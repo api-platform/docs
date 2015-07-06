@@ -88,6 +88,7 @@ using the external parameters feature of the Symfony container:
     }
   ]
 }
+```
 
 The file also tell to the Heroku deployment system to build a PHP container and to add the Postgres add-on.
 
