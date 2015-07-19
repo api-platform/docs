@@ -1,4 +1,4 @@
-# Deploying an API Platform on Heroku
+# Deploying an API Platform app on Heroku
 
 [Heroku](http://heroku.com) is a popular, fast, scalable and reliable *Platform As A Service* (PaaS). As Heroku offers a
 free plan including database support trough [Heroku Postgres](https://www.heroku.com/postgres), it's
