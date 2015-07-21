@@ -35,10 +35,10 @@ see how API Platform make modern development easy and fun again:
   the API in AJAX (of course) but also a native iOS or Android app, or even a desktop application. Clients only display
   data and forms.
 
-## Resources 
+## Resources
 
 * [Getting started](getting-started/api.md)
 * [The model generator](http://php-schema.dunglas.fr)
 * [The API system](https://github.com/dunglas/DunglasApiBundle)
 * [Deploying on Heroku](deployment/heroku.md)
-
+* [Use it with docker !](getting-started/docker.md)
