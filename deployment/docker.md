@@ -1,6 +1,6 @@
-# Use it with docker !
+# Using API Platform with Docker
 
-Project can be run through [Docker](https://www.docker.com/) &
+Projects using API Platform can be run through [Docker](https://www.docker.com/) and
 [Docker compose](https://docs.docker.com/compose/). Run `docker-compose up -d`,
 your project will be accessible at [http://127.0.0.1](http://127.0.0.1).
 
