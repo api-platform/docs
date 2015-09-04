@@ -1,4 +1,4 @@
-# DunglasApiBundle
+# API Bundle
 
 DunglasApiBundle is an easy to use and powerful system to create [hypermedia-driven REST APIs](http://en.wikipedia.org/wiki/HATEOAS).
 It is a component of the [Dunglas's API Platform framework](http://api-platform.com) and it can be used

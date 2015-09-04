@@ -8,7 +8,7 @@ If you are in a hurry, a demo is available online and all sources created during
   / [sources](https://github.com/dunglas/blog-api)
 * the Angular client: [demo](https://dunglas.github.io/blog-client/) / [sources](https://github.com/dunglas/blog-client)
 
-[![blog-api-platform](http://dunglas.fr/wp-content/uploads/2015/06/blog-api-platform.png)](http://dunglas.fr/wp-content/uploads/2015/06/blog-api-platform.png)
+[![blog-api-platform](images/blog-api-platform.png)](images/blog-api-platform.png)
 
 To create the API-side of our project we will:
 
@@ -26,7 +26,7 @@ any language able to send HTTP requests).
 
 ## Prerequisites
 
-Only PHP 5.5+ must be installed to run Dunglas's API Platform. A built-in web server is shipped with the framework for the
+Only PHP 5.5+ must be installed to run API Platform. A built-in web server is shipped with the framework for the
 development environment.
 
 To follow this tutorial a database must be installed (but its not a strong dependency of the framework). We recommend MySQL
@@ -59,13 +59,13 @@ The installer will ask for:
 * a secret token (choose a long one) for cryptographic features
 
 Take a look at [the content of the generated directory](https://github.com/dunglas/blog-api). You should recognize a [Symfony
-application directory structure](http://symfony.com/doc/current/quick_tour/the_architecture.html). It's fine and intended:
-**the generated skeleton is a perfectly valid Symfony full-stack application** that follows [Symfony Best Practices](http://symfony.com/doc/current/best_practices/index.html).
+application directory structure](https://symfony.com/doc/current/quick_tour/the_architecture.html). It's fine and intended:
+**the generated skeleton is a perfectly valid Symfony full-stack application** that follows [Symfony Best Practices](https://symfony.com/doc/current/best_practices/index.html).
 It means that you can:
 
 * [use thousands of exiting Symfony bundles](http://knpbundles.com) with API Platform
 * use API Platform in any existing Symfony application
-* reuse all your Symfony skills and benefit of the high quality [Symfony documentation](http://symfony.com/doc/current/index.html)
+* reuse all your Symfony skills and benefit of the high quality [Symfony documentation](https://symfony.com/doc/current/index.html)
 
 The skeleton comes with a demonstration bookstore API. Remove it:
 
@@ -74,7 +74,7 @@ The skeleton comes with a demonstration bookstore API. Remove it:
 
 ## Generating the data model
 
-The first incredibly useful tool provided by Dunglas's API platform is it's data model generator also know as **[PHP Schema](https://github.com/dunglas/php-schema)**.
+The first incredibly useful tool provided by API platform is [its data model generator](../shema-generator/index.md).
 This API Platform component can also be used standalone to bootstrap any PHP data model.
 
 To kickstart our blog data model we browse [Schema.org](http://schema.org) and find an existing schema that describe perfectly
@@ -90,7 +90,7 @@ Browse Schema.org, choose the types and properties you need (there is a bunch of
 * Full high-quality PHPDoc for classes, properties, constants and methods extracted from Schema.org.
 * Doctrine ORM annotation mapping including database columns with type guessing, relations with cardinality guessing, class
   inheritance (through the `@AbstractSuperclass` annotation).
-* Data validation through [Symfony Validator](http://symfony.com/doc/current/book/validation.html) annotations including
+* Data validation through [Symfony Validator](https://symfony.com/doc/current/book/validation.html) annotations including
   data type validation, enum support (choices) and check for required properties.
 * Interfaces and [Doctrine `ResolveTargetEntityListener`](http://doctrine-orm.readthedocs.org/en/latest/cookbook/resolve-target-entity-listener.html)
   support.
@@ -180,7 +180,7 @@ Then generate database tables related to the generated entities:
 
     app/console doctrine:schema:create
 
-PHP Schema provides a lot of configuration options. Take a look at [its dedicated documentation](https://github.com/dunglas/php-schema).
+PHP Schema provides a lot of configuration options. Take a look at [its dedicated documentation](../schema-generator/index.md).
 Keep in mind that PHP Schema is also available as a standalone tool (and a PHAR will be available soon) and can be used
 to bootstrap any PHP project (works fine with raw PHP, API Platform and Symfony but has an extension mechanism allowing
 to use it with other technologies such as Zend Framework and Laravel).
@@ -199,11 +199,11 @@ remove `dunglas/php-schema` from your `composer.json` file.
 ## Exposing the API
 
 We have a working data model backed by a database. Now we will create a hypermedia REST API thanks to another component
-of Dunglas's API Platform: **[DunglasApiBundle](https://github.com/dunglas/DunglasApiBundle)**.
+of API Platform: **[ApiBundle](../api-bundle/index.md)**.
 
 As PHP Schema, it is already preinstalled and properly configured. We just need to declare resources we want to expose.
 
-Exposing a resource collection basically consist to register a new [Symfony service](http://symfony.com/doc/current/book/service_container.html).
+Exposing a resource collection basically consist to register a new [Symfony service](https://symfony.com/doc/current/book/service_container.html).
 For our blog app we will expose trough the API the two entity classes generated by PHP Schema: `BlogPosting` (blog post)
 and `Person` (author of the post):
 
@@ -228,9 +228,9 @@ Start the integrated development web server: `app/console server:start`
 
 Then open `http://localhost:8000/doc` with a web browser:
 
-[![API Platform doc](http://dunglas.fr/wp-content/uploads/2015/06/api-platform-nelmio-api-doc.png)](http://dunglas.fr/wp-content/uploads/2015/06/api-platform-nelmio-api-doc.png)
+[![API Platform doc](images/api-doc.png)](images/api-doc.png)
 
-Thanks to [NelmioApiDocBundle](https://github.com/nelmio/NelmioApiDocBundle) support of DunglasApiBundle and its integration
+Thanks to [NelmioApiDocBundle](https://github.com/nelmio/NelmioApiDocBundle) support of ApiBundle and its integration
 with API Platform, you get for a free **an automatically generated human-readable documentation** of the API (Swagger-like).
 The doc also **includes a sandbox** to try the API.
 
@@ -264,7 +264,7 @@ The data is inserted in database. The server replies with a JSON-LD representati
 The JSON-LD spec is fully supported by the bundle. Want a proof? Browse `http://localhost:8000/contexts/Person`.
 
 By default, the API allows `GET` (retrieve, on collections and items), `POST` (create), `PUT` (update) and `DELETE` (self-explaining)
-HTTP methods. [You can add and remove any other operation you want](https://github.com/dunglas/DunglasApiBundle/blob/master/Resources/doc/operations.md).
+HTTP methods. [You can add and remove any other operation you want](../api-bundle/operations.md).
 Try it!
 
 Now, browse `http://localhost:8000/people`:
@@ -295,7 +295,7 @@ as body:
 
 ```json
 {
-    "name": "Dunglas's API Platform is great",
+    "name": "API Platform is great",
     "headline": "You'll love that framework!",
     "articleBody": "The body of my article.",
     "articleSection": "technology",
@@ -328,7 +328,7 @@ Correct the body and send the request again:
 
 ```json
 {
-    "name": "Dunglas's API Platform is great",
+    "name": "API Platform is great",
     "headline": "You'll love that framework!",
     "articleBody": "The body of my article.",
     "articleSection": "technology",
@@ -356,21 +356,21 @@ an open web standard for describing hypermedia REST APIs in JSON-LD. Any Hydra-c
 with the API without knowing anything about it! The most popular Hydra client is [Hydra Console](http://www.markus-lanthaler.com/hydra/console/).
 Open an URL of the API with it you'll get a nice management interface.
 
-[![API Platform Hydra console](http://dunglas.fr/wp-content/uploads/2015/06/api-platform-hydra-console.png)](http://dunglas.fr/wp-content/uploads/2015/06/api-platform-hydra-console.png)
+[![API Platform Hydra console](console.png)](console.png)
 
 You can also give a try to the brand new [hydra-core Javascript library](https://github.com/bergos/hydra-core).
 
-DunglasApiBundle offers a lot of other features including:
+ApiBundle offers a lot of other features including:
 
-* [filters](https://github.com/dunglas/DunglasApiBundle/blob/master/Resources/doc/filters.md)
-* [serialization groups and child resource embedding](https://github.com/dunglas/DunglasApiBundle/blob/master/Resources/doc/serialization-groups-and-relations.md)
-* [custom operations](https://github.com/dunglas/DunglasApiBundle/blob/master/Resources/doc/operations.md): deactivate
+* [filters](../api-bundle/filters.md)
+* [serialization groups and child resource embedding](../api-bundle/serialization-groups-and-relations.md)
+* [custom operations](../api-bundle/operations.md): deactivate
   some methods, create custom operations, URL and controllers
-* [data providers](https://github.com/dunglas/DunglasApiBundle/blob/master/Resources/doc/data-providers.md): retrieve and
+* [data providers](../api-bundle/data-providers.md): retrieve and
   modify data trough a web-service or a MongoDB database or anything else instead of Doctrine ORM
-* a powerful [event system](https://github.com/dunglas/DunglasApiBundle/blob/master/Resources/doc/the-event-system.md)
+* a powerful [event system](../api-bundle/the-event-system.md)
 
-Read [its dedicated documentation](https://github.com/dunglas/DunglasApiBundle/) to see how to leverage them and how to
+Read [its dedicated documentation](../api-bundle/index.md) to see how to leverage them and how to
 hook your own code everywhere into it.
 
 ## Specifying and testing the API
@@ -439,7 +439,7 @@ Feature: Blog
     When I send a "POST" request to "/blog_postings" with body:
     """
     {
-        "name": "Dunglas's API Platform is great",
+        "name": "API Platform is great",
         "headline": "You'll that framework!",
         "articleBody": "The body of my article.",
         "articleSection": "technology",
@@ -473,7 +473,7 @@ Feature: Blog
     When I send a "POST" request to "/blog_postings" with body:
     """
     {
-        "name": "Dunglas's API Platform is great",
+        "name": "API Platform is great",
         "headline": "You'll that framework!",
         "articleBody": "The body of my article.",
         "articleSection": "technology",
@@ -498,7 +498,7 @@ Feature: Blog
       "datePublished": "2015-05-11T00:00:00+02:00",
       "headline": "You'll that framework!",
       "isFamilyFriendly": true,
-      "name": "Dunglas's API Platform is great"
+      "name": "API Platform is great"
     }
     """
 ```
@@ -524,7 +524,7 @@ more documentation and cookbooks are coming!
 
 Here is a non exhaustive list of what you can do with API Platform:
 
-* Add [a user management system](https://github.com/dunglas/DunglasApiBundle/blob/master/Resources/doc/fosuser-bundle.md)
+* Add [a user management system](../api-bundle/fosuser-bundle.md)
   (FOSUser integration)
 * [Secure the API with JWT](https://github.com/lexik/LexikJWTAuthenticationBundle) (LexikJwtAuthenticationBundle) or [OAuth](https://github.com/FriendsOfSymfony/FOSOAuthServerBundle)
   (FosOAuthServer)
@@ -533,7 +533,7 @@ Here is a non exhaustive list of what you can do with API Platform:
 * [Add CSRF protection when the API authentication relies on cookies](https://github.com/dunglas/DunglasAngularCsrfBundle)
   (DunglasAngularCsrfBundle – you should prefer using a stateless authentication mode such as a JWT token stored in the
   browser session storage when possible)
-* [Send mails](http://symfony.com/doc/current/cookbook/email/email.html) (Swift Mailer)
-* [Use Apache or Nginx](http://symfony.com/doc/current/cookbook/configuration/web_server_configuration.html), or even [Heroku](../deployment/heroku.md)
+* [Send mails](https://symfony.com/doc/current/cookbook/email/email.html) (Swift Mailer)
+* [Deploy](../deployment/index.md)
 
 The next step? [Learn how to create an AngularJS client for the API](angularjs.md).

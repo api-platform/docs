@@ -10,7 +10,7 @@ Or directly as a development dependency of your project:
 
     composer require --dev dunglas/php-schema
 
-If you want to create an API exposing Schema.org types, take a look at [Dunglas's API platform](https://github.com/dunglas/api-platform),
+If you want to create an API exposing Schema.org types, take a look at [API platform](https://api-platform.com),
 a all-in-one skeleton including PHP Schema and integrated with a ton of other useful packages allowing to generate JSON-LD
 REST API in minutes.
 

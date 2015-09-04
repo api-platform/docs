@@ -1,6 +1,4 @@
-# API Platform
-
-![API Platform](http://api-platform.com/api-platform.png)
+# Getting started with the API Platform framework
 
 In 20 years of PHP, the web changed dramatically and is now evolving faster than ever:
 
@@ -28,17 +26,9 @@ full-stack all-in-one framework and a set of independent PHP components and bund
 The architecture promoted by the framework will distrust many of you but read this tutorial until the end and you will
 see how API Platform make modern development easy and fun again:
 
-* Start by **creating [a hypermedia REST API](http://en.wikipedia.org/wiki/HATEOAS)** exposing structured data that can
+* [Start by **creating a hypermedia REST API**](api.md) exposing structured data that can
   be understood by any compliant client such your apps but also as search engines (JSON-LD with Schema.org vocabulary).
   This API is the central and unique entry point to access and modify data. It also encapsulates the whole business logic.
-* Then **create as many clients as you want using frontend technologies you love**: an HTML5/Javascript webapp querying
+* [Then **create as many clients as you want using frontend technologies you love**](angularjs.md): an HTML5/Javascript webapp querying
   the API in AJAX (of course) but also a native iOS or Android app, or even a desktop application. Clients only display
   data and forms.
-
-## Resources
-
-* [Getting started](getting-started/api.md)
-* [The model generator](http://php-schema.dunglas.fr)
-* [The API system](https://github.com/dunglas/DunglasApiBundle)
-* [Deploying on Heroku](deployment/heroku.md)
-* [Use it with docker !](getting-started/docker.md)

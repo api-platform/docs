@@ -1,8 +1,10 @@
-# PHP Schema.org Model Scaffolding
+# The schema generator
 
-The [PHP Schema](http://php-schema.dunglas.com/) command line tool part of [the API Platform framework](http://api-platform.com) that instantly generates a PHP data model from the [Schema.org](http://schema.org)
-vocabulary. Browse Schema.org, choose the types and properties you need, run our code generator and you're done! You get
+`schema` is a command line tool part of [the API Platform framework](https://api-platform.com) that instantly generates
+a PHP data model from the [Schema.org](http://schema.org) vocabulary.
+Browse Schema.org, choose the types and properties you need, run our code generator and you're done! You get
 a fully featured PHP data model including:
+
 * A set of PHP entities with properties, constants (enum values), getters, setters, adders and removers. The class
 hierarchy provided by Schema.org will be translated to a PHP class hierarchy with parents as `abstract` classes. The generated
 code complies with [PSR](http://www.php-fig.org/) coding standards.
@@ -59,9 +61,5 @@ It opens the way to generic web API clients able to extract and process data fro
 
 ## Documentation
 
-* [Getting Started](doc/getting-started.md)
-* [Configuration](doc/configuration.md)
-
-## Credits
-
-This project has been created by [Kévin Dunglas](http://dunglas.fr) and is sponsored by [Les-Tilleuls.coop](http://les-tilleuls.coop).
+* [Getting Started](getting-started.md)
+* [Configuration](configuration.md)
