@@ -23,7 +23,7 @@ Then, write a simple YAML config file like the following (here we will generate 
 
 `address-book.yml`:
 
-```yml
+```yaml
 rdfa:
  - tests/data/schema.rdfa
 relations:
@@ -675,7 +675,7 @@ validation annotation generator automatically takes care of enumerations to vali
 
 A config file generating an enum class:
 
-```yml
+```yaml
 types:
   OfferItemCondition: ~ # The generator will automatically guess that OfferItemCondition is subclass of Enum
 ```
