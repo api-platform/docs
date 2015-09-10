@@ -1,6 +1,7 @@
 # An AngularJS client
 
-Prequistes:
+Prerequisites:
+
 * Having finished [the API tutorial](api.md)
 * [Node.js](https://nodejs.org/) and [NPM](https://www.npmjs.com/) installed.
 
