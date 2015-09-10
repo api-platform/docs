@@ -8,7 +8,7 @@ If you are in a hurry, a demo is available online and all sources created during
   / [sources](https://github.com/dunglas/blog-api)
 * the Angular client: [demo](https://dunglas.github.io/blog-client/) / [sources](https://github.com/dunglas/blog-client)
 
-[![blog-api-platform](images/blog-api-platform.png)](images/blog-api-platform.png)
+![Screenshot of the blog](images/blog-api-platform.png)
 
 To create the API-side of our project we will:
 
@@ -228,7 +228,7 @@ Start the integrated development web server: `app/console server:start`
 
 Then open `http://localhost:8000/doc` with a web browser:
 
-[![API Platform doc](images/api-doc.png)](images/api-doc.png)
+![API doc](images/api-doc.png)]
 
 Thanks to [NelmioApiDocBundle](https://github.com/nelmio/NelmioApiDocBundle) support of ApiBundle and its integration
 with API Platform, you get for a free **an automatically generated human-readable documentation** of the API (Swagger-like).
@@ -356,7 +356,7 @@ an open web standard for describing hypermedia REST APIs in JSON-LD. Any Hydra-c
 with the API without knowing anything about it! The most popular Hydra client is [Hydra Console](http://www.markus-lanthaler.com/hydra/console/).
 Open an URL of the API with it you'll get a nice management interface.
 
-[![API Platform Hydra console](console.png)](console.png)
+![Hydra console](images/console.png)]
 
 You can also give a try to the brand new [hydra-core Javascript library](https://github.com/bergos/hydra-core).
 

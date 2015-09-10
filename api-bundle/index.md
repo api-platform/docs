@@ -35,7 +35,7 @@ Validator and Doctrine ORM metadata
 Everything is fully customizable through a powerful event system and strong OOP.
 This bundle is documented and tested with Behat (take a look at [the `features/` directory](features/)).
 
-![Screenshot of DunglasApiBundle integrated with NelmioApiDocBundle](images/NelmioApiDocBundle.png)
+![Screenshot of ApiBundle integrated with NelmioApiDocBundle](images/NelmioApiDocBundle.png)
 
 ## Official documentation
 
