@@ -4,11 +4,11 @@
 
 Use [Composer](http://getcomposer.org) to install the generator. In standalone mode:
 
-    composer create-project dunglas/php-schema
+    composer create-project api-platform/schema-generator
 
 Or directly as a development dependency of your project:
 
-    composer require --dev dunglas/php-schema
+    composer require --dev api-platform/schema-generator
 
 If you want to create an API exposing Schema.org types, take a look at [API platform](https://api-platform.com),
 a all-in-one skeleton including PHP Schema and integrated with a ton of other useful packages allowing to generate JSON-LD
@@ -717,19 +717,19 @@ class OfferItemCondition extends Enum
 
 ```
 
-### Enabling DunglasApi support
+### Enabling API Platform bundle support
 
-PHP Schema supports [IRI annotations provided by DunglasApiBundle](https://github.com/dunglas/DunglasApiBundle#using-external-json-ld-vocabularies).
+PHP Schema supports [IRI annotations provided by DunglasApiBundle](../api-bundle/external-vocabularies.md).
 This is useful if you plan to use your generated data model to power a REST API.
 
 To enable this generator along with others, add the following lines to your PHP Schema configuration file:
 
 ```yaml
 annotationGenerators:
-    - SchemaOrgModel\AnnotationGenerator\PhpDocAnnotationGenerator
-    - SchemaOrgModel\AnnotationGenerator\DoctrineOrmAnnotationGenerator
-    - SchemaOrgModel\AnnotationGenerator\ConstraintAnnotationGenerator
-    - SchemaOrgModel\AnnotationGenerator\DunglasApiAnnotationGenerator
+    - ApiPlatform\SchemaGenerator\AnnotationGenerator\PhpDocAnnotationGenerator
+    - ApiPlatform\SchemaGenerator\AnnotationGenerator\DoctrineOrmAnnotationGenerator
+    - ApiPlatform\SchemaGenerator\AnnotationGenerator\ConstraintAnnotationGenerator
+    - ApiPlatform\SchemaGenerator\AnnotationGenerator\DunglasApiAnnotationGenerator
 ```
 
 ### Going further
