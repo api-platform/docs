@@ -128,10 +128,10 @@ To generate our data model form Schema.org types, we must create a YAML configur
 # app/config/schema.yml
  
 annotationGenerators: # Generators we want to use, keep it as is for any API Platform project
-    - SchemaOrgModel\AnnotationGenerator\PhpDocAnnotationGenerator
-    - SchemaOrgModel\AnnotationGenerator\DoctrineOrmAnnotationGenerator
-    - SchemaOrgModel\AnnotationGenerator\ConstraintAnnotationGenerator
-    - SchemaOrgModel\AnnotationGenerator\DunglasApiAnnotationGenerator
+    - ApiPlatform\SchemaGenerator\AnnotationGenerator\PhpDocAnnotationGenerator
+    - ApiPlatform\SchemaGenerator\AnnotationGenerator\DoctrineOrmAnnotationGenerator
+    - ApiPlatform\SchemaGenerator\AnnotationGenerator\ConstraintAnnotationGenerator
+    - ApiPlatform\SchemaGenerator\AnnotationGenerator\DunglasApiAnnotationGenerator
 namespaces:
   entity: AppBundle\Entity # The default namespace for entities, following API Platform and Symfony best practices
 types: # The list of type to generated (a PHP entity class by type will be generated)

@@ -129,18 +129,18 @@ Example (enabling only the PHPDoc generator):
 
 ```yaml
 annotationGenerators:
-    - SchemaOrgModel\AnnotationGenerator\PhpDocAnnotationGenerator
+    - ApiPlatform\SchemaGenerator\AnnotationGenerator\PhpDocAnnotationGenerator
 ```
 
-You can write your generators by implementing the [AnnotationGeneratorInterface](src/SchemaOrgModel/AnnotationGenerator/AnnotationGeneratorInterface).
-The [AbstractAnnotationGenerator](src/SchemaOrgModel/AnnotationGenerator/AbstractAnnotationGenerator) provides helper methods
+You can write your generators by implementing the `AnnotationGeneratorInterface`.
+The `AbstractAnnotationGenerator` provides helper methods
 useful when creating your own generators.
 
 Enabling a custom generator and the PHPDoc generator:
 
 ```yaml
 annotationGenerators:
-  - SchemaOrgModel\AnnotationGenerator\PhpDocAnnotationGenerator
+  - ApiPlatform\SchemaGenerator\AnnotationGenerator\PhpDocAnnotationGenerator
   - Acme\Generators\MyGenerator
 ```
 
@@ -343,7 +343,7 @@ types:
 annotationGenerators:
 
     # Defaults:
-    - SchemaOrgModel\AnnotationGenerator\PhpDocAnnotationGenerator
-    - SchemaOrgModel\AnnotationGenerator\ConstraintAnnotationGenerator
-    - SchemaOrgModel\AnnotationGenerator\DoctrineOrmAnnotationGenerator
+    - ApiPlatform\SchemaGenerator\AnnotationGenerator\PhpDocAnnotationGenerator
+    - ApiPlatform\SchemaGenerator\AnnotationGenerator\ConstraintAnnotationGenerator
+    - ApiPlatform\SchemaGenerator\AnnotationGenerator\DoctrineOrmAnnotationGenerator
 ```
