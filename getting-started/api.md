@@ -38,7 +38,7 @@ or MariaDB but other major DBMS are supported including SQLite, PostgreSQL, Orac
 Let's start our new blog API project. The easiest way to create a new project is to use [Composer](https://getcomposer.org/)
 (you need to have it installed on your box):
 
-    composer create-project dunglas/api-platform --stability=beta blog-api
+    composer create-project api-platform/api-platform blog-api
 
 Composer creates the skeleton of the new blog API then retrieve the framework and all its dependencies.
 
