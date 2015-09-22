@@ -5,7 +5,7 @@ Projects using API Platform can be run through [Docker](https://www.docker.com/)
 your project will be accessible at [http://127.0.0.1](http://127.0.0.1).
 
 You can customize Docker configuration by creating your own `docker-compose.yml`
-file. Form example if you want Nginx to run on port 8888:
+file. For example, if you want Nginx to run on port 8888:
 
 ```yaml
 web:

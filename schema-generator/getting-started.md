@@ -17,7 +17,7 @@ REST API in minutes.
 ## Model scaffolding
 
 Start by browsing [Schema.org](http://schema.org) and pick types applicable to your application. The website provides
-tons of schemas including (but not limited too) representations of people, organization, event, postal address, creative
+tons of schemas including (but not limited to) representations of people, organization, event, postal address, creative
 work and e-commerce structures.
 Then, write a simple YAML config file like the following (here we will generate a data model for an address book):
 
@@ -739,10 +739,10 @@ annotationGenerators:
 
 ## Cardinality extraction
 
-The Cardinality Extractor is a standalone tool (also used internally by the generator) extracting property's cardinality.
-Its uses [GoodRelations](http://www.heppnetz.de/projects/goodrelations/) data when available. Other cardinalities are
+The Cardinality Extractor is a standalone tool (also used internally by the generator) extracting a property's cardinality.
+It uses [GoodRelations](http://www.heppnetz.de/projects/goodrelations/) data when available. Other cardinalities are
 guessed using the property's comment.
-When the cardinality cannot be automatically extracted, it's value is set to `unknown`.
+When cardinality cannot be automatically extracted, it's value is set to `unknown`.
 
 Usage:
 

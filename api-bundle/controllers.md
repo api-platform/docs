@@ -1,7 +1,7 @@
 # Controllers
 
-The bundle provide a default controller class implementing CRUD operations: `Dunglas\ApiBundle\Controller\ResourceController`.
-Basically this controller class extends the default controller class of the FrameworkBundle of Symfony providing implementations
+The bundle provides a default controller class implementing CRUD operations: `Dunglas\ApiBundle\Controller\ResourceController`.
+Basically, this controller class extends the default controller class of Symfony's FrameworkBundle providing implementation
 of CRUD actions. It also provides convenient methods to retrieve the `Resource` class associated with the current request
 and to serialize entities using normalizers provided by the bundle.
 
@@ -36,8 +36,8 @@ class CustomController extends ResourceController
 ```
 
 Custom controllers are often used with [custom operations](operations.md). If you don't create a custom operation
-for your custom controller, you need to register yourself that controller in the Symfony routing system and it will
-appear in documentations.
+for your custom controller, in order for it to appear in the documentation, you need to register that controller in 
+the Symfony routing system yourself.
 
 Note that you shouldn't use `@Route` annotations, as this will cause bugs. The bundle auto-registers routes within Symfony2, so you don't need to use `@Route` annotations.
 
