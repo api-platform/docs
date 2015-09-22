@@ -65,7 +65,7 @@ for the given HTTP method) and a context that will be passed to documentation ge
 
 A convenient factory is provided to build `Dunglas\ApiBundle\Api\Operation\Operation` instances.
 This factory guesses good default values for options such as the route name and its associated URL
-by inspecting the given `Resource` instance. All guessed values can be override.
+by inspecting the given `Resource` instance. All guessed values can be overridden.
 
 If you want to use custom controller action, [refer to the dedicated documentation](controllers.md).
 

@@ -13,7 +13,7 @@ and [by Doctrine ORM](http://doctrine-orm.readthedocs.org/en/latest/reference/ev
 
 ## Retrieving item
 
-- `api.retrieve` (`Dunglas\ApiBundle\Event\Events::RETRIEVE_LIST`): after the retrieving of an object during a `GET` request on an item.
+- `api.retrieve` (`Dunglas\ApiBundle\Event\Events::RETRIEVE`): after the retrieving of an object during a `GET` request on an item.
 
 ## Creating item
 
