@@ -2,7 +2,7 @@
 
 The bundle provides a generic system to apply filters on collections. Useful filters
 for the Doctrine ORM are provided with the bundle. However the filter system is
-extensible enough to let you create custom filters fitting your specific needs
+extensible enough to let you create custom filters that would fit your specific needs
 and for any data provider.
 
 By default, all filters are disabled. They must be enabled explicitly.
@@ -17,7 +17,7 @@ If Doctrine ORM support is enabled, adding filters is as easy as adding an entry
 in your `app/config/services.yml` file.
 
 The search filter supports exact and partial matching strategies.
-If the partial strategy is specified, a SQL query with a `WHERE` clause similar
+If the partial strategy is specified, an SQL query with a `WHERE` clause similar
 to `LIKE %text to search%` will be automatically issued.
 
 In the following, we will see how to allow filtering a list of e-commerce offers:
@@ -167,7 +167,7 @@ services:
 Given that the collection endpoint is `/offers`, you can filter offers by name in
 ascending order and then by ID on descending order with the following query: `/offers?order[name]=desc&order[id]=asc`.
 
-By default, whenever the query does not specify explicitly the direction (e.g: `/offers?order[name]&order[id]`), filters will not be applied, unless you configure a default order direction to use:
+By default, whenever the query does not specify the direction explicitly (e.g: `/offers?order[name]&order[id]`), filters will not be applied unless you configure a default order direction to use:
 
 ```yaml
 
@@ -198,8 +198,8 @@ dunglas_api:
 
 ## Enabling a filter for all properties of a resource
 
-As we seen in previous examples, properties where filters can be applied must be
-explicitly declared. But if you don't care about security and performances (ex:
+As we have seen in previous examples, properties where filters can be applied must be
+explicitly declared. But if you don't care about security and performance (ex:
 an API with restricted access), it's also possible to enable builtin filters for
 all properties:
 
@@ -243,8 +243,8 @@ A convenient abstract class is also shipped with the bundle: `Dunglas\ApiBundle\
 
 ### Overriding extraction of properties from the request
 
-How filters data are extracted from the request can be changed for all built-in
-filters by extending the parent filter class an overriding the `extractProperties(\Symfony\Component\HttpFoundation\Request $request)`
+You can change the way the filter parameters are extracted from the request. This can be done by extending the parent
+filter class and overriding the `extractProperties(\Symfony\Component\HttpFoundation\Request $request)`
 method.
 
 In the following example, we will completely change the syntax of the order filter
