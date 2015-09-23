@@ -153,7 +153,6 @@ types: # The list of type to generated (a PHP entity class by type will be gener
       name: ~
   Person: # Person is a relation of the "CreativeWork" type (property "author"), PHP Schema will generate relations for us
     properties: {} # We don't want any specific property for a person except "name" inherited from Thing
-Then execute the generator:
 ```
 
 Then execute the generator:
