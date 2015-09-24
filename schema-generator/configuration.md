@@ -52,6 +52,7 @@ types:
 
 The cardinality of a property is automatically guessed. The `cardinality` option allows to override the guessed value.
 Supported cardinalities are:
+
 * `(0..1)`: scalar, not required
 * `(0..*)`: array, not required
 * `(1..1)`: scalar, required
