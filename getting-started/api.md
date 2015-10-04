@@ -289,7 +289,7 @@ Now, browse `http://localhost:8000/people`:
 
 Pagination is also supported (and enabled) out of the box.
 
-It's time to post our first article. Run a POST request on `http://locahost:8000/blog_posting` with the following JSON document
+It's time to post our first article. Run a POST request on `http://locahost:8000/blog_postings` with the following JSON document
 as body:
 
 ```json
