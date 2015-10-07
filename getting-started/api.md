@@ -74,7 +74,7 @@ The skeleton comes with a demonstration bookstore API. Remove it:
 
 ## Generating the data model
 
-The first incredibly useful tool provided by API platform is [its data model generator](../shema-generator/index.md).
+The first incredibly useful tool provided by API platform is [its data model generator](../schema-generator/index.md).
 This API Platform component can also be used standalone to bootstrap any PHP data model.
 
 To kickstart our blog data model we browse [Schema.org](http://schema.org) and find an existing schema that describe perfectly
