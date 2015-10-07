@@ -111,6 +111,126 @@ Example:
      abstract: true
 ```
 
+
+## Forcing a nullable property
+
+Force a property to be `nullable` (or to be not).
+
+By default this option is `true` 
+
+Example:
+
+```yaml
+   Person:
+    properties:
+      name: { nullable: false }
+```
+
+The `@Assert\NotNull` constrain is automatically added
+
+```php
+/**
+ * @var string The name of the item.
+ * 
+ * @ORM\Column
+ * @Assert\Type(type="string")
+ * @Assert\NotNull
+ */
+  private $name;
+```
+
+## Forcing a unique property
+
+Force a property to be `unique` (or to be not).
+
+By default this option is `false`
+
+Example:
+
+```yaml
+   Person:
+    properties:
+      email: { unique: true }
+```
+
+Output:
+```php
+<?php
+
+...
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+
+/**
+ * A person (alive, dead, undead, or fictional).
+ * 
+ * @see http://schema.org/Person Documentation on Schema.org
+ * 
+ * @ORM\Entity
+ * @UniqueEntity("email")
+ * @Iri("http://schema.org/Person")
+ */
+class Person
+{
+  /**
+   * @var string Email address.
+   * 
+   * @ORM\Column
+   * @Assert\Email
+   */
+    private $email;
+```
+
+## Forcing a property to be in a serialization group
+
+Force a property to be in a `groups`.
+
+Enabling the `SerializerGroupsAnnotationGenerator` generator:
+
+```yaml
+annotationGenerators:
+  - ApiPlatform\SchemaGenerator\AnnotationGenerator\SerializerGroupsAnnotationGenerator
+  ...
+```
+
+This option expects an array of scalar value `{ groups: [ groups1, group2, ... ] }`
+
+Example:
+
+```yaml
+   Person:
+      properties:
+        name: { groups: [ public ] }
+```
+
+Output:
+```php
+<?php
+
+...
+use Symfony\Component\Serializer\Annotation\Groups;
+
+/**
+ * A person (alive, dead, undead, or fictional).
+ * 
+ * @see http://schema.org/Person Documentation on Schema.org
+ * 
+ * @ORM\Entity
+ * @Iri("http://schema.org/Person")
+ */
+class Person
+{
+  /**
+  * @var string The name of the item.
+  * 
+  * @ORM\Column(nullable=true)
+  * @Assert\Type(type="string")
+  * @Iri("https://schema.org/name")
+  * @Groups({"public"})
+  */
+  private $name;
+
+```
+
 ## Author PHPDoc
 
 Add a `@author` PHPDoc annotation to class' DocBlock.
