@@ -242,7 +242,7 @@ in this document.
 
 ## Trying the API
 
-Add a person named Kévin by issuing a POST request on `http://localhost:8000/users` with the following JSON document as
+Add a person named Kévin by issuing a POST request on `http://localhost:8000/people` with the following JSON document as
 raw body:
 
 ```json
