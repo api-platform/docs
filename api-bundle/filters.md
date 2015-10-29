@@ -16,9 +16,11 @@ if this bundle is active.
 If Doctrine ORM support is enabled, adding filters is as easy as adding an entry
 in your `app/config/services.yml` file.
 
-The search filter supports exact and partial matching strategies.
-If the partial strategy is specified, an SQL query with a `WHERE` clause similar
-to `LIKE %text to search%` will be automatically issued.
+The search filter supports `exact`, `partial`, `start`, `end`, and `word_start` matching strategies.
+- `partial` strategy uses `LIKE %text%` to search for fields that containing the text.
+- `start` strategy uses `LIKE text%` to search for fields that starts with text.
+- `end` strategy uses `LIKE %text` to search for fields that ends with text.
+- `word_start` strategy uses `LIKE text% OR LIKE % text%` to search for fields that containing the word starts with text.
 
 In the following, we will see how to allow filtering a list of e-commerce offers:
 
@@ -29,7 +31,7 @@ In the following, we will see how to allow filtering a list of e-commerce offers
 services:
     resource.offer.search_filter:
         parent:    "api.doctrine.orm.search_filter"
-        arguments: [ { id: "exact", price: "exact", name: "partial"  } ]
+        arguments: [ { id: "exact", price: "exact", name: "word_start", alias: "start", description: "partial"  } ]
 
     resource.offer:
         parent:    "api.resource"
@@ -41,7 +43,9 @@ services:
 ```
 
 `http://localhost:8000/api/offers?price=10` will return all offers with a price being exactly `10`.
-`http://localhost:8000/api/offers?name=shirt` will returns all offer with a description containing the word "shirt".
+`http://localhost:8000/api/offers?name=shirt` will returns all offers with a name containing the word starts with "shirt".
+`http://localhost:8000/api/offers?alias=tee` will returns all offers with an alias starts with "tee".
+`http://localhost:8000/api/offers?description=cotton` will returns all offers with a description containing with "cotton".
 
 Filters can be combined together: `http://localhost:8000/api/offers?price=10&name=shirt`
 
