@@ -198,6 +198,101 @@ the data provider and any changes in the embedded relation will be applied to th
 
 You can create as relation embedding levels as you want.
 
+### Creating a custom Normalizer
+The normalizer must implements the ```NormalizerInterface``` and ```DenormalizerInterface```.
+If you add simple modification eg: add a new serialization group for each item, you can inject the Normalizer provided with the API.
+
+Define the service:
+```yml
+api.serializer.normalizer.item:
+    public: false
+    class: AppBundle\Serializer\CustomItemNormalizer
+    arguments: [ @api.json_ld.normalizer.item ]
+    tags: [ { name: serializer.normalizer } ]
+```
+
+The custom normalizer:
+
+```php
+namespace AppBundle\Serializer;
+
+use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
+use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
+
+/**
+ * Class CustomItemNormalizer
+ * @package AppBundle\Serializer
+ */
+class CustomItemNormalizer implements NormalizerInterface, DenormalizerInterface
+{
+    /**
+     * @var NormalizerInterface
+     */
+    private $normalizer;
+
+    /**
+     * CustomItemNormalizer constructor.
+     *
+     * @param $normalizer
+     */
+    public function __construct(NormalizerInterface $normalizer)
+    {
+        if (!$normalizer instanceof DenormalizerInterface) {
+            throw new \InvalidArgumentException('The normalizer must implement the DenormalizerInterface');
+        }
+
+        $this->normalizer = $normalizer;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function denormalize($data, $class, $format = null, array $context = array())
+    {
+        return $this->normalizer->denormalize($data, $class, $format, $context);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function supportsDenormalization($data, $type, $format = null)
+    {
+        return $this->normalizer->supportsDenormalization($data, $type, $format);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function normalize($object, $format = null, array $context = array())
+    {
+        return $this->normalizer->normalize($object, $format, $context);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function supportsNormalization($data, $format = null)
+    {
+        return $this->normalizer->supportsNormalization($data, $format);
+    }
+}
+```
+
+Example to add a serialization group for each item:
+```php
+public function normalize($object, $format = null, array $context = array())
+{
+    $resource = $this->normalizer->guessResource($object, $context, true);
+
+    $resource->initNormalizationContext(array('groups' => array_merge(
+        $resource->getNormalizationGroups(),
+        ['detail']
+    )));
+
+    return $this->normalizer->normalize($object, $format, $context);
+}
+```
+
 ### Name conversion
 
 The Serializer Component provides a handy way to translate or map PHP field names to serialized names. See the
