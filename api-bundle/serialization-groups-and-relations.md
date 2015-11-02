@@ -237,8 +237,8 @@ class CustomItemNormalizer implements NormalizerInterface, DenormalizerInterface
      */
     public function __construct(NormalizerInterface $normalizer)
     {
-        if (!$normalizer instanceof DenormalizerInterface) {
-            throw new \InvalidArgumentException('The normalizer must implement the DenormalizerInterface');
+        if (!$normalizer instanceof NormalizerInterface) {
+            throw new \InvalidArgumentException('The normalizer must implement the NormalizerInterface');
         }
 
         $this->normalizer = $normalizer;
