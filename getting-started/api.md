@@ -135,6 +135,7 @@ annotationGenerators: # Generators we want to use, keep it as is for any API Pla
 namespaces:
   entity: AppBundle\Entity # The default namespace for entities, following API Platform and Symfony best practices
 types: # The list of type to generated (a PHP entity class by type will be generated)
+  SocialMediaPosting: ~
   BlogPosting: ~ # A type to generate a PHP entity class from, including all its properties (here this type has no specific property, they are all inherited)
   Article: # Schema.org has an inheritance system, we will configure all types of the hierarchy
     properties: # The list of properties we want to use
