@@ -50,7 +50,7 @@ The generated JSON for products and the related context document will now use ex
 ```json
 {
     "@context": {
-        "@vocab": "http://example.com/vocab#",
+        "@vocab": "http://example.com/apidoc#",
         "hydra": "http://www.w3.org/ns/hydra/core#",
         "name": "https://schema.org/name",
         // Other properties

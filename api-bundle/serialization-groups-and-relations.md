@@ -63,7 +63,7 @@ You can also decide to embed it:
 ```json
 {
   "@context": {
-    "@vocab": "http://localhost/vocab#",
+    "@vocab": "http://localhost:8000/apidoc#",
     "hydra": "http://www.w3.org/ns/hydra/core#",
     "name": "#Offer/name"
   }
@@ -221,12 +221,12 @@ Actually we identify the entity identifier from [Doctrine Identifier](http://doc
 We don't support entity resource with multiple identifier.
 
 The entity identifier is never returned like other properties : it's a part of the URI contained in `@id` field. 
-So in the `/vocab` endpoint : identifier not appear in the properties list.
+So in the `/apidoc` endpoint : identifier not appear in the properties list.
 
 #### Entity identifier writable
 
 In some case, you will be able to set from the client the identifier of a resource. (like a slug for example)
-So, in this case the identifier property must become a writable class property in the /vocab endpoint.
+So, in this case the identifier property must become a writable class property in the `/apidoc` endpoint.
 
 To do this you simply have to : 
 * create a a setter for identifier in the entity
