@@ -346,7 +346,7 @@ date functions. In production we recommend the format specified by the [RFC 3339
 
 We already have a powerful hypermedia REST API (always without writing a single line of PHP), but there is more.
 
-**Our API is auto-discoverable**. Open `http://localhost:8000/vocab` and take a look at the content. Capabilities of the
+**Our API is auto-discoverable**. Open `http://localhost:8000/apidoc` and take a look at the content. Capabilities of the
 API are fully described in a machine-readable format: available resources, properties and operations, description of elements,
 readable and writable properties, types returned and expected...
 
