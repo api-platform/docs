@@ -24,7 +24,7 @@ Example:
 types:
   Thing:
     namespaces:
-      entity: "Dunglas\CoreBundle\Entity" # Namespace for the Thing entity (works for enumerations too)
+      class: "Dunglas\CoreBundle\Entity" # Namespace for the Thing entity (works for enumerations too)
       interface: "Schema\Model" # Namespace of the related interface
 ```
 
