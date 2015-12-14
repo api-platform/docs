@@ -200,6 +200,39 @@ dunglas_api:
             order:   "_order" # the URL query parameter to use is now "_order"
 ```
 
+## Filtering on nested properties
+
+**(Added in v1.1 of the API Bundle)**
+
+Sometimes, you need to be able to perform filtering based on some linked resources
+(on the other side of a relation). All built-in filters support nested properties
+using the dot (`.`) syntax, e.g.:
+
+```yaml
+
+# app/config/services.yml
+
+services:
+    resource.offer.search_filter:
+        parent:    "api.doctrine.orm.search_filter"
+        arguments: [ { "product.color": "exact" } ]
+
+    resource.offer.order_filter:
+        parent:    "api.doctrine.orm.order_filter"
+        arguments: [ { "product.releaseDate": ~ } ]
+
+    resource.offer:
+        parent:    "api.resource"
+        arguments: [ "AppBundle\Entity\Offer"]
+        calls:
+            -      method:    "initFilters"
+                   arguments: [ [ "@resource.offer.search_filter", "@resource.offer.order_filter" ] ]
+        tags:      [ { name: "api.resource" } ]
+```
+
+The above allows you to find offers by their respective product's color: `http://localhost:8000/api/offers?product.color=red`,
+or order offers by the product's release date: `http://localhost:8000/api/offers?order[product.releaseDate]=desc`
+
 ## Enabling a filter for all properties of a resource
 
 As we have seen in previous examples, properties where filters can be applied must be
@@ -217,6 +250,8 @@ services:
         parent:    "api.doctrine.orm.order_filter"
         arguments: [ ~ ] # This line can also be omitted
 ```
+
+**Note: Filters on nested properties must still be enabled explicitly, in order to keep things sane**
 
 Regardless of this option, filters can by applied on a property only if:
 - the property exists
