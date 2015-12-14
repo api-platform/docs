@@ -116,7 +116,7 @@ Example:
 
 Force a property to be `nullable` (or to be not).
 
-By default this option is `true` 
+By default this option is `true`
 
 Example:
 
@@ -131,7 +131,7 @@ The `@Assert\NotNull` constrain is automatically added
 ```php
 /**
  * @var string The name of the item.
- * 
+ *
  * @ORM\Column
  * @Assert\Type(type="string")
  * @Assert\NotNull
@@ -162,9 +162,9 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
  * A person (alive, dead, undead, or fictional).
- * 
+ *
  * @see http://schema.org/Person Documentation on Schema.org
- * 
+ *
  * @ORM\Entity
  * @UniqueEntity("email")
  * @Iri("http://schema.org/Person")
@@ -173,7 +173,7 @@ class Person
 {
   /**
    * @var string Email address.
-   * 
+   *
    * @ORM\Column
    * @Assert\Email
    */
@@ -211,9 +211,9 @@ use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * A person (alive, dead, undead, or fictional).
- * 
+ *
  * @see http://schema.org/Person Documentation on Schema.org
- * 
+ *
  * @ORM\Entity
  * @Iri("http://schema.org/Person")
  */
@@ -221,7 +221,7 @@ class Person
 {
   /**
   * @var string The name of the item.
-  * 
+  *
   * @ORM\Column(nullable=true)
   * @Assert\Type(type="string")
   * @Iri("https://schema.org/name")
@@ -229,6 +229,19 @@ class Person
   */
   private $name;
 
+```
+
+## Forcing an embeddable class to be embedded
+
+Force an `embeddable` class to be `embedded`.
+
+Example:
+
+```yaml
+   GeoCoordinates:
+     embeddable: true
+   Place:
+     coordinates: { range: "GeoCoordinates", embedded: true, columnPrefix: false }
 ```
 
 ## Author PHPDoc
@@ -449,6 +462,9 @@ types:
 
         # The parent class, set to false for a top level class
         parent:               null
+
+        # If the class is embeddable, set to true for an embeddable class
+        embeddable:           false
 
         # Properties of this type to use
         properties:
