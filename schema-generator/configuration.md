@@ -111,6 +111,19 @@ Example:
      abstract: true
 ```
 
+## Forcing an embeddable class to be embedded
+
+Force an `embeddable` class to be `embedded`.
+
+Example:
+
+```yaml
+   GeoCoordinates:
+     embeddable: true
+   Place:
+     coordinates: { range: "GeoCoordinates", embedded: true, columnPrefix: false }
+```
+
 ## Author PHPDoc
 
 Add a `@author` PHPDoc annotation to class' DocBlock.
@@ -330,6 +343,9 @@ types:
         # The parent class, set to false for a top level class
         parent:               null
 
+        # If the class is embeddable, set to true for an embeddable class
+        embeddable:           false
+
         # Properties of this type to use
         properties:
 
@@ -339,6 +355,8 @@ types:
                 # The property range
                 range:                null # Example: Offer
                 cardinality:          ~ # One of "(0..1)"; "(0..*)"; "(1..1)"; "(1..*)"; "unknown"
+                embedded:             false # true if field is an embedded class
+                columnPrefix:         false # true if embedded columns should be named with prefix
 
 # Annotation generators to use
 annotationGenerators:
