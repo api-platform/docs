@@ -13,7 +13,7 @@ First register the following service:
 
 resource.user:
         parent:    "api.resource"
-        arguments: [ "AppBundle\Entity\User" ]
+        arguments: [ "AppBundle\\Entity\\User" ]
         calls:
             -      method:    "initNormalizationContext"
                    arguments: [ { groups: [ "user_read" ] } ]

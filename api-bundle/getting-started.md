@@ -159,12 +159,12 @@ Register the following services (for example in `app/config/services.yml`):
 services:
     resource.product:
         parent:    "api.resource"
-        arguments: [ "AppBundle\Entity\Product" ]
+        arguments: [ "AppBundle\\Entity\\Product" ]
         tags:      [ { name: "api.resource" } ]
 
     resource.offer:
         parent:    "api.resource"
-        arguments: [ "AppBundle\Entity\Offer" ]
+        arguments: [ "AppBundle\\Entity\\Offer" ]
         tags:      [ { name: "api.resource" } ]
 ```
 

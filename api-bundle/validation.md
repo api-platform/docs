@@ -12,7 +12,7 @@ To take care of them, edit your service declaration and add groups you want to u
 services:
     resource.product:
         parent:    "api.resource"
-        arguments: [ "AppBundle\Entity\Product" ]
+        arguments: [ "AppBundle\\Entity\\Product" ]
         calls:
             -      method:    "initValidationGroups"
                    arguments: [ [ "group1", "group2" ] ]

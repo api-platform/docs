@@ -10,7 +10,7 @@ in the Serializer component. Specifying to the API system the groups to use is d
 services:
     resource.product:
         parent:    "api.resource"
-        arguments: [ "AppBundle\Entity\Product" ]
+        arguments: [ "AppBundle\\Entity\\Product" ]
         calls:
             -      method:    "initNormalizationContext"
                    arguments: [ { groups: [ "serialization_group1", "serialization_group2" ] } ]
@@ -78,7 +78,7 @@ services:
 
     resource.offer:
         parent:    "api.resource"
-        arguments: [ "AppBundle\Entity\Offer" ]
+        arguments: [ "AppBundle\\Entity\\Offer" ]
         calls:
             -      method:    "initNormalizationContext"
                    arguments: [ { json_ld_context_embedded: true } ]
@@ -148,7 +148,7 @@ services:
 
     resource.offer:
         parent:    "api.resource"
-        arguments: [ "AppBundle\Entity\Offer" ]
+        arguments: [ "AppBundle\\Entity\\Offer" ]
         calls:
             -      method:    "initNormalizationContext"
                    arguments: [ { groups: [ "offer" ] } ]
@@ -183,7 +183,7 @@ services:
 
     resource.offer:
         parent:     "api.resource"
-        arguments:  [ "AppBundle\Entity\Offer" ]
+        arguments:  [ "AppBundle\\Entity\\Offer" ]
         calls:
             -       method:    "initDenormalizationContext"
                     arguments:
