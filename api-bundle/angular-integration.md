@@ -18,7 +18,8 @@ var app = angular
 
         // JSON-LD @id support
         RestangularProvider.setRestangularFields({
-            id: '@id'
+            id: '@id',
+            selfLink: '@id'
         });
         RestangularProvider.setSelfLinkAbsoluteUrl(false);
 
