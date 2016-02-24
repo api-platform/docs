@@ -32,7 +32,7 @@ Register the routes of our API by adding the following lines to `app/config/rout
 ```yaml
 api:
     resource: "."
-    type:     "api"
+    type:     "api_platform"
     prefix:   "/api" # Optional
 ```
 
