@@ -219,10 +219,15 @@ Example:
 
 ```yaml
 rdfa:
-  - https://raw.githubusercontent.com/rvguha/schemaorg/master/data/schema.rdfa # Experimental version of Schema.org
-  - http://example.com/data/myschema.rfa # Additional types
+    -
+        uri: https://raw.githubusercontent.com/rvguha/schemaorg/master/data/schema.rdfa # Experimental version of Schema.org
+        format: rdfa # Optional document type
+    -
+        uri: http://example.com/data/myschema.rfa # Additional types
+        format: ~
 ```
 
+*Format is optional but you can specify it if it can't be guessed, got or if it is wrong from the HTTP headers or from the file.*
 *Support for other namespaces than `http://schema.org` is planned for future versions but not currently available.*
 
 ## Checking GoodRelation compatibility
@@ -258,7 +263,9 @@ header: |
 rdfa:
 
     # Default:
-    - http://schema.org/docs/schema_org_rdfa.html
+    -
+        uri: http://schema.org/docs/schema_org_rdfa.html
+        format: ~
 
 # OWL relation files to use
 relations:

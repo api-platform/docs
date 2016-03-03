@@ -25,7 +25,9 @@ Then, write a simple YAML config file like the following (here we will generate 
 
 ```yaml
 rdfa:
- - tests/data/schema.rdfa
+ -
+   uri: tests/data/schema.rdfa
+   format: ~
 relations:
  - tests/data/v1.owl
 # The PHP namespace of generated entities
