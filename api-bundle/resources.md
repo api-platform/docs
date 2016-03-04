@@ -26,14 +26,14 @@ class MyCustomResource implements ResourceInterface
     
     public function getItemOperations() {
         return [
-            new MyItemOperation();
+            new MyItemOperation(),
         ];
     }
     
     public function getCollectionOperations()
     {
         return [
-            new MyCollectionOperation();
+            new MyCollectionOperation(),
         ];
     }
 
