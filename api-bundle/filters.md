@@ -22,6 +22,8 @@ The search filter supports `exact`, `partial`, `start`, `end`, and `word_start` 
 - `end` strategy uses `LIKE %text` to search for fields that ends with text.
 - `word_start` strategy uses `LIKE text% OR LIKE % text%` to search for fields that containing the word starts with text.
 
+Prepend the letter `i` to the filter if you want it to be case insensitive. For example `ipartial` or `iexact`. Note that this will use the `LOWER` function and **will** impact performances if there is no [*function-based index*](http://use-the-index-luke.com/sql/where-clause/functions/case-insensitive-search).
+
 In the following, we will see how to allow filtering a list of e-commerce offers:
 
 ```yaml
