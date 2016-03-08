@@ -66,7 +66,7 @@ types:
 
 Run the generator with this config file as parameter:
 
-    bin/schema generate-types output-directory/ address-book.yml
+    bin/schema generate-types output-directory/ app/config/address-book.yml
 
 The following classes will be generated:
 
