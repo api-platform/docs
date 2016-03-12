@@ -14,7 +14,7 @@ if this bundle is active.
 ## Search filter
 
 If Doctrine ORM support is enabled, adding filters is as easy as adding an entry
-in your `app/config/services.yml` file.
+in your `app/config/services.yml` file and adding a Attributes in your entity.
 
 The search filter supports exact and partial matching strategies.
 If the partial strategy is specified, an SQL query with a `WHERE` clause similar
@@ -27,18 +27,37 @@ In the following, we will see how to allow filtering a list of e-commerce offers
 # app/config/services.yml
 
 services:
-    resource.offer.search_filter:
-        parent:    "api.doctrine.orm.search_filter"
+    offer.search_filter:
+        parent:    "api_platform.doctrine.orm.search_filter"
         arguments: [ { id: "exact", price: "exact", name: "partial"  } ]
-
-    resource.offer:
-        parent:    "api.resource"
-        arguments: [ "AppBundle\Entity\Offer" ]
-        calls:
-            -      method:    "initFilters"
-                   arguments: [ [ "@resource.offer.search_filter" ] ]
-        tags:      [ { name: "api.resource" } ]
+        tags:      [ { name: 'api_platform.filter', id: 'offer.search' } ]
 ```
+
+# AppBundle\Entity\Offer.php
+```php
+<?php
+
+namespace AppBundle\Entity;
+
+use ApiPlatform\Core\Annotation\Property;
+use ApiPlatform\Core\Annotation\Resource;
+use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
+
+/**
+ * An offer to transfer some rights to an item or to provide a service—for example, an offer to sell tickets to an event, to rent the DVD of a movie, to stream a TV show over the internet, to repair a motorcycle, or to loan a book.
+ *
+ * @see http://schema.org/Offer Documentation on Schema.org
+ *
+ * @ORM\Entity
+ * @Resource(attributes={"filters"={"offer.search"}},iri="http://schema.org/Offer")
+ */
+class Offer
+{
+...
+}
+```
+
 
 `http://localhost:8000/api/offers?price=10` will return all offers with a price being exactly `10`.
 `http://localhost:8000/api/offers?name=shirt` will returns all offer with a description containing the word "shirt".
@@ -52,17 +71,10 @@ It is possible to filter on relations too:
 # app/config/services.yml
 
 services:
-    resource.offer.search_filter:
-        parent:    "api.doctrine.orm.search_filter"
-        arguments: [ { "product": "exact" } ]
-
-    resource.offer:
-        parent:    "api.resource"
-        arguments: [ "AppBundle\Entity\Offer"] 
-        calls:
-            -      method:    "initFilters"
-                   arguments: [ [ "@resource.offer.search_filter" ] ]
-        tags:      [ { name: "api.resource" } ]
+    offer.search_filter:
+        parent:    "api_platform.doctrine.orm.search_filter"
+        arguments: [ { id: "exact", price: "exact", name: "partial"  } ]
+        tags:      [ { name: 'api_platform.filter', id: 'offer.search' } ]
 ```
 
 With this service definition, it is possible to find all offers belonging to the
@@ -89,18 +101,36 @@ As others filters, the date filter must be explicitly enabled:
 # app/config/services.yml
 
 services:
-    # Enable date filter for for the property "dateProperty" of the resource "resource.offer"
-    resource.date_filter:
-        parent:    "api.doctrine.orm.date_filter"
+    # Enable date filter for for the property "dateProperty" of the resource "offer"
+    offer.date_filter:
+        parent:    "api_platform.doctrine.orm.date_filter"
         arguments: [ { "dateProperty": ~ } ]
+        tags:      [ { name: 'api_platform.filter', id: 'offer.date' } ]
+```
 
-    resource.offer:
-        parent:    "api.resource"
-        arguments: [ "AppBundle\Entity\Offer"] 
-        calls:
-            -      method:    "initFilters"
-                   arguments: [ [ "@resource.offer.date_filter" ] ]
-        tags:      [ { name: "api.resource" } ]
+# AppBundle\Entity\Offer.php
+```php
+<?php
+
+namespace AppBundle\Entity;
+
+use ApiPlatform\Core\Annotation\Property;
+use ApiPlatform\Core\Annotation\Resource;
+use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
+
+/**
+ * An offer to transfer some rights to an item or to provide a service—for example, an offer to sell tickets to an event, to rent the DVD of a movie, to stream a TV show over the internet, to repair a motorcycle, or to loan a book.
+ *
+ * @see http://schema.org/Offer Documentation on Schema.org
+ *
+ * @ORM\Entity
+ * @Resource(attributes={"filters"={"offer.search","offer.date"}},iri="http://schema.org/Offer")
+ */
+class Offer
+{
+...
+}
 ```
 
 ### Managing `null` values
@@ -111,9 +141,9 @@ Four behaviors are available at the property level of the filter:
 | Description                          | Strategy to set                                                               |
 |--------------------------------------|-------------------------------------------------------------------------------|
 | Use the default behavior of the DBMS | `null`                                                                        |
-| Exclude items                        | `Dunglas\ApiBundle\Doctrine\Orm\Filter\DateFilter::EXCLUDE_NULL` (`0`)        |
-| Consider items as oldest             | `Dunglas\ApiBundle\Doctrine\Orm\Filter\DateFilter::INCLUDE_NULL_BEFORE` (`1`) |
-| Consider items as youngest           | `Dunglas\ApiBundle\Doctrine\Orm\Filter\DateFilter::INCLUDE_NULL_AFTER` (`2`)  |
+| Exclude items                        | `ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\DateFilter::EXCLUDE_NULL` (`0`)        |
+| Consider items as oldest             | `ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\DateFilter::INCLUDE_NULL_BEFORE` (`1`) |
+| Consider items as youngest           | `ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\DateFilter::INCLUDE_NULL_AFTER` (`2`)  |
 
 For instance, exclude entries with a property value of `null`, with the following service definition:
 
@@ -122,21 +152,15 @@ For instance, exclude entries with a property value of `null`, with the followin
 # app/config/services.yml
 
 services:
-    resource.date_filter:
-        parent:    "api.doctrine.orm.date_filter"
+    offer.date_filter:
+        parent:    "api_platform.doctrine.orm.date_filter"
         arguments: [ { "dateProperty": ~ } ]
-
-    resource.offer:
-        parent:    "api.resource"
-        arguments: [ "AppBundle\Entity\Offer"] 
-        calls:
-            -      method:    "initFilters"
-                   arguments: [ [ "@resource.offer.date_filter" ] ]
-        tags:      [ { name: "api.resource" } ]
+        tags:      [ { name: 'api_platform.filter', id: 'offer.date' }
 ```
 
+
 If you use another service definition format than YAML, you can use the
-`Dunglas\ApiBundle\Doctrine\Orm\Filter\DateFilter::EXCLUDE_NULL` constant directly.
+`ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\DateFilter::EXCLUDE_NULL` constant directly.
 
 ## Order filter
 
@@ -151,17 +175,36 @@ Enable the filter:
 # app/config/services.yml
 
 services:
-    resource.offer.order_filter:
-        parent:    "api.doctrine.orm.order_filter"
+   offer.order_filter:
+        parent:    "api_platform.doctrine.orm.order_filter"
         arguments: [ { "id": ~, "name": ~ } ]
+        tags:      [ { name: 'api_platform.filter', id: 'offer.order' }
+```
 
-    resource.offer:
-        parent:    "api.resource"
-        arguments: [ "AppBundle\Entity\Offer"] 
-        calls:
-            -      method:    "initFilters"
-                   arguments: [ [ "@resource.offer.order_filter" ] ]
-        tags:      [ { name: "api.resource" } ]
+
+# AppBundle\Entity\Offer.php
+```php
+<?php
+
+namespace AppBundle\Entity;
+
+use ApiPlatform\Core\Annotation\Property;
+use ApiPlatform\Core\Annotation\Resource;
+use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
+
+/**
+ * An offer to transfer some rights to an item or to provide a service—for example, an offer to sell tickets to an event, to rent the DVD of a movie, to stream a TV show over the internet, to repair a motorcycle, or to loan a book.
+ *
+ * @see http://schema.org/Offer Documentation on Schema.org
+ *
+ * @ORM\Entity
+ * @Resource(attributes={"filters"={"offer.search","offer.date","offer.order"}},iri="http://schema.org/Offer")
+ */
+class Offer
+{
+...
+}
 ```
 
 Given that the collection endpoint is `/offers`, you can filter offers by name in
@@ -174,12 +217,114 @@ By default, whenever the query does not specify the direction explicitly (e.g: `
 # app/config/services.yml
 
 services:
-    resource.offer.order_filter:
-        parent:    "api.doctrine.orm.order_filter"
+    offer.order_filter:
+        parent:    "api_platform.doctrine.orm.order_filter"
         arguments: [ { "id": ASC, "name": DESC } ]
+        tags:      [ { name: 'api_platform.filter', id: 'offer.order' }
 
     [...]
 ```
+
+## Boolean Filter 
+
+The boolean filter allow you to search on boolean fields and value.
+
+Syntax: `?property=[on|off|true|false|0|1]`
+
+You can either use TRUE or true, the parameters are case insensitive.
+
+Enable the filter:
+
+```yaml
+
+# app/config/services.yml
+
+services:
+   offer.boolean_filter:
+        parent:    "api_platform.doctrine.orm.boolean_filter"
+        arguments: [ { "isAvailableGenericallyInMyCountry": ~ } ]
+        tags:      [ { name: 'api_platform.filter', id: 'offer.boolean' }
+```
+
+
+# AppBundle\Entity\Offer.php
+```php
+<?php
+
+namespace AppBundle\Entity;
+
+use ApiPlatform\Core\Annotation\Property;
+use ApiPlatform\Core\Annotation\Resource;
+use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
+
+/**
+ * An offer to transfer some rights to an item or to provide a service—for example, an offer to sell tickets to an event, to rent the DVD of a movie, to stream a TV show over the internet, to repair a motorcycle, or to loan a book.
+ *
+ * @see http://schema.org/Offer Documentation on Schema.org
+ *
+ * @ORM\Entity
+ * @Resource(attributes={"filters"={"offer.search","offer.date","offer.boolean"}},iri="http://schema.org/Offer")
+ */
+class Offer
+{
+...
+}
+```
+
+Given that the collection endpoint is `/offers`, you can filter offers by boolean  with the following query: `/offers?isAvailableGenericallyInMyCountry=true`.
+
+It will return all offers with `isAvailableGenericallyInMyCountry` equals true
+
+## Numeric Filter 
+
+The boolean filter allow you to search on numeric fields and value.
+
+Syntax: `?property=int|bigint|decimal...`
+
+
+Enable the filter:
+
+```yaml
+
+# app/config/services.yml
+
+services:
+   offer.numeric_filter:
+        parent:    "api_platform.doctrine.orm.numeric_filter"
+        arguments: [ { "sold": ~ } ]
+        tags:      [ { name: 'api_platform.filter', id: 'offer.numeric' }
+```
+
+
+# AppBundle\Entity\Offer.php
+```php
+<?php
+
+namespace AppBundle\Entity;
+
+use ApiPlatform\Core\Annotation\Property;
+use ApiPlatform\Core\Annotation\Resource;
+use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
+
+/**
+ * An offer to transfer some rights to an item or to provide a service—for example, an offer to sell tickets to an event, to rent the DVD of a movie, to stream a TV show over the internet, to repair a motorcycle, or to loan a book.
+ *
+ * @see http://schema.org/Offer Documentation on Schema.org
+ *
+ * @ORM\Entity
+ * @Resource(attributes={"filters"={"offer.search","offer.date","offer.boolean","offer.numeric"}},iri="http://schema.org/Offer")
+ */
+class Offer
+{
+...
+}
+```
+
+Given that the collection endpoint is `/offers`, you can filter offers by boolean  with the following query: `/offers?sold=1`.
+
+It will return all offers with `sold` equals 1
 
 ### Using a custom order query parameter name
 
@@ -190,10 +335,9 @@ Hopefully, the query parameter name to use is configurable:
 
 # app/config/config.yml
 
-dunglas_api:
+api_platform:
     collection:
-        filter_name:
-            order:   "_order" # the URL query parameter to use is now "_order"
+        order_parameter_name: "_order" # the URL query parameter to use is now "_order"
 ```
 
 ## Filtering on nested properties
@@ -209,21 +353,15 @@ using the dot (`.`) syntax, e.g.:
 # app/config/services.yml
 
 services:
-    resource.offer.search_filter:
-        parent:    "api.doctrine.orm.search_filter"
+   offer.search_filter:
+        parent:    "api_platform.doctrine.orm.search_filter"
         arguments: [ { "product.color": "exact" } ]
+        tags:      [ { name: 'api_platform.filter', id: 'offer.searcb' }
 
-    resource.offer.order_filter:
-        parent:    "api.doctrine.orm.order_filter"
+   offer.order_filter:
+        parent:    "api_platform.doctrine.orm.order_filter"
         arguments: [ { "product.releaseDate": ~ } ]
-
-    resource.offer:
-        parent:    "api.resource"
-        arguments: [ "AppBundle\Entity\Offer"]
-        calls:
-            -      method:    "initFilters"
-                   arguments: [ [ "@resource.offer.search_filter", "@resource.offer.order_filter" ] ]
-        tags:      [ { name: "api.resource" } ]
+        tags:      [ { name: 'api_platform.filter', id: 'offer.order' }
 ```
 
 The above allows you to find offers by their respective product's color: `http://localhost:8000/api/offers?product.color=red`,
@@ -242,9 +380,10 @@ all properties:
 
 services:
     # Filter enabled for all properties
-    resource.offer.order_filter:
-        parent:    "api.doctrine.orm.order_filter"
+    offer.order_filter:
+        parent:    "api_platform.doctrine.orm.order_filter"
         arguments: [ ~ ] # This line can also be omitted
+        tags:      [ { name: 'api_platform.filter', id: 'offer.order' }
 ```
 
 **Note: Filters on nested properties must still be enabled explicitly, in order to keep things sane**
@@ -261,9 +400,12 @@ It means that the filter will be **silently** ignored if the property:
 
 ## Creating custom filters
 
-Custom filters can be written by implementing the `Dunglas\ApiBundle\Api\Filter\FilterInterface`
+Custom filters can be written by implementing the `ApiPlatform\Core\Api\FilterInterface`
 interface.
 
+
+@TODO
+What is the new way to register custom filters ?
 Don't forget to register your custom filters with the `Dunglas\ApiBundle\Api\Resource::initFilters()` method.
 
 If you use [custom data providers](data-providers.md), they must support filtering and be aware of actives filters to
@@ -271,10 +413,10 @@ work properly.
 
 ### Creating custom Doctrine ORM filters
 
-Doctrine ORM filters must implement the `Dunglas\ApiBundle\Doctrine\Orm\FilterInterface`.
+Doctrine ORM filters must implement the `ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\FilterInterface`.
 They can interact directly with the Doctrine `QueryBuilder`.
 
-A convenient abstract class is also shipped with the bundle: `Dunglas\ApiBundle\Doctrine\Orm\AbstractFilter`
+A convenient abstract class is also shipped with the bundle: `ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\AbstractFilter`
 
 ### Overriding extraction of properties from the request
 
@@ -310,24 +452,18 @@ Finally, register the custom filter:
 # app/config/services.yml
 
 services:
-    resource.offer.custom_order_filter:
+    offer.custom_order_filter:
         class:    "AppBundle\Filter\CustomOrderFilter"
-
-    resource.offer:
-        parent:    "api.resource"
-        arguments: [ "AppBundle\Entity\Offer" ]
-        calls:
-            -      method:    "initFilters"
-                   arguments: [ [ "@resource.offer.custom_order_filter" ] ]
-        tags:      [ { name: "api.resource" } ]
+        tags:      [ { name: 'api_platform.filter', id: 'offer.order' }
 ```
 
 Beware: in [some cases](https://github.com/dunglas/DunglasApiBundle/issues/157#issuecomment-119576010) you may have to use double slashes in the class path to make it work:
 
 ```
 services:
-    resource.offer.custom_order_filter:
+    offer.custom_order_filter:
         class:    "AppBundle\\Filter\\CustomOrderFilter"
+        tags:      [ { name: 'api_platform.filter', id: 'offer.order' }
 ```
 
 Previous chapter: [Data providers](data-providers.md)<br>
