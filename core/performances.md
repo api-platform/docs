@@ -7,11 +7,11 @@ bundle provides a built-in cache service using [APCu](https://github.com/krakjoe
 To enable it in the prod environment (it requires APCu to be installed), add the following lines to `app/config/config_prod.yml`:
 
 ```yaml
-dunglas_api:
+api_platform:
     cache: api.mapping.cache.apc
 ```
 
-DunglasApiBundle leverages the [Doctrine Cache](https://github.com/doctrine/cache) to abstract the cache backend. If
+ApiPlatformBundle leverages the [Doctrine Cache](https://github.com/doctrine/cache) to abstract the cache backend. If
 you want to use a custom cache backend such as Redis, Memcache or MongoDB, register a Doctrine Cache provider as a service
 and set the `cache` config key to the id of the custom service you created.
 

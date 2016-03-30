@@ -2,7 +2,7 @@
 
 ## Restangular
 
-DunglasApiBundle works fine with [AngularJS](http://angularjs.org). The popular [Restangular](https://github.com/mgonto/restangular)
+ApiPlatformBundle works fine with [AngularJS v1](http://angularjs.org). The popular [Restangular](https://github.com/mgonto/restangular)
 REST client library for Angular can easily be configured to handle the API format.
 
 Here is a working Restangular config:
@@ -92,5 +92,7 @@ article.listView().fields([
 admin.addEntity(article);
 nga.configure(admin)
 ```
+
+You can look at what we have done as another exemple [api-platform/admin](https://github.com/api-platform/admin).
 
 Previous chapter: [Performances](performances.md)

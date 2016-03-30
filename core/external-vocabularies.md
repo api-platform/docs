@@ -3,7 +3,7 @@
 JSON-LD allows to define classes and properties of your API with open vocabularies such as [Schema.org](https://schema.org)
 and [Good Relations](http://www.heppnetz.de/projects/goodrelations/).
 
-DunglasApiBundle provides annotations usable on PHP classes and properties for specifying a related external [IRI](http://en.wikipedia.org/wiki/Internationalized_resource_identifier).
+ApiPlatformBundle provides annotations usable on PHP classes and properties for specifying a related external [IRI](http://en.wikipedia.org/wiki/Internationalized_resource_identifier).
 
 
 ```php
@@ -13,11 +13,10 @@ DunglasApiBundle provides annotations usable on PHP classes and properties for s
 
 namespace AppBundle\Entity;
 
-use Dunglas\ApiBundle\Annotation\Iri;
-
+use ApiPlatform\Core\Annotation\Property;
 /**
  * ...
- * @Iri("https://schema.org/Product")
+ * @see http://schema.org/Product Documentation on Schema.org
  */
 class Product
 {
@@ -25,7 +24,7 @@ class Product
 
     /**
      * ...
-     * @Iri("https://schema.org/name")
+     * @Property(iri="http://schema.org/name")
      */
     public $name;
 }

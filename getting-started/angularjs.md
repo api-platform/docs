@@ -26,6 +26,7 @@ of [Yeoman](http://yeoman.io/). Install the generator then generate a client ske
 
 Yeoman will ask some questions. We want to keep the app minimal:
 
+* choose Grunt or Gulp (experimental), both will work
 * don't install Sass support
 * install Twitter Bootstrap (it's optional but the app will look better)
 * uncheck all suggested angular modules
@@ -44,7 +45,8 @@ DunglasApiBundle provides [a Restangular integration guide](https://github.com/d
 in its documentation. Once configured, Restangular will work with the JSON-LD/Hydra API like with any other standard REST
 API.
 
-Then edit `app/app.js` file to register Restangular and configure it properly:
+Then edit `app/app.js` file to register Restangular and configure it properly as explained [in the dedicated documentation
+chapter](../core/angular-integration.md):
 
 ```javascript
 // app/scripts/app.js
@@ -64,13 +66,14 @@ angular
     .config(['RestangularProvider', function (RestangularProvider) {
         // The URL of the API endpoint
         RestangularProvider.setBaseUrl('http://localhost:8000');
- 
+
         // JSON-LD @id support
         RestangularProvider.setRestangularFields({
-            id: '@id'
+            id: '@id',
+            selfLink: '@id'
         });
         RestangularProvider.setSelfLinkAbsoluteUrl(false);
- 
+
         // Hydra collections support
         RestangularProvider.addResponseInterceptor(function (data, operation) {
             // Remove trailing slash to make Restangular working
@@ -79,29 +82,29 @@ angular
                     data.href = data['@id'].substring(1);
                 }
             }
- 
+
             // Populate href property for the collection
             populateHref(data);
- 
+
             if ('getList' === operation) {
                 var collectionResponse = data['hydra:member'];
                 collectionResponse.metadata = {};
- 
+
                 // Put metadata in a property of the collection
                 angular.forEach(data, function (value, key) {
                     if ('hydra:member' !== key) {
                         collectionResponse.metadata[key] = value;
                     }
                 });
- 
+
                 // Populate href property for all elements of the collection
                 angular.forEach(collectionResponse, function (value) {
                     populateHref(value);
                 });
- 
+
                 return collectionResponse;
             }
- 
+
             return data;
         });
     }])
@@ -161,7 +164,8 @@ angular.module('blogApp')
                 $scope.errorDescription = response.data['hydra:description'];
             });
         };
-    });
+    })
+;
 ```
 
 As you can see, querying the API with Restangular is easy and very intuitive. The library automatically issues HTTP requests

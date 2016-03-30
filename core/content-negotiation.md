@@ -10,7 +10,7 @@ The bundle will automatically detect the best format to return according to the 
 and enabled formats. If no format asked by the client is supported by the server, the response will be sent in the first
 format defined in the `support_formats` configuration key (see below).
 
-An example using the builtin XML serializer is available in Behat specs: https://github.com/dunglas/DunglasApiBundle/tree/master/features/content_negotiation.feature
+An example using the builtin XML serializer is available in Behat specs: https://github.com/api-platform/core/blob/master/features/content_negotiation.feature
 
 ## Enabling several formats
 
@@ -18,12 +18,14 @@ The first required step is to configure allowed formats in the bundle. The follo
 support:
 
 ```yaml
-dunglas_api:
+api_platform:
     # ...
-    supported_formats:                 [ "jsonld", "myformat" ]
+    supported_formats:
+        jsonld:                        ['application/ld+json']
+        myformat:                      ['application/vnd.myformat']
 ```
 
-## Registering a custom format in the Negotiation library
+## Registering a custom formatg in the Negotiation library
 
 If the format you want to use is not supported by default in the Negotiation library, you must register it using a [compiler pass](http://symfony.com/doc/current/components/dependency_injection/compilation.html#creating-a-compiler-pass):
 
@@ -84,11 +86,10 @@ Here is an example responder using the builtin XML serializer:
 
 ```php
 // src/AppBundle/EventListener/XmlResponderViewListener.php
-
 <?php
 
 /*
- * This file is part of the DunglasApiBundle package.
+ * This file is part of the API Platform project.
  *
  * (c) Kévin Dunglas <dunglas@gmail.com>
  *
@@ -98,6 +99,7 @@ Here is an example responder using the builtin XML serializer:
 
 namespace AppBundle\EventListener;
 
+use ApiPlatform\Core\Metadata\Resource\Factory\ResourceMetadataFactoryInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\GetResponseForControllerResultEvent;
@@ -117,9 +119,15 @@ class XmlResponderViewListener
      */
     private $serializer;
 
-    public function __construct(SerializerInterface $serializer)
+    /**
+     * @var ResourceMetadataFactoryInterface
+     */
+    private $resourceMetadataFactory;
+
+    public function __construct(SerializerInterface $serializer, ResourceMetadataFactoryInterface $resourceMetadataFactory)
     {
         $this->serializer = $serializer;
+        $this->resourceMetadataFactory = $resourceMetadataFactory;
     }
 
     /**
@@ -158,9 +166,12 @@ class XmlResponderViewListener
                 break;
         }
 
-        $resourceType = $request->attributes->get('_resource_type');
+        $resourceClass = $request->attributes->get('_resource_class');
+        $resourceMetadata = $this->resourceMetadataFactory->create($resourceClass);
+        $context = $resourceMetadata->getAttribute('normalization_context', []);
+
         $response = new Response(
-            $this->serializer->serialize($controllerResult, self::FORMAT, $resourceType->getNormalizationContext()),
+            $this->serializer->serialize($controllerResult, self::FORMAT, $context),
             $status,
             ['Content-Type' => 'application/xml']
         );
@@ -177,12 +188,11 @@ dispatched by Symfony:
 
 # app/config/services.yml
 
-    xml_responder_view_listener:
-        class: "AppBundle\EventListener\XmlResponderViewListener"
-        arguments:
-            - @serializer
+    app.xml_responder_view_listener:
+        class: 'AppBundle\EventListener\XmlResponderViewListener'
+        arguments: [ '@api_platform.serializer', '@api_platform.metadata.resource.metadata_factory' ]
         tags:
-            - { name: "kernel.event_listener", event: "kernel.view", method: "onKernelView" }
+            - { name: 'kernel.event_listener', event: 'kernel.view', method: 'onKernelView' }
 ```
 
 Previous chapter: [Using external (JSON-LD) vocabularies](external-vocabularies.md)<br>
