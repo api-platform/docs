@@ -1,6 +1,6 @@
 # Validation
 
-DunglasApiBundle use the Symfony validator to validate entities.
+ApiPlatformBundle use the Symfony validator to validate entities.
 By default, it uses the default validation group, but this behavior is customizable.
 
 ## Using validation groups

@@ -1,11 +1,11 @@
 # The event system
 
-DunglasApiBundle leverages the [Symfony Event Dispatcher Component](http://symfony.com/doc/current/components/event_dispatcher/index.html)
+ApiPlatformBundle leverages the [Symfony Event Dispatcher Component](http://symfony.com/doc/current/components/event_dispatcher/index.html)
 to provide a powerful event system triggered in the object lifecycle.
 
 Additionally to [events triggered by the Symfony HTTP Kernel](http://symfony.com/doc/current/components/http_kernel/introduction.html#creating-an-event-listener)
 and [by Doctrine ORM](http://doctrine-orm.readthedocs.org/en/latest/reference/events.html#reference-events-lifecycle-events)
-(if you use it), DunglasApiBundle comes with its own set of events occurring during the handling of the request:
+(if you use it), ApiPlatformBundle comes with its own set of events occurring during the handling of the request:
 
 ## Retrieving list
 
