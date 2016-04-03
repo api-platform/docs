@@ -1,6 +1,6 @@
 # API Bundle
 
-DunglasApiBundle is an easy to use and powerful system to create [hypermedia-driven REST APIs](http://en.wikipedia.org/wiki/HATEOAS).
+ApiPlatformBundle is an easy to use and powerful system to create [hypermedia-driven REST APIs](http://en.wikipedia.org/wiki/HATEOAS).
 It is a component of the [API Platform framework](https://api-platform.com) and it can be used
 as a standalone bundle for [the Symfony framework](https://symfony.com).
 
@@ -40,7 +40,7 @@ This bundle is documented and tested with Behat (take a look at [the `features/`
 ## Official documentation
 
 1. [Getting Started](getting-started.md)
-  1. [Installing DunglasApiBundle](getting-started.md#installing-dunglasapibundle)
+  1. [Installing ApiPlatformBundle](getting-started.md#installing-apiplatformbundle)
   2. [Configuring the API](getting-started.md#configuring-the-api)
   3. [Mapping the entities](getting-started.md#mapping-the-entities)
   4. [Registering the services](getting-started.md#registering-the-services)

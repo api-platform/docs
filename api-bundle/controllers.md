@@ -1,15 +1,13 @@
 # Controllers
 
-The bundle provides a default controller class implementing CRUD operations: `Dunglas\ApiBundle\Controller\ResourceController`.
-Basically, this controller class extends the default controller class of Symfony's FrameworkBundle providing implementation
-of CRUD actions. It also provides convenient methods to retrieve the `Resource` class associated with the current request
-and to serialize entities using normalizers provided by the bundle.
+The bundle provides custom Json-LD response using the Symfony `Response` and `Controller`
+WIP : @todo clarify that
 
 ## Using a custom controller
 
 When [the event system](the-event-system.md) is not enough, it's possible to use custom controllers.
 
-Your custom controller should extend the `ResourceController` provided by this bundle.
+Your custom controller should extend the `Controller` provided by Symfony.
 
 Example of custom controller:
 
@@ -20,17 +18,22 @@ Example of custom controller:
 
 namespace AppBundle\Controller;
 
-use Dunglas\ApiBundle\Controller\ResourceController;
-use Symfony\Component\HttpFoundation\Request;
+use ApiPlatform\Core\JsonLd\Response;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
-class CustomController extends ResourceController
+/**
+ * Custom Controller.
+ *
+ * @author Kévin Dunglas <dunglas@gmail.com>
+ */
+class CustomController extends Controller
 {
-    // Customize the AppBundle:Custom:custom action
-    public function getAction(Request $request, $id)
+    /**
+     * @return \ApiPlatform\Core\JsonLd\Response
+     */
+    public function customAction($id)
     {
-        $this->get('logger')->info('This is my custom controller.');
-        
-        return parent::getAction($request, $id);
+        return new Response(sprintf('This is a custom action for %d.', $id));
     }
 }
 ```

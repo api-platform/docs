@@ -1,11 +1,10 @@
 # Getting started
 
-## Installing DunglasApiBundle
+## Installing ApiPlatformBundle
 
-If you are starting a new project, the easiest way to get DunglasApiBundle up, running and well integrated with other useful
+If you are starting a new project, the easiest way to get ApiPlatformBundle up, running and well integrated with other useful
 tools including [PHP Schema](http://php-schema.dunglas.com), [NelmioApiDocBundle](https://github.com/nelmio/NelmioApiDocBundle),
-[NelmioCorsBundle](https://github.com/nelmio/NelmioCorsBundle) and [Behat](http://behat.org) is to install [Dunglas's API
-Platform](https://github.com/dunglas/api-platform).
+[NelmioCorsBundle](https://github.com/nelmio/NelmioCorsBundle) and [Behat](http://behat.org) is to install [API Platform Standard Edition](https://github.com/api-platform/api-platform).
 It's a Symfony edition packaged with the best tools to develop a REST API and sensitive default settings.
 
 Alternatively, you can use [Composer](http://getcomposer.org) to install the standalone bundle in your project:
@@ -19,7 +18,7 @@ public function registerBundles()
 {
     $bundles = [
         // ...
-        new Dunglas\ApiBundle\DunglasApiBundle(),
+        new ApiPlatform\Core\Bridge\Symfony\Bundle\ApiPlatformBundle(),
         // ...
     ];
 
@@ -31,9 +30,8 @@ Register the routes of our API by adding the following lines to `app/config/rout
 
 ```yaml
 api:
-    resource: "."
-    type:     "api"
-    prefix:   "/api" # Optional
+    resource: '.'
+    type:     'api_platform'
 ```
 
 ## Configuring the API
@@ -43,9 +41,9 @@ api:
 The first step is to name your API. Add the following lines in `app/config/config.yml`:
 
 ```yaml
-dunglas_api:
-    title:       "Your API name"                    # The title of the API.
-    description: "The full description of your API" # The description of the API.
+api_platform:
+    title:                             'My Dummy API'
+    description:                       'This is a test API.'
 ```
 
 The name and the description you give will be accessible through the auto-generated Hydra documentation.
@@ -55,22 +53,22 @@ The name and the description you give will be accessible through the auto-genera
 Here's the complete configuration with the default:
 
 ```yaml
-# Default configuration for extension with alias: "dunglas_api"
-dunglas_api:
-    title:           "Your API name"                    # Required, the title of the API.
-    description:     "The full description of your API" # Required, the description of the API.
-    cache:           false                              # The caching service to use. Set to "dunglas_api.mapping.cache.apc" to enable APC metadata caching.
-    enable_fos_user: false                              # Enable the FOSUserBundle integration.
+# Default configuration for extension with alias: "api_platform"
+api_platform:
+    title:                             'My Dummy API'
+    description:                       'This is a test API.'
+    supported_formats:
+        jsonld:                        ['application/ld+json']
+        xml:                           ['application/xml', 'text/xml']
+    name_converter:                    'app.name_converter'
+    enable_fos_user:                   true
     collection:
-        filter_name:
-            order:   "order"                            # Keyword used for the order filter
-        order:       null                               # The default order of results. (supported by Doctrine: ASC and DESC)
+        order_parameter_name:          'order'
+        order:                         'ASC'
         pagination:
-            page_parameter_name:       page             # The name of the parameter handling the page number.
-            items_per_page:
-                number:                30               # The default number of items perm page in collections.
-                enable_client_request: false            # Allow the client to change the number of elements by page.
-                parameter_name:        itemsPerPage     # The name of the parameter to change the number of elements by page client side.
+            client_enabled:            true
+            client_items_per_page:     true
+            items_per_page:            3
 ```
 
 The name and the description you give will be accessible through the auto-generated Hydra documentation.
@@ -171,7 +169,7 @@ services:
 **You're done!**
 
 You now have a fully featured API exposing your Doctrine entities.
-Run the Symfony app (`app/console server:run`) and browse the API entrypoint at `http://localhost:8000/api`.
+Run the Symfony app (`bin/console server:run`) and browse the API entrypoint at `http://localhost:8000/api`.
 
 Interact with the API using a REST client (I recommend [Postman](https://chrome.google.com/webstore/detail/postman-rest-client/fdmmgilgnpjigdojojpjoooidkmcomcm))
 or an Hydra aware application (you should give a try to [Hydra Console](https://github.com/lanthaler/HydraConsole)). Take

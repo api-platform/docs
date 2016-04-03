@@ -1,6 +1,6 @@
 # Data providers
 
-To retrieve data that will be exposed by the API, DunglasApiBundle uses classes called data providers. A data provider
+To retrieve data that will be exposed by the API, ApiPlatformBundle uses classes called data providers. A data provider
 using [Doctrine ORM](http://www.doctrine-project.org/projects/orm.html) to retrieve data from a database is included with the bundle and is enabled by default. This data provider
 natively supports paged collections and filters. It can be used as is and fits perfectly with common usages.
 
@@ -76,14 +76,14 @@ it supports (in this case, the resource managing `AppBundle\Entity\MyEntity`).
 The previous custom data provider returns only full, non-paged collections. However for large collections, returning all
 the data set in one response is often not possible.
 In order to support pagination, implement a `getCollection()` method in your data provider that would return a 
-`Dunglas\ApiBundle\Model\PaginatorInterface` instead of an array.
+`ApiPlatform\Core\Api\PaginatorInterface` instead of an array.
 
-To create your own paginators, take a look at the Doctrine ORM paginator bridge: [`Dunglas\ApiBundle\Doctrine\Orm\Paginator`](/Doctrine/Orm/Paginator.php).
+To create your own paginators, take a look at the Doctrine ORM paginator bridge: [`ApiPlatform\Core\Bridge\Doctrine\Orm\Paginator`](Bridge/Doctrine/Orm/Paginator.php).
 
 ## Supporting filters
 
 To be able [to filter collections](filters.md), the Data Provider must be aware of registered filters to the given resource.
-The best way to learn how to create a filter aware data provider is too look at the default Doctrine ORM data provider: [`Dunglas\ApiBundle\Doctrine\Orm\DataProvider`](/Doctrine/Orm/DataProvider.php).
+The best way to learn how to create a filter aware data provider is too look at the default Doctrine ORM data provider: [`ApiPlatform\Core\Bridge\Doctrine\Orm\ItemDataProvider`](Bridge/Doctrine/Orm/ItemDataProvider.php).
 
 ## Extending the Doctrine Data Provider
 
