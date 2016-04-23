@@ -9,7 +9,7 @@ It's a Symfony edition packaged with the best tools to develop a REST API and se
 
 Alternatively, you can use [Composer](http://getcomposer.org) to install the standalone bundle in your project:
 
-`composer require dunglas/api-bundle`
+`composer require api-platform/core`
 
 Then, update your `app/config/AppKernel.php` file:
 
@@ -30,8 +30,9 @@ Register the routes of our API by adding the following lines to `app/config/rout
 
 ```yaml
 api:
-    resource: '.'
-    type:     'api_platform'
+    resource: "."
+    type:     "api"
+    prefix:   "/api" # Optional
 ```
 
 ## Configuring the API
@@ -53,25 +54,32 @@ The name and the description you give will be accessible through the auto-genera
 Here's the complete configuration with the default:
 
 ```yaml
-# Default configuration for extension with alias: "api_platform"
 api_platform:
-    title:                             'My Dummy API'
-    description:                       'This is a test API.'
+    title:           "Your API name"                    # Required, the title of the API.
+    description:     "The full description of your API" # Required, the description of the API.
     supported_formats:
-        jsonld:                        ['application/ld+json']
-        xml:                           ['application/xml', 'text/xml']
-    name_converter:                    'app.name_converter'
-    enable_fos_user:                   true
+        jsonld:    ['application/ld+json']
+    name_converter: null
+    enable_fos_user: false # Enable the FOSUserBundle integration.
+    enable_nelmio_api_doc: true # Enable the NelmioApiDocBundle integration.
     collection:
-        order_parameter_name:          'order'
-        order:                         'ASC'
+        order:       null                               # The default order of results. (supported by Doctrine: ASC and DESC)
+        order_parameter_name: "order" # The name of the parameter handling the sort direction
         pagination:
-            client_enabled:            true
-            client_items_per_page:     true
-            items_per_page:            3
-```
+            enabled: true # To enable or disable pagination for all resource collections by default.
+            client_enabled: false # To allow the client to enable or disable the pagination.
+            client_items_per_page: false # To allow the client to set the number of items per page.
+            items_per_page: 30 # The default number of items per page.
+            page_parameter_name:       page             # The name of the parameter handling the page number.
+            enabled_parameter_name: pagination # The name of the query parameter to enable or disable pagination.
+            items_per_page_parameter_name: itemsPerPage # The name of the query parameter to set the number of items per page.
+    metadata:
+        resource:
+            cache: api_platform.metadata.resource.cache.array # psr cache service
+        property:
+            cache: api_platform.metadata.resource.cache.array
 
-The name and the description you give will be accessible through the auto-generated Hydra documentation.
+```
 
 ## Mapping the entities
 
@@ -149,22 +157,65 @@ class Offer
 }
 ```
 
-## Registering the services
+## Registering resources
 
-Register the following services (for example in `app/config/services.yml`):
+A resource can be defined through Annotations, Yaml or XML. The following represents the minimal configuration to register a resource for Product and one for Offer. A resource is then represented by REST endpoints called [Operations](operations.md).
+
+<configurations>
+```php
+<?php
+// src/AppBundle/Entity/Product.php
+
+namespace AppBundle\Entity;
+
+use ApiPlatform\Core\Annotation\Resource;
+use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
+
+/**
+ * @ORM\Entity
+ * @Resource
+ */
+class Product
+{
+//...
+}
+
+// src/AppBundle/Entity/Offer.php
+
+namespace AppBundle\Entity;
+
+use ApiPlatform\Core\Annotation\Resource;
+use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
+
+/**
+ * @ORM\Entity
+ * @Resource
+ */
+class Offer
+{
+//...
+}
+```
 
 ```yaml
-services:
-    resource.product:
-        parent:    "api.resource"
-        arguments: [ "AppBundle\Entity\Product" ]
-        tags:      [ { name: "api.resource" } ]
+# src/AppBundle/Resources/config/resources.yml
+resources:
+  product:
+    class: 'AppBundle\Entity\Product'
+  offer:
+    class: 'AppBundle\Entity\Offer'
+```
 
     resource.offer:
         parent:    "api.resource"
         arguments: [ "AppBundle\Entity\Offer" ]
         tags:      [ { name: "api.resource" } ]
 ```
+
+
+</configurations>
 
 **You're done!**
 
