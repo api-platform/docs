@@ -19,7 +19,7 @@ public function registerBundles()
 {
     $bundles = [
         // ...
-        new Dunglas\ApiBundle\DunglasApiBundle(),
+        new ApiPlatform\Core\Bridge\Symfony\Bundle\ApiPlatformBundle(),
         // ...
     ];
 
@@ -32,7 +32,7 @@ Register the routes of our API by adding the following lines to `app/config/rout
 ```yaml
 api:
     resource: "."
-    type:     "api"
+    type:     "api_platform"
     prefix:   "/api" # Optional
 ```
 
@@ -43,7 +43,7 @@ api:
 The first step is to name your API. Add the following lines in `app/config/config.yml`:
 
 ```yaml
-dunglas_api:
+api_platform:
     title:       "Your API name"                    # The title of the API.
     description: "The full description of your API" # The description of the API.
 ```
@@ -56,21 +56,22 @@ Here's the complete configuration with the default:
 
 ```yaml
 # Default configuration for extension with alias: "dunglas_api"
-dunglas_api:
+api_platform:
     title:           "Your API name"                    # Required, the title of the API.
     description:     "The full description of your API" # Required, the description of the API.
-    cache:           false                              # The caching service to use. Set to "dunglas_api.mapping.cache.apc" to enable APC metadata caching.
+    supported_formats: ['jsonld']                       # Enabled api formats, first one will be default
     enable_fos_user: false                              # Enable the FOSUserBundle integration.
     collection:
-        filter_name:
-            order:   "order"                            # Keyword used for the order filter
+        order_parameter_name: 'order'                   # Name of the query parameter to order results
         order:       null                               # The default order of results. (supported by Doctrine: ASC and DESC)
         pagination:
-            page_parameter_name:       page             # The name of the parameter handling the page number.
-            items_per_page:
-                number:                30               # The default number of items perm page in collections.
-                enable_client_request: false            # Allow the client to change the number of elements by page.
-                parameter_name:        itemsPerPage     # The name of the parameter to change the number of elements by page client side.
+            enabled: true                               # Enable pagination
+            page_parameter_name: 'page'                 # The name of the parameter handling the page number.
+            items_per_page: 30                          # The default number of items perm page in collections.
+            client_enabled: false                       # Allow the client to change the number of elements by page.
+            client_items_per_page: 'itemsPerPage'       # TODO: What is this?.
+            enabled_parameter_name: pagination          # Query parameter to enable/disable pagination
+            items_per_page_parameter_name: itemsPerPage # Query parameter to change number of items per page
 ```
 
 The name and the description you give will be accessible through the auto-generated Hydra documentation.
