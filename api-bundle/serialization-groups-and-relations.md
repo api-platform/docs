@@ -197,7 +197,7 @@ The following rules apply when denormalizating embedded relations:
 the data provider and any changes in the embedded relation will be applied to that object.
 * if no `@id` key exists, a new object will be created containing data provided in the embedded JSON document.
 
-You can create as relation embedding levels as you want.
+You can create as many embedding levels as you want.
 
 ### Name conversion
 
