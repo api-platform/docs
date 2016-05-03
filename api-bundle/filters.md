@@ -37,7 +37,7 @@ services:
 
     resource.offer:
         parent:    "api.resource"
-        arguments: [ "AppBundle\Entity\Offer" ]
+        arguments: [ "AppBundle\\Entity\\Offer" ]
         calls:
             -      method:    "initFilters"
                    arguments: [ [ "@resource.offer.search_filter" ] ]
@@ -64,7 +64,7 @@ services:
 
     resource.offer:
         parent:    "api.resource"
-        arguments: [ "AppBundle\Entity\Offer"] 
+        arguments: [ "AppBundle\\Entity\\Offer" ]
         calls:
             -      method:    "initFilters"
                    arguments: [ [ "@resource.offer.search_filter" ] ]
@@ -102,7 +102,7 @@ services:
 
     resource.offer:
         parent:    "api.resource"
-        arguments: [ "AppBundle\Entity\Offer"] 
+        arguments: [ "AppBundle\\Entity\\Offer" ]
         calls:
             -      method:    "initFilters"
                    arguments: [ [ "@resource.offer.date_filter" ] ]
@@ -134,7 +134,7 @@ services:
 
     resource.offer:
         parent:    "api.resource"
-        arguments: [ "AppBundle\Entity\Offer"] 
+        arguments: [ "AppBundle\\Entity\\Offer" ]
         calls:
             -      method:    "initFilters"
                    arguments: [ [ "@resource.offer.date_filter" ] ]
@@ -163,7 +163,7 @@ services:
 
     resource.offer:
         parent:    "api.resource"
-        arguments: [ "AppBundle\Entity\Offer"] 
+        arguments: [ "AppBundle\\Entity\\Offer" ]
         calls:
             -      method:    "initFilters"
                    arguments: [ [ "@resource.offer.order_filter" ] ]
@@ -225,7 +225,7 @@ services:
 
     resource.offer:
         parent:    "api.resource"
-        arguments: [ "AppBundle\Entity\Offer"]
+        arguments: [ "AppBundle\\Entity\\Offer" ]
         calls:
             -      method:    "initFilters"
                    arguments: [ [ "@resource.offer.search_filter", "@resource.offer.order_filter" ] ]
@@ -317,11 +317,11 @@ Finally, register the custom filter:
 
 services:
     resource.offer.custom_order_filter:
-        class:    "AppBundle\Filter\CustomOrderFilter"
+        class:    AppBundle\Filter\CustomOrderFilter
 
     resource.offer:
         parent:    "api.resource"
-        arguments: [ "AppBundle\Entity\Offer" ]
+        arguments: [ "AppBundle\\Entity\\Offer" ]
         calls:
             -      method:    "initFilters"
                    arguments: [ [ "@resource.offer.custom_order_filter" ] ]

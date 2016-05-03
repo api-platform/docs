@@ -28,14 +28,14 @@ The following `Resource` definition exposes a `GET` operation for it's collectio
 ```yaml
 services:
     resource.product.collection_operation.get:
-        class:     "Dunglas\ApiBundle\Api\Operation\Operation"
+        class:     Dunglas\ApiBundle\Api\Operation\Operation
         public:    false
         factory:   [ "@api.operation_factory", "createCollectionOperation" ]
         arguments: [ "@resource.product", "GET" ]
 
     resource.product:
         parent:    "api.resource"
-        arguments: [ "AppBundle\Entity\Product" ]
+        arguments: [ "AppBundle\\Entity\\Product" ]
         calls:
             -      [ "initCollectionOperations", [ [ "@resource.product.collection_operation.get" ] ] ]
         tags:      [ { name: "api.resource" } ]
@@ -49,7 +49,7 @@ with an empty array as first parameter:
 
     resource.product:
         parent:    "api.resource"
-        arguments: [ "AppBundle\Entity\Product" ]
+        arguments: [ "AppBundle\\Entity\\Product" ]
         calls:
             -      [ "initItemOperations", [ [ ] ] ]
             -      [ "initCollectionOperations", [ [ "@resource.product.collection_operation.get" ] ] ]
@@ -74,19 +74,19 @@ operations in the Hydra vocab.
 
 ```yaml
     resource.product.item_operation.get:
-        class:     "Dunglas\ApiBundle\Api\Operation\Operation"
+        class:     Dunglas\ApiBundle\Api\Operation\Operation
         public:    false
         factory:   [ "@api.operation_factory", "createItemOperation" ]
         arguments: [ "@resource.product", "GET" ]
 
     resource.product.item_operation.put:
-        class:     "Dunglas\ApiBundle\Api\Operation\Operation"
+        class:     Dunglas\ApiBundle\Api\Operation\Operation
         public:    false
         factory:   [ "@api.operation_factory", "createItemOperation" ]
         arguments: [ "@resource.product", "PUT" ]
 
     resource.product.item_operation.custom_get:
-        class:   "Dunglas\ApiBundle\Api\Operation\Operation"
+        class:   Dunglas\ApiBundle\Api\Operation\Operation
         public:  false
         factory: [ "@api.operation_factory", "createItemOperation" ]
         arguments:
@@ -102,7 +102,7 @@ operations in the Hydra vocab.
 
     resource.product:
         parent:    "api.resource"
-        arguments: [ "AppBundle\Entity\Product" ]
+        arguments: [ "AppBundle\\Entity\\Product" ]
         calls:
             -      method:    "initItemOperations"
                    arguments: [ [ "@resource.product.item_operation.get", "@resource.product.item_operation.put", "@resource.product.item_operation.custom_get" ] ]
