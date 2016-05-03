@@ -192,11 +192,12 @@ services:
 ```
 
 The following rules apply when denormalizating embedded relations:
+
 * if a `@id` key is present in the embedded resource, the object corresponding to the given URI will be retrieved trough
 the data provider and any changes in the embedded relation will be applied to that object.
 * if no `@id` key exists, a new object will be created containing data provided in the embedded JSON document.
 
-You can create as relation embedding levels as you want.
+You can create as many embedding levels as you want.
 
 ### Name conversion
 
