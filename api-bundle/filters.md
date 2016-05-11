@@ -277,10 +277,10 @@ work properly.
 
 ### Creating custom Doctrine ORM filters
 
-Doctrine ORM filters must implement the `Dunglas\ApiBundle\Doctrine\Orm\FilterInterface`.
+Doctrine ORM filters must implement the `Dunglas\ApiBundle\Doctrine\Orm\Filter\FilterInterface`.
 They can interact directly with the Doctrine `QueryBuilder`.
 
-A convenient abstract class is also shipped with the bundle: `Dunglas\ApiBundle\Doctrine\Orm\AbstractFilter`
+A convenient abstract class is also shipped with the bundle: `Dunglas\ApiBundle\Doctrine\Orm\Filter\AbstractFilter`
 
 ### Overriding extraction of properties from the request
 
