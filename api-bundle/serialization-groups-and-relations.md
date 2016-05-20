@@ -171,6 +171,8 @@ The generated JSON with previous settings will be like the following:
 }
 ```
 
+Note that in order to optimize such embedded relations, the default doctrine dataprovider will automatically join entities whose relations are defined as [`EAGER`](http://doctrine-orm.readthedocs.io/projects/doctrine-orm/en/latest/reference/annotations-reference.html#manytoone).
+
 ### Denormalization
 
 It is also possible to embed a relation in `PUT` and `POST` requests. To enable that feature, serialization groups must be

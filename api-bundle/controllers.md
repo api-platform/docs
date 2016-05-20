@@ -39,7 +39,7 @@ Custom controllers are often used with [custom operations](operations.md). If yo
 for your custom controller, in order for it to appear in the documentation, you need to register that controller in 
 the Symfony routing system yourself.
 
-Note that you shouldn't use `@Route` annotations, as this will cause bugs. The bundle auto-registers routes within Symfony2, so you don't need to use `@Route` annotations.
+Note that you shouldn't use `@Route` annotations, as this will cause bugs. The bundle auto-registers routes within Symfony, so you don't need to use `@Route` annotations.
 
 Previous chapter: [Resources](resources.md)<br>
 Next chapter: [Using external (JSON-LD) vocabularies](external-vocabularies.md)
