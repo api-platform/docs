@@ -168,7 +168,7 @@ If you use another service definition format than YAML, you can use the
 
 ## Order filter
 
-The order filter allows to order a collection by given properties.
+The order filter allows to order a collection against the given properties.
 
 Syntax: `?order[property]=<asc|desc>`
 
@@ -212,7 +212,7 @@ class Offer
 ```
 
 Given that the collection endpoint is `/offers`, you can filter offers by name in
-ascending order and then by ID on descending order with the following query: `/offers?order[name]=desc&order[id]=asc`.
+ascending order and then by ID in descending order with the following query: `/offers?order[name]=desc&order[id]=asc`.
 
 By default, whenever the query does not specify the direction explicitly (e.g: `/offers?order[name]&order[id]`), filters will not be applied unless you configure a default order direction to use:
 
@@ -333,7 +333,7 @@ It will return all offers with `sold` equals 1
 ### Using a custom order query parameter name
 
 A conflict will occur if `order` is also the name of a property with the search filter enabled.
-Hopefully, the query parameter name to use is configurable:
+Luckily, the query parameter name to use is configurable:
 
 ```yaml
 
@@ -412,7 +412,7 @@ interface.
 What is the new way to register custom filters ?
 Don't forget to register your custom filters with the `Dunglas\ApiBundle\Api\Resource::initFilters()` method.
 
-If you use [custom data providers](data-providers.md), they must support filtering and be aware of actives filters to
+If you use [custom data providers](data-providers.md), they must support filtering and be aware of active filters to
 work properly.
 
 ### Creating custom Doctrine ORM filters

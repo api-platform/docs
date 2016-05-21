@@ -1,18 +1,13 @@
 # Data providers
 
-To retrieve data that will be exposed by the API, DunglasApiBundle uses classes called data providers. A data provider
-using [Doctrine ORM](http://www.doctrine-project.org/projects/orm.html) to retrieve data from a database is included with the bundle and is enabled by default. This data provider
-natively supports paged collections and filters. It can be used as is and fits perfectly with common usages.
+To retrieve data exposed by the API, DunglasApiBundle uses classes called *data providers*. A data provider using [Doctrine ORM](http://www.doctrine-project.org/projects/orm.html) to retrieve data from a database is included with the bundle and is enabled by default. This data provider natively supports paged collections and filters. It can be used as is and fits perfectly with common usages.
 
 But sometime, you want to retrieve data from other sources such as a webservice, ElasticSearch, MongoDB or another ORM.
-Custom data providers can be used to do so. A project can include as much data providers as it needs. The first able to
-retrieve data for a given resource will be used.
+Custom data providers can be used to do so. A project can include as many data providers as it needs. The first able to retrieve data for a given resource will be used.
 
 ## Creating a custom data provider
 
-Data providers must return a collection of items and specific items for a given resource when requested. In the following
-example, we will create a custom provider returning data from a static list of objects. Fell free to adapt it to match your
-own needs.
+Data providers must return a collection of items and specific items for a given resource when requested. In the following example, we will create a custom provider returning data from a static list of objects. Feel free to adapt it to match your own needs.
 
 Let's start with the data provider itself:
 
@@ -68,15 +63,13 @@ services:
         tags:  [ { name: "api.data_provider", priority: 1 } ]
 ```
 
-This data provider is now up and running. It will take precedence over the default Doctrine ORM data provider for each resource
-it supports (in this case, the resource managing `AppBundle\Entity\MyEntity`).
+This data provider is now up and running. It will take precedence over the default Doctrine ORM data provider for each resource it supports (in this case, the resource managing `AppBundle\Entity\MyEntity`).
 
 ## Returning a paged collection
 
 The previous custom data provider returns only full, non-paged collections. However for large collections, returning all
 the data set in one response is often not possible.
-In order to support pagination, implement a `getCollection()` method in your data provider that would return a 
-`Dunglas\ApiBundle\Model\PaginatorInterface` instead of an array.
+In order to support pagination, implement a `getCollection()` method in your data provider that would return a `Dunglas\ApiBundle\Model\PaginatorInterface` instead of an array.
 
 To create your own paginators, take a look at the Doctrine ORM paginator bridge: [`Dunglas\ApiBundle\Doctrine\Orm\Paginator`](/Doctrine/Orm/Paginator.php).
 
@@ -115,7 +108,7 @@ class MyEntityDataProvider extends DataProvider
 
         return new Paginator($doctrineOrmPaginator);
     }
-    
+
     public function supports(ResourceInterface $resource)
     {
         return 'AppBundle\Entity\MyEntity' === $resource->getEntityClass();

@@ -23,7 +23,7 @@ By default, the following operations are automatically enabled:
 If you want to disable some operations (e.g. the `DELETE` operation), you must create manually applicable operations using
 the operation factory class, `Dunglas\ApiBundle\Api\Operation\OperationFactory::createCollectionOperation()` or/and `Dunglas\ApiBundle\Api\Operation\OperationFactory::createItemOperation()` methods and then, register it in the resource with `Dunglas\ApiBundle\Api/Resource::initCollectionOperations` or/and `Dunglas\ApiBundle\Api/Resource::initItemOperations`.
 
-The following `Resource` definition exposes a `GET` operation for it's collection but not the `POST` one:
+The following `Resource` definition exposes a `GET` operation for its collection but not the `POST` one:
 
 ```yaml
 services:
@@ -41,7 +41,7 @@ services:
         tags:      [ { name: "api.resource" } ]
 ```
 
-However, in the following example items operations will still be automatically registered. To disable them, call `initItemOperations`
+However, in the following example item operations will still be automatically registered. To disable them, call `initItemOperations`
 with an empty array as first parameter:
 
 ```yaml
@@ -58,19 +58,17 @@ with an empty array as first parameter:
 
 ## Creating custom operations
 
-DunglasApiBundle allows to register custom operations for collections and items.
+DunglasApiBundle allows registering custom operations for collections and items.
 Custom operations allow to customize routing information (like the URL and the HTTP method),
 the controller to use (default to the built-in action of the `ResourceController` applicable
-for the given HTTP method) and a context that will be passed to documentation generators.
+for the given HTTP method) and a context that will be passed to the documentation generators.
 
 A convenient factory is provided to build `Dunglas\ApiBundle\Api\Operation\Operation` instances.
-This factory guesses good default values for options such as the route name and its associated URL
-by inspecting the given `Resource` instance. All guessed values can be overridden.
+This factory guesses good default values for options such as the route name and its associated URL by inspecting the given `Resource` instance. All guessed values can be overridden.
 
 If you want to use custom controller action, [refer to the dedicated documentation](controllers.md).
 
-DunglasApiBundle is smart enough to automatically register routes in the Symfony routing system and to document
-operations in the Hydra vocab.
+DunglasApiBundle is smart enough to automatically register routes in the Symfony routing system and to document operations in the Hydra vocab.
 
 ```yaml
     resource.product.item_operation.get:
