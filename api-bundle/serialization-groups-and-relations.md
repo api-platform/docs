@@ -171,11 +171,11 @@ The generated JSON with previous settings will be like the following:
 }
 ```
 
-Note that in order to optimize such embedded relations, the default doctrine dataprovider will automatically join entities whose relations are defined as [`EAGER`](http://doctrine-orm.readthedocs.io/projects/doctrine-orm/en/latest/reference/annotations-reference.html#manytoone).
+**Note: in order to optimize such embedded relations, the default doctrine dataprovider will automatically join entities whose relations are defined as [`EAGER`](http://doctrine-orm.readthedocs.io/projects/doctrine-orm/en/latest/reference/annotations-reference.html#manytoone) avoiding extra queries to be executed when serializing the sub-objects.**
 
 ### Denormalization
 
-It is also possible to embed a relation in `PUT` and `POST` requests. To enable that feature, serialization groups must be
+It is also possible to embed a relation in `PUT` and `POST` requests. To enable that feature, the serialization groups must be
 set the same way as normalization and the service definition must be like the following:
 
 ```yaml
@@ -220,19 +220,19 @@ services:
 
 ### Entity identifier case
 
-Actually we identify the entity identifier from [Doctrine Identifier](http://doctrine-orm.readthedocs.org/en/latest/reference/basic-mapping.html#identifiers-primary-keys).
+At the moment we identify the entity identifier based on the [Doctrine Identifier](http://doctrine-orm.readthedocs.org/en/latest/reference/basic-mapping.html#identifiers-primary-keys).
 We don't support entity resource with multiple identifier.
 
-The entity identifier is never returned like other properties : it's a part of the URI contained in `@id` field. 
-So in the `/apidoc` endpoint : identifier not appear in the properties list.
+The entity identifier is never returned like other properties : it is a part of the URI contained in the `@id` field. 
+So in the `/apidoc` endpoint the identifier will not appear in the properties list.
 
 #### Entity identifier writable
 
-In some case, you will be able to set from the client the identifier of a resource. (like a slug for example)
-So, in this case the identifier property must become a writable class property in the `/apidoc` endpoint.
+In some cases, you will want to set the identifier of a resource from the client (like a slug for example).
+In this case the identifier property must become a writable class property in the `/apidoc` endpoint.
 
 To do this you simply have to : 
-* create a a setter for identifier in the entity
+* create a setter for identifier in the entity
 * add the denormalization group to the property if you use a specific denormalization group
 
 Previous chapter: [Filters](filters.md)<br>
