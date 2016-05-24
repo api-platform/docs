@@ -3,7 +3,7 @@
 ## Using serialization groups
 
 Symfony 2.7 introduced [serialization (and deserialization) groups support](http://symfony.com/blog/new-in-symfony-2-7-serialization-groups)
-in the Serializer component. Specifying to the API system the groups to use is damn easy:
+in the Serializer component. Specifying to the API system the groups to use is really simple:
 
 ```yaml
 # app/config/services.yml
