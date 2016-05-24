@@ -63,7 +63,7 @@ var app = angular
 ## ng-admin
 
 If you want to use [ng-admin](https://github.com/marmelab/ng-admin), set the [Restangular](#restangular) config,
-then create your entities as in the following example :
+then create your entities like in the following example :
 
 ```javascript
 var nga = NgAdminConfigurationProvider;

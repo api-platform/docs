@@ -20,11 +20,11 @@ The search filter supports `exact`, `partial`, `start`, `end`, and `word_start` 
 - `partial` strategy uses `LIKE %text%` to search for fields that containing the text.
 - `start` strategy uses `LIKE text%` to search for fields that starts with text.
 - `end` strategy uses `LIKE %text` to search for fields that ends with text.
-- `word_start` strategy uses `LIKE text% OR LIKE % text%` to search for fields that containing the word starts with text.
+- `word_start` strategy uses `LIKE text% OR LIKE % text%` to search for fields that contains the word starting with `text`.
 
 Prepend the letter `i` to the filter if you want it to be case insensitive. For example `ipartial` or `iexact`. Note that this will use the `LOWER` function and **will** impact performances if there is no [*function-based index*](http://use-the-index-luke.com/sql/where-clause/functions/case-insensitive-search).
 
-In the following, we will see how to allow filtering a list of e-commerce offers:
+In the following example, we will see how to allow the filtering of a list of e-commerce offers:
 
 ```yaml
 
@@ -146,7 +146,7 @@ If you use another service definition format than YAML, you can use the
 
 ## Order filter
 
-The order filter allows to order a collection by given properties.
+The order filter allows to order a collection against the given properties.
 
 Syntax: `?order[property]=<asc|desc>`
 
@@ -171,7 +171,7 @@ services:
 ```
 
 Given that the collection endpoint is `/offers`, you can filter offers by name in
-ascending order and then by ID on descending order with the following query: `/offers?order[name]=desc&order[id]=asc`.
+ascending order and then by ID in descending order with the following query: `/offers?order[name]=desc&order[id]=asc`.
 
 By default, whenever the query does not specify the direction explicitly (e.g: `/offers?order[name]&order[id]`), filters will not be applied unless you configure a default order direction to use:
 
@@ -190,7 +190,7 @@ services:
 ### Using a custom order query parameter name
 
 A conflict will occur if `order` is also the name of a property with the search filter enabled.
-Hopefully, the query parameter name to use is configurable:
+Luckily, the query parameter name to use is configurable:
 
 ```yaml
 
@@ -272,7 +272,7 @@ interface.
 
 Don't forget to register your custom filters with the `Dunglas\ApiBundle\Api\Resource::initFilters()` method.
 
-If you use [custom data providers](data-providers.md), they must support filtering and be aware of actives filters to
+If you use [custom data providers](data-providers.md), they must support filtering and be aware of active filters to
 work properly.
 
 ### Creating custom Doctrine ORM filters
