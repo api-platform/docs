@@ -1,6 +1,7 @@
 # Validation
 
-DunglasApiBundle uses the Symfony validator to validate entities.
+API Platform uses the Symfony validator to validate entities.
+
 By default, it uses the default validation group, but this behavior is customizable.
 
 ## Using validation groups
@@ -8,16 +9,7 @@ The built-in controller is able to leverage Symfony's [validation groups](http:/
 
 You can customize them by editting your service declaration and add the groups you want to use when the validation occurs:
 
-```yaml
-services:
-    resource.product:
-        parent:    "api.resource"
-        arguments: [ "AppBundle\Entity\Product" ]
-        calls:
-            -      method:    "initValidationGroups"
-                   arguments: [ [ "group1", "group2" ] ]
-        tags:      [ { name: "api.resource" } ]
-```
+TODO: snippet using annotations
 
 With the previous definition, the validations groups `group1` and `group2` will be used when the validation occurs.
 

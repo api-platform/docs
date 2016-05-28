@@ -1,6 +1,6 @@
 # API Bundle
 
-DunglasApiBundle is an easy to use and powerful system to create [hypermedia-driven REST APIs](http://en.wikipedia.org/wiki/HATEOAS).
+ApiPlatformBundle is an easy to use and powerful system to create [hypermedia-driven REST APIs](http://en.wikipedia.org/wiki/HATEOAS).
 It is a component of the [API Platform framework](https://api-platform.com) and it can be used
 as a standalone bundle for [the Symfony framework](https://symfony.com).
 
@@ -40,7 +40,7 @@ This bundle is documented and tested with Behat (take a look at [the `features/`
 ## Official documentation
 
 1. [Getting Started](getting-started.md)
-  1. [Installing DunglasApiBundle](getting-started.md#installing-dunglasapibundle)
+  1. [Installing ApiPlatformBundle](getting-started.md#installing-apiplatformbundle)
   2. [Configuring the API](getting-started.md#configuring-the-api)
   3. [Mapping the entities](getting-started.md#mapping-the-entities)
   4. [Registering the services](getting-started.md#registering-the-services)
@@ -81,22 +81,20 @@ This bundle is documented and tested with Behat (take a look at [the `features/`
   5. [Deleting item](the-event-system.md#deleting-item)
   6. [JSON-LD context builder](the-event-system.md#json-ld-context-builder)
   7. [Registering an event listener](the-event-system.md#registering-an-event-listener)
-9. [Resources](resources.md)
-  1. [Using a custom `Resource` class](resources.md#using-a-custom-resource-class)
-10. [Controllers](controllers.md)
+9. [Controllers](controllers.md)
   1. [Using a custom controller](controllers.md#using-a-custom-controller)
-11. [FOSUserBundle integration](fosuser-bundle.md#fosuser-bundle-integration)
+10. [FOSUserBundle integration](fosuser-bundle.md#fosuser-bundle-integration)
   1. [Creating a `User` entity with serialization groups](fosuser-bundle.md#creating-a-user-entity-with-serialization-groups)
-12. [Using external (JSON-LD) vocabularies](external-vocabularies.md)
-13. [Content Negotiation](content-negotiation.md)
+11. [Using external (JSON-LD) vocabularies](external-vocabularies.md)
+12. [Content Negotiation](content-negotiation.md)
   1. [Enabling several formats](content-negotiation.md#enabling-several-formats)
   2. [Registering a custom format in the Negotiation library](content-negotiation.md#registering-a-custom-format-in-the-Negotiation-library)
   3. [Registering a custom serializer](content-negotiation.md#registering-a-custom-serializer)
   4. [Creating a responder](content-negotiation.md#creating-a-responder)
-15. [Performances](performances.md)
+13. [Performances](performances.md)
   1. [Enabling the metadata cache](performances.md#enabling-the-metadata-cache)
 14. [Security](security.md) 
-16. [AngularJS integration](angular-integration.md)
+15. [AngularJS integration](angular-integration.md)
 
 ## Other resources
 
