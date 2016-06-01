@@ -235,4 +235,4 @@ To do this you simply have to :
 * add the denormalization group to the property if you use a specific denormalization group
 
 Previous chapter: [Filters](filters.md)<br>
-Next chapter: [Validation](validation.md)
+Next chapter: [Resources path generators](resource-path-generator.md)

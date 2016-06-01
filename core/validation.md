@@ -19,5 +19,5 @@ You may also pass in a [group sequence](http://symfony.com/doc/current/book/vali
 
 If you need to dynamically determine which validation groups to use for an entity in different scenarios, just pass in a [callable](http://php.net/manual/en/language.types.callable.php). The callback will receive the entity object as its first argument, and should return an array of group names or a [group sequence](http://symfony.com/doc/current/book/validation.html#group-sequence).
 
-Previous chapter: [Serialization groups and relations](serialization-groups-and-relations.md)<br>
+Previous chapter: [Resources path generators](resource-path-generator.md)<br>
 Next chapter: [The event system](the-event-system.md)
