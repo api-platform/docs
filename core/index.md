@@ -40,11 +40,10 @@ This bundle is documented and tested with Behat (take a look at [the `features/`
 ## Official documentation
 
 1. [Getting Started](getting-started.md)
-  1. [Installing ApiPlatformBundle](getting-started.md#installing-apiplatformbundle)
-  2. [Configuring the API](getting-started.md#configuring-the-api)
+  1. [Installing API Platform Core](getting-started.md#installing-api-platform-core)
+  2. [Before reading this documentation](getting-started.md#before-reading-this-documentation)
   3. [Mapping the entities](getting-started.md#mapping-the-entities)
-  4. [Registering the services](getting-started.md#registering-the-services)
-2. [NelmioApiDocBundle integration](nelmio-api-doc.md)
+2. [Configuration](configuration.md)
 3. [Operations](operations.md)
   1. [Disabling operations](operations.md#disabling-operations)
   2. [Creating custom operations](operations.md#creating-custom-operations)
@@ -83,18 +82,19 @@ This bundle is documented and tested with Behat (take a look at [the `features/`
   7. [Registering an event listener](the-event-system.md#registering-an-event-listener)
 9. [Controllers](controllers.md)
   1. [Using a custom controller](controllers.md#using-a-custom-controller)
-10. [FOSUserBundle integration](fosuser-bundle.md#fosuser-bundle-integration)
-  1. [Creating a `User` entity with serialization groups](fosuser-bundle.md#creating-a-user-entity-with-serialization-groups)
-11. [Using external (JSON-LD) vocabularies](external-vocabularies.md)
-12. [Content Negotiation](content-negotiation.md)
+10. [Using external (JSON-LD) vocabularies](external-vocabularies.md)
+11. [Content Negotiation](content-negotiation.md)
   1. [Enabling several formats](content-negotiation.md#enabling-several-formats)
   2. [Registering a custom format in the Negotiation library](content-negotiation.md#registering-a-custom-format-in-the-Negotiation-library)
   3. [Registering a custom serializer](content-negotiation.md#registering-a-custom-serializer)
   4. [Creating a responder](content-negotiation.md#creating-a-responder)
-13. [Performances](performances.md)
+12. [Performances](performances.md)
   1. [Enabling the metadata cache](performances.md#enabling-the-metadata-cache)
-14. [Security](security.md) 
-15. [AngularJS integration](angular-integration.md)
+13. [Security](security.md)
+14. [NelmioApiDocBundle integration](nelmio-api-doc.md)
+15. [FOSUserBundle integration](fosuser-bundle.md#fosuser-bundle-integration)
+  1. [Creating a `User` entity with serialization groups](fosuser-bundle.md#creating-a-user-entity-with-serialization-groups)
+16. [AngularJS integration](angular-integration.md)
 
 ## Other resources
 
@@ -102,10 +102,11 @@ This bundle is documented and tested with Behat (take a look at [the `features/`
 
 * [LoopBackApiBundle](https://github.com/theofidry/LoopBackApiBundle): provides a set of Doctrine ORM filters for more advanced query operations
 
-### Other resources
+### Other documentations
 
+* (english) [Discovering API Platform v2](https://dunglas.fr/2016/05/the-first-alpha-of-api-platform-2-0-is-available/)
 * (english) [Create API-First Web Apps with API Platform, a PHP Framework](http://blog.runscope.com/posts/create-api-first-web-apps-with-api-platform-a-php-framework)
+* (french) [Tour d'horizon des changements dans API Platform v2](https://les-tilleuls.coop/fr/blog/article/la-premiere-alpha-d-api-platform-2-0-est-disponible)
 * (french) [A la découverte de API Platform (Symfony Live Paris 2015)](https://dunglas.fr/2015/04/mes-slides-du-symfony-live-2015-a-la-decouverte-de-api-platform/)
 * (french) [API-first et Linked Data avec Symfony (sfPot Lille 2015)](https://les-tilleuls.coop/slides/dunglas/slides-sfPot-2015-01-15/#/)
 * (french) [Behat PHP code coverage](http://www.kitpages.fr/fr/cms/204/behat-php-code-coverage)
-

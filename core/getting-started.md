@@ -1,12 +1,14 @@
 # Getting started
 
-## Installing API Platform
+## Installing API Platform Core
 
-If you are starting a new project, the easiest way to get API Platform up is to install [API Platform Standard Edition](https://github.com/api-platform/api-platform). It ships with very convenient tools such as [the schema generator](../schema-generator/), [NelmioApiDocBundle](https://github.com/nelmio/NelmioApiDocBundle),
-[NelmioCorsBundle](https://github.com/nelmio/NelmioCorsBundle) and [Behat](http://behat.org).
-It's a Symfony edition packaged with the best tools to develop a REST API and sensitive default settings.
+If you are starting a new project, the easiest way to get API Platform up is to install the [API Platform Standard Edition](https://github.com/api-platform/api-platform).
+It ships with the API Platform Core library integrated with [the Symfony framework](https://symfony.com), [the schema generator](../schema-generator/),
+[Doctrine ORM](www.doctrine-project.org), [NelmioApiDocBundle](https://github.com/nelmio/NelmioApiDocBundle), [NelmioCorsBundle](https://github.com/nelmio/NelmioCorsBundle)
+and [Behat](http://behat.org).
+Basically, it is a Symfony edition packaged with the best tools to develop a REST API and sensitive default settings.
 
-Alternatively, you can use [Composer](http://getcomposer.org) to install the standalone bundle in your project:
+Alternatively, you can use [Composer](http://getcomposer.org) to install the standalone bundle in an existing Symfony project:
 
 `composer require api-platform/core`
 
@@ -30,95 +32,25 @@ Register the routes of our API by adding the following lines to `app/config/rout
 ```yaml
 api:
     resource: '.'
-    type:     'api'
+    type:     'api_platform'
     prefix:   '/api' # Optional
 ```
 
-## Configuring the API
+There is no mandatory configuration. However, a lot of [configuration parameters](configuration.md) are available.
 
-### Minimal configuration
+## Before reading this documentation
 
-The first step is to name your API. Add the following lines in `app/config/config.yml`:
-
-```yaml
-api_platform:
-    title:       'Your API name'                    # The title of the API.
-    description: 'The full description of your API' # The description of the API.
-```
-
-The name and the description you give will be accessible through the auto-generated Hydra documentation.
-
-### Full configuration
-
-Here's the complete configuration with the default:
-
-```yaml
-api_platform:
-
-    # The title of the API.
-    title:                ~ # Required
-
-    # The description of the API.
-    description:          ~ # Required
-
-    # The list of enabled formats. The first one will be the default.
-    supported_formats:
-
-        # Prototype
-        format:
-            mime_types:           []
-
-    # Specify a name converter to use.
-    name_converter:       null
-
-    # Enable the FOSUserBundle integration.
-    enable_fos_user:      false
-
-    # Enable the Nelmio Api doc integration.
-    enable_nelmio_api_doc:  true
-    collection:
-
-        # The default order of results.
-        order:                null
-
-        # The name of the query parameter to order results.
-        order_parameter_name:  order
-        pagination:
-
-            # To enable or disable pagination for all resource collections by default.
-            enabled:              true
-
-            # To allow the client to enable or disable the pagination.
-            client_enabled:       false
-
-            # To allow the client to set the number of items per page.
-            client_items_per_page:  false
-
-            # The default number of items per page.
-            items_per_page:       30
-
-            # The default name of the parameter handling the page number.
-            page_parameter_name:  page
-
-            # The name of the query parameter to enable or disable pagination.
-            enabled_parameter_name:  pagination
-
-            # The name of the query parameter to set the number of items per page.
-            items_per_page_parameter_name:  itemsPerPage
-    metadata:
-        resource:
-
-            # Cache service for resource metadata.
-            cache:                api_platform.metadata.resource.cache.array
-        property:
-
-            # Cache service for property metadata.
-            cache:                api_platform.metadata.property.cache.array
-```
+If you haven't read it already, take a look at [the "Creating your first API with API Platform, in 5 minutes" guide](../getting-started/api.md).
+Using the schema generator is not necessary to use API Platform Core. But the "Exposing the API" section of this tutorial
+covers basic concepts required to understand how API Platform works including how it implements the REST pattern and what
+[JSON-LD](http://json-ld.org/) and [Hydra](http://www.hydra-cg.com/) formats are.
 
 ## Mapping the entities
 
-Imagine you have the following Doctrine entity classes:
+API Platform Core is able to automatically expose entities mapped as "API resources" through a REST API supporting CRUD operations.
+To expose your entities, you can use Docblock annotations, XML and YAML configuration files.
+
+Here is an example of entities mapped using annotations which will be exposed trough a REST API:
 
 ```php
 <?php
@@ -127,13 +59,15 @@ Imagine you have the following Doctrine entity classes:
 
 namespace AppBundle\Entity;
 
+use ApiPlatform\Core\Annotation\ApiResource;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
+ * @ApiResource
  * @ORM\Entity
  */
-class Product
+class Product // The class name will be used to name exposed resources
 {
     /**
      * @ORM\Column(type="integer")
@@ -143,6 +77,8 @@ class Product
     public $id;
 
     /**
+     * @param string $name A name property - this description will be avaliable in the API documentation too.
+     *
      * @ORM\Column
      * @Assert\NotBlank
      */
@@ -157,10 +93,14 @@ class Product
 
 namespace AppBundle\Entity;
 
+use ApiPlatform\Core\Annotation\ApiResource;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
+ * An offer from my shop - this description will be automatically extracted form the PHPDoc to document the API.
+ *
+ * @ApiResource(iri="http://schema.org/Offer")
  * @ORM\Entity
  */
 class Offer
@@ -192,67 +132,71 @@ class Offer
 }
 ```
 
-## Registering resources
+It is the minimal configuration required to expose `Product` and `Offer` entities as JSON-LD documents trough an hypermedia
+web API.
 
-A resource can be defined through Annotations, Yaml or XML. The following represents the minimal configuration to register a resource for Product and one for Offer. A resource is then represented by REST endpoints called [Operations](operations.md).
+If you are familiar with the Symfony ecosystem, you noticed that entity classes are also mapped with Doctrine ORM annotations
+and validation constraints from [the Symfony Validator Component](http://symfony.com/doc/current/book/validation.html).
+This isn't mandatory. You can use [your preferred persistence](data-providers.md) and [validation](the-event-system.md) systems.
+However, API Platform Core has built-in support for those library and is able to use them without requiring any specific
+code or configuration to automatically persist and validate your data. They are good default and we encourage you to use
+them unless you know what you are doing.
+
+Thanks to the mapping done previously, API Platform Core will automatically register the following REST [operations](operations.md)
+for resources of the product type:
+
+Product
+
+Method | URL            | Description
+-------|----------------|--------------------------------
+GET    | /products      | Retrieve the (paged) collection
+POST   | /products      | Create a new product
+GET    | /products/{id} | Retrieve a product
+PUT    | /products/{id} | Update a product
+DELETE | /products/{id} | Delete a product
+
+The same operations are available for the offer method (routes will start with the `/offers` pattern).
+Routes prefixes are built by pluralizing the name of the mapped entity class.
+It is also possible to override the naming convention using [resource path generators](resource-path-generators.md).
+
+As an alternative to annotations, you can map entity classes using XML or YAML:
 
 <configurations>
 
-```php
-<?php
-// src/AppBundle/Entity/Product.php
-
-namespace AppBundle\Entity;
-
-use ApiPlatform\Core\Annotation\Resource;
-use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Validator\Constraints as Assert;
-
-/**
- * @ORM\Entity
- * @Resource
- */
-class Product
-{
-//...
-}
-
-// src/AppBundle/Entity/Offer.php
-
-namespace AppBundle\Entity;
-
-use ApiPlatform\Core\Annotation\Resource;
-use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Validator\Constraints as Assert;
-
-/**
- * @ORM\Entity
- * @Resource
- */
-class Offer
-{
-//...
-}
+```xml
+# src/AppBundle/Resources/config/resources.xml
+<?xml version="1.0" encoding="UTF-8" ?>
+<resources>
+        <resource class="AppBundle\Entity\Product" />
+        <resource
+            class="AppBundle\Entity\Offer"
+            shortName="Offer" <!-- optional -->
+            description="An offer form my shop" <!-- optional -->
+            iri="http://schema.org/Offer" <!-- optional -->
+        />
+</resources>
 ```
 
 ```yaml
 # src/AppBundle/Resources/config/resources.yml
 resources:
-  product:
-    class: 'AppBundle\Entity\Product'
-  offer:
-    class: 'AppBundle\Entity\Offer'
+    product:
+        class: 'AppBundle\Entity\Product'
+    offer:
+        class: 'AppBundle\Entity\Offer'
+        shortName: 'Offer' # optional        # optional
+        description: 'An offer from my shop' # optional
 ```
 
 </configurations>
 
 **You're done!**
 
-You now have a fully featured API exposing your Doctrine entities.
+You now have a fully featured API exposing your entities.
 Run the Symfony app (`bin/console server:run`) and browse the API entrypoint at `http://localhost:8000/api`.
 
-Interact with the API using a REST client (we recommend [Postman](https://chrome.google.com/webstore/detail/postman-rest-client/fdmmgilgnpjigdojojpjoooidkmcomcm))
-or an Hydra aware application (you should give a try to [Hydra Console](https://github.com/lanthaler/HydraConsole)). Take
+Interact with the API using a REST client (we recommend [Postman](https://www.getpostman.com/)) or an Hydra aware application
+(you should give a try to [Hydra Console](https://github.com/lanthaler/HydraConsole)). Take
 a look at the usage examples in [the `features` directory](/features/).
 
-Next chapter: [NelmioApiDocBundle integration](nelmio-api-doc.md)
+Next chapter: [Configuration](configuration.md)
