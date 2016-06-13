@@ -3,21 +3,23 @@
 The API system has builtin [content negotiation](https://en.wikipedia.org/wiki/Content_negotiation) capabilities.
 It leverages the [`willdurand/negotiation`](https://github.com/willdurand/Negotiation) library.
 
-The only supported format by default is [JSON-LD](https://json-ld.org). Support for other formats such as XML or Protobuf
+The only supported format by default is [JSON-LD](https://json-ld.org). Support for other formats such as XML or [Protobuf](https://developers.google.com/protocol-buffers/)
 can be added easily.
 
-The bundle will automatically detect the best format to return according to the `Accept` HTTP header sent by the client
-and enabled formats. If no format asked by the client is supported by the server, the response will be sent in the first
-format defined in the `support_formats` configuration key (see below).
+API Platform Core will automatically detect the best format to return according to the `Accept` HTTP header sent by the
+client and enabled formats. If no format asked by the client is supported by the server, the response will be sent in the
+first format defined in the `support_formats` configuration key (see below).
 
 An example using the builtin XML serializer is available in Behat specs: https://github.com/api-platform/core/blob/master/features/content_negotiation.feature
 
 ## Enabling several formats
 
-The first required step is to configure allowed formats in the bundle. The following configuration will enabled `myformat`
-support:
+The first required step is to configure allowed formats. The following configuration will enable the support of a format
+called `myformat` and having `application/vnd.myformat` as [MIME type](https://en.wikipedia.org/wiki/Media_type).
 
 ```yaml
+# app/config/config.yml
+
 api_platform:
     # ...
     supported_formats:
@@ -25,9 +27,10 @@ api_platform:
         myformat:                      ['application/vnd.myformat']
 ```
 
-## Registering a custom formatg in the Negotiation library
+## Registering a custom format in the Negotiation library
 
-If the format you want to use is not supported by default in the Negotiation library, you must register it using a [compiler pass](http://symfony.com/doc/current/components/dependency_injection/compilation.html#creating-a-compiler-pass):
+If the format you want to use is not supported by default in the Negotiation library, you must register it using a [compiler
+pass](https://symfony.com/doc/current/components/dependency_injection/compilation.html#creating-a-compiler-pass):
 
 ```php
 // src/AppBundle/DependencyInjection/Compiler/MyFormatPass.php
@@ -72,30 +75,20 @@ class AppBundle extends Bundle
 
 ## Registering a custom serializer
 
-Then you need to create custom encoder, decoder and eventually a normalizer and a denormalizer for your format. The bundle
-relies on the Symfony Serializer Component. [Refer to its dedicated documentation](https://symfony.com/doc/current/cookbook/serializer.html#adding-normalizers-and-encoders)
+Then you need to create custom encoder, decoder and eventually a normalizer and a denormalizer for your format. API Platform
+Core relies on the Symfony Serializer Component. [Refer to its dedicated documentation](https://symfony.com/doc/current/cookbook/serializer.html#adding-normalizers-and-encoders)
 to learn how to create and register such classes.
 
-The bundle will automatically call the serializer with your defined format name (`myformat` in previous examples) as `format`
-parameter during the deserialization process.
+API Platform Core will automatically call the serializer with your defined format name (`myformat` in previous examples)
+as `format` parameter during the deserialization process.
 
 ## Creating a responder
 
 Finally, you need to create a class that will convert the raw data to formatted data and the according HTTP response.
-Here is an example responder using the builtin XML serializer:
+Here is an example responder using the XML serializer shipped with the Symfony Serializer Component:
 
 ```php
 // src/AppBundle/EventListener/XmlResponderViewListener.php
-<?php
-
-/*
- * This file is part of the API Platform project.
- *
- * (c) Kévin Dunglas <dunglas@gmail.com>
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
 
 namespace AppBundle\EventListener;
 
@@ -107,21 +100,12 @@ use Symfony\Component\Serializer\SerializerInterface;
 
 /**
  * Serializes data in XML then builds the response object.
- *
- * @author Kévin Dunglas <dunglas@gmail.com>
  */
-class XmlResponderViewListener
+final class XmlResponderViewListener
 {
     const FORMAT = 'xml';
 
-    /**
-     * @var SerializerInterface
-     */
     private $serializer;
-
-    /**
-     * @var ResourceMetadataFactoryInterface
-     */
     private $resourceMetadataFactory;
 
     public function __construct(SerializerInterface $serializer, ResourceMetadataFactoryInterface $resourceMetadataFactory)
@@ -185,11 +169,13 @@ The last step is to register the event listener on [the `kernel.view` event](htt
 dispatched by Symfony:
 
 ```yaml
-
 # app/config/services.yml
 
+services:
+    # ...
+
     app.xml_responder_view_listener:
-        class: 'AppBundle\EventListener\XmlResponderViewListener'
+        class:     'AppBundle\EventListener\XmlResponderViewListener'
         arguments: [ '@api_platform.serializer', '@api_platform.metadata.resource.metadata_factory' ]
         tags:
             - { name: 'kernel.event_listener', event: 'kernel.view', method: 'onKernelView' }
