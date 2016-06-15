@@ -183,7 +183,7 @@ We generated a set of Plain-Old-PHP entities representing our data model. As pro
   including database columns with type guessing, relations with cardinality guessing and class inheritance (through the
   `@AbstractSuperclass` annotation).
 * [Symfony validation annotations](https://symfony.com/doc/current/book/validation.html#constraints)
-* API Platform `@Resource` and `@Property` annotations
+* API Platform `@ApiResource` and `@ApiProperty` annotations
 * Full high-quality [PHPDoc](https://www.phpdoc.org) for classes, properties, constants and methods extracted from Schema.org
 
 The data model is fully functional. You can hack it (modify entities, properties, indexes, validation rules...), or use it
@@ -244,7 +244,7 @@ do is to remove `api-platform/schema-generator` from your `composer.json` file.
 We have a working data model backed by a database. But we also got a working hypermedia REST API thanks to **[API Platform Core](../core/index.md)**.
 
 The core, like the schema generator, is already pre-installed and properly configured.
-We just need to mark resources we want to expose with an `@Resource` annotation. Open any of the generated entities, and
+We just need to mark resources we want to expose with an `@ApiResource` annotation. Open any of the generated entities, and
 you'll see that the schema generator already added this annotation for us.
 
 And our API is already finished! How would it be easier?
@@ -275,7 +275,7 @@ in this document.
 If you want to expose any entity:
 
 * Put it in the `Entity` directory of a bundle
-* Mark it with the `@ApiPlatform\Core\Annotation\Resource` annotation
+* Mark it with the `@ApiPlatform\Core\Annotation\ApiResource` annotation
 
 It's as easy as it looks.
 
