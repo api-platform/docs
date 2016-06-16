@@ -24,7 +24,7 @@ class Product
 
     /**
      * ...
-     * @Property(iri="http://schema.org/name")
+     * @ApiProperty(iri="http://schema.org/name")
      */
     public $name;
 }

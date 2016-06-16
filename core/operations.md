@@ -39,11 +39,11 @@ If you want to use custom controller action, [refer to the dedicated documentati
 
 ```php
 <?php
-use ApiPlatform\Core\Annotation\Resource;
+use ApiPlatform\Core\Annotation\ApiResource;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @Resource(itemOperations={
+ * @ApiResource(itemOperations={
  *     "get"={"method"="GET"},
  *     "put"={"method"="PUT"},
  *     "custom_get"={
@@ -136,11 +136,11 @@ resources:
 
 ```php
 <?php
-use ApiPlatform\Core\Annotation\Resource;
+use ApiPlatform\Core\Annotation\ApiResource;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @Resource(collectionOperations={"get"={"method"="GET"}})
+ * @ApiResource(collectionOperations={"get"={"method"="GET"}})
  * @ORM\Entity
  */
 class Product
@@ -159,7 +159,7 @@ passed to documentation generators.
 API Platform is smart enough to automatically register typical REST routes in the Symfony routing system and to document
 operations in the Hydra vocab.
 
-If you want to use a custom URL, set the Symfony route to use in the `@Resource` annotation.
+If you want to use a custom URL, set the Symfony route to use in the `@ApiResource` annotation.
 
 TO COMPLETE
 
@@ -179,11 +179,11 @@ However, in the following example items operations will still be automatically r
 
 ```php
 <?php
-use ApiPlatform\Core\Annotation\Resource;
+use ApiPlatform\Core\Annotation\ApiResource;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @Resource(collectionOperations={"get"={"method"="GET"}}, itemOperations={})
+ * @ApiResource(collectionOperations={"get"={"method"="GET"}}, itemOperations={})
  * @ORM\Entity
  */
 class Product
