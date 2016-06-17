@@ -57,15 +57,6 @@ api_platform:
 
             # The name of the query parameter to set the number of items per page.
             items_per_page_parameter_name:  itemsPerPage
-    metadata:
-        resource:
-
-            # Cache service for resource metadata.
-            cache:                api_platform.metadata.resource.cache.array
-        property:
-
-            # Cache service for property metadata.
-            cache:                api_platform.metadata.property.cache.array
 ```
 
 Previous chapter: [Getting Started](getting-started.md)<br>
