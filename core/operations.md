@@ -7,18 +7,18 @@ API Platform is smart enough to automatically register typical [CRUD](https://en
 and to describe them in exposed documentations (Hydra and NelmioApiDoc). It also creates and registers route corresponding
 to those operations in the Symfony routing system (if it is available).
 
-The behavior of builtin operations is briefly presented in the [Getting started](getting-started.md#mapping-the-entities)
+The behavior of built-in operations is briefly presented in the [Getting started](getting-started.md#mapping-the-entities)
 guide.
 
-The list of enabled operations can be configured on a per resource basis. It also possible to create custom operations related
-to specific routes.
+The list of enabled operations can be configured on a per resource basis. Creating custom operations on specific routes
+is also possible.
 
 There are two kind of operations: `collectionOperations` and `itemOperations`.
 
-`collectionOperations` act on the collection of resources. By default two routes are implemented: `POST` and `GET`. On the
-other hand, `itemOperations` act on an individual resource. 3 default routes are defined `GET`, `PUT` and `DELETE`.
+`collectionOperations` act on the collection of resources. By default two routes are implemented: `POST` and `GET`. `itemOperations`
+act on an individual resource. 3 default routes are defined `GET`, `PUT` and `DELETE`.
 
-When the `ApiPlatform\Core\Annotation\ApiResource` annotation is applied to an entity class, the following builtin CRUD
+When the `ApiPlatform\Core\Annotation\ApiResource` annotation is applied to an entity class, the following built-in CRUD
 operations are automatically enabled:
 
 *Collection operations*
@@ -39,13 +39,13 @@ Method   | Mandatory | Description
 ## Enabling and disabling operations
 
 If no operation is specified, all default CRUD operations are automatically registered. It is also possible - and recommended
-for large projects - to define explicitly operations.
+for large projects - to define operations explicitly.
 
 Keep in mind that `collectionOperations` and `itemOperations` behave independently. For instance, if you don't explicitly
 configure operations for `collectionOperations`, `GET` and `POST` operations will be automatically registered, even if you
 explicitly configure `itemOperations`. The reverse is also true.
 
-Operations can be configured using annotations, XML or YAML. In the following examples, we enable only the builtin operation
+Operations can be configured using annotations, XML or YAML. In the following examples, we enable only the built-in operation
 for the `GET` method for both `collectionOperations` and `itemOperations` to create a readonly endpoint.
 
 `itemOperations` and `collectionOperations` are arrays containing a list of operation. Each operation is defined by a key
@@ -96,15 +96,15 @@ product:
 
 </configurations>
 
-API Platform Core is smart enough to automatically register the applicable Symfony route referencing a builtin CRUD action
+API Platform Core is smart enough to automatically register the applicable Symfony route referencing a built-in CRUD action
 just by specifying the enabled HTTP method.
 
 ## Configuring operations
 
-The URL, the HTTP method and the Hydra context passed to documentation generators of operations can be easily configured.
+The URL, the HTTP method and the Hydra context passed to documentation generators of operations is easy to configure.
 
-In the following examples, the builtin `GET` and `PUT` item operations are registered but they use custom URLs instead of
-the default one guessed by API Platform from the resource name. The Hydra context is also override for the `PUT` operation.
+In the next example, both `GET` and `PUT` operations are registered with custom URLs. Those will override the default generated
+URLs. In addition to that, we replace the Hydra context for the `PUT` operation.
 
 <configurations>
 
@@ -178,9 +178,9 @@ services.
 
 Thanks to the [autowiring](http://symfony.com/doc/current/components/dependency_injection/autowiring.html) feature of the
 Symfony dependency injection container, services required by an action can be type-hinted in its controller, it will be automatically
-instantiated and injected, without requiring to declare it explicitly.
+instantiated and injected, without having to declare it explicitly.
 
-In the following example, the builtin `GET` operation is registered as well as a custom operation called `special`.
+In the following example, the built-in `GET` operation is registered as well as a custom operation called `special`.
 The `special` operation reference the Symfony route named `book_special`.
 
 
@@ -268,7 +268,7 @@ class BookSpecial
 }
 ```
 
-This custom operation behaves exactly like the builtin operation: it returns a JSON-LD document corresponding to the id
+This custom operation behaves exactly like the built-in operation: it returns a JSON-LD document corresponding to the id
 passed in the URL.
 
 It is mandatory to set the `_resource_class` and `_item_operation_name` (or `_collection_operation_name` for a collection
@@ -284,7 +284,7 @@ can type-hint any other service you need and it will be autowired too.
 The `__invoke` method of the action is called automatically when the matching route is hit. It can return either an instance
 of `Symfony\Component\HttpFoundation\Response` (that will be displayed to the client immediately by the Symfony kernel)
 or, like in this example, an instance of an entity mapped as a resource (or a collection of instances for collection operations).
-In this case, the entity will pass through [all builtin event listeners](the-event-system.md) of API Platform and will be
+In this case, the entity will pass through [all built-in event listeners](the-event-system.md) of API Platform and will be
 automatically serialized in JSON-LD then sent to the client.
 
 Alternatively, you can also use standard Symfony controller and YAML or XML route declarations. The following example do
