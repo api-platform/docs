@@ -9,4 +9,4 @@ It is also possible to use the [Event system](the-event-system.md) for more adva
 if you really need to.
 
 Previous chapter: [Content negotiation](content-negotiation.md)<br>
-Next chapter: [Performances](performances.md)
+Next chapter: [Performance](performance.md)
