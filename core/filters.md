@@ -1,28 +1,33 @@
 # Filters
 
-The bundle provides a generic system to apply filters on collections. Useful filters
-for the Doctrine ORM are provided with the bundle. However the filter system is
-extensible enough to let you create custom filters that would fit your specific needs
-and for any data provider.
+API Platform Core provides a generic system to apply filters on collections. Useful filters for the Doctrine ORM are provided
+with the library. You can also create custom filters that would fit your specific needs.
+You can also add filtering support to your custom [data providers](data-providers.md) by implementing interfaces provided
+by the library.
 
 By default, all filters are disabled. They must be enabled explicitly.
 
-When a filter is enabled, it is automatically documented as a `hydra:search` property
-in collection returns. It also automatically appears in the NelmioApiDoc documentation
-if this bundle is active.
+When a filter is enabled, it is automatically documented as a `hydra:search` property in the collection response. It also
+automatically appears in the [NelmioApiDoc documentation](nelmio-api-doc.md) if it is available.
 
 ## Search filter
 
-If Doctrine ORM support is enabled, adding filters is as easy as adding an entry
-in your `app/config/services.yml` file and adding a Attributes in your entity.
+If Doctrine ORM support is enabled, adding filters is as easy as registering a filter service in your `app/config/services.yml`
+file and adding an attribute to your resource configuration.
 
-The search filter supports `exact`, `partial`, `start`, `end`, and `word_start` matching strategies.
-- `partial` strategy uses `LIKE %text%` to search for fields that containing the text.
-- `start` strategy uses `LIKE text%` to search for fields that starts with text.
-- `end` strategy uses `LIKE %text` to search for fields that ends with text.
-- `word_start` strategy uses `LIKE text% OR LIKE % text%` to search for fields that contains the word starting with `text`.
+The search filter supports `exact`, `partial`, `start`, `end`, and `word_start` matching strategies:
 
-Prepend the letter `i` to the filter if you want it to be case insensitive. For example `ipartial` or `iexact`. Note that this will use the `LOWER` function and **will** impact performances if there is no [*function-based index*](http://use-the-index-luke.com/sql/where-clause/functions/case-insensitive-search).
+* `partial` strategy uses `LIKE %text%` to search for fields that containing the text.
+* `start` strategy uses `LIKE text%` to search for fields that starts with text.
+* `end` strategy uses `LIKE %text` to search for fields that ends with text.
+* `word_start` strategy uses `LIKE text% OR LIKE % text%` to search for fields that contains the word starting with `text`.
+
+Prepend the letter `i` to the filter if you want it to be case insensitive. For example `ipartial` or `iexact`. Note that
+this will use the `LOWER` function and **will** impact performances if there is no [*function-based index*](http://use-the-index-luke.com/sql/where-clause/functions/case-insensitive-search).
+
+Case insensitivity may already be enforced at the database level depending on the [collation](https://en.wikipedia.org/wiki/Collation)
+used. If you are using MySQL, note that the commonly used `utf8_unicode_ci` collation (and its sibling `utf8mb4_unicode_ci`)
+are already case insensitive, as indicated by the `_ci` part in their names.
 
 In the following example, we will see how to allow the filtering of a list of e-commerce offers:
 
@@ -37,7 +42,6 @@ services:
 ```
 
 ```php
-<?php
 // src/AppBundle/Entity/Offer.php
 
 namespace AppBundle\Entity;
@@ -70,13 +74,11 @@ services:
         tags:      [ { name: 'api_platform.filter', id: 'offer.search' } ]
 ```
 
-With this service definition, it is possible to find all offers belonging to the
-product identified by a given IRI.
+With this service definition, it is possible to find all offers belonging to the product identified by a given IRI.
 Try the following: `http://localhost:8000/api/offers?product=/api/products/12`
 Using a numeric ID is also supported: `http://localhost:8000/api/offers?product=12`
 
-Previous URLs will return all offers for the product having the following IRI as
-JSON-LD identifier (`@id`): `http://localhost:8000/api/products/12`.
+Previous URLs will return all offers for the product having the following IRI as JSON-LD identifier (`@id`): `http://localhost:8000/api/products/12`.
 
 ## Date filter
 
@@ -84,8 +86,7 @@ The date filter allows to filter a collection by date intervals.
 
 Syntax: `?property[<after|before>]=value`
 
-The value can take any date format supported by the [`\DateTime()`](http://php.net/manual/en/datetime.construct.php)
-class.
+The value can take any date format supported by the [`\DateTime` constructor](http://php.net/manual/en/datetime.construct.php).
 
 As others filters, the date filter must be explicitly enabled:
 
@@ -121,12 +122,12 @@ class Offer
 The date filter is able to deal with date properties having `null` values.
 Four behaviors are available at the property level of the filter:
 
-| Description                          | Strategy to set                                                               |
-|--------------------------------------|-------------------------------------------------------------------------------|
-| Use the default behavior of the DBMS | `null`                                                                        |
-| Exclude items                        | `ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\DateFilter::EXCLUDE_NULL` (`0`)        |
-| Consider items as oldest             | `ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\DateFilter::INCLUDE_NULL_BEFORE` (`1`) |
-| Consider items as youngest           | `ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\DateFilter::INCLUDE_NULL_AFTER` (`2`)  |
+Description                          | Strategy to set
+-------------------------------------|------------------------------------------------------------------------------------
+Use the default behavior of the DBMS | `null`
+Exclude items                        | `ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\DateFilter::EXCLUDE_NULL` (`exclude_null`)
+Consider items as oldest             | `ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\DateFilter::INCLUDE_NULL_BEFORE` (`include_null_before`)
+Consider items as youngest           | `ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\DateFilter::INCLUDE_NULL_AFTER` (`include_null_after`)
 
 For instance, exclude entries with a property value of `null`, with the following service definition:
 
@@ -136,12 +137,12 @@ For instance, exclude entries with a property value of `null`, with the followin
 services:
     offer.date_filter:
         parent:    'api_platform.doctrine.orm.date_filter'
-        arguments: [ { dateProperty: ~ } ]
+        arguments: [ { dateProperty: 'exclude_null' } ]
         tags:      [ { name: 'api_platform.filter', id: 'offer.date' } ]
 ```
 
-If you use another service definition format than YAML, you can use the
-`ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\DateFilter::EXCLUDE_NULL` constant directly.
+If you use a service definition format other than YAML, you can use the `ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\DateFilter::EXCLUDE_NULL`
+constant directly.
 
 ## Order filter
 
@@ -177,10 +178,11 @@ class Offer
 }
 ```
 
-Given that the collection endpoint is `/offers`, you can filter offers by name in
-ascending order and then by ID in descending order with the following query: `/offers?order[name]=desc&order[id]=asc`.
+Given that the collection endpoint is `/offers`, you can filter offers by name in ascending order and then by ID in descending
+order with the following query: `/offers?order[name]=desc&order[id]=asc`.
 
-By default, whenever the query does not specify the direction explicitly (e.g: `/offers?order[name]&order[id]`), filters will not be applied unless you configure a default order direction to use:
+By default, whenever the query does not specify the direction explicitly (e.g: `/offers?order[name]&order[id]`), filters
+will not be applied unless you configure a default order direction to use:
 
 ```yaml
 # app/config/services.yml
@@ -230,7 +232,7 @@ class Offer
 
 Given that the collection endpoint is `/offers`, you can filter offers by boolean  with the following query: `/offers?isAvailableGenericallyInMyCountry=true`.
 
-It will return all offers with `isAvailableGenericallyInMyCountry` equals true
+It will return all offers where `isAvailableGenericallyInMyCountry` equals `true`.
 
 ## Numeric Filter 
 
@@ -285,9 +287,8 @@ api_platform:
 
 ## Filtering on nested properties
 
-Sometimes, you need to be able to perform filtering based on some linked resources
-(on the other side of a relation). All built-in filters support nested properties
-using the dot (`.`) syntax, e.g.:
+Sometimes, you need to be able to perform filtering based on some linked resources (on the other side of a relation). All
+built-in filters support nested properties using the dot (`.`) syntax, e.g.:
 
 ```yaml
 # app/config/services.yml
@@ -309,10 +310,9 @@ or order offers by the product's release date: `http://localhost:8000/api/offers
 
 ## Enabling a filter for all properties of a resource
 
-As we have seen in previous examples, properties where filters can be applied must be
-explicitly declared. But if you don't care about security and performance (ex:
-an API with restricted access), it's also possible to enable builtin filters for
-all properties:
+As we have seen in previous examples, properties where filters can be applied must be explicitly declared. If you don't
+care about security and performance (e.g. an API with restricted access), it is also possible to enable built-in filters
+for all properties:
 
 ```yaml
 # app/config/services.yml
@@ -343,8 +343,8 @@ It means that the filter will be **silently** ignored if the property:
 Custom filters can be written by implementing the `ApiPlatform\Core\Api\FilterInterface`
 interface.
 
-If you use [custom data providers](data-providers.md), they must support filtering and be aware of active filters to
-work properly.
+If you use [custom data providers](data-providers.md), they must support filtering and be aware of active filters to work
+properly.
 
 ### Creating custom Doctrine ORM filters
 
@@ -355,12 +355,10 @@ A convenient abstract class is also shipped with the bundle: `ApiPlatform\Core\B
 
 ### Overriding extraction of properties from the request
 
-You can change the way the filter parameters are extracted from the request. This can be done by extending the parent
-filter class and overriding the `extractProperties(\Symfony\Component\HttpFoundation\Request $request)`
+You can change the way the filter parameters are extracted from the request. This can be done by overriding the `extractProperties(\Symfony\Component\HttpFoundation\Request $request)`
 method.
 
-In the following example, we will completely change the syntax of the order filter
-to be the following: `?filter[order][property]`
+In the following example, we will completely change the syntax of the order filter to be the following: `?filter[order][property]`
 
 ```php
 // src/AppBundle/Filter/CustomOrderFilter.php
@@ -388,17 +386,6 @@ services:
     offer.custom_order_filter:
         class: 'AppBundle\Filter\CustomOrderFilter'
         tags:  [ { name: 'api_platform.filter', id: 'offer.order' } ]
-```
-
-Beware: in [some cases](https://github.com/dunglas/DunglasApiBundle/issues/157#issuecomment-119576010) you may have to use double slashes in the class path to make it work:
-
-```
-# app/config/services.yml
-
-services:
-    offer.custom_order_filter:
-        class:    'AppBundle\Filter\CustomOrderFilter'
-        tags:      [ { name: 'api_platform.filter', id: 'offer.order' } ]
 ```
 
 Previous chapter: [Data providers](data-providers.md)<br>
