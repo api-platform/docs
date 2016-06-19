@@ -180,8 +180,9 @@ Thanks to the [autowiring](http://symfony.com/doc/current/components/dependency_
 Symfony dependency injection container, services required by an action can be type-hinted in its controller, it will be automatically
 instantiated and injected, without requiring to declare it explicitly.
 
+In the following example, the builtin `GET` operation is registered as well as a custom operation called `special`.
+The `special` operation reference the Symfony route named `book_special`.
 
----- Not finished below, see https://github.com/dunglas/api-platform/tree/custom_controller ----
 
 <configurations>
 
@@ -193,13 +194,7 @@ use ApiPlatform\Core\Annotation\ApiResource;
 /**
  * @ApiResource(itemOperations={
  *     "get"={"method"="GET"},
- *     "put"={"method"="PUT"},
- *     "custom_get"={
- *        "path"="/products/{id}/custom",
- *        "method"="GET",
- *        "controller"="my_custom_controller",
- *        "hydra_context"={"@type"="hydra:Operation", "hydra:title"="A custom operation", "returns"="xmls:string"}
- *     }
+ *     "special"={"special"={"route_name"="book_special"}
  * })
  */
 class Book
@@ -215,16 +210,8 @@ product:
     itemOperations:
         get:
             method: 'GET'
-        put:
-            method: 'PUT'
-        custom_get:
-            method: 'GET'
-            path: '/products/{id}/custom'
-            controller: 'my_custom_controller'
-            hydra_context:  # you can customize hydra context per operation
-              "@type": "hydra:Operation"
-              "hydra:title": "A custom operation"
-              "returns": "xmls:string"
+        special:
+            route_name: 'book_special'
 ```
 
 ```xml
@@ -234,13 +221,7 @@ product:
     <resource class="AppBundle\Entity\Book">
         <itemOperations type="collection">
             <operation key="get" method="GET" />
-            <operation key="put" method="PUT" />
-            <operation key="custom_get" method="GET" path="/products/{id}/custom" controller="my_custom_controller">
-                <attribute key="hydra_context" type="collection">
-                <attribute key="@type">hydra:Operation</attribute>
-                <attribute key="hydra:title">A custom Operation</attribute>
-                <attribute key="returns">xmls:string</attribute>
-            </operation>
+            <operation key="special" routeName="book_special" />
         </itemOperations>
     </resource>
 </resources>
@@ -248,18 +229,94 @@ product:
 
 </configurations>
 
-```yaml
-products.custom_get:
-    path:  '/products/{id}/custom'
-    methods:  ['GET', 'HEAD']
-    defaults:
-        _controller:     'AppBundle:Custom:custom'
-        _resource_class: 'AppBundle\Entity\Dummy'
-        _item_operation_name: 'custom_get'
+API Platform will automatically map this `special` operation with the route `book_special`. Let's create a custom action
+and its related route using annotations:
+
+```php
+// src/AppBundle/Action/BookSpecial.php
+
+<?php
+
+namespace AppBundle\Action;
+
+use AppBundle\Entity\Book;
+use Doctrine\Common\Persistence\ManagerRegistry;
+use Symfony\Component\Routing\Annotation\Route;
+
+class BookSpecial
+{
+    private $doctrine;
+
+    public function __construct(ManagerRegistry $doctrine)
+    {
+        $this->doctrine = $doctrine;
+    }
+
+    /**
+     * @Route(
+     *     name="book_special",
+     *     path="/books/{id}/special",
+     *     defaults={"_resource_class"=Book::class, "_item_operation_name"="special"}
+     * )
+     */
+    public function __invoke($id)
+    {
+        // do something special here
+
+        return $this->doctrine->getManager()->find(Book::class, $id);
+    }
+}
 ```
 
-However, in the following example items operations will still be automatically registered. To disable them, simply override the itemOperation configuration:
+This custom operation behaves exactly like the builtin operation: it returns a JSON-LD document corresponding to the id
+passed in the URL.
 
+It is mandatory to set the `_resource_class` and `_item_operation_name` (or `_collection_operation_name` for a collection
+operation) in the parameters of the route (`defaults` key). It allows API Platform and the Symfony routing system to hook
+together.
+
+Here we consider that DunglasActionBundle is installed (the default when using the API Platform standard edition). This
+action will be automatically registered as a service (the service name is the same as the class name: `AppBundle\Action\BookSpecial`).
+
+The Doctrine manager registry (`doctrine` service) will be automatically injected thanks to the autowiring feature. You
+can type-hint any other service you need and it will be autowired too.
+
+The `__invoke` method of the action is called automatically when the matching route is hit. It can return either an instance
+of `Symfony\Component\HttpFoundation\Response` (that will be displayed to the client immediately by the Symfony kernel)
+or, like in this example, an instance of an entity mapped as a resource (or a collection of instances for collection operations).
+In this case, the entity will pass through [all builtin event listeners](the-event-system.md) of API Platform and will be
+automatically serialized in JSON-LD then sent to the client.
+
+Alternatively, you can also use standard Symfony controller and YAML or XML route declarations. The following example do
+exactly the same thing than the previous example in a more Symfony-like fashion:
+
+```php
+<?php
+// src/AppBundle/Controller/BookController.php
+
+namespace AppBundle\Controller;
+
+use AppBundle\Entity\Book;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+
+class BookController extends Controller
+{
+    public function specialAction($id)
+    {
+        return $this->get('doctrine')->getManager()->find(Book::class, $id);
+    }
+}
+
+```yaml
+# app/config/routing.yml
+
+book_special:
+    path: '/books/{id}/special'
+    defaults:
+        _controller: 'AppBundle:Book:special'
+        _resource_class: 'AppBundle\Entity\Book'
+        _item_operation_name: 'special'
+```
 
 Previous chapter: [NelmioApiDocBundle integration](nelmio-api-doc.md)<br>
 Next chapter: [Data providers](data-providers.md)
