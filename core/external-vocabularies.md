@@ -3,22 +3,21 @@
 JSON-LD allows to define classes and properties of your API with open vocabularies such as [Schema.org](https://schema.org)
 and [Good Relations](http://www.heppnetz.de/projects/goodrelations/).
 
-ApiPlatformBundle provides annotations usable on PHP classes and properties for specifying a related external [IRI](http://en.wikipedia.org/wiki/Internationalized_resource_identifier).
+API Platform Core provides annotations usable on PHP classes and properties for specifying a related external [IRI](http://en.wikipedia.org/wiki/Internationalized_resource_identifier).
 
 
 ```php
-<?php
-
-// src/AppBundle/Entity/Product.php
+// src/AppBundle/Entity/Book.php
 
 namespace AppBundle\Entity;
 
-use ApiPlatform\Core\Annotation\Property;
+use ApiPlatform\Core\Annotation\ApiProperty;
+use ApiPlatform\Core\Annotation\ApiResource;
+
 /**
- * ...
- * @see http://schema.org/Product Documentation on Schema.org
+ * @ApiResource(iri="http://schema.org/Book")
  */
-class Product
+class Book
 {
     // ...
 
@@ -32,27 +31,25 @@ class Product
 
 The generated JSON for products and the related context document will now use external IRIs according to the specified annotations:
 
-`GET /products/22`
+`GET /books/22`
 
 ```json
 {
-  "@context": "/contexts/Product",
-  "@id": "/product/22",
+  "@context": "/contexts/Book",
+  "@id": "/books/22",
   "@type": "https://schema.org/Product",
-  "name": "My awesome product",
-  // other properties
+  "name": "My awesome book"
 }
 ```
 
-`GET /contexts/Product`
+`GET /contexts/Book`
 
 ```json
 {
     "@context": {
         "@vocab": "http://example.com/apidoc#",
         "hydra": "http://www.w3.org/ns/hydra/core#",
-        "name": "https://schema.org/name",
-        // Other properties
+        "name": "https://schema.org/name"
     }
 }
 ```
