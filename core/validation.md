@@ -1,23 +1,56 @@
 # Validation
 
-API Platform uses the Symfony validator to validate entities.
+API Platform Core uses the [Symfony Validator component](http://symfony.com/doc/current/book/validation.html) to validate
+entities.
 
-By default, it uses the default validation group, but this behavior is customizable.
+Without specific configuration, it uses the default validation group, but this behavior is customizable.
 
 ## Using validation groups
-The built-in controller is able to leverage Symfony's [validation groups](http://symfony.com/doc/current/book/validation.html#validation-groups).
 
-You can customize them by editting your service declaration and add the groups you want to use when the validation occurs:
+Built-in actions are able to leverage Symfony's [validation groups](http://symfony.com/doc/current/book/validation.html#validation-groups).
 
-TODO: snippet using annotations
+You can customize them by editing the resource configuration and add the groups you want to use when the validation occurs:
 
-With the previous definition, the validations groups `group1` and `group2` will be used when the validation occurs.
+```php
+// src/AppBundle/Entity/Book.php
 
-You may also pass in a [group sequence](http://symfony.com/doc/current/book/validation.html#group-sequence) in place of the array of group names.
+use ApiPlatform\Core\Annotation\ApiResource;
+use Symfony\Component\Validator\Constraints as Assert;
+
+/**
+ * @ApiResource(attributes={"validation_groups"={"a", "b"}})
+ */
+class Book
+{
+    /**
+     * @Assert\NotBlank(groups={"a"})
+     */
+    private $name;
+
+    /**
+     * @Assert\NotBull(groups={"b"})
+     */
+    private $author;
+
+    // ...
+}
+```
+
+With the previous configuration, the validations groups `group1` and `group2` will be used when validation is performed.
+
+Like for [serialization groups](serialization-groups-and-relations.md#using-different-serialization-groups-per-operation),
+you can specify validation groups globally or on a per operation basis.
+
+Of course, you can use XML or YAML configuration format instead of annotations if you prefer.
+
+You may also pass in a [group sequence](http://symfony.com/doc/current/book/validation.html#group-sequence) in place of
+the array of group names.
 
 ## Dynamic validation groups
 
-If you need to dynamically determine which validation groups to use for an entity in different scenarios, just pass in a [callable](http://php.net/manual/en/language.types.callable.php). The callback will receive the entity object as its first argument, and should return an array of group names or a [group sequence](http://symfony.com/doc/current/book/validation.html#group-sequence).
+If you need to dynamically determine which validation groups to use for an entity in different scenarios, just pass in a
+[callable](http://php.net/manual/en/language.types.callable.php). The callback will receive the entity object as its first
+argument, and should return an array of group names or a [group sequence](http://symfony.com/doc/current/book/validation.html#group-sequence).
 
-Previous chapter: [Resources path generators](resource-path-generator.md)<br>
+Previous chapter: [Path naming strategy](path-naming-strategy.md)<br>
 Next chapter: [The event system](the-event-system.md)
