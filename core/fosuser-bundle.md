@@ -1,44 +1,34 @@
 # FOSUser Bundle integration
 
-This bundle is shipped with a bridge for the [FOSUserBundle](https://github.com/FriendsOfSymfony/FOSUserBundle). If the FOSUserBundle is enabled, this bridges registers to the persist, update and delete events to pass user objects to the UserManager, before redispatching the event. 
+API Platform Core is shipped with a bridge for [FOSUserBundle](https://github.com/FriendsOfSymfony/FOSUserBundle). If the
+FOSUser bundle is enabled, this bridge will use its `UserManager` to create, update and delete user resources.
 
 ## Creating a `User` entity with serialization groups
 
-Here's an example of declaration of a [doctrine ORM User class](https://github.com/FriendsOfSymfony/FOSUserBundle/blob/master/Resources/doc/index.rst#a-doctrine-orm-user-class). As shown you can use serialization groups to hide properties like `plainPassword` (only in read) and `password`. The properties shown are handled with the [`normalizationContext`](serialization-groups-and-relations.md#normalization), while the properties you can modify are handled with [`denormalizationContext`](serialization-groups-and-relations.md#denormalization).
+Here's an example of declaration of a [Doctrine ORM User class](https://github.com/FriendsOfSymfony/FOSUserBundle/blob/master/Resources/doc/index.rst#a-doctrine-orm-user-class).
+You need to use serialization groups to hide some properties like `plainPassword` (only in read) and `password`. The properties
+shown are handled with the [`normalization_context`](serialization-groups-and-relations.md#normalization), while the properties
+you can modify are handled with [`denormalization_context`](serialization-groups-and-relations.md#denormalization).
 
 First register the following service:
 
-```yaml
-# app/config/services.yml
-
-resource.user:
-        parent:    "api.resource"
-        arguments: [ "AppBundle\Entity\User" ]
-        calls:
-            -      method:    "initNormalizationContext"
-                   arguments: [ { groups: [ "user_read" ] } ]
-            -      method:    "initDenormalizationContext"
-                   arguments: [ { groups: [ "user_write" ] } ]
-        tags:      [ { name: "api.resource" } ]
-```
-
-Then create your User entity with serialization groups:
-
 ```php
-<?php
+// src/AppBundle/Entity/User.php
 
 namespace AppBundle\Entity;
 
+use ApiPlatform\Core\Annotation\ApiResource;
 use Doctrine\ORM\Mapping as ORM;
-use FOS\UserBundle\Entity\User as BaseUser;
+use FOS\UserBundle\Model\User as BaseUser;
+use FOS\UserBundle\Model\UserInterface;
 use Symfony\Component\Serializer\Annotation\Groups;
-use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
  * @ORM\Entity
- *
- * @UniqueEntity("email")
- * @UniqueEntity("username")
+ * @ApiResource(attributes={
+ *     "normalization_context"={"groups"={"user", "user-read"}},
+ *     "denormalization_context"={"groups"={"user", "user-write"}}
+ * })
  */
 class User extends BaseUser
 {
@@ -50,38 +40,43 @@ class User extends BaseUser
     protected $id;
 
     /**
-     * @var string The username of the author.
-     *
-     * @Groups({"user_read", "user_write"})
-     */
-    protected $username;
-
-    /**
-     * @var string The email of the user.
-     *
-     * @Groups({"user_read", "user_write"})
+     * @Groups({"user"})
      */
     protected $email;
 
     /**
-     * @var string Plain password. Used for model validation. Must not be persisted.
-     *
-     * @Groups({"user_write"})
+     * @ORM\Column(type="string", length=255, nullable=true)
+     * @Groups({"user"})
+     */
+    protected $fullname;
+
+    /**
+     * @Groups({"user-write"})
      */
     protected $plainPassword;
 
     /**
-     * @var boolean Shows that the user is enabled
-     *
-     * @Groups({"user_read", "user_write"})
+     * @Groups({"user"})
      */
-    protected $enabled;
+    protected $username;
 
-    /**
-     * @var array Array, role(s) of the user
-     *
-     * @Groups({"user_read", "user_write"})
-     */
-    protected $roles;
+    public function setFullname($fullname)
+    {
+        $this->fullname = $fullname;
+
+        return $this;
+    }
+    public function getFullname()
+    {
+        return $this->fullname;
+    }
+
+    public function isUser(UserInterface $user = null)
+    {
+        return $user instanceof self && $user->id === $this->id;
+    }
 }
 ```
+
+Previous chapter: [NelmioApiDocBundle integration](nelmio-api-doc.md)<br>
+Next chapter: [AngularJS integration](angular-integration.md)
