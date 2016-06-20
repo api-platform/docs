@@ -1,11 +1,11 @@
 # Operations
 
-API Platform Core relies on the concept of operation. Operations can be applied to a resource exposed by the API. From a
-technical point of view, an operation is a link between a resource an a route and its related controller.
+API Platform Core relies on the concept of operations. Operations can be applied to a resource exposed by the API. From
+an implementation point of view, an operation is a link between a resource an a route and its related controller.
 
-API Platform is smart enough to automatically register typical [CRUD](https://en.wikipedia.org/wiki/Create,_read,_update_and_delete)
-and to describe them in exposed documentations (Hydra and NelmioApiDoc). It also creates and registers route corresponding
-to those operations in the Symfony routing system (if it is available).
+API Platform automatically registers typical [CRUD](https://en.wikipedia.org/wiki/Create,_read,_update_and_delete)
+and describes them in exposed documentations (Hydra and NelmioApiDoc). It also creates and registers routes corresponding
+to these operations in the Symfony routing system (if it is available).
 
 The behavior of built-in operations is briefly presented in the [Getting started](getting-started.md#mapping-the-entities)
 guide.
@@ -13,10 +13,10 @@ guide.
 The list of enabled operations can be configured on a per resource basis. Creating custom operations on specific routes
 is also possible.
 
-There are two kind of operations: `collectionOperations` and `itemOperations`.
+There are two types of operations: collection operations and item operations.
 
-`collectionOperations` act on the collection of resources. By default two routes are implemented: `POST` and `GET`. `itemOperations`
-act on an individual resource. 3 default routes are defined `GET`, `PUT` and `DELETE`.
+Collection operations act on the collection of resources. By default two routes are implemented: `POST` and `GET`. Item
+operations act on an individual resource. 3 default routes are defined `GET`, `PUT` and `DELETE`.
 
 When the `ApiPlatform\Core\Annotation\ApiResource` annotation is applied to an entity class, the following built-in CRUD
 operations are automatically enabled:
