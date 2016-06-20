@@ -4,7 +4,7 @@ API Platform Core relies on the concept of operations. Operations can be applied
 an implementation point of view, an operation is a link between a resource an a route and its related controller.
 
 API Platform automatically registers typical [CRUD](https://en.wikipedia.org/wiki/Create,_read,_update_and_delete)
-and describes them in exposed documentations (Hydra and NelmioApiDoc). It also creates and registers routes corresponding
+and describes them in the exposed documentation (Hydra and NelmioApiDoc). It also creates and registers routes corresponding
 to these operations in the Symfony routing system (if it is available).
 
 The behavior of built-in operations is briefly presented in the [Getting started](getting-started.md#mapping-the-entities)
