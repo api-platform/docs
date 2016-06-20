@@ -1,238 +1,329 @@
 # Serialization groups and relations
 
-## Using serialization groups
+API Platform Core allows to choose which attributes of the resource are exposed during the normalization (read) and denormalization
+(write) process. It relies on the [serialization (and deserialization) groups](https://symfony.com/doc/current/components/serializer.html#attributes-groups)
+feature of the Symfony Serializer component.
 
-Symfony 2.7 introduced [serialization (and deserialization) groups support](http://symfony.com/blog/new-in-symfony-2-7-serialization-groups)
-in the Serializer component. Specifying to the API system the groups to use is really simple:
+## Configuration
 
-```yaml
-# app/config/services.yml
-services:
-    resource.product:
-        parent:    "api.resource"
-        arguments: [ "AppBundle\Entity\Product" ]
-        calls:
-            -      method:    "initNormalizationContext"
-                   arguments: [ { groups: [ "serialization_group1", "serialization_group2" ] } ]
-            -      method:    "initDenormalizationContext"
-                   arguments: [ { groups: [ "deserialization_group1", "deserialization_group2" ] } ]
-        tags:      [ { name: "api.resource" } ]
-```
+The Symfony Serializer component allows to specify the definition of serialization using XML, YAML, or annotations. As annotations
+are really easy to understand, we will use them in this documentation.
 
-The built-in controller and the Hydra documentation generator will leverage specified serialization and deserialization
-to give access only to exposed properties and to guess if they are readable or/and writable.
+However, if you don't use the standard edition of API Platform, don't forget to enable annotation support in the serializer
+configuration:
 
-## Annotations
-
-The Symfony serializer allows to specify the definition of serialization using XML, YAML, or annotations. As annotations are really easy to understand, we'll use them in following examples.  
-However, in order to use annotations, don't forget to enable it in the serializer configuration:
 ```yaml
 # app/config/config.yml
+
 framework:
-    # ...
-    serializer:      { enable_annotations: true }
+    serializer: { enable_annotations: true }
 ```
+
+## Using serialization groups
+
+Specifying to the API system the groups to use is really simple:
+
+```php
+// src/AppBundle/Entity/Book.php
+
+namespace AppBundle\Entity;
+
+use ApiPlatform\Core\Annotation\ApiResource;
+use Symfony\Component\Serializer\Annotation\Groups;
+
+/**
+ * @ApiResource(attributes={
+ *     "normalization_context"={"groups"={"read"}},
+ *     "denormalization_context"={"groups"={"write"}}
+ * })
+ */
+class Book
+{
+    /**
+     * @Groups({"read", "write"})
+     */
+    private $name;
+
+    /**
+     * @Groups({"write"})
+     */
+    private $author;
+
+    // ...
+}
+```
+
+With the config of the previous example, the `name` property will be accessible in read and write, but the `author` property
+will be write only, therefore the `author` property will never be included in documents returned by the API.
+
+The value of the `normalization_context` is passed to the Symfony Serializer during the normalization process. In the same
+way, `denormalization_context` is used for denormalization.
+You can configure groups as well as any Symfony Serializer option configurable through the context argument (e.g. the `enable_max_depth`
+key when using [the `@MaxDepth` annotation](https://github.com/symfony/symfony/issues/17113)).
+
+Built-in actions and the Hydra documentation generator will leverage the specified serialization and deserialization groups
+to give access only to exposed properties and to guess if they are readable and/or writable.
+
+## Using different serialization groups per operation
+
+It is possible to specify normalization and denormalization contexts (as well as any other attribute) on a per operation
+basis. API Platform Core will always use the most specific definition. For instance if normalization groups are set both
+at the resource level and at the operation level, the configuration set at the operation level will be used and the resource
+level ignored.
+
+In the following example we use different serialization groups for the `GET` and `PUT` operations:
+
+```php
+// src/AppBundle/Entity/Book.php
+
+namespace AppBundle\Entity;
+
+use ApiPlatform\Core\Annotation\ApiResource;
+use Symfony\Component\Serializer\Annotation\Groups;
+
+/**
+ * @ApiResource(
+ *     attributes={"normalization_context"={"groups"={"get"}}},
+ *     itemOperations={
+ *          "get"={"method"="GET"},
+ *          "put"={"method"="PUT", "normalization_context"={"groups"={"put"}}}
+ *     }
+ * )
+ */
+class Book
+{
+    /**
+     * @Groups({"get", "put"})
+     */
+    private $name;
+
+    /**
+     * @Groups({"get"})
+     */
+    private $author;
+
+    // ...
+}
+```
+
+`name` and `author` properties will be included in the document generated during a `GET` operation because the configuration
+defined at the resource level is inherited. However the document generated when a `PUT` request will be received will only
+include the `name` property because of the specific configuration for this operation.
+
+Refer to the documentation of [operations](operations.md) to learn more about the concept of operations.
 
 ## Embedding relations
 
-By default, the serializer provided with DunglasApiBundle will represent relations between objects by dereferenceables
-URIs. They allow to retrieve details of related objects by issuing an extra HTTP request.
+By default, the serializer provided with API Platform Core represents relations between objects by [dereferenceables IRIs](https://en.wikipedia.org/wiki/Internationalized_Resource_Identifier).
+They allow to retrieve details of related objects by issuing an extra HTTP request.
 
-In the following JSON document, the relation from an offer to a product is represented by an URI:
+In the following JSON document, the relation from a book to an author is represented by an URI:
 
 ```json
 {
-  "@context": "/contexts/Offer",
-  "@id": "/offer/62",
-  "@type": "Offer",
-  "price": 31.2,
-  "product": "/products/59"
+  "@context": "/contexts/Book",
+  "@id": "/books/62",
+  "@type": "Book",
+  "name": "My awesome book",
+  "author": "/people/59"
 }
-```
-
-## Embedding the context
-
-By default, the context attribute (`@context`) will be serialized as an URI:
-```json
-{
-  "@context": "/contexts/Offer"
-}
-```
-
-You can also decide to embed it:
-```json
-{
-  "@context": {
-    "@vocab": "http://localhost:8000/apidoc#",
-    "hydra": "http://www.w3.org/ns/hydra/core#",
-    "name": "#Offer/name"
-  }
-}
-```
-
-For this, register the following services (for example in `app/config/services.yml`):
-
-```yaml
-services:
-    # ...
-
-    resource.offer:
-        parent:    "api.resource"
-        arguments: [ "AppBundle\Entity\Offer" ]
-        calls:
-            -      method:    "initNormalizationContext"
-                   arguments: [ { json_ld_context_embedded: true } ]
-        tags:      [ { name: "api.resource" } ]
 ```
 
 ### Normalization
 
-From a performance point of view, it's sometimes necessary to avoid extra HTTP requests. It is possible to embed related
-objects (or only some of their properties) directly in the parent response trough serialization groups.
-By using the following serizalization groups annotations (`@Groups`) and this updated service definition, a JSON representation
-of the product is embedded in the offer response:
+To improve the application's performance, it is sometimes necessary to avoid issuing extra HTTP requests. It is possible
+to embed related objects (or only some of their properties) directly in the parent response trough serialization groups.
+By using the following serialization groups annotations (`@Groups`), a JSON representation of the author is embedded in
+the book response:
 
 ```php
-<?php
-
-// src/AppBundle/Entity/Offer.php
+// src/AppBundle/Entity/Book.php
 
 namespace AppBundle\Entity;
 
+use ApiPlatform\Core\Annotation\ApiResource;
 use Symfony\Component\Serializer\Annotation\Groups;
 
-class Offer
+/**
+ * @ApiResource(attributes={"normalization_context"={"groups"={"book"}}})
+ */
+class Book
 {
+    /**
+     * @Groups({"book"})
+     */
+    private $name;
+    
+    /**
+     * @Groups({"book"})
+     */
+    private $author;
+
     // ...
-    
-    /**
-     * ...
-     * @Groups({"offer"})
-     */
-    public $price;
-    
-    /**
-     * ...
-     * @Groups({"offer"})
-     */
-    public $product;
 }
 ```
 
 ```php
-<?php
-
-// src/AppBundle/Entity/Product.php
+// src/AppBundle/Entity/Person.php
 
 namespace AppBundle\Entity;
 
+use ApiPlatform\Core\Annotation\ApiResource;
 use Symfony\Component\Serializer\Annotation\Groups;
 
-class Product
+/**
+ * @ApiResource
+ */
+class Person
 {
-    // ...
-
     /**
      * ...
-     * @Groups({"offer"})
+     * @Groups({"book"})
      */
     public $name;
+
+    // ...
 }
-```
-
-Register the following services (for example in `app/config/services.yml`):
-
-```yaml
-services:
-    # ...
-
-    resource.offer:
-        parent:    "api.resource"
-        arguments: [ "AppBundle\Entity\Offer" ]
-        calls:
-            -      method:    "initNormalizationContext"
-                   arguments: [ { groups: [ "offer" ] } ]
-        tags:      [ { name: "api.resource" } ]
 ```
 
 The generated JSON with previous settings will be like the following:
 
 ```json
 {
-  "@context": "/contexts/Offer",
-  "@id": "/offer/62",
-  "@type": "Offer",
-  "price": 31.2,
-  "product": {
-    "@id": "/products/59",
-    "@type": "Product",
-    "name": "Lyle and Scott polo skirt"
+  "@context": "/contexts/Book",
+  "@id": "/books/62",
+  "@type": "Book",
+  "name": "My awesome book",
+  "author": {
+    "@id": "/people/59",
+    "@type": "Person",
+    "name": "Kévin Dunglas"
   }
 }
 ```
 
-**Note: in order to optimize such embedded relations, the default doctrine dataprovider will automatically join entities whose relations are defined as [`EAGER`](http://doctrine-orm.readthedocs.io/projects/doctrine-orm/en/latest/reference/annotations-reference.html#manytoone) avoiding extra queries to be executed when serializing the sub-objects.**
+In order to optimize such embedded relations, the default Doctrine data provider will automatically join entities on relations
+marked as [`EAGER`](http://doctrine-orm.readthedocs.io/projects/doctrine-orm/en/latest/reference/annotations-reference.html#manytoone)
+avoiding extra queries to be executed when serializing the sub-objects.
 
 ### Denormalization
 
 It is also possible to embed a relation in `PUT` and `POST` requests. To enable that feature, the serialization groups must be
-set the same way as normalization and the service definition must be like the following:
+set the same way as normalization and the configuration should be like this:
 
-```yaml
-# app/config/services.yml
-services:
-    # ...
+```php
+// src/AppBundle/Entity/Book.php
 
-    resource.offer:
-        parent:     "api.resource"
-        arguments:  [ "AppBundle\Entity\Offer" ]
-        calls:
-            -       method:    "initDenormalizationContext"
-                    arguments:
-                        -      { groups: [ "offer" ] }
-        tags:       [ { name: "api.resource" } ]
+namespace AppBundle\Entity;
+
+use ApiPlatform\Core\Annotation\ApiResource;
+
+/**
+ * @ApiResource(attributes={"denormalization_context"={"groups"={"book"}}})
+ */
+class Book
+{
+    // ...
+}
 ```
 
 The following rules apply when denormalizating embedded relations:
-* if a `@id` key is present in the embedded resource, the object corresponding to the given URI will be retrieved trough
+
+* If a `@id` key is present in the embedded resource, the object corresponding to the given URI will be retrieved trough
 the data provider and any changes in the embedded relation will be applied to that object.
-* if no `@id` key exists, a new object will be created containing data provided in the embedded JSON document.
+* If no `@id` key exists, a new object will be created containing data provided in the embedded JSON document.
 
 You can create as relation embedding levels as you want.
 
-### Name conversion
+## Name conversion
 
-The Serializer Component provides a handy way to translate or map PHP field names to serialized names. See the
-[Symfony documentation](http://symfony.com/doc/master/components/serializer.html#converting-property-names-when-serializing-and-deserializing)
+The Serializer Component provides a handy way to map PHP field names to serialized names. See the related [Symfony documentation](http://symfony.com/doc/master/components/serializer.html#converting-property-names-when-serializing-and-deserializing).
 
 To use this feature, declare a new service with id `api.name_converter`. For example, you can convert `CamelCase` to 
 `snake_case` with the following configuration:
 
 ```yaml
 # app/config/services.yml
-services:
-    # ...
 
+services:
     api.name_converter:
         class: Symfony\Component\Serializer\NameConverter\CamelCaseToSnakeCaseNameConverter
+        public: false
 ```
 
-### Entity identifier case
+## Entity identifier case
 
-At the moment we identify the entity identifier based on the [Doctrine Identifier](http://doctrine-orm.readthedocs.org/en/latest/reference/basic-mapping.html#identifiers-primary-keys).
-We don't support entity resource with multiple identifier.
+API Platform is able to guess the entity identifier using [Doctrine metadata](http://doctrine-orm.readthedocs.org/en/latest/reference/basic-mapping.html#identifiers-primary-keys).
+It also supports composite identifiers.
 
-The entity identifier is never returned like other properties : it is a part of the URI contained in the `@id` field. 
-So in the `/apidoc` endpoint the identifier will not appear in the properties list.
+If Doctrine ORM is not used, the identifier must be marked explicitly using the `identifier` attribute of the `ApiPlatform\Core\Annotation\ApiProperty`
+annotation.
 
-#### Entity identifier writable
+Most of the time, the property identifying the entity is not included in the returned document but is included as a part
+of the URI contained in the `@id` field. So in the `/apidoc` endpoint the identifier will not appear in the properties list.
+
+However, when using composite identifier, properties composing the identifier are included in the API response and in the
+documentation.
+
+### Writable entity identifier
 
 In some cases, you will want to set the identifier of a resource from the client (like a slug for example).
 In this case the identifier property must become a writable class property in the `/apidoc` endpoint.
 
-To do this you simply have to : 
-* create a setter for identifier in the entity
-* add the denormalization group to the property if you use a specific denormalization group
+To do this you simply have to:
+
+* Create a setter for identifier in the entity.
+* Add the denormalization group to the property if you use a specific denormalization group.
+
+## Embedding the context
+
+By default, the generated [JSON-LD context](https://www.w3.org/TR/json-ld/#the-context) (`@context`) is only reference by
+an IRI. A client supporting JSON-LD must send a second HTTP request to retrieve it:
+
+```json
+{
+  "@context": "/contexts/Book",
+  "@id": "/books/62",
+  "@type": "Book",
+  "name": "My awesome book",
+  "author": "/people/59"
+}
+```
+
+You can configure API Platform Core to embed the JSON-LD context in the root document like the following:
+
+```json
+{
+  "@context": {
+    "@vocab": "http://localhost:8000/apidoc#",
+    "hydra": "http://www.w3.org/ns/hydra/core#",
+    "name": "http://schema.org/name",
+    "author": "http://schema.org/authhor"
+  },
+  "@id": "/books/62",
+  "@type": "Book",
+  "name": "My awesome book",
+  "author": "/people/59"
+}
+```
+
+To do so, use the following configuration:
+
+```php
+// src/AppBundle/Entity/Book.php
+
+namespace AppBundle\Entity;
+
+use ApiPlatform\Core\Annotation\ApiResource;
+
+/**
+ * @ApiResource(attributes={"jsonld_embed_context"=true})
+ */
+class Book
+{
+    // ...
+}
+```
 
 Previous chapter: [Filters](filters.md)<br>
 Next chapter: [Resources path generators](resource-path-generator.md)
