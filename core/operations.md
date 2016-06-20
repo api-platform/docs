@@ -1,9 +1,9 @@
 # Operations
 
 API Platform Core relies on the concept of operations. Operations can be applied to a resource exposed by the API. From
-an implementation point of view, an operation is a link between a resource an a route and its related controller.
+an implementation point of view, an operation is a link between a resource, a route and its related controller.
 
-API Platform automatically registers typical [CRUD](https://en.wikipedia.org/wiki/Create,_read,_update_and_delete)
+API Platform automatically registers typical [CRUD](https://en.wikipedia.org/wiki/Create,_read,_update_and_delete) operations
 and describes them in the exposed documentation (Hydra and NelmioApiDoc). It also creates and registers routes corresponding
 to these operations in the Symfony routing system (if it is available).
 
@@ -15,7 +15,7 @@ is also possible.
 
 There are two types of operations: collection operations and item operations.
 
-Collection operations act on the collection of resources. By default two routes are implemented: `POST` and `GET`. Item
+Collection operations act on a collection of resources. By default two routes are implemented: `POST` and `GET`. Item
 operations act on an individual resource. 3 default routes are defined `GET`, `PUT` and `DELETE`.
 
 When the `ApiPlatform\Core\Annotation\ApiResource` annotation is applied to an entity class, the following built-in CRUD
