@@ -165,10 +165,10 @@ controllers can be any valid [Symfony controller](http://symfony.com/doc/current
 Symfony controllers extending the [`Symfony\Bundle\FrameworkBundle\Controller\Controller`](http://api.symfony.com/3.1/Symfony/Bundle/FrameworkBundle/Controller/Controller.html)
 helper class.
 
-However, API recommends to use **action classes** instead of typical Symfony controllers:
+However, API Platform recommends to use **action classes** instead of typical Symfony controllers. Internally, API Platform
+implements the [Action-Domain-Responder](https://github.com/pmjones/adr) pattern (ADR), a web-specific refinement of [MVC](https://en.wikipedia.org/wiki/Model%E2%80%93view%E2%80%93controller).
 
-Internally, API Platform implements the [Action-Domain-Responder](https://github.com/pmjones/adr) pattern (ADR), a web-specific
-refinement of [MVC](https://en.wikipedia.org/wiki/Model%E2%80%93view%E2%80%93controller).
+Note: [the event system](events.md) should be preferred over custom controllers when applicable.
 
 The standard edition of API Platform also comes with an enhanced action system for Symfony pre-installed: [DunglasActionBundle](https://github.com/dunglas/DunglasActionBundle).
 *DunglasActionBundle* eases the implementation of the ADR pattern with Symfony and improves the developer experience.
