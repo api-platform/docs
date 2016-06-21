@@ -306,7 +306,7 @@ class BookController extends Controller
         return $this->get('doctrine')->getManager()->find(Book::class, $id);
     }
 }
-
+```
 ```yaml
 # app/config/routing.yml
 
