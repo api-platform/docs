@@ -194,7 +194,7 @@ use ApiPlatform\Core\Annotation\ApiResource;
 /**
  * @ApiResource(itemOperations={
  *     "get"={"method"="GET"},
- *     "special"={"special"={"route_name"="book_special"}
+ *     "special"={"route_name"="book_special"}
  * })
  */
 class Book
