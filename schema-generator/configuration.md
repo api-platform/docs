@@ -447,6 +447,10 @@ types:
     # Prototype
     id:
 
+        # Alternative Prototype to use if the Prototype specified by id (above) is not found
+        # The Entity will still be named according to the value of id
+        guessFrom:            null
+
         # Type namespaces
         namespaces:
 
@@ -474,7 +478,7 @@ types:
 
                 # The property range
                 range:                null # Example: Offer
-                cardinality:          ~ # One of "(0..1)"; "(0..*)"; "(1..1)"; "(1..*)"; "unknown"
+                cardinality:          ~ # One of "(0..1)"; "(0..*)"; "(1..1)"; "(1..*)"; "(*..0)"; "(*..1); "unknown"
 
 # Annotation generators to use
 annotationGenerators:
