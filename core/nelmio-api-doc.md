@@ -1,4 +1,4 @@
-# NelmioApiDocBundle integration
+# NelmioApiDocBundle Integration
 
 ![Screenshot of ApiBundle integrated with NelmioApiDocBundle](../getting-started/images/api-doc.png)
 

@@ -1,4 +1,4 @@
-# Data providers
+# Data Providers
 
 To retrieve data exposed by the API, API Platform uses classes called **data providers**. A data provider using [Doctrine
 ORM](http://www.doctrine-project.org/projects/orm.html) to retrieve data from a database is included with the library and
@@ -19,7 +19,7 @@ For a given resource, you can implement two kind of interfaces:
 
 In the following examples we will create custom data providers for an entity class class called `AppBundle\Entity\BlogPost`.
 
-## Custom collection data provider
+## Custom Collection Data Provider
 
 First, your `BlogPostCollectionDataProvider` has to implement the [`CollectionDataProviderInterface`](https://github.com/api-platform/core/blob/master/src/Api/CollectionDataProviderInterface.php):
 
@@ -36,7 +36,7 @@ use AppBundle\Entity\BlogPost;
 use ApiPlatform\Core\Api\CollectionDataProviderInterface;
 use ApiPlatform\Core\Exception\ResourceClassNotSupportedException;
 
-class BlogPostCollectionDataProvider implements CollectionDataProviderInterface
+final class BlogPostCollectionDataProvider implements CollectionDataProviderInterface
 {
     public function getCollection(string $resourceClass, string $operationName = null)
     {
@@ -67,7 +67,7 @@ register and use this data provider. The optional attribute `priority` allows to
 data providers. The first data provider not throwing a `ApiPlatform\Core\Exception\ResourceClassNotSupportedException` will
 be used.
 
-## Custom item data provider
+## Custom Item Data Provider
 
 The process is similar for item data providers. Create a `BlogPostItemDataProvider` implementing the [`ItemDataProviderInterface`](https://github.com/api-platform/core/blob/master/src/Api/ItemDataProviderInterface.php)
 interface:
@@ -84,7 +84,7 @@ use AppBundle\Entity\BlogPost;
 use ApiPlatform\Core\Api\ItemDataProviderInterface;
 use ApiPlatform\Core\Exception\ResourceClassNotSupportedException;
 
-class BlogPostItemDataProvider implements ItemDataProviderInterface
+final class BlogPostItemDataProvider implements ItemDataProviderInterface
 {
     public function getItem(string $resourceClass, $id, string $operationName = null, bool $fetchData = false);
     {

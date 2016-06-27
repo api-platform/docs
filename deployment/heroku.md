@@ -1,4 +1,4 @@
-# Deploying an API Platform app on Heroku
+# Deploying an API Platform App on Heroku
 
 [Heroku](http://heroku.com) is a popular, fast, scalable and reliable *Platform As A Service* (PaaS). As Heroku offers a
 free plan including database support trough [Heroku Postgres](https://www.heroku.com/postgres), it's
@@ -17,7 +17,7 @@ have a working install of [Composer](http://getcomposer.org), perfect, we will n
 
 Create a new API Platform project as usual:
 
-    composer create-project dunglas/api-platform
+    composer create-project api-platform/api-platform
 
 Go to the created directory. Then install the API Heroku integration library created by the API Platform team. It we will ease the deployment.
 Install it:
@@ -166,3 +166,6 @@ can scale it in one click from the Heroku interface.
 To see your logs, run `heroku logs --tail`.
 
 Can it be easier? Yes it can: we are preparing an API Platform edition preconfigured to run on Heroku! Stay tuned.
+
+Previous chapter: [Introduction](index.md)
+Next chapter: [Using API Platform with Docker](docker.md)

@@ -1,4 +1,4 @@
-# Usage
+# Getting Started
 
 ## Installation
 
@@ -747,3 +747,6 @@ When cardinality cannot be automatically extracted, it's value is set to `unknow
 Usage:
 
     bin/schema extract-cardinalities
+
+Previous chapter: [Introduction](../core/index.md)
+Next chapter: [Configuration](configuration.md)

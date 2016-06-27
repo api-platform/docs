@@ -488,3 +488,6 @@ annotationGenerators:
     - ApiPlatform\SchemaGenerator\AnnotationGenerator\ConstraintAnnotationGenerator
     - ApiPlatform\SchemaGenerator\AnnotationGenerator\DoctrineOrmAnnotationGenerator
 ```
+
+Previous chapter: [Getting Started](getting-started.md)
+Next chapter: [Deployment: Introduction](../deployment/index.md)

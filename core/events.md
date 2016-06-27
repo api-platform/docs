@@ -1,4 +1,4 @@
-# The event system
+# The Event System
 
 API Platform Core implements the [Action-Domain-Responder](https://github.com/pmjones/adr) pattern. This implementation
 is covered in depth in the [Creating custom operations and controllers](operations.md#creating-custom-operations-and-controllers]

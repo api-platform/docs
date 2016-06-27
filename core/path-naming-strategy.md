@@ -1,6 +1,6 @@
-# Path naming strategy
+# Path Naming Strategy
 
-With API Platform, you can configure the naming strategy of URL paths exposing your resources globally.
+With API Platform Core, you can configure the naming strategy of URL paths exposing your resources globally.
 It comes with pre-registered generators, which you can easily override.
 
 ## Configuration
@@ -39,7 +39,7 @@ namespace AppBundle\Routing;
 use ApiPlatform\Core\Routing\ResourcePathGeneratorInterface;
 use Doctrine\Common\Inflector\Inflector;
 
-class NoSeparatorsResourcePathGenerator implements ResourcePathGeneratorInterface
+final class NoSeparatorsResourcePathGenerator implements ResourcePathGeneratorInterface
 {
     public function generateResourceBasePath(string $resourceShortName) : string
     {

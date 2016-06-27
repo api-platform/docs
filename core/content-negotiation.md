@@ -1,4 +1,4 @@
-# Content negotiation
+# Content Negotiation
 
 The API system has builtin [content negotiation](https://en.wikipedia.org/wiki/Content_negotiation) capabilities.
 It leverages the [`willdurand/negotiation`](https://github.com/willdurand/Negotiation) library.
@@ -12,7 +12,7 @@ first format defined in the `support_formats` configuration key (see below).
 
 An example using the builtin XML serializer is available in Behat specs: https://github.com/api-platform/core/blob/master/features/content_negotiation.feature
 
-## Enabling several formats
+## Enabling Several Formats
 
 The first required step is to configure allowed formats. The following configuration will enable the support of a format
 called `myformat` and having `application/vnd.myformat` as [MIME type](https://en.wikipedia.org/wiki/Media_type).
@@ -27,7 +27,7 @@ api_platform:
         myformat:                      ['application/vnd.myformat']
 ```
 
-## Registering a custom format in the Negotiation library
+## Registering a Custom Format in the Negotiation Library
 
 If the format you want to use is not supported by default in the Negotiation library, you must register it using a [compiler
 pass](https://symfony.com/doc/current/components/dependency_injection/compilation.html#creating-a-compiler-pass):
@@ -40,7 +40,7 @@ namespace AppBundle\DependencyInjection\Compiler;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 
-class MyFormatPass implements CompilerPassInterface
+final class MyFormatPass implements CompilerPassInterface
 {
     public function process(ContainerBuilder $container)
     {
@@ -64,7 +64,7 @@ use AppBundle\DependencyInjection\Compiler\MyFormatPass;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
-class AppBundle extends Bundle
+final class AppBundle extends Bundle
 {
     public function build(ContainerBuilder $container)
     {
@@ -73,7 +73,7 @@ class AppBundle extends Bundle
 }
 ```
 
-## Registering a custom serializer
+## Registering a Custom Serializer
 
 Then you need to create custom encoder, decoder and eventually a normalizer and a denormalizer for your format. API Platform
 Core relies on the Symfony Serializer Component. [Refer to its dedicated documentation](https://symfony.com/doc/current/cookbook/serializer.html#adding-normalizers-and-encoders)

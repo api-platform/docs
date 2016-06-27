@@ -1,4 +1,4 @@
-# An AngularJS client
+# An AngularJS Client
 
 Prerequisites:
 
@@ -251,3 +251,6 @@ Of course there are some tasks to have a finished client including routing, pagi
 in the generated HTML for search engines (use [the response extractor hook](https://github.com/mgonto/restangular/issues/100)
 provided by Restangular). As it's only Angular tasks, it's out of scope of this introduction to API Platform. But it's a
 good exercise to add such features to the client. Feel free to share your snippets!
+
+Previous chapter: [Creating your First API with API Platform, in 5 Minutes](api.md)<br>
+Next chapter: [API Platform Core: Introduction](../core/index.md)
