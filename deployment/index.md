@@ -1,9 +1,12 @@
-# Deploying API Platform applications
+# Deploying API Platform Applications
 
 As an API Platform application is basically a standard Symfony application, [all Symfony deployment cookbooks](http://symfony.com/doc/current/cookbook/deployment/index.html)
 apply.
 
-However, API Platform also provide facilities to deploy applications trough containers and Platforms as a Service (Paas):
+However, API Platform also provide facilities to deploy applications trough containers and Platforms as a Service (PaaS):
 
-* [Deploying an API Platform app on Heroku](heroku.md)
+* [Deploying an API Platform App on Heroku](heroku.md)
 * [Using API Platform with Docker](docker.md)
+
+Previous chapter: [Schema Generator: Configuration](../schema-generator/index.md)
+Next chapter: [Deploying an API Platform App on Heroku](heroku.md)

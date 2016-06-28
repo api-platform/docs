@@ -49,7 +49,7 @@ api_platform:
         page_parameter_name: _page
 ```
 
-## Disabling the pagination
+## Disabling the Pagination
 
 Paginating collection is generally accepted as a good practice. It also allows browsing large collections without to much
 overhead as well as preventing [DOS attacks](https://en.wikipedia.org/wiki/Denial-of-service_attack).
@@ -69,7 +69,7 @@ api_platform:
             enabled: false
 ```
 
-### For a specific resource
+### For a Specific Resource
 
 It can also be disabled for specific resource:
 
@@ -130,7 +130,7 @@ class Book
 }
 ```
 
-## Changing the number of items per page
+## Changing the Number of Items per Page
 
 In the same manner, the number of items per page is configurable and can be set client-side.
 
@@ -147,7 +147,7 @@ api_platform:
             items_per_page: 30 # Default value
 ```
 
-### For a specific resource
+### For a Specific Resource
 
 ```php
 // src/AppBundle/Entity/Book.php
@@ -179,7 +179,7 @@ api_platform:
 
 The number of items per page can now be changed adding a query parameter named `itemsPerPage`: `GET /books?itemsPerPage=20`
 
-#### For a specific resource
+#### For a Specific Resource
 
 Changing the number of items per page can be enabled (or disabled) for a specific resource:
 

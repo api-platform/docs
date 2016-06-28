@@ -36,7 +36,7 @@ Method   | Mandatory | Description
 `PUT`    | no        | Update an element
 `DELETE` | no        | Delete an element
 
-## Enabling and disabling operations
+## Enabling and Disabling Operations
 
 If no operation is specified, all default CRUD operations are automatically registered. It is also possible - and recommended
 for large projects - to define operations explicitly.
@@ -99,7 +99,7 @@ product:
 API Platform Core is smart enough to automatically register the applicable Symfony route referencing a built-in CRUD action
 just by specifying the enabled HTTP method.
 
-## Configuring operations
+## Configuring Operations
 
 The URL, the HTTP method and the Hydra context passed to documentation generators of operations is easy to configure.
 
@@ -158,7 +158,7 @@ product:
 
 </configurations>
 
-## Creating custom operations and controllers
+## Creating Custom Operations and Controllers
 
 API Platform can leverage the Symfony routing system to register custom operation related to custom controllers. Such custom
 controllers can be any valid [Symfony controller](http://symfony.com/doc/current/book/controller.html), including standard

@@ -10,7 +10,7 @@ By default, all filters are disabled. They must be enabled explicitly.
 When a filter is enabled, it is automatically documented as a `hydra:search` property in the collection response. It also
 automatically appears in the [NelmioApiDoc documentation](nelmio-api-doc.md) if it is available.
 
-## Search filter
+## Search Filter
 
 If Doctrine ORM support is enabled, adding filters is as easy as registering a filter service in your `app/config/services.yml`
 file and adding an attribute to your resource configuration.
@@ -80,7 +80,7 @@ Using a numeric ID is also supported: `http://localhost:8000/api/offers?product=
 
 Previous URLs will return all offers for the product having the following IRI as JSON-LD identifier (`@id`): `http://localhost:8000/api/products/12`.
 
-## Date filter
+## Date Filter
 
 The date filter allows to filter a collection by date intervals.
 
@@ -117,7 +117,7 @@ class Offer
 }
 ```
 
-### Managing `null` values
+### Managing `null` Values
 
 The date filter is able to deal with date properties having `null` values.
 Four behaviors are available at the property level of the filter:
@@ -143,56 +143,6 @@ services:
 
 If you use a service definition format other than YAML, you can use the `ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\DateFilter::EXCLUDE_NULL`
 constant directly.
-
-## Order filter
-
-The order filter allows to order a collection against the given properties.
-
-Syntax: `?order[property]=<asc|desc>`
-
-Enable the filter:
-
-```yaml
-# app/config/services.yml
-
-services:
-   offer.order_filter:
-        parent:    'api_platform.doctrine.orm.order_filter'
-        arguments: [ { id: ~, name: ~ } ]
-        tags:      [ { name: 'api_platform.filter', id: 'offer.order' } ]
-```
-
-```php
-// src/AppBundle/Entity/Offer.php
-
-namespace AppBundle\Entity;
-
-use ApiPlatform\Core\Annotation\ApiResource;
-
-/**
- * @ApiResource(attributes={"filters"={"offer.search", "offer.date", "offer.order"}})
- */
-class Offer
-{
-    // ...
-}
-```
-
-Given that the collection endpoint is `/offers`, you can filter offers by name in ascending order and then by ID in descending
-order with the following query: `/offers?order[name]=desc&order[id]=asc`.
-
-By default, whenever the query does not specify the direction explicitly (e.g: `/offers?order[name]&order[id]`), filters
-will not be applied unless you configure a default order direction to use:
-
-```yaml
-# app/config/services.yml
-
-services:
-    offer.order_filter:
-        parent:    'api_platform.doctrine.orm.order_filter'
-        arguments: [ { id: 'ASC', name: 'DESC' } ]
-        tags:      [ { name: 'api_platform.filter', id: 'offer.order' } ]
-```
 
 ## Boolean Filter 
 
@@ -262,7 +212,7 @@ use ApiPlatform\Core\Annotation\ApiResource;
 /**
  * @ApiResource(attributes={"filters"={"offer.search", "offer.date", "offer.boolean", "offer.numeric"}})
  */
-class Offer
+final lass Offer
 {
     // ...
 }
@@ -272,7 +222,57 @@ Given that the collection endpoint is `/offers`, you can filter offers by boolea
 
 It will return all offers with `sold` equals 1
 
-### Using a custom order query parameter name
+## Order Filter
+
+The order filter allows to order a collection against the given properties.
+
+Syntax: `?order[property]=<asc|desc>`
+
+Enable the filter:
+
+```yaml
+# app/config/services.yml
+
+services:
+   offer.order_filter:
+        parent:    'api_platform.doctrine.orm.order_filter'
+        arguments: [ { id: ~, name: ~ } ]
+        tags:      [ { name: 'api_platform.filter', id: 'offer.order' } ]
+```
+
+```php
+// src/AppBundle/Entity/Offer.php
+
+namespace AppBundle\Entity;
+
+use ApiPlatform\Core\Annotation\ApiResource;
+
+/**
+ * @ApiResource(attributes={"filters"={"offer.search", "offer.date", "offer.order"}})
+ */
+class Offer
+{
+    // ...
+}
+```
+
+Given that the collection endpoint is `/offers`, you can filter offers by name in ascending order and then by ID in descending
+order with the following query: `/offers?order[name]=desc&order[id]=asc`.
+
+By default, whenever the query does not specify the direction explicitly (e.g: `/offers?order[name]&order[id]`), filters
+will not be applied unless you configure a default order direction to use:
+
+```yaml
+# app/config/services.yml
+
+services:
+    offer.order_filter:
+        parent:    'api_platform.doctrine.orm.order_filter'
+        arguments: [ { id: 'ASC', name: 'DESC' } ]
+        tags:      [ { name: 'api_platform.filter', id: 'offer.order' } ]
+```
+
+### Using a Custom Order Query Parameter Name
 
 A conflict will occur if `order` is also the name of a property with the search filter enabled.
 Luckily, the query parameter name to use is configurable:
@@ -285,7 +285,7 @@ api_platform:
         order_parameter_name: '_order' # the URL query parameter to use is now "_order"
 ```
 
-## Filtering on nested properties
+## Filtering on Nested Properties
 
 Sometimes, you need to be able to perform filtering based on some linked resources (on the other side of a relation). All
 built-in filters support nested properties using the dot (`.`) syntax, e.g.:
@@ -308,7 +308,7 @@ services:
 The above allows you to find offers by their respective product's color: `http://localhost:8000/api/offers?product.color=red`,
 or order offers by the product's release date: `http://localhost:8000/api/offers?order[product.releaseDate]=desc`
 
-## Enabling a filter for all properties of a resource
+## Enabling a Filter for All Properties of a Resource
 
 As we have seen in previous examples, properties where filters can be applied must be explicitly declared. If you don't
 care about security and performance (e.g. an API with restricted access), it is also possible to enable built-in filters
@@ -338,7 +338,7 @@ It means that the filter will be **silently** ignored if the property:
 * is not enabled
 * has an invalid value
 
-## Creating custom filters
+## Creating Custom Filters
 
 Custom filters can be written by implementing the `ApiPlatform\Core\Api\FilterInterface`
 interface.
@@ -346,14 +346,14 @@ interface.
 If you use [custom data providers](data-providers.md), they must support filtering and be aware of active filters to work
 properly.
 
-### Creating custom Doctrine ORM filters
+### Creating Custom Doctrine ORM Filters
 
 Doctrine ORM filters must implement the `ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\FilterInterface`.
 They can interact directly with the Doctrine `QueryBuilder`.
 
 A convenient abstract class is also shipped with the bundle: `ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\AbstractFilter`
 
-### Overriding extraction of properties from the request
+### Overriding Extraction of Properties from the Request
 
 You can change the way the filter parameters are extracted from the request. This can be done by overriding the `extractProperties(\Symfony\Component\HttpFoundation\Request $request)`
 method.
@@ -368,7 +368,7 @@ namespace AppBundle\Filter;
 use Dunglas\ApiBundle\Doctrine\Orm\OrderFilter;
 use Symfony\Component\HttpFoundation\Request;
 
-class CustomOrderFilter extends OrderFilter
+final class CustomOrderFilter extends OrderFilter
 {
     protected function extractProperties(Request $request)
     {

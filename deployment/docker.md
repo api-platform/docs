@@ -1,27 +1,15 @@
 # Using API Platform with Docker
 
-Projects using API Platform can be run through [Docker](https://www.docker.com/) and
-[Docker compose](https://docs.docker.com/compose/). Run `docker-compose up -d`,
-your project will be accessible at [http://127.0.0.1](http://127.0.0.1).
+API Platform projects can be run through [Docker](https://www.docker.com/).
+A [Docker compose](https://docs.docker.com/compose/) configuration including a fully working [LAMP](https://en.wikipedia.org/wiki/LAMP_(software_bundle))
+stack is shipped with the standard edition.
 
-You can customize Docker configuration by creating your own `docker-compose.yml`
-file. For example, if you want Nginx to run on port 8888:
+To install it, run the following commands (Docker must be installed on your system):
 
-```yaml
-web:
-    image: vincentchalamon/docker-symfony
-    ports:
-        - 8888:80
-    volumes:
-        - .:/var/www
-    tty: true
+    docker-compose up # Download, build and run Docker images
+    docker-compose run web composer install -o -n # Install Composer dependencies
+    docker-compose run web bin/console doctrine:schema:create # Create the MySQL schema
 
-db:
-    image: mysql
-    command: mysqld --port 3386
-    net: "host"
-    environment:
-        MYSQL_DATABASE: api
-        MYSQL_USER: root
-        MYSQL_ALLOW_EMPTY_PASSWORD: yes
-```
+Your project will be accessible at the URL `http://127.0.0.1`.
+
+Previous chapter: [Deploying an API Platform App on Heroku](heroku.md)

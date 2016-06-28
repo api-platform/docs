@@ -38,14 +38,14 @@ api:
 
 There is no mandatory configuration. However, a lot of [configuration parameters](configuration.md) are available.
 
-## Before reading this documentation
+## Before Reading this Documentation
 
 If you haven't read it already, take a look at [the "Creating your first API with API Platform, in 5 minutes" guide](../getting-started/api.md).
 Using the schema generator is not necessary to use API Platform Core. But the "Exposing the API" section of this tutorial
 covers basic concepts required to understand how API Platform works including how it implements the REST pattern and what
 [JSON-LD](http://json-ld.org/) and [Hydra](http://www.hydra-cg.com/) formats are.
 
-## Mapping the entities
+## Mapping the Entities
 
 API Platform Core is able to automatically expose entities mapped as "API resources" through a REST API supporting CRUD operations.
 To expose your entities, you can use Docblock annotations, XML and YAML configuration files.
@@ -179,6 +179,7 @@ As an alternative to annotations, you can map entity classes using XML or YAML:
 
 ```yaml
 # src/AppBundle/Resources/config/resources.yml
+
 resources:
     product:
         class: 'AppBundle\Entity\Product'
@@ -199,4 +200,5 @@ Interact with the API using a REST client (we recommend [Postman](https://www.ge
 (you should give a try to [Hydra Console](https://github.com/lanthaler/HydraConsole)). Take
 a look at the usage examples in [the `features` directory](/features/).
 
+Previous chapter: [Introduction](index.md)<br>
 Next chapter: [Configuration](configuration.md)

@@ -1,9 +1,9 @@
-# FOSUser Bundle integration
+# FOSUser Bundle Integration
 
 API Platform Core is shipped with a bridge for [FOSUserBundle](https://github.com/FriendsOfSymfony/FOSUserBundle). If the
 FOSUser bundle is enabled, this bridge will use its `UserManager` to create, update and delete user resources.
 
-## Creating a `User` entity with serialization groups
+## Creating a `User` Entity with Serialization Groups
 
 Here's an example of declaration of a [Doctrine ORM User class](https://github.com/FriendsOfSymfony/FOSUserBundle/blob/master/Resources/doc/index.rst#a-doctrine-orm-user-class).
 You need to use serialization groups to hide some properties like `plainPassword` (only in read) and `password`. The properties
@@ -79,4 +79,4 @@ class User extends BaseUser
 ```
 
 Previous chapter: [NelmioApiDocBundle integration](nelmio-api-doc.md)<br>
-Next chapter: [AngularJS integration](angular-integration.md)
+Next chapter: [AngularJS integration](angularjs-integration.md)

@@ -5,7 +5,7 @@ entities.
 
 Without specific configuration, it uses the default validation group, but this behavior is customizable.
 
-## Using validation groups
+## Using Validation Groups
 
 Built-in actions are able to leverage Symfony's [validation groups](http://symfony.com/doc/current/book/validation.html#validation-groups).
 
@@ -46,7 +46,7 @@ Of course, you can use XML or YAML configuration format instead of annotations i
 You may also pass in a [group sequence](http://symfony.com/doc/current/book/validation.html#group-sequence) in place of
 the array of group names.
 
-## Dynamic validation groups
+## Dynamic Validation Groups
 
 If you need to dynamically determine which validation groups to use for an entity in different scenarios, just pass in a
 [callable](http://php.net/manual/en/language.types.callable.php). The callback will receive the entity object as its first

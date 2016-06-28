@@ -1,4 +1,4 @@
-# Using external (JSON-LD) vocabularies
+# Using External JSON-LD Vocabularies
 
 JSON-LD allows to define classes and properties of your API with open vocabularies such as [Schema.org](https://schema.org)
 and [Good Relations](http://www.heppnetz.de/projects/goodrelations/).

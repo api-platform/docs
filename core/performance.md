@@ -1,6 +1,6 @@
 # Performance
 
-## Enabling the metadata cache
+## Enabling the Metadata Cache
 
 Computing metadata used by the bundle is a costly operation. Fortunately, metadata can be computed once and then cached.
 API Platform internally uses a [PSR-6](http://www.php-fig.org/psr/psr-6/) cache. If the Symfony Cache Component is available

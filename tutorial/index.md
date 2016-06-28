@@ -16,12 +16,12 @@ to improve and professionalize the PHP ecosystem. The PHP world has closed the g
 more innovative than them.
 
 But in critical area I've described previously, many things can be improved. Almost all existing solutions are still [designed
-and documented](https://symfony.com/doc/2.7/book/page_creation.html) to create websites the old way: a server generate then
-send plain-old HTML documents to browsers.
+and documented](https://symfony.com/doc/current/book/page_creation.html) to create websites the old way: a server generates
+then sends plain-old HTML documents to browsers.
 
-[API Platform](https://api-platform.com) is a brand new set of tools to kickstart modern web projects. It's a framework for
-API-first projects built on top of Symfony. Like other modern frameworks such as Zend Framework and Symfony, it's both a
-full-stack all-in-one framework and a set of independent PHP components and bundles that can be used separately.
+[API Platform](https://api-platform.com) is a set of tools for building modern web projects. It is a framework
+for API-first projects built on top of Symfony. Like other modern frameworks such as Zend Framework and Symfony, it's both
+a full-stack all-in-one framework and a set of independent PHP components and bundles that can be used separately.
 
 The architecture promoted by the framework will distrust many of you but read this tutorial until the end and you will
 see how API Platform make modern development easy and fun again:
@@ -29,6 +29,8 @@ see how API Platform make modern development easy and fun again:
 * [Start by **creating a hypermedia REST API**](api.md) exposing structured data that can
   be understood by any compliant client such your apps but also as search engines (JSON-LD with Schema.org vocabulary).
   This API is the central and unique entry point to access and modify data. It also encapsulates the whole business logic.
-* [Then **create as many clients as you want using frontend technologies you love**](angularjs.md): an HTML5/Javascript webapp querying
-  the API in AJAX (of course) but also a native iOS or Android app, or even a desktop application. Clients only display
-  data and forms.
+* [Then **create as many clients as you want using frontend technologies you love**](angularjs.md): an HTML5/Javascript
+  webapp querying the API in AJAX (of course) but also a native iOS or Android app, or even a desktop application. Clients
+  only display data and forms.
+
+Next chapter: [Creating your First API with API Platform, in 5 Minutes](api.md)

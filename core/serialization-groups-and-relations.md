@@ -1,4 +1,4 @@
-# Serialization groups and relations
+# Serialization Groups and Relations
 
 API Platform Core allows to choose which attributes of the resource are exposed during the normalization (read) and denormalization
 (write) process. It relies on the [serialization (and deserialization) groups](https://symfony.com/doc/current/components/serializer.html#attributes-groups)
@@ -19,7 +19,7 @@ framework:
     serializer: { enable_annotations: true }
 ```
 
-## Using serialization groups
+## Using Serialization Groups
 
 Specifying to the API system the groups to use is really simple:
 
@@ -64,7 +64,7 @@ key when using [the `@MaxDepth` annotation](https://github.com/symfony/symfony/i
 Built-in actions and the Hydra documentation generator will leverage the specified serialization and deserialization groups
 to give access only to exposed properties and to guess if they are readable and/or writable.
 
-## Using different serialization groups per operation
+## Using Different Serialization Groups per Operation
 
 It is possible to specify normalization and denormalization contexts (as well as any other attribute) on a per operation
 basis. API Platform Core will always use the most specific definition. For instance if normalization groups are set both
@@ -112,7 +112,7 @@ include the `name` property because of the specific configuration for this opera
 
 Refer to the documentation of [operations](operations.md) to learn more about the concept of operations.
 
-## Embedding relations
+## Embedding Relations
 
 By default, the serializer provided with API Platform Core represents relations between objects by [dereferenceables IRIs](https://en.wikipedia.org/wiki/Internationalized_Resource_Identifier).
 They allow to retrieve details of related objects by issuing an extra HTTP request.
@@ -235,7 +235,7 @@ the data provider and any changes in the embedded relation will be applied to th
 
 You can create as relation embedding levels as you want.
 
-## Name conversion
+## Name Conversion
 
 The Serializer Component provides a handy way to map PHP field names to serialized names. See the related [Symfony documentation](http://symfony.com/doc/master/components/serializer.html#converting-property-names-when-serializing-and-deserializing).
 
@@ -251,7 +251,7 @@ services:
         public: false
 ```
 
-## Entity identifier case
+## Entity Identifier Case
 
 API Platform is able to guess the entity identifier using [Doctrine metadata](http://doctrine-orm.readthedocs.org/en/latest/reference/basic-mapping.html#identifiers-primary-keys).
 It also supports composite identifiers.
@@ -265,7 +265,7 @@ of the URI contained in the `@id` field. So in the `/apidoc` endpoint the identi
 However, when using composite identifier, properties composing the identifier are included in the API response and in the
 documentation.
 
-### Writable entity identifier
+### Writable Entity Identifier
 
 In some cases, you will want to set the identifier of a resource from the client (like a slug for example).
 In this case the identifier property must become a writable class property in the `/apidoc` endpoint.
@@ -275,7 +275,7 @@ To do this you simply have to:
 * Create a setter for identifier in the entity.
 * Add the denormalization group to the property if you use a specific denormalization group.
 
-## Embedding the context
+## Embedding the Context
 
 By default, the generated [JSON-LD context](https://www.w3.org/TR/json-ld/#the-context) (`@context`) is only reference by
 an IRI. A client supporting JSON-LD must send a second HTTP request to retrieve it:

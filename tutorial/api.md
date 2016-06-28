@@ -1,4 +1,4 @@
-# Creating your first API with API Platform, in 5 minutes
+# Creating your First API with API Platform, in 5 Minutes
 
 In this tutorial, we will create a typical blog application with API Platform.
 And it will take us less than 5 minutes to create the API, promised!
@@ -603,3 +603,6 @@ Here is a non exhaustive list of what you can do with API Platform:
 * [Deploy](../deployment/index.md)
 
 The next step? [Learn how to create an AngularJS client for the API](angularjs.md).
+
+Previous chapter: [Introduction](index.md)<br>
+Next chapter: [An AngularJS Client](angularjs.md)
