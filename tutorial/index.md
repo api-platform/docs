@@ -19,7 +19,7 @@ But in critical area I've described previously, many things can be improved. Alm
 and documented](https://symfony.com/doc/current/book/page_creation.html) to create websites the old way: a server generates
 then sends plain-old HTML documents to browsers.
 
-[API Platform](https://api-platform.com) is a new generation set of modern tools to kickstart web projects. It is a framework
+[API Platform](https://api-platform.com) is a set of tools for building modern web projects. It is a framework
 for API-first projects built on top of Symfony. Like other modern frameworks such as Zend Framework and Symfony, it's both
 a full-stack all-in-one framework and a set of independent PHP components and bundles that can be used separately.
 
