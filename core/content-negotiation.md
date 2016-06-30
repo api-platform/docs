@@ -27,52 +27,6 @@ api_platform:
         myformat:                      ['application/vnd.myformat']
 ```
 
-## Registering a Custom Format in the Negotiation Library
-
-If the format you want to use is not supported by default in the Negotiation library, you must register it using a [compiler
-pass](https://symfony.com/doc/current/components/dependency_injection/compilation.html#creating-a-compiler-pass):
-
-```php
-// src/AppBundle/DependencyInjection/Compiler/MyFormatPass.php
-
-namespace AppBundle\DependencyInjection\Compiler;
-
-use Symfony\Component\DependencyInjection\ContainerBuilder;
-use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
-
-final class MyFormatPass implements CompilerPassInterface
-{
-    public function process(ContainerBuilder $container)
-    {
-        // ...
-
-        $container->getDefinition('api.format_negotiator')->addMethodCall('registerFormat', [
-            'myformat', ['application/vnd.myformat'], true,
-        ]);
-    }
-}
-```
-
-Don't forget to register your compiler pass into the container from the `Bundle::build(ContainerBuilder $container)` method of your bundle:
-
-```php
-// src/AppBundle/AppBundle.php
-
-namespace AppBundle;
-
-use AppBundle\DependencyInjection\Compiler\MyFormatPass;
-use Symfony\Component\DependencyInjection\ContainerBuilder;
-use Symfony\Component\HttpKernel\Bundle\Bundle;
-
-final class AppBundle extends Bundle
-{
-    public function build(ContainerBuilder $container)
-    {
-        $container->addCompilerPass(new MyFormatPass());
-    }
-}
-```
-
 ## Registering a Custom Serializer
 
 Then you need to create custom encoder, decoder and eventually a normalizer and a denormalizer for your format. API Platform
