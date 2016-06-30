@@ -152,8 +152,16 @@ final class XmlResponderViewListener
 
         $resourceClass = $request->attributes->get('_resource_class');
         $resourceMetadata = $this->resourceMetadataFactory->create($resourceClass);
-        $context = $resourceMetadata->getAttribute('normalization_context', []);
+        
+        $itemContext = $resourceMetadata->getItemOperationAttribute($operationName, 'normalization_context', ['groups' => []], false);
+        $collectionContext = $resourceMetadata->getCollectionOperationAttribute($operationName, 'normalization_context', ['groups' => []], false);
 
+        if(!$itemContext['groups'] && !$collectionContext['groups']) {
+            $context = $resourceMetadata->getAttribute('normalization_context', []);
+        } else {
+            $context = array_merge($itemContext, $collectionContext);
+        }
+        
         $response = new Response(
             $this->serializer->serialize($controllerResult, self::FORMAT, $context),
             $status,
