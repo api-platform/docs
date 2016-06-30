@@ -132,6 +132,8 @@ final class XmlResponderViewListener
         $request = $event->getRequest();
 
         $format = $request->attributes->get('_api_format');
+       $operationName = $request->attributes->get("_collection_operation_name", $request->attributes->get('_item_operation_name'));
+
         if (self::FORMAT !== $format) {
             return $controllerResult;
         }
