@@ -1,6 +1,6 @@
 # NelmioApiDocBundle Integration
 
-![Screenshot of ApiBundle integrated with NelmioApiDocBundle](../getting-started/images/api-doc.png)
+![Screenshot of ApiBundle integrated with NelmioApiDocBundle](../tutorial/images/api-doc.png)
 
 [NelmioApiDocBundle](https://github.com/nelmio/NelmioApiDocBundle) (since version 2.9) has built-in support for API Platform.
 Installing it will give you access to a human-readable documentation and a nice sandbox.

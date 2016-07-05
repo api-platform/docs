@@ -2,9 +2,9 @@
 
 ## Tutorial
 
-1. [Introduction](getting-started/index.md)
-1. [Creating a Fully Featured API in 5 Minutes](getting-started/api.md)
-2. [Consuming the API with AngularJS](getting-started/api.md)
+1. [Introduction](tutorial/index.md)
+1. [Creating a Fully Featured API in 5 Minutes](tutorial/api.md)
+2. [Consuming the API with AngularJS](tutorial/api.md)
 
 ## API Platform Core: create a powerful APIs with ease
 

@@ -40,7 +40,7 @@ There is no mandatory configuration. However, a lot of [configuration parameters
 
 ## Before Reading this Documentation
 
-If you haven't read it already, take a look at [the "Creating your first API with API Platform, in 5 minutes" guide](../getting-started/api.md).
+If you haven't read it already, take a look at [the "Creating your first API with API Platform, in 5 minutes" guide](../tutorial/api.md).
 Using the schema generator is not necessary to use API Platform Core. But the "Exposing the API" section of this tutorial
 covers basic concepts required to understand how API Platform works including how it implements the REST pattern and what
 [JSON-LD](http://json-ld.org/) and [Hydra](http://www.hydra-cg.com/) formats are.
