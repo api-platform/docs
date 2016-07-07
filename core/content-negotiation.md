@@ -3,147 +3,95 @@
 The API system has builtin [content negotiation](https://en.wikipedia.org/wiki/Content_negotiation) capabilities.
 It leverages the [`willdurand/negotiation`](https://github.com/willdurand/Negotiation) library.
 
-The only supported format by default is [JSON-LD](https://json-ld.org). Support for other formats such as XML or [Protobuf](https://developers.google.com/protocol-buffers/)
-can be added easily.
+By default, only the [JSON-LD](https://json-ld.org) format is enabled. However API Platform Core supports for formats included
+in the underlying [Symfony Serializer component]() can be enabled through the configuration. It supports XML, raw JSON and
+CSV (since Symfony 3.2).
 
-API Platform Core will automatically detect the best format to return according to the `Accept` HTTP header sent by the
-client and enabled formats. If no format asked by the client is supported by the server, the response will be sent in the
-first format defined in the `support_formats` configuration key (see below).
+API Platform Core will automatically detect the best format to return according to enabled formats and the value of the
+`Accept` HTTP header sent by the client. If no format asked by the client is supported by the server, the response will
+be sent in the first format defined in the `formats` configuration key (see below).
 
-An example using the builtin XML serializer is available in Behat specs: https://github.com/api-platform/core/blob/master/features/content_negotiation.feature
+An example using the builtin XML support is available in Behat specs: https://github.com/api-platform/core/blob/master/features/content_negotiation.feature
+
+The API Platform content negotiation system is extensible. Support for other formats (such as [HAL]() or [JSONAPI]())
+can be added by [creating and registering appropriate encoders and, sometimes, normalizers](). Adding support for other
+standard hypermedia formats upstream is very welcome. Don't hesitate to contribute your new encoders and normalizers.
 
 ## Enabling Several Formats
 
-The first required step is to configure allowed formats. The following configuration will enable the support of a format
-called `myformat` and having `application/vnd.myformat` as [MIME type](https://en.wikipedia.org/wiki/Media_type).
+The first required step is to configure allowed formats. The following configuration will enable the support of XML (built-in)
+and of a custom format called `myformat` and having `application/vnd.myformat` as [MIME type](https://en.wikipedia.org/wiki/Media_type).
 
 ```yaml
 # app/config/config.yml
 
 api_platform:
     # ...
-    supported_formats:
-        jsonld:                        ['application/ld+json']
-        myformat:                      ['application/vnd.myformat']
+    formats:
+        jsonld:   ['application/ld+json']
+        xml:      ['application/xml', 'text/xml']
+        myformat: ['application/vnd.myformat']
 ```
 
-## Registering a Custom Serializer
+Because the Symfoyn Serializer component is able to serialize objects in XML, sending an `Accept` HTTP header with the
+`text/xml` string as value is enough to retrieve XML documents from our API. However API Platform knows nothing about the
+`myformat` format. We need to register (at least) a custom encoder for this format.
 
-Then you need to create custom encoder, decoder and eventually a normalizer and a denormalizer for your format. API Platform
-Core relies on the Symfony Serializer Component. [Refer to its dedicated documentation](https://symfony.com/doc/current/cookbook/serializer.html#adding-normalizers-and-encoders)
-to learn how to create and register such classes.
+## Registering a Custom Format in the Negotiation Library
 
-API Platform Core will automatically call the serializer with your defined format name (`myformat` in previous examples)
-as `format` parameter during the deserialization process.
-
-## Creating a responder
-
-Finally, you need to create a class that will convert the raw data to formatted data and the according HTTP response.
-Here is an example responder using the XML serializer shipped with the Symfony Serializer Component:
+If the format you want to use is not supported by default in the Negotiation library, you must register it using a [compiler
+pass](https://symfony.com/doc/current/components/dependency_injection/compilation.html#creating-a-compiler-pass):
 
 ```php
-// src/AppBundle/EventListener/XmlResponderViewListener.php
+// src/AppBundle/DependencyInjection/Compiler/MyFormatPass.php
 
-namespace AppBundle\EventListener;
+namespace AppBundle\DependencyInjection\Compiler;
 
-use ApiPlatform\Core\Metadata\Resource\Factory\ResourceMetadataFactoryInterface;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpKernel\Event\GetResponseForControllerResultEvent;
-use Symfony\Component\Serializer\SerializerInterface;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 
-/**
- * Serializes data in XML then builds the response object.
- */
-final class XmlResponderViewListener
+final class MyFormatPass implements CompilerPassInterface
 {
-    const FORMAT = 'xml';
-
-    private $serializer;
-    private $resourceMetadataFactory;
-
-    public function __construct(SerializerInterface $serializer, ResourceMetadataFactoryInterface $resourceMetadataFactory)
+    public function process(ContainerBuilder $container)
     {
-        $this->serializer = $serializer;
-        $this->resourceMetadataFactory = $resourceMetadataFactory;
-    }
+        // ...
 
-    /**
-     * In an API context, converts any data to a XML response.
-     *
-     * @param GetResponseForControllerResultEvent $event
-     *
-     * @return Response|mixed
-     */
-    public function onKernelView(GetResponseForControllerResultEvent $event)
-    {
-        $controllerResult = $event->getControllerResult();
-
-        if ($controllerResult instanceof Response) {
-            return $controllerResult;
-        }
-
-        $request = $event->getRequest();
-
-        $format = $request->attributes->get('_api_format');
-       $operationName = $request->attributes->get("_collection_operation_name", $request->attributes->get('_item_operation_name'));
-
-        if (self::FORMAT !== $format) {
-            return $controllerResult;
-        }
-
-        switch ($request->getMethod()) {
-            case Request::METHOD_POST:
-                $status = 201;
-                break;
-
-            case Request::METHOD_DELETE:
-                $status = 204;
-                break;
-
-            default:
-                $status = 200;
-                break;
-        }
-
-        $resourceClass = $request->attributes->get('_resource_class');
-        $resourceMetadata = $this->resourceMetadataFactory->create($resourceClass);
-        
-        $itemContext = $resourceMetadata->getItemOperationAttribute($operationName, 'normalization_context', ['groups' => []], false);
-        $collectionContext = $resourceMetadata->getCollectionOperationAttribute($operationName, 'normalization_context', ['groups' => []], false);
-
-        if(!$itemContext['groups'] && !$collectionContext['groups']) {
-            $context = $resourceMetadata->getAttribute('normalization_context', []);
-        } else {
-            $context = array_merge($itemContext, $collectionContext);
-        }
-        
-        $response = new Response(
-            $this->serializer->serialize($controllerResult, self::FORMAT, $context),
-            $status,
-            ['Content-Type' => 'application/xml']
-        );
-
-        $event->setResponse($response);
+        $container->getDefinition('api.format_negotiator')->addMethodCall('registerFormat', [
+            'myformat', ['application/vnd.myformat'], true,
+        ]);
     }
 }
 ```
 
-The last step is to register the event listener on [the `kernel.view` event](http://symfony.com/doc/current/components/http_kernel/introduction.html#the-kernel-view-event)
-dispatched by Symfony:
+Don't forget to register your compiler pass into the container from the `Bundle::build(ContainerBuilder $container)` method of your bundle:
 
-```yaml
-# app/config/services.yml
+```php
+// src/AppBundle/AppBundle.php
 
-services:
-    # ...
+namespace AppBundle;
 
-    app.xml_responder_view_listener:
-        class:     'AppBundle\EventListener\XmlResponderViewListener'
-        arguments: [ '@api_platform.serializer', '@api_platform.metadata.resource.metadata_factory' ]
-        tags:
-            - { name: 'kernel.event_listener', event: 'kernel.view', method: 'onKernelView' }
+use AppBundle\DependencyInjection\Compiler\MyFormatPass;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\HttpKernel\Bundle\Bundle;
+
+final class AppBundle extends Bundle
+{
+    public function build(ContainerBuilder $container)
+    {
+        $container->addCompilerPass(new MyFormatPass());
+    }
+}
 ```
+
+## Registering a Custom Serializer
+
+If you are adding support for a format not supported by default by API Platform nor by the Symfony Serializer Component,
+you need to create custom encoder, decoder and eventually a normalizer and a denormalizer for your format. Refer to the
+Symfony documentation to learn [how to create and register such classes](](https://symfony.com/doc/current/cookbook/serializer.html#adding-normalizers-and-encoders)).
+
+API Platform Core will automatically call the serializer with your defined format name (`myformat` in previous examples)
+as `format` parameter during the deserialization process. Then it will return the result to the client with the asked MIME
+type using its built-in responder.
 
 Previous chapter: [Using external (JSON-LD) vocabularies](external-vocabularies.md)<br>
 Next chapter: [Security](security.md)
