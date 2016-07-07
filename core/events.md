@@ -14,13 +14,18 @@ of the request lifecycle.
 
 Built-in event listeners are:
 
-Event               | Priority | Description
---------------------|----------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-`kernel.request`    | 0        | guess the best response format ([content negotiation](content-negotiation.md))
-`kernel.controller` | 0        | execute built-in actions that retrieve the data from the persistence system using the [data providers](data-providers.md) (`GET`, `PUT`, `DELETE`), deserializes the request (`POST`, `PUT`) and returns an entity (`GET`, `POST`, `PUT`, `DELETE`), an array of entities or a paged collection (`GET` on a collection)
-`kernel.view`       | 20       | [validate data](validation.md) (`POST`, `PUT`)
-`kernel.view`       | 10       | persist data (`POST`, `PUT`, `DELETE`)
-`kernel.view`       | 0        | serialize data and transform them in a `Symfony\Component\HttpFoundation\Response` instance
+Name                          | Event              | Priority | Description
+------------------------------|--------------------|----------|--------------------------------------------------------------------------------------------------------------------------
+`AddFormatListener`           | `kernel.request`   | 7        | guess the best response format ([content negotiation](content-negotiation.md))
+`ReadListener`                | `kernel.request`   | 4        | retrieve data from the persistence system using the [data providers](data-providers.md)
+`DeserializeListener`         | `kernel.request`   | 2        | deserialize data into a PHP entity (`GET`, `POST`, `DELETE`); update the entity retrieved using the data provider (`PUT`)
+`ValidateListener`            | `kernel.view`      | 64       | [validate data](validation.md) (`POST`, `PUT`)
+`WriteListener`               | `kernel.view`      | 32       | if using the Doctrine ORM, persist data (`POST`, `PUT`, `DELETE`)
+`SerializeListener`           | `kernel.view`      | 16       | serialize the PHP entity in string [according to the request format](content-negotiation.md)
+`RespondListener`             | `kernel.view`      | 8        | transform serialized to a `Symfony\Component\HttpFoundation\Response` instance
+`AddLinkHeaderListener`       | `kernel.response`  | 0        | add a `Link` HTTP header pointing to the Hydra documentation
+`ValidationExceptionListener` | `kernel.exception` | 0        | serialize validation exceptions in the Hydra format
+`ExceptionListener`           | `kernel.exception` | -96      | serialize PHP exceptions in the Hydra format (including the stack trace in debug mode)
 
 Those built-in listeners are always executed for routes managed by API Platform. Registering your own event listeners to
 add extra logic is convenient.
@@ -50,7 +55,7 @@ final class BookMailSubscriber implements EventSubscriberInterface
     public static function getSubscribedEvents()
     {
         return [
-            KernelEvents::VIEW => [['sendMail', 5]],
+            KernelEvents::VIEW => [['sendMail', 0]],
         ];
     }
 
