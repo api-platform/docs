@@ -183,7 +183,6 @@ instantiated and injected, without having to declare it explicitly.
 In the following example, the built-in `GET` operation is registered as well as a custom operation called `special`.
 The `special` operation reference the Symfony route named `book_special`.
 
-
 <configurations>
 
 ```php
@@ -241,15 +240,16 @@ namespace AppBundle\Action;
 
 use AppBundle\Entity\Book;
 use Doctrine\Common\Persistence\ManagerRegistry;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Symfony\Component\Routing\Annotation\Route;
 
 class BookSpecial
 {
-    private $doctrine;
+    private $myService;
 
-    public function __construct(ManagerRegistry $doctrine)
+    public function __construct(MyService $myService)
     {
-        $this->doctrine = $doctrine;
+        $this->myService = $myService;
     }
 
     /**
@@ -258,12 +258,17 @@ class BookSpecial
      *     path="/books/{id}/special",
      *     defaults={"_resource_class"=Book::class, "_item_operation_name"="special"}
      * )
+     * @Method("PUT")
      */
-    public function __invoke($id)
+    public function __invoke($data) // API Platform retrieves the PHP entity using the data provider then (for POST and
+                                    // PUT method) deserializes user data in it. Then passes it to the action. Here $data
+                                    // is an instance of Book having the given ID. By convention, the action's parameter
+                                    // must be called $data.
     {
-        // do something special here
+        $this->myService->doSomething($data);
 
-        return $this->doctrine->getManager()->find(Book::class, $id);
+        return $data; // API Platform will automatically validate, persist (if you use Doctrine) and serialize en entity
+                      // for you. If you prefer to do it yourself, return an instance of Symfony\Component\HttpFoundation\Response
     }
 }
 ```
@@ -278,14 +283,17 @@ together.
 Here we consider that DunglasActionBundle is installed (the default when using the API Platform standard edition). This
 action will be automatically registered as a service (the service name is the same as the class name: `AppBundle\Action\BookSpecial`).
 
-The Doctrine manager registry (`doctrine` service) will be automatically injected thanks to the autowiring feature. You
-can type-hint any other service you need and it will be autowired too.
+API Platform automatically retrieve the appropriate PHP entity then deserializes
 
-The `__invoke` method of the action is called automatically when the matching route is hit. It can return either an instance
-of `Symfony\Component\HttpFoundation\Response` (that will be displayed to the client immediately by the Symfony kernel)
-or, like in this example, an instance of an entity mapped as a resource (or a collection of instances for collection operations).
-In this case, the entity will pass through [all built-in event listeners](the-event-system.md) of API Platform and will be
-automatically serialized in JSON-LD then sent to the client.
+Services (`$myService` here) are automatically injected thanks to the autowiring feature. You can type-hint any service
+you need and it will be autowired too.
+
+The `__invoke` method of the action is called when the matching route is hit. It can return either an instance of `Symfony\Component\HttpFoundation\Response`
+(that will be displayed to the client immediately by the Symfony kernel) or, like in this example, an instance of an entity
+mapped as a resource (or a collection of instances for collection operations).
+In this case, the entity will pass through [all built-in event listeners](the-event-system.md) of API Platform. It will be
+automatically validated, persisted and serialized in JSON-LD. Then the Symfony kernel will send the resulting document to
+the client.
 
 Alternatively, you can also use standard Symfony controller and YAML or XML route declarations. The following example do
 exactly the same thing than the previous example in a more Symfony-like fashion:
@@ -301,17 +309,19 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
 class BookController extends Controller
 {
-    public function specialAction($id)
+    public function specialAction($data)
     {
-        return $this->get('doctrine')->getManager()->find(Book::class, $id);
+        return $this->get('my_service')->doSomething(Book::class, $id);
     }
 }
 ```
+
 ```yaml
 # app/config/routing.yml
 
 book_special:
     path: '/books/{id}/special'
+    methods:  ['PUT']
     defaults:
         _controller: 'AppBundle:Book:special'
         _resource_class: 'AppBundle\Entity\Book'
