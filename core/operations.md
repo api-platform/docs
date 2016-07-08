@@ -256,7 +256,7 @@ class BookSpecial
      * @Route(
      *     name="book_special",
      *     path="/books/{id}/special",
-     *     defaults={"_resource_class"=Book::class, "_item_operation_name"="special"}
+     *     defaults={"_api_resource_class"=Book::class, "_api_item_operation_name"="special"}
      * )
      * @Method("PUT")
      */
@@ -276,7 +276,7 @@ class BookSpecial
 This custom operation behaves exactly like the built-in operation: it returns a JSON-LD document corresponding to the id
 passed in the URL.
 
-It is mandatory to set the `_resource_class` and `_item_operation_name` (or `_collection_operation_name` for a collection
+It is mandatory to set the `_api_resource_class` and `_api_item_operation_name` (or `_api_collection_operation_name` for a collection
 operation) in the parameters of the route (`defaults` key). It allows API Platform and the Symfony routing system to hook
 together.
 
@@ -324,8 +324,8 @@ book_special:
     methods:  ['PUT']
     defaults:
         _controller: 'AppBundle:Book:special'
-        _resource_class: 'AppBundle\Entity\Book'
-        _item_operation_name: 'special'
+        _api_resource_class: 'AppBundle\Entity\Book'
+        _api_item_operation_name: 'special'
 ```
 
 Previous chapter: [NelmioApiDocBundle integration](nelmio-api-doc.md)<br>
