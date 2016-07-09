@@ -4,18 +4,23 @@ The API system has builtin [content negotiation](https://en.wikipedia.org/wiki/C
 It leverages the [`willdurand/negotiation`](https://github.com/willdurand/Negotiation) library.
 
 By default, only the [JSON-LD](https://json-ld.org) format is enabled. However API Platform Core supports for formats included
-in the underlying [Symfony Serializer component]() can be enabled through the configuration. It supports XML, raw JSON and
-CSV (since Symfony 3.2).
+in the underlying [Symfony Serializer component](http://symfony.com/doc/current/components/serializer.html) can be enabled
+through the configuration. It supports XML, raw JSON and CSV (since Symfony 3.2).
 
-API Platform Core will automatically detect the best format to return according to enabled formats and the value of the
-`Accept` HTTP header sent by the client. If no format asked by the client is supported by the server, the response will
-be sent in the first format defined in the `formats` configuration key (see below).
+API Platform Core will automatically detect the best resolving format depending on:
 
+* enabled formats (link to docs for this / see below)
+* the `Accept` HTTP header
+
+If the client requested format is not supported by the server, the response format will be the first format defined in the `formats` configuration key (see below).
 An example using the builtin XML support is available in Behat specs: https://github.com/api-platform/core/blob/master/features/content_negotiation.feature
 
-The API Platform content negotiation system is extensible. Support for other formats (such as [HAL]() or [JSONAPI]())
+The API Platform content negotiation system is extensible. Support for other formats (such as [HAL](http://stateless.co/hal_specification.html)
+or [JSONAPI](http://jsonapi.org/))
 can be added by [creating and registering appropriate encoders and, sometimes, normalizers](). Adding support for other
-standard hypermedia formats upstream is very welcome. Don't hesitate to contribute your new encoders and normalizers.
+standard hypermedia formats upstream is very welcome. Don't hesitate to contribute by adding your encoders and normalizers
+to API Platform Core.
+
 
 ## Enabling Several Formats
 
@@ -33,9 +38,9 @@ api_platform:
         myformat: ['application/vnd.myformat']
 ```
 
-Because the Symfoyn Serializer component is able to serialize objects in XML, sending an `Accept` HTTP header with the
+Because the Symfony Serializer component is able to serialize objects in XML, sending an `Accept` HTTP header with the
 `text/xml` string as value is enough to retrieve XML documents from our API. However API Platform knows nothing about the
-`myformat` format. We need to register (at least) a custom encoder for this format.
+`myformat` format. We need to register an encoder and optionally a normalizer for this format.
 
 ## Registering a Custom Format in the Negotiation Library
 
@@ -86,8 +91,8 @@ final class AppBundle extends Bundle
 ## Registering a Custom Serializer
 
 If you are adding support for a format not supported by default by API Platform nor by the Symfony Serializer Component,
-you need to create custom encoder, decoder and eventually a normalizer and a denormalizer for your format. Refer to the
-Symfony documentation to learn [how to create and register such classes](](https://symfony.com/doc/current/cookbook/serializer.html#adding-normalizers-and-encoders)).
+you need to create custom encoder, decoder and eventually a normalizer and a denormalizer. Refer to the
+Symfony documentation to learn [how to create and register such classes](https://symfony.com/doc/current/cookbook/serializer.html#adding-normalizers-and-encoders).
 
 API Platform Core will automatically call the serializer with your defined format name (`myformat` in previous examples)
 as `format` parameter during the deserialization process. Then it will return the result to the client with the asked MIME

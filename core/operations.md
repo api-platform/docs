@@ -24,14 +24,14 @@ operations are automatically enabled:
 *Collection operations*
 
 Method | Mandatory | Description
--------|------------------------------------------
+-------|-----------|------------------------------------------
 `GET`  | yes       | Retrieve the (paginated) list of elements
 `POST` | no        | Create a new element
 
 *Item operations*
 
 Method   | Mandatory | Description
----------|------------------
+---------|-----------|------------------
 `GET`    | yes       | Retrieve element
 `PUT`    | no        | Update an element
 `DELETE` | no        | Delete an element
@@ -267,7 +267,7 @@ class BookSpecial
     {
         $this->myService->doSomething($data);
 
-        return $data; // API Platform will automatically validate, persist (if you use Doctrine) and serialize en entity
+        return $data; // API Platform will automatically validate, persist (if you use Doctrine) and serialize an entity
                       // for you. If you prefer to do it yourself, return an instance of Symfony\Component\HttpFoundation\Response
     }
 }
@@ -283,7 +283,8 @@ together.
 Here we consider that DunglasActionBundle is installed (the default when using the API Platform standard edition). This
 action will be automatically registered as a service (the service name is the same as the class name: `AppBundle\Action\BookSpecial`).
 
-API Platform automatically retrieve the appropriate PHP entity then deserializes
+API Platform automatically retrieve the appropriate PHP entity then then deserializes it, and for `POST` and `PUT` requests
+updates the entity with data provided by the user.
 
 Services (`$myService` here) are automatically injected thanks to the autowiring feature. You can type-hint any service
 you need and it will be autowired too.
