@@ -33,6 +33,8 @@ or MariaDB but other major DBMS are supported including PostgreSQL and SQLite.
 
 ## Installing the framework
 
+### With composer
+
 Let's start our new blog API project. The easiest way to create a new project is to use [Composer](https://getcomposer.org/)
 (you need to have it installed on your box):
 
@@ -88,6 +90,12 @@ Run the built-in web server:
 
 You can open `http://localhost:8000` with you preferred REST client.
 We recommend [Postman](https://www.getpostman.com), and you will see later that API Platform is nicely integrated with it.
+
+### With docker
+
+You can also use [docker](https://www.docker.com/) for the installation of your project.
+
+it just make a clone of the repository Api Platform and [follow documentation docker](../deployment/docker.md)
 
 When you're done with the demo app and want to create your own API:
 
