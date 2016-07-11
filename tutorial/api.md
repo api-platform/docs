@@ -110,6 +110,9 @@ Report types you're interested in a YAML configuration file like in the followin
 
 ```yaml
 # app/config/schema.yml
+
+rdfa:
+ - vendor/api-platform/schema-generator/tests/data/schema.rdfa
  
 types:                      # The list of type to generated (a PHP entity class by type will be generated)
   BlogPosting:
