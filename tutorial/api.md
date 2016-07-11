@@ -92,7 +92,7 @@ We recommend [Postman](https://www.getpostman.com), and you will see later that 
 When you're done with the demo app and want to create your own API:
 
 * empty the `app/config/schema.yml` file
-* delete all PHP files in the `src/AppBundle/Entity/` directory
+* delete all PHP files in directories `src/AppBundle/Entity/` and `src/AppBundle/DataFixtures/`
 
 ## Generating the data model
 
