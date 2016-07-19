@@ -212,7 +212,7 @@ use ApiPlatform\Core\Annotation\ApiResource;
 /**
  * @ApiResource(attributes={"filters"={"offer.search", "offer.date", "offer.boolean", "offer.numeric"}})
  */
-final lass Offer
+final class Offer
 {
     // ...
 }
