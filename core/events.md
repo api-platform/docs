@@ -1,10 +1,10 @@
 # The Event System
 
 API Platform Core implements the [Action-Domain-Responder](https://github.com/pmjones/adr) pattern. This implementation
-is covered in depth in the [Creating custom operations and controllers](operations.md#creating-custom-operations-and-controllers]
+is covered in depth in the [Creating custom operations and controllers](operations.md#creating-custom-operations-and-controllers)
 chapter.
 
-Basically, API Platform Core execute an action class that will return an entity or a collection of entity. Then a series
+Basically, API Platform Core execute an action class that will return an entity or a collection of entities. Then a series
 of event listeners are executed which validate the data, persist it in database, serialize it (typically in a JSON-LD document)
 and create an HTTP response that will be sent to the client.
 
