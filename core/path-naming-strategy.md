@@ -21,7 +21,6 @@ To change it to the dash generator, add the following lines to `app/config/confi
 api_platform:
     naming:
         resource_path_naming_strategy: 'api_platform.naming.resource_path_naming_strategy.dash'
-
 ```
 
 ## Create a custom path generator
@@ -30,7 +29,7 @@ Let's assumes we need urls without separators (e.g. `api.tld/myresources`)
 
 ### Defining the Resource Path Generator
 
-Make sure the custom generator implements `[ApiPlatform\Core\Naming\ResourcePathNamingStrategyInterface](https://github.com/api-platform/core/blob/master/src/Naming/ResourcePathNamingStrategyInterface.php)`:
+Make sure the custom generator implements [`ApiPlatform\Core\Naming\ResourcePathNamingStrategyInterface`](https://github.com/api-platform/core/blob/master/src/Naming/ResourcePathNamingStrategyInterface.php):
 
 ```php
 // src/AppBundle/Naming/NoSeparatorsResourcePathGenerator.php
@@ -83,7 +82,6 @@ services:
 api_platform:
     naming:
         resource_path_naming_strategy: 'app.naming.resource_path_naming_strategy.no_separators'
-
 ```
 
 Previous chapter: [Serialization groups and relations](serialization-groups-and-relations.md)
