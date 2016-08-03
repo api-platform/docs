@@ -13,6 +13,10 @@ If you use the standalone API Platform Core bundle, copy the following configura
 ```yaml
 # app/config/config.yml
 
+api_platform:
+    ...
+    enable_nelmio_api_doc: true
+
 nelmio_api_doc:
     sandbox:
         accept_type:        'application/json'
