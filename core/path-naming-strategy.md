@@ -7,20 +7,20 @@ It comes with pre-registered generators, which you can easily override.
 
 There are two pre-registered path generator services:
 
-Strategy                                                  | Entity name  | Path result
-----------------------------------------------------------|--------------|----------------
-`api_platform.routing.resource_path_generator.underscore` | `MyResource` | `/my_resources`
-`api_platform.routing.resource_path_generator.dash`       | `MyResource` | `/my-resources`
+Strategy                                                       | Entity name  | Path result
+---------------------------------------------------------------|--------------|----------------
+`api_platform.naming.resource_path_naming_strategy.underscore` | `MyResource` | `/my_resources`
+`api_platform.naming.resource_path_naming_strategy.dash`       | `MyResource` | `/my-resources`
 
-The default generator is `api_platform.routing.resource_path_generator.underscore`.
+The default generator is `api_platform.naming.resource_path_naming_strategy.underscore`.
 To change it to the dash generator, add the following lines to `app/config/config.yml`:
 
 ```yaml
 # app/config/config.yml
 
 api_platform:
-    routing:
-        resource_path_generator: 'api_platform.routing.resource_path_generator.dash'
+    naming:
+        resource_path_naming_strategy: 'api_platform.naming.resource_path_naming_strategy.dash'
 ```
 
 ## Create a custom path generator
@@ -29,17 +29,17 @@ Let's assumes we need urls without separators (e.g. `api.tld/myresources`)
 
 ### Defining the Resource Path Generator
 
-Make sure the custom generator implements `ApiPlatform\Core\Routing\ResourcePathGeneratorInterface`:
+Make sure the custom generator implements [`ApiPlatform\Core\Naming\ResourcePathNamingStrategyInterface`](https://github.com/api-platform/core/blob/master/src/Naming/ResourcePathNamingStrategyInterface.php):
 
 ```php
-// src/AppBundle/Routing/NoSeparatorsResourcePathGenerator.php
+// src/AppBundle/Naming/NoSeparatorsResourcePathGenerator.php
 
-namespace AppBundle\Routing;
+namespace AppBundle\Naming;
 
-use ApiPlatform\Core\Routing\ResourcePathGeneratorInterface;
+use ApiPlatform\Core\Naming\ResourcePathNamingStrategyInterface;
 use Doctrine\Common\Inflector\Inflector;
 
-final class NoSeparatorsResourcePathGenerator implements ResourcePathGeneratorInterface
+final class NoSeparatorsResourcePathGenerator implements ResourcePathNamingStrategyInterface
 {
     public function generateResourceBasePath(string $resourceShortName) : string
     {
@@ -58,8 +58,8 @@ Note that `$resourceShortName` contains a camel case string, by default the reso
 # src/AppBundle/Resources/config/services.yml
 
 services:
-  app.routing.resource_path_generator.no_separators:
-    class: 'AppBundle\Routing\NoSeparatorsResourcePathGenerator'
+  app.naming.resource_path_naming_strategy.no_separators:
+    class: 'AppBundle\Naming\NoSeparatorsResourcePathGenerator'
     public: false
 ```
 
@@ -68,7 +68,7 @@ services:
 
 <?xml version="1.0" encoding="UTF-8" ?>
 <services>
-    <service id="app.routing.resource_path_generator.no_separators" class="AppBundle\Routing\NoSeparatorsResourcePathGenerator" public="false" />
+    <service id="app.naming.resource_path_naming_strategy.no_separators" class="AppBundle\Naming\NoSeparatorsResourcePathGenerator" public="false" />
 </services>
 ```
 
@@ -80,8 +80,8 @@ services:
 # app/config/config.yml
 
 api_platform:
-    routing:
-        resource_path_generator: 'app.routing.resource_path_generator.no_separators'
+    naming:
+        resource_path_naming_strategy: 'app.naming.resource_path_naming_strategy.no_separators'
 ```
 
 Previous chapter: [Serialization groups and relations](serialization-groups-and-relations.md)
