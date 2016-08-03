@@ -46,15 +46,15 @@ The generated JSON for products and the related context document will now use ex
 
 ```json
 {
-    "@context": {
-        "@vocab": "http://example.com/apidoc#",
-        "hydra": "http://www.w3.org/ns/hydra/core#",
-        "name": "https://schema.org/name"
-    }
+  "@context": {
+    "@vocab": "http://example.com/apidoc#",
+    "hydra": "http://www.w3.org/ns/hydra/core#",
+    "name": "https://schema.org/name"
+  }
 }
 ```
 
 An extended list of existing open vocabularies is available on [the Linked Open Vocabularies (LOV) database](http://lov.okfn.org/dataset/lov/).
 
-Previous chapter: [Controllers vocabularies](controllers.md)<br>
-Next chapter: [Content Negotiation](content-negotiation.md)
+Previous chapter: [Content Negotiation](content-negotiation.md)<br>
+Next chapter: [Data Providers](data-providers.md)

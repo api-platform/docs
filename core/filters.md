@@ -388,5 +388,5 @@ services:
         tags:  [ { name: 'api_platform.filter', id: 'offer.order' } ]
 ```
 
-Previous chapter: [Data providers](data-providers.md)<br>
-Next chapter: [Serialization groups and relations](serialization-groups-and-relations.md)
+Previous chapter: [Operations](operations.md)<br>
+Next chapter: [Serialization Groups and Relations](serialization-groups-and-relations.md)

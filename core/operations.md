@@ -330,4 +330,4 @@ book_special:
 ```
 
 Previous chapter: [NelmioApiDocBundle integration](nelmio-api-doc.md)<br>
-Next chapter: [Data providers](data-providers.md)
+Next chapter: [Filters](filters.md)

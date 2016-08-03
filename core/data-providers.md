@@ -111,5 +111,5 @@ services:
             -  { name: 'api_platform.item_data_provider' }
 ```
 
-Previous chapter: [Operations](operations.md)<br>
-Next chapter: [Filters](filters.md)
+Previous chapter: [Using External JSON-LD Vocabularies](external-vocabularies.md)<br>
+Next chapter: [Security](security.md)

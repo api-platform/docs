@@ -197,5 +197,5 @@ class Book
 }
 ```
 
-Previous chapter: [NelmioApiDocBundle integration](nelmio-api-doc.md)<br>
-Next chapter: [Data providers](data-providers.md)
+Previous chapter: [Validation](validation.md)<br>
+Next chapter: [The Event System](events.md)

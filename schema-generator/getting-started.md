@@ -748,5 +748,5 @@ Usage:
 
     bin/schema extract-cardinalities
 
-Previous chapter: [Introduction](../core/index.md)
+Previous chapter: [Introduction](index.md)<br>
 Next chapter: [Configuration](configuration.md)

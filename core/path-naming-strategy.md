@@ -84,5 +84,5 @@ api_platform:
         resource_path_naming_strategy: 'app.naming.resource_path_naming_strategy.no_separators'
 ```
 
-Previous chapter: [Serialization groups and relations](serialization-groups-and-relations.md)
-Next chapter: [Validation](validation.md)
+Previous chapter: [Performance](performance.md)<br>
+Next chapter: [FOSUserBundle Integration](fosuser-bundle.md)

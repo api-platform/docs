@@ -95,5 +95,5 @@ nga.configure(admin)
 
 You can look at what we have done as another exemple [api-platform/admin](https://github.com/api-platform/admin).
 
-Previous chapter: [Performances](performances.md)
-Next chapter: [Schema Generator: Introduction](angularjs-integration.md)
+Previous chapter: [FOSUserBundle Integration](fosuser-bundle.md)<br>
+Next chapter: [Schema Generator: introduction](../schema-generator/index.md)
