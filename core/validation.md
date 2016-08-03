@@ -53,4 +53,4 @@ If you need to dynamically determine which validation groups to use for an entit
 argument, and should return an array of group names or a [group sequence](http://symfony.com/doc/current/book/validation.html#group-sequence).
 
 Previous chapter: [Path naming strategy](path-naming-strategy.md)<br>
-Next chapter: [The event system](the-event-system.md)
+Next chapter: [The event system](events.md)
