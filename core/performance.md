@@ -17,4 +17,4 @@ you want to use it on your project, follow the documentation dedicated to Symfon
 Keep in mind that PPM is still in an early stage of development and can cause issues in production.
 
 Previous chapter: [Using external (JSON-LD) vocabularies](external-vocabularies.md)<br>
-Next chapter: [AngularJS Integration](angular-integration.md)
+Next chapter: [AngularJS Integration](angularjs-integration.md)
