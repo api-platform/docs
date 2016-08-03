@@ -64,7 +64,8 @@ services:
 
 Tagging the service with the tag `api_platform.collection_data_provider` will enable API Platform Core to automatically
 register and use this data provider. The optional attribute `priority` allows to define the order in wich are called the
-data providers. The first data provider not throwing a `ApiPlatform\Core\Exception\ResourceClassNotSupportedException` will be used.
+data providers. The first data provider not throwing a `ApiPlatform\Core\Exception\ResourceClassNotSupportedException`
+will be used.
 
 ## Custom Item Data Provider
 
