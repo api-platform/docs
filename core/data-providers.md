@@ -12,18 +12,18 @@ retrieve data for a given resource will be used.
 
 For a given resource, you can implement two kind of interfaces:
 
-* the [`CollectionDataProviderInterface`](https://github.com/api-platform/core/blob/master/src/Api/CollectionDataProviderInterface.php)
+* the [`CollectionDataProviderInterface`](https://github.com/api-platform/core/blob/master/src/DataProvider/CollectionDataProviderInterface.php)
   is used when fetching a collection.
-* the [`ItemDataProviderInterface`](https://github.com/api-platform/core/blob/master/src/Api/ItemDataProviderInterface.php)
+* the [`ItemDataProviderInterface`](https://github.com/api-platform/core/blob/master/src/DataProvider/ItemDataProviderInterface.php)
   is used when fetching items.
 
 In the following examples we will create custom data providers for an entity class class called `AppBundle\Entity\BlogPost`.
 
 ## Custom Collection Data Provider
 
-First, your `BlogPostCollectionDataProvider` has to implement the [`CollectionDataProviderInterface`](https://github.com/api-platform/core/blob/master/src/Api/CollectionDataProviderInterface.php):
+First, your `BlogPostCollectionDataProvider` has to implement the [`CollectionDataProviderInterface`](https://github.com/api-platform/core/blob/master/src/DataProvider/CollectionDataProviderInterface.php):
 
-The `getCollection` method must return an `array`, a `Traversable` or a `ApiPlatform\Core\Api\PaginatorInterface` instance.
+The `getCollection` method must return an `array`, a `Traversable` or a [`ApiPlatform\Core\DataProvider\PaginatorInterface`](https://github.com/api-platform/core/blob/master/src/DataProvider/PaginatorInterface.php) instance.
 If no data is available, you should return an empty array.
 
 ```php
@@ -33,7 +33,7 @@ If no data is available, you should return an empty array.
 namespace AppBundle\DataProvider;
 
 use AppBundle\Entity\BlogPost;
-use ApiPlatform\Core\Api\CollectionDataProviderInterface;
+use ApiPlatform\Core\DataProvider\CollectionDataProviderInterface;
 use ApiPlatform\Core\Exception\ResourceClassNotSupportedException;
 
 final class BlogPostCollectionDataProvider implements CollectionDataProviderInterface
@@ -64,12 +64,12 @@ services:
 
 Tagging the service with the tag `api_platform.collection_data_provider` will enable API Platform Core to automatically
 register and use this data provider. The optional attribute `priority` allows to define the order in wich are called the
-data providers. The first data provider not throwing a `ApiPlatform\Core\Exception\ResourceClassNotSupportedException` will
-be used.
+data providers. The first data provider not throwing a `ApiPlatform\Core\Exception\ResourceClassNotSupportedException`
+will be used.
 
 ## Custom Item Data Provider
 
-The process is similar for item data providers. Create a `BlogPostItemDataProvider` implementing the [`ItemDataProviderInterface`](https://github.com/api-platform/core/blob/master/src/Api/ItemDataProviderInterface.php)
+The process is similar for item data providers. Create a `BlogPostItemDataProvider` implementing the [`ItemDataProviderInterface`](https://github.com/api-platform/core/blob/master/src/DataProvider/ItemDataProviderInterface.php)
 interface:
 
 The `getItem` method can return `null` if no result has been found.
@@ -81,7 +81,7 @@ The `getItem` method can return `null` if no result has been found.
 namespace AppBundle\DataProvider;
 
 use AppBundle\Entity\BlogPost;
-use ApiPlatform\Core\Api\ItemDataProviderInterface;
+use ApiPlatform\Core\DataProvider\ItemDataProviderInterface;
 use ApiPlatform\Core\Exception\ResourceClassNotSupportedException;
 
 final class BlogPostItemDataProvider implements ItemDataProviderInterface
