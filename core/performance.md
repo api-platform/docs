@@ -16,5 +16,5 @@ you want to use it on your project, follow the documentation dedicated to Symfon
 
 Keep in mind that PPM is still in an early stage of development and can cause issues in production.
 
-Previous chapter: [Security](security.md)<br>
+Previous chapter: [Security](security.md)
 Next chapter: [Path Naming Strategy](path-naming-strategy.md)

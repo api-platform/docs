@@ -59,5 +59,5 @@ api_platform:
             items_per_page_parameter_name: itemsPerPage
 ```
 
-Previous chapter: [Getting Started](getting-started.md)<br>
+Previous chapter: [Getting Started](getting-started.md)
 Next chapter: [NelmioApiDocBundle integration](nelmio-api-doc.md)

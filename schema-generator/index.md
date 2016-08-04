@@ -63,5 +63,5 @@ It opens the way to generic web API clients able to extract and process data fro
 * [Getting Started](getting-started.md)
 * [Configuration](configuration.md)
 
-Previous chapter: [API Platform Core: AngularJS integration](../core/angularjs-integration.md)<br>
+Previous chapter: [API Platform Core: AngularJS integration](../core/angularjs-integration.md)
 Next chapter: [Getting Started](getting-started.md)

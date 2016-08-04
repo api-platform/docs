@@ -112,32 +112,32 @@ Report types you're interested in a YAML configuration file like in the followin
 # app/config/schema.yml
  
 types:                      # The list of type to generated (a PHP entity class by type will be generated)
-  BlogPosting:
-    parent: false           # It's a best practice to have entity without parents
-    properties:             # The list of properties we want to use
-      name: ~               # You can include properties from the current type and of all these parents
-      articleBody: ~
-      articleSection: ~
-      headline: ~
-      isFamilyFriendly: ~
-      datePublished: ~
-      author:
-        range: Person       # You can specify relations, here we force the type of the property to Person
-        cardinality: (*..0) # We also the cardinality of the relation
-      kevinReview:          # You can also define custom properties, not available in Schema.org
-        range: Text         # For custom properties, type must always be specified
-        cardinality: (*..0) # Using the cardinality here (not a relation) allows to deal with the nullable option
-  Person:                   # Person is a relation of the BlogPosting type (author property), relations will be automatically generated
-    parent: false
-    properties:
-      familyName: ~         # We add some common properties defined by Schema.org
-      givenName: ~
-      description: ~
-      birthDate: ~
-      deathDate: ~
+    BlogPosting:
+        parent: false           # It's a best practice to have entity without parents
+        properties:             # The list of properties we want to use
+            name: ~               # You can include properties from the current type and of all these parents
+            articleBody: ~
+            articleSection: ~
+            headline: ~
+            isFamilyFriendly: ~
+            datePublished: ~
+            author:
+                range: Person       # You can specify relations, here we force the type of the property to Person
+                cardinality: (*..0) # We also the cardinality of the relation
+            kevinReview:          # You can also define custom properties, not available in Schema.org
+                range: Text         # For custom properties, type must always be specified
+                cardinality: (*..0) # Using the cardinality here (not a relation) allows to deal with the nullable option
+    Person:                   # Person is a relation of the BlogPosting type (author property), relations will be automatically generated
+        parent: false
+        properties:
+            familyName: ~         # We add some common properties defined by Schema.org
+            givenName: ~
+            description: ~
+            birthDate: ~
+            deathDate: ~
 
 namespaces:
-  entity: AppBundle\Entity # The default namespace for entities, following API Platform and Symfony best practices
+    entity: AppBundle\Entity # The default namespace for entities, following API Platform and Symfony best practices
 
 annotationGenerators: # Enabled generators
     - ApiPlatform\SchemaGenerator\AnnotationGenerator\PhpDocAnnotationGenerator          # PHPDoc
@@ -604,5 +604,5 @@ Here is a non exhaustive list of what you can do with API Platform:
 
 The next step? [Learn how to create an AngularJS client for the API](angularjs.md).
 
-Previous chapter: [Introduction](index.md)<br>
+Previous chapter: [Introduction](index.md)
 Next chapter: [An AngularJS Client](angularjs.md)

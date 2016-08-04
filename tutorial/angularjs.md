@@ -50,20 +50,19 @@ chapter](../core/angular-integration.md):
 
 ```javascript
 // app/scripts/app.js
- 
+
 'use strict';
- 
+
 /**
  * @ngdoc overview
  * @name blogApp
  * @description
  * # blogApp
- *
  * Main module of the application.
  */
 angular
     .module('blogApp', ['restangular'])
-    .config(['RestangularProvider', function (RestangularProvider) {
+    .config(['RestangularProvider', function(RestangularProvider) {
         // The URL of the API endpoint
         RestangularProvider.setBaseUrl('http://localhost:8000');
 
@@ -75,7 +74,7 @@ angular
         RestangularProvider.setSelfLinkAbsoluteUrl(false);
 
         // Hydra collections support
-        RestangularProvider.addResponseInterceptor(function (data, operation) {
+        RestangularProvider.addResponseInterceptor(function(data, operation) {
             // Remove trailing slash to make Restangular working
             function populateHref(data) {
                 if (data['@id']) {
@@ -91,14 +90,14 @@ angular
                 collectionResponse.metadata = {};
 
                 // Put metadata in a property of the collection
-                angular.forEach(data, function (value, key) {
+                angular.forEach(data, function(value, key) {
                     if ('hydra:member' !== key) {
                         collectionResponse.metadata[key] = value;
                     }
                 });
 
                 // Populate href property for all elements of the collection
-                angular.forEach(collectionResponse, function (value) {
+                angular.forEach(collectionResponse, function(value) {
                     populateHref(value);
                 });
 
@@ -107,8 +106,7 @@ angular
 
             return data;
         });
-    }])
-;
+    }]);
 ```
 
 Be sure to change the base URL with the one of your API in production (_protip_: use [grunt-ng-constant](https://github.com/werk85/grunt-ng-constant)).
@@ -128,18 +126,18 @@ And here is the controller retrieving the posts list and allowing to create a ne
  * Controller of the blogApp
  */
 angular.module('blogApp')
-    .controller('MainCtrl', function ($scope, Restangular) {
+    .controller('MainCtrl', function($scope, Restangular) {
         var blogPostingApi = Restangular.all('blog_postings');
         var peopleApi = Restangular.all('people');
 
         function loadPosts() {
-            blogPostingApi.getList().then(function (posts) {
+            blogPostingApi.getList().then(function(posts) {
                 $scope.posts = posts;
             });
         }
 
         loadPosts();
-        peopleApi.getList().then(function (people) {
+        peopleApi.getList().then(function(people) {
             $scope.people = people;
         });
 
@@ -148,8 +146,8 @@ angular.module('blogApp')
         $scope.errorTitle = false;
         $scope.errorDescription = false;
 
-        $scope.createPost = function (form) {
-            blogPostingApi.post($scope.newPost).then(function () {
+        $scope.createPost = function(form) {
+            blogPostingApi.post($scope.newPost).then(function() {
                 loadPosts();
 
                 $scope.success = true;
@@ -158,14 +156,13 @@ angular.module('blogApp')
 
                 $scope.newPost = {};
                 form.$setPristine();
-            }, function (response) {
+            }, function(response) {
                 $scope.success = false;
                 $scope.errorTitle = response.data['hydra:title'];
                 $scope.errorDescription = response.data['hydra:description'];
             });
         };
-    })
-;
+    });
 ```
 
 As you can see, querying the API with Restangular is easy and very intuitive. The library automatically issues HTTP requests
@@ -252,5 +249,5 @@ in the generated HTML for search engines (use [the response extractor hook](http
 provided by Restangular). As it's only Angular tasks, it's out of scope of this introduction to API Platform. But it's a
 good exercise to add such features to the client. Feel free to share your snippets!
 
-Previous chapter: [Creating your First API with API Platform, in 5 Minutes](api.md)<br>
+Previous chapter: [Creating your First API with API Platform, in 5 Minutes](api.md)
 Next chapter: [API Platform Core: Introduction](../core/index.md)

@@ -98,5 +98,5 @@ API Platform Core will automatically call the serializer with your defined forma
 as `format` parameter during the deserialization process. Then it will return the result to the client with the asked MIME
 type using its built-in responder.
 
-Previous chapter: [The Event System](events.md)<br>
+Previous chapter: [The Event System](events.md)
 Next chapter: [Using External JSON-LD Vocabularies](external-vocabularies.md)

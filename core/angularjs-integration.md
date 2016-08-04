@@ -12,7 +12,7 @@ Here is a working Restangular config:
 
 var app = angular
     .module('myAngularjsApp')
-    .config(['RestangularProvider', function (RestangularProvider) {
+    .config(['RestangularProvider', function(RestangularProvider) {
         // The URL of the API endpoint
         RestangularProvider.setBaseUrl('http://localhost:8000');
 
@@ -24,7 +24,7 @@ var app = angular
         RestangularProvider.setSelfLinkAbsoluteUrl(false);
 
         // Hydra collections support
-        RestangularProvider.addResponseInterceptor(function (data, operation) {
+        RestangularProvider.addResponseInterceptor(function(data, operation) {
             // Remove trailing slash to make Restangular working
             function populateHref(data) {
                 if (data['@id']) {
@@ -40,14 +40,14 @@ var app = angular
                 collectionResponse.metadata = {};
 
                 // Put metadata in a property of the collection
-                angular.forEach(data, function (value, key) {
+                angular.forEach(data, function(value, key) {
                     if ('hydra:member' !== key) {
                         collectionResponse.metadata[key] = value;
                     }
                 });
 
                 // Populate href property for all elements of the collection
-                angular.forEach(collectionResponse, function (value) {
+                angular.forEach(collectionResponse, function(value) {
                     populateHref(value);
                 });
 
@@ -56,9 +56,7 @@ var app = angular
 
             return data;
         });
-    }])
-;
-
+    }]);
 ```
 
 ## ng-admin
@@ -67,21 +65,24 @@ If you want to use [ng-admin](https://github.com/marmelab/ng-admin), set the [Re
 then create your entities like in the following example :
 
 ```javascript
+'use strict';
+
 var nga = NgAdminConfigurationProvider;
 
-var admin = nga.application('My First Admin')
-               .baseApiUrl('http://localhost:8000');
+var admin = nga
+    .application('My First Admin')
+    .baseApiUrl('http://localhost:8000');
 
 var article = nga.entity('articles');
 article.identifier(nga.field('@id'));
 article.url(function(entityName, viewType, identifierValue) {
-       var url = '/' + entityName;
+    var url = '/' + entityName;
 
-       if(viewType === 'ListView' || viewType === 'CreateView') {
-            return url;
-       }
+    if (viewType === 'ListView' || viewType === 'CreateView') {
+        return url;
+    }
 
-       return identifierValue ? decodeURIComponent(identifierValue) : url;
+    return identifierValue ? decodeURIComponent(identifierValue) : url;
 });
 
 article.listView().fields([
@@ -90,10 +91,10 @@ article.listView().fields([
 ]);
 
 admin.addEntity(article);
-nga.configure(admin)
+nga.configure(admin);
 ```
 
 You can look at what we have done as another exemple [api-platform/admin](https://github.com/api-platform/admin).
 
-Previous chapter: [FOSUserBundle Integration](fosuser-bundle.md)<br>
+Previous chapter: [FOSUserBundle Integration](fosuser-bundle.md)
 Next chapter: [Schema Generator: introduction](../schema-generator/index.md)

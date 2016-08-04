@@ -78,5 +78,5 @@ class User extends BaseUser
 }
 ```
 
-Previous chapter: [Path Naming Strategy](path-naming-strategy.md)<br>
+Previous chapter: [Path Naming Strategy](path-naming-strategy.md)
 Next chapter: [AngularJS integration](angularjs-integration.md)

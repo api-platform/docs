@@ -25,41 +25,41 @@ Then, write a simple YAML config file like the following (here we will generate 
 
 ```yaml
 rdfa:
- - tests/data/schema.rdfa
+    - tests/data/schema.rdfa
 relations:
- - tests/data/v1.owl
+    - tests/data/v1.owl
 # The PHP namespace of generated entities
 namespaces:
-  entity: "AddressBook\Entity"
+    entity: "AddressBook\Entity"
 # The list of types and properties we want to use
 types:
-  # Parent class of Person
-  Thing:
-    properties:
-      name: ~
-  Person:
-    properties:
-      familyName: ~
-      givenName: ~
-      additionalName: ~
-      gender: ~
-      address: ~
-      birthDate: ~
-      telephone: ~
-      email: ~
-      url: ~
-      jobTitle: ~
-  PostalAddress:
-    # Disable the generation of the class hierarchy for this type
-    parent: false
-    properties:
-      # Force the type of the addressCountry property to text
-      addressCountry: { range: "Text" }
-      addressLocality: ~
-      addressRegion: ~
-      postOfficeBoxNumber: ~
-      postalCode: ~
-      streetAddress: ~
+    # Parent class of Person
+    Thing:
+        properties:
+            name: ~
+    Person:
+        properties:
+            familyName: ~
+            givenName: ~
+            additionalName: ~
+            gender: ~
+            address: ~
+            birthDate: ~
+            telephone: ~
+            email: ~
+            url: ~
+            jobTitle: ~
+    PostalAddress:
+        # Disable the generation of the class hierarchy for this type
+        parent: false
+        properties:
+            # Force the type of the addressCountry property to text
+            addressCountry: { range: "Text" }
+            addressLocality: ~
+            addressRegion: ~
+            postOfficeBoxNumber: ~
+            postalCode: ~
+            streetAddress: ~
 ```
 
 Run the generator with this config file as parameter:
@@ -440,7 +440,6 @@ class Person extends Thing
 ```php
 <?php
 
-
 namespace AddressBook\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
@@ -677,14 +676,13 @@ A config file generating an enum class:
 
 ```yaml
 types:
-  OfferItemCondition: ~ # The generator will automatically guess that OfferItemCondition is subclass of Enum
+    OfferItemCondition: ~ # The generator will automatically guess that OfferItemCondition is subclass of Enum
 ```
 
 The associated PHP class:
 
 ```php
 <?php
-
 
 namespace SchemaOrg\Enum;
 
@@ -748,5 +746,5 @@ Usage:
 
     bin/schema extract-cardinalities
 
-Previous chapter: [Introduction](index.md)<br>
+Previous chapter: [Introduction](index.md)
 Next chapter: [Configuration](configuration.md)

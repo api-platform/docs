@@ -158,7 +158,7 @@ Enable the filter:
 # app/config/services.yml
 
 services:
-   offer.boolean_filter:
+    offer.boolean_filter:
         parent:    'api_platform.doctrine.orm.boolean_filter'
         arguments: [ { isAvailableGenericallyInMyCountry: ~ } ]
         tags:      [ { name: 'api_platform.filter', id: 'offer.boolean' } ]
@@ -196,7 +196,7 @@ Enable the filter:
 # app/config/services.yml
 
 services:
-   offer.numeric_filter:
+    offer.numeric_filter:
         parent:    'api_platform.doctrine.orm.numeric_filter'
         arguments: [ { sold: ~ } ]
         tags:      [ { name: 'api_platform.filter', id: 'offer.numeric' } ]
@@ -234,7 +234,7 @@ Enable the filter:
 # app/config/services.yml
 
 services:
-   offer.order_filter:
+    offer.order_filter:
         parent:    'api_platform.doctrine.orm.order_filter'
         arguments: [ { id: ~, name: ~ } ]
         tags:      [ { name: 'api_platform.filter', id: 'offer.order' } ]
@@ -294,12 +294,12 @@ built-in filters support nested properties using the dot (`.`) syntax, e.g.:
 # app/config/services.yml
 
 services:
-   offer.search_filter:
+    offer.search_filter:
         parent:    'api_platform.doctrine.orm.search_filter'
         arguments: [ { product.color: 'exact' } ]
         tags:      [ { name: 'api_platform.filter', id: 'offer.search' } ]
 
-   offer.order_filter:
+    offer.order_filter:
         parent:    'api_platform.doctrine.orm.order_filter'
         arguments: [ { product.releaseDate: ~ } ]
         tags:      [ { name: 'api_platform.filter', id: 'offer.order' } ]
@@ -388,5 +388,5 @@ services:
         tags:  [ { name: 'api_platform.filter', id: 'offer.order' } ]
 ```
 
-Previous chapter: [Operations](operations.md)<br>
+Previous chapter: [Operations](operations.md)
 Next chapter: [Serialization Groups and Relations](serialization-groups-and-relations.md)

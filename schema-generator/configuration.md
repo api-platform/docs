@@ -11,9 +11,9 @@ Example:
 
 ```yaml
 namespaces:
-  entity:               "Dunglas\EcommerceBundle\Entity"
-  enum:                 "Dunglas\EcommerceBundle\Enum"
-  interface:            "Dunglas\EcommerceBundle\Model"
+    entity:    "Dunglas\EcommerceBundle\Entity"
+    enum:      "Dunglas\EcommerceBundle\Enum"
+    interface: "Dunglas\EcommerceBundle\Model"
 ```
 
 Namespaces can also be specified for a specific type. It will take precedence over any globally configured namespace.
@@ -22,10 +22,10 @@ Example:
 
 ```yaml
 types:
-  Thing:
-    namespaces:
-      class: "Dunglas\CoreBundle\Entity" # Namespace for the Thing entity (works for enumerations too)
-      interface: "Schema\Model" # Namespace of the related interface
+    Thing:
+        namespaces:
+            class: "Dunglas\CoreBundle\Entity" # Namespace for the Thing entity (works for enumerations too)
+            interface: "Schema\Model" # Namespace of the related interface
 ```
 
 ## Forcing a field range
@@ -39,13 +39,13 @@ Example:
 
 ```yaml
 types:
-  Brand:
-    properties:
-      logo: { range: "ImageObject" } # Force the range of the logo propery to ImageObject (can also be URL according to Schema.org)
+    Brand:
+        properties:
+            logo: { range: "ImageObject" } # Force the range of the logo propery to ImageObject (can also be URL according to Schema.org)
 
-  PostalAddress:
-    properties:
-      addressCountry: { range: "Text" } # Force the type to Text instead of Country
+    PostalAddress:
+        properties:
+            addressCountry: { range: "Text" } # Force the type to Text instead of Country
 ```
 
 ## Forcing a field cardinality
@@ -64,10 +64,10 @@ Example:
 
 ```yaml
 types:
-  Product:
-    properties:
-      sku:
-        cardinality: "(0..1)"
+    Product:
+        properties:
+            sku:
+                cardinality: "(0..1)"
 ```
 
 ## Forcing a relation table name
@@ -80,10 +80,10 @@ This is useful when you need two entities to have more than one relation.
 Example:
 
 ```yaml
-  Organization:
-    properties:
-      contactPoint: { range: Person, relationTableName: organization_contactPoint }
-      member: { range: Person, cardinality: (1..*) } ## Will be default value : organization_person
+    Organization:
+        properties:
+            contactPoint: { range: Person, relationTableName: organization_contactPoint }
+                member: { range: Person, cardinality: (1..*) } ## Will be default value : organization_person
 ```
 
 ## Forcing (or disabling) a class parent
@@ -93,11 +93,11 @@ Override the guessed class hierarchy of a given type with this option.
 Example:
 
 ```yaml
-  ImageObject:
-    parent: Thing # Force the parent to be Thing instead of CreativeWork > MediaObject
-    properties: ~
-  Drug:
-    parent: false # No parent
+    ImageObject:
+        parent: Thing # Force the parent to be Thing instead of CreativeWork > MediaObject
+        properties: ~
+    Drug:
+        parent: false # No parent
 ```
 
 ## Forcing a class to be abstract
@@ -107,8 +107,8 @@ Force a class to be `abstract` (or to be not).
 Example:
 
 ```yaml
-   Person:
-     abstract: true
+    Person:
+        abstract: true
 ```
 
 
@@ -121,9 +121,9 @@ By default this option is `true`
 Example:
 
 ```yaml
-   Person:
-    properties:
-      name: { nullable: false }
+    Person:
+        properties:
+            name: { nullable: false }
 ```
 
 The `@Assert\NotNull` constrain is automatically added
@@ -148,9 +148,9 @@ By default this option is `false`
 Example:
 
 ```yaml
-   Person:
-    properties:
-      email: { unique: true }
+    Person:
+        properties:
+            email: { unique: true }
 ```
 
 Output:
@@ -171,12 +171,12 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
  */
 class Person
 {
-  /**
-   * @var string Email address.
-   *
-   * @ORM\Column
-   * @Assert\Email
-   */
+    /**
+     * @var string Email address.
+     *
+     * @ORM\Column
+     * @Assert\Email
+     */
     private $email;
 ```
 
@@ -188,7 +188,7 @@ Enabling the `SerializerGroupsAnnotationGenerator` generator:
 
 ```yaml
 annotationGenerators:
-  - ApiPlatform\SchemaGenerator\AnnotationGenerator\SerializerGroupsAnnotationGenerator
+    - ApiPlatform\SchemaGenerator\AnnotationGenerator\SerializerGroupsAnnotationGenerator
   ...
 ```
 
@@ -197,9 +197,9 @@ This option expects an array of scalar value `{ groups: [ groups1, group2, ... ]
 Example:
 
 ```yaml
-   Person:
-      properties:
-        name: { groups: [ public ] }
+    Person:
+        properties:
+            name: { groups: [ public ] }
 ```
 
 Output:
@@ -219,15 +219,15 @@ use Symfony\Component\Serializer\Annotation\Groups;
  */
 class Person
 {
-  /**
-  * @var string The name of the item.
-  *
-  * @ORM\Column(nullable=true)
-  * @Assert\Type(type="string")
-  * @Iri("https://schema.org/name")
-  * @Groups({"public"})
-  */
-  private $name;
+    /**
+     * @var string The name of the item.
+     *
+     * @ORM\Column(nullable=true)
+     * @Assert\Type(type="string")
+     * @Iri("https://schema.org/name")
+     * @Groups({"public"})
+     */
+    private $name;
 
 ```
 
@@ -238,10 +238,10 @@ Force an `embeddable` class to be `embedded`.
 Example:
 
 ```yaml
-   GeoCoordinates:
-     embeddable: true
-   Place:
-     coordinates: { range: "GeoCoordinates", embedded: true, columnPrefix: false }
+    GeoCoordinates:
+        embeddable: true
+    Place:
+        coordinates: { range: "GeoCoordinates", embedded: true, columnPrefix: false }
 ```
 
 ## Author PHPDoc
@@ -274,8 +274,8 @@ Enabling a custom generator and the PHPDoc generator:
 
 ```yaml
 annotationGenerators:
-  - ApiPlatform\SchemaGenerator\AnnotationGenerator\PhpDocAnnotationGenerator
-  - Acme\Generators\MyGenerator
+    - ApiPlatform\SchemaGenerator\AnnotationGenerator\PhpDocAnnotationGenerator
+    - Acme\Generators\MyGenerator
 ```
 
 ## Disabling `id` generator
@@ -296,7 +296,7 @@ This behavior can be disabled (to fallback to standard arrays) with the followin
 
 ```yaml
 doctrine:
-  useCollection: false
+    useCollection: false
 ```
 
 ## Custom field visibility
@@ -319,9 +319,9 @@ The inheritance annotation can be forced for a given type like the following:
 
 ```yaml
 types:
-  Product:
-    doctrine:
-      inheritanceMapping: "@MappedSuperclass"
+    Product:
+        doctrine:
+            inheritanceMapping: "@MappedSuperclass"
 ```
 
 *This setting is only relevant when using the Doctrine ORM generator.*
@@ -339,7 +339,7 @@ To let PHP Schema generating the XML mapping file usable with Symfony add the fo
 
 ```yaml
 doctrine:
-  resolveTargetEntityConfigPath: path/to/doctrine.xml
+    resolveTargetEntityConfigPath: path/to/doctrine.xml
 ```
 
 ## Custom schemas
@@ -352,8 +352,8 @@ Example:
 
 ```yaml
 rdfa:
-  - https://raw.githubusercontent.com/rvguha/schemaorg/master/data/schema.rdfa # Experimental version of Schema.org
-  - http://example.com/data/myschema.rfa # Additional types
+    - https://raw.githubusercontent.com/rvguha/schemaorg/master/data/schema.rdfa # Experimental version of Schema.org
+    - http://example.com/data/myschema.rfa # Additional types
 ```
 
 *Support for other namespaces than `http://schema.org` is planned for future versions but not currently available.*
@@ -373,14 +373,14 @@ Example:
 
 ```yaml
 header: |
-  /*
-   * This file is part of the Ecommerce package.
-   *
-   * (c) Kévin Dunglas <dunglas@gmail.com>
-   *
-   * For the full copyright and license information, please view the LICENSE
-   * file that was distributed with this source code.
-   */
+    /*
+     * This file is part of the Ecommerce package.
+     *
+     * (c) Kévin Dunglas <dunglas@gmail.com>
+     *
+     * For the full copyright and license information, please view the LICENSE
+     * file that was distributed with this source code.
+     */
 ```
 
 
@@ -489,5 +489,5 @@ annotationGenerators:
     - ApiPlatform\SchemaGenerator\AnnotationGenerator\DoctrineOrmAnnotationGenerator
 ```
 
-Previous chapter: [Getting Started](getting-started.md)<br>
+Previous chapter: [Getting Started](getting-started.md)
 Next chapter: [Deployment: Introduction](../deployment/index.md)

@@ -48,5 +48,5 @@ contains a working app covering all features of the library.
 * (french) [API-first et Linked Data avec Symfony (sfPot Lille 2015)](https://les-tilleuls.coop/slides/dunglas/slides-sfPot-2015-01-15/#/)
 * (french) [Behat PHP code coverage](http://www.kitpages.fr/fr/cms/204/behat-php-code-coverage)
 
-Previous chapter: [Tutorial: An AngularJS Client](../tutorial/angularjs.md)<br>
+Previous chapter: [Tutorial: An AngularJS Client](../tutorial/angularjs.md)
 Next chapter: [Getting Started](getting-started.md)

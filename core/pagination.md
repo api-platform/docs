@@ -83,7 +83,7 @@ use ApiPlatform\Core\Annotation\ApiResource;
  */
 class Book
 {
-   // ...
+    // ...
 }
 ```
 
@@ -126,7 +126,7 @@ use ApiPlatform\Core\Annotation\ApiResource;
  */
 class Book
 {
-   // ...
+    // ...
 }
 ```
 
@@ -159,7 +159,7 @@ use ApiPlatform\Core\Annotation\ApiResource;
  */
 class Book
 {
-   // ...
+    // ...
 }
 ```
 
@@ -193,9 +193,9 @@ use ApiPlatform\Core\Annotation\ApiResource;
  */
 class Book
 {
-   // ...
+    // ...
 }
 ```
 
-Previous chapter: [Validation](validation.md)<br>
+Previous chapter: [Validation](validation.md)
 Next chapter: [The Event System](events.md)
