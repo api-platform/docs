@@ -63,7 +63,7 @@ The decorated [DeserializeListener](https://github.com/api-platform/core/blob/91
 is called on demand, so it's better to eliminate its own tags:
 
 ```php
-namespace Posse\RestBundle;
+namespace AppBundle;
 
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
