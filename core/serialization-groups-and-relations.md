@@ -325,5 +325,5 @@ class Book
 }
 ```
 
-Previous chapter: [Filters](filters.md)<br>
-Next chapter: [Resources path generators](resource-path-generator.md)
+Previous chapter: [Filters](filters.md)
+Next chapter: [Path naming strategy](path-naming-strategy.md)

@@ -15,6 +15,8 @@ Alternatively, you can use [Composer](http://getcomposer.org) to install the sta
 Then, update your `app/config/AppKernel.php` file:
 
 ```php
+// app/config/AppKernel.php
+
 public function registerBundles()
 {
     $bundles = [
@@ -167,13 +169,13 @@ As an alternative to annotations, you can map entity classes using XML or YAML:
 # src/AppBundle/Resources/config/resources.xml
 <?xml version="1.0" encoding="UTF-8" ?>
 <resources>
-        <resource class="AppBundle\Entity\Product" />
-        <resource
-            class="AppBundle\Entity\Offer"
-            shortName="Offer" <!-- optional -->
-            description="An offer form my shop" <!-- optional -->
-            iri="http://schema.org/Offer" <!-- optional -->
-        />
+    <resource class="AppBundle\Entity\Product" />
+    <resource
+        class="AppBundle\Entity\Offer"
+        shortName="Offer" <!-- optional -->
+        description="An offer form my shop" <!-- optional -->
+        iri="http://schema.org/Offer" <!-- optional -->
+    />
 </resources>
 ```
 
@@ -200,5 +202,5 @@ Interact with the API using a REST client (we recommend [Postman](https://www.ge
 (you should give a try to [Hydra Console](https://github.com/lanthaler/HydraConsole)). Take
 a look at the usage examples in [the `features` directory](/features/).
 
-Previous chapter: [Introduction](index.md)<br>
+Previous chapter: [Introduction](index.md)
 Next chapter: [Configuration](configuration.md)

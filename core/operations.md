@@ -121,7 +121,7 @@ use ApiPlatform\Core\Annotation\ApiResource;
  */
 class Book
 {
-   //...
+    //...
 }
 ```
 
@@ -329,5 +329,5 @@ book_special:
         _api_item_operation_name: 'special'
 ```
 
-Previous chapter: [NelmioApiDocBundle integration](nelmio-api-doc.md)<br>
-Next chapter: [Data providers](data-providers.md)
+Previous chapter: [NelmioApiDocBundle integration](nelmio-api-doc.md)
+Next chapter: [Filters](filters.md)

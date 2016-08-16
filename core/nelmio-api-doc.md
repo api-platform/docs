@@ -13,6 +13,10 @@ If you use the standalone API Platform Core bundle, copy the following configura
 ```yaml
 # app/config/config.yml
 
+api_platform:
+    # ...
+    enable_nelmio_api_doc: true
+
 nelmio_api_doc:
     sandbox:
         accept_type:        'application/json'
@@ -27,5 +31,5 @@ nelmio_api_doc:
 Please note that NelmioApiDocBundle has a sandbox limitation where you cannot pass a JSON array as parameter, so you cannot
 use it to deserialize nested objects.
 
-Previous chapter: [Configuration](configuration.md)<br>
+Previous chapter: [Configuration](configuration.md)
 Next chapter: [Operations](operations.md)

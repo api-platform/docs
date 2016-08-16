@@ -58,9 +58,9 @@ Note that `$resourceShortName` contains a camel case string, by default the reso
 # src/AppBundle/Resources/config/services.yml
 
 services:
-  app.naming.resource_path_naming_strategy.no_separators:
-    class: 'AppBundle\Naming\NoSeparatorsResourcePathGenerator'
-    public: false
+    app.naming.resource_path_naming_strategy.no_separators:
+        class: 'AppBundle\Naming\NoSeparatorsResourcePathGenerator'
+        public: false
 ```
 
 ```xml
@@ -84,5 +84,5 @@ api_platform:
         resource_path_naming_strategy: 'app.naming.resource_path_naming_strategy.no_separators'
 ```
 
-Previous chapter: [Serialization groups and relations](serialization-groups-and-relations.md)
-Next chapter: [Validation](validation.md)
+Previous chapter: [Performance](performance.md)
+Next chapter: [FOSUserBundle Integration](fosuser-bundle.md)
