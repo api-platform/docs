@@ -1,8 +1,8 @@
-#How to accept posted form data
+# Accept `application/x-www-form-urlencoded` Form Data
 
-###Create your DeserializeListener decorator:
+## Create your `DeserializeListener` Decorator
 
-This decorator is able to denormalize posted form data to the target object. In case of other format, it fallbacks to the original DeserializeListener.
+This decorator is able to denormalize posted form data to the target object. In case of other format, it fallbacks to the original [DeserializeListener](https://github.com/api-platform/core/blob/91dc2a4d6eeb79ea8dec26b41e800827336beb1a/src/Bridge/Symfony/Bundle/Resources/config/api.xml#L85-L91).
 
 ```php
 namespace AppBundle\Listener;
@@ -17,15 +17,11 @@ use ApiPlatform\Core\Serializer\SerializerContextBuilderInterface;
 
 class DeserializeListener
 {
-    /** @var DecoratedListener */
     private $decorated;
 
-    /** @var DenormalizerInterface */
     private $denormalizer;
 
-    /** @var SerializerContextBuilderInterface */
     private $serializerContextBuilder;
-
 
     public function __construct(DecoratedListener $decorated, DenormalizerInterface $denormalizer, SerializerContextBuilderInterface $serializerContextBuilder)
     {
@@ -56,46 +52,22 @@ class DeserializeListener
         }
         $context = $this->serializerContextBuilder->createFromRequest($request, false, $attributes);
         $data = $request->request->all();
-        $object = $this->denormalizer ->denormalize($data, $attributes['resource_class'], null, $context);
+        $object = $this->denormalizer->denormalize($data, $attributes['resource_class'], null, $context);
         $request->attributes->set('data', $object);
     }
 }
 ```
 
-###Then, create the service definition:
+## Create the service definition
 
-```yml
-    app.listener.request.deserialize:
-        class: AppBundle\Listener\DeserializeListener
-        arguments: ["@api_platform.listener.request.deserialize", "@api_platform.serializer", "@api_platform.serializer.context_builder"]
+```yaml
+# app/config/services.yml
+services:
+    # ...
+    app.listener.decorating_deserialize:
+        class: 'AppBundle\Listener\DeserializeListener'
+        arguments: ['@app.listener.decorating_deserialize.inner', '@api_platform.serializer', '@api_platform.serializer.context_builder']
+        decorates: 'api_platform.listener.request.deserialize'
         tags:
-        - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest, priority: 2 }
-```
-
-###Clean up the original listener
-
-The decorated [DeserializeListener](https://github.com/api-platform/core/blob/91dc2a4d6eeb79ea8dec26b41e800827336beb1a/src/Bridge/Symfony/Bundle/Resources/config/api.xml#L85-L91)
-is called on demand, so it's better to eliminate its own tags:
-
-```php
-namespace AppBundle;
-
-use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
-use Symfony\Component\DependencyInjection\ContainerBuilder;
-use Symfony\Component\HttpKernel\Bundle\Bundle;
-
-class AppBundle extends Bundle
-{
-    public function build(ContainerBuilder $container)
-    {
-        parent::build($container);
-        $container->addCompilerPass(new class implements CompilerPassInterface {
-            public function process(ContainerBuilder $container) {
-                $listener = $container->findDefinition('api_platform.listener.request.deserialize');
-                $listener->clearTags();
-            }
-        });
-    }
-}
-
+            - { name: 'kernel.event_listener', event: 'kernel.request', method: 'onKernelRequest', priority: 2 }
 ```
