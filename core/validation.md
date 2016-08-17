@@ -52,5 +52,5 @@ If you need to dynamically determine which validation groups to use for an entit
 [callable](http://php.net/manual/en/language.types.callable.php). The callback will receive the entity object as its first
 argument, and should return an array of group names or a [group sequence](http://symfony.com/doc/current/book/validation.html#group-sequence).
 
-Previous chapter: [Path naming strategy](path-naming-strategy.md)
+Previous chapter: [Operation Path Naming](operation-path-naming.md)
 Next chapter: [The event system](events.md)

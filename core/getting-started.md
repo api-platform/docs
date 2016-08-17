@@ -126,7 +126,7 @@ class Offer
      * @Assert\Type(type="float")
      */
     public $price;
-    
+
     /**
      * @ORM\ManyToOne(targetEntity="Product")
      */
@@ -159,7 +159,7 @@ DELETE | /products/{id} | Delete a product
 
 The same operations are available for the offer method (routes will start with the `/offers` pattern).
 Routes prefixes are built by pluralizing the name of the mapped entity class.
-It is also possible to override the naming convention using [resource path generators](resource-path-generators.md).
+It is also possible to override the naming convention using [operation path namings](operation-path-naming.md).
 
 As an alternative to annotations, you can map entity classes using XML or YAML:
 
