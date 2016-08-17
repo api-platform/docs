@@ -66,8 +66,34 @@ services:
     # ...
     app.listener.decorating_deserialize:
         class: 'AppBundle\Listener\DeserializeListener'
-        arguments: ['@app.listener.decorating_deserialize.inner', '@api_platform.serializer', '@api_platform.serializer.context_builder']
-        decorates: 'api_platform.listener.request.deserialize'
+        arguments: ['@api_platform.listener.request.deserialize', '@api_platform.serializer', '@api_platform.serializer.context_builder']
         tags:
             - { name: 'kernel.event_listener', event: 'kernel.request', method: 'onKernelRequest', priority: 2 }
+```
+
+## Cleanup the Original Listener
+
+The decorated DeserializeListener is called on demand, so it's better to eliminate its own tags:
+
+```php
+namespace AppBundle;
+
+use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\HttpKernel\Bundle\Bundle;
+
+class AppBundle extends Bundle
+{
+    public function build(ContainerBuilder $container)
+    {
+        parent::build($container);
+        $container->addCompilerPass(new class implements CompilerPassInterface {
+            public function process(ContainerBuilder $container) {
+                $listener = $container->findDefinition('api_platform.listener.request.deserialize');
+                $listener->clearTags();
+            }
+        });
+    }
+}
+
 ```
