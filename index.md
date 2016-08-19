@@ -73,6 +73,7 @@
 19. [AngularJS Integration](core/angularjs-integration.md)
   1. [Restangular](core/angularjs-integration.md#restangular)
   2. [ng-admin](core/angularjs-integration.md#ng-admin)
+
 ## Schema Generator
 
 1. [Introduction](schema-generator/index.md)
