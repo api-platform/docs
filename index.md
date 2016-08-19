@@ -66,13 +66,13 @@
     2. [Registering the Service](core/path-naming-strategy.md#registering-the-service)
     3. [Configure it](core/path-naming-strategy.md#configure-it)
 15. [Configuration Reference](core/configuration.md)
-16. [NelmioApiDocBundle Integration](core/nelmio-api-doc.md)
-17. [FOSUserBundle Integration](core/fosuser-bundle.md#fosuser-bundle-integration)
+16. [Accept `application/x-www-form-urlencoded` Form Data] (core/form-data.md)
+17. [NelmioApiDocBundle Integration](core/nelmio-api-doc.md)
+18. [FOSUserBundle Integration](core/fosuser-bundle.md#fosuser-bundle-integration)
   1. [Creating a `User` Entity with Serialization Groups](core/fosuser-bundle.md#creating-a-user-entity-with-serialization-groups)
-18. [AngularJS Integration](core/angularjs-integration.md)
+19. [AngularJS Integration](core/angularjs-integration.md)
   1. [Restangular](core/angularjs-integration.md#restangular)
   2. [ng-admin](core/angularjs-integration.md#ng-admin)
-19. [Accept `application/x-www-form-urlencoded` Form Data] (core/form-data.md)
 ## Schema Generator
 
 1. [Introduction](schema-generator/index.md)
