@@ -38,6 +38,7 @@
   3. [Embedding Relations](core/serialization-groups-and-relations.md#embedding-relations)
     1. [Normalization](core/serialization-groups-and-relations.md#normalization)
     2. [Denormalization](core/serialization-groups-and-relations.md#denormalization)
+    3. [Changing the Serialization Context Dynamically](core/serialization-groups-and-relations.md#changing-the-serialization-context-dynamically)
   4. [Name Conversion](core/serialization-groups-and-relations.md#name-conversion)
   5. [Entity Identifier Case](core/serialization-groups-and-relations.md#entity-identifier-case)
   6. [Writable Entity Identifier](core/serialization-groups-and-relations.md#writable-entity-identifier)
