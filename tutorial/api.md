@@ -433,7 +433,7 @@ framework) is pre-configured with contexts useful to spec and test REST API and 
 With Behat, you can write the API specification (as user stories) in natural language then execute scenarios against the
 application to validate its behavior.
 
-Create a [Gherkin](http://docs.behat.org/en/latest/guides/1.gherkin.html) feature file containing the scenarios we run manually
+Create a [Gherkin](http://docs.behat.org/en/latest/user_guide/gherkin.html) feature file containing the scenarios we run manually
 in the previous chapter:
 
 ```gherkin
