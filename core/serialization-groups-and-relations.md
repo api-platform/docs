@@ -392,7 +392,7 @@ You can configure API Platform Core to embed the JSON-LD context in the root doc
     "@vocab": "http://localhost:8000/apidoc#",
     "hydra": "http://www.w3.org/ns/hydra/core#",
     "name": "http://schema.org/name",
-    "author": "http://schema.org/authhor"
+    "author": "http://schema.org/author"
   },
   "@id": "/books/62",
   "@type": "Book",
