@@ -88,5 +88,5 @@ If you don't have DunglasActionBundle installed, [the subscriber must be registe
 [Doctrine events](http://doctrine-orm.readthedocs.org/en/latest/reference/events.html#reference-events-lifecycle-events)
 are also available (if you use it) if you want to hook at the object lifecycle events.
 
-Previous chapter: [Validation](validation.md)<br>
-Next chapter: [Resources](resources.md)
+Previous chapter: [Pagination](pagination.md)
+Next chapter: [Content Negotiation](content-negotiation.md)

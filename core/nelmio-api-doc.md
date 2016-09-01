@@ -3,15 +3,16 @@
 ![Screenshot of ApiBundle integrated with NelmioApiDocBundle](../tutorial/images/api-doc.png)
 
 [NelmioApiDocBundle](https://github.com/nelmio/NelmioApiDocBundle) (since version 2.9) has built-in support for API Platform.
-Installing it will give you access to a human-readable documentation and a nice sandbox.
-
-If you use the API Platform standard edition, NelmioApiDocBundle is automatically configured. Browse the `/doc` URL to show
-it.
+Installing it will give you access to a human-readable documentation and a nice sandbox. It is an alternative to the builtin API Platform documentation.
 
 If you use the standalone API Platform Core bundle, copy the following configuration:
 
 ```yaml
 # app/config/config.yml
+
+api_platform:
+    # ...
+    enable_nelmio_api_doc: true
 
 nelmio_api_doc:
     sandbox:
@@ -27,5 +28,5 @@ nelmio_api_doc:
 Please note that NelmioApiDocBundle has a sandbox limitation where you cannot pass a JSON array as parameter, so you cannot
 use it to deserialize nested objects.
 
-Previous chapter: [Configuration](configuration.md)<br>
+Previous chapter: [Configuration](configuration.md)
 Next chapter: [Operations](operations.md)

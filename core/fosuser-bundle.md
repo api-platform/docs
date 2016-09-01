@@ -78,5 +78,5 @@ class User extends BaseUser
 }
 ```
 
-Previous chapter: [NelmioApiDocBundle integration](nelmio-api-doc.md)<br>
+Previous chapter: [Operation Path Naming](operation-path-naming.md)
 Next chapter: [AngularJS integration](angularjs-integration.md)

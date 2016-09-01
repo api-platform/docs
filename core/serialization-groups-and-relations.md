@@ -153,7 +153,7 @@ class Book
      * @Groups({"book"})
      */
     private $name;
-    
+
     /**
      * @Groups({"book"})
      */
@@ -235,11 +235,105 @@ the data provider and any changes in the embedded relation will be applied to th
 
 You can create as relation embedding levels as you want.
 
+### Changing the Serialization Context Dynamically
+
+Let's imagine a resource where most fields can be managed by any user, but some can be managed by admin users only:
+
+```php
+// src/AppBundle/Entity/Book.php
+
+namespace AppBundle\Entity;
+
+use ApiPlatform\Core\Annotation\ApiResource;
+use Symfony\Component\Serializer\Annotation\Groups;
+
+/**
+ * @ApiResource(attributes={
+ *     "normalization_context"={"groups"={"book_output"}}}),
+ *     "denormalization_context"={"groups"={"book_input"}}
+ * })
+ */
+class Book
+{
+    // ...
+
+    /**
+     * This field can be managed by an admin only
+     *
+     * @var bool
+     *
+     * @Groups({"book_output", "admin_input"})
+     */
+    private $active = false;
+
+    /**
+     * This field can be managed by any user
+     *
+     * @var string
+     *
+     * @Groups({"book_output", "book_input"})
+     */
+    private $name;
+}
+```
+
+All entry points are the same for all users, so we should find a way to detect if authenticated user is admin, and if so
+dynamically add `admin_input` to deserialization groups.
+
+API Platform implements a `ContextBuilder`, which prepares the context for serialization & deserialization. Let's
+[decorate this service](http://symfony.com/doc/current/service_container/service_decoration.html) to override the
+`createFromRequest` method:
+
+```yml
+// src/AppBundle/Resources/config/services.yml
+
+services:
+    app.serializer.builder.book:
+        decorates: api_platform.serializer.context_builder
+        class: AppBundle\Serializer\BookContextBuilder
+        arguments: ['@app.serializer.builder.book.inner', '@security.authorization_checker']
+```
+
+```php
+// src/AppBundle/Serializer/BookContextBuilder.php
+
+namespace AppBundle\Serializer;
+
+use ApiPlatform\Core\Serializer\SerializerContextBuilderInterface;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
+
+final class BookContextBuilder implements SerializerContextBuilderInterface
+{
+    private $decorated;
+    private $authorizationChecker;
+
+    public function __construct(SerializerContextBuilderInterface $decorated, AuthorizationCheckerInterface $authorizationChecker)
+    {
+        $this->decorated = $decorated;
+        $this->authorizationChecker = $authorizationChecker;
+    }
+
+    public function createFromRequest(Request $request, bool $normalization, array $extractedAttributes = null) : array
+    {
+        $context = $this->decorated->createFromRequest($request, $normalization, $extractedAttributes);
+        if ($this->authorizationChecker->isGranted('ROLE_ADMIN') && false === $normalization) {
+            $context['groups'][] = 'admin_input';
+        }
+
+        return $context;
+    }
+}
+```
+
+If the user has `ROLE_ADMIN` permission, `admin_input` group will be dynamically added to the denormalization context.
+The variable `$normalization` lets you check whether the context is for normalization (if true) or denormalization.
+
 ## Name Conversion
 
 The Serializer Component provides a handy way to map PHP field names to serialized names. See the related [Symfony documentation](http://symfony.com/doc/master/components/serializer.html#converting-property-names-when-serializing-and-deserializing).
 
-To use this feature, declare a new service with id `api.name_converter`. For example, you can convert `CamelCase` to 
+To use this feature, declare a new service with id `api.name_converter`. For example, you can convert `CamelCase` to
 `snake_case` with the following configuration:
 
 ```yaml
@@ -325,5 +419,5 @@ class Book
 }
 ```
 
-Previous chapter: [Filters](filters.md)<br>
-Next chapter: [Resources path generators](resource-path-generator.md)
+Previous chapter: [Filters](filters.md)
+Next chapter: [Operation Path Naming](operation-path-naming.md)

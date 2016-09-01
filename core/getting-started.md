@@ -15,6 +15,8 @@ Alternatively, you can use [Composer](http://getcomposer.org) to install the sta
 Then, update your `app/config/AppKernel.php` file:
 
 ```php
+// app/config/AppKernel.php
+
 public function registerBundles()
 {
     $bundles = [
@@ -124,7 +126,7 @@ class Offer
      * @Assert\Type(type="float")
      */
     public $price;
-    
+
     /**
      * @ORM\ManyToOne(targetEntity="Product")
      */
@@ -157,7 +159,7 @@ DELETE | /products/{id} | Delete a product
 
 The same operations are available for the offer method (routes will start with the `/offers` pattern).
 Routes prefixes are built by pluralizing the name of the mapped entity class.
-It is also possible to override the naming convention using [resource path generators](resource-path-generators.md).
+It is also possible to override the naming convention using [operation path namings](operation-path-naming.md).
 
 As an alternative to annotations, you can map entity classes using XML or YAML:
 
@@ -167,13 +169,13 @@ As an alternative to annotations, you can map entity classes using XML or YAML:
 # src/AppBundle/Resources/config/resources.xml
 <?xml version="1.0" encoding="UTF-8" ?>
 <resources>
-        <resource class="AppBundle\Entity\Product" />
-        <resource
-            class="AppBundle\Entity\Offer"
-            shortName="Offer" <!-- optional -->
-            description="An offer form my shop" <!-- optional -->
-            iri="http://schema.org/Offer" <!-- optional -->
-        />
+    <resource class="AppBundle\Entity\Product" />
+    <resource
+        class="AppBundle\Entity\Offer"
+        shortName="Offer" <!-- optional -->
+        description="An offer form my shop" <!-- optional -->
+        iri="http://schema.org/Offer" <!-- optional -->
+    />
 </resources>
 ```
 
@@ -200,5 +202,5 @@ Interact with the API using a REST client (we recommend [Postman](https://www.ge
 (you should give a try to [Hydra Console](https://github.com/lanthaler/HydraConsole)). Take
 a look at the usage examples in [the `features` directory](/features/).
 
-Previous chapter: [Introduction](index.md)<br>
+Previous chapter: [Introduction](index.md)
 Next chapter: [Configuration](configuration.md)
