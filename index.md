@@ -68,9 +68,10 @@
     1. [Defining the Operation Path Naming](core/operation-path-naming.md#defining-the-operation-path-resolver)
     2. [Registering the Service](core/operation-path-naming.md#registering-the-service)
     3. [Configure it](core/operation-path-naming.md#configure-it)
-17. [FOSUserBundle Integration](core/fosuser-bundle.md)
+17. [Accept `application/x-www-form-urlencoded` Form Data] (core/form-data.md)
+18. [FOSUserBundle Integration](core/fosuser-bundle.md)
   1. [Creating a `User` Entity with Serialization Groups](core/fosuser-bundle.md#creating-a-user-entity-with-serialization-groups)
-18. [AngularJS Integration](core/angularjs-integration.md)
+19. [AngularJS Integration](core/angularjs-integration.md)
   1. [Restangular](core/angularjs-integration.md#restangular)
   2. [ng-admin](core/angularjs-integration.md#ng-admin)
 
