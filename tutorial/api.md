@@ -1,42 +1,63 @@
 # Creating your First API with API Platform, in 5 Minutes
 
-In this tutorial, we will create a typical blog application with API Platform.
-And it will take us less than 5 minutes to create the API, promised!
+In this getting started guide, we will learn how easy and efficient is [API Platform](https://api-platform.com) to create
+web APIs by creating an API to power a typical blog application. It will take us less than 5 minutes to have a fully featured
+API up and running, promised!
 
-All sources created during this tutorial are available on GitHub:
+To create our API we will basically have to:
 
-* the blog API : [demo](https://api-platform-demo-blog-api.herokuapp.com) (we recommend to browse it with [Postman](http://getpostman.com))
-  / [sources](https://github.com/dunglas/blog-api)
-* the Angular client: [demo](https://dunglas.github.io/blog-client/) / [sources](https://github.com/dunglas/blog-client)
+* install API Platform
+* handcraft our data model, map it with the database and add some validation rules
 
-![Screenshot of the blog](images/blog-api-platform.png)
+API Platform will be able to deal directly with our data model to expose a powerful read/write web API having a ton of built-in
+features including data validation, pagination, [Swagger/Open API](https://swagger.io), [Hydra](http://hydra-cg.com)
+and human-readable documentation, filtering, sorting, hypermedia/HATEOAS support ([JSON-LD](http://json-ld.org) and [HAL](blog.stateless.co/post/13296666138/json-linking-with-hal)),
+CORS support...
 
-To create the API-side of our project we will:
-
-* Bootstrap a fully featured and working data model including ORM mapping, validation rules and semantic metadata with the
-  generator provided by API platform (of course you can also handcraft your data model or modify the generated one to fit
-  your needs).
-* Expose this data model trough a read/write (CRUD) web API having a ton of features out of the box: hypermedia, pagination,
-  validation, filtering, sorting... ; supporting [JSON-LD](http://json-ld.org), [Schema.org](https://schema.org) and [Hydra](http://www.hydra-cg.com/)
-  open standards and being easily extensible thanks to strong [OOP](https://en.wikipedia.org/wiki/Object-oriented_programming).
-
-In [a second part](angularjs.md), we will develop a tiny AngularJS webapp to illustrate how to create and consume data from the API. Keep
-in mind that you can use your preferred client-side technology (tested and approved with Angular, React, Ionic, Swift but
-can work with any language able to send HTTP requests).
-
-## Prerequisites
-
-PHP 7 must be installed to run API Platform. A built-in web server is shipped with the framework for the development environment.
-
-To follow this tutorial a database must be installed (but its not a strong dependency of the framework). We recommend MySQL
-or MariaDB but other major DBMS are supported including PostgreSQL and SQLite.
+Our API will rely on well established open standards (HTTP, JSON, RDF...), support content negotiation and will be easily extensible
+thanks to strong [OOP](https://en.wikipedia.org/wiki/Object-oriented_programming) and to [the Symfony framework][https://symfony.com].
+Adding features like custom service-oriented API endpoints, JWT or OAuth authentication, HTTP caching, mail sending or
+asynchronous jobs will be very easy.
 
 ## Installing the framework
 
-Let's start our new blog API project. The easiest way to create a new project is to use [Composer](https://getcomposer.org/)
-(you need to have it installed on your box):
+API Platform is shipped with a complete [https://docker.com](Docker) setup that makes it easy to get a containerized development
+environment up and running. The setup contains a PHP 7 + Apache image pre-configured with everything required to run API Platform
+and a MySQL image to host the database.
 
-    composer create-project api-platform/api-platform:dev-master blog-api
+[Download](https://api-platform.com/download) and unzip the last version of the API Platform Standard Edition.
+If you don't already have Docker installed on your computer, [it's time to install it](https://www.docker.com/products/overview#/install_the_platform).
+
+Open in a terminal an go inside the folder containing your API Platform installation. Then run the following command to
+install locally the dependencies of the project:
+
+    docker-compose run web composer install
+
+The `web` container is where your project belongs. Prefixing a command by `docker-compose run web` allow to run this command
+in this container. You may want [to create an alias](http://www.linfo.org/alias.html) to run command in the container easier.
+Here, we installed libraries required by our project using the `composer` command shipped with the API Platform image.
+
+The first time you will run a command, Docker will download and build images. It take some time, but don't worry, it will
+be lightning fast next time you run commands ins the container.
+
+Project files are automatically shared between your local machine and the container thanks to pre-configured a [Docker volume](https://docs.docker.com/engine/tutorials/dockervolumes/).
+It means that you can edit files of your project locally using your preferred IDE or code editor, they will be transparently
+taken into account.
+
+Now, it's time to start the Apache and the MySQL servers. Run the following command:
+
+
+
+Alternatively to using Docker, you can install API Platform on your local computer using [Composer](https://getcomposer.org/):
+
+    composer create-project api-platform/api-platform blog-api
+
+API Platform can work with all major RDBMS including MySQL but also PostgreSQL, SQLite, SQL Server and MariaDB. The persistence
+system can also be replaced with anything else like a noSQL database or a remote web service if you want to.
+
+##
+
+Let's start our new blog API project. The easiest way to create a new project is to
 
 Composer creates the skeleton of the new blog API then retrieve the framework and all its dependencies.
 
@@ -602,7 +623,13 @@ Here is a non exhaustive list of what you can do with API Platform:
 * [Send mails](https://symfony.com/doc/current/cookbook/email/email.html) (Swift Mailer)
 * [Deploy](../deployment/index.md)
 
-The next step? [Learn how to create an AngularJS client for the API](angularjs.md).
+Keep in mind that you can use your preferred client-side technology: API Platform is tested and approved with React, Angular
+1 & 2, Ionic and Swift but can work with any language able to send HTTP requests.
+[Checkout our AngularJS client for API Platform tutorial](angularjs.md) to learn how to consume the API with AngularJS.
+
+To go further, the API Platform team maintains a demo application showing more advanced use cases like leveraging serialization
+groups, user management or JWT and OAuth authentication. [Checkout the demo code source on GitHub]https://github.com/api-platform/demo)
+and [browse it online](https://demo.api-platform.com).
 
 Previous chapter: [Introduction](index.md)
 Next chapter: [An AngularJS Client](angularjs.md)
