@@ -1,297 +1,122 @@
 # Creating your First API with API Platform, in 5 Minutes
 
-In this getting started guide, we will learn how easy and efficient is [API Platform](https://api-platform.com) to create
-web APIs by creating an API to power a typical blog application. It will take us less than 5 minutes to have a fully featured
-API up and running, promised!
+[API Platform](https://api-platform.com) is one of the most efficient framework out there to create web APIs. It makes it
+easy to create simple APIs while giving you the ability to do create complex features with style. To discover the basics,
+we will create an API to manage a bookshop.
 
-To create our API we will basically have to:
+In only 4 steps, we will create a fully featured API relying on industry leading open standards:
 
-* install API Platform
-* handcraft our data model, map it with the database and add some validation rules
+1. Install API Platform
+2. Handcraft the data model as *Plain Old PHP Objects*
+3. Map those classes with the database
+4. Add some validation rules
 
-API Platform will be able to deal directly with our data model to expose a powerful read/write web API having a ton of built-in
-features including data validation, pagination, [Swagger/Open API](https://swagger.io), [Hydra](http://hydra-cg.com)
-and human-readable documentation, filtering, sorting, hypermedia/HATEOAS support ([JSON-LD](http://json-ld.org) and [HAL](blog.stateless.co/post/13296666138/json-linking-with-hal)),
-CORS support...
+API Platform will use the data model to expose a read/write web API having a ton of built-in features:
 
-Our API will rely on well established open standards (HTTP, JSON, RDF...), support content negotiation and will be easily extensible
-thanks to strong [OOP](https://en.wikipedia.org/wiki/Object-oriented_programming) and to [the Symfony framework][https://symfony.com].
-Adding features like custom service-oriented API endpoints, JWT or OAuth authentication, HTTP caching, mail sending or
-asynchronous jobs will be very easy.
+* data validation
+* pagination
+* filtering
+* sorting
+* a nice UI and machine-readable documentations ([Swagger/OpenAPI](https://swagger.io), [Hydra](http://hydra-cg.com))
+* hypermedia/HATEOAS and content negotiation support ([JSON-LD](http://json-ld.org), [HAL](blog.stateless.co/post/13296666138/json-linking-with-hal))
+* authentication ([Basic HTTP](https://en.wikipedia.org/wiki/Basic_access_authentication), cookies as well as [JWT](https://jwt.io/)
+  and [OAuth](https://oauth.net/) through extensions)
+* [CORS headers support](https://developer.mozilla.org/en-US/docs/Web/HTTP/Access_control_CORS)
+* HTTP caching
+* and basically everything mandatory for modern APIs.
+
+One more thing, before we start: API Platform is built on top of [the Symfony framework][https://symfony.com]. API Platform
+is compatible with most [Symfony bundles](http://symfony.com/blog/the-30-most-useful-symfony-bundles-and-making-them-even-better)
+(extensions) and benefits from the numerous extensions provided by this rock-solid foundation (kernel events, DIC...). Adding
+features like custom service-oriented API endpoints, JWT or OAuth authentication, HTTP caching, mail sending or asynchronous
+jobs to your APIs is very straightforward.
 
 ## Installing the framework
 
 API Platform is shipped with a complete [https://docker.com](Docker) setup that makes it easy to get a containerized development
-environment up and running. The setup contains a PHP 7 + Apache image pre-configured with everything required to run API Platform
-and a MySQL image to host the database.
+environment up and running. The bundled setup contains an image pre-configured with PHP 7, Apache and everything required
+to run API Platform and a MySQL image to host the database.
 
-[Download](https://api-platform.com/download) and unzip the last version of the API Platform Standard Edition.
-If you don't already have Docker installed on your computer, [it's time to install it](https://www.docker.com/products/overview#/install_the_platform).
+*Alternatively to using Docker, API Platform can also be installed using [Composer](https://getcomposer.org/):
+`composer create-project api-platform/api-platform bookshop-api`.*
 
-Open in a terminal an go inside the folder containing your API Platform installation. Then run the following command to
-install locally the dependencies of the project:
+Start by [downloading the API Platform Standard Edition](https://api-platform.com/download) and extract the content of the
+archive.
+The resulting directory contains an empty API Platform project structure. You will add your own code and configuration inside
+it.
+Then, if you do not already installed Docker on your computer, [it is the right time to do it](https://www.docker.com/products/overview#/install_the_platform).
 
-    docker-compose run web composer install
+Open a terminal, go inside the directory containing your project skeleton, and run the following command to start the Apache
+and the MySQL servers using Docker Compose:
 
-The `web` container is where your project belongs. Prefixing a command by `docker-compose run web` allow to run this command
-in this container. You may want [to create an alias](http://www.linfo.org/alias.html) to run command in the container easier.
-Here, we installed libraries required by our project using the `composer` command shipped with the API Platform image.
+    $ docker-compose up
 
-The first time you will run a command, Docker will download and build images. It take some time, but don't worry, it will
-be lightning fast next time you run commands ins the container.
+The first time you start containers, Docker downloads and builds images for you. It will take some time, but don't worry,
+this operation is done only one time. Starting servers will then be lightning fast.
 
-Project files are automatically shared between your local machine and the container thanks to pre-configured a [Docker volume](https://docs.docker.com/engine/tutorials/dockervolumes/).
-It means that you can edit files of your project locally using your preferred IDE or code editor, they will be transparently
-taken into account.
+Project's files are automatically shared between your local machine and the container thanks to a pre-configured [Docker
+volume](https://docs.docker.com/engine/tutorials/dockervolumes/). It means that you can edit files of your project locally
+using your preferred IDE or code editor, they will be transparently taken into account.
+Speaking about IDEs, our preferred software to develop API Platform apps is [PHPStorm](https://www.jetbrains.com/phpstorm/)
+with its awesome "Symfony" and "PHP annotations" plugins. Give it a try, you will got auto-completion for almost everything.
 
-Now, it's time to start the Apache and the MySQL servers. Run the following command:
+Now, in another shell, install the PHP dependencies of our project:
 
+    $ docker-compose run web composer install --no-interaction
 
+The `web` container is where your project belongs. Prefixing a command by `docker-compose run web` allow to run the given
+command in this container. You may want [to create an alias](http://www.linfo.org/alias.html) to run commands in the container
+easily. Here, we installed libraries required by our project using the `composer` command included in the API Platform
+image.
 
-Alternatively to using Docker, you can install API Platform on your local computer using [Composer](https://getcomposer.org/):
+The API Platform Standard Edition has a dummy entity for test purpose: `src/AppBundle/Entity/Foo.php`. We will remove it
+later, but for now, create the related database table:
 
-    composer create-project api-platform/api-platform blog-api
+    docker-compose run web bin/console doctrine:schema:create
 
-API Platform can work with all major RDBMS including MySQL but also PostgreSQL, SQLite, SQL Server and MariaDB. The persistence
-system can also be replaced with anything else like a noSQL database or a remote web service if you want to.
+You probably guessed that this test entity uses the industry leading [Doctrine ORM](http://www.doctrine-project.org/projects/orm.html)
+library as persistence system.
+API Platform is 100% independent of the persistence system and you can use the one(s) that best suit(s) your needs (like
+a noSQL database or a remote web service).
+API Platform even support using several persistence system together in the same project.
 
-##
+However, Doctrine ORM is definitely the easiest way to persist and query data in an API Platform project thanks to a bridge
+included in the Standard Edition. This Doctrine ORM bridge is optimized for performance and development convenience. Doctrine
+ORM and its bridge support major RDBMS including MySQL, PostgreSQL, SQLite, SQL Server and MariaDB.
 
-Let's start our new blog API project. The easiest way to create a new project is to
+Open `http://localhost` with your favorite web browser:
 
-Composer creates the skeleton of the new blog API then retrieve the framework and all its dependencies.
+![Swagger UI integration in API Platform](images/swagger-ui.png)
 
-At the end of the installation, you will be prompted for some configuration parameters including database credentials.
-All configuration parameters can be changed later by editing the `app/config/parameters.yml` file.
+API Platform exposes a description of the API in the Swagger UI format. It also integrates Swagger UI, a nice interface
+rendering the API documentation. Click on an operation to display its details. You can also send requests to the API directly
+from the UI. Try to create a new foo object using the `POST` operation, then access it using `GET` and finally  delete it
+with `DELETE`.
+If you access any API URL using a web browser, API Platform will detect it (using the `Accept` HTTP header send by the header)
+and display will the related request to the API in the UI. Open `http://localhost/foos`:
 
-API Platform is pre-configured to use the popular and powerful [Doctrine ORM](http://www.doctrine-project.org/projects/orm.html).
-It's supported natively by all API Platform components. However the Doctrine ORM is fully optional: you can replace it
-by your favorite ORM, no ORM at all and even no database.
+![Request detail in the UI](images/swagger-ui.png)
 
-The installer will also ask you for some configuration parameters:
+If you want to access the raw data, you have two alternatives:
 
-* `database_*`: database credentials (MySQL is configured by default, but other popular RDBMS are supported)
-* `mailer_*`: mail server credentials (to send mails)
-* `cors_allow_origin`: the URL of your default web client application to automatically set appropriate [CORS](http://en.wikipedia.org/wiki/Cross-origin_resource_sharing)
-  headers, **set it to `http://locahost:9000` (the default URL of the built-in Grunt server of our AngularJS client) to follow this tutorial**
-* `api_*`: a name and a description of the API that will be used in the generated documentation
-* `secret`: a secret token (choose a long one) for cryptographic features
+* Add the correct `Accept` header (or don't set any `Accept` header at all and API Platform will default to JSON-LD) - preferred
+  when writing API clients
+* Add the format format you want as the extension of the resource - to debug purpose only
 
-Finally, the installer will ask if you want to remove the existing VCS history, type `Y`.
+For instance, go to `http://localhost/foos.jsonld` to retrieve the list of Foos object in JSON-LD or http://localhost/foos.json`
+to get raw JSON.
 
-Take a look at [the content of the generated directory](https://github.com/dunglas/blog-api). You maybe recognize a [Symfony
-application directory structure](https://symfony.com/doc/current/quick_tour/the_architecture.html). It's fine and intended:
-**the generated skeleton is a perfectly valid Symfony full-stack application** that follows [Symfony Best Practices](https://symfony.com/doc/current/best_practices/index.html).
+You can use your favorite HTTP client to query the API. We strongly recommend to use [Postman](https://www.getpostman.com/).
+It works perfectly well with API Platform, has native JSON support, allow you to easily write functional tests for your
+API and has very good team collaboration features.
 
-It means that with this default API Platform setup, you can:
+## Creating the model
 
-* [use thousands of exiting Symfony bundles](http://knpbundles.com)
-* reuse all your Symfony skills and benefit of the high quality [Symfony documentation](https://symfony.com/doc/current/index.html)
+API Platform is now 100% functional. Let's create our own data model.
+Our bookshop API will be simple for now. It will be composed of books and reviews.
 
-You can also use API Platform in any existing Symfony application.
-
-While API Platform is perfectly integrated with Symfony, keep in mind that it's basically a set of standalone PHP components.
-You can also use those components in raw PHP (without framework) as well as with other frameworks.
-
-The skeleton comes with a demonstration bookstore API. You can play with it by running the following commands:
-
-Create the database:
-
-    $ bin/console doctrine:database:create
-
-Create the database schema:
-
-    $ bin/console doctrine:schema:create
-
-Run the built-in web server:
-
-    $ bin/console server:start
-
-You can open `http://localhost:8000` with you preferred REST client.
-We recommend [Postman](https://www.getpostman.com), and you will see later that API Platform is nicely integrated with it.
-
-When you're done with the demo app and want to create your own API:
-
-* empty the `app/config/schema.yml` file
-* delete all PHP files in the `src/AppBundle/Entity/` directory
-
-## Generating the data model
-
-The first incredibly useful tool provided by API platform is [its data model generator](../schema-generator/index.md).
-
-It is 100% independent of other components but fits well with them: you can use this generator to scaffold the data model
-of any PHP application. But you can also expose any hand-crafted PHP data model with the API system.
-**Those components are not coupled together.**
-
-To scaffold our blog data model we'll browse [Schema.org](https://schema.org) and find types matching our needs.
-We're lucky, the [https://schema.org/BlogPosting](https://schema.org/BlogPosting) describes exactly the data model we want
-for our blog. As you can see, there is a bunch of schemas available.
-
-Report types you're interested in a YAML configuration file like in the following snippet: 
-
-```yaml
-# app/config/schema.yml
- 
-types:                      # The list of type to generated (a PHP entity class by type will be generated)
-    BlogPosting:
-        parent: false           # It's a best practice to have entity without parents
-        properties:             # The list of properties we want to use
-            name: ~               # You can include properties from the current type and of all these parents
-            articleBody: ~
-            articleSection: ~
-            headline: ~
-            isFamilyFriendly: ~
-            datePublished: ~
-            author:
-                range: Person       # You can specify relations, here we force the type of the property to Person
-                cardinality: (*..0) # We also the cardinality of the relation
-            kevinReview:          # You can also define custom properties, not available in Schema.org
-                range: Text         # For custom properties, type must always be specified
-                cardinality: (*..0) # Using the cardinality here (not a relation) allows to deal with the nullable option
-    Person:                   # Person is a relation of the BlogPosting type (author property), relations will be automatically generated
-        parent: false
-        properties:
-            familyName: ~         # We add some common properties defined by Schema.org
-            givenName: ~
-            description: ~
-            birthDate: ~
-            deathDate: ~
-
-namespaces:
-    entity: AppBundle\Entity # The default namespace for entities, following API Platform and Symfony best practices
-
-annotationGenerators: # Enabled generators
-    - ApiPlatform\SchemaGenerator\AnnotationGenerator\PhpDocAnnotationGenerator          # PHPDoc
-    - ApiPlatform\SchemaGenerator\AnnotationGenerator\DoctrineOrmAnnotationGenerator     # Doctrine ORM mapping
-    - ApiPlatform\SchemaGenerator\AnnotationGenerator\ConstraintAnnotationGenerator      # Symfony Validation Constraints
-    - ApiPlatform\SchemaGenerator\AnnotationGenerator\ApiPlatformCoreAnnotationGenerator # API Platform resource mapping
-```
-
-The `types` key contains the list of classes we want to generate. Each class will be generated from the corresponding
-Schema.org type.
-
-Report properties of the class you want to generate in the `properties` key of the type. Similarly PHP properties are
-generated using properties coming from Schema.org. If the value of the `properties` key is null (`~`), all properties
-of the Schema.org type will be generated.
-As you can see with `kevinReview`, it's also possible to define custom properties.
-
-The schema generator is smart enough to guess types (`range` in the Schema.org terminology) and cardinalities of properties.
-Use the `range` and `cardinality` keys if you want to override those values.
-
-The `namespaces` key contain the namespace where generates entities belong. The generator is also able to generate enums,
-interfaces and abstract class. Here we use the default Symfony directory for entities.
-
-Finally, the `annotationGenerators` key contains the list of annotation generators we want to register. With those settings
-it will generate the PHPDoc, Doctrine ORM mappings, Symfony Validation annotations and API Platform annotations.
-The last one is only useful to generate Schema.org IRI when exposing the API instead of custom ones. If you don't want to
-expose a Schema.org enabled API, you can remove this generator. You can also create you own annotation generators and register them in this configuration section.
-
-If you don't find types or properties matching your specific needs, it's not a big deal. You can create entity classes
-by yourself (directly in PHP) and still benefit from the bunch of other API Platform features.
-You can also pick some classes and properties from Schema.org then add more custom types to your model.
-
-It's time to run the model generator:
-
-    $ vendor/bin/schema generate-types src/ app/config/schema.yml
-
-Take a look at the content of the [src/AppBundle/Entity/](https://github.com/dunglas/blog-api/tree/master/src/AppBundle/Entity) directory.
-We generated a set of Plain-Old-PHP entities representing our data model. As promised we generated:
-
-* A set of PHP entities with properties, constants (enum values), getters, setters, adders and removers. The class hierarchy
-  provided by Schema.org is translated to a PHP class hierarchy with parents as `abstract` classes. The generated code
-  complies with [PSR](http://www.php-fig.org/) coding standards.
-* [Doctrine ORM mapping annotations](https://doctrine-orm.readthedocs.org/projects/doctrine-orm/en/latest/reference/annotations-reference.html)
-  including database columns with type guessing, relations with cardinality guessing and class inheritance (through the
-  `@AbstractSuperclass` annotation).
-* [Symfony validation annotations](https://symfony.com/doc/current/book/validation.html#constraints)
-* API Platform `@ApiResource` and `@ApiProperty` annotations
-* Full high-quality [PHPDoc](https://www.phpdoc.org) for classes, properties, constants and methods extracted from Schema.org
-
-The data model is fully functional. You can hack it (modify entities, properties, indexes, validation rules...), or use it
-as is!
-
-Reusing an existing semantic schema like we've done has many advantages:
-
-**Don't Reinvent The Wheel**
-
-Data models provided by Schema.org are popular and have been proved efficient. They cover a broad spectrum of topics including
-creative work, e-commerce, event, medicine, social networking, people, postal address, organization, place or review. Schema.org
-has its root in [a ton of preexisting well designed vocabularies](http://schema.rdfs.org/mappings.html) and is successfully
-used by more and more website and applications.
-
-Pick up schemas applicable to your application, generate your PHP model, then customize and specialize it to fit your needs.
-
-**Improve SEO and user experience**
-
-Adding Schema.org markup to websites and apps increase their ranking in search engines results and enable awesome features
-such as [Google Rich Snippets](https://support.google.com/webmasters/answer/99170?hl=en) and [Gmail markup](https://developers.google.com/gmail/markup/overview).
-
-Mapping your app data model to Schema.org structures can be a tedious task. Using the generator, your data model will be
-a derived from Schema.org. Serializing your data as JSON-LD will not require specific mapping nor adaptation. It's a matter
-of minutes.
-
-**Ready for the future**
-
-Schema.org improves the interoperability of your applications. Used with hypermedia technologies such as [Hydra](http://www.hydra-cg.com/)
-it's a big step towards the semantic and machine readable web. It opens the way to generic web API clients able to extract
-and process data from any website or app using such technologies.
-
-Ask Doctrine to create the database of the project:
-
-    $ bin/console doctrine:database:drop --force # Just in case you created the DB to play with the bookstore app, be careful with this command it deletes data permanently
-    $ bin/console doctrine:database:create
-
-Then generate database tables related to the generated entities:
-
-    $ bin/console doctrine:schema:create
-
-The schema generator provides a lot of configuration options. Take a look at [its dedicated documentation](../schema-generator/index.md).
-Keep in mind that it is also available as a standalone tool (PHAR) and can be used to bootstrap any PHP project (works fine
-with raw PHP, API Platform and Symfony but also has an extension mechanism allowing to use it with other technologies.
-
-You can always create your very own data model from scratch. It's perfectly OK and you can still use API Platform without
-the generator.
-
-Sometimes we will have to make a data model with very specific business types, not available in Schema.org. Sometimes we
-will find Schema.org types that partially matches what we want but needs to be adapted.
-
-Anyway, the schema generator is a tool intended **to bootstrap** the data model. You can and **you will** edit manually
-generated PHP entities. When you start to edit manually the generated files, be careful to not run the generator again,
-it will overwrite your changes (this behavior will be enhanced in future versions). When you do such things, the best to
-do is to remove `api-platform/schema-generator` from your `composer.json` file.
-
-## Exposing the API
-
-We have a working data model backed by a database. But we also got a working hypermedia REST API thanks to **[API Platform Core](../core/index.md)**.
-
-The core, like the schema generator, is already pre-installed and properly configured.
-We just need to mark resources we want to expose with an `@ApiResource` annotation. Open any of the generated entities, and
-you'll see that the schema generator already added this annotation for us.
-
-And our API is already finished! How would it be easier?
-
-When you create new entities, you need to clear the cache:
-
-    $ bin/console cache:clear
-
-Start the integrated development web server:
-
-    $ bin/console server:start
-
-Then open `http://localhost:8000/doc` with a web browser:
-
-![API doc](images/api-doc.png)]
-
-Thanks to [NelmioApiDocBundle](https://github.com/nelmio/NelmioApiDocBundle) support of ApiBundle and its integration
-with API Platform, you get for a free **an automatically generated human-readable documentation** of the API (Swagger-like).
-The doc also **includes a sandbox** to try the API.
-
-You can also use your favorite HTTP client (yeah, we already talked about Postman) to query the API.
-It is lower level than the sandbox and will allow to inspect forge and inspect JSON requests and responses easily.
-
-Open `http://localhost:8000` with Postman. This URL is the entry point of the API. It gives to access to all exposed
-resources. As you can see, the API returns minified JSON-LD. For better readability, JSON snippets have been prettified
-in this document.
+Books will have an id, a name, an author, an ISBN number, a description and will be related to a list of reviews.
+Reviews
 
 If you want to expose any entity:
 
