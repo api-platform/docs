@@ -4,12 +4,10 @@
 easy to create simple APIs while giving you the ability to do create complex features with style. To discover the basics,
 we will create an API to manage a bookshop.
 
-In only 4 steps, we will create a fully featured API relying on industry leading open standards:
+In a few minutes, we will create a fully featured API relying on industry leading open standards:
 
 1. Install API Platform
-2. Handcraft the data model as *Plain Old PHP Objects*
-3. Map those classes with the database
-4. Add some validation rules
+2. Handcraft the API data model as *Plain Old PHP Objects*, it will be automatically exposed
 
 API Platform will use the data model to expose a read/write web API having a ton of built-in features:
 
@@ -26,16 +24,16 @@ API Platform will use the data model to expose a read/write web API having a ton
 * and basically everything mandatory for modern APIs.
 
 One more thing, before we start: API Platform is built on top of [the Symfony framework][https://symfony.com]. API Platform
-is compatible with most [Symfony bundles](http://symfony.com/blog/the-30-most-useful-symfony-bundles-and-making-them-even-better)
-(extensions) and benefits from the numerous extensions provided by this rock-solid foundation (kernel events, DIC...). Adding
-features like custom service-oriented API endpoints, JWT or OAuth authentication, HTTP caching, mail sending or asynchronous
-jobs to your APIs is very straightforward.
+is compatible with most [Symfony bundles](https://symfony.com/blog/the-30-most-useful-symfony-bundles-and-making-them-even-better)
+(plugins) and benefits from the numerous extensions points provided by this rock-solid foundation (events, DIC...).
+Adding features like custom, service-oriented, API endpoints, JWT or OAuth authentication, HTTP caching, mail sending or
+asynchronous jobs to your APIs is very straightforward.
 
 ## Installing the framework
 
-API Platform is shipped with a complete [https://docker.com](Docker) setup that makes it easy to get a containerized development
-environment up and running. The bundled setup contains an image pre-configured with PHP 7, Apache and everything required
-to run API Platform and a MySQL image to host the database.
+API Platform is shipped with a entire [https://docker.com](Docker) setup that makes it easy to get a containerized development
+environment up and running. This setup contains an image pre-configured with PHP 7, Apache and everything needed to run API
+Platform and a MySQL image to host the database.
 
 *Alternatively to using Docker, API Platform can also be installed using [Composer](https://getcomposer.org/):
 `composer create-project api-platform/api-platform bookshop-api`.*
@@ -44,41 +42,43 @@ Start by [downloading the API Platform Standard Edition](https://api-platform.co
 archive.
 The resulting directory contains an empty API Platform project structure. You will add your own code and configuration inside
 it.
-Then, if you do not already installed Docker on your computer, [it is the right time to do it](https://www.docker.com/products/overview#/install_the_platform).
+Then, if you do not already have Docker on your computer, [it's the right time to install it](https://www.docker.com/products/overview#/install_the_platform).
 
 Open a terminal, go inside the directory containing your project skeleton, and run the following command to start the Apache
-and the MySQL servers using Docker Compose:
+and the MySQL servers using [Docker Compose](https://docs.docker.com/compose/):
 
     $ docker-compose up
 
-The first time you start containers, Docker downloads and builds images for you. It will take some time, but don't worry,
+The first time you start the containers, Docker downloads and builds images for you. It will take some time, but don't worry,
 this operation is done only one time. Starting servers will then be lightning fast.
 
-Project's files are automatically shared between your local machine and the container thanks to a pre-configured [Docker
+Project's files are automatically shared between your local host machine and the container thanks to a pre-configured [Docker
 volume](https://docs.docker.com/engine/tutorials/dockervolumes/). It means that you can edit files of your project locally
-using your preferred IDE or code editor, they will be transparently taken into account.
+using your preferred IDE or code editor, they will be transparently taken into account in the container.
 Speaking about IDEs, our preferred software to develop API Platform apps is [PHPStorm](https://www.jetbrains.com/phpstorm/)
-with its awesome "Symfony" and "PHP annotations" plugins. Give it a try, you will got auto-completion for almost everything.
+with its awesome [Symfony](https://confluence.jetbrains.com/display/PhpStorm/Getting+Started+-+Symfony+Development+using+PhpStorm)
+and [PHP annotations](https://plugins.jetbrains.com/plugin/7320) plugins. Give them a try, you'll got auto-completion for
+almost everything.
 
-Now, in another shell, install the PHP dependencies of our project:
+Now, in another shell, install the PHP dependencies of the project:
 
     $ docker-compose run web composer install --no-interaction
 
-The `web` container is where your project belongs. Prefixing a command by `docker-compose run web` allow to run the given
-command in this container. You may want [to create an alias](http://www.linfo.org/alias.html) to run commands in the container
-easily. Here, we installed libraries required by our project using the `composer` command included in the API Platform
+The `web` container is where your project belongs. Prefixing a command by `docker-compose run web` allows to execute this
+given command in the container. You may want [to create an alias](http://www.linfo.org/alias.html) to run easily commands
+in the container. Here, we installed libraries required by the project using the `composer` tool included in the API Platform
 image.
 
-The API Platform Standard Edition has a dummy entity for test purpose: `src/AppBundle/Entity/Foo.php`. We will remove it
-later, but for now, create the related database table:
+The API Platform Standard Edition comes with a dummy entity for test purpose: `src/AppBundle/Entity/Foo.php`. We will remove
+it later, but for now, create the related database table:
 
     docker-compose run web bin/console doctrine:schema:create
 
-You probably guessed that this test entity uses the industry leading [Doctrine ORM](http://www.doctrine-project.org/projects/orm.html)
+If you're used to the PHP ecosystem, you probably guessed that this test entity uses the industry leading [Doctrine ORM](http://www.doctrine-project.org/projects/orm.html)
 library as persistence system.
 API Platform is 100% independent of the persistence system and you can use the one(s) that best suit(s) your needs (like
-a noSQL database or a remote web service).
-API Platform even support using several persistence system together in the same project.
+a NoSQL database or a remote web service).
+API Platform even supports using several persistence systems together in the same project.
 
 However, Doctrine ORM is definitely the easiest way to persist and query data in an API Platform project thanks to a bridge
 included in the Standard Edition. This Doctrine ORM bridge is optimized for performance and development convenience. Doctrine
@@ -88,12 +88,12 @@ Open `http://localhost` with your favorite web browser:
 
 ![Swagger UI integration in API Platform](images/swagger-ui.png)
 
-API Platform exposes a description of the API in the Swagger UI format. It also integrates Swagger UI, a nice interface
-rendering the API documentation. Click on an operation to display its details. You can also send requests to the API directly
-from the UI. Try to create a new foo object using the `POST` operation, then access it using `GET` and finally  delete it
-with `DELETE`.
-If you access any API URL using a web browser, API Platform will detect it (using the `Accept` HTTP header send by the header)
-and display will the related request to the API in the UI. Open `http://localhost/foos`:
+API Platform exposes a description of the API in the Swagger format. It also integrates Swagger UI, a nice interface rendering
+the API documentation. Click on an operation to display its details. You can also send requests to the API directly from the UI.
+Try to create a new *Foo* resource using the `POST` operation, then access it using the `GET` operation and, finally, delete
+it by executing the `DELETE` operation.
+If you access any API URL using a web browser, API Platform detects it (using the `Accept` HTTP header) and displays the
+corresponding API request in the UI. Open `http://localhost/foos`:
 
 ![Request detail in the UI](images/swagger-ui.png)
 
@@ -101,31 +101,263 @@ If you want to access the raw data, you have two alternatives:
 
 * Add the correct `Accept` header (or don't set any `Accept` header at all and API Platform will default to JSON-LD) - preferred
   when writing API clients
-* Add the format format you want as the extension of the resource - to debug purpose only
+* Add the format format you want as the extension of the resource - for debug purpose only
 
-For instance, go to `http://localhost/foos.jsonld` to retrieve the list of Foos object in JSON-LD or http://localhost/foos.json`
-to get raw JSON.
+For instance, go to `http://localhost/foos.jsonld` to retrieve the list of `Foo` resources in JSON-LD or http://localhost/foos.json`
+to retrieve data in raw JSON.
 
-You can use your favorite HTTP client to query the API. We strongly recommend to use [Postman](https://www.getpostman.com/).
-It works perfectly well with API Platform, has native JSON support, allow you to easily write functional tests for your
-API and has very good team collaboration features.
+Of course, you can also use your favorite HTTP client to query the API. We strongly recommend to use [Postman](https://www.getpostman.com/).
+It works perfectly well with API Platform, also has native Swagger support, allows to easily write functional tests and
+has very good team collaboration features.
 
 ## Creating the model
 
 API Platform is now 100% functional. Let's create our own data model.
-Our bookshop API will be simple for now. It will be composed of books and reviews.
+Our bookshop API will start simple. It will be composed of a `Book` resource type and a `Review` one.
 
-Books will have an id, a name, an author, an ISBN number, a description and will be related to a list of reviews.
-Reviews
+Books have an id, an ISBN number, a title, a description, an author, a publication date and are related to a list of reviews.
+Reviews have an id, a rating (between 0 and 5), a body, an author, a publication date and are related to one book.
 
-If you want to expose any entity:
+Let's describe this data model as a set of Plain Old PHP Objects (POPO) and map it to database's tables using annotations
+provided by the Doctrine ORM:
 
-* Put it in the `Entity` directory of a bundle
-* Mark it with the `@ApiPlatform\Core\Annotation\ApiResource` annotation
 
-It's as easy as it looks.
+```php
+// src/AppBundle/Entity/Book.php
+
+namespace AppBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * A book.
+ *
+ * @ORM\Entity
+ */
+class Book
+{
+    /**
+     * @var string An UUID for this book.
+     *
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="UUID")
+     * @ORM\Column(type="guid")
+     */
+    private $id;
+
+    /**
+     * @var string|null The ISBN number if this book (or null if doesn't have one).
+     *
+     * @ORM\Column(nullable=true)
+     */
+    private $isbn;
+
+    /**
+     * @var string The title of this book.
+     *
+     * @ORM\Column
+     */
+    private $title;
+
+    /**
+     * @var string The description of this book.
+     *
+     * @ORM\Column(type="text")
+     */
+    private $description;
+
+    /**
+     * @var string The author of this book.
+     *
+     * @ORM\Column
+     */
+    private $author;
+
+    /**
+     * @var \DateTimeInterface The publication date of this book.
+     *
+     * @ORM\Column(type="datetime")
+     */
+    private $publicationDate;
+
+    /**
+     * @var Review[] Available reviews for this book.
+     *
+     * @ORM\ManyToOne(targetEntity="Review", inversedBy="book")
+     */
+    private $reviews;
+}
+```
+
+```php
+// src/AppBundle/Entity/Review.php
+
+namespace AppBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * A review of a book.
+ *
+ * @ORM\Entity
+ */
+class Review
+{
+    /**
+     * @var string The UUID of this review.
+     *
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="UUID")
+     * @ORM\Column(type="guid")
+     */
+    private $id;
+
+    /**
+     * @var int The rating of this review (between 0 and 5).
+     *
+     * @ORM\Column(type="smallint")
+     */
+    private $rating;
+
+    /**
+     * @var string the body of the review.
+     *
+     * @ORM\Column(type="text")
+     */
+    private $body;
+
+    /**
+     * @var string The author of the review.
+     *
+     * @ORM\Column
+     */
+    private $author;
+
+    /**
+     * @var \DateTimeInterface The date of publication of this review.
+     *
+     * @ORM\Column(type="datetime")
+     */
+    private $publicationDate;
+
+    /**
+     * @var Book The book this review is about.
+     *
+     * @ORM\OneToMany(targetEntity="Book", mappedBy="books")
+     */
+    private $book;
+}
+```
+
+As you can see there are just 2 typical PHP objects with the corresponding PHPDoc (you will see that the PHPDoc of entities
+and properties will appear in the API documentation).
+
+Doctrine's annotations map these entities to tables in the MySQL database. Annotations are convenient as
+they allow grouping the code and the configuration but, if you want to decouple classes from their metadata, you can switch
+to XML or YAML mappings. They are supported as well.
+
+Learn more about how to map entities with the Doctrine ORM in [the project's official documentation](http://docs.doctrine-project.org/projects/doctrine-orm/en/latest/reference/association-mapping.html)
+or in Kévin's book "[Persistence in PHP with the Doctrine ORM](https://www.amazon.fr/gp/product/B00HEGSKYQ/ref=as_li_tl?ie=UTF8&camp=1642&creative=6746&creativeASIN=B00HEGSKYQ&linkCode=as2&tag=kevidung-21)".
+
+As we used private properties (but API Platform as well as Doctrine can also work with public ones), we need to create the
+corresponding accessor methods. Run the following command or use the code generation feature of your IDE to generate them:
+
+    $ docker-compose run web bin/console doctrine:generate:entities AppBundle
+
+Then, delete the file `src/AppBundle/Entity/Foo.php`, this demo entity isn't useful anymore.
+Finally, tell Doctrine to sync the database's tables structure with our new data model:
+
+    $ docker-compose run web bin/console doctrine:schema:update --force
+
+We now have a working data model that you can persist and query. To create an API endpoint with CRUD capabilities corresponding
+to an entity class, we just have to mark it with an annotation called `@ApiResource`:
+
+```php
+// src/AppBundle/Entity/Book.php
+
+namespace AppBundle\Entity;
+
+use ApiPlatform\Core\Annotation\ApiResource;
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * A book.
+ *
+ * @ApiResource
+ * @ORM\Entity
+ */
+class Book
+{
+    // ...
+}
+```
+
+```php
+// src/AppBundle/Entity/Entity.php
+
+namespace AppBundle\Entity;
+
+use ApiPlatform\Core\Annotation\ApiResource;
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * A review of a book.
+ *
+ * @ApiResource
+ * @ORM\Entity
+ */
+class Review
+{
+    // ...
+}
+```
+
+**Our API is (almost) ready!**
+Browse `http://localhost/app_dev.php` to load the development environment (including the awesome [Symfony profiler](https://symfony.com/blog/new-in-symfony-2-8-redesigned-profiler)).
+
+Operations available for our 2 resources types appear in the UI.
+
+Click on the `POST` operation of the `Book` resource type and send the following JSON document as request body:
+
+```json
+{
+  "isbn": "1234",
+  "title": "Persistence in PHP with the Doctrine ORM",
+  "description": "Learn the Doctrine ORM!",
+  "author": "Kévin Dunglas",
+  "publicationDate": "2016-09-20"
+}
+```
+
+You just saved a new book resource through the bookshop API! API Platform automatically deserializes the JSON document to
+an instance of the related entity class and tells Doctrine ORM how to persist it in the database.
+
+By default, the API supports `GET` (retrieve, on collections and items), `POST` (create), `PUT` (update) and `DELETE` (self-explaining)
+HTTP methods. [You can add and remove any other operation you want, including custom ones](../core/operations.md).
+
+Try to the `GET` operation on the collection. The book we added appears. When the collection will contain more than 30 items,
+the pagination will automatically show up, [and this is entirely configurable](../core/pagination.md)! You may be interested
+in [adding some filters and in sorting the collection](../core/filters.md) as well.
+
+Maybe did you notice that some keys start by the `@` symbol in the generated JSON response (`@id`, `@type`, `@context`...)?
+API Platform comes with a full support of the [JSON-LD](http://json-ld.org/) format (and its [Hydra](http://www.hydra-cg.com/) extension).
+[MENTION HAL...).
+
+To summarize, if you want to expose any entity you just have to:
+
+1. Put it in the `Entity` directory of a bundle
+2. If you use Doctrine, map it with the database
+3. Mark it with the `@ApiPlatform\Core\Annotation\ApiResource` annotation
+
+How can it be more easy?!
+
+## Validating Data
+
+TODO
 
 ## Trying the API
+
+TO REMOVE
 
 Add a person named Olivier Lenancker by issuing a POST request on `http://localhost:8000/people` with the following JSON document as
 raw body:
@@ -159,9 +391,7 @@ Thanks to the schema generator, the `@type` property of the JSON-LD document is 
 
 The JSON-LD spec is fully supported by API Platform. Want a proof? Browse `http://localhost:8000/contexts/Person`.
 
-By default, the API allows `GET` (retrieve, on collections and items), `POST` (create), `PUT` (update) and `DELETE` (self-explaining)
-HTTP methods. [You can add and remove any other operation you want](../core/operations.md).
-Try it!
+
 
 Now, browse `http://localhost:8000/people`:
 
@@ -270,160 +500,6 @@ API Platform offers a lot of other features including:
 
 Read [its dedicated documentation](../core/index.md) to see how to leverage them and how to
 hook your own code everywhere into it.
-
-## Specifying and testing the API
-
-[Behat](http://docs.behat.org/) (a [Behavior-driven development](http://en.wikipedia.org/wiki/Behavior-driven_development)
-framework) is pre-configured with contexts useful to spec and test REST API and JSON documents.
-
-With Behat, you can write the API specification (as user stories) in natural language then execute scenarios against the
-application to validate its behavior.
-
-Create a [Gherkin](http://docs.behat.org/en/latest/user_guide/gherkin.html) feature file containing the scenarios we run manually
-in the previous chapter:
-
-```gherkin
-# features/blog.feature
-
-Feature: Blog
-  In order to post news
-  As a client software developer
-  I need to be able to retrieve, create, update and delete authors and posts trough the API.
-
-  # "@createSchema" creates a temporary SQLite database for testing the API
-  @createSchema
-  Scenario: Create a person
-    When I send a "POST" request to "/people" with body:
-    """
-    {
-      "familyName": "Lenancker",
-      "givenName": "Olivier",
-      "description": "A famous author from the North.",
-      "birthDate": "666-06-06"
-    }
-    """
-    Then the response status code should be 201
-    And the response should be in JSON
-    And the header "Content-Type" should be equal to "application/ld+json"
-    And the JSON should be equal to:
-    """
-    {
-      "@context": "/contexts/Person",
-      "@id": "/people/1",
-      "@type": "http://schema.org/Person",
-      "birthDate": "0666-06-06T00:00:00+00:00",
-      "deathDate": null,
-      "description": "A famous author from the North.",
-      "familyName": "Lenancker",
-      "givenName": "Olivier"
-    }
-    """
-
-  Scenario: Retrieve the user list
-    When I send a "GET" request to "/people"
-    Then the response status code should be 200
-    And the response should be in JSON
-    And the header "Content-Type" should be equal to "application/ld+json"
-    And the JSON should be equal to:
-    """
-    {
-      "@context": "/contexts/Person",
-      "@id": "/people",
-      "@type": "hydra:Collection",
-      "hydra:member": [
-        {
-          "@id": "/people/1",
-          "@type": "http://schema.org/Person",
-          "birthDate": "0666-06-06T00:00:00+00:00",
-          "deathDate": null,
-          "description": "A famous author from the North.",
-          "familyName": "Lenancker",
-          "givenName": "Olivier"
-        }
-      ],
-      "hydra:totalItems": 1
-    }
-    """
-
-  Scenario: Throw errors when a post is invalid
-    When I send a "POST" request to "/blog_postings" with body:
-    """
-    {
-      "name": "API Platform is great",
-      "headline": "You'll love that framework!",
-      "articleBody": "The body of my article.",
-      "articleSection": "technology",
-      "author": "/people/1",
-      "isFamilyFriendly": "maybe",
-      "datePublished": "2015-05-11",
-      "kevinReview": "nice"
-    }
-    """
-    Then the response status code should be 400
-    And the response should be in JSON
-    And the header "Content-Type" should be equal to "application/ld+json"
-    And the JSON should be equal to:
-    """
-    {
-      "@context": "/contexts/ConstraintViolationList",
-      "@type": "ConstraintViolationList",
-      "hydra:title": "An error occurred",
-      "hydra:description": "isFamilyFriendly: This value should be of type boolean.",
-      "violations": [
-        {
-          "propertyPath": "isFamilyFriendly",
-          "message": "This value should be of type boolean."
-        }
-      ]
-    }
-    """
-
-  # "@dropSchema" is mandatory to cleanup the temporary database on the last scenario
-  @dropSchema
-  Scenario: Post a new blog post
-    When I send a "POST" request to "/blog_postings" with body:
-    """
-    {
-      "name": "API Platform is great",
-      "headline": "You'll love that framework!",
-      "articleBody": "The body of my article.",
-      "articleSection": "technology",
-      "author": "/people/1",
-      "isFamilyFriendly": true,
-      "datePublished": "2015-05-11",
-      "kevinReview": "nice"
-    }
-    """
-    Then the response status code should be 201
-    And the response should be in JSON
-    And the header "Content-Type" should be equal to "application/ld+json"
-    And the JSON should be equal to:
-    """
-    {
-      "@context": "/contexts/BlogPosting",
-      "@id": "/blog_postings/1",
-      "@type": "http://schema.org/BlogPosting",
-      "articleBody": "The body of my article.",
-      "articleSection": "technology",
-      "author": "/people/1",
-      "datePublished": "2015-05-11T00:00:00+00:00",
-      "headline": "You'll love that framework!",
-      "isFamilyFriendly": true,
-      "name": "API Platform is great",
-      "kevinReview": "nice"
-    }
-    """
-```
-
-The API Platform flavor of Behat also comes with a temporary SQLite database dedicated to tests. It works out of the box.
-
-Simply run `vendor/bin/behat`. Everything should be green:
-
-    4 scenarios (4 passed)
-    21 steps (21 passed)
-
-Then you get a powerful hypermedia API exposing structured data, specified and tested thanks to Behat. And still without
-a line of PHP!
 
 It's incredibly useful for prototyping and Rapid Application Development (RAD). But the framework is designed to run in prod.
 It benefits from **strong extension points** and is **has been optimized for very high-traffic websites** (API Platform
