@@ -16,14 +16,15 @@ API Platform will use the data model to expose a read/write web API having a ton
 * filtering
 * sorting
 * a nice UI and machine-readable documentations ([Swagger/OpenAPI](https://swagger.io), [Hydra](http://hydra-cg.com))
-* hypermedia/HATEOAS and content negotiation support ([JSON-LD](http://json-ld.org), [HAL](blog.stateless.co/post/13296666138/json-linking-with-hal))
+* hypermedia/[HATEOAS](https://en.wikipedia.org/wiki/HATEOAS) and content negotiation support ([JSON-LD](http://json-ld.org),
+[HAL](http://blog.stateless.co/post/13296666138/json-linking-with-hal))
 * authentication ([Basic HTTP](https://en.wikipedia.org/wiki/Basic_access_authentication), cookies as well as [JWT](https://jwt.io/)
   and [OAuth](https://oauth.net/) through extensions)
 * [CORS headers support](https://developer.mozilla.org/en-US/docs/Web/HTTP/Access_control_CORS)
 * HTTP caching
 * and basically everything mandatory for modern APIs.
 
-One more thing, before we start: API Platform is built on top of [the Symfony framework][https://symfony.com]. API Platform
+One more thing, before we start: API Platform is built on top of [the Symfony framework](https://symfony.com). API Platform
 is compatible with most [Symfony bundles](https://symfony.com/blog/the-30-most-useful-symfony-bundles-and-making-them-even-better)
 (plugins) and benefits from the numerous extensions points provided by this rock-solid foundation (events, DIC...).
 Adding features like custom, service-oriented, API endpoints, JWT or OAuth authentication, HTTP caching, mail sending or
@@ -31,7 +32,7 @@ asynchronous jobs to your APIs is very straightforward.
 
 ## Installing the framework
 
-API Platform is shipped with a entire [https://docker.com](Docker) setup that makes it easy to get a containerized development
+API Platform is shipped with a entire [Docker](https://docker.com) setup that makes it easy to get a containerized development
 environment up and running. This setup contains an image pre-configured with PHP 7, Apache and everything needed to run API
 Platform and a MySQL image to host the database.
 
@@ -86,7 +87,7 @@ ORM and its bridge support major RDBMS including MySQL, PostgreSQL, SQLite, SQL 
 
 Open `http://localhost` with your favorite web browser:
 
-![Swagger UI integration in API Platform](images/swagger-ui.png)
+![Swagger UI integration in API Platform](images/swagger-ui-1.png)
 
 API Platform exposes a description of the API in the Swagger format. It also integrates Swagger UI, a nice interface rendering
 the API documentation. Click on an operation to display its details. You can also send requests to the API directly from the UI.
@@ -95,7 +96,7 @@ it by executing the `DELETE` operation.
 If you access any API URL using a web browser, API Platform detects it (using the `Accept` HTTP header) and displays the
 corresponding API request in the UI. Open `http://localhost/foos`:
 
-![Request detail in the UI](images/swagger-ui.png)
+![Request detail in the UI](images/swagger-ui-2.png)
 
 If you want to access the raw data, you have two alternatives:
 
@@ -103,7 +104,7 @@ If you want to access the raw data, you have two alternatives:
   when writing API clients
 * Add the format format you want as the extension of the resource - for debug purpose only
 
-For instance, go to `http://localhost/foos.jsonld` to retrieve the list of `Foo` resources in JSON-LD or http://localhost/foos.json`
+For instance, go to `http://localhost/foos.jsonld` to retrieve the list of `Foo` resources in JSON-LD or `http://localhost/foos.json`
 to retrieve data in raw JSON.
 
 Of course, you can also use your favorite HTTP client to query the API. We strongly recommend to use [Postman](https://www.getpostman.com/).
@@ -529,7 +530,7 @@ Keep in mind that you can use your preferred client-side technology: API Platfor
 [Checkout our AngularJS client for API Platform tutorial](angularjs.md) to learn how to consume the API with AngularJS.
 
 To go further, the API Platform team maintains a demo application showing more advanced use cases like leveraging serialization
-groups, user management or JWT and OAuth authentication. [Checkout the demo code source on GitHub]https://github.com/api-platform/demo)
+groups, user management or JWT and OAuth authentication. [Checkout the demo code source on GitHub](https://github.com/api-platform/demo)
 and [browse it online](https://demo.api-platform.com).
 
 Previous chapter: [Introduction](index.md)
