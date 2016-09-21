@@ -356,6 +356,34 @@ use Symfony 3.2+).
 It's up to you to choose which format to enable and to use by default. You can also easily [add support for other formats](../core/content-negotiation.md)
 if you need to.
 
+Now, add a review for this book using the `POST` operation for the `Review` resource:
+
+```json
+{
+    "book": "/books/<THE-UUID-OF-THE-BOOK>"
+    "rating": 5,
+    "body": "Interesting book!",
+    "author": "Kévin",
+    "publicationDate": "September 21, 2016",
+}
+```
+
+Be sure to replace `<THE-UUID-OF-THE-BOOK>` by... The UUID of the book we previously created.
+
+There is 2 interesting things to mention about this request:
+
+First, we learned how to work with relations. In a hypermedia API, every resource is identified by an (unique) [IRI](https://en.wikipedia.org/wiki/Internationalized_Resource_Identifier).
+An URL is a valid IRI, and it's what API Platform uses. The `@id` property of every JSON-LD document contains the IRI identifying
+it. You can use this IRI to reference this document from other documents. In the previous request, we used the IRI of the
+book we created earlier to link it with the `Review` we were creating. API Platform is smart enough to deal with IRIs.
+By the way, you may want to [embed documents](../core/serialization-groups-and-relations.md) instead of referencing them (e.g. to reduce the number of HTTP requests
+to issue).
+
+The other interesting thing is how API Platform handles dates (the `publicationDate` property). API Platform understands
+[any date format supported by PHP](http://php.net/manual/en/datetime.formats.date.php). In production we strongly recommend
+to use the format specified by the [RFC 3339](http://tools.ietf.org/html/rfc3339), but, as you can see, most common formats
+including `September 21, 2016` can be used.
+
 To summarize, if you want to expose any entity you just have to:
 
 1. Put it in the `Entity` directory of a bundle
@@ -366,184 +394,219 @@ How can it be more easy?!
 
 ## Validating Data
 
-TODO
-
-## Trying the API
-
-TO REMOVE
-
-Add a person named Olivier Lenancker by issuing a POST request on `http://localhost:8000/people` with the following JSON document as
-raw body:
+Now try to add another book by issuing a `POST` request to `/books` with the following body:
 
 ```json
 {
-  "familyName": "Lenancker",
-  "givenName": "Olivier",
-  "description": "A famous author from the North.",
-  "birthDate": "666-06-06"
+  "isbn": "2851840053",
+  "description": "Hello",
+  "author": "Me",
+  "publicationDate": "today"
 }
 ```
 
-As you can see, we omitted some optional properties such as `description` and `deathDate`.
+Oops, we missed to add the title. But submit the request anyway. You should get a 500 error with the following message:
 
-The data is inserted in database. The server replies with a JSON-LD representation of the freshly created resource.
-Thanks to the schema generator, the `@type` property of the JSON-LD document is referencing a Schema.org type:
+    An exception occurred while executing 'INSERT INTO book [...] VALUES [...]' with params [...]:
+    SQLSTATE[23000]: Integrity constraint violation: 1048 Column 'title' cannot be null
 
-```json
+Did you notice that the error was automatically serialized in JSON-LD and respect the Hydra Core vocabulary for errors?
+It allows the client to easily extract useful information from the error. Anyway, it's bad to get a SQL error when submitting
+a request. It means that we doesn't valid use input, and [it's a very bad and dangerous practice](https://www.owasp.org/index.php/Input_Validation_Cheat_Sheet).
+
+API Platform comes with a bridge with [the Symfony Validator Component](http://symfony.com/doc/current/validation.html).
+Adding some of [its numerous validation constraints](http://symfony.com/doc/current/validation.html#supported-constraints)
+(or [creating custom ones](http://symfony.com/doc/current/validation/custom_constraint.html)) to our entities is enough
+to get validate user submitted data. Let's add some validation rules to our data model:
+
+```php
+
+// src/AppBundle/Entity/Book.php
+
+namespace AppBundle\Entity;
+
+use ApiPlatform\Core\Annotation\ApiResource;
+use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
+
+/**
+ * A book.
+ *
+ * @ApiResource
+ * @ORM\Entity
+ */
+class Book
 {
-  "@context": "/contexts/Person",
-  "@id": "/people/1",
-  "@type": "http://schema.org/Person",
-  "birthDate": "0666-06-06T00:00:00+00:00",
-  "deathDate": null,
-  "description": "A famous author from the North.",
-  "familyName": "Lenancker",
-  "givenName": "Olivier"
+    /**
+     * @var string An UUID for this book.
+     *
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="UUID")
+     * @ORM\Column(type="guid")
+     */
+    private $id;
+
+    /**
+     * @var string|null The ISBN number if this book (or null if doesn't have one).
+     *
+     * @ORM\Column(nullable=true)
+     * @Assert\Isbn
+     */
+    private $isbn;
+
+    /**
+     * @var string The title of this book.
+     *
+     * @ORM\Column
+     * @Assert\NotBlank
+     */
+    private $title;
+
+    /**
+     * @var string The description of this book.
+     *
+     * @ORM\Column(type="text")
+     * @Assert\NotBlank
+     */
+    private $description;
+
+    /**
+     * @var string The author of this book.
+     *
+     * @ORM\Column
+     * @Assert\NotBlank
+     */
+    private $author;
+
+    /**
+     * @var \DateTimeInterface The publication date of this book.
+     *
+     * @ORM\Column(type="datetime")
+     * @Assert\NotNull
+     */
+    private $publicationDate;
+
+    /**
+     * @var Review[] Available reviews for this book.
+     *
+     * @ORM\OneToMany(targetEntity="Review", mappedBy="book")
+     */
+    private $reviews;
+
+    // ...
 }
 ```
 
-The JSON-LD spec is fully supported by API Platform. Want a proof? Browse `http://localhost:8000/contexts/Person`.
+```php
 
+// src/Entity/Review.php
 
+namespace AppBundle\Entity;
 
-Now, browse `http://localhost:8000/people`:
+use ApiPlatform\Core\Annotation\ApiResource;
+use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
-```json
+/**
+ * A review of a book.
+ *
+ * @ApiResource
+ * @ORM\Entity
+ */
+class Review
 {
-  "@context": "/contexts/Person",
-  "@id": "/people",
-  "@type": "hydra:Collection",
-  "hydra:member": [
-    {
-      "@id": "/people/1",
-      "@type": "http://schema.org/Person",
-      "birthDate": "0666-06-06T00:00:00+00:00",
-      "deathDate": null,
-      "description": "A famous author from the North.",
-      "familyName": "Lenancker",
-      "givenName": "Olivier"
-    }
-  ],
-  "hydra:totalItems": 1
+    /**
+     * @var string The UUID of this review.
+     *
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="UUID")
+     * @ORM\Column(type="guid")
+     */
+    private $id;
+
+    /**
+     * @var int The rating of this review (between 0 and 5).
+     *
+     * @ORM\Column(type="smallint")
+     * @Assert\Range(min=0, max=5)
+     */
+    private $rating;
+
+    /**
+     * @var string the body of the review.
+     *
+     * @ORM\Column(type="text")
+     * @Assert\NotBlank
+     */
+    private $body;
+
+    /**
+     * @var string The author of the review.
+     *
+     * @ORM\Column
+     * @Assert\NotBlank
+     */
+    private $author;
+
+    /**
+     * @var \DateTimeInterface The date of publication of this review.
+     *
+     * @ORM\Column(type="datetime")
+     * @Assert\NotBlank
+     */
+    private $publicationDate;
+
+    /**
+     * @var Book The book this review is about.
+     *
+     * @ORM\ManyToOne(targetEntity="Book", inversedBy="reviews")
+     * @Assert\NotNull
+     */
+    private $book;
+
+    // ...
 }
 ```
 
-Pagination is also supported (and enabled) out of the box.
+After updating the entities to add those `@Assert\*` annotations (as for Doctrine, you can use XML or YAML formats if you
+prefer), try again the previous `POST` request.
 
-It's time to post our first article. Run a POST request on `http://locahost:8000/blog_postings` with the following JSON document
-as body:
+    isbn: This value is neither a valid ISBN-10 nor a valid ISBN-13.
+    title: This value should not be blank.
 
-```json
-{
-  "name": "API Platform is great",
-  "headline": "You'll love that framework!",
-  "articleBody": "The body of my article.",
-  "articleSection": "technology",
-  "author": "/people/1",
-  "isFamilyFriendly": "maybe",
-  "datePublished": "2015-05-11",
-  "kevinReview": "nice"
-}
-```
+You now get proper validation error messages, always serialized using the Hydra error format (API Problem is also supported).
+Those errors are easy to parse client-side. By adding the proper validation constraints, we also noticed that the provided
+ISBN number isn't valid...
 
-Oops... the `isFamilyFriendly` property is a boolean. Our JSON contains an incorrect type value (a `string`).
-Fortunately API Platform is smart enough to detect the error: it uses Symfony validation constraints generated previously.
-It returns a detailed error message in the Hydra error serialization format:
-
-```json
-{
-  "@context": "/contexts/ConstraintViolationList",
-  "@type": "ConstraintViolationList",
-  "hydra:title": "An error occurred",
-  "hydra:description": "isFamilyFriendly: This value should be of type boolean.",
-  "violations": [
-    {
-      "propertyPath": "isFamilyFriendly",
-      "message": "This value should be of type boolean."
-    }
-  ]
-}
-```
-
-Correct the body and send the request again:
-
-```json
-{
-  "name": "API Platform is great",
-  "headline": "You'll love that framework!",
-  "articleBody": "The body of my article.",
-  "articleSection": "technology",
-  "author": "/people/1",
-  "isFamilyFriendly": true,
-  "datePublished": "2015-05-11",
-  "kevinReview": "nice"
-}
-```
-
-We fixed it! By the way you learned how to work with relations. In a hypermedia API, every resource is identified with
-an unique IRI (an URL is an IRI). They are in the `@id` property of every JSON-LD document generated by the API and you
-can use it as reference to set relations like we done in the previous snippet for the author property.
-
-API Platform is smart enough to understand [any date format supported by PHP](http://php.net/manual/en/datetime.formats.date.php)
-date functions. In production we recommend the format specified by the [RFC 3339](http://tools.ietf.org/html/rfc3339).
-
-We already have a powerful hypermedia REST API (always without writing a single line of PHP), but there is more.
-
-**Our API is auto-discoverable**. Open `http://localhost:8000/apidoc` and take a look at the content. Capabilities of the
-API are fully described in a machine-readable format: available resources, properties and operations, description of elements,
-readable and writable properties, types returned and expected...
-
-As for errors, the whole API is described using [the Hydra Core Vocabulary](http://www.w3.org/ns/hydra/spec/latest/core/),
-an open web standard for describing hypermedia REST APIs in JSON-LD. Any Hydra-compliant client or library is able to interact
-with the API without knowing anything about it! The most popular Hydra client is [Hydra Console](http://www.markus-lanthaler.com/hydra/console/).
-Open an URL of the API with it you'll get a nice management interface.
-
-![Hydra console](images/console.png)]
-
-You can also give a try to the [hydra-core Javascript library](https://github.com/bergos/hydra-core).
-
-API Platform offers a lot of other features including:
-
-* [filters](../core/filters.md)
-* [serialization groups and child resource embedding](../core/serialization-groups-and-relations.md)
-* [data providers](../core/data-providers.md): retrieve and modify data trough a web-service or a MongoDB database or anything
-  else instead of Doctrine ORM
-* [custom operations](../core/operations.md): deactivate some methods, create custom operations, URL and controllers
-* a powerful [event system](../core/the-event-system.md)
-
-Read [its dedicated documentation](../core/index.md) to see how to leverage them and how to
-hook your own code everywhere into it.
-
-It's incredibly useful for prototyping and Rapid Application Development (RAD). But the framework is designed to run in prod.
-It benefits from **strong extension points** and is **has been optimized for very high-traffic websites** (API Platform
-powers the new version of a major world-wide media site).
+Here we are! We have created a workign and very powerful hypermedia REST API in a few minutes, and by writing only a few
+lines of PHP. But we only covered the basics.
 
 ## Other features
 
-API Platform has a lot of other features and can extended with PHP libraries and Symfony bundles. [Stay tuned](https://twitter.com/ApiPlatform),
-more documentation and cookbooks are coming!
+They are many more features to learn! Read [the full documentation](../core/index.md) to discover how to use them and how
+to extend API Platform to fit your needs.
+API Platform is incredibly efficient for prototyping and Rapid Application Development (RAD). But the framework is also
+designed to create complex web APIs far beyond simple CRUD apps. It benefits from **strong extension points** and is **is
+continuously optimized for performance.** It powers very high-traffic websites.
 
-Here is a non exhaustive list of what you can do with API Platform:
+API Platform can also be extended using PHP libraries and Symfony bundles.
 
-* Add [a user management system](../core/fosuser-bundle.md)
-  (FOSUser integration)
+Here is a non-exhaustive list of popular API Platform extensions:
+
+* Add [a user management system](../core/fosuser-bundle.md) (FOSUser)
 * [Secure the API with JWT](https://github.com/lexik/LexikJWTAuthenticationBundle) (LexikJwtAuthenticationBundle) or [OAuth](https://github.com/FriendsOfSymfony/FOSOAuthServerBundle)
   (FosOAuthServer)
 * [Add a Varnish reverse proxy and adopt a expiration or invalidation HTTP cache strategy](http://foshttpcachebundle.readthedocs.org)
-  (FosHttpCache)
+  (FOSHttpCache)
 * [Add CSRF protection when the API authentication relies on cookies](https://github.com/dunglas/DunglasAngularCsrfBundle)
-  (DunglasAngularCsrfBundle – you should prefer using a stateless authentication mode such as a JWT token stored in the
-  browser session storage when possible)
+  (DunglasAngularCsrfBundle)
 * [Send mails](https://symfony.com/doc/current/cookbook/email/email.html) (Swift Mailer)
-* [Deploy](../deployment/index.md)
+* [Execute async jobs and create micro-service architectures using RabbitMQ](https://github.com/php-amqplib/RabbitMqBundle)
+  (RabbitMQBundle)
 
 Keep in mind that you can use your preferred client-side technology: API Platform is tested and approved with React, Angular
-1 & 2, Ionic and Swift but can work with any language able to send HTTP requests.
-[Checkout our AngularJS client for API Platform tutorial](angularjs.md) to learn how to consume the API with AngularJS.
+1 & 2, Ionic and Swift but can work with any language able to send HTTP requests (even COBOL can do that).
 
 To go further, the API Platform team maintains a demo application showing more advanced use cases like leveraging serialization
 groups, user management or JWT and OAuth authentication. [Checkout the demo code source on GitHub](https://github.com/api-platform/demo)
 and [browse it online](https://demo.api-platform.com).
-
-Previous chapter: [Introduction](index.md)
-Next chapter: [An AngularJS Client](angularjs.md)
