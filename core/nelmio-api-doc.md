@@ -5,7 +5,7 @@
 [NelmioApiDocBundle](https://github.com/nelmio/NelmioApiDocBundle) (since version 2.9) has built-in support for API Platform.
 Installing it will give you access to a human-readable documentation and a nice sandbox. It is an alternative to the builtin API Platform documentation.
 
-If you use the standalone API Platform Core bundle, copy the following configuration:
+If you use the standalone API Platform Core bundle, download and enable the bundle as explained in [NelmioApiDocBundle installation steps](https://github.com/nelmio/NelmioApiDocBundle/blob/master/Resources/doc/index.rst) (skip routing and configuration steps), and then copy the following configuration:
 
 ```yaml
 # app/config/config.yml
