@@ -128,8 +128,6 @@ provided by the Doctrine ORM:
 ```php
 // src/AppBundle/Entity/Book.php
 
-<?php
-
 namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
@@ -196,8 +194,6 @@ class Book
 
 ```php
 // src/AppBundle/Entity/Review.php
-
-<?php
 
 namespace AppBundle\Entity;
 
@@ -328,27 +324,37 @@ Click on the `POST` operation of the `Book` resource type and send the following
 
 ```json
 {
-  "isbn": "1234",
+  "isbn": "9781782164104",
   "title": "Persistence in PHP with the Doctrine ORM",
-  "description": "Learn the Doctrine ORM!",
+  "description": "This book is designed for PHP developers and architects who want to modernize their skills through better understanding of Persistence and ORM.",
   "author": "Kévin Dunglas",
-  "publicationDate": "2016-09-20"
+  "publicationDate": "2013-12-01"
 }
 ```
 
-You just saved a new book resource through the bookshop API! API Platform automatically deserializes the JSON document to
-an instance of the related entity class and tells Doctrine ORM how to persist it in the database.
+You just saved a new book resource through the bookshop API! API Platform automatically transforms the JSON document to
+an instance of the corresponding PHP entity class and uses Doctrine ORM to persist it in the database.
 
 By default, the API supports `GET` (retrieve, on collections and items), `POST` (create), `PUT` (update) and `DELETE` (self-explaining)
-HTTP methods. [You can add and remove any other operation you want, including custom ones](../core/operations.md).
+HTTP methods. You are not limited to the built-in operations. You can [add new custom operations](../core/operations.md#enabling-and-disabling-operations)
+(`PATCH` operations, sub-resources...) or [disable the ones you don't want](../core/operations.md#creating-custom-operations-and-controllers).
 
-Try to the `GET` operation on the collection. The book we added appears. When the collection will contain more than 30 items,
-the pagination will automatically show up, [and this is entirely configurable](../core/pagination.md)! You may be interested
+Try the `GET` operation on the collection. The book we added appears. When the collection will contain more than 30 items,
+the pagination will automatically show up, [and this is entirely configurable](../core/pagination.md). You may be interested
 in [adding some filters and in sorting the collection](../core/filters.md) as well.
 
 Maybe did you notice that some keys start by the `@` symbol in the generated JSON response (`@id`, `@type`, `@context`...)?
-API Platform comes with a full support of the [JSON-LD](http://json-ld.org/) format (and its [Hydra](http://www.hydra-cg.com/) extension).
-[MENTION HAL...).
+API Platform comes with a full support of the [JSON-LD](http://json-ld.org/) format (and its [Hydra](http://www.hydra-cg.com/)
+extension). It allows to build smart clients, with auto-discoverability capabilities (take a look at [Hydra console](http://www.markus-lanthaler.com/hydra/console/))
+and is very useful for open data, SEO and interoperability when [used with open vocabularies such as Schema.org](http://blog.schema.org/2013/06/schemaorg-and-json-ld.html).
+JSON-LD enables a lot of awesome advanced features (like [giving access to Google to your structured data](https://developers.google.com/search/docs/guides/intro-structured-data)
+or consuming APIs with [Apache Jena](https://jena.apache.org/documentation/io/#formats)).
+Wwe think that it's the best default for a new API. However, API Platform natively [supports many other formats](../core/content-negotiation.md)
+including [HAL](http://stateless.co/hal_specification.html), raw [JSON](http://www.json.org/), [XML](https://www.w3.org/XML/)
+(experimental) and even [YAML](http://yaml.org/) and [CSV](https://en.wikipedia.org/wiki/Comma-separated_values) (if you
+use Symfony 3.2+).
+It's up to you to choose which format to enable and to use by default. You can also easily [add support for other formats](../core/content-negotiation.md)
+if you need to.
 
 To summarize, if you want to expose any entity you just have to:
 
