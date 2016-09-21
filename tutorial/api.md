@@ -126,6 +126,8 @@ provided by the Doctrine ORM:
 ```php
 // src/AppBundle/Entity/Book.php
 
+<?php
+
 namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
@@ -184,7 +186,7 @@ class Book
     /**
      * @var Review[] Available reviews for this book.
      *
-     * @ORM\ManyToOne(targetEntity="Review", inversedBy="book")
+     * @ORM\OneToMany(targetEntity="Review", mappedBy="book")
      */
     private $reviews;
 }
@@ -192,6 +194,8 @@ class Book
 
 ```php
 // src/AppBundle/Entity/Review.php
+
+<?php
 
 namespace AppBundle\Entity;
 
@@ -244,7 +248,7 @@ class Review
     /**
      * @var Book The book this review is about.
      *
-     * @ORM\OneToMany(targetEntity="Book", mappedBy="books")
+     * @ORM\ManyToOne(targetEntity="Book", inversedBy="reviews")
      */
     private $book;
 }
