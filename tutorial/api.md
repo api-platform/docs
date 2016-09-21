@@ -1,28 +1,30 @@
 # Creating your First API with API Platform, in 5 Minutes
 
-[API Platform](https://api-platform.com) is one of the most efficient framework out there to create web APIs. It makes it
-easy to create simple APIs while giving you the ability to do create complex features with style. To discover the basics,
-we will create an API to manage a bookshop.
+[API Platform](https://api-platform.com) is the most efficient framework out there to create web APIs. It makes it
+easy to create simple APIs with support of industry leading open standards while giving you the ability to create complex
+features with style. To discover the basics, we will create an API to manage a bookshop.
 
-In a few minutes, we will create a fully featured API relying on industry leading open standards:
+In a few minutes and just 2 steps, we will create a fully featured API:
 
 1. Install API Platform
-2. Handcraft the API data model as *Plain Old PHP Objects*, it will be automatically exposed
+2. Handcraft the API data model as *Plain Old PHP Objects*
 
-API Platform will use the data model to expose a read/write web API having a ton of built-in features:
+API Platform uses these model classes to expose a web API having a ton of built-in features:
 
+* creating, retrieving, updating and deleting (CRUD) resources
 * data validation
 * pagination
 * filtering
 * sorting
-* a nice UI and machine-readable documentations ([Swagger/OpenAPI](https://swagger.io), [Hydra](http://hydra-cg.com))
-* hypermedia/[HATEOAS](https://en.wikipedia.org/wiki/HATEOAS) and content negotiation support ([JSON-LD](http://json-ld.org),
-[HAL](http://blog.stateless.co/post/13296666138/json-linking-with-hal))
+* a nice UI and a machine-readable documentations ([Swagger/OpenAPI](https://swagger.io), [Hydra](http://hydra-cg.com))
+* hypermedia/HATEOAS ([JSON-LD](http://json-ld.org), [HAL](blog.stateless.co/post/13296666138/json-linking-with-hal))
+* content negotiation
 * authentication ([Basic HTTP](https://en.wikipedia.org/wiki/Basic_access_authentication), cookies as well as [JWT](https://jwt.io/)
   and [OAuth](https://oauth.net/) through extensions)
-* [CORS headers support](https://developer.mozilla.org/en-US/docs/Web/HTTP/Access_control_CORS)
+* [CORS headers](https://developer.mozilla.org/en-US/docs/Web/HTTP/Access_control_CORS)
+* security (tested against [OWASP recommendations](https://www.owasp.org/index.php/REST_Security_Cheat_Sheet))
 * HTTP caching
-* and basically everything mandatory for modern APIs.
+* and basically everything needed to build modern APIs.
 
 One more thing, before we start: API Platform is built on top of [the Symfony framework](https://symfony.com). API Platform
 is compatible with most [Symfony bundles](https://symfony.com/blog/the-30-most-useful-symfony-bundles-and-making-them-even-better)
