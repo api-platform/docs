@@ -34,43 +34,42 @@ asynchronous jobs to your APIs is very straightforward.
 
 ## Installing the framework
 
-API Platform is shipped with a entire [Docker](https://docker.com) setup that makes it easy to get a containerized development
+API Platform is shipped with a [Docker](https://docker.com) setup that makes it easy to get a containerized development
 environment up and running. This setup contains an image pre-configured with PHP 7, Apache and everything needed to run API
 Platform and a MySQL image to host the database.
 
 *Alternatively to using Docker, API Platform can also be installed using [Composer](https://getcomposer.org/):
 `composer create-project api-platform/api-platform bookshop-api`.*
 
-Start by [downloading the API Platform Standard Edition](https://api-platform.com/download) and extract the content of the
-archive.
+Start by [downloading the API Platform Standard Edition archive](https://api-platform.com/download) and extract its content.
 The resulting directory contains an empty API Platform project structure. You will add your own code and configuration inside
 it.
 Then, if you do not already have Docker on your computer, [it's the right time to install it](https://www.docker.com/products/overview#/install_the_platform).
 
-Open a terminal, go inside the directory containing your project skeleton, and run the following command to start the Apache
-and the MySQL servers using [Docker Compose](https://docs.docker.com/compose/):
+Open a terminal, and navigate to the directory containing your project skeleton. Then, run the following command to start
+the Apache and the MySQL servers using [Docker Compose](https://docs.docker.com/compose/):
 
     $ docker-compose up
 
 The first time you start the containers, Docker downloads and builds images for you. It will take some time, but don't worry,
-this operation is done only one time. Starting servers will then be lightning fast.
+this is done only once. Starting servers will then be lightning fast.
 
 Project's files are automatically shared between your local host machine and the container thanks to a pre-configured [Docker
 volume](https://docs.docker.com/engine/tutorials/dockervolumes/). It means that you can edit files of your project locally
-using your preferred IDE or code editor, they will be transparently taken into account in the container.
-Speaking about IDEs, our preferred software to develop API Platform apps is [PHPStorm](https://www.jetbrains.com/phpstorm/)
+using your IDE or code editor, they will be transparently taken into account in the container.
+Speaking about IDEs, our favorite software to develop API Platform apps is [PHPStorm](https://www.jetbrains.com/phpstorm/)
 with its awesome [Symfony](https://confluence.jetbrains.com/display/PhpStorm/Getting+Started+-+Symfony+Development+using+PhpStorm)
 and [PHP annotations](https://plugins.jetbrains.com/plugin/7320) plugins. Give them a try, you'll got auto-completion for
 almost everything.
 
-Now, in another shell, install the PHP dependencies of the project:
+Now, in another shell, install the project's PHP dependencies:
 
     $ docker-compose run web composer install --no-interaction
 
-The `web` container is where your project belongs. Prefixing a command by `docker-compose run web` allows to execute this
-given command in the container. You may want [to create an alias](http://www.linfo.org/alias.html) to run easily commands
-in the container. Here, we installed libraries required by the project using the `composer` tool included in the API Platform
-image.
+The `web` container is where your project stands. Prefixing a command by `docker-compose run web` allows to execute the
+given command in the container. You may want [to create an alias](http://www.linfo.org/alias.html) to easily run commands
+inside the container. Here, we are installing libraries required by the project using the `composer` tool included in the
+API Platform image.
 
 The API Platform Standard Edition comes with a dummy entity for test purpose: `src/AppBundle/Entity/Foo.php`. We will remove
 it later, but for now, create the related database table:
@@ -85,7 +84,7 @@ API Platform even supports using several persistence systems together in the sam
 
 However, Doctrine ORM is definitely the easiest way to persist and query data in an API Platform project thanks to a bridge
 included in the Standard Edition. This Doctrine ORM bridge is optimized for performance and development convenience. Doctrine
-ORM and its bridge support major RDBMS including MySQL, PostgreSQL, SQLite, SQL Server and MariaDB.
+ORM and its bridge supports major RDBMS including MySQL, PostgreSQL, SQLite, SQL Server and MariaDB.
 
 Open `http://localhost` with your favorite web browser:
 
@@ -252,8 +251,8 @@ class Review
 }
 ```
 
-As you can see there are just 2 typical PHP objects with the corresponding PHPDoc (you will see that the PHPDoc of entities
-and properties will appear in the API documentation).
+As you can see there are two typical PHP objects with the corresponding PHPDoc (note that entities's and properties's descriptions
+included in their PHPDoc will appear in the API documentation).
 
 Doctrine's annotations map these entities to tables in the MySQL database. Annotations are convenient as
 they allow grouping the code and the configuration but, if you want to decouple classes from their metadata, you can switch
@@ -341,15 +340,15 @@ HTTP methods. You are not limited to the built-in operations. You can [add new c
 
 Try the `GET` operation on the collection. The book we added appears. When the collection will contain more than 30 items,
 the pagination will automatically show up, [and this is entirely configurable](../core/pagination.md). You may be interested
-in [adding some filters and in sorting the collection](../core/filters.md) as well.
+in [adding some filters and adding sorts to the collection](../core/filters.md) as well.
 
-Maybe did you notice that some keys start by the `@` symbol in the generated JSON response (`@id`, `@type`, `@context`...)?
+You may have notice that some keys start by the `@` symbol in the generated JSON response (`@id`, `@type`, `@context`...)?
 API Platform comes with a full support of the [JSON-LD](http://json-ld.org/) format (and its [Hydra](http://www.hydra-cg.com/)
 extension). It allows to build smart clients, with auto-discoverability capabilities (take a look at [Hydra console](http://www.markus-lanthaler.com/hydra/console/))
 and is very useful for open data, SEO and interoperability when [used with open vocabularies such as Schema.org](http://blog.schema.org/2013/06/schemaorg-and-json-ld.html).
 JSON-LD enables a lot of awesome advanced features (like [giving access to Google to your structured data](https://developers.google.com/search/docs/guides/intro-structured-data)
 or consuming APIs with [Apache Jena](https://jena.apache.org/documentation/io/#formats)).
-Wwe think that it's the best default for a new API. However, API Platform natively [supports many other formats](../core/content-negotiation.md)
+We think that it's the best default format for a new API. However, API Platform natively [supports many other formats](../core/content-negotiation.md)
 including [HAL](http://stateless.co/hal_specification.html), raw [JSON](http://www.json.org/), [XML](https://www.w3.org/XML/)
 (experimental) and even [YAML](http://yaml.org/) and [CSV](https://en.wikipedia.org/wiki/Comma-separated_values) (if you
 use Symfony 3.2+).
@@ -370,14 +369,14 @@ Now, add a review for this book using the `POST` operation for the `Review` reso
 
 Be sure to replace `<THE-UUID-OF-THE-BOOK>` by... The UUID of the book we previously created.
 
-There is 2 interesting things to mention about this request:
+There are two interesting things to mention about this request:
 
 First, we learned how to work with relations. In a hypermedia API, every resource is identified by an (unique) [IRI](https://en.wikipedia.org/wiki/Internationalized_Resource_Identifier).
 An URL is a valid IRI, and it's what API Platform uses. The `@id` property of every JSON-LD document contains the IRI identifying
 it. You can use this IRI to reference this document from other documents. In the previous request, we used the IRI of the
 book we created earlier to link it with the `Review` we were creating. API Platform is smart enough to deal with IRIs.
-By the way, you may want to [embed documents](../core/serialization-groups-and-relations.md) instead of referencing them (e.g. to reduce the number of HTTP requests
-to issue).
+By the way, you may want to [embed documents](../core/serialization-groups-and-relations.md) instead of referencing them
+(e.g. to reduce the number of HTTP requests).
 
 The other interesting thing is how API Platform handles dates (the `publicationDate` property). API Platform understands
 [any date format supported by PHP](http://php.net/manual/en/datetime.formats.date.php). In production we strongly recommend
@@ -412,7 +411,7 @@ Oops, we missed to add the title. But submit the request anyway. You should get 
 
 Did you notice that the error was automatically serialized in JSON-LD and respect the Hydra Core vocabulary for errors?
 It allows the client to easily extract useful information from the error. Anyway, it's bad to get a SQL error when submitting
-a request. It means that we doesn't valid use input, and [it's a very bad and dangerous practice](https://www.owasp.org/index.php/Input_Validation_Cheat_Sheet).
+a request. It means that we doesn't use a valid input, and [it's a very bad and dangerous practice](https://www.owasp.org/index.php/Input_Validation_Cheat_Sheet).
 
 API Platform comes with a bridge with [the Symfony Validator Component](http://symfony.com/doc/current/validation.html).
 Adding some of [its numerous validation constraints](http://symfony.com/doc/current/validation.html#supported-constraints)
@@ -568,7 +567,7 @@ class Review
 }
 ```
 
-After updating the entities to add those `@Assert\*` annotations (as for Doctrine, you can use XML or YAML formats if you
+After updating the entities by adding those `@Assert\*` annotations (as for Doctrine, you can use XML or YAML formats if you
 prefer), try again the previous `POST` request.
 
     isbn: This value is neither a valid ISBN-10 nor a valid ISBN-13.
