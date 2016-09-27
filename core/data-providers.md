@@ -84,7 +84,7 @@ use ApiPlatform\Core\Exception\ResourceClassNotSupportedException;
 
 final class BlogPostItemDataProvider implements ItemDataProviderInterface
 {
-    public function getItem(string $resourceClass, $id, string $operationName = null, bool $fetchData = false);
+    public function getItem(string $resourceClass, $id, string $operationName = null, bool $fetchData = false)
     {
         if (BlogPost::class !== $resourceClass) {
           throw new ResourceClassNotSupportedException();
