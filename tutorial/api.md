@@ -1,8 +1,9 @@
 # Creating your First API with API Platform, in 5 Minutes
 
-[API Platform](https://api-platform.com) is the most efficient framework out there to create web APIs. It makes it
-easy to create simple APIs with support of industry leading open standards while giving you the ability to create complex
-features with style. To discover the basics, we will create an API to manage a bookshop.
+[API Platform](https://api-platform.com) is one of the most efficient framework out there to create web APIs. It makes it
+easy to start creating APIs with the support of industry-leading open standards, while giving you the flexibility to build
+complex features.
+To discover the basics, we will create an API to manage a bookshop.
 
 In a few minutes and just 2 steps, we will create a fully featured API:
 
@@ -16,9 +17,9 @@ API Platform uses these model classes to expose a web API having a ton of built-
 * pagination
 * filtering
 * sorting
-* a nice UI and a machine-readable documentations ([Swagger/OpenAPI](https://swagger.io), [Hydra](http://hydra-cg.com))
-* hypermedia/HATEOAS ([JSON-LD](http://json-ld.org), [HAL](blog.stateless.co/post/13296666138/json-linking-with-hal))
-* content negotiation
+* a nice UI and machine-readable documentation ([Swagger/OpenAPI](https://swagger.io), [Hydra](http://hydra-cg.com))
+* hypermedia/[HATEOAS](https://en.wikipedia.org/wiki/HATEOAS) and content negotiation support ([JSON-LD](http://json-ld.org),
+[HAL](http://blog.stateless.co/post/13296666138/json-linking-with-hal))
 * authentication ([Basic HTTP](https://en.wikipedia.org/wiki/Basic_access_authentication), cookies as well as [JWT](https://jwt.io/)
   and [OAuth](https://oauth.net/) through extensions)
 * [CORS headers](https://developer.mozilla.org/en-US/docs/Web/HTTP/Access_control_CORS)
@@ -38,8 +39,9 @@ API Platform is shipped with a [Docker](https://docker.com) setup that makes it 
 environment up and running. This setup contains an image pre-configured with PHP 7, Apache and everything needed to run API
 Platform and a MySQL image to host the database.
 
-*Alternatively to using Docker, API Platform can also be installed using [Composer](https://getcomposer.org/):
-`composer create-project api-platform/api-platform bookshop-api`.*
+As an alternative to Docker, API Platform can also be installed using [Composer](https://getcomposer.org/):
+
+    $ composer create-project api-platform/api-platform bookshop-api
 
 Start by [downloading the API Platform Standard Edition archive](https://api-platform.com/download) and extract its content.
 The resulting directory contains an empty API Platform project structure. You will add your own code and configuration inside
@@ -47,7 +49,7 @@ it.
 Then, if you do not already have Docker on your computer, [it's the right time to install it](https://www.docker.com/products/overview#/install_the_platform).
 
 Open a terminal, and navigate to the directory containing your project skeleton. Then, run the following command to start
-the Apache and the MySQL servers using [Docker Compose](https://docs.docker.com/compose/):
+Apache and MySQL using [Docker Compose](https://docs.docker.com/compose/):
 
     $ docker-compose up
 
@@ -76,7 +78,7 @@ it later, but for now, create the related database table:
 
     docker-compose run web bin/console doctrine:schema:create
 
-If you're used to the PHP ecosystem, you probably guessed that this test entity uses the industry leading [Doctrine ORM](http://www.doctrine-project.org/projects/orm.html)
+If you're used to the PHP ecosystem, you probably guessed that this test entity uses the industry-leading [Doctrine ORM](http://www.doctrine-project.org/projects/orm.html)
 library as persistence system.
 API Platform is 100% independent of the persistence system and you can use the one(s) that best suit(s) your needs (like
 a NoSQL database or a remote web service).
@@ -603,7 +605,7 @@ Here is a non-exhaustive list of popular API Platform extensions:
 * [Execute async jobs and create micro-service architectures using RabbitMQ](https://github.com/php-amqplib/RabbitMqBundle)
   (RabbitMQBundle)
 
-Keep in mind that you can use your preferred client-side technology: API Platform is tested and approved with React, Angular
+Keep in mind that you can use your favorite client-side technology: API Platform is tested and approved with React, Angular
 1 & 2, Ionic and Swift but can work with any language able to send HTTP requests (even COBOL can do that).
 
 To go further, the API Platform team maintains a demo application showing more advanced use cases like leveraging serialization

@@ -38,7 +38,7 @@ api:
     prefix:   '/api' # Optional
 ```
 
-There is no mandatory configuration configuration although [some parameters](configuration.md) are configurable.
+There is no mandatory configuration options although [many settings are available](configuration.md).
 
 ## Before Reading this Documentation
 
