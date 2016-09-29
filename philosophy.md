@@ -1,4 +1,4 @@
-# Getting started with the API Platform framework
+# API Platform Philosophy
 
 In 20 years of PHP, the web changed dramatically and is now evolving faster than ever:
 
@@ -32,5 +32,3 @@ see how API Platform make modern development easy and fun again:
 * [Then **create as many clients as you want using frontend technologies you love**](angularjs.md): an HTML5/Javascript
   webapp querying the API in AJAX (of course) but also a native iOS or Android app, or even a desktop application. Clients
   only display data and forms.
-
-Next chapter: [Creating your First API with API Platform, in 5 Minutes](api.md)

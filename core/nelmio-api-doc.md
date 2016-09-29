@@ -1,11 +1,12 @@
 # NelmioApiDocBundle Integration
 
-![Screenshot of ApiBundle integrated with NelmioApiDocBundle](../tutorial/images/api-doc.png)
+![Screenshot of API Platform integrated with NelmioApiDocBundle](images/NelmioApiDocBundle.png)
 
 [NelmioApiDocBundle](https://github.com/nelmio/NelmioApiDocBundle) (since version 2.9) has built-in support for API Platform.
-Installing it will give you access to a human-readable documentation and a nice sandbox. It is an alternative to the builtin API Platform documentation.
+Installing it will give you access to a human-readable documentation and a nice sandbox. It is an alternative to the builtin
+API Platform documentation.
 
-If you use the standalone API Platform Core bundle, download and enable the bundle as explained in [NelmioApiDocBundle installation steps](https://github.com/nelmio/NelmioApiDocBundle/blob/master/Resources/doc/index.rst) (skip routing and configuration steps), and then copy the following configuration:
+To enable the NelmioApiDoc integration, copy the following configuration:
 
 ```yaml
 # app/config/config.yml
@@ -18,7 +19,7 @@ nelmio_api_doc:
     sandbox:
         accept_type:        'application/json'
         body_format:
-            formats:        [ 'json' ]
+            formats:        ['json']
             default_format: 'json'
         request_format:
             formats:

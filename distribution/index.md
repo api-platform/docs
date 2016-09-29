@@ -141,11 +141,11 @@ use Doctrine\ORM\Mapping as ORM;
 class Book
 {
     /**
-     * @var string An UUID for this book.
+     * @var int The id of this book.
      *
      * @ORM\Id
-     * @ORM\GeneratedValue(strategy="UUID")
-     * @ORM\Column(type="guid")
+     * @ORM\GeneratedValue
+     * @ORM\Column(type="integer")
      */
     private $id;
 
@@ -208,11 +208,11 @@ use Doctrine\ORM\Mapping as ORM;
 class Review
 {
     /**
-     * @var string The UUID of this review.
+     * @var int The id of this review.
      *
      * @ORM\Id
-     * @ORM\GeneratedValue(strategy="UUID")
-     * @ORM\Column(type="guid")
+     * @ORM\GeneratedValue
+     * @ORM\Column(type="integer")
      */
     private $id;
 
@@ -361,15 +361,13 @@ Now, add a review for this book using the `POST` operation for the `Review` reso
 
 ```json
 {
-    "book": "/books/<THE-UUID-OF-THE-BOOK>"
+    "book": "/books/1"
     "rating": 5,
     "body": "Interesting book!",
     "author": "Kévin",
     "publicationDate": "September 21, 2016",
 }
 ```
-
-Be sure to replace `<THE-UUID-OF-THE-BOOK>` by... The UUID of the book we previously created.
 
 There are two interesting things to mention about this request:
 
@@ -439,11 +437,11 @@ use Symfony\Component\Validator\Constraints as Assert;
 class Book
 {
     /**
-     * @var string An UUID for this book.
+     * @var int The id of this book.
      *
      * @ORM\Id
-     * @ORM\GeneratedValue(strategy="UUID")
-     * @ORM\Column(type="guid")
+     * @ORM\GeneratedValue
+     * @ORM\Column(type="integer")
      */
     private $id;
 
@@ -517,11 +515,11 @@ use Symfony\Component\Validator\Constraints as Assert;
 class Review
 {
     /**
-     * @var string The UUID of this review.
+     * @var int The id of this review.
      *
      * @ORM\Id
-     * @ORM\GeneratedValue(strategy="UUID")
-     * @ORM\Column(type="guid")
+     * @ORM\GeneratedValue
+     * @ORM\Column(type="integer")
      */
     private $id;
 
@@ -579,7 +577,7 @@ You now get proper validation error messages, always serialized using the Hydra 
 Those errors are easy to parse client-side. By adding the proper validation constraints, we also noticed that the provided
 ISBN number isn't valid...
 
-Here we are! We have created a workign and very powerful hypermedia REST API in a few minutes, and by writing only a few
+Here we are! We have created a working and very powerful hypermedia REST API in a few minutes, and by writing only a few
 lines of PHP. But we only covered the basics.
 
 ## Other features
@@ -611,3 +609,5 @@ Keep in mind that you can use your favorite client-side technology: API Platform
 To go further, the API Platform team maintains a demo application showing more advanced use cases like leveraging serialization
 groups, user management or JWT and OAuth authentication. [Checkout the demo code source on GitHub](https://github.com/api-platform/demo)
 and [browse it online](https://demo.api-platform.com).
+
+Next chapter: [Testing And Specifying the API](testing.md)

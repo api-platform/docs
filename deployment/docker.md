@@ -2,7 +2,7 @@
 
 API Platform projects can be run through [Docker](https://www.docker.com/).
 A [Docker compose](https://docs.docker.com/compose/) configuration including a fully working [LAMP](https://en.wikipedia.org/wiki/LAMP_(software_bundle))
-stack is shipped with the standard edition.
+stack is shipped with the API Platform distribution.
 
 To install it, run the following commands (Docker must be installed on your system):
 

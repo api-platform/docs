@@ -79,7 +79,7 @@ final class BookMailSubscriber implements EventSubscriberInterface
 }
 ```
 
-If you use the standard edition of API Platform, creating the previous class is enough. [DunglasActionBundle](https://github.com/dunglas/DunglasActionBundle)
+If you use the official API Platform distribution, creating the previous class is enough. [DunglasActionBundle](https://github.com/dunglas/DunglasActionBundle)
 (installed by default) will automatically register this subscriber as a service and will inject its dependencies using [the
 autowiring feature of the Symfony Dependency Injection Container](http://symfony.com/doc/current/components/dependency_injection/autowiring.html).
 

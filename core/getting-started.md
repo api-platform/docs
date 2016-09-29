@@ -2,7 +2,7 @@
 
 ## Installing API Platform Core
 
-If you are starting a new project, the easiest way to get API Platform up is to install the [API Platform Standard Edition](https://github.com/api-platform/api-platform).
+If you are starting a new project, the easiest way to get API Platform up is to install the [API Platform Standard Edition](../distribution/api.md).
 It ships with the API Platform Core library integrated with [the Symfony framework](https://symfony.com), [the schema generator](../schema-generator/),
 [Doctrine ORM](www.doctrine-project.org), [NelmioApiDocBundle](https://github.com/nelmio/NelmioApiDocBundle), [NelmioCorsBundle](https://github.com/nelmio/NelmioCorsBundle)
 and [Behat](http://behat.org).
@@ -42,20 +42,19 @@ There is no mandatory configuration options although [many settings are availabl
 
 ## Before Reading this Documentation
 
-If you haven't read it already, take a look at [the "Creating your first API with API Platform, in 5 minutes" guide](../tutorial/api.md).
-Using the schema generator is not necessary to use API Platform Core. But the "Exposing the API" section of this tutorial
-covers basic concepts required to understand how API Platform works including how it implements the REST pattern and what
-[JSON-LD](http://json-ld.org/) and [Hydra](http://www.hydra-cg.com/) formats are.
+If you haven't read it already, take a look at [the "Creating your first API with API Platform, in a few minutes" guide](../distribution/getting-started.md).
+This tutorial covers basic concepts required to understand how API Platform works including how it implements the REST pattern
+and what [JSON-LD](http://json-ld.org/) and [Hydra](http://www.hydra-cg.com/) formats are.
 
 ## Mapping the Entities
 
-API Platform Core is able to automatically expose entities mapped as "API resources" through a REST API supporting CRUD operations.
+API Platform Core is able to automatically expose entities mapped as "API resources" through a REST API supporting CRUD
+operations.
 To expose your entities, you can use Docblock annotations, XML and YAML configuration files.
 
 Here is an example of entities mapped using annotations which will be exposed trough a REST API:
 
 ```php
-<?php
 
 // src/AppBundle/Entity/Product.php
 

@@ -1,12 +1,12 @@
 # API Platform documentation
 
-## Tutorial
+## API Platform Distribution: create a powerful APIs with ease
 
-1. [Introduction](tutorial/index.md)
-2. [Creating a Fully Featured API in 5 Minutes](tutorial/api.md)
-3. [Consuming the API with AngularJS](tutorial/angularjs.md)
+1. [Creating a Fully Featured API in 5 Minutes](distribution/index.md)
+2. [Testing and Specifying the API](distribution/testing.md)
+3. Bonus: [The Framework Philosophy](distribution/philosophy.md)
 
-## API Platform Core: create a powerful APIs with ease
+## API Platform Core library
 
 1. [Introduction](core/index.md)
 2. [Getting Started](core/getting-started.md)
@@ -75,7 +75,7 @@
   1. [Restangular](core/angularjs-integration.md#restangular)
   2. [ng-admin](core/angularjs-integration.md#ng-admin)
 
-## Schema Generator
+## Schema Generator: Generate Data Models from Open Vocabularies
 
 1. [Introduction](schema-generator/index.md)
 2. [Getting Started](schema-generator/getting-started.md)
@@ -87,7 +87,8 @@
 2. [Deploying an API Platform App on Heroku](deployment/heroku.md)
 3. [Using API Platform with Docker](deployment/docker.md)
 
-## Contributing
+## Extra
 
+1. [The project's philosophy](philosophy.md)
 1. [Contribution guide](https://github.com/api-platform/api-platform/blob/master/CONTRIBUTING.md)
-2. [Contributor Code Of Conduct](conduct.md)
+3. [Contributor Code Of Conduct](conduct.md)
