@@ -24,6 +24,8 @@ framework:
 Specifying to the API system the groups to use is really simple:
 
 ```php
+<?php
+
 // src/AppBundle/Entity/Book.php
 
 namespace AppBundle\Entity;
@@ -74,6 +76,8 @@ level ignored.
 In the following example we use different serialization groups for the `GET` and `PUT` operations:
 
 ```php
+<?php
+
 // src/AppBundle/Entity/Book.php
 
 namespace AppBundle\Entity;
@@ -137,6 +141,8 @@ By using the following serialization groups annotations (`@Groups`), a JSON repr
 the book response:
 
 ```php
+<?php
+
 // src/AppBundle/Entity/Book.php
 
 namespace AppBundle\Entity;
@@ -164,6 +170,8 @@ class Book
 ```
 
 ```php
+<?php
+
 // src/AppBundle/Entity/Person.php
 
 namespace AppBundle\Entity;
@@ -212,6 +220,8 @@ It is also possible to embed a relation in `PUT` and `POST` requests. To enable 
 set the same way as normalization and the configuration should be like this:
 
 ```php
+<?php
+
 // src/AppBundle/Entity/Book.php
 
 namespace AppBundle\Entity;
@@ -240,6 +250,8 @@ You can create as relation embedding levels as you want.
 Let's imagine a resource where most fields can be managed by any user, but some can be managed by admin users only:
 
 ```php
+<?php
+
 // src/AppBundle/Entity/Book.php
 
 namespace AppBundle\Entity;
@@ -285,7 +297,7 @@ API Platform implements a `ContextBuilder`, which prepares the context for seria
 `createFromRequest` method:
 
 ```yml
-// src/AppBundle/Resources/config/services.yml
+# src/AppBundle/Resources/config/services.yml
 
 services:
     app.serializer.builder.book:
@@ -295,6 +307,8 @@ services:
 ```
 
 ```php
+<?php
+
 // src/AppBundle/Serializer/BookContextBuilder.php
 
 namespace AppBundle\Serializer;
@@ -404,6 +418,8 @@ You can configure API Platform Core to embed the JSON-LD context in the root doc
 To do so, use the following configuration:
 
 ```php
+<?php
+
 // src/AppBundle/Entity/Book.php
 
 namespace AppBundle\Entity;

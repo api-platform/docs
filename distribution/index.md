@@ -127,6 +127,8 @@ provided by the Doctrine ORM:
 
 
 ```php
+<?php
+
 // src/AppBundle/Entity/Book.php
 
 namespace AppBundle\Entity;
@@ -194,6 +196,8 @@ class Book
 ```
 
 ```php
+<?php
+
 // src/AppBundle/Entity/Review.php
 
 namespace AppBundle\Entity;
@@ -277,6 +281,8 @@ We now have a working data model that you can persist and query. To create an AP
 to an entity class, we just have to mark it with an annotation called `@ApiResource`:
 
 ```php
+<?php
+
 // src/AppBundle/Entity/Book.php
 
 namespace AppBundle\Entity;
@@ -297,6 +303,8 @@ class Book
 ```
 
 ```php
+<?php
+
 // src/AppBundle/Entity/Entity.php
 
 namespace AppBundle\Entity;
@@ -361,7 +369,7 @@ Now, add a review for this book using the `POST` operation for the `Review` reso
 
 ```json
 {
-    "book": "/books/1"
+    "book": "/books/1",
     "rating": 5,
     "body": "Interesting book!",
     "author": "Kévin",
@@ -419,6 +427,7 @@ Adding some of [its numerous validation constraints](http://symfony.com/doc/curr
 to get validate user submitted data. Let's add some validation rules to our data model:
 
 ```php
+<?php
 
 // src/AppBundle/Entity/Book.php
 
@@ -497,6 +506,7 @@ class Book
 ```
 
 ```php
+<?php
 
 // src/Entity/Review.php
 

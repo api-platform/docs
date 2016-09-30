@@ -74,6 +74,8 @@ api_platform:
 It can also be disabled for specific resource:
 
 ```php
+<?php
+
 // src/AppBundle/Entity/Book.php
 
 use ApiPlatform\Core\Annotation\ApiResource;
@@ -117,6 +119,8 @@ used as the value.
 The client ability to disable the pagination can also be set in the resource configuration:
 
 ```php
+<?php
+
 // src/AppBundle/Entity/Book.php
 
 use ApiPlatform\Core\Annotation\ApiResource;
@@ -150,6 +154,8 @@ api_platform:
 ### For a Specific Resource
 
 ```php
+<?php
+
 // src/AppBundle/Entity/Book.php
 
 use ApiPlatform\Core\Annotation\ApiResource;
@@ -184,6 +190,8 @@ The number of items per page can now be changed adding a query parameter named `
 Changing the number of items per page can be enabled (or disabled) for a specific resource:
 
 ```php
+<?php
+
 // src/AppBundle/Entity/Book.php
 
 use ApiPlatform\Core\Annotation\ApiResource;

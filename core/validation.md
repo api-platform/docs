@@ -12,6 +12,8 @@ Built-in actions are able to leverage Symfony's [validation groups](http://symfo
 You can customize them by editing the resource configuration and add the groups you want to use when the validation occurs:
 
 ```php
+<?php
+
 // src/AppBundle/Entity/Book.php
 
 use ApiPlatform\Core\Annotation\ApiResource;

@@ -10,6 +10,7 @@ In this tutorial, we will decorate the default `DeserializeListener` class to ha
 This decorator is able to denormalize posted form data to the target object. In case of other format, it fallbacks to the original [DeserializeListener](https://github.com/api-platform/core/blob/91dc2a4d6eeb79ea8dec26b41e800827336beb1a/src/Bridge/Symfony/Bundle/Resources/config/api.xml#L85-L91).
 
 ```php
+<?php
 
 // src/AppBundle/EventListener/DeserializeListener.php
 
@@ -83,6 +84,8 @@ services:
 The decorated DeserializeListener is called on demand, so it's better to eliminate its own tags:
 
 ```php
+<?php
+
 // src/AppBundle/AppBundle.php
 
 namespace AppBundle;

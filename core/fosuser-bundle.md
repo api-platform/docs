@@ -13,6 +13,8 @@ you can modify are handled with [`denormalization_context`](serialization-groups
 First register the following service:
 
 ```php
+<?php
+
 // src/AppBundle/Entity/User.php
 
 namespace AppBundle\Entity;

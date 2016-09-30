@@ -54,6 +54,8 @@ corresponding to the name of the operation that can be anything you want and an 
 <configurations>
 
 ```php
+<?php
+
 // src/AppBundle/Entity/Book.php
 
 use ApiPlatform\Core\Annotation\ApiResource;
@@ -63,7 +65,7 @@ use ApiPlatform\Core\Annotation\ApiResource;
  */
 class Book
 {
-   // ...
+    // ...
 }
 ```
 
@@ -109,6 +111,8 @@ URLs. In addition to that, we replace the Hydra context for the `PUT` operation.
 <configurations>
 
 ```php
+<?php
+
 // src/AppBundle/Entity/Book.php
 
 use ApiPlatform\Core\Annotation\ApiResource;
@@ -186,6 +190,8 @@ The `special` operation reference the Symfony route named `book_special`.
 <configurations>
 
 ```php
+<?php
+
 // src/AppBundle/Entity/Book.php
 
 use ApiPlatform\Core\Annotation\ApiResource;
@@ -198,7 +204,7 @@ use ApiPlatform\Core\Annotation\ApiResource;
  */
 class Book
 {
-   //...
+    //...
 }
 ```
 
@@ -232,9 +238,9 @@ API Platform will automatically map this `special` operation with the route `boo
 and its related route using annotations:
 
 ```php
-// src/AppBundle/Action/BookSpecial.php
-
 <?php
+
+// src/AppBundle/Action/BookSpecial.php
 
 namespace AppBundle\Action;
 
@@ -301,6 +307,7 @@ exactly the same thing than the previous example in a more Symfony-like fashion:
 
 ```php
 <?php
+
 // src/AppBundle/Controller/BookController.php
 
 namespace AppBundle\Controller;

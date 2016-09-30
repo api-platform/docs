@@ -31,6 +31,8 @@ Let's assume we need URLs without separators (e.g. `api.tld/myresources`)
 Make sure the custom resolver implements [`ApiPlatform\Core\PathResolver\OperationPathResolverInterface`](https://github.com/api-platform/core/blob/master/src/PathResolver/OperationPathResolverInterface.php):
 
 ```php
+<?php
+
 // src/AppBundle/PathResolver/NoSeparatorsOperationPathResolver.php
 
 namespace AppBundle\PathResolver;

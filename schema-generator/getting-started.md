@@ -126,6 +126,7 @@ abstract class Thing
 ```php
 <?php
 
+// src/AddressBook/Entity/Person.php
 
 namespace AddressBook\Entity;
 
@@ -440,6 +441,8 @@ class Person extends Thing
 ```php
 <?php
 
+// src/AddressBook/Entity/PostalAddress.php
+
 namespace AddressBook\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
@@ -683,6 +686,8 @@ The associated PHP class:
 
 ```php
 <?php
+
+// src/SchemaOrg/Enum/OfferItemCondition.php
 
 namespace SchemaOrg\Enum;
 
