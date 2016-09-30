@@ -333,16 +333,23 @@ The variable `$normalization` lets you check whether the context is for normaliz
 
 The Serializer Component provides a handy way to map PHP field names to serialized names. See the related [Symfony documentation](http://symfony.com/doc/master/components/serializer.html#converting-property-names-when-serializing-and-deserializing).
 
-To use this feature, declare a new service with id `api_platform.name_converter`. For example, you can convert `CamelCase` to
+To use this feature, declare a new service with id `api.name_converter`. For example, you can convert `CamelCase` to
 `snake_case` with the following configuration:
 
 ```yaml
 # app/config/services.yml
 
 services:
-    api_platform.name_converter:
+    api.name_converter:
         class: Symfony\Component\Serializer\NameConverter\CamelCaseToSnakeCaseNameConverter
         public: false
+```
+
+```yaml
+# app/config/config.yml
+
+api_platform:
+    name_converter: api.name_converter
 ```
 
 ## Entity Identifier Case
