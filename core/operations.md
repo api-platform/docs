@@ -170,7 +170,7 @@ implements the [Action-Domain-Responder](https://github.com/pmjones/adr) pattern
 
 Note: [the event system](events.md) should be preferred over custom controllers when applicable.
 
-The standard edition of API Platform also comes with an enhanced action system for Symfony pre-installed: [DunglasActionBundle](https://github.com/dunglas/DunglasActionBundle).
+The distribution of API Platform also comes with an enhanced action system for Symfony pre-installed: [DunglasActionBundle](https://github.com/dunglas/DunglasActionBundle).
 *DunglasActionBundle* eases the implementation of the ADR pattern with Symfony and improves the developer experience.
 
 It automatically registers action classes stored in `src/*Bundle/Action` and `src/*Bundle/Controller` directories as autowired
@@ -280,7 +280,7 @@ It is mandatory to set the `_api_resource_class` and `_api_item_operation_name` 
 operation) in the parameters of the route (`defaults` key). It allows API Platform and the Symfony routing system to hook
 together.
 
-Here we consider that DunglasActionBundle is installed (the default when using the API Platform standard edition). This
+Here we consider that DunglasActionBundle is installed (the default when using the API Platform distribution). This
 action will be automatically registered as a service (the service name is the same as the class name: `AppBundle\Action\BookSpecial`).
 
 API Platform automatically retrieve the appropriate PHP entity then then deserializes it, and for `POST` and `PUT` requests

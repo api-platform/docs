@@ -9,7 +9,7 @@ feature of the Symfony Serializer component.
 The Symfony Serializer component allows to specify the definition of serialization using XML, YAML, or annotations. As annotations
 are really easy to understand, we will use them in this documentation.
 
-However, if you don't use the standard edition of API Platform, don't forget to enable annotation support in the serializer
+However, if you don't use the official distribution of API Platform, don't forget to enable annotation support in the serializer
 configuration:
 
 ```yaml
