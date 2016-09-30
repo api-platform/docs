@@ -1,4 +1,4 @@
-# API Platform Philosophy
+# API Platform's Philosophy
 
 In 20 years of PHP, the web changed dramatically and is now evolving faster than ever:
 
