@@ -365,7 +365,7 @@ In the following example, we will completely change the syntax of the order filt
 
 namespace AppBundle\Filter;
 
-use Dunglas\ApiBundle\Doctrine\Orm\OrderFilter;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\OrderFilter;
 use Symfony\Component\HttpFoundation\Request;
 
 final class CustomOrderFilter extends OrderFilter
