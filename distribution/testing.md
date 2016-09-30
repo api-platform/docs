@@ -167,4 +167,4 @@ You may also be interested by those alternative testing tools (not included in t
   test in the CI using [newman](https://github.com/postmanlabs/newman).
 * [PHP Matcher](https://github.com/coduo/php-matcher): the Swiss Army knife of JSON document testing.
 
-Previous chapter: [Creating your First API with API Platform, in 5 Minutes][index.md]
+Previous chapter: [Creating your First API with API Platform, in 5 Minutes](index.md)
