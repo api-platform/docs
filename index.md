@@ -4,7 +4,6 @@
 
 1. [Creating a Fully Featured API in 5 Minutes](distribution/index.md)
 2. [Testing and Specifying the API](distribution/testing.md)
-3. Bonus: [The Framework Philosophy](distribution/philosophy.md)
 
 ## API Platform Core library
 
