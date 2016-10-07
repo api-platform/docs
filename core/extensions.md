@@ -1,23 +1,22 @@
 # Extensions
 
-API Platform Core provides a system to extends queries on items and collections readings.
-You can create custom extension that fit your needs.
+API Platform Core provides a system to extend queries on items and collections.
 
 ## Custom Extension
 
-If Doctrine ORM support is enabled, adding extension is as easy as registering a service in your `app/config/services.yml` file and create the extension you need.
+If Doctrine ORM support is enabled, adding an extension is as easy as registering a service in your `app/config/services.yml` file and create the class you need.
 
-Custom extension can be written by implementing the `ApiPlatform\Core\Bridge\Doctrine\Orm\Extension\QueryCollectionExtensionInterface`
+Custom extension must implement the `ApiPlatform\Core\Bridge\Doctrine\Orm\Extension\QueryCollectionExtensionInterface`
 and / or the `ApiPlatform\Core\Bridge\Doctrine\Orm\Extension\QueryItemExtensionInterface`
-interfaces, depending on your whether you asking for a collection of items or just an item.
+interfaces, depending if you are asking for a collection of items or just an item.
 
 If you use [custom data providers](data-providers.md), they must support extensions and be aware of active extensions to work
 properly.
 
 ## Filter upon the current user
 
-In the following example, we will see how to always get the offers owned by the current user. We will set up an exception, whenever the user possesses the `ROLE_ADMIN`.
-Given these two entities :
+In the following example, we will see how to always get the offers owned by the current user. We will set up an exception, whenever the user has the `ROLE_ADMIN`.
+Given these two entities:
 
 ```php
 <?php
@@ -28,7 +27,7 @@ namespace AppBundle\Entity;
 use ApiPlatform\Core\Annotation\ApiResource;
 
 /**
- * @ApiResource()
+ * @ApiResource
  */
 class User
 {
@@ -46,7 +45,7 @@ namespace AppBundle\Entity;
 use ApiPlatform\Core\Annotation\ApiResource;
 
 /**
- * @ApiResource()
+ * @ApiResource
  */
 class Offer
 {
@@ -62,8 +61,8 @@ class Offer
 ```
 
 ```php
-// src/AppBundle/Doctrine/ORM/Extension/CurrentUserExtension.php
 <?php
+// src/AppBundle/Doctrine/ORM/Extension/CurrentUserExtension.php
 
 namespace AppBundle\Doctrine\ORM\Extension;
 
@@ -73,6 +72,7 @@ use ApiPlatform\Core\Bridge\Doctrine\Orm\Util\QueryNameGeneratorInterface;
 use ApiPlatform\Core\Metadata\Property\Factory\PropertyMetadataFactoryInterface;
 use ApiPlatform\Core\Metadata\Property\Factory\PropertyNameCollectionFactoryInterface;
 use AppBundle\Entity\Offer;
+use AppBundle\Entity\User;
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\ORM\Query\Expr;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
@@ -110,17 +110,17 @@ final class CurrentUserExtension implements QueryCollectionExtensionInterface, Q
     }
 
     /**
-     * Add where condition
      *
      * @param QueryBuilder $queryBuilder
      * @param string       $resourceClass
      */
     private function addWhere(QueryBuilder $queryBuilder, string $resourceClass)
     {
-        if (Offer::class === $resourceClass && !$this->authorizationChecker->isGranted('ROLE_ADMIN')) {
-            $user = $this->token->getToken()->getUser();
+        $user = $this->token->getToken()->getUser();
+        if ($user instanceof User && Offer::class === $resourceClass && !$this->authorizationChecker->isGranted('ROLE_ADMIN')) {
             $rootAlias = $queryBuilder->getRootAliases()[0];
-            $queryBuilder->andWhere(sprintf('%s.user = ', $rootAlias).$user->getId());
+            $queryBuilder->andWhere(sprintf('%s.user = :current_user', $rootAlias));
+            $queryBuilder->setParameter('current_user', $user->getId());
         }
     }
 }
@@ -146,8 +146,8 @@ services:
             - { name: api_platform.doctrine.orm.query_extension.item, priority: 64 }
 ```
 
-Having the item related tag and interface, allows you to customize the query when trying to get/read a specific Item.
-Having the collection related tag and interface, allows you to customize the query when trying to get/read a collection of items.
+Thanks to the api_platform.doctrine.orm.query_extension.collection tag, API Platform will register this service as a collection extension.
+The api_platform.doctrine.orm.query_extension.item do the same thing for items.
 
 Previous chapter: [Filters](filters.md)
 
