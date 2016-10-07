@@ -39,12 +39,13 @@ namespace AppBundle\PathResolver;
 
 use ApiPlatform\Core\PathResolver\OperationPathResolverInterface;
 use Doctrine\Common\Inflector\Inflector;
+use ApiPlatform\Core\Metadata\Resource\ResourceMetadata;
 
 final class NoSeparatorsOperationPathResolver implements OperationPathResolverInterface
 {
-    public function resolveOperationPath(string $resourceShortName, array $operation, bool $collection) : string
+    public function resolveOperationPath(ResourceMetadata $resourceMetadata, array $operation, bool $collection) : string
     {
-        $path = Inflector::pluralize(strtolower($resourceShortName));
+        $path = Inflector::pluralize(strtolower($resourceMetadata->getShortName());
         if (!$collection) {
             $path .= '/{id}';
         }
@@ -55,7 +56,7 @@ final class NoSeparatorsOperationPathResolver implements OperationPathResolverIn
 }
 ```
 
-Note that `$resourceShortName` contains a camel case string, by default the resource class name (e.g. `MyResource`).
+Note that `$resourceMetadata->getShortName()` contains a camel case string, by default the resource class name (e.g. `MyResource`).
 
 ### Registering the Service
 
