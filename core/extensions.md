@@ -2,9 +2,12 @@
 
 API Platform Core provides a system to extend queries on items and collections.
 
+Extensions are specific to Doctrine, and therefor, the Doctrine ORM support must be enabled.
+If you use custom providers, they should support extensions and be aware of active extensions OR implement their own extension systems.
+
 ## Custom Extension
 
-If Doctrine ORM support is enabled, adding an extension is as easy as registering a service in your `app/config/services.yml` file and create the class you need.
+Adding an extension is as easy as registering a service in your `app/config/services.yml` file and create the class you need.
 
 Custom extension must implement the `ApiPlatform\Core\Bridge\Doctrine\Orm\Extension\QueryCollectionExtensionInterface`
 and / or the `ApiPlatform\Core\Bridge\Doctrine\Orm\Extension\QueryItemExtensionInterface`
