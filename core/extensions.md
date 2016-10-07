@@ -73,7 +73,6 @@ use ApiPlatform\Core\Bridge\Doctrine\Orm\Util\QueryNameGeneratorInterface;
 use ApiPlatform\Core\Metadata\Property\Factory\PropertyMetadataFactoryInterface;
 use ApiPlatform\Core\Metadata\Property\Factory\PropertyNameCollectionFactoryInterface;
 use AppBundle\Entity\Offer;
-use AppBundle\Entity\User;
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\ORM\Query\Expr;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
@@ -118,20 +117,10 @@ final class CurrentUserExtension implements QueryCollectionExtensionInterface, Q
      */
     private function addWhere(QueryBuilder $queryBuilder, string $resourceClass)
     {
-        if (Offer::class !== $resourceClass || $this->authorizationChecker->isGranted('ROLE_ADMIN')) {
-            return;
-        }
-
-        $classMetadata = $queryBuilder->getEntityManager()->getClassMetadata($resourceClass);
-        $user = $this->token->getToken()->getUser();
-
-        foreach ($classMetadata->getAssociationNames() as $i => $association) {
-            $mapping = $classMetadata->associationMappings[$association];
-
-            if (User::class === $mapping['targetEntity']) {
-                $queryBuilder->andWhere('o.'.$association.' = '.$user->getId());
-                return;
-            }
+        if (Offer::class === $resourceClass && !$this->authorizationChecker->isGranted('ROLE_ADMIN')) {
+            $user = $this->token->getToken()->getUser();
+            $rootAlias = $queryBuilder->getRootAliases()[0];
+            $queryBuilder->andWhere(sprintf('%s.user = ', $rootAlias).$user->getId());
         }
     }
 }
