@@ -42,7 +42,7 @@ Then remove the following script call in the `post-install-cmd` and `post-update
 ```
 
 Then we must register the Composer script provided by the library we installed in the `scripts` section of the `composer.json`
-file: 
+file:
 
 ```json
     "scripts": {
@@ -100,7 +100,7 @@ We are almost done, but API Platform (and Symfony) have a particular directory s
 directory must be private and we must tell it to Heroku. Create a new file at the root of the application directory named
 `Procfile` with the following content:
 
-```
+```yaml
 web: bin/heroku-php-apache2 web/
 ```
 

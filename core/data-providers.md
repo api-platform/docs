@@ -27,6 +27,8 @@ The `getCollection` method must return an `array`, a `Traversable` or a [`ApiPla
 If no data is available, you should return an empty array.
 
 ```php
+<?php
+
 // src/AppBundle/DataProvider/BlogPostCollectionDataProvider.php
 
 namespace AppBundle\DataProvider;
@@ -74,6 +76,8 @@ interface:
 The `getItem` method can return `null` if no result has been found.
 
 ```php
+<?php
+
 // src/AppBundle/DataProvider/BlogPostItemDataProvider.php
 
 namespace AppBundle\DataProvider;

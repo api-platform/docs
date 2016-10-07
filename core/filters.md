@@ -42,6 +42,8 @@ services:
 ```
 
 ```php
+<?php
+
 // src/AppBundle/Entity/Offer.php
 
 namespace AppBundle\Entity;
@@ -102,6 +104,8 @@ services:
 ```
 
 ```php
+<?php
+
 // src/AppBundle/Entity/Offer.php
 
 namespace AppBundle\Entity;
@@ -144,7 +148,7 @@ services:
 If you use a service definition format other than YAML, you can use the `ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\DateFilter::EXCLUDE_NULL`
 constant directly.
 
-## Boolean Filter 
+## Boolean Filter
 
 The boolean filter allow you to search on boolean fields and value.
 
@@ -165,6 +169,8 @@ services:
 ```
 
 ```php
+<?php
+
 // src/AppBundle/Entity/Offer.php
 
 namespace AppBundle\Entity;
@@ -184,7 +190,7 @@ Given that the collection endpoint is `/offers`, you can filter offers by boolea
 
 It will return all offers where `isAvailableGenericallyInMyCountry` equals `true`.
 
-## Numeric Filter 
+## Numeric Filter
 
 The boolean filter allow you to search on numeric fields and value.
 
@@ -203,6 +209,8 @@ services:
 ```
 
 ```php
+<?php
+
 // src/AppBundle/Entity/Offer.php
 
 namespace AppBundle\Entity;
@@ -241,6 +249,8 @@ services:
 ```
 
 ```php
+<?php
+
 // src/AppBundle/Entity/Offer.php
 
 namespace AppBundle\Entity;
@@ -361,6 +371,8 @@ method.
 In the following example, we will completely change the syntax of the order filter to be the following: `?filter[order][property]`
 
 ```php
+<?php
+
 // src/AppBundle/Filter/CustomOrderFilter.php
 
 namespace AppBundle\Filter;

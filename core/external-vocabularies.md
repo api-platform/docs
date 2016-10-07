@@ -5,8 +5,9 @@ and [Good Relations](http://www.heppnetz.de/projects/goodrelations/).
 
 API Platform Core provides annotations usable on PHP classes and properties for specifying a related external [IRI](http://en.wikipedia.org/wiki/Internationalized_resource_identifier).
 
-
 ```php
+<?php
+
 // src/AppBundle/Entity/Book.php
 
 namespace AppBundle\Entity;

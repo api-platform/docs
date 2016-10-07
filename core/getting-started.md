@@ -15,6 +15,8 @@ Alternatively, you can use [Composer](http://getcomposer.org) to install the sta
 Then, update your `app/config/AppKernel.php` file:
 
 ```php
+<?php
+
 // app/config/AppKernel.php
 
 public function registerBundles()
@@ -32,6 +34,8 @@ public function registerBundles()
 Register the routes of our API by adding the following lines to `app/config/routing.yml`:
 
 ```yaml
+# app/config/routing.yml
+
 api:
     resource: '.'
     type:     'api_platform'
@@ -55,6 +59,7 @@ To expose your entities, you can use Docblock annotations, XML and YAML configur
 Here is an example of entities mapped using annotations which will be exposed trough a REST API:
 
 ```php
+<?php
 
 // src/AppBundle/Entity/Product.php
 

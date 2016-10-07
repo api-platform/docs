@@ -33,6 +33,8 @@ add extra logic is convenient.
 In the following example, we will send a mail each time a new book is created using the API:
 
 ```php
+<?php
+
 // src/AppBundle/EventSubscriber/BookMailSubscriber.php
 
 namespace AppBundle\EventSubscriber;

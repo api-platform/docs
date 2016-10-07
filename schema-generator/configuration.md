@@ -129,6 +129,8 @@ Example:
 The `@Assert\NotNull` constrain is automatically added
 
 ```php
+<?php
+
 /**
  * @var string The name of the item.
  *
