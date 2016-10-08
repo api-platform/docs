@@ -145,12 +145,17 @@ services:
             - '@security.token_storage'
             - '@security.authorization_checker'
         tags:
-            - { name: api_platform.doctrine.orm.query_extension.collection, priority: 64 }
-            - { name: api_platform.doctrine.orm.query_extension.item, priority: 64 }
+            - { name: api_platform.doctrine.orm.query_extension.collection, priority: 9 }
+            - { name: api_platform.doctrine.orm.query_extension.item }
 ```
 
 Thanks to the api_platform.doctrine.orm.query_extension.collection tag, API Platform will register this service as a collection extension.
 The api_platform.doctrine.orm.query_extension.item do the same thing for items.
+
+Notice the priority level for the Collection tag.
+There is a case, when an extension implements the `ApiPlatform\Core\Bridge\Doctrine\Orm\Extension\QueryResultCollectionExtensionInterface` or the `ApiPlatform\Core\Bridge\Doctrine\Orm\Extension\QueryResultItemExtensionInterface` and supports to immediately return results,
+any lower priority extension will not be executed.
+In our case, since the pagination is activated by default ([see how to disable the pagination](pagination.md#disabling-the-pagination)) and the `ApiPlatform\Core\Bridge\Doctrine\Orm\Extension\PaginationExtension` is declared with a priority 8, we must declare a priority to at least 9 to ensure it's execution.
 
 Previous chapter: [Filters](filters.md)
 
