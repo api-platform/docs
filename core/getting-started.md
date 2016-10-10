@@ -193,6 +193,9 @@ resources:
         class: 'AppBundle\Entity\Offer'
         shortName: 'Offer' # optional        # optional
         description: 'An offer from my shop' # optional
+        iri: 'http://schema.org/Offer'       # optional
+        attributes:                          # optional
+            pagination_items_per_page: 25    # optional
 ```
 
 </configurations>
