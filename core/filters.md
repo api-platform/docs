@@ -23,7 +23,7 @@ The search filter supports `exact`, `partial`, `start`, `end`, and `word_start` 
 * `word_start` strategy uses `LIKE text% OR LIKE % text%` to search for fields that contains the word starting with `text`.
 
 Prepend the letter `i` to the filter if you want it to be case insensitive. For example `ipartial` or `iexact`. Note that
-this will use the `LOWER` function and **will** impact performances if there is no [*function-based index*](http://use-the-index-luke.com/sql/where-clause/functions/case-insensitive-search).
+this will use the `LOWER` function and **will** impact performance [if there is no proper index](performance.md#search-filter).
 
 Case insensitivity may already be enforced at the database level depending on the [collation](https://en.wikipedia.org/wiki/Collation)
 used. If you are using MySQL, note that the commonly used `utf8_unicode_ci` collation (and its sibling `utf8mb4_unicode_ci`)
