@@ -113,5 +113,5 @@ services:
             -  { name: 'api_platform.item_data_provider' }
 ```
 
-Previous chapter: [Using External JSON-LD Vocabularies](external-vocabularies.md)
+Previous chapter: [Extending JSON-LD context](core/extending-jsonld-context.md)
 Next chapter: [Security](security.md)
