@@ -2,8 +2,8 @@
 
 API Platform Core provides a system to extend queries on items and collections.
 
-Extensions are specific to Doctrine, and therefor, the Doctrine ORM support must be enabled.
-If you use custom providers, they should support extensions and be aware of active extensions OR implement their own extension systems.
+Extensions are specific to Doctrine, and therefore, the Doctrine ORM support must be enabled to use this feature.
+If you use custom providers it's up to you to implement your own extension system or not.
 
 ## Custom Extension
 
@@ -16,7 +16,7 @@ interfaces, depending if you are asking for a collection of items or just an ite
 If you use [custom data providers](data-providers.md), they must support extensions and be aware of active extensions to work
 properly.
 
-## Filter upon the current user
+## Example
 
 In the following example, we will see how to always get the offers owned by the current user. We will set up an exception, whenever the user has the `ROLE_ADMIN`.
 Given these two entities:
@@ -36,7 +36,6 @@ class User
 {
     // ...
 }
-
 ```
 
 ```php
@@ -60,7 +59,6 @@ class Offer
 
     //...
 }
-
 ```
 
 ```php
@@ -149,13 +147,38 @@ services:
             - { name: api_platform.doctrine.orm.query_extension.item }
 ```
 
-Thanks to the api_platform.doctrine.orm.query_extension.collection tag, API Platform will register this service as a collection extension.
-The api_platform.doctrine.orm.query_extension.item do the same thing for items.
+Thanks to the `api_platform.doctrine.orm.query_extension.collection` tag, API Platform will register this service as a collection extension.
+The `api_platform.doctrine.orm.query_extension.item` do the same thing for items.
 
-Notice the priority level for the Collection tag.
-There is a case, when an extension implements the `ApiPlatform\Core\Bridge\Doctrine\Orm\Extension\QueryResultCollectionExtensionInterface` or the `ApiPlatform\Core\Bridge\Doctrine\Orm\Extension\QueryResultItemExtensionInterface` and supports to immediately return results,
+Notice the priority level for the `api_platform.doctrine.orm.query_extension.collection` tag.
+When an extension implements the `ApiPlatform\Core\Bridge\Doctrine\Orm\Extension\QueryResultCollectionExtensionInterface` or the `ApiPlatform\Core\Bridge\Doctrine\Orm\Extension\QueryResultItemExtensionInterface` interface to return results by itself,
 any lower priority extension will not be executed.
-In our case, since the pagination is activated by default ([see how to disable the pagination](pagination.md#disabling-the-pagination)) and the `ApiPlatform\Core\Bridge\Doctrine\Orm\Extension\PaginationExtension` is declared with a priority 8, we must declare a priority to at least 9 to ensure it's execution.
+Because the pagination is enabled by default with a priority of 8, the priority of the `app.doctrine.orm.query_extension.current_user` service must be at least 9 to ensure its execution.
+
+### Note
+
+This example adds a WHERE condition only when a fully authenticated user without ROLE_ADMIN tries to access to a resource.
+That mean it return without restriction any item or collection for every other user.
+You need to ensure that your user is authenticated to access the two endpoints.
+
+A way of doing it, is with the access control :
+
+```yaml
+# app/config/security.yml
+
+security:
+    # ...
+
+    firewalls:
+        # ...
+        default:
+            # ...
+
+    access_control:
+        # ...
+        - { path: ^/offers, roles: IS_AUTHENTICATED_FULLY }
+        - { path: ^/users, roles: IS_AUTHENTICATED_FULLY }
+```
 
 Previous chapter: [Filters](filters.md)
 
