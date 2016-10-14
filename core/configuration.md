@@ -28,6 +28,12 @@ api_platform:
 
     # Enable the Nelmio Api doc integration.
     enable_nelmio_api_doc: false
+
+    # Map exceptions to HTTP status codes
+    exception_to_status:
+        Symfony\Component\Serializer\Exception\ExceptionInterface: 400 # with a status code
+        ApiPlatform\Core\Exception\InvalidArgumentException: 'HTTP_BAD_REQUEST' # or with a constant defined in the 'Symfony\Component\HttpFoundation\Response' class
+
     collection:
 
         # The default order of results.
