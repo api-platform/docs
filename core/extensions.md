@@ -2,23 +2,18 @@
 
 API Platform Core provides a system to extend queries on items and collections.
 
-Extensions are specific to Doctrine, and therefore, the Doctrine ORM support must be enabled to use this feature.
-If you use custom providers it's up to you to implement your own extension system or not.
+Extensions are specific to Doctrine, and therefore, the Doctrine ORM support must be enabled to use this feature. If you use custom providers it's up to you to implement your own extension system or not.
 
 ## Custom Extension
 
-Adding an extension is as easy as registering a service in your `app/config/services.yml` file and create the class you need.
+Custom extensions must implement the `ApiPlatform\Core\Bridge\Doctrine\Orm\Extension\QueryCollectionExtensionInterface` and / or the `ApiPlatform\Core\Bridge\Doctrine\Orm\Extension\QueryItemExtensionInterface` interfaces, to be run when querying for a collection of items and when querying for an item respectively.
 
-Custom extension must implement the `ApiPlatform\Core\Bridge\Doctrine\Orm\Extension\QueryCollectionExtensionInterface`
-and / or the `ApiPlatform\Core\Bridge\Doctrine\Orm\Extension\QueryItemExtensionInterface`
-interfaces, depending if you are asking for a collection of items or just an item.
-
-If you use [custom data providers](data-providers.md), they must support extensions and be aware of active extensions to work
-properly.
+If you use [custom data providers](data-providers.md), they must support extensions and be aware of active extensions to work properly.
 
 ## Example
 
 In the following example, we will see how to always get the offers owned by the current user. We will set up an exception, whenever the user has the `ROLE_ADMIN`.
+
 Given these two entities:
 
 ```php
@@ -147,19 +142,13 @@ services:
             - { name: api_platform.doctrine.orm.query_extension.item }
 ```
 
-Thanks to the `api_platform.doctrine.orm.query_extension.collection` tag, API Platform will register this service as a collection extension.
-The `api_platform.doctrine.orm.query_extension.item` do the same thing for items.
+Thanks to the `api_platform.doctrine.orm.query_extension.collection` tag, API Platform will register this service as a collection extension. The `api_platform.doctrine.orm.query_extension.item` do the same thing for items.
 
-Notice the priority level for the `api_platform.doctrine.orm.query_extension.collection` tag.
-When an extension implements the `ApiPlatform\Core\Bridge\Doctrine\Orm\Extension\QueryResultCollectionExtensionInterface` or the `ApiPlatform\Core\Bridge\Doctrine\Orm\Extension\QueryResultItemExtensionInterface` interface to return results by itself,
-any lower priority extension will not be executed.
-Because the pagination is enabled by default with a priority of 8, the priority of the `app.doctrine.orm.query_extension.current_user` service must be at least 9 to ensure its execution.
+Notice the priority level for the `api_platform.doctrine.orm.query_extension.collection` tag. When an extension implements the `ApiPlatform\Core\Bridge\Doctrine\Orm\Extension\QueryResultCollectionExtensionInterface` or the `ApiPlatform\Core\Bridge\Doctrine\Orm\Extension\QueryResultItemExtensionInterface` interface to return results by itself, any lower priority extension will not be executed. Because the pagination is enabled by default with a priority of 8, the priority of the `app.doctrine.orm.query_extension.current_user` service must be at least 9 to ensure its execution.
 
 ### Note
 
-This example adds a WHERE condition only when a fully authenticated user without ROLE_ADMIN tries to access to a resource.
-That mean it return without restriction any item or collection for every other user.
-You need to ensure that your user is authenticated to access the two endpoints.
+This example adds a WHERE condition only when a fully authenticated user without ROLE_ADMIN tries to access to a resource. That mean it return without restriction any item or collection for every other user. You need to ensure that your user is authenticated to access the two endpoints.
 
 A way of doing it, is with the access control :
 
