@@ -2,7 +2,7 @@
 
 ## Installing API Platform Core
 
-If you are starting a new project, the easiest way to get API Platform up is to install the [API Platform Standard Edition](../distribution/api.md).
+If you are starting a new project, the easiest way to get API Platform up is to install the [API Platform Standard Edition](../distribution/index.md).
 It ships with the API Platform Core library integrated with [the Symfony framework](https://symfony.com), [the schema generator](../schema-generator/),
 [Doctrine ORM](www.doctrine-project.org), [NelmioApiDocBundle](https://github.com/nelmio/NelmioApiDocBundle), [NelmioCorsBundle](https://github.com/nelmio/NelmioCorsBundle)
 and [Behat](http://behat.org).
