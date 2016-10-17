@@ -146,22 +146,17 @@ Thanks to the `api_platform.doctrine.orm.query_extension.collection` tag, API Pl
 
 Notice the priority level for the `api_platform.doctrine.orm.query_extension.collection` tag. When an extension implements the `ApiPlatform\Core\Bridge\Doctrine\Orm\Extension\QueryResultCollectionExtensionInterface` or the `ApiPlatform\Core\Bridge\Doctrine\Orm\Extension\QueryResultItemExtensionInterface` interface to return results by itself, any lower priority extension will not be executed. Because the pagination is enabled by default with a priority of 8, the priority of the `app.doctrine.orm.query_extension.current_user` service must be at least 9 to ensure its execution.
 
-### Note
+### Blocking Anonymous Users
 
-This example adds a WHERE condition only when a fully authenticated user without ROLE_ADMIN tries to access to a resource. That mean it return without restriction any item or collection for every other user. You need to ensure that your user is authenticated to access the two endpoints.
+This example adds a `WHERE` clause condition only when a fully authenticated user without `ROLE_ADMIN` tries to access to a resource. It means that anonymous users will be able to access to all data. To prevent this potential security issue, the API must ensure that the current user is authenticated.
 
-A way of doing it, is with the access control :
+To secure the access to endpoints, use the following access control rule:
 
 ```yaml
 # app/config/security.yml
 
 security:
     # ...
-
-    firewalls:
-        # ...
-        default:
-            # ...
 
     access_control:
         # ...
