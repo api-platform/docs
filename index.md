@@ -93,5 +93,5 @@
 ## Extra
 
 1. [The project's philosophy](philosophy.md)
-1. [Contribution guide](https://github.com/api-platform/api-platform/blob/master/CONTRIBUTING.md)
+2. [Contribution guide](https://github.com/api-platform/api-platform/blob/master/CONTRIBUTING.md)
 3. [Contributor Code Of Conduct](conduct.md)
