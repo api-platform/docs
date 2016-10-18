@@ -316,6 +316,7 @@ namespace AppBundle\Serializer;
 use ApiPlatform\Core\Serializer\SerializerContextBuilderInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
+use AppBundle\Entity\Book;
 
 final class BookContextBuilder implements SerializerContextBuilderInterface
 {
@@ -331,7 +332,9 @@ final class BookContextBuilder implements SerializerContextBuilderInterface
     public function createFromRequest(Request $request, bool $normalization, array $extractedAttributes = null) : array
     {
         $context = $this->decorated->createFromRequest($request, $normalization, $extractedAttributes);
-        if ($this->authorizationChecker->isGranted('ROLE_ADMIN') && false === $normalization) {
+        $subject = $request->attributes->get('data');
+        
+        if ($subject instanceof Book && $this->authorizationChecker->isGranted('ROLE_ADMIN') && false === $normalization) {
             $context['groups'][] = 'admin_input';
         }
 
@@ -340,7 +343,7 @@ final class BookContextBuilder implements SerializerContextBuilderInterface
 }
 ```
 
-If the user has `ROLE_ADMIN` permission, `admin_input` group will be dynamically added to the denormalization context.
+If the user has `ROLE_ADMIN` permission and the subject is an instance of Book, `admin_input` group will be dynamically added to the denormalization context.
 The variable `$normalization` lets you check whether the context is for normalization (if true) or denormalization.
 
 ## Name Conversion
