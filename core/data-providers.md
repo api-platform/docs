@@ -113,5 +113,5 @@ services:
             -  { name: 'api_platform.item_data_provider' }
 ```
 
-Previous chapter: [Extending JSON-LD context](core/extending-jsonld-context.md)
+Previous chapter: [Extending JSON-LD context](extending-jsonld-context.md)
 Next chapter: [Security](security.md)
