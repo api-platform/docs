@@ -345,8 +345,8 @@ You just saved a new book resource through the bookshop API! API Platform automa
 an instance of the corresponding PHP entity class and uses Doctrine ORM to persist it in the database.
 
 By default, the API supports `GET` (retrieve, on collections and items), `POST` (create), `PUT` (update) and `DELETE` (self-explaining)
-HTTP methods. You are not limited to the built-in operations. You can [add new custom operations](../core/operations.md#enabling-and-disabling-operations)
-(`PATCH` operations, sub-resources...) or [disable the ones you don't want](../core/operations.md#creating-custom-operations-and-controllers).
+HTTP methods. You are not limited to the built-in operations. You can [add new custom operations](../core/operations.md#creating-custom-operations-and-controllers)
+(`PATCH` operations, sub-resources...) or [disable the ones you don't want](../core/operations.md#enabling-and-disabling-operations).
 
 Try the `GET` operation on the collection. The book we added appears. When the collection will contain more than 30 items,
 the pagination will automatically show up, [and this is entirely configurable](../core/pagination.md). You may be interested
