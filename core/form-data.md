@@ -110,3 +110,6 @@ class AppBundle extends Bundle
 }
 
 ```
+
+Previous chapter: [Operation Path Naming](operation-path-naming.md)
+Next chapter: [FOSUserBundle Integration](fosuser-bundle.md)
