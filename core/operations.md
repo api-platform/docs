@@ -336,6 +336,6 @@ book_special:
         _api_item_operation_name: 'special'
 ```
 
-Previous chapter: [NelmioApiDocBundle integration](nelmio-api-doc.md)
+Previous chapter: [Configuration](configuration.md)
 
 Next chapter: [Filters](filters.md)
