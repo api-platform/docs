@@ -337,4 +337,5 @@ book_special:
 ```
 
 Previous chapter: [NelmioApiDocBundle integration](nelmio-api-doc.md)
+
 Next chapter: [Filters](filters.md)

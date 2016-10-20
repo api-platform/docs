@@ -114,4 +114,5 @@ services:
 ```
 
 Previous chapter: [Extending JSON-LD context](extending-jsonld-context.md)
+
 Next chapter: [Security](security.md)

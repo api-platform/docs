@@ -53,4 +53,5 @@ as `format` parameter during the deserialization process. Then it will return th
 type using its built-in responder.
 
 Previous chapter: [The Event System](events.md)
+
 Next chapter: [Using External JSON-LD Vocabularies](external-vocabularies.md)

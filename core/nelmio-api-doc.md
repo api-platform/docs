@@ -30,4 +30,5 @@ Please note that NelmioApiDocBundle has a sandbox limitation where you cannot pa
 use it to deserialize nested objects.
 
 Previous chapter: [Configuration](configuration.md)
+
 Next chapter: [Operations](operations.md)

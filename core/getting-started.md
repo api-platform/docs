@@ -210,4 +210,5 @@ Interact with the API using a REST client (we recommend [Postman](https://www.ge
 a look at the usage examples in [the `features` directory](/features/).
 
 Previous chapter: [Introduction](index.md)
+
 Next chapter: [Configuration](configuration.md)

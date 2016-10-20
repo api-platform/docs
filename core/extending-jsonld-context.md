@@ -65,4 +65,5 @@ The generated context will now have your custom attributes set:
 Note that you do not have to provide the `@id` attribute, if you do not provide an `@id` attribute, the value from `iri` will be taken.
 
 Previous chapter: [Using External JSON-LD Vocabularies](external-vocabularies.md)
+
 Next chapter: [Data Providers](data-providers.md)

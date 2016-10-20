@@ -446,4 +446,5 @@ class Book
 ```
 
 Previous chapter: [Filters](filters.md)
+
 Next chapter: [Validation](validation.md)

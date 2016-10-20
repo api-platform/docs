@@ -752,4 +752,5 @@ Usage:
     bin/schema extract-cardinalities
 
 Previous chapter: [Introduction](index.md)
+
 Next chapter: [Configuration](configuration.md)
