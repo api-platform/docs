@@ -168,4 +168,5 @@ To see your logs, run `heroku logs --tail`.
 Can it be easier? Yes it can: we are preparing an API Platform edition preconfigured to run on Heroku! Stay tuned.
 
 Previous chapter: [Introduction](index.md)
+
 Next chapter: [Using API Platform with Docker](docker.md)

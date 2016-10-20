@@ -66,4 +66,5 @@ api_platform:
 ```
 
 Previous chapter: [Getting Started](getting-started.md)
+
 Next chapter: [NelmioApiDocBundle integration](nelmio-api-doc.md)

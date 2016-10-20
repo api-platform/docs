@@ -58,4 +58,5 @@ The generated JSON for products and the related context document will now use ex
 An extended list of existing open vocabularies is available on [the Linked Open Vocabularies (LOV) database](http://lov.okfn.org/dataset/lov/).
 
 Previous chapter: [Content Negotiation](content-negotiation.md)
+
 Next chapter: [Extending JSON-LD context](extending-jsonld-context.md)

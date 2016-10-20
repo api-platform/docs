@@ -10,4 +10,5 @@ It is also possible to use the [event system](events.md) for more advanced logic
 if you really need to.
 
 Previous chapter: [Data Providers](data-providers.md)
+
 Next chapter: [Performance](performance.md)

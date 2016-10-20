@@ -91,4 +91,5 @@ If you don't have DunglasActionBundle installed, [the subscriber must be registe
 are also available (if you use it) if you want to hook at the object lifecycle events.
 
 Previous chapter: [Pagination](pagination.md)
+
 Next chapter: [Content Negotiation](content-negotiation.md)

@@ -55,4 +55,5 @@ If you need to dynamically determine which validation groups to use for an entit
 argument, and should return an array of group names or a [group sequence](http://symfony.com/doc/current/book/validation.html#group-sequence).
 
 Previous chapter: [Serialization Groups and Relations](serialization-groups-and-relations.md)
+
 Next chapter: [Pagination](pagination.md)
