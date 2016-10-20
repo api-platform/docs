@@ -32,7 +32,7 @@
     2. [Overriding Extraction of Properties from the Request](core/filters.md#overriding-extraction-of-properties-from-the-request)
 6. [Extensions](core/extensions.md)
    1. [Custom Extension](core/extensions.md#custom-extension)
-   2. [Filter upon the current user](core/extensions.md#filter-upon-the-current-user)
+   2. [Filter upon the current user](core/extensions.md#example)
 7. [Serialization Groups and Relations](core/serialization-groups-and-relations.md)
   1. [Configuration](core/serialization-groups-and-relations.md#configuration)
   2. [Using Different Serialization Groups per Operation](core/serialization-groups-and-relations.md#embedding-relations)
