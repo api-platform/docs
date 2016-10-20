@@ -39,10 +39,6 @@ API Platform is shipped with a [Docker](https://docker.com) setup that makes it 
 environment up and running. This setup contains an image pre-configured with PHP 7, Apache and everything needed to run API
 Platform and a MySQL image to host the database.
 
-As an alternative to Docker, API Platform can also be installed using [Composer](https://getcomposer.org/):
-
-    $ composer create-project api-platform/api-platform bookshop-api
-
 Start by [downloading the API Platform Standard Edition archive](https://api-platform.com/download) and extract its content.
 The resulting directory contains an empty API Platform project structure. You will add your own code and configuration inside
 it.
@@ -87,6 +83,10 @@ API Platform even supports using several persistence systems together in the sam
 However, Doctrine ORM is definitely the easiest way to persist and query data in an API Platform project thanks to a bridge
 included in the Standard Edition. This Doctrine ORM bridge is optimized for performance and development convenience. Doctrine
 ORM and its bridge supports major RDBMS including MySQL, PostgreSQL, SQLite, SQL Server and MariaDB.
+
+Note: Instead of using Docker, API Platform can also be installed on the local machine using [Composer](https://getcomposer.org/):
+
+    $ composer create-project api-platform/api-platform bookshop-api
 
 Open `http://localhost` with your favorite web browser:
 
