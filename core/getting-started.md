@@ -4,7 +4,7 @@
 
 If you are starting a new project, the easiest way to get API Platform up is to install the [API Platform Standard Edition](../distribution/index.md).
 It ships with the API Platform Core library integrated with [the Symfony framework](https://symfony.com), [the schema generator](../schema-generator/),
-[Doctrine ORM](www.doctrine-project.org), [NelmioApiDocBundle](https://github.com/nelmio/NelmioApiDocBundle), [NelmioCorsBundle](https://github.com/nelmio/NelmioCorsBundle)
+[Doctrine ORM](http://www.doctrine-project.org), [NelmioApiDocBundle](https://github.com/nelmio/NelmioApiDocBundle), [NelmioCorsBundle](https://github.com/nelmio/NelmioCorsBundle)
 and [Behat](http://behat.org).
 Basically, it is a Symfony edition packaged with the best tools to develop a REST API and sensitive default settings.
 
@@ -46,7 +46,7 @@ There is no mandatory configuration options although [many settings are availabl
 
 ## Before Reading this Documentation
 
-If you haven't read it already, take a look at [the "Creating your first API with API Platform, in a few minutes" guide](../distribution/getting-started.md).
+If you haven't read it already, take a look at [the "Creating your first API with API Platform, in a few minutes" guide](../distribution/index.md).
 This tutorial covers basic concepts required to understand how API Platform works including how it implements the REST pattern
 and what [JSON-LD](http://json-ld.org/) and [Hydra](http://www.hydra-cg.com/) formats are.
 
@@ -143,7 +143,7 @@ web API.
 
 If you are familiar with the Symfony ecosystem, you noticed that entity classes are also mapped with Doctrine ORM annotations
 and validation constraints from [the Symfony Validator Component](http://symfony.com/doc/current/book/validation.html).
-This isn't mandatory. You can use [your preferred persistence](data-providers.md) and [validation](the-event-system.md) systems.
+This isn't mandatory. You can use [your preferred persistence](data-providers.md) and [validation](validation.md) systems.
 However, API Platform Core has built-in support for those library and is able to use them without requiring any specific
 code or configuration to automatically persist and validate your data. They are good default and we encourage you to use
 them unless you know what you are doing.
@@ -207,7 +207,7 @@ Run the Symfony app (`bin/console server:run`) and browse the API entrypoint at 
 
 Interact with the API using a REST client (we recommend [Postman](https://www.getpostman.com/)) or an Hydra aware application
 (you should give a try to [Hydra Console](https://github.com/lanthaler/HydraConsole)). Take
-a look at the usage examples in [the `features` directory](/features/).
+a look at the usage examples in [the `features` directory](https://github.com/api-platform/api-platform/tree/master/features).
 
 Previous chapter: [Introduction](index.md)
 
