@@ -166,4 +166,4 @@ security:
 
 Previous chapter: [Data Providers](data-providers.md)
 
-Next chapter: [Security](core/security.md)
+Next chapter: [Security](security.md)
