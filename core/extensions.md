@@ -164,6 +164,6 @@ security:
         - { path: ^/users, roles: IS_AUTHENTICATED_FULLY }
 ```
 
-Previous chapter: [Data Providers](core/data-providers.md)
+Previous chapter: [Data Providers](data-providers.md)
 
 Next chapter: [Security](core/security.md)
