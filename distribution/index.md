@@ -373,7 +373,7 @@ Now, add a review for this book using the `POST` operation for the `Review` reso
     "rating": 5,
     "body": "Interesting book!",
     "author": "Kévin",
-    "publicationDate": "September 21, 2016",
+    "publicationDate": "September 21, 2016"
 }
 ```
 
