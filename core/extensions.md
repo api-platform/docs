@@ -164,6 +164,6 @@ security:
         - { path: ^/users, roles: IS_AUTHENTICATED_FULLY }
 ```
 
-Previous chapter: [Filters](filters.md)
+Previous chapter: [Data Providers](core/data-providers.md)
 
-Next chapter: [Serialization Groups and Relations](serialization-groups-and-relations.md)
+Next chapter: [Security](core/security.md)

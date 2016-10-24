@@ -9,6 +9,6 @@ For instance, if you wish to restrict the access of some endpoints, you can use 
 It is also possible to use the [event system](events.md) for more advanced logic or even [custom actions](operations.md#creating-custom-operations-and-controllers)
 if you really need to.
 
-Previous chapter: [Data Providers](data-providers.md)
+Previous chapter: [Extensions](core/extensions.md)
 
 Next chapter: [Performance](performance.md)

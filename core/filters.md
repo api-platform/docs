@@ -402,4 +402,4 @@ services:
 
 Previous chapter: [Operations](operations.md)
 
-Next chapter: [Extensions](extensions.md)
+Next chapter: [Serialization Groups and Relations](core/serialization-groups-and-relations.md)

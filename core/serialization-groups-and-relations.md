@@ -445,6 +445,6 @@ class Book
 }
 ```
 
-Previous chapter: [Extensions](extensions.md)
+Previous chapter: [Filters](core/filters.md)
 
 Next chapter: [Validation](validation.md)
