@@ -105,7 +105,7 @@ If you want to access the raw data, you have two alternatives:
 
 * Add the correct `Accept` header (or don't set any `Accept` header at all and API Platform will default to JSON-LD) - preferred
   when writing API clients
-* Add the format format you want as the extension of the resource - for debug purpose only
+* Add the format you want as the extension of the resource - for debug purpose only
 
 For instance, go to `http://localhost/foos.jsonld` to retrieve the list of `Foo` resources in JSON-LD or `http://localhost/foos.json`
 to retrieve data in raw JSON.
