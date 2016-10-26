@@ -30,7 +30,7 @@ class Book
     private $name;
 
     /**
-     * @Assert\NotBull(groups={"b"})
+     * @Assert\NotNull(groups={"b"})
      */
     private $author;
 
