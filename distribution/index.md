@@ -39,7 +39,7 @@ API Platform is shipped with a [Docker](https://docker.com) setup that makes it 
 environment up and running. This setup contains an image pre-configured with PHP 7, Apache and everything needed to run API
 Platform and a MySQL image to host the database.
 
-Start by [downloading the API Platform Standard Edition archive](https://api-platform.com/download) and extract its content.
+Start by [downloading the API Platform Standard Edition archive](https://api.github.com/repos/api-platform/api-platform/zipball) and extract its content.
 The resulting directory contains an empty API Platform project structure. You will add your own code and configuration inside
 it.
 Then, if you do not already have Docker on your computer, [it's the right time to install it](https://www.docker.com/products/overview#/install_the_platform).
