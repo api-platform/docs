@@ -31,4 +31,4 @@ use it to deserialize nested objects.
 
 Previous chapter: [FOSUserBundle Integration](fosuser-bundle.md)
 
-Next chapter: [AngularJS Integration](angularjs-integration.md)
+Next chapter: [LexikJwtAuthenticationBundle integration](lexic-jwt-authentication-bundle.md)

@@ -77,7 +77,8 @@
 20. [FOSUserBundle Integration](core/fosuser-bundle.md)
   1. [Creating a `User` Entity with Serialization Groups](core/fosuser-bundle.md#creating-a-user-entity-with-serialization-groups)
 21. [NelmioApiDocBundle integration](core/nelmio-api-doc.md)
-22. [AngularJS Integration](core/angularjs-integration.md)
+22. [LexikJwtAuthenticationBundle integration](core/lexic-jwt-authentication-bundle.md/)
+23. [AngularJS Integration](core/angularjs-integration.md)
   1. [Restangular](core/angularjs-integration.md#restangular)
   2. [ng-admin](core/angularjs-integration.md#ng-admin)
 
