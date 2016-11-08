@@ -1,19 +1,29 @@
-## Jwt Authentification
+# JWT Authentification
 
-Api-Platform is fully working with [LexikJWTAuthenticationBundle](https://github.com/lexik/LexikJWTAuthenticationBundle).
+
+[JWT](https://jwt.io/) is a JSON based way to create access tokens in order to identify the client who wants to access to private information.
+
+This is an exemple in JS that you can use, store the token wherever you want to :
+
+1. POST /login_check
+2. localStorage.setItem('token', response.token)
+3. headers.add('Authorization', 'Bearer ' + localStorage.getItem(token))
+
+API Platform is fully working with [LexikJWTAuthenticationBundle](https://github.com/lexik/LexikJWTAuthenticationBundle).
 
 In order to install [the bundle please follow their documentation](https://github.com/lexik/LexikJWTAuthenticationBundle/blob/master/Resources/doc/index.md).
 
-Here is a full exemple of a working configuration using symfony guard and a Person entity:
+Here is a full exemple of a working configuration with a `Person` entity:
 
 ```yml
+# app/config/security.yml
 security:
     encoders:
         AppBundle\Entity\Person: bcrypt
 
     role_hierarchy:
-        ROLE_FOO:      ROLE_USER
-        ROLE_ADMIN:        ROLE_FOO
+        ROLE_FOO:   ROLE_USER
+        ROLE_ADMIN: ROLE_FOO
 
     providers:
         app:
@@ -50,6 +60,6 @@ security:
         - { path: ^/, roles: [ ROLE_FOO ] }
 ```       
 
-Previous chapter: [NelmioApiDocBundle integration](nelmio-api-doc.md)
+Previous chapter: [FOSUserBundle Integration](fosuser-bundle.md)
 
-Next chapter: [AngularJS Integration](angularjs-integration.md)
+Next chapter: [NelmioApiDocBundle integration](nelmio-api-doc.md)

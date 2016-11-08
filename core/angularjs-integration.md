@@ -96,6 +96,6 @@ nga.configure(admin);
 
 You can look at what we have done as another exemple [api-platform/admin](https://github.com/api-platform/admin).
 
-Previous chapter:[LexikJwtAuthenticationBundle integration](lexic-jwt-authentication-bundle.md)
+Previous chapter: [NelmioApiDocBundle integration](core/nelmio-api-doc.md)
 
 Next chapter: [Schema Generator: introduction](../schema-generator/index.md)
