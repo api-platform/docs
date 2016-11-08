@@ -156,7 +156,7 @@ Feature: Manage books and their reviews
 
 The API Platform flavor of Behat also comes with a temporary SQLite database dedicated to tests. It works out of the box.
 
-Just run `docker-compose run web vendor/bin/behat` and everything should be green:
+Just run `docker-compose run --rm web vendor/bin/behat` and everything should be green:
 
 Your Linked Data API is now specified and tested thanks to Behat!
 
