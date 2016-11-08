@@ -5,18 +5,22 @@ It leverages the [`willdurand/negotiation`](https://github.com/willdurand/Negoti
 
 By default, only the [JSON-LD](https://json-ld.org) format is enabled. However API Platform Core supports for formats included
 in the underlying [Symfony Serializer component](http://symfony.com/doc/current/components/serializer.html) can be enabled
-through the configuration. It supports XML, raw JSON and CSV (since Symfony 3.2).
+through the configuration. It supports XML, YAML, raw JSON and CSV (since Symfony 3.2).
+
+Both XML and JSON formats are experimental and there are no assurance that we will not break them.
 
 API Platform Core will automatically detect the best resolving format depending on:
 
 * enabled formats (link to docs for this / see below)
 * the `Accept` HTTP header
+* adding the format name at the end of the url ( `.json`, `.jsonld`, `.xml`, `.jsonhal`, `.csv`, `.yaml`, `.html`)  will be the same as adding the `Accept` header
 
 If the client requested format is not supported by the server, the response format will be the first format defined in the `formats` configuration key (see below).
 An example using the builtin XML support is available in Behat specs: https://github.com/api-platform/core/blob/master/features/content_negotiation.feature
 
-The API Platform content negotiation system is extensible. Support for other formats (such as [HAL](http://stateless.co/hal_specification.html)
-or [JSONAPI](http://jsonapi.org/))
+The format [HAL](http://stateless.co/hal_specification.html) has been added to API Platform.
+
+The API Platform content negotiation system is extensible. Support for other formats (such as [JSONAPI](http://jsonapi.org/))
 can be added by [creating and registering appropriate encoders and, sometimes, normalizers](). Adding support for other
 standard hypermedia formats upstream is very welcome. Don't hesitate to contribute by adding your encoders and normalizers
 to API Platform Core.
@@ -33,8 +37,11 @@ and of a custom format called `myformat` and having `application/vnd.myformat` a
 api_platform:
     # ...
     formats:
+        json:     ['application/json']
         jsonld:   ['application/ld+json']
         xml:      ['application/xml', 'text/xml']
+        jsonhal:  ['application/hal+json']
+        html:     ['text/html']
         myformat: ['application/vnd.myformat']
 ```
 
