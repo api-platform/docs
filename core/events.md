@@ -14,18 +14,18 @@ of the request lifecycle.
 
 API Platform comes with a (class)[https://github.com/api-platform/core/blob/master/src/EventListener/EventPriorities.php] `ApiPlatform\Core\EventListener\EventPriorities` that declare the events priorities by using constant
 
-Constant           | Priority |
--------------------|----------|
-`PRE_READ`         | 5        |
-`POST_READ`        | 3        |
-`PRE_DESERIALIZE`  | 3        |
-`POST_DESERIALIZE` | 1        |     
-`PRE_VALIDATE`     | 65       |     
-`POST_VALIDATE`    | 63       |     
-`PRE_WRITE`        | 33       |     
-`POST_WRITE`       | 31       |     
-`PRE_RESPOND`      | 9        |     
-`POST_RESPOND`     | 7        |     
+Constant           | Event            | Priority |
+-------------------|------------------|----------|
+`PRE_READ`         | `kernel.request` | 5        |
+`POST_READ`        | `kernel.request` | 3        |
+`PRE_DESERIALIZE`  | `kernel.request` | 3        |
+`POST_DESERIALIZE` | `kernel.request` | 1        |
+`PRE_VALIDATE`     | `kernel.view`    | 65       |
+`POST_VALIDATE`    | `kernel.view`    | 63       |
+`PRE_WRITE`        | `kernel.view`    | 33       |
+`POST_WRITE`       | `kernel.view`    | 31       |
+`PRE_RESPOND`      | `kernel.view`    | 9        |
+`POST_RESPOND`     | `kernel.view`    | 7        |
 
 Built-in event listeners are:
 
