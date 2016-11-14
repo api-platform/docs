@@ -52,7 +52,7 @@ Apache and MySQL using [Docker Compose](https://docs.docker.com/compose/):
 The first time you start the containers, Docker downloads and builds images for you. It will take some time, but don't worry,
 this is done only once. Starting servers will then be lightning fast.
 
-In order to see container's logs you will have to do 
+In order to see container's logs you will have to do:
 
     $ docker-compose logs -f # follow the logs
 
@@ -67,7 +67,7 @@ almost everything.
 The API Platform Standard Edition comes with a dummy entity for test purpose: `src/AppBundle/Entity/Foo.php`. We will remove
 it later, but for now, create the related database table:
 
-    docker-compose exec web bin/console doctrine:schema:create
+   $ docker-compose exec web bin/console doctrine:schema:create
 
 The `web` container is where your project stands. Prefixing a command by `docker-compose exec web` allows to execute the
 given command in the container. You may want [to create an alias](http://www.linfo.org/alias.html) to easily run commands
