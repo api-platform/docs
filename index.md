@@ -76,7 +76,7 @@
 19. [Accept `application/x-www-form-urlencoded` Form Data] (core/form-data.md)
 20. [FOSUserBundle Integration](core/fosuser-bundle.md)
   1. [Creating a `User` Entity with Serialization Groups](core/fosuser-bundle.md#creating-a-user-entity-with-serialization-groups)
-21. [Adding a JWT authentication using LexikJwtAuthenticationBundle](core/jwt.md)  
+21. [Adding a JWT authentication using LexikJWTAuthenticationBundle](core/jwt.md)  
 22. [NelmioApiDocBundle integration](core/nelmio-api-doc.md)
 23. [AngularJS Integration](core/angularjs-integration.md)
   1. [Restangular](core/angularjs-integration.md#restangular)

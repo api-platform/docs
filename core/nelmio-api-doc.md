@@ -29,6 +29,6 @@ nelmio_api_doc:
 Please note that NelmioApiDocBundle has a sandbox limitation where you cannot pass a JSON array as parameter, so you cannot
 use it to deserialize nested objects.
 
-Previous chapter: [Adding a JWT authentication using LexikJwtAuthenticationBundle](jwt.md)
+Previous chapter: [Adding a JWT authentication using `LexikJWTAuthenticationBundle`](jwt.md)
 
 Next chapter: [AngularJS Integration](angularjs-integration.md)
