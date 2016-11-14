@@ -47,10 +47,14 @@ Then, if you do not already have Docker on your computer, [it's the right time t
 Open a terminal, and navigate to the directory containing your project skeleton. Then, run the following command to start
 Apache and MySQL using [Docker Compose](https://docs.docker.com/compose/):
 
-    $ docker-compose up
+    $ docker-compose up -d # Running in detached mode
 
 The first time you start the containers, Docker downloads and builds images for you. It will take some time, but don't worry,
 this is done only once. Starting servers will then be lightning fast.
+
+In order to see container's logs you will have to do:
+
+    $ docker-compose logs -f # follow the logs
 
 Project's files are automatically shared between your local host machine and the container thanks to a pre-configured [Docker
 volume](https://docs.docker.com/engine/tutorials/dockervolumes/). It means that you can edit files of your project locally
@@ -60,19 +64,14 @@ with its awesome [Symfony](https://confluence.jetbrains.com/display/PhpStorm/Get
 and [PHP annotations](https://plugins.jetbrains.com/plugin/7320) plugins. Give them a try, you'll got auto-completion for
 almost everything.
 
-Now, in another shell, install the project's PHP dependencies:
-
-    $ docker-compose run --rm web composer install --no-interaction
-
-The `web` container is where your project stands. Prefixing a command by `docker-compose run --rm web` allows to execute the
-given command in the container. You may want [to create an alias](http://www.linfo.org/alias.html) to easily run commands
-inside the container. Here, we are installing libraries required by the project using the `composer` tool included in the
-API Platform image.
-
 The API Platform Standard Edition comes with a dummy entity for test purpose: `src/AppBundle/Entity/Foo.php`. We will remove
 it later, but for now, create the related database table:
 
-    docker-compose run --rm web bin/console doctrine:schema:create
+   $ docker-compose exec web bin/console doctrine:schema:create
+
+The `web` container is where your project stands. Prefixing a command by `docker-compose exec web` allows to execute the
+given command in the container. You may want [to create an alias](http://www.linfo.org/alias.html) to easily run commands
+inside the container.
 
 If you're used to the PHP ecosystem, you probably guessed that this test entity uses the industry-leading [Doctrine ORM](http://www.doctrine-project.org/projects/orm.html)
 library as persistence system.
@@ -270,12 +269,12 @@ or in Kévin's book "[Persistence in PHP with the Doctrine ORM](https://www.amaz
 As we used private properties (but API Platform as well as Doctrine can also work with public ones), we need to create the
 corresponding accessor methods. Run the following command or use the code generation feature of your IDE to generate them:
 
-    $ docker-compose run --rm web bin/console doctrine:generate:entities AppBundle
+    $ docker-compose exec web bin/console doctrine:generate:entities AppBundle
 
 Then, delete the file `src/AppBundle/Entity/Foo.php`, this demo entity isn't useful anymore.
 Finally, tell Doctrine to sync the database's tables structure with our new data model:
 
-    $ docker-compose run --rm web bin/console doctrine:schema:update --force
+    $ docker-compose exec web bin/console doctrine:schema:update --force
 
 We now have a working data model that you can persist and query. To create an API endpoint with CRUD capabilities corresponding
 to an entity class, we just have to mark it with an annotation called `@ApiResource`:
