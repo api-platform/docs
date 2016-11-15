@@ -130,7 +130,7 @@ class Book
 ```
 
 ```yaml
-# src/AppBundle/Resources/config/resources.yml
+# src/AppBundle/Resources/config/api_resources.yml
 product:
     class: 'AppBundle\Entity\Book'
     itemOperations:
@@ -144,7 +144,7 @@ product:
 ```
 
 ```xml
-<!-- src/Acme/BlogBundle/Resources/config/resources.xml -->
+<!-- src/Acme/BlogBundle/Resources/config/api_resources.xml -->
 <?xml version="1.0" encoding="UTF-8" ?>
 <resources>
     <resource class="AppBundle\Entity\Book">
