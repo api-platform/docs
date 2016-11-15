@@ -67,7 +67,7 @@ almost everything.
 The API Platform Standard Edition comes with a dummy entity for test purpose: `src/AppBundle/Entity/Foo.php`. We will remove
 it later, but for now, create the related database table:
 
-   $ docker-compose exec web bin/console doctrine:schema:create
+    $ docker-compose exec web bin/console doctrine:schema:create
 
 The `web` container is where your project stands. Prefixing a command by `docker-compose exec web` allows to execute the
 given command in the container. You may want [to create an alias](http://www.linfo.org/alias.html) to easily run commands
