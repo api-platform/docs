@@ -113,7 +113,7 @@ namespace AppBundle\Entity;
 use ApiPlatform\Core\Annotation\ApiResource;
 
 /**
- * @ApiResource(attributes={"filters"={"offer.search", "offer.date"}})
+ * @ApiResource(attributes={"filters"={"offer.date"}})
  */
 class Offer
 {
@@ -150,7 +150,7 @@ constant directly.
 
 ## Boolean Filter
 
-The boolean filter allow you to search on boolean fields and value.
+The boolean filter allows you to search on boolean fields and values.
 
 Syntax: `?property=[on|off|true|false|0|1]`
 
@@ -178,7 +178,7 @@ namespace AppBundle\Entity;
 use ApiPlatform\Core\Annotation\ApiResource;
 
 /**
- * @ApiResource(attributes={"filters"={"offer.search", "offer.date", "offer.boolean"}})
+ * @ApiResource(attributes={"filters"={"offer.boolean"}})
  */
 class Offer
 {
@@ -192,7 +192,7 @@ It will return all offers where `isAvailableGenericallyInMyCountry` equals `true
 
 ## Numeric Filter
 
-The boolean filter allow you to search on numeric fields and value.
+The numeric filter allows you to search on numeric fields and values.
 
 Syntax: `?property=int|bigint|decimal...`
 
@@ -218,7 +218,7 @@ namespace AppBundle\Entity;
 use ApiPlatform\Core\Annotation\ApiResource;
 
 /**
- * @ApiResource(attributes={"filters"={"offer.search", "offer.date", "offer.boolean", "offer.numeric"}})
+ * @ApiResource(attributes={"filters"={"offer.numeric"}})
  */
 final class Offer
 {
@@ -229,6 +229,49 @@ final class Offer
 Given that the collection endpoint is `/offers`, you can filter offers by boolean  with the following query: `/offers?sold=1`.
 
 It will return all offers with `sold` equals 1
+
+
+## Range Filter
+
+The range filter allows you to filter by a value Lower than, Greater than, Lower than or equal, Greater than or equal and between two values.
+
+Syntax: `?property[lt]|[gt]|[lte]|[gte]|[between]=value`
+
+Enable the filter:
+
+```yaml
+# app/config/services.yml
+
+services:
+    offer.numeric_filter:
+        parent:    'api_platform.doctrine.orm.range_filer'
+        arguments: [ { price: ~ } ]
+        tags:      [ { name: 'api_platform.filter', id: 'offer.range' } ]
+```
+
+```php
+<?php
+
+// src/AppBundle/Entity/Offer.php
+
+namespace AppBundle\Entity;
+
+use ApiPlatform\Core\Annotation\ApiResource;
+
+/**
+ * @ApiResource(attributes={"filters"={"offer.range"}})
+ */
+final class Offer
+{
+    // ...
+}
+```
+
+Given that the collection endpoint is `/offers`, you can filters the price with the following query: `/offers?price[between]=12.99..15.99`.
+
+It will return all offers with `price` between 12.99 and 15.99.
+
+You can filters offers by joining two value for example: `/offers?price[gt]=12.99&price[lt]=19.99`.
 
 ## Order Filter
 
@@ -258,7 +301,7 @@ namespace AppBundle\Entity;
 use ApiPlatform\Core\Annotation\ApiResource;
 
 /**
- * @ApiResource(attributes={"filters"={"offer.search", "offer.date", "offer.order"}})
+ * @ApiResource(attributes={"filters"={"offer.order"}})
  */
 class Offer
 {
