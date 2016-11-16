@@ -8,20 +8,29 @@ Here's the complete configuration of the Symfony bundle with including default v
 api_platform:
 
     # The title of the API.
-    title: ~ # Required
+    title: ''
 
     # The description of the API.
-    description: ~ # Required
+    description: ''
 
-    # The list of enabled formats. The first one will be the default.
-    supported_formats:
+    # The version of the API.
+    version: '0.0.0'
 
-        # Prototype
-        format:
-            mime_types: []
+    # Specify the default operation path resolver to use for generating resources operations path.
+    default_operation_path_resolver: 'api_platform.operation_path_resolver.underscore'
 
     # Specify a name converter to use.
-    name_converter: null
+    name_converter: ~
+
+    eager_loading:
+        # To enable or disable eager loading.
+        enabled: true
+
+        # Max number of joined relations before EagerLoading throws a RuntimeException.
+        max_joins: 30
+
+        # Force join on every relation. If disabled, it will only join relations having the EAGER fetch mode.
+        force_eager: true
 
     # Enable the FOSUserBundle integration.
     enable_fos_user: false
@@ -29,20 +38,20 @@ api_platform:
     # Enable the Nelmio Api doc integration.
     enable_nelmio_api_doc: false
 
-    # Map exceptions to HTTP status codes
-    exception_to_status:
-        Symfony\Component\Serializer\Exception\ExceptionInterface: 400 # with a status code
-        ApiPlatform\Core\Exception\InvalidArgumentException: 'HTTP_BAD_REQUEST' # or with a constant defined in the 'Symfony\Component\HttpFoundation\Response' class
+    # Enable the Swagger documentation and export.
+    enable_swagger: true
+
+    # Enable Swagger ui.
+    enable_swagger_ui: true
 
     collection:
-
         # The default order of results.
-        order: null
+        order: ~
 
         # The name of the query parameter to order results.
-        order_parameter_name:  order
-        pagination:
+        order_parameter_name: 'order'
 
+        pagination:
             # To enable or disable pagination for all resource collections by default.
             enabled: true
 
@@ -55,14 +64,50 @@ api_platform:
             # The default number of items per page.
             items_per_page: 30
 
+            # The maximum number of items per page.
+            maximum_items_per_page: ~
+
             # The default name of the parameter handling the page number.
-            page_parameter_name: page
+            page_parameter_name: 'page'
 
             # The name of the query parameter to enable or disable pagination.
-            enabled_parameter_name: pagination
+            enabled_parameter_name: 'pagination'
 
             # The name of the query parameter to set the number of items per page.
-            items_per_page_parameter_name: itemsPerPage
+            items_per_page_parameter_name: 'itemsPerPage'
+
+    # The list of exceptions mapped to their HTTP status code.
+    exception_to_status:
+        # With a status code.
+        Symfony\Component\Serializer\Exception\ExceptionInterface: 400
+
+        # Or with a constant defined in the 'Symfony\Component\HttpFoundation\Response' class.
+        ApiPlatform\Core\Exception\InvalidArgumentException: 'HTTP_BAD_REQUEST'
+
+        # ...
+
+    # The list of enabled formats. The first one will be the default.
+    formats:
+        jsonld:
+            mime_types: ['application/ld+json']
+
+        json:
+            mime_types: ['application/json']
+
+        html:
+            mime_types: ['text/html']
+
+        # ...
+
+    # The list of enabled error formats. The first one will be the default.
+    error_formats:
+        jsonproblem:
+            mime_types: ['application/problem+json']
+            
+        jsonld:
+            mime_types: ['application/ld+json']
+            
+        # ...
 ```
 
 Previous chapter: [Getting Started](getting-started.md)
