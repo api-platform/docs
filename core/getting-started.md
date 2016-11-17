@@ -187,11 +187,9 @@ As an alternative to annotations, you can map entity classes using XML or YAML:
 # src/AppBundle/Resources/config/api_resources.yml
 
 resources:
-    product:
-        class: 'AppBundle\Entity\Product'
-    offer:
-        class: 'AppBundle\Entity\Offer'
-        shortName: 'Offer' # optional        # optional
+    AppBundle\Entity\Product: ~
+    AppBundle\Entity\Offer:
+        shortName: 'Offer'                   # optional
         description: 'An offer from my shop' # optional
         iri: 'http://schema.org/Offer'       # optional
         attributes:                          # optional
