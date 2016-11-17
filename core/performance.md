@@ -29,6 +29,8 @@ database driver.
 
 ### Unserialized Properties Hydratation
 
+#### Query Hint
+
 Even though we're selecting only partial results (serialized properties) with Doctrine, it'll try to hydrate some
 relations with lazy joins (for example `OneToOne` relations). It's recommended to take a look at the Symfony Profiler,
 check what the generated SQL queries are doing in background and see if those may impact performance.
@@ -235,6 +237,166 @@ services:
         tags:
             - {name: api_platform.doctrine.orm.query_extension.item}
 ```
+
+#### Eager loading
+
+By default Doctrine comes with [lazy loading](http://doctrine-orm.readthedocs.io/en/latest/reference/working-with-objects.html#by-lazy-loading).
+Usually a killer time-saving feature and also a performance killer with large applications.
+
+Fortunately, Doctrine proposes another approach to remedy this problem: [eager loading](http://doctrine-orm.readthedocs.io/en/latest/reference/working-with-objects.html#by-eager-loading).
+This can easily be enabled for a relation: `@ORM\ManyToOne(fetch="EAGER")`.
+
+By default in API Platform, we made the choice to force eager loading for all relations, with or without the Doctrine
+`fetch` attribute. Thanks to the eager loading [extension](extensions.md).
+
+##### Max joins
+
+There is a default restriction with this feature. We allow up to 30 joins per query. Beyond, an 
+`ApiPlatform\Core\Exception\RuntimeException` exception will be thrown but this value can easily be increased with a
+little of configuration:
+
+```yaml
+# app/config/config.yaml
+
+api_platform:
+    # ...
+
+    eager_loading:
+        max_joins: 100
+
+    # ...
+```
+
+Be careful when you exceed this limit, it's often caused by the result of a circular reference. [Serializer groups](serialization-groups-and-relations.md)
+can be a good solution to fix this issue.
+
+##### Force eager
+
+As mentioned above, by default we force eager loading for all relations. This behaviour can be modified with the 
+configuration in order to apply it only on join relations having the `EAGER` fetch mode:
+
+```yaml
+# app/config/config.yaml
+
+api_platform:
+    # ...
+
+    eager_loading:
+        force_eager: false
+
+    # ...
+```
+
+##### Override at resource and operation level
+
+When eager loading is enabled, whatever the status of the `force_eager` parameter, you can easily override it directly
+from the configuration of each resource. You can do this at the resource level, at the operations level, or both:
+
+```php
+<?php
+// src/AppBundle/Entity/Address.php
+
+namespace AppBundle\Entity;
+
+use ApiPlatform\Core\Annotation\ApiResource;
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * @ApiResource
+ * @ORM\Entity
+ */
+class Address
+{
+    // ...
+}
+```
+
+```php
+<?php
+// src/AppBundle/Entity/User.php
+
+namespace AppBundle\Entity;
+
+use ApiPlatform\Core\Annotation\ApiResource;
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * @ApiResource(attributes={"force_eager"=false})
+ * @ORM\Entity
+ */
+class User
+{
+    /**
+     * @var Address
+     * 
+     * @ORM\ManyToOne(targetEntity="Address", fetch="EAGER") 
+     */
+    public $address;
+
+    /**
+     * @var Group[]
+     *
+     * @ORM\ManyToMany(targetEntity="Group", inversedBy="users")
+     * @ORM\JoinTable(name="users_groups")
+     */
+    public $groups;
+}
+```
+
+```php
+<?php
+// src/AppBundle/Entity/Group.php
+
+namespace AppBundle\Entity;
+
+use ApiPlatform\Core\Annotation\ApiResource;
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * @ApiResource(
+ *     attributes={"force_eager"=false},
+ *     itemOperations={
+ *         "get"={"method"="GET", "force_eager"=true},
+ *         "post"={"method"="POST"}
+ *     },
+ *     collectionOperations={
+ *         "get"={"method"="GET", "force_eager"=true},
+ *         "post"={"method"="POST"}
+ *     }
+ * )
+ * @ORM\Entity
+ */
+class Group
+{
+    /**
+     * @var User[]
+     *
+     * @ManyToMany(targetEntity="User", mappedBy="groups")
+     */
+    public $users;
+}
+```
+
+Be careful, the operation level is higher priority than the resource level but both are higher priority than the global
+configuration.
+
+##### Disable eager loading
+
+If for any reason you don't want the eager loading feature, you can turn off it in the configuration:
+
+```yaml
+# app/config/config.yaml
+
+api_platform:
+    # ...
+
+    eager_loading:
+        enabled: false
+
+    # ...
+```
+
+The whole configuration seen before will no longer work and Doctrine will recover its default behavior.
 
 Previous chapter: [Security](security.md)
 
