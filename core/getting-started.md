@@ -170,7 +170,8 @@ As an alternative to annotations, you can map entity classes using XML or YAML:
 <configurations>
 
 ```xml
-# src/AppBundle/Resources/config/api_resources.xml
+<!-- app/config/api_resources.xml -->
+
 <?xml version="1.0" encoding="UTF-8" ?>
 <resources>
     <resource class="AppBundle\Entity\Product" />
@@ -184,7 +185,7 @@ As an alternative to annotations, you can map entity classes using XML or YAML:
 ```
 
 ```yaml
-# src/AppBundle/Resources/config/api_resources.yml
+# app/config/api_resources.yml
 
 resources:
     AppBundle\Entity\Product: ~
