@@ -62,7 +62,7 @@ Note that `$resourceShortName` contains a camel case string, by default the reso
 <configurations>
 
 ```yaml
-# src/AppBundle/Resources/config/services.yml
+# app/config/services.yml
 
 services:
     app.operation_path_resolver.no_separators:
@@ -71,7 +71,7 @@ services:
 ```
 
 ```xml
-<!-- src/AppBundle/Resources/config/services.xml -->
+<!-- app/config/services.xml -->
 
 <?xml version="1.0" encoding="UTF-8" ?>
 <services>

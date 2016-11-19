@@ -297,7 +297,7 @@ API Platform implements a `ContextBuilder`, which prepares the context for seria
 `createFromRequest` method:
 
 ```yml
-# src/AppBundle/Resources/config/services.yml
+# app/config/services.yml
 
 services:
     app.serializer.builder.book:
