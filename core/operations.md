@@ -70,9 +70,9 @@ class Book
 ```
 
 ```yaml
-# src/AppBundle/Resources/config/api_resources.yml
-product:
-    class: 'AppBundle\Entity\Book'
+# app/config/api_resources.yml
+
+AppBundle\Entity\Book:
     collectionOperations:
         get:
             method: 'GET' # nothing more to add if we want to keep the default controller
@@ -82,16 +82,17 @@ product:
 ```
 
 ```xml
-<!-- src/AppBundle/Resources/config/api_resources.xml -->
+<!-- app/config/api_resources.xml -->
+
 <?xml version="1.0" encoding="UTF-8" ?>
 <resources>
     <resource class="AppBundle\Entity\Book">
-        <itemOperations type="collection">
-            <operation key="get" method="GET" />
-        </itemOperations>
-        <collectionOperations type="collection">
-            <operation key="get" method="GET" />
-        </collectionOperations>
+        <itemOperation name="get">
+            <attribute name="method">GET</attribute>
+        </itemOperation>
+        <collectionOperation name="get">
+            <attribute name="method">GET</attribute>
+        </collectionOperation>
     </resource>
 </resources>
 ```
@@ -130,9 +131,9 @@ class Book
 ```
 
 ```yaml
-# src/AppBundle/Resources/config/api_resources.yml
-product:
-    class: 'AppBundle\Entity\Book'
+# app/config/api_resources.yml
+
+AppBundle\Entity\Book:
     itemOperations:
         get:
             method: 'GET'
@@ -144,18 +145,22 @@ product:
 ```
 
 ```xml
-<!-- src/Acme/BlogBundle/Resources/config/api_resources.xml -->
+<!-- app/config/api_resources.xml -->
+
 <?xml version="1.0" encoding="UTF-8" ?>
 <resources>
     <resource class="AppBundle\Entity\Book">
-        <itemOperations type="collection">
-            <operation key="get" method="GET" />
-            <operation key="put" method="GET" path="/grimoire/{id}/update">
-                <attribute key="hydra_context" type="collection">
-                    <attribute key="foo">bar</attribute>
-                </attribute>
-            </operation>
-        </itemOperations>
+        <itemOperation name="get">
+            <attribute name="method">GET</attribute>
+            <attribute name="path">/grimoire/{id}</attribute>
+        </itemOperation>
+        <itemOperation name="put">
+            <attribute name="method">PUT</attribute>
+            <attribute name="path">/grimoire/{id}/update</attribute>
+            <attribute name="hydra_context">
+                <attribute name="foo">bar</attribute>
+            </attribute>
+        </itemOperation>
     </resource>
 </resources>
 ```
@@ -209,9 +214,9 @@ class Book
 ```
 
 ```yaml
-# src/AppBundle/Resources/config/resources.yml
-product:
-    class: 'AppBundle\Entity\Book'
+# app/config/api_resources.yml
+
+AppBundle\Entity\Book:
     itemOperations:
         get:
             method: 'GET'
@@ -220,14 +225,17 @@ product:
 ```
 
 ```xml
-<!-- src/Acme/BlogBundle/Resources/config/resources.xml -->
+<!-- app/config/api_resources.xml -->
+
 <?xml version="1.0" encoding="UTF-8" ?>
 <resources>
     <resource class="AppBundle\Entity\Book">
-        <itemOperations type="collection">
-            <operation key="get" method="GET" />
-            <operation key="special" routeName="book_special" />
-        </itemOperations>
+        <itemOperation name="get">
+            <attribute name="method">GET</attribute>
+        </itemOperation>
+        <itemOperation name="special">
+            <attribute name="route_name">book_special</attribute>
+        </itemOperation>
     </resource>
 </resources>
 ```
