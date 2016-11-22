@@ -70,7 +70,7 @@ class Book
 ```
 
 ```yaml
-# app/config/api_resources.yml
+# src/AppBundle/Resources/config/api_resources/resources.yml
 
 AppBundle\Entity\Book:
     collectionOperations:
@@ -82,7 +82,7 @@ AppBundle\Entity\Book:
 ```
 
 ```xml
-<!-- app/config/api_resources.xml -->
+<!-- src/AppBundle/Resources/config/api_resources/resources.xml -->
 
 <?xml version="1.0" encoding="UTF-8" ?>
 <resources>
@@ -131,7 +131,7 @@ class Book
 ```
 
 ```yaml
-# app/config/api_resources.yml
+# src/AppBundle/Resources/config/api_resources/resources.yml
 
 AppBundle\Entity\Book:
     itemOperations:
@@ -145,7 +145,7 @@ AppBundle\Entity\Book:
 ```
 
 ```xml
-<!-- app/config/api_resources.xml -->
+<!-- src/AppBundle/Resources/config/api_resources/resources.xml -->
 
 <?xml version="1.0" encoding="UTF-8" ?>
 <resources>
@@ -214,7 +214,7 @@ class Book
 ```
 
 ```yaml
-# app/config/api_resources.yml
+# src/AppBundle/Resources/config/api_resources/resources.yml
 
 AppBundle\Entity\Book:
     itemOperations:
@@ -225,7 +225,7 @@ AppBundle\Entity\Book:
 ```
 
 ```xml
-<!-- app/config/api_resources.xml -->
+<!-- src/AppBundle/Resources/config/api_resources/resources.xml -->
 
 <?xml version="1.0" encoding="UTF-8" ?>
 <resources>
