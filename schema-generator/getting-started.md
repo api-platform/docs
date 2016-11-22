@@ -17,18 +17,9 @@ tons of schemas including (but not limited to) representations of people, organi
 work and e-commerce structures.
 Then, write a simple YAML config file like the following (here we will generate a data model for an address book):
 
-`address-book.yml`:
-
 ```yaml
 # app/config/schema.yml
 
-rdfa:
-    - tests/data/schema.rdfa
-relations:
-    - tests/data/v1.owl
-# The PHP namespace of generated entities
-namespaces:
-    entity: "AddressBook\Entity"
 # The list of types and properties we want to use
 types:
     # Parent class of Person
@@ -62,17 +53,16 @@ types:
 
 Run the generator with this config file as parameter:
 
-    $ docker-compose exec web vendor/bin/schema generate-types output-directory/ app/config/schema.yml
+    $ docker-compose exec web vendor/bin/schema generate-types src/ app/config/schema.yml
 
 The following classes will be generated:
-
-`output-directory/AddressBook/Entity/Thing.php`:
 
 ```php
 <?php
 
+// src/AppBundle/Entity/Thing.php
 
-namespace AddressBook\Entity;
+namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -119,14 +109,12 @@ abstract class Thing
 
 ```
 
-`output-directory/AddressBook/Entity/Person.php`:
-
 ```php
 <?php
 
-// src/AddressBook/Entity/Person.php
+// src/AppBundle/Entity/Person.php
 
-namespace AddressBook\Entity;
+namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -147,12 +135,14 @@ class Person extends Thing
      * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $id;
+
     /**
      * @var string An additional name for a Person, can be used for a middle name.
      * @Assert\Type(type="string")
      * @ORM\Column(nullable=true)
      */
     private $additionalName;
+
     /**
      * @var PostalAddress Physical address of the item.
      * @ORM\ManyToOne(targetEntity="PostalAddress")
@@ -164,36 +154,42 @@ class Person extends Thing
      * @ORM\Column(type="date", nullable=true)
      */
     private $birthDate;
+
     /**
      * @var string Email address.
      * @Assert\Email
      * @ORM\Column(nullable=true)
      */
     private $email;
+
     /**
      * @var string Family name. In the U.S., the last name of an Person. This can be used along with givenName instead of the name property.
      * @Assert\Type(type="string")
      * @ORM\Column(nullable=true)
      */
     private $familyName;
+
     /**
      * @var string Gender of the person.
      * @Assert\Type(type="string")
      * @ORM\Column(nullable=true)
      */
     private $gender;
+
     /**
      * @var string Given name. In the U.S., the first name of a Person. This can be used along with familyName instead of the name property.
      * @Assert\Type(type="string")
      * @ORM\Column(nullable=true)
      */
     private $givenName;
+
     /**
      * @var string The job title of the person (for example, Financial Manager).
      * @Assert\Type(type="string")
      * @ORM\Column(nullable=true)
      */
     private $jobTitle;
+
     /**
      * @var string The telephone number.
      * @Assert\Type(type="string")
@@ -434,14 +430,12 @@ class Person extends Thing
 
 ```
 
-`output-directory/AddressBook/Entity/PostalAddress.php`:
-
 ```php
 <?php
 
-// src/AddressBook/Entity/PostalAddress.php
+// src/AppBundle/Entity/PostalAddress.php
 
-namespace AddressBook\Entity;
+namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -462,36 +456,42 @@ class PostalAddress
      * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $id;
+
     /**
      * @var string The country. For example, USA. You can also provide the two-letter [ISO 3166-1 alpha-2 country code](http://en.wikipedia.org/wiki/ISO_3166-1).
      * @Assert\Type(type="string")
      * @ORM\Column(nullable=true)
      */
     private $addressCountry;
+
     /**
      * @var string The locality. For example, Mountain View.
      * @Assert\Type(type="string")
      * @ORM\Column(nullable=true)
      */
     private $addressLocality;
+
     /**
      * @var string The region. For example, CA.
      * @Assert\Type(type="string")
      * @ORM\Column(nullable=true)
      */
     private $addressRegion;
+
     /**
      * @var string The postal code. For example, 94043.
      * @Assert\Type(type="string")
      * @ORM\Column(nullable=true)
      */
     private $postalCode;
+
     /**
      * @var string $postOfficeBoxNumber The post office box number for PO box addresses.
      * @Assert\Type(type="string")
      * @ORM\Column(nullable=true)
      */
     private $postOfficeBoxNumber;
+
     /**
      * @var string The street address. For example, 1600 Amphitheatre Pkwy.
      * @Assert\Type(type="string")
@@ -660,17 +660,16 @@ class PostalAddress
         return $this->streetAddress;
     }
 }
-
 ```
 
-Note that the generator take care of creating directories corresponding to the namespace structure.
+Note that the generator takes care of creating directories corresponding to the namespace structure.
 
 Without configuration file, the tool will build the entire Schema.org vocabulary. If no properties are specified for a given
 type, all its properties will be generated.
 
-The generator also support enumerations generation. For subclasses of [`Enumeration`](https://schema.org/Enumeration), the
+The generator also supports enumerations generation. For subclasses of [`Enumeration`](https://schema.org/Enumeration), the
 generator will automatically create a class extending the Enum type provided by [myclabs/php-enum](https://github.com/myclabs/php-enum).
-Don't forget to install this library in your project. Refer you to PHP Enum documentation to see how to use it. The Symfony
+Don't forget to install this library in your project. Refer you to PHP Enum documentation to see how to use it. The Symfon
 validation annotation generator automatically takes care of enumerations to validate choices values.
 
 A config file generating an enum class:
@@ -680,14 +679,14 @@ types:
     OfferItemCondition: ~ # The generator will automatically guess that OfferItemCondition is subclass of Enum
 ```
 
-The associated PHP class:
+The related PHP class:
 
 ```php
 <?php
 
-// src/SchemaOrg/Enum/OfferItemCondition.php
+// src/AppBundle/Enum/OfferItemCondition.php
 
-namespace SchemaOrg\Enum;
+namespace AppBundle\Enum;
 
 use MyCLabs\Enum\Enum;
 
@@ -715,7 +714,6 @@ class OfferItemCondition extends Enum
      */
     const USED_CONDITION = 'http://schema.org/UsedCondition';
 }
-
 ```
 
 ### Enabling API Platform Core support
