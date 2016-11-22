@@ -480,7 +480,7 @@ types:
 
                 # The property range
                 range:                null # Example: Offer
-                cardinality:          ~ # One of "(0..1)"; "(0..*)"; "(1..1)"; "(1..*)"; "(*..0)"; "(*..1); "unknown"
+                cardinality:          ~ # One of "(0..1)"; "(0..*)"; "(1..1)"; "(1..*)"; "(*..0)"; "(*..1)"; "unknown"
 
 # Annotation generators to use
 annotationGenerators:
