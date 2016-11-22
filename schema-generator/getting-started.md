@@ -718,9 +718,10 @@ class OfferItemCondition extends Enum
 
 ```
 
-### Enabling API Platform bundle support
+### Enabling API Platform Core support
 
-PHP Schema supports [IRI annotations provided by DunglasApiBundle](../api-bundle/external-vocabularies.md).
+PHP Schema is able to use [annotations provided by the core library](distribution/index.md#creating-the-model) and
+to map properties to corresponding types of the used [external vocabulary](../core/external-vocabularies.md).
 This is useful if you plan to use your generated data model to power a REST API.
 
 To enable this generator along with others, add the following lines to your PHP Schema configuration file:
@@ -730,7 +731,7 @@ annotationGenerators:
     - ApiPlatform\SchemaGenerator\AnnotationGenerator\PhpDocAnnotationGenerator
     - ApiPlatform\SchemaGenerator\AnnotationGenerator\DoctrineOrmAnnotationGenerator
     - ApiPlatform\SchemaGenerator\AnnotationGenerator\ConstraintAnnotationGenerator
-    - ApiPlatform\SchemaGenerator\AnnotationGenerator\DunglasApiAnnotationGenerator
+    - ApiPlatform\SchemaGenerator\AnnotationGenerator\ApiPlatformCoreApiAnnotationGenerator
 ```
 
 ### Going further
