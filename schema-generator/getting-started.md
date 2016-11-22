@@ -2,21 +2,17 @@
 
 ## Installation
 
-Use [Composer](http://getcomposer.org) to install the generator. In standalone mode:
+If you use [the official distribution of API Platform](../distribution/index.md), the Schema Generator is already installed as a development dependency of your project and can be invoked through Docker:
 
-    composer create-project api-platform/schema-generator
+    $ docker-compose exec web vendor/bin/schema
 
-Or directly as a development dependency of your project:
+The Schema Generator can also [be downloaded independently as a PHAR](https://github.com/api-platform/schema-generator/releases) or installed in an existing project using [Composer](https://getcomposer.org):
 
-    composer require --dev api-platform/schema-generator
-
-If you want to create an API exposing Schema.org types, take a look at [API platform](https://api-platform.com),
-a all-in-one skeleton including PHP Schema and integrated with a ton of other useful packages allowing to generate JSON-LD
-REST API in minutes.
+    $ composer require --dev api-platform/schema-generator
 
 ## Model scaffolding
 
-Start by browsing [Schema.org](http://schema.org) and pick types applicable to your application. The website provides
+Start by browsing [Schema.org](https://schema.org) and pick types applicable to your application. The website provides
 tons of schemas including (but not limited to) representations of people, organization, event, postal address, creative
 work and e-commerce structures.
 Then, write a simple YAML config file like the following (here we will generate a data model for an address book):
@@ -24,6 +20,8 @@ Then, write a simple YAML config file like the following (here we will generate 
 `address-book.yml`:
 
 ```yaml
+# app/config/schema.yml
+
 rdfa:
     - tests/data/schema.rdfa
 relations:
@@ -64,7 +62,7 @@ types:
 
 Run the generator with this config file as parameter:
 
-    bin/schema generate-types output-directory/ address-book.yml
+    $ docker-compose exec web vendor/bin/schema generate-types output-directory/ app/config/schema.yml
 
 The following classes will be generated:
 
@@ -738,7 +736,6 @@ annotationGenerators:
 ### Going further
 
 * Browse [the configuration documentation](configuration.md)
-* See `tests/config/ecommerce.yml`
 
 ## Cardinality extraction
 
@@ -749,7 +746,7 @@ When cardinality cannot be automatically extracted, it's value is set to `unknow
 
 Usage:
 
-    bin/schema extract-cardinalities
+    $ docker-compose exec vendor/bin/schema extract-cardinalities
 
 Previous chapter: [Introduction](index.md)
 
