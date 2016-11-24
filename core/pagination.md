@@ -46,7 +46,8 @@ The name of the page parameter can be changed with the following configuration:
 
 api_platform:
     collection:
-        page_parameter_name: _page
+        pagination:
+            page_parameter_name: _page
 ```
 
 ## Disabling the Pagination
