@@ -669,7 +669,7 @@ type, all its properties will be generated.
 
 The generator also supports enumerations generation. For subclasses of [`Enumeration`](https://schema.org/Enumeration), the
 generator will automatically create a class extending the Enum type provided by [myclabs/php-enum](https://github.com/myclabs/php-enum).
-Don't forget to install this library in your project. Refer you to PHP Enum documentation to see how to use it. The Symfon
+Don't forget to install this library in your project. Refer you to PHP Enum documentation to see how to use it. The Symfony
 validation annotation generator automatically takes care of enumerations to validate choices values.
 
 A config file generating an enum class:
@@ -745,7 +745,7 @@ When cardinality cannot be automatically extracted, it's value is set to `unknow
 
 Usage:
 
-    $ docker-compose exec vendor/bin/schema extract-cardinalities
+    $ docker-compose exec web vendor/bin/schema extract-cardinalities
 
 Previous chapter: [Introduction](index.md)
 
