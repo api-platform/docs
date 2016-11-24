@@ -2,35 +2,24 @@
 
 ## Installation
 
-Use [Composer](http://getcomposer.org) to install the generator. In standalone mode:
+If you use [the official distribution of API Platform](../distribution/index.md), the Schema Generator is already installed as a development dependency of your project and can be invoked through Docker:
 
-    composer create-project api-platform/schema-generator
+    $ docker-compose exec web vendor/bin/schema
 
-Or directly as a development dependency of your project:
+The Schema Generator can also [be downloaded independently as a PHAR](https://github.com/api-platform/schema-generator/releases) or installed in an existing project using [Composer](https://getcomposer.org):
 
-    composer require --dev api-platform/schema-generator
-
-If you want to create an API exposing Schema.org types, take a look at [API platform](https://api-platform.com),
-a all-in-one skeleton including PHP Schema and integrated with a ton of other useful packages allowing to generate JSON-LD
-REST API in minutes.
+    $ composer require --dev api-platform/schema-generator
 
 ## Model scaffolding
 
-Start by browsing [Schema.org](http://schema.org) and pick types applicable to your application. The website provides
+Start by browsing [Schema.org](https://schema.org) and pick types applicable to your application. The website provides
 tons of schemas including (but not limited to) representations of people, organization, event, postal address, creative
 work and e-commerce structures.
 Then, write a simple YAML config file like the following (here we will generate a data model for an address book):
 
-`address-book.yml`:
-
 ```yaml
-rdfa:
-    - tests/data/schema.rdfa
-relations:
-    - tests/data/v1.owl
-# The PHP namespace of generated entities
-namespaces:
-    entity: "AddressBook\Entity"
+# app/config/schema.yml
+
 # The list of types and properties we want to use
 types:
     # Parent class of Person
@@ -64,17 +53,16 @@ types:
 
 Run the generator with this config file as parameter:
 
-    bin/schema generate-types output-directory/ address-book.yml
+    $ docker-compose exec web vendor/bin/schema generate-types src/ app/config/schema.yml
 
 The following classes will be generated:
-
-`output-directory/AddressBook/Entity/Thing.php`:
 
 ```php
 <?php
 
+// src/AppBundle/Entity/Thing.php
 
-namespace AddressBook\Entity;
+namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -121,14 +109,12 @@ abstract class Thing
 
 ```
 
-`output-directory/AddressBook/Entity/Person.php`:
-
 ```php
 <?php
 
-// src/AddressBook/Entity/Person.php
+// src/AppBundle/Entity/Person.php
 
-namespace AddressBook\Entity;
+namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -149,12 +135,14 @@ class Person extends Thing
      * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $id;
+
     /**
      * @var string An additional name for a Person, can be used for a middle name.
      * @Assert\Type(type="string")
      * @ORM\Column(nullable=true)
      */
     private $additionalName;
+
     /**
      * @var PostalAddress Physical address of the item.
      * @ORM\ManyToOne(targetEntity="PostalAddress")
@@ -166,36 +154,42 @@ class Person extends Thing
      * @ORM\Column(type="date", nullable=true)
      */
     private $birthDate;
+
     /**
      * @var string Email address.
      * @Assert\Email
      * @ORM\Column(nullable=true)
      */
     private $email;
+
     /**
      * @var string Family name. In the U.S., the last name of an Person. This can be used along with givenName instead of the name property.
      * @Assert\Type(type="string")
      * @ORM\Column(nullable=true)
      */
     private $familyName;
+
     /**
      * @var string Gender of the person.
      * @Assert\Type(type="string")
      * @ORM\Column(nullable=true)
      */
     private $gender;
+
     /**
      * @var string Given name. In the U.S., the first name of a Person. This can be used along with familyName instead of the name property.
      * @Assert\Type(type="string")
      * @ORM\Column(nullable=true)
      */
     private $givenName;
+
     /**
      * @var string The job title of the person (for example, Financial Manager).
      * @Assert\Type(type="string")
      * @ORM\Column(nullable=true)
      */
     private $jobTitle;
+
     /**
      * @var string The telephone number.
      * @Assert\Type(type="string")
@@ -436,14 +430,12 @@ class Person extends Thing
 
 ```
 
-`output-directory/AddressBook/Entity/PostalAddress.php`:
-
 ```php
 <?php
 
-// src/AddressBook/Entity/PostalAddress.php
+// src/AppBundle/Entity/PostalAddress.php
 
-namespace AddressBook\Entity;
+namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -464,36 +456,42 @@ class PostalAddress
      * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $id;
+
     /**
      * @var string The country. For example, USA. You can also provide the two-letter [ISO 3166-1 alpha-2 country code](http://en.wikipedia.org/wiki/ISO_3166-1).
      * @Assert\Type(type="string")
      * @ORM\Column(nullable=true)
      */
     private $addressCountry;
+
     /**
      * @var string The locality. For example, Mountain View.
      * @Assert\Type(type="string")
      * @ORM\Column(nullable=true)
      */
     private $addressLocality;
+
     /**
      * @var string The region. For example, CA.
      * @Assert\Type(type="string")
      * @ORM\Column(nullable=true)
      */
     private $addressRegion;
+
     /**
      * @var string The postal code. For example, 94043.
      * @Assert\Type(type="string")
      * @ORM\Column(nullable=true)
      */
     private $postalCode;
+
     /**
      * @var string $postOfficeBoxNumber The post office box number for PO box addresses.
      * @Assert\Type(type="string")
      * @ORM\Column(nullable=true)
      */
     private $postOfficeBoxNumber;
+
     /**
      * @var string The street address. For example, 1600 Amphitheatre Pkwy.
      * @Assert\Type(type="string")
@@ -662,15 +660,14 @@ class PostalAddress
         return $this->streetAddress;
     }
 }
-
 ```
 
-Note that the generator take care of creating directories corresponding to the namespace structure.
+Note that the generator takes care of creating directories corresponding to the namespace structure.
 
 Without configuration file, the tool will build the entire Schema.org vocabulary. If no properties are specified for a given
 type, all its properties will be generated.
 
-The generator also support enumerations generation. For subclasses of [`Enumeration`](https://schema.org/Enumeration), the
+The generator also supports enumerations generation. For subclasses of [`Enumeration`](https://schema.org/Enumeration), the
 generator will automatically create a class extending the Enum type provided by [myclabs/php-enum](https://github.com/myclabs/php-enum).
 Don't forget to install this library in your project. Refer you to PHP Enum documentation to see how to use it. The Symfony
 validation annotation generator automatically takes care of enumerations to validate choices values.
@@ -682,14 +679,14 @@ types:
     OfferItemCondition: ~ # The generator will automatically guess that OfferItemCondition is subclass of Enum
 ```
 
-The associated PHP class:
+The related PHP class:
 
 ```php
 <?php
 
-// src/SchemaOrg/Enum/OfferItemCondition.php
+// src/AppBundle/Enum/OfferItemCondition.php
 
-namespace SchemaOrg\Enum;
+namespace AppBundle\Enum;
 
 use MyCLabs\Enum\Enum;
 
@@ -717,12 +714,12 @@ class OfferItemCondition extends Enum
      */
     const USED_CONDITION = 'http://schema.org/UsedCondition';
 }
-
 ```
 
-### Enabling API Platform bundle support
+### Enabling API Platform Core support
 
-PHP Schema supports [IRI annotations provided by DunglasApiBundle](../api-bundle/external-vocabularies.md).
+PHP Schema is able to use [annotations provided by the core library](distribution/index.md#creating-the-model) and
+to map properties to corresponding types of the used [external vocabulary](../core/external-vocabularies.md).
 This is useful if you plan to use your generated data model to power a REST API.
 
 To enable this generator along with others, add the following lines to your PHP Schema configuration file:
@@ -732,13 +729,12 @@ annotationGenerators:
     - ApiPlatform\SchemaGenerator\AnnotationGenerator\PhpDocAnnotationGenerator
     - ApiPlatform\SchemaGenerator\AnnotationGenerator\DoctrineOrmAnnotationGenerator
     - ApiPlatform\SchemaGenerator\AnnotationGenerator\ConstraintAnnotationGenerator
-    - ApiPlatform\SchemaGenerator\AnnotationGenerator\DunglasApiAnnotationGenerator
+    - ApiPlatform\SchemaGenerator\AnnotationGenerator\ApiPlatformCoreAnnotationGenerator
 ```
 
 ### Going further
 
 * Browse [the configuration documentation](configuration.md)
-* See `tests/config/ecommerce.yml`
 
 ## Cardinality extraction
 
@@ -749,7 +745,7 @@ When cardinality cannot be automatically extracted, it's value is set to `unknow
 
 Usage:
 
-    bin/schema extract-cardinalities
+    $ docker-compose exec web vendor/bin/schema extract-cardinalities
 
 Previous chapter: [Introduction](index.md)
 

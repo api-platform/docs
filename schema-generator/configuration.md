@@ -2,7 +2,7 @@
 
 The following options can be used in the configuration file.
 
-## Customizing PHP namespaces
+## Customizing PHP Namespaces
 
 Namespaces of generated PHP classes can be set globally, respectively for entities, enumerations and interfaces (if used
 with Doctrine Resolve Target Entity Listener option).
@@ -28,7 +28,7 @@ types:
             interface: "Schema\Model" # Namespace of the related interface
 ```
 
-## Forcing a field range
+## Forcing a Field Range
 
 Schema.org allows a property to have several types. However, the generator allows only one type by property. If not configured,
 it will use the first defined type.
@@ -48,7 +48,7 @@ types:
             addressCountry: { range: "Text" } # Force the type to Text instead of Country
 ```
 
-## Forcing a field cardinality
+## Forcing a Field Cardinality
 
 The cardinality of a property is automatically guessed. The `cardinality` option allows to override the guessed value.
 Supported cardinalities are:
@@ -70,7 +70,7 @@ types:
                 cardinality: "(0..1)"
 ```
 
-## Forcing a relation table name
+## Forcing a Relation Table Name
 
 The relation table name between two entities is automatically guessed by Doctrine. The `relationTableName` option allows
 to override the default value.
@@ -86,7 +86,7 @@ Example:
                 member: { range: Person, cardinality: (1..*) } ## Will be default value : organization_person
 ```
 
-## Forcing (or disabling) a class parent
+## Forcing (or Disabling) a Class Parent
 
 Override the guessed class hierarchy of a given type with this option.
 
@@ -100,7 +100,7 @@ Example:
         parent: false # No parent
 ```
 
-## Forcing a class to be abstract
+## Forcing a Class to be Abstract
 
 Force a class to be `abstract` (or to be not).
 
@@ -112,7 +112,7 @@ Example:
 ```
 
 
-## Forcing a nullable property
+## Forcing a Nullable Property
 
 Force a property to be `nullable` (or to be not).
 
@@ -141,7 +141,7 @@ The `@Assert\NotNull` constrain is automatically added
   private $name;
 ```
 
-## Forcing a unique property
+## Forcing a Unique Property
 
 Force a property to be `unique` (or to be not).
 
@@ -182,7 +182,7 @@ class Person
     private $email;
 ```
 
-## Forcing a property to be in a serialization group
+## Forcing a Property to be in a Serialization Group
 
 Force a property to be in a `groups`.
 
@@ -205,6 +205,7 @@ Example:
 ```
 
 Output:
+
 ```php
 <?php
 
@@ -233,7 +234,7 @@ class Person
 
 ```
 
-## Forcing an embeddable class to be embedded
+## Forcing an Embeddable Class to be Embedded
 
 Force an `embeddable` class to be `embedded`.
 
@@ -256,10 +257,10 @@ Example:
 author: "Kévin Dunglas <kevin@les-tilleuls.coop>"
 ```
 
-## Disabling generators and creating custom ones
+## Disabling Generators and Creating Custom Ones
 
-By default, all generators except the `DunglasJsonLdApi` one are enabled. You can specify the list of generators to use
-with the `generators` option.
+By default, all generators except `DunglasJsonLdApi` (API Platform v1) and `SerializerGroups` are enabled.
+You can specify the list of generators to use with the `generators` option.
 
 Example (enabling only the PHPDoc generator):
 
@@ -280,7 +281,7 @@ annotationGenerators:
     - Acme\Generators\MyGenerator
 ```
 
-## Disabling `id` generator
+## Disabling `id` Generator
 
 By default, the generator add a property called `id` not provided by Schema.org. This useful when using generated entity
 with an ORM or an ODM.
@@ -290,7 +291,7 @@ This behavior can be disabled with the following setting:
 generateId: false
 ```
 
-## Disabling usage of Doctrine collection
+## Disabling Usage of Doctrine Collection
 
 By default, the generator use classes provided by the [Doctrine Collections](https://github.com/doctrine/collections) library
 to store collections of entities. This is useful (and required) when using Doctrine ORM or Doctrine ODM.
@@ -301,7 +302,7 @@ doctrine:
     useCollection: false
 ```
 
-## Custom field visibility
+## Custom Field Visibility
 
 Generated fields have a `private` visibility and are exposed through getters and setters.
 The default visibility can be changed with the `fieldVisibility` otion.
@@ -312,7 +313,7 @@ Example:
 fieldVisibility: "protected"
 ```
 
-## Forcing Doctrine inheritance mapping annotation
+## Forcing Doctrine Inheritance Mapping Annotation
 
 The standard behavior of the generator is to use the `@MappedSuperclass` Doctrine annotation for classes with children and
 `@Entity` for classes with no child.
@@ -344,10 +345,10 @@ doctrine:
     resolveTargetEntityConfigPath: path/to/doctrine.xml
 ```
 
-## Custom schemas
+## Custom Schemas
 
 The generator can use your own schema definitions. They must be wrote in RDFa and follow the format of the [Schema.org's
-definition](http://schema.org/docs/schema_org_rdfa.html). This is useful to document your [Schema.org extensions](http://schema.org/docs/extension.html) and use them
+definition](httsp://schema.org/docs/schema_org_rdfa.html). This is useful to document your [Schema.org extensions](https://schema.org/docs/extension.html) and use them
 to generate the PHP data model of your application.
 
 Example:
@@ -358,16 +359,28 @@ rdfa:
     - http://example.com/data/myschema.rfa # Additional types
 ```
 
-*Support for other namespaces than `http://schema.org` is planned for future versions but not currently available.*
+You can also use any other vocabulary. Check the [Linked Open Vocabularies](https://lov.okfn.org/dataset/lov/) to find one fitting your needs.
 
-## Checking GoodRelation compatibility
+For instance, to generate a data model from the [Video Game Ontology](http://purl.org/net/VideoGameOntology), use the following config file:
+
+```
+rdfa:
+  - http://vocab.linkeddata.es/vgo/GameOntologyv3.owl # The URL of the vocabulary definition
+
+types:
+  Session:
+    vocabularyNamespace: http://purl.org/net/VideoGameOntology#
+  # ...
+```
+
+## Checking GoodRelation Compatibility
 
 If the `checkIsGoodRelations` option is set to `true`, the generator will emit a warning if an encountered property is not
 par of the [GoodRelations](http://www.heppnetz.de/projects/goodrelations/) schema.
 
 This is useful when generating e-commerce data model.
 
-## PHP file header
+## PHP File Header
 
 Prepend all generated PHP files with a custom comment.
 
@@ -386,9 +399,148 @@ header: |
 ```
 
 
-## Full configuration reference
+## Full Configuration Reference
 
 ```yaml
+# RDFa files to use
+rdfa:
+
+    # Prototype
+    -
+
+        # RDFa URI to use
+        uri:                  'https://schema.org/docs/schema_org_rdfa.html' # Example: https://schema.org/docs/schema_org_rdfa.html
+
+        # RDFa URI data format
+        format:               null # Example: rdfxml
+
+# OWL relation files to use
+relations:
+
+    # Default:
+    - https://purl.org/goodrelations/v1.owl
+
+# Debug mode
+debug:                false
+
+# Automatically add an id field to entities
+generateId:           true
+
+# Generate interfaces and use Doctrine's Resolve Target Entity feature
+useInterface:         false
+
+# Emit a warning if a property is not derived from GoodRelations
+checkIsGoodRelations:  false
+
+# A license or any text to use as header of generated files
+header:               false # Example: // (c) Kévin Dunglas <dunglas@gmail.com>
+
+# PHP namespaces
+namespaces:
+
+        # The namespace of the generated entities
+        entity:               AppBundle\Entity # Example: Acme\Entity
+
+        # The namespace of the generated enumerations
+        enum:                 AppBundle\Enum # Example: Acme\Enum
+
+        # The namespace of the generated interfaces
+        interface:            AppBundle\Model # Example: Acme\Model
+
+    # Doctrine
+    doctrine:
+
+        # Use Doctrine's ArrayCollection instead of standard arrays
+        useCollection:        true
+
+        # The Resolve Target Entity Listener config file pass
+        resolveTargetEntityConfigPath:  null
+
+    # The value of the phpDoc's @author annotation
+    author:               false # Example: Kévin Dunglas <dunglas@gmail.com>
+
+    # Visibility of entities fields
+    fieldVisibility:      private # One of "private"; "protected"; "public"
+
+    # Schema.org's types to use
+    types:
+
+        # Prototype
+        id:
+
+            # Namespace of the vocabulary the type belongs to.
+            vocabularyNamespace:  'http://schema.org/'
+
+            # Is the class abstract? (null to guess)
+            abstract:             null
+
+            # Is the class embeddable?
+            embeddable:           false
+
+            # Type namespaces
+            namespaces:
+
+                # The namespace for the generated class (override any other defined namespace)
+                class:                null
+
+                # The namespace for the generated interface (override any other defined namespace)
+                interface:            null
+
+            doctrine:
+
+                # The Doctrine inheritance mapping type (override the guessed one)
+                inheritanceMapping:   null
+
+            # The parent class, set to false for a top level class
+            parent:               null
+
+            # If declaring a custom class, this will be the class from which properties type will be guessed
+            guessFrom:            Thing
+
+            # Import all existing properties
+            allProperties:        false
+
+            # Properties of this type to use
+            properties:
+
+                # Prototype
+                id:
+
+                    # The property range
+                    range:                null # Example: Offer
+
+                    # The relation table name
+                    relationTableName:    null # Example: organization_member
+                    cardinality:          unknown # One of "(0..1)"; "(0..*)"; "(1..1)"; "(1..*)"; "(*..0)"; "(*..1)"; "(*..*)"; "unknown"
+
+                    # The doctrine column annotation content
+                    ormColumn:            null # Example: type="decimal", precision=5, scale=1, options={"comment" = "my comment"}
+
+                    # Symfony Serialization Groups
+                    groups:               []
+
+                    # The property nullable
+                    nullable:             true
+
+                    # The property unique
+                    unique:               false
+
+                    # Is the property embedded?
+                    embedded:             false
+
+                    # The property columnPrefix
+                    columnPrefix:         false
+
+    # Annotation generators to use
+    annotationGenerators:
+
+        # Defaults:
+        - ApiPlatform\SchemaGenerator\AnnotationGenerator\PhpDocAnnotationGenerator
+        - ApiPlatform\SchemaGenerator\AnnotationGenerator\ConstraintAnnotationGenerator
+        - ApiPlatform\SchemaGenerator\AnnotationGenerator\DoctrineOrmAnnotationGenerator
+        - ApiPlatform\SchemaGenerator\AnnotationGenerator\ApiPlatformCoreAnnotationGenerator
+
+
 # RDFa files to use
 rdfa:
 
@@ -442,53 +594,6 @@ author:               false # Example: Kévin Dunglas <dunglas@gmail.com>
 
 # Visibility of entities fields
 fieldVisibility:      ~ # One of "private"; "protected"; "public"
-
-# Schema.org's types to use
-types:
-
-    # Prototype
-    id:
-
-        # Alternative Prototype to use if the Prototype specified by id (above) is not found
-        # The Entity will still be named according to the value of id
-        guessFrom:            null
-
-        # Type namespaces
-        namespaces:
-
-            # The namespace for the generated class (override any other defined namespace)
-            class:                null
-
-            # The namespace for the generated interface (override any other defined namespace)
-            interface:            null
-        doctrine:
-
-            # The Doctrine inheritance mapping type (override the guessed one)
-            inheritanceMapping:   null
-
-        # The parent class, set to false for a top level class
-        parent:               null
-
-        # If the class is embeddable, set to true for an embeddable class
-        embeddable:           false
-
-        # Properties of this type to use
-        properties:
-
-            # Prototype
-            id:
-
-                # The property range
-                range:                null # Example: Offer
-                cardinality:          ~ # One of "(0..1)"; "(0..*)"; "(1..1)"; "(1..*)"; "(*..0)"; "(*..1); "unknown"
-
-# Annotation generators to use
-annotationGenerators:
-
-    # Defaults:
-    - ApiPlatform\SchemaGenerator\AnnotationGenerator\PhpDocAnnotationGenerator
-    - ApiPlatform\SchemaGenerator\AnnotationGenerator\ConstraintAnnotationGenerator
-    - ApiPlatform\SchemaGenerator\AnnotationGenerator\DoctrineOrmAnnotationGenerator
 ```
 
 Previous chapter: [Getting Started](getting-started.md)
