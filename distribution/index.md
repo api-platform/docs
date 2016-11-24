@@ -35,6 +35,8 @@ asynchronous jobs to your APIs is very straightforward.
 
 ## Installing the framework
 
+### In Docker container
+
 API Platform is shipped with a [Docker](https://docker.com) setup that makes it easy to get a containerized development
 environment up and running. This setup contains an image pre-configured with PHP 7, Apache and everything needed to run API
 Platform and a MySQL image to host the database.
@@ -83,9 +85,23 @@ However, Doctrine ORM is definitely the easiest way to persist and query data in
 included in the Standard Edition. This Doctrine ORM bridge is optimized for performance and development convenience. Doctrine
 ORM and its bridge supports major RDBMS including MySQL, PostgreSQL, SQLite, SQL Server and MariaDB.
 
-Note: Instead of using Docker, API Platform can also be installed on the local machine using [Composer](https://getcomposer.org/):
+### Via Composer
+
+Instead of using Docker, API Platform can also be installed on the local machine using [Composer](https://getcomposer.org/):
 
     $ composer create-project api-platform/api-platform bookshop-api
+    
+Then, enter the project folder, create the database and its schema:  
+    
+    $ cd bookshop-api
+    $ php bin/console doctrine:database:create
+    $ php bin/console doctrine:schema:create
+    
+And start the server:    
+    
+    $ php bin/console server:run
+
+## It's ready!
 
 Open `http://localhost` with your favorite web browser:
 
