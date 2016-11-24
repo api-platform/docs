@@ -244,7 +244,7 @@ Enable the filter:
 
 services:
     offer.numeric_filter:
-        parent:    'api_platform.doctrine.orm.range_filer'
+        parent:    'api_platform.doctrine.orm.range_filter'
         arguments: [ { price: ~ } ]
         tags:      [ { name: 'api_platform.filter', id: 'offer.range' } ]
 ```
