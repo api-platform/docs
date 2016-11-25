@@ -261,7 +261,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ApiResource(attributes={
- *     "normalization_context"={"groups"={"book_output"}}}),
+ *     "normalization_context"={"groups"={"book_output"}},
  *     "denormalization_context"={"groups"={"book_input"}}
  * })
  */
