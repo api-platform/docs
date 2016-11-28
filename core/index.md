@@ -10,7 +10,7 @@ standards.
 Build a working and fully-featured CRUD API in minutes. Leverage the awesome features of the tool to develop complex and
 high performance API-first projects.
 
-If you are starting a new project, the easiest way to get API Platform up is to install the [API Platform Standard Edition](../distribution/api.md).
+If you are starting a new project, the easiest way to get API Platform up is to install the [API Platform Standard Edition](../distribution/index.md).
 
 [![JSON-LD enabled](http://json-ld.org/images/json-ld-logo-64.png)](http://json-ld.org)
 
