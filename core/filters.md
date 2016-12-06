@@ -72,7 +72,7 @@ It is possible to filter on relations too:
 services:
     offer.search_filter:
         parent:    'api_platform.doctrine.orm.search_filter'
-        arguments: [ { id: 'exact', price: 'exact', name: 'partial' } ]
+        arguments: [ { product: 'exact' } ]
         tags:      [ { name: 'api_platform.filter', id: 'offer.search' } ]
 ```
 

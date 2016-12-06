@@ -38,21 +38,21 @@ class Book
 }
 ```
 
-With the previous configuration, the validations groups `group1` and `group2` will be used when validation is performed.
+With the previous configuration, the validations groups `a` and `b` will be used when validation is performed.
 
 Like for [serialization groups](serialization-groups-and-relations.md#using-different-serialization-groups-per-operation),
 you can specify validation groups globally or on a per operation basis.
 
 Of course, you can use XML or YAML configuration format instead of annotations if you prefer.
 
-You may also pass in a [group sequence](http://symfony.com/doc/current/book/validation.html#group-sequence) in place of
+You may also pass in a [group sequence](http://symfony.com/doc/current/validation/sequence_provider.html) in place of
 the array of group names.
 
 ## Dynamic Validation Groups
 
 If you need to dynamically determine which validation groups to use for an entity in different scenarios, just pass in a
 [callable](http://php.net/manual/en/language.types.callable.php). The callback will receive the entity object as its first
-argument, and should return an array of group names or a [group sequence](http://symfony.com/doc/current/book/validation.html#group-sequence).
+argument, and should return an array of group names or a [group sequence](http://symfony.com/doc/current/validation/sequence_provider.html).
 
 Previous chapter: [Serialization Groups and Relations](serialization-groups-and-relations.md)
 

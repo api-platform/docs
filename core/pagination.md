@@ -82,7 +82,7 @@ It can also be disabled for specific resource:
 use ApiPlatform\Core\Annotation\ApiResource;
 
 /**
- * @ApiResource(attributes={"pagination_enabled"=true})
+ * @ApiResource(attributes={"pagination_enabled"=false})
  */
 class Book
 {
