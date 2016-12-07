@@ -10,7 +10,7 @@ The configuration docker is planned to be launch on the port 80 in the `docker-c
 
 ## Using API Platform and JMS Serializer in the same project
 
-By default, [JMS Serializer](http://jmsyst.com/bundles/JMSSerializerBundle) replaces the `serializer` service by its own. However, API Platform requires the Symfony serializer (and not the JMS one) to works properly.
+By default, [JMS Serializer](http://jmsyst.com/bundles/JMSSerializerBundle) replaces the `serializer` service by its own. However, API Platform requires the Symfony serializer (and not the JMS one) to work properly.
 Fortunately, this behavior can be deactivated using the following configuration:
 
 ```yaml
