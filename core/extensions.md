@@ -65,27 +65,20 @@ namespace AppBundle\Doctrine\ORM\Extension;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Extension\QueryCollectionExtensionInterface;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Extension\QueryItemExtensionInterface;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Util\QueryNameGeneratorInterface;
-use ApiPlatform\Core\Metadata\Property\Factory\PropertyMetadataFactoryInterface;
-use ApiPlatform\Core\Metadata\Property\Factory\PropertyNameCollectionFactoryInterface;
 use AppBundle\Entity\Offer;
 use AppBundle\Entity\User;
 use Doctrine\ORM\QueryBuilder;
-use Doctrine\ORM\Query\Expr;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationChecker;
 
 final class CurrentUserExtension implements QueryCollectionExtensionInterface, QueryItemExtensionInterface
 {
+    private $tokenStorage;
     private $authorizationChecker;
-    private $propertyNameCollectionFactory;
-    private $propertyMetadataFactory;
-    private $token;
 
-    public function __construct(PropertyNameCollectionFactoryInterface $propertyNameCollectionFactory, PropertyMetadataFactoryInterface $propertyMetadataFactory, TokenStorageInterface $token, AuthorizationChecker $checker)
+    public function __construct(TokenStorageInterface $tokenStorage, AuthorizationChecker $checker)
     {
-        $this->propertyMetadataFactory = $propertyMetadataFactory;
-        $this->propertyNameCollectionFactory = $propertyNameCollectionFactory;
-        $this->token = $token;
+        $this->tokenStorage = $tokenStorage;
         $this->authorizationChecker = $checker;
     }
 
@@ -100,7 +93,7 @@ final class CurrentUserExtension implements QueryCollectionExtensionInterface, Q
     /**
      * {@inheritdoc}
      */
-    public function applyToItem(QueryBuilder $queryBuilder, QueryNameGeneratorInterface $queryNameGenerator, string $resourceClass, array $identifiers, string $operationName = null)
+    public function applyToItem(QueryBuilder $queryBuilder, QueryNameGeneratorInterface $queryNameGenerator, string $resourceClass, array $identifiers, string $operationName = null, array $context = [])
     {
         $this->addWhere($queryBuilder, $resourceClass);
     }
@@ -112,7 +105,7 @@ final class CurrentUserExtension implements QueryCollectionExtensionInterface, Q
      */
     private function addWhere(QueryBuilder $queryBuilder, string $resourceClass)
     {
-        $user = $this->token->getToken()->getUser();
+        $user = $this->tokenStorage->getToken()->getUser();
         if ($user instanceof User && Offer::class === $resourceClass && !$this->authorizationChecker->isGranted('ROLE_ADMIN')) {
             $rootAlias = $queryBuilder->getRootAliases()[0];
             $queryBuilder->andWhere(sprintf('%s.user = :current_user', $rootAlias));
