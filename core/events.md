@@ -75,7 +75,7 @@ are also available (if you use it) if you want to hook at the object lifecycle e
 
 Built-in event listeners are:
 
-Name                          | Event              | Pre & Post hooks                     | Priority  | Description
+Name                          | Event              | Pre & Post hooks                     | Priority | Description
 ------------------------------|--------------------|--------------------------------------|----------|--------------------------------------------------------------------------------------------------------------------------
 `AddFormatListener`           | `kernel.request`   | None                                 | 7        | guess the best response format ([content negotiation](content-negotiation.md))
 `ReadListener`                | `kernel.request`   | `PRE_READ`, `POST_READ`              | 4        | retrieve data from the persistence system using the [data providers](data-providers.md)
@@ -93,18 +93,18 @@ add extra logic is convenient.
 
 The [`ApiPlatform\Core\EventListener\EventPriorities`](https://github.com/api-platform/core/blob/master/src/EventListener/EventPriorities.php) class comes with a convenient set of class's constants corresponding to commonly used priorities:
 
-Constant           | Event            | Priority |
--------------------|------------------|----------|
-`PRE_READ`         | `kernel.request` | 5        |
-`POST_READ`        | `kernel.request` | 3        |
-`PRE_DESERIALIZE`  | `kernel.request` | 3        |
-`POST_DESERIALIZE` | `kernel.request` | 1        |
-`PRE_VALIDATE`     | `kernel.view`    | 65       |
-`POST_VALIDATE`    | `kernel.view`    | 63       |
-`PRE_WRITE`        | `kernel.view`    | 33       |
-`POST_WRITE`       | `kernel.view`    | 31       |
-`PRE_RESPOND`      | `kernel.view`    | 9        |
-`POST_RESPOND`     | `kernel.view`    | 7        |
+Constant           | Event             | Priority |
+-------------------|-------------------|----------|
+`PRE_READ`         | `kernel.request`  | 5        |
+`POST_READ`        | `kernel.request`  | 3        |
+`PRE_DESERIALIZE`  | `kernel.request`  | 3        |
+`POST_DESERIALIZE` | `kernel.request`  | 1        |
+`PRE_VALIDATE`     | `kernel.view`     | 65       |
+`POST_VALIDATE`    | `kernel.view`     | 63       |
+`PRE_WRITE`        | `kernel.view`     | 33       |
+`POST_WRITE`       | `kernel.view`     | 31       |
+`PRE_RESPOND`      | `kernel.view`     | 9        |
+`POST_RESPOND`     | `kernel.response` | 0        |
 
 Previous chapter: [Pagination](pagination.md)
 
