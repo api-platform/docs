@@ -6,7 +6,7 @@ If you are starting a new project, the easiest way to get API Platform up is to 
 It ships with the API Platform Core library integrated with [the Symfony framework](https://symfony.com), [the schema generator](../schema-generator/),
 [Doctrine ORM](http://www.doctrine-project.org), [NelmioApiDocBundle](https://github.com/nelmio/NelmioApiDocBundle), [NelmioCorsBundle](https://github.com/nelmio/NelmioCorsBundle)
 and [Behat](http://behat.org).
-Basically, it is a Symfony edition packaged with the best tools to develop a REST API and sensitive default settings.
+Basically, it is a Symfony edition packaged with the best tools to develop a REST API and sensible default settings.
 
 Alternatively, you can use [Composer](http://getcomposer.org) to install the standalone bundle in an existing Symfony project:
 
