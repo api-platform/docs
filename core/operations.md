@@ -327,7 +327,7 @@ class BookController extends Controller
 {
     public function specialAction($data)
     {
-        return $this->get('my_service')->doSomething(Book::class, $id);
+        return $this->get('my_service')->doSomething($data);
     }
 }
 ```
