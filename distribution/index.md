@@ -420,7 +420,7 @@ Now try to add another book by issuing a `POST` request to `/books` with the fol
 
 ```json
 {
-  "isbn": "2851840053",
+  "isbn": "2815840053",
   "description": "Hello",
   "author": "Me",
   "publicationDate": "today"
