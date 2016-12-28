@@ -18,7 +18,6 @@ the API without having to write a single line of PHP.
 
 ```gherkin
 # features/books.feature
-
 Feature: Manage books and their reviews
   In order to manage books and their reviews
   As a client software developer
@@ -48,6 +47,7 @@ Feature: Manage books and their reviews
       "@context": "/contexts/Book",
       "@id": "/books/1",
       "@type": "Book",
+      "id": 1,
       "isbn": "9781782164104",
       "title": "Persistence in PHP with the Doctrine ORM",
       "description": "This book is designed for PHP developers and architects who want to modernize their skills through better understanding of Persistence and ORM.",
@@ -73,6 +73,7 @@ Feature: Manage books and their reviews
         {
           "@id": "/books/1",
           "@type": "Book",
+          "id": 1,
           "isbn": "9781782164104",
           "title": "Persistence in PHP with the Doctrine ORM",
           "description": "This book is designed for PHP developers and architects who want to modernize their skills through better understanding of Persistence and ORM.",
@@ -145,6 +146,7 @@ Feature: Manage books and their reviews
       "@context": "/contexts/Review",
       "@id": "/reviews/1",
       "@type": "Review",
+      "id": 1,
       "rating": 5,
       "body": "Must have!",
       "author": "Foo Bar",
@@ -156,9 +158,15 @@ Feature: Manage books and their reviews
 
 The API Platform flavor of Behat also comes with a temporary SQLite database dedicated to tests. It works out of the box.
 
-Just run `docker-compose run --rm web vendor/bin/behat` and everything should be green:
+Clear the cache of the `test` environment:
 
-Your Linked Data API is now specified and tested thanks to Behat!
+    $ docker-compose exec web bin/console cache:clear --env=test
+
+Then run: 
+
+    $ docker-compose run --rm web vendor/bin/behat`.
+    
+Everything should be green now. Your Linked Data API is now specified and tested thanks to Behat!
 
 You may also be interested by those alternative testing tools (not included in the API Platform distribution):
 
