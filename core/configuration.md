@@ -108,6 +108,12 @@ api_platform:
             mime_types: ['application/ld+json']
             
         # ...
+    
+    # Custom paths to look for api resource configurations
+    loader_paths:
+        annotation: []
+        yaml: []
+        xml: []
 ```
 
 Previous chapter: [Getting Started](getting-started.md)
