@@ -110,6 +110,14 @@ api_platform:
         # ...
 ```
 
+## JMS Serializer
+Disable the short service "serializer" alias name as it conflicts with API Platform.
+
+```
+jms_serializer:    
+    enable_short_alias: false
+```
+
 Previous chapter: [Getting Started](getting-started.md)
 
 Next chapter: [Operations](operations.md)
