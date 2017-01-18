@@ -78,8 +78,6 @@ class Book
      */
     public static function validationGroups(self $book)
     {
-        // 
-        
         return ['a'];
     }
 
