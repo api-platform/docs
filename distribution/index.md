@@ -51,6 +51,8 @@ Apache and MySQL using [Docker Compose](https://docs.docker.com/compose/):
 
     $ docker-compose up -d # Running in detached mode
 
+If you encounter problems running Docker on Windows (especially with Docker Toolbox), see [our Troubleshooting guide](../troubleshooting.md#using-docker).
+
 The first time you start the containers, Docker downloads and builds images for you. It will take some time, but don't worry,
 this is done only once. Starting servers will then be lightning fast.
 
