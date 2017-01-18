@@ -6,7 +6,7 @@ This is a list of common pitfalls on using API Platform, and how to avoid them.
 
 ### With Docker Toolbox on Windows
 
-If you get errors like the following when running `docker-compos up` on Windows:
+If you get errors like the following when running `docker-compose up` on Windows:
 
 ```
 ERROR: for web  Cannot create container for service web: Invalid bind mount spec "C:\\Users\\Kevin\\api-platform:/app:rw": Invalid volume specification: 'C:\Users\Kevin\api-platform:/app:rw'
