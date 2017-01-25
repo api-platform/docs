@@ -108,6 +108,13 @@ api_platform:
             mime_types: ['application/ld+json']
             
         # ...
+     
+     # Custom paths to look for api resource configurations
+     loader_paths:
+         annotation: []
+         xml: []
+         yaml:
+            - "%kernel.root_dir%/../src/api/user_resources.yml"
 ```
 
 Previous chapter: [Getting Started](getting-started.md)
