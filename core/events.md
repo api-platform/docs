@@ -106,6 +106,6 @@ Constant           | Event             | Priority |
 `PRE_RESPOND`      | `kernel.view`     | 9        |
 `POST_RESPOND`     | `kernel.response` | 0        |
 
-Previous chapter: [Pagination](pagination.md)
+Previous chapter: [Error Handling](errors.md)
 
 Next chapter: [Content Negotiation](content-negotiation.md)

@@ -208,4 +208,4 @@ class Book
 
 Previous chapter: [Validation](validation.md)
 
-Next chapter: [The Event System](events.md)
+Next chapter: [Error Handling](errors.md)
