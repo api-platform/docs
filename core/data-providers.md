@@ -59,6 +59,7 @@ Then declare a Symfony service, for example:
 services:
     blog_post.collection_data_provider:
         class: 'AppBundle\DataProvider\BlogPostCollectionDataProvider'
+        public: false
         tags:
             -  { name: 'api_platform.collection_data_provider', priority: 2 }
 ```
@@ -88,8 +89,7 @@ use ApiPlatform\Core\Exception\ResourceClassNotSupportedException;
 
 final class BlogPostItemDataProvider implements ItemDataProviderInterface
 {
-    public function getItem(string $resourceClass, $id, string $operationName = null, bool $fetchData = false)
-    {
+    public function getItem(string $resourceClass, $id, string $operationName = null, array $context = [])    {
         if (BlogPost::class !== $resourceClass) {
           throw new ResourceClassNotSupportedException();
         }
@@ -107,8 +107,9 @@ attribute can be used to order providers.
 # app/config/services.yml
 
 services:
-    blog_post.collection_data_provider:
+    blog_post.item_data_provider:
         class: 'AppBundle\DataProvider\BlogPostCollectionDataProvider'
+        public: false
         tags:
             -  { name: 'api_platform.item_data_provider' }
 ```
