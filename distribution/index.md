@@ -169,7 +169,7 @@ class Book
     private $id;
 
     /**
-     * @var string|null The ISBN number if this book (or null if doesn't have one).
+     * @var string|null The ISBN number of this book (or null if doesn't have one).
      *
      * @ORM\Column(nullable=true)
      */
@@ -472,7 +472,7 @@ class Book
     private $id;
 
     /**
-     * @var string|null The ISBN number if this book (or null if doesn't have one).
+     * @var string|null The ISBN number of this book (or null if doesn't have one).
      *
      * @ORM\Column(nullable=true)
      * @Assert\Isbn
