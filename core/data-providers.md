@@ -107,8 +107,8 @@ attribute can be used to order providers.
 # app/config/services.yml
 
 services:
-    blog_post.collection_data_provider:
-        class: 'AppBundle\DataProvider\BlogPostCollectionDataProvider'
+    blog_post.item_data_provider:
+        class: 'AppBundle\DataProvider\BlogPostItemDataProvider'
         tags:
             -  { name: 'api_platform.item_data_provider' }
 ```
