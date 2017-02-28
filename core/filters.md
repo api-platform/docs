@@ -398,7 +398,7 @@ interface.
 
 API Platform provides a convenient way to create Doctrine ORM filters. If you use [custom data providers](data-providers.md),
 you can still create filters by implementing the previously mentioned interface, but - as API Platform isn't aware of your
-persistence system's  internals - you have to create the filtering logic by yourself.
+persistence system's internals - you have to create the filtering logic by yourself.
 
 ### Creating Custom Doctrine ORM Filters
 
@@ -472,7 +472,7 @@ services:
         tags: [ { name: 'api_platform.filter', id: 'regexp' } ]
 ```
 
-Finally, add this filter to resources you want:
+Finally, add this filter to resources you want to be filtered:
 
 ```php
 <?php
