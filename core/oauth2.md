@@ -308,8 +308,10 @@ php bin/console oauth:client:create client_credentials
 
 ## OAuth2 Configuration
 
-```yaml
+Add the following code to your `app/config/config.yml` and replace the `clientId` and `clientSecret` with the data from the generated application client with the `client_credentials` grant type.
 
+```yaml
+# ...
 fos_oauth_server:
     db_driver: orm       # Drivers available: orm, mongodb, or propel
     client_class:        AppBundle\Entity\Client
@@ -328,7 +330,6 @@ api_platform:
         enabled: true
         clientId: 'enter-swagger-api-documentation-client-id'
         clientSecret: 'enter-swagger-api-documentation-client-secret'
-
 ```
 
 That's all, now your OAuth2 authentication should work.
