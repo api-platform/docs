@@ -82,4 +82,4 @@ class User extends BaseUser
 
 Previous chapter: [Accept application/x-www-form-urlencoded Form Data](form-data.md)
 
-Next chapter: [Adding a JWT authentication using `LexikJWTAuthenticationBundle`](jwt.md)
+Next chapter: [Adding a OAuth2 authentication using `FOSOAuthServerBundle`](oauth2.md)

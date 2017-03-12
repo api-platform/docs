@@ -28,7 +28,7 @@ security:
     providers:
         fos_userbundle:
             id: fos_user.user_provider.username
-            
+
     firewalls:
         login:
             pattern:  ^/login
@@ -60,6 +60,6 @@ security:
         - { path: ^/, roles: [ ROLE_READER ] }
 ```       
 
-Previous chapter: [FOSUserBundle Integration](fosuser-bundle.md)
+Previous chapter: [Adding a OAuth2 authentication using `FOSOAuthServerBundle`](oauth2.md)
 
 Next chapter: [NelmioApiDocBundle integration](nelmio-api-doc.md)
