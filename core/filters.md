@@ -321,9 +321,35 @@ will not be applied unless you configure a default order direction to use:
 services:
     offer.order_filter:
         parent:    'api_platform.doctrine.orm.order_filter'
-        arguments: [ { id: 'ASC', name: 'DESC' } ]
+        arguments: [ { id: { default_direction: 'ASC' }, name: { default_direction: 'DESC' } } ]
         tags:      [ { name: 'api_platform.filter', id: 'offer.order' } ]
 ```
+
+### Comparing with Null Values
+
+When the property used for ordering can contain `null` values, you may want to specify how `null` values are treated in
+the comparison:
+
+Description                          | Strategy to set
+-------------------------------------|---------------------------------------------------------------------------------------------
+Use the default behavior of the DBMS | `null`
+Consider items as smallest           | `ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\OrderFilter::NULLS_SMALLEST` (`nulls_smallest`)
+Consider items as largest            | `ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\OrderFilter::NULLS_LARGEST` (`nulls_largest`)
+
+For instance, treat entries with a property value of `null` as the smallest, with the following service definition:
+
+```yaml
+# app/config/services.yml
+
+services:
+    offer.order_filter:
+        parent:    'api_platform.doctrine.orm.date_filter'
+        arguments: [ { validFrom: { nulls_comparison: 'nulls_smallest' } } ]
+        tags:      [ { name: 'api_platform.filter', id: 'offer.order' } ]
+```
+
+If you use a service definition format other than YAML, you can use the `ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\OrderFilter::NULLS_SMALLEST`
+constant directly.
 
 ### Using a Custom Order Query Parameter Name
 
