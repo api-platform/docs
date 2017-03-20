@@ -396,15 +396,104 @@ It means that the filter will be **silently** ignored if the property:
 Custom filters can be written by implementing the `ApiPlatform\Core\Api\FilterInterface`
 interface.
 
-If you use [custom data providers](data-providers.md), they must support filtering and be aware of active filters to work
-properly.
+API Platform provides a convenient way to create Doctrine ORM filters. If you use [custom data providers](data-providers.md),
+you can still create filters by implementing the previously mentioned interface, but - as API Platform isn't aware of your
+persistence system's internals - you have to create the filtering logic by yourself.
 
 ### Creating Custom Doctrine ORM Filters
 
-Doctrine ORM filters must implement the `ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\FilterInterface`.
-They can interact directly with the Doctrine `QueryBuilder`.
+Doctrine filters can access to the HTTP request (Symfony's `Request` object) and to the `QueryBuilder` instance used to
+retrieve data from the database. They are only applied to collections. If you want to deal with the DQL query generated
+to retrieve items, or don't need to access the HTTP request, [extensions](extensions.md) are the way to go.
 
-A convenient abstract class is also shipped with the bundle: `ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\AbstractFilter`
+A Doctrine ORM filter is basically a class implementing the `ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\FilterInterface`.
+API Platform includes a convenient abstract class implementing this interface and providing utility methods: `ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\AbstractFilter`
+
+In the following example, we create a class to filter a collection by applying a regexp to a property. The `REGEXP` DQL
+function used in this example can be found in the [`DoctrineExtensions`](https://github.com/beberlei/DoctrineExtensions)
+library. This library must be properly installed and registered to use this example (works only with MySQL).
+
+```php
+<?php
+
+// src/AppBundle/Filter/RegexpFilter.php
+
+namespace AppBundle\Filter;
+
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\AbstractFilter;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Util\QueryNameGeneratorInterface;
+use Doctrine\ORM\QueryBuilder;
+
+final class RegexpFilter extends AbstractFilter
+{
+    protected function filterProperty(string $property, $value, QueryBuilder $queryBuilder, QueryNameGeneratorInterface $queryNameGenerator, string $resourceClass, string $operationName = null)
+    {
+        $parameterName = $queryNameGenerator->generateParameterName($property); // Generate a unique parameter name to avoid collisions with other filters
+        $queryBuilder
+            ->andWhere(sprintf('REGEXP(o.%s, :%s) = 1', $property, $parameterName))
+            ->setParameter($parameterName, $value);
+    }
+
+    // This function is only used to hook in documentation generators (supported by Swagger and Hydra)
+    public function getDescription(string $resourceClass): array
+    {
+        $description = [];
+        foreach ($this->properties as $property => $strategy) {
+            $description['regexp_'.$property] = [
+                'property' => $property,
+                'type' => 'string',
+                'required' => false,
+                'swagger' => ['description' => 'Filter using a regex. This will appear in the Swagger documentation!'],
+            ];
+        }
+
+        return $description;
+    }
+}
+```
+
+Then, register this filter as a service:
+
+```yaml
+services:
+    'AppBundle\Filter\RegexpFilter':
+        class: 'AppBundle\Filter\RegexpFilter'
+        autowire: true # See the next example for a plain old definition
+        tags: [ { name: 'api_platform.filter', id: 'regexp' } ]
+```
+
+In the previous example, the filter can be applied on any property. However, thanks to the `AbstractFilter` class,
+it can also be enabled for some properties:
+
+services:
+    'AppBundle\Filter\RegexpFilter':
+        class: 'AppBundle\Filter\RegexpFilter'
+        arguments: [ '@doctrine', '@request_stack', '@?logger', { email: ~, anOtherProperty: ~ } ]
+        tags: [ { name: 'api_platform.filter', id: 'regexp' } ]
+```
+
+Finally, add this filter to resources you want to be filtered:
+
+```php
+<?php
+
+// src/AppBundle/Entity/Offer.php
+
+namespace AppBundle\Entity;
+
+use ApiPlatform\Core\Annotation\ApiResource;
+
+/**
+ * @ApiResource(attributes={"filters"={"regexp"}})
+ */
+class Offer
+{
+    // ...
+}
+```
+
+You can now enable this filter using URLs like `http://example.com/offers?regexp_email=^[FOO]`. This new filter will also
+appear in Swagger and Hydra documentations.
 
 ### Overriding Extraction of Properties from the Request
 
