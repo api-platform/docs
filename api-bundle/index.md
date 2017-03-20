@@ -102,6 +102,5 @@ This bundle is documented and tested with Behat (take a look at [the `features/`
 
 * (english) [Create API-First Web Apps with API Platform, a PHP Framework](http://blog.runscope.com/posts/create-api-first-web-apps-with-api-platform-a-php-framework)
 * (french) [A la découverte de API Platform (Symfony Live Paris 2015)](https://dunglas.fr/2015/04/mes-slides-du-symfony-live-2015-a-la-decouverte-de-api-platform/)
-* (french) [API-first et Linked Data avec Symfony (sfPot Lille 2015)](https://les-tilleuls.coop/slides/dunglas/slides-sfPot-2015-01-15/#/)
 * (french) [Behat PHP code coverage](http://www.kitpages.fr/fr/cms/204/behat-php-code-coverage)
 
