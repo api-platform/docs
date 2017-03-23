@@ -326,7 +326,7 @@ fos_oauth_server:
 
 api_platform:
     # ...
-    oauth2:
+    oauth:
         enabled: true
         clientId: 'enter-swagger-api-documentation-client-id'
         clientSecret: 'enter-swagger-api-documentation-client-secret'
