@@ -465,6 +465,7 @@ services:
 In the previous example, the filter can be applied on any property. However, thanks to the `AbstractFilter` class,
 it can also be enabled for some properties:
 
+```yaml
 services:
     'AppBundle\Filter\RegexpFilter':
         class: 'AppBundle\Filter\RegexpFilter'
