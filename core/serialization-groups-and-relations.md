@@ -136,7 +136,7 @@ In the following JSON document, the relation from a book to an author is represe
 ### Normalization
 
 To improve the application's performance, it is sometimes necessary to avoid issuing extra HTTP requests. It is possible
-to embed related objects (or only some of their properties) directly in the parent response trough serialization groups.
+to embed related objects (or only some of their properties) directly in the parent response through serialization groups.
 By using the following serialization groups annotations (`@Groups`), a JSON representation of the author is embedded in
 the book response:
 
@@ -239,7 +239,7 @@ class Book
 
 The following rules apply when denormalizating embedded relations:
 
-* If a `@id` key is present in the embedded resource, the object corresponding to the given URI will be retrieved trough
+* If a `@id` key is present in the embedded resource, the object corresponding to the given URI will be retrieved through
 the data provider and any changes in the embedded relation will be applied to that object.
 * If no `@id` key exists, a new object will be created containing data provided in the embedded JSON document.
 
