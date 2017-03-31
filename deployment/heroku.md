@@ -1,7 +1,7 @@
 # Deploying an API Platform App on Heroku
 
 [Heroku](http://heroku.com) is a popular, fast, scalable and reliable *Platform As A Service* (PaaS). As Heroku offers a
-free plan including database support trough [Heroku Postgres](https://www.heroku.com/postgres), it's
+free plan including database support through [Heroku Postgres](https://www.heroku.com/postgres), it's
 a very convenient way to experiment with the API Platform.
 
 The API Platform Heroku integration also supports MySQL databases provided by [the ClearDB add-on](https://addons.heroku.com/cleardb).

@@ -21,7 +21,7 @@ the API without having to write a single line of PHP.
 Feature: Manage books and their reviews
   In order to manage books and their reviews
   As a client software developer
-  I need to be able to retrieve, create, update and delete them trough the API.
+  I need to be able to retrieve, create, update and delete them through the API.
 
   # the "@createSchema" annotation provided by API Platform creates a temporary SQLite database for testing the API
   @createSchema
@@ -162,10 +162,10 @@ Clear the cache of the `test` environment:
 
     $ docker-compose exec web bin/console cache:clear --env=test
 
-Then run: 
+Then run:
 
     $ docker-compose run --rm web vendor/bin/behat`.
-    
+
 Everything should be green now. Your Linked Data API is now specified and tested thanks to Behat!
 
 You may also be interested by those alternative testing tools (not included in the API Platform distribution):
