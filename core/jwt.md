@@ -63,7 +63,7 @@ security:
 ```       
 
 ## Protect documentation with same authentification
-You may need protect documentation too : 
+You can also add security to the embedded SwaggerUI: 
 ```yml
     security:
     firewalls:
@@ -81,7 +81,7 @@ You may need protect documentation too :
 ```       
 
 
-You need create some route to provide a login form, login check and logout (This configuration is based on FOSUserBundle) :
+Then, you need to provide the login form, and two routes login_check and logout. This configuration is based on FOSUserBundle:
 ```yml
 fos_user_security_login:
     path:     /login
