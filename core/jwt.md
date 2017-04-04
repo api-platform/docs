@@ -57,7 +57,7 @@ security:
 
 
     access_control:
-        - { path: ^/toekn, role: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/token, role: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/books, roles: [ ROLE_READER ] }
         - { path: ^/, roles: [ ROLE_READER ] }
 ```       
