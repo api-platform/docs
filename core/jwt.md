@@ -12,7 +12,7 @@ In order to install [the bundle please follow their documentation](https://githu
 
 `LexikJWTAuthenticationBundle` requires your application to have a properly configured user provider. You can either use [API Platform's FOSUserBundle integration](fosuser-bundle) or  [create a custom user provider](http://symfony.com/doc/current/security/custom_provider.html).
 
-##Configure Token acquisition
+## Configure Token acquisition
 Here's a sample configuration using the data provider provided by FOSUser for secure API:
 
 ```yml
