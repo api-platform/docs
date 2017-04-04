@@ -12,7 +12,8 @@ In order to install [the bundle please follow their documentation](https://githu
 
 `LexikJWTAuthenticationBundle` requires your application to have a properly configured user provider. You can either use [API Platform's FOSUserBundle integration](fosuser-bundle) or  [create a custom user provider](http://symfony.com/doc/current/security/custom_provider.html).
 
-Here's a sample configuration using the data provider provided by FOSUser:
+##Configure Token acquisition
+Here's a sample configuration using the data provider provided by FOSUser for secure API:
 
 ```yml
 # app/config/security.yml
@@ -30,13 +31,17 @@ security:
             id: fos_user.user_provider.username
             
     firewalls:
+        dev:
+            pattern:  ^/(_(profiler|wdt)|css|images|js)/
+            security: false
+            
         login:
-            pattern:  ^/login
+            pattern:  ^/token
             stateless: true
             anonymous: true
             provider: fos_userbundle
             form_login:
-                check_path: /login_check
+                check_path: /token
                 username_parameter: email
                 password_parameter: password
                 success_handler: lexik_jwt_authentication.handler.authentication_success
@@ -50,15 +55,208 @@ security:
             anonymous: true
             lexik_jwt: ~
 
-        dev:
-            pattern:  ^/(_(profiler|wdt)|css|images|js)/
-            security: false
 
     access_control:
-        - { path: ^/login, role: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/toekn, role: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/books, roles: [ ROLE_READER ] }
         - { path: ^/, roles: [ ROLE_READER ] }
 ```       
+
+## Protect documentation with same authentification
+You may need protect documentation too : 
+```yml
+    security:
+    firewalls:
+        docs:
+            pattern: ^/(docs|login|logout)
+            form_login:
+                provider: fos_userbundle
+                default_target_path: api_doc
+            logout:       true
+            anonymous:    true
+
+    access_control:
+        - { path: ^/login$,  role: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/logout$, role: IS_AUTHENTICATED_ANONYMOUSLY }
+```       
+
+
+You need create some route to provide a login form, login check and logout (This configuration is based on FOSUserBundle) :
+```yml
+fos_user_security_login:
+    path:     /login
+    defaults: {_controller: "FOSUserBundle:Security:login"}
+
+fos_user_security_check:
+    path:     /login_check
+
+app.docs.auth.logout:
+    path:     /logout
+```       
+
+## Complete documentation with auth system
+At this state, you can retrieve a token through /token URI. But this URI is actually not documented in Swagger. 
+To modify documentation, you can register a new `Symfony\Component\Serializer\Normalizer\NormalizerInterface` to overload `\ApiPlatform\Core\Swagger\Serializer\DocumentationNormalizer`. 
+
+You can base on this sample : 
+```php
+<?php
+
+namespace AppBundle\Documentation;
+
+use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
+
+final class JwtDocumentationNormalizer implements NormalizerInterface
+{
+    /**
+     * @var NormalizerInterface
+     */
+    private $normalizerDeferred;
+
+    public function __construct(NormalizerInterface $normalizerDeferred)
+    {
+        $this->normalizerDeferred = $normalizerDeferred;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function normalize($object, $format = null, array $context = [])
+    {
+        $TokenDocumentation =[
+            'paths' => [
+                '/token' => [
+                    'post' => [
+                        'tags' => ['Token'],
+                        'operationId' => 'postTokenItem',
+                        'consumes' => ['application/json'],
+                        'produces' => ['application/json'],
+                        'summary' => 'Get JWT token to login.',
+                        'parameters' => [
+                            [
+                                'in' => 'formData',
+                                'name' => 'email',
+                                'description' => 'Your Email',
+                                'required' => true,
+                                'type' => 'string'
+                            ],
+                            [
+                                'in' => 'formData',
+                                'name' => 'password',
+                                'description' => 'Your password',
+                                'required' => true,
+                                'type' => 'string'
+                            ]
+                        ],
+                        'responses' => [
+                            401 => ['description' => 'Bad credentials'],
+                        ],
+                    ]
+                ]
+            ],
+            'definitions' => [
+                'Token' => [
+                    'type' => 'object',
+                    'description' => "",
+                    'properties' => [
+                        'token' => [
+                            'type' => 'string',
+                            'readOnly' => true,
+                        ]
+                    ]
+                ]
+            ]
+        ];
+
+        $deferredDocumentation = $this->normalizerDeferred->normalize($object, $format, $context);
+
+        return array_merge_recursive($TokenDocumentation, $deferredDocumentation);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function supportsNormalization($data, $format = null)
+    {
+        return $this->normalizerDeferred->supportsNormalization($data, $format);
+    }
+}
+
+```
+And register this service like that : 
+```yml
+services:
+    app.jwt.documentation.normalizer:
+      class:     AppBundle\Documentation\JwtDocumentationNormalizer
+      decorates: api_platform.swagger.normalizer.documentation
+      decoration_priority: 2
+      arguments: ['@app.jwt.documentation.normalizer.inner']
+      public:    false
+```
+
+Last problem in your documnetation, part of 'Response Messages' does not contain 401 Response (If token is invalid/expire)
+
+This sample add on each route a 401 Response. You can modify this to add your own logic to protect specific route and not each route. 
+```php 
+<?php
+
+namespace AppBundle\Documentation;
+
+use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
+
+final class Response401DocumentationNormalizer implements NormalizerInterface
+{
+    /**
+     * @var NormalizerInterface
+     */
+    private $normalizerDeferred;
+
+    public function __construct(NormalizerInterface $normalizerDeferred)
+    {
+        $this->normalizerDeferred = $normalizerDeferred;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function normalize($object, $format = null, array $context = [])
+    {
+        /** @var array[][] $deferredDocumentation */
+        $deferredDocumentation = $this->normalizerDeferred->normalize($object, $format, $context);
+
+        $description401 = ['description' => 'Bad credentials'];
+        foreach ($deferredDocumentation['paths'] as $deferredPath => $deferredPathDefinition) {
+            foreach ($deferredPathDefinition as $deferredMethod => $deferredDefinition) {
+                $deferredDocumentation['paths'][$deferredPath][$deferredMethod]['responses'][401] = $description401;
+            }
+        }
+
+        return $deferredDocumentation;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function supportsNormalization($data, $format = null)
+    {
+        return $this->normalizerDeferred->supportsNormalization($data, $format);
+    }
+}
+``` 
+
+And register this service like that : 
+```yml
+services:
+    app.401.documentation.normalizer:
+      class:     AppBundle\Documentation\Response401DocumentationNormalizer
+      decorates: api_platform.swagger.normalizer.documentation
+      decoration_priority: 1
+      arguments: ['@app.401.documentation.normalizer.inner']
+      public:    false
+```
+
+Now you have a complete documentation and a secure API !
+
 
 Previous chapter: [FOSUserBundle Integration](fosuser-bundle.md)
 
