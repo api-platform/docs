@@ -13,7 +13,7 @@ In order to install [the bundle please follow their documentation](https://githu
 `LexikJWTAuthenticationBundle` requires your application to have a properly configured user provider. You can either use [API Platform's FOSUserBundle integration](fosuser-bundle) or  [create a custom user provider](http://symfony.com/doc/current/security/custom_provider.html).
 
 ## Configure Token acquisition
-Here's a sample configuration using the FOSUserBundle to secure the API:
+Here's a sample configuration using FOSUserBundle to secure the API:
 
 ```yml
 # app/config/security.yml
@@ -65,6 +65,8 @@ security:
 ## Protect documentation with same authentification
 You can also add security to the embedded SwaggerUI: 
 ```yml
+# app/config/security.yml
+
     security:
     firewalls:
         docs:
@@ -83,6 +85,8 @@ You can also add security to the embedded SwaggerUI:
 
 Then, you need to provide the login form, and two routes login_check and logout. This configuration is based on FOSUserBundle:
 ```yml
+# app/config/routing.yml
+
 fos_user_security_login:
     path:     /login
     defaults: {_controller: "FOSUserBundle:Security:login"}
@@ -100,6 +104,8 @@ To modify documentation, you can register a new `Symfony\Component\Serializer\No
 
 You can base on this sample : 
 ```php
+//AppBundle/Documentation/JwtDocumentationNormalizer.php
+
 <?php
 
 namespace AppBundle\Documentation;
@@ -185,6 +191,8 @@ final class JwtDocumentationNormalizer implements NormalizerInterface
 ```
 And register this service like that : 
 ```yml
+# app/config/services.yml
+
 services:
     app.jwt.documentation.normalizer:
       class:     AppBundle\Documentation\JwtDocumentationNormalizer
@@ -198,6 +206,8 @@ Last problem in your documnetation, part of 'Response Messages' does not contain
 
 This sample add on each route a 401 Response. You can modify this to add your own logic to protect specific route and not each route. 
 ```php 
+//AppBundle/Documentation/Response401DocumentationNormalizer.php
+
 <?php
 
 namespace AppBundle\Documentation;
@@ -246,6 +256,8 @@ final class Response401DocumentationNormalizer implements NormalizerInterface
 
 And register this service like that : 
 ```yml
+# app/config/services.yml
+
 services:
     app.401.documentation.normalizer:
       class:     AppBundle\Documentation\Response401DocumentationNormalizer
