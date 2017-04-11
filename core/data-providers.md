@@ -17,7 +17,7 @@ For a given resource, you can implement two kind of interfaces:
 * the [`ItemDataProviderInterface`](https://github.com/api-platform/core/blob/master/src/DataProvider/ItemDataProviderInterface.php)
   is used when fetching items.
 
-In the following examples we will create custom data providers for an entity class class called `AppBundle\Entity\BlogPost`.
+In the following examples we will create custom data providers for an entity class class called `AppBundle\Entity\BlogPost`. Notice, that you need to set `identifier` attribute as it was described at [Entity Identifier Case](serialization-groups-and-relations.md#entity-identifier-case) section for your custom entity class to work properly.
 
 ## Custom Collection Data Provider
 
