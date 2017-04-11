@@ -18,7 +18,7 @@ For a given resource, you can implement two kind of interfaces:
   is used when fetching items.
 
 In the following examples we will create custom data providers for an entity class class called `AppBundle\Entity\BlogPost`.
-Note, that if your entity is not doctrine-related, you need to flag the identifier property by using `@ApiProperty(identifiier=true)` for things to work properly (refer to [Entity Identifier Case](serialization-groups-and-relations.md#entity-identifier-case)).
+Note, that if your entity is not doctrine-related, you need to flag the identifier property by using `@ApiProperty(identifiier=true)` for things to work properly (see also [Entity Identifier Case](serialization-groups-and-relations.md#entity-identifier-case)).
 
 ## Custom Collection Data Provider
 
