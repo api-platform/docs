@@ -77,7 +77,7 @@
     1. [Defining the Operation Path Naming](core/operation-path-naming.md#defining-the-operation-path-resolver)
     2. [Registering the Service](core/operation-path-naming.md#registering-the-service)
     3. [Configure it](core/operation-path-naming.md#configure-it)
-19. [Accept `application/x-www-form-urlencoded` Form Data] (core/form-data.md)
+19. [Accept `application/x-www-form-urlencoded` Form Data](core/form-data.md)
 20. [FOSUserBundle Integration](core/fosuser-bundle.md)
   1. [Creating a `User` Entity with Serialization Groups](core/fosuser-bundle.md#creating-a-user-entity-with-serialization-groups)
 21. [Adding a JWT authentication using LexikJWTAuthenticationBundle](core/jwt.md)  
