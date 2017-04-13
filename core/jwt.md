@@ -13,6 +13,7 @@ In order to install [the bundle please follow their documentation](https://githu
 `LexikJWTAuthenticationBundle` requires your application to have a properly configured user provider. You can either use [API Platform's FOSUserBundle integration](fosuser-bundle) or  [create a custom user provider](http://symfony.com/doc/current/security/custom_provider.html).
 
 ## Configure Token acquisition
+
 Here's a sample configuration using FOSUserBundle to secure the API:
 
 ```yml
@@ -64,6 +65,7 @@ security:
 
 ## Protect documentation with same authentification
 You can also add security to the embedded SwaggerUI: 
+
 ```yml
 # app/config/security.yml
 
@@ -74,35 +76,37 @@ You can also add security to the embedded SwaggerUI:
             form_login:
                 provider: fos_userbundle
                 default_target_path: api_doc
-            logout:       true
-            anonymous:    true
+            logout: true
+            anonymous: true
 
     access_control:
-        - { path: ^/login$,  role: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/login$, role: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/logout$, role: IS_AUTHENTICATED_ANONYMOUSLY }
 ```       
 
 
 Then, you need to provide the login form, and two routes login_check and logout. This configuration is based on FOSUserBundle:
+
 ```yml
 # app/config/routing.yml
 
 fos_user_security_login:
-    path:     /login
-    defaults: {_controller: "FOSUserBundle:Security:login"}
+    path: /login
+    defaults: {_controller: 'FOSUserBundle:Security:login'}
 
 fos_user_security_check:
-    path:     /login_check
+    path: /login_check
 
 app.docs.auth.logout:
     path:     /logout
 ```       
 
-## Complete documentation with auth system
-At this state, you can retrieve a token through /token URI. But this URI is actually not documented in Swagger. 
-To modify documentation, you can register a new `Symfony\Component\Serializer\Normalizer\NormalizerInterface` to overload `\ApiPlatform\Core\Swagger\Serializer\DocumentationNormalizer`. 
+## Complete Documentation with Auth System
+At this state, you can retrieve a token through `/token` URI. But this URI is actually not documented in Swagger. 
+To modify documentation, you can register a new `Symfony\Component\Serializer\Normalizer\NormalizerInterface` to overload `ApiPlatform\Core\Swagger\Serializer\DocumentationNormalizer`. 
 
 You can base on this sample : 
+
 ```php
 //AppBundle/Documentation/JwtDocumentationNormalizer.php
 
@@ -114,9 +118,6 @@ use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
 final class JwtDocumentationNormalizer implements NormalizerInterface
 {
-    /**
-     * @var NormalizerInterface
-     */
     private $normalizerDeferred;
 
     public function __construct(NormalizerInterface $normalizerDeferred)
@@ -190,21 +191,23 @@ final class JwtDocumentationNormalizer implements NormalizerInterface
 
 ```
 And register this service like that : 
+
 ```yml
 # app/config/services.yml
 
 services:
     app.jwt.documentation.normalizer:
-      class:     AppBundle\Documentation\JwtDocumentationNormalizer
+      class: 'AppBundle\Documentation\JwtDocumentationNormalizer'
       decorates: api_platform.swagger.normalizer.documentation
       decoration_priority: 2
       arguments: ['@app.jwt.documentation.normalizer.inner']
-      public:    false
+      public: false
 ```
 
 Last problem in your documnetation, part of 'Response Messages' does not contain 401 Response (If token is invalid/expire)
 
 This sample add on each route a 401 Response. You can modify this to add your own logic to protect specific route and not each route. 
+
 ```php 
 //AppBundle/Documentation/Response401DocumentationNormalizer.php
 
@@ -255,19 +258,20 @@ final class Response401DocumentationNormalizer implements NormalizerInterface
 ``` 
 
 And register this service like that : 
+
 ```yml
 # app/config/services.yml
 
 services:
     app.401.documentation.normalizer:
-      class:     AppBundle\Documentation\Response401DocumentationNormalizer
+      class: 'AppBundle\Documentation\Response401DocumentationNormalizer'
       decorates: api_platform.swagger.normalizer.documentation
       decoration_priority: 1
       arguments: ['@app.401.documentation.normalizer.inner']
-      public:    false
+      public: false
 ```
 
-Now you have a complete documentation and a secure API !
+Now you have a complete documentation and a secure API!
 
 
 Previous chapter: [FOSUserBundle Integration](fosuser-bundle.md)
