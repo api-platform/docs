@@ -12,7 +12,7 @@ In order to install [the bundle please follow their documentation](https://githu
 
 `LexikJWTAuthenticationBundle` requires your application to have a properly configured user provider. You can either use [API Platform's FOSUserBundle integration](fosuser-bundle) or  [create a custom user provider](http://symfony.com/doc/current/security/custom_provider.html).
 
-## Configure Token acquisition
+## Configure Token Acquisition
 
 Here's a sample configuration using FOSUserBundle to secure the API:
 
@@ -63,7 +63,7 @@ security:
         - { path: ^/, roles: [ ROLE_READER ] }
 ```       
 
-## Protect documentation with same authentification
+## Protect Documentation with same Authentification
 You can also add security to the embedded SwaggerUI: 
 
 ```yml
