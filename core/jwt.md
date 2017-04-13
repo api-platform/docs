@@ -84,7 +84,6 @@ You can also add security to the embedded SwaggerUI:
         - { path: ^/logout$, role: IS_AUTHENTICATED_ANONYMOUSLY }
 ```       
 
-
 Then, you need to provide the login form, and two routes login_check and logout. This configuration is based on FOSUserBundle:
 
 ```yml
@@ -190,6 +189,7 @@ final class JwtDocumentationNormalizer implements NormalizerInterface
 }
 
 ```
+
 And register this service like that : 
 
 ```yml
