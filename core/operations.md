@@ -297,7 +297,7 @@ together.
 Here we consider that DunglasActionBundle is installed (the default when using the API Platform distribution). This
 action will be automatically registered as a service (the service name is the same as the class name: `AppBundle\Action\BookSpecial`).
 
-API Platform automatically retrieve the appropriate PHP entity then then deserializes it, and for `POST` and `PUT` requests
+API Platform automatically retrieves the appropriate PHP entity then deserializes it, and for `POST` and `PUT` requests
 updates the entity with data provided by the user.
 
 Services (`$myService` here) are automatically injected thanks to the autowiring feature. You can type-hint any service
