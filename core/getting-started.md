@@ -173,7 +173,10 @@ As an alternative to annotations, you can map entity classes using XML or YAML:
 <!-- src/AppBundle/Resources/config/api_resources/resources.xml -->
 
 <?xml version="1.0" encoding="UTF-8" ?>
-<resources>
+<resources xmlns="https://api-platform.com/schema/metadata"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="https://api-platform.com/schema/metadata
+           https://api-platform.com/schema/metadata/metadata-2.0.xsd">
     <resource class="AppBundle\Entity\Product" />
     <resource
         class="AppBundle\Entity\Offer"
