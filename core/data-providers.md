@@ -18,6 +18,7 @@ For a given resource, you can implement two kind of interfaces:
   is used when fetching items.
 
 In the following examples we will create custom data providers for an entity class class called `AppBundle\Entity\BlogPost`.
+Note, that if your entity is not doctrine-related, you need to flag the identifier property by using `@ApiProperty(identifiier=true)` for things to work properly (see also [Entity Identifier Case](serialization-groups-and-relations.md#entity-identifier-case)).
 
 ## Custom Collection Data Provider
 
@@ -65,8 +66,8 @@ services:
 ```
 
 Tagging the service with the tag `api_platform.collection_data_provider` will enable API Platform Core to automatically
-register and use this data provider. The optional attribute `priority` allows to define the order in wich are called the
-data providers. The first data provider not throwing a `ApiPlatform\Core\Exception\ResourceClassNotSupportedException`
+register and use this data provider. The optional attribute `priority` allows to define the order in which the
+data providers are called. The first data provider not throwing a `ApiPlatform\Core\Exception\ResourceClassNotSupportedException`
 will be used.
 
 ## Custom Item Data Provider

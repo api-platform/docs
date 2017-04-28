@@ -49,7 +49,8 @@ Operations can be configured using annotations, XML or YAML. In the following ex
 for the `GET` method for both `collectionOperations` and `itemOperations` to create a readonly endpoint.
 
 `itemOperations` and `collectionOperations` are arrays containing a list of operation. Each operation is defined by a key
-corresponding to the name of the operation that can be anything you want and an array of properties as value.
+corresponding to the name of the operation that can be anything you want and an array of properties as value. If an
+empty list of operations is provided, all operations are disabled.
 
 <configurations>
 
@@ -90,12 +91,16 @@ AppBundle\Entity\Book:
            xsi:schemaLocation="https://api-platform.com/schema/metadata
            https://api-platform.com/schema/metadata/metadata-2.0.xsd">
     <resource class="AppBundle\Entity\Book">
-        <itemOperation name="get">
-            <attribute name="method">GET</attribute>
-        </itemOperation>
-        <collectionOperation name="get">
-            <attribute name="method">GET</attribute>
-        </collectionOperation>
+        <itemOperations>
+            <itemOperation name="get">
+                <attribute name="method">GET</attribute>
+            </itemOperation>
+        </itemOperations>
+        <collectionOperations>
+            <collectionOperation name="get">
+                <attribute name="method">GET</attribute>
+            </collectionOperation>
+        </collectionOperations>
     </resource>
 </resources>
 ```
@@ -124,7 +129,7 @@ use ApiPlatform\Core\Annotation\ApiResource;
 /**
  * @ApiResource(itemOperations={
  *     "get"={"method"="GET", "path"="/grimoire/{id}"},
- *     "put"={"method"="PUT", "path"="/grimoire/{id}/update", "hydra_context"={"foo"="bar"}},
+ *     "put"={"method"="PUT", "path"="/grimoire/{id}/update", "hydra_context"={"foo"="bar"},
  * })
  */
 class Book
@@ -156,17 +161,19 @@ AppBundle\Entity\Book:
            xsi:schemaLocation="https://api-platform.com/schema/metadata
            https://api-platform.com/schema/metadata/metadata-2.0.xsd">
     <resource class="AppBundle\Entity\Book">
-        <itemOperation name="get">
-            <attribute name="method">GET</attribute>
-            <attribute name="path">/grimoire/{id}</attribute>
-        </itemOperation>
-        <itemOperation name="put">
-            <attribute name="method">PUT</attribute>
-            <attribute name="path">/grimoire/{id}/update</attribute>
-            <attribute name="hydra_context">
-                <attribute name="foo">bar</attribute>
-            </attribute>
-        </itemOperation>
+        <itemOperations>
+            <itemOperation name="get">
+                <attribute name="method">GET</attribute>
+                <attribute name="path">/grimoire/{id}</attribute>
+            </itemOperation>
+            <itemOperation name="put">
+                <attribute name="method">PUT</attribute>
+                <attribute name="path">/grimoire/{id}/update</attribute>
+                <attribute name="hydra_context">
+                    <attribute name="foo">bar</attribute>
+                </attribute>
+            </itemOperation>
+        </itemOperations>
     </resource>
 </resources>
 ```
@@ -239,12 +246,14 @@ AppBundle\Entity\Book:
            xsi:schemaLocation="https://api-platform.com/schema/metadata
            https://api-platform.com/schema/metadata/metadata-2.0.xsd">
     <resource class="AppBundle\Entity\Book">
-        <itemOperation name="get">
-            <attribute name="method">GET</attribute>
-        </itemOperation>
-        <itemOperation name="special">
-            <attribute name="route_name">book_special</attribute>
-        </itemOperation>
+        <itemOperations>
+            <itemOperation name="get">
+                <attribute name="method">GET</attribute>
+            </itemOperation>
+            <itemOperation name="special">
+                <attribute name="route_name">book_special</attribute>
+            </itemOperation>
+        </itemOperations>
     </resource>
 </resources>
 ```

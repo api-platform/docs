@@ -162,7 +162,7 @@ Clear the cache of the `test` environment:
 
     $ docker-compose exec web bin/console cache:clear --env=test
 
-Then run:
+Then run: 
 
     $ docker-compose run --rm web vendor/bin/behat`.
 

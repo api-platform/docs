@@ -126,8 +126,6 @@ services:
         class: AppBundle\Doctrine\ORM\Extension\CurrentUserExtension
         public: false
         arguments:
-            - '@api_platform.metadata.property.name_collection_factory'
-            - '@api_platform.metadata.property.metadata_factory'
             - '@security.token_storage'
             - '@security.authorization_checker'
         tags:
