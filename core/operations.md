@@ -85,7 +85,10 @@ AppBundle\Entity\Book:
 <!-- src/AppBundle/Resources/config/api_resources/resources.xml -->
 
 <?xml version="1.0" encoding="UTF-8" ?>
-<resources>
+<resources xmlns="https://api-platform.com/schema/metadata"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="https://api-platform.com/schema/metadata
+           https://api-platform.com/schema/metadata/metadata-2.0.xsd">
     <resource class="AppBundle\Entity\Book">
         <itemOperation name="get">
             <attribute name="method">GET</attribute>
@@ -148,7 +151,10 @@ AppBundle\Entity\Book:
 <!-- src/AppBundle/Resources/config/api_resources/resources.xml -->
 
 <?xml version="1.0" encoding="UTF-8" ?>
-<resources>
+<resources xmlns="https://api-platform.com/schema/metadata"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="https://api-platform.com/schema/metadata
+           https://api-platform.com/schema/metadata/metadata-2.0.xsd">
     <resource class="AppBundle\Entity\Book">
         <itemOperation name="get">
             <attribute name="method">GET</attribute>
@@ -228,7 +234,10 @@ AppBundle\Entity\Book:
 <!-- src/AppBundle/Resources/config/api_resources/resources.xml -->
 
 <?xml version="1.0" encoding="UTF-8" ?>
-<resources>
+<resources xmlns="https://api-platform.com/schema/metadata"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="https://api-platform.com/schema/metadata
+           https://api-platform.com/schema/metadata/metadata-2.0.xsd">
     <resource class="AppBundle\Entity\Book">
         <itemOperation name="get">
             <attribute name="method">GET</attribute>
