@@ -104,3 +104,4 @@
 2. [Troubleshooting](troubleshooting.md)
 3. [Contribution guide](https://github.com/api-platform/api-platform/blob/master/CONTRIBUTING.md)
 4. [Contributor Code Of Conduct](conduct.md)
+5. [Upgrade path from v1 to v2](upgrade-path.md)
