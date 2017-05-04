@@ -56,7 +56,7 @@ API Platform Core is able to automatically expose entities mapped as "API resour
 operations.
 To expose your entities, you can use Docblock annotations, XML and YAML configuration files.
 
-Here is an example of entities mapped using annotations which will be exposed trough a REST API:
+Here is an example of entities mapped using annotations which will be exposed through a REST API:
 
 ```php
 <?php
@@ -138,7 +138,7 @@ class Offer
 }
 ```
 
-It is the minimal configuration required to expose `Product` and `Offer` entities as JSON-LD documents trough an hypermedia
+It is the minimal configuration required to expose `Product` and `Offer` entities as JSON-LD documents through an hypermedia
 web API.
 
 If you are familiar with the Symfony ecosystem, you noticed that entity classes are also mapped with Doctrine ORM annotations
