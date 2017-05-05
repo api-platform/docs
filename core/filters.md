@@ -453,7 +453,7 @@ final class CustomOrderFilter extends OrderFilter
 {
     protected function extractProperties(Request $request)
     {
-        $filter = $request->query->get('filter[order]', []);
+        return $request->query->get('filter[order]', []);
     }
 }
 ```
