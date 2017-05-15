@@ -61,7 +61,7 @@ var app = angular
 
 ## ng-admin
 
-If you want to use [ng-admin](https://github.com/marmelab/ng-admin), set the [Restangular](#restangular) config,
+If you want to use [ng-admin](https://github.com/marmelab/ng-admin), set the [Restangular](https://github.com/mgonto/restangular) config,
 then create your entities like in the following example :
 
 ```javascript
