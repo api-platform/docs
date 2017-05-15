@@ -83,7 +83,7 @@ Name                          | Event              | Pre & Post hooks           
 `ValidateListener`            | `kernel.view`      | `PRE_VALIDATE`, `POST_VALIDATE`      | 64       | [validate data](validation.md) (`POST`, `PUT`)
 `WriteListener`               | `kernel.view`      | `PRE_WRITE`, `POST_WRITE`            | 32       | if using the Doctrine ORM, persist data (`POST`, `PUT`, `DELETE`)
 `SerializeListener`           | `kernel.view`      | None                                 | 16       | serialize the PHP entity in string [according to the request format](content-negotiation.md)
-`RespondListener`             | `kernel.view`      | `PRE_RESPOND`, `POST_RESPOND`        | 8        | transform serialized to a `Symfony\Component\HttpFoundation\Response` instance
+`RespondListener`             | `kernel.response`  | `PRE_RESPOND`, `POST_RESPOND`        | 8        | transform serialized to a `Symfony\Component\HttpFoundation\Response` instance
 `AddLinkHeaderListener`       | `kernel.response`  | None                                 | 0        | add a `Link` HTTP header pointing to the Hydra documentation
 `ValidationExceptionListener` | `kernel.exception` | None                                 | 0        | serialize validation exceptions in the Hydra format
 `ExceptionListener`           | `kernel.exception` | None                                 | -96      | serialize PHP exceptions in the Hydra format (including the stack trace in debug mode)
@@ -103,8 +103,8 @@ Constant           | Event             | Priority |
 `POST_VALIDATE`    | `kernel.view`     | 63       |
 `PRE_WRITE`        | `kernel.view`     | 33       |
 `POST_WRITE`       | `kernel.view`     | 31       |
-`PRE_RESPOND`      | `kernel.view`     | 9        |
-`POST_RESPOND`     | `kernel.response` | 0        |
+`PRE_RESPOND`      | `kernel.response` | 9        |
+`POST_RESPOND`     | `kernel.response` | 7        |
 
 Previous chapter: [Pagination](pagination.md)
 
