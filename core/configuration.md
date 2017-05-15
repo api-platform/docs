@@ -120,6 +120,14 @@ api_platform:
             - "%kernel.root_dir%/../src/api/user_resources.yml"
 ```
 
+## JMS Serializer
+Disable the short service "serializer" alias name as it conflicts with API Platform.
+
+```
+jms_serializer:    
+    enable_short_alias: false
+```
+
 Previous chapter: [Getting Started](getting-started.md)
 
 Next chapter: [Operations](operations.md)
