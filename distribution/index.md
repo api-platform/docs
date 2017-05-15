@@ -41,7 +41,7 @@ API Platform is shipped with a [Docker](https://docker.com) setup that makes it 
 environment up and running. This setup contains an image pre-configured with PHP 7, Apache and everything needed to run API
 Platform and a MySQL image to host the database.
 
-Start by [downloading the API Platform Standard Edition archive](https://api.github.com/repos/api-platform/api-platform/zipball) and extract its content.
+Start by [downloading the API Platform Standard Edition archive](https://github.com/api-platform/api-platform/releases/latest) and extract its content.
 The resulting directory contains an empty API Platform project structure. You will add your own code and configuration inside
 it.
 Then, if you do not already have Docker on your computer, [it's the right time to install it](https://www.docker.com/products/overview#/install_the_platform).
@@ -92,15 +92,15 @@ ORM and its bridge supports major RDBMS including MySQL, PostgreSQL, SQLite, SQL
 Instead of using Docker, API Platform can also be installed on the local machine using [Composer](https://getcomposer.org/):
 
     $ composer create-project api-platform/api-platform bookshop-api
-    
+
 Then, enter the project folder, create the database and its schema:  
-    
+
     $ cd bookshop-api
     $ php bin/console doctrine:database:create
     $ php bin/console doctrine:schema:create
-    
+
 And start the server:    
-    
+
     $ php bin/console server:run
 
 ## It's ready!
