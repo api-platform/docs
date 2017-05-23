@@ -12,6 +12,22 @@ you can modify are handled with [`denormalization_context`](serialization-groups
 
 First register the following service:
 
+```yaml
+# app/config/services.yml
+
+resource.user:
+        parent:    "api.resource"
+        arguments: [ "AppBundle\Entity\User" ]
+        calls:
+            -      method:    "initNormalizationContext"
+                   arguments: [ { groups: [ "user_read" ] } ]
+            -      method:    "initDenormalizationContext"
+                   arguments: [ { groups: [ "user_write" ] } ]
+        tags:      [ { name: "api.resource" } ]
+```
+
+Then create your User entity with serialization groups:
+
 ```php
 <?php
 
