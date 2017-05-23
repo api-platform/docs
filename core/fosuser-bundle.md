@@ -10,23 +10,7 @@ You need to use serialization groups to hide some properties like `plainPassword
 shown are handled with the [`normalization_context`](serialization-groups-and-relations.md#normalization), while the properties
 you can modify are handled with [`denormalization_context`](serialization-groups-and-relations.md#denormalization).
 
-First register the following service:
-
-```yaml
-# app/config/services.yml
-
-resource.user:
-        parent:    "api.resource"
-        arguments: [ "AppBundle\Entity\User" ]
-        calls:
-            -      method:    "initNormalizationContext"
-                   arguments: [ { groups: [ "user_read" ] } ]
-            -      method:    "initDenormalizationContext"
-                   arguments: [ { groups: [ "user_write" ] } ]
-        tags:      [ { name: "api.resource" } ]
-```
-
-Then create your User entity with serialization groups:
+Create your User entity with serialization groups:
 
 ```php
 <?php
