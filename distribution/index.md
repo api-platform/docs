@@ -369,7 +369,7 @@ Try the `GET` operation on the collection. The book we added appears. When the c
 the pagination will automatically show up, [and this is entirely configurable](../core/pagination.md). You may be interested
 in [adding some filters and adding sorts to the collection](../core/filters.md) as well.
 
-You may have notice that some keys start by the `@` symbol in the generated JSON response (`@id`, `@type`, `@context`...)?
+You may have noticed that some keys start with the `@` symbol in the generated JSON response (`@id`, `@type`, `@context`...)?
 API Platform comes with a full support of the [JSON-LD](http://json-ld.org/) format (and its [Hydra](http://www.hydra-cg.com/)
 extension). It allows to build smart clients, with auto-discoverability capabilities (take a look at [Hydra console](http://www.markus-lanthaler.com/hydra/console/))
 and is very useful for open data, SEO and interoperability when [used with open vocabularies such as Schema.org](http://blog.schema.org/2013/06/schemaorg-and-json-ld.html).
@@ -397,7 +397,7 @@ Now, add a review for this book using the `POST` operation for the `Review` reso
 There are two interesting things to mention about this request:
 
 First, we learned how to work with relations. In a hypermedia API, every resource is identified by an (unique) [IRI](https://en.wikipedia.org/wiki/Internationalized_Resource_Identifier).
-An URL is a valid IRI, and it's what API Platform uses. The `@id` property of every JSON-LD document contains the IRI identifying
+A URL is a valid IRI, and it's what API Platform uses. The `@id` property of every JSON-LD document contains the IRI identifying
 it. You can use this IRI to reference this document from other documents. In the previous request, we used the IRI of the
 book we created earlier to link it with the `Review` we were creating. API Platform is smart enough to deal with IRIs.
 By the way, you may want to [embed documents](../core/serialization-groups-and-relations.md) instead of referencing them
