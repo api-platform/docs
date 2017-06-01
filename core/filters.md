@@ -541,9 +541,9 @@ use Symfony\Component\HttpFoundation\Request;
 
 final class CustomOrderFilter extends OrderFilter
 {
-    protected function extractProperties(Request $request)
+    protected function extractProperties(Request $request): array
     {
-        $filter = $request->query->get('filter[order]', []);
+        return $request->query->get('filter[order]', []);
     }
 }
 ```
