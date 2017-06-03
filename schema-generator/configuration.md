@@ -260,7 +260,7 @@ author: "Kévin Dunglas <kevin@les-tilleuls.coop>"
 ## Disabling Generators and Creating Custom Ones
 
 By default, all generators except `DunglasJsonLdApi` (API Platform v1) and `SerializerGroups` are enabled.
-You can specify the list of generators to use with the `generators` option.
+You can specify the list of generators to use with the `annotationGenerators` option.
 
 Example (enabling only the PHPDoc generator):
 
