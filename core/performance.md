@@ -171,7 +171,7 @@ configuration.
 
 #### Disable eager loading
 
-If for any reason you don't want the eager loading feature, you can turn off it in the configuration:
+If for any reason you don't want the eager loading feature, you can turn it off in the configuration:
 
 ```yaml
 # app/config/config.yaml
