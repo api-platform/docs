@@ -71,9 +71,9 @@ almost everything.
 The API Platform Standard Edition comes with a dummy entity for test purpose: `src/AppBundle/Entity/Foo.php`. We will remove
 it later, but for now, create the related database table:
 
-    $ docker-compose exec php bin/console doctrine:schema:create
+    $ docker-compose exec app bin/console doctrine:schema:create
 
-The `php` container is where your project stands. Prefixing a command by `docker-compose exec php` allows to execute the
+The `app` container is where your project stands. Prefixing a command by `docker-compose exec app` allows to execute the
 given command in the container. You may want [to create an alias](http://www.linfo.org/alias.html) to easily run commands
 inside the container.
 
@@ -94,14 +94,14 @@ Instead of using Docker, API Platform can also be installed on the local machine
     $ composer create-project api-platform/api-platform bookshop-api
     
 Then, enter the project folder, create the database and its schema:  
-    
+
     $ cd bookshop-api
-    $ php bin/console doctrine:database:create
-    $ php bin/console doctrine:schema:create
+    $ bin/console doctrine:database:create
+    $ bin/console doctrine:schema:create
     
 And start the server:    
-    
-    $ php bin/console server:run
+
+    $ bin/console server:run
 
 ## It's ready!
 
@@ -287,12 +287,12 @@ or in Kévin's book "[Persistence in PHP with the Doctrine ORM](https://www.amaz
 As we used private properties (but API Platform as well as Doctrine can also work with public ones), we need to create the
 corresponding accessor methods. Run the following command or use the code generation feature of your IDE to generate them:
 
-    $ docker-compose exec php bin/console doctrine:generate:entities AppBundle
+    $ docker-compose exec app bin/console doctrine:generate:entities AppBundle
 
 Then, delete the file `src/AppBundle/Entity/Foo.php`, this demo entity isn't useful anymore.
 Finally, tell Doctrine to sync the database's tables structure with our new data model:
 
-    $ docker-compose exec php bin/console doctrine:schema:update --force
+    $ docker-compose exec app bin/console doctrine:schema:update --force
 
 We now have a working data model that you can persist and query. To create an API endpoint with CRUD capabilities corresponding
 to an entity class, we just have to mark it with an annotation called `@ApiResource`:
