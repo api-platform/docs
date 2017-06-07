@@ -283,8 +283,7 @@ annotationGenerators:
 
 ## Disabling `id` Generator
 
-By default, the generator add a property called `id` not provided by Schema.org. This useful when using generated entity
-with an ORM or an ODM.
+By default, the generator adds a property called `id` not provided by Schema.org. This may be useful when generating an entity for use with an ORM or an ODM.
 This behavior can be disabled with the following setting:
 
 ```yaml
