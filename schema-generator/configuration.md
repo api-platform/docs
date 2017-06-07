@@ -260,7 +260,7 @@ author: "Kévin Dunglas <kevin@les-tilleuls.coop>"
 ## Disabling Generators and Creating Custom Ones
 
 By default, all generators except `DunglasJsonLdApi` (API Platform v1) and `SerializerGroups` are enabled.
-You can specify the list of generators to use with the `generators` option.
+You can specify the list of generators to use with the `annotationGenerators` option.
 
 Example (enabling only the PHPDoc generator):
 
@@ -283,8 +283,7 @@ annotationGenerators:
 
 ## Disabling `id` Generator
 
-By default, the generator add a property called `id` not provided by Schema.org. This useful when using generated entity
-with an ORM or an ODM.
+By default, the generator adds a property called `id` not provided by Schema.org. This may be useful when generating an entity for use with an ORM or an ODM.
 This behavior can be disabled with the following setting:
 
 ```yaml
