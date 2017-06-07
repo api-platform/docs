@@ -160,11 +160,11 @@ The API Platform flavor of Behat also comes with a temporary SQLite database ded
 
 Clear the cache of the `test` environment:
 
-    $ docker-compose php web bin/console cache:clear --env=test
+    $ docker-compose app bin/console cache:clear --env=test
 
 Then run:
 
-    $ docker-compose run --rm php vendor/bin/behat`.
+    $ docker-compose run --rm app vendor/bin/behat`.
     
 Everything should be green now. Your Linked Data API is now specified and tested thanks to Behat!
 
