@@ -464,13 +464,15 @@ final class RegexpFilter extends AbstractFilter
     public function getDescription(string $resourceClass): array
     {
         $description = [];
-        foreach ($this->properties as $property => $strategy) {
-            $description['regexp_'.$property] = [
-                'property' => $property,
-                'type' => 'string',
-                'required' => false,
-                'swagger' => ['description' => 'Filter using a regex. This will appear in the Swagger documentation!'],
-            ];
+        if (!empty($this->properties)) {
+            foreach ($this->properties as $property => $strategy) {
+                $description['regexp_'.$property] = [
+                    'property' => $property,
+                    'type' => 'string',
+                    'required' => false,
+                    'swagger' => ['description' => 'Filter using a regex. This will appear in the Swagger documentation!'],
+                ];
+            }
         }
 
         return $description;
