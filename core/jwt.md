@@ -35,13 +35,12 @@ security:
             stateless: true
             anonymous: true
             provider: fos_userbundle
-            form_login:
+            json_login:
                 check_path: /login_check
-                username_parameter: email
-                password_parameter: password
+                username_path: email
+                password_path: password
                 success_handler: lexik_jwt_authentication.handler.authentication_success
                 failure_handler: lexik_jwt_authentication.handler.authentication_failure
-                require_previous_session: false
 
         main:
             pattern:   ^/
