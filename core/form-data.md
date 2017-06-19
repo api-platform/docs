@@ -102,7 +102,7 @@ class AppBundle extends Bundle
         $container->addCompilerPass(new class implements CompilerPassInterface {
             public function process(ContainerBuilder $container) {
                 $container
-                    ->findDefinition('api_platform.listener.request.deserialize');
+                    ->findDefinition('api_platform.listener.request.deserialize')
                     ->clearTags();
             }
         });
