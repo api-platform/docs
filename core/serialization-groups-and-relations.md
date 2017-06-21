@@ -334,7 +334,7 @@ final class BookContextBuilder implements SerializerContextBuilderInterface
         $context = $this->decorated->createFromRequest($request, $normalization, $extractedAttributes);
         $subject = $request->attributes->get('data');
 
-        if ($subject instanceof Book && $this->authorizationChecker->isGranted('ROLE_ADMIN') && false === $normalization) {
+        if ($subject instanceof Book && isset($context['groups']) && $this->authorizationChecker->isGranted('ROLE_ADMIN') && false === $normalization) {
             $context['groups'][] = 'admin_input';
         }
 
