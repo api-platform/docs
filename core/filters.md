@@ -522,6 +522,229 @@ class Offer
 You can now enable this filter using URLs like `http://example.com/offers?regexp_email=^[FOO]`. This new filter will also
 appear in Swagger and Hydra documentations.
 
+### [Doctrine filters](http://docs.doctrine-project.org/projects/doctrine-orm/en/latest/reference/filters.html)
+
+Doctrine features a filter system that allows the developer to add SQL to the conditional clauses of queries, regardless the place where the SQL is generated (e.g. from a DQL query, or by loading associated entities).
+These are applied on collections and items, so are incredibly useful.
+
+The following information, specific to Doctrine filters in Symfony, is based upon [a great article posted on Michaël Perrin's blog](http://blog.michaelperrin.fr/2014/12/05/doctrine-filters/).
+
+Suppose we have a User entity and an Order entity related to the User one. A user should only see his orders and no others' ones.
+
+```php
+<?php
+
+# src/Acme/DemoBundle/Entity/User.php
+
+/** @Entity **/
+class User
+{
+    // ...
+}
+
+/** @Entity **/
+class Order
+{
+    // ...
+
+    /**
+     * @ManyToOne(targetEntity="User")
+     * @JoinColumn(name="user_id", referencedColumnName="id")
+     **/
+    private $user;
+}
+```
+
+The whole idea is that any query on the order table should add a WHERE user_id = :user_id condition.
+
+1) Creation of a custom annotation for our restricted entities
+
+```php
+<?php
+
+# src/Acme/DemoBundle/Annotation/UserAware.php
+
+namespace Acme\DemoBundle\Annotation;
+
+use Doctrine\Common\Annotations\Annotation;
+
+/**
+ * @Annotation
+ * @Target("CLASS")
+ */
+final class UserAware
+{
+    public $userFieldName;
+}
+```
+
+2) Use of the annotation on the Order entity
+
+Let's mark the Order entity as a "user aware" entity.
+
+```php
+<?php
+
+# src/Acme/DemoBundle/Entity/Order.php
+
+namespace Acme\DemoBundle\Entity;
+
+use Acme\DemoBundle\Annotation\UserAware;
+
+/**
+ * Order entity
+ *
+ * @UserAware(userFieldName="user_id")
+ */
+class Order { ... }
+```
+
+3) Creation of a Doctrine filter class
+
+```php
+<?php
+
+# src/Acme/DemoBundle/Filter/UserFilter.php
+
+namespace Acme\DemoBundle\Filter;
+
+use Doctrine\ORM\Mapping\ClassMetaData;
+use Doctrine\ORM\Query\Filter\SQLFilter;
+use Doctrine\Common\Annotations\Reader;
+
+class UserFilter extends SQLFilter
+{
+    protected $reader;
+
+    public function addFilterConstraint(ClassMetadata $targetEntity, $targetTableAlias)
+    {
+        if (empty($this->reader)) {
+            return '';
+        }
+
+        // The Doctrine filter is called for any query on any entity
+        // Check if the current entity is "user aware" (marked with an annotation)
+        $userAware = $this->reader->getClassAnnotation(
+            $targetEntity->getReflectionClass(),
+            'Acme\\DemoBundle\\Annotation\\UserAware'
+        );
+
+        if (!$userAware) {
+            return '';
+        }
+
+        $fieldName = $userAware->userFieldName;
+
+        try {
+            // Don't worry, getParameter automatically quotes parameters
+            $userId = $this->getParameter('id');
+        } catch (\InvalidArgumentException $e) {
+            // No user id has been defined
+            return '';
+        }
+
+        if (empty($fieldName) || empty($userId)) {
+            return '';
+        }
+
+        $query = sprintf('%s.%s = %s', $targetTableAlias, $fieldName, $userId);
+
+        return $query;
+    }
+
+    public function setAnnotationReader(Reader $reader)
+    {
+        $this->reader = $reader;
+    }
+}
+```
+
+4) Configure the Doctrine filter
+
+```yaml
+# app/config/config.yml
+
+doctrine:
+    orm:
+        filters:
+            user_filter:
+                class: Acme\DemoBundle\Filter\UserFilter
+                enabled: true
+```
+
+And add a listener for every request that initializes the Doctrine filter with the current user in your bundle services declaration file.
+
+```yaml
+# AcmeDemoBundle/Resources/config/services.yml
+
+services:
+    acme_demo.doctrine.filter.configurator:
+        class: Acme\DemoBundle\Filter\Configurator
+        arguments:
+            - "@doctrine.orm.entity_manager"
+            - "@security.token_storage"
+            - "@annotation_reader"
+        tags:
+            - { name: kernel.event_listener, event: kernel.request, priority: 5 }
+```
+
+It's key to set the priority higher than the ApiPlatform\Core\EventListener\ReadListener's priority, as flagged in [this issue](https://github.com/api-platform/core/issues/1185), as otherwise the PaginatorExtension will ignore the Doctrine filter and return incorrect totalItems and page (first/last/next) data.
+
+Lastly, implement the configurator class:
+
+```php
+<?php
+
+namespace Acme\TestBundle\Filter;
+
+use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use Doctrine\Common\Persistence\ObjectManager;
+use Doctrine\Common\Annotations\Reader;
+
+class Configurator
+{
+    protected $em;
+    protected $tokenStorage;
+    protected $reader;
+
+    public function __construct(ObjectManager $em, TokenStorageInterface $tokenStorage, Reader $reader)
+    {
+        $this->em              = $em;
+        $this->tokenStorage    = $tokenStorage;
+        $this->reader          = $reader;
+    }
+
+    public function onKernelRequest()
+    {
+        if ($user = $this->getUser()) {
+            $filter = $this->em->getFilters()->enable('user_filter');
+            $filter->setParameter('id', $user->getId());
+            $filter->setAnnotationReader($this->reader);
+        }
+    }
+
+    private function getUser()
+    {
+        $token = $this->tokenStorage->getToken();
+
+        if (!$token) {
+            return null;
+        }
+
+        $user = $token->getUser();
+
+        if (!($user instanceof UserInterface)) {
+            return null;
+        }
+
+        return $user;
+    }
+}
+```
+
+Done: Doctrine will automatically filter all "UserAware" entities!
+
 ### Overriding Extraction of Properties from the Request
 
 You can change the way the filter parameters are extracted from the request. This can be done by overriding the `extractProperties(\Symfony\Component\HttpFoundation\Request $request)`
