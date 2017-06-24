@@ -164,7 +164,7 @@ Clear the cache of the `test` environment:
 
 Then run:
 
-    $ docker-compose run --rm app vendor/bin/behat`.
+    $ docker-compose run --rm app vendor/bin/behat
     
 Everything should be green now. Your Linked Data API is now specified and tested thanks to Behat!
 
