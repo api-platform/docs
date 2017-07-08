@@ -118,6 +118,11 @@ api_platform:
          xml: []
          yaml:
             - "%kernel.root_dir%/../src/api/user_resources.yml"
+     
+     # Enable api key integration for Swagger UI
+     api_key:
+         enabled: false
+         header: 'Authorization'
 ```
 
 Previous chapter: [Getting Started](getting-started.md)
