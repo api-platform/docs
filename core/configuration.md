@@ -122,8 +122,8 @@ api_platform:
      # Enable api key integration for Swagger UI, can contain multiple entries
      api_keys:
          authorization: # configuration name
-            type: header # can be query or header
-            name: Authorization # name of the header or parameter, depending on your type
+            type: 'header' # can be query or header
+            name: 'Authorization' # name of the header or parameter, depending on your type
 ```
 
 Previous chapter: [Getting Started](getting-started.md)
