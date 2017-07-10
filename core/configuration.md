@@ -119,10 +119,11 @@ api_platform:
          yaml:
             - "%kernel.root_dir%/../src/api/user_resources.yml"
      
-     # Enable api key integration for Swagger UI
-     api_key:
-         enabled: false
-         header: 'Authorization'
+     # Enable api key integration for Swagger UI, can contain multiple entries
+     api_keys:
+         authorization: # configuration name
+            type: header # can be query or header
+            name: Authorization # name of the header or parameter, depending on your type
 ```
 
 Previous chapter: [Getting Started](getting-started.md)
