@@ -22,6 +22,9 @@ api_platform:
     # Specify a name converter to use.
     name_converter: ~
 
+    # Specify a name for the folder within bundle that contain api resources.
+    api_resources_directory: 'Entity'
+
     eager_loading:
         # To enable or disable eager loading.
         enabled: true
