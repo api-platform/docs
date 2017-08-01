@@ -36,11 +36,20 @@ Fortunately, Doctrine proposes another approach to remedy this problem: [eager l
 This can easily be enabled for a relation: `@ORM\ManyToOne(fetch="EAGER")`.
 
 By default in API Platform, we made the choice to force eager loading for all relations, with or without the Doctrine
-`fetch` attribute. Thanks to the eager loading [extension](extensions.md).
+`fetch` attribute. Thanks to the eager loading [extension](extensions.md). The `EagerLoadingExtension` will join every
+readable association according to the serialization context. If you want to fetch an association that is not serializable
+you've to bypass `readable` and `readableLink` by using the `fetchEager` attribute on the property declaration, for example:
+
+```php
+/**
+ * @ApiProperty(attributes={"fetchEager": true})
+ */
+ public $foo;
+```
 
 #### Max joins
 
-There is a default restriction with this feature. We allow up to 30 joins per query. Beyond, an 
+There is a default restriction with this feature. We allow up to 30 joins per query. Beyond, an
 `ApiPlatform\Core\Exception\RuntimeException` exception will be thrown but this value can easily be increased with a
 little of configuration:
 
@@ -61,7 +70,7 @@ can be a good solution to fix this issue.
 
 #### Force eager
 
-As mentioned above, by default we force eager loading for all relations. This behaviour can be modified with the 
+As mentioned above, by default we force eager loading for all relations. This behaviour can be modified with the
 configuration in order to apply it only on join relations having the `EAGER` fetch mode:
 
 ```yaml
@@ -117,8 +126,8 @@ class User
 {
     /**
      * @var Address
-     * 
-     * @ORM\ManyToOne(targetEntity="Address", fetch="EAGER") 
+     *
+     * @ORM\ManyToOne(targetEntity="Address", fetch="EAGER")
      */
     public $address;
 
