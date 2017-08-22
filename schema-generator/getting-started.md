@@ -4,7 +4,7 @@
 
 If you use [the official distribution of API Platform](../distribution/index.md), the Schema Generator is already installed as a development dependency of your project and can be invoked through Docker:
 
-    $ docker-compose exec web vendor/bin/schema
+    $ docker-compose exec app vendor/bin/schema
 
 The Schema Generator can also [be downloaded independently as a PHAR](https://github.com/api-platform/schema-generator/releases) or installed in an existing project using [Composer](https://getcomposer.org):
 
@@ -53,7 +53,7 @@ types:
 
 Run the generator with this config file as parameter:
 
-    $ docker-compose exec web vendor/bin/schema generate-types src/ app/config/schema.yml
+    $ docker-compose exec app vendor/bin/schema generate-types src/ app/config/schema.yml
 
 The following classes will be generated:
 
@@ -745,7 +745,7 @@ When cardinality cannot be automatically extracted, it's value is set to `unknow
 
 Usage:
 
-    $ docker-compose exec web vendor/bin/schema extract-cardinalities
+    $ docker-compose exec app vendor/bin/schema extract-cardinalities
 
 Previous chapter: [Introduction](index.md)
 
