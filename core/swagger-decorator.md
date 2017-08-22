@@ -61,7 +61,7 @@ the variable `docs` is an array compose by paths :
 
 `$docs['paths']['{path}']['{method}']['parameters']`
 
-for example if you want to remove all references to your path ’/foos’ in method GET in the swagger you can make in the normalise function
+for example if you want to remove all references to your path ’/foos’ in method GET in the swagger you can make in the normalize function
 
 ```php
 		unset($docs['paths']['/foos']['get']);
