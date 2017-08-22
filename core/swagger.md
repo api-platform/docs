@@ -8,7 +8,7 @@ Symfony allows to [decorate services](https://symfony.com/doc/current/service_co
 
 ### Example
 
-In the following example, we will see how to override Swagger title and remove all `/foos` references in method `GET`
+In the following example, we will see how to override Swagger title and add a custom filter in `/foos` path only for the `GET` method 
 
 
 ```yaml
@@ -44,8 +44,16 @@ final class SwaggerDecorator implements NormalizerInterface
     {
         $docs = $this->decorated->normalize($object, $format, $context);
 
-		// e.g to remove all references
-		unset($docs['paths']['/foos']['get']);
+        $CustomDefinition = [
+            'name' => 'fields',
+            'definition' => 'Fields to remove of the outpout',
+            'default' => 'id',
+            'in' => 'query',
+        ];
+
+		
+		// e.g add a custom parameter 
+		$docs['paths']['/foos']['get']['parameters'][] = $CustomDefinition;
 		
 		// Override title
 		$docs['info']['title'] = 'My Api Foo';
