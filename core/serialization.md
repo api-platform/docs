@@ -14,10 +14,10 @@ The official documention on this Symfony component is available [here](https://s
 `api_platform.jsonld.normalizer.item`
 
 * HAL serializer 
-`api_platform.serializer.normalizer.item`
+`api_platform.hal.normalizer.item`
 
 * JSON, XML, CSV serializer
-`api_platform.hal.normalizer.item`
+`api_platform.serializer.normalizer.item`
 
 ## decorates a serializer and add extra informations (json-ld)
 In the following example, we will see how to add extra informations on the output. Add the date on each request in`GET`
