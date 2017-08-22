@@ -20,10 +20,10 @@ The API Platform Serializer is very extensible, you can register custom normaliz
 
 ### Normalizers
 
-* [JSON-LD](https://en.wikipedia.org/wiki/JSON-LD) serializer 
+* [JSON-LD](https://en.wikipedia.org/wiki/JSON-LD) serializer
 `api_platform.jsonld.normalizer.item`
 
-* [HAL](https://en.wikipedia.org/wiki/Hypertext_Application_Language) serializer 
+* [HAL](https://en.wikipedia.org/wiki/Hypertext_Application_Language) serializer
 `api_platform.serializer.normalizer.item`
 
 * JSON, XML, CSV serializer (using the Symfony serializer)
@@ -41,11 +41,11 @@ The API Platform Serializer is very extensible, you can register custom normaliz
 
 ## Decorates a serializer and add extra informations (json-ld)
 In the following example, we will see how we add extra informations to the output.
-Here is how we add the date on each request in `GET`: 
+Here is how we add the date on each request in `GET`:
 
 ```yaml
  # app/config/services.yml
- 
+
 services:
      api_platform.jsonld.normalizer.item:#TODO
         class: AppBundle\Serializer\ApiNormalizer
@@ -116,7 +116,7 @@ class ApiNormalizer extends AbstractItemNormalizer
        $data['@id'] = $this->iriConverter->getIriFromItem($object);
        $data['@type'] = $resourceMetadata->getIri() ?: $resourceMetadata->getShortName();
 
-		// e.g. Here we add for each normalization the current date 
+		// e.g. Here we add for each normalization the current date
        $extra =  new \DateTime('now');
        $rawData['date'] =  $extra->format('Y-m-d');
 
@@ -135,4 +135,3 @@ class ApiNormalizer extends AbstractItemNormalizer
     }
 }
 ```
-
