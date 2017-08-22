@@ -85,7 +85,8 @@
 23. [AngularJS Integration](core/angularjs-integration.md)
     1.  [Restangular](core/angularjs-integration.md#restangular)
     2.  [ng-admin](core/angularjs-integration.md#ng-admin)
-23. [Swagger Support](core/swagger.md)
+24. [Swagger Support](core/swagger.md)
+
 ## Schema Generator: Generate Data Models from Open Vocabularies
 
 1.  [Introduction](schema-generator/index.md)
