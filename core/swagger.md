@@ -1,15 +1,10 @@
-# Swagger support
+# Swagger Support
 
 ## Override Swagger documentation
-
-Symfony allows to [decorate services](https://symfony.com/doc/current/service_container/service_decoration.html), here we need to decorate the
-
+Symfony allows to [decorate services](https://symfony.com/doc/current/service_container/service_decoration.html), here we need to decorate 
 `api_platform.swagger.normalizer.documentation`
-
 ### Example
-
-In the following example, we will see how to override Swagger title and add a custom filter in `/foos` path only for the `GET` method 
-
+In the following example, we will see how to override the title of the Swagger documentation and add a custom filter for the `GET` operation of `/foos` path 
 
 ```yaml
  # app/config/services.yml
@@ -32,7 +27,6 @@ use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
 final class SwaggerDecorator implements NormalizerInterface
 {
-
     private $decorated;
 
     public function __construct(NormalizerInterface $decorated)
@@ -52,7 +46,7 @@ final class SwaggerDecorator implements NormalizerInterface
         ];
 
 		
-		// e.g add a custom parameter 
+	// e.g. add a custom parameter 
 		$docs['paths']['/foos']['get']['parameters'][] = $customDefinition;
 		
 		// Override title
@@ -67,5 +61,4 @@ final class SwaggerDecorator implements NormalizerInterface
     }
 }
 ```
-
 
