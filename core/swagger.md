@@ -44,7 +44,7 @@ final class SwaggerDecorator implements NormalizerInterface
     {
         $docs = $this->decorated->normalize($object, $format, $context);
 
-        $CustomDefinition = [
+        $customDefinition = [
             'name' => 'fields',
             'definition' => 'Fields to remove of the outpout',
             'default' => 'id',
@@ -53,7 +53,7 @@ final class SwaggerDecorator implements NormalizerInterface
 
 		
 		// e.g add a custom parameter 
-		$docs['paths']['/foos']['get']['parameters'][] = $CustomDefinition;
+		$docs['paths']['/foos']['get']['parameters'][] = $customDefinition;
 		
 		// Override title
 		$docs['info']['title'] = 'My Api Foo';
