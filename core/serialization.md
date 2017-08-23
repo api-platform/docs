@@ -1,6 +1,6 @@
 # The Serialization Process
 
-## Overall process
+## Overall Process
 
 API Platform embraces and extends the Symfony Serializer Component to transform PHP entities in hypermedia API responses.
 
@@ -57,7 +57,7 @@ use ApiPlatform\Core\Serializer\ItemNormalizer;
 use Symfony\Component\Console\Exception\InvalidArgumentException;
 
 
-class ApiNormalizer extends AbstractItemNormalizer
+final class ApiNormalizer extends AbstractItemNormalizer
 {
     public function __construct(ItemNormalizer $decorated)
     {
@@ -71,12 +71,11 @@ class ApiNormalizer extends AbstractItemNormalizer
     
     public function normalize($object, $format = null, array $context = [])
     {
-        $datas = $this->decorated->normalize($object, $format, $context);
-        if (is_array($datas)) {
-        $date = new \DateTime('now');
-        $datas['date'] = $date->format('Y-m-d');
+        $data = $this->decorated->normalize($object, $format, $context);
+        if (is_array($data)) {
+            $data['date'] = date(\DateTime::RFC3339);
         }
-        return $datas;
+        return $data;
     }
     
     public function supportsDenormalization($data, $type, $format = null)
