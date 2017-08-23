@@ -39,7 +39,7 @@ Here is how we add the date on each request in `GET`:
  # app/config/services.yml
 
 services:
- 		 app.custom.jsonld.normalizer:
+        app.custom.jsonld.normalizer:
         class: AppBundle\Serializer\ApiNormalizer
         autowire: true
         arguments: [ '@api_platform.metadata.resource.metadata_factory', '@api_platform.metadata.property.name_collection_factory', '@api_platform.metadata.property.metadata_factory', '@api_platform.iri_converter', '@api_platform.resource_class_resolver', '@api_platform.jsonld.context_builder', '@api_platform.property_accessor', '@api_platform.name_converter', '@serializer.mapping.class_metadata_factory','@app.collection.order']
@@ -108,7 +108,7 @@ class ApiNormalizer extends AbstractItemNormalizer
        $data['@id'] = $this->iriConverter->getIriFromItem($object);
        $data['@type'] = $resourceMetadata->getIri() ?: $resourceMetadata->getShortName();
 
-		// e.g. Here we add for each normalization the current date
+		 // e.g. Here we add for each normalization the current date
        $extra =  new \DateTime('now');
        $rawData['date'] =  $extra->format('Y-m-d');
 
