@@ -112,12 +112,9 @@ api_platform:
             
         # ...
      
-     # Custom paths to look for api resource configurations
-     loader_paths:
-         annotation: []
-         xml: []
-         yaml:
-            - "%kernel.root_dir%/../src/api/user_resources.yml"
+     # The list of paths with files or directories where the bundle will look for additional resource files.
+     mapping:
+         paths: ['%kernel.project_dir%/src/Entity']
 ```
 
 Previous chapter: [Getting Started](getting-started.md)
