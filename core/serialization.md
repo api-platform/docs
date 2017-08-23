@@ -30,7 +30,7 @@ JSON-LD, or JavaScript Object Notation for Linked Data, is a method of encoding 
 * JSON, XML, CSV, YAML serializer (using the Symfony serializer)
 `api_platform.serializer.normalizer.item`
 
-## Decorates a Serializer and Add Extra Data
+## Decorating a Serializer and Add Extra Data
 In the following example, we will see how we add extra informations to the output.
 Here is how we add the date on each request in `GET`:
 

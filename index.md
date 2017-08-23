@@ -90,7 +90,7 @@
 25. [The Serialization Process](core/serialization.md)
     1. [Overall Process](core/serialization.md#overall-process)
     2. [Available Serializers](core/serialization.md#available-serializers)
-    3. [Decorates a Serializer and Add Extra Data](core/serialization.md#decorates-a-serializer-and-add-extra-data)
+    3. [Decorating a Serializer and Add Extra Data](core/serialization.md#decorating-a-serializer-and-add-extra-data)
 
 ## Schema Generator: Generate Data Models from Open Vocabularies
 
