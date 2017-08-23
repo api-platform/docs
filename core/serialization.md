@@ -20,24 +20,16 @@ The API Platform Serializer is very extensible, you can register custom normaliz
 
 ### Normalizers
 
-* [JSON-LD](https://en.wikipedia.org/wiki/JSON-LD) serializer
+* [JSON-LD](https://json-ld.org) serializer
 `api_platform.jsonld.normalizer.item`
+
+JSON-LD, or JavaScript Object Notation for Linked Data, is a method of encoding Linked Data using JSON. It is a World Wide Web Consortium Recommendation.
 
 * [HAL](https://en.wikipedia.org/wiki/Hypertext_Application_Language) serializer
 `api_platform.serializer.normalizer.item`
 
 * JSON, XML, CSV serializer (using the Symfony serializer)
 `api_platform.hal.normalizer.item`
-
-###Encoders
-
-* [HAL](https://en.wikipedia.org/wiki/Hypertext_Application_Language) encoder
-`api_platform.hal.encoder`
-
-* [JSON-LD](https://en.wikipedia.org/wiki/JSON-LD) encoder
-`api_platform.jsonld.encoder`
-
-* [Symfony encoders](https://symfony.com/doc/current/components/serializer.html#encoders)
 
 ## Decorates a serializer and add extra informations (json-ld)
 In the following example, we will see how we add extra informations to the output.
@@ -47,9 +39,9 @@ Here is how we add the date on each request in `GET`:
  # app/config/services.yml
 
 services:
-     api_platform.jsonld.normalizer.item:#TODO
+ 		 app.custom.jsonld.normalizer:
         class: AppBundle\Serializer\ApiNormalizer
-        #TODO autowire: true
+        autowire: true
         arguments: [ '@api_platform.metadata.resource.metadata_factory', '@api_platform.metadata.property.name_collection_factory', '@api_platform.metadata.property.metadata_factory', '@api_platform.iri_converter', '@api_platform.resource_class_resolver', '@api_platform.jsonld.context_builder', '@api_platform.property_accessor', '@api_platform.name_converter', '@serializer.mapping.class_metadata_factory','@app.collection.order']
         tags:
             - { name: serializer.normalizer, priority: 12 }
