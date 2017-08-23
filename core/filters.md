@@ -10,7 +10,9 @@ By default, all filters are disabled. They must be enabled explicitly.
 When a filter is enabled, it is automatically documented as a `hydra:search` property in the collection response. It also
 automatically appears in the [NelmioApiDoc documentation](nelmio-api-doc.md) if it is available.
 
-## Search Filter
+## Doctrine ORM Filters
+
+### Search Filter
 
 If Doctrine ORM support is enabled, adding filters is as easy as registering a filter service in your `app/config/services.yml`
 file and adding an attribute to your resource configuration.
@@ -82,7 +84,7 @@ Using a numeric ID is also supported: `http://localhost:8000/api/offers?product=
 
 Previous URLs will return all offers for the product having the following IRI as JSON-LD identifier (`@id`): `http://localhost:8000/api/products/12`.
 
-## Date Filter
+### Date Filter
 
 The date filter allows to filter a collection by date intervals.
 
@@ -121,7 +123,7 @@ class Offer
 }
 ```
 
-### Managing `null` Values
+#### Managing `null` Values
 
 The date filter is able to deal with date properties having `null` values.
 Four behaviors are available at the property level of the filter:
@@ -148,7 +150,7 @@ services:
 If you use a service definition format other than YAML, you can use the `ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\DateFilter::EXCLUDE_NULL`
 constant directly.
 
-## Boolean Filter
+### Boolean Filter
 
 The boolean filter allows you to search on boolean fields and values.
 
@@ -190,7 +192,7 @@ Given that the collection endpoint is `/offers`, you can filter offers by boolea
 
 It will return all offers where `isAvailableGenericallyInMyCountry` equals `true`.
 
-## Numeric Filter
+### Numeric Filter
 
 The numeric filter allows you to search on numeric fields and values.
 
@@ -231,7 +233,7 @@ Given that the collection endpoint is `/offers`, you can filter offers by boolea
 It will return all offers with `sold` equals 1
 
 
-## Range Filter
+### Range Filter
 
 The range filter allows you to filter by a value Lower than, Greater than, Lower than or equal, Greater than or equal and between two values.
 
@@ -273,7 +275,7 @@ It will return all offers with `price` between 12.99 and 15.99.
 
 You can filters offers by joining two value for example: `/offers?price[gt]=12.99&price[lt]=19.99`.
 
-## Order Filter
+### Order Filter
 
 The order filter allows to order a collection against the given properties.
 
@@ -325,7 +327,7 @@ services:
         tags:      [ { name: 'api_platform.filter', id: 'offer.order' } ]
 ```
 
-### Comparing with Null Values
+#### Comparing with Null Values
 
 When the property used for ordering can contain `null` values, you may want to specify how `null` values are treated in
 the comparison:
@@ -351,7 +353,7 @@ services:
 If you use a service definition format other than YAML, you can use the `ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\OrderFilter::NULLS_SMALLEST`
 constant directly.
 
-### Using a Custom Order Query Parameter Name
+#### Using a Custom Order Query Parameter Name
 
 A conflict will occur if `order` is also the name of a property with the search filter enabled.
 Luckily, the query parameter name to use is configurable:
@@ -364,7 +366,7 @@ api_platform:
         order_parameter_name: '_order' # the URL query parameter to use is now "_order"
 ```
 
-## Filtering on Nested Properties
+### Filtering on Nested Properties
 
 Sometimes, you need to be able to perform filtering based on some linked resources (on the other side of a relation). All
 built-in filters support nested properties using the dot (`.`) syntax, e.g.:
@@ -387,7 +389,7 @@ services:
 The above allows you to find offers by their respective product's color: `http://localhost:8000/api/offers?product.color=red`,
 or order offers by the product's release date: `http://localhost:8000/api/offers?order[product.releaseDate]=desc`
 
-## Enabling a Filter for All Properties of a Resource
+### Enabling a Filter for All Properties of a Resource
 
 As we have seen in previous examples, properties where filters can be applied must be explicitly declared. If you don't
 care about security and performance (e.g. an API with restricted access), it is also possible to enable built-in filters
@@ -416,6 +418,144 @@ It means that the filter will be **silently** ignored if the property:
 * does not exist
 * is not enabled
 * has an invalid value
+
+## Serializer Filters
+
+### Group Filter
+
+The group filter allows you to filter by serialization groups.
+
+Syntax: `?groups[]=<group>`
+
+You can add as many groups as you need.
+
+Enable the filter:
+
+```yaml
+# app/config/services.yml
+
+services:
+    book.group_filter:
+        parent: 'api_platform.serializer.group_filter'
+        arguments:     # Default arguments values
+            - 'groups' # The query parameter name
+            - false    # Allow to override the default serialization groups
+        tags:   [ { name: 'api_platform.filter', id: 'book.group' } ]
+```
+
+```php
+<?php
+
+// src/AppBundle/Entity/Book.php
+
+namespace AppBundle\Entity;
+
+use ApiPlatform\Core\Annotation\ApiResource;
+
+/**
+ * @ApiResource(attributes={"filters"={"book.group"}})
+ */
+class Book
+{
+    // ...
+}
+```
+
+Given that the collection endpoint is `/books`, you can filter by serialization groups with the following query: `/books?groups[]=read&groups[]=write`.
+
+By default the query parameter name is `groups` but you can easily customize it to another by changing the first argument.
+For example, with `serialization_groups` as name:
+
+```yaml
+# app/config/services.yml
+
+services:
+    book.group_filter:
+        parent:    'api_platform.serializer.group_filter'
+        arguments: [ 'serialization_groups' ]
+        tags:      [ { name: 'api_platform.filter', id: 'book.group' } ]
+```
+
+You can also override the default serialization groups when you use the filter by changing the second argument to
+`true`:
+
+```yaml
+# app/config/services.yml
+
+services:
+    book.group_filter:
+        parent:    'api_platform.serializer.group_filter'
+        arguments: [ 'groups', true ]
+        tags:      [ { name: 'api_platform.filter', id: 'book.group' } ]
+```
+
+### Property filter
+
+The property filter add the possibility to filter serialization properties.
+
+Syntax: `?properties[]=<property>`
+
+You can add as many properties as you need.
+
+Enable the filter:
+
+```yaml
+# app/config/services.yml
+
+services:
+    book.property_filter:
+        parent: 'api_platform.serializer.property_filter'
+        arguments:         # Default arguments values
+            - 'properties' # The query parameter name
+            - false        # Allow to override the default serialization properties
+        tags:   [ { name: 'api_platform.filter', id: 'book.property' } ]
+```
+
+```php
+<?php
+
+// src/AppBundle/Entity/Book.php
+
+namespace AppBundle\Entity;
+
+use ApiPlatform\Core\Annotation\ApiResource;
+
+/**
+ * @ApiResource(attributes={"filters"={"book.property"}})
+ */
+class Book
+{
+    // ...
+}
+```
+
+Given that the collection endpoint is `/books`, you can filter the serialization properties with the following query: `/books?properties[]=title&properties[]=author`.
+
+By default the query parameter name is `properties` but you can easily customize it to another by changing the first argument.
+For example, with `serialization_properties` as name:
+
+```yaml
+# app/config/services.yml
+
+services:
+    book.property_filter:
+        parent:    'api_platform.serializer.property_filter'
+        arguments: [ 'serialization_properties' ]
+        tags:      [ { name: 'api_platform.filter', id: 'book.property' } ]
+```
+
+You can also override the default serialization properties when you use the filter by changing the second argument to
+`true`:
+
+```yaml
+# app/config/services.yml
+
+services:
+    book.property_filter:
+        parent:    'api_platform.serializer.property_filter'
+        arguments: [ 'properties', true ]
+        tags:      [ { name: 'api_platform.filter', id: 'book.property' } ]
+```
 
 ## Creating Custom Filters
 
