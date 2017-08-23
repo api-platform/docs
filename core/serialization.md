@@ -16,7 +16,7 @@ Unlike Symfony itself, API Platform leverages custom normalizers, its router and
 
 The API Platform Serializer is very extensible, you can register custom normalizers and encoders to support other formats. You can also decorate existing normalizers to customize their behaviors.
 
-## Available serializers
+## Available Serializers
 
 ### Normalizers
 
@@ -26,12 +26,12 @@ The API Platform Serializer is very extensible, you can register custom normaliz
 JSON-LD, or JavaScript Object Notation for Linked Data, is a method of encoding Linked Data using JSON. It is a World Wide Web Consortium Recommendation.
 
 * [HAL](https://en.wikipedia.org/wiki/Hypertext_Application_Language) serializer
-`api_platform.serializer.normalizer.item`
-
-* JSON, XML, CSV serializer (using the Symfony serializer)
 `api_platform.hal.normalizer.item`
 
-## Decorates a serializer and add extra informations (json-ld)
+* JSON, XML, CSV serializer (using the Symfony serializer)
+`api_platform.serializer.normalizer.item`
+
+## Decorates a Serializer and Add Extra Data
 In the following example, we will see how we add extra informations to the output.
 Here is how we add the date on each request in `GET`:
 
@@ -49,6 +49,7 @@ services:
 
 ```php
 <?php
+
 // src/Appbundle/Serializer/ApiSerializer
 
 namespace AppBundle\Serializer;
@@ -67,8 +68,7 @@ use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
 use Symfony\Component\Serializer\Mapping\Factory\ClassMetadataFactoryInterface;
 use Symfony\Component\Serializer\NameConverter\NameConverterInterface;
 
-
-class ApiNormalizer extends AbstractItemNormalizer
+final class ApiNormalizer extends AbstractItemNormalizer
 {
     use ContextTrait;
     use JsonLdContextTrait;
