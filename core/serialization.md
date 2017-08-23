@@ -39,11 +39,10 @@ Here is how we add the date on each request in `GET`:
  # app/config/services.yml
 
 services:
-app.custom.jsonld.normalizer_decorator:
+     app.custom.jsonld.normalizer_decorator:
         decorates: api_platform.jsonld.normalizer.item
         class: AppBundle\Serializer\ApiNormalizer
         autowire: true
-
 ```
 
 ```php
