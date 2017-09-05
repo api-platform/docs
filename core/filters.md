@@ -489,6 +489,18 @@ services:
         tags:      [ { name: 'api_platform.filter', id: 'book.group' } ]
 ```
 
+To avoid uncontrolled data exposure, you can also specify a whitelist of serialization groups as a third argument:
+
+```yaml
+# app/config/services.yml
+
+services:
+    book.group_filter:
+        parent:    'api_platform.serializer.group_filter'
+        arguments: [ 'groups', false, ['allowed_group', 'safe_group'] ]
+        tags:      [ { name: 'api_platform.filter', id: 'book.group' } ]
+```
+
 ### Property filter
 
 The property filter add the possibility to filter serialization properties.
@@ -555,6 +567,18 @@ services:
         parent:    'api_platform.serializer.property_filter'
         arguments: [ 'properties', true ]
         tags:      [ { name: 'api_platform.filter', id: 'book.property' } ]
+```
+
+To avoid uncontrolled data exposure, you can also specify a whitelist of properties as a third argument:
+
+```yaml
+# app/config/services.yml
+
+services:
+    book.group_filter:
+        parent:    'api_platform.serializer.group_filter'
+        arguments: [ 'groups', false, ['allowed_property', {'nested': ['safe_property']}] ]
+        tags:      [ { name: 'api_platform.filter', id: 'book.group' } ]
 ```
 
 ## Creating Custom Filters
