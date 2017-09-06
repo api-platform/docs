@@ -12,3 +12,5 @@ To install it, run the following commands (Docker must be installed on your syst
 Your project will be accessible at the URL `http://127.0.0.1`.
 
 Previous chapter: [Deploying an API Platform App on Heroku](heroku.md)
+
+Next chapter: [API Platform Admin: Introduction](../admin/index.md)
