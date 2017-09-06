@@ -174,3 +174,5 @@ Then edit the configuration of API Platform Admin to pass a `filterToQuery` prop
 The autocomplete field should now work properly!
 
 Previous chapter: [Authentication Support](authentication-support.md)
+
+Next chapter: [API Platform CRUD Generator: Introduction](../generate-crud/index.md)
