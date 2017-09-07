@@ -1,11 +1,11 @@
 # API Platform documentation
 
-## API Platform Distribution: create a powerful APIs with ease
+## API Platform Distribution: Create Powerful APIs with Ease
 
 1.  [Creating a Fully Featured API in 5 Minutes](distribution/index.md)
 2.  [Testing and Specifying the API](distribution/testing.md)
 
-## API Platform Core library
+## API Platform Core Library
 
 1.  [Introduction](core/index.md)
 2.  [Getting Started](core/getting-started.md)
@@ -103,9 +103,28 @@
 2.  [Deploying an API Platform App on Heroku](deployment/heroku.md)
 3.  [Using API Platform with Docker](deployment/docker.md)
 
+## API Platform Admin: Create a Fancy and Fully-Featured Administration Interface
+
+1.  [Introduction](admin/index.md)
+    1.  [Features](admin/index.md#features)
+2.  [Getting Started](admin/getting-started.md)
+    1.  [Installation](admin/getting-started.md#installation)
+    2.  [Creating the Admin](admin/getting-started.md#creating-the-admin)
+    3.  [Customizing the Admin](admin/getting-started.md#customizing-the-admin)
+        1.  [Using Custom Components](admin/getting-started.md#using-custom-components)
+        2.  [Managing Files and Images](admin/getting-started.md#managing-files-and-images)
+        3.  [Using a Custom Validation Function or Inject Custom Props](admin/getting-started.md#using-a-custom-validation-function-or-inject-custom-props)
+3.  [Authentication Support](admin/authentication-support.md)
+4.  [Handling Relations to Collections](admin/handling-relations-to-collections.md)
+    1.  [Using an Autocomplete Input for Relations](admin/handling-relations-to-collections.md#using-an-autocomplete-input-for-relations)
+
 ## Extra
 
-1.  [The project's philosophy](philosophy.md)
+1.  [The Project's Philosophy](philosophy.md)
 2.  [Troubleshooting](troubleshooting.md)
-3.  [Contribution guide](https://github.com/api-platform/api-platform/blob/master/CONTRIBUTING.md)
+3.  [Contribution Guides](https://github.com/api-platform/api-platform/blob/master/CONTRIBUTING.md)
+    1.  [API Platform Distribution](https://github.com/api-platform/api-platform/blob/master/CONTRIBUTING.md)
+    2.  [API Platform Core Library](https://github.com/api-platform/core/blob/master/CONTRIBUTING.md)
+    3.  [API Platform Schema Generator](https://github.com/api-platform/schema-generator/blob/master/CONTRIBUTING.md)
+    4.  [API Platform Admin](https://github.com/api-platform/admin/blob/master/CONTRIBUTING.md)
 4.  [Contributor Code Of Conduct](conduct.md)
