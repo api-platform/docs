@@ -120,7 +120,7 @@
 4.  [Handling Relations to Collections](admin/handling-relations-to-collections.md)
     1.  [Using an Autocomplete Input for Relations](admin/handling-relations-to-collections.md#using-an-autocomplete-input-for-relations)
 
-## CRUD Generator: Scaffold a React/Redux App with CRUD Features
+## API Platform CRUD Generator: Scaffold a React/Redux App with CRUD Features
 
 1.  [Introduction](generate-crud/index.md)
     1.  [Features](generate-crud/index.md#features)
