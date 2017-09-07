@@ -118,6 +118,13 @@
 4.  [Handling Relations to Collections](admin/handling-relations-to-collections.md)
     1.  [Using an Autocomplete Input for Relations](admin/handling-relations-to-collections.md#using-an-autocomplete-input-for-relations)
 
+## CRUD Generator: Scaffold a React/Redux App with CRUD Features
+
+1.  [Introduction](generate-crud/index.md)
+    1.  [Features](generate-crud/index.md#features)
+2.  [Installation and Usage](generate-crud/installation-and-usage.md)
+3.  [Troubleshooting](generate-crud/troubleshooting.md)
+
 ## Extra
 
 1.  [The Project's Philosophy](philosophy.md)
@@ -127,4 +134,5 @@
     2.  [API Platform Core Library](https://github.com/api-platform/core/blob/master/CONTRIBUTING.md)
     3.  [API Platform Schema Generator](https://github.com/api-platform/schema-generator/blob/master/CONTRIBUTING.md)
     4.  [API Platform Admin](https://github.com/api-platform/admin/blob/master/CONTRIBUTING.md)
+    5.  [API Platform CRUD Generator](https://github.com/api-platform/generate-crud/blob/master/CONTRIBUTING.md)
 4.  [Contributor Code Of Conduct](conduct.md)
