@@ -35,11 +35,18 @@ asynchronous jobs to your APIs is very straightforward.
 
 ## Installing the framework
 
-### In Docker container
+### In Docker containers
 
 API Platform is shipped with a [Docker](https://docker.com) setup that makes it easy to get a containerized development
-environment up and running. This setup contains an image pre-configured with PHP 7, Apache and everything needed to run API
-Platform and a MySQL image to host the database.
+environment up and running. This setup contains a [Docker Compose](https://docs.docker.com/compose/) configuration with
+several pre-configured and ready-use services with everything needed to run API Platform:
+
+| Name    | Description                                                   | Port(s)
+| ------- | ------------------------------------------------------------- | -------
+| app     | The application with PHP and PHP-FPM 7.1, the latest Composer | N/A
+| db      | A database provided by MySQL 5.7                              | N/A
+| nginx   | An HTTP server provided by Nginx 1.11                         | 8080
+| varnish | An HTTP cache provided by Varnish 4.1                         | 80
 
 Start by [downloading the API Platform Standard Edition archive](https://api.github.com/repos/api-platform/api-platform/zipball) and extract its content.
 The resulting directory contains an empty API Platform project structure. You will add your own code and configuration inside
@@ -47,7 +54,7 @@ it.
 Then, if you do not already have Docker on your computer, [it's the right time to install it](https://www.docker.com/products/overview#/install_the_platform).
 
 Open a terminal, and navigate to the directory containing your project skeleton. Then, run the following command to start
-Apache and MySQL using [Docker Compose](https://docs.docker.com/compose/):
+all services using [Docker Compose](https://docs.docker.com/compose/):
 
     $ docker-compose up -d # Running in detached mode
 
