@@ -53,7 +53,7 @@ types:
 
 Run the generator with this config file as parameter:
 
-    $ docker-compose exec app vendor/bin/schema generate-types src/ app/config/schema.yml
+    $ vendor/bin/schema generate-types src/ app/config/schema.yml
 
 The following classes will be generated:
 
@@ -745,7 +745,7 @@ When cardinality cannot be automatically extracted, it's value is set to `unknow
 
 Usage:
 
-    $ docker-compose exec app vendor/bin/schema extract-cardinalities
+    $ vendor/bin/schema extract-cardinalities
 
 Previous chapter: [Introduction](index.md)
 
