@@ -68,6 +68,107 @@ API Platform Core will automatically call the serializer with your defined forma
 as `format` parameter during the deserialization process. Then it will return the result to the client with the asked MIME
 type using its built-in responder.
 
+
+## Writing a Custom Normalizer
+
+Using composition is the recommended way to implement a custom normalizer. You can use the following template to start with your
+own implementation of `CustomItemNormalizer`:
+
+
+```yaml
+# app/config/services.yml
+
+services:
+    app.custom_item_normalizer:
+        public: false
+        class: AppBundle\Serializer\CustomItemNormalizer
+        arguments: [ '@api_platform.serializer.normalizer.item' ]
+        tags: [ { name: serializer.normalizer } ]
+```
+
+```php
+<?php
+
+// src/AppBundle/Serializer/CustomItemNormalizer.php
+
+namespace AppBundle\Serializer;
+
+use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
+use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
+
+class CustomItemNormalizer implements NormalizerInterface, DenormalizerInterface
+{
+    private $normalizer;
+
+    public function __construct(NormalizerInterface $normalizer)
+    {
+        if (!$normalizer instanceof DenormalizerInterface) {
+            throw new \InvalidArgumentException('The normalizer must implement the DenormalizerInterface');
+        }
+
+        $this->normalizer = $normalizer;
+    }
+
+    public function denormalize($data, $class, $format = null, array $context = [])
+    {
+        return $this->normalizer->denormalize($data, $class, $format, $context);
+    }
+
+    public function supportsDenormalization($data, $type, $format = null)
+    {
+        return $this->normalizer->supportsDenormalization($data, $type, $format);
+    }
+
+    public function normalize($object, $format = null, array $context = [])
+    {
+        return $this->normalizer->normalize($object, $format, $context);
+    }
+
+    public function supportsNormalization($data, $format = null)
+    {
+        return $this->normalizer->supportsNormalization($data, $format);
+    }
+}
+```
+
+For example if you want to make the `csv` format to work for even complex entities with a lot of hierarchy, you have
+to flatten or remove too complex relations:
+
+```php
+<?php
+
+// src/AppBundle/Serializer/CustomItemNormalizer.php
+
+namespace AppBundle\Serializer;
+
+use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
+use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
+
+class CustomItemNormalizer implements NormalizerInterface, DenormalizerInterface
+{
+    // ...
+
+    public function normalize($object, $format = null, array $context = [])
+    {
+        $result = $this->normalizer->normalize($object, $format, $context);
+
+        if ('csv' !== $format || !is_array($result)) {
+            return $result;
+        }
+
+        foreach ($result as $key => $value) {
+            if (is_array($value) && array_keys(array_keys($value)) === array_keys($value)) {
+                unset($result[$key]);
+            }
+        }
+
+        return $result;
+    }
+    
+    // ...
+}
+```
+
 Previous chapter: [The Event System](events.md)
 
 Next chapter: [Using External JSON-LD Vocabularies](external-vocabularies.md)

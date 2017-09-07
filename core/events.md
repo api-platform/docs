@@ -40,7 +40,7 @@ final class BookMailSubscriber implements EventSubscriberInterface
     public static function getSubscribedEvents()
     {
         return [
-            KernelEvents::VIEW => [['sendMail', EventPriorities::POST_WRITE]],
+            KernelEvents::VIEW => ['sendMail', EventPriorities::POST_WRITE],
         ];
     }
 

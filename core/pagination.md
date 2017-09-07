@@ -52,10 +52,9 @@ api_platform:
 
 ## Disabling the Pagination
 
-Paginating collection is generally accepted as a good practice. It also allows browsing large collections without to much
+Paginating collections is generally accepted as a good practice. It allows browsing large collections without too much
 overhead as well as preventing [DOS attacks](https://en.wikipedia.org/wiki/Denial-of-service_attack).
-It allows to browse large collections and prevent. However, for small collections, it can be convenient to fully disable
-the pagination.
+However, for small collections, it can be convenient to fully disable the pagination.
 
 ### Globally
 

@@ -48,7 +48,7 @@ several pre-configured and ready-use services with everything needed to run API 
 | nginx   | An HTTP server provided by Nginx 1.11                         | 8080
 | varnish | An HTTP cache provided by Varnish 4.1                         | 80
 
-Start by [downloading the API Platform Standard Edition archive](https://api.github.com/repos/api-platform/api-platform/zipball) and extract its content.
+Start by [downloading the API Platform Standard Edition archive](https://github.com/api-platform/api-platform/releases/latest) and extract its content.
 The resulting directory contains an empty API Platform project structure. You will add your own code and configuration inside
 it.
 Then, if you do not already have Docker on your computer, [it's the right time to install it](https://www.docker.com/products/overview#/install_the_platform).
@@ -99,7 +99,7 @@ ORM and its bridge supports major RDBMS including MySQL, PostgreSQL, SQLite, SQL
 Instead of using Docker, API Platform can also be installed on the local machine using [Composer](https://getcomposer.org/):
 
     $ composer create-project api-platform/api-platform bookshop-api
-    
+
 Then, enter the project folder, create the database and its schema:  
 
     $ cd bookshop-api
@@ -443,12 +443,12 @@ Oops, we missed to add the title. But submit the request anyway. You should get 
 
 Did you notice that the error was automatically serialized in JSON-LD and respect the Hydra Core vocabulary for errors?
 It allows the client to easily extract useful information from the error. Anyway, it's bad to get a SQL error when submitting
-a request. It means that we doesn't use a valid input, and [it's a very bad and dangerous practice](https://www.owasp.org/index.php/Input_Validation_Cheat_Sheet).
+a request. It means that we didn't use a valid input, and [it's a very bad and dangerous practice](https://www.owasp.org/index.php/Input_Validation_Cheat_Sheet).
 
 API Platform comes with a bridge with [the Symfony Validator Component](http://symfony.com/doc/current/validation.html).
 Adding some of [its numerous validation constraints](http://symfony.com/doc/current/validation.html#supported-constraints)
 (or [creating custom ones](http://symfony.com/doc/current/validation/custom_constraint.html)) to our entities is enough
-to get validate user submitted data. Let's add some validation rules to our data model:
+to validate user submitted data. Let's add some validation rules to our data model:
 
 ```php
 <?php

@@ -56,6 +56,7 @@
     1.  [Enabling Several Formats](core/content-negotiation.md#enabling-several-formats)
     2.  [Registering a Custom Serializer](core/content-negotiation.md#registering-a-custom-serializer)
     3.  [Creating a Responder](core/content-negotiation.md#creating-a-responder)
+    4.  [Writing a Custom Normalizer](core/content-negotiation.md#writing-a-custom-normalizer)
 11. [Using External JSON-LD Vocabularies](core/external-vocabularies.md)
 12. [Extending JSON-LD context](core/extending-jsonld-context.md)
 13. [Data Providers](core/data-providers.md)

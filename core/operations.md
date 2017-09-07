@@ -86,7 +86,10 @@ AppBundle\Entity\Book:
 <!-- src/AppBundle/Resources/config/api_resources/resources.xml -->
 
 <?xml version="1.0" encoding="UTF-8" ?>
-<resources>
+<resources xmlns="https://api-platform.com/schema/metadata"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="https://api-platform.com/schema/metadata
+           https://api-platform.com/schema/metadata/metadata-2.0.xsd">
     <resource class="AppBundle\Entity\Book">
         <itemOperations>
             <itemOperation name="get">
@@ -153,7 +156,10 @@ AppBundle\Entity\Book:
 <!-- src/AppBundle/Resources/config/api_resources/resources.xml -->
 
 <?xml version="1.0" encoding="UTF-8" ?>
-<resources>
+<resources xmlns="https://api-platform.com/schema/metadata"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="https://api-platform.com/schema/metadata
+           https://api-platform.com/schema/metadata/metadata-2.0.xsd">
     <resource class="AppBundle\Entity\Book">
         <itemOperations>
             <itemOperation name="get">
@@ -235,7 +241,10 @@ AppBundle\Entity\Book:
 <!-- src/AppBundle/Resources/config/api_resources/resources.xml -->
 
 <?xml version="1.0" encoding="UTF-8" ?>
-<resources>
+<resources xmlns="https://api-platform.com/schema/metadata"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="https://api-platform.com/schema/metadata
+           https://api-platform.com/schema/metadata/metadata-2.0.xsd">
     <resource class="AppBundle\Entity\Book">
         <itemOperations>
             <itemOperation name="get">
@@ -306,7 +315,7 @@ together.
 Here we consider that DunglasActionBundle is installed (the default when using the API Platform distribution). This
 action will be automatically registered as a service (the service name is the same as the class name: `AppBundle\Action\BookSpecial`).
 
-API Platform automatically retrieve the appropriate PHP entity then then deserializes it, and for `POST` and `PUT` requests
+API Platform automatically retrieves the appropriate PHP entity then deserializes it, and for `POST` and `PUT` requests
 updates the entity with data provided by the user.
 
 Services (`$myService` here) are automatically injected thanks to the autowiring feature. You can type-hint any service
