@@ -19,7 +19,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  * Secured resource.
  *
  * @ApiResource(
- *     attributes={"is_granted"="has_role('ROLE_USER')"},
+ *     attributes={"access_control"="is_granted('ROLE_USER')},
  *     collectionOperations={
  *         "get"={"method"="GET"},
  *         "post"={"method"="POST", "access_control"="is_granted('ROLE_USER')}
