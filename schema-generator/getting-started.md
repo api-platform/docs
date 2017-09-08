@@ -58,64 +58,40 @@ Run the generator with this config file as parameter:
 The following classes will be generated:
 
 ```php
-<?php
-
-// src/AppBundle/Entity/Thing.php
-
-namespace AppBundle\Entity;
-
-use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Validator\Constraints as Assert;
-
-/**
- * The most generic type of item.
- *
- * @see http://schema.org/Thing Documentation on Schema.org
- *
- * @ORM\MappedSuperclass
- */
-abstract class Thing
-{
-    /**
-     * @var string $name The name of the item.
-     * @Assert\Type(type="string")
-     * @ORM\Column(nullable=true)
-     */
-    private $name;
-
-    /**
-     * Sets name.
-     *
-     * @param  string $name
-     * @return $this
-     */
-    public function setName($name)
-    {
-        $this->name = $name;
-
-        return $this;
-    }
-
-    /**
-     * Gets name.
-     *
-     * @return string
-     */
-    public function getName()
-    {
-        return $this->name;
-    }
-}
-
+types:
+    Person:
+        properties:
+            name: ~
+            familyName: ~
+            givenName: ~
+            additionalName: ~
+            gender: ~
+            address: ~
+            birthDate: ~
+            telephone: ~
+            email: ~
+            url: ~
+            jobTitle: ~
+    PostalAddress:
+        properties:
+            # Force the type of the addressCountry property to text
+            addressCountry: { range: "Text" }
+            addressLocality: ~
+            addressRegion: ~
+            postOfficeBoxNumber: ~
+            postalCode: ~
+            streetAddress: ~
 ```
 
 ```php
 <?php
 
-// src/AppBundle/Entity/Person.php
+declare(strict_types=1);
 
 namespace AppBundle\Entity;
 
+use ApiPlatform\Core\Annotation\ApiProperty;
+use ApiPlatform\Core\Annotation\ApiResource;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -125,320 +101,237 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @see http://schema.org/Person Documentation on Schema.org
  *
  * @ORM\Entity
+ * @ApiResource(iri="http://schema.org/Person")
  */
-class Person extends Thing
+class Person
 {
     /**
-     * @var integer
-     * @ORM\Column(type="integer")
+     * @var int|null
+     *
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
+     * @ORM\Column(type="integer")
      */
     private $id;
 
     /**
-     * @var string An additional name for a Person, can be used for a middle name.
-     * @Assert\Type(type="string")
-     * @ORM\Column(nullable=true)
+     * @var string|null the name of the item
+     *
+     * @ORM\Column(type="text", nullable=true)
+     * @ApiProperty(iri="http://schema.org/name")
      */
-    private $additionalName;
+    private $name;
 
     /**
-     * @var PostalAddress Physical address of the item.
-     * @ORM\ManyToOne(targetEntity="PostalAddress")
-     */
-    private $address;
-    /**
-     * @var \DateTime Date of birth.
-     * @Assert\Date
-     * @ORM\Column(type="date", nullable=true)
-     */
-    private $birthDate;
-
-    /**
-     * @var string Email address.
-     * @Assert\Email
-     * @ORM\Column(nullable=true)
-     */
-    private $email;
-
-    /**
-     * @var string Family name. In the U.S., the last name of an Person. This can be used along with givenName instead of the name property.
-     * @Assert\Type(type="string")
-     * @ORM\Column(nullable=true)
+     * @var string|null Family name. In the U.S., the last name of an Person. This can be used along with givenName instead of the name property.
+     *
+     * @ORM\Column(type="text", nullable=true)
+     * @ApiProperty(iri="http://schema.org/familyName")
      */
     private $familyName;
 
     /**
-     * @var string Gender of the person.
-     * @Assert\Type(type="string")
-     * @ORM\Column(nullable=true)
-     */
-    private $gender;
-
-    /**
-     * @var string Given name. In the U.S., the first name of a Person. This can be used along with familyName instead of the name property.
-     * @Assert\Type(type="string")
-     * @ORM\Column(nullable=true)
+     * @var string|null Given name. In the U.S., the first name of a Person. This can be used along with familyName instead of the name property.
+     *
+     * @ORM\Column(type="text", nullable=true)
+     * @ApiProperty(iri="http://schema.org/givenName")
      */
     private $givenName;
 
     /**
-     * @var string The job title of the person (for example, Financial Manager).
-     * @Assert\Type(type="string")
-     * @ORM\Column(nullable=true)
+     * @var string|null an additional name for a Person, can be used for a middle name
+     *
+     * @ORM\Column(type="text", nullable=true)
+     * @ApiProperty(iri="http://schema.org/additionalName")
      */
-    private $jobTitle;
+    private $additionalName;
 
     /**
-     * @var string The telephone number.
-     * @Assert\Type(type="string")
-     * @ORM\Column(nullable=true)
+     * @var string|null Gender of the person. While http://schema.org/Male and http://schema.org/Female may be used, text strings are also acceptable for people who do not identify as a binary gender.
+     *
+     * @ORM\Column(type="text", nullable=true)
+     * @ApiProperty(iri="http://schema.org/gender")
+     */
+    private $gender;
+
+    /**
+     * @var PostalAddress|null physical address of the item
+     *
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\PostalAddress")
+     * @ApiProperty(iri="http://schema.org/address")
+     */
+    private $address;
+
+    /**
+     * @var \DateTimeInterface|null date of birth
+     *
+     * @ORM\Column(type="date", nullable=true)
+     * @ApiProperty(iri="http://schema.org/birthDate")
+     * @Assert\Date
+     */
+    private $birthDate;
+
+    /**
+     * @var string|null the telephone number
+     *
+     * @ORM\Column(type="text", nullable=true)
+     * @ApiProperty(iri="http://schema.org/telephone")
      */
     private $telephone;
 
     /**
-     * Sets id.
+     * @var string|null email address
      *
-     * @param  integer $id
-     * @return $this
+     * @ORM\Column(type="text", nullable=true)
+     * @ApiProperty(iri="http://schema.org/email")
+     * @Assert\Email
      */
-    public function setId($id)
-    {
-        $this->id = $id;
-
-        return $this;
-    }
+    private $email;
 
     /**
-     * Gets id.
+     * @var string|null URL of the item
      *
-     * @return integer
+     * @ORM\Column(type="text", nullable=true)
+     * @ApiProperty(iri="http://schema.org/url")
+     * @Assert\Url
      */
-    public function getId()
+    private $url;
+
+    /**
+     * @var string|null the job title of the person (for example, Financial Manager)
+     *
+     * @ORM\Column(type="text", nullable=true)
+     * @ApiProperty(iri="http://schema.org/jobTitle")
+     */
+    private $jobTitle;
+
+    public function getId(): ?int
     {
         return $this->id;
     }
 
-    /**
-     * Sets additionalName.
-     *
-     * @param  string $additionalName
-     * @return $this
-     */
-    public function setAdditionalName($additionalName)
+    public function setName(?string $name): void
     {
-        $this->additionalName = $additionalName;
-
-        return $this;
+        $this->name = $name;
     }
 
-    /**
-     * Gets additionalName.
-     *
-     * @return string
-     */
-    public function getAdditionalName()
+    public function getName(): ?string
     {
-        return $this->additionalName;
+        return $this->name;
     }
 
-    /**
-     * Sets address.
-     *
-     * @param  PostalAddress $address
-     * @return $this
-     */
-    public function setAddress(PostalAddress $address)
-    {
-        $this->address = $address;
-
-        return $this;
-    }
-
-    /**
-     * Gets address.
-     *
-     * @return PostalAddress
-     */
-    public function getAddress()
-    {
-        return $this->address;
-    }
-
-    /**
-     * Sets birthDate.
-     *
-     * @param  \DateTime $birthDate
-     * @return $this
-     */
-    public function setBirthDate(\DateTime $birthDate)
-    {
-        $this->birthDate = $birthDate;
-
-        return $this;
-    }
-
-    /**
-     * Gets birthDate.
-     *
-     * @return \DateTime
-     */
-    public function getBirthDate()
-    {
-        return $this->birthDate;
-    }
-
-    /**
-     * Sets email.
-     *
-     * @param  string $email
-     * @return $this
-     */
-    public function setEmail($email)
-    {
-        $this->email = $email;
-
-        return $this;
-    }
-
-    /**
-     * Gets email.
-     *
-     * @return string
-     */
-    public function getEmail()
-    {
-        return $this->email;
-    }
-
-    /**
-     * Sets familyName.
-     *
-     * @param  string $familyName
-     * @return $this
-     */
-    public function setFamilyName($familyName)
+    public function setFamilyName(?string $familyName): void
     {
         $this->familyName = $familyName;
-
-        return $this;
     }
 
-    /**
-     * Gets familyName.
-     *
-     * @return string
-     */
-    public function getFamilyName()
+    public function getFamilyName(): ?string
     {
         return $this->familyName;
     }
 
-    /**
-     * Sets gender.
-     *
-     * @param  string $gender
-     * @return $this
-     */
-    public function setGender($gender)
-    {
-        $this->gender = $gender;
-
-        return $this;
-    }
-
-    /**
-     * Gets gender.
-     *
-     * @return string
-     */
-    public function getGender()
-    {
-        return $this->gender;
-    }
-
-    /**
-     * Sets givenName.
-     *
-     * @param  string $givenName
-     * @return $this
-     */
-    public function setGivenName($givenName)
+    public function setGivenName(?string $givenName): void
     {
         $this->givenName = $givenName;
-
-        return $this;
     }
 
-    /**
-     * Gets givenName.
-     *
-     * @return string
-     */
-    public function getGivenName()
+    public function getGivenName(): ?string
     {
         return $this->givenName;
     }
 
-    /**
-     * Sets jobTitle.
-     *
-     * @param  string $jobTitle
-     * @return $this
-     */
-    public function setJobTitle($jobTitle)
+    public function setAdditionalName(?string $additionalName): void
     {
-        $this->jobTitle = $jobTitle;
-
-        return $this;
+        $this->additionalName = $additionalName;
     }
 
-    /**
-     * Gets jobTitle.
-     *
-     * @return string
-     */
-    public function getJobTitle()
+    public function getAdditionalName(): ?string
     {
-        return $this->jobTitle;
+        return $this->additionalName;
     }
 
-    /**
-     * Sets telephone.
-     *
-     * @param  string $telephone
-     * @return $this
-     */
-    public function setTelephone($telephone)
+    public function setGender(?string $gender): void
+    {
+        $this->gender = $gender;
+    }
+
+    public function getGender(): ?string
+    {
+        return $this->gender;
+    }
+
+    public function setAddress(?PostalAddress $address): void
+    {
+        $this->address = $address;
+    }
+
+    public function getAddress(): ?PostalAddress
+    {
+        return $this->address;
+    }
+
+    public function setBirthDate(?\DateTimeInterface $birthDate): void
+    {
+        $this->birthDate = $birthDate;
+    }
+
+    public function getBirthDate(): ?\DateTimeInterface
+    {
+        return $this->birthDate;
+    }
+
+    public function setTelephone(?string $telephone): void
     {
         $this->telephone = $telephone;
-
-        return $this;
     }
 
-    /**
-     * Gets telephone.
-     *
-     * @return string
-     */
-    public function getTelephone()
+    public function getTelephone(): ?string
     {
         return $this->telephone;
     }
-}
 
+    public function setEmail(?string $email): void
+    {
+        $this->email = $email;
+    }
+
+    public function getEmail(): ?string
+    {
+        return $this->email;
+    }
+
+    public function setUrl(?string $url): void
+    {
+        $this->url = $url;
+    }
+
+    public function getUrl(): ?string
+    {
+        return $this->url;
+    }
+
+    public function setJobTitle(?string $jobTitle): void
+    {
+        $this->jobTitle = $jobTitle;
+    }
+
+    public function getJobTitle(): ?string
+    {
+        return $this->jobTitle;
+    }
+}
 ```
 
 ```php
 <?php
 
-// src/AppBundle/Entity/PostalAddress.php
+declare(strict_types=1);
 
 namespace AppBundle\Entity;
 
+use ApiPlatform\Core\Annotation\ApiProperty;
+use ApiPlatform\Core\Annotation\ApiResource;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * The mailing address.
@@ -446,216 +339,128 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @see http://schema.org/PostalAddress Documentation on Schema.org
  *
  * @ORM\Entity
+ * @ApiResource(iri="http://schema.org/PostalAddress")
  */
 class PostalAddress
 {
     /**
-     * @var integer
-     * @ORM\Column(type="integer")
+     * @var int|null
+     *
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
+     * @ORM\Column(type="integer")
      */
     private $id;
 
     /**
-     * @var string The country. For example, USA. You can also provide the two-letter [ISO 3166-1 alpha-2 country code](http://en.wikipedia.org/wiki/ISO_3166-1).
-     * @Assert\Type(type="string")
-     * @ORM\Column(nullable=true)
+     * @var string|null The country. For example, USA. You can also provide the two-letter \[ISO 3166-1 alpha-2 country code\](http://en.wikipedia.org/wiki/ISO\_3166-1).
+     *
+     * @ORM\Column(type="text", nullable=true)
+     * @ApiProperty(iri="http://schema.org/addressCountry")
      */
     private $addressCountry;
 
     /**
-     * @var string The locality. For example, Mountain View.
-     * @Assert\Type(type="string")
-     * @ORM\Column(nullable=true)
+     * @var string|null The locality. For example, Mountain View.
+     *
+     * @ORM\Column(type="text", nullable=true)
+     * @ApiProperty(iri="http://schema.org/addressLocality")
      */
     private $addressLocality;
 
     /**
-     * @var string The region. For example, CA.
-     * @Assert\Type(type="string")
-     * @ORM\Column(nullable=true)
+     * @var string|null The region. For example, CA.
+     *
+     * @ORM\Column(type="text", nullable=true)
+     * @ApiProperty(iri="http://schema.org/addressRegion")
      */
     private $addressRegion;
 
     /**
-     * @var string The postal code. For example, 94043.
-     * @Assert\Type(type="string")
-     * @ORM\Column(nullable=true)
-     */
-    private $postalCode;
-
-    /**
-     * @var string $postOfficeBoxNumber The post office box number for PO box addresses.
-     * @Assert\Type(type="string")
-     * @ORM\Column(nullable=true)
+     * @var string|null the post office box number for PO box addresses
+     *
+     * @ORM\Column(type="text", nullable=true)
+     * @ApiProperty(iri="http://schema.org/postOfficeBoxNumber")
      */
     private $postOfficeBoxNumber;
 
     /**
-     * @var string The street address. For example, 1600 Amphitheatre Pkwy.
-     * @Assert\Type(type="string")
-     * @ORM\Column(nullable=true)
+     * @var string|null The postal code. For example, 94043.
+     *
+     * @ORM\Column(type="text", nullable=true)
+     * @ApiProperty(iri="http://schema.org/postalCode")
+     */
+    private $postalCode;
+
+    /**
+     * @var string|null The street address. For example, 1600 Amphitheatre Pkwy.
+     *
+     * @ORM\Column(type="text", nullable=true)
+     * @ApiProperty(iri="http://schema.org/streetAddress")
      */
     private $streetAddress;
 
-    /**
-     * Sets id.
-     *
-     * @param  integer $id
-     * @return $this
-     */
-    public function setId($id)
-    {
-        $this->id = $id;
-
-        return $this;
-    }
-
-    /**
-     * Gets id.
-     *
-     * @return integer
-     */
-    public function getId()
+    public function getId(): ?int
     {
         return $this->id;
     }
 
-    /**
-     * Sets addressCountry.
-     *
-     * @param  string $addressCountry
-     * @return $this
-     */
-    public function setAddressCountry($addressCountry)
+    public function setAddressCountry(?string $addressCountry): void
     {
         $this->addressCountry = $addressCountry;
-
-        return $this;
     }
 
-    /**
-     * Gets addressCountry.
-     *
-     * @return string
-     */
-    public function getAddressCountry()
+    public function getAddressCountry(): ?string
     {
         return $this->addressCountry;
     }
 
-    /**
-     * Sets addressLocality.
-     *
-     * @param  string $addressLocality
-     * @return $this
-     */
-    public function setAddressLocality($addressLocality)
+    public function setAddressLocality(?string $addressLocality): void
     {
         $this->addressLocality = $addressLocality;
-
-        return $this;
     }
 
-    /**
-     * Gets addressLocality.
-     *
-     * @return string
-     */
-    public function getAddressLocality()
+    public function getAddressLocality(): ?string
     {
         return $this->addressLocality;
     }
 
-    /**
-     * Sets addressRegion.
-     *
-     * @param  string $addressRegion
-     * @return $this
-     */
-    public function setAddressRegion($addressRegion)
+    public function setAddressRegion(?string $addressRegion): void
     {
         $this->addressRegion = $addressRegion;
-
-        return $this;
     }
 
-    /**
-     * Gets addressRegion.
-     *
-     * @return string
-     */
-    public function getAddressRegion()
+    public function getAddressRegion(): ?string
     {
         return $this->addressRegion;
     }
 
-    /**
-     * Sets postalCode.
-     *
-     * @param  string $postalCode
-     * @return $this
-     */
-    public function setPostalCode($postalCode)
-    {
-        $this->postalCode = $postalCode;
-
-        return $this;
-    }
-
-    /**
-     * Gets postalCode.
-     *
-     * @return string
-     */
-    public function getPostalCode()
-    {
-        return $this->postalCode;
-    }
-
-    /**
-     * Sets postOfficeBoxNumber.
-     *
-     * @param  string $postOfficeBoxNumber
-     * @return $this
-     */
-    public function setPostOfficeBoxNumber($postOfficeBoxNumber)
+    public function setPostOfficeBoxNumber(?string $postOfficeBoxNumber): void
     {
         $this->postOfficeBoxNumber = $postOfficeBoxNumber;
-
-        return $this;
     }
 
-    /**
-     * Gets postOfficeBoxNumber.
-     *
-     * @return string
-     */
-    public function getPostOfficeBoxNumber()
+    public function getPostOfficeBoxNumber(): ?string
     {
         return $this->postOfficeBoxNumber;
     }
 
-    /**
-     * Sets streetAddress.
-     *
-     * @param  string $streetAddress
-     * @return $this
-     */
-    public function setStreetAddress($streetAddress)
+    public function setPostalCode(?string $postalCode): void
     {
-        $this->streetAddress = $streetAddress;
-
-        return $this;
+        $this->postalCode = $postalCode;
     }
 
-    /**
-     * Gets streetAddress.
-     *
-     * @return string
-     */
-    public function getStreetAddress()
+    public function getPostalCode(): ?string
+    {
+        return $this->postalCode;
+    }
+
+    public function setStreetAddress(?string $streetAddress): void
+    {
+        $this->streetAddress = $streetAddress;
+    }
+
+    public function getStreetAddress(): ?string
     {
         return $this->streetAddress;
     }
@@ -684,7 +489,7 @@ The related PHP class:
 ```php
 <?php
 
-// src/AppBundle/Enum/OfferItemCondition.php
+declare(strict_types=1);
 
 namespace AppBundle\Enum;
 
@@ -714,22 +519,6 @@ class OfferItemCondition extends Enum
      */
     const USED_CONDITION = 'http://schema.org/UsedCondition';
 }
-```
-
-### Enabling API Platform Core support
-
-PHP Schema is able to use [annotations provided by the core library](distribution/index.md#creating-the-model) and
-to map properties to corresponding types of the used [external vocabulary](../core/external-vocabularies.md).
-This is useful if you plan to use your generated data model to power a REST API.
-
-To enable this generator along with others, add the following lines to your PHP Schema configuration file:
-
-```yaml
-annotationGenerators:
-    - ApiPlatform\SchemaGenerator\AnnotationGenerator\PhpDocAnnotationGenerator
-    - ApiPlatform\SchemaGenerator\AnnotationGenerator\DoctrineOrmAnnotationGenerator
-    - ApiPlatform\SchemaGenerator\AnnotationGenerator\ConstraintAnnotationGenerator
-    - ApiPlatform\SchemaGenerator\AnnotationGenerator\ApiPlatformCoreAnnotationGenerator
 ```
 
 ### Going further
