@@ -56,7 +56,9 @@ class Book
 }
 ```
 
-This exemple is going to allow only fetching the book related to the current user. if he tries to fetch a book that is linked to his account, that will not return the resource. In addition, only admins are able to create books which means that a user could not create a book.
+This example is going to allow only fetching the book related to the current user. if he tries to fetch a book which is
+linked to his account, that will not return the resource. In addition, only admins are able to create books which means
+that a user could not create a book.
 
 It is also possible to use the [event system](events.md) for more advanced logic or even [custom actions](operations.md#creating-custom-operations-and-controllers)
 if you really need to.
