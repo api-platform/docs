@@ -35,7 +35,7 @@ asynchronous jobs to your APIs is very straightforward.
 
 ## Installing the framework
 
-### In Docker containers
+### In Docker Containers
 
 API Platform is shipped with a [Docker](https://docker.com) setup that makes it easy to get a containerized development
 environment up and running. This setup contains a [Docker Compose](https://docs.docker.com/compose/) configuration with
@@ -121,9 +121,7 @@ the API documentation. Click on an operation to display its details. You can als
 Try to create a new *Foo* resource using the `POST` operation, then access it using the `GET` operation and, finally, delete
 it by executing the `DELETE` operation.
 If you access any API URL using a web browser, API Platform detects it (using the `Accept` HTTP header) and displays the
-corresponding API request in the UI. Open `http://localhost/foos`:
-
-![Request detail in the UI](images/swagger-ui-2.png)
+corresponding API request in the UI. Try yourself by browsing to `http://localhost/foos`.
 
 If you want to access the raw data, you have two alternatives:
 
@@ -614,7 +612,13 @@ ISBN number isn't valid...
 Here we are! We have created a working and very powerful hypermedia REST API in a few minutes, and by writing only a few
 lines of PHP. But we only covered the basics.
 
-## Other features
+## Going Client-Side
+
+API Platform also provides amazing client-side components.
+Continue [by creating a fancy Material Design administration interface](../admin/index.md) for your API in seconds.
+Then, [scaffold a ReactJS / Redux Progressive Web App](generate-crud/index.md).
+
+## Other Features
 
 They are many more features to learn! Read [the full documentation](../core/index.md) to discover how to use them and how
 to extend API Platform to fit your needs.
@@ -629,16 +633,13 @@ Here is a non-exhaustive list of popular API Platform extensions:
 * Add [a user management system](../core/fosuser-bundle.md) (FOSUser)
 * [Secure the API with JWT](https://github.com/lexik/LexikJWTAuthenticationBundle) (LexikJwtAuthenticationBundle) or [OAuth](https://github.com/FriendsOfSymfony/FOSOAuthServerBundle)
   (FosOAuthServer)
-* [Add a Varnish reverse proxy and adopt a expiration or invalidation HTTP cache strategy](http://foshttpcachebundle.readthedocs.org)
-  (FOSHttpCache)
-* [Add CSRF protection when the API authentication relies on cookies](https://github.com/dunglas/DunglasAngularCsrfBundle)
-  (DunglasAngularCsrfBundle)
 * [Send mails](https://symfony.com/doc/current/cookbook/email/email.html) (Swift Mailer)
 * [Execute async jobs and create micro-service architectures using RabbitMQ](https://github.com/php-amqplib/RabbitMqBundle)
   (RabbitMQBundle)
 
-Keep in mind that you can use your favorite client-side technology: API Platform is tested and approved with React, Angular
-1 & 2, Ionic and Swift but can work with any language able to send HTTP requests (even COBOL can do that).
+Keep in mind that you can use your favorite client-side technology: API Platform provides React components ; but you can
+use your preferred client-side technology including Angular, Ionic and Swift. Any language able to send HTTP requests is OK
+(even COBOL can do that).
 
 To go further, the API Platform team maintains a demo application showing more advanced use cases like leveraging serialization
 groups, user management or JWT and OAuth authentication. [Checkout the demo code source on GitHub](https://github.com/api-platform/demo)
