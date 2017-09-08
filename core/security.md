@@ -25,7 +25,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  *         "post"={"method"="POST", "access_control"="is_granted('ROLE_USER')}
  *     },
  *     itemOperations={
- *         "get"={"method"="GET", "access_control"="is_granted('ROLE_USER') and object.owner() == user"}
+ *         "get"={"method"="GET", "access_control"="is_granted('ROLE_USER') and object.owner == user"}
  *     }
  * )
  * @ORM\Entity
