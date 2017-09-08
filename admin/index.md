@@ -26,6 +26,6 @@ You can also customize all screens by using Admin On Rest components and even ra
 * Nicely display server-side errors (e.g. advanced validation)
 * **100% customizable**
 
-Previous chapter: [Using API Platform with Docker](../deployment/docker.md)
+Previous chapter: [Deployment: Using API Platform with Docker](../deployment/docker.md)
 
 Next chapter: [Getting Started](getting-started.md)
