@@ -1,5 +1,31 @@
 # Performance
 
+## Enabling the Builtin HTTP Cache Invalidation System
+
+Exposing a hypermedia API has [many advantages](http://blog.theamazingrando.com/in-band-vs-out-of-band.html). One of
+them is the ability to know exactly which resources are included in HTTP responses created by the API. We used this
+specificity to make API Platform apps blazing fast.
+
+When the cache mechanism [is enabled](configuration.md), API Platform collects identifiers of every resources
+included in a given HTTP response (including lists, embedded documents and subresources) and returns them in a special
+HTTP header called [Cache-Tags](https://support.cloudflare.com/hc/en-us/articles/206596608-How-to-Purge-Cache-Using-Cache-Tags-Enterprise-only-).
+
+A [cache reverse proxy](https://en.wikipedia.org/wiki/Web_accelerator) supporting cache tags (Varnish, CloudFlare,
+Fastly…) must be put in front of the web server and store all responses returned by the API with a high
+[TTL](https://en.wikipedia.org/wiki/Time_to_live). When a resource is modified, API Platform takes care of purging all
+responses containing it in the proxy’s cache. It means that after the first request, all subsequent requests will not
+touch the web server, and will be served instantly from the cache. It also means that the content served will always be
+fresh, because the cache is purged in real time.
+
+The support for most specific cases such as the invalidation of collections when a document is added or removed or for
+relationships and inverse relations is built-in.
+
+We also included [Varnish](https://varnish-cache.org/) in the [Docker setup](../deployment/docker.md) provided with the
+distribution of API Platform, so this feature works out of the box.
+
+Integration with Varnish and the Doctrine ORM is shipped with the core library. You can easily implement the support for
+any other proxy or persistence system.
+
 ## Enabling the Metadata Cache
 
 Computing metadata used by the bundle is a costly operation. Fortunately, metadata can be computed once and then cached.
