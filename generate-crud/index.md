@@ -18,6 +18,6 @@ Works especially well with APIs built with the [API Platform](https://api-platfo
 * The generated HTML code is accessible to people with disabilities ([ARIA](https://www.w3.org/WAI/intro/aria) support)
 * The Redux and the React Router configuration is also generated
 
-Previous chapter: [Using API Platform with Docker](../deployment/docker.md)
+Previous chapter: [API Platform Admin: Handling Relations to Collections](../admin/handling-relations-to-collections.md)
 
 Next chapter: [Installation and Usage](installation-and-usage.md)
