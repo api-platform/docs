@@ -50,7 +50,7 @@ class Book
     public $title;
     
     /**
-     * @ORM\Column(type="text")
+     * @ORM\Column(type="string")
      */
     public $owner;
 }
