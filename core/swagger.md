@@ -64,4 +64,4 @@ final class SwaggerDecorator implements NormalizerInterface
 
 Previous chapter: [AngularJS Integration](angularjs-integration.md)
 
-Next chapter: [Schema Generator: Introduction](../schema-generator/index.md)
+Next chapter: [The Serialization Process](serialization.md)
