@@ -88,3 +88,7 @@ final class ApiNormalizer extends AbstractItemNormalizer
     }
 }
 ```
+
+Previous chapter: [Swagger Support](core/swagger.md)
+
+Next chapter: [Schema Generator: Introduction](schema-generator/index.md)
