@@ -4,6 +4,7 @@ API Platform Core is shipped with a bridge for [FOSUserBundle](https://github.co
 FOSUser bundle is enabled, this bridge will use its `UserManager` to create, update and delete user resources.
 
 ## Installing the bundle
+
 The installation procedure of the FOSUserBundle is described [in the main Symfony docs](https://symfony.com/doc/master/bundles/FOSUserBundle/index.html)
 
 You can:
@@ -16,6 +17,15 @@ If you are using the API Platform Standard Edition, you will need to enable the 
 # app/config/config.yml
 framework:
     form: { enabled: true }
+```
+
+## Enable the bridge
+
+To enable the provided bridge with FOSUserBundle, you need to add the following configuration to api-platform:
+```yaml
+# app/config/config.yml
+api_platform:
+    enable_fos_user: true
 ```
 
 ## Creating a `User` Entity with Serialization Groups
