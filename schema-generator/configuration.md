@@ -446,6 +446,7 @@ rdfa:
 types:
   Session:
     vocabularyNamespace: http://purl.org/net/VideoGameOntology#
+
   # ...
 ```
 

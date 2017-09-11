@@ -300,10 +300,12 @@ API Platform implements a `ContextBuilder`, which prepares the context for seria
 # app/config/services.yml
 
 services:
-    app.serializer.builder.book:
-        decorates: api_platform.serializer.context_builder
-        class: AppBundle\Serializer\BookContextBuilder
-        arguments: ['@app.serializer.builder.book.inner', '@security.authorization_checker']
+
+    # ...
+
+    'AppBundle\Serializer\BookContextBuilder':
+        decorates: 'api_platform.serializer.context_builder'
+        arguments: [ '@app.serializer.builder.book.inner' ]
 ```
 
 ```php
@@ -357,16 +359,17 @@ To use this feature, declare a new service with id `app.name_converter`. For exa
 # app/config/services.yml
 
 services:
-    app.name_converter:
-        class: Symfony\Component\Serializer\NameConverter\CamelCaseToSnakeCaseNameConverter
-        public: false
+
+    # ...
+
+    'Symfony\Component\Serializer\NameConverter\CamelCaseToSnakeCaseNameConverter': ~
 ```
 
 ```yaml
 # app/config/config.yml
 
 api_platform:
-    name_converter: app.name_converter
+    name_converter: 'Symfony\Component\Serializer\NameConverter\CamelCaseToSnakeCaseNameConverter'
 ```
 
 ## Entity Identifier Case

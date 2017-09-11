@@ -58,11 +58,11 @@ Then declare a Symfony service, for example:
 # app/config/services.yml
 
 services:
-    blog_post.collection_data_provider:
-        class: 'AppBundle\DataProvider\BlogPostCollectionDataProvider'
-        public: false
-        tags:
-            -  { name: 'api_platform.collection_data_provider', priority: 2 }
+
+    # ...
+
+    'AppBundle\DataProvider\BlogPostCollectionDataProvider':
+        tags: [ { name: 'api_platform.collection_data_provider', priority: 2 } ]
 ```
 
 Tagging the service with the tag `api_platform.collection_data_provider` will enable API Platform Core to automatically
@@ -101,18 +101,21 @@ final class BlogPostItemDataProvider implements ItemDataProviderInterface
 }
 ```
 
-The tag to use for item data providers is `api_platform.item_data_provider`. As for collection data providers, the `priority`
-attribute can be used to order providers.
+If service autowiring and autoconfiguration are enabled (it's the case by default), you are done!
+
+Otherwise, if you use a custom dependency injection configuration, you need to register the corresponding service add the
+`api_platform.item_data_provider` tag. As for collection data providers, the `priority` attribute can be used to order
+providers.
 
 ```yaml
 # app/config/services.yml
 
 services:
-    blog_post.item_data_provider:
-        class: 'AppBundle\DataProvider\BlogPostItemDataProvider'
-        public: false
-        tags:
-            -  { name: 'api_platform.item_data_provider' }
+
+    # ...
+
+    'AppBundle\DataProvider\BlogPostItemDataProvider':
+        tags: [ 'api_platform.item_data_provider' ]
 ```
 
 Previous chapter: [Extending JSON-LD context](extending-jsonld-context.md)

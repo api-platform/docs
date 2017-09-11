@@ -35,13 +35,14 @@ In the following example, we will see how we add extra informations to the outpu
 Here is how we add the date on each request in `GET`:
 
 ```yaml
- # app/config/services.yml
+# app/config/services.yml
 
 services:
-     app.custom.jsonld.normalizer_decorator:
-        decorates: api_platform.jsonld.normalizer.item
-        class: AppBundle\Serializer\ApiNormalizer
-        autowire: true
+
+  # ...
+
+    'AppBundle\Serializer\ApiNormalizer':
+        decorates: 'api_platform.jsonld.normalizer.item'
 ```
 
 ```php
