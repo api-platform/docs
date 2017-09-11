@@ -597,7 +597,7 @@ final class UserAware
 }
 ```
 
-Then, Let's mark the `Order` entity as a "user aware" entity.
+Then, let's mark the `Order` entity as a "user aware" entity.
 
 ```php
 <?php
@@ -637,7 +637,7 @@ final class UserFilter extends SQLFilter
     public function addFilterConstraint(ClassMetadata $targetEntity, string $targetTableAlias): string
     {
         if (null === $this->reader) {
-            return '';
+            return throw new \RuntimeException(sprintf('An annotation reader must be provided. Be sure to call "%s::setAnnotationReader()".', __CLASS__));
         }
 
         // The Doctrine filter is called for any query on any entity
@@ -680,7 +680,6 @@ doctrine:
         filters:
             user_filter:
                 class: AppBundle\Filter\UserFilter
-                enabled: true
 ```
 
 And add a listener for every request that initializes the Doctrine filter with the current user in your bundle services declaration file.
@@ -689,12 +688,7 @@ And add a listener for every request that initializes the Doctrine filter with t
 # app/config/services.yml
 
 services:
-    acme_demo.doctrine.filter.configurator:
-        class: AppBundle\Filter\Configurator
-        arguments:
-            - '@doctrine.orm.entity_manager'
-            - '@security.token_storage'
-            - '@annotation_reader'
+    'AppBundle\EventListener\UserFilterConfigurator':
         tags:
             - { name: kernel.event_listener, event: kernel.request, priority: 5 }
 ```
@@ -706,16 +700,16 @@ Lastly, implement the configurator class:
 ```php
 <?php
 
-// src/AppBundle/Filter/Configurator.php
+// src/AppBundle/EventListener/UserFilterConfigurator.php
 
-namespace AppBundle\Filter;
+namespace AppBundle\EventListener;
 
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Doctrine\Common\Persistence\ObjectManager;
 use Doctrine\Common\Annotations\Reader;
 
-final class Configurator
+final class UserFilterConfigurator
 {
     private $em;
     private $tokenStorage;
@@ -730,8 +724,7 @@ final class Configurator
 
     public function onKernelRequest(): void
     {
-        $user = $this->getUser()
-        if (!$user) {
+        if (!$user = $this->getUser()) {
             return;
         }
 
