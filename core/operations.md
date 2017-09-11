@@ -296,7 +296,7 @@ You may want custom groups on subresources. Because a subresource is nothing mor
 use ApiPlatform\Core\Annotation\ApiResource;
 
 /**
- * @ApiResource(collectionOperations={"api_questions_answer_get_subresource"={"method"="GET", "normalization_context"="{"groups"={"foobar"}}"}})
+ * @ApiResource(collectionOperations={"api_questions_answer_get_subresource"={"method"="GET", "normalization_context"={"groups"={"foobar"}}}})
  */
 class Answer
 {
