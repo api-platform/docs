@@ -93,6 +93,11 @@
     1.  [Restangular](core/angularjs-integration.md#restangular)
     2.  [ng-admin](core/angularjs-integration.md#ng-admin)
 24. [Swagger Support](core/swagger.md)
+    1. [Override Swagger documentation](core/swagger.md#override-swagger-documentation)
+25. [The Serialization Process](core/serialization.md)
+    1. [Overall Process](core/serialization.md#overall-process)
+    2. [Available Serializers](core/serialization.md#available-serializers)
+    3. [Decorating a Serializer and Add Extra Data](core/serialization.md#decorating-a-serializer-and-add-extra-data)
 
 ## Schema Generator: Generate Data Models from Open Vocabularies
 
