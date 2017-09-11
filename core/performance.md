@@ -83,12 +83,11 @@ little of configuration:
 # app/config/config.yaml
 
 api_platform:
+
     # ...
 
     eager_loading:
         max_joins: 100
-
-    # ...
 ```
 
 Be careful when you exceed this limit, it's often caused by the result of a circular reference. [Serializer groups](serialization-groups-and-relations.md)
@@ -103,12 +102,11 @@ configuration in order to apply it only on join relations having the `EAGER` fet
 # app/config/config.yaml
 
 api_platform:
+
     # ...
 
     eager_loading:
         force_eager: false
-
-    # ...
 ```
 
 #### Override at resource and operation level
@@ -212,12 +210,11 @@ If for any reason you don't want the eager loading feature, you can turn it off 
 # app/config/config.yaml
 
 api_platform:
+
     # ...
 
     eager_loading:
         enabled: false
-
-    # ...
 ```
 
 The whole configuration seen before will no longer work and Doctrine will recover its default behavior.

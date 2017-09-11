@@ -44,7 +44,9 @@ and of a custom format called `myformat` and having `application/vnd.myformat` a
 # app/config/config.yml
 
 api_platform:
+
     # ...
+
     formats:
         jsonld:   ['application/ld+json']
         jsonhal:  ['application/hal+json']
@@ -79,11 +81,12 @@ own implementation of `CustomItemNormalizer`:
 # app/config/services.yml
 
 services:
-    app.custom_item_normalizer:
-        public: false
-        class: AppBundle\Serializer\CustomItemNormalizer
+
+# ...
+
+    'AppBundle\Serializer\CustomItemNormalizer':
         arguments: [ '@api_platform.serializer.normalizer.item' ]
-        tags: [ { name: serializer.normalizer } ]
+        tags: [ 'serializer.normalizer' ]
 ```
 
 ```php
@@ -96,7 +99,7 @@ namespace AppBundle\Serializer;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
-class CustomItemNormalizer implements NormalizerInterface, DenormalizerInterface
+final class CustomItemNormalizer implements NormalizerInterface, DenormalizerInterface
 {
     private $normalizer;
 
