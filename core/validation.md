@@ -137,11 +137,11 @@ Then, configure the entity class to use this service to retrieve validation grou
 namespace AppBundle\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
-use AppBundle\Validator\AdminGroupsGeneratorGroupsGenerator;
+use AppBundle\Validator\AdminGroupsGenerator;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * @ApiResource(attributes={"validation_groups"=AdminGroupsGeneratorGroupsGenerator::class})
+ * @ApiResource(attributes={"validation_groups"=AdminGroupsGenerator::class})
  */
 class Book
 {
