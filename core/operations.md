@@ -525,4 +525,5 @@ book_special:
 
 Previous chapter: [Configuration](configuration.md)
 
-Next chapter: [Filters](filters.md)
+Next chapter: [Overriding Default Order](default-order.md)
+
