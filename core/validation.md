@@ -106,7 +106,7 @@ namespace AppBundle\Validator;
 
 use AppBundle/Entity/Book;
 
-class ValidatorGroupsGenerator
+class GroupsGenerator
 {
     private $anotherService;
 
