@@ -1,17 +1,20 @@
 # FOSUser Bundle Integration
 
-API Platform Core is shipped with a bridge for [FOSUserBundle](https://github.com/FriendsOfSymfony/FOSUserBundle). If the
-FOSUser bundle is enabled, this bridge will use its `UserManager` to create, update and delete user resources.
+API Platform Core is shipped with a bridge for [FOSUserBundle](https://github.com/FriendsOfSymfony/FOSUserBundle). If
+the FOSUser bundle is enabled, this bridge will use its `UserManager` to create, update and delete user resources.
 
-## Installing the bundle
+## Installing the Bundle
 
 The installation procedure of the FOSUserBundle is described [in the main Symfony docs](https://symfony.com/doc/master/bundles/FOSUserBundle/index.html)
 
 You can:
-- Skip the step 3 and use the class provided in the next paragraph to set up serialization groups the correct way
-- Skip the step 4 if you are planning to [use a JWT-based authentication using `LexikJWTAuthenticationBundle`](jwt.md)
+- Skip the [step 3 (Create your User class)](https://symfony.com/doc/master/bundles/FOSUserBundle/index.html#step-3-create-your-user-class)
+and use the class provided in the next paragraph to set up serialization groups the correct way
+- Skip the [step 4 (Configure your application's security.yml)](https://symfony.com/doc/master/bundles/FOSUserBundle/index.html#step-4-configure-your-application-s-security-yml)
+if you are planning to [use a JWT-based authentication using `LexikJWTAuthenticationBundle`](jwt.md)
 
-If you are using the API Platform Standard Edition, you will need to enable the form services in the symfony framework configuration options:
+If you are using the API Platform Standard Edition, you will need to enable the form services in the symfony framework
+configuration options:
 
 ```yaml
 # app/config/config.yml
@@ -19,7 +22,7 @@ framework:
     form: { enabled: true }
 ```
 
-## Enable the bridge
+## Enabling the Bridge
 
 To enable the provided bridge with FOSUserBundle, you need to add the following configuration to api-platform:
 ```yaml
