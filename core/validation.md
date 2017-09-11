@@ -100,38 +100,48 @@ Alternatively, you can use a service to retrieve the groups to use:
 ```php
 <?php
 
-// src/AppBundle/Validator/GroupsGenerator.php
+// src/AppBundle/Validator/AdminGroupsGenerator.php
 
 namespace AppBundle\Validator;
 
-use AppBundle/Entity/Book;
+use AppBundle\Entity\Book;
+use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
-class GroupsGenerator
+final class AdminGroupsGenerator
 {
-    private $anotherService;
+    private $authorizationChecker;
 
-    public function __construct(AnotherService $s)
+    public function __construct(AuthorizationCheckerInterface $authorizationChecker)
     {
-        $this->anotherService = $anotherService;
+        $this->authorizationChecker = $authorizationChecker;
     }
 
     public function __invoke(Book $book): array
     {
-        return $this->anotherService->isSomething($book) ? ['a', 'b'] : ['a'];
+        return $this->authorizationChecker->isGranted('ROLE_ADMIN', $book) ? ['a', 'b'] : ['a'];
     }
 }
 ```
 
+This class selects the groups to apply regarding the role of the current user: if the current user has the `ROLE_ADMIN` role, groups `a` and `b` are returned. In other cases, just `a` is returned.
+
+This class is automatically registered as a service thanks to [the autowiring feature of the Symfony Dependency Injection Component](https://symfony.com/doc/current/service_container/autowiring.html).
+
+Then, configure the entity class to use this service to retrieve validation groups:
+
 ```php
 <?php
+
 // src/AppBundle/Entity/Book.php
 
+namespace AppBundle\Entity;
+
 use ApiPlatform\Core\Annotation\ApiResource;
-use AppBundle\Validator\GroupsGenerator;
+use AppBundle\Validator\AdminGroupsGeneratorGroupsGenerator;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * @ApiResource(attributes={"validation_groups"=GroupsGenerator::class})
+ * @ApiResource(attributes={"validation_groups"=AdminGroupsGeneratorGroupsGenerator::class})
  */
 class Book
 {
