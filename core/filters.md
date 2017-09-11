@@ -522,34 +522,53 @@ class Offer
 You can now enable this filter using URLs like `http://example.com/offers?regexp_email=^[FOO]`. This new filter will also
 appear in Swagger and Hydra documentations.
 
-### [Doctrine filters](http://docs.doctrine-project.org/projects/doctrine-orm/en/latest/reference/filters.html)
+### Using Doctrine Filters
 
-Doctrine features a filter system that allows the developer to add SQL to the conditional clauses of queries, regardless the place where the SQL is generated (e.g. from a DQL query, or by loading associated entities).
+Doctrine features [a filter system](http://docs.doctrine-project.org/projects/doctrine-orm/en/latest/reference/filters.html) that allows the developer to add SQL to the conditional clauses of queries, regardless the place where the SQL is generated (e.g. from a DQL query, or by loading associated entities).
 These are applied on collections and items, so are incredibly useful.
 
 The following information, specific to Doctrine filters in Symfony, is based upon [a great article posted on Michaël Perrin's blog](http://blog.michaelperrin.fr/2014/12/05/doctrine-filters/).
 
-Suppose we have a User entity and an Order entity related to the User one. A user should only see his orders and no others' ones.
+Suppose we have a `User` entity and an `Order` entity related to the `User` one. A user should only see his orders and no others's ones.
 
 ```php
 <?php
 
-# src/Acme/DemoBundle/Entity/User.php
+// src/AppBundle/Entity/User.php
 
-/** @Entity **/
+namespace AppBundle\Entity;
+
+use ApiPlatform\Core\Annotation\ApiResource;
+
+/**
+ * @ApiResource
+ */
 class User
 {
     // ...
 }
+```
 
-/** @Entity **/
+```php
+<?php
+
+// src/AppBundle/Entity/Order.php
+
+namespace AppBundle\Entity;
+
+use ApiPlatform\Core\Annotation\ApiResource;
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * @ApiResource
+ */
 class Order
 {
     // ...
 
     /**
-     * @ManyToOne(targetEntity="User")
-     * @JoinColumn(name="user_id", referencedColumnName="id")
+     * @ORM\ManyToOne(targetEntity="User")
+     * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
      **/
     private $user;
 }
@@ -557,14 +576,14 @@ class Order
 
 The whole idea is that any query on the order table should add a WHERE user_id = :user_id condition.
 
-1) Creation of a custom annotation for our restricted entities
+Start by creating a custom annotation to mark restricted entities:
 
 ```php
 <?php
 
-# src/Acme/DemoBundle/Annotation/UserAware.php
+// src/AppBundle/Annotation/UserAware.php
 
-namespace Acme\DemoBundle\Annotation;
+namespace AppBundle\Annotation;
 
 use Doctrine\Common\Annotations\Annotation;
 
@@ -578,65 +597,59 @@ final class UserAware
 }
 ```
 
-2) Use of the annotation on the Order entity
-
-Let's mark the Order entity as a "user aware" entity.
+Then, Let's mark the `Order` entity as a "user aware" entity.
 
 ```php
 <?php
 
-# src/Acme/DemoBundle/Entity/Order.php
+// src/AppBundle/Entity/Order.php
 
-namespace Acme\DemoBundle\Entity;
+namespace AppBundle\Entity;
 
-use Acme\DemoBundle\Annotation\UserAware;
+use AppBundle\Annotation\UserAware;
 
 /**
- * Order entity
- *
  * @UserAware(userFieldName="user_id")
  */
-class Order { ... }
+class Order {
+    // ...
+}
 ```
 
-3) Creation of a Doctrine filter class
+Now, create a Doctrine filter class:
 
 ```php
 <?php
 
-# src/Acme/DemoBundle/Filter/UserFilter.php
+// src/AppBundle/Filter/UserFilter.php
 
-namespace Acme\DemoBundle\Filter;
+namespace AppBundle\Filter;
 
+use AppBundle\Annotation\UserAware;
 use Doctrine\ORM\Mapping\ClassMetaData;
 use Doctrine\ORM\Query\Filter\SQLFilter;
 use Doctrine\Common\Annotations\Reader;
 
-class UserFilter extends SQLFilter
+final class UserFilter extends SQLFilter
 {
-    protected $reader;
+    private $reader;
 
-    public function addFilterConstraint(ClassMetadata $targetEntity, $targetTableAlias)
+    public function addFilterConstraint(ClassMetadata $targetEntity, string $targetTableAlias): string
     {
-        if (empty($this->reader)) {
+        if (null === $this->reader) {
             return '';
         }
 
         // The Doctrine filter is called for any query on any entity
         // Check if the current entity is "user aware" (marked with an annotation)
-        $userAware = $this->reader->getClassAnnotation(
-            $targetEntity->getReflectionClass(),
-            'Acme\\DemoBundle\\Annotation\\UserAware'
-        );
-
+        $userAware = $this->reader->getClassAnnotation($targetEntity->getReflectionClass(), UserAware::class);
         if (!$userAware) {
             return '';
         }
 
         $fieldName = $userAware->userFieldName;
-
         try {
-            // Don't worry, getParameter automatically quotes parameters
+            // Don't worry, getParameter automatically escapes parameters
             $userId = $this->getParameter('id');
         } catch (\InvalidArgumentException $e) {
             // No user id has been defined
@@ -647,19 +660,17 @@ class UserFilter extends SQLFilter
             return '';
         }
 
-        $query = sprintf('%s.%s = %s', $targetTableAlias, $fieldName, $userId);
-
-        return $query;
+        return sprintf('%s.%s = %s', $targetTableAlias, $fieldName, $userId);
     }
 
-    public function setAnnotationReader(Reader $reader)
+    public function setAnnotationReader(Reader $reader): void
     {
         $this->reader = $reader;
     }
 }
 ```
 
-4) Configure the Doctrine filter
+Now, we must configure the Doctrine filter. 
 
 ```yaml
 # app/config/config.yml
@@ -668,77 +679,75 @@ doctrine:
     orm:
         filters:
             user_filter:
-                class: Acme\DemoBundle\Filter\UserFilter
+                class: AppBundle\Filter\UserFilter
                 enabled: true
 ```
 
 And add a listener for every request that initializes the Doctrine filter with the current user in your bundle services declaration file.
 
 ```yaml
-# AcmeDemoBundle/Resources/config/services.yml
+# app/config/services.yml
 
 services:
     acme_demo.doctrine.filter.configurator:
-        class: Acme\DemoBundle\Filter\Configurator
+        class: AppBundle\Filter\Configurator
         arguments:
-            - "@doctrine.orm.entity_manager"
-            - "@security.token_storage"
-            - "@annotation_reader"
+            - '@doctrine.orm.entity_manager'
+            - '@security.token_storage'
+            - '@annotation_reader'
         tags:
             - { name: kernel.event_listener, event: kernel.request, priority: 5 }
 ```
 
-It's key to set the priority higher than the ApiPlatform\Core\EventListener\ReadListener's priority, as flagged in [this issue](https://github.com/api-platform/core/issues/1185), as otherwise the PaginatorExtension will ignore the Doctrine filter and return incorrect totalItems and page (first/last/next) data.
+It's key to set the priority higher than the `ApiPlatform\Core\EventListener\ReadListener`'s priority, as flagged in [this issue](https://github.com/api-platform/core/issues/1185), as otherwise the `PaginatorExtension` will ignore the Doctrine filter and return incorrect `totalItems` and `page` (first/last/next) data.
 
 Lastly, implement the configurator class:
 
 ```php
 <?php
 
-namespace Acme\TestBundle\Filter;
+// src/AppBundle/Filter/Configurator.php
+
+namespace AppBundle\Filter;
 
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Doctrine\Common\Persistence\ObjectManager;
 use Doctrine\Common\Annotations\Reader;
 
-class Configurator
+final class Configurator
 {
-    protected $em;
-    protected $tokenStorage;
-    protected $reader;
+    private $em;
+    private $tokenStorage;
+    private $reader;
 
     public function __construct(ObjectManager $em, TokenStorageInterface $tokenStorage, Reader $reader)
     {
-        $this->em              = $em;
-        $this->tokenStorage    = $tokenStorage;
-        $this->reader          = $reader;
+        $this->em = $em;
+        $this->tokenStorage = $tokenStorage;
+        $this->reader = $reader;
     }
 
-    public function onKernelRequest()
+    public function onKernelRequest(): void
     {
-        if ($user = $this->getUser()) {
-            $filter = $this->em->getFilters()->enable('user_filter');
-            $filter->setParameter('id', $user->getId());
-            $filter->setAnnotationReader($this->reader);
+        $user = $this->getUser()
+        if (!$user) {
+            return;
         }
+
+        $filter = $this->em->getFilters()->enable('user_filter');
+        $filter->setParameter('id', $user->getId());
+        $filter->setAnnotationReader($this->reader);
     }
 
-    private function getUser()
+    private function getUser(): ?UserInterface
     {
-        $token = $this->tokenStorage->getToken();
-
-        if (!$token) {
+        if (!$token = $this->tokenStorage->getToken()) {
             return null;
         }
 
         $user = $token->getUser();
-
-        if (!($user instanceof UserInterface)) {
-            return null;
-        }
-
-        return $user;
+        return $user instanceof UserInterface ? $user : null;
     }
 }
 ```
