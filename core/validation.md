@@ -95,6 +95,55 @@ class Book
 }
 ```
 
+You can also use a custom service :
+```php
+<?php
+
+// src/AppBundle/Service/ValidatorGroupsGenerator.php
+
+use AppBundle/Entity/Book;
+
+class ValidatorGroupsGenerator
+{
+    private $s;
+
+    public function __construct(AService $s)
+    {
+        $this->s = $s;
+    }
+
+    public function __invoke(Book $book): array
+    {
+        return $this->s->isSomething($book) ? ['a', 'b'] : ['a'];
+    }
+}
+```
+```php
+<?php
+// src/AppBundle/Entity/Book.php
+
+use ApiPlatform\Core\Annotation\ApiResource;
+use Symfony\Component\Validator\Constraints as Assert;
+
+/**
+ * @ApiResource(attributes={"validation_groups"="AppBundle\Service\ValidatorGroupsGenerator"})
+ */
+class Book
+{
+    /**
+     * @Assert\NotBlank(groups={"a"})
+     */
+    private $name;
+
+    /**
+     * @Assert\NotNull(groups={"b"})
+     */
+    private $author;
+
+    // ...
+}
+```
+
 Previous chapter: [Serialization Groups and Relations](serialization-groups-and-relations.md)
 
 Next chapter: [Pagination](pagination.md)
