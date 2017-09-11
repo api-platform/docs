@@ -127,10 +127,11 @@ class GroupsGenerator
 // src/AppBundle/Entity/Book.php
 
 use ApiPlatform\Core\Annotation\ApiResource;
+use AppBundle\Validator\GroupsGenerator;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * @ApiResource(attributes={"validation_groups"="AppBundle\Validator\GroupsGenerator"})
+ * @ApiResource(attributes={"validation_groups"=GroupsGenerator::class})
  */
 class Book
 {
