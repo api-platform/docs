@@ -14,7 +14,7 @@ automatically appears in the [NelmioApiDoc documentation](nelmio-api-doc.md) if 
 
 ### Search Filter
 
-If Doctrine ORM support is enabled, adding filters is as easy as registering a filter service in your `app/config/services.yml`
+If Doctrine ORM support is enabled, adding filters is as easy as registering a filter service in the `app/config/api_filters.yml`
 file and adding an attribute to your resource configuration.
 
 The search filter supports `exact`, `partial`, `start`, `end`, and `word_start` matching strategies:
@@ -34,13 +34,13 @@ are already case insensitive, as indicated by the `_ci` part in their names.
 In the following example, we will see how to allow the filtering of a list of e-commerce offers:
 
 ```yaml
-# app/config/services.yml
+# app/config/api_filters.yml
 
 services:
     offer.search_filter:
-        parent:    'api_platform.doctrine.orm.search_filter'
+        parent: 'api_platform.doctrine.orm.search_filter'
         arguments: [ { id: 'exact', price: 'exact', name: 'partial' } ]
-        tags:      [ { name: 'api_platform.filter', id: 'offer.search' } ]
+        tags: [ 'api_platform.filter' ]
 ```
 
 ```php
@@ -53,7 +53,7 @@ namespace AppBundle\Entity;
 use ApiPlatform\Core\Annotation\ApiResource;
 
 /**
- * @ApiResource(attributes={"filters"={"offer.search"}})
+ * @ApiResource(attributes={"filters"={"offer.search_filter"}})
  */
 class Offer
 {
@@ -69,13 +69,13 @@ Filters can be combined together: `http://localhost:8000/api/offers?price=10&nam
 It is possible to filter on relations too:
 
 ```yaml
-# app/config/services.yml
+# app/config/api_filters.yml
 
 services:
     offer.search_filter:
-        parent:    'api_platform.doctrine.orm.search_filter'
+        parent:  'api_platform.doctrine.orm.search_filter'
         arguments: [ { product: 'exact' } ]
-        tags:      [ { name: 'api_platform.filter', id: 'offer.search' } ]
+        tags: [ 'api_platform.filter' ]
 ```
 
 With this service definition, it is possible to find all offers belonging to the product identified by a given IRI.
@@ -97,14 +97,14 @@ The `after` and `before` filters will filter including the value whereas `strict
 As others filters, the date filter must be explicitly enabled:
 
 ```yaml
-# app/config/services.yml
+# app/config/api_filters.yml
 
 services:
     # Enable date filter for for the property "dateProperty" of the resource "offer"
     offer.date_filter:
-        parent:    'api_platform.doctrine.orm.date_filter'
+        parent: 'api_platform.doctrine.orm.date_filter'
         arguments: [ { dateProperty: ~ } ]
-        tags:      [ { name: 'api_platform.filter', id: 'offer.date' } ]
+        tags:  [ 'api_platform.filter' ]
 ```
 
 ```php
@@ -117,7 +117,7 @@ namespace AppBundle\Entity;
 use ApiPlatform\Core\Annotation\ApiResource;
 
 /**
- * @ApiResource(attributes={"filters"={"offer.date"}})
+ * @ApiResource(attributes={"filters"={"offer.date_filter"}})
  */
 class Offer
 {
@@ -140,13 +140,13 @@ Consider items as youngest           | `ApiPlatform\Core\Bridge\Doctrine\Orm\Fil
 For instance, exclude entries with a property value of `null`, with the following service definition:
 
 ```yaml
-# app/config/services.yml
+# app/config/api_filters.yml
 
 services:
     offer.date_filter:
-        parent:    'api_platform.doctrine.orm.date_filter'
+        parent: 'api_platform.doctrine.orm.date_filter'
         arguments: [ { dateProperty: 'exclude_null' } ]
-        tags:      [ { name: 'api_platform.filter', id: 'offer.date' } ]
+        tags: [ 'api_platform.filter' ]
 ```
 
 If you use a service definition format other than YAML, you can use the `ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\DateFilter::EXCLUDE_NULL`
@@ -163,13 +163,13 @@ You can either use TRUE or true, the parameters are case insensitive.
 Enable the filter:
 
 ```yaml
-# app/config/services.yml
+# app/config/api_filters.yml
 
 services:
     offer.boolean_filter:
-        parent:    'api_platform.doctrine.orm.boolean_filter'
+        parent: 'api_platform.doctrine.orm.boolean_filter'
         arguments: [ { isAvailableGenericallyInMyCountry: ~ } ]
-        tags:      [ { name: 'api_platform.filter', id: 'offer.boolean' } ]
+        tags: [ 'api_platform.filter' ]
 ```
 
 ```php
@@ -182,7 +182,7 @@ namespace AppBundle\Entity;
 use ApiPlatform\Core\Annotation\ApiResource;
 
 /**
- * @ApiResource(attributes={"filters"={"offer.boolean"}})
+ * @ApiResource(attributes={"filters"={"offer.boolean_filter"}})
  */
 class Offer
 {
@@ -203,13 +203,13 @@ Syntax: `?property=int|bigint|decimal...`
 Enable the filter:
 
 ```yaml
-# app/config/services.yml
+# app/config/api_filters.yml
 
 services:
     offer.numeric_filter:
-        parent:    'api_platform.doctrine.orm.numeric_filter'
+        parent: 'api_platform.doctrine.orm.numeric_filter'
         arguments: [ { sold: ~ } ]
-        tags:      [ { name: 'api_platform.filter', id: 'offer.numeric' } ]
+        tags: [ 'api_platform.filter' ]
 ```
 
 ```php
@@ -222,9 +222,9 @@ namespace AppBundle\Entity;
 use ApiPlatform\Core\Annotation\ApiResource;
 
 /**
- * @ApiResource(attributes={"filters"={"offer.numeric"}})
+ * @ApiResource(attributes={"filters"={"offer.numeric_filter"}})
  */
-final class Offer
+class Offer
 {
     // ...
 }
@@ -244,13 +244,13 @@ Syntax: `?property[lt]|[gt]|[lte]|[gte]|[between]=value`
 Enable the filter:
 
 ```yaml
-# app/config/services.yml
+# app/config/api_filters.yml
 
 services:
-    offer.numeric_filter:
-        parent:    'api_platform.doctrine.orm.range_filter'
+    offer.range_filter:
+        parent: 'api_platform.doctrine.orm.range_filter'
         arguments: [ { price: ~ } ]
-        tags:      [ { name: 'api_platform.filter', id: 'offer.range' } ]
+        tags:  [ 'api_platform.filter' ]
 ```
 
 ```php
@@ -263,9 +263,9 @@ namespace AppBundle\Entity;
 use ApiPlatform\Core\Annotation\ApiResource;
 
 /**
- * @ApiResource(attributes={"filters"={"offer.range"}})
+ * @ApiResource(attributes={"filters"={"offer.range_filter"}})
  */
-final class Offer
+class Offer
 {
     // ...
 }
@@ -286,13 +286,13 @@ Syntax: `?order[property]=<asc|desc>`
 Enable the filter:
 
 ```yaml
-# app/config/services.yml
+# app/config/api_filters.yml
 
 services:
     offer.order_filter:
-        parent:    'api_platform.doctrine.orm.order_filter'
+        parent: 'api_platform.doctrine.orm.order_filter'
         arguments: [ { id: ~, name: ~ } ]
-        tags:      [ { name: 'api_platform.filter', id: 'offer.order' } ]
+        tags: [ 'api_platform.filter' ]
 ```
 
 ```php
@@ -305,7 +305,7 @@ namespace AppBundle\Entity;
 use ApiPlatform\Core\Annotation\ApiResource;
 
 /**
- * @ApiResource(attributes={"filters"={"offer.order"}})
+ * @ApiResource(attributes={"filters"={"offer.order_filter"}})
  */
 class Offer
 {
@@ -320,13 +320,13 @@ By default, whenever the query does not specify the direction explicitly (e.g: `
 will not be applied unless you configure a default order direction to use:
 
 ```yaml
-# app/config/services.yml
+# app/config/api_filters.yml
 
 services:
     offer.order_filter:
-        parent:    'api_platform.doctrine.orm.order_filter'
+        parent:  'api_platform.doctrine.orm.order_filter'
         arguments: [ { id: { default_direction: 'ASC' }, name: { default_direction: 'DESC' } } ]
-        tags:      [ { name: 'api_platform.filter', id: 'offer.order' } ]
+        tags: [ 'api_platform.filter' ]
 ```
 
 #### Comparing with Null Values
@@ -343,13 +343,13 @@ Consider items as largest            | `ApiPlatform\Core\Bridge\Doctrine\Orm\Fil
 For instance, treat entries with a property value of `null` as the smallest, with the following service definition:
 
 ```yaml
-# app/config/services.yml
+# app/config/api_filters.yml
 
 services:
     offer.order_filter:
-        parent:    'api_platform.doctrine.orm.date_filter'
+        parent: 'api_platform.doctrine.orm.date_filter'
         arguments: [ { validFrom: { nulls_comparison: 'nulls_smallest' } } ]
-        tags:      [ { name: 'api_platform.filter', id: 'offer.order' } ]
+        tags: [ 'api_platform.filter' ]
 ```
 
 If you use a service definition format other than YAML, you can use the `ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\OrderFilter::NULLS_SMALLEST`
@@ -374,18 +374,18 @@ Sometimes, you need to be able to perform filtering based on some linked resourc
 built-in filters support nested properties using the dot (`.`) syntax, e.g.:
 
 ```yaml
-# app/config/services.yml
+# app/config/api_filters.yml
 
 services:
     offer.search_filter:
-        parent:    'api_platform.doctrine.orm.search_filter'
+        parent: 'api_platform.doctrine.orm.search_filter'
         arguments: [ { product.color: 'exact' } ]
-        tags:      [ { name: 'api_platform.filter', id: 'offer.search' } ]
+        tags: [ 'api_platform.filter' ]
 
     offer.order_filter:
-        parent:    'api_platform.doctrine.orm.order_filter'
+        parent: 'api_platform.doctrine.orm.order_filter'
         arguments: [ { product.releaseDate: ~ } ]
-        tags:      [ { name: 'api_platform.filter', id: 'offer.order' } ]
+        tags: [ 'api_platform.filter' ]
 ```
 
 The above allows you to find offers by their respective product's color: `http://localhost:8000/api/offers?product.color=red`,
@@ -398,14 +398,13 @@ care about security and performance (e.g. an API with restricted access), it is 
 for all properties:
 
 ```yaml
-# app/config/services.yml
+# app/config/api_filters.yml
 
 services:
     # Filter enabled for all properties
     offer.order_filter:
-        parent:    'api_platform.doctrine.orm.order_filter'
-        arguments: [ ~ ] # This line can also be omitted
-        tags:      [ { name: 'api_platform.filter', id: 'offer.order' } ]
+        parent: 'api_platform.doctrine.orm.order_filter'
+        tags: [ 'api_platform.filter' ]
 ```
 
 **Note: Filters on nested properties must still be enabled explicitly, in order to keep things sane**
@@ -434,7 +433,7 @@ You can add as many groups as you need.
 Enable the filter:
 
 ```yaml
-# app/config/services.yml
+# app/config/api_filters.yml
 
 services:
     book.group_filter:
@@ -442,7 +441,7 @@ services:
         arguments:     # Default arguments values
             - 'groups' # The query parameter name
             - false    # Allow to override the default serialization groups
-        tags:   [ { name: 'api_platform.filter', id: 'book.group' } ]
+        tags: [ 'api_platform.filter' ]
 ```
 
 ```php
@@ -455,7 +454,7 @@ namespace AppBundle\Entity;
 use ApiPlatform\Core\Annotation\ApiResource;
 
 /**
- * @ApiResource(attributes={"filters"={"book.group"}})
+ * @ApiResource(attributes={"filters"={"book.group_filter"}})
  */
 class Book
 {
@@ -469,38 +468,38 @@ By default the query parameter name is `groups` but you can easily customize it 
 For example, with `serialization_groups` as name:
 
 ```yaml
-# app/config/services.yml
+# app/config/api_filters.yml
 
 services:
     book.group_filter:
-        parent:    'api_platform.serializer.group_filter'
+        parent:  'api_platform.serializer.group_filter'
         arguments: [ 'serialization_groups' ]
-        tags:      [ { name: 'api_platform.filter', id: 'book.group' } ]
+        tags: [ 'api_platform.filter' ]
 ```
 
 You can also override the default serialization groups when you use the filter by changing the second argument to
 `true`:
 
 ```yaml
-# app/config/services.yml
+# app/config/api_filters.yml
 
 services:
     book.group_filter:
-        parent:    'api_platform.serializer.group_filter'
+        parent: 'api_platform.serializer.group_filter'
         arguments: [ 'groups', true ]
-        tags:      [ { name: 'api_platform.filter', id: 'book.group' } ]
+        tags: [ 'api_platform.filter' ]
 ```
 
 To avoid uncontrolled data exposure, you can also specify a whitelist of serialization groups as a third argument:
 
 ```yaml
-# app/config/services.yml
+# app/config/api_filters.yml
 
 services:
     book.group_filter:
-        parent:    'api_platform.serializer.group_filter'
+        parent: 'api_platform.serializer.group_filter'
         arguments: [ 'groups', false, ['allowed_group', 'safe_group'] ]
-        tags:      [ { name: 'api_platform.filter', id: 'book.group' } ]
+        tags: [ 'api_platform.filter' ]
 ```
 
 ### Property filter
@@ -514,7 +513,7 @@ You can add as many properties as you need.
 Enable the filter:
 
 ```yaml
-# app/config/services.yml
+# app/config/api_filters.yml
 
 services:
     book.property_filter:
@@ -522,7 +521,7 @@ services:
         arguments:         # Default arguments values
             - 'properties' # The query parameter name
             - false        # Allow to override the default serialization properties
-        tags:   [ { name: 'api_platform.filter', id: 'book.property' } ]
+        tags: [ 'api_platform.filter' ]
 ```
 
 ```php
@@ -535,7 +534,7 @@ namespace AppBundle\Entity;
 use ApiPlatform\Core\Annotation\ApiResource;
 
 /**
- * @ApiResource(attributes={"filters"={"book.property"}})
+ * @ApiResource(attributes={"filters"={"book.property_filter"}})
  */
 class Book
 {
@@ -549,38 +548,38 @@ By default the query parameter name is `properties` but you can easily customize
 For example, with `serialization_properties` as name:
 
 ```yaml
-# app/config/services.yml
+# app/config/api_filters.yml
 
 services:
     book.property_filter:
-        parent:    'api_platform.serializer.property_filter'
+        parent: 'api_platform.serializer.property_filter'
         arguments: [ 'serialization_properties' ]
-        tags:      [ { name: 'api_platform.filter', id: 'book.property' } ]
+        tags: [ 'api_platform.filter' ]
 ```
 
 You can also override the default serialization properties when you use the filter by changing the second argument to
 `true`:
 
 ```yaml
-# app/config/services.yml
+# app/config/api_filters.yml
 
 services:
     book.property_filter:
-        parent:    'api_platform.serializer.property_filter'
+        parent: 'api_platform.serializer.property_filter'
         arguments: [ 'properties', true ]
-        tags:      [ { name: 'api_platform.filter', id: 'book.property' } ]
+        tags: [ 'api_platform.filter' ]
 ```
 
 To avoid uncontrolled data exposure, you can also specify a whitelist of properties as a third argument:
 
 ```yaml
-# app/config/services.yml
+# app/config/api_filters.yml
 
 services:
     book.group_filter:
-        parent:    'api_platform.serializer.group_filter'
+        parent: 'api_platform.serializer.group_filter'
         arguments: [ 'groups', false, ['allowed_property', {'nested': ['safe_property']}] ]
-        tags:      [ { name: 'api_platform.filter', id: 'book.group' } ]
+        tags: [ 'api_platform.filter' ]
 ```
 
 ## Creating Custom Filters
@@ -647,22 +646,24 @@ final class RegexpFilter extends AbstractFilter
 Then, register this filter as a service:
 
 ```yaml
+# app/config/api_filters.yml
+
 services:
     'AppBundle\Filter\RegexpFilter':
-        class: 'AppBundle\Filter\RegexpFilter'
         autowire: true # See the next example for a plain old definition
-        tags: [ { name: 'api_platform.filter', id: 'regexp' } ]
+        tags: [ 'api_platform.filter' ]
 ```
 
 In the previous example, the filter can be applied on any property. However, thanks to the `AbstractFilter` class,
 it can also be enabled for some properties:
 
 ```yaml
+# app/config/api_filters.yml
+
 services:
     'AppBundle\Filter\RegexpFilter':
-        class: 'AppBundle\Filter\RegexpFilter'
         arguments: [ '@doctrine', '@request_stack', '@?logger', { email: ~, anOtherProperty: ~ } ]
-        tags: [ { name: 'api_platform.filter', id: 'regexp' } ]
+        tags: [ 'api_platform.filter' ]
 ```
 
 Finally, add this filter to resources you want to be filtered:
@@ -675,9 +676,10 @@ Finally, add this filter to resources you want to be filtered:
 namespace AppBundle\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
+use AppBundle\Filter\RegexpFilter;
 
 /**
- * @ApiResource(attributes={"filters"={"regexp"}})
+ * @ApiResource(attributes={"filters"={RegexpFilter::class}})
  */
 class Offer
 {
@@ -717,12 +719,11 @@ final class CustomOrderFilter extends OrderFilter
 Finally, register the custom filter:
 
 ```yaml
-# app/config/services.yml
+# app/config/api_filters.yml
 
 services:
-    offer.custom_order_filter:
-        class: 'AppBundle\Filter\CustomOrderFilter'
-        tags:  [ { name: 'api_platform.filter', id: 'offer.order' } ]
+    'AppBundle\Filter\CustomOrderFilter':
+        tags: [ 'api_platform.filter' ]
 ```
 
 Previous chapter: [Operations](operations.md)
