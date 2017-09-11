@@ -95,29 +95,33 @@ class Book
 }
 ```
 
-You can also use a custom service :
+Alternatively, you can use a service to retrieve the groups to use:
+
 ```php
 <?php
 
-// src/AppBundle/Service/ValidatorGroupsGenerator.php
+// src/AppBundle/Validator/GroupsGenerator.php
+
+namespace AppBundle\Validator;
 
 use AppBundle/Entity/Book;
 
 class ValidatorGroupsGenerator
 {
-    private $s;
+    private $anotherService;
 
-    public function __construct(AService $s)
+    public function __construct(AnotherService $s)
     {
-        $this->s = $s;
+        $this->anotherService = $anotherService;
     }
 
     public function __invoke(Book $book): array
     {
-        return $this->s->isSomething($book) ? ['a', 'b'] : ['a'];
+        return $this->anotherService->isSomething($book) ? ['a', 'b'] : ['a'];
     }
 }
 ```
+
 ```php
 <?php
 // src/AppBundle/Entity/Book.php
@@ -126,7 +130,7 @@ use ApiPlatform\Core\Annotation\ApiResource;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * @ApiResource(attributes={"validation_groups"="AppBundle\Service\ValidatorGroupsGenerator"})
+ * @ApiResource(attributes={"validation_groups"="AppBundle\Validator\GroupsGenerator"})
  */
 class Book
 {
