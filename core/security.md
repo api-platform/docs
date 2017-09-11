@@ -19,10 +19,10 @@ use Symfony\Component\Validator\Constraints as Assert;
  * Secured resource.
  *
  * @ApiResource(
- *     attributes={"access_control"="is_granted('ROLE_USER')},
+ *     attributes={"access_control"="is_granted('ROLE_USER')"},
  *     collectionOperations={
  *         "get"={"method"="GET"},
- *         "post"={"method"="POST", "access_control"="is_granted('ROLE_USER')}
+ *         "post"={"method"="POST", "access_control"="is_granted('ROLE_USER')"}
  *     },
  *     itemOperations={
  *         "get"={"method"="GET", "access_control"="is_granted('ROLE_USER') and object.owner == user"}
