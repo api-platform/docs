@@ -159,6 +159,12 @@ class Book
 }
 ```
 
+## Use payload for handling different error levels
+
+As stated in the [Symfony doc](https://symfony.com/doc/current/validation/severity.html), you can use the payload field in order to define error levels.
+You can retrieve the payload field by setting to true the option `serialize_payload_constraint` in the API Platform config.
+Then, the serializer will return all payload values in the error response.
+
 Previous chapter: [Serialization Groups and Relations](serialization-groups-and-relations.md)
 
 Next chapter: [Pagination](pagination.md)
