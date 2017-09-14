@@ -19,7 +19,8 @@ services:
 
     'AppBundle\Swagger\SwaggerDecorator':
         decorates: 'api_platform.swagger.normalizer.documentation'
-        arguments: [ '@app.swagger.swagger_decorator.inner' ]
+        arguments: [ '@AppBundle\Swagger\SwaggerDecorator.inner' ]
+        public: false
 ```
 
 ```php
