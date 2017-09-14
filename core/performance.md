@@ -219,6 +219,23 @@ api_platform:
 
 The whole configuration seen before will no longer work and Doctrine will recover its default behavior.
 
+### Partial Pagination
+
+When using the default pagination, the Doctrine paginator will execute a `COUNT` query on the collection. The result of the
+`COUNT` query is used to compute the latest page available. With big collections this can lead to quite long response times.
+If you don't mind not having the latest page available, you can enable partial pagination and avoid the `COUNT` query:
+
+```
+# app/config/config.yaml
+
+api_platform:
+    collection:
+        pagination:
+            partial: true # Disabled by default
+```
+
+More details are available on the [pagination documentation](pagination.md#partial-pagination).
+
 Previous chapter: [Security](security.md)
 
 Next chapter: [Operation Path Naming](operation-path-naming.md)
