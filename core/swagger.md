@@ -20,7 +20,7 @@ services:
     'AppBundle\Swagger\SwaggerDecorator':
         decorates: 'api_platform.swagger.normalizer.documentation'
         arguments: [ '@AppBundle\Swagger\SwaggerDecorator.inner' ]
-        public: false
+        autoconfigure: false
 ```
 
 ```php
