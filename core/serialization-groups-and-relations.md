@@ -305,7 +305,8 @@ services:
 
     'AppBundle\Serializer\BookContextBuilder':
         decorates: 'api_platform.serializer.context_builder'
-        arguments: [ '@app.serializer.builder.book.inner' ]
+        arguments: [ '@AppBundle\Serializer\BookContextBuilder.inner' ]
+        autoconfigure: false
 ```
 
 ```php
