@@ -4,7 +4,7 @@ API Platform Core relies on the concept of operations. Operations can be applied
 an implementation point of view, an operation is a link between a resource, a route and its related controller.
 
 API Platform automatically registers typical [CRUD](https://en.wikipedia.org/wiki/Create,_read,_update_and_delete) operations
-and describes them in the exposed documentation (Hydra and NelmioApiDoc). It also creates and registers routes corresponding
+and describes them in the exposed documentation (Hydra and Swagger). It also creates and registers routes corresponding
 to these operations in the Symfony routing system (if it is available).
 
 The behavior of built-in operations is briefly presented in the [Getting started](getting-started.md#mapping-the-entities)
@@ -353,15 +353,12 @@ implements the [Action-Domain-Responder](https://github.com/pmjones/adr) pattern
 
 Note: [the event system](events.md) should be preferred over custom controllers when applicable.
 
-The distribution of API Platform also comes with an enhanced action system for Symfony pre-installed: [DunglasActionBundle](https://github.com/dunglas/DunglasActionBundle).
-*DunglasActionBundle* eases the implementation of the ADR pattern with Symfony and improves the developer experience.
-
-It automatically registers action classes stored in `src/*Bundle/Action` and `src/*Bundle/Controller` directories as autowired
-services.
+The distribution of API Platform also eases the implementation of the ADR pattern: it automatically registers action classes
+stored in `src/AppBundle/Action` and `src/AppBundle/Controller` as autowired services.
 
 Thanks to the [autowiring](http://symfony.com/doc/current/components/dependency_injection/autowiring.html) feature of the
-Symfony dependency injection container, services required by an action can be type-hinted in its controller, it will be automatically
-instantiated and injected, without having to declare it explicitly.
+Symfony Dependency Injection container, services required by an action can be type-hinted in its constructor, it will be
+automatically instantiated and injected, without having to declare it explicitly.
 
 In the following example, the built-in `GET` operation is registered as well as a custom operation called `special`.
 The `special` operation reference the Symfony route named `book_special`.
@@ -473,8 +470,8 @@ It is mandatory to set the `_api_resource_class` and `_api_item_operation_name` 
 operation) in the parameters of the route (`defaults` key). It allows API Platform and the Symfony routing system to hook
 together.
 
-Here we consider that DunglasActionBundle is installed (the default when using the API Platform distribution). This
-action will be automatically registered as a service (the service name is the same as the class name: `AppBundle\Action\BookSpecial`).
+Here we consider that the autowiring enabled for controller classes (the default when using the API Platform distribution).
+This action will be automatically registered as a service (the service name is the same as the class name: `AppBundle\Action\BookSpecial`).
 
 API Platform automatically retrieves the appropriate PHP entity then deserializes it, and for `POST` and `PUT` requests
 updates the entity with data provided by the user.
