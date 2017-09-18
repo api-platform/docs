@@ -50,6 +50,7 @@
 8.  [Validation](core/validation.md)
     1.  [Using Validation Groups](core/validation.md#using-validation-groups)
     2.  [Dynamic Validation Groups](core/validation.md#dynamic-validation-groups)
+    3.  [Error Levels and Payload Serialization](core/validation.md#error-levels-and-payload-serialization)
 9.  [Pagination](core/pagination.md)
     1.  [Disabling the Pagination](core/pagination.md#disabling-the-pagination)
     2.  [Changing the Number of Items per Page](core/pagination.md#changing-the-number-of-items-per-page)
