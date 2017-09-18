@@ -205,6 +205,76 @@ class Book
 }
 ```
 
+## Partial Pagination
+
+When using the default pagination, a `COUNT` query will be issued against the current requested collection. This may have a
+performance impact on really big collections. The downside is that the information about the last page is lost (ie: `hydra:last`).
+
+### Globally
+
+The partial pagination retrieval can be configured for all resources:
+
+```yaml
+# app/config/config.yml
+
+api_platform:
+    collection:
+        pagination:
+            partial: true # Disabled by default
+```
+
+### For a Specific Resource
+
+```php
+<?php
+
+// src/AppBundle/Entity/Book.php
+
+use ApiPlatform\Core\Annotation\ApiResource;
+
+/**
+ * @ApiResource(attributes={"pagination_partial"=true})
+ */
+class Book
+{
+    // ...
+}
+```
+
+### Client-side
+
+#### Globally
+
+```yaml
+# app/config/config.yml
+
+api_platform:
+    collection:
+        pagination:
+            client_partial: true # Disabled by default
+            partial_parameter_name: 'partial' # Default value
+```
+
+The partial pagination retrieval can now be changed by toggling a query parameter named `partial`: `GET /books?partial=true`
+
+#### For a Specific Resource
+
+```php
+<?php
+
+// src/AppBundle/Entity/Book.php
+
+use ApiPlatform\Core\Annotation\ApiResource;
+
+/**
+ * @ApiResource(attributes={"pagination_client_partial"=true})
+ */
+class Book
+{
+    // ...
+}
+```
+
 Previous chapter: [Validation](validation.md)
 
 Next chapter: [The Event System](events.md)
