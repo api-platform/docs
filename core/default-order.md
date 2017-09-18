@@ -59,6 +59,29 @@ class Book
 }
 ```
 
+It's also possible to configure the default filter on an association property:
+
+<?php
+
+// src/AppBundle/Entity/Book.php
+
+namespace AppBundle\Entity;
+
+use ApiPlatform\Core\Annotation\ApiResource;
+
+/**
+ * @ApiResource(attributes={"order"={"author.username"}})
+ */
+class Book
+{
+    // ...
+
+    /**
+     * @var User
+     */
+    public $author;
+}
+
 Previous chapter: [Operations](operations.md)
 
 Next chapter: [Filters](filters.md)
