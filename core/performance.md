@@ -225,7 +225,7 @@ When using the default pagination, the Doctrine paginator will execute a `COUNT`
 `COUNT` query is used to compute the latest page available. With big collections this can lead to quite long response times.
 If you don't mind not having the latest page available, you can enable partial pagination and avoid the `COUNT` query:
 
-```
+```yaml
 # app/config/config.yaml
 
 api_platform:
