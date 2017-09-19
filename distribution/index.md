@@ -103,12 +103,12 @@ Instead of using Docker, API Platform can also be installed on the local machine
 Then, enter the project folder, create the database and its schema:  
 
     $ cd bookshop-api
-    $ bin/console doctrine:database:create
-    $ bin/console doctrine:schema:create
+    $ php bin/console doctrine:database:create
+    $ php bin/console doctrine:schema:create
     
 And start the server:    
 
-    $ bin/console server:run
+    $ php bin/console server:run
 
 ## It's ready!
 
