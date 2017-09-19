@@ -100,13 +100,13 @@ Instead of using Docker, API Platform can also be installed on the local machine
 
     $ composer create-project api-platform/api-platform bookshop-api
 
-Then, enter the project folder, create the database and its schema:  
+Then, enter the project folder, create the database and its schema:
 
     $ cd bookshop-api
     $ bin/console doctrine:database:create
     $ bin/console doctrine:schema:create
-    
-And start the server:    
+
+And start the server:
 
     $ bin/console server:run
 
@@ -616,7 +616,7 @@ lines of PHP. But we only covered the basics.
 
 API Platform also provides amazing client-side components.
 Continue [by creating a fancy Material Design administration interface](../admin/index.md) for your API in seconds.
-Then, [scaffold a ReactJS / Redux Progressive Web App](client-generator/index.md).
+Then, [scaffold a ReactJS / Redux Progressive Web App](../client-generator/index.md).
 
 ## Other Features
 
@@ -628,7 +628,7 @@ continuously optimized for performance.** It powers very high-traffic websites.
 
 API Platform has a builtin HTTP cache invalidation system which allows to make API Platform apps blazing fast, and it uses
 [Varnish](https://varnish-cache.org/) by default. Read more in the chapter
-[API Platform Core Library: Enabling the Builtin HTTP Cache Invalidation System](core/performance.md#enabling-the-builtin-http-cache-invalidation-system).
+[API Platform Core Library: Enabling the Builtin HTTP Cache Invalidation System](../core/performance.md#enabling-the-builtin-http-cache-invalidation-system).
 
 API Platform can also be extended using PHP libraries and Symfony bundles.
 
