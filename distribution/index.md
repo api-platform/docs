@@ -616,7 +616,7 @@ lines of PHP. But we only covered the basics.
 
 API Platform also provides amazing client-side components.
 Continue [by creating a fancy Material Design administration interface](../admin/index.md) for your API in seconds.
-Then, [scaffold a ReactJS / Redux Progressive Web App](generate-crud/index.md).
+Then, [scaffold a ReactJS / Redux Progressive Web App](client-generator/index.md).
 
 ## Other Features
 
