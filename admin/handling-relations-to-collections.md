@@ -175,4 +175,4 @@ The autocomplete field should now work properly!
 
 Previous chapter: [Authentication Support](authentication-support.md)
 
-Next chapter: [API Platform CRUD Generator: Introduction](../generate-crud/index.md)
+Next chapter: [The Client Generator Component: Introduction](../client-generator/index.md)
