@@ -49,7 +49,7 @@ file:
         "pre-install-cmd": [
           "Dunglas\\Heroku\\Database::createParameters"
         ],
-        // ...
+        "_": "..."
     }
 ```
 
@@ -115,23 +115,27 @@ persist applications logs. To use it we need to configure Monolog to output logs
 Open `app/config/config_prod.yml`, find the following block:
 
 ```yaml
-    monolog:
-        # ...
-        nested:
-            type:  stream
-            path:  "%kernel.logs_dir%/%kernel.environment%.log"
-            level: debug
+monolog:
+
+    # ...
+
+    nested:
+        type: stream
+        path: '%kernel.logs_dir%/%kernel.environment%.log'
+        level: debug
 ```
 
 And replace it by:
 
 ```yaml
-    monolog:
-        # ...
-        nested:
-            type:  stream
-            path:  "php://stderr"
-            level: debug
+monolog:
+
+    # ...
+
+    nested:
+        type: stream
+        path: 'php://stderr'
+        level: debug
 ```
 
 We are ready to deploy our app!
@@ -164,8 +168,6 @@ Your browser should open automatically and display the entrypoint of the API. It
 can scale it in one click from the Heroku interface.
 
 To see your logs, run `heroku logs --tail`.
-
-Can it be easier? Yes it can: we are preparing an API Platform edition preconfigured to run on Heroku! Stay tuned.
 
 Previous chapter: [Introduction](index.md)
 

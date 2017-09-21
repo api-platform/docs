@@ -122,14 +122,10 @@ Finally register the custom extension:
 # app/config/services.yml
 
 services:
-    app.doctrine.orm.query_extension.current_user:
-        class: AppBundle\Doctrine\ORM\Extension\CurrentUserExtension
-        public: false
-        arguments:
-            - '@api_platform.metadata.property.name_collection_factory'
-            - '@api_platform.metadata.property.metadata_factory'
-            - '@security.token_storage'
-            - '@security.authorization_checker'
+
+    # ...
+
+    'AppBundle\Doctrine\ORM\Extension\CurrentUserExtension':
         tags:
             - { name: api_platform.doctrine.orm.query_extension.collection, priority: 9 }
             - { name: api_platform.doctrine.orm.query_extension.item }
@@ -149,10 +145,13 @@ To secure the access to endpoints, use the following access control rule:
 # app/config/security.yml
 
 security:
+
     # ...
 
     access_control:
+
         # ...
+
         - { path: ^/offers, roles: IS_AUTHENTICATED_FULLY }
         - { path: ^/users, roles: IS_AUTHENTICATED_FULLY }
 ```

@@ -76,10 +76,10 @@ final class DeserializeListener
 # app/config/services.yml
 
 services:
+
     # ...
-    app.listener.decorating_deserialize:
-        class: 'AppBundle\EventListener\DeserializeListener'
-        arguments: ['@api_platform.serializer', '@api_platform.serializer.context_builder', '@api_platform.listener.request.deserialize']
+
+    'AppBundle\EventListener\DeserializeListener':
         tags:
             - { name: 'kernel.event_listener', event: 'kernel.request', method: 'onKernelRequest', priority: 2 }
 ```
@@ -107,7 +107,7 @@ class AppBundle extends Bundle
         $container->addCompilerPass(new class implements CompilerPassInterface {
             public function process(ContainerBuilder $container) {
                 $container
-                    ->findDefinition('api_platform.listener.request.deserialize');
+                    ->findDefinition('api_platform.listener.request.deserialize')
                     ->clearTags();
             }
         });

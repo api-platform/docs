@@ -12,18 +12,20 @@ To enable the NelmioApiDoc integration, copy the following configuration:
 # app/config/config.yml
 
 api_platform:
+
     # ...
+
     enable_nelmio_api_doc: true
 
 nelmio_api_doc:
     sandbox:
-        accept_type:        'application/json'
+        accept_type: 'application/json'
         body_format:
-            formats:        ['json']
+            formats: ['json']
             default_format: 'json'
         request_format:
             formats:
-                json:       'application/json'
+                json: 'application/json'
 ```
 
 Please note that NelmioApiDocBundle has a sandbox limitation where you cannot pass a JSON array as parameter, so you cannot

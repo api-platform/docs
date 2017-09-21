@@ -11,8 +11,8 @@ Example:
 
 ```yaml
 namespaces:
-    entity:    "Dunglas\EcommerceBundle\Entity"
-    enum:      "Dunglas\EcommerceBundle\Enum"
+    entity: "Dunglas\EcommerceBundle\Entity"
+    enum: "Dunglas\EcommerceBundle\Enum"
     interface: "Dunglas\EcommerceBundle\Model"
 ```
 
@@ -182,6 +182,30 @@ class Person
     private $email;
 ```
 
+## Making a Property Read Only
+
+A property can be marked read only with the following configuration:
+
+```yaml
+    Person:
+        properties:
+            email: { writable: false }
+```
+
+In such case, no mutator method will be generated.
+
+## Making a Property Write Only
+
+A property can be marked read only with the following configuration:
+
+```yaml
+    Person:
+        properties:
+            email: { radable: false }
+```
+
+In this case, no getter method will be generated.
+
 ## Forcing a Property to be in a Serialization Group
 
 Force a property to be in a `groups`.
@@ -281,13 +305,57 @@ annotationGenerators:
     - Acme\Generators\MyGenerator
 ```
 
-## Disabling `id` Generator
+## Skipping Accessor Method Generation
 
-By default, the generator adds a property called `id` not provided by Schema.org. This may be useful when generating an entity for use with an ORM or an ODM.
+It's possible to skip the generation of accessor methods. This is particularly useful combined with the `visibility: public`
+option.
+
+To skip the generation of accessor methods, use the following config:
+
+```yaml
+accessorMethods: false
+```
+
+It's possible to skip
+
+## Disabling the `id` Generator
+
+By default, the generator adds a property called `id` not provided by Schema.org.
+This is useful when generating an entity for use with an ORM or an ODM but not when generating DTOs.
 This behavior can be disabled with the following setting:
 
 ```yaml
-generateId: false
+id:
+  generate: false
+```
+
+## Generating UUIDs
+
+It's also possible to let the DBMS generate [UUIDs](https://en.wikipedia.org/wiki/Universally_unique_identifier) instead of autoincremented integers:
+
+```yaml
+id:
+  generationStrategy: uuid
+```
+
+## User submitted UUIDs
+
+To set manually a UUID instead of letting the DBMS generating it, use the following config:
+
+```yaml
+id:
+  generationStrategy: uuid
+  writable: true
+```
+
+## Generating Custom IDs
+
+With this configuration option, an `$id` property of type `string` and the corresponding getters and setters will be
+generated, but the DBMS will not generate anything, the ID must be set manually.
+
+```yaml
+id:
+  generationStrategy: none
 ```
 
 ## Disabling Usage of Doctrine Collection
@@ -301,7 +369,7 @@ doctrine:
     useCollection: false
 ```
 
-## Custom Field Visibility
+## Changing the Field Visibility
 
 Generated fields have a `private` visibility and are exposed through getters and setters.
 The default visibility can be changed with the `fieldVisibility` otion.
@@ -310,6 +378,15 @@ Example:
 
 ```yaml
 fieldVisibility: "protected"
+```
+
+## Generating `@Assert\Type` Annotations
+
+It's possible to automatically generate Symfony validator's `@Assert\Type` annotations using the following config:
+
+```yaml
+validator:
+  assertType: true
 ```
 
 ## Forcing Doctrine Inheritance Mapping Annotation
@@ -369,6 +446,7 @@ rdfa:
 types:
   Session:
     vocabularyNamespace: http://purl.org/net/VideoGameOntology#
+
   # ...
 ```
 
@@ -401,41 +479,52 @@ header: |
 ## Full Configuration Reference
 
 ```yaml
-# RDFa files to use
-rdfa:
+onfig:
 
-    # Prototype
-    -
+    # RDFa files
+    rdfa:
 
-        # RDFa URI to use
-        uri:                  'https://schema.org/docs/schema_org_rdfa.html' # Example: https://schema.org/docs/schema_org_rdfa.html
+        # Prototype
+        -
 
-        # RDFa URI data format
-        format:               null # Example: rdfxml
+            # RDFa URI to use
+            uri:                  'https://schema.org/docs/schema_org_rdfa.html' # Example: https://schema.org/docs/schema_org_rdfa.html
 
-# OWL relation files to use
-relations:
+            # RDFa URI data format
+            format:               null # Example: rdfxml
 
-    # Default:
-    - https://purl.org/goodrelations/v1.owl
+    # OWL relation files to use
+    relations:
 
-# Debug mode
-debug:                false
+        # Default:
+        - https://purl.org/goodrelations/v1.owl
 
-# Automatically add an id field to entities
-generateId:           true
+    # Debug mode
+    debug:                false
 
-# Generate interfaces and use Doctrine's Resolve Target Entity feature
-useInterface:         false
+    # IDs configuration
+    id:
 
-# Emit a warning if a property is not derived from GoodRelations
-checkIsGoodRelations:  false
+        # Automatically add an id field to entities
+        generate:             true
 
-# A license or any text to use as header of generated files
-header:               false # Example: // (c) Kévin Dunglas <dunglas@gmail.com>
+        # The ID generation strategy to use ("none" to not let the database generate IDs).
+        generationStrategy:   auto # One of "auto"; "none"; "uuid"; "mongoid"
 
-# PHP namespaces
-namespaces:
+        # Is the ID writable? Only applicable if "generationStrategy" is "uuid".
+        writable:             false
+
+    # Generate interfaces and use Doctrine's Resolve Target Entity feature
+    useInterface:         false
+
+    # Emit a warning if a property is not derived from GoodRelations
+    checkIsGoodRelations: false
+
+    # A license or any text to use as header of generated files
+    header:               false # Example: // (c) Kévin Dunglas <dunglas@gmail.com>
+
+    # PHP namespaces
+    namespaces:
 
         # The namespace of the generated entities
         entity:               AppBundle\Entity # Example: Acme\Entity
@@ -453,13 +542,25 @@ namespaces:
         useCollection:        true
 
         # The Resolve Target Entity Listener config file pass
-        resolveTargetEntityConfigPath:  null
+        resolveTargetEntityConfigPath: null
+
+    # Symfony Validator Component
+    validator:
+
+        # Generate @Assert\Type annotation
+        assertType:           false
 
     # The value of the phpDoc's @author annotation
     author:               false # Example: Kévin Dunglas <dunglas@gmail.com>
 
     # Visibility of entities fields
     fieldVisibility:      private # One of "private"; "protected"; "public"
+
+    # Set this flag to false to not generate getter, setter, adder and remover methods
+    accessorMethods:      true
+
+    # Set this flag to true to generate fluent setter, adder and remover methods
+    fluentMutatorMethods: false
 
     # Schema.org's types to use
     types:
@@ -484,14 +585,13 @@ namespaces:
 
                 # The namespace for the generated interface (override any other defined namespace)
                 interface:            null
-
             doctrine:
 
                 # The Doctrine inheritance mapping type (override the guessed one)
                 inheritanceMapping:   null
 
             # The parent class, set to false for a top level class
-            parent:               null
+            parent:               false
 
             # If declaring a custom class, this will be the class from which properties type will be guessed
             guessFrom:            Thing
@@ -518,7 +618,13 @@ namespaces:
                     # Symfony Serialization Groups
                     groups:               []
 
-                    # The property nullable
+                    # Is the property readable?
+                    readable:             true
+
+                    # Is the property writable?
+                    writable:             true
+
+                    # Is the property nullable?
                     nullable:             true
 
                     # The property unique
@@ -535,64 +641,10 @@ namespaces:
 
         # Defaults:
         - ApiPlatform\SchemaGenerator\AnnotationGenerator\PhpDocAnnotationGenerator
-        - ApiPlatform\SchemaGenerator\AnnotationGenerator\ConstraintAnnotationGenerator
         - ApiPlatform\SchemaGenerator\AnnotationGenerator\DoctrineOrmAnnotationGenerator
         - ApiPlatform\SchemaGenerator\AnnotationGenerator\ApiPlatformCoreAnnotationGenerator
-
-
-# RDFa files to use
-rdfa:
-
-    # Default:
-    - http://schema.org/docs/schema_org_rdfa.html
-
-# OWL relation files to use
-relations:
-
-    # Default:
-    - http://purl.org/goodrelations/v1.owl
-
-# Debug mode
-debug:                false
-
-# Automatically add an id field to entities
-generateId:           true
-
-# Generate interfaces and use Doctrine's Resolve Target Entity feature
-useInterface:         false
-
-# Emit a warning if a property is not derived from GoodRelations
-checkIsGoodRelations:  false
-
-# A license or any text to use as header of generated files
-header:               false # Example: // (c) Kévin Dunglas <dunglas@gmail.com>
-
-# PHP namespaces
-namespaces:
-
-    # The namespace of the generated entities
-    entity:               SchemaOrg\Entity # Example: Acme\Entity
-
-    # The namespace of the generated enumerations
-    enum:                 SchemaOrg\Enum # Example: Acme\Enum
-
-    # The namespace of the generated interfaces
-    interface:            SchemaOrg\Model # Example: Acme\Model
-
-# Doctrine
-doctrine:
-
-    # Use Doctrine's ArrayCollection instead of standard arrays
-    useCollection:        true
-
-    # The Resolve Target Entity Listener config file pass
-    resolveTargetEntityConfigPath:  null
-
-# The value of the phpDoc's @author annotation
-author:               false # Example: Kévin Dunglas <dunglas@gmail.com>
-
-# Visibility of entities fields
-fieldVisibility:      ~ # One of "private"; "protected"; "public"
+        - ApiPlatform\SchemaGenerator\AnnotationGenerator\ConstraintAnnotationGenerator
+        - ApiPlatform\SchemaGenerator\AnnotationGenerator\SerializerGroupsAnnotationGenerator
 ```
 
 Previous chapter: [Getting Started](getting-started.md)
