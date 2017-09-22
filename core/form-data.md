@@ -52,17 +52,16 @@ final class DeserializeListener
 
     private function denormalizeFormRequest(Request $request)
     {
-        try {
-            $attributes = RequestAttributesExtractor::extractAttributes($request);
-        } catch (RuntimeException $e) {
+        if (!$attributes = RequestAttributesExtractor::extractAttributes($request)) {
             return;
         }
+
         $context = $this->serializerContextBuilder->createFromRequest($request, false, $attributes);
         $populated = $request->attributes->get('data');
         if (null !== $populated) {
             $context['object_to_populate'] = $populated;
         }
-        
+
         $data = $request->request->all();
         $object = $this->denormalizer->denormalize($data, $attributes['resource_class'], null, $context);
         $request->attributes->set('data', $object);
