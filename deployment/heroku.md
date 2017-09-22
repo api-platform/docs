@@ -85,7 +85,10 @@ using the external parameters feature of the Symfony container:
     {
       "url": "https://github.com/heroku/heroku-buildpack-php"
     }
-  ]
+  ],
+  "scripts": {
+    "postdeploy": "php bin/console doctrine:schema:create"
+  }
 }
 ```
 
@@ -101,7 +104,7 @@ directories must be private.
 Create a new file named `Procfile` at the root of the application directory with the following content:
 
 ```yaml
-web: bin/heroku-php-apache2 web/
+web: vendor/bin/heroku-php-apache2 web/
 ```
 
 Our application is ready to be deployed, but Heroku dynos are not persistent and file stored directly on the filesystem
@@ -157,10 +160,6 @@ Create the Heroku application:
 And deploy for the first time:
 
     git push heroku master
-
-Your browser should open automatically and display the entrypoint of the API. It's time to create the database:
-
-    heroku run "app/console doctrine:schema:create"
 
 **We're done.** You can play with the demo bookstore API provided with API Platform. It is ready for production and you
 can scale it in one click from the Heroku interface.
