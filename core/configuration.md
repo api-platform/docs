@@ -79,7 +79,7 @@ api_platform:
 
     swagger:
         # The swagger api keys.
-        api_keys: []      
+        api_keys: []
 
     collection:
         # The default order of results.
@@ -112,6 +112,16 @@ api_platform:
 
             # The name of the query parameter to set the number of items per page.
             items_per_page_parameter_name: 'itemsPerPage'
+
+            # To allow partial pagination for all resource collections.
+            # This improves performances by skipping the `COUNT` query.
+            partial: true
+
+            # To allow the client to enable or disable the partial pagination.
+            client_partial: true
+
+            # The name of the query parameter to enable or disable the partial pagination.
+            partial_parameter_name: 'partial' # Default value
 
     mapping:
         # The list of paths with files or directories where the bundle will look for additional resource files.
