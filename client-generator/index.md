@@ -1,4 +1,4 @@
-# The API Platform CRUD Generator
+# The API Platform Client Generator
 
 API Platform Crud Generator is a generator to scaffold a React/Redux app with Create-Retrieve-Update-Delete features for any API exposing a Hydra documentation.
 Works especially well with APIs built with the [API Platform](https://api-platform.com) framework.

@@ -1,11 +1,11 @@
 # API Platform documentation
 
-## API Platform Distribution: Create Powerful APIs with Ease
+## The Distribution: Create Powerful APIs with Ease
 
 1.  [Creating a Fully Featured API in 5 Minutes](distribution/index.md)
 2.  [Testing and Specifying the API](distribution/testing.md)
 
-## API Platform Core Library
+## The API Component
 
 1.  [Introduction](core/index.md)
 2.  [Getting Started](core/getting-started.md)
@@ -102,21 +102,13 @@
     2. [Available Serializers](core/serialization.md#available-serializers)
     3. [Decorating a Serializer and Add Extra Data](core/serialization.md#decorating-a-serializer-and-add-extra-data)
 
-## Schema Generator: Generate Data Models from Open Vocabularies
+## The Schema Generator Component: Generate Data Models from Open Vocabularies
 
 1.  [Introduction](schema-generator/index.md)
 2.  [Getting Started](schema-generator/getting-started.md)
 3.  [Configuration](schema-generator/configuration.md)
 
-## Deployment
-
-1.  [Introduction](deployment/index.md)
-2.  [Deploying an API Platform App on Heroku](deployment/heroku.md)
-3.  [Using API Platform with Docker](deployment/docker.md)
-    1.  [Services](deployment/docker.md#services)
-    2.  [Installation](deployment/docker.md#installation)
-
-## API Platform Admin: Create a Fancy and Fully-Featured Administration Interface
+## The Admin Component: Create a Fancy and Fully-Featured Administration Interface
 
 1.  [Introduction](admin/index.md)
     1.  [Features](admin/index.md#features)
@@ -131,12 +123,20 @@
 4.  [Handling Relations to Collections](admin/handling-relations-to-collections.md)
     1.  [Using an Autocomplete Input for Relations](admin/handling-relations-to-collections.md#using-an-autocomplete-input-for-relations)
 
-## API Platform CRUD Generator: Scaffold a React/Redux App with CRUD Features
+## The Client Generator Component: Scaffold a React/Redux App with CRUD Features
 
-1.  [Introduction](generate-crud/index.md)
-    1.  [Features](generate-crud/index.md#features)
-2.  [Installation and Usage](generate-crud/installation-and-usage.md)
-3.  [Troubleshooting](generate-crud/troubleshooting.md)
+1.  [Introduction](client-generator/index.md)
+    1.  [Features](client-generator/index.md#features)
+2.  [Installation and Usage](client-generator/installation-and-usage.md)
+3.  [Troubleshooting](client-generator/troubleshooting.md)
+
+## Deployment
+
+1.  [Introduction](deployment/index.md)
+2.  [Deploying an API Platform App on Heroku](deployment/heroku.md)
+3.  [Using API Platform with Docker](deployment/docker.md)
+    1.  [Services](deployment/docker.md#services)
+    2.  [Installation](deployment/docker.md#installation)
 
 ## Extra
 
@@ -147,5 +147,5 @@
     2.  [API Platform Core Library](https://github.com/api-platform/core/blob/master/CONTRIBUTING.md)
     3.  [API Platform Schema Generator](https://github.com/api-platform/schema-generator/blob/master/CONTRIBUTING.md)
     4.  [API Platform Admin](https://github.com/api-platform/admin/blob/master/CONTRIBUTING.md)
-    5.  [API Platform CRUD Generator](https://github.com/api-platform/generate-crud/blob/master/CONTRIBUTING.md)
+    5.  [API Platform CRUD Generator](https://github.com/api-platform/client-generator/blob/master/CONTRIBUTING.md)
 4.  [Contributor Code Of Conduct](conduct.md)
