@@ -52,17 +52,16 @@ final class DeserializeListener
 
     private function denormalizeFormRequest(Request $request)
     {
-        try {
-            $attributes = RequestAttributesExtractor::extractAttributes($request);
-        } catch (RuntimeException $e) {
+        if (!$attributes = RequestAttributesExtractor::extractAttributes($request)) {
             return;
         }
+        
         $context = $this->serializerContextBuilder->createFromRequest($request, false, $attributes);
         $populated = $request->attributes->get('data');
         if (null !== $populated) {
             $context['object_to_populate'] = $populated;
         }
-        
+
         $data = $request->request->all();
         $object = $this->denormalizer->denormalize($data, $attributes['resource_class'], null, $context);
         $request->attributes->set('data', $object);
@@ -76,10 +75,10 @@ final class DeserializeListener
 # app/config/services.yml
 
 services:
+
     # ...
-    app.listener.decorating_deserialize:
-        class: 'AppBundle\EventListener\DeserializeListener'
-        arguments: ['@api_platform.serializer', '@api_platform.serializer.context_builder', '@api_platform.listener.request.deserialize']
+
+    'AppBundle\EventListener\DeserializeListener':
         tags:
             - { name: 'kernel.event_listener', event: 'kernel.request', method: 'onKernelRequest', priority: 2 }
 ```
@@ -107,7 +106,7 @@ class AppBundle extends Bundle
         $container->addCompilerPass(new class implements CompilerPassInterface {
             public function process(ContainerBuilder $container) {
                 $container
-                    ->findDefinition('api_platform.listener.request.deserialize');
+                    ->findDefinition('api_platform.listener.request.deserialize')
                     ->clearTags();
             }
         });
