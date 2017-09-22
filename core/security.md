@@ -22,7 +22,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  *     attributes={"access_control"="is_granted('ROLE_USER')"},
  *     collectionOperations={
  *         "get"={"method"="GET"},
- *         "post"={"method"="POST", "access_control"="is_granted('ROLE_USER')"}
+ *         "post"={"method"="POST", "access_control"="is_granted('ROLE_ADMIN')"}
  *     },
  *     itemOperations={
  *         "get"={"method"="GET", "access_control"="is_granted('ROLE_USER') and object.owner == user"}

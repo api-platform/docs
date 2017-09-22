@@ -43,6 +43,8 @@ services:
 
     'AppBundle\Serializer\ApiNormalizer':
         decorates: 'api_platform.jsonld.normalizer.item'
+        arguments: [ '@AppBundle\Serializer\ApiNormalizer.inner' ]
+        autoconfigure: false
 ```
 
 ```php
@@ -53,13 +55,12 @@ services:
 namespace AppBundle\Serializer;
 
 use ApiPlatform\Core\Serializer\AbstractItemNormalizer;
-use ApiPlatform\Core\Serializer\ItemNormalizer;
 use Symfony\Component\Console\Exception\InvalidArgumentException;
-
+use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
 final class ApiNormalizer extends AbstractItemNormalizer
 {
-    public function __construct(ItemNormalizer $decorated)
+    public function __construct(NormalizerInterface $decorated)
     {
         $this->decorated = $decorated;
     }
