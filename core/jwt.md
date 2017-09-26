@@ -60,6 +60,45 @@ security:
         - { path: ^/, roles: [ ROLE_READER ] }
 ```       
 
+## Testing with Behat
+You can test your application with Behat like described in the doc and LexikJWTAuthenticationBundle by adding to `features/bootstrap/FeatureContext.php` these functions:
+```php
+    // features/bootstrap/FeatureContext.php
+    
+    // createDatabase and dropDatabase functions (note: the order is important)
+    /**
+     * @BeforeScenario @login
+     *
+     * use the https://symfony.com/doc/current/security/entity_provider.html#creating-your-first-user hash
+     */
+    public function login(\Behat\Behat\Hook\Scope\BeforeScenarioScope $scope) {
+        $user = new \AppBundle\Entity\User();
+        $user->setUsername('admin');
+        $user->setPassword('$2a$08$jHZj/wJfcVKlIwr5AvR78euJxYK7Ku5kURNhNx.7.CSIJ3Pq6LEPC');
+        $user->setEmail('test@test.com');
+        $user->setNom('Test');
+
+        $this->manager->persist($user);
+        $this->manager->flush();
+
+        $token = $this->jwtManager->create($user);
+
+        $this->restContext = $scope->getEnvironment()->getContext('Behatch\Context\RestContext');
+        $this->restContext->iAddHeaderEqualTo('Authorization', 'Bearer ' . $token);
+    }
+
+    /**
+     * @AfterScenario @logout
+     */
+    public function logout() {
+        $this->restContext->iAddHeaderEqualTo('Authorization', '');
+    }
+```
+
+The `jwtManager` variable is just the `lexik_jwt_authentication.jwt_manager` service added to `behat.yml`.
+Then, you just have to add to your features **@login** and **@logout** like **@createSchema** and **@dropSchema**.
+
+
 Previous chapter: [FOSUserBundle Integration](fosuser-bundle.md)
 
 Next chapter: [NelmioApiDocBundle integration](nelmio-api-doc.md)
