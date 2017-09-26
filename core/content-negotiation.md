@@ -26,7 +26,7 @@ HTML (API docs)                                                 | `html`       |
 
 
 If the client requested format is not specified (if it's not supported, it will throw an HTTP bad format error), the response format will be the first format defined in the `formats` configuration key (see below).
-An example using the builtin XML support is available in Behat specs: https://github.com/api-platform/core/blob/master/features/content_negotiation.feature
+An example using the builtin XML support is available in [Behat specs](https://github.com/api-platform/core/blob/master/features/main/content_negotiation.feature).
 
 
 The API Platform content negotiation system is extensible. Support for other formats (such as [JSONAPI](http://jsonapi.org/))
