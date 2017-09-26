@@ -100,6 +100,6 @@ Replace the `App.vue` file with the following :
   </div>
 </template>
 ```
-Previous chapter: [Introduction](index.md)
+Previous chapter: [Installation and Usage](installation-and-usage.md)
 
 Next chapter: [Troubleshooting](troubleshooting.md)
