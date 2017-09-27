@@ -60,6 +60,74 @@ security:
         - { path: ^/, roles: [ ROLE_READER ] }
 ```       
 
+## Testing with Behat
+
+Let's configure Behat to automatically send a `Authorization` HTTP header containing a valid JWT token when a scenario is marked with a `@login` annotation. Edit `features/bootstrap/FeatureContext.php` and add the following methods:
+
+```php
+<?php
+
+// features/bootstrap/FeatureContext.php
+
+use AppBundle\Entity\User;
+use Behat\Behat\Hook\Scope\BeforeScenarioScope;
+use Behatch\Context\RestContext;
+
+class FeatureContext implements Context, SnippetAcceptingContext
+{
+    // ...
+    // Must be aster createDatabase() and dropDatabase() functions (the order matters)
+
+    /**
+     * @BeforeScenario
+     * @login
+     *
+     * @see https://symfony.com/doc/current/security/entity_provider.html#creating-your-first-user
+     */
+    public function login(BeforeScenarioScope $scope)
+    {
+        $user = new User();
+        $user->setUsername('admin');
+        $user->setPassword('ATestPassword');
+        $user->setEmail('test@test.com');
+
+        $this->manager->persist($user);
+        $this->manager->flush();
+
+        $token = $this->jwtManager->create($user);
+
+        $this->restContext = $scope->getEnvironment()->getContext(RestContext::class);
+        $this->restContext->iAddHeaderEqualTo('Authorization', "Bearer $token");
+    }
+
+    /**
+     * @AfterScenario
+     * @logout
+     */
+    public function logout() {
+        $this->restContext->iAddHeaderEqualTo('Authorization', '');
+    }
+}
+```
+
+Then, update `behat.yml` to inject the `lexik_jwt_authentication.jwt_manager`:
+
+```yaml
+# behat.yml
+default:
+  # ...
+  suites:
+    default:
+      contexts:
+        - FeatureContext: { doctrine: '@doctrine', 'jwtManager': '@lexik_jwt_authentication.jwt_manager' }
+        - Behat\MinkExtension\Context\MinkContext
+        - Behatch\Context\RestContext
+        - Behatch\Context\JsonContext
+  # ...
+```
+
+Finally, mark your scenarios with the `@login` annotation to automatically add a valid `Authorization` header and with `@logout` to be sure to detroy the token after this scerario.
+
 Previous chapter: [FOSUserBundle Integration](fosuser-bundle.md)
 
 Next chapter: [NelmioApiDocBundle integration](nelmio-api-doc.md)
