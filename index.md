@@ -91,6 +91,7 @@
     2.  [Enabling the Bridge](core/fosuser-bundle.md#enabling-the-bridge)
     3.  [Creating a `User` Entity with Serialization Groups](core/fosuser-bundle.md#creating-a-user-entity-with-serialization-groups)
 21. [Adding a JWT authentication using LexikJWTAuthenticationBundle](core/jwt.md)
+    1. [Testing with Behat](core/jwt.md#testing-with-behat)
 22. [NelmioApiDocBundle integration](core/nelmio-api-doc.md)
 23. [AngularJS Integration](core/angularjs-integration.md)
     1.  [Restangular](core/angularjs-integration.md#restangular)
