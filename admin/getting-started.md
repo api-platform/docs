@@ -43,6 +43,7 @@ export default App;
 Your new administration interface is ready! Type `yarn start` to try it!
 
 Note: if you don't want to hardcode the API URL, you can [use an environment variable](https://github.com/facebookincubator/create-react-app/blob/master/packages/react-scripts/template/README.md#adding-custom-environment-variables).
+
 Note: make sure `entrypoint` does not end with a `/`.
 
 Note: make sure `entrypoint` does not end with a `/`.
