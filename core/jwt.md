@@ -62,42 +62,70 @@ security:
 
 ## Testing with Behat
 You can test your application with Behat like described in the doc and LexikJWTAuthenticationBundle by adding to `features/bootstrap/FeatureContext.php` these functions:
+
 ```php
-    // features/bootstrap/FeatureContext.php
-    
-    // createDatabase and dropDatabase functions (note: the order is important)
+<?php
+
+// features/bootstrap/FeatureContext.php
+
+use AppBundle\Entity\User;
+use Behat\Behat\Hook\Scope\BeforeScenarioScope;
+use Behatch\Context\RestContext;
+
+class FeatureContext implements Context, SnippetAcceptingContext
+{
+    // ...
+    // Must be aster createDatabase() and dropDatabase() functions (the order matters)
+
     /**
-     * @BeforeScenario @login
+     * @BeforeScenario
+     * @login
      *
-     * use the https://symfony.com/doc/current/security/entity_provider.html#creating-your-first-user hash
+     * @see https://symfony.com/doc/current/security/entity_provider.html#creating-your-first-user
      */
-    public function login(\Behat\Behat\Hook\Scope\BeforeScenarioScope $scope) {
-        $user = new \AppBundle\Entity\User();
+    public function login(BeforeScenarioScope $scope)
+    {
+        $user = new User();
         $user->setUsername('admin');
-        $user->setPassword('$2a$08$jHZj/wJfcVKlIwr5AvR78euJxYK7Ku5kURNhNx.7.CSIJ3Pq6LEPC');
+        $user->setPassword('ATestPassword');
         $user->setEmail('test@test.com');
-        $user->setNom('Test');
 
         $this->manager->persist($user);
         $this->manager->flush();
 
         $token = $this->jwtManager->create($user);
 
-        $this->restContext = $scope->getEnvironment()->getContext('Behatch\Context\RestContext');
-        $this->restContext->iAddHeaderEqualTo('Authorization', 'Bearer ' . $token);
+        $this->restContext = $scope->getEnvironment()->getContext(RestContext::class);
+        $this->restContext->iAddHeaderEqualTo('Authorization', "Bearer $token");
     }
 
     /**
-     * @AfterScenario @logout
+     * @AfterScenario
+     * @logout
      */
     public function logout() {
         $this->restContext->iAddHeaderEqualTo('Authorization', '');
     }
+}
 ```
 
-The `jwtManager` variable is just the `lexik_jwt_authentication.jwt_manager` service added to `behat.yml`.
-Then, you just have to add to your features **@login** and **@logout** like **@createSchema** and **@dropSchema**.
+Then, updates `behat.yml` to inject the `lexik_jwt_authentication.jwt_manager`:
 
+```yaml
+# behat.yml
+default:
+  # ...
+  suites:
+    default:
+      contexts:
+        - FeatureContext: { doctrine: '@doctrine', 'jwtManager': '@lexik_jwt_authentication.jwt_manager' }
+        - Behat\MinkExtension\Context\MinkContext
+        - Behatch\Context\RestContext
+        - Behatch\Context\JsonContext
+  # ...
+```
+
+Finally, mark your scenarios with the `@login` annotation to automatically add a valid `Authorization` header or with `@logout` to be sure that no user is authenticated.
 
 Previous chapter: [FOSUserBundle Integration](fosuser-bundle.md)
 
