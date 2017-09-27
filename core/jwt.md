@@ -61,6 +61,7 @@ security:
 ```       
 
 ## Testing with Behat
+
 You can test your application with Behat like described in the doc and LexikJWTAuthenticationBundle by adding to `features/bootstrap/FeatureContext.php` these functions:
 
 ```php
