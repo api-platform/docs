@@ -62,7 +62,7 @@ security:
 
 ## Testing with Behat
 
-You can test your application with Behat like described in the doc and LexikJWTAuthenticationBundle by adding to `features/bootstrap/FeatureContext.php` these functions:
+Let's configure Behat to automatically send a `Authorization` HTTP header containing a valid JWT token when a scenario is marked with a `@login` annotation. Edit `features/bootstrap/FeatureContext.php` and add the following methods:
 
 ```php
 <?php
