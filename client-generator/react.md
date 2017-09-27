@@ -69,4 +69,4 @@ ReactDom.render(
 
 Previous chapter: [Introduction](index.md)
 
-Next chapter: [Vue components](vuejs.md)
+Next chapter: [Vue.js generator](vuejs.md)
