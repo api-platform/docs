@@ -11,7 +11,15 @@ Then, create a new React application for your admin:
 
     $ create-react-app my-admin
 
-Now, add install `@api-platform/admin` library in your newly created project:
+React and React DOM will be directly provided as dependencies of Admin On REST. As having different versions of React
+causes issues, remove `react` and `react-dom` from the `dependencies` section of the generated `package.json` file: 
+
+```patch
+-    "react": "^15.6.1",
+-    "react-dom": "^15.6.1"
+```
+
+Finally, install the `@api-platform/admin` library:
 
     $ yarn add @api-platform/admin
 
