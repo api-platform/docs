@@ -23,4 +23,4 @@ Works especially well with APIs built with the [API Platform](https://api-platfo
 
 Previous chapter: [API Platform Admin: Handling Relations to Collections](../admin/handling-relations-to-collections.md)
 
-Next chapter: [Installation and Usage](installation-and-usage.md)
+Next chapter: [React generator](react.md)
