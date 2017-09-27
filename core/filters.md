@@ -438,9 +438,10 @@ Enable the filter:
 services:
     book.group_filter:
         parent: 'api_platform.serializer.group_filter'
-        arguments:     # Default arguments values
-            - 'groups' # The query parameter name
-            - false    # Allow to override the default serialization groups
+        arguments:                # Default arguments values
+            - 'groups'            # The query parameter name
+            - false               # Allow to override the default serialization groups
+            - ['allowed_groups']  # Whitelist of groups (null by default will allow all groups)
         tags: [ 'api_platform.filter' ]
 ```
 
@@ -518,9 +519,10 @@ Enable the filter:
 services:
     book.property_filter:
         parent: 'api_platform.serializer.property_filter'
-        arguments:         # Default arguments values
-            - 'properties' # The query parameter name
-            - false        # Allow to override the default serialization properties
+        arguments:                  # Default arguments values
+            - 'properties'          # The query parameter name
+            - false                 # Allow to override the default serialization properties
+            - ['allowed_property']  # Whitelist of properties (null by default will allow all properties)
         tags: [ 'api_platform.filter' ]
 ```
 
@@ -576,8 +578,8 @@ To avoid uncontrolled data exposure, you can also specify a whitelist of propert
 # app/config/api_filters.yml
 
 services:
-    book.group_filter:
-        parent: 'api_platform.serializer.group_filter'
+    book.property_filter:
+        parent: 'api_platform.serializer.property_filter'
         arguments: [ 'groups', false, ['allowed_property', {'nested': ['safe_property']}] ]
         tags: [ 'api_platform.filter' ]
 ```
