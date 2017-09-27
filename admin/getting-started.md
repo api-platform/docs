@@ -21,7 +21,7 @@ Edit the `src/App.js` file like the following:
 
 ```javascript
 import React, { Component } from 'react';
-import { HydraAdmin } from 'api-platform-admin';
+import { HydraAdmin } from '@api-platform-admin';
 
 class App extends Component {
   render() {
