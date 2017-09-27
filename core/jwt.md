@@ -110,7 +110,7 @@ class FeatureContext implements Context, SnippetAcceptingContext
 }
 ```
 
-Then, updates `behat.yml` to inject the `lexik_jwt_authentication.jwt_manager`:
+Then, update `behat.yml` to inject the `lexik_jwt_authentication.jwt_manager`:
 
 ```yaml
 # behat.yml
@@ -126,7 +126,7 @@ default:
   # ...
 ```
 
-Finally, mark your scenarios with the `@login` annotation to automatically add a valid `Authorization` header or with `@logout` to be sure that no user is authenticated.
+Finally, mark your scenarios with the `@login` annotation to automatically add a valid `Authorization` header and with `@logout` to be sure to detroy the token after this scerario.
 
 Previous chapter: [FOSUserBundle Integration](fosuser-bundle.md)
 
