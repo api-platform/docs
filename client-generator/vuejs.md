@@ -26,7 +26,7 @@ Reference the Bootstrap CSS stylesheet in `index.html` (optional):
 
 In the app directory, generate the files for the resource you want:
 
-    $ generate-api-platform-client https://demo.api-platform.com src/ --resource foo
+    $ generate-api-platform-client -g vue https://demo.api-platform.com src/ --resource foo
     # Replace the URL by the entrypoint of your Hydra-enabled API
     # Omit the resource flag to generate files for all resource types exposed by the API
 
