@@ -73,7 +73,7 @@ const fetchWithAuth = (url, options = {}) => {
 
 class Admin extends Component {
   render() {
-    return <HydraAdmin entrypoint={entrypoint} restClient={hydraClient(entrypoint, fetchWithAuth)} authClient={authClient}/>
+    return <HydraAdmin entrypoint={entrypoint} restClient={hydraClient({entrypoint}, fetchWithAuth)} authClient={authClient}/>
   }
 }
 
