@@ -2,7 +2,7 @@
 
 Authentication can easily be handled when using the API Platform's admin library.
 In the following section, we will assume [the API is secured using JWT](https://api-platform.com/docs/core/jwt), but the
-process is similar for other authentication mechanisms.
+process is similar for other authentication mechanisms. The `login_uri` is the full URI to the route specified by the `firewalls.login.json_login.check_path` config in the [JWT documentation](https://api-platform.com/docs/core/jwt). 
 
 The first step is to create a client to handle the authentication process:
 
@@ -10,13 +10,14 @@ The first step is to create a client to handle the authentication process:
 // src/authClient.js
 import { AUTH_LOGIN, AUTH_LOGOUT, AUTH_ERROR, AUTH_CHECK } from 'admin-on-rest';
 
-const entrypoint = 'https://demo.api-platform.com'; // Change this by your own entrypoint
+// Change this to be your own login check route.
+const login_uri = 'https://demo.api-platform.com/login_check'; 
 
 export default (type, params) => {
   switch (type) {
     case AUTH_LOGIN:
       const { username, password } = params;
-      const request = new Request(`${entrypoint}/login_check`, {
+      const request = new Request(`${login_uri}`, {
         method: 'POST',
         body: JSON.stringify({ email: username, password }),
         headers: new Headers({ 'Content-Type': 'application/json' }),
