@@ -43,6 +43,9 @@ export default (type, params) => {
         return Promise.reject();
       }
       break;
+
+    case AUTH_CHECK:
+        return localStorage.getItem('token') ? Promise.resolve() : Promise.reject();
       
       default:
           return Promise.resolve();
