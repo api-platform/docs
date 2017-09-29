@@ -7,6 +7,7 @@ process is similar for other authentication mechanisms.
 The first step is to create a client to handle the authentication process:
 
 ```javascript
+// src/authClient.js
 import { AUTH_LOGIN, AUTH_LOGOUT, AUTH_ERROR } from 'admin-on-rest';
 
 const entrypoint = 'https://demo.api-platform.com'; // Change this by your own entrypoint
@@ -52,8 +53,9 @@ export default (type, params) => {
 Then, configure the `Admin` component to use the authentication client we just created:
 
 ```javascript
+// src/Admin.js
 import React, { Component } from 'react';
-import { HydraAdmin, hydraClient, fetchHydra } from 'api-platform-admin';
+import { HydraAdmin, hydraClient, fetchHydra } from '@api-platform/admin';
 import authClient from './authClient';
 
 const entrypoint = 'https://demo.api-platform.com';
