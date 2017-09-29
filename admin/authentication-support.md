@@ -8,7 +8,7 @@ The first step is to create a client to handle the authentication process:
 
 ```javascript
 // src/authClient.js
-import { AUTH_LOGIN, AUTH_LOGOUT, AUTH_ERROR } from 'admin-on-rest';
+import { AUTH_LOGIN, AUTH_LOGOUT, AUTH_ERROR, AUTH_CHECK } from 'admin-on-rest';
 
 const entrypoint = 'https://demo.api-platform.com'; // Change this by your own entrypoint
 
@@ -45,7 +45,7 @@ export default (type, params) => {
       break;
 
     case AUTH_CHECK:
-        return localStorage.getItem('token') ? Promise.resolve() : Promise.reject();
+      return localStorage.getItem('token') ? Promise.resolve() : Promise.reject();
       
       default:
           return Promise.resolve();
