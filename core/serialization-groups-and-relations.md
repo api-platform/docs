@@ -437,7 +437,7 @@ namespace AppBundle\Entity;
 use ApiPlatform\Core\Annotation\ApiResource;
 
 /**
- * @ApiResource(attributes={"jsonld_embed_context"=true})
+ * @ApiResource(attributes={"normalization_context"={"jsonld_embed_context"=true}})
  */
 class Book
 {
