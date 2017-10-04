@@ -649,4 +649,4 @@ onfig:
 
 Previous chapter: [Getting Started](getting-started.md)
 
-Next chapter: [Deployment: Introduction](../deployment/index.md)
+Next chapter: [The Admin Component: Introduction](../admin/index.md)

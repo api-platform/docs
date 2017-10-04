@@ -26,7 +26,7 @@ Reference the Bootstrap CSS stylesheet in `index.html` (optional):
 
 In the app directory, generate the files for the resource you want:
 
-    $ generate-api-platform-client https://demo.api-platform.com src/ --resource foo --generator vue
+    $ generate-api-platform-client --generator vue https://demo.api-platform.com src/ --resource foo
     # Replace the URL by the entrypoint of your Hydra-enabled API
     # Omit the resource flag to generate files for all resource types exposed by the API
 
@@ -100,6 +100,6 @@ Replace the `App.vue` file with the following :
   </div>
 </template>
 ```
-Previous chapter: [Installation and Usage](installation-and-usage.md)
+Previous chapter: [React generator](react.md)
 
 Next chapter: [Troubleshooting](troubleshooting.md)

@@ -131,8 +131,9 @@
 
 1.  [Introduction](client-generator/index.md)
     1.  [Features](client-generator/index.md#features)
-2.  [Installation and Usage](client-generator/installation-and-usage.md)
-3.  [Troubleshooting](client-generator/troubleshooting.md)
+2.  [React generator](client-generator/react.md)
+3.  [Vue.js generator](client-generator/vuejs.md)
+4.  [Troubleshooting](client-generator/troubleshooting.md)
 
 ## Deployment
 

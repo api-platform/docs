@@ -39,4 +39,6 @@ you are using by running something like `curl https://demo.api-platform.com/`.
   access and the response `curl https://demo.api-platform.com/contexts/Entrypoint`. In the above case an "Access Denied"
   message in JSON format was being returned.  
 
-Previous chapter: [Installation and Usage](installation-and-usage.md)
+Previous chapter: [Vue.js generator](vuejs.md)
+
+Next chapter: [Deployment: Introduction](../deployment/index.md)
