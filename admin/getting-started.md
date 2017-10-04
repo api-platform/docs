@@ -46,8 +46,6 @@ Note: if you don't want to hardcode the API URL, you can [use an environment var
 
 Note: make sure `entrypoint` does not end with a `/`.
 
-Note: make sure `entrypoint` does not end with a `/`.
-
 ## Customizing the Admin
 
 The API Platform's admin parses the Hydra documentation exposed by the API and transforms it to an object data structure. This data structure can be customized to add, remove or customize resources and properties. To do so, we can leverage the `AdminBuilder` component provided by the library. It's a lower level component than the `HydraAdmin` one we used in the previous example. It allows to access to the object storing the structure of admin's screens.
