@@ -35,6 +35,7 @@ The code is ready to be executed! Register the generated reducers and components
 ```javascript
 import React from 'react';
 import ReactDom from 'react-dom';
+import registerServiceWorker from './registerServiceWorker';
 import { createStore, combineReducers, applyMiddleware } from 'redux';
 import { Provider } from 'react-redux';
 import thunk from 'redux-thunk';
@@ -65,6 +66,8 @@ ReactDom.render(
   </Provider>,
   document.getElementById('root')
 );
+
+registerServiceWorker();
 ```
 
 Previous chapter: [Introduction](index.md)
