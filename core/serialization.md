@@ -8,7 +8,7 @@ The main serialization process has two stages:
 
 ![Serializer workflow](images/SerializerWorkflow.png)
 
-> As you can see in the picture above, an array is used as a man in the middle. This way, Encoders will only deal with turning specific formats into arrays and vice versa. The same way, Normalizers will deal with turning specific objects into arrays and vice versa. 
+> As you can see in the picture above, an array is used as a man in the middle. This way, Encoders will only deal with turning specific formats into arrays and vice versa. The same way, Normalizers will deal with turning specific objects into arrays and vice versa.
 -- [The Symfony documentation](https://symfony.com/doc/current/components/serializer.html)
 
 Unlike Symfony itself, API Platform leverages custom normalizers, its router and the [data provider](data-providers.md) system to do an advanced tranformation. Metadata are added to the generated document including links, type information, pagination data or available filters.
@@ -64,12 +64,12 @@ final class ApiNormalizer extends AbstractItemNormalizer
     {
         $this->decorated = $decorated;
     }
-    
+
     public function supportsNormalization($data, $format = null)
     {
         return $this->decorated->supportsNormalization($data, $format);
     }
-    
+
     public function normalize($object, $format = null, array $context = [])
     {
         $data = $this->decorated->normalize($object, $format, $context);
@@ -78,12 +78,12 @@ final class ApiNormalizer extends AbstractItemNormalizer
         }
         return $data;
     }
-    
+
     public function supportsDenormalization($data, $type, $format = null)
     {
         return $this->decorated->supportsNormalization($data, $type, $format);
     }
-    
+
     public function denormalize($data, $class, $format = null, array $context = [])
     {
         return $this->decorated->denormalise($data, $class, $format, $context);
@@ -91,6 +91,6 @@ final class ApiNormalizer extends AbstractItemNormalizer
 }
 ```
 
-Previous chapter: [Swagger Support](core/swagger.md)
+Previous chapter: [Swagger Support](swagger.md)
 
-Next chapter: [Schema Generator: Introduction](schema-generator/index.md)
+Next chapter: [Schema Generator: Introduction](../schema-generator/index.md)

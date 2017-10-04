@@ -11,7 +11,15 @@ Then, create a new React application for your admin:
 
     $ create-react-app my-admin
 
-Now, add install `@api-platform/admin` library in your newly created project:
+React and React DOM will be directly provided as dependencies of Admin On REST. As having different versions of React
+causes issues, remove `react` and `react-dom` from the `dependencies` section of the generated `package.json` file: 
+
+```patch
+-    "react": "^15.6.1",
+-    "react-dom": "^15.6.1"
+```
+
+Finally, install the `@api-platform/admin` library:
 
     $ yarn add @api-platform/admin
 
@@ -35,6 +43,8 @@ export default App;
 Your new administration interface is ready! Type `yarn start` to try it!
 
 Note: if you don't want to hardcode the API URL, you can [use an environment variable](https://github.com/facebookincubator/create-react-app/blob/master/packages/react-scripts/template/README.md#adding-custom-environment-variables).
+
+Note: make sure `entrypoint` does not end with a `/`.
 
 ## Customizing the Admin
 

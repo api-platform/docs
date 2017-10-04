@@ -1,4 +1,4 @@
-# Installation and Usage
+# React generator
 
 Create a React application using [Facebook's Create React App](https://github.com/facebookincubator/create-react-app):
 
@@ -69,4 +69,4 @@ ReactDom.render(
 
 Previous chapter: [Introduction](index.md)
 
-Next chapter: [Vue components](vuejs.md)
+Next chapter: [Vue.js generator](vuejs.md)

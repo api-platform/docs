@@ -201,7 +201,7 @@ A property can be marked read only with the following configuration:
 ```yaml
     Person:
         properties:
-            email: { radable: false }
+            email: { readable: false }
 ```
 
 In this case, no getter method will be generated.
@@ -649,4 +649,4 @@ onfig:
 
 Previous chapter: [Getting Started](getting-started.md)
 
-Next chapter: [Deployment: Introduction](../deployment/index.md)
+Next chapter: [The Admin Component: Introduction](../admin/index.md)
