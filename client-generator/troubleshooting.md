@@ -40,3 +40,5 @@ you are using by running something like `curl https://demo.api-platform.com/`.
   message in JSON format was being returned.  
 
 Previous chapter: [Vue.js generator](vuejs.md)
+
+Next chapter: [Deployment: Introduction](../deployment/index.md)

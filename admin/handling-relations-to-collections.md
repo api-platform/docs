@@ -175,4 +175,4 @@ The autocomplete field should now work properly!
 
 Previous chapter: [Authentication Support](authentication-support.md)
 
-Next chapter: [The Client Generator Component: Introduction](../client-generator/index.md)
+Next chapter: [Client Generator: Introduction](../client-generator/index.md)
