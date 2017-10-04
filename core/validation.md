@@ -125,7 +125,7 @@ final class AdminGroupsGenerator
 
 This class selects the groups to apply regarding the role of the current user: if the current user has the `ROLE_ADMIN` role, groups `a` and `b` are returned. In other cases, just `a` is returned.
 
-This class is automatically registered as a service thanks to [the autowiring feature of the Symfony Dependency Injection Component](https://symfony.com/doc/current/service_container/autowiring.html).
+This class is automatically registered as a service thanks to [the autowiring feature of the Symfony Dependency Injection Component](https://symfony.com/doc/current/service_container/autowiring.html). Just note that this service must be public.
 
 Then, configure the entity class to use this service to retrieve validation groups:
 
