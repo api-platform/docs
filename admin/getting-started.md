@@ -31,7 +31,7 @@ Edit the `src/App.js` file like the following:
 import React from 'react';
 import { HydraAdmin } from '@api-platform/admin';
 
-export default () => entrypoint="https://demo.api-platform.com"/>; // Replace with your own API entrypoint
+export default () => <HydraAdmin entrypoint="https://demo.api-platform.com"/>; // Replace with your own API entrypoint
 ```
 
 Your new administration interface is ready! Type `yarn start` to try it!
