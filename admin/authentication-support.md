@@ -2,20 +2,22 @@
 
 Authentication can easily be handled when using the API Platform's admin library.
 In the following section, we will assume [the API is secured using JWT](https://api-platform.com/docs/core/jwt), but the
-process is similar for other authentication mechanisms.
+process is similar for other authentication mechanisms. The `login_uri` is the full URI to the route specified by the `firewalls.login.json_login.check_path` config in the [JWT documentation](https://api-platform.com/docs/core/jwt). 
 
 The first step is to create a client to handle the authentication process:
 
 ```javascript
-import { AUTH_LOGIN, AUTH_LOGOUT, AUTH_ERROR } from 'admin-on-rest';
+// src/authClient.js
+import { AUTH_LOGIN, AUTH_LOGOUT, AUTH_ERROR, AUTH_CHECK } from 'admin-on-rest';
 
-const entrypoint = 'https://demo.api-platform.com'; // Change this by your own entrypoint
+// Change this to be your own login check route.
+const login_uri = 'https://demo.api-platform.com/login_check'; 
 
 export default (type, params) => {
   switch (type) {
     case AUTH_LOGIN:
       const { username, password } = params;
-      const request = new Request(`${entrypoint}/login_check`, {
+      const request = new Request(`${login_uri}`, {
         method: 'POST',
         body: JSON.stringify({ email: username, password }),
         headers: new Headers({ 'Content-Type': 'application/json' }),
@@ -42,6 +44,9 @@ export default (type, params) => {
         return Promise.reject();
       }
       break;
+
+    case AUTH_CHECK:
+      return localStorage.getItem('token') ? Promise.resolve() : Promise.reject();
       
       default:
           return Promise.resolve();
@@ -52,8 +57,9 @@ export default (type, params) => {
 Then, configure the `Admin` component to use the authentication client we just created:
 
 ```javascript
+// src/Admin.js
 import React, { Component } from 'react';
-import { HydraAdmin, hydraClient, fetchHydra } from 'api-platform-admin';
+import { HydraAdmin, hydraClient, fetchHydra } from '@api-platform/admin';
 import authClient from './authClient';
 
 const entrypoint = 'https://demo.api-platform.com';
@@ -65,9 +71,11 @@ const fetchWithAuth = (url, options = {}) => {
   return fetchHydra(url, options);
 };
 
+const restClient = (api) => (hydraClient(api, fetchWithAuth));
+
 class Admin extends Component {
   render() {
-    return <HydraAdmin entrypoint={entrypoint} restClient={hydraClient(entrypoint, fetchWithAuth)} authClient={authClient}/>
+    return <HydraAdmin entrypoint={entrypoint} restClient={restClient} authClient={authClient}/>
   }
 }
 
