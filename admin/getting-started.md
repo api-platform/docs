@@ -28,23 +28,15 @@ Finally, install the `@api-platform/admin` library:
 Edit the `src/App.js` file like the following:
 
 ```javascript
-import React, { Component } from 'react';
+import React from 'react';
 import { HydraAdmin } from '@api-platform/admin';
 
-class App extends Component {
-  render() {
-    return <HydraAdmin entrypoint="https://demo.api-platform.com"/> // Replace with your own API entrypoint
-  }
-}
-
-export default App;
+export default () => <HydraAdmin entrypoint="https://demo.api-platform.com"/>; // Replace with your own API entrypoint
 ```
 
 Your new administration interface is ready! Type `yarn start` to try it!
 
 Note: if you don't want to hardcode the API URL, you can [use an environment variable](https://github.com/facebookincubator/create-react-app/blob/master/packages/react-scripts/template/README.md#adding-custom-environment-variables).
-
-Note: make sure `entrypoint` does not end with a `/`.
 
 ## Customizing the Admin
 
