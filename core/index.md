@@ -36,8 +36,7 @@ Validator and Doctrine ORM metadata
 * Easy installation thanks to API Platform
 
 Everything is fully customizable through a powerful event system and strong OOP.
-This bundle is extensively tested (unit and functionnal). The [`Fixtures/` directory](https://github.com/api-platform/core/tree/master/Fixtures))
-contains a working app covering all features of the library.
+This bundle is extensively tested (unit and functionnal).
 
 ![Screenshot of ApiBundle integrated with NelmioApiDocBundle](images/NelmioApiDocBundle.png)
 
