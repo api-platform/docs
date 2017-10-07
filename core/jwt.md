@@ -59,6 +59,40 @@ security:
         - { path: ^/, roles: [ ROLE_READER ] }
 ```       
 
+## Testing with Swagger
+
+You want to test the routes of your API protected by JWT authentication?
+
+### Configure api platform
+
+```yml
+# app/config/config.yml
+
+api_platform:
+    swagger:
+         api_keys:
+            - { name: 'Authorization', type: 'header' }
+```
+
+And the Authorise button will appear.
+
+![Screenshot of API Platform with Authorize button](images/JWTAuthorizeButton.png)
+
+### Add new API key
+
+All you have to do is configure the API key in the value field.
+
+By default [only the authorization header mode is enabled](https://github.com/lexik/LexikJWTAuthenticationBundle/blob/master/Resources/doc/index.md#2-use-the-token) in [LexikJWTAuthenticationBundle](https://github.com/lexik/LexikJWTAuthenticationBundle).
+
+You must add the [JWT token](https://github.com/lexik/LexikJWTAuthenticationBundle/blob/master/Resources/doc/index.md#1-obtain-the-token) as below and authorize.
+
+```
+Bearer MY_NEW_TOKEN
+```
+
+![Screenshot of API Platform with the configuration API Key](images/JWTConfigureApiKey.png)
+
+
 ## Testing with Behat
 
 Let's configure Behat to automatically send a `Authorization` HTTP header containing a valid JWT token when a scenario is marked with a `@login` annotation. Edit `features/bootstrap/FeatureContext.php` and add the following methods:
