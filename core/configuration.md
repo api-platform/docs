@@ -77,6 +77,11 @@ api_platform:
         # The oauth scopes.
         scopes: []
 
+    graphql:
+        enabled: false
+        graphiql:
+            enabled: true
+
     swagger:
         # The swagger api keys.
         api_keys: []
