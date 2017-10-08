@@ -63,7 +63,7 @@ security:
 
 You want to test the routes of your API protected by JWT authentication?
 
-### Configure api platform
+### Configuring API Platform
 
 ```yml
 # app/config/config.yml
@@ -71,20 +71,20 @@ You want to test the routes of your API protected by JWT authentication?
 api_platform:
     swagger:
          api_keys:
-            - { name: 'Authorization', type: 'header' }
+             - { name: 'Authorization', type: 'header' }
 ```
 
-And the Authorise button will appear.
+And the Authorize button will appear.
 
 ![Screenshot of API Platform with Authorize button](images/JWTAuthorizeButton.png)
 
-### Add new API key
+### Adding a New API Key
 
-All you have to do is configure the API key in the value field.
+All you have to do is to configure the API key in the value field.
 
 By default [only the authorization header mode is enabled](https://github.com/lexik/LexikJWTAuthenticationBundle/blob/master/Resources/doc/index.md#2-use-the-token) in [LexikJWTAuthenticationBundle](https://github.com/lexik/LexikJWTAuthenticationBundle).
 
-You must add the [JWT token](https://github.com/lexik/LexikJWTAuthenticationBundle/blob/master/Resources/doc/index.md#1-obtain-the-token) as below and authorize.
+You must set the [JWT token](https://github.com/lexik/LexikJWTAuthenticationBundle/blob/master/Resources/doc/index.md#1-obtain-the-token) as below and click on the "Authorize" button.
 
 ```
 Bearer MY_NEW_TOKEN
