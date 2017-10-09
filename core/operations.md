@@ -129,7 +129,7 @@ use ApiPlatform\Core\Annotation\ApiResource;
 /**
  * @ApiResource(itemOperations={
  *     "get"={"method"="GET", "path"="/grimoire/{id}"},
- *     "put"={"method"="PUT", "path"="/grimoire/{id}/update", "hydra_context"={"foo"="bar"},
+ *     "put"={"method"="PUT", "path"="/grimoire/{id}/update", "hydra_context"={"foo"="bar"}},
  * })
  */
 class Book
