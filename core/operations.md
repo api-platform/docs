@@ -486,7 +486,7 @@ In this case, the entity will pass through [all built-in event listeners](events
 automatically validated, persisted and serialized in JSON-LD. Then the Symfony kernel will send the resulting document to
 the client.
 
-Alternatively, you can also use standard Symfony controller and YAML or XML route declarations. The following example do
+Alternatively, you can also use standard Symfony controller and YAML or XML route declarations. The following example does
 exactly the same thing than the previous example in a more Symfony-like fashion:
 
 ```php
