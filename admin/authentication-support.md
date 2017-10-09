@@ -30,6 +30,7 @@ export default (type, params) => {
         })
         .then(({ token }) => {
           localStorage.setItem('token', token); // The JWT token is stored in the browser's local storage
+          window.location.replace('/');
         });
 
     case AUTH_LOGOUT:
