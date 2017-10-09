@@ -95,7 +95,7 @@ final class BlogPostItemDataProvider implements ItemDataProviderInterface
           throw new ResourceClassNotSupportedException();
         }
 
-        // Retrieve the blog post item from somewhere
+        // Retrieve the blog post item from somewhere then return it or null if not found
         return new BlogPost($id);
     }
 }
