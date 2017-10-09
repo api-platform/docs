@@ -115,7 +115,7 @@ just by specifying the enabled HTTP method.
 The URL, the HTTP method and the Hydra context passed to documentation generators of operations is easy to configure.
 
 In the next example, both `GET` and `PUT` operations are registered with custom URLs. Those will override the default generated
-URLs. In addition to that, we replace the Hydra context for the `PUT` operation.
+URLs. In addition to that, we replace the Hydra context for the `PUT` operation, and require the `id` parameter to be an integer.
 
 <configurations>
 
@@ -128,7 +128,7 @@ use ApiPlatform\Core\Annotation\ApiResource;
 
 /**
  * @ApiResource(itemOperations={
- *     "get"={"method"="GET", "path"="/grimoire/{id}"},
+ *     "get"={"method"="GET", "path"="/grimoire/{id}", "requirements"={"id"="\d+"}},
  *     "put"={"method"="PUT", "path"="/grimoire/{id}/update", "hydra_context"={"foo"="bar"}},
  * })
  */
@@ -146,10 +146,14 @@ AppBundle\Entity\Book:
         get:
             method: 'GET'
             path: '/grimoire/{id}'
+            requirements:
+                id: '\d+'
         put:
             method: 'PUT'
             path: '/grimoire/{id}/update'
             hydra_context: { foo: 'bar' }
+            requirements:
+                id: '\d+'
 ```
 
 ```xml
@@ -165,12 +169,18 @@ AppBundle\Entity\Book:
             <itemOperation name="get">
                 <attribute name="method">GET</attribute>
                 <attribute name="path">/grimoire/{id}</attribute>
+                <attribute name="requirements">
+                    <attribute name="id">\d+</attribute>
+                </attribute>
             </itemOperation>
             <itemOperation name="put">
                 <attribute name="method">PUT</attribute>
                 <attribute name="path">/grimoire/{id}/update</attribute>
                 <attribute name="hydra_context">
                     <attribute name="foo">bar</attribute>
+                </attribute>
+                <attribute name="requirements">
+                    <attribute name="id">\d+</attribute>
                 </attribute>
             </itemOperation>
         </itemOperations>
