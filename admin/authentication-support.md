@@ -15,11 +15,15 @@ export default (type, params) => {
   switch (type) {
     case AUTH_LOGIN:
       const { username, password } = params;
-      const request = new Request(`${entrypoint}/login_check`, {
-        method: 'POST',
-        // the next two lines are compatible with LexikJWTAuthenticationBundle. Change this if you use something else ...
-        body: `_username=${username}&_password=${password}`,
-        headers: new Headers({ 'Content-Type': 'application/x-www-form-urlencoded' }),
+      const request = new Request(`${API_ENTRYPOINT}/login`, {
+          body: JSON.stringify({
+              username: params.username,
+              password: params.password,
+          }),
+          headers: new Headers({
+              'Content-Type': 'application/json',
+          }),
+          method: 'POST',
       });
 
       return fetch(request)
