@@ -55,11 +55,12 @@ services:
 namespace AppBundle\Serializer;
 
 use ApiPlatform\Core\Serializer\AbstractItemNormalizer;
-use Symfony\Component\Console\Exception\InvalidArgumentException;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
 final class ApiNormalizer extends AbstractItemNormalizer
 {
+    private $decorated;
+    
     public function __construct(NormalizerInterface $decorated)
     {
         $this->decorated = $decorated;
@@ -76,17 +77,18 @@ final class ApiNormalizer extends AbstractItemNormalizer
         if (is_array($data)) {
             $data['date'] = date(\DateTime::RFC3339);
         }
+        
         return $data;
     }
 
     public function supportsDenormalization($data, $type, $format = null)
     {
-        return $this->decorated->supportsNormalization($data, $type, $format);
+        return $this->decorated->supportsDenormalization($data, $type, $format);
     }
 
     public function denormalize($data, $class, $format = null, array $context = [])
     {
-        return $this->decorated->denormalise($data, $class, $format, $context);
+        return $this->decorated->denormalize($data, $class, $format, $context);
     }
 }
 ```
