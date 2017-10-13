@@ -70,9 +70,11 @@ final class SwaggerDecorator implements NormalizerInterface
 ```
 
 ## Adding Swagger Context
+
 Sometimes you may want to have additional information included in your Swagger documentation. Follow these steps.
 
 ### Properties
+
 The following configuration will provide additional context to your Swagger definitions:
 
 ```php
@@ -135,7 +137,8 @@ The following configuration will provide additional context to your Swagger defi
  }
 ```
 
-or in YAML
+or in YAML:
+
 ```yaml
 resources:
     AppBundle\Entity\Product:
