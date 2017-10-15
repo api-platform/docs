@@ -42,7 +42,7 @@ services:
   # ...
 
     'AppBundle\Serializer\ApiNormalizer':
-        decorates: 'api_platform.jsonld.normalizer.item'
+        decorates: 'api_platform.serializer.normalizer.item'
         arguments: [ '@AppBundle\Serializer\ApiNormalizer.inner' ]
         autoconfigure: false
 ```
@@ -50,7 +50,7 @@ services:
 ```php
 <?php
 
-// src/Appbundle/Serializer/ApiSerializer
+// src/AppBundle/Serializer/ApiNormalizer
 
 namespace AppBundle\Serializer;
 
