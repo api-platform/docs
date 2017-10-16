@@ -430,7 +430,6 @@ namespace AppBundle\Action;
 
 use AppBundle\Entity\Book;
 use Doctrine\Common\Persistence\ManagerRegistry;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Symfony\Component\Routing\Annotation\Route;
 
 class BookSpecial
@@ -446,9 +445,9 @@ class BookSpecial
      * @Route(
      *     name="book_special",
      *     path="/books/{id}/special",
+     *     methods={"PUT"}
      *     defaults={"_api_resource_class"=Book::class, "_api_item_operation_name"="special"}
      * )
-     * @Method("PUT")
      */
     public function __invoke($data) // API Platform retrieves the PHP entity using the data provider then (for POST and
                                     // PUT method) deserializes user data in it. Then passes it to the action. Here $data
