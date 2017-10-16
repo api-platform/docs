@@ -83,12 +83,13 @@ import parseHydraDocumentation from 'api-doc-parser/lib/hydra/parseHydraDocument
 const entrypoint = 'https://demo.api-platform.com';
 
 class Admin extends Component {
-  state = {api: null};
+  state = {api: null, resources:null};
 
   componentDidMount() {
-    parseHydraDocumentation(entrypoint).then(api => {
+    parseHydraDocumentation(entrypoint).then(result => {
+        const api = result.api;
         const r = api.resources;
-
+        
         const books = r.find(r => 'books' === r.name);
 
         // Set the field in the list and the show views
@@ -107,15 +108,16 @@ class Admin extends Component {
           </ReferenceArrayInput>
         ;
 
-        this.setState({api: api});
+        this.setState({api: api, resources:r});
       }
     )
   }
 
   render() {
     if (null === this.state.api) return <div>Loading...</div>;
+    var params = {entrypoint:entrypoint, resources:this.state.resources};
 
-    return <AdminBuilder api={this.state.api} restClient={hydraClient(entrypoint)}/>
+    return <AdminBuilder api={this.state.api} restClient={hydraClient(params)}/>
   }
 }
 
