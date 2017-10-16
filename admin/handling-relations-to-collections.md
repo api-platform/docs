@@ -77,7 +77,7 @@ Let's customize the components used for the `authors` property:
 ```javascript
 import React, { Component } from 'react';
 import { ReferenceArrayField, SingleFieldList, ChipField, ReferenceArrayInput, SelectArrayInput } from 'admin-on-rest';
-import { AdminBuilder, hydraClient } from 'api-platform-admin';
+import { AdminBuilder, hydraClient } from '@api-platform/admin';
 import parseHydraDocumentation from 'api-doc-parser/lib/hydra/parseHydraDocumentation';
 
 const entrypoint = 'https://demo.api-platform.com';
