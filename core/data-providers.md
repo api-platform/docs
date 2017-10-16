@@ -17,6 +17,10 @@ For a given resource, you can implement two kind of interfaces:
 * the [`ItemDataProviderInterface`](https://github.com/api-platform/core/blob/master/src/DataProvider/ItemDataProviderInterface.php)
   is used when fetching items.
 
+Both implementations can also implement a third, optional interface called
+['RestrictedDataProviderInterface'](https://github.com/api-platform/core/blob/master/src/DataProvider/ItemDataProviderInterface.php)
+if you want to limit their effects to a single resource or operation.
+
 In the following examples we will create custom data providers for an entity class called `AppBundle\Entity\BlogPost`.
 Note, that if your entity is not Doctrine-related, you need to flag the identifier property by using `@ApiProperty(identifier=true)` for things to work properly (see also [Entity Identifier Case](serialization-groups-and-relations.md#entity-identifier-case)).
 
@@ -35,19 +39,22 @@ If no data is available, you should return an empty array.
 namespace AppBundle\DataProvider;
 
 use ApiPlatform\Core\DataProvider\CollectionDataProviderInterface;
+use ApiPlatform\Core\DataProvider\RestrictedDataProviderInterface;
 use ApiPlatform\Core\Exception\ResourceClassNotSupportedException;
 use AppBundle\Entity\BlogPost;
 
-final class BlogPostCollectionDataProvider implements CollectionDataProviderInterface
+final class BlogPostCollectionDataProvider implements CollectionDataProviderInterface, RestrictedDataProviderInterface
 {
-    public function getCollection(string $resourceClass, string $operationName = null)
+    public function supports(string $resourceClass, string $operationName = null): bool
     {
-        if (BlogPost::class !== $resourceClass) {
-            throw new ResourceClassNotSupportedException();
-        }
+        return BlogPost::class === $resourceClass;
+    }
 
+    public function getCollection(string $resourceClass, string $operationName = null): \Generator
+    {
         // Retrieve the blog post collection from somewhere
-        return [new BlogPost(1), new BlogPost(2)];
+        yield new BlogPost(1);
+        yield new BlogPost(2);
     }
 }
 ```
@@ -85,17 +92,20 @@ The `getItem` method can return `null` if no result has been found.
 namespace AppBundle\DataProvider;
 
 use ApiPlatform\Core\DataProvider\ItemDataProviderInterface;
+use ApiPlatform\Core\DataProvider\RestrictedDataProviderInterface;
 use ApiPlatform\Core\Exception\ResourceClassNotSupportedException;
 use AppBundle\Entity\BlogPost;
 
-final class BlogPostItemDataProvider implements ItemDataProviderInterface
+final class BlogPostItemDataProvider implements ItemDataProviderInterface, RestrictedDataProviderInterface
 {
-    public function getItem(string $resourceClass, $id, string $operationName = null, array $context = [])    {
-        if (BlogPost::class !== $resourceClass) {
-          throw new ResourceClassNotSupportedException();
-        }
+    public function supports(string $resourceClass, string $operationName = null): bool
+    {
+        return BlogPost::class === $resourceClass;
+    }
 
-        // Retrieve the blog post item from somewhere
+    public function getItem(string $resourceClass, $id, string $operationName = null, array $context = []): ?BlogPost
+    {
+        // Retrieve the blog post item from somewhere then return it or null if not found
         return new BlogPost($id);
     }
 }
