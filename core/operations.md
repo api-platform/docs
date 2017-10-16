@@ -445,7 +445,7 @@ class BookSpecial
      * @Route(
      *     name="book_special",
      *     path="/books/{id}/special",
-     *     methods={"PUT"}
+     *     methods={"PUT"},
      *     defaults={"_api_resource_class"=Book::class, "_api_item_operation_name"="special"}
      * )
      */
