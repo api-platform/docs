@@ -34,9 +34,9 @@ If no data is available, you should return an empty array.
 
 namespace AppBundle\DataProvider;
 
-use AppBundle\Entity\BlogPost;
 use ApiPlatform\Core\DataProvider\CollectionDataProviderInterface;
 use ApiPlatform\Core\Exception\ResourceClassNotSupportedException;
+use AppBundle\Entity\BlogPost;
 
 final class BlogPostCollectionDataProvider implements CollectionDataProviderInterface
 {
@@ -84,9 +84,9 @@ The `getItem` method can return `null` if no result has been found.
 
 namespace AppBundle\DataProvider;
 
-use AppBundle\Entity\BlogPost;
 use ApiPlatform\Core\DataProvider\ItemDataProviderInterface;
 use ApiPlatform\Core\Exception\ResourceClassNotSupportedException;
+use AppBundle\Entity\BlogPost;
 
 final class BlogPostItemDataProvider implements ItemDataProviderInterface
 {
