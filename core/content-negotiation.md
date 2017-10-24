@@ -11,10 +11,10 @@ Both XML and JSON formats are experimental and there are no assurance that we wi
 
 API Platform Core will automatically detect the best resolving format depending on:
 
-* enabled formats (link to docs for this / see below)
-* the `Accept` HTTP header
-* Alternatively to send the proper `Accept` HTTP header, you can also request a specific format by adding its name as the extension of the URL.
-* Available formats are :
+* enabled formats (see below)
+* the requested format, specified in either the `Accept` HTTP header or as an extension appended to the URL
+
+Available formats are:
 
 Format                                                          | Format name  | MIME types                    | Backward Compatibility guaranteed
 ----------------------------------------------------------------|--------------|-------------------------------|----------------------------------------
@@ -134,8 +134,8 @@ final class CustomItemNormalizer implements NormalizerInterface, DenormalizerInt
 }
 ```
 
-For example if you want to make the `csv` format to work for even complex entities with a lot of hierarchy, you have
-to flatten or remove too complex relations:
+For example if you want to make the `csv` format work for even complex entities with a lot of hierarchy, you have to
+flatten or remove too complex relations:
 
 ```php
 <?php
