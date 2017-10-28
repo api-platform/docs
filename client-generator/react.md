@@ -44,7 +44,7 @@ import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import createBrowserHistory from 'history/createBrowserHistory';
 import { syncHistoryWithStore, routerReducer as routing } from 'react-router-redux'
 
-// Replace "foo" by the name of the resource type
+// Replace "foo" with the name of the resource type
 import foo from './reducers/foo/';
 import fooRoutes from './routes/foo';
 
