@@ -31,6 +31,6 @@ api_platform:
 ...
     graphql:
         graphiql:
-            enabled: true
+            enabled: false
 ...            
 ```
