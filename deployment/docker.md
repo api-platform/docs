@@ -1,12 +1,12 @@
 # Using API Platform with Docker
 
 API Platform projects can be run through [Docker](https://www.docker.com/).
-A [Docker compose](https://docs.docker.com/compose/) configuration including a fully working [LAMP](https://en.wikipedia.org/wiki/LAMP_(software_bundle))
-stack is shipped with the API Platform distribution.
+A [Docker compose](https://docs.docker.com/compose/) configuration, including a fully working [LAMP](https://en.wikipedia.org/wiki/LAMP_(software_bundle))
+stack, is shipped with the API Platform distribution.
 
 ## Services
 
-The Docker Compose configuration comes with several ready-use services by default:
+The Docker Compose configuration comes with several ready-to-use services by default:
 
 | Name    | Description                                                   | Port(s)
 | ------- | ------------------------------------------------------------- | -------
@@ -23,6 +23,7 @@ To install it, run the following commands (Docker must be installed on your syst
     $ docker-compose exec app bin/console doctrine:schema:create # Create the MySQL schema
 
 Your project will be accessible in two different ways:
+
 * Through the HTTP cache (Varnish): `http://localhost`
 * Through the HTTP server directly (Nginx) to facilitate debugging: `http://localhost:8080`
 

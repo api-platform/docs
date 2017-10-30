@@ -21,7 +21,7 @@ framework:
 
 ## Using Serialization Groups
 
-Specifying to the API system the groups to use is really simple:
+It is really simple to specify what groups to use in the API system:
 
 ```php
 <?php

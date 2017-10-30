@@ -168,7 +168,7 @@ Then run:
     
 Everything should be green now. Your Linked Data API is now specified and tested thanks to Behat!
 
-You may also be interested by those alternative testing tools (not included in the API Platform distribution):
+You may also be interested in these alternative testing tools (not included in the API Platform distribution):
 
 * [Postman tests](https://www.getpostman.com/docs/writing_tests) (proprietary): create functional test for your API Platform project
   using a nice UI, benefit from [the Swagger integration](https://www.getpostman.com/docs/importing_swagger) and run tests

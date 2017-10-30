@@ -3,7 +3,7 @@
 Currently, API Platform Admin doesn't handle `to-many` relations. The core library [is being patched](https://github.com/api-platform/core/pull/1189)
 to document relations to collections through OWL.
 
-During the meantime, it is possible to configure manually API Platform to handle relations to collections.
+In the meantime, it is possible to manually configure API Platform to handle relations to collections.
 
 We will create the admin for an API exposing `Person` and `Book` resources linked with a `many-to-many`
 relation between them (trough the `authors` property).
@@ -122,11 +122,11 @@ class Admin extends Component {
 export default Admin;
 ```
 
-The admin now properly handle this `to-many` relation!
+The admin now properly handles this `to-many` relation!
 
 ## Using an Autocomplete Input for Relations
 
-We'll do a last improvement to our admin: transform the relation selector we just created to use autocompletion.
+We'll make one last improvement to our admin: transforming the relation selector we just created to use autocompletion.
 
 Start by adding a "partial search" filter on the `name` property of the `Book` resource class.
 

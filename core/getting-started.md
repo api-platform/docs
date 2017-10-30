@@ -162,7 +162,7 @@ PUT    | /products/{id} | Update a product
 DELETE | /products/{id} | Delete a product
 
 The same operations are available for the offer method (routes will start with the `/offers` pattern).
-Routes prefixes are built by pluralizing the name of the mapped entity class.
+Route prefixes are built by pluralizing the name of the mapped entity class.
 It is also possible to override the naming convention using [operation path namings](operation-path-naming.md).
 
 As an alternative to annotations, you can map entity classes using XML or YAML:
@@ -208,7 +208,7 @@ You now have a fully featured API exposing your entities.
 Run the Symfony app (`bin/console server:run`) and browse the API entrypoint at `http://localhost:8000/api`.
 
 Interact with the API using a REST client (we recommend [Postman](https://www.getpostman.com/)) or an Hydra aware application
-(you should give a try to [Hydra Console](https://github.com/lanthaler/HydraConsole)). Take
+(you should give [Hydra Console](https://github.com/lanthaler/HydraConsole) a try). Take
 a look at the usage examples in [the `features` directory](https://github.com/api-platform/api-platform/tree/master/features).
 
 Previous chapter: [Introduction](index.md)
