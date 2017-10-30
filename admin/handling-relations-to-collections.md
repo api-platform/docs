@@ -82,13 +82,11 @@ import parseHydraDocumentation from 'api-doc-parser/lib/hydra/parseHydraDocument
 
 const entrypoint = 'https://demo.api-platform.com';
 
-class Admin extends Component {
-  state = {api: null};
+export default class extends Component {
+  state = {api: null, resources: null};
 
   componentDidMount() {
-    parseHydraDocumentation(entrypoint).then(api => {
-        const r = api.resources;
-
+    parseHydraDocumentation(entrypoint).then({api, resources} => {
         const books = r.find(r => 'books' === r.name);
 
         // Set the field in the list and the show views
@@ -107,7 +105,7 @@ class Admin extends Component {
           </ReferenceArrayInput>
         ;
 
-        this.setState({api: api});
+        this.setState({api, resources});
       }
     )
   }
@@ -115,11 +113,9 @@ class Admin extends Component {
   render() {
     if (null === this.state.api) return <div>Loading...</div>;
 
-    return <AdminBuilder api={this.state.api} restClient={hydraClient(entrypoint)}/>
+    return <AdminBuilder api={this.state.api} restClient={hydraClient({entrypoint: entrypoint, resources: this.state.resources})}/>
   }
 }
-
-export default Admin;
 ```
 
 The admin now properly handles this `to-many` relation!
@@ -131,7 +127,7 @@ We'll make one last improvement to our admin: transforming the relation selector
 Start by adding a "partial search" filter on the `name` property of the `Book` resource class.
 
 ```yaml
-# etc/packages/api_platform.yaml
+# config/api_filters.yml
 
 services:
     person.search_filter:
