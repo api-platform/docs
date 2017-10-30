@@ -62,7 +62,7 @@ class Offer
 ```
 
 `http://localhost:8000/api/offers?price=10` will return all offers with a price being exactly `10`.
-`http://localhost:8000/api/offers?name=shirt` will returns all offer with a description containing the word "shirt".
+`http://localhost:8000/api/offers?name=shirt` will return all offers with a description containing the word "shirt".
 
 Filters can be combined together: `http://localhost:8000/api/offers?price=10&name=shirt`
 
@@ -86,7 +86,7 @@ Previous URLs will return all offers for the product having the following IRI as
 
 ### Date Filter
 
-The date filter allows to filter a collection by date intervals.
+The date filter allows for filtering a collection by date intervals.
 
 Syntax: `?property[<after|before|strictly_after|strictly_before>]=value`
 
@@ -275,7 +275,7 @@ Given that the collection endpoint is `/offers`, you can filters the price with 
 
 It will return all offers with `price` between 12.99 and 15.99.
 
-You can filters offers by joining two value for example: `/offers?price[gt]=12.99&price[lt]=19.99`.
+You can filter offers by joining two values, for example: `/offers?price[gt]=12.99&price[lt]=19.99`.
 
 ### Order Filter
 
@@ -595,7 +595,7 @@ persistence system's internals - you have to create the filtering logic by yours
 
 ### Creating Custom Doctrine ORM Filters
 
-Doctrine filters can access to the HTTP request (Symfony's `Request` object) and to the `QueryBuilder` instance used to
+Doctrine filters have access to the HTTP request (Symfony's `Request` object) and to the `QueryBuilder` instance used to
 retrieve data from the database. They are only applied to collections. If you want to deal with the DQL query generated
 to retrieve items, or don't need to access the HTTP request, [extensions](extensions.md) are the way to go.
 
@@ -636,7 +636,11 @@ final class RegexpFilter extends AbstractFilter
                 'property' => $property,
                 'type' => 'string',
                 'required' => false,
-                'swagger' => ['description' => 'Filter using a regex. This will appear in the Swagger documentation!'],
+                'swagger' => [
+                    'description' => 'Filter using a regex. This will appear in the Swagger documentation!',
+                    'name' => 'Custom name to use in the Swagger documentation',
+                    'type' => 'Will appear below the name in the Swagger documentation',
+                ],
             ];
         }
 

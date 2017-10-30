@@ -1,6 +1,6 @@
 # Troubleshooting
 
-* The generator does not perform any authentication, so you must ensure that all referenced hydra paths for your API are
+* The generator does not perform any authentication, so you must ensure that all referenced Hydra paths for your API are
 accessible anonymously. If you are using API Platform this will at least include:
 
   ```

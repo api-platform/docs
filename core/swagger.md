@@ -69,6 +69,125 @@ final class SwaggerDecorator implements NormalizerInterface
 }
 ```
 
+## Adding Swagger Context
+
+Sometimes you may want to have additional information included in your Swagger documentation. Follow these steps.
+
+### Properties
+
+The following configuration will provide additional context to your Swagger definitions:
+
+```php
+<?php
+ 
+ // src/AppBundle/Entity/Product.php
+ 
+ namespace AppBundle\Entity;
+ 
+ use ApiPlatform\Core\Annotation\ApiResource;
+ use ApiPlatform\Core\Annotation\ApiProperty;
+ use Doctrine\ORM\Mapping as ORM;
+ use Symfony\Component\Validator\Constraints as Assert;
+ 
+ /**
+  * @ApiResource
+  * @ORM\Entity
+  */
+ class Product // The class name will be used to name exposed resources
+ {
+     /**
+      * @ORM\Column(type="integer")
+      * @ORM\Id
+      * @ORM\GeneratedValue(strategy="AUTO")
+      */
+     public $id;
+ 
+     /**
+      * @param string $name A name property - this description will be avaliable in the API documentation too.
+      *
+      * @ORM\Column
+      * @Assert\NotBlank
+      * 
+      * @ApiProperty(
+      *     "attributes"={
+      *         "swagger_context"={
+      *             "type"="string",
+      *             "enum"={"one", "two"},
+      *             "example"="one"          
+      *         }
+      *     }
+      * )
+      */
+     public $name;
+     
+     /**
+      * @ORM\Column
+      * @Assert\DateTime
+      *
+      * @ApiProperty(
+      *     "attributes"={
+      *         "swagger_context"={
+      *             "type"="string",
+      *             "format"="date-time"     
+      *         }
+      *     }
+      * ) 
+      */
+     public $timestamp;
+ }
+```
+
+or in YAML:
+
+```yaml
+resources:
+    AppBundle\Entity\Product:
+      properties:
+        name:
+          attributes:
+            swagger_context:
+              type: string
+              enum: ['one', 'two']
+              example: one
+        timestamp:
+          attributes:
+            swagger_context:
+              type: string
+              format: date-time
+```
+
+Will produce the following Swagger:
+```json
+{
+  "swagger": "2.0",
+  "basePath": "/",
+  ...
+  
+  "definitions": {
+    "Product": {
+      "type": "object",
+      "description": "This is a product.",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "readOnly": true
+        },
+        "name": {
+          "type": "string",
+          "description": "This is a name.",
+          "enum": ["one", "two"],
+          "example": "one"
+        },
+        "timestamp": {
+          "type": "string",
+          "format": "date-time"
+        }
+      }
+    }
+  }
+}
+```
+
 Previous chapter: [AngularJS Integration](angularjs-integration.md)
 
 Next chapter: [The Serialization Process](serialization.md)

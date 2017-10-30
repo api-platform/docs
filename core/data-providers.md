@@ -63,11 +63,8 @@ Then declare a Symfony service, for example:
 
 ```yaml
 # app/config/services.yml
-
 services:
-
     # ...
-
     'AppBundle\DataProvider\BlogPostCollectionDataProvider':
         tags: [ { name: 'api_platform.collection_data_provider', priority: 2 } ]
 ```

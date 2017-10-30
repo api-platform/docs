@@ -3,7 +3,7 @@
 Currently, API Platform Admin doesn't handle `to-many` relations. The core library [is being patched](https://github.com/api-platform/core/pull/1189)
 to document relations to collections through OWL.
 
-During the meantime, it is possible to configure manually API Platform to handle relations to collections.
+In the meantime, it is possible to manually configure API Platform to handle relations to collections.
 
 We will create the admin for an API exposing `Person` and `Book` resources linked with a `many-to-many`
 relation between them (trough the `authors` property).
@@ -77,18 +77,16 @@ Let's customize the components used for the `authors` property:
 ```javascript
 import React, { Component } from 'react';
 import { ReferenceArrayField, SingleFieldList, ChipField, ReferenceArrayInput, SelectArrayInput } from 'admin-on-rest';
-import { AdminBuilder, hydraClient } from 'api-platform-admin';
+import { AdminBuilder, hydraClient } from '@api-platform/admin';
 import parseHydraDocumentation from 'api-doc-parser/lib/hydra/parseHydraDocumentation';
 
 const entrypoint = 'https://demo.api-platform.com';
 
-class Admin extends Component {
-  state = {api: null};
+export default class extends Component {
+  state = {api: null, resources: null};
 
   componentDidMount() {
-    parseHydraDocumentation(entrypoint).then(api => {
-        const r = api.resources;
-
+    parseHydraDocumentation(entrypoint).then({api, resources} => {
         const books = r.find(r => 'books' === r.name);
 
         // Set the field in the list and the show views
@@ -107,7 +105,7 @@ class Admin extends Component {
           </ReferenceArrayInput>
         ;
 
-        this.setState({api: api});
+        this.setState({api, resources});
       }
     )
   }
@@ -115,23 +113,21 @@ class Admin extends Component {
   render() {
     if (null === this.state.api) return <div>Loading...</div>;
 
-    return <AdminBuilder api={this.state.api} restClient={hydraClient(entrypoint)}/>
+    return <AdminBuilder api={this.state.api} restClient={hydraClient({entrypoint: entrypoint, resources: this.state.resources})}/>
   }
 }
-
-export default Admin;
 ```
 
-The admin now properly handle this `to-many` relation!
+The admin now properly handles this `to-many` relation!
 
 ## Using an Autocomplete Input for Relations
 
-We'll do a last improvement to our admin: transform the relation selector we just created to use autocompletion.
+We'll make one last improvement to our admin: transforming the relation selector we just created to use autocompletion.
 
 Start by adding a "partial search" filter on the `name` property of the `Book` resource class.
 
 ```yaml
-# etc/packages/api_platform.yaml
+# config/api_filters.yml
 
 services:
     person.search_filter:

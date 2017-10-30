@@ -28,23 +28,15 @@ Finally, install the `@api-platform/admin` library:
 Edit the `src/App.js` file like the following:
 
 ```javascript
-import React, { Component } from 'react';
+import React from 'react';
 import { HydraAdmin } from '@api-platform/admin';
 
-class App extends Component {
-  render() {
-    return <HydraAdmin entrypoint="https://demo.api-platform.com"/> // Replace with your own API entrypoint
-  }
-}
-
-export default App;
+export default () => <HydraAdmin entrypoint="https://demo.api-platform.com"/>; // Replace with your own API entrypoint
 ```
 
 Your new administration interface is ready! Type `yarn start` to try it!
 
 Note: if you don't want to hardcode the API URL, you can [use an environment variable](https://github.com/facebookincubator/create-react-app/blob/master/packages/react-scripts/template/README.md#adding-custom-environment-variables).
-
-Note: make sure `entrypoint` does not end with a `/`.
 
 ## Customizing the Admin
 
@@ -78,9 +70,7 @@ const apiDocumentationParser = entrypoint => parseHydraDocumentation(entrypoint)
   })
 ;
 
-export default (props) => (
-  <HydraAdmin apiDocumentationParser={apiDocumentationParser} entrypoint={entrypoint}/>
-);
+export default (props) => <HydraAdmin apiDocumentationParser={apiDocumentationParser} entrypoint={entrypoint}/>;
 ```
 
 The `fieldComponent` property of the `Field` class allows to set the component used to render a property in list and show screens.
@@ -157,9 +147,7 @@ const apiDocumentationParser = entrypoint => parseHydraDocumentation(entrypoint)
   })
 ;
 
-export default (props) => (
-  <HydraAdmin apiDocumentationParser={apiDocumentationParser} entrypoint={entrypoint}/>
-);
+export default (props) => <HydraAdmin apiDocumentationParser={apiDocumentationParser} entrypoint={entrypoint}/>;
 ```
 
 __Note__: In this example, we choose to send the file via a multi-part form data, but you are totally free to use another solution (like `base64`). But keep in mind that multi-part form data is the most efficient solution.
@@ -176,7 +164,7 @@ import parseHydraDocumentation from 'api-doc-parser/lib/hydra/parseHydraDocument
 
 const entrypoint = 'https://demo.api-platform.com';
 
-class App extends Component {
+export default class extends Component {
   state = {api: null};
 
   componentDidMount() {
@@ -197,8 +185,6 @@ class App extends Component {
     return <AdminBuilder api={this.state.api} restClient={hydraClient(entrypoint)}/>
   }
 }
-
-export default App;
 ```
 
 Previous chapter: [Introduction](index.md)

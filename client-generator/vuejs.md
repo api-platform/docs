@@ -38,7 +38,7 @@ import Vuex from 'vuex';
 import VueRouter from 'vue-router';
 import App from './App.vue';
 
-// Replace "foo" by the name of the resource type
+// Replace "foo" with the name of the resource type
 import foo from './store/modules/foo/';
 import fooRoutes from './routes/foo';
 
@@ -89,7 +89,7 @@ Replace the `App.vue` file with the following :
   <div class="container">
     <nav>
       <ul class="nav nav-justified">
-        <!-- Replace Foo by your resource name -->
+        <!-- Replace Foo with your resource name -->
         <li class="active"><router-link :to="{ name: 'FooList' }" class="active">Foos</router-link></li>
       </ul>
     </nav>
