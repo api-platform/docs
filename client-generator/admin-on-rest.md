@@ -1,5 +1,15 @@
 # Admin On REST generator
 
+## Summary
+This generator is alternative to api-platform/admin [api-platform/admin](https://github.com/api-platform/admin)
+
+**api-platform/admin** allows to generate all resources on the fly and is immune to API changes.
+
+**Generator** allows more configuration to the resource components by generated config file (config file per resource). In case of API changes resource components have to be regenerated to expose changes
+
+Example configuration of the resource component at the bottom of this document.
+
+## Usage
 Create a React application using [Facebook's Create React App](https://github.com/facebookincubator/create-react-app):
 
     $ create-react-app my-app
@@ -173,6 +183,75 @@ export default App;
 
 ````
 The code is ready to be executed!
+
+Resource configuration example config/book.js:
+
+Each resource component has fields and buttons config options.
+False setting hides field or button.
+```javascript
+export const configList = {
+  '@id': true,           
+  id: true,              
+  isbn: true,            
+  description: true,      
+  author: true,          
+  title: true,           
+  publicationDate: true, 
+  buttons: {
+    show: true,
+    edit: true,
+    create: true,
+    refresh: true,
+    delete: true,
+  }
+}
+
+export const configEdit = {
+  '@id': true,
+  id: true,
+  isbn: true,
+  description: true,
+  author: true,
+  title: true,
+  publicationDate: true,
+  buttons: {
+    show: true,
+    list: true,
+    delete: true,
+    refresh: true,
+  }
+}
+
+export const configCreate = {
+  '@id': true,
+  id: true,
+  isbn: true,
+  description: true,
+  author: true,
+  title: true,
+  publicationDate: true,
+  buttons: {
+    list: true,
+  }
+}
+
+export const configShow = {
+  '@id': true,
+  id: true,
+  isbn: true,
+  description: true,
+  author: true,
+  title: true,
+  publicationDate: true,
+  buttons: {
+    edit: true,
+    list: true,
+    delete: true,
+    refresh: true,
+  }
+}
+
+```
 
 Previous chapter: [Vue.js generator](vuejs.md)
 
