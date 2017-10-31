@@ -102,4 +102,4 @@ Replace the `App.vue` file with the following :
 ```
 Previous chapter: [React generator](react.md)
 
-Next chapter: [Troubleshooting](troubleshooting.md)
+Next chapter: [Admin On REST](admin-on-rest.md)
