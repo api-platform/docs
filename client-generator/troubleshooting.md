@@ -22,19 +22,23 @@ you are using by running something like `curl https://demo.api-platform.com/`.
 
 * If you receive a message like this:
 
-```
-{ Error
-at done (/usr/local/share/.config/yarn/global/node_modules/jsonld/js/jsonld.js:6851:19)
-at <anonymous>
-at process._tickCallback (internal/process/next_tick.js:188:7)
-name: 'jsonld.InvalidUrl',
-message: 'Dereferencing a URL did not result in a JSON object. The response was valid JSON, but it was not a JSON object.',
-details:
-{ code: 'invalid remote context',
- url: 'https://demo.api-platform.com/contexts/Entrypoint',
- cause: null } }
-```
+  ```
+  { Error
+    at done (/usr/local/share/.config/yarn/global/node_modules/jsonld/js/jsonld.js:6851:19)
+    at <anonymous>
+    at process._tickCallback (internal/process/next_tick.js:188:7)
+  name: 'jsonld.InvalidUrl',
+  message: 'Dereferencing a URL did not result in a JSON object. The response was valid JSON, but it was not a JSON object.',
+  details:
+   { code: 'invalid remote context',
+     url: 'https://demo.api-platform.com/contexts/Entrypoint',
+     cause: null } }
+  ```
 
-Check access to the specified url, in this case `https://demo.api-platform.com/contexts/Entrypoint`, use curl to check
-access and the response `curl https://demo.api-platform.com/contexts/Entrypoint`. In the above case an "Access Denied"
-message in JSON format was being returned.  
+  Check access to the specified url, in this case `https://demo.api-platform.com/contexts/Entrypoint`, use curl to check
+  access and the response `curl https://demo.api-platform.com/contexts/Entrypoint`. In the above case an "Access Denied"
+  message in JSON format was being returned.  
+
+Previous chapter: [Admin On REST](admin-on-rest.md)
+
+Next chapter: [Deployment: Introduction](../deployment/index.md)
