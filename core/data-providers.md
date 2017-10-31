@@ -103,8 +103,8 @@ final class BlogPostItemDataProvider implements ItemDataProviderInterface
 
 If service autowiring and autoconfiguration are enabled (it's the case by default), you are done!
 
-Otherwise, if you use a custom dependency injection configuration, you need to register the corresponding service add the
-`api_platform.item_data_provider` tag. As for collection data providers, the `priority` attribute can be used to order
+Otherwise, if you use a custom dependency injection configuration, you need to register the corresponding service and add the
+`api_platform.item_data_provider` tag to it. As for collection data providers, the `priority` attribute can be used to order
 providers.
 
 ```yaml
