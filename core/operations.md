@@ -128,7 +128,7 @@ use ApiPlatform\Core\Annotation\ApiResource;
 
 /**
  * @ApiResource(itemOperations={
- *     "get"={"method"="GET", "path"="/grimoire/{id}", "requirements"={"id"="\d+"}},
+ *     "get"={"method"="GET", "path"="/grimoire/{id}", "requirements"={"id"="\d+"}, "defaults"={"color"="brown"}, "options"={"my_option"="my_option_value", "schemes"={"https"}, "host"="{subdomain}.api-platform.com"}},
  *     "put"={"method"="PUT", "path"="/grimoire/{id}/update", "hydra_context"={"foo"="bar"}},
  * })
  */
@@ -148,6 +148,12 @@ AppBundle\Entity\Book:
             path: '/grimoire/{id}'
             requirements:
                 id: '\d+'
+            defaults:
+                color: 'brown'
+            host: '{subdomain}.api-platform.com'
+            schemes: ['https']
+            options: 
+                my_option: 'my_option_value'
         put:
             method: 'PUT'
             path: '/grimoire/{id}/update'
@@ -172,6 +178,16 @@ AppBundle\Entity\Book:
                 <attribute name="requirements">
                     <attribute name="id">\d+</attribute>
                 </attribute>
+                <attribute name="defaults">
+                    <attribute name="color">brown</attribute>
+                </attribute>
+                <attribute name="options">
+                    <attribute name="color">brown</attribute>
+                </attribute>
+                <attribute name="schemes">
+                    <attribute>https</attribute>
+                </attribute>
+                <attribute name="host">{subdomain}.api-platform.com</attribute>
             </itemOperation>
             <itemOperation name="put">
                 <attribute name="method">PUT</attribute>
