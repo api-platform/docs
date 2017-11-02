@@ -1,22 +1,22 @@
-# Swagger Support
+# Swagger / Open API Support
 
-## Override Swagger documentation
+API Platform natively support the [Open API](https://www.openapis.org/) (formerly Swagger) API documentation format.
+It also integrates a customized version of [Swagger UI](https://swagger.io/swagger-ui/), a nice tool to display the
+API documentation in a user friendly way.
+
+![Screenshot](../distribution/images/swagger-ui-1.png)
+
+## Overriding the Swagger Documentation
 
 Symfony allows to [decorate services](https://symfony.com/doc/current/service_container/service_decoration.html), here we
 need to decorate `api_platform.swagger.normalizer.documentation`.
-
-### Example
 
 In the following example, we will see how to override the title of the Swagger documentation and add a custom filter for
 the `GET` operation of `/foos` path
 
 ```yaml
 # app/config/services.yml
-
 services:
-
-    # ...
-
     'AppBundle\Swagger\SwaggerDecorator':
         decorates: 'api_platform.swagger.normalizer.documentation'
         arguments: [ '@AppBundle\Swagger\SwaggerDecorator.inner' ]
@@ -25,8 +25,7 @@ services:
 
 ```php
 <?php
-
-// src\AppBundle\Swagger\SwaggerDecorator.php
+// src/AppBundle/Swagger/SwaggerDecorator.php
 
 namespace AppBundle\Swagger;
 
@@ -69,77 +68,71 @@ final class SwaggerDecorator implements NormalizerInterface
 }
 ```
 
-## Adding Swagger Context
+## Using the Swagger Context
 
-Sometimes you may want to have additional information included in your Swagger documentation. Follow these steps.
-
-### Properties
-
+Sometimes you may want to have additional information included in your Swagger documentation.
 The following configuration will provide additional context to your Swagger definitions:
 
 ```php
 <?php
+// src/AppBundle/Entity/Product.php
  
- // src/AppBundle/Entity/Product.php
- 
- namespace AppBundle\Entity;
- 
- use ApiPlatform\Core\Annotation\ApiResource;
- use ApiPlatform\Core\Annotation\ApiProperty;
- use Doctrine\ORM\Mapping as ORM;
- use Symfony\Component\Validator\Constraints as Assert;
- 
- /**
-  * @ApiResource
-  * @ORM\Entity
-  */
- class Product // The class name will be used to name exposed resources
- {
-     /**
-      * @ORM\Column(type="integer")
-      * @ORM\Id
-      * @ORM\GeneratedValue(strategy="AUTO")
-      */
-     public $id;
- 
-     /**
-      * @param string $name A name property - this description will be avaliable in the API documentation too.
-      *
-      * @ORM\Column
-      * @Assert\NotBlank
-      * 
-      * @ApiProperty(
-      *     "attributes"={
-      *         "swagger_context"={
-      *             "type"="string",
-      *             "enum"={"one", "two"},
-      *             "example"="one"          
-      *         }
-      *     }
-      * )
-      */
-     public $name;
-     
-     /**
-      * @ORM\Column
-      * @Assert\DateTime
-      *
-      * @ApiProperty(
-      *     "attributes"={
-      *         "swagger_context"={
-      *             "type"="string",
-      *             "format"="date-time"     
-      *         }
-      *     }
-      * ) 
-      */
-     public $timestamp;
- }
+namespace AppBundle\Entity;
+
+use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Core\Annotation\ApiProperty;
+use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
+
+/**
+ * @ApiResource
+ * @ORM\Entity
+ */
+class Product // The class name will be used to name exposed resources
+{
+    /**
+     * @ORM\Column(type="integer")
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="AUTO")
+     */
+    public $id;
+
+    /**
+     * @param string $name A name property - this description will be avaliable in the API documentation too.
+     *
+     * @ORM\Column
+     * @Assert\NotBlank
+     * 
+     * @ApiProperty(
+     *     "attributes"={
+     *         "swagger_context"={
+     *             "type"="string",
+     *             "enum"={"one", "two"},
+     *             "example"="one"          
+     *         }
+     *     }
+     * )
+     */
+    public $name;
+    
+    /**
+     * @ORM\Column
+     * @Assert\DateTime
+     *
+     * @ApiProperty(
+     *     "attributes"={
+     *         "swagger_context"={"type"="string", "format"="date-time"}
+     *     }
+     * ) 
+     */
+    public $timestamp;
+}
 ```
 
-or in YAML:
+Or in YAML:
 
 ```yaml
+# src/AppBundle/Resources/config/api_resources/resources.yml
 resources:
     AppBundle\Entity\Product:
       properties:
@@ -156,12 +149,11 @@ resources:
               format: date-time
 ```
 
-Will produce the following Swagger:
+Will produce the following Swagger documentation:
 ```json
 {
   "swagger": "2.0",
   "basePath": "/",
-  ...
   
   "definitions": {
     "Product": {
@@ -188,6 +180,7 @@ Will produce the following Swagger:
 }
 ```
 
-Previous chapter: [AngularJS Integration](angularjs-integration.md)
+Previous chapter: [Security](core/security.md)
 
-Next chapter: [The Serialization Process](serialization.md)
+Next chapter: [Performance](core/performance.md)
+

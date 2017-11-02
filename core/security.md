@@ -11,6 +11,9 @@ Since 2.1, you can add security through [Symfony's access control expressions](h
 Here is an example:
 
 ```php
+<?php
+// src/AppBundle/Entity/Book.php
+
 use ApiPlatform\Core\Annotation\ApiResource;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -63,6 +66,6 @@ that a user could not create a book.
 It is also possible to use the [event system](events.md) for more advanced logic or even [custom actions](operations.md#creating-custom-operations-and-controllers)
 if you really need to.
 
-Previous chapter: [Extensions](extensions.md)
+Previous chapter: [JWT Authentification](core/jwt.md)
 
-Next chapter: [Performance](performance.md)
+Next chapter: [Swagger Support](core/swagger.md)

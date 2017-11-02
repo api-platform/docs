@@ -36,7 +36,6 @@ Bootstrap 4 - from release 0.1.16
   <!-- ... -->
 ```
 
-
 In the app directory, generate the files for the resource you want:
 
     $ generate-api-platform-client https://demo.api-platform.com src/ --resource foo

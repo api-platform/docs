@@ -2,9 +2,9 @@
 
 ## Installing API Platform Core
 
-If you are starting a new project, the easiest way to get API Platform up is to install the [API Platform Standard Edition](../distribution/index.md).
+If you are starting a new project, the easiest way to get API Platform up is to install the [API Platform Distribution](../distribution/index.md).
 It ships with the API Platform Core library integrated with [the Symfony framework](https://symfony.com), [the schema generator](../schema-generator/),
-[Doctrine ORM](http://www.doctrine-project.org), [NelmioApiDocBundle](https://github.com/nelmio/NelmioApiDocBundle), [NelmioCorsBundle](https://github.com/nelmio/NelmioCorsBundle)
+[Doctrine ORM](http://www.doctrine-project.org), [NelmioCorsBundle](https://github.com/nelmio/NelmioCorsBundle)
 and [Behat](http://behat.org).
 Basically, it is a Symfony edition packaged with the best tools to develop a REST API and sensible default settings.
 
@@ -16,7 +16,6 @@ Then, update your `app/config/AppKernel.php` file:
 
 ```php
 <?php
-
 // app/config/AppKernel.php
 
 public function registerBundles()
@@ -24,7 +23,6 @@ public function registerBundles()
     $bundles = [
         // ...
         new ApiPlatform\Core\Bridge\Symfony\Bundle\ApiPlatformBundle(),
-        // ...
     ];
 
     // ...
@@ -35,11 +33,10 @@ Register the routes of our API by adding the following lines to `app/config/rout
 
 ```yaml
 # app/config/routing.yml
-
 api:
     resource: '.'
-    type:     'api_platform'
-    prefix:   '/api' # Optional
+    type: 'api_platform'
+    prefix: '/api' # Optional
 ```
 
 There is no mandatory configuration options although [many settings are available](configuration.md).
@@ -60,13 +57,13 @@ Here is an example of entities mapped using annotations which will be exposed th
 
 ```php
 <?php
-
 // src/AppBundle/Entity/Product.php
 
 namespace AppBundle\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
@@ -83,18 +80,42 @@ class Product // The class name will be used to name exposed resources
     public $id;
 
     /**
-     * @param string $name A name property - this description will be avaliable in the API documentation too.
+     * @param string $name A name property - this description will be available in the API documentation too.
      *
      * @ORM\Column
      * @Assert\NotBlank
      */
     public $name;
+    
+    // Notice the "cascade" option below, this is mandatory if you want Doctrine to automatically persist the related entity
+    /**
+     * @ORM\OneToMany(targetEntity="Offer", mappedBy="product", cascade={"persist"})
+     */
+    public $offers;
+
+    public function __construct()
+    {
+        $this->offers = new ArrayCollection(); // Initialize $offers as an Doctrine collection 
+    }
+
+    // Adding both an adder and a remover as well as updating the reverse relation are mandatory
+    // if you want Doctrine to automatically update and persist (thanks to the "cascade" option) the related entity
+    public function addOffer(Offer $offer): void
+    {
+        $offer->product = $this;
+        $this->offers->add($offer);
+    }
+
+    public function removeGreeting(Offer $offer): void
+    {
+        $offer->product = null;
+        $this->offers->removeElement($offer);
+    }
 }
 ```
 
 ```php
 <?php
-
 // src/AppBundle/Entity/Offer.php
 
 namespace AppBundle\Entity;
@@ -132,7 +153,7 @@ class Offer
     public $price;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Product")
+     * @ORM\ManyToOne(targetEntity="Product", inversedBy="offers")
      */
     public $product;
 }
@@ -167,11 +188,10 @@ It is also possible to override the naming convention using [operation path nami
 
 As an alternative to annotations, you can map entity classes using XML or YAML:
 
-<configurations>
+XML:
 
 ```xml
 <!-- src/AppBundle/Resources/config/api_resources/resources.xml -->
-
 <?xml version="1.0" encoding="UTF-8" ?>
 <resources xmlns="https://api-platform.com/schema/metadata"
            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -187,9 +207,10 @@ As an alternative to annotations, you can map entity classes using XML or YAML:
 </resources>
 ```
 
+YAML:
+
 ```yaml
 # src/AppBundle/Resources/config/api_resources/resources.yml
-
 resources:
     AppBundle\Entity\Product: ~
     AppBundle\Entity\Offer:
@@ -199,8 +220,6 @@ resources:
         attributes:                          # optional
             pagination_items_per_page: 25    # optional
 ```
-
-</configurations>
 
 **You're done!**
 
