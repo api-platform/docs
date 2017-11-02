@@ -150,7 +150,6 @@ provided by the Doctrine ORM:
 
 ```php
 <?php
-
 // src/AppBundle/Entity/Book.php
 
 namespace AppBundle\Entity;
@@ -219,7 +218,6 @@ class Book
 
 ```php
 <?php
-
 // src/AppBundle/Entity/Review.php
 
 namespace AppBundle\Entity;
@@ -304,7 +302,6 @@ to an entity class, we just have to mark it with an annotation called `@ApiResou
 
 ```php
 <?php
-
 // src/AppBundle/Entity/Book.php
 
 namespace AppBundle\Entity;
@@ -326,7 +323,6 @@ class Book
 
 ```php
 <?php
-
 // src/AppBundle/Entity/Entity.php
 
 namespace AppBundle\Entity;
@@ -405,7 +401,7 @@ First, we learned how to work with relations. In a hypermedia API, every resourc
 A URL is a valid IRI, and it's what API Platform uses. The `@id` property of every JSON-LD document contains the IRI identifying
 it. You can use this IRI to reference this document from other documents. In the previous request, we used the IRI of the
 book we created earlier to link it with the `Review` we were creating. API Platform is smart enough to deal with IRIs.
-By the way, you may want to [embed documents](../core/serialization-groups-and-relations.md) instead of referencing them
+By the way, you may want to [embed documents](../core/serialization.md) instead of referencing them
 (e.g. to reduce the number of HTTP requests).
 
 The other interesting thing is how API Platform handles dates (the `publicationDate` property). API Platform understands
@@ -450,7 +446,6 @@ to validate user submitted data. Let's add some validation rules to our data mod
 
 ```php
 <?php
-
 // src/AppBundle/Entity/Book.php
 
 namespace AppBundle\Entity;
@@ -529,7 +524,6 @@ class Book
 
 ```php
 <?php
-
 // src/Entity/Review.php
 
 namespace AppBundle\Entity;

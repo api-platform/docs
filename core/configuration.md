@@ -4,7 +4,6 @@ Here's the complete configuration of the Symfony bundle with including default v
 
 ```yaml
 # app/config/config.yml
-
 api_platform:
 
     # The title of the API.

@@ -168,7 +168,7 @@ import parseHydraDocumentation from 'api-doc-parser/lib/hydra/parseHydraDocument
 
 const entrypoint = 'https://demo.api-platform.com';
 
-class App extends Component {
+export default class extends Component {
   state = {api: null};
 
   componentDidMount() {
@@ -189,8 +189,6 @@ class App extends Component {
     return <AdminBuilder api={this.state.api} restClient={hydraClient(entrypoint)}/>
   }
 }
-
-export default App;
 ```
 
 Previous chapter: [Introduction](index.md)

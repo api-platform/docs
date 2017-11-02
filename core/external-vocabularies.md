@@ -1,4 +1,4 @@
-# Using External JSON-LD Vocabularies
+# Using External Vocabularies
 
 JSON-LD allows to define classes and properties of your API with open vocabularies such as [Schema.org](https://schema.org)
 and [Good Relations](http://www.heppnetz.de/projects/goodrelations/).
@@ -7,7 +7,6 @@ API Platform Core provides annotations usable on PHP classes and properties for 
 
 ```php
 <?php
-
 // src/AppBundle/Entity/Book.php
 
 namespace AppBundle\Entity;

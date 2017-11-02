@@ -65,11 +65,7 @@ Otherwise, you must register this class a service like in the following example:
 
 ```yaml
 # app/config/services.yml
-
 services:
-
-    # ...
-
     'AppBundle\PathResolver\NoSeparatorsOperationPathResolver': ~
 ```
 

@@ -5,18 +5,19 @@
 [Wikipedia](https://en.wikipedia.org/wiki/JSON_Web_Token)
 
 API Platform allows to easily add a JWT-based authentication to your API using [LexikJWTAuthenticationBundle](https://github.com/lexik/LexikJWTAuthenticationBundle).
+To install this bundle, [just follow its documentation](https://github.com/lexik/LexikJWTAuthenticationBundle/blob/master/Resources/doc/index.md).
 
-API Platform is fully working with [LexikJWTAuthenticationBundle](https://github.com/lexik/LexikJWTAuthenticationBundle).
+# Installing LexikJWTAuthenticationBundle
 
-In order to install [the bundle please follow their documentation](https://github.com/lexik/LexikJWTAuthenticationBundle/blob/master/Resources/doc/index.md).
+`LexikJWTAuthenticationBundle` requires your application to have a properly configured user provider.
+You can either use the [Doctrine user provider](https://symfony.com/doc/current/security/entity_provider.html) provided
+by Symfony (recommended), [create a custom user provider](http://symfony.com/doc/current/security/custom_provider.html)
+or use [API Platform's FOSUserBundle integration](fosuser-bundle.md).
 
-`LexikJWTAuthenticationBundle` requires your application to have a properly configured user provider. You can either use [API Platform's FOSUserBundle integration](fosuser-bundle) or  [create a custom user provider](http://symfony.com/doc/current/security/custom_provider.html).
+Here's a sample configuration using the data provider provided by FOSUserBundle:
 
-Here's a sample configuration using the data provider provided by FOSUser:
-
-```yml
+```yaml
 # app/config/security.yml
-
 security:
     encoders:
         FOS\UserBundle\Model\UserInterface: bcrypt
@@ -59,22 +60,21 @@ security:
         - { path: ^/, roles: [ ROLE_READER ] }
 ```       
 
-## Testing with Swagger
+## Documenting the Authentication Mechanism with Swagger/Open API
 
 You want to test the routes of your API protected by JWT authentication?
 
 ### Configuring API Platform
 
-```yml
+```yaml
 # app/config/config.yml
-
 api_platform:
     swagger:
          api_keys:
              - { name: 'Authorization', type: 'header' }
 ```
 
-And the Authorize button will appear.
+And the Authorize button will automatically appear in Swagger UI.
 
 ![Screenshot of API Platform with Authorize button](images/JWTAuthorizeButton.png)
 
@@ -97,7 +97,6 @@ Let's configure Behat to automatically send a `Authorization` HTTP header contai
 
 ```php
 <?php
-
 // features/bootstrap/FeatureContext.php
 
 use AppBundle\Entity\User;

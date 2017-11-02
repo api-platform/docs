@@ -116,7 +116,6 @@ Open `app/config/config_prod.yml` and find the following block:
 
 ```yaml
 monolog:
-
     # ...
 
     nested:
@@ -129,7 +128,6 @@ And replace it with:
 
 ```yaml
 monolog:
-
     # ...
 
     nested:
