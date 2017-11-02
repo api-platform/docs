@@ -22,6 +22,9 @@ causes issues, remove `react` and `react-dom` from the `dependencies` section of
 -    "react": "^16.0.0",
 -    "react-dom": "^16.0.0",
 ```
+Install admin-on-rest
+
+    $ yarn add admin-on-rest
 
 Install the generator globally:
 
