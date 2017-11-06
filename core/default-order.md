@@ -61,7 +61,7 @@ class Book
 
 It's also possible to configure the default filter on an association property:
 
-<?php
+```<?php
 
 // src/AppBundle/Entity/Book.php
 
@@ -81,6 +81,7 @@ class Book
      */
     public $author;
 }
+```
 
 Previous chapter: [Operations](operations.md)
 
