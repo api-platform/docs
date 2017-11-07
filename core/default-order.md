@@ -61,7 +61,8 @@ class Book
 
 It's also possible to configure the default filter on an association property:
 
-```<?php
+```php
+<?php
 
 // src/AppBundle/Entity/Book.php
 
