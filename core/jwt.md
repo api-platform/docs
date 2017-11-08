@@ -81,7 +81,7 @@ And the "Authorize" button will automatically appear in Swagger UI.
 ### Adding a New API Key
 
 All you have to do is configure the API key in the `value` field.
-By default [only the authorization header mode is enabled](https://github.com/lexik/LexikJWTAuthenticationBundle/blob/master/Resources/doc/index.md#2-use-the-token) in [LexikJWTAuthenticationBundle](https://github.com/lexik/LexikJWTAuthenticationBundle).
+By default, [only the authorization header mode is enabled](https://github.com/lexik/LexikJWTAuthenticationBundle/blob/master/Resources/doc/index.md#2-use-the-token) in [LexikJWTAuthenticationBundle](https://github.com/lexik/LexikJWTAuthenticationBundle).
 You must set the [JWT token](https://github.com/lexik/LexikJWTAuthenticationBundle/blob/master/Resources/doc/index.md#1-obtain-the-token) as below and click on the "Authorize" button.
 
 ```
@@ -156,7 +156,7 @@ default:
   # ...
 ```
 
-Finally, mark your scenarios with the `@login` annotation to automatically add a valid `Authorization` header and with `@logout` to be sure to destroy the token after this scenario.
+Finally, mark your scenarios with the `@login` annotation to automatically add a valid `Authorization` header, and with `@logout` to be sure to destroy the token after this scenario.
 
 Previous chapter: [FOSUserBundle Integration](fosuser-bundle.md)
 
