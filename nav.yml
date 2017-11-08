@@ -1,0 +1,349 @@
+-
+    title: 'The Distribution: Create Powerful APIs with Ease'
+    path: distribution
+    items:
+        -
+            id: index
+            title: 'Creating a Fully Featured API in 5 Minutes'
+        -
+            id: testing
+            title: 'Testing and Specifying the API'
+-
+    title: 'The API Component'
+    path: core
+    items:
+        -
+            id: index
+            title: Introduction
+        -
+            id: getting-started
+            title: 'Getting Started'
+            anchors:
+                -
+                    id: installing-api-platform-core
+                    title: 'Installing API Platform Core'
+                -
+                    id: before-reading-this-documentation
+                    title: 'Before Reading this Documentation'
+                -
+                    id: mapping-the-entities
+                    title: 'Mapping the Entities'
+        -
+            id: configuration
+            title: Configuration
+        -
+            id: operations
+            title: Operations
+            anchors:
+                -
+                    id: enabling-and-disabling-operations
+                    title: 'Enabling and Disabling Operations'
+                -
+                    id: configuring-operations
+                    title: 'Configuring Operations'
+                -
+                    id: subresources
+                    title: Subresources
+                -
+                    id: creating-custom-operations-and-controllers
+                    title: 'Creating Custom Operations and Controllers'
+        -
+            id: default-order
+            title: 'Overriding Default Order'
+        -
+            id: filters
+            title: Filters
+            anchors:
+                -
+                    id: doctrine-orm-filters
+                    title: 'Doctrine ORM Filters'
+                -
+                    id: serializer-filters
+                    title: 'Serializer Filters'
+                -
+                    id: creating-custom-filters
+                    title: 'Creating Custom Filters'
+        -
+            id: serialization
+            title: 'The Serialization Process'
+            anchors:
+                -
+                    id: overall-process
+                    title: 'Overall Process'
+                -
+                    id: available-serializers
+                    title: 'Available Serializers'
+                -
+                    id: the-serialization-context-groups-and-relations
+                    title: 'The Serialization Context, Groups and Relations'
+                -
+                    id: embedding-relations
+                    title: 'Using Different Serialization Groups per Operation'
+                -
+                    id: embedding-relations
+                    title: 'Embedding Relations'
+                -
+                    id: changing-the-serialization-context-dynamically
+                    title: 'Changing the Serialization Context Dynamically'
+                -
+                    id: name-conversion
+                    title: 'Name Conversion'
+                -
+                    id: entity-identifier-case
+                    title: 'Entity Identifier Case'
+                -
+                    id: writable-entity-identifier
+                    title: 'Writable Entity Identifier'
+                -
+                    id: embedding-the-json-ld-context
+                    title: 'Embedding the JSON-LD Context'
+                -
+                    id: decorating-a-serializer-and-add-extra-data
+                    title: 'Decorating a Serializer and Add Extra Data'
+        -
+            id: content-negotiation
+            title: 'Content Negotiation'
+            anchors:
+                -
+                    id: enabling-several-formats
+                    title: 'Enabling Several Formats'
+                -
+                    id: registering-a-custom-serializer
+                    title: 'Registering a Custom Serializer'
+                -
+                    id: creating-a-responder
+                    title: 'Creating a Responder'
+                -
+                    id: writing-a-custom-normalizer
+                    title: 'Writing a Custom Normalizer'
+        -
+            id: validation
+            title: Validation
+            anchors:
+                -
+                    id: using-validation-groups
+                    title: 'Using Validation Groups'
+                -
+                    id: dynamic-validation-groups
+                    title: 'Dynamic Validation Groups'
+        -
+            id: pagination
+            title: Pagination
+            anchors:
+                -
+                    id: disabling-the-pagination
+                    title: 'Disabling the Pagination'
+                -
+                    id: changing-the-number-of-items-per-page
+                    title: 'Changing the Number of Items per Page'
+        -
+            id: events
+            title: 'The Event System'
+        -
+            id: data-providers
+            title: 'Data Providers'
+            anchors:
+                -
+                    id: creating-a-custom-data-provider
+                    title: 'Custom Collection Data Provider'
+                -
+                    id: returning-a-paged-collection
+                    title: 'Custom Item Data Provider'
+        -
+            id: extensions
+            title: Extensions
+            anchors:
+                -
+                    id: custom-extension
+                    title: 'Custom Extension'
+                -
+                    id: example
+                    title: 'Filter upon the current user'
+        -
+            id: jwt
+            title: 'JWT Authentification'
+            anchors:
+                -
+                    id: installing-lexikjwtauthenticationnundle
+                    title: 'Installing LexikJWTAuthenticationBundle'
+                -
+                    id: documenting-the-authentication-mechanism-with-swagger-open-api
+                    title: 'Documenting the Authentication Mechanism with Swagger/Open API'
+                -
+                    id: testing-with-behat
+                    title: 'Testing with Behat'
+        -
+            id: security
+            title: Security
+        -
+            id: swagger
+            title: 'Swagger Support'
+            anchors:
+                -
+                    id: overriding-the-swagger-documentation
+                    title: 'Overriding the Swagger documentation'
+                -
+                    id: using-the-swagger-context
+                    title: 'Using the Swagger Context'
+        -
+            id: performance
+            title: Performance
+            anchors:
+                -
+                    id: enabling-the-builtin-http-cache-invalidation-system
+                    title: 'Enabling the Builtin HTTP Cache Invalidation System'
+                -
+                    id: enabling-the-metadata-cache
+                    title: 'Enabling the Metadata Cache'
+                -
+                    id: using-ppm-php-pm
+                    title: 'Using PPM (PHP-PM)'
+                -
+                    id: doctrine-queries-and-indexes
+                    title: 'Doctrine Queries and Indexes'
+        -
+            id: operation-path-naming
+            title: 'Operation Path Naming'
+            anchors:
+                -
+                    id: configuration
+                    title: Configuration
+                -
+                    id: create-a-custom-operation-path-resolver
+                    title: 'Create a Custom Operation Path Naming'
+        -
+            id: form-data
+            title: 'Accept "application/x-www-form-urlencoded" Form Data'
+        -
+            id: external-vocabularies
+            title: 'Using External Vocabularies'
+        -
+            id: extending-jsonld-context
+            title: 'Extending the JSON-LD context'
+        -
+            id: fosuser-bundle
+            title: 'FOSUserBundle Integration'
+            anchors:
+                -
+                    id: installing-the-bundle
+                    title: 'Installing the Bundle'
+                -
+                    id: enabling-the-bridge
+                    title: 'Enabling the Bridge'
+                -
+                    id: creating-a-user-entity-with-serialization-groups
+                    title: 'Creating a "User" Entity with Serialization Groups'
+        -
+            id: nelmio-api-doc
+            title: 'NelmioApiDocBundle integration'
+        -
+            id: angularjs-integration
+            title: 'AngularJS Integration'
+            anchors:
+                -
+                    id: restangular
+                    title: Restangular
+                -
+                    id: ng-admin
+                    title: ng-admin
+-
+    title: 'The Schema Generator Component: Generate Data Models from Open Vocabularies'
+    path: schema-generator
+    items:
+        -
+            id: index
+            title: Introduction
+        -
+            id: getting-started
+            title: 'Getting Started'
+        -
+            id: configuration
+            title: Configuration
+-
+    title: 'The Admin Component: Create a Fancy and Fully-Featured Administration Interface'
+    path: admin
+    items:
+        -
+            id: index
+            title: Introduction
+            anchors:
+                -
+                    id: features
+                    title: Features
+        -
+            id: getting-started
+            title: 'Getting Started'
+            anchors:
+                -
+                    id: installation
+                    title: Installation
+                -
+                    id: creating-the-admin
+                    title: 'Creating the Admin'
+                -
+                    id: customizing-the-admin
+                    title: 'Customizing the Admin'
+        -
+            id: authentication-support
+            title: 'Authentication Support'
+        -
+            id: handling-relations-to-collections
+            title: 'Handling Relations to Collections'
+            anchors:
+                -
+                    id: using-an-autocomplete-input-for-relations
+                    title: 'Using an Autocomplete Input for Relations'
+-
+    title: 'The Client Generator Component: Scaffold Progressive Web Apps and Native Apps'
+    path: client-generator
+    items:
+        -
+            id: index
+            title: Introduction
+            anchors:
+                -
+                    id: features
+                    title: Features
+        -
+            id: react
+            title: 'React generator'
+        -
+            id: vuejs
+            title: 'Vue.js generator'
+        -
+            id: troubleshooting
+            title: Troubleshooting
+-
+    title: Deployment
+    path: deployment
+    items:
+        -
+            id: index
+            title: Introduction
+        -
+            id: heroku
+            title: 'Deploying an API Platform App on Heroku'
+        -
+            id: docker
+            title: 'Using API Platform with Docker'
+            anchors:
+                -
+                    id: services
+                    title: Services
+                -
+                    id: installation
+                    title: Installation
+-
+    title: Extra
+    path: extra
+    items:
+        -
+            id: philosophy
+            title: 'The Project''s Philosophy'
+        -
+            id: troubleshooting
+            title: Troubleshooting
+        -
+            id: conduct
+            title: 'Contributor Code Of Conduct'
+
