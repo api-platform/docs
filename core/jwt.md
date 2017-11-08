@@ -93,7 +93,7 @@ Bearer MY_NEW_TOKEN
 
 ## Testing with Behat
 
-Let's configure Behat to automatically send a `Authorization` HTTP header containing a valid JWT token when a scenario is marked with a `@login` annotation. Edit `features/bootstrap/FeatureContext.php` and add the following methods:
+Let's configure Behat to automatically send an `Authorization` HTTP header containing a valid JWT token when a scenario is marked with a `@login` annotation. Edit `features/bootstrap/FeatureContext.php` and add the following methods:
 
 ```php
 <?php
