@@ -58,7 +58,7 @@ security:
         - { path: ^/login, role: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/books, roles: [ ROLE_READER ] }
         - { path: ^/, roles: [ ROLE_READER ] }
-```       
+```
 
 ## Documenting the Authentication Mechanism with Swagger/Open API
 
