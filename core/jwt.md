@@ -74,7 +74,7 @@ api_platform:
              - { name: 'Authorization', type: 'header' }
 ```
 
-And the Authorize button will automatically appear in Swagger UI.
+And the "Authorize" button will automatically appear in Swagger UI.
 
 ![Screenshot of API Platform with Authorize button](images/JWTAuthorizeButton.png)
 
