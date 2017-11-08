@@ -106,7 +106,7 @@ use Behatch\Context\RestContext;
 class FeatureContext implements Context, SnippetAcceptingContext
 {
     // ...
-    // Must be aster createDatabase() and dropDatabase() functions (the order matters)
+    // Must be after createDatabase() and dropDatabase() functions (the order matters)
 
     /**
      * @BeforeScenario
@@ -156,7 +156,7 @@ default:
   # ...
 ```
 
-Finally, mark your scenarios with the `@login` annotation to automatically add a valid `Authorization` header and with `@logout` to be sure to detroy the token after this scerario.
+Finally, mark your scenarios with the `@login` annotation to automatically add a valid `Authorization` header and with `@logout` to be sure to destroy the token after this scenario.
 
 Previous chapter: [FOSUserBundle Integration](fosuser-bundle.md)
 
