@@ -62,7 +62,7 @@ security:
 
 ## Documenting the Authentication Mechanism with Swagger/Open API
 
-You want to test the routes of your API protected by JWT authentication?
+Want to test the routes of your JWT-authentication-protected API?
 
 ### Configuring API Platform
 
