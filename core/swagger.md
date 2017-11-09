@@ -51,13 +51,13 @@ final class SwaggerDecorator implements NormalizerInterface
             'in' => 'query',
         ];
 
-		
-	// e.g. add a custom parameter 
+
+	// e.g. add a custom parameter
 		$docs['paths']['/foos']['get']['parameters'][] = $customDefinition;
-		
+
 		// Override title
 		$docs['info']['title'] = 'My Api Foo';
-			
+
         return $docs;
     }
 
@@ -76,7 +76,7 @@ The following configuration will provide additional context to your Swagger defi
 ```php
 <?php
 // src/AppBundle/Entity/Product.php
- 
+
 namespace AppBundle\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
@@ -102,7 +102,7 @@ class Product // The class name will be used to name exposed resources
      *
      * @ORM\Column
      * @Assert\NotBlank
-     * 
+     *
      * @ApiProperty(
      *     "attributes"={
      *         "swagger_context"={
@@ -114,7 +114,7 @@ class Product // The class name will be used to name exposed resources
      * )
      */
     public $name;
-    
+
     /**
      * @ORM\Column
      * @Assert\DateTime
@@ -123,7 +123,7 @@ class Product // The class name will be used to name exposed resources
      *     "attributes"={
      *         "swagger_context"={"type"="string", "format"="date-time"}
      *     }
-     * ) 
+     * )
      */
     public $timestamp;
 }
@@ -154,7 +154,7 @@ Will produce the following Swagger documentation:
 {
   "swagger": "2.0",
   "basePath": "/",
-  
+
   "definitions": {
     "Product": {
       "type": "object",
@@ -179,8 +179,3 @@ Will produce the following Swagger documentation:
   }
 }
 ```
-
-Previous chapter: [Security](core/security.md)
-
-Next chapter: [Performance](core/performance.md)
-

@@ -166,7 +166,3 @@ Your browser should open automatically and display the entrypoint of the API. It
 can scale it in one click from the Heroku interface.
 
 To see your logs, run `heroku logs --tail`.
-
-Previous chapter: [Introduction](index.md)
-
-Next chapter: [Using API Platform with Docker](docker.md)

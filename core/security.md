@@ -43,7 +43,7 @@ class Book
      * @ORM\GeneratedValue(strategy="AUTO")
      */
     public $id;
-    
+
     /**
      * @var string The title
      *
@@ -51,7 +51,7 @@ class Book
      * @Assert\NotBlank
      */
     public $title;
-    
+
     /**
      * @ORM\Column
      */
@@ -65,7 +65,3 @@ that a user could not create a book.
 
 It is also possible to use the [event system](events.md) for more advanced logic or even [custom actions](operations.md#creating-custom-operations-and-controllers)
 if you really need to.
-
-Previous chapter: [JWT Authentification](core/jwt.md)
-
-Next chapter: [Swagger Support](core/swagger.md)

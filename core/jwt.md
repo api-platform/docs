@@ -29,7 +29,7 @@ security:
     providers:
         fos_userbundle:
             id: fos_user.user_provider.username
-            
+
     firewalls:
         login:
             pattern:  ^/login
@@ -157,7 +157,3 @@ default:
 ```
 
 Finally, mark your scenarios with the `@login` annotation to automatically add a valid `Authorization` header and with `@logout` to be sure to detroy the token after this scerario.
-
-Previous chapter: [FOSUserBundle Integration](fosuser-bundle.md)
-
-Next chapter: [NelmioApiDocBundle integration](nelmio-api-doc.md)

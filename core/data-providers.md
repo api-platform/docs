@@ -115,7 +115,3 @@ services:
     'AppBundle\DataProvider\BlogPostItemDataProvider':
         tags: [ 'api_platform.item_data_provider' ]
 ```
-
-Previous chapter: [The Event System](core/events.md)
-
-Next chapter: [Extensions](core/extensions.md)

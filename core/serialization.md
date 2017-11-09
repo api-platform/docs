@@ -530,7 +530,3 @@ class Book
     // ...
 }
 ```
-
-Previous chapter: [Filters](filters.md)
-
-Next chapter: [Content Negotiation](content-negotiation.md)

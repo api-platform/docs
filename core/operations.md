@@ -516,8 +516,3 @@ book_special:
         _api_resource_class: 'AppBundle\Entity\Book'
         _api_item_operation_name: 'special'
 ```
-
-Previous chapter: [Configuration](configuration.md)
-
-Next chapter: [Overriding Default Order](default-order.md)
-

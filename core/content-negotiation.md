@@ -161,11 +161,7 @@ class CustomItemNormalizer implements NormalizerInterface, DenormalizerInterface
 
         return $result;
     }
-    
+
     // ...
 }
 ```
-
-Previous chapter: [The Serialization Process](core/serialization.md)
-
-Next chapter: [Validation](core/validation.md)

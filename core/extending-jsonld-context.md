@@ -1,6 +1,6 @@
 # Extending JSON-LD context
 
-API Platform Core provides the possibility to extend the JSON-LD context of properties. This allows you to describe JSON-LD 
+API Platform Core provides the possibility to extend the JSON-LD context of properties. This allows you to describe JSON-LD
 typed values, inverse properties using the `@reverse` keyword and you can even overwrite the `@id` property this way. Everything you define
 within the following annotation, will be passed to the context, that provides a generic way to extend the context.
 
@@ -23,7 +23,7 @@ class Book
     /**
      * ...
      * @ApiProperty(
-     *     iri="http://schema.org/name", 
+     *     iri="http://schema.org/name",
      *     attributes={
      *         "jsonld_context"={
      *             "@id"="http://yourcustomid.com",
@@ -62,7 +62,3 @@ The generated context will now have your custom attributes set:
 ```
 
 Note that you do not have to provide the `@id` attribute, if you do not provide an `@id` attribute, the value from `iri` will be taken.
-
-Previous chapter: [Using External Vocabularies](external-vocabularies.md)
-
-Next chapter: [FOSUserBundle Integration](core/fosuser-bundle.md)

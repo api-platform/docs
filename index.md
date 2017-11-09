@@ -145,11 +145,7 @@
 
 ## Extra
 
-1.  [The Project's Philosophy](philosophy.md)
-2.  [Troubleshooting](troubleshooting.md)
-3.  Contribution Guides
-    1.  [API Platform Core Library](https://github.com/api-platform/core/blob/master/CONTRIBUTING.md)
-    2.  [API Platform Schema Generator](https://github.com/api-platform/schema-generator/blob/master/CONTRIBUTING.md)
-    3.  [API Platform Admin](https://github.com/api-platform/admin/blob/master/CONTRIBUTING.md)
-    4.  [API Platform CRUD Generator](https://github.com/api-platform/client-generator/blob/master/CONTRIBUTING.md)
-4.  [Contributor Code Of Conduct](conduct.md)
+1.  [The Project's Philosophy](extra/philosophy.md)
+2.  [Troubleshooting](extra/troubleshooting.md)
+2.  [Contribution Guides](extra/contribution-guides.md)
+4.  [Contributor Code Of Conduct](extra/conduct.md)

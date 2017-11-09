@@ -206,7 +206,3 @@ api_platform:
 ```
 
 The whole configuration seen before will no longer work and Doctrine will recover its default behavior.
-
-Previous chapter: [Swagger Support](core/swagger.md)
-
-Next chapter: [Operation Path Naming](operation-path-naming.md)
