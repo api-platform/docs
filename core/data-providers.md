@@ -125,6 +125,46 @@ services:
         tags: [ 'api_platform.item_data_provider' ]
 ```
 
+## Inject Serializer in a ItemDataProvider
+
+In some case, you may need to inject the Serializer in your DataProvider. For CollectionDataProvider, you can inject it
+easily without risk, but for ItemDataProvider you will experience a CircularReferenceException.
+
+That's why we implemented the SerializerAwareDataProviderInterface to help you inject the Serializer dependency:
+
+```php
+<?php
+
+// src/AppBundle/DataProvider/BlogPostItemDataProvider.php
+
+namespace AppBundle\DataProvider;
+
+use ApiPlatform\Core\DataProvider\ItemDataProviderInterface;
+use ApiPlatform\Core\DataProvider\SerializerAwareDataProviderInterface;
+use ApiPlatform\Core\DataProvider\SerializerAwareDataProviderTrait;
+use ApiPlatform\Core\Exception\ResourceClassNotSupportedException;
+use AppBundle\Entity\BlogPost;
+
+final class BlogPostItemDataProvider implements ItemDataProviderInterface, SerializerAwareDataProviderInterface
+{
+    use SerializerAwareDataProviderTrait;
+
+    public function supports(string $resourceClass, string $operationName = null): bool
+    {
+        return BlogPost::class === $resourceClass;
+    }
+
+    public function getItem(string $resourceClass, $id, string $operationName = null, array $context = []): ?BlogPost
+    {
+        // Retrieve data from anywhere you want, in a custom format
+        $data = '...';
+
+        // Deserialize data using Serializer
+        return $this->getSerializer()->deserialize($data, BlogPost::class, 'custom');
+    }
+}
+```
+
 Previous chapter: [Extending JSON-LD context](extending-jsonld-context.md)
 
 Next chapter: [Extensions](extensions.md)
