@@ -127,10 +127,10 @@ services:
 
 ## Inject Serializer in a ItemDataProvider
 
-In some case, you may need to inject the Serializer in your DataProvider. For CollectionDataProvider, you can inject it
-easily without risk, but for ItemDataProvider you will experience a CircularReferenceException.
+In some cases, you may need to inject the Serializer in your DataProvider. There are no issues with the
+CollectionDataProvider, but when injecting it in the ItemDataProvider it will throw a CircularReferenceException.
 
-That's why we implemented the SerializerAwareDataProviderInterface to help you inject the Serializer dependency:
+For this reason, we implemented the SerializerAwareDataProviderInterface:
 
 ```php
 <?php
