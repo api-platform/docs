@@ -35,7 +35,6 @@ In the following example, we will see how to allow the filtering of a list of e-
 
 ```yaml
 # app/config/api_filters.yml
-
 services:
     offer.search_filter:
         parent: 'api_platform.doctrine.orm.search_filter'
@@ -45,7 +44,6 @@ services:
 
 ```php
 <?php
-
 // src/AppBundle/Entity/Offer.php
 
 namespace AppBundle\Entity;
@@ -70,7 +68,6 @@ It is possible to filter on relations too:
 
 ```yaml
 # app/config/api_filters.yml
-
 services:
     offer.search_filter:
         parent:  'api_platform.doctrine.orm.search_filter'
@@ -98,7 +95,6 @@ As others filters, the date filter must be explicitly enabled:
 
 ```yaml
 # app/config/api_filters.yml
-
 services:
     # Enable date filter for for the property "dateProperty" of the resource "offer"
     offer.date_filter:
@@ -109,7 +105,6 @@ services:
 
 ```php
 <?php
-
 // src/AppBundle/Entity/Offer.php
 
 namespace AppBundle\Entity;
@@ -141,7 +136,6 @@ For instance, exclude entries with a property value of `null`, with the followin
 
 ```yaml
 # app/config/api_filters.yml
-
 services:
     offer.date_filter:
         parent: 'api_platform.doctrine.orm.date_filter'
@@ -164,7 +158,6 @@ Enable the filter:
 
 ```yaml
 # app/config/api_filters.yml
-
 services:
     offer.boolean_filter:
         parent: 'api_platform.doctrine.orm.boolean_filter'
@@ -174,7 +167,6 @@ services:
 
 ```php
 <?php
-
 // src/AppBundle/Entity/Offer.php
 
 namespace AppBundle\Entity;
@@ -204,7 +196,6 @@ Enable the filter:
 
 ```yaml
 # app/config/api_filters.yml
-
 services:
     offer.numeric_filter:
         parent: 'api_platform.doctrine.orm.numeric_filter'
@@ -214,7 +205,6 @@ services:
 
 ```php
 <?php
-
 // src/AppBundle/Entity/Offer.php
 
 namespace AppBundle\Entity;
@@ -232,8 +222,7 @@ class Offer
 
 Given that the collection endpoint is `/offers`, you can filter offers by boolean  with the following query: `/offers?sold=1`.
 
-It will return all offers with `sold` equals 1
-
+It will return all offers with `sold` equals `1`.
 
 ### Range Filter
 
@@ -245,7 +234,6 @@ Enable the filter:
 
 ```yaml
 # app/config/api_filters.yml
-
 services:
     offer.range_filter:
         parent: 'api_platform.doctrine.orm.range_filter'
@@ -255,7 +243,6 @@ services:
 
 ```php
 <?php
-
 // src/AppBundle/Entity/Offer.php
 
 namespace AppBundle\Entity;
@@ -287,7 +274,6 @@ Enable the filter:
 
 ```yaml
 # app/config/api_filters.yml
-
 services:
     offer.order_filter:
         parent: 'api_platform.doctrine.orm.order_filter'
@@ -297,7 +283,6 @@ services:
 
 ```php
 <?php
-
 // src/AppBundle/Entity/Offer.php
 
 namespace AppBundle\Entity;
@@ -321,7 +306,6 @@ will not be applied unless you configure a default order direction to use:
 
 ```yaml
 # app/config/api_filters.yml
-
 services:
     offer.order_filter:
         parent:  'api_platform.doctrine.orm.order_filter'
@@ -344,7 +328,6 @@ For instance, treat entries with a property value of `null` as the smallest, wit
 
 ```yaml
 # app/config/api_filters.yml
-
 services:
     offer.order_filter:
         parent: 'api_platform.doctrine.orm.date_filter'
@@ -362,7 +345,6 @@ Luckily, the query parameter name to use is configurable:
 
 ```yaml
 # app/config/config.yml
-
 api_platform:
     collection:
         order_parameter_name: '_order' # the URL query parameter to use is now "_order"
@@ -375,7 +357,6 @@ built-in filters support nested properties using the dot (`.`) syntax, e.g.:
 
 ```yaml
 # app/config/api_filters.yml
-
 services:
     offer.search_filter:
         parent: 'api_platform.doctrine.orm.search_filter'
@@ -399,7 +380,6 @@ for all properties:
 
 ```yaml
 # app/config/api_filters.yml
-
 services:
     # Filter enabled for all properties
     offer.order_filter:
@@ -434,7 +414,6 @@ Enable the filter:
 
 ```yaml
 # app/config/api_filters.yml
-
 services:
     book.group_filter:
         parent: 'api_platform.serializer.group_filter'
@@ -447,7 +426,6 @@ services:
 
 ```php
 <?php
-
 // src/AppBundle/Entity/Book.php
 
 namespace AppBundle\Entity;
@@ -470,7 +448,6 @@ For example, with `serialization_groups` as name:
 
 ```yaml
 # app/config/api_filters.yml
-
 services:
     book.group_filter:
         parent:  'api_platform.serializer.group_filter'
@@ -483,7 +460,6 @@ You can also override the default serialization groups when you use the filter b
 
 ```yaml
 # app/config/api_filters.yml
-
 services:
     book.group_filter:
         parent: 'api_platform.serializer.group_filter'
@@ -495,7 +471,6 @@ To avoid uncontrolled data exposure, you can also specify a whitelist of seriali
 
 ```yaml
 # app/config/api_filters.yml
-
 services:
     book.group_filter:
         parent: 'api_platform.serializer.group_filter'
@@ -515,7 +490,6 @@ Enable the filter:
 
 ```yaml
 # app/config/api_filters.yml
-
 services:
     book.property_filter:
         parent: 'api_platform.serializer.property_filter'
@@ -528,7 +502,6 @@ services:
 
 ```php
 <?php
-
 // src/AppBundle/Entity/Book.php
 
 namespace AppBundle\Entity;
@@ -551,7 +524,6 @@ For example, with `serialization_properties` as name:
 
 ```yaml
 # app/config/api_filters.yml
-
 services:
     book.property_filter:
         parent: 'api_platform.serializer.property_filter'
@@ -564,7 +536,6 @@ You can also override the default serialization properties when you use the filt
 
 ```yaml
 # app/config/api_filters.yml
-
 services:
     book.property_filter:
         parent: 'api_platform.serializer.property_filter'
@@ -576,7 +547,6 @@ To avoid uncontrolled data exposure, you can also specify a whitelist of propert
 
 ```yaml
 # app/config/api_filters.yml
-
 services:
     book.property_filter:
         parent: 'api_platform.serializer.property_filter'
@@ -608,7 +578,6 @@ library. This library must be properly installed and registered to use this exam
 
 ```php
 <?php
-
 // src/AppBundle/Filter/RegexpFilter.php
 
 namespace AppBundle\Filter;
@@ -653,10 +622,8 @@ Then, register this filter as a service:
 
 ```yaml
 # app/config/api_filters.yml
-
 services:
     'AppBundle\Filter\RegexpFilter':
-        autowire: true # See the next example for a plain old definition
         tags: [ 'api_platform.filter' ]
 ```
 
@@ -665,7 +632,6 @@ it can also be enabled for some properties:
 
 ```yaml
 # app/config/api_filters.yml
-
 services:
     'AppBundle\Filter\RegexpFilter':
         arguments: [ '@doctrine', '@request_stack', '@?logger', { email: ~, anOtherProperty: ~ } ]
@@ -676,7 +642,6 @@ Finally, add this filter to resources you want to be filtered:
 
 ```php
 <?php
-
 // src/AppBundle/Entity/Offer.php
 
 namespace AppBundle\Entity;
@@ -705,7 +670,6 @@ In the following example, we will completely change the syntax of the order filt
 
 ```php
 <?php
-
 // src/AppBundle/Filter/CustomOrderFilter.php
 
 namespace AppBundle\Filter;
@@ -726,12 +690,7 @@ Finally, register the custom filter:
 
 ```yaml
 # app/config/api_filters.yml
-
 services:
     'AppBundle\Filter\CustomOrderFilter':
         tags: [ 'api_platform.filter' ]
 ```
-
-Previous chapter: [Operations](operations.md)
-
-Next chapter: [Serialization Groups and Relations](serialization-groups-and-relations.md)

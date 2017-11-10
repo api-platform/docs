@@ -120,7 +120,6 @@ Finally register the custom extension:
 
 ```yaml
 # app/config/services.yml
-
 services:
 
     # ...
@@ -143,19 +142,12 @@ To secure the access to endpoints, use the following access control rule:
 
 ```yaml
 # app/config/security.yml
-
 security:
-
     # ...
 
     access_control:
-
         # ...
 
         - { path: ^/offers, roles: IS_AUTHENTICATED_FULLY }
         - { path: ^/users, roles: IS_AUTHENTICATED_FULLY }
 ```
-
-Previous chapter: [Data Providers](data-providers.md)
-
-Next chapter: [Security](security.md)

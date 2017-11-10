@@ -42,9 +42,7 @@ and of a custom format called `myformat` and having `application/vnd.myformat` a
 
 ```yaml
 # app/config/config.yml
-
 api_platform:
-
     # ...
 
     formats:
@@ -79,9 +77,7 @@ own implementation of `CustomItemNormalizer`:
 
 ```yaml
 # app/config/services.yml
-
 services:
-
 # ...
 
     'AppBundle\Serializer\CustomItemNormalizer':
@@ -91,7 +87,6 @@ services:
 
 ```php
 <?php
-
 // src/AppBundle/Serializer/CustomItemNormalizer.php
 
 namespace AppBundle\Serializer;
@@ -139,7 +134,6 @@ flatten or remove too complex relations:
 
 ```php
 <?php
-
 // src/AppBundle/Serializer/CustomItemNormalizer.php
 
 namespace AppBundle\Serializer;
@@ -167,11 +161,7 @@ class CustomItemNormalizer implements NormalizerInterface, DenormalizerInterface
 
         return $result;
     }
-    
+
     // ...
 }
 ```
-
-Previous chapter: [The Event System](events.md)
-
-Next chapter: [Using External JSON-LD Vocabularies](external-vocabularies.md)

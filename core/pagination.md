@@ -43,7 +43,6 @@ The name of the page parameter can be changed with the following configuration:
 
 ```yaml
 # app/config/config.yml
-
 api_platform:
     collection:
         pagination:
@@ -62,7 +61,6 @@ The pagination can be disabled for all resources using this configuration:
 
 ```yaml
 # app/config/config.yml
-
 api_platform:
     collection:
         pagination:
@@ -75,7 +73,6 @@ It can also be disabled for specific resource:
 
 ```php
 <?php
-
 // src/AppBundle/Entity/Book.php
 
 use ApiPlatform\Core\Annotation\ApiResource;
@@ -98,7 +95,6 @@ use the following configuration:
 
 ```yaml
 # app/config/config.yml
-
 api_platform:
     collection:
         pagination:
@@ -120,7 +116,6 @@ The client ability to disable the pagination can also be set in the resource con
 
 ```php
 <?php
-
 // src/AppBundle/Entity/Book.php
 
 use ApiPlatform\Core\Annotation\ApiResource;
@@ -144,7 +139,6 @@ The number of items per page can be configured for all resources:
 
 ```yaml
 # app/config/config.yml
-
 api_platform:
     collection:
         pagination:
@@ -155,7 +149,6 @@ api_platform:
 
 ```php
 <?php
-
 // src/AppBundle/Entity/Book.php
 
 use ApiPlatform\Core\Annotation\ApiResource;
@@ -175,7 +168,6 @@ class Book
 
 ```yaml
 # app/config/config.yml
-
 api_platform:
     collection:
         pagination:
@@ -191,7 +183,6 @@ Changing the number of items per page can be enabled (or disabled) for a specifi
 
 ```php
 <?php
-
 // src/AppBundle/Entity/Book.php
 
 use ApiPlatform\Core\Annotation\ApiResource;
@@ -274,7 +265,3 @@ class Book
     // ...
 }
 ```
-
-Previous chapter: [Validation](validation.md)
-
-Next chapter: [The Event System](events.md)

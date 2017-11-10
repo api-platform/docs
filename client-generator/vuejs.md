@@ -7,7 +7,7 @@ Create a Vue.js application using [vue-cli](https://github.com/vuejs/vue-cli):
 
 Install Vue Router, Vuex and babel-plugin-transform-builtin-extend (to allow extending bultin types like Error and Array):
 
-    $ yarn add vue-router vuex babel-plugin-transform-builtin-extend babel-preset-es2015 babel-preset-stage-2 
+    $ yarn add vue-router vuex babel-plugin-transform-builtin-extend babel-preset-es2015 babel-preset-stage-2
 
 Install the generator globally:
 
@@ -100,6 +100,3 @@ Replace the `App.vue` file with the following :
   </div>
 </template>
 ```
-Previous chapter: [React generator](react.md)
-
-Next chapter: [Troubleshooting](troubleshooting.md)

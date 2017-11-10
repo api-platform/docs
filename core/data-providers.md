@@ -22,7 +22,7 @@ Both implementations can also implement a third, optional interface called
 if you want to limit their effects to a single resource or operation.
 
 In the following examples we will create custom data providers for an entity class called `AppBundle\Entity\BlogPost`.
-Note, that if your entity is not Doctrine-related, you need to flag the identifier property by using `@ApiProperty(identifier=true)` for things to work properly (see also [Entity Identifier Case](serialization-groups-and-relations.md#entity-identifier-case)).
+Note, that if your entity is not Doctrine-related, you need to flag the identifier property by using `@ApiProperty(identifier=true)` for things to work properly (see also [Entity Identifier Case](serialization.md#entity-identifier-case)).
 
 ## Custom Collection Data Provider
 
@@ -33,7 +33,6 @@ If no data is available, you should return an empty array.
 
 ```php
 <?php
-
 // src/AppBundle/DataProvider/BlogPostCollectionDataProvider.php
 
 namespace AppBundle\DataProvider;
@@ -83,7 +82,6 @@ The `getItem` method can return `null` if no result has been found.
 
 ```php
 <?php
-
 // src/AppBundle/DataProvider/BlogPostItemDataProvider.php
 
 namespace AppBundle\DataProvider;
@@ -110,8 +108,8 @@ final class BlogPostItemDataProvider implements ItemDataProviderInterface, Restr
 
 If service autowiring and autoconfiguration are enabled (it's the case by default), you are done!
 
-Otherwise, if you use a custom dependency injection configuration, you need to register the corresponding service add the
-`api_platform.item_data_provider` tag. As for collection data providers, the `priority` attribute can be used to order
+Otherwise, if you use a custom dependency injection configuration, you need to register the corresponding service and add the
+`api_platform.item_data_provider` tag to it. As for collection data providers, the `priority` attribute can be used to order
 providers.
 
 ```yaml
@@ -163,7 +161,3 @@ final class BlogPostItemDataProvider implements ItemDataProviderInterface, Seria
     }
 }
 ```
-
-Previous chapter: [Extending JSON-LD context](extending-jsonld-context.md)
-
-Next chapter: [Extensions](extensions.md)

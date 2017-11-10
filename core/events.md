@@ -16,7 +16,6 @@ In the following example, we will send a mail each time a new book is created us
 
 ```php
 <?php
-
 // src/AppBundle/EventSubscriber/BookMailSubscriber.php
 
 namespace AppBundle\EventSubscriber;
@@ -105,7 +104,3 @@ Constant           | Event             | Priority |
 `POST_WRITE`       | `kernel.view`     | 31       |
 `PRE_RESPOND`      | `kernel.view`     | 9        |
 `POST_RESPOND`     | `kernel.response` | 0        |
-
-Previous chapter: [Pagination](pagination.md)
-
-Next chapter: [Content Negotiation](content-negotiation.md)

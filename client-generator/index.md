@@ -21,7 +21,3 @@ The generator works especially well with APIs built with the [API Platform](http
 * The generated HTML is compatible with [Bootstrap](https://getbootstrap.com/) and includes mandatory classes
 * The generated HTML code is accessible to people with disabilities ([ARIA](https://www.w3.org/WAI/intro/aria) support)
 * The Redux and the React Router configuration is also generated
-
-Previous chapter: [Admin: Handling Relations to Collections](../admin/handling-relations-to-collections.md)
-
-Next chapter: [React generator](react.md)
