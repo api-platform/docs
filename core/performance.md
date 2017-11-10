@@ -81,16 +81,12 @@ little of configuration:
 
 ```yaml
 # app/config/config.yaml
-
 api_platform:
-
-    # ...
-
     eager_loading:
         max_joins: 100
 ```
 
-Be careful when you exceed this limit, it's often caused by the result of a circular reference. [Serializer groups](serialization-groups-and-relations.md)
+Be careful when you exceed this limit, it's often caused by the result of a circular reference. [Serializer groups](serialization.md)
 can be a good solution to fix this issue.
 
 #### Force eager
@@ -100,11 +96,7 @@ configuration in order to apply it only on join relations having the `EAGER` fet
 
 ```yaml
 # app/config/config.yaml
-
 api_platform:
-
-    # ...
-
     eager_loading:
         force_eager: false
 ```
@@ -208,11 +200,7 @@ If for any reason you don't want the eager loading feature, you can turn it off 
 
 ```yaml
 # app/config/config.yaml
-
 api_platform:
-
-    # ...
-
     eager_loading:
         enabled: false
 ```
@@ -235,7 +223,3 @@ api_platform:
 ```
 
 More details are available on the [pagination documentation](pagination.md#partial-pagination).
-
-Previous chapter: [Security](security.md)
-
-Next chapter: [Operation Path Naming](operation-path-naming.md)

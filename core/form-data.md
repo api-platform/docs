@@ -11,7 +11,6 @@ This decorator is able to denormalize posted form data to the target object. In 
 
 ```php
 <?php
-
 // src/AppBundle/EventListener/DeserializeListener.php
 
 namespace AppBundle\EventListener;
@@ -73,7 +72,6 @@ final class DeserializeListener
 
 ```yaml
 # app/config/services.yml
-
 services:
 
     # ...
@@ -89,7 +87,6 @@ The decorated DeserializeListener is called on demand, so it's better to elimina
 
 ```php
 <?php
-
 // src/AppBundle/AppBundle.php
 
 namespace AppBundle;
@@ -114,7 +111,3 @@ class AppBundle extends Bundle
 }
 
 ```
-
-Previous chapter: [Operation Path Naming](operation-path-naming.md)
-
-Next chapter: [FOSUserBundle Integration](fosuser-bundle.md)

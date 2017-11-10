@@ -7,7 +7,3 @@ However, API Platform also provide facilities to deploy applications through con
 
 * [Deploying an API Platform App on Heroku](heroku.md)
 * [Using API Platform with Docker](docker.md)
-
-Previous chapter: [Client Generator: Troubleshooting](../client-generator/troubleshooting.md)
-
-Next chapter: [Deploying an API Platform App on Heroku](heroku.md)

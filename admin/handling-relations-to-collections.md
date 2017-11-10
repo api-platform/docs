@@ -12,6 +12,7 @@ This API can be created using the following PHP code:
 
 ```php
 <?php
+// src/AppBundle/Entity/Person.php
 
 namespace App\Entity;
 
@@ -40,6 +41,7 @@ class Person
 
 ```php
 <?php
+// src/AppBundle/Entity/Book.php
 
 namespace App\Entity;
 
@@ -128,7 +130,6 @@ Start by adding a "partial search" filter on the `name` property of the `Book` r
 
 ```yaml
 # config/api_filters.yml
-
 services:
     person.search_filter:
         parent: 'api_platform.doctrine.orm.search_filter'
@@ -168,7 +169,3 @@ Then edit the configuration of API Platform Admin to pass a `filterToQuery` prop
 ```
 
 The autocomplete field should now work properly!
-
-Previous chapter: [Authentication Support](authentication-support.md)
-
-Next chapter: [Client Generator: Introduction](../client-generator/index.md)

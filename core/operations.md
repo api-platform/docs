@@ -52,17 +52,17 @@ for the `GET` method for both `collectionOperations` and `itemOperations` to cre
 corresponding to the name of the operation that can be anything you want and an array of properties as value. If an
 empty list of operations is provided, all operations are disabled.
 
-<configurations>
-
 ```php
 <?php
-
 // src/AppBundle/Entity/Book.php
 
 use ApiPlatform\Core\Annotation\ApiResource;
 
 /**
- * @ApiResource(collectionOperations={"get"={"method"="GET"}}, itemOperations={"get"={"method"="GET"}})
+ * @ApiResource(
+ *     collectionOperations={"get"={"method"="GET"}},
+ *     itemOperations={"get"={"method"="GET"}}
+ *     )
  */
 class Book
 {
@@ -70,9 +70,10 @@ class Book
 }
 ```
 
+Alternatively, you can use the YAML configuration format:
+
 ```yaml
 # src/AppBundle/Resources/config/api_resources/resources.yml
-
 AppBundle\Entity\Book:
     collectionOperations:
         get:
@@ -82,9 +83,10 @@ AppBundle\Entity\Book:
             method: 'GET'
 ```
 
+Or the XML configuration format:
+
 ```xml
 <!-- src/AppBundle/Resources/config/api_resources/resources.xml -->
-
 <?xml version="1.0" encoding="UTF-8" ?>
 <resources xmlns="https://api-platform.com/schema/metadata"
            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -105,8 +107,6 @@ AppBundle\Entity\Book:
 </resources>
 ```
 
-</configurations>
-
 API Platform Core is smart enough to automatically register the applicable Symfony route referencing a built-in CRUD action
 just by specifying the enabled HTTP method.
 
@@ -117,11 +117,8 @@ The URL, the HTTP method and the Hydra context passed to documentation generator
 In the next example, both `GET` and `PUT` operations are registered with custom URLs. Those will override the default generated
 URLs. In addition to that, we replace the Hydra context for the `PUT` operation, and require the `id` parameter to be an integer.
 
-<configurations>
-
 ```php
 <?php
-
 // src/AppBundle/Entity/Book.php
 
 use ApiPlatform\Core\Annotation\ApiResource;
@@ -138,9 +135,10 @@ class Book
 }
 ```
 
+Or in YAML:
+
 ```yaml
 # src/AppBundle/Resources/config/api_resources/resources.yml
-
 AppBundle\Entity\Book:
     itemOperations:
         get:
@@ -156,9 +154,10 @@ AppBundle\Entity\Book:
                 id: '\d+'
 ```
 
+Or in XML:
+
 ```xml
 <!-- src/AppBundle/Resources/config/api_resources/resources.xml -->
-
 <?xml version="1.0" encoding="UTF-8" ?>
 <resources xmlns="https://api-platform.com/schema/metadata"
            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -188,8 +187,6 @@ AppBundle\Entity\Book:
 </resources>
 ```
 
-</configurations>
-
 ## Subresources
 
 Since ApiPlatform 2.1, you can declare subresources. A subresource is a collection or an item that belongs to another resource. The starting point of a subresource must be a relation on an existing resource.
@@ -197,15 +194,13 @@ Since ApiPlatform 2.1, you can declare subresources. A subresource is a collecti
 For example, let's create two entities (Question, Answer) and set up a subresource so that `/question/42/answer` gives us the answer to the question 42:
 
 ```php
-
+<?php
 // src/AppBundle/Entity/Answer.php
 
 use ApiPlatform\Core\Annotation\ApiResource;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Answer.
- *
  * @ORM\Entity
  * @ApiResource
  */
@@ -230,14 +225,13 @@ class Answer
 
     public function getId()
     {
-      return $this->id;
+        return $this->id;
     }
 }
 ```
 
 ```php
 <?php
-
 // src/AppBundle/Entity/Question.php
 
 use ApiPlatform\Core\Annotation\ApiProperty;
@@ -272,7 +266,7 @@ class Question
 
     public function getId()
     {
-      return $this->id;
+        return $this->id;
     }
 }
 ```
@@ -296,11 +290,8 @@ Last but not least, Subresources can be nested, such that `/questions/42/answer/
 
 You may want custom groups on subresources. Because a subresource is nothing more than a collection operation, you can set `normalization_context` or `denormalization_context` on that operation. To do so, you need to override `collectionOperations`. Based on the above operation, because we retrieve an answer, we need to alter it's configuration:
 
-<configurations>
-
 ```php
 <?php
-
 // src/AppBundle/Entity/Answer.php
 
 use ApiPlatform\Core\Annotation\ApiResource;
@@ -314,9 +305,10 @@ class Answer
 }
 ```
 
+Or using YAML:
+
 ```yaml
 # src/AppBundle/Resources/config/api_resources/resources.yml
-
 AppBundle\Entity\Answer:
     collectionOperations:
         api_questions_answer_get_subresource:
@@ -324,9 +316,10 @@ AppBundle\Entity\Answer:
             normalization_context: {'groups': ['foobar']}
 ```
 
+Or in XML:
+
 ```xml
 <!-- src/AppBundle/Resources/config/api_resources/resources.xml -->
-
 <?xml version="1.0" encoding="UTF-8" ?>
 <resources xmlns="https://api-platform.com/schema/metadata"
            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -347,9 +340,9 @@ AppBundle\Entity\Answer:
 </resources>
 ```
 
-</configurations>
-
-Note that the operation name, here `api_questions_answer_get_subresource`, is the important keyword. It'll be automatically set to `$resources_$subresource(s)_get_subresource`. To find the correct operation name you may use `bin/console debug:router`.
+Note that the operation name, here `api_questions_answer_get_subresource`, is the important keyword.
+It'll be automatically set to `$resources_$subresource(s)_get_subresource`. To find the correct operation name you
+may use `bin/console debug:router`.
 
 ## Creating Custom Operations and Controllers
 
@@ -373,11 +366,8 @@ automatically instantiated and injected, without having to declare it explicitly
 In the following example, the built-in `GET` operation is registered as well as a custom operation called `special`.
 The `special` operation reference the Symfony route named `book_special`.
 
-<configurations>
-
 ```php
 <?php
-
 // src/AppBundle/Entity/Book.php
 
 use ApiPlatform\Core\Annotation\ApiResource;
@@ -394,9 +384,10 @@ class Book
 }
 ```
 
+Or in YAML:
+
 ```yaml
 # src/AppBundle/Resources/config/api_resources/resources.yml
-
 AppBundle\Entity\Book:
     itemOperations:
         get:
@@ -405,9 +396,10 @@ AppBundle\Entity\Book:
             route_name: 'book_special'
 ```
 
+Or in XML:
+
 ```xml
 <!-- src/AppBundle/Resources/config/api_resources/resources.xml -->
-
 <?xml version="1.0" encoding="UTF-8" ?>
 <resources xmlns="https://api-platform.com/schema/metadata"
            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -426,14 +418,11 @@ AppBundle\Entity\Book:
 </resources>
 ```
 
-</configurations>
-
 API Platform will automatically map this `special` operation with the route `book_special`. Let's create a custom action
 and its related route using annotations:
 
 ```php
 <?php
-
 // src/AppBundle/Action/BookSpecial.php
 
 namespace AppBundle\Action;
@@ -500,7 +489,6 @@ exactly the same thing than the previous example in a more Symfony-like fashion:
 
 ```php
 <?php
-
 // src/AppBundle/Controller/BookController.php
 
 namespace AppBundle\Controller;
@@ -519,7 +507,6 @@ class BookController extends Controller
 
 ```yaml
 # app/config/routing.yml
-
 book_special:
     path: '/books/{id}/special'
     methods:  ['PUT']
@@ -528,8 +515,3 @@ book_special:
         _api_resource_class: 'AppBundle\Entity\Book'
         _api_item_operation_name: 'special'
 ```
-
-Previous chapter: [Configuration](configuration.md)
-
-Next chapter: [Overriding Default Order](default-order.md)
-

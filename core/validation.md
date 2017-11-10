@@ -13,7 +13,6 @@ You can customize them by editing the resource configuration and add the groups 
 
 ```php
 <?php
-
 // src/AppBundle/Entity/Book.php
 
 use ApiPlatform\Core\Annotation\ApiResource;
@@ -58,14 +57,15 @@ In the following example, we use a static method to return the validation groups
 
 ```php
 <?php
-
 // src/AppBundle/Entity/Book.php
 
 use ApiPlatform\Core\Annotation\ApiResource;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * @ApiResource(attributes={"validation_groups"={Book::class, "validationGroups"}})
+ * @ApiResource(
+ *     attributes={"validation_groups"={Book::class, "validationGroups"}}
+ * )
  */
 class Book
 {
@@ -99,7 +99,6 @@ Alternatively, you can use a service to retrieve the groups to use:
 
 ```php
 <?php
-
 // src/AppBundle/Validator/AdminGroupsGenerator.php
 
 namespace AppBundle\Validator;
@@ -131,7 +130,6 @@ Then, configure the entity class to use this service to retrieve validation grou
 
 ```php
 <?php
-
 // src/AppBundle/Entity/Book.php
 
 namespace AppBundle\Entity;
@@ -185,7 +183,3 @@ api_platform:
 ```
 
 In this example, only `severity` and `anotherPayloadField` will be serialized.
-
-Previous chapter: [Serialization Groups and Relations](serialization-groups-and-relations.md)
-
-Next chapter: [Pagination](pagination.md)

@@ -89,7 +89,7 @@
         1.  [Defining the Operation Path Naming](core/operation-path-naming.md#defining-the-operation-path-resolver)
         2.  [Registering the Service](core/operation-path-naming.md#registering-the-service)
         3.  [Configure it](core/operation-path-naming.md#configure-it)
-19. [Accept `application/x-www-form-urlencoded` Form Data](core/form-data.md)
+19. [Accept application/x-www-form-urlencoded Form Data](core/form-data.md)
 20. [FOSUserBundle Integration](core/fosuser-bundle.md)
     1.  [Installing the Bundle](core/fosuser-bundle.md#installing-the-bundle)
     2.  [Enabling the Bridge](core/fosuser-bundle.md#enabling-the-bridge)
@@ -133,7 +133,7 @@
 4.  [Handling Relations to Collections](admin/handling-relations-to-collections.md)
     1.  [Using an Autocomplete Input for Relations](admin/handling-relations-to-collections.md#using-an-autocomplete-input-for-relations)
 
-## The Client Generator Component: Scaffold a React/Redux App with CRUD Features
+## The Client Generator Component: Scaffold Progressive Web Apps and Native Apps
 
 1.  [Introduction](client-generator/index.md)
     1.  [Features](client-generator/index.md#features)

@@ -26,5 +26,3 @@ Your project will be accessible in two different ways:
 
 * Through the HTTP cache (Varnish): `http://localhost`
 * Through the HTTP server directly (Nginx) to facilitate debugging: `http://localhost:8080`
-
-Previous chapter: [Deploying an API Platform App on Heroku](heroku.md)

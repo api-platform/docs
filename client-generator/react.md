@@ -19,7 +19,7 @@ Bootstrap 3 - last release 0.1.15
 ```html
   <!-- ... -->
     <title>React App</title>
-    
+
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
   </head>
   <!-- ... -->
@@ -29,13 +29,12 @@ Bootstrap 4 - from release 0.1.16
 ```html
   <!-- ... -->
     <title>React App</title>
-    
+
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M" crossorigin="anonymous">
     <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
   </head>
   <!-- ... -->
 ```
-
 
 In the app directory, generate the files for the resource you want:
 
@@ -82,7 +81,3 @@ ReactDom.render(
 
 registerServiceWorker();
 ```
-
-Previous chapter: [Introduction](index.md)
-
-Next chapter: [Vue.js generator](vuejs.md)
