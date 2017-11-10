@@ -58,11 +58,11 @@ security:
         - { path: ^/login, role: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/books, roles: [ ROLE_READER ] }
         - { path: ^/, roles: [ ROLE_READER ] }
-```       
+```
 
 ## Documenting the Authentication Mechanism with Swagger/Open API
 
-You want to test the routes of your API protected by JWT authentication?
+Want to test the routes of your JWT-authentication-protected API?
 
 ### Configuring API Platform
 
@@ -74,14 +74,14 @@ api_platform:
              - { name: 'Authorization', type: 'header' }
 ```
 
-And the Authorize button will automatically appear in Swagger UI.
+And the "Authorize" button will automatically appear in Swagger UI.
 
 ![Screenshot of API Platform with Authorize button](images/JWTAuthorizeButton.png)
 
 ### Adding a New API Key
 
-All you have to do is to configure the API key in the value field.
-By default [only the authorization header mode is enabled](https://github.com/lexik/LexikJWTAuthenticationBundle/blob/master/Resources/doc/index.md#2-use-the-token) in [LexikJWTAuthenticationBundle](https://github.com/lexik/LexikJWTAuthenticationBundle).
+All you have to do is configuring the API key in the `value` field.
+By default, [only the authorization header mode is enabled](https://github.com/lexik/LexikJWTAuthenticationBundle/blob/master/Resources/doc/index.md#2-use-the-token) in [LexikJWTAuthenticationBundle](https://github.com/lexik/LexikJWTAuthenticationBundle).
 You must set the [JWT token](https://github.com/lexik/LexikJWTAuthenticationBundle/blob/master/Resources/doc/index.md#1-obtain-the-token) as below and click on the "Authorize" button.
 
 ```
@@ -93,7 +93,7 @@ Bearer MY_NEW_TOKEN
 
 ## Testing with Behat
 
-Let's configure Behat to automatically send a `Authorization` HTTP header containing a valid JWT token when a scenario is marked with a `@login` annotation. Edit `features/bootstrap/FeatureContext.php` and add the following methods:
+Let's configure Behat to automatically send an `Authorization` HTTP header containing a valid JWT token when a scenario is marked with a `@login` annotation. Edit `features/bootstrap/FeatureContext.php` and add the following methods:
 
 ```php
 <?php
@@ -106,7 +106,7 @@ use Behatch\Context\RestContext;
 class FeatureContext implements Context, SnippetAcceptingContext
 {
     // ...
-    // Must be aster createDatabase() and dropDatabase() functions (the order matters)
+    // Must be after createDatabase() and dropDatabase() functions (the order matters)
 
     /**
      * @BeforeScenario
@@ -156,4 +156,4 @@ default:
   # ...
 ```
 
-Finally, mark your scenarios with the `@login` annotation to automatically add a valid `Authorization` header and with `@logout` to be sure to detroy the token after this scerario.
+Finally, mark your scenarios with the `@login` annotation to automatically add a valid `Authorization` header, and with `@logout` to be sure to destroy the token after this scenario.
