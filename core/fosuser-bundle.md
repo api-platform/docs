@@ -111,7 +111,3 @@ class User extends BaseUser
     }
 }
 ```
-
-Previous chapter: [Extending the JSON-LD context](core/extending-jsonld-context.md)
-
-Next chapter: [NelmioApiDocBundle integration](core/nelmio-api-doc.md)

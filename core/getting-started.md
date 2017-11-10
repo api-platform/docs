@@ -86,7 +86,7 @@ class Product // The class name will be used to name exposed resources
      * @Assert\NotBlank
      */
     public $name;
-    
+
     // Notice the "cascade" option below, this is mandatory if you want Doctrine to automatically persist the related entity
     /**
      * @ORM\OneToMany(targetEntity="Offer", mappedBy="product", cascade={"persist"})
@@ -95,7 +95,7 @@ class Product // The class name will be used to name exposed resources
 
     public function __construct()
     {
-        $this->offers = new ArrayCollection(); // Initialize $offers as an Doctrine collection 
+        $this->offers = new ArrayCollection(); // Initialize $offers as an Doctrine collection
     }
 
     // Adding both an adder and a remover as well as updating the reverse relation are mandatory
@@ -229,7 +229,3 @@ Run the Symfony app (`bin/console server:run`) and browse the API entrypoint at 
 Interact with the API using a REST client (we recommend [Postman](https://www.getpostman.com/)) or an Hydra aware application
 (you should give [Hydra Console](https://github.com/lanthaler/HydraConsole) a try). Take
 a look at the usage examples in [the `features` directory](https://github.com/api-platform/api-platform/tree/master/features).
-
-Previous chapter: [Introduction](index.md)
-
-Next chapter: [Configuration](configuration.md)

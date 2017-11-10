@@ -77,7 +77,3 @@ services:
 api_platform:
     default_operation_path_resolver: 'AppBundle\PathResolver\NoSeparatorsOperationPathResolver'
 ```
-
-Previous chapter: [Performance](performance.md)
-
-Next chapter: [Accept application/x-www-form-urlencoded Form Data](form-data.md)

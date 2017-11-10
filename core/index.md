@@ -49,7 +49,3 @@ contains a working app covering all features of the library.
 * (french) [Tour d'horizon des changements dans API Platform v2](https://les-tilleuls.coop/fr/blog/article/la-premiere-alpha-d-api-platform-2-0-est-disponible)
 * (french) [A la découverte de API Platform (Symfony Live Paris 2015)](https://dunglas.fr/2015/04/mes-slides-du-symfony-live-2015-a-la-decouverte-de-api-platform/)
 * (french) [API-first et Linked Data avec Symfony (sfPot Lille 2015)](https://les-tilleuls.coop/slides/dunglas/slides-sfPot-2015-01-15/#/)
-
-Previous chapter: [API Platform Distribution: Testing and Specifying the API](../distribution/testing.md)
-
-Next chapter: [Getting Started](getting-started.md)

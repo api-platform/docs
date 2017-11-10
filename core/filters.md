@@ -692,7 +692,3 @@ services:
     'AppBundle\Filter\CustomOrderFilter':
         tags: [ 'api_platform.filter' ]
 ```
-
-Previous chapter: [Operations](operations.md)
-
-Next chapter: [The Serialization Process](serialization.md)

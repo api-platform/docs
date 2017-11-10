@@ -156,7 +156,3 @@ class Book
     // ...
 }
 ```
-
-Previous chapter: [Content Negotiation](core/content-negotiation.md)
-
-Next chapter: [Pagination](pagination.md)

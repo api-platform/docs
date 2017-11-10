@@ -151,7 +151,3 @@ security:
         - { path: ^/offers, roles: IS_AUTHENTICATED_FULLY }
         - { path: ^/users, roles: IS_AUTHENTICATED_FULLY }
 ```
-
-Previous chapter: [Extensions](core/extensions.md)
-
-Next chapter: [Security](core/security.md)

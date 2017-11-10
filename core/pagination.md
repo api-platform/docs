@@ -195,7 +195,3 @@ class Book
     // ...
 }
 ```
-
-Previous chapter: [Validation](validation.md)
-
-Next chapter: [The Event System](events.md)

@@ -642,5 +642,3 @@ use your preferred client-side technology including Angular, Ionic and Swift. An
 To go further, the API Platform team maintains a demo application showing more advanced use cases like leveraging serialization
 groups, user management or JWT and OAuth authentication. [Checkout the demo code source on GitHub](https://github.com/api-platform/demo)
 and [browse it online](https://demo.api-platform.com).
-
-Next chapter: [Testing And Specifying the API](testing.md)

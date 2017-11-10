@@ -98,7 +98,3 @@ nga.configure(admin);
 ```
 
 You can look at what we have done as another exemple [api-platform/admin](https://github.com/api-platform/admin).
-
-Previous chapter: [NelmioApiDocBundle integration](nelmio-api-doc.md)
-
-Next chapter: [Schema Generator: Introduction](../schema-generator/index.md)

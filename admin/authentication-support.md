@@ -2,7 +2,7 @@
 
 Authentication can easily be handled when using the API Platform's admin library.
 In the following section, we will assume [the API is secured using JWT](https://api-platform.com/docs/core/jwt), but the
-process is similar for other authentication mechanisms. The `login_uri` is the full URI to the route specified by the `firewalls.login.json_login.check_path` config in the [JWT documentation](https://api-platform.com/docs/core/jwt). 
+process is similar for other authentication mechanisms. The `login_uri` is the full URI to the route specified by the `firewalls.login.json_login.check_path` config in the [JWT documentation](https://api-platform.com/docs/core/jwt).
 
 The first step is to create a client to handle the authentication process:
 
@@ -11,7 +11,7 @@ The first step is to create a client to handle the authentication process:
 import { AUTH_LOGIN, AUTH_LOGOUT, AUTH_ERROR, AUTH_CHECK } from 'admin-on-rest';
 
 // Change this to be your own login check route.
-const login_uri = 'https://demo.api-platform.com/login_check'; 
+const login_uri = 'https://demo.api-platform.com/login_check';
 
 export default (type, params) => {
   switch (type) {
@@ -47,7 +47,7 @@ export default (type, params) => {
 
     case AUTH_CHECK:
       return localStorage.getItem('token') ? Promise.resolve() : Promise.reject();
-      
+
       default:
           return Promise.resolve();
   }
@@ -82,7 +82,3 @@ export default class extends Component {
 
 Refer to [the chapter dedicated to authentication in the Admin On Rest documentation](https://marmelab.com/admin-on-rest/Authentication.html)
 for more information.
-
-Previous chapter: [Getting Started](getting-started.md)
-
-Next chapter: [Handling Relations to Collections](handling-relations-to-collections.md)

@@ -80,7 +80,3 @@ class Book
     public $author;
 }
 ```
-
-Previous chapter: [Operations](operations.md)
-
-Next chapter: [Filters](filters.md)
