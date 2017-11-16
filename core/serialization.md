@@ -417,19 +417,23 @@ services:
 
 ```php
 <?php
-// src/Appbundle/Serializer/ApiSerializer
+// src/Appbundle/Serializer/ApiNormalizer
 
 namespace AppBundle\Serializer;
 
-use ApiPlatform\Core\Serializer\AbstractItemNormalizer;
+use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
-final class ApiNormalizer extends AbstractItemNormalizer
+final class ApiNormalizer implements NormalizerInterface, DenormalizerInterface
 {
     private $decorated;
 
     public function __construct(NormalizerInterface $decorated)
     {
+        if (!$decorated instanceof DenormalizerInterface) {
+            throw new \InvalidArgumentException(sprintf('The decorated normalizer must implement the %s.', DenormalizerInterface::class));
+        }
+
         $this->decorated = $decorated;
     }
 
