@@ -56,27 +56,31 @@ import parseHydraDocumentation from 'api-doc-parser/lib/hydra/parseHydraDocument
 
 const entrypoint = 'https://demo.api-platform.com';
 
-const apiDocumentationParser = entrypoint => parseHydraDocumentation(entrypoint)
-  .then(api => {
-    api.resources.map(resource => {
-      const books = api.resources.find(r => 'books' === r.name);
-      books.fields.find(f => 'description' === f.name).fieldComponent = <RichTextField source="description" key="description"/>;
-      books.fields.find(f => 'description' === f.name).inputComponent = <RichTextInput source="description" key="description"/>;
+const myApiDocumentationParser = entrypoint => parseHydraDocumentation(entrypoint)
+ .then( ({ api }) => {
 
-      return resource;
-    });
+    const books = api.resources.find(({ name }) => 'books' === name);
+    const description = books.fields.find(f => 'description' === f.name);
+    
+    description.field = props => (
+        <RichTextField {...props} source="description" />
+    );
+    
+    description.input = props => (
+        <RichTextInput {...props} source="description" addLabel={true} />
+    );
 
-    return api;
+    return { api };
   })
 ;
 
 export default (props) => (
-  <HydraAdmin apiDocumentationParser={apiDocumentationParser} entrypoint={entrypoint}/>
+    <HydraAdmin apiDocumentationParser={myApiDocumentationParser} entrypoint={entrypoint} />
 );
 ```
 
-The `fieldComponent` property of the `Field` class allows to set the component used to render a property in list and show screens.
-The `inputComponent` property allows to set the component to use to render the input used in create and edit screens.
+The `field` property of the `Field` class allows to set the component used to render a property in list and show screens.
+The `input` property allows to set the component to use to render the input used in create and edit screens.
 
 Any [field](https://marmelab.com/admin-on-rest/Fields.html) or [input](https://marmelab.com/admin-on-rest/Inputs.html) provided by the Admin On Rest library can be used.
 
