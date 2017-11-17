@@ -479,7 +479,7 @@ header: |
 ## Full Configuration Reference
 
 ```yaml
-onfig:
+config:
 
     # RDFa files
     rdfa:
