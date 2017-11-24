@@ -383,6 +383,73 @@ final class BookContextBuilder implements SerializerContextBuilderInterface
 If the user has `ROLE_ADMIN` permission and the subject is an instance of Book, `admin_input` group will be dynamically added to the denormalization context.
 The variable `$normalization` lets you check whether the context is for normalization (if true) or denormalization.
 
+## Changing the Serialization Context on a per item base
+
+The example above shows how you can modify the normalization/denormalization context based on the current user permissions for all the books that are being normalized/denormalized. Sometimes, however, the permissions vary depending on what book is being processed. Think of ACL's: User A may retrieve Book A but not Book B. In that case, we have to leverage the power of the Symfony Serializer and register our own normalizer that adds the group on every single item (priority `64` is just an example, make sure your normalizer gets loaded first):
+
+```yaml
+# app/config/services.yml
+services:
+    'AppBundle\Serializer\BookAttributeNormalizer':
+        arguments: [ '@security.token_storage' ]
+        tags:
+            - { name: 'serializer.normalizer', priority: 64 }
+```
+
+The Normalizer class is a bit harder to understand because it has to be aware of the Serializer instance itself to pass on the object to normalize to the other normalizer once it added the groups and at the same time it has to make sure, there's no recursion. Here's how this could look like:
+
+```php
+<?php
+// src/AppBundle/Serializer/BookAttributeNormalizer.php
+
+class BookAttributeNormalizer implements NormalizerInterface, SerializerAwareInterface
+{
+    use SerializerAwareTrait;
+
+    const BOOK_ATTRIBUTE_NORMALIZER_ALREADY_CALLED = 'BOOK_ATTRIBUTE_NORMALIZER_ALREADY_CALLED';
+    private $tokenStorage;
+
+    public function __construct(TokenStorageInterface $tokenStorage)
+    {
+        $this->tokenStorage = $tokenStorage;
+    }
+
+    public function normalize($object, $format = null, array $context = [])
+    {
+        // Get permissions from user in $this->tokenStorage
+        // for the current $object (book)
+        if ($this->userHasPermissionsForBook($object)) {
+            $context['groups'][] = 'can_retrieve_book';
+        }
+
+        return $this->passOn($object, $format, $context);
+    }
+    
+    public function supportsNormalization($data, $format = null, array $context = [])
+    {
+        // Make sure we're not called twice
+        if (isset($context[self::BOOK_ATTRIBUTE_NORMALIZER_ALREADY_CALLED])) {
+            return false;
+        }
+
+        return $data instanceof Book;
+    }
+
+    private function passOn($object, $format = null, array $context = [])
+    {
+        if (!$this->serializer instanceof NormalizerInterface) {
+            throw new LogicException(sprintf('Cannot normalize object "%s" because the injected serializer is not a normalizer', $object));
+        }
+
+        $context[self::BOOK_ATTRIBUTE_NORMALIZER_ALREADY_CALLED] = true;
+
+        return $this->serializer->normalize($object, $format, $context);
+    }
+}
+```
+
+This will add the serialization group `can_retrieve_book` only if the currently logged in user has access to the given book instance.
+
 ## Name Conversion
 
 The Serializer Component provides a handy way to map PHP field names to serialized names. See the related [Symfony documentation](http://symfony.com/doc/master/components/serializer.html#converting-property-names-when-serializing-and-deserializing).
