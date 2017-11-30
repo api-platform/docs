@@ -12,11 +12,11 @@ Alternatively, you can use [Composer](http://getcomposer.org) to install the sta
 
 `composer require api-platform/core`
 
-Then, update your `app/config/AppKernel.php` file:
+Then, update your `app/AppKernel.php` file:
 
 ```php
 <?php
-// app/config/AppKernel.php
+// app/AppKernel.php
 
 public function registerBundles()
 {
