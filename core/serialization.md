@@ -423,8 +423,10 @@ namespace AppBundle\Serializer;
 
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
+use Symfony\Component\Serializer\SerializerAwareInterface;
+use Symfony\Component\Serializer\SerializerInterface;
 
-final class ApiNormalizer implements NormalizerInterface, DenormalizerInterface
+final class ApiNormalizer implements NormalizerInterface, DenormalizerInterface, SerializerAwareInterface
 {
     private $decorated;
 
@@ -460,6 +462,13 @@ final class ApiNormalizer implements NormalizerInterface, DenormalizerInterface
     public function denormalize($data, $class, $format = null, array $context = [])
     {
         return $this->decorated->denormalize($data, $class, $format, $context);
+    }
+    
+    public function setSerializer(SerializerInterface $serializer)
+    {
+        if($this->decorated instanceof SerializerAwareInterface) {
+            $this->decorated->setSerializer($serializer);
+        }
     }
 }
 ```
