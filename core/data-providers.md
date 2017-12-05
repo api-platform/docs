@@ -35,18 +35,19 @@ namespace AppBundle\DataProvider;
 
 use AppBundle\Entity\BlogPost;
 use ApiPlatform\Core\DataProvider\CollectionDataProviderInterface;
-use ApiPlatform\Core\Exception\ResourceClassNotSupportedException;
+use ApiPlatform\Core\DataProvider\RestrictedDataProviderInterface;
 
-final class BlogPostCollectionDataProvider implements CollectionDataProviderInterface
+final class BlogPostCollectionDataProvider implements CollectionDataProviderInterface, RestrictedDataProviderInterface
 {
     public function getCollection(string $resourceClass, string $operationName = null)
     {
-        if (BlogPost::class !== $resourceClass) {
-            throw new ResourceClassNotSupportedException();
-        }
-
         // Retrieve the blog post collection from somewhere
         return [new BlogPost(1), new BlogPost(2)];
+    }
+    
+    public function supports(string $resourceClass, string $operationName = null): bool
+    {
+        return BlogPost::class === $resourceClass;
     }
 }
 ```
@@ -84,17 +85,19 @@ namespace AppBundle\DataProvider;
 
 use AppBundle\Entity\BlogPost;
 use ApiPlatform\Core\DataProvider\ItemDataProviderInterface;
-use ApiPlatform\Core\Exception\ResourceClassNotSupportedException;
+use ApiPlatform\Core\DataProvider\RestrictedDataProviderInterface;
 
-final class BlogPostItemDataProvider implements ItemDataProviderInterface
+final class BlogPostItemDataProvider implements ItemDataProviderInterface, RestrictedDataProviderInterface
 {
-    public function getItem(string $resourceClass, $id, string $operationName = null, array $context = [])    {
-        if (BlogPost::class !== $resourceClass) {
-          throw new ResourceClassNotSupportedException();
-        }
-
+    public function getItem(string $resourceClass, $id, string $operationName = null, array $context = [])   
+    {
         // Retrieve the blog post item from somewhere then return it or null if not found
         return new BlogPost($id);
+    }
+    
+    public function supports(string $resourceClass, string $operationName = null): bool
+    {
+        return BlogPost::class === $resourceClass;
     }
 }
 ```
