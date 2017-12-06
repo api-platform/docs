@@ -271,6 +271,19 @@ class Question
 }
 ```
 
+Alternatively, you can use the YAML configuration format:
+
+```yaml
+AppBundle\Entity\Answer: ~
+AppBundle\Entity\Question:
+    properties:
+        answer:
+            subresource:
+                resourceClass: AppBundle\Entity\Answer
+                collection: false
+```
+
+
 Note that all we had to do is to set up `@ApiSubresource` on the `Question::answer` relation. Because the `answer` is a to-one relation, we know that this subresource is an item. Therefore the response will look like this:
 
 ```json
