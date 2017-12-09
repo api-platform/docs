@@ -106,7 +106,7 @@ class Product // The class name will be used to name exposed resources
         $this->offers->add($offer);
     }
 
-    public function removeGreeting(Offer $offer): void
+    public function removeOffer(Offer $offer): void
     {
         $offer->product = null;
         $this->offers->removeElement($offer);
