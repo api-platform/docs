@@ -39,7 +39,7 @@ class Book
 
 With the previous configuration, the validations groups `a` and `b` will be used when validation is performed.
 
-Like for [serialization groups](serialization-groups-and-relations.md#using-different-serialization-groups-per-operation),
+Like for [serialization groups](serialization.md#using-different-serialization-groups-per-operation),
 you can specify validation groups globally or on a per operation basis.
 
 Of course, you can use XML or YAML configuration format instead of annotations if you prefer.
