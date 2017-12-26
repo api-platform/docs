@@ -180,9 +180,9 @@ Will produce the following Swagger documentation:
 }
 ```
 
-## Changing the name of a definition
+## Changing the Name of a Definition
 
-ApiPlatform generates a definition name based on the serializer `groups` defined
+API Platform generates a definition name based on the serializer `groups` defined
 in the (`de`)`normalization_context`. It's possible to override the name
 thanks to the `swagger_definition_name` option:
 
