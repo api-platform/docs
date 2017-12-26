@@ -279,7 +279,7 @@ AppBundle\Entity\Question:
     properties:
         answer:
             subresource:
-                resourceClass: AppBundle\Entity\Answer
+                resourceClass: 'AppBundle\Entity\Answer'
                 collection: false
 ```
 
