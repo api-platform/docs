@@ -11,7 +11,7 @@ Then, create a new React application for your admin:
 
     $ create-react-app my-admin
 
-Then, every files to edit and commands to launch will be in the new created my-admin directory.
+Then, every files to edit and commands to launch will be in the new created `my-admin` directory.
 
     $ cd my-admin
 
@@ -38,9 +38,9 @@ import { HydraAdmin } from '@api-platform/admin';
 export default () => <HydraAdmin entrypoint="https://demo.api-platform.com"/>; // Replace with your own API entrypoint
 ```
 
-Replace the domain by your own domain in the `cors_allow_origin` param of `app/config/parameters.yml` symfony file. Ex: `http://localhost:3000` by default.
+Be sure to make your API send proper [CORS HTTP headers](https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS) to allow the admin's domain to access it. To do so, update the value of the `cors_allow_origin` parameter in `app/config/parameters.yml` (it will be `http://localhost:3000` by default).
 
-Clear cache of symfony for the production environment to take care of this changes:
+Clear the cache to apply this changes:
 
     $ docker-compose exec app bin/console cache:clear --env=prod
 
@@ -64,9 +64,9 @@ import RichTextInput from 'aor-rich-text-input';
 import { HydraAdmin } from '@api-platform/admin';
 import parseHydraDocumentation from '@api-platform/api-doc-parser/lib/hydra/parseHydraDocumentation';
 
-const entrypoint = 'https://demo.api-platform.sh';
+const entrypoint = 'https://demo.api-platform.com';
 
-const apiDocumentationParser = entrypoint => parseHydraDocumentation(entrypoint)
+const myApiDocumentationParser = entrypoint => parseHydraDocumentation(entrypoint)
   .then( ({ api }) => {
     const books = api.resources.find(({ name }) => 'books' === name);
     const description = books.fields.find(f => 'description' === f.name);
@@ -85,7 +85,7 @@ const apiDocumentationParser = entrypoint => parseHydraDocumentation(entrypoint)
 ;
 
 export default (props) => (
-  <HydraAdmin apiDocumentationParser={apiDocumentationParser} entrypoint={entrypoint}/>
+  <HydraAdmin apiDocumentationParser={myApiDocumentationParser} entrypoint={entrypoint}/>
 );
 ```
 
