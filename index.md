@@ -35,6 +35,7 @@
         2.  [Property Filter](core/filters.md#property-filter)
     3.  [Creating Custom Filters](core/filters.md#creating-custom-filters)
         1.  [Creating Custom Doctrine ORM Filters](core/filters.md#creating-custom-doctrine-orm-filters)
+            1. [Using Doctrine Filters](core/filters.md#using-doctrine-filters)
         2.  [Overriding Extraction of Properties from the Request](core/filters.md#overriding-extraction-of-properties-from-the-request)
 7.  [Serialization Groups and Relations](core/serialization-groups-and-relations.md)
     1.  [Configuration](core/serialization-groups-and-relations.md#configuration)

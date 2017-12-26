@@ -661,6 +661,231 @@ class Offer
 You can now enable this filter using URLs like `http://example.com/offers?regexp_email=^[FOO]`. This new filter will also
 appear in Swagger and Hydra documentations.
 
+### Using Doctrine Filters
+
+Doctrine features [a filter system](http://docs.doctrine-project.org/projects/doctrine-orm/en/latest/reference/filters.html) that allows the developer to add SQL to the conditional clauses of queries, regardless the place where the SQL is generated (e.g. from a DQL query, or by loading associated entities).
+These are applied on collections and items, so are incredibly useful.
+
+The following information, specific to Doctrine filters in Symfony, is based upon [a great article posted on Michaël Perrin's blog](http://blog.michaelperrin.fr/2014/12/05/doctrine-filters/).
+
+Suppose we have a `User` entity and an `Order` entity related to the `User` one. A user should only see his orders and no others's ones.
+
+```php
+<?php
+
+// src/AppBundle/Entity/User.php
+
+namespace AppBundle\Entity;
+
+use ApiPlatform\Core\Annotation\ApiResource;
+
+/**
+ * @ApiResource
+ */
+class User
+{
+    // ...
+}
+```
+
+```php
+<?php
+
+// src/AppBundle/Entity/Order.php
+
+namespace AppBundle\Entity;
+
+use ApiPlatform\Core\Annotation\ApiResource;
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * @ApiResource
+ */
+class Order
+{
+    // ...
+
+    /**
+     * @ORM\ManyToOne(targetEntity="User")
+     * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
+     **/
+    private $user;
+}
+```
+
+The whole idea is that any query on the order table should add a WHERE user_id = :user_id condition.
+
+Start by creating a custom annotation to mark restricted entities:
+
+```php
+<?php
+
+// src/AppBundle/Annotation/UserAware.php
+
+namespace AppBundle\Annotation;
+
+use Doctrine\Common\Annotations\Annotation;
+
+/**
+ * @Annotation
+ * @Target("CLASS")
+ */
+final class UserAware
+{
+    public $userFieldName;
+}
+```
+
+Then, let's mark the `Order` entity as a "user aware" entity.
+
+```php
+<?php
+
+// src/AppBundle/Entity/Order.php
+
+namespace AppBundle\Entity;
+
+use AppBundle\Annotation\UserAware;
+
+/**
+ * @UserAware(userFieldName="user_id")
+ */
+class Order {
+    // ...
+}
+```
+
+Now, create a Doctrine filter class:
+
+```php
+<?php
+
+// src/AppBundle/Filter/UserFilter.php
+
+namespace AppBundle\Filter;
+
+use AppBundle\Annotation\UserAware;
+use Doctrine\ORM\Mapping\ClassMetaData;
+use Doctrine\ORM\Query\Filter\SQLFilter;
+use Doctrine\Common\Annotations\Reader;
+
+final class UserFilter extends SQLFilter
+{
+    private $reader;
+
+    public function addFilterConstraint(ClassMetadata $targetEntity, string $targetTableAlias): string
+    {
+        if (null === $this->reader) {
+            return throw new \RuntimeException(sprintf('An annotation reader must be provided. Be sure to call "%s::setAnnotationReader()".', __CLASS__));
+        }
+
+        // The Doctrine filter is called for any query on any entity
+        // Check if the current entity is "user aware" (marked with an annotation)
+        $userAware = $this->reader->getClassAnnotation($targetEntity->getReflectionClass(), UserAware::class);
+        if (!$userAware) {
+            return '';
+        }
+
+        $fieldName = $userAware->userFieldName;
+        try {
+            // Don't worry, getParameter automatically escapes parameters
+            $userId = $this->getParameter('id');
+        } catch (\InvalidArgumentException $e) {
+            // No user id has been defined
+            return '';
+        }
+
+        if (empty($fieldName) || empty($userId)) {
+            return '';
+        }
+
+        return sprintf('%s.%s = %s', $targetTableAlias, $fieldName, $userId);
+    }
+
+    public function setAnnotationReader(Reader $reader): void
+    {
+        $this->reader = $reader;
+    }
+}
+```
+
+Now, we must configure the Doctrine filter. 
+
+```yaml
+# app/config/config.yml
+
+doctrine:
+    orm:
+        filters:
+            user_filter:
+                class: AppBundle\Filter\UserFilter
+```
+
+And add a listener for every request that initializes the Doctrine filter with the current user in your bundle services declaration file.
+
+```yaml
+# app/config/services.yml
+
+services:
+    'AppBundle\EventListener\UserFilterConfigurator':
+        tags:
+            - { name: kernel.event_listener, event: kernel.request, priority: 5 }
+```
+
+It's key to set the priority higher than the `ApiPlatform\Core\EventListener\ReadListener`'s priority, as flagged in [this issue](https://github.com/api-platform/core/issues/1185), as otherwise the `PaginatorExtension` will ignore the Doctrine filter and return incorrect `totalItems` and `page` (first/last/next) data.
+
+Lastly, implement the configurator class:
+
+```php
+<?php
+
+// src/AppBundle/EventListener/UserFilterConfigurator.php
+
+namespace AppBundle\EventListener;
+
+use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use Doctrine\Common\Persistence\ObjectManager;
+use Doctrine\Common\Annotations\Reader;
+
+final class UserFilterConfigurator
+{
+    private $em;
+    private $tokenStorage;
+    private $reader;
+
+    public function __construct(ObjectManager $em, TokenStorageInterface $tokenStorage, Reader $reader)
+    {
+        $this->em = $em;
+        $this->tokenStorage = $tokenStorage;
+        $this->reader = $reader;
+    }
+
+    public function onKernelRequest(): void
+    {
+        if (!$user = $this->getUser()) {
+            throw new \RuntimeException('There is no authenticated user.');
+        }
+
+        $filter = $this->em->getFilters()->enable('user_filter');
+        $filter->setParameter('id', $user->getId());
+        $filter->setAnnotationReader($this->reader);
+    }
+
+    private function getUser(): ?UserInterface
+    {
+        if (!$token = $this->tokenStorage->getToken()) {
+            return null;
+        }
+
+        $user = $token->getUser();
+        return $user instanceof UserInterface ? $user : null;
+    }
+}
+```
+
+Done: Doctrine will automatically filter all "UserAware" entities!
+
 ### Overriding Extraction of Properties from the Request
 
 You can change the way the filter parameters are extracted from the request. This can be done by overriding the `extractProperties(\Symfony\Component\HttpFoundation\Request $request)`
