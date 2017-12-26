@@ -43,7 +43,6 @@ The name of the page parameter can be changed with the following configuration:
 
 ```yaml
 # app/config/config.yml
-
 api_platform:
     collection:
         pagination:
@@ -52,10 +51,9 @@ api_platform:
 
 ## Disabling the Pagination
 
-Paginating collection is generally accepted as a good practice. It also allows browsing large collections without to much
+Paginating collections is generally accepted as a good practice. It allows browsing large collections without too much
 overhead as well as preventing [DOS attacks](https://en.wikipedia.org/wiki/Denial-of-service_attack).
-It allows to browse large collections and prevent. However, for small collections, it can be convenient to fully disable
-the pagination.
+However, for small collections, it can be convenient to fully disable the pagination.
 
 ### Globally
 
@@ -63,7 +61,6 @@ The pagination can be disabled for all resources using this configuration:
 
 ```yaml
 # app/config/config.yml
-
 api_platform:
     collection:
         pagination:
@@ -76,7 +73,6 @@ It can also be disabled for specific resource:
 
 ```php
 <?php
-
 // src/AppBundle/Entity/Book.php
 
 use ApiPlatform\Core\Annotation\ApiResource;
@@ -99,7 +95,6 @@ use the following configuration:
 
 ```yaml
 # app/config/config.yml
-
 api_platform:
     collection:
         pagination:
@@ -121,7 +116,6 @@ The client ability to disable the pagination can also be set in the resource con
 
 ```php
 <?php
-
 // src/AppBundle/Entity/Book.php
 
 use ApiPlatform\Core\Annotation\ApiResource;
@@ -145,7 +139,6 @@ The number of items per page can be configured for all resources:
 
 ```yaml
 # app/config/config.yml
-
 api_platform:
     collection:
         pagination:
@@ -156,7 +149,6 @@ api_platform:
 
 ```php
 <?php
-
 // src/AppBundle/Entity/Book.php
 
 use ApiPlatform\Core\Annotation\ApiResource;
@@ -176,7 +168,6 @@ class Book
 
 ```yaml
 # app/config/config.yml
-
 api_platform:
     collection:
         pagination:
@@ -192,7 +183,6 @@ Changing the number of items per page can be enabled (or disabled) for a specifi
 
 ```php
 <?php
-
 // src/AppBundle/Entity/Book.php
 
 use ApiPlatform\Core\Annotation\ApiResource;
@@ -206,6 +196,72 @@ class Book
 }
 ```
 
-Previous chapter: [Validation](validation.md)
+## Partial Pagination
 
-Next chapter: [The Event System](events.md)
+When using the default pagination, a `COUNT` query will be issued against the current requested collection. This may have a
+performance impact on really big collections. The downside is that the information about the last page is lost (ie: `hydra:last`).
+
+### Globally
+
+The partial pagination retrieval can be configured for all resources:
+
+```yaml
+# app/config/config.yml
+
+api_platform:
+    collection:
+        pagination:
+            partial: true # Disabled by default
+```
+
+### For a Specific Resource
+
+```php
+<?php
+
+// src/AppBundle/Entity/Book.php
+
+use ApiPlatform\Core\Annotation\ApiResource;
+
+/**
+ * @ApiResource(attributes={"pagination_partial"=true})
+ */
+class Book
+{
+    // ...
+}
+```
+
+### Client-side
+
+#### Globally
+
+```yaml
+# app/config/config.yml
+
+api_platform:
+    collection:
+        pagination:
+            client_partial: true # Disabled by default
+            partial_parameter_name: 'partial' # Default value
+```
+
+The partial pagination retrieval can now be changed by toggling a query parameter named `partial`: `GET /books?partial=true`
+
+#### For a Specific Resource
+
+```php
+<?php
+
+// src/AppBundle/Entity/Book.php
+
+use ApiPlatform\Core\Annotation\ApiResource;
+
+/**
+ * @ApiResource(attributes={"pagination_client_partial"=true})
+ */
+class Book
+{
+    // ...
+}
+```

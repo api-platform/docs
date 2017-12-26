@@ -59,27 +59,15 @@ Note that `$resourceShortName` contains a camel case string, by default the reso
 
 ### Registering the Service
 
-<configurations>
+If you haven't disabled the autowiring option, the service will be registered automatically and you have nothing more to
+do.
+Otherwise, you must register this class a service like in the following example:
 
 ```yaml
 # app/config/services.yml
-
 services:
-    app.operation_path_resolver.no_separators:
-        class: 'AppBundle\\PathResolver\\NoSeparatorsOperationPathResolver'
-        public: false
+    'AppBundle\PathResolver\NoSeparatorsOperationPathResolver': ~
 ```
-
-```xml
-<!-- app/config/services.xml -->
-
-<?xml version="1.0" encoding="UTF-8" ?>
-<services>
-    <service id="app.operation_path_resolver.no_separators" class="AppBundle\PathResolver\NoSeparatorsOperationPathResolver" public="false" />
-</services>
-```
-
-</configurations>
 
 ### Configure It
 
@@ -87,9 +75,5 @@ services:
 # app/config/config.yml
 
 api_platform:
-    default_operation_path_resolver: 'app.operation_path_resolver.no_separators'
+    default_operation_path_resolver: 'AppBundle\PathResolver\NoSeparatorsOperationPathResolver'
 ```
-
-Previous chapter: [Performance](performance.md)
-
-Next chapter: [Accept application/x-www-form-urlencoded Form Data](form-data.md)

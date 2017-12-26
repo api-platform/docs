@@ -1,8 +1,11 @@
-# AngularJS integration
+# AngularJS Integration
+
+Warning: For new project, you should consider using [the API Platform's Progressive Web App generator](../client-generator/index.md)
+(that supports React and Vue.js) instead of this Angular v1 integration.
 
 ## Restangular
 
-ApiPlatformBundle works fine with [AngularJS v1](http://angularjs.org). The popular [Restangular](https://github.com/mgonto/restangular)
+API Platform works fine with [AngularJS v1](http://angularjs.org). The popular [Restangular](https://github.com/mgonto/restangular)
 REST client library for Angular can easily be configured to handle the API format.
 
 Here is a working Restangular config:
@@ -95,7 +98,3 @@ nga.configure(admin);
 ```
 
 You can look at what we have done as another exemple [api-platform/admin](https://github.com/api-platform/admin).
-
-Previous chapter: [NelmioApiDocBundle integration](nelmio-api-doc.md)
-
-Next chapter: [Schema Generator: introduction](../schema-generator/index.md)

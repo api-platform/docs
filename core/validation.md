@@ -13,7 +13,6 @@ You can customize them by editing the resource configuration and add the groups 
 
 ```php
 <?php
-
 // src/AppBundle/Entity/Book.php
 
 use ApiPlatform\Core\Annotation\ApiResource;
@@ -58,14 +57,15 @@ In the following example, we use a static method to return the validation groups
 
 ```php
 <?php
-
 // src/AppBundle/Entity/Book.php
 
 use ApiPlatform\Core\Annotation\ApiResource;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * @ApiResource(attributes={"validation_groups"={Book::class, "validationGroups"}})
+ * @ApiResource(
+ *     attributes={"validation_groups"={Book::class, "validationGroups"}}
+ * )
  */
 class Book
 {
@@ -95,6 +95,91 @@ class Book
 }
 ```
 
-Previous chapter: [Serialization Groups and Relations](serialization-groups-and-relations.md)
+Alternatively, you can use a service to retrieve the groups to use:
 
-Next chapter: [Pagination](pagination.md)
+```php
+<?php
+// src/AppBundle/Validator/AdminGroupsGenerator.php
+
+namespace AppBundle\Validator;
+
+use AppBundle\Entity\Book;
+use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
+
+final class AdminGroupsGenerator
+{
+    private $authorizationChecker;
+
+    public function __construct(AuthorizationCheckerInterface $authorizationChecker)
+    {
+        $this->authorizationChecker = $authorizationChecker;
+    }
+
+    public function __invoke(Book $book): array
+    {
+        return $this->authorizationChecker->isGranted('ROLE_ADMIN', $book) ? ['a', 'b'] : ['a'];
+    }
+}
+```
+
+This class selects the groups to apply regarding the role of the current user: if the current user has the `ROLE_ADMIN` role, groups `a` and `b` are returned. In other cases, just `a` is returned.
+
+This class is automatically registered as a service thanks to [the autowiring feature of the Symfony Dependency Injection Component](https://symfony.com/doc/current/service_container/autowiring.html). Just note that this service must be public.
+
+Then, configure the entity class to use this service to retrieve validation groups:
+
+```php
+<?php
+// src/AppBundle/Entity/Book.php
+
+namespace AppBundle\Entity;
+
+use ApiPlatform\Core\Annotation\ApiResource;
+use AppBundle\Validator\AdminGroupsGenerator;
+use Symfony\Component\Validator\Constraints as Assert;
+
+/**
+ * @ApiResource(attributes={"validation_groups"=AdminGroupsGenerator::class})
+ */
+class Book
+{
+    /**
+     * @Assert\NotBlank(groups={"a"})
+     */
+    private $name;
+
+    /**
+     * @Assert\NotNull(groups={"b"})
+     */
+    private $author;
+
+    // ...
+}
+```
+
+## Error Levels and Payload Serialization
+
+As stated in the [Symfony documentation](https://symfony.com/doc/current/validation/severity.html), you can use the payload field to define error levels.
+You can retrieve the payload field by setting the `serialize_payload_fields` option to `true` in the API Platform config:
+
+```yaml
+# app/config/config.yml
+
+api_platform:
+    validator:
+        serialize_payload_fields: true
+```
+
+Then, the serializer will return all payload values in the error response.
+
+If you want to serialize only some payload fields, define them in the config like this:
+
+```yaml
+# app/config/config.yml
+
+api_platform:
+    validator:
+        serialize_payload_fields: [ severity, anotherPayloadField ]
+```
+
+In this example, only `severity` and `anotherPayloadField` will be serialized.

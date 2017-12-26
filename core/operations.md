@@ -4,7 +4,7 @@ API Platform Core relies on the concept of operations. Operations can be applied
 an implementation point of view, an operation is a link between a resource, a route and its related controller.
 
 API Platform automatically registers typical [CRUD](https://en.wikipedia.org/wiki/Create,_read,_update_and_delete) operations
-and describes them in the exposed documentation (Hydra and NelmioApiDoc). It also creates and registers routes corresponding
+and describes them in the exposed documentation (Hydra and Swagger). It also creates and registers routes corresponding
 to these operations in the Symfony routing system (if it is available).
 
 The behavior of built-in operations is briefly presented in the [Getting started](getting-started.md#mapping-the-entities)
@@ -52,17 +52,17 @@ for the `GET` method for both `collectionOperations` and `itemOperations` to cre
 corresponding to the name of the operation that can be anything you want and an array of properties as value. If an
 empty list of operations is provided, all operations are disabled.
 
-<configurations>
-
 ```php
 <?php
-
 // src/AppBundle/Entity/Book.php
 
 use ApiPlatform\Core\Annotation\ApiResource;
 
 /**
- * @ApiResource(collectionOperations={"get"={"method"="GET"}}, itemOperations={"get"={"method"="GET"}})
+ * @ApiResource(
+ *     collectionOperations={"get"={"method"="GET"}},
+ *     itemOperations={"get"={"method"="GET"}}
+ *     )
  */
 class Book
 {
@@ -70,9 +70,10 @@ class Book
 }
 ```
 
+Alternatively, you can use the YAML configuration format:
+
 ```yaml
 # src/AppBundle/Resources/config/api_resources/resources.yml
-
 AppBundle\Entity\Book:
     collectionOperations:
         get:
@@ -82,11 +83,15 @@ AppBundle\Entity\Book:
             method: 'GET'
 ```
 
+Or the XML configuration format:
+
 ```xml
 <!-- src/AppBundle/Resources/config/api_resources/resources.xml -->
-
 <?xml version="1.0" encoding="UTF-8" ?>
-<resources>
+<resources xmlns="https://api-platform.com/schema/metadata"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="https://api-platform.com/schema/metadata
+           https://api-platform.com/schema/metadata/metadata-2.0.xsd">
     <resource class="AppBundle\Entity\Book">
         <itemOperations>
             <itemOperation name="get">
@@ -102,8 +107,6 @@ AppBundle\Entity\Book:
 </resources>
 ```
 
-</configurations>
-
 API Platform Core is smart enough to automatically register the applicable Symfony route referencing a built-in CRUD action
 just by specifying the enabled HTTP method.
 
@@ -112,21 +115,18 @@ just by specifying the enabled HTTP method.
 The URL, the HTTP method and the Hydra context passed to documentation generators of operations is easy to configure.
 
 In the next example, both `GET` and `PUT` operations are registered with custom URLs. Those will override the default generated
-URLs. In addition to that, we replace the Hydra context for the `PUT` operation.
-
-<configurations>
+URLs. In addition to that, we replace the Hydra context for the `PUT` operation, and require the `id` parameter to be an integer.
 
 ```php
 <?php
-
 // src/AppBundle/Entity/Book.php
 
 use ApiPlatform\Core\Annotation\ApiResource;
 
 /**
  * @ApiResource(itemOperations={
- *     "get"={"method"="GET", "path"="/grimoire/{id}"},
- *     "put"={"method"="PUT", "path"="/grimoire/{id}/update", "hydra_context"={"foo"="bar"},
+ *     "get"={"method"="GET", "path"="/grimoire/{id}", "requirements"={"id"="\d+"}, "defaults"={"color"="brown"}, "options"={"my_option"="my_option_value", "schemes"={"https"}, "host"="{subdomain}.api-platform.com"}},
+ *     "put"={"method"="PUT", "path"="/grimoire/{id}/update", "hydra_context"={"foo"="bar"}},
  * })
  */
 class Book
@@ -135,30 +135,58 @@ class Book
 }
 ```
 
+Or in YAML:
+
 ```yaml
 # src/AppBundle/Resources/config/api_resources/resources.yml
-
 AppBundle\Entity\Book:
     itemOperations:
         get:
             method: 'GET'
             path: '/grimoire/{id}'
+            requirements:
+                id: '\d+'
+            defaults:
+                color: 'brown'
+            host: '{subdomain}.api-platform.com'
+            schemes: ['https']
+            options: 
+                my_option: 'my_option_value'
         put:
             method: 'PUT'
             path: '/grimoire/{id}/update'
             hydra_context: { foo: 'bar' }
+            requirements:
+                id: '\d+'
 ```
+
+Or in XML:
 
 ```xml
 <!-- src/AppBundle/Resources/config/api_resources/resources.xml -->
-
 <?xml version="1.0" encoding="UTF-8" ?>
-<resources>
+<resources xmlns="https://api-platform.com/schema/metadata"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="https://api-platform.com/schema/metadata
+           https://api-platform.com/schema/metadata/metadata-2.0.xsd">
     <resource class="AppBundle\Entity\Book">
         <itemOperations>
             <itemOperation name="get">
                 <attribute name="method">GET</attribute>
                 <attribute name="path">/grimoire/{id}</attribute>
+                <attribute name="requirements">
+                    <attribute name="id">\d+</attribute>
+                </attribute>
+                <attribute name="defaults">
+                    <attribute name="color">brown</attribute>
+                </attribute>
+                <attribute name="options">
+                    <attribute name="color">brown</attribute>
+                </attribute>
+                <attribute name="schemes">
+                    <attribute>https</attribute>
+                </attribute>
+                <attribute name="host">{subdomain}.api-platform.com</attribute>
             </itemOperation>
             <itemOperation name="put">
                 <attribute name="method">PUT</attribute>
@@ -166,13 +194,171 @@ AppBundle\Entity\Book:
                 <attribute name="hydra_context">
                     <attribute name="foo">bar</attribute>
                 </attribute>
+                <attribute name="requirements">
+                    <attribute name="id">\d+</attribute>
+                </attribute>
             </itemOperation>
         </itemOperations>
     </resource>
 </resources>
 ```
 
-</configurations>
+## Subresources
+
+Since ApiPlatform 2.1, you can declare subresources. A subresource is a collection or an item that belongs to another resource. The starting point of a subresource must be a relation on an existing resource.
+
+For example, let's create two entities (Question, Answer) and set up a subresource so that `/question/42/answer` gives us the answer to the question 42:
+
+```php
+<?php
+// src/AppBundle/Entity/Answer.php
+
+use ApiPlatform\Core\Annotation\ApiResource;
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * @ORM\Entity
+ * @ApiResource
+ */
+class Answer
+{
+    /**
+     * @ORM\Column(type="integer")
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="AUTO")
+     */
+    private $id;
+
+    /**
+     * @ORM\Column
+     */
+    public $content;
+
+    /**
+     * @ORM\OneToOne(targetEntity="Question", mappedBy="answer")
+     */
+    public $question;
+
+    public function getId()
+    {
+        return $this->id;
+    }
+}
+```
+
+```php
+<?php
+// src/AppBundle/Entity/Question.php
+
+use ApiPlatform\Core\Annotation\ApiProperty;
+use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Core\Annotation\ApiSubresource;
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * @ORM\Entity
+ * @ApiResource
+ */
+class Question
+{
+    /**
+     * @ORM\Column(type="integer")
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="AUTO")
+     */
+    private $id;
+
+    /**
+     * @ORM\Column
+     */
+    public $content;
+
+    /**
+     * @ORM\OneToOne(targetEntity="Answer", inversedBy="question")
+     * @ORM\JoinColumn(referencedColumnName="id", unique=true)
+     * @ApiSubresource
+     */
+    public $answer;
+
+    public function getId()
+    {
+        return $this->id;
+    }
+}
+```
+
+Note that all we had to do is to set up `@ApiSubresource` on the `Question::answer` relation. Because the `answer` is a to-one relation, we know that this subresource is an item. Therefore the response will look like this:
+
+```json
+{
+  "@context": "/contexts/Answer",
+  "@id": "/answers/42",
+  "@type": "Answer",
+  "id": 42,
+  "content": "Life, the Universe, and Everything",
+  "question": "/questions/42"
+}
+```
+
+If you put the subresource on a relation that is to-many, you will retrieve a collection.
+
+Last but not least, Subresources can be nested, such that `/questions/42/answer/comments` will get the collection of comments for the answer to question 42.
+
+You may want custom groups on subresources. Because a subresource is nothing more than a collection operation, you can set `normalization_context` or `denormalization_context` on that operation. To do so, you need to override `collectionOperations`. Based on the above operation, because we retrieve an answer, we need to alter it's configuration:
+
+```php
+<?php
+// src/AppBundle/Entity/Answer.php
+
+use ApiPlatform\Core\Annotation\ApiResource;
+
+/**
+ * @ApiResource(collectionOperations={"api_questions_answer_get_subresource"={"method"="GET", "normalization_context"={"groups"={"foobar"}}}})
+ */
+class Answer
+{
+    // ...
+}
+```
+
+Or using YAML:
+
+```yaml
+# src/AppBundle/Resources/config/api_resources/resources.yml
+AppBundle\Entity\Answer:
+    collectionOperations:
+        api_questions_answer_get_subresource:
+            method: 'GET' # nothing more to add if we want to keep the default controller
+            normalization_context: {'groups': ['foobar']}
+```
+
+Or in XML:
+
+```xml
+<!-- src/AppBundle/Resources/config/api_resources/resources.xml -->
+<?xml version="1.0" encoding="UTF-8" ?>
+<resources xmlns="https://api-platform.com/schema/metadata"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="https://api-platform.com/schema/metadata
+           https://api-platform.com/schema/metadata/metadata-2.0.xsd">
+    <resource class="AppBundle\Entity\Answer">
+        <collectionOperations>
+            <collectionOperation name="api_questions_answer_get_subresource">
+                <attribute name="method">GET</attribute>
+                <attribute name="normalization_context">
+                  <attribute name="groups">
+                    <group>foobar</group>
+                  </attribute>
+                </attribute>
+            </collectionOperation>
+        </collectionOperations>
+    </resource>
+</resources>
+```
+
+Note that the operation name, here `api_questions_answer_get_subresource`, is the important keyword.
+It'll be automatically set to `$resources_$subresource(s)_get_subresource`. To find the correct operation name you
+may use `bin/console debug:router`.
 
 ## Creating Custom Operations and Controllers
 
@@ -186,24 +372,18 @@ implements the [Action-Domain-Responder](https://github.com/pmjones/adr) pattern
 
 Note: [the event system](events.md) should be preferred over custom controllers when applicable.
 
-The distribution of API Platform also comes with an enhanced action system for Symfony pre-installed: [DunglasActionBundle](https://github.com/dunglas/DunglasActionBundle).
-*DunglasActionBundle* eases the implementation of the ADR pattern with Symfony and improves the developer experience.
-
-It automatically registers action classes stored in `src/*Bundle/Action` and `src/*Bundle/Controller` directories as autowired
-services.
+The distribution of API Platform also eases the implementation of the ADR pattern: it automatically registers action classes
+stored in `src/AppBundle/Action` and `src/AppBundle/Controller` as autowired services.
 
 Thanks to the [autowiring](http://symfony.com/doc/current/components/dependency_injection/autowiring.html) feature of the
-Symfony dependency injection container, services required by an action can be type-hinted in its controller, it will be automatically
-instantiated and injected, without having to declare it explicitly.
+Symfony Dependency Injection container, services required by an action can be type-hinted in its constructor, it will be
+automatically instantiated and injected, without having to declare it explicitly.
 
 In the following example, the built-in `GET` operation is registered as well as a custom operation called `special`.
 The `special` operation reference the Symfony route named `book_special`.
 
-<configurations>
-
 ```php
 <?php
-
 // src/AppBundle/Entity/Book.php
 
 use ApiPlatform\Core\Annotation\ApiResource;
@@ -220,9 +400,10 @@ class Book
 }
 ```
 
+Or in YAML:
+
 ```yaml
 # src/AppBundle/Resources/config/api_resources/resources.yml
-
 AppBundle\Entity\Book:
     itemOperations:
         get:
@@ -231,11 +412,15 @@ AppBundle\Entity\Book:
             route_name: 'book_special'
 ```
 
+Or in XML:
+
 ```xml
 <!-- src/AppBundle/Resources/config/api_resources/resources.xml -->
-
 <?xml version="1.0" encoding="UTF-8" ?>
-<resources>
+<resources xmlns="https://api-platform.com/schema/metadata"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="https://api-platform.com/schema/metadata
+           https://api-platform.com/schema/metadata/metadata-2.0.xsd">
     <resource class="AppBundle\Entity\Book">
         <itemOperations>
             <itemOperation name="get">
@@ -249,21 +434,17 @@ AppBundle\Entity\Book:
 </resources>
 ```
 
-</configurations>
-
 API Platform will automatically map this `special` operation with the route `book_special`. Let's create a custom action
 and its related route using annotations:
 
 ```php
 <?php
-
 // src/AppBundle/Action/BookSpecial.php
 
 namespace AppBundle\Action;
 
 use AppBundle\Entity\Book;
 use Doctrine\Common\Persistence\ManagerRegistry;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Symfony\Component\Routing\Annotation\Route;
 
 class BookSpecial
@@ -279,9 +460,9 @@ class BookSpecial
      * @Route(
      *     name="book_special",
      *     path="/books/{id}/special",
+     *     methods={"PUT"},
      *     defaults={"_api_resource_class"=Book::class, "_api_item_operation_name"="special"}
      * )
-     * @Method("PUT")
      */
     public function __invoke($data) // API Platform retrieves the PHP entity using the data provider then (for POST and
                                     // PUT method) deserializes user data in it. Then passes it to the action. Here $data
@@ -303,10 +484,10 @@ It is mandatory to set the `_api_resource_class` and `_api_item_operation_name` 
 operation) in the parameters of the route (`defaults` key). It allows API Platform and the Symfony routing system to hook
 together.
 
-Here we consider that DunglasActionBundle is installed (the default when using the API Platform distribution). This
-action will be automatically registered as a service (the service name is the same as the class name: `AppBundle\Action\BookSpecial`).
+Here we consider that the autowiring enabled for controller classes (the default when using the API Platform distribution).
+This action will be automatically registered as a service (the service name is the same as the class name: `AppBundle\Action\BookSpecial`).
 
-API Platform automatically retrieve the appropriate PHP entity then then deserializes it, and for `POST` and `PUT` requests
+API Platform automatically retrieves the appropriate PHP entity then deserializes it, and for `POST` and `PUT` requests
 updates the entity with data provided by the user.
 
 Services (`$myService` here) are automatically injected thanks to the autowiring feature. You can type-hint any service
@@ -319,12 +500,11 @@ In this case, the entity will pass through [all built-in event listeners](events
 automatically validated, persisted and serialized in JSON-LD. Then the Symfony kernel will send the resulting document to
 the client.
 
-Alternatively, you can also use standard Symfony controller and YAML or XML route declarations. The following example do
+Alternatively, you can also use standard Symfony controller and YAML or XML route declarations. The following example does
 exactly the same thing than the previous example in a more Symfony-like fashion:
 
 ```php
 <?php
-
 // src/AppBundle/Controller/BookController.php
 
 namespace AppBundle\Controller;
@@ -343,7 +523,6 @@ class BookController extends Controller
 
 ```yaml
 # app/config/routing.yml
-
 book_special:
     path: '/books/{id}/special'
     methods:  ['PUT']
@@ -352,7 +531,3 @@ book_special:
         _api_resource_class: 'AppBundle\Entity\Book'
         _api_item_operation_name: 'special'
 ```
-
-Previous chapter: [Configuration](configuration.md)
-
-Next chapter: [Filters](filters.md)

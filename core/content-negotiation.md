@@ -11,10 +11,10 @@ Both XML and JSON formats are experimental and there are no assurance that we wi
 
 API Platform Core will automatically detect the best resolving format depending on:
 
-* enabled formats (link to docs for this / see below)
-* the `Accept` HTTP header
-* Alternatively to send the proper `Accept` HTTP header, you can also request a specific format by adding its name as the extension of the URL.
-* Available formats are :
+* enabled formats (see below)
+* the requested format, specified in either the `Accept` HTTP header or as an extension appended to the URL
+
+Available formats are:
 
 Format                                                          | Format name  | MIME types                    | Backward Compatibility guaranteed
 ----------------------------------------------------------------|--------------|-------------------------------|----------------------------------------
@@ -26,7 +26,7 @@ HTML (API docs)                                                 | `html`       |
 
 
 If the client requested format is not specified (if it's not supported, it will throw an HTTP bad format error), the response format will be the first format defined in the `formats` configuration key (see below).
-An example using the builtin XML support is available in Behat specs: https://github.com/api-platform/core/blob/master/features/content_negotiation.feature
+An example using the builtin XML support is available in [Behat specs](https://github.com/api-platform/core/blob/master/features/main/content_negotiation.feature).
 
 
 The API Platform content negotiation system is extensible. Support for other formats (such as [JSONAPI](http://jsonapi.org/))
@@ -42,9 +42,9 @@ and of a custom format called `myformat` and having `application/vnd.myformat` a
 
 ```yaml
 # app/config/config.yml
-
 api_platform:
     # ...
+
     formats:
         jsonld:   ['application/ld+json']
         jsonhal:  ['application/hal+json']
@@ -68,6 +68,100 @@ API Platform Core will automatically call the serializer with your defined forma
 as `format` parameter during the deserialization process. Then it will return the result to the client with the asked MIME
 type using its built-in responder.
 
-Previous chapter: [The Event System](events.md)
 
-Next chapter: [Using External JSON-LD Vocabularies](external-vocabularies.md)
+## Writing a Custom Normalizer
+
+Using composition is the recommended way to implement a custom normalizer. You can use the following template to start with your
+own implementation of `CustomItemNormalizer`:
+
+
+```yaml
+# app/config/services.yml
+services:
+# ...
+
+    'AppBundle\Serializer\CustomItemNormalizer':
+        arguments: [ '@api_platform.serializer.normalizer.item' ]
+        tags: [ 'serializer.normalizer' ]
+```
+
+```php
+<?php
+// src/AppBundle/Serializer/CustomItemNormalizer.php
+
+namespace AppBundle\Serializer;
+
+use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
+use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
+
+final class CustomItemNormalizer implements NormalizerInterface, DenormalizerInterface
+{
+    private $normalizer;
+
+    public function __construct(NormalizerInterface $normalizer)
+    {
+        if (!$normalizer instanceof DenormalizerInterface) {
+            throw new \InvalidArgumentException('The normalizer must implement the DenormalizerInterface');
+        }
+
+        $this->normalizer = $normalizer;
+    }
+
+    public function denormalize($data, $class, $format = null, array $context = [])
+    {
+        return $this->normalizer->denormalize($data, $class, $format, $context);
+    }
+
+    public function supportsDenormalization($data, $type, $format = null)
+    {
+        return $this->normalizer->supportsDenormalization($data, $type, $format);
+    }
+
+    public function normalize($object, $format = null, array $context = [])
+    {
+        return $this->normalizer->normalize($object, $format, $context);
+    }
+
+    public function supportsNormalization($data, $format = null)
+    {
+        return $this->normalizer->supportsNormalization($data, $format);
+    }
+}
+```
+
+For example if you want to make the `csv` format work for even complex entities with a lot of hierarchy, you have to
+flatten or remove too complex relations:
+
+```php
+<?php
+// src/AppBundle/Serializer/CustomItemNormalizer.php
+
+namespace AppBundle\Serializer;
+
+use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
+use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
+
+class CustomItemNormalizer implements NormalizerInterface, DenormalizerInterface
+{
+    // ...
+
+    public function normalize($object, $format = null, array $context = [])
+    {
+        $result = $this->normalizer->normalize($object, $format, $context);
+
+        if ('csv' !== $format || !is_array($result)) {
+            return $result;
+        }
+
+        foreach ($result as $key => $value) {
+            if (is_array($value) && array_keys(array_keys($value)) === array_keys($value)) {
+                unset($result[$key]);
+            }
+        }
+
+        return $result;
+    }
+
+    // ...
+}
+```

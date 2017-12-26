@@ -11,7 +11,7 @@ Deploying API Platform applications on Heroku is very straightforward and you wi
 *Note: this tutorial works perfectly well with API Platform but also with any Symfony application based on the Symfony Standard
 Edition.*
 
-If you haven't already one, [create an account on Heroku](https://signup.heroku.com/signup/dc). Then install [the Heroku
+If you don't already have one, [create an account on Heroku](https://signup.heroku.com/signup/dc). Then install [the Heroku
 toolbelt](https://devcenter.heroku.com/articles/getting-started-with-php#local-workstation-setup). We guess you already
 have a working install of [Composer](http://getcomposer.org), perfect, we will need it.
 
@@ -24,18 +24,18 @@ Install it:
 
     composer require dunglas/api-platform-heroku
 
-Heroku relies on [environment variables](https://devcenter.heroku.com/articles/config-vars) for configuration. Independently of the provider you
+Heroku relies on [environment variables](https://devcenter.heroku.com/articles/config-vars) for its configuration. Regardless of what provider you
 choose for hosting your application, using environment variables to configure your production environment is a best practice.
 So we will configure the library we just installed and remove the Incenteev Parameter Handler library that was bundled with
 API Platform. Parameter Handler generated the `app/config/parameters.yml` file during the installation process.
 
-Open `composer.json` file and remove the following line in the  `require` section:
+Open the `composer.json` file and remove the following line from the  `require` section:
 
 ```json
 "incenteev/composer-parameter-handler": "~2.0",
 ```
 
-Then remove the following script call in the `post-install-cmd` and `post-update-cmd` sections:
+Then remove the following script call from the `post-install-cmd` and `post-update-cmd` sections:
 
 ```json
 "Incenteev\\ParameterHandler\\ScriptHandler::buildParameters",
@@ -49,18 +49,17 @@ file:
         "pre-install-cmd": [
           "Dunglas\\Heroku\\Database::createParameters"
         ],
-        // ...
+        "_": "..."
     }
 ```
 
-Delete `app/config/parameters.yml` and `app/config/parameters.yml.dist` as they will not be used anymore. The remove the
-the following line from the `imports` section of `app/config/config.yml`:
+Delete `app/config/parameters.yml` and `app/config/parameters.yml.dist` as they will not be used anymore. Then remove the following line from the `imports` section of `app/config/config.yml`:
 
 ```yaml
     - { resource: parameters.yml }
 ```
 
-We will now create a Heroku the `app.json` file at the root of the application directory to set the parameters of our application
+We will now create the Heroku `app.json` file at the root of the application directory to set the parameters of our application
 using the external parameters feature of the Symfony container:
 
 ```json
@@ -90,15 +89,16 @@ using the external parameters feature of the Symfony container:
 }
 ```
 
-The file also tell to the Heroku deployment system to build a PHP container and to add the Postgres add-on.
+The file also tells the Heroku deployment system to build a PHP container and to add the Postgres add-on.
 
 If you also want to run your app locally or on another hosting provider, don't forget to set those environment variables
-and another one called `DATABASE_URL` containing your database DSN.
-A convenient way to manage environment variable is the [PHP dotenv](https://github.com/vlucas/phpdotenv) library.
+and another one called `DATABASE_URL` containing your database [DSN](https://en.wikipedia.org/wiki/Data_source_name).
+A convenient way to manage environment variables is the [PHP dotenv](https://github.com/vlucas/phpdotenv) library.
 
-We are almost done, but API Platform (and Symfony) have a particular directory structure, the document root is `web/`, other
-directory must be private and we must tell it to Heroku. Create a new file at the root of the application directory named
-`Procfile` with the following content:
+We are almost done, but API Platform (and Symfony) has a particular directory structure which requires further configuration. We must tell Heroku that the document root is `web/`, and that all other
+directories must be private.
+
+Create a new file named `Procfile` at the root of the application directory with the following content:
 
 ```yaml
 web: bin/heroku-php-apache2 web/
@@ -109,32 +109,34 @@ will be lost. It's problematic for our logs.
 
 Note: if you want to store files permanently, use a persistent file storage service such as Amazon S3.
 
-Heroku provides another free service called  https://devcenter.heroku.com/articles/logplex allowing to centralize and
-persist applications logs. To use it we need to configure Monolog to output logs on `STDERR` instead of in a file.
+Heroku provides another free service, [Logplex](https://devcenter.heroku.com/articles/logplex), which allows us to centralize and
+persist applications logs. To use it we need to configure Monolog to output logs to `STDERR` instead of to a file.
 
-Open `app/config/config_prod.yml`, find the following block:
-
-```yaml
-    monolog:
-        # ...
-        nested:
-            type:  stream
-            path:  "%kernel.logs_dir%/%kernel.environment%.log"
-            level: debug
-```
-
-And replace it by:
+Open `app/config/config_prod.yml` and find the following block:
 
 ```yaml
-    monolog:
-        # ...
-        nested:
-            type:  stream
-            path:  "php://stderr"
-            level: debug
+monolog:
+    # ...
+
+    nested:
+        type: stream
+        path: '%kernel.logs_dir%/%kernel.environment%.log'
+        level: debug
 ```
 
-We are ready to deploy our app!
+And replace it with:
+
+```yaml
+monolog:
+    # ...
+
+    nested:
+        type: stream
+        path: 'php://stderr'
+        level: debug
+```
+
+We are now ready to deploy our app!
 
 Initialize a git repository:
 
@@ -164,9 +166,3 @@ Your browser should open automatically and display the entrypoint of the API. It
 can scale it in one click from the Heroku interface.
 
 To see your logs, run `heroku logs --tail`.
-
-Can it be easier? Yes it can: we are preparing an API Platform edition preconfigured to run on Heroku! Stay tuned.
-
-Previous chapter: [Introduction](index.md)
-
-Next chapter: [Using API Platform with Docker](docker.md)

@@ -35,19 +35,26 @@ asynchronous jobs to your APIs is very straightforward.
 
 ## Installing the framework
 
-### In Docker container
+### In Docker Containers
 
 API Platform is shipped with a [Docker](https://docker.com) setup that makes it easy to get a containerized development
-environment up and running. This setup contains an image pre-configured with PHP 7, Apache and everything needed to run API
-Platform and a MySQL image to host the database.
+environment up and running. This setup contains a [Docker Compose](https://docs.docker.com/compose/) configuration with
+several pre-configured and ready-use services with everything needed to run API Platform:
 
-Start by [downloading the API Platform Standard Edition archive](https://api.github.com/repos/api-platform/api-platform/zipball) and extract its content.
+| Name    | Description                                                   | Port(s)
+| ------- | ------------------------------------------------------------- | -------
+| app     | The application with PHP and PHP-FPM 7.1, the latest Composer | N/A
+| db      | A database provided by MySQL 5.7                              | N/A
+| nginx   | An HTTP server provided by Nginx 1.11                         | 8080
+| varnish | An HTTP cache provided by Varnish 4.1                         | 80
+
+Start by [downloading the API Platform Standard Edition archive](https://github.com/api-platform/api-platform/releases/latest) and extract its content.
 The resulting directory contains an empty API Platform project structure. You will add your own code and configuration inside
 it.
 Then, if you do not already have Docker on your computer, [it's the right time to install it](https://www.docker.com/products/overview#/install_the_platform).
 
 Open a terminal, and navigate to the directory containing your project skeleton. Then, run the following command to start
-Apache and MySQL using [Docker Compose](https://docs.docker.com/compose/):
+all services using [Docker Compose](https://docs.docker.com/compose/):
 
     $ docker-compose up -d # Running in detached mode
 
@@ -92,14 +99,14 @@ ORM and its bridge supports major RDBMS including MySQL, PostgreSQL, SQLite, SQL
 Instead of using Docker, API Platform can also be installed on the local machine using [Composer](https://getcomposer.org/):
 
     $ composer create-project api-platform/api-platform bookshop-api
-    
-Then, enter the project folder, create the database and its schema:  
+
+Then, enter the project folder, create the database and its schema:
 
     $ cd bookshop-api
     $ bin/console doctrine:database:create
     $ bin/console doctrine:schema:create
-    
-And start the server:    
+
+And start the server:
 
     $ bin/console server:run
 
@@ -114,9 +121,7 @@ the API documentation. Click on an operation to display its details. You can als
 Try to create a new *Foo* resource using the `POST` operation, then access it using the `GET` operation and, finally, delete
 it by executing the `DELETE` operation.
 If you access any API URL using a web browser, API Platform detects it (using the `Accept` HTTP header) and displays the
-corresponding API request in the UI. Open `http://localhost/foos`:
-
-![Request detail in the UI](images/swagger-ui-2.png)
+corresponding API request in the UI. Try yourself by browsing to `http://localhost/foos`.
 
 If you want to access the raw data, you have two alternatives:
 
@@ -145,7 +150,6 @@ provided by the Doctrine ORM:
 
 ```php
 <?php
-
 // src/AppBundle/Entity/Book.php
 
 namespace AppBundle\Entity;
@@ -214,7 +218,6 @@ class Book
 
 ```php
 <?php
-
 // src/AppBundle/Entity/Review.php
 
 namespace AppBundle\Entity;
@@ -299,7 +302,6 @@ to an entity class, we just have to mark it with an annotation called `@ApiResou
 
 ```php
 <?php
-
 // src/AppBundle/Entity/Book.php
 
 namespace AppBundle\Entity;
@@ -321,7 +323,6 @@ class Book
 
 ```php
 <?php
-
 // src/AppBundle/Entity/Entity.php
 
 namespace AppBundle\Entity;
@@ -400,7 +401,7 @@ First, we learned how to work with relations. In a hypermedia API, every resourc
 A URL is a valid IRI, and it's what API Platform uses. The `@id` property of every JSON-LD document contains the IRI identifying
 it. You can use this IRI to reference this document from other documents. In the previous request, we used the IRI of the
 book we created earlier to link it with the `Review` we were creating. API Platform is smart enough to deal with IRIs.
-By the way, you may want to [embed documents](../core/serialization-groups-and-relations.md) instead of referencing them
+By the way, you may want to [embed documents](../core/serialization.md) instead of referencing them
 (e.g. to reduce the number of HTTP requests).
 
 The other interesting thing is how API Platform handles dates (the `publicationDate` property). API Platform understands
@@ -436,16 +437,15 @@ Oops, we missed to add the title. But submit the request anyway. You should get 
 
 Did you notice that the error was automatically serialized in JSON-LD and respect the Hydra Core vocabulary for errors?
 It allows the client to easily extract useful information from the error. Anyway, it's bad to get a SQL error when submitting
-a request. It means that we doesn't use a valid input, and [it's a very bad and dangerous practice](https://www.owasp.org/index.php/Input_Validation_Cheat_Sheet).
+a request. It means that we didn't use a valid input, and [it's a very bad and dangerous practice](https://www.owasp.org/index.php/Input_Validation_Cheat_Sheet).
 
 API Platform comes with a bridge with [the Symfony Validator Component](http://symfony.com/doc/current/validation.html).
 Adding some of [its numerous validation constraints](http://symfony.com/doc/current/validation.html#supported-constraints)
 (or [creating custom ones](http://symfony.com/doc/current/validation/custom_constraint.html)) to our entities is enough
-to get validate user submitted data. Let's add some validation rules to our data model:
+to validate user submitted data. Let's add some validation rules to our data model:
 
 ```php
 <?php
-
 // src/AppBundle/Entity/Book.php
 
 namespace AppBundle\Entity;
@@ -524,7 +524,6 @@ class Book
 
 ```php
 <?php
-
 // src/Entity/Review.php
 
 namespace AppBundle\Entity;
@@ -607,13 +606,23 @@ ISBN number isn't valid...
 Here we are! We have created a working and very powerful hypermedia REST API in a few minutes, and by writing only a few
 lines of PHP. But we only covered the basics.
 
-## Other features
+## Going Client-Side
+
+API Platform also provides amazing client-side components.
+Continue [by creating a fancy Material Design administration interface](../admin/index.md) for your API in seconds.
+Then, [scaffold a ReactJS / Redux Progressive Web App](../client-generator/index.md).
+
+## Other Features
 
 They are many more features to learn! Read [the full documentation](../core/index.md) to discover how to use them and how
 to extend API Platform to fit your needs.
 API Platform is incredibly efficient for prototyping and Rapid Application Development (RAD). But the framework is also
 designed to create complex web APIs far beyond simple CRUD apps. It benefits from **strong extension points** and is **is
 continuously optimized for performance.** It powers very high-traffic websites.
+
+API Platform has a builtin HTTP cache invalidation system which allows to make API Platform apps blazing fast, and it uses
+[Varnish](https://varnish-cache.org/) by default. Read more in the chapter
+[API Platform Core Library: Enabling the Builtin HTTP Cache Invalidation System](../core/performance.md#enabling-the-builtin-http-cache-invalidation-system).
 
 API Platform can also be extended using PHP libraries and Symfony bundles.
 
@@ -622,19 +631,14 @@ Here is a non-exhaustive list of popular API Platform extensions:
 * Add [a user management system](../core/fosuser-bundle.md) (FOSUser)
 * [Secure the API with JWT](https://github.com/lexik/LexikJWTAuthenticationBundle) (LexikJwtAuthenticationBundle) or [OAuth](https://github.com/FriendsOfSymfony/FOSOAuthServerBundle)
   (FosOAuthServer)
-* [Add a Varnish reverse proxy and adopt a expiration or invalidation HTTP cache strategy](http://foshttpcachebundle.readthedocs.org)
-  (FOSHttpCache)
-* [Add CSRF protection when the API authentication relies on cookies](https://github.com/dunglas/DunglasAngularCsrfBundle)
-  (DunglasAngularCsrfBundle)
 * [Send mails](https://symfony.com/doc/current/cookbook/email/email.html) (Swift Mailer)
 * [Execute async jobs and create micro-service architectures using RabbitMQ](https://github.com/php-amqplib/RabbitMqBundle)
   (RabbitMQBundle)
 
-Keep in mind that you can use your favorite client-side technology: API Platform is tested and approved with React, Angular
-1 & 2, Ionic and Swift but can work with any language able to send HTTP requests (even COBOL can do that).
+Keep in mind that you can use your favorite client-side technology: API Platform provides React components ; but you can
+use your preferred client-side technology including Angular, Ionic and Swift. Any language able to send HTTP requests is OK
+(even COBOL can do that).
 
 To go further, the API Platform team maintains a demo application showing more advanced use cases like leveraging serialization
 groups, user management or JWT and OAuth authentication. [Checkout the demo code source on GitHub](https://github.com/api-platform/demo)
 and [browse it online](https://demo.api-platform.com).
-
-Next chapter: [Testing And Specifying the API](testing.md)

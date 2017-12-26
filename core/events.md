@@ -16,7 +16,6 @@ In the following example, we will send a mail each time a new book is created us
 
 ```php
 <?php
-
 // src/AppBundle/EventSubscriber/BookMailSubscriber.php
 
 namespace AppBundle\EventSubscriber;
@@ -40,7 +39,7 @@ final class BookMailSubscriber implements EventSubscriberInterface
     public static function getSubscribedEvents()
     {
         return [
-            KernelEvents::VIEW => [['sendMail', EventPriorities::POST_WRITE]],
+            KernelEvents::VIEW => ['sendMail', EventPriorities::POST_WRITE],
         ];
     }
 
@@ -64,11 +63,11 @@ final class BookMailSubscriber implements EventSubscriberInterface
 }
 ```
 
-If you use the official API Platform distribution, creating the previous class is enough. [DunglasActionBundle](https://github.com/dunglas/DunglasActionBundle)
-(installed by default) will automatically register this subscriber as a service and will inject its dependencies using [the
-autowiring feature of the Symfony Dependency Injection Container](http://symfony.com/doc/current/components/dependency_injection/autowiring.html).
+If you use the official API Platform distribution, creating the previous class is enough. The Symfony Dependency Injection
+component will automatically register this subscriber as a service and will inject its dependencies thanks to the [autowiring
+feature](http://symfony.com/doc/current/components/dependency_injection/autowiring.html).
 
-If you don't have DunglasActionBundle installed, [the subscriber must be registered manually](http://symfony.com/doc/current/components/http_kernel/introduction.html#creating-an-event-listener).
+Alternatively, [the subscriber must be registered manually](http://symfony.com/doc/current/components/http_kernel/introduction.html#creating-an-event-listener).
 
 [Doctrine events](http://doctrine-orm.readthedocs.org/en/latest/reference/events.html#reference-events-lifecycle-events)
 are also available (if you use it) if you want to hook at the object lifecycle events.
@@ -105,7 +104,3 @@ Constant           | Event             | Priority |
 `POST_WRITE`       | `kernel.view`     | 31       |
 `PRE_RESPOND`      | `kernel.view`     | 9        |
 `POST_RESPOND`     | `kernel.response` | 0        |
-
-Previous chapter: [Pagination](pagination.md)
-
-Next chapter: [Content Negotiation](content-negotiation.md)

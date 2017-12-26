@@ -1,34 +1,35 @@
 # NelmioApiDocBundle Integration
 
+NelmioApiDoc provides an alternative to [the native Swagger/Open API support](swagger.md) provided by API Platform.
+
+As NelmioApiDocBundle 3+ has builtin support for API Platform, this documentation is only relevant for people using
+NelmioApiDocBundle between version 2.9 and 3.0.
+
+For new projects, prefer using the builtin Swagger support and/or NelmioApiDoc 3.
+
 ![Screenshot of API Platform integrated with NelmioApiDocBundle](images/NelmioApiDocBundle.png)
 
-[NelmioApiDocBundle](https://github.com/nelmio/NelmioApiDocBundle) (since version 2.9) has built-in support for API Platform.
-Installing it will give you access to a human-readable documentation and a nice sandbox. It is an alternative to the builtin
-API Platform documentation.
+[NelmioApiDocBundle](https://github.com/nelmio/NelmioApiDocBundle) is supported by API Platform since version 2.9.
 
 To enable the NelmioApiDoc integration, copy the following configuration:
 
 ```yaml
 # app/config/config.yml
-
 api_platform:
     # ...
+
     enable_nelmio_api_doc: true
 
 nelmio_api_doc:
     sandbox:
-        accept_type:        'application/json'
+        accept_type: 'application/json'
         body_format:
-            formats:        ['json']
+            formats: ['json']
             default_format: 'json'
         request_format:
             formats:
-                json:       'application/json'
+                json: 'application/json'
 ```
 
 Please note that NelmioApiDocBundle has a sandbox limitation where you cannot pass a JSON array as parameter, so you cannot
 use it to deserialize nested objects.
-
-Previous chapter: [Adding a JWT authentication using `LexikJWTAuthenticationBundle`](jwt.md)
-
-Next chapter: [AngularJS Integration](angularjs-integration.md)
