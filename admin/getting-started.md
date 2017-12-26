@@ -11,6 +11,10 @@ Then, create a new React application for your admin:
 
     $ create-react-app my-admin
 
+Now, go to the newly created `my-admin` directory:
+
+    $ cd my-admin
+
 React and React DOM will be directly provided as dependencies of Admin On REST. As having different versions of React
 causes issues, remove `react` and `react-dom` from the `dependencies` section of the generated `package.json` file:
 
@@ -34,6 +38,12 @@ import { HydraAdmin } from '@api-platform/admin';
 export default () => <HydraAdmin entrypoint="https://demo.api-platform.com"/>; // Replace with your own API entrypoint
 ```
 
+Be sure to make your API send proper [CORS HTTP headers](https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS) to allow the admin's domain to access it. To do so, update the value of the `cors_allow_origin` parameter in `app/config/parameters.yml` (it will be `http://localhost:3000` by default).
+
+Clear the cache to apply this change:
+
+    $ docker-compose exec app bin/console cache:clear --env=prod
+
 Your new administration interface is ready! Type `yarn start` to try it!
 
 Note: if you don't want to hardcode the API URL, you can [use an environment variable](https://github.com/facebookincubator/create-react-app/blob/master/packages/react-scripts/template/README.md#adding-custom-environment-variables).
@@ -51,27 +61,31 @@ In the following example, we change components used for the `description` proper
 import React from 'react';
 import { RichTextField } from 'admin-on-rest';
 import RichTextInput from 'aor-rich-text-input';
-import HydraAdmin from 'api-platform-admin/lib/hydra/HydraAdmin';
-import parseHydraDocumentation from 'api-doc-parser/lib/hydra/parseHydraDocumentation';
+import { HydraAdmin } from '@api-platform/admin';
+import parseHydraDocumentation from '@api-platform/api-doc-parser/lib/hydra/parseHydraDocumentation';
 
 const entrypoint = 'https://demo.api-platform.com';
 
-const apiDocumentationParser = entrypoint => parseHydraDocumentation(entrypoint)
-  .then(api => {
-    api.resources.map(resource => {
-      const books = api.resources.find(r => 'books' === r.name);
-      books.fields.find(f => 'description' === f.name).fieldComponent = <RichTextField source="description" key="description"/>;
-      books.fields.find(f => 'description' === f.name).inputComponent = <RichTextInput source="description" key="description"/>;
+const myApiDocumentationParser = entrypoint => parseHydraDocumentation(entrypoint)
+  .then( ({ api }) => {
+    const books = api.resources.find(({ name }) => 'books' === name);
+    const description = books.fields.find(f => 'description' === f.name);
 
-      return resource;
-    });
+    description.input = props => (
+      <RichTextInput {...props} source="description" />
+    );
 
-    return api;
+    description.input.defaultProps = {
+      addField: true,
+      addLabel: true
+    };
+
+    return { api };
   })
 ;
 
 export default (props) => (
-  <HydraAdmin apiDocumentationParser={apiDocumentationParser} entrypoint={entrypoint}/>
+  <HydraAdmin apiDocumentationParser={myApiDocumentationParser} entrypoint={entrypoint}/>
 );
 ```
 
@@ -92,13 +106,28 @@ In the following example, we will:
 ```javascript
 import { FunctionField, ImageField, ImageInput } from 'admin-on-rest/lib/mui';
 import React from 'react';
-import HydraAdmin from 'api-platform-admin/lib/hydra/HydraAdmin';
-import parseHydraDocumentation from 'api-doc-parser/lib/hydra/parseHydraDocumentation';
+import { RichTextField } from 'admin-on-rest';
+import RichTextInput from 'aor-rich-text-input';
+import { HydraAdmin } from '@api-platform/admin';
+import parseHydraDocumentation from '@api-platform/api-doc-parser/lib/hydra/parseHydraDocumentation';
 
 const entrypoint = 'https://demo.api-platform.com';
 
-const apiDocumentationParser = entrypoint => parseHydraDocumentation(entrypoint)
-  .then(api => {
+const myApiDocumentationParser = entrypoint => parseHydraDocumentation(entrypoint)
+  .then( ({ api }) => {
+
+    const books = api.resources.find(({ name }) => 'books' === name);
+    const description = books.fields.find(f => 'description' === f.name);
+
+    description.input = props => (
+      <RichTextInput {...props} source="description" />
+    );
+
+    description.input.defaultProps = {
+      addField: true,
+      addLabel: true,
+    };
+
     api.resources.map(resource => {
       if ('http://schema.org/ImageObject' === resource.id) {
         resource.fields.map(field => {
@@ -145,12 +174,12 @@ const apiDocumentationParser = entrypoint => parseHydraDocumentation(entrypoint)
       return resource;
     });
 
-    return api;
+    return { api };
   })
 ;
 
 export default (props) => (
-  <HydraAdmin apiDocumentationParser={apiDocumentationParser} entrypoint={entrypoint}/>
+  <HydraAdmin apiDocumentationParser={myApiDocumentationParser} entrypoint={entrypoint} />
 );
 ```
 
@@ -172,7 +201,7 @@ export default class extends Component {
   state = {api: null};
 
   componentDidMount() {
-    parseHydraDocumentation(entrypoint).then(api => {
+    parseHydraDocumentation(entrypoint).then( ({ api }) =>  => {
       const books = api.resources.find(r => 'books' === r.name);
 
       books.writableFields.find(f => 'description' === f.name).inputProps = {
@@ -180,7 +209,9 @@ export default class extends Component {
       };
 
       this.setState({api: api});
-    })
+      
+      return { api };
+    });
   }
 
   render() {
