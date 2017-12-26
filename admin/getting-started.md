@@ -11,7 +11,7 @@ Then, create a new React application for your admin:
 
     $ create-react-app my-admin
 
-Then, every files to edit and commands to launch will be in the new created `my-admin` directory.
+Now, go to the newly created `my-admin` directory:
 
     $ cd my-admin
 
@@ -40,7 +40,7 @@ export default () => <HydraAdmin entrypoint="https://demo.api-platform.com"/>; /
 
 Be sure to make your API send proper [CORS HTTP headers](https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS) to allow the admin's domain to access it. To do so, update the value of the `cors_allow_origin` parameter in `app/config/parameters.yml` (it will be `http://localhost:3000` by default).
 
-Clear the cache to apply this changes:
+Clear the cache to apply this change:
 
     $ docker-compose exec app bin/console cache:clear --env=prod
 
