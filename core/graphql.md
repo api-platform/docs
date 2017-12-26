@@ -12,7 +12,7 @@ Once enabled, you have nothing to do: your schema describing your API is automat
 
 ## Enabling GraphQL
 
-To enable GraphQL in your API, simply require the graphql-php package using Composer:
+To enable GraphQL and GraphiQL interface in your API, simply require the graphql-php package using Composer:
 
     $ composer require webonyx/graphql-php
 
@@ -26,7 +26,9 @@ If you need to disable it, it can be done in the configuration:
 
 ```yaml
 # app/config/config.yml
-graphql:
-    enabled: true
-    graphiql: false
+api_platform:
+    graphql:
+        graphiql:
+            enabled: false
+# ...            
 ```
