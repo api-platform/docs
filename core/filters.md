@@ -599,9 +599,13 @@ final class RegexpFilter extends AbstractFilter
     // This function is only used to hook in documentation generators (supported by Swagger and Hydra)
     public function getDescription(string $resourceClass): array
     {
+        if (!$this->properties) {
+            return [];
+        }
+
         $description = [];
         foreach ($this->properties as $property => $strategy) {
-            $description['regexp_'.$property] = [
+            $description["regexp_$property"] = [
                 'property' => $property,
                 'type' => 'string',
                 'required' => false,
