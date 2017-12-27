@@ -42,7 +42,17 @@ In this case, we disable all operations except `POST`.
 Then, thanks to [the event system](events.md), it's possible to intercept the
 `POST` request and to handle it.
 
-First, an event subscriber is needed:
+First, we should define a custom loader paths and create an event subscriber:
+
+* define a custom loader paths for `Api/Dto`:
+
+```yaml
+api_platform:
+    mapping:
+        paths: ['%kernel.project_dir%/src/Api/Dto']
+```
+
+* create an event subscriber:
 
 ```php
 <?php
