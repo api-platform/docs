@@ -9,6 +9,8 @@ someone has lost its password.
 So let's create a basic DTO for this request:
 
 ```php
+// api/src/Api/Dto/ForgotPasswordRequest.php
+
 namespace App\Api\Dto;
 
 use ApiPlatform\Core\Annotation\ApiResource;
@@ -44,6 +46,7 @@ First, an event subscriber is needed:
 
 ```php
 <?php
+// api/src/Api/EventSubscriber/UserSubscriber.php
 
 namespace App\Api\EventSubscriber;
 
@@ -102,7 +105,6 @@ Otherwise, the following configuration is needed:
 
 ```yaml
 # app/config/services.yml
-
 services:
 
     # ...
