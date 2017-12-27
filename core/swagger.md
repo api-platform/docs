@@ -108,7 +108,7 @@ class Product // The class name will be used to name exposed resources
      *         "swagger_context"={
      *             "type"="string",
      *             "enum"={"one", "two"},
-     *             "example"="one"          
+     *             "example"="one"
      *         }
      *     }
      * )
@@ -177,5 +177,52 @@ Will produce the following Swagger documentation:
       }
     }
   }
+}
+```
+
+## Changing the Name of a Definition
+
+API Platform generates a definition name based on the serializer `groups` defined
+in the (`de`)`normalization_context`. It's possible to override the name
+thanks to the `swagger_definition_name` option:
+
+```php
+/**
+ * @ApiResource(
+ *      collectionOperations={
+ *          "post"={
+ *              "method"="POST",
+ *              "denormalization_context"={
+ *                  "groups"={"user_read"},
+ *                  "swagger_definition_name": "Read",
+ *              },
+ *          },
+ *      },
+ * )
+ */
+class User
+{
+}
+```
+
+It's also possible to re-use the (`de`)`normalization_context`:
+
+```php
+/**
+ * @ApiResource(
+ *      collectionOperations={
+ *          "post"={
+ *              "method"="POST",
+ *              "denormalization_context"=User::API_WRITE,
+ *          },
+ *      },
+ * )
+ */
+class User
+{
+    const API_WRITE = [
+        'groups' => ['user_read'],
+        'swagger_definition_name' => 'Read',
+    ];
 }
 ```
