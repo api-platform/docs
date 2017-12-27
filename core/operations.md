@@ -357,7 +357,31 @@ Note that the operation name, here `api_questions_answer_get_subresource`, is th
 It'll be automatically set to `$resources_$subresource(s)_get_subresource`. To find the correct operation name you
 may use `bin/console debug:router`.
 
-### Control the depth of subresources
+### Control the Path of Subresources
+
+You can control the path of subresources with the `path` option of the `subresourceOperations` parameter:
+
+```php
+<?php
+// src/AppBundle/Entity/Question.php
+
+/**
+ * @ORM\Entity()
+ * @ApiResource(
+ *      subresourceOperations={
+ *          "answer_get_subresource"= {
+ *              "method"="GET",
+ *              "path"="/questions/{id}/all-answers",
+ *          },
+ *      },
+ * )
+ */
+class Question
+{
+}
+```
+
+### Control the Depth of Subresources
 
 You can control depth of subresources with the parameter `maxDepth`. For example, if `Answer` entity also have subresource such as `comments`and you don't want the route `api/questions/{id}/answers/{id}/comments` to be generated. You can do this by adding the parameter maxDepth in ApiSubresource annotation or yml/xml file configuration.
 
