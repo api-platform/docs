@@ -13,7 +13,7 @@ The main serialization process has two stages:
 
 Unlike Symfony itself, API Platform leverages custom normalizers, its router and the [data provider](data-providers.md) system to do an advanced tranformation. Metadata are added to the generated document including links, type information, pagination data or available filters.
 
-The API Platform Serializer is very extensible, you can register custom normalizers and encoders to support other formats. You can also decorate existing normalizers to customize their behaviors.
+The API Platform Serializer is extendable, you can register custom normalizers and encoders to support other formats. You can also decorate existing normalizers to customize their behaviors.
 
 ## Available Serializers
 

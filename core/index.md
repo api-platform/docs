@@ -7,8 +7,8 @@ framework](https://symfony.com) (recommended).
 It embraces [JSON for Linked Data (JSON-LD)](http://json-ld.org) and [Hydra Core Vocabulary](http://www.hydra-cg.com) web
 standards but also supports [HAL](http://stateless.co/hal_specification.html), [Swagger/Open API](https://www.openapis.org/), XML, JSON, CSV and YAML.
 
-Build a working and fully-featured CRUD API in minutes. Leverage the awesome features of the tool to develop complex and
-high performance API-first projects.
+Build a working and fully featured CRUD API in minutes. Leverage the awesome features of the tool to develop complex and
+high performance API first projects.
 
 If you are starting a new project, the easiest way to get API Platform up is to install
 the [API Platform Distribution](../distribution/index.md).
@@ -17,7 +17,7 @@ the [API Platform Distribution](../distribution/index.md).
 
 ## Features
 
-Here is the fully-featured REST API you'll get in minutes:
+Here is the fully featured REST API you'll get in minutes:
 
 * [Automatic CRUD](operations.md)
 * Hypermedia (JSON-LD and HAL)

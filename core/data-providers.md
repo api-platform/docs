@@ -5,7 +5,7 @@ ORM](http://www.doctrine-project.org/projects/orm.html) to retrieve data from a 
 is enabled by default. This data provider natively supports paged collections and filters. It can be used as is and fits
 perfectly with common usages.
 
-But sometime, you want to retrieve data from other sources such as another persistence layer, a webservice, ElasticSearch
+However, you sometime want to retrieve data from other sources such as another persistence layer, a webservice, ElasticSearch
 or MongoDB.
 Custom data providers can be used to do so. A project can include as many data providers as it needs. The first able to
 retrieve data for a given resource will be used.

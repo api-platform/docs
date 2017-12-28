@@ -3,7 +3,7 @@
 API Platform Core is shipped with a bridge for [FOSUserBundle](https://github.com/FriendsOfSymfony/FOSUserBundle).
 If the FOSUser bundle is enabled, this bridge will use its `UserManager` to create, update and delete user resources.
 
-Note: FOSUserBundle is not very well suited for APIs. We strongly encourage you to use the [Doctrine user provider](https://symfony.com/doc/current/security/entity_provider.html)
+Note: FOSUserBundle is not well suited for APIs. We strongly encourage you to use the [Doctrine user provider](https://symfony.com/doc/current/security/entity_provider.html)
 shipped with Symfony or to [create a custom user provider](http://symfony.com/doc/current/security/custom_provider.html)
 instead of using this bundle.
 

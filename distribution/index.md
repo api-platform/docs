@@ -31,7 +31,7 @@ One more thing, before we start: API Platform is built on top of [the Symfony fr
 is compatible with most [Symfony bundles](https://symfony.com/blog/the-30-most-useful-symfony-bundles-and-making-them-even-better)
 (plugins) and benefits from the numerous extensions points provided by this rock-solid foundation (events, DIC...).
 Adding features like custom, service-oriented, API endpoints, JWT or OAuth authentication, HTTP caching, mail sending or
-asynchronous jobs to your APIs is very straightforward.
+asynchronous jobs to your APIs is straightforward.
 
 ## Installing the framework
 
@@ -134,14 +134,14 @@ to retrieve data in raw JSON.
 
 Of course, you can also use your favorite HTTP client to query the API. We strongly recommend to use [Postman](https://www.getpostman.com/).
 It works perfectly well with API Platform, also has native Swagger support, allows to easily write functional tests and
-has very good team collaboration features.
+has good team collaboration features.
 
 ## Creating the model
 
 API Platform is now 100% functional. Let's create our own data model.
 Our bookshop API will start simple. It will be composed of a `Book` resource type and a `Review` one.
 
-Books have an id, an ISBN number, a title, a description, an author, a publication date and are related to a list of reviews.
+Books have an id, an ISBN, a title, a description, an author, a publication date and are related to a list of reviews.
 Reviews have an id, a rating (between 0 and 5), a body, an author, a publication date and are related to one book.
 
 Let's describe this data model as a set of Plain Old PHP Objects (POPO) and map it to database's tables using annotations
@@ -173,7 +173,7 @@ class Book
     private $id;
 
     /**
-     * @var string|null The ISBN number of this book (or null if doesn't have one).
+     * @var string|null The ISBN of this book (or null if doesn't have one).
      *
      * @ORM\Column(nullable=true)
      */
@@ -373,7 +373,7 @@ in [adding some filters and adding sorts to the collection](../core/filters.md) 
 You may have noticed that some keys start with the `@` symbol in the generated JSON response (`@id`, `@type`, `@context`...)?
 API Platform comes with a full support of the [JSON-LD](http://json-ld.org/) format (and its [Hydra](http://www.hydra-cg.com/)
 extension). It allows to build smart clients, with auto-discoverability capabilities (take a look at [Hydra console](http://www.markus-lanthaler.com/hydra/console/))
-and is very useful for open data, SEO and interoperability when [used with open vocabularies such as Schema.org](http://blog.schema.org/2013/06/schemaorg-and-json-ld.html).
+and is useful for open data, SEO and interoperability when [used with open vocabularies such as Schema.org](http://blog.schema.org/2013/06/schemaorg-and-json-ld.html).
 JSON-LD enables a lot of awesome advanced features (like [giving access to Google to your structured data](https://developers.google.com/search/docs/guides/intro-structured-data)
 or consuming APIs with [Apache Jena](https://jena.apache.org/documentation/io/#formats)).
 We think that it's the best default format for a new API. However, API Platform natively [supports many other formats](../core/content-negotiation.md)
@@ -437,7 +437,7 @@ Oops, we missed to add the title. But submit the request anyway. You should get 
 
 Did you notice that the error was automatically serialized in JSON-LD and respect the Hydra Core vocabulary for errors?
 It allows the client to easily extract useful information from the error. Anyway, it's bad to get a SQL error when submitting
-a request. It means that we didn't use a valid input, and [it's a very bad and dangerous practice](https://www.owasp.org/index.php/Input_Validation_Cheat_Sheet).
+a request. It means that we didn't use a valid input, and [it's a bad and dangerous practice](https://www.owasp.org/index.php/Input_Validation_Cheat_Sheet).
 
 API Platform comes with a bridge with [the Symfony Validator Component](http://symfony.com/doc/current/validation.html).
 Adding some of [its numerous validation constraints](http://symfony.com/doc/current/validation.html#supported-constraints)
@@ -472,7 +472,7 @@ class Book
     private $id;
 
     /**
-     * @var string|null The ISBN number of this book (or null if doesn't have one).
+     * @var string|null The ISBN of this book (or null if doesn't have one).
      *
      * @ORM\Column(nullable=true)
      * @Assert\Isbn
@@ -601,9 +601,9 @@ prefer), try again the previous `POST` request.
 
 You now get proper validation error messages, always serialized using the Hydra error format (API Problem is also supported).
 Those errors are easy to parse client-side. By adding the proper validation constraints, we also noticed that the provided
-ISBN number isn't valid...
+ISBN isn't valid...
 
-Here we are! We have created a working and very powerful hypermedia REST API in a few minutes, and by writing only a few
+Here we are! We have created a working and powerful hypermedia REST API in a few minutes, and by writing only a few
 lines of PHP. But we only covered the basics.
 
 ## Going Client-Side
@@ -618,7 +618,7 @@ They are many more features to learn! Read [the full documentation](../core/inde
 to extend API Platform to fit your needs.
 API Platform is incredibly efficient for prototyping and Rapid Application Development (RAD). But the framework is also
 designed to create complex web APIs far beyond simple CRUD apps. It benefits from **strong extension points** and is **is
-continuously optimized for performance.** It powers very high-traffic websites.
+continuously optimized for performance.** It powers high-traffic websites.
 
 API Platform has a builtin HTTP cache invalidation system which allows to make API Platform apps blazing fast, and it uses
 [Varnish](https://varnish-cache.org/) by default. Read more in the chapter

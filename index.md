@@ -112,7 +112,7 @@
 2.  [Getting Started](schema-generator/getting-started.md)
 3.  [Configuration](schema-generator/configuration.md)
 
-## The Admin Component: Create a Fancy and Fully-Featured Administration Interface
+## The Admin Component: Create a Fancy and Fully Featured Administration Interface
 
 1.  [Introduction](admin/index.md)
     1.  [Features](admin/index.md#features)
