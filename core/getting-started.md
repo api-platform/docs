@@ -12,11 +12,11 @@ Alternatively, you can use [Composer](http://getcomposer.org) to install the sta
 
 `composer require api-platform/core`
 
-Then, update your `app/config/AppKernel.php` file:
+Then, update your `app/AppKernel.php` file:
 
 ```php
 <?php
-// app/config/AppKernel.php
+// app/AppKernel.php
 
 public function registerBundles()
 {
@@ -106,7 +106,7 @@ class Product // The class name will be used to name exposed resources
         $this->offers->add($offer);
     }
 
-    public function removeGreeting(Offer $offer): void
+    public function removeOffer(Offer $offer): void
     {
         $offer->product = null;
         $this->offers->removeElement($offer);

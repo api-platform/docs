@@ -21,9 +21,6 @@ api_platform:
     # Specify a path name generator to use.
     path_segment_name_generator: 'api_platform.path_segment_name_generator.underscore'
 
-    # Specify a name for the folder within bundle that contain api resources.
-    api_resources_directory: 'Entity'
-
     eager_loading:
         # To enable or disable eager loading.
         enabled: true

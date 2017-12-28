@@ -69,14 +69,14 @@ use AppBundle\Entity\Offer;
 use AppBundle\Entity\User;
 use Doctrine\ORM\QueryBuilder;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
-use Symfony\Component\Security\Core\Authorization\AuthorizationChecker;
+use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 final class CurrentUserExtension implements QueryCollectionExtensionInterface, QueryItemExtensionInterface
 {
     private $tokenStorage;
     private $authorizationChecker;
 
-    public function __construct(TokenStorageInterface $tokenStorage, AuthorizationChecker $checker)
+    public function __construct(TokenStorageInterface $tokenStorage, AuthorizationCheckerInterface $checker)
     {
         $this->tokenStorage = $tokenStorage;
         $this->authorizationChecker = $checker;

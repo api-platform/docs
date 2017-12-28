@@ -271,6 +271,19 @@ class Question
 }
 ```
 
+Alternatively, you can use the YAML configuration format:
+
+```yaml
+AppBundle\Entity\Answer: ~
+AppBundle\Entity\Question:
+    properties:
+        answer:
+            subresource:
+                resourceClass: 'AppBundle\Entity\Answer'
+                collection: false
+```
+
+
 Note that all we had to do is to set up `@ApiSubresource` on the `Question::answer` relation. Because the `answer` is a to-one relation, we know that this subresource is an item. Therefore the response will look like this:
 
 ```json
@@ -343,6 +356,75 @@ Or in XML:
 Note that the operation name, here `api_questions_answer_get_subresource`, is the important keyword.
 It'll be automatically set to `$resources_$subresource(s)_get_subresource`. To find the correct operation name you
 may use `bin/console debug:router`.
+
+### Control the Path of Subresources
+
+You can control the path of subresources with the `path` option of the `subresourceOperations` parameter:
+
+```php
+<?php
+// src/AppBundle/Entity/Question.php
+
+/**
+ * @ORM\Entity()
+ * @ApiResource(
+ *      subresourceOperations={
+ *          "answer_get_subresource"= {
+ *              "method"="GET",
+ *              "path"="/questions/{id}/all-answers",
+ *          },
+ *      },
+ * )
+ */
+class Question
+{
+}
+```
+
+### Control the Depth of Subresources
+
+You can control depth of subresources with the parameter `maxDepth`. For example, if `Answer` entity also have subresource such as `comments`and you don't want the route `api/questions/{id}/answers/{id}/comments` to be generated. You can do this by adding the parameter maxDepth in ApiSubresource annotation or yml/xml file configuration.
+
+```php
+<?php
+// src/AppBundle/Entity/Question.php
+
+use ApiPlatform\Core\Annotation\ApiProperty;
+use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Core\Annotation\ApiSubresource;
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * @ORM\Entity
+ * @ApiResource
+ */
+class Question
+{
+    /**
+     * @ORM\Column(type="integer")
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="AUTO")
+     */
+    private $id;
+
+    /**
+     * @ORM\Column
+     */
+    public $content;
+
+    /**
+     * @ORM\OneToOne(targetEntity="Answer", inversedBy="question")
+     * @ORM\JoinColumn(referencedColumnName="id", unique=true)
+     * @ApiSubresource(maxDepth=1)
+     */
+    public $answer;
+
+    public function getId()
+    {
+        return $this->id;
+    }
+}
+```
 
 ## Creating Custom Operations and Controllers
 

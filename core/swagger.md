@@ -53,10 +53,10 @@ final class SwaggerDecorator implements NormalizerInterface
 
 
 	// e.g. add a custom parameter
-		$docs['paths']['/foos']['get']['parameters'][] = $customDefinition;
+	$docs['paths']['/foos']['get']['parameters'][] = $customDefinition;
 
-		// Override title
-		$docs['info']['title'] = 'My Api Foo';
+	// Override title
+	$docs['info']['title'] = 'My Api Foo';
 
         return $docs;
     }
@@ -104,7 +104,7 @@ class Product // The class name will be used to name exposed resources
      * @Assert\NotBlank
      *
      * @ApiProperty(
-     *     "attributes"={
+     *     attributes={
      *         "swagger_context"={
      *             "type"="string",
      *             "enum"={"one", "two"},
@@ -120,7 +120,7 @@ class Product // The class name will be used to name exposed resources
      * @Assert\DateTime
      *
      * @ApiProperty(
-     *     "attributes"={
+     *     attributes={
      *         "swagger_context"={"type"="string", "format"="date-time"}
      *     }
      * )

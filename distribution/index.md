@@ -323,7 +323,7 @@ class Book
 
 ```php
 <?php
-// src/AppBundle/Entity/Entity.php
+// src/AppBundle/Entity/Review.php
 
 namespace AppBundle\Entity;
 
