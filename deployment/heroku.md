@@ -2,11 +2,11 @@
 
 [Heroku](http://heroku.com) is a popular, fast, scalable and reliable *Platform As A Service* (PaaS). As Heroku offers a
 free plan including database support through [Heroku Postgres](https://www.heroku.com/postgres), it's
-a very convenient way to experiment with the API Platform.
+a convenient way to experiment with the API Platform.
 
 The API Platform Heroku integration also supports MySQL databases provided by [the ClearDB add-on](https://addons.heroku.com/cleardb).
 
-Deploying API Platform applications on Heroku is very straightforward and you will learn how to do it in this tutorial.
+Deploying API Platform applications on Heroku is straightforward and you will learn how to do it in this tutorial.
 
 *Note: this tutorial works perfectly well with API Platform but also with any Symfony application based on the Symfony Standard
 Edition.*

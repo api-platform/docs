@@ -9,7 +9,7 @@ of event listeners are executed which validate the data, persist it in database,
 and create an HTTP response that will be sent to the client.
 
 To do so, API Platform Core leverages [events triggered by the Symfony HTTP Kernel](https://symfony.com/doc/current/reference/events.html#kernel-events).
-You can also hook your own code to those events. They are very handy and powerful extension points available at all points
+You can also hook your own code to those events. They are handy and powerful extension points available at all points
 of the request lifecycle.
 
 In the following example, we will send a mail each time a new book is created using the API:
