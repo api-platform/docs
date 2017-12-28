@@ -330,7 +330,7 @@ For instance, treat entries with a property value of `null` as the smallest, wit
 # app/config/api_filters.yml
 services:
     offer.order_filter:
-        parent: 'api_platform.doctrine.orm.date_filter'
+        parent: 'api_platform.doctrine.orm.order_filter'
         arguments: [ { validFrom: { nulls_comparison: 'nulls_smallest' } } ]
         tags: [ 'api_platform.filter' ]
 ```
