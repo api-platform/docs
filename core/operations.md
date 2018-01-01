@@ -558,7 +558,7 @@ API Platform automatically retrieves the appropriate PHP entity then deserialize
 updates the entity with data provided by the user.
 
 If you want to bypass the automatic retrieval of the entity, you can set the parameter `_api_receive` to `false`. 
-This way, it will skip the `Read`, `Deserialize` and `Validate` listeners (see [The Event System](events.md) for more informations).
+This way, it will skip the `Read`, `Deserialize` and `Validate` listeners (see [the event system](events.md) for more information).
 
 Services (`$myService` here) are automatically injected thanks to the autowiring feature. You can type-hint any service
 you need and it will be autowired too.
