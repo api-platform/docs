@@ -620,3 +620,44 @@ class Book
     // ...
 }
 ```
+
+## Force entity to be displayed as IRI
+
+In some case like with tree entities, serialization groups are not enough and that can leads to huge payloads. 
+To limit these references you can use the always_identifer to render the object as IRI :
+
+```php
+use ApiPlatform\Core\Annotation\ApiProperty;
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * @ApiResource 
+ * @ORM\Entity
+ */
+class Category
+{
+    //...
+    
+    /**
+     * @var ArrayCollection children categories
+     *
+     * @ORM\ManyToMany(targetEntity="Category")
+     * @ApiProperty(alwaysIdentifier=true)
+     */
+    private $children;
+}
+```
+
+Will be displayed as
+```json
+{
+      "@context": "/contexts/Category",
+      "@id": "/categories/1",
+      "@type": "Category",
+      "children": [
+          "/always_identifier_dummies/1"
+      ]
+}
+```
+
+Note that in trees an object will be always serialized only 1 time. The second time, the IRI will always be used because of the circular reference handle.
