@@ -423,7 +423,7 @@ doctrine:
 
 ## Custom Schemas
 
-The generator can use your own schema definitions. They must be wrote in RDFa and follow the format of the [Schema.org's
+The generator can use your own schema definitions. They must be written in RDFa and follow the format of the [Schema.org's
 definition](httsp://schema.org/docs/schema_org_rdfa.html). This is useful to document your [Schema.org extensions](https://schema.org/docs/extension.html) and use them
 to generate the PHP data model of your application.
 
