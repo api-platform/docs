@@ -455,6 +455,8 @@ class BookAttributeNormalizer implements NormalizerInterface, SerializerAwareInt
 
 This will add the serialization group `can_retrieve_book` only if the currently logged in user has access to the given book instance.
 
+Note: In this example, we use the `TokenStorageInterface` to check for access. Don't forget that Symfony provides many useful other services that might be better suited depending on your use case such as the [`AuthorizationChecker`](https://symfony.com/doc/current/components/security/authorization.html#authorization-checker)
+
 ## Name Conversion
 
 The Serializer Component provides a handy way to map PHP field names to serialized names. See the related [Symfony documentation](http://symfony.com/doc/master/components/serializer.html#converting-property-names-when-serializing-and-deserializing).
