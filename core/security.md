@@ -59,7 +59,7 @@ class Book
 }
 ```
 
-This example is going to allow only fetching the book related to the current user. if he tries to fetch a book which is
+This example is going to allow only fetching the book related to the current user. If he tries to fetch a book which is not
 linked to his account, that will not return the resource. In addition, only admins are able to create books which means
 that a user could not create a book.
 
