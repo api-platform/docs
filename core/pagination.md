@@ -196,6 +196,60 @@ class Book
 }
 ```
 
+## Changing Maximum items per page
+
+### Globally
+
+The number of maximum items per page can be configured for all resources:
+
+```yaml
+# app/config/config.yml
+api_platform:
+    collection:
+        pagination:
+            maximum_items_per_page: 50
+```
+
+### For a Specific Resource
+
+```php
+<?php
+// src/AppBundle/Entity/Book.php
+
+use ApiPlatform\Core\Annotation\ApiResource;
+
+/**
+ * @ApiResource(
+ *     attributes={"maximum_items_per_page"=50}
+ * )
+ */
+class Book
+{
+    // ...
+}
+```
+
+### For a Specific Resource Collection Operation
+
+```php
+<?php
+// src/AppBundle/Entity/Book.php
+
+use ApiPlatform\Core\Annotation\ApiResource;
+
+/**
+ * @ApiResource(
+ *     collectionOperations={
+ *         "get"={"maximum_items_per_page"=50}
+ *     }
+ * )
+ */
+class Book
+{
+    // ...
+}
+```
+
 ## Partial Pagination
 
 When using the default pagination, a `COUNT` query will be issued against the current requested collection. This may have a
