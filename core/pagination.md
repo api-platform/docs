@@ -240,7 +240,7 @@ use ApiPlatform\Core\Annotation\ApiResource;
 /**
  * @ApiResource(
  *     collectionOperations={
- *         "get"={"method"="GET", "maximum_items_per_page"=50}
+ *         "get"={"maximum_items_per_page"=50}
  *     }
  * )
  */
