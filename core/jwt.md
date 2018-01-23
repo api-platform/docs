@@ -72,8 +72,8 @@ api_platform:
     swagger:
          api_keys:
              apiKey:
-                name: "Authorization"
-                type: "header"
+                name: Authorization
+                type: header
 ```
 
 And the "Authorize" button will automatically appear in Swagger UI.
