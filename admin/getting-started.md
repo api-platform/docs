@@ -79,7 +79,7 @@ const myApiDocumentationParser = entrypoint => parseHydraDocumentation(entrypoin
       addField: true,
       addLabel: true
     };
-
+    
     return { api };
   })
 ;
@@ -87,8 +87,8 @@ const myApiDocumentationParser = entrypoint => parseHydraDocumentation(entrypoin
 export default (props) => <HydraAdmin apiDocumentationParser={myApiDocumentationParser} entrypoint={entrypoint}/>;
 ```
 
-The `fieldComponent` property of the `Field` class allows to set the component used to render a property in list and show screens.
-The `inputComponent` property allows to set the component to use to render the input used in create and edit screens.
+The `field` property of the `Field` class allows to set the component used to render a property in list and show screens.
+The `input` property allows to set the component to use to render the input used in create and edit screens.
 
 Any [field](https://marmelab.com/admin-on-rest/Fields.html) or [input](https://marmelab.com/admin-on-rest/Inputs.html) provided by the Admin On Rest library can be used.
 

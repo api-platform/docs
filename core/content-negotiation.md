@@ -24,16 +24,13 @@ JSON                                                            | `json`       |
 XML                                                             | `xml`        | `application/xml`, `text/xml` | no
 HTML (API docs)                                                 | `html`       | `text/html`                   | no
 
-
 If the client requested format is not specified (if it's not supported, it will throw an HTTP bad format error), the response format will be the first format defined in the `formats` configuration key (see below).
 An example using the builtin XML support is available in [Behat specs](https://github.com/api-platform/core/blob/master/features/main/content_negotiation.feature).
 
-
-The API Platform content negotiation system is extensible. Support for other formats (such as [JSONAPI](http://jsonapi.org/))
+The API Platform content negotiation system is extendable. Support for other formats (such as [JSONAPI](http://jsonapi.org/))
 can be added by [creating and registering appropriate encoders and, sometimes, normalizers](https://symfony.com/doc/current/serializer.html#adding-normalizers-and-encoders). Adding support for other
-standard hypermedia formats upstream is very welcome. Don't hesitate to contribute by adding your encoders and normalizers
+standard hypermedia formats upstream is welcome. Don't hesitate to contribute by adding your encoders and normalizers
 to API Platform Core.
-
 
 ## Enabling Several Formats
 
@@ -68,12 +65,10 @@ API Platform Core will automatically call the serializer with your defined forma
 as `format` parameter during the deserialization process. Then it will return the result to the client with the asked MIME
 type using its built-in responder.
 
-
 ## Writing a Custom Normalizer
 
 Using composition is the recommended way to implement a custom normalizer. You can use the following template to start with your
 own implementation of `CustomItemNormalizer`:
-
 
 ```yaml
 # app/config/services.yml

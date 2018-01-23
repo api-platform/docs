@@ -14,10 +14,10 @@ specified the documentation URL instead of the entrypoint. For example if you ar
 documentation URL is at [https://demo.api-platform.com/docs](https://demo.api-platform.com/docs) the entry point is
 likely at [https://demo.api-platform.com](https://demo.api-platform.com). You can see an example of the expected
 response from an entrypoint in your browser by clicking visiting
-[https://demo.api-platform.com/index.jsonld](https://demo.api-platform.com/index.jsonld).   
+[https://demo.api-platform.com/index.jsonld](https://demo.api-platform.com/index.jsonld).
 
 * If you receive `TypeError: Cannot read property '@type' of undefined` or `TypeError: Cannot read property '0'
-of undefined` check that the URL you specified is accessible and returns jsonld.  You can check from the command line
+of undefined` check that the URL you specified is accessible and returns jsonld. You can check from the command line
 you are using by running something like `curl https://demo.api-platform.com/`.
 
 * If you receive a message like this:

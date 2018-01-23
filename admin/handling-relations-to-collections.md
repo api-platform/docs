@@ -3,7 +3,7 @@
 Currently, API Platform Admin doesn't handle `to-many` relations. The core library [is being patched](https://github.com/api-platform/core/pull/1189)
 to document relations to collections through OWL.
 
-In the meantime, it is possible to manually configure API Platform to handle relations to collections.
+Meanwhile, it is possible to manually configure API Platform to handle relations to collections.
 
 We will create the admin for an API exposing `Person` and `Book` resources linked with a `many-to-many`
 relation between them (trough the `authors` property).

@@ -1,7 +1,7 @@
 # Accept `application/x-www-form-urlencoded` Form Data
 
 API Platform only supports raw documents as request input (encoded in JSON, XML, YAML...). This has many advantages including support of types and the ability to send back to the API documents originally retrieved through a `GET` request.
-But sometimes - for instance, to support legacy clients - it is necessary to accept inputs encoded in the traditional [`application/x-www-form-urlencoded`](https://www.w3.org/TR/html401/interact/forms.html#h-17.13.4.1) format (HTML form content type). This can easily be done using [the powerful event system](events.md) of the framework.
+However, sometimes - for instance, to support legacy clients - it is necessary to accept inputs encoded in the traditional [`application/x-www-form-urlencoded`](https://www.w3.org/TR/html401/interact/forms.html#h-17.13.4.1) format (HTML form content type). This can easily be done using [the powerful event system](events.md) of the framework.
 
 In this tutorial, we will decorate the default `DeserializeListener` class to handle form data if applicable, and delegate to the built-in listener for other cases.
 
