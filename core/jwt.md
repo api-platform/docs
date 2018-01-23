@@ -71,7 +71,9 @@ Want to test the routes of your JWT-authentication-protected API?
 api_platform:
     swagger:
          api_keys:
-             - { name: 'Authorization', type: 'header' }
+             apiKey:
+                name: Authorization
+                type: header
 ```
 
 And the "Authorize" button will automatically appear in Swagger UI.
