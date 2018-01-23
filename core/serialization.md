@@ -283,7 +283,8 @@ the data provider and any changes in the embedded relation will be applied to th
 
 You can create as relation embedding levels as you want.
 
-## Changing the Serialization Context Dynamically
+## 
+Serialization Context Dynamically
 
 Let's imagine a resource where most fields can be managed by any user, but some can be managed by admin users only:
 
@@ -383,7 +384,7 @@ final class BookContextBuilder implements SerializerContextBuilderInterface
 If the user has `ROLE_ADMIN` permission and the subject is an instance of Book, `admin_input` group will be dynamically added to the denormalization context.
 The variable `$normalization` lets you check whether the context is for normalization (if true) or denormalization.
 
-## Changing the Serialization Context on a per item basis
+## Changing the Serialization Context on a Per Item Basis
 
 The example above shows how you can modify the normalization/denormalization context based on the current user permissions for all the books that are being normalized/denormalized. Sometimes, however, the permissions vary depending on what book is being processed. Think of ACL's: User A may retrieve Book A but not Book B. In that case, we have to leverage the power of the Symfony Serializer and register our own normalizer that adds the group on every single item (priority `64` is just an example, make sure your normalizer gets loaded first):
 
@@ -402,11 +403,14 @@ The Normalizer class is a bit harder to understand because it has to make sure t
 <?php
 // src/AppBundle/Serializer/BookAttributeNormalizer.php
 
+namespace AppBundle\Serializer;
+
 class BookAttributeNormalizer implements NormalizerInterface, SerializerAwareInterface
 {
     use SerializerAwareTrait;
 
     private const BOOK_ATTRIBUTE_NORMALIZER_ALREADY_CALLED = 'BOOK_ATTRIBUTE_NORMALIZER_ALREADY_CALLED';
+
     private $tokenStorage;
 
     public function __construct(TokenStorageInterface $tokenStorage)
@@ -433,7 +437,7 @@ class BookAttributeNormalizer implements NormalizerInterface, SerializerAwareInt
         return $data instanceof Book;
     }
     
-    private function userHasPermissionsForBook($object)
+    private function userHasPermissionsForBook($object): bool
     {
         // Get permissions from user in $this->tokenStorage
         // for the current $object (book) and
