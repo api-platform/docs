@@ -180,23 +180,24 @@ Will produce the following Swagger documentation:
 }
 ```
 
-## Changing Swagger UI location
+## Changing the Swagger UI Location
 
-Sometimes you may want to have the api at one location, and the Swagger UI at a different location. This can be done by disabling the Swagger UI from the `api_platform` configuration file and manually adding the Swagger UI controller.
+Sometimes you may want to have the API at one location, and the Swagger UI at a different location. This can be done by disabling the Swagger UI from the API Platform configuration file and manually adding the Swagger UI controller.
 
-**Disable Swagger UI**
+### Disabling Swagger UI
 
 ```yaml
-# config/packages/api_platform.yaml
+# app/config/config.yml
 
-enable_swagger_ui: false
+api_platform:
+    # ...
+    enable_swagger_ui: false
 ```
 
-**Manually adding Swagger UI controller**
+### Manually Registering the Swagger UI Controller
 
 ```yaml
-# config/routes.yaml
-
+# app/config/routing.yml
 swagger_ui:
     path: /docs
     controller: api_platform.swagger.action.ui
