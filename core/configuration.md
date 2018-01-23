@@ -48,6 +48,12 @@ api_platform:
     # Enable Swagger ui.
     enable_swagger_ui: true
 
+    # Enable the entrypoint.
+    enable_entrypoint: true
+
+    # Enable the docs.
+    enable_docs: true
+
     oauth:
         # To enable or disable oauth.
         enabled: false
