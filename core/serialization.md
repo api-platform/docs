@@ -283,8 +283,7 @@ the data provider and any changes in the embedded relation will be applied to th
 
 You can create as relation embedding levels as you want.
 
-## 
-Serialization Context Dynamically
+## Serialization Context Dynamically
 
 Let's imagine a resource where most fields can be managed by any user, but some can be managed by admin users only:
 
