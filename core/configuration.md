@@ -75,7 +75,7 @@ api_platform:
 
     swagger:
         # The swagger api keys.
-        api_keys: []      
+        api_keys: []
 
     collection:
         # The default order of results.
@@ -112,6 +112,10 @@ api_platform:
     mapping:
         # The list of paths with files or directories where the bundle will look for additional resource files.
         paths: []
+
+    # The list of your resources class directories. Defaults to the directories of the mapping paths but might differ.
+    resource_class_directories:
+        - '%kernel.project_dir%/src/Entity'
 
     http_cache:
         # Automatically generate etags for API responses.
