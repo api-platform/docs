@@ -22,12 +22,15 @@ script:
   - cd $TRAVIS_BUILD_DIR/../website
   - bin/generate-nav
   - yarn gatsby build
+  # Preserve artifacts
+  - cd $TRAVIS_BUILD_DIR
+  - mv ../website/public public
 
 deploy:
   provider: pages
   skip_cleanup: true
   github_token: $GITHUB_TOKEN
-  local_dir: $TRAVIS_BUILD_DIR/../website/public
+  local_dir: public
   fqdn: api-platform.com
   on:
     branch: 2.1
