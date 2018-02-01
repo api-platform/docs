@@ -479,7 +479,7 @@ services:
 
 ### Property filter
 
-The property filter add the possibility to filter serialization properties.
+The property filter adds the possibility to filter serialization properties.
 
 Syntax: `?properties[]=<property>`
 
