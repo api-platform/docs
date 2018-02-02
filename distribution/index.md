@@ -1,5 +1,7 @@
 # Getting Started with API Platform: Hypermedia and GraphQL API, Admin and Progressive Web App
 
+![The welcome page](images/api-platform-2.2-welcome.png)
+
 > *API Platform* is the most advanced API platform, in any framework or language.
 
 Fabien Potencier (creator of Symfony), SymfonyCon 2017
