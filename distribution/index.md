@@ -689,7 +689,7 @@ The generated code contains a list (including pagination), a delete button, a cr
 [Bootstrap 4](http://getbootstrap.com) markup and [ARIA roles](https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA)
 to make the app usable by people with disabilities.
 
-If you prefer to generated a PWA built on top of Vue.js, or a native mobile app, read [the dedicated documentation](../client-generator/index.md).
+If you prefer to generate a PWA built on top of Vue.js, or a native mobile app, read [the dedicated documentation](../client-generator/index.md).
 
 ## Other Features
 
