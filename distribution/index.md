@@ -17,7 +17,7 @@ It contains:
 * a dynamic JavaScript admin, leveraging the hypermedia capabilities of API Platform and built on top of [React](https://reactjs.org/)
   and [Admin On Rest](https://github.com/marmelab/admin-on-rest)
 * A Progressive Web App skeleton, generated with [Create React App](https://github.com/facebookincubator/create-react-app)
-  and containing the tools to scaffold your own React/[Redux](http://redux.js.org/) app in one command
+  and containing the tools to scaffold your own React/[Redux](https://redux.js.org/) app in one command
 * A [Docker](https://docker.com)-based setup to bootstrap the project in a single command, providing:
   * Servers for the API and JavaScript apps
   * A [Varnish Cache](http://varnish-cache.org/) server enabling the [API Platform's built-in invalidation cache mechanism](https://api-platform.com/docs/core/performance/#enabling-the-builtin-http-cache-invalidation-system)
@@ -82,7 +82,7 @@ This starts the following services:
 | cache-proxy | A HTTP cache proxy for the API provided by Varnish            | 8081    | all (prefer using a managed service in prod)
 | h2-proxy    | A HTTP/2 and HTTPS development proxy for all apps             | 443 (client)<br>444 (admin)<br>8443 (api)<br>8444 (cache-proxy) | dev (configure properly your web server in prod)
 
-If you encounter problems running Docker on Windows (especially with Docker Toolbox), see [our Troubleshooting guide](../troubleshooting.md#using-docker).
+If you encounter problems running Docker on Windows (especially with Docker Toolbox), see [our Troubleshooting guide](../extra/troubleshooting.md#using-docker).
 
 The first time you start the containers, Docker downloads and builds images for you. It will take some time, but don't worry,
 this is done only once. Starting servers will then be lightning fast.
@@ -99,7 +99,7 @@ with its awesome [Symfony](https://confluence.jetbrains.com/display/PhpStorm/Get
 and [Php Inspections](https://plugins.jetbrains.com/plugin/7622-php-inspections-ea-extended-) plugins. Give them a try,
 you'll got auto-completion for almost everything and awesome quality analysis.
 
-The API Platform distribution comes with a dummy entity for test purpose: `src/Entity/Greeting.php`. We will remove
+The API Platform distribution comes with a dummy entity for test purpose: `api/src/Entity/Greeting.php`. We will remove
 it later, but for now, create the related database table:
 
     $ docker-compose exec php bin/console doctrine:schema:create
@@ -165,7 +165,7 @@ Click on the "API" button, or go to `http://localhost:8080`:
 TODO: replace this screenshot
 ![Swagger UI integration in API Platform](images/swagger-ui-1.png)
 
-To browse the HTTPS version of this page (`https://localghsot:8443`), you need to accept first the auto-generated TLS certificate.
+To browse the HTTPS version of this page (`https://localhost:8443`), you need to accept first the auto-generated TLS certificate.
 
 API Platform exposes a description of the API in the [OpenAPI](https://www.openapis.org/) format (formerly known as Swagger).
 It also integrates a customized version of [Swagger UI](https://swagger.io/swagger-ui/), a nice interface rendering the
@@ -203,7 +203,7 @@ provided by the Doctrine ORM:
 
 ```php
 <?php
-// src/Entity/Book.php
+// api/src/Entity/Book.php
 
 namespace App\Entity;
 
@@ -281,7 +281,7 @@ class Book
 
 ```php
 <?php
-// src/Entity/Review.php
+// api/src/Entity/Review.php
 
 namespace App\Entity;
 
@@ -361,19 +361,19 @@ We used a private property for the id and a getter for the id to enforce the fac
 by the RDMS because the `@ORM\GeneratedValue` annotation). API Platform also has first-grade support for UUIDs, [you should
 probably use them instead of auto-incremented ids](https://www.clever-cloud.com/blog/engineering/2015/05/20/why-auto-increment-is-a-terrible-idea/).
 
-Then, delete the file `src/AppBundle/Entity/Foo.php`, this demo entity isn't useful anymore.
+Then, delete the file `api/src/Entity/Greeting.php`, this demo entity isn't useful anymore.
 Finally, tell Doctrine to sync the database's tables structure with our new data model:
 
-    $ docker-compose exec app bin/console doctrine:schema:update --force
+    $ docker-compose exec php bin/console doctrine:schema:update --force
 
 We now have a working data model that you can persist and query. To create an API endpoint with CRUD capabilities corresponding
 to an entity class, we just have to mark it with an annotation called `@ApiResource`:
 
 ```php
 <?php
-// src/AppBundle/Entity/Book.php
+// api/src/Entity/Book.php
 
-namespace AppBundle\Entity;
+namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
 
@@ -390,9 +390,9 @@ class Book
 
 ```php
 <?php
-// src/AppBundle/Entity/Review.php
+// api/src/Entity/Review.php
 
-namespace AppBundle\Entity;
+namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
 
@@ -513,9 +513,9 @@ to validate user submitted data. Let's add some validation rules to our data mod
 
 ```php
 <?php
-// src/AppBundle/Entity/Book.php
+// api/src/Entity/Book.php
 
-namespace AppBundle\Entity;
+namespace App\Entity;
 
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -558,9 +558,9 @@ class Book
 
 ```php
 <?php
-// src/Entity/Review.php
+// api/src/Entity/Review.php
 
-namespace AppBundle\Entity;
+namespace App\Entity;
 
 use Symfony\Component\Validator\Constraints as Assert;
 
