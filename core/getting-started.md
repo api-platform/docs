@@ -8,42 +8,16 @@ It ships with the API Platform Core library integrated with [the Symfony framewo
 and [Behat](http://behat.org).
 Basically, it is a Symfony edition packaged with the best tools to develop a REST API and sensible default settings.
 
-Alternatively, you can use [Composer](http://getcomposer.org) to install the standalone bundle in an existing Symfony project:
+Alternatively, you can use [Composer](http://getcomposer.org) to install the standalone bundle in an existing Symfony Flex
+project:
 
-`composer require api-platform/core`
-
-Then, update your `app/AppKernel.php` file:
-
-```php
-<?php
-// app/AppKernel.php
-
-public function registerBundles()
-{
-    $bundles = [
-        // ...
-        new ApiPlatform\Core\Bridge\Symfony\Bundle\ApiPlatformBundle(),
-    ];
-
-    // ...
-}
-```
-
-Register the routes of our API by adding the following lines to `app/config/routing.yml`:
-
-```yaml
-# app/config/routing.yml
-api:
-    resource: '.'
-    type: 'api_platform'
-    prefix: '/api' # Optional
-```
+`composer require api`
 
 There is no mandatory configuration options although [many settings are available](configuration.md).
 
 ## Before Reading this Documentation
 
-If you haven't read it already, take a look at [the "Creating your first API with API Platform, in a few minutes" guide](../distribution/index.md).
+If you haven't read it already, take a look at [the Getting Started guide](../distribution/index.md).
 This tutorial covers basic concepts required to understand how API Platform works including how it implements the REST pattern
 and what [JSON-LD](http://json-ld.org/) and [Hydra](http://www.hydra-cg.com/) formats are.
 
