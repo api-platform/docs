@@ -2,27 +2,27 @@
 
 > *API Platform* is the most advanced API platform, in any framework or language.
 
-Fabien Potencier, creator of Symfony
+Fabien Potencier (creator of Symfony), SymfonyCon 2017
 
 [API Platform](https://api-platform.com) is a powerful but easy to use **full-stack** framework dedicated to API-driven projects.
 It contains a **PHP** library to create fully-featured APIs supporting industry-leading standards (JSON-LD, GraphQL, OpenAPI...),
-provides ambitious **JavaScript** tooling to consume those APIs in a breath (admin, PWA and mobile apps generators, hypermedia
+provides ambitious **JavaScript** tooling to consume those APIs in a snap (admin, PWA and mobile apps generators, hypermedia
 client...) and is shipped with a nice **Docker** and **Kubernetes** integration to develop and deploy instantly in the cloud.
 
 The easiest and more powerful way to get started is to download the API Platform official distribution.
 It contains:
 
-* an API skeleton, including with [the server-side component](https://api-platform.com/docs/core/), [the Symfony 4
+* an API skeleton, including with [the server-side component](../core/index.md), [the Symfony 4
   microframework](https://symfony.com/doc/current/setup/flex.html) and [the Doctrine ORM](http://docs.doctrine-project.org/projects/doctrine-orm/)
 * a dynamic JavaScript admin, leveraging the hypermedia capabilities of API Platform and built on top of [React](https://reactjs.org/)
   and [Admin On Rest](https://github.com/marmelab/admin-on-rest)
-* A Progressive Web App skeleton, generated with [Create React App](https://github.com/facebookincubator/create-react-app)
+* a Progressive Web App skeleton, generated with [Create React App](https://github.com/facebookincubator/create-react-app)
   and containing the tools to scaffold your own React/[Redux](https://redux.js.org/) app in one command
-* A [Docker](https://docker.com)-based setup to bootstrap the project in a single command, providing:
-  * Servers for the API and JavaScript apps
-  * A [Varnish Cache](http://varnish-cache.org/) server enabling the [API Platform's built-in invalidation cache mechanism](https://api-platform.com/docs/core/performance/#enabling-the-builtin-http-cache-invalidation-system)
-  * A development HTTP/2 and HTTPS proxy (allowing, for instance, to test the provided [service workers](https://developer.mozilla.org/fr/docs/Web/API/Service_Worker_API))
-  * A [Helm](https://helm.sh/) chart to deploy the API in any [Kubernetes](https://kubernetes.io/) cluster
+* a [Docker](https://docker.com)-based setup to bootstrap the project in a single command, providing:
+  * servers for the API and JavaScript apps
+  * a [Varnish Cache](http://varnish-cache.org/) server enabling the [API Platform's built-in invalidation cache mechanism](../core/performance.md#enabling-the-builtin-http-cache-invalidation-system)
+  * a development HTTP/2 and HTTPS proxy (allowing, for instance, to test the provided [service workers](https://developer.mozilla.org/fr/docs/Web/API/Service_Worker_API))
+  * a [Helm](https://helm.sh/) chart to deploy the API in any [Kubernetes](https://kubernetes.io/) cluster
 
 To discover how the framework works, we will create an API to manage a bookshop.
 
@@ -87,7 +87,7 @@ If you encounter problems running Docker on Windows (especially with Docker Tool
 The first time you start the containers, Docker downloads and builds images for you. It will take some time, but don't worry,
 this is done only once. Starting servers will then be lightning fast.
 
-To see container's logs, run:
+To see the container's logs, run:
 
     $ docker-compose logs -f # follow the logs
 
@@ -115,7 +115,7 @@ is able to automatically optimize the generated SQL queries by adding the approp
 lot of powerful built-in filters.
 Doctrine ORM and its bridge support most popular RDBMS including PostgreSQL, MySQL, MariaDB, SQL Server, Oracle and SQLite.
 
-That being said, keep in mind that API Platform is 100% independent of the persistence system. Tou can use the one(s) that
+That being said, keep in mind that API Platform is 100% independent of the persistence system. You can use the one(s) that
 best suit(s) your needs (including NoSQL databases or remote web services). API Platform even supports using several persistence
 systems together in the same project.
 
@@ -356,7 +356,7 @@ Learn more about how to map entities with the Doctrine ORM in [the project's off
 or in Kévin's book "[Persistence in PHP with the Doctrine ORM](https://www.amazon.fr/gp/product/B00HEGSKYQ/ref=as_li_tl?ie=UTF8&camp=1642&creative=6746&creativeASIN=B00HEGSKYQ&linkCode=as2&tag=kevidung-21)".
 
 For the sake of simplicity, in this example we used public properties (except for the id, see below). API Platform as well
-as Doctrine also support support accessor methods (getters/setters), use them if you want to.
+as Doctrine also support accessor methods (getters/setters), use them if you want to.
 We used a private property for the id and a getter for the id to enforce the fact that it is read only (the ID will be generated
 by the RDMS because the `@ORM\GeneratedValue` annotation). API Platform also has first-grade support for UUIDs, [you should
 probably use them instead of auto-incremented ids](https://www.clever-cloud.com/blog/engineering/2015/05/20/why-auto-increment-is-a-terrible-idea/).
@@ -440,7 +440,7 @@ API Platform comes with a full support of the [JSON-LD](http://json-ld.org/) for
 extension). It allows to build smart clients, with auto-discoverability capabilities such as the API Platform Admin that
 we will discover in a few lines.
 It is useful for open data, SEO and interoperability, especially when [used with open vocabularies such as Schema.org](http://blog.schema.org/2013/06/schemaorg-and-json-ld.html)
-and allow to [give access to Google to your structured data](https://developers.google.com/search/docs/guides/intro-structured-data)
+and allows to [give access to Google to your structured data](https://developers.google.com/search/docs/guides/intro-structured-data)
 or to query your APIs in [SPARQL](https://en.wikipedia.org/wiki/SPARQL) using [Apache Jena](https://jena.apache.org/documentation/io/#formats)).
 
 We think that JSON-LD is the best default format for a new API.
@@ -617,7 +617,7 @@ ISBN isn't valid...
 ## Adding GraphQL Support
 
 Isn't API Platform a REST **and** GraphQL framework? That's true! GraphQL support isn't enabled by default, to add it we
-just need an extra library, run the following command to install GraphQL PHP:
+need to install the [graphql-php](https://webonyx.github.io/graphql-php/) library. Run the following command:
 
     $ docker-compose exec php composer req webonyx/graphql-php
 
@@ -634,7 +634,7 @@ clients.
 
 ## The Admin
 
-Wouldn't it be nice to have an administration backend to manage the data exposed by our API?
+Wouldn't it be nice to have an administration backend to manage the data exposed by your API?
 Wait... You already have one!
 
 Open `http://localhost:81` in your browser:
@@ -642,8 +642,8 @@ Open `http://localhost:81` in your browser:
 TODO: screenshot
 
 This [Material Design](https://material.io/guidelines/) admin is a [Progressive Web App](https://developers.google.com/web/progressive-web-apps/)
-built with [API Platform Admin](../admin/index.md) (Admin On Rest, React and Redux inside). It very powerful and fully customizable,
-refer to its documentation to learn more.
+built with [API Platform Admin](../admin/index.md) (Admin On Rest, React and Redux inside). It is very powerful and fully
+customizable, refer to its documentation to learn more.
 It leverages the Hydra documentation exposed by the API component to build itself. It's 100% dynamic, **no code generation
 occurs**.
 
@@ -690,7 +690,7 @@ Here is a non-exhaustive list of popular API Platform extensions:
 * [Execute async jobs and create micro-service architectures using RabbitMQ](https://github.com/php-amqplib/RabbitMqBundle)
   (RabbitMQBundle)
 
-Keep in mind that you can use your favorite client-side technology: API Platform provides React and Vue.js components ;
+Keep in mind that you can use your favorite client-side technology: API Platform provides React and Vue.js components;
 but you can use your preferred client-side technology including Angular, Ionic and Swift. Any language able to send HTTP
 requests is OK (even COBOL can do that).
 
