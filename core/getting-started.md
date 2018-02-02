@@ -57,9 +57,9 @@ Here is an example of entities mapped using annotations which will be exposed th
 
 ```php
 <?php
-// src/AppBundle/Entity/Product.php
+// api/src/Entity/Product.php
 
-namespace AppBundle\Entity;
+namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
 use Doctrine\ORM\Mapping as ORM;
@@ -116,9 +116,9 @@ class Product // The class name will be used to name exposed resources
 
 ```php
 <?php
-// src/AppBundle/Entity/Offer.php
+// api/src/Entity/Offer.php
 
-namespace AppBundle\Entity;
+namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
 use Doctrine\ORM\Mapping as ORM;
@@ -191,15 +191,15 @@ As an alternative to annotations, you can map entity classes using XML or YAML:
 XML:
 
 ```xml
-<!-- src/AppBundle/Resources/config/api_resources/resources.xml -->
+<!-- api/src/Resources/config/api_resources/resources.xml -->
 <?xml version="1.0" encoding="UTF-8" ?>
 <resources xmlns="https://api-platform.com/schema/metadata"
            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
            xsi:schemaLocation="https://api-platform.com/schema/metadata
            https://api-platform.com/schema/metadata/metadata-2.0.xsd">
-    <resource class="AppBundle\Entity\Product" />
+    <resource class="App\Entity\Product" />
     <resource
-        class="AppBundle\Entity\Offer"
+        class="App\Entity\Offer"
         shortName="Offer" <!-- optional -->
         description="An offer form my shop" <!-- optional -->
         iri="http://schema.org/Offer" <!-- optional -->
@@ -210,10 +210,10 @@ XML:
 YAML:
 
 ```yaml
-# src/AppBundle/Resources/config/api_resources/resources.yml
+# api/src/Resources/config/api_resources/resources.yml
 resources:
-    AppBundle\Entity\Product: ~
-    AppBundle\Entity\Offer:
+    App\Entity\Product: ~
+    App\Entity\Offer:
         shortName: 'Offer'                   # optional
         description: 'An offer from my shop' # optional
         iri: 'http://schema.org/Offer'       # optional

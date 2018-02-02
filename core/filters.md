@@ -21,7 +21,7 @@ Filters are services (see the section on [custom filters](core/filters.md#creati
 For example having a filter service declaration:
 
 ```yaml
-# app/config/api_filters.yml
+# api/config/api_filters.yml
 services:
     offer.date_filter:
         parent: 'api_platform.doctrine.orm.date_filter'
@@ -33,9 +33,9 @@ We're linking the filter `offer.date_filter` with the `@ApiResource` annotation:
 
 ```php
 <?php
-// src/AppBundle/Entity/Offer.php
+// api/Entity/Offer.php
 
-namespace AppBundle\Entity;
+namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
 
@@ -54,9 +54,9 @@ This annotation automatically declares the service, and you just have to use the
 
 ```php
 <?php
-// src/AppBundle/Entity/Offer.php
+// api/Entity/Offer.php
 
-namespace AppBundle\Entity;
+namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiFilter;
 use ApiPlatform\Core\Annotation\ApiResource;
@@ -78,7 +78,7 @@ For the sake of consistency, we're using the annotation in the below documentati
 
 ### Search Filter
 
-If Doctrine ORM support is enabled, adding filters is as easy as registering a filter service in the `app/config/api_filters.yml`
+If Doctrine ORM support is enabled, adding filters is as easy as registering a filter service in the `api/config/api_filters.yml`
 file and adding an attribute to your resource configuration.
 
 The search filter supports `exact`, `partial`, `start`, `end`, and `word_start` matching strategies:
@@ -99,9 +99,9 @@ In the following example, we will see how to allow the filtering of a list of e-
 
 ```php
 <?php
-// src/AppBundle/Entity/Offer.php
+// api/Entity/Offer.php
 
-namespace AppBundle\Entity;
+namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
 
@@ -124,9 +124,9 @@ It is possible to filter on relations too, if `Offer` has a `Product` relation:
 
 ```php
 <?php
-// src/AppBundle/Entity/Offer.php
+// api/Entity/Offer.php
 
-namespace AppBundle\Entity;
+namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
 
@@ -160,9 +160,9 @@ As others filters, the date filter must be explicitly enabled:
 
 ```php
 <?php
-// src/AppBundle/Entity/Offer.php
+// api/Entity/Offer.php
 
-namespace AppBundle\Entity;
+namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiFilter;
 use ApiPlatform\Core\Annotation\ApiResource;
@@ -194,9 +194,9 @@ For instance, exclude entries with a property value of `null`, with the followin
 
 ```php
 <?php
-// src/AppBundle/Entity/Offer.php
+// api/Entity/Offer.php
 
-namespace AppBundle\Entity;
+namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiFilter;
 use ApiPlatform\Core\Annotation\ApiResource;
@@ -224,9 +224,9 @@ Enable the filter:
 
 ```php
 <?php
-// src/AppBundle/Entity/Offer.php
+// api/Entity/Offer.php
 
-namespace AppBundle\Entity;
+namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiFilter;
 use ApiPlatform\Core\Annotation\ApiResource;
@@ -256,9 +256,9 @@ Enable the filter:
 
 ```php
 <?php
-// src/AppBundle/Entity/Offer.php
+// api/Entity/Offer.php
 
-namespace AppBundle\Entity;
+namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiFilter;
 use ApiPlatform\Core\Annotation\ApiResource;
@@ -288,9 +288,9 @@ Enable the filter:
 
 ```php
 <?php
-// src/AppBundle/Entity/Offer.php
+// api/Entity/Offer.php
 
-namespace AppBundle\Entity;
+namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiFilter;
 use ApiPlatform\Core\Annotation\ApiResource;
@@ -322,9 +322,9 @@ Enable the filter:
 
 ```php
 <?php
-// src/AppBundle/Entity/Offer.php
+// api/Entity/Offer.php
 
-namespace AppBundle\Entity;
+namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiFilter;
 use ApiPlatform\Core\Annotation\ApiResource;
@@ -348,9 +348,9 @@ will not be applied unless you configure a default order direction to use:
 
 ```php
 <?php
-// src/AppBundle/Entity/Offer.php
+// api/Entity/Offer.php
 
-namespace AppBundle\Entity;
+namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiFilter;
 use ApiPlatform\Core\Annotation\ApiResource;
@@ -383,9 +383,9 @@ For instance, treat entries with a property value of `null` as the smallest, wit
 ```php
 <?php
 
-// src/AppBundle/Entity/Offer.php
+// api/Entity/Offer.php
 
-namespace AppBundle\Entity;
+namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiFilter;
 use ApiPlatform\Core\Annotation\ApiResource;
@@ -407,7 +407,7 @@ A conflict will occur if `order` is also the name of a property with the search 
 Luckily, the query parameter name to use is configurable:
 
 ```yaml
-# app/config/config.yml
+# api/config/config.yml
 api_platform:
     collection:
         order_parameter_name: '_order' # the URL query parameter to use is now "_order"
@@ -426,9 +426,9 @@ built-in filters support nested properties using the dot (`.`) syntax, e.g.:
 ```php
 <?php
 
-// src/AppBundle/Entity/Offer.php
+// api/Entity/Offer.php
 
-namespace AppBundle\Entity;
+namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiFilter;
 use ApiPlatform\Core\Annotation\ApiResource;
@@ -458,9 +458,9 @@ for all properties:
 ```php
 <?php
 
-// src/AppBundle/Entity/Offer.php
+// api/Entity/Offer.php
 
-namespace AppBundle\Entity;
+namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiFilter;
 use ApiPlatform\Core\Annotation\ApiResource;
@@ -504,9 +504,9 @@ Enable the filter:
 ```php
 <?php
 
-// src/AppBundle/Entity/Book.php
+// api/Entity/Book.php
 
-namespace AppBundle\Entity;
+namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiFilter;
 use ApiPlatform\Core\Annotation\ApiResource;
@@ -542,9 +542,9 @@ Enable the filter:
 ```php
 <?php
 
-// src/AppBundle/Entity/Book.php
+// api/Entity/Book.php
 
-namespace AppBundle\Entity;
+namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiFilter;
 use ApiPlatform\Core\Annotation\ApiResource;
@@ -591,9 +591,9 @@ library. This library must be properly installed and registered to use this exam
 
 ```php
 <?php
-// src/AppBundle/Filter/RegexpFilter.php
+// api/Filter/RegexpFilter.php
 
-namespace AppBundle\Filter;
+namespace App\Filter;
 
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\AbstractFilter;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Util\QueryNameGeneratorInterface;
@@ -638,9 +638,9 @@ final class RegexpFilter extends AbstractFilter
 Then, register this filter as a service:
 
 ```yaml
-# app/config/api_filters.yml
+# api/config/api_filters.yml
 services:
-    'AppBundle\Filter\RegexpFilter':
+    'App\Filter\RegexpFilter':
         tags: [ 'api_platform.filter' ]
 ```
 
@@ -648,9 +648,9 @@ In the previous example, the filter can be applied on any property. However, tha
 it can also be enabled for some properties:
 
 ```yaml
-# app/config/api_filters.yml
+# api/config/api_filters.yml
 services:
-    'AppBundle\Filter\RegexpFilter':
+    'App\Filter\RegexpFilter':
         arguments: [ '@doctrine', '@request_stack', '@?logger', { email: ~, anOtherProperty: ~ } ]
         tags: [ 'api_platform.filter' ]
 ```
@@ -659,12 +659,12 @@ Finally, add this filter to resources you want to be filtered:
 
 ```php
 <?php
-// src/AppBundle/Entity/Offer.php
+// api/Entity/Offer.php
 
-namespace AppBundle\Entity;
+namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
-use AppBundle\Filter\RegexpFilter;
+use App\Filter\RegexpFilter;
 
 /**
  * @ApiResource(attributes={"filters"={RegexpFilter::class}})
@@ -680,13 +680,13 @@ Or by using the `ApiFilter` annotation:
 ```php
 <?php
 
-// src/AppBundle/Entity/Offer.php
+// api/Entity/Offer.php
 
-namespace AppBundle\Entity;
+namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiFilter;
 use ApiPlatform\Core\Annotation\ApiResource;
-use AppBundle\Filter\RegexpFilter;
+use App\Filter\RegexpFilter;
 
 /**
  * @ApiResource
@@ -701,7 +701,7 @@ class Offer
 You can now enable this filter using URLs like `http://example.com/offers?regexp_email=^[FOO]`. This new filter will also
 appear in Swagger and Hydra documentations.
 
-### Using Doctrine Filters
+### Using Doctrine Filters
 
 Doctrine features [a filter system](http://docs.doctrine-project.org/projects/doctrine-orm/en/latest/reference/filters.html) that allows the developer to add SQL to the conditional clauses of queries, regardless the place where the SQL is generated (e.g. from a DQL query, or by loading associated entities).
 These are applied on collections and items, so are incredibly useful.
@@ -713,9 +713,9 @@ Suppose we have a `User` entity and an `Order` entity related to the `User` one.
 ```php
 <?php
 
-// src/AppBundle/Entity/User.php
+// api/Entity/User.php
 
-namespace AppBundle\Entity;
+namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
 
@@ -731,9 +731,9 @@ class User
 ```php
 <?php
 
-// src/AppBundle/Entity/Order.php
+// api/Entity/Order.php
 
-namespace AppBundle\Entity;
+namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
 use Doctrine\ORM\Mapping as ORM;
@@ -760,9 +760,9 @@ Start by creating a custom annotation to mark restricted entities:
 ```php
 <?php
 
-// src/AppBundle/Annotation/UserAware.php
+// api/Annotation/UserAware.php
 
-namespace AppBundle\Annotation;
+namespace App\Annotation;
 
 use Doctrine\Common\Annotations\Annotation;
 
@@ -781,11 +781,11 @@ Then, let's mark the `Order` entity as a "user aware" entity.
 ```php
 <?php
 
-// src/AppBundle/Entity/Order.php
+// api/Entity/Order.php
 
-namespace AppBundle\Entity;
+namespace App\Entity;
 
-use AppBundle\Annotation\UserAware;
+use App\Annotation\UserAware;
 
 /**
  * @UserAware(userFieldName="user_id")
@@ -800,11 +800,11 @@ Now, create a Doctrine filter class:
 ```php
 <?php
 
-// src/AppBundle/Filter/UserFilter.php
+// api/Filter/UserFilter.php
 
-namespace AppBundle\Filter;
+namespace App\Filter;
 
-use AppBundle\Annotation\UserAware;
+use App\Annotation\UserAware;
 use Doctrine\ORM\Mapping\ClassMetaData;
 use Doctrine\ORM\Query\Filter\SQLFilter;
 use Doctrine\Common\Annotations\Reader;
@@ -852,22 +852,22 @@ final class UserFilter extends SQLFilter
 Now, we must configure the Doctrine filter.
 
 ```yaml
-# app/config/config.yml
+# api/config/config.yml
 
 doctrine:
     orm:
         filters:
             user_filter:
-                class: AppBundle\Filter\UserFilter
+                class: App\Filter\UserFilter
 ```
 
 And add a listener for every request that initializes the Doctrine filter with the current user in your bundle services declaration file.
 
 ```yaml
-# app/config/services.yml
+# api/config/services.yml
 
 services:
-    'AppBundle\EventListener\UserFilterConfigurator':
+    'App\EventListener\UserFilterConfigurator':
         tags:
             - { name: kernel.event_listener, event: kernel.request, priority: 5 }
 ```
@@ -879,9 +879,9 @@ Lastly, implement the configurator class:
 ```php
 <?php
 
-// src/AppBundle/EventListener/UserFilterConfigurator.php
+// api/EventListener/UserFilterConfigurator.php
 
-namespace AppBundle\EventListener;
+namespace App\EventListener;
 
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
@@ -935,9 +935,9 @@ In the following example, we will completely change the syntax of the order filt
 
 ```php
 <?php
-// src/AppBundle/Filter/CustomOrderFilter.php
+// api/Filter/CustomOrderFilter.php
 
-namespace AppBundle\Filter;
+namespace App\Filter;
 
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\OrderFilter;
 use Symfony\Component\HttpFoundation\Request;
@@ -954,9 +954,9 @@ final class CustomOrderFilter extends OrderFilter
 Finally, register the custom filter:
 
 ```yaml
-# app/config/api_filters.yml
+# api/config/api_filters.yml
 services:
-    'AppBundle\Filter\CustomOrderFilter':
+    'App\Filter\CustomOrderFilter':
         tags: [ 'api_platform.filter' ]
 ```
 

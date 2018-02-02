@@ -108,9 +108,9 @@ from the configuration of each resource. You can do this at the resource level, 
 
 ```php
 <?php
-// src/AppBundle/Entity/Address.php
+// api/src/Entity/Address.php
 
-namespace AppBundle\Entity;
+namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
 use Doctrine\ORM\Mapping as ORM;
@@ -127,9 +127,9 @@ class Address
 
 ```php
 <?php
-// src/AppBundle/Entity/User.php
+// api/src/Entity/User.php
 
-namespace AppBundle\Entity;
+namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
 use Doctrine\ORM\Mapping as ORM;
@@ -159,9 +159,9 @@ class User
 
 ```php
 <?php
-// src/AppBundle/Entity/Group.php
+// api/src/Entity/Group.php
 
-namespace AppBundle\Entity;
+namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
 use Doctrine\ORM\Mapping as ORM;

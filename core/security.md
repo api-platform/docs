@@ -12,7 +12,7 @@ Here is an example:
 
 ```php
 <?php
-// src/AppBundle/Entity/Book.php
+// api/src/Entity/Book.php
 
 use ApiPlatform\Core\Annotation\ApiResource;
 use Doctrine\ORM\Mapping as ORM;

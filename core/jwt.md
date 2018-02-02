@@ -67,7 +67,7 @@ Want to test the routes of your JWT-authentication-protected API?
 ### Configuring API Platform
 
 ```yaml
-# app/config/config.yml
+# api/config/packages/api_platform.yaml
 api_platform:
     swagger:
          api_keys:
@@ -101,7 +101,7 @@ Let's configure Behat to automatically send an `Authorization` HTTP header conta
 <?php
 // features/bootstrap/FeatureContext.php
 
-use AppBundle\Entity\User;
+use App\Entity\User;
 use Behat\Behat\Hook\Scope\BeforeScenarioScope;
 use Behatch\Context\RestContext;
 

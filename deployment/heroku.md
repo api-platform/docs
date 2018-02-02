@@ -53,7 +53,7 @@ file:
     }
 ```
 
-Delete `app/config/parameters.yml` and `app/config/parameters.yml.dist` as they will not be used anymore. Then remove the following line from the `imports` section of `app/config/config.yml`:
+Delete `app/config/parameters.yml` and `app/config/parameters.yml.dist` as they will not be used anymore. Then remove the following line from the `imports` section of `api/config/packages/api_platform.yaml`:
 
 ```yaml
     - { resource: parameters.yml }

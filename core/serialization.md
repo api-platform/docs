@@ -48,7 +48,7 @@ However, if you don't use the official distribution of API Platform, don't forge
 configuration:
 
 ```yaml
-# app/config/config.yml
+# api/config/packages/api_platform.yaml
 framework:
     serializer: { enable_annotations: true }
 ```
@@ -62,9 +62,9 @@ It is really simple to specify what groups to use in the API system:
 
 ```php
 <?php
-// src/AppBundle/Entity/Book.php
+// api/src/Entity/Book.php
 
-namespace AppBundle\Entity;
+namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
 use Symfony\Component\Serializer\Annotation\Groups;
@@ -113,9 +113,9 @@ In the following example we use different serialization groups for the `GET` and
 
 ```php
 <?php
-// src/AppBundle/Entity/Book.php
+// api/src/Entity/Book.php
 
-namespace AppBundle\Entity;
+namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
 use Symfony\Component\Serializer\Annotation\Groups;
@@ -179,9 +179,9 @@ the book response:
 
 ```php
 <?php
-// src/AppBundle/Entity/Book.php
+// api/src/Entity/Book.php
 
-namespace AppBundle\Entity;
+namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
 use Symfony\Component\Serializer\Annotation\Groups;
@@ -209,9 +209,9 @@ class Book
 
 ```php
 <?php
-// src/AppBundle/Entity/Person.php
+// api/src/Entity/Person.php
 
-namespace AppBundle\Entity;
+namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
 use Symfony\Component\Serializer\Annotation\Groups;
@@ -258,9 +258,9 @@ set the same way as normalization and the configuration should be like this:
 
 ```php
 <?php
-// src/AppBundle/Entity/Book.php
+// api/src/Entity/Book.php
 
-namespace AppBundle\Entity;
+namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
 
@@ -289,9 +289,9 @@ Let's imagine a resource where most fields can be managed by any user, but some 
 
 ```php
 <?php
-// src/AppBundle/Entity/Book.php
+// api/src/Entity/Book.php
 
-namespace AppBundle\Entity;
+namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
 use Symfony\Component\Serializer\Annotation\Groups;
@@ -336,24 +336,24 @@ API Platform implements a `ContextBuilder`, which prepares the context for seria
 `createFromRequest` method:
 
 ```yaml
-# app/config/services.yml
+# api/config/services.yml
 services:
-    'AppBundle\Serializer\BookContextBuilder':
+    'App\Serializer\BookContextBuilder':
         decorates: 'api_platform.serializer.context_builder'
-        arguments: [ '@AppBundle\Serializer\BookContextBuilder.inner' ]
+        arguments: [ '@App\Serializer\BookContextBuilder.inner' ]
         autoconfigure: false
 ```
 
 ```php
 <?php
-// src/AppBundle/Serializer/BookContextBuilder.php
+// api/src/Serializer/BookContextBuilder.php
 
-namespace AppBundle\Serializer;
+namespace App\Serializer;
 
 use ApiPlatform\Core\Serializer\SerializerContextBuilderInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
-use AppBundle\Entity\Book;
+use App\Entity\Book;
 
 final class BookContextBuilder implements SerializerContextBuilderInterface
 {
@@ -366,7 +366,7 @@ final class BookContextBuilder implements SerializerContextBuilderInterface
         $this->authorizationChecker = $authorizationChecker;
     }
 
-    public function createFromRequest(Request $request, bool $normalization, array $extractedAttributes = null) : array
+    public function createFromRequest(Request $request, bool $normalization, ?array $extractedAttributes = null): array
     {
         $context = $this->decorated->createFromRequest($request, $normalization, $extractedAttributes);
         $subject = $request->attributes->get('data');
@@ -388,9 +388,9 @@ The variable `$normalization` lets you check whether the context is for normaliz
 The example above shows how you can modify the normalization/denormalization context based on the current user permissions for all the books that are being normalized/denormalized. Sometimes, however, the permissions vary depending on what book is being processed. Think of ACL's: User A may retrieve Book A but not Book B. In that case, we have to leverage the power of the Symfony Serializer and register our own normalizer that adds the group on every single item (priority `64` is just an example, make sure your normalizer gets loaded first):
 
 ```yaml
-# app/config/services.yml
+# api/config/services.yml
 services:
-    'AppBundle\Serializer\BookAttributeNormalizer':
+    'App\Serializer\BookAttributeNormalizer':
         arguments: [ '@security.token_storage' ]
         tags:
             - { name: 'serializer.normalizer', priority: 64 }
@@ -400,9 +400,9 @@ The Normalizer class is a bit harder to understand because it has to make sure t
 
 ```php
 <?php
-// src/AppBundle/Serializer/BookAttributeNormalizer.php
+// api/src/Serializer/BookAttributeNormalizer.php
 
-namespace AppBundle\Serializer;
+namespace App\Serializer;
 
 class BookAttributeNormalizer implements NormalizerInterface, SerializerAwareInterface
 {
@@ -468,13 +468,13 @@ To use this feature, declare a new service with id `app.name_converter`. For exa
 `snake_case` with the following configuration:
 
 ```yaml
-# app/config/services.yml
+# api/config/services.yml
 services:
     'Symfony\Component\Serializer\NameConverter\CamelCaseToSnakeCaseNameConverter': ~
 ```
 
 ```yaml
-# app/config/config.yml
+# api/config/packages/api_platform.yaml
 api_platform:
     name_converter: 'Symfony\Component\Serializer\NameConverter\CamelCaseToSnakeCaseNameConverter'
 ```
@@ -485,18 +485,18 @@ In the following example, we will see how we add extra informations to the outpu
 Here is how we add the date on each request in `GET`:
 
 ```yaml
-# app/config/services.yml
+# api/config/services.yml
 services:
-    'AppBundle\Serializer\ApiNormalizer':
+    'App\Serializer\ApiNormalizer':
         decorates: 'api_platform.jsonld.normalizer.item'
-        arguments: [ '@AppBundle\Serializer\ApiNormalizer.inner' ]
+        arguments: [ '@App\Serializer\ApiNormalizer.inner' ]
 ```
 
 ```php
 <?php
-// src/Appbundle/Serializer/ApiNormalizer
+// api/src/Serializer/ApiNormalizer
 
-namespace AppBundle\Serializer;
+namespace App\Serializer;
 
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
@@ -604,9 +604,9 @@ To do so, use the following configuration:
 
 ```php
 <?php
-// src/AppBundle/Entity/Book.php
+// api/src/Entity/Book.php
 
-namespace AppBundle\Entity;
+namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
 

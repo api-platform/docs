@@ -38,7 +38,7 @@ The first required step is to configure allowed formats. The following configura
 and of a custom format called `myformat` and having `application/vnd.myformat` as [MIME type](https://en.wikipedia.org/wiki/Media_type).
 
 ```yaml
-# app/config/config.yml
+# api/config/packages/api_platform.yaml
 api_platform:
     # ...
 
@@ -71,20 +71,21 @@ Using composition is the recommended way to implement a custom normalizer. You c
 own implementation of `CustomItemNormalizer`:
 
 ```yaml
-# app/config/services.yml
+# api/config/services.yml
 services:
 # ...
 
-    'AppBundle\Serializer\CustomItemNormalizer':
+    'App\Serializer\CustomItemNormalizer':
         arguments: [ '@api_platform.serializer.normalizer.item' ]
-        tags: [ 'serializer.normalizer' ]
+        # Uncomment if you don't use the autoconfigure feature
+        #tags: [ 'serializer.normalizer' ]
 ```
 
 ```php
 <?php
-// src/AppBundle/Serializer/CustomItemNormalizer.php
+// api/src/Serializer/CustomItemNormalizer.php
 
-namespace AppBundle\Serializer;
+namespace App\Serializer;
 
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
@@ -129,9 +130,9 @@ flatten or remove too complex relations:
 
 ```php
 <?php
-// src/AppBundle/Serializer/CustomItemNormalizer.php
+// api/src/Serializer/CustomItemNormalizer.php
 
-namespace AppBundle\Serializer;
+namespace App\Serializer;
 
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;

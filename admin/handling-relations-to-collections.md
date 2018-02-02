@@ -12,7 +12,7 @@ This API can be created using the following PHP code:
 
 ```php
 <?php
-// src/AppBundle/Entity/Person.php
+// api/src/Entity/Person.php
 
 namespace App\Entity;
 
@@ -41,7 +41,7 @@ class Person
 
 ```php
 <?php
-// src/AppBundle/Entity/Book.php
+// api/src/Entity/Book.php
 
 namespace App\Entity;
 

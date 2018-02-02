@@ -114,7 +114,7 @@ default), you are done!
 Otherwise, the following configuration is needed:
 
 ```yaml
-# app/config/services.yml
+# api/config/services.yml
 services:
 
     # ...

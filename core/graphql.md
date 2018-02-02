@@ -25,7 +25,7 @@ If Twig is installed in your project, go to the GraphQL endpoint with your brows
 If you need to disable it, it can be done in the configuration:
 
 ```yaml
-# app/config/config.yml
+# api/config/packages/api_platform.yaml
 api_platform:
     graphql:
         graphiql:

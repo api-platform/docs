@@ -31,7 +31,7 @@ By default, [JMS Serializer Bundle](http://jmsyst.com/bundles/JMSSerializerBundl
 Fortunately, this behavior can be deactivated using the following configuration:
 
 ```yaml
-# app/config/config.yml
+# api/config/packages/api_platform.yaml
 
 jms_serializer:    
     enable_short_alias: false
