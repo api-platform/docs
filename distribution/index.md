@@ -151,21 +151,20 @@ installable with NPM or Yarn.
 
 ## It's Ready!
 
-Open `http://localhost` in your favorite web browser:
+Open `https://localhost` in your favorite web browser:
 
-TODO: replace this screenshot
-![Swagger UI integration in API Platform](images/swagger-ui-1.png)
+![The welcome page](images/api-platform-2.2-welcome.png)
 
-This is the welcome screen, later you will probably replace it by the homepage of your Progressive Web App. If you don't
-plan to create a Progressive Web App, you can remove the `client/` directory and the related lines in `docker-compose.yaml`
-(don't do it now, we'll use this container later in this tutorial).
+You'll need to add a security exception in your browser to accept the self-signed TLS certificate that has been generated
+for this container when installing the framework. Repeat this step for all other services available through HTTPS.
 
-Click on the "API" button, or go to `http://localhost:8080`:
+Later you will probably replace this welcome screen by the homepage of your Progressive Web App. If you don't plan to create
+a Progressive Web App, you can remove the `client/` directory and the related lines in `docker-compose.yaml` (don't do it
+now, we'll use this container later in this tutorial).
 
-TODO: replace this screenshot
-![Swagger UI integration in API Platform](images/swagger-ui-1.png)
+Click on the "HTTPS API" button, or go to `https://localhost:8443/`:
 
-To browse the HTTPS version of this page (`https://localhost:8443`), you need to accept first the auto-generated TLS certificate.
+![The API](images/api-platform-2.2-api.png)
 
 API Platform exposes a description of the API in the [OpenAPI](https://www.openapis.org/) format (formerly known as Swagger).
 It also integrates a customized version of [Swagger UI](https://swagger.io/swagger-ui/), a nice interface rendering the
@@ -366,6 +365,9 @@ Finally, tell Doctrine to sync the database's tables structure with our new data
 
     $ docker-compose exec php bin/console doctrine:schema:update --force
 
+Later, you'll want to use [Doctrine Migrations](https://symfony.com/doc/current/doctrine.html#migrations-creating-the-database-tables-schema),
+when changing the database's structure.
+
 We now have a working data model that you can persist and query. To create an API endpoint with CRUD capabilities corresponding
 to an entity class, we just have to mark it with an annotation called `@ApiResource`:
 
@@ -408,11 +410,13 @@ class Review
 ```
 
 **Our API is (almost) ready!**
-Browse `http://localhost:8080` to load the development environment (including the awesome [Symfony profiler](https://symfony.com/blog/new-in-symfony-2-8-redesigned-profiler)).
+Browse `https://localhost:8443` to load the development environment (including the awesome [Symfony profiler](https://symfony.com/blog/new-in-symfony-2-8-redesigned-profiler)).
+
+![The bookshop API](images/api-platform-2.2-bookshop-api.png)
 
 Operations available for our 2 resources types appear in the UI.
 
-Click on the `POST` operation of the `Book` resource type and send the following JSON document as request body:
+Click on the `POST` operation of the `Book` resource type, click on "Try it out" and send the following JSON document as request body:
 
 ```json
 {
@@ -587,7 +591,7 @@ class Review
 
     /**
      * ...
-     * @Assert\NotBlank
+     * @Assert\NotNull
      */
     public $publicationDate;
 
@@ -604,10 +608,24 @@ class Review
 After updating the entities by adding those `@Assert\*` annotations (as for Doctrine, you can also use XML or YAML), try
 again the previous `POST` request.
 
-TODO: add the hydra response instead
-
-    isbn: This value is neither a valid ISBN-10 nor a valid ISBN-13.
-    title: This value should not be blank.
+```json
+{
+  "@context": "/contexts/ConstraintViolationList",
+  "@type": "ConstraintViolationList",
+  "hydra:title": "An error occurred",
+  "hydra:description": "isbn: This value is neither a valid ISBN-10 nor a valid ISBN-13.\ntitle: This value should not be blank.",
+  "violations": [
+    {
+      "propertyPath": "isbn",
+      "message": "This value is neither a valid ISBN-10 nor a valid ISBN-13."
+    },
+    {
+      "propertyPath": "title",
+      "message": "This value should not be blank."
+    }
+  ]
+}
+```
 
 You now get proper validation error messages, always serialized using the Hydra error format ([RFC 7807](https://tools.ietf.org/html/rfc7807)
 is also supported).
@@ -621,10 +639,10 @@ need to install the [graphql-php](https://webonyx.github.io/graphql-php/) librar
 
     $ docker-compose exec php composer req webonyx/graphql-php
 
-You now have a GraphQL API! Open `http://localhost:8080/graphql` to play with it using the nice [GraphiQL](https://github.com/graphql/graphiql)
+You now have a GraphQL API! Open `https://localhost:8443/graphql` to play with it using the nice [GraphiQL](https://github.com/graphql/graphiql)
 UI that is shipped with API Platform:
 
-TODO screenshot
+![GraphQL endpoint](images/api-platform-2.2-graphql.png)
 
 The GraphQL implementation supports [queries](http://graphql.org/learn/queries/), [mutations](http://graphql.org/learn/queries/),
 [100% of the Relay server specification](https://facebook.github.io/relay/docs/en/graphql-server-specification.html), pagination,
@@ -637,9 +655,9 @@ clients.
 Wouldn't it be nice to have an administration backend to manage the data exposed by your API?
 Wait... You already have one!
 
-Open `http://localhost:81` in your browser:
+Open `https://localhost:444` in your browser:
 
-TODO: screenshot
+![The admin](images/api-platform-2.2-admin.png)
 
 This [Material Design](https://material.io/guidelines/) admin is a [Progressive Web App](https://developers.google.com/web/progressive-web-apps/)
 built with [API Platform Admin](../admin/index.md) (Admin On Rest, React and Redux inside). It is very powerful and fully
@@ -657,9 +675,10 @@ The distribution comes with a skeleton ready to welcome the React flavor of the 
 
     $ docker-compose exec client generate-api-platform-client
 
-Then open `http://localhost/books` in your browser:
+Open `client/src/index.js` and follow the copy/pasting instructions displayed in the console. Then open `https://localhost/books/`
+in your browser:
 
-TODO: screenshot
+![The React Progressive Web App](images/api-platform-2.2-pwa-react.png)
 
 You can also choose to generate the code for a specific resource with the `--resource` argument (example:
 `generate-api-platform-client --resource books`). 
@@ -667,6 +686,8 @@ You can also choose to generate the code for a specific resource with the `--res
 The generated code contains a list (including pagination), a delete button, a creation and an edition form. It also includes
 [Bootstrap 4](http://getbootstrap.com) markup and [ARIA roles](https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA)
 to make the app usable by people with disabilities.
+
+If you prefer to generated a PWA built on top of Vue.js, or a native mobile app, read [the dedicated documentation](../client-generator/index.md).
 
 ## Other Features
 
