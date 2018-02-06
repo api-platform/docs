@@ -500,6 +500,8 @@ Or in XML:
 </resources>
 ```
 
+For action (ADR) with `App\Action` namespace, please see: [Action Configuration](https://github.com/api-platform/api-platform/issues/537#issuecomment-361215914)
+
 API Platform will automatically map this `special` operation with the route `book_special`. Let's create a custom action
 and its related route using annotations:
 
