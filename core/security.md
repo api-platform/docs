@@ -66,7 +66,7 @@ that a user could not create a book.
 It is also possible to use the [event system](events.md) for more advanced logic or even [custom actions](operations.md#creating-custom-operations-and-controllers)
 if you really need to.
 
-## Confifuring the Access Control Message
+## Configuring the Access Control Message
 
 By default when API request will be denied you will get the "Access Denied." message.
 You can change it by configuring "access_control_message" attribute.
