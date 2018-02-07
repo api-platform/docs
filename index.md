@@ -37,6 +37,7 @@
         1.  [Creating Custom Doctrine ORM Filters](core/filters.md#creating-custom-doctrine-orm-filters)
             1. [Using Doctrine Filters](core/filters.md#using-doctrine-filters)
         2.  [Overriding Extraction of Properties from the Request](core/filters.md#overriding-extraction-of-properties-from-the-request)
+    4.  [ApiFilter Annotation](core/filters.md#apifilter-annotation)
 7.  [Serialization Groups and Relations](core/serialization-groups-and-relations.md)
     1.  [Configuration](core/serialization-groups-and-relations.md#configuration)
     2.  [Using Different Serialization Groups per Operation](core/serialization-groups-and-relations.md#embedding-relations)
