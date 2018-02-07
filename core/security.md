@@ -66,7 +66,7 @@ that a user could not create a book.
 It is also possible to use the [event system](events.md) for more advanced logic or even [custom actions](operations.md#creating-custom-operations-and-controllers)
 if you really need to.
 
-## Access Control Message
+## Confifuring the Access Control Message
 
 By default when API request will be denied you will get the "Access Denied." message.
 You can change it by configuring "access_control_message" attribute.
@@ -75,25 +75,26 @@ For example:
 
 ```php
 <?php
-// src/AppBundle/Entity/Book.php
+// src/Entity/Book.php
+
+namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
-use Doctrine\ORM\Mapping as ORM;
 
 /**
+ * ...
  * @ApiResource(
  *     attributes={"access_control"="is_granted('ROLE_USER')"},
  *     collectionOperations={
- *         "post"={"method"="POST", "access_control"="is_granted('ROLE_ADMIN')", "access_control_message"="Only admins can add books."}
+ *         "post"={"access_control"="is_granted('ROLE_ADMIN')", "access_control_message"="Only admins can add books."}
  *     },
  *     itemOperations={
- *         "get"={"method"="GET", "access_control"="is_granted('ROLE_USER') and object.owner == user", "access_control_message"="Sorry, but you are not the book owner."}
+ *         "get"={"access_control"="is_granted('ROLE_USER') and object.owner == user", "access_control_message"="Sorry, but you are not the book owner."}
  *     }
  * )
- * @ORM\Entity
  */
 class Book
 {
-
+    // ...
 }
 ```
