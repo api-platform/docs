@@ -14,7 +14,7 @@ For new projects, prefer using the builtin Swagger support and/or NelmioApiDoc 3
 To enable the NelmioApiDoc integration, copy the following configuration:
 
 ```yaml
-# app/config/config.yml
+# api/config/packages/api_platform.yaml
 api_platform:
     # ...
 

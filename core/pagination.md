@@ -42,7 +42,7 @@ of total items in the collection.
 The name of the page parameter can be changed with the following configuration:
 
 ```yaml
-# app/config/config.yml
+# api/config/packages/api_platform.yaml
 api_platform:
     collection:
         pagination:
@@ -60,7 +60,7 @@ However, for small collections, it can be convenient to fully disable the pagina
 The pagination can be disabled for all resources using this configuration:
 
 ```yaml
-# app/config/config.yml
+# api/config/packages/api_platform.yaml
 api_platform:
     collection:
         pagination:
@@ -73,7 +73,7 @@ It can also be disabled for specific resource:
 
 ```php
 <?php
-// src/AppBundle/Entity/Book.php
+// src/Entity/Book.php
 
 use ApiPlatform\Core\Annotation\ApiResource;
 
@@ -94,7 +94,7 @@ You can configure API Platform Core to let the client enable or disable the pagi
 use the following configuration:
 
 ```yaml
-# app/config/config.yml
+# api/config/packages/api_platform.yaml
 api_platform:
     collection:
         pagination:
@@ -116,7 +116,7 @@ The client ability to disable the pagination can also be set in the resource con
 
 ```php
 <?php
-// src/AppBundle/Entity/Book.php
+// src/Entity/Book.php
 
 use ApiPlatform\Core\Annotation\ApiResource;
 
@@ -138,7 +138,7 @@ In the same manner, the number of items per page is configurable and can be set 
 The number of items per page can be configured for all resources:
 
 ```yaml
-# app/config/config.yml
+# api/config/packages/api_platform.yaml
 api_platform:
     collection:
         pagination:
@@ -149,7 +149,7 @@ api_platform:
 
 ```php
 <?php
-// src/AppBundle/Entity/Book.php
+// src/Entity/Book.php
 
 use ApiPlatform\Core\Annotation\ApiResource;
 
@@ -167,7 +167,7 @@ class Book
 #### Globally
 
 ```yaml
-# app/config/config.yml
+# api/config/packages/api_platform.yaml
 api_platform:
     collection:
         pagination:
@@ -183,7 +183,7 @@ Changing the number of items per page can be enabled (or disabled) for a specifi
 
 ```php
 <?php
-// src/AppBundle/Entity/Book.php
+// src/Entity/Book.php
 
 use ApiPlatform\Core\Annotation\ApiResource;
 
@@ -203,7 +203,7 @@ class Book
 The number of maximum items per page can be configured for all resources:
 
 ```yaml
-# app/config/config.yml
+# api/config/packages/api_platform.yaml
 api_platform:
     collection:
         pagination:
@@ -214,7 +214,7 @@ api_platform:
 
 ```php
 <?php
-// src/AppBundle/Entity/Book.php
+// src/Entity/Book.php
 
 use ApiPlatform\Core\Annotation\ApiResource;
 
@@ -233,7 +233,7 @@ class Book
 
 ```php
 <?php
-// src/AppBundle/Entity/Book.php
+// src/Entity/Book.php
 
 use ApiPlatform\Core\Annotation\ApiResource;
 
@@ -260,7 +260,7 @@ performance impact on really big collections. The downside is that the informati
 The partial pagination retrieval can be configured for all resources:
 
 ```yaml
-# app/config/config.yml
+# api/config/packages/api_platform.yaml
 
 api_platform:
     collection:
@@ -273,7 +273,7 @@ api_platform:
 ```php
 <?php
 
-// src/AppBundle/Entity/Book.php
+// src/Entity/Book.php
 
 use ApiPlatform\Core\Annotation\ApiResource;
 
@@ -291,7 +291,7 @@ class Book
 #### Globally
 
 ```yaml
-# app/config/config.yml
+# api/config/packages/api_platform.yaml
 
 api_platform:
     collection:
@@ -307,7 +307,7 @@ The partial pagination retrieval can now be changed by toggling a query paramete
 ```php
 <?php
 
-// src/AppBundle/Entity/Book.php
+// src/Entity/Book.php
 
 use ApiPlatform\Core\Annotation\ApiResource;
 

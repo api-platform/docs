@@ -20,7 +20,6 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @ApiResource(
  *      collectionOperations={
  *          "post"={
- *              "method"="POST",
  *              "path"="/users/forgot-password-request",
  *          },
  *      },
@@ -30,8 +29,8 @@ use Symfony\Component\Validator\Constraints as Assert;
 final class ForgotPasswordRequest
 {
     /**
-     * @Assert\NotBlank()
-     * @Assert\Email()
+     * @Assert\NotBlank
+     * @Assert\Email
      */
     public $email;
 }
@@ -114,13 +113,12 @@ default), you are done!
 Otherwise, the following configuration is needed:
 
 ```yaml
-# app/config/services.yml
+# api/config/services.yaml
 services:
-
     # ...
-
     'App\Api\EventSubscriber\UserSubscriber':
         arguments:
             - '@app.manager.user'
-        tags: [ 'kernel.event_subscriber' ]
+        # Uncomment the following line only if you don't use autoconfiguration
+        #tags: [ 'kernel.event_subscriber' ]
 ```

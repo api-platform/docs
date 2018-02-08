@@ -13,7 +13,7 @@ You can customize them by editing the resource configuration and add the groups 
 
 ```php
 <?php
-// src/AppBundle/Entity/Book.php
+// api/src/Entity/Book.php
 
 use ApiPlatform\Core\Annotation\ApiResource;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -57,7 +57,7 @@ In the following example, we use a static method to return the validation groups
 
 ```php
 <?php
-// src/AppBundle/Entity/Book.php
+// api/src/Entity/Book.php
 
 use ApiPlatform\Core\Annotation\ApiResource;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -99,11 +99,11 @@ Alternatively, you can use a service to retrieve the groups to use:
 
 ```php
 <?php
-// src/AppBundle/Validator/AdminGroupsGenerator.php
+// api/src/Validator/AdminGroupsGenerator.php
 
-namespace AppBundle\Validator;
+namespace App\Validator;
 
-use AppBundle\Entity\Book;
+use App\Entity\Book;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 final class AdminGroupsGenerator
@@ -130,12 +130,12 @@ Then, configure the entity class to use this service to retrieve validation grou
 
 ```php
 <?php
-// src/AppBundle/Entity/Book.php
+// api/src/Entity/Book.php
 
-namespace AppBundle\Entity;
+namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
-use AppBundle\Validator\AdminGroupsGenerator;
+use App\Validator\AdminGroupsGenerator;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
@@ -163,7 +163,7 @@ As stated in the [Symfony documentation](https://symfony.com/doc/current/validat
 You can retrieve the payload field by setting the `serialize_payload_fields` option to `true` in the API Platform config:
 
 ```yaml
-# app/config/config.yml
+# api/config/packages/api_platform.yaml
 
 api_platform:
     validator:
@@ -175,7 +175,7 @@ Then, the serializer will return all payload values in the error response.
 If you want to serialize only some payload fields, define them in the config like this:
 
 ```yaml
-# app/config/config.yml
+# api/config/packages/api_platform.yaml
 
 api_platform:
     validator:

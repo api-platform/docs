@@ -21,7 +21,7 @@ Both implementations can also implement a third, optional interface called
 ['RestrictedDataProviderInterface'](https://github.com/api-platform/core/blob/master/src/DataProvider/ItemDataProviderInterface.php)
 if you want to limit their effects to a single resource or operation.
 
-In the following examples we will create custom data providers for an entity class called `AppBundle\Entity\BlogPost`.
+In the following examples we will create custom data providers for an entity class called `App\Entity\BlogPost`.
 Note, that if your entity is not Doctrine-related, you need to flag the identifier property by using `@ApiProperty(identifier=true)` for things to work properly (see also [Entity Identifier Case](serialization.md#entity-identifier-case)).
 
 ## Custom Collection Data Provider
@@ -33,14 +33,14 @@ If no data is available, you should return an empty array.
 
 ```php
 <?php
-// src/AppBundle/DataProvider/BlogPostCollectionDataProvider.php
+// api/src/DataProvider/BlogPostCollectionDataProvider.php
 
-namespace AppBundle\DataProvider;
+namespace App\DataProvider;
 
 use ApiPlatform\Core\DataProvider\CollectionDataProviderInterface;
 use ApiPlatform\Core\DataProvider\RestrictedDataProviderInterface;
 use ApiPlatform\Core\Exception\ResourceClassNotSupportedException;
-use AppBundle\Entity\BlogPost;
+use App\Entity\BlogPost;
 
 final class BlogPostCollectionDataProvider implements CollectionDataProviderInterface, RestrictedDataProviderInterface
 {
@@ -61,11 +61,13 @@ final class BlogPostCollectionDataProvider implements CollectionDataProviderInte
 Then declare a Symfony service, for example:
 
 ```yaml
-# app/config/services.yml
+# api/config/services.yaml
 services:
     # ...
-    'AppBundle\DataProvider\BlogPostCollectionDataProvider':
+    'App\DataProvider\BlogPostCollectionDataProvider':
         tags: [ { name: 'api_platform.collection_data_provider', priority: 2 } ]
+        # Autoconfiguration must be disabled to set a custom priority
+        autoconfigure: false
 ```
 
 Tagging the service with the tag `api_platform.collection_data_provider` will enable API Platform Core to automatically
@@ -82,14 +84,14 @@ The `getItem` method can return `null` if no result has been found.
 
 ```php
 <?php
-// src/AppBundle/DataProvider/BlogPostItemDataProvider.php
+// api/src/DataProvider/BlogPostItemDataProvider.php
 
-namespace AppBundle\DataProvider;
+namespace App\DataProvider;
 
 use ApiPlatform\Core\DataProvider\ItemDataProviderInterface;
 use ApiPlatform\Core\DataProvider\RestrictedDataProviderInterface;
 use ApiPlatform\Core\Exception\ResourceClassNotSupportedException;
-use AppBundle\Entity\BlogPost;
+use App\Entity\BlogPost;
 
 final class BlogPostItemDataProvider implements ItemDataProviderInterface, RestrictedDataProviderInterface
 {
@@ -113,14 +115,12 @@ Otherwise, if you use a custom dependency injection configuration, you need to r
 providers.
 
 ```yaml
-# app/config/services.yml
-
+# api/config/services.yaml
 services:
-
     # ...
-
-    'AppBundle\DataProvider\BlogPostItemDataProvider':
-        tags: [ 'api_platform.item_data_provider' ]
+    'App\DataProvider\BlogPostItemDataProvider': ~
+        # Uncomment only if autoconfiguration is disabled
+        #tags: [ 'api_platform.item_data_provider' ]
 ```
 
 ## Injecting the Serializer in an `ItemDataProvider`
@@ -132,15 +132,15 @@ For this reason, we implemented the `SerializerAwareDataProviderInterface`:
 
 ```php
 <?php
-// src/AppBundle/DataProvider/BlogPostItemDataProvider.php
+// api/src/DataProvider/BlogPostItemDataProvider.php
 
-namespace AppBundle\DataProvider;
+namespace App\DataProvider;
 
 use ApiPlatform\Core\DataProvider\ItemDataProviderInterface;
 use ApiPlatform\Core\DataProvider\SerializerAwareDataProviderInterface;
 use ApiPlatform\Core\DataProvider\SerializerAwareDataProviderTrait;
 use ApiPlatform\Core\Exception\ResourceClassNotSupportedException;
-use AppBundle\Entity\BlogPost;
+use App\Entity\BlogPost;
 
 final class BlogPostItemDataProvider implements ItemDataProviderInterface, SerializerAwareDataProviderInterface
 {

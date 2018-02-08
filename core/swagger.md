@@ -15,19 +15,19 @@ In the following example, we will see how to override the title of the Swagger d
 the `GET` operation of `/foos` path
 
 ```yaml
-# app/config/services.yml
+# api/config/services.yaml
 services:
-    'AppBundle\Swagger\SwaggerDecorator':
+    'App\Swagger\SwaggerDecorator':
         decorates: 'api_platform.swagger.normalizer.documentation'
-        arguments: [ '@AppBundle\Swagger\SwaggerDecorator.inner' ]
+        arguments: [ '@App\Swagger\SwaggerDecorator.inner' ]
         autoconfigure: false
 ```
 
 ```php
 <?php
-// src/AppBundle/Swagger/SwaggerDecorator.php
+// api/src/Swagger/SwaggerDecorator.php
 
-namespace AppBundle\Swagger;
+namespace App\Swagger;
 
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
@@ -75,9 +75,9 @@ The following configuration will provide additional context to your Swagger defi
 
 ```php
 <?php
-// src/AppBundle/Entity/Product.php
+// api/src/Entity/Product.php
 
-namespace AppBundle\Entity;
+namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
 use ApiPlatform\Core\Annotation\ApiProperty;
@@ -132,9 +132,9 @@ class Product // The class name will be used to name exposed resources
 Or in YAML:
 
 ```yaml
-# src/AppBundle/Resources/config/api_resources/resources.yml
+# api/config/api_platform/resources.yaml
 resources:
-    AppBundle\Entity\Product:
+    App\Entity\Product:
       properties:
         name:
           attributes:
@@ -191,7 +191,6 @@ thanks to the `swagger_definition_name` option:
  * @ApiResource(
  *      collectionOperations={
  *          "post"={
- *              "method"="POST",
  *              "denormalization_context"={
  *                  "groups"={"user_read"},
  *                  "swagger_definition_name": "Read",
@@ -212,7 +211,6 @@ It's also possible to re-use the (`de`)`normalization_context`:
  * @ApiResource(
  *      collectionOperations={
  *          "post"={
- *              "method"="POST",
  *              "denormalization_context"=User::API_WRITE,
  *          },
  *      },
@@ -234,7 +232,7 @@ Sometimes you may want to have the API at one location, and the Swagger UI at a 
 ### Disabling Swagger UI
 
 ```yaml
-# app/config/config.yml
+# api/config/packages/api_platform.yaml
 
 api_platform:
     # ...
@@ -244,7 +242,7 @@ api_platform:
 ### Manually Registering the Swagger UI Controller
 
 ```yaml
-# app/config/routing.yml
+# app/config/routes.yaml
 swagger_ui:
     path: /docs
     controller: api_platform.swagger.action.ui

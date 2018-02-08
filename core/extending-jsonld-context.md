@@ -6,9 +6,9 @@ within the following annotation, will be passed to the context, that provides a 
 
 ```php
 <?php
-// src/AppBundle/Entity/Book.php
+// api/src/Entity/Book.php
 
-namespace AppBundle\Entity;
+namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiProperty;
 use ApiPlatform\Core\Annotation\ApiResource;

@@ -53,7 +53,7 @@ with a huge collection. [Here are some examples to index LIKE
 filters](http://use-the-index-luke.com/sql/where-clause/searching-for-ranges/like-performance-tuning) depending on your
 database driver.
 
-### Eager loading
+### Eager Loading
 
 By default Doctrine comes with [lazy loading](http://doctrine-orm.readthedocs.io/en/latest/reference/working-with-objects.html#by-lazy-loading).
 Usually a killer time-saving feature and also a performance killer with large applications.
@@ -73,14 +73,14 @@ you've to bypass `readable` and `readableLink` by using the `fetchEager` attribu
  public $foo;
 ```
 
-#### Max joins
+#### Max Joins
 
 There is a default restriction with this feature. We allow up to 30 joins per query. Beyond, an
 `ApiPlatform\Core\Exception\RuntimeException` exception will be thrown but this value can easily be increased with a
 little of configuration:
 
 ```yaml
-# app/config/config.yaml
+# api/config/packages/api_platform.yaml
 api_platform:
     eager_loading:
         max_joins: 100
@@ -89,28 +89,28 @@ api_platform:
 Be careful when you exceed this limit, it's often caused by the result of a circular reference. [Serializer groups](serialization.md)
 can be a good solution to fix this issue.
 
-#### Force eager
+#### Force Eager
 
 As mentioned above, by default we force eager loading for all relations. This behaviour can be modified with the
 configuration in order to apply it only on join relations having the `EAGER` fetch mode:
 
 ```yaml
-# app/config/config.yaml
+# api/config/packages/api_platform.yaml
 api_platform:
     eager_loading:
         force_eager: false
 ```
 
-#### Override at resource and operation level
+#### Override at Resource and Operation Level
 
 When eager loading is enabled, whatever the status of the `force_eager` parameter, you can easily override it directly
 from the configuration of each resource. You can do this at the resource level, at the operations level, or both:
 
 ```php
 <?php
-// src/AppBundle/Entity/Address.php
+// api/src/Entity/Address.php
 
-namespace AppBundle\Entity;
+namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
 use Doctrine\ORM\Mapping as ORM;
@@ -127,9 +127,9 @@ class Address
 
 ```php
 <?php
-// src/AppBundle/Entity/User.php
+// api/src/Entity/User.php
 
-namespace AppBundle\Entity;
+namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
 use Doctrine\ORM\Mapping as ORM;
@@ -159,9 +159,9 @@ class User
 
 ```php
 <?php
-// src/AppBundle/Entity/Group.php
+// api/src/Entity/Group.php
 
-namespace AppBundle\Entity;
+namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
 use Doctrine\ORM\Mapping as ORM;
@@ -170,12 +170,12 @@ use Doctrine\ORM\Mapping as ORM;
  * @ApiResource(
  *     attributes={"force_eager"=false},
  *     itemOperations={
- *         "get"={"method"="GET", "force_eager"=true},
- *         "post"={"method"="POST"}
+ *         "get"={"force_eager"=true},
+ *         "post"
  *     },
  *     collectionOperations={
- *         "get"={"method"="GET", "force_eager"=true},
- *         "post"={"method"="POST"}
+ *         "get"={"force_eager"=true},
+ *         "post"
  *     }
  * )
  * @ORM\Entity
@@ -194,12 +194,12 @@ class Group
 Be careful, the operation level is higher priority than the resource level but both are higher priority than the global
 configuration.
 
-#### Disable eager loading
+#### Disable Eager Loading
 
 If for any reason you don't want the eager loading feature, you can turn it off in the configuration:
 
 ```yaml
-# app/config/config.yaml
+# api/config/packages/api_platform.yaml
 api_platform:
     eager_loading:
         enabled: false
@@ -214,8 +214,7 @@ When using the default pagination, the Doctrine paginator will execute a `COUNT`
 If you don't mind not having the latest page available, you can enable partial pagination and avoid the `COUNT` query:
 
 ```yaml
-# app/config/config.yaml
-
+# api/config/packages/api_platform.yaml
 api_platform:
     collection:
         pagination:

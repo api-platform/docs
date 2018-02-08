@@ -527,13 +527,13 @@ config:
     namespaces:
 
         # The namespace of the generated entities
-        entity:               AppBundle\Entity # Example: Acme\Entity
+        entity:               App\Entity # Example: Acme\Entity
 
         # The namespace of the generated enumerations
-        enum:                 AppBundle\Enum # Example: Acme\Enum
+        enum:                 App\Enum # Example: Acme\Enum
 
         # The namespace of the generated interfaces
-        interface:            AppBundle\Model # Example: Acme\Model
+        interface:            App\Model # Example: Acme\Model
 
     # Doctrine
     doctrine:

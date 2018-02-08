@@ -10,7 +10,7 @@ The Schema Generator can also [be downloaded independently as a PHAR](https://gi
 
     $ composer require --dev api-platform/schema-generator
 
-## Model scaffolding
+## Model Scaffolding
 
 Start by browsing [Schema.org](https://schema.org) and pick types applicable to your application. The website provides
 tons of schemas including (but not limited to) representations of people, organization, event, postal address, creative
@@ -18,8 +18,7 @@ work and e-commerce structures.
 Then, write a simple YAML config file like the following (here we will generate a data model for an address book):
 
 ```yaml
-# app/config/schema.yml
-
+# api/config/schema.yaml
 # The list of types and properties we want to use
 types:
     # Parent class of Person
@@ -53,11 +52,11 @@ types:
 
 Run the generator with this config file as parameter:
 
-    $ vendor/bin/schema generate-types src/ app/config/schema.yml
+    $ vendor/bin/schema generate-types api/src/ api/config/schema.yaml
 
 The following classes will be generated:
 
-```php
+```yaml
 types:
     Person:
         properties:
@@ -88,7 +87,7 @@ types:
 
 declare(strict_types=1);
 
-namespace AppBundle\Entity;
+namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiProperty;
 use ApiPlatform\Core\Annotation\ApiResource;
@@ -157,7 +156,7 @@ class Person
     /**
      * @var PostalAddress|null physical address of the item
      *
-     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\PostalAddress")
+     * @ORM\ManyToOne(targetEntity="App\Entity\PostalAddress")
      * @ApiProperty(iri="http://schema.org/address")
      */
     private $address;
@@ -327,7 +326,7 @@ class Person
 
 declare(strict_types=1);
 
-namespace AppBundle\Entity;
+namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiProperty;
 use ApiPlatform\Core\Annotation\ApiResource;
@@ -491,7 +490,7 @@ The related PHP class:
 
 declare(strict_types=1);
 
-namespace AppBundle\Enum;
+namespace App\Enum;
 
 use MyCLabs\Enum\Enum;
 
@@ -521,11 +520,11 @@ class OfferItemCondition extends Enum
 }
 ```
 
-### Going further
+### Going Further
 
 * Browse [the configuration documentation](configuration.md)
 
-## Cardinality extraction
+## Cardinality Extraction
 
 The Cardinality Extractor is a standalone tool (also used internally by the generator) extracting a property's cardinality.
 It uses [GoodRelations](http://www.heppnetz.de/projects/goodrelations/) data when available. Other cardinalities are
