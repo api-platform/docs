@@ -170,12 +170,12 @@ use Doctrine\ORM\Mapping as ORM;
  * @ApiResource(
  *     attributes={"force_eager"=false},
  *     itemOperations={
- *         "get"={"method"="GET", "force_eager"=true},
- *         "post"={"method"="POST"}
+ *         "get"={"force_eager"=true},
+ *         "post"
  *     },
  *     collectionOperations={
- *         "get"={"method"="GET", "force_eager"=true},
- *         "post"={"method"="POST"}
+ *         "get"={"force_eager"=true},
+ *         "post"
  *     }
  * )
  * @ORM\Entity

@@ -16,7 +16,8 @@ is also possible.
 There are two types of operations: collection operations and item operations.
 
 Collection operations act on a collection of resources. By default two routes are implemented: `POST` and `GET`. Item
-operations act on an individual resource. 3 default routes are defined `GET`, `PUT` and `DELETE`.
+operations act on an individual resource. 3 default routes are defined `GET`, `PUT` and `DELETE` (`PATCH` is also supported
+when [using the JSON API format](content-negotiation.md), as required by the specification).
 
 When the `ApiPlatform\Core\Annotation\ApiResource` annotation is applied to an entity class, the following built-in CRUD
 operations are automatically enabled:
@@ -38,7 +39,7 @@ Method   | Mandatory | Description
 
 ## Enabling and Disabling Operations
 
-If no operation is specified, all default CRUD operations are automatically registered. It is also possible - and recommended
+If no operation are specified, all default CRUD operations are automatically registered. It is also possible - and recommended
 for large projects - to define operations explicitly.
 
 Keep in mind that `collectionOperations` and `itemOperations` behave independently. For instance, if you don't explicitly
@@ -51,6 +52,30 @@ for the `GET` method for both `collectionOperations` and `itemOperations` to cre
 `itemOperations` and `collectionOperations` are arrays containing a list of operation. Each operation is defined by a key
 corresponding to the name of the operation that can be anything you want and an array of properties as value. If an
 empty list of operations is provided, all operations are disabled.
+
+If the operation's name match a supported HTTP methods (`GET`, `POST`, `PUT` or `DELETE`), the corresponding `method` property
+will be automatically added.
+
+```php
+<?php
+// api/src/Entity/Book.php
+
+use ApiPlatform\Core\Annotation\ApiResource;
+
+/**
+ * ...
+ * @ApiResource(
+ *     collectionOperations={"get"},
+ *     itemOperations={"get"}
+ *     )
+ */
+class Book
+{
+    // ...
+}
+```
+
+The previous example can be also be written with an explicit method definition:
 
 ```php
 <?php
@@ -77,11 +102,9 @@ Alternatively, you can use the YAML configuration format:
 # api/config/api_platform/resources.yaml
 App\Entity\Book:
     collectionOperations:
-        get:
-            method: 'GET' # nothing more to add if we want to keep the default controller
+        get: ~ # nothing more to add if we want to keep the default controller
     itemOperations:
-        get:
-            method: 'GET'
+        get: ~
 ```
 
 Or the XML configuration format:
@@ -96,21 +119,17 @@ Or the XML configuration format:
            https://api-platform.com/schema/metadata/metadata-2.0.xsd">
     <resource class="App\Entity\Book">
         <itemOperations>
-            <itemOperation name="get">
-                <attribute name="method">GET</attribute>
-            </itemOperation>
+            <itemOperation name="get" />
         </itemOperations>
         <collectionOperations>
-            <collectionOperation name="get">
-                <attribute name="method">GET</attribute>
-            </collectionOperation>
+            <collectionOperation name="get" />
         </collectionOperations>
     </resource>
 </resources>
 ```
 
 API Platform Core is smart enough to automatically register the applicable Symfony route referencing a built-in CRUD action
-just by specifying the enabled HTTP method.
+just by specifying the method name as key, or by checking the explicitly configured HTTP method.
 
 ## Configuring Operations
 
@@ -207,11 +226,15 @@ Or in XML:
 </resources>
 ```
 
+In all the previous examples, you can safely remove the `method` because the method name always match the operation name.
+
 ## Subresources
 
-Since ApiPlatform 2.1, you can declare subresources. A subresource is a collection or an item that belongs to another resource. The starting point of a subresource must be a relation on an existing resource.
+Since ApiPlatform 2.1, you can declare subresources. A subresource is a collection or an item that belongs to another resource.
+The starting point of a subresource must be a relation on an existing resource.
 
-For example, let's create two entities (Question, Answer) and set up a subresource so that `/question/42/answer` gives us the answer to the question 42:
+For example, let's create two entities (Question, Answer) and set up a subresource so that `/question/42/answer` gives us
+the answer to the question 42:
 
 ```php
 <?php
@@ -308,7 +331,6 @@ App\Entity\Question:
                 collection: false
 ```
 
-
 Note that all we had to do is to set up `@ApiSubresource` on the `Question::answer` relation. Because the `answer` is a to-one relation, we know that this subresource is an item. Therefore the response will look like this:
 
 ```json
@@ -380,6 +402,9 @@ Or in XML:
     </resource>
 </resources>
 ```
+
+In the previous examples, the `method` attribute is mandatory, because the operation name doesn't match a supported HTTP
+method.
 
 Note that the operation name, here `api_questions_answer_get_subresource`, is the important keyword.
 It'll be automatically set to `$resources_$subresource(s)_get_subresource`. To find the correct operation name you
@@ -468,7 +493,7 @@ use ApiPlatform\Core\Annotation\ApiResource;
 
 /**
  * @ApiResource(itemOperations={
- *     "get"={"method"="GET"},
+ *     "get",
  *     "special"={"route_name"="book_special"}
  * })
  */
@@ -484,8 +509,7 @@ Or in YAML:
 # api/config/api_platform/resources.yaml
 App\Entity\Book:
     itemOperations:
-        get:
-            method: 'GET'
+        get: ~
         special:
             route_name: 'book_special'
 ```
@@ -502,9 +526,7 @@ Or in XML:
            https://api-platform.com/schema/metadata/metadata-2.0.xsd">
     <resource class="App\Entity\Book">
         <itemOperations>
-            <itemOperation name="get">
-                <attribute name="method">GET</attribute>
-            </itemOperation>
+            <itemOperation name="get" />
             <itemOperation name="special">
                 <attribute name="route_name">book_special</attribute>
             </itemOperation>

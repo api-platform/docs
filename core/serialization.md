@@ -126,8 +126,8 @@ use Symfony\Component\Serializer\Annotation\Groups;
  *         "normalization_context"={"groups"={"get"}}
  *     },
  *     itemOperations={
- *          "get"={"method"="GET"},
- *          "put"={"method"="PUT", "normalization_context"={"groups"={"put"}}}
+ *          "get",
+ *          "put"={"normalization_context"={"groups"={"put"}}}
  *     }
  * )
  */

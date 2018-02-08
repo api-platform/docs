@@ -191,7 +191,6 @@ thanks to the `swagger_definition_name` option:
  * @ApiResource(
  *      collectionOperations={
  *          "post"={
- *              "method"="POST",
  *              "denormalization_context"={
  *                  "groups"={"user_read"},
  *                  "swagger_definition_name": "Read",
@@ -212,7 +211,6 @@ It's also possible to re-use the (`de`)`normalization_context`:
  * @ApiResource(
  *      collectionOperations={
  *          "post"={
- *              "method"="POST",
  *              "denormalization_context"=User::API_WRITE,
  *          },
  *      },
