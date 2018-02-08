@@ -28,8 +28,12 @@ services:
     offer.date_filter:
         parent: 'api_platform.doctrine.orm.date_filter'
         arguments: [ { dateProperty: ~ } ]
-        # Uncomment the next line if autoconfiguration is not enabled (it is by default)
-        #tags:  [ 'api_platform.filter' ]
+        tags:  [ 'api_platform.filter' ]
+        # The following are mandatory only if a _defaults section is defined
+        # You may want to isolate filters in a dedicated file to avoid adding them
+        autowire: false
+        autoconfigure: false
+        public: false
 ```
 
 We're linking the filter `offer.date_filter` with the `@ApiResource` annotation:
@@ -49,6 +53,40 @@ class Offer
 {
     // ...
 }
+```
+
+Alternatively, using YAML:
+
+```yaml
+# api/config/api_platform/resources.yaml
+App\Entity\Offer:
+    collectionOperations:
+        get:
+            filters: ['offer.date_filter']
+    # ...
+```
+
+Or XML:
+
+```xml
+<?xml version="1.0" encoding="UTF-8" ?>
+<!-- api/config/api_platform/resources.xml -->
+
+<resources xmlns="https://api-platform.com/schema/metadata"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="https://api-platform.com/schema/metadata
+           https://api-platform.com/schema/metadata/metadata-2.0.xsd">
+    <resource class="App\Entity\Offer">
+        <collectionOperations>
+            <collectionOperation name="get">
+                <attribute name="filters">
+                    <attribute>offer.date_filter</attribute>
+                </attribute>
+            </collectionOperation>
+            <!-- ... -->
+        </collectionOperations>
+    </resource>
+</resources>
 ```
 
 2. By using the `@ApiFilter` annotation.

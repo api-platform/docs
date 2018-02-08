@@ -338,6 +338,7 @@ API Platform implements a `ContextBuilder`, which prepares the context for seria
 ```yaml
 # api/config/services.yaml
 services:
+    # ...
     'App\Serializer\BookContextBuilder':
         decorates: 'api_platform.serializer.context_builder'
         arguments: [ '@App\Serializer\BookContextBuilder.inner' ]
