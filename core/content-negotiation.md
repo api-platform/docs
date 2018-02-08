@@ -71,14 +71,14 @@ Using composition is the recommended way to implement a custom normalizer. You c
 own implementation of `CustomItemNormalizer`:
 
 ```yaml
-# api/config/services.yml
+# api/config/services.yaml
 services:
-# ...
-
     'App\Serializer\CustomItemNormalizer':
         arguments: [ '@api_platform.serializer.normalizer.item' ]
         # Uncomment if you don't use the autoconfigure feature
         #tags: [ 'serializer.normalizer' ]
+    
+    # ...
 ```
 
 ```php

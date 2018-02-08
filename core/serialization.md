@@ -336,7 +336,7 @@ API Platform implements a `ContextBuilder`, which prepares the context for seria
 `createFromRequest` method:
 
 ```yaml
-# api/config/services.yml
+# api/config/services.yaml
 services:
     'App\Serializer\BookContextBuilder':
         decorates: 'api_platform.serializer.context_builder'
@@ -388,7 +388,7 @@ The variable `$normalization` lets you check whether the context is for normaliz
 The example above shows how you can modify the normalization/denormalization context based on the current user permissions for all the books that are being normalized/denormalized. Sometimes, however, the permissions vary depending on what book is being processed. Think of ACL's: User A may retrieve Book A but not Book B. In that case, we have to leverage the power of the Symfony Serializer and register our own normalizer that adds the group on every single item (priority `64` is just an example, make sure your normalizer gets loaded first):
 
 ```yaml
-# api/config/services.yml
+# api/config/services.yaml
 services:
     'App\Serializer\BookAttributeNormalizer':
         arguments: [ '@security.token_storage' ]
@@ -468,7 +468,7 @@ To use this feature, declare a new service with id `app.name_converter`. For exa
 `snake_case` with the following configuration:
 
 ```yaml
-# api/config/services.yml
+# api/config/services.yaml
 services:
     'Symfony\Component\Serializer\NameConverter\CamelCaseToSnakeCaseNameConverter': ~
 ```
@@ -485,7 +485,7 @@ In the following example, we will see how we add extra informations to the outpu
 Here is how we add the date on each request in `GET`:
 
 ```yaml
-# api/config/services.yml
+# api/config/services.yaml
 services:
     'App\Serializer\ApiNormalizer':
         decorates: 'api_platform.jsonld.normalizer.item'

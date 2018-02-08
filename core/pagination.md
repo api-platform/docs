@@ -42,7 +42,7 @@ of total items in the collection.
 The name of the page parameter can be changed with the following configuration:
 
 ```yaml
-# api/config/config.yml
+# api/config/packages/api_platform.yaml
 api_platform:
     collection:
         pagination:

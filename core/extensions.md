@@ -119,7 +119,7 @@ final class CurrentUserExtension implements QueryCollectionExtensionInterface, Q
 Finally register the custom extension:
 
 ```yaml
-# api/config/services.yml
+# api/config/services.yaml
 services:
 
     # ...
@@ -141,13 +141,11 @@ This example adds a `WHERE` clause condition only when a fully authenticated use
 To secure the access to endpoints, use the following access control rule:
 
 ```yaml
-# app/config/security.yml
+# app/config/package/security.yaml
 security:
     # ...
-
     access_control:
         # ...
-
         - { path: ^/offers, roles: IS_AUTHENTICATED_FULLY }
         - { path: ^/users, roles: IS_AUTHENTICATED_FULLY }
 ```

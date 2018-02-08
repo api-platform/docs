@@ -61,11 +61,13 @@ final class BlogPostCollectionDataProvider implements CollectionDataProviderInte
 Then declare a Symfony service, for example:
 
 ```yaml
-# api/config/services.yml
+# api/config/services.yaml
 services:
     # ...
     'App\DataProvider\BlogPostCollectionDataProvider':
         tags: [ { name: 'api_platform.collection_data_provider', priority: 2 } ]
+        # Autoconfiguration must be disabled to set a custom priority
+        autoconfigure: false
 ```
 
 Tagging the service with the tag `api_platform.collection_data_provider` will enable API Platform Core to automatically
@@ -113,14 +115,12 @@ Otherwise, if you use a custom dependency injection configuration, you need to r
 providers.
 
 ```yaml
-# api/config/services.yml
-
+# api/config/services.yaml
 services:
-
     # ...
-
-    'App\DataProvider\BlogPostItemDataProvider':
-        tags: [ 'api_platform.item_data_provider' ]
+    'App\DataProvider\BlogPostItemDataProvider': ~
+        # Uncomment only if autoconfiguration is disabled
+        #tags: [ 'api_platform.item_data_provider' ]
 ```
 
 ## Injecting the Serializer in an `ItemDataProvider`

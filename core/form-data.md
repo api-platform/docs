@@ -71,14 +71,14 @@ final class DeserializeListener
 ## Creating the Service Definition
 
 ```yaml
-# api/config/services.yml
+# api/config/services.yaml
 services:
-
     # ...
-
     'App\EventListener\DeserializeListener':
         tags:
             - { name: 'kernel.event_listener', event: 'kernel.request', method: 'onKernelRequest', priority: 2 }
+        # Autoconfiguration must be disabled to set a custom priority
+        autoconfigure: false
 ```
 
 ## Cleanup the Original Listener

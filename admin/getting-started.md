@@ -38,7 +38,10 @@ import { HydraAdmin } from '@api-platform/admin';
 export default () => <HydraAdmin entrypoint="https://demo.api-platform.com"/>; // Replace with your own API entrypoint
 ```
 
-Be sure to make your API send proper [CORS HTTP headers](https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS) to allow the admin's domain to access it. To do so, update the value of the `cors_allow_origin` parameter in `app/config/parameters.yml` (it will be `http://localhost:3000` by default).
+Be sure to make your API send proper [CORS HTTP headers](https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS) to allow
+the admin's domain to access it.
+To do so, update the value of the `CORS_ALLOW_ORIGIN` parameter in `api/.env` (it will be set to `^https?://localhost:?[0-9]*$`
+by default).
 
 Clear the cache to apply this change:
 

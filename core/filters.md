@@ -12,28 +12,31 @@ automatically appears in the [NelmioApiDoc documentation](nelmio-api-doc.md) if 
 
 ## Doctrine ORM Filters
 
-### Basic knowledge
+### Basic Knowledge
 
-Filters are services (see the section on [custom filters](core/filters.md#creating-custom-filters)), and they can be linked to a Resource in two ways:
+Filters are services (see the section on [custom filters](core/filters.md#creating-custom-filters)), and they can be linked
+to a Resource in two ways:
 
 1. Through the `ApiResource` declaration, as the `filters` attribute.
 
 For example having a filter service declaration:
 
 ```yaml
-# api/config/api_filters.yml
+# api/config/services.yaml
 services:
+    # ...
     offer.date_filter:
         parent: 'api_platform.doctrine.orm.date_filter'
         arguments: [ { dateProperty: ~ } ]
-        tags:  [ 'api_platform.filter' ]
+        # Uncomment the next line if autoconfiguration is not enabled (it is by default)
+        #tags:  [ 'api_platform.filter' ]
 ```
 
 We're linking the filter `offer.date_filter` with the `@ApiResource` annotation:
 
 ```php
 <?php
-// api/Entity/Offer.php
+// api/src/Entity/Offer.php
 
 namespace App\Entity;
 
@@ -54,7 +57,7 @@ This annotation automatically declares the service, and you just have to use the
 
 ```php
 <?php
-// api/Entity/Offer.php
+// api/src/Entity/Offer.php
 
 namespace App\Entity;
 
@@ -78,7 +81,7 @@ For the sake of consistency, we're using the annotation in the below documentati
 
 ### Search Filter
 
-If Doctrine ORM support is enabled, adding filters is as easy as registering a filter service in the `api/config/api_filters.yml`
+If Doctrine ORM support is enabled, adding filters is as easy as registering a filter service in the `api/config/services.yaml`
 file and adding an attribute to your resource configuration.
 
 The search filter supports `exact`, `partial`, `start`, `end`, and `word_start` matching strategies:
@@ -99,7 +102,7 @@ In the following example, we will see how to allow the filtering of a list of e-
 
 ```php
 <?php
-// api/Entity/Offer.php
+// api/src/Entity/Offer.php
 
 namespace App\Entity;
 
@@ -124,7 +127,7 @@ It is possible to filter on relations too, if `Offer` has a `Product` relation:
 
 ```php
 <?php
-// api/Entity/Offer.php
+// api/src/Entity/Offer.php
 
 namespace App\Entity;
 
@@ -160,7 +163,7 @@ As others filters, the date filter must be explicitly enabled:
 
 ```php
 <?php
-// api/Entity/Offer.php
+// api/src/Entity/Offer.php
 
 namespace App\Entity;
 
@@ -194,7 +197,7 @@ For instance, exclude entries with a property value of `null`, with the followin
 
 ```php
 <?php
-// api/Entity/Offer.php
+// api/src/Entity/Offer.php
 
 namespace App\Entity;
 
@@ -224,7 +227,7 @@ Enable the filter:
 
 ```php
 <?php
-// api/Entity/Offer.php
+// api/src/Entity/Offer.php
 
 namespace App\Entity;
 
@@ -256,7 +259,7 @@ Enable the filter:
 
 ```php
 <?php
-// api/Entity/Offer.php
+// api/src/Entity/Offer.php
 
 namespace App\Entity;
 
@@ -288,7 +291,7 @@ Enable the filter:
 
 ```php
 <?php
-// api/Entity/Offer.php
+// api/src/Entity/Offer.php
 
 namespace App\Entity;
 
@@ -322,7 +325,7 @@ Enable the filter:
 
 ```php
 <?php
-// api/Entity/Offer.php
+// api/src/Entity/Offer.php
 
 namespace App\Entity;
 
@@ -348,7 +351,7 @@ will not be applied unless you configure a default order direction to use:
 
 ```php
 <?php
-// api/Entity/Offer.php
+// api/src/Entity/Offer.php
 
 namespace App\Entity;
 
@@ -382,8 +385,7 @@ For instance, treat entries with a property value of `null` as the smallest, wit
 
 ```php
 <?php
-
-// api/Entity/Offer.php
+// api/src/Entity/Offer.php
 
 namespace App\Entity;
 
@@ -407,7 +409,7 @@ A conflict will occur if `order` is also the name of a property with the search 
 Luckily, the query parameter name to use is configurable:
 
 ```yaml
-# api/config/config.yml
+# api/config/packages/api_platform.yaml
 api_platform:
     collection:
         order_parameter_name: '_order' # the URL query parameter to use is now "_order"
@@ -425,8 +427,7 @@ built-in filters support nested properties using the dot (`.`) syntax, e.g.:
 
 ```php
 <?php
-
-// api/Entity/Offer.php
+// api/src/Entity/Offer.php
 
 namespace App\Entity;
 
@@ -457,8 +458,7 @@ for all properties:
 
 ```php
 <?php
-
-// api/Entity/Offer.php
+// api/src/Entity/Offer.php
 
 namespace App\Entity;
 
@@ -504,7 +504,7 @@ Enable the filter:
 ```php
 <?php
 
-// api/Entity/Book.php
+// api/src/Entity/Book.php
 
 namespace App\Entity;
 
@@ -542,7 +542,7 @@ Enable the filter:
 ```php
 <?php
 
-// api/Entity/Book.php
+// api/src/Entity/Book.php
 
 namespace App\Entity;
 
@@ -591,7 +591,7 @@ library. This library must be properly installed and registered to use this exam
 
 ```php
 <?php
-// api/Filter/RegexpFilter.php
+// api/src/Filter/RegexpFilter.php
 
 namespace App\Filter;
 
@@ -638,28 +638,31 @@ final class RegexpFilter extends AbstractFilter
 Then, register this filter as a service:
 
 ```yaml
-# api/config/api_filters.yml
+# api/config/services.yaml
 services:
+    # ...
     'App\Filter\RegexpFilter':
-        tags: [ 'api_platform.filter' ]
+        # Uncomment only if autoconfiguration isn't enabled
+        #tags: [ 'api_platform.filter' ]
 ```
 
 In the previous example, the filter can be applied on any property. However, thanks to the `AbstractFilter` class,
 it can also be enabled for some properties:
 
 ```yaml
-# api/config/api_filters.yml
+# api/config/services.yaml
 services:
     'App\Filter\RegexpFilter':
         arguments: [ '@doctrine', '@request_stack', '@?logger', { email: ~, anOtherProperty: ~ } ]
-        tags: [ 'api_platform.filter' ]
+        # Uncomment only if autoconfiguration isn't enabled
+        #tags: [ 'api_platform.filter' ]
 ```
 
 Finally, add this filter to resources you want to be filtered:
 
 ```php
 <?php
-// api/Entity/Offer.php
+// api/src/Entity/Offer.php
 
 namespace App\Entity;
 
@@ -679,8 +682,7 @@ Or by using the `ApiFilter` annotation:
 
 ```php
 <?php
-
-// api/Entity/Offer.php
+// api/src/Entity/Offer.php
 
 namespace App\Entity;
 
@@ -712,8 +714,7 @@ Suppose we have a `User` entity and an `Order` entity related to the `User` one.
 
 ```php
 <?php
-
-// api/Entity/User.php
+// api/src/Entity/User.php
 
 namespace App\Entity;
 
@@ -730,8 +731,7 @@ class User
 
 ```php
 <?php
-
-// api/Entity/Order.php
+// api/src/Entity/Order.php
 
 namespace App\Entity;
 
@@ -759,7 +759,6 @@ Start by creating a custom annotation to mark restricted entities:
 
 ```php
 <?php
-
 // api/Annotation/UserAware.php
 
 namespace App\Annotation;
@@ -780,8 +779,7 @@ Then, let's mark the `Order` entity as a "user aware" entity.
 
 ```php
 <?php
-
-// api/Entity/Order.php
+// api/src/Entity/Order.php
 
 namespace App\Entity;
 
@@ -799,8 +797,7 @@ Now, create a Doctrine filter class:
 
 ```php
 <?php
-
-// api/Filter/UserFilter.php
+// api/src/Filter/UserFilter.php
 
 namespace App\Filter;
 
@@ -852,8 +849,7 @@ final class UserFilter extends SQLFilter
 Now, we must configure the Doctrine filter.
 
 ```yaml
-# api/config/config.yml
-
+# api/config/packages/api_platform.yaml
 doctrine:
     orm:
         filters:
@@ -864,12 +860,14 @@ doctrine:
 And add a listener for every request that initializes the Doctrine filter with the current user in your bundle services declaration file.
 
 ```yaml
-# api/config/services.yml
-
+# api/config/services.yaml
 services:
+    # ...
     'App\EventListener\UserFilterConfigurator':
         tags:
             - { name: kernel.event_listener, event: kernel.request, priority: 5 }
+        # Autoconfiguration must be disabled to set a custom priority
+        autoconfigure: false
 ```
 
 It's key to set the priority higher than the `ApiPlatform\Core\EventListener\ReadListener`'s priority, as flagged in [this issue](https://github.com/api-platform/core/issues/1185), as otherwise the `PaginatorExtension` will ignore the Doctrine filter and return incorrect `totalItems` and `page` (first/last/next) data.
@@ -878,7 +876,6 @@ Lastly, implement the configurator class:
 
 ```php
 <?php
-
 // api/EventListener/UserFilterConfigurator.php
 
 namespace App\EventListener;
@@ -935,7 +932,7 @@ In the following example, we will completely change the syntax of the order filt
 
 ```php
 <?php
-// api/Filter/CustomOrderFilter.php
+// api/src/Filter/CustomOrderFilter.php
 
 namespace App\Filter;
 
@@ -954,10 +951,12 @@ final class CustomOrderFilter extends OrderFilter
 Finally, register the custom filter:
 
 ```yaml
-# api/config/api_filters.yml
+# api/config/services.yaml
 services:
-    'App\Filter\CustomOrderFilter':
-        tags: [ 'api_platform.filter' ]
+    # ...
+    'App\Filter\CustomOrderFilter': ~
+        # Uncomment only if autoconfiguration isn't enabled
+        #tags: [ 'api_platform.filter' ]
 ```
 
 ## ApiFilter Annotation
@@ -994,10 +993,11 @@ class DummyCar
 
     /**
      * @ORM\OneToMany(targetEntity="DummyCarColor", mappedBy="car")
-     *
      * @ApiFilter(SearchFilter::class, properties={"colors.prop": "ipartial"})
      */
     private $colors;
+    
+    // ...
 }
 
 ```
@@ -1021,6 +1021,10 @@ For example, let's define two data filters (`DateFilter`, `SearchFilter` and `Bo
 
 ```php
 <?php
+// api/src/Entity/DummyCar.php
+
+namespace App\Entity;
+
 use ApiPlatform\Core\Annotation\ApiFilter;
 use ApiPlatform\Core\Annotation\ApiResource;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\BooleanFilter;
@@ -1072,4 +1076,3 @@ The next filters are not related to how the data is fetched but rather on the ho
 @ApiFilter(PropertyFilter::class, arguments={"parameterName": "foobar"})
 @ApiFilter(GroupFilter::class, arguments={"parameterName": "foobargroups"})
 ```
-

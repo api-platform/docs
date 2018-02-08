@@ -15,7 +15,7 @@ In the following example, we will see how to override the title of the Swagger d
 the `GET` operation of `/foos` path
 
 ```yaml
-# api/config/services.yml
+# api/config/services.yaml
 services:
     'App\Swagger\SwaggerDecorator':
         decorates: 'api_platform.swagger.normalizer.documentation'
@@ -132,7 +132,7 @@ class Product // The class name will be used to name exposed resources
 Or in YAML:
 
 ```yaml
-# api/src/Resources/config/api_resources/resources.yml
+# api/config/api_platform/resources.yaml
 resources:
     App\Entity\Product:
       properties:
@@ -244,7 +244,7 @@ api_platform:
 ### Manually Registering the Swagger UI Controller
 
 ```yaml
-# app/config/routing.yml
+# app/config/routes.yaml
 swagger_ui:
     path: /docs
     controller: api_platform.swagger.action.ui

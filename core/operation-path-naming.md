@@ -17,7 +17,6 @@ To change it to the dash resolver, add the following lines to `api/config/packag
 
 ```yaml
 # api/config/packages/api_platform.yaml
-
 api_platform:
     path_segment_name_generator: api_platform.path_segment_name_generator.dash
 ```
@@ -64,8 +63,9 @@ do.
 Otherwise, you must register this class a service like in the following example:
 
 ```yaml
-# api/config/services.yml
+# api/config/services.yaml
 services:
+    # ...
     'App\PathResolver\NoSeparatorsOperationPathResolver': ~
 ```
 
@@ -73,7 +73,6 @@ services:
 
 ```yaml
 # api/config/packages/api_platform.yaml
-
 api_platform:
     path_segment_name_generator: 'App\PathResolver\NoSeparatorsOperationPathResolver'
 ```

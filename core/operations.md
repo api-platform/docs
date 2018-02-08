@@ -74,6 +74,7 @@ class Book
 Alternatively, you can use the YAML configuration format:
 
 ```yaml
+# api/config/api_platform/resources.yaml
 App\Entity\Book:
     collectionOperations:
         get:
@@ -87,6 +88,8 @@ Or the XML configuration format:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" ?>
+<!-- api/config/api_platform/resources.xml -->
+
 <resources xmlns="https://api-platform.com/schema/metadata"
            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
            xsi:schemaLocation="https://api-platform.com/schema/metadata
@@ -138,6 +141,7 @@ class Book
 Or in YAML:
 
 ```yaml
+# api/config/api_platform/resources.yaml
 App\Entity\Book:
     itemOperations:
         get:
@@ -163,6 +167,8 @@ Or in XML:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" ?>
+<!-- api/config/api_platform/resources.xml -->
+
 <resources xmlns="https://api-platform.com/schema/metadata"
            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
            xsi:schemaLocation="https://api-platform.com/schema/metadata
@@ -292,6 +298,7 @@ class Question
 Alternatively, you can use the YAML configuration format:
 
 ```yaml
+# api/config/api_platform/resources.yaml
 App\Entity\Answer: ~
 App\Entity\Question:
     properties:
@@ -341,6 +348,7 @@ class Answer
 Or using YAML:
 
 ```yaml
+# api/config/api_platform/resources.yaml
 App\Entity\Answer:
     collectionOperations:
         api_questions_answer_get_subresource:
@@ -352,6 +360,8 @@ Or in XML:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" ?>
+<!-- api/config/api_platform/resources.xml -->
+
 <resources xmlns="https://api-platform.com/schema/metadata"
            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
            xsi:schemaLocation="https://api-platform.com/schema/metadata
@@ -401,7 +411,8 @@ class Question
 
 ### Control the Depth of Subresources
 
-You can control depth of subresources with the parameter `maxDepth`. For example, if `Answer` entity also have subresource such as `comments`and you don't want the route `api/questions/{id}/answers/{id}/comments` to be generated. You can do this by adding the parameter maxDepth in ApiSubresource annotation or yml/xml file configuration.
+You can control depth of subresources with the parameter `maxDepth`. For example, if `Answer` entity also have subresource
+such as `comments`and you don't want the route `api/questions/{id}/answers/{id}/comments` to be generated. You can do this by adding the parameter maxDepth in ApiSubresource annotation or YAML/XML file configuration.
 
 ```php
 <?php
@@ -470,6 +481,7 @@ class Book
 Or in YAML:
 
 ```yaml
+# api/config/api_platform/resources.yaml
 App\Entity\Book:
     itemOperations:
         get:
@@ -482,6 +494,8 @@ Or in XML:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" ?>
+<!-- api/config/api_platform/resources.xml -->
+
 <resources xmlns="https://api-platform.com/schema/metadata"
            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
            xsi:schemaLocation="https://api-platform.com/schema/metadata

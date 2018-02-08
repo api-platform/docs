@@ -165,8 +165,9 @@ As an alternative to annotations, you can map entity classes using XML or YAML:
 XML:
 
 ```xml
-<!-- api/src/Resources/config/api_resources/resources.xml -->
 <?xml version="1.0" encoding="UTF-8" ?>
+<!-- api/config/api_platform/resources.xml -->
+
 <resources xmlns="https://api-platform.com/schema/metadata"
            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
            xsi:schemaLocation="https://api-platform.com/schema/metadata
@@ -184,7 +185,7 @@ XML:
 YAML:
 
 ```yaml
-# api/src/Resources/config/api_resources/resources.yml
+# api/config/api_platform/resources.yaml
 resources:
     App\Entity\Product: ~
     App\Entity\Offer:

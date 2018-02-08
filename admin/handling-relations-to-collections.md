@@ -129,16 +129,18 @@ We'll make one last improvement to our admin: transforming the relation selector
 Start by adding a "partial search" filter on the `name` property of the `Book` resource class.
 
 ```yaml
-# config/api_filters.yml
+# api/config/services.yaml
 services:
     person.search_filter:
         parent: 'api_platform.doctrine.orm.search_filter'
         arguments: [ { name: 'partial' } ]
-        tags: ['api_platform.filter']
+        # Uncomment only if you don't use autoconfiguration
+        #tags: ['api_platform.filter']
 ```
 
 ```php
-
+<?php
+// api/src/Entity/Person.php
 // ...
 
 /**
@@ -147,7 +149,8 @@ services:
  */
 class Person
 {
-// ...
+    // ...
+}
 ```
 
 Then edit the configuration of API Platform Admin to pass a `filterToQuery` property to the `ReferenceArrayInput` component.

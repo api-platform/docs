@@ -17,7 +17,7 @@ or use [API Platform's FOSUserBundle integration](fosuser-bundle.md).
 Here's a sample configuration using the data provider provided by FOSUserBundle:
 
 ```yaml
-# app/config/security.yml
+# app/config/packages/security.yaml
 security:
     encoders:
         FOS\UserBundle\Model\UserInterface: bcrypt
