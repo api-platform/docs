@@ -585,7 +585,7 @@ operation) in the parameters of the route (`defaults` key). It allows API Platfo
 together.
 
 Here we consider that the autowiring enabled for controller classes (the default when using the API Platform distribution).
-This action will be automatically registered as a service (the service name is the same as the class name: `App\Action\BookSpecial`).
+This action will be automatically registered as a service (the service name is the same as the class name: `App\Controller\BookSpecial`).
 
 API Platform automatically retrieves the appropriate PHP entity then deserializes it, and for `POST` and `PUT` requests
 updates the entity with data provided by the user.
