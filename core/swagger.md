@@ -204,3 +204,17 @@ swagger_ui:
 ```
 
 Change `/docs` to your desired URI you wish Swagger to be accessible on.
+
+## Using the Swagger Command
+
+You can also dump your current Swagger documentation using the provided command:
+
+```
+# assuming the Symfony console is at bin/console
+
+$ bin/console api:swagger:export
+# Swagger documentation in JSON format...
+
+$ bin/console api:swagger:export --yaml
+# Swagger documentation in YAML format...
+```
