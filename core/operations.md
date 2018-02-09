@@ -228,6 +228,28 @@ Or in XML:
 
 In all the previous examples, you can safely remove the `method` because the method name always match the operation name.
 
+### Prefixing all routes of all operations
+
+Sometimes it's also useful to put a whole resource into its own "namespace" regarding the URI. Let's say you want to
+put everything that's related to a `Book` into the `library` so that URIs become `library/book/{id}`. In that case
+you don't need to override all the operations to set the path but configure a `routePrefix` for the whole entity instead:
+
+```php
+<?php
+// api/src/Entity/Book.php
+
+use ApiPlatform\Core\Annotation\ApiResource;
+
+/**
+ * ...
+ * @ApiResource("attributes"={"routePrefix"="/library"})
+ */
+class Book
+{
+    //...
+}
+```
+
 ## Subresources
 
 Since ApiPlatform 2.1, you can declare subresources. A subresource is a collection or an item that belongs to another resource.
