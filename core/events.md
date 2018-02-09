@@ -52,8 +52,7 @@ final class BookMailSubscriber implements EventSubscriberInterface
             return;
         }
 
-        $message = \Swift_Message::newInstance()
-            ->setSubject('A new book has been added')
+        $message = (new \Swift_Message('A new book has been added'))
             ->setFrom('system@example.com')
             ->setTo('contact@les-tilleuls.coop')
             ->setBody(sprintf('The book #%d has been added.', $book->getId()));

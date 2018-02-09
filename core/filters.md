@@ -569,7 +569,7 @@ Given that the collection endpoint is `/books`, you can filter by serialization 
 
 ### Property filter
 
-The property filter add the possibility to filter serialization properties.
+The property filter adds the possibility to filter serialization properties.
 
 Syntax: `?properties[]=<property>`
 
