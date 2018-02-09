@@ -97,7 +97,7 @@ will be write only, therefore the `author` property will never be included in do
 The value of the `normalization_context` is passed to the Symfony Serializer during the normalization process. In the same
 way, `denormalization_context` is used for denormalization.
 You can configure groups as well as any Symfony Serializer option configurable through the context argument (e.g. the `enable_max_depth`
-key when using [the `@MaxDepth` annotation](http://symfony.com/doc/current/components/serializer.html#handling-serialization-depth)).
+key when using [the `@MaxDepth` annotation](https://symfony.com/doc/current/components/serializer.html#handling-serialization-depth)).
 
 Built-in actions and the Hydra documentation generator will leverage the specified serialization and deserialization groups
 to give access only to exposed properties and to guess if they are readable and/or writable.
