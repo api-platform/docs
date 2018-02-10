@@ -621,3 +621,49 @@ class Book
     // ...
 }
 ```
+
+## Force Relations to be Serialized as IRIs
+
+Sometimes, for instance when dealing with trees of resources, using only serialization groups can lead to huge payloads. 
+To limit these references you can use the `alwaysIdentifer` option, as its name suggest, it forces to serialize the relation as an IRI instead of embedding its data:
+
+```php
+// src/Entity/Category.php
+
+namespace App\Entity;
+
+use ApiPlatform\Core\Annotation\ApiProperty;
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * @ApiResource 
+ * @ORM\Entity
+ */
+class Category
+{
+    //...
+
+    /**
+     * @var ArrayCollection children categories
+     *
+     * @ORM\ManyToMany(targetEntity="Category")
+     * @ApiProperty(alwaysIdentifier=true)
+     */
+    private $children;
+}
+```
+
+A resource of this class will be serialized as:
+
+```json
+{
+      "@context": "/contexts/Category",
+      "@id": "/categories/1",
+      "@type": "Category",
+      "children": [
+          "/always_identifier_dummies/1"
+      ]
+}
+```
+
+Note that in trees an object will be always serialized only 1 time. The second time, the IRI will always be used because of the built-in circular reference handler.
