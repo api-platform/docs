@@ -204,3 +204,12 @@ swagger_ui:
 ```
 
 Change `/docs` to your desired URI you wish Swagger to be accessible on.
+
+### Enable Swagger doc for API Gateway
+
+[AWS API Gateway](https://aws.amazon.com/api-gateway/) supports Swagger 2.0 partially, but it [requires some changes](https://docs.aws.amazon.com/apigateway/latest/developerguide/api-gateway-known-issues.html).
+Fortunately, API Platform provides a way to be compatible with both Swagger 2.0 & API Gateway.
+
+To enable API Gateway compatibility on your Swagger doc, add `api_gateway=true` query parameter:
+
+`http://www.example.com/docs.json?api_gateway=true`
