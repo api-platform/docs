@@ -3,10 +3,9 @@
 ![The welcome page](images/api-platform-2.2-welcome.png)
 
 > *API Platform* is the most advanced API platform, in any framework or language.
+> - Fabien Potencier (creator of Symfony), SymfonyCon 2017
 
-Fabien Potencier (creator of Symfony), SymfonyCon 2017
-
-[API Platform](https://api-platform.com) is a powerful but easy to use **full-stack** framework dedicated to API-driven projects.
+[API Platform](https://api-platform.com) is a powerful but easy to use **full stack** framework dedicated to API-driven projects.
 It contains a **PHP** library to create fully-featured APIs supporting industry-leading standards (JSON-LD, GraphQL, OpenAPI...),
 provides ambitious **JavaScript** tooling to consume those APIs in a snap (admin, PWA and mobile apps generators, hypermedia
 client...) and is shipped with a nice **Docker** and **Kubernetes** integration to develop and deploy instantly in the cloud.
@@ -662,8 +661,8 @@ Open `https://localhost:444` in your browser:
 ![The admin](images/api-platform-2.2-admin.png)
 
 This [Material Design](https://material.io/guidelines/) admin is a [Progressive Web App](https://developers.google.com/web/progressive-web-apps/)
-built with [API Platform Admin](../admin/index.md) (Admin On Rest, React and Redux inside). It is very powerful and fully
-customizable, refer to its documentation to learn more.
+built with [API Platform Admin](../admin/index.md) (Admin On Rest, React and Redux inside). It is powerful and fully customizable,
+refer to its documentation to learn more.
 It leverages the Hydra documentation exposed by the API component to build itself. It's 100% dynamic, **no code generation
 occurs**.
 
