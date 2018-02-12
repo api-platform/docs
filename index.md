@@ -147,10 +147,8 @@
 ## Deployment
 
 1.  [Introduction](deployment/index.md)
-2.  [Deploying an API Platform App on Heroku](deployment/heroku.md)
-3.  [Using API Platform with Docker](deployment/docker.md)
-    1.  [Services](deployment/docker.md#services)
-    2.  [Installation](deployment/docker.md#installation)
+2.  [Deploying to a Kubernetes Cluster](deployment/kubernetes.md)
+3.  [Deploying an API Platform App on Heroku](deployment/heroku.md)
 
 ## Extra
 
