@@ -14,7 +14,7 @@ automatically appears in the [NelmioApiDoc documentation](nelmio-api-doc.md) if 
 
 ### Basic Knowledge
 
-Filters are services (see the section on [custom filters](core/filters.md#creating-custom-filters)), and they can be linked
+Filters are services (see the section on [custom filters](#creating-custom-filters)), and they can be linked
 to a Resource in two ways:
 
 1. Through the `ApiResource` declaration, as the `filters` attribute.
