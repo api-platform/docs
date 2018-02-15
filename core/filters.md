@@ -283,7 +283,7 @@ class Offer
 }
 ```
 
-Given that the collection endpoint is `/offers`, you can filter offers by boolean  with the following query: `/offers?isAvailableGenericallyInMyCountry=true`.
+Given that the collection endpoint is `/offers`, you can filter offers by boolean with the following query: `/offers?isAvailableGenericallyInMyCountry=true`.
 
 It will return all offers where `isAvailableGenericallyInMyCountry` equals `true`.
 
@@ -315,7 +315,7 @@ class Offer
 }
 ```
 
-Given that the collection endpoint is `/offers`, you can filter offers by boolean  with the following query: `/offers?sold=1`.
+Given that the collection endpoint is `/offers`, you can filter offers by boolean with the following query: `/offers?sold=1`.
 
 It will return all offers with `sold` equals `1`.
 
@@ -452,11 +452,6 @@ api_platform:
     collection:
         order_parameter_name: '_order' # the URL query parameter to use is now "_order"
 ```
-
-### Filtering on Nested Properties
-
-Sometimes, you need to be able to perform filtering based on some linked resources (on the other side of a relation). All
-built-in filters support nested properties using the dot (`.`) syntax, e.g.:
 
 ### Filtering on Nested Properties
 
@@ -1040,7 +1035,7 @@ class DummyCar
 
 ```
 
-On the first property, `name`, it's straightforward. The first annotation argument is the filter class, the second sepcifies options, here the strategy:
+On the first property, `name`, it's straightforward. The first annotation argument is the filter class, the second specifies options, here the strategy:
 
 ```
 @ApiFilter(SearchFilter::class, strategy="partial")
@@ -1108,7 +1103,7 @@ The `SearchFilter` here adds properties. The result is the exact same as the exa
 
 Note that you can specify the `properties` argument on every filter.
 
-The next filters are not related to how the data is fetched but rather on the how the serialization is done On those, we can give an `arguments` option ([see here for the available arguments](#serializer-filters)):
+The next filters are not related to how the data is fetched but rather on the how the serialization is done on those, we can give an `arguments` option ([see here for the available arguments](#serializer-filters)):
 
 ```
 @ApiFilter(PropertyFilter::class, arguments={"parameterName": "foobar"})
