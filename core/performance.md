@@ -40,7 +40,7 @@ namespace AppBundle\EventSubscriber;
 use ApiPlatform\Core\EventListener\EventPriorities;
 use AppBundle\Entity\User;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-use Symfony\Component\HttpKernel\Event\GetResponseForControllerResultEvent;
+use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 
 final class UserResourcesSubscriber implements EventSubscriberInterface
@@ -48,16 +48,17 @@ final class UserResourcesSubscriber implements EventSubscriberInterface
     public static function getSubscribedEvents()
     {
         return [
-            KernelEvents::VIEW => ['extendResources', EventPriorities::PRE_READ],
+            KernelEvents::REQUEST => ['extendResources', EventPriorities::PRE_READ],
+            KernelEvents::REQUEST => ['extendResources', EventPriorities::POST_READ]
         ];
     }
 
-    public function extendResources(GetResponseForControllerResultEvent $event)
+    public function extendResources(GetResponseEvent $event)
     {
-        $user = $event->getControllerResult();
+        $class = $event->getRequest()->attributes->get('_api_resource_class');
         $request = $event->getRequest();
 
-        if ($user instanceof User) {
+        if ($class === User::class) {
             $resources = [
                 '/me'
             ];
