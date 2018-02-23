@@ -48,7 +48,7 @@ final class UserResourcesSubscriber implements EventSubscriberInterface
     public static function getSubscribedEvents()
     {
         return [
-            KernelEvents::VIEW => ['extendResources', EventPriorities::POST_WRITE],
+            KernelEvents::VIEW => ['extendResources', EventPriorities::PRE_READ],
         ];
     }
 
