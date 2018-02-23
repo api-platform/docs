@@ -179,4 +179,4 @@ You may also be interested in these alternative testing tools (not included in t
 
 To run your [PHPUnit](https://phpunit.de/) test suite, execute the following command:
 
-    $ docker-compose exec app vendor/bin/phpunit
+    $ docker-compose exec php vendor/bin/phpunit
