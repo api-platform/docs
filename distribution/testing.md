@@ -175,8 +175,8 @@ You may also be interested in these alternative testing tools (not included in t
   test in the CI using [newman](https://github.com/postmanlabs/newman).
 * [PHP Matcher](https://github.com/coduo/php-matcher): the Swiss Army knife of JSON document testing.
 
-# Unit tests with phpunit
+# Running Unit Tests with PHPUnit
 
-Run your phpunit tests with the following command, when your docker container is running:
+To run your [PHPUnit](https://phpunit.de/) test suite, execute the following command:
 
     $ docker-compose exec app vendor/bin/phpunit
