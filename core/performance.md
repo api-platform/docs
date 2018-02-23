@@ -26,6 +26,48 @@ distribution of API Platform, so this feature works out of the box.
 Integration with Varnish and the Doctrine ORM is shipped with the core library. You can easily implement the support for
 any other proxy or persistence system.
 
+### Extending Cache-Tags for invalidation
+
+Sometimes you need individual resources like `/me`. To work properly with Varnish, the cache tags need to be augmented with these resources. Here is an example how this can be done:
+
+```php
+<?php
+
+declare(strict_types=1);
+
+namespace AppBundle\EventSubscriber;
+
+use ApiPlatform\Core\EventListener\EventPriorities;
+use AppBundle\Entity\User;
+use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use Symfony\Component\HttpKernel\Event\GetResponseForControllerResultEvent;
+use Symfony\Component\HttpKernel\KernelEvents;
+
+final class UserResourcesSubscriber implements EventSubscriberInterface
+{
+    public static function getSubscribedEvents()
+    {
+        return [
+            KernelEvents::VIEW => ['extendResources', EventPriorities::POST_WRITE],
+        ];
+    }
+
+    public function extendResources(GetResponseForControllerResultEvent $event)
+    {
+        $user = $event->getControllerResult();
+        $request = $event->getRequest();
+
+        if ($user instanceof User) {
+            $resources = [
+                '/me'
+            ];
+
+            $request->attributes->set('_resources', $request->attributes->get('_resources', []) + (array)$resources);
+        }
+    }
+}
+```
+
 ## Enabling the Metadata Cache
 
 Computing metadata used by the bundle is a costly operation. Fortunately, metadata can be computed once and then cached.
