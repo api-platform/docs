@@ -174,3 +174,9 @@ You may also be interested in these alternative testing tools (not included in t
   using a nice UI, benefit from [the Swagger integration](https://www.getpostman.com/docs/importing_swagger) and run tests
   test in the CI using [newman](https://github.com/postmanlabs/newman).
 * [PHP Matcher](https://github.com/coduo/php-matcher): the Swiss Army knife of JSON document testing.
+
+# Unit tests with phpunit
+
+Run your phpunit tests with the following command, when your docker container is running:
+
+    $ docker-compose exec app vendor/bin/phpunit
