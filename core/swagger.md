@@ -249,3 +249,15 @@ swagger_ui:
 ```
 
 Change `/docs` to your desired URI you wish Swagger to be accessible on.
+
+## Using the Swagger Command
+
+You can also dump your current Swagger documentation using the provided command:
+
+```
+$ docker-compose exe php bin/console api:swagger:export
+# Swagger documentation in JSON format...
+
+$ docker-compose exe php bin/console --yaml
+# Swagger documentation in YAML format...
+```
