@@ -157,7 +157,8 @@
 
 ## Extra
 
-1.  [The Project's Philosophy](extra/philosophy.md)
-2.  [Troubleshooting](extra/troubleshooting.md)
-2.  [Contribution Guides](extra/contribution-guides.md)
-4.  [Contributor Code Of Conduct](extra/conduct.md)
+1.  [The Release Process](extra/releases.md)
+2.  [The Project's Philosophy](extra/philosophy.md)
+3.  [Troubleshooting](extra/troubleshooting.md)
+4.  [Contribution Guides](extra/contribution-guides.md)
+5.  [Contributor Code Of Conduct](extra/conduct.md)
