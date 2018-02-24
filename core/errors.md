@@ -1,18 +1,17 @@
-# Error Handling
+# Errors Handling
 
 API Platform comes with a powerful error system. It handles excepted (such as faulty JSON documents sent by the
 client or validation errors) as well as unexpected errors (PHP exceptions and errors).
-API Platform automatically send the appropriate HTTP status code to the client: `400` for expected errors, `500` for
-unexpected ones. It also provides a description of the respecting [the Hydra specification](http://www.hydra-cg.com/spec/latest/core/#description-of-http-status-codes-and-errors)
-or the [RFC 7807](https://tools.ietf.org/html/rfc7807) depending of the format selected during the [content negotiation](content-negotiation.md).
+API Platform automatically sends the appropriate HTTP status code to the client: `400` for expected errors, `500` for
+unexpected ones. It also provides a description of the error in [the Hydra error format](http://www.hydra-cg.com/spec/latest/core/#description-of-http-status-codes-and-errors)
+or in the format described in the [RFC 7807](https://tools.ietf.org/html/rfc7807), depending of the format selected during the [content negotiation](content-negotiation.md).
 
 ## Converting PHP Exceptions to HTTP Errors
 
 The framework also allows to configure the HTTP status code sent to the clients when custom exceptions are thrown.
 
-In the following example, we will throw explain to throw a domain exception from the business layer of the application and
-configure API Platform to convert it to a `404 Not Found` error. Let's create a this domain exception and the service throwing
-it:
+In the following example, we throw a domain exception from the business layer of the application and
+configure API Platform to convert it to a `404 Not Found` error:
 
 ```php
 <?php
@@ -63,14 +62,14 @@ final class ProductManager implements EventSubscriberInterface
 }
 ```
 
-If you use the standard distribution of API Platform, the event listener will be automatically registered. If you use a
+If you use the standard distribution of API Platform, this event listener will be automatically registered. If you use a
 custom installation, [learn how to register listeners](events.md).
 
 Then, configure the framework to catch `AppBundle\Exception\ProductNotFoundException` exceptions and convert them in `404`
 errors:
 
 ```yaml
-# app/config/config.yml
+# config/packages/api_platform.yaml
 api_platform:
     # ...
     exception_to_status:
@@ -82,7 +81,7 @@ api_platform:
 ```
 
 Any type of `Exception` can be thrown, API Platform will convert it to a Symfony's `HttpException`. The framework also takes
-care to serialize the error description according to the request format. For instance, if the API should respond in JSON-LD,
+care of serializing the error description according to the request format. For instance, if the API should respond in JSON-LD,
 the error will be returned in this format as well:
 
 `GET /products/1234`
