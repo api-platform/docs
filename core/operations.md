@@ -485,7 +485,7 @@ automatically instantiated and injected, without having to declare it explicitly
 In the following example, the built-in `GET` operation is registered as well as a custom operation called `special`.
 The `special` operation reference the Symfony route named `book_special`.
 
-Note: For performance reasons API Platform is using the first operation (with GET method) defined in collectionOperations to generate the IRI for this resourceClass. This means that as long as you dont want to overwrite the IRI for this resourceClass by intention, the default collectionOperation called "get" should be the first operation defined inside collectionOperations.
+Note: API Platform uses the first operation (with `GET` method) defined in `collectionOperations` to generate the IRI for this resource class. This means that as long as you dont want to overwrite the IRI for this resource class by intention, the default collection operation associated with the `GET` method should be the first operation defined inside collection operations.
 
 ```php
 <?php
