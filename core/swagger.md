@@ -210,11 +210,9 @@ Change `/docs` to your desired URI you wish Swagger to be accessible on.
 You can also dump your current Swagger documentation using the provided command:
 
 ```
-# assuming the Symfony console is at bin/console
-
-$ bin/console api:swagger:export
+$ docker-compose exe php bin/console api:swagger:export
 # Swagger documentation in JSON format...
 
-$ bin/console api:swagger:export --yaml
+$ docker-compose exe php bin/console --yaml
 # Swagger documentation in YAML format...
 ```
