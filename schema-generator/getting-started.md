@@ -4,7 +4,7 @@
 
 If you use [the official distribution of API Platform](../distribution/index.md), the Schema Generator is already installed as a development dependency of your project and can be invoked through Docker:
 
-    $ docker-compose exec app vendor/bin/schema
+    $ docker-compose exec php vendor/bin/schema
 
 The Schema Generator can also [be downloaded independently as a PHAR](https://github.com/api-platform/schema-generator/releases) or installed in an existing project using [Composer](https://getcomposer.org):
 

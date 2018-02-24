@@ -45,7 +45,7 @@ by default).
 
 Clear the cache to apply this change:
 
-    $ docker-compose exec app bin/console cache:clear --env=prod
+    $ docker-compose exec php bin/console cache:clear --env=prod
 
 Your new administration interface is ready! Type `yarn start` to try it!
 
