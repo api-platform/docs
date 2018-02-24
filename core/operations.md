@@ -228,7 +228,7 @@ Or in XML:
 
 In all the previous examples, you can safely remove the `method` because the method name always match the operation name.
 
-### Prefixing all routes of all operations
+### Prefixing All Routes of All Operations
 
 Sometimes it's also useful to put a whole resource into its own "namespace" regarding the URI. Let's say you want to
 put everything that's related to a `Book` into the `library` so that URIs become `library/book/{id}`. In that case
