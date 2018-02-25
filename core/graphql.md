@@ -32,3 +32,39 @@ api_platform:
             enabled: false
 # ...            
 ```
+
+## Filters
+
+Filters are supported out-of-the-box. Follow the [filters](filters.md) documentation and your filters will be available as arguments of queries.
+
+However you don't necessarily have the same needs for your GraphQL endpoint as for your REST one.
+
+In the `ApiResource` declaration, you can choose to decorrelate the GraphQL filters in `query` of the `graphql` attribute.
+
+For example, this entity will have a search filter for REST and a date filter for GraphQL:
+
+```php
+<?php
+// api/src/Entity/Offer.php
+
+namespace App\Entity;
+
+use ApiPlatform\Core\Annotation\ApiResource;
+
+/**
+ * @ApiResource(
+ *     attributes={
+ *         "filters"={"offer.search_filter"}
+ *     },
+ *     graphql={
+ *         "query"={
+ *              "filters"={"offer.date_filter"}
+ *          }
+ *     }
+ * )
+ */
+class Offer
+{
+    // ...
+}
+```
