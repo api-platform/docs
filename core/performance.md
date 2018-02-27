@@ -48,15 +48,14 @@ final class UserResourcesSubscriber implements EventSubscriberInterface
     public static function getSubscribedEvents()
     {
         return [
-            KernelEvents::REQUEST => ['extendResources', EventPriorities::PRE_READ],
             KernelEvents::REQUEST => ['extendResources', EventPriorities::POST_READ]
         ];
     }
 
     public function extendResources(GetResponseEvent $event)
     {
-        $class = $event->getRequest()->attributes->get('_api_resource_class');
         $request = $event->getRequest();
+        $class = $request->attributes->get('_api_resource_class');
 
         if ($class === User::class) {
             $resources = [
