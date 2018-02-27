@@ -134,17 +134,23 @@ application using [Composer](https://getcomposer.org/):
 
     # Create a new Symfony Flex project
     $ composer create-project symfony/skeleton bookshop-api
+    # Enter the project folder
+    $ cd bookshop-api
     # Install the API Platform's server component in this skeleton
     $ composer req api
 
-Then, enter the project folder, create the database and its schema:
+Then, create the database and its schema:
 
-    $ cd bookshop-api
     $ bin/console doctrine:database:create
     $ bin/console doctrine:schema:create
 
-And start the built-in PHP server:
+And start the built-in PHP server or the Symfony WebServerBundle:
 
+    # Built-in PHP server
+    $ php -S 127.0.0.1:8000 -t public
+    
+    # Symfony WebServerBundle
+    $ composer req server --dev
     $ bin/console server:run
 
 All JavaScript components are also [available as standalone libraries](https://github.com/api-platform?language=javascript)
