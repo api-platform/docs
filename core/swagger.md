@@ -70,8 +70,8 @@ final class SwaggerDecorator implements NormalizerInterface
 
 ## Using the Swagger Context
 
-Sometimes you may want to have additional information included in your Swagger documentation.
-The following configuration will provide additional context to your Swagger definitions:
+Sometimes you may want to change the information included in your Swagger documentation.
+The following configuration will give you total control over your Swagger definitions:
 
 ```php
 <?php
@@ -255,9 +255,9 @@ Change `/docs` to your desired URI you wish Swagger to be accessible on.
 You can also dump your current Swagger documentation using the provided command:
 
 ```
-$ docker-compose exe php bin/console api:swagger:export
+$ docker-compose exec php bin/console api:swagger:export
 # Swagger documentation in JSON format...
 
-$ docker-compose exe php bin/console api:swagger:export --yaml
+$ docker-compose exec php bin/console api:swagger:export --yaml
 # Swagger documentation in YAML format...
 ```
