@@ -113,7 +113,7 @@ class Offer
 }
 ```
 
-Learn more on how the [ApiFilter annotation](core/filters.md#apifilter-annotation) works.
+Learn more on how the [ApiFilter annotation](filters.md#apifilter-annotation) works.
 
 For the sake of consistency, we're using the annotation in the below documentation.
 
