@@ -355,6 +355,38 @@ It will return all offers with `price` between 12.99 and 15.99.
 
 You can filter offers by joining two values, for example: `/offers?price[gt]=12.99&price[lt]=19.99`.
 
+### Exists Filter
+
+The exists filter allows you to select items based on nullable field value.
+
+Syntax: `?exists[property]=<true|false|1|0>`
+
+Enable the filter:
+
+```php
+<?php
+// api/src/Entity/Offer.php
+
+namespace App\Entity;
+
+use ApiPlatform\Core\Annotation\ApiFilter;
+use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\ExistsFilter;
+
+/**
+ * @ApiResource(attributes={"filters"={"offer.exists_filter"}})
+ * @ApiFilter(ExistsFilter::class, properties={"transportFees"})
+ */
+class Offer
+{
+    // ...
+}
+```
+
+Given that the collection endpoint is `/offers`, you can filter offers on nullable field with the following query: `/offers?exists[transportFees]=true`.
+
+It will return all offers where `transportFees` is not `null`.
+
 ### Order Filter
 
 The order filter allows to order a collection against the given properties.
@@ -1052,7 +1084,7 @@ Note that for each given property we specify the strategy:
 
 The `ApiFilter` annotation can be set on the class as well. If you don't specify any properties, it'll act on every property of the class.
 
-For example, let's define two data filters (`DateFilter`, `SearchFilter` and `BooleanFilter`) and two serialization filters (`PropertyFilter` and `GroupFilter`) on our `DummyCar` class:
+For example, let's define three data filters (`DateFilter`, `SearchFilter` and `BooleanFilter`) and two serialization filters (`PropertyFilter` and `GroupFilter`) on our `DummyCar` class:
 
 ```php
 <?php
