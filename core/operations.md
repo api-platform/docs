@@ -507,6 +507,9 @@ automatically instantiated and injected, without having to declare it explicitly
 In the following example, the built-in `GET` operation is registered as well as a custom operation called `special`.
 The `special` operation reference the Symfony route named `book_special`.
 
+Since version 2.3, you can also use the route name as operation name by convention as shown in the next example
+for `book_custom` if no `method` nor `route_name` attributes are specified.
+
 ```php
 <?php
 // src/Entity/Book.php
@@ -516,7 +519,8 @@ use ApiPlatform\Core\Annotation\ApiResource;
 /**
  * @ApiResource(itemOperations={
  *     "get",
- *     "special"={"route_name"="book_special"}
+ *     "special"={"route_name"="book_special"},
+*      "book_custom",
  * })
  */
 class Book
@@ -534,6 +538,7 @@ App\Entity\Book:
         get: ~
         special:
             route_name: 'book_special'
+        book_custom: ~
 ```
 
 Or in XML:
@@ -552,6 +557,7 @@ Or in XML:
             <itemOperation name="special">
                 <attribute name="route_name">book_special</attribute>
             </itemOperation>
+            <itemOperation name="book_custom" />
         </itemOperations>
     </resource>
 </resources>
