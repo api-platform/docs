@@ -261,8 +261,6 @@ The boolean filter allows you to search on boolean fields and values.
 
 Syntax: `?property=[true|false|1|0]`
 
-You can either use TRUE or true, the parameters are case insensitive.
-
 Enable the filter:
 
 ```php
