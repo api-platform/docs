@@ -18,7 +18,7 @@ For a given resource, you can implement two kind of interfaces:
   is used when fetching items.
 
 Both implementations can also implement a third, optional interface called
-['RestrictedDataProviderInterface'](https://github.com/api-platform/core/blob/master/src/DataProvider/ItemDataProviderInterface.php)
+['RestrictedDataProviderInterface'](https://github.com/api-platform/core/blob/master/src/DataProvider/RestrictedDataProviderInterface.php)
 if you want to limit their effects to a single resource or operation.
 
 In the following examples we will create custom data providers for an entity class called `App\Entity\BlogPost`.
