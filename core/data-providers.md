@@ -44,7 +44,7 @@ use App\Entity\BlogPost;
 
 final class BlogPostCollectionDataProvider implements CollectionDataProviderInterface, RestrictedDataProviderInterface
 {
-    public function supports(string $resourceClass, string $operationName = null): bool
+    public function supports(string $resourceClass, string $operationName = null, array $context = []): bool
     {
         return BlogPost::class === $resourceClass;
     }
@@ -95,7 +95,7 @@ use App\Entity\BlogPost;
 
 final class BlogPostItemDataProvider implements ItemDataProviderInterface, RestrictedDataProviderInterface
 {
-    public function supports(string $resourceClass, string $operationName = null): bool
+    public function supports(string $resourceClass, string $operationName = null, array $context = []): bool
     {
         return BlogPost::class === $resourceClass;
     }
@@ -146,7 +146,7 @@ final class BlogPostItemDataProvider implements ItemDataProviderInterface, Seria
 {
     use SerializerAwareDataProviderTrait;
 
-    public function supports(string $resourceClass, string $operationName = null): bool
+    public function supports(string $resourceClass, string $operationName = null, array $context = []): bool
     {
         return BlogPost::class === $resourceClass;
     }
