@@ -40,7 +40,6 @@ Here is the fully featured REST API you'll get in minutes:
 Everything is fully customizable through a powerful event system and strong OOP.
 
 This bundle is extensively tested (unit and functional). The [`Fixtures/` directory](https://github.com/api-platform/core/tree/master/tests/Fixtures)) contains a working app covering all features of the library.
-contains a working app covering all features of the library.
 
 ## Other resources
 
