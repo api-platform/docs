@@ -160,21 +160,17 @@ The API Platform flavor of Behat also comes with a temporary SQLite database ded
 
 Clear the cache of the `test` environment:
 
-    $ docker-compose app bin/console cache:clear --env=test
+    $ docker-compose exec app bin/console cache:clear --env=test
 
 Then run:
 
-    $ docker-compose run --rm app vendor/bin/behat`.
-    
+    $ docker-compose exec app vendor/bin/behat
+
 Everything should be green now. Your Linked Data API is now specified and tested thanks to Behat!
 
-You may also be interested by those alternative testing tools (not included in the API Platform distribution):
+You may also be interested in these alternative testing tools (not included in the API Platform distribution):
 
 * [Postman tests](https://www.getpostman.com/docs/writing_tests) (proprietary): create functional test for your API Platform project
   using a nice UI, benefit from [the Swagger integration](https://www.getpostman.com/docs/importing_swagger) and run tests
   test in the CI using [newman](https://github.com/postmanlabs/newman).
 * [PHP Matcher](https://github.com/coduo/php-matcher): the Swiss Army knife of JSON document testing.
-
-Previous chapter: [Creating your First API with API Platform, in 5 Minutes](index.md)
-
-Next chapter: [API Platform Core: Introduction](../core/index.md)

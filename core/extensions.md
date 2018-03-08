@@ -18,9 +18,9 @@ Given these two entities:
 
 ```php
 <?php
-// src/AppBundle/Entity/User.php
+// api/src/Entity/User.php
 
-namespace AppBundle\Entity;
+namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
 
@@ -35,9 +35,9 @@ class User
 
 ```php
 <?php
-// src/AppBundle/Entity/Offer.php
+// api/src/Entity/Offer.php
 
-namespace AppBundle\Entity;
+namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
 
@@ -58,25 +58,25 @@ class Offer
 
 ```php
 <?php
-// src/AppBundle/Doctrine/ORM/Extension/CurrentUserExtension.php
+// api/src/Doctrine/CurrentUserExtension.php
 
-namespace AppBundle\Doctrine\ORM\Extension;
+namespace App\Doctrine;
 
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Extension\QueryCollectionExtensionInterface;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Extension\QueryItemExtensionInterface;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Util\QueryNameGeneratorInterface;
-use AppBundle\Entity\Offer;
-use AppBundle\Entity\User;
+use App\Entity\Offer;
+use App\Entity\User;
 use Doctrine\ORM\QueryBuilder;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
-use Symfony\Component\Security\Core\Authorization\AuthorizationChecker;
+use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 final class CurrentUserExtension implements QueryCollectionExtensionInterface, QueryItemExtensionInterface
 {
     private $tokenStorage;
     private $authorizationChecker;
 
-    public function __construct(TokenStorageInterface $tokenStorage, AuthorizationChecker $checker)
+    public function __construct(TokenStorageInterface $tokenStorage, AuthorizationCheckerInterface $checker)
     {
         $this->tokenStorage = $tokenStorage;
         $this->authorizationChecker = $checker;
@@ -119,15 +119,12 @@ final class CurrentUserExtension implements QueryCollectionExtensionInterface, Q
 Finally register the custom extension:
 
 ```yaml
-# app/config/services.yml
-
+# api/config/services.yaml
 services:
-    app.doctrine.orm.query_extension.current_user:
-        class: AppBundle\Doctrine\ORM\Extension\CurrentUserExtension
-        public: false
-        arguments:
-            - '@security.token_storage'
-            - '@security.authorization_checker'
+
+    # ...
+
+    'App\Doctrine\CurrentUserExtension':
         tags:
             - { name: api_platform.doctrine.orm.query_extension.collection, priority: 9 }
             - { name: api_platform.doctrine.orm.query_extension.item }
@@ -144,17 +141,11 @@ This example adds a `WHERE` clause condition only when a fully authenticated use
 To secure the access to endpoints, use the following access control rule:
 
 ```yaml
-# app/config/security.yml
-
+# app/config/package/security.yaml
 security:
     # ...
-
     access_control:
         # ...
         - { path: ^/offers, roles: IS_AUTHENTICATED_FULLY }
         - { path: ^/users, roles: IS_AUTHENTICATED_FULLY }
 ```
-
-Previous chapter: [Data Providers](data-providers.md)
-
-Next chapter: [Security](security.md)

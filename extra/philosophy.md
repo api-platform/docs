@@ -15,7 +15,7 @@ In 20 years of PHP, the web changed dramatically and is now evolving faster than
 to improve and professionalize the PHP ecosystem. The PHP world has closed the gap with most backend solutions and is often
 more innovative than them.
 
-But in critical area I've described previously, many things can be improved. Almost all existing solutions are still [designed
+However in critical area I've described previously, many things can be improved. Almost all existing solutions are still [designed
 and documented](https://symfony.com/doc/current/book/page_creation.html) to create websites the old way: a server generates
 then sends plain-old HTML documents to browsers.
 
@@ -26,9 +26,9 @@ a full-stack all-in-one framework and a set of independent PHP components and bu
 The architecture promoted by the framework will distrust many of you but read this tutorial until the end and you will
 see how API Platform make modern development easy and fun again:
 
-* [Start by **creating a hypermedia REST API**](distribution/index.md) exposing structured data that can
+* [Start by **creating a hypermedia REST API**](../distribution/index.md) exposing structured data that can
   be understood by any compliant client such your apps but also as search engines (JSON-LD with Schema.org vocabulary).
   This API is the central and unique entry point to access and modify data. It also encapsulates the whole business logic.
-* [Then **create as many clients as you want using frontend technologies you love**](core/angularjs-integration.md): an HTML5/Javascript
+* [Then **create as many clients as you want using frontend technologies you love**](../client-generator/index.md): an HTML5/Javascript
   webapp querying the API in AJAX (of course) but also a native iOS or Android app, or even a desktop application. Clients
   only display data and forms.

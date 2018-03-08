@@ -1,0 +1,7 @@
+{
+  "checks": {
+    "typography.symbols": false,
+    "typography.exclamation": false,
+    "cliches.misc": false
+  }
+}

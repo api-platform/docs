@@ -9,20 +9,19 @@ of event listeners are executed which validate the data, persist it in database,
 and create an HTTP response that will be sent to the client.
 
 To do so, API Platform Core leverages [events triggered by the Symfony HTTP Kernel](https://symfony.com/doc/current/reference/events.html#kernel-events).
-You can also hook your own code to those events. They are very handy and powerful extension points available at all points
+You can also hook your own code to those events. They are handy and powerful extension points available at all points
 of the request lifecycle.
 
 In the following example, we will send a mail each time a new book is created using the API:
 
 ```php
 <?php
+// api/src/EventSubscriber/BookMailSubscriber.php
 
-// src/AppBundle/EventSubscriber/BookMailSubscriber.php
-
-namespace AppBundle\EventSubscriber;
+namespace App\EventSubscriber;
 
 use ApiPlatform\Core\EventListener\EventPriorities;
-use AppBundle\Entity\Book;
+use App\Entity\Book;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\GetResponseForControllerResultEvent;
@@ -40,7 +39,7 @@ final class BookMailSubscriber implements EventSubscriberInterface
     public static function getSubscribedEvents()
     {
         return [
-            KernelEvents::VIEW => [['sendMail', EventPriorities::POST_WRITE]],
+            KernelEvents::VIEW => ['sendMail', EventPriorities::POST_WRITE],
         ];
     }
 
@@ -53,8 +52,7 @@ final class BookMailSubscriber implements EventSubscriberInterface
             return;
         }
 
-        $message = \Swift_Message::newInstance()
-            ->setSubject('A new book has been added')
+        $message = (new \Swift_Message('A new book has been added'))
             ->setFrom('system@example.com')
             ->setTo('contact@les-tilleuls.coop')
             ->setBody(sprintf('The book #%d has been added.', $book->getId()));
@@ -64,11 +62,11 @@ final class BookMailSubscriber implements EventSubscriberInterface
 }
 ```
 
-If you use the official API Platform distribution, creating the previous class is enough. [DunglasActionBundle](https://github.com/dunglas/DunglasActionBundle)
-(installed by default) will automatically register this subscriber as a service and will inject its dependencies using [the
-autowiring feature of the Symfony Dependency Injection Container](http://symfony.com/doc/current/components/dependency_injection/autowiring.html).
+If you use the official API Platform distribution, creating the previous class is enough. The Symfony Dependency Injection
+component will automatically register this subscriber as a service and will inject its dependencies thanks to the [autowiring
+feature](http://symfony.com/doc/current/components/dependency_injection/autowiring.html).
 
-If you don't have DunglasActionBundle installed, [the subscriber must be registered manually](http://symfony.com/doc/current/components/http_kernel/introduction.html#creating-an-event-listener).
+Alternatively, [the subscriber must be registered manually](http://symfony.com/doc/current/components/http_kernel/introduction.html#creating-an-event-listener).
 
 [Doctrine events](http://doctrine-orm.readthedocs.org/en/latest/reference/events.html#reference-events-lifecycle-events)
 are also available (if you use it) if you want to hook at the object lifecycle events.
@@ -105,7 +103,3 @@ Constant           | Event             | Priority |
 `POST_WRITE`       | `kernel.view`     | 31       |
 `PRE_RESPOND`      | `kernel.view`     | 9        |
 `POST_RESPOND`     | `kernel.response` | 0        |
-
-Previous chapter: [Pagination](pagination.md)
-
-Next chapter: [Content Negotiation](content-negotiation.md)

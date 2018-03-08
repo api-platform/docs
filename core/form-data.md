@@ -1,7 +1,7 @@
 # Accept `application/x-www-form-urlencoded` Form Data
 
 API Platform only supports raw documents as request input (encoded in JSON, XML, YAML...). This has many advantages including support of types and the ability to send back to the API documents originally retrieved through a `GET` request.
-But sometimes - for instance, to support legacy clients - it is necessary to accept inputs encoded in the traditional [`application/x-www-form-urlencoded`](https://www.w3.org/TR/html401/interact/forms.html#h-17.13.4.1) format (HTML form content type). This can easily be done using [the powerful event system](events.md) of the framework.
+However, sometimes - for instance, to support legacy clients - it is necessary to accept inputs encoded in the traditional [`application/x-www-form-urlencoded`](https://www.w3.org/TR/html401/interact/forms.html#h-17.13.4.1) format (HTML form content type). This can easily be done using [the powerful event system](events.md) of the framework.
 
 In this tutorial, we will decorate the default `DeserializeListener` class to handle form data if applicable, and delegate to the built-in listener for other cases.
 
@@ -11,10 +11,9 @@ This decorator is able to denormalize posted form data to the target object. In 
 
 ```php
 <?php
+// api/src/EventListener/DeserializeListener.php
 
-// src/AppBundle/EventListener/DeserializeListener.php
-
-namespace AppBundle\EventListener;
+namespace App\EventListener;
 
 use ApiPlatform\Core\Exception\RuntimeException;
 use ApiPlatform\Core\Util\RequestAttributesExtractor;
@@ -37,7 +36,7 @@ final class DeserializeListener
         $this->decorated = $decorated;
     }
 
-    public function onKernelRequest(GetResponseEvent $event) {
+    public function onKernelRequest(GetResponseEvent $event): void {
         $request = $event->getRequest();
         if ($request->isMethodSafe() || $request->isMethod(Request::METHOD_DELETE)) {
             return;
@@ -50,14 +49,18 @@ final class DeserializeListener
         }
     }
 
-    private function denormalizeFormRequest(Request $request)
+    private function denormalizeFormRequest(Request $request): void
     {
-        try {
-            $attributes = RequestAttributesExtractor::extractAttributes($request);
-        } catch (RuntimeException $e) {
+        if (!$attributes = RequestAttributesExtractor::extractAttributes($request)) {
             return;
         }
+
         $context = $this->serializerContextBuilder->createFromRequest($request, false, $attributes);
+        $populated = $request->attributes->get('data');
+        if (null !== $populated) {
+            $context['object_to_populate'] = $populated;
+        }
+
         $data = $request->request->all();
         $object = $this->denormalizer->denormalize($data, $attributes['resource_class'], null, $context);
         $request->attributes->set('data', $object);
@@ -65,18 +68,17 @@ final class DeserializeListener
 }
 ```
 
-## Create the Service Definition
+## Creating the Service Definition
 
 ```yaml
-# app/config/services.yml
-
+# api/config/services.yaml
 services:
     # ...
-    app.listener.decorating_deserialize:
-        class: 'AppBundle\EventListener\DeserializeListener'
-        arguments: ['@api_platform.serializer', '@api_platform.serializer.context_builder', '@api_platform.listener.request.deserialize']
+    'App\EventListener\DeserializeListener':
         tags:
             - { name: 'kernel.event_listener', event: 'kernel.request', method: 'onKernelRequest', priority: 2 }
+        # Autoconfiguration must be disabled to set a custom priority
+        autoconfigure: false
 ```
 
 ## Cleanup the Original Listener
@@ -85,20 +87,23 @@ The decorated DeserializeListener is called on demand, so it's better to elimina
 
 ```php
 <?php
+// src/Kernel.php
 
-// src/AppBundle/AppBundle.php
+namespace App;
 
-namespace AppBundle;
-
-use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
+use App\DependencyInjection\Compiler\CustomPass;
+use Symfony\Bundle\FrameworkBundle\Kernel\MicroKernelTrait;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
-use Symfony\Component\HttpKernel\Bundle\Bundle;
+use Symfony\Component\HttpKernel\Kernel as BaseKernel;
 
-class AppBundle extends Bundle
+class Kernel extends BaseKernel
 {
-    public function build(ContainerBuilder $container)
+    use MicroKernelTrait;
+
+    // ...
+
+    protected function build(ContainerBuilder $container): void
     {
-        parent::build($container);
         $container->addCompilerPass(new class implements CompilerPassInterface {
             public function process(ContainerBuilder $container) {
                 $container
@@ -108,9 +113,4 @@ class AppBundle extends Bundle
         });
     }
 }
-
 ```
-
-Previous chapter: [Operation Path Naming](operation-path-naming.md)
-
-Next chapter: [FOSUserBundle Integration](fosuser-bundle.md)

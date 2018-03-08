@@ -11,10 +11,10 @@ Both XML and JSON formats are experimental and there are no assurance that we wi
 
 API Platform Core will automatically detect the best resolving format depending on:
 
-* enabled formats (link to docs for this / see below)
-* the `Accept` HTTP header
-* Alternatively to send the proper `Accept` HTTP header, you can also request a specific format by adding its name as the extension of the URL.
-* Available formats are :
+* enabled formats (see below)
+* the requested format, specified in either the `Accept` HTTP header or as an extension appended to the URL
+
+Available formats are:
 
 Format                                                          | Format name  | MIME types                    | Backward Compatibility guaranteed
 ----------------------------------------------------------------|--------------|-------------------------------|----------------------------------------
@@ -24,16 +24,13 @@ JSON                                                            | `json`       |
 XML                                                             | `xml`        | `application/xml`, `text/xml` | no
 HTML (API docs)                                                 | `html`       | `text/html`                   | no
 
-
 If the client requested format is not specified (if it's not supported, it will throw an HTTP bad format error), the response format will be the first format defined in the `formats` configuration key (see below).
-An example using the builtin XML support is available in Behat specs: https://github.com/api-platform/core/blob/master/features/content_negotiation.feature
+An example using the builtin XML support is available in [Behat specs](https://github.com/api-platform/core/blob/master/features/main/content_negotiation.feature).
 
-
-The API Platform content negotiation system is extensible. Support for other formats (such as [JSONAPI](http://jsonapi.org/))
+The API Platform content negotiation system is extendable. Support for other formats (such as [JSONAPI](http://jsonapi.org/))
 can be added by [creating and registering appropriate encoders and, sometimes, normalizers](https://symfony.com/doc/current/serializer.html#adding-normalizers-and-encoders). Adding support for other
-standard hypermedia formats upstream is very welcome. Don't hesitate to contribute by adding your encoders and normalizers
+standard hypermedia formats upstream is welcome. Don't hesitate to contribute by adding your encoders and normalizers
 to API Platform Core.
-
 
 ## Enabling Several Formats
 
@@ -41,10 +38,10 @@ The first required step is to configure allowed formats. The following configura
 and of a custom format called `myformat` and having `application/vnd.myformat` as [MIME type](https://en.wikipedia.org/wiki/Media_type).
 
 ```yaml
-# app/config/config.yml
-
+# api/config/packages/api_platform.yaml
 api_platform:
     # ...
+
     formats:
         jsonld:   ['application/ld+json']
         jsonhal:  ['application/hal+json']
@@ -68,6 +65,99 @@ API Platform Core will automatically call the serializer with your defined forma
 as `format` parameter during the deserialization process. Then it will return the result to the client with the asked MIME
 type using its built-in responder.
 
-Previous chapter: [The Event System](events.md)
+## Writing a Custom Normalizer
 
-Next chapter: [Using External JSON-LD Vocabularies](external-vocabularies.md)
+Using composition is the recommended way to implement a custom normalizer. You can use the following template to start with your
+own implementation of `CustomItemNormalizer`:
+
+```yaml
+# api/config/services.yaml
+services:
+    'App\Serializer\CustomItemNormalizer':
+        arguments: [ '@api_platform.serializer.normalizer.item' ]
+        # Uncomment if you don't use the autoconfigure feature
+        #tags: [ 'serializer.normalizer' ]
+    
+    # ...
+```
+
+```php
+<?php
+// api/src/Serializer/CustomItemNormalizer.php
+
+namespace App\Serializer;
+
+use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
+use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
+
+final class CustomItemNormalizer implements NormalizerInterface, DenormalizerInterface
+{
+    private $normalizer;
+
+    public function __construct(NormalizerInterface $normalizer)
+    {
+        if (!$normalizer instanceof DenormalizerInterface) {
+            throw new \InvalidArgumentException('The normalizer must implement the DenormalizerInterface');
+        }
+
+        $this->normalizer = $normalizer;
+    }
+
+    public function denormalize($data, $class, $format = null, array $context = [])
+    {
+        return $this->normalizer->denormalize($data, $class, $format, $context);
+    }
+
+    public function supportsDenormalization($data, $type, $format = null)
+    {
+        return $this->normalizer->supportsDenormalization($data, $type, $format);
+    }
+
+    public function normalize($object, $format = null, array $context = [])
+    {
+        return $this->normalizer->normalize($object, $format, $context);
+    }
+
+    public function supportsNormalization($data, $format = null)
+    {
+        return $this->normalizer->supportsNormalization($data, $format);
+    }
+}
+```
+
+For example if you want to make the `csv` format work for even complex entities with a lot of hierarchy, you have to
+flatten or remove too complex relations:
+
+```php
+<?php
+// api/src/Serializer/CustomItemNormalizer.php
+
+namespace App\Serializer;
+
+use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
+use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
+
+class CustomItemNormalizer implements NormalizerInterface, DenormalizerInterface
+{
+    // ...
+
+    public function normalize($object, $format = null, array $context = [])
+    {
+        $result = $this->normalizer->normalize($object, $format, $context);
+
+        if ('csv' !== $format || !is_array($result)) {
+            return $result;
+        }
+
+        foreach ($result as $key => $value) {
+            if (is_array($value) && array_keys(array_keys($value)) === array_keys($value)) {
+                unset($result[$key]);
+            }
+        }
+
+        return $result;
+    }
+
+    // ...
+}
+```

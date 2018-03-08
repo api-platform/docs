@@ -7,19 +7,18 @@ Pre-registered resolvers are available and can easily be overridden.
 
 There are two pre-registered operation path naming services:
 
-Service name                                      | Entity name  | Path result
---------------------------------------------------|--------------|----------------
-`api_platform.operation_path_resolver.underscore` | `MyResource` | `/my_resources`
-`api_platform.operation_path_resolver.dash`       | `MyResource` | `/my-resources`
+Service name                                          | Entity name  | Path result
+------------------------------------------------------|--------------|----------------
+`api_platform.path_segment_name_generator.underscore` | `MyResource` | `/my_resources`
+`api_platform.path_segment_name_generator.dash`       | `MyResource` | `/my-resources`
 
-The default resolver is `api_platform.operation_path_resolver.underscore`.
-To change it to the dash resolver, add the following lines to `app/config/config.yml`:
+The default resolver is `api_platform.path_segment_name_generator.underscore`.
+To change it to the dash resolver, add the following lines to `api/config/packages/api_platform.yaml`:
 
 ```yaml
-# app/config/config.yml
-
+# api/config/packages/api_platform.yaml
 api_platform:
-    default_operation_path_resolver: 'api_platform.operation_path_resolver.dash'
+    path_segment_name_generator: api_platform.path_segment_name_generator.dash
 ```
 
 ## Create a Custom Operation Path Resolver
@@ -33,9 +32,9 @@ Make sure the custom resolver implements [`ApiPlatform\Core\PathResolver\Operati
 ```php
 <?php
 
-// src/AppBundle/PathResolver/NoSeparatorsOperationPathResolver.php
+// api/src/PathResolver/NoSeparatorsOperationPathResolver.php
 
-namespace AppBundle\PathResolver;
+namespace App\PathResolver;
 
 use ApiPlatform\Core\PathResolver\OperationPathResolverInterface;
 use Doctrine\Common\Inflector\Inflector;
@@ -59,37 +58,21 @@ Note that `$resourceShortName` contains a camel case string, by default the reso
 
 ### Registering the Service
 
-<configurations>
+If you haven't disabled the autowiring option, the service will be registered automatically and you have nothing more to
+do.
+Otherwise, you must register this class a service like in the following example:
 
 ```yaml
-# app/config/services.yml
-
+# api/config/services.yaml
 services:
-    app.operation_path_resolver.no_separators:
-        class: 'AppBundle\\PathResolver\\NoSeparatorsOperationPathResolver'
-        public: false
+    # ...
+    'App\PathResolver\NoSeparatorsOperationPathResolver': ~
 ```
-
-```xml
-<!-- app/config/services.xml -->
-
-<?xml version="1.0" encoding="UTF-8" ?>
-<services>
-    <service id="app.operation_path_resolver.no_separators" class="AppBundle\PathResolver\NoSeparatorsOperationPathResolver" public="false" />
-</services>
-```
-
-</configurations>
 
 ### Configure It
 
 ```yaml
-# app/config/config.yml
-
+# api/config/packages/api_platform.yaml
 api_platform:
-    default_operation_path_resolver: 'app.operation_path_resolver.no_separators'
+    path_segment_name_generator: 'App\PathResolver\NoSeparatorsOperationPathResolver'
 ```
-
-Previous chapter: [Performance](performance.md)
-
-Next chapter: [Accept application/x-www-form-urlencoded Form Data](form-data.md)

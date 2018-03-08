@@ -1,0 +1,36 @@
+language: node
+
+cache:
+  yarn: true
+
+env:
+  global:
+    secure: gjiWHIgNjLXuEFmLiepiOTHOuauHfeKHutrE0sBwFZUQzP9FoGTZzJub1z8/vm+hhygA+TZbB0iclygHyNrXCkZyNdnZXChXl4iPdYqY3OARPOAbQff16+/XSUDsZ/Ok1etdb3kKor1R4rBt/WywBvXmmdggumTA3yT5ExI+dyomdONo4yMUZ7g1la0ehMEzGqyVjt0nUW31PN3l6dI1qgigHCuotSrrpWP6fTXuUh5l6YA7KXb/V1hJxaGENLz1Cdfk0sF66e4KsV/DX6JZSqpvdqVB8OTPU+si511yJtGS8OeuLs4RqmXMLrY/ChCodlYnfCE+NleBFpUnCVqth/RDRh7LvplUJlpsXNcfyoA3mOFmZa0euOMCqJ3qwESz802Y9c5oN63hn2OUF/raFDc3SMMC86FFHxwyYjz5+yzXYupnFNj39NKdQ1v1KBbY8BD8UT8RU3mlu4/3LRz0tSamREHj3pGgBmvgUZfUE1dMngeaZjOmBaIZH8TnKQ75CvfnoT+LJnZo6g9g4uwz6jtaIziSMZ0OW/95nF8yx+xONbHEtt5ex5M09NOFsN2vB2bcUAgIjyGrmmNLQadwJyQv557IGPEE5CyGhJpXh9XZ+WMw2vO45MOw4sQPkARF6OJkMteqFc2NLXMOQJ07EScbgEKR/9VOcyxIk/7a7nc=
+
+install:
+  - pip install --user proselint
+  - cp .proselintrc ~
+  - cd ..
+  - git clone https://github.com/api-platform/website.git
+  - cd website
+  - yarn install
+  - ln -s $TRAVIS_BUILD_DIR src/pages/docs
+  - cd $TRAVIS_BUILD_DIR
+
+script:
+  - find . -name '*.md' ! -name 'conduct.md' ! -name 'heroku.md' -exec proselint {} \;
+  - cd $TRAVIS_BUILD_DIR/../website
+  - bin/generate-nav
+  - yarn gatsby build
+  # Preserve artifacts
+  - cd $TRAVIS_BUILD_DIR
+  - mv ../website/public public
+
+deploy:
+  provider: pages
+  skip_cleanup: true
+  github_token: $GITHUB_TOKEN
+  local_dir: public
+  fqdn: api-platform.com
+  on:
+    branch: 2.2
