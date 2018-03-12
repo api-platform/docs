@@ -7,7 +7,7 @@ if you want to.
 
 ## Validating Submitted Data
 
-Validating submitted data is simple as adding [Symfony's builtin constraints](http://symfony.com/doc/current/reference/constraints.html)
+Validating submitted data is simple as adding [Symfony's built-in constraints](http://symfony.com/doc/current/reference/constraints.html)
 or [custom constraints](http://symfony.com/doc/current/validation/custom_constraint.html) directly in classes marked with
 the `@ApiResource` annotation:
 
@@ -19,7 +19,7 @@ namespace AppBundle\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Validator\Constraints as Assert; // Symfony's builtin constraints
+use Symfony\Component\Validator\Constraints as Assert; // Symfony's built-in constraints
 use AppBundle\Validator\Constraints\MinimalProperties; // A custom constraint
 
 /**
