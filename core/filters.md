@@ -357,7 +357,7 @@ You can filter offers by joining two values, for example: `/offers?price[gt]=12.
 
 The exists filter allows you to select items based on nullable field value.
 
-Syntax: `?exists[property]=<true|false|1|0>`
+Syntax: `?property[exists]=<true|false|1|0>`
 
 Enable the filter:
 
@@ -381,7 +381,7 @@ class Offer
 }
 ```
 
-Given that the collection endpoint is `/offers`, you can filter offers on nullable field with the following query: `/offers?exists[transportFees]=true`.
+Given that the collection endpoint is `/offers`, you can filter offers on nullable field with the following query: `/offers?transportFees[exists]=true`.
 
 It will return all offers where `transportFees` is not `null`.
 
