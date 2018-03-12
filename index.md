@@ -81,7 +81,7 @@
     2.  [Filter upon the current user](core/extensions.md#example)
 17. [Security](core/security.md)
 18. [Performance](core/performance.md)
-    1.  [Enabling the Builtin HTTP Cache Invalidation System](core/performance.md#enabling-the-builtin-http-cache-invalidation-system)
+    1.  [Enabling the Built-in HTTP Cache Invalidation System](core/performance.md#enabling-the-builtin-http-cache-invalidation-system)
     2.  [Enabling the Metadata Cache](core/performance.md#enabling-the-metadata-cache)
     3.  [Using PPM (PHP-PM)](core/performance.md#using-ppm-php-pm)
     4.  [Doctrine Queries and Indexes](core/performance.md#doctrine-queries-and-indexes)

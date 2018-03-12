@@ -1,6 +1,6 @@
 # Performance
 
-## Enabling the Builtin HTTP Cache Invalidation System
+## Enabling the Built-in HTTP Cache Invalidation System
 
 Exposing a hypermedia API has [many advantages](http://blog.theamazingrando.com/in-band-vs-out-of-band.html). One of
 them is the ability to know exactly which resources are included in HTTP responses created by the API. We used this
