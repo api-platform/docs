@@ -5,7 +5,7 @@ Create a Vue.js application using [vue-cli](https://github.com/vuejs/vue-cli):
     $ vue init webpack-simple my-app
     $ cd my-app
 
-Install Vue Router, Vuex and babel-plugin-transform-builtin-extend (to allow extending bultin types like Error and Array):
+Install Vue Router, Vuex and babel-plugin-transform-builtin-extend (to allow extending built-in types like Error and Array):
 
     $ yarn add vue-router vuex babel-plugin-transform-builtin-extend babel-preset-es2015 babel-preset-stage-2
 
