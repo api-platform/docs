@@ -105,7 +105,7 @@ Constant           | Event             | Priority |
 `POST_RESPOND`     | `kernel.response` | 0        |
 
 Some of those built-in listeners can be enabled/disabled by setting request attributes ([for instance in the `defaults` 
-attribute of an operation](operations.md#creating-custom-operations-and-controllers)):
+attribute of an operation](operations.md#recommended-method)):
 
 Listener              | Parameter      | Values         | Default | Description                            |
 ----------------------|----------------|----------------|---------|----------------------------------------|

@@ -18,6 +18,8 @@
     2.  [Configuring Operations](core/operations.md#configuring-operations)
     3.  [Subresources](core/operations.md#subresources)
     4.  [Creating Custom Operations and Controllers](core/operations.md#creating-custom-operations-and-controllers)
+        1. [Recommended Method](core/operations.md#recommended-method)
+        2. [Alternative Method](core/operations.md#alternative-method)
 5.  [Overriding Default Order](core/default-order.md)
 6.  [Filters](core/filters.md)
     1.  [Doctrine ORM Filters](core/filters.md#doctrine-orm-filters)
