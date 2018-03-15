@@ -261,3 +261,23 @@ $ docker-compose exec php bin/console api:swagger:export
 $ docker-compose exec php bin/console api:swagger:export --yaml
 # Swagger documentation in YAML format...
 ```
+
+## Overriding the Swagger Templates
+
+Sometimes you want to override swagger templates to personalize documentation. You can override it as described in the official [doc.](https://symfony.com/doc/current/templating/overriding.html)
+
+Example:
+
+  ```html
+{# templates/bundles/ApiPlatformBundle/SwaggerUi/index.html.twig #}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>{% if title %}{{ title }} {% endif %}API Override Platform</title>
+    ....
+</html>
+```
+
+
+
