@@ -79,38 +79,7 @@ services:
             - { name: 'kernel.event_listener', event: 'kernel.request', method: 'onKernelRequest', priority: 2 }
         # Autoconfiguration must be disabled to set a custom priority
         autoconfigure: false
-```
-
-## Cleanup the Original Listener
-
-The decorated DeserializeListener is called on demand, so it's better to eliminate its own tags:
-
-```php
-<?php
-// src/Kernel.php
-
-namespace App;
-
-use App\DependencyInjection\Compiler\CustomPass;
-use Symfony\Bundle\FrameworkBundle\Kernel\MicroKernelTrait;
-use Symfony\Component\DependencyInjection\ContainerBuilder;
-use Symfony\Component\HttpKernel\Kernel as BaseKernel;
-
-class Kernel extends BaseKernel
-{
-    use MicroKernelTrait;
-
-    // ...
-
-    protected function build(ContainerBuilder $container): void
-    {
-        $container->addCompilerPass(new class implements CompilerPassInterface {
-            public function process(ContainerBuilder $container) {
-                $container
-                    ->findDefinition('api_platform.listener.request.deserialize')
-                    ->clearTags();
-            }
-        });
-    }
-}
+        decorates: 'api_platform.listener.request.deserialize'
+        arguments:
+            $decorated: '@App\EventListener\DeserializeListener.inner'
 ```
