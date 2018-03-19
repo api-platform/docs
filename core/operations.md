@@ -75,7 +75,7 @@ class Book
 }
 ```
 
-The previous example can be also be written with an explicit method definition:
+The previous example can also be written with an explicit method definition:
 
 ```php
 <?php
@@ -465,7 +465,7 @@ class Question
 
 ## Creating Custom Operations and Controllers
 
-API Platform can leverage the Symfony routing system to register custom operation related to custom controllers. Such custom
+API Platform can leverage the Symfony routing system to register custom operations related to custom controllers. Such custom
 controllers can be any valid [Symfony controller](http://symfony.com/doc/current/book/controller.html), including standard
 Symfony controllers extending the [`Symfony\Bundle\FrameworkBundle\Controller\Controller`](http://api.symfony.com/3.1/Symfony/Bundle/FrameworkBundle/Controller/Controller.html)
 helper class.
