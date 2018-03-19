@@ -23,7 +23,7 @@ to a Resource in two ways:
 
 1. Through the resource declaration, as the `filters` attribute.
 
-   For example having a filter service declaration:
+   For example having a filter service declaration in `services.yaml`:
 
     ```yaml
     # api/config/services.yaml
@@ -34,10 +34,21 @@ to a Resource in two ways:
             arguments: [ { dateProperty: ~ } ]
             tags:  [ 'api_platform.filter' ]
             # The following are mandatory only if a _defaults section is defined with inverted values.
-            # You may want to isolate filters in a dedicated file to avoid adding the following lines (by adding them in the defaults section)
+            # You may want to isolate filters in a dedicated file to avoid adding the following lines.
             autowire: false
             autoconfigure: false
             public: false
+    ```
+
+    Alternatively, you can choose to use a dedicated file to gather filters together:
+
+    ```yaml
+    # api/config/filters.yaml
+    services:
+        offer.date_filter:
+            parent: 'api_platform.doctrine.orm.date_filter'
+            arguments: [ { dateProperty: ~ } ]
+            tags:  [ 'api_platform.filter' ]
     ```
 
    We're linking the filter `offer.date_filter` with the resource like this:
