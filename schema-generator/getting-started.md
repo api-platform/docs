@@ -35,13 +35,7 @@ types:
             familyName: ~
             givenName: ~
             additionalName: ~
-            gender: ~
             address: ~
-            birthDate: ~
-            telephone: ~
-            email: ~
-            url: ~
-            jobTitle: ~
     PostalAddress:
         # Disable the generation of the class hierarchy for this type
         parent: false
@@ -69,13 +63,7 @@ types:
             familyName: ~
             givenName: ~
             additionalName: ~
-            gender: ~
             address: ~
-            birthDate: ~
-            telephone: ~
-            email: ~
-            url: ~
-            jobTitle: ~
     PostalAddress:
         properties:
             # Force the type of the addressCountry property to text
@@ -97,7 +85,6 @@ namespace App\Entity;
 use ApiPlatform\Core\Annotation\ApiProperty;
 use ApiPlatform\Core\Annotation\ApiResource;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * A person (alive, dead, undead, or fictional).
@@ -117,14 +104,6 @@ class Person
      * @ORM\Column(type="integer")
      */
     private $id;
-
-    /**
-     * @var string|null the name of the item
-     *
-     * @ORM\Column(type="text", nullable=true)
-     * @ApiProperty(iri="http://schema.org/name")
-     */
-    private $name;
 
     /**
      * @var string|null Family name. In the U.S., the last name of an Person. This can be used along with givenName instead of the name property.
@@ -151,14 +130,6 @@ class Person
     private $additionalName;
 
     /**
-     * @var string|null Gender of the person. While http://schema.org/Male and http://schema.org/Female may be used, text strings are also acceptable for people who do not identify as a binary gender.
-     *
-     * @ORM\Column(type="text", nullable=true)
-     * @ApiProperty(iri="http://schema.org/gender")
-     */
-    private $gender;
-
-    /**
      * @var PostalAddress|null physical address of the item
      *
      * @ORM\ManyToOne(targetEntity="App\Entity\PostalAddress")
@@ -166,62 +137,9 @@ class Person
      */
     private $address;
 
-    /**
-     * @var \DateTimeInterface|null date of birth
-     *
-     * @ORM\Column(type="date", nullable=true)
-     * @ApiProperty(iri="http://schema.org/birthDate")
-     * @Assert\Date
-     */
-    private $birthDate;
-
-    /**
-     * @var string|null the telephone number
-     *
-     * @ORM\Column(type="text", nullable=true)
-     * @ApiProperty(iri="http://schema.org/telephone")
-     */
-    private $telephone;
-
-    /**
-     * @var string|null email address
-     *
-     * @ORM\Column(type="text", nullable=true)
-     * @ApiProperty(iri="http://schema.org/email")
-     * @Assert\Email
-     */
-    private $email;
-
-    /**
-     * @var string|null URL of the item
-     *
-     * @ORM\Column(type="text", nullable=true)
-     * @ApiProperty(iri="http://schema.org/url")
-     * @Assert\Url
-     */
-    private $url;
-
-    /**
-     * @var string|null the job title of the person (for example, Financial Manager)
-     *
-     * @ORM\Column(type="text", nullable=true)
-     * @ApiProperty(iri="http://schema.org/jobTitle")
-     */
-    private $jobTitle;
-
     public function getId(): ?int
     {
         return $this->id;
-    }
-
-    public function setName(?string $name): void
-    {
-        $this->name = $name;
-    }
-
-    public function getName(): ?string
-    {
-        return $this->name;
     }
 
     public function setFamilyName(?string $familyName): void
@@ -254,16 +172,6 @@ class Person
         return $this->additionalName;
     }
 
-    public function setGender(?string $gender): void
-    {
-        $this->gender = $gender;
-    }
-
-    public function getGender(): ?string
-    {
-        return $this->gender;
-    }
-
     public function setAddress(?PostalAddress $address): void
     {
         $this->address = $address;
@@ -272,56 +180,6 @@ class Person
     public function getAddress(): ?PostalAddress
     {
         return $this->address;
-    }
-
-    public function setBirthDate(?\DateTimeInterface $birthDate): void
-    {
-        $this->birthDate = $birthDate;
-    }
-
-    public function getBirthDate(): ?\DateTimeInterface
-    {
-        return $this->birthDate;
-    }
-
-    public function setTelephone(?string $telephone): void
-    {
-        $this->telephone = $telephone;
-    }
-
-    public function getTelephone(): ?string
-    {
-        return $this->telephone;
-    }
-
-    public function setEmail(?string $email): void
-    {
-        $this->email = $email;
-    }
-
-    public function getEmail(): ?string
-    {
-        return $this->email;
-    }
-
-    public function setUrl(?string $url): void
-    {
-        $this->url = $url;
-    }
-
-    public function getUrl(): ?string
-    {
-        return $this->url;
-    }
-
-    public function setJobTitle(?string $jobTitle): void
-    {
-        $this->jobTitle = $jobTitle;
-    }
-
-    public function getJobTitle(): ?string
-    {
-        return $this->jobTitle;
     }
 }
 ```
@@ -467,6 +325,61 @@ class PostalAddress
     public function getStreetAddress(): ?string
     {
         return $this->streetAddress;
+    }
+}
+```
+
+```php
+<?php
+
+declare(strict_types=1);
+
+namespace App\Entity;
+
+use ApiPlatform\Core\Annotation\ApiProperty;
+use ApiPlatform\Core\Annotation\ApiResource;
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * The most generic type of item.
+ *
+ * @see http://schema.org/Thing Documentation on Schema.org
+ *
+ * @ORM\Entity
+ * @ApiResource(iri="http://schema.org/Thing")
+ */
+class Thing
+{
+    /**
+     * @var int|null
+     *
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="AUTO")
+     * @ORM\Column(type="integer")
+     */
+    private $id;
+
+    /**
+     * @var string|null the name of the item
+     *
+     * @ORM\Column(type="text", nullable=true)
+     * @ApiProperty(iri="http://schema.org/name")
+     */
+    private $name;
+
+    public function getId(): ?int
+    {
+        return $this->id;
+    }
+
+    public function setName(?string $name): void
+    {
+        $this->name = $name;
+    }
+
+    public function getName(): ?string
+    {
+        return $this->name;
     }
 }
 ```
