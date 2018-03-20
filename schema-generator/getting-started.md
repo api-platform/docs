@@ -15,7 +15,12 @@ The Schema Generator can also [be downloaded independently as a PHAR](https://gi
 Start by browsing [Schema.org](https://schema.org) and pick types applicable to your application. The website provides
 tons of schemas including (but not limited to) representations of people, organization, event, postal address, creative
 work and e-commerce structures.
-Then, write a simple YAML config file like the following (here we will generate a data model for an address book):
+Then, write a simple YAML config file like the following.
+
+Here we will generate a data model for an address book with these data:
+
+- a [`Person`](http://schema.org/Person) which inherits from [`Thing`](http://schema.org/Thing)
+- a [`PostalAddress`](http://schema.org/PostalAddress) which inherits from [`ContactPoint`](http://schema.org/ContactPoint), which inherits from [`StructuredValue`](http://schema.org/StructuredValue), etc.
 
 ```yaml
 # api/config/schema.yaml
