@@ -213,13 +213,17 @@ use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\DateFilter;
 
 /**
  * @ApiResource
- * @ApiFilter(DateFilter::class, properties={"dateProperty"})
+ * @ApiFilter(DateFilter::class, properties={"createdAt"})
  */
 class Offer
 {
     // ...
 }
 ```
+
+Given that the collection endpoint is `/offers`, you can filter offers by date with the following query: `/offers?createdAt[after]=2018-03-19`.
+
+It will return all offers where `createdAt` is superior or equal to `2018-03-19`.
 
 #### Managing `null` Values
 
@@ -259,7 +263,7 @@ class Offer
 
 The boolean filter allows you to search on boolean fields and values.
 
-Syntax: `?property=[true|false|1|0]`
+Syntax: `?property=<true|false|1|0>`
 
 Enable the filter:
 
@@ -291,7 +295,7 @@ It will return all offers where `isAvailableGenericallyInMyCountry` equals `true
 
 The numeric filter allows you to search on numeric fields and values.
 
-Syntax: `?property=int|bigint|decimal...`
+Syntax: `?property=<int|bigint|decimal...>`
 
 Enable the filter:
 
@@ -323,7 +327,7 @@ It will return all offers with `sold` equals `1`.
 
 The range filter allows you to filter by a value Lower than, Greater than, Lower than or equal, Greater than or equal and between two values.
 
-Syntax: `?property[lt]|[gt]|[lte]|[gte]|[between]=value`
+Syntax: `?property[<lt|gt|lte|gte|between>]=value`
 
 Enable the filter:
 
