@@ -172,7 +172,7 @@ App\Entity\Book:
                 color: 'brown'
             host: '{subdomain}.api-platform.com'
             schemes: ['https']
-            options: 
+            options:
                 my_option: 'my_option_value'
         put:
             method: 'PUT'
@@ -488,6 +488,8 @@ The `special` operation reference the Symfony route named `book_special`.
 
 Note: By default, API Platform uses the first `GET` operation defined in `collectionOperations` to generate the IRI for
 a resource class.
+
+Note: With custom operation, you will probably want to properly document it. See the [swagger](swagger.md) part of the documentation to do so.
 
 ### Recommended Method
 
