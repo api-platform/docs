@@ -202,7 +202,9 @@ And tell your configuration how to load it:
 # api/config/packages/api_platform.yaml
 api_platform:
     mapping:
-        paths: ['%kernel.project_dir%/config/api_platform']
+        paths: 
+            - '%kernel.project_dir%/src/Entity'
+            - '%kernel.project_dir%/config/api_platform'
 ```
 
 Note that the resources configuration only support the normalization / denormalization context definition in `yaml` and `xml`. To configure the groups of serialization for each attribute, you need to define your groups like you would usually on a standard Symfony project. See the [Symfony doc](https://symfony.com/doc/current/components/serializer.html#attributes-groups).
