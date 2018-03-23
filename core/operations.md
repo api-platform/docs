@@ -556,6 +556,7 @@ use App\Controller\BookSpecial;
  * @ApiResource(itemOperations={
  *     "get",
  *     "special"={
+ *         "method"="GET",
  *         "path"="/books/{id}/special",
  *         "controller"=BookSpecial::class
  *     }
@@ -575,6 +576,7 @@ App\Entity\Book:
     itemOperations:
         get: ~
         special:
+            method: 'GET'
             path: '/books/{id}/special'
             controller: 'App\Controller\BookSpecial'
 ```
@@ -593,6 +595,7 @@ Or in XML:
         <itemOperations>
             <itemOperation name="get" />
             <itemOperation name="special">
+                <attribute name="method">GET</attribute>
                 <attribute name="path">/books/{id}/special</attribute>
                 <attribute name="controller">App\Controller\BookSpecial</attribute>
             </itemOperation>
@@ -601,7 +604,7 @@ Or in XML:
 </resources>
 ```
 
-It is mandatory to set the `path` and `controller` attributes. They allow API platform to configure the routing path and
+It is mandatory to set the `method`, `path` and `controller` attributes. They allow API platform to configure the routing path and
 the associated controller respectively.
 
 If you want to bypass the automatic retrieval of the entity in your custom operation, you can set the parameter
