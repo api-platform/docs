@@ -225,7 +225,7 @@ class User
 }
 ```
 
-## Changing operations swagger documentation
+## Changing Operations in the Swagger Documentation
 
 You also have full control over both built-in and custom operations documentation:
 
