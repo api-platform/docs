@@ -225,6 +225,32 @@ class User
 }
 ```
 
+## Changing Operations in the Swagger Documentation
+
+You also have full control over both built-in and custom operations documentation:
+
+```yaml
+resources:
+  App\Entity\Rabbit:
+    collectionOperations:
+      create_user:
+        method: get
+        path: '/rabbit/rand'
+        controller: App\Controller\RandomRabbit
+        swagger_context:
+          summary: Random rabbit picture
+          description: >
+            # Pop a great rabbit picture by color!
+
+            ![A great rabbit](https://rabbit.org/graphics/fun/netbunnies/jellybean1-brennan1.jpg)
+
+          requestBody: '{"days": 23}'
+          parameters:
+            - {name: 'theme', description: 'dark'}
+```
+
+![Impact on swagger ui](../distribution/images/swagger-ui-2.png)
+
 ## Changing the Swagger UI Location
 
 Sometimes you may want to have the API at one location, and the Swagger UI at a different location. This can be done by disabling the Swagger UI from the API Platform configuration file and manually adding the Swagger UI controller.
