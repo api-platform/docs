@@ -196,27 +196,18 @@ resources:
             pagination_items_per_page: 25    # optional
 ```
 
-And tell your configuration how to load it:
+If and only if you are using the XML or the YAML, you need to tell API Platform configuration to load it:
 
 ```yaml
 # api/config/packages/api_platform.yaml
 api_platform:
     mapping:
         paths: 
-            - '%kernel.project_dir%/src/Entity'
-            - '%kernel.project_dir%/config/api_platform'
+            - '%kernel.project_dir%/src/Entity' # default configuration for annotations
+            - '%kernel.project_dir%/config/api_platform' # yaml or xml directory configuration
 ```
 
-Note that the resources configuration only support the normalization / denormalization context definition in `yaml` and `xml`. To configure the groups of serialization for each attribute, you need to define your groups like you would usually on a standard Symfony project. See the [Symfony doc](https://symfony.com/doc/current/components/serializer.html#attributes-groups).
-
-You might also need to update your framework configuration with this:
-
-``` yaml
-# api/config/packages/framework.yaml
-framework:
-    serializer:
-        enabled: true
-```
+Note that the resources configuration only support the normalization / denormalization context definition in `YAML` and `XML`. To configure the groups of serialization for each attribute, you need to define your groups like you would usually on a standard Symfony project. See the [Symfony doc](https://symfony.com/doc/current/components/serializer.html#attributes-groups).
 
 **You're done!**
 
