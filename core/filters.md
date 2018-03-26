@@ -600,7 +600,7 @@ Given that the collection endpoint is `/books`, you can filter by serialization 
 
 ### Property filter
 
-The property filter adds the possibility to filter serialization properties.
+The property filter adds the possibility to select the properties to serialize (sparse fieldsets).
 
 Syntax: `?properties[]=<property>`
 
@@ -630,9 +630,9 @@ class Book
 ```
 
 Three arguments are available to configure the filter:
-- `parameterName` is the query parameter name (default `groups`)
+- `parameterName` is the query parameter name (default `properties`)
 - `overrideDefaultProperties` allows to override the default serialization properties (default `false`)
-- `whitelist` properties whitelist to avoid uncontrolled data exposure (default `null` to allow all groups)
+- `whitelist` properties whitelist to avoid uncontrolled data exposure (default `null` to allow all properties)
 
 Given that the collection endpoint is `/books`, you can filter the serialization properties with the following query: `/books?properties[]=title&properties[]=author`.
 
