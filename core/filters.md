@@ -602,7 +602,7 @@ Given that the collection endpoint is `/books`, you can filter by serialization 
 
 The property filter adds the possibility to select the properties to serialize (sparse fieldsets).
 
-Syntax: `?properties[]=<property>`
+Syntax: `?properties[]=<property>&properties[<relation>]=<property>`
 
 You can add as many properties as you need.
 
@@ -635,6 +635,7 @@ Three arguments are available to configure the filter:
 - `whitelist` properties whitelist to avoid uncontrolled data exposure (default `null` to allow all properties)
 
 Given that the collection endpoint is `/books`, you can filter the serialization properties with the following query: `/books?properties[]=title&properties[]=author`.
+If you want to include some properties of the nested "author" document, use: `/books?properties[]=title&properties[author]=name`.
 
 ## Creating Custom Filters
 
