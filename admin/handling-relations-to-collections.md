@@ -6,7 +6,7 @@ to document relations to collections through OWL.
 Meanwhile, it is possible to manually configure API Platform to handle relations to collections.
 
 We will create the admin for an API exposing `Person` and `Book` resources linked with a `many-to-many`
-relation between them (trough the `authors` property).
+relation between them (through the `authors` property).
 
 This API can be created using the following PHP code:
 
