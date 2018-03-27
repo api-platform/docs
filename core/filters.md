@@ -389,9 +389,9 @@ Given that the collection endpoint is `/offers`, you can filter offers on nullab
 
 It will return all offers where `transportFees` is not `null`.
 
-### Order Filter
+### Order Filter (Sorting)
 
-The order filter allows to order a collection against the given properties.
+The order filter allows to sort a collection against the given properties.
 
 Syntax: `?order[property]=<asc|desc>`
 
