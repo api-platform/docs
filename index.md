@@ -123,6 +123,7 @@
     2. [Available Serializers](core/serialization.md#available-serializers)
     3. [Decorating a Serializer and Add Extra Data](core/serialization.md#decorating-a-serializer-and-add-extra-data)
 28. [Handling Data Transfer Objects (DTOs)](core/dto.md)
+29. [About API versioning](core/api-versioning.md)
 
 ## The Schema Generator Component: Generate Data Models from Open Vocabularies
 
