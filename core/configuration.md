@@ -161,6 +161,9 @@ api_platform:
           # URLs of the Varnish servers to purge using cache tags when a resource is updated.
           varnish_urls: []
 
+          # To pass options to the client charged with the request.
+          request_options: []
+
     # The list of exceptions mapped to their HTTP status code.
     exception_to_status:
         # With a status code.
