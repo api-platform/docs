@@ -52,6 +52,8 @@ types:
 Run the generator with this config file as parameter:
 
     $ vendor/bin/schema generate-types api/src/ api/config/schema.yaml
+      
+> Using docker: `$ docker-compose exec php vendor/bin/schema generate-types src/ config/schema.yaml`
 
 The following classes will be generated:
 
