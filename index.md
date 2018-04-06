@@ -119,6 +119,9 @@
     2. [Available Serializers](core/serialization.md#available-serializers)
     3. [Decorating a Serializer and Add Extra Data](core/serialization.md#decorating-a-serializer-and-add-extra-data)
 27. [Handling Data Transfer Objects (DTOs)](core/dto.md)
+28. [Identifiers](core/identifiers.md)
+    1. [Custom identifier normalizer](core/identifiers.md#custom-identifier-normalizer)
+    2. [Supported identifiers](core/identifiers.md#supported-identifiers)
 
 ## The Schema Generator Component: Generate Data Models from Open Vocabularies
 

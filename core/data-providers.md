@@ -100,10 +100,10 @@ final class BlogPostItemDataProvider implements ItemDataProviderInterface, Restr
         return BlogPost::class === $resourceClass;
     }
 
-    public function getItem(string $resourceClass, $id, string $operationName = null, array $context = []): ?BlogPost
+    public function getItem(string $resourceClass, $identifiers, string $operationName = null, array $context = []): ?BlogPost
     {
         // Retrieve the blog post item from somewhere then return it or null if not found
-        return new BlogPost($id);
+        return new BlogPost($identifiers['id']);
     }
 }
 ```
