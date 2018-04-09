@@ -47,9 +47,9 @@ final class PersonDataProvider implements ItemDataProviderInterface, RestrictedD
     public function getItem(string $resourceClass, $identifiers, string $operationName = null, array $context = [])
     {
         // Our identifier is:
-        // $id['code']
+        // $identifiers['code']
         // although it's a string, it's not an instance of Uuid and we wanted to retrieve the timestamp of our time-based uuid:
-        // $id['code']->getTimestamp()
+        // $identifiers['code']->getTimestamp()
     }
 
     /**
