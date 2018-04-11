@@ -118,11 +118,7 @@
     1. [Overall View](core/graphql.md#overall-view)
     2. [Enabling GraphQL](core/graphql.md#enabling-graphql)
     3. [GraphiQL](core/graphql.md#graphiql)
-27. [The Serialization Process](core/serialization.md)
-    1. [Overall Process](core/serialization.md#overall-process)
-    2. [Available Serializers](core/serialization.md#available-serializers)
-    3. [Decorating a Serializer and Add Extra Data](core/serialization.md#decorating-a-serializer-and-add-extra-data)
-28. [Handling Data Transfer Objects (DTOs)](core/dto.md)
+27. [Handling Data Transfer Objects (DTOs)](core/dto.md)
 
 ## The Schema Generator Component: Generate Data Models from Open Vocabularies
 
