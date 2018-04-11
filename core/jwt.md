@@ -14,7 +14,9 @@ You can either use the [Doctrine user provider](https://symfony.com/doc/current/
 by Symfony (recommended), [create a custom user provider](http://symfony.com/doc/current/security/custom_provider.html)
 or use [API Platform's FOSUserBundle integration](fosuser-bundle.md).
 
-Here's a sample configuration using the data provider provided by FOSUserBundle:
+## Configure Token Acquisition
+
+Here's a sample configuration using FOSUserBundle to secure the API:
 
 ```yaml
 # app/config/packages/security.yaml
@@ -31,15 +33,20 @@ security:
             id: fos_user.user_provider.username
 
     firewalls:
+        dev:
+            pattern:  ^/(_(profiler|wdt)|css|images|js)/
+            security: false
+            
         login:
-            pattern:  ^/login
+            pattern:  ^/token
             stateless: true
             anonymous: true
             provider: fos_userbundle
-            json_login:
-                check_path: /login_check
-                username_path: email
-                password_path: password
+
+            form_login:
+                check_path: /token
+                username_parameter: email
+                password_parameter: password
                 success_handler: lexik_jwt_authentication.handler.authentication_success
                 failure_handler: lexik_jwt_authentication.handler.authentication_failure
 
@@ -50,15 +57,222 @@ security:
             anonymous: true
             lexik_jwt: ~
 
-        dev:
-            pattern:  ^/(_(profiler|wdt)|css|images|js)/
-            security: false
 
     access_control:
-        - { path: ^/login, role: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/token, role: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/books, roles: [ ROLE_READER ] }
         - { path: ^/, roles: [ ROLE_READER ] }
+```       
+
+## Protect Documentation with same Authentification
+You can also add security to the embedded SwaggerUI: 
+
+```yml
+# app/config/security.yml
+
+    security:
+    firewalls:
+        docs:
+            pattern: ^/(docs|login|logout)
+            form_login:
+                provider: fos_userbundle
+                default_target_path: api_doc
+            logout: true
+            anonymous: true
+
+    access_control:
+        - { path: ^/login$, role: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/logout$, role: IS_AUTHENTICATED_ANONYMOUSLY }
+```       
+
+Then, you need to provide the login form, and two routes login_check and logout. This configuration is based on FOSUserBundle:
+
+```yml
+# app/config/routing.yml
+
+fos_user_security_login:
+    path: /login
+    defaults: {_controller: 'FOSUserBundle:Security:login'}
+
+fos_user_security_check:
+    path: /login_check
+
+app.docs.auth.logout:
+    path:     /logout
+```       
+
+## Complete Documentation with Auth System
+At this state, you can retrieve a token through `/token` URI. But this URI is actually not documented in Swagger. 
+To modify documentation, you can register a new `Symfony\Component\Serializer\Normalizer\NormalizerInterface` to overload `ApiPlatform\Core\Swagger\Serializer\DocumentationNormalizer`. 
+
+You can base on this sample : 
+
+```php
+//AppBundle/Documentation/JwtDocumentationNormalizer.php
+
+<?php
+
+namespace AppBundle\Documentation;
+
+use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
+
+final class JwtDocumentationNormalizer implements NormalizerInterface
+{
+    private $normalizerDeferred;
+
+    public function __construct(NormalizerInterface $normalizerDeferred)
+    {
+        $this->normalizerDeferred = $normalizerDeferred;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function normalize($object, $format = null, array $context = [])
+    {
+        $TokenDocumentation =[
+            'paths' => [
+                '/token' => [
+                    'post' => [
+                        'tags' => ['Token'],
+                        'operationId' => 'postTokenItem',
+                        'consumes' => ['application/json'],
+                        'produces' => ['application/json'],
+                        'summary' => 'Get JWT token to login.',
+                        'parameters' => [
+                            [
+                                'in' => 'formData',
+                                'name' => 'email',
+                                'description' => 'Your Email',
+                                'required' => true,
+                                'type' => 'string'
+                            ],
+                            [
+                                'in' => 'formData',
+                                'name' => 'password',
+                                'description' => 'Your password',
+                                'required' => true,
+                                'type' => 'string'
+                            ]
+                        ],
+                        'responses' => [
+                            401 => ['description' => 'Bad credentials'],
+                        ],
+                    ]
+                ]
+            ],
+            'definitions' => [
+                'Token' => [
+                    'type' => 'object',
+                    'description' => "",
+                    'properties' => [
+                        'token' => [
+                            'type' => 'string',
+                            'readOnly' => true,
+                        ]
+                    ]
+                ]
+            ]
+        ];
+
+        $deferredDocumentation = $this->normalizerDeferred->normalize($object, $format, $context);
+
+        return array_merge_recursive($TokenDocumentation, $deferredDocumentation);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function supportsNormalization($data, $format = null)
+    {
+        return $this->normalizerDeferred->supportsNormalization($data, $format);
+    }
+}
+
 ```
+
+And register this service like that : 
+
+```yml
+# app/config/services.yml
+
+services:
+    app.jwt.documentation.normalizer:
+      class: 'AppBundle\Documentation\JwtDocumentationNormalizer'
+      decorates: api_platform.swagger.normalizer.documentation
+      decoration_priority: 2
+      arguments: ['@app.jwt.documentation.normalizer.inner']
+      public: false
+```
+
+Last problem in your documnetation, part of 'Response Messages' does not contain 401 Response (If token is invalid/expire)
+
+This sample add on each route a 401 Response. You can modify this to add your own logic to protect specific route and not each route. 
+
+```php 
+//AppBundle/Documentation/Response401DocumentationNormalizer.php
+
+<?php
+
+namespace AppBundle\Documentation;
+
+use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
+
+final class Response401DocumentationNormalizer implements NormalizerInterface
+{
+    /**
+     * @var NormalizerInterface
+     */
+    private $normalizerDeferred;
+
+    public function __construct(NormalizerInterface $normalizerDeferred)
+    {
+        $this->normalizerDeferred = $normalizerDeferred;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function normalize($object, $format = null, array $context = [])
+    {
+        /** @var array[][] $deferredDocumentation */
+        $deferredDocumentation = $this->normalizerDeferred->normalize($object, $format, $context);
+
+        $description401 = ['description' => 'Bad credentials'];
+        foreach ($deferredDocumentation['paths'] as $deferredPath => $deferredPathDefinition) {
+            foreach ($deferredPathDefinition as $deferredMethod => $deferredDefinition) {
+                $deferredDocumentation['paths'][$deferredPath][$deferredMethod]['responses'][401] = $description401;
+            }
+        }
+
+        return $deferredDocumentation;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function supportsNormalization($data, $format = null)
+    {
+        return $this->normalizerDeferred->supportsNormalization($data, $format);
+    }
+}
+``` 
+
+And register this service like that : 
+
+```yml
+# app/config/services.yml
+
+services:
+    app.401.documentation.normalizer:
+      class: 'AppBundle\Documentation\Response401DocumentationNormalizer'
+      decorates: api_platform.swagger.normalizer.documentation
+      decoration_priority: 1
+      arguments: ['@app.401.documentation.normalizer.inner']
+      public: false
+```
+
+Now you have a complete documentation and a secure API!
 
 ## Documenting the Authentication Mechanism with Swagger/Open API
 
@@ -159,3 +373,4 @@ default:
 ```
 
 Finally, mark your scenarios with the `@login` annotation to automatically add a valid `Authorization` header, and with `@logout` to be sure to destroy the token after this scenario.
+
