@@ -54,7 +54,7 @@ class Product // The class name will be used to name exposed resources
     public $id;
 
     /**
-     * @param string $name A name property - this description will be available in the API documentation too.
+     * @var string $name A name property - this description will be available in the API documentation too.
      *
      * @ORM\Column
      * @Assert\NotBlank
