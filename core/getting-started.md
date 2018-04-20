@@ -196,7 +196,7 @@ resources:
             pagination_items_per_page: 25    # optional
 ```
 
-If and only if you are using the XML or the YAML, you need to tell API Platform configuration to load it:
+If you prefer to use XML or YAML files instead of annotations, you must configure API Platform to load the appropriate files:
 
 ```yaml
 # api/config/packages/api_platform.yaml
@@ -207,7 +207,13 @@ api_platform:
             - '%kernel.project_dir%/config/api_platform' # yaml or xml directory configuration
 ```
 
-Note that the resources configuration only support the normalization / denormalization context definition in `YAML` and `XML`. To configure the groups of serialization for each attribute, you need to define your groups like you would usually on a standard Symfony project. See the [Symfony doc](https://symfony.com/doc/current/components/serializer.html#attributes-groups).
+The API Platform's configuration (annotations, `YAML` or `XML`) only allow to configure the context passed to the Symfony Serializer:
+
+* The `normalization_context` key will be passed as 3rd argument of [the `Serializer::serialize()` method](https://api.symfony.com/master/Symfony/Component/Serializer/SerializerInterface.html#method_serialize)
+* The `denormalization_context` key will be passed as 4th argument of [the `Serializer::deserialize()` method](https://api.symfony.com/master/Symfony/Component/Serializer/SerializerInterface.html#method_deserialize)
+
+
+To configure the serialization groups of classes's properties, you must use directly [the Symfony Serializer's configuration files or annotations]( https://symfony.com/doc/current/components/serializer.html#attributes-groups).
 
 **You're done!**
 
