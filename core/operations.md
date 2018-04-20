@@ -486,8 +486,7 @@ automatically instantiated and injected, without having to declare it explicitly
 In the following examples, the built-in `GET` operation is registered as well as a custom operation called `special`.
 The `special` operation reference the Symfony route named `book_special`.
 
-Note: By default, API Platform uses the first `GET` operation defined in `collectionOperations` to generate the IRI for
-a resource class.
+Note: By default, API Platform uses the first `GET` operation defined in `itemOperations` to generate the IRI of an item and the first `GET` operation defined in `collectionOperations` to generate the IRI of a collection.
 
 Note: With custom operation, you will probably want to properly document it. See the [swagger](swagger.md) part of the documentation to do so.
 
