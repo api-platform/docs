@@ -187,7 +187,7 @@ Or in XML:
 
 Your data provider will now have access to the core extensions, here is an example on how to use them:
 
-```
+```php
 <?php
 // api/src/DataProvider/BlogPostItemDataProvider.php
 
