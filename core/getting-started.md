@@ -196,6 +196,25 @@ resources:
             pagination_items_per_page: 25    # optional
 ```
 
+If you prefer to use XML or YAML files instead of annotations, you must configure API Platform to load the appropriate files:
+
+```yaml
+# api/config/packages/api_platform.yaml
+api_platform:
+    mapping:
+        paths: 
+            - '%kernel.project_dir%/src/Entity' # default configuration for annotations
+            - '%kernel.project_dir%/config/api_platform' # yaml or xml directory configuration
+```
+
+The API Platform's configuration (annotations, `YAML` or `XML`) only allow to configure the context passed to the Symfony Serializer:
+
+* The `normalization_context` key will be passed as 3rd argument of [the `Serializer::serialize()` method](https://api.symfony.com/master/Symfony/Component/Serializer/SerializerInterface.html#method_serialize)
+* The `denormalization_context` key will be passed as 4th argument of [the `Serializer::deserialize()` method](https://api.symfony.com/master/Symfony/Component/Serializer/SerializerInterface.html#method_deserialize)
+
+
+To configure the serialization groups of classes's properties, you must use directly [the Symfony Serializer's configuration files or annotations]( https://symfony.com/doc/current/components/serializer.html#attributes-groups).
+
 **You're done!**
 
 You now have a fully featured API exposing your entities.
