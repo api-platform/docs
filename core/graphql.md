@@ -135,3 +135,42 @@ Or order your results like:
   }
 }
 ```
+
+## Security (`access_control`)
+
+To add a security layer to your queries and mutations, follow the [security](security.md) documentation.
+
+If your security needs differ between REST and GraphQL, add the particular parts in the `graphql` key.
+
+In the example below, we want the same security rules as in REST, but we also want to allow an admin to delete a book in GraphQL only.
+Please note it's not possible to update a book in GraphQL because the `update` operation is not defined.
+
+```php
+<?php
+// api/src/Entity/Book.php
+
+namespace App\Entity;
+
+use ApiPlatform\Core\Annotation\ApiResource;
+
+/**
+ * @ApiResource(
+ *     attributes={"access_control"="is_granted('ROLE_USER')"},
+ *     collectionOperations={
+ *         "post"={"access_control"="is_granted('ROLE_ADMIN')", "access_control_message"="Only admins can add books."}
+ *     },
+ *     itemOperations={
+ *         "get"={"access_control"="is_granted('ROLE_USER') and object.owner == user", "access_control_message"="Sorry, but you are not the book owner."}
+ *     },
+ *     graphql={
+ *         "query"={"access_control"="is_granted('ROLE_USER') and object.owner == user"},
+ *         "delete"={"access_control"="is_granted('ROLE_ADMIN')"},
+ *         "create"={"access_control"="is_granted('ROLE_ADMIN')"}
+ *     }
+ * )
+ */
+class Book
+{
+    // ...
+}
+```
