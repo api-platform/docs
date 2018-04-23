@@ -40,6 +40,7 @@ Filters are supported out-of-the-box. Follow the [filters](filters.md) documenta
 However you don't necessarily have the same needs for your GraphQL endpoint as for your REST one.
 
 In the `ApiResource` declaration, you can choose to decorrelate the GraphQL filters in `query` of the `graphql` attribute.
+In order to keep the default behavior (possibility to fetch, delete, update or create), define all the operations (`query`, `delete`, `update` and `create`).
 
 For example, this entity will have a search filter for REST and a date filter for GraphQL:
 
@@ -59,7 +60,10 @@ use ApiPlatform\Core\Annotation\ApiResource;
  *     graphql={
  *         "query"={
  *              "filters"={"offer.date_filter"}
- *          }
+ *          },
+ *          "delete",
+ *          "update",
+ *          "create"
  *     }
  * )
  */
