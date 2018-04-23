@@ -68,3 +68,67 @@ class Offer
     // ...
 }
 ```
+
+### Filtering on Nested Properties
+
+Unlike for REST, all built-in filters support nested properties using the underscore (`_`) syntax instead of the dot (`.`) syntax, e.g.:
+
+```php
+<?php
+// api/src/Entity/Offer.php
+
+namespace App\Entity;
+
+use ApiPlatform\Core\Annotation\ApiFilter;
+use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\OrderFilter;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
+
+/**
+ * @ApiResource
+ * @ApiFilter(OrderFilter::class, properties={"product.releaseDate"})
+ * @ApiFilter(SearchFilter::class, properties={"product.color": "exact"})
+ */
+class Offer
+{
+    // ...
+}
+```
+
+
+The above allows you to find offers by their respective product's color like for the REST Api.
+You can then filter using the following syntax:
+
+```graphql
+{
+  offers(product_color: "red") {
+    edges {
+      node {
+        id
+        product {
+          name
+          color
+        }
+      }
+    }
+  }
+}
+```
+
+Or order your results like:
+
+```graphql
+{
+  offers(order: {product_releaseDate: "DESC"}) {
+    edges {
+      node {
+        id
+        product {
+          name
+          color
+        }
+      }
+    }
+  }
+}
+```
