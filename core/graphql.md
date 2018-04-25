@@ -95,7 +95,6 @@ class Offer
 }
 ```
 
-
 The above allows you to find offers by their respective product's color like for the REST Api.
 You can then filter using the following syntax:
 
