@@ -508,7 +508,7 @@ use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
 /**
  * @ApiResource
  * @ApiFilter(OrderFilter::class, properties={"product.releaseDate"})
- * @ApiFilter(SearchFilter::class, properties={"product.name": "exact"})
+ * @ApiFilter(SearchFilter::class, properties={"product.color": "exact"})
  */
 class Offer
 {
