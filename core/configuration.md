@@ -179,6 +179,11 @@ api_platform:
         jsonld:
             mime_types: ['application/ld+json']
 
+    # The list of enabled documentation formats. The first one will be the default.
+    documentation_formats:
+        jsonld:
+            mime_types: ['application/ld+json']
+
         json:
             mime_types: ['application/json']
 
