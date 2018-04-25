@@ -278,7 +278,7 @@ use ApiPlatform\Core\Annotation\ApiResource;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\BooleanFilter;
 
 /**
- * @ApiResource(attributes={"filters"={"offer.boolean_filter"}})
+ * @ApiResource
  * @ApiFilter(BooleanFilter::class, properties={"isAvailableGenericallyInMyCountry"})
  */
 class Offer
@@ -376,7 +376,7 @@ use ApiPlatform\Core\Annotation\ApiResource;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\ExistsFilter;
 
 /**
- * @ApiResource(attributes={"filters"={"offer.exists_filter"}})
+ * @ApiResource
  * @ApiFilter(ExistsFilter::class, properties={"transportFees"})
  */
 class Offer
