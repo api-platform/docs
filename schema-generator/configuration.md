@@ -196,7 +196,7 @@ In such case, no mutator method will be generated.
 
 ## Making a Property Write Only
 
-A property can be marked read only with the following configuration:
+A property can be marked write only with the following configuration:
 
 ```yaml
     Person:
