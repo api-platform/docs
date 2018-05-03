@@ -30,6 +30,12 @@ package manager) chart to deploy in a wink on any of these platforms.
 
 ## Deploying
 
+Firstly you need to update helm dependencies by running:
+
+    helm dependency update ./api/helm/api
+
+You are now ready to deploy the API!
+
 Deploy your API to the container:
 
     helm install ./api/helm/api --namespace=baz --name baz \
