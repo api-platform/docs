@@ -276,6 +276,7 @@ swagger_ui:
 
 Change `/docs` to your desired URI you wish Swagger to be accessible on.
 
+<<<<<<< HEAD
 ## Using the Swagger Command
 
 You can also dump your current Swagger documentation using the provided command:
@@ -301,3 +302,12 @@ As described [in the Symfony documentation](https://symfony.com/doc/current/temp
 ```
 
 You may want to copy the [one shipped with API Platform](https://github.com/api-platform/core/blob/master/src/Bridge/Symfony/Bundle/Resources/views/SwaggerUi/index.html.twig) and customize it.
+
+### Enable Swagger doc for API Gateway
+
+[AWS API Gateway](https://aws.amazon.com/api-gateway/) supports Swagger 2.0 partially, but it [requires some changes](https://docs.aws.amazon.com/apigateway/latest/developerguide/api-gateway-known-issues.html).
+Fortunately, API Platform provides a way to be compatible with both Swagger 2.0 & API Gateway.
+
+To enable API Gateway compatibility on your Swagger doc, add `api_gateway=true` query parameter:
+
+`http://www.example.com/docs.json?api_gateway=true`
