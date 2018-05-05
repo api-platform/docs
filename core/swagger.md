@@ -283,9 +283,6 @@ You can also dump your current Swagger documentation using the provided command:
 ```
 $ docker-compose exec php bin/console api:swagger:export
 # Swagger documentation in JSON format...
-
-$ docker-compose exec php bin/console api:swagger:export --yaml
-# Swagger documentation in YAML format...
 ```
 
 ## Overriding the UI Template
