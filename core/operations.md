@@ -75,7 +75,7 @@ class Book
 }
 ```
 
-The previous example can be also be written with an explicit method definition:
+The previous example can also be written with an explicit method definition:
 
 ```php
 <?php
@@ -172,7 +172,7 @@ App\Entity\Book:
                 color: 'brown'
             host: '{subdomain}.api-platform.com'
             schemes: ['https']
-            options: 
+            options:
                 my_option: 'my_option_value'
         put:
             method: 'PUT'
@@ -487,13 +487,14 @@ class Question
 
 ## Creating Custom Operations and Controllers
 
-API Platform can leverage the Symfony routing system to register custom operation related to custom controllers. Such custom
+API Platform can leverage the Symfony routing system to register custom operations related to custom controllers. Such custom
 controllers can be any valid [Symfony controller](http://symfony.com/doc/current/book/controller.html), including standard
 Symfony controllers extending the [`Symfony\Bundle\FrameworkBundle\Controller\Controller`](http://api.symfony.com/3.1/Symfony/Bundle/FrameworkBundle/Controller/Controller.html)
 helper class.
 
 However, API Platform recommends to use **action classes** instead of typical Symfony controllers. Internally, API Platform
-implements the [Action-Domain-Responder](https://github.com/pmjones/adr) pattern (ADR), a web-specific refinement of [MVC](https://en.wikipedia.org/wiki/Model%E2%80%93view%E2%80%93controller).
+implements the [Action-Domain-Responder](https://github.com/pmjones/adr) pattern (ADR), a web-specific refinement of
+[MVC](https://en.wikipedia.org/wiki/Model%E2%80%93view%E2%80%93controller).
 
 Note: [the event system](events.md) should be preferred over custom controllers when applicable.
 
@@ -504,11 +505,207 @@ Thanks to the [autowiring](http://symfony.com/doc/current/components/dependency_
 Symfony Dependency Injection container, services required by an action can be type-hinted in its constructor, it will be
 automatically instantiated and injected, without having to declare it explicitly.
 
-In the following example, the built-in `GET` operation is registered as well as a custom operation called `special`.
+In the following examples, the built-in `GET` operation is registered as well as a custom operation called `special`.
 The `special` operation reference the Symfony route named `book_special`.
 
 Since version 2.3, you can also use the route name as operation name by convention as shown in the next example
 for `book_custom` if no `method` nor `route_name` attributes are specified.
+
+By default, API Platform uses the first `GET` operation defined in `itemOperations` to generate the IRI of an item and the first `GET` operation defined in `collectionOperations` to generate the IRI of a collection.
+
+If you create a custom operation, you will probably want to properly document it. See the [swagger](swagger.md) part of the documentation to do so.
+
+### Recommended Method
+
+First, let's create your custom operation:
+
+```php
+<?php
+// api/src/Controller/BookSpecial.php
+
+namespace App\Controller;
+
+use App\Entity\Book;
+
+class BookSpecial
+{
+    private $myService;
+
+    public function __construct(MyService $myService)
+    {
+        $this->myService = $myService;
+    }
+
+    public function __invoke(Book $data): Book
+    {
+        $this->myService->doSomething($data);
+
+        return $data;
+    }
+}
+```
+
+This custom operation behaves exactly like the built-in operation: it returns a JSON-LD document corresponding to the id
+passed in the URL.
+
+Here we consider that [autowiring](https://symfony.com/doc/current/service_container/autowiring.html) is enabled for
+controller classes (the default when using the API Platform distribution).
+This action will be automatically registered as a service (the service name is the same as the class name:
+`App\Controller\BookSpecial`).
+
+API Platform automatically retrieves the appropriate PHP entity using the data provider then deserializes user data in it,
+and for `POST` and `PUT` requests updates the entity with data provided by the user.
+By convention, the action's parameter must be called `$data`.
+
+Services (`$myService` here) are automatically injected thanks to the autowiring feature. You can type-hint any service
+you need and it will be autowired too.
+
+The `__invoke` method of the action is called when the matching route is hit. It can return either an instance of
+`Symfony\Component\HttpFoundation\Response` (that will be displayed to the client immediately by the Symfony kernel) or,
+like in this example, an instance of an entity mapped as a resource (or a collection of instances for collection operations).
+In this case, the entity will pass through [all built-in event listeners](events.md) of API Platform. It will be
+automatically validated, persisted and serialized in JSON-LD. Then the Symfony kernel will send the resulting document to
+the client.
+
+The routing has not been configured yet because we will add it at the resource configuration level:
+
+```php
+<?php
+// src/Entity/Book.php
+
+use ApiPlatform\Core\Annotation\ApiResource;
+use App\Controller\BookSpecial;
+
+/**
+ * @ApiResource(itemOperations={
+ *     "get",
+ *     "special"={
+ *         "method"="GET",
+ *         "path"="/books/{id}/special",
+ *         "controller"=BookSpecial::class
+ *     }
+ * })
+ */
+class Book
+{
+    //...
+}
+```
+
+Or in YAML:
+
+```yaml
+# api/config/api_platform/resources.yaml
+App\Entity\Book:
+    itemOperations:
+        get: ~
+        special:
+            method: 'GET'
+            path: '/books/{id}/special'
+            controller: 'App\Controller\BookSpecial'
+```
+
+Or in XML:
+
+```xml
+<?xml version="1.0" encoding="UTF-8" ?>
+<!-- api/config/api_platform/resources.xml -->
+
+<resources xmlns="https://api-platform.com/schema/metadata"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="https://api-platform.com/schema/metadata
+           https://api-platform.com/schema/metadata/metadata-2.0.xsd">
+    <resource class="App\Entity\Book">
+        <itemOperations>
+            <itemOperation name="get" />
+            <itemOperation name="special">
+                <attribute name="method">GET</attribute>
+                <attribute name="path">/books/{id}/special</attribute>
+                <attribute name="controller">App\Controller\BookSpecial</attribute>
+            </itemOperation>
+        </itemOperations>
+    </resource>
+</resources>
+```
+
+It is mandatory to set the `method`, `path` and `controller` attributes. They allow API platform to configure the routing path and
+the associated controller respectively.
+
+If you want to bypass the automatic retrieval of the entity in your custom operation, you can set the parameter
+`_api_receive` to `false` in the `default` attribute:
+
+```php
+<?php
+// src/Entity/Book.php
+
+use ApiPlatform\Core\Annotation\ApiResource;
+use App\Controller\BookSpecial;
+
+/**
+ * @ApiResource(itemOperations={
+ *     "get",
+ *     "special"={
+ *         "path"="/books/{id}/special",
+ *         "controller"=BookSpecial::class,
+ *         "defaults"={"_api_receive"=false}
+ *     }
+ * })
+ */
+class Book
+{
+    //...
+}
+```
+
+Or in YAML:
+
+```yaml
+# api/config/api_platform/resources.yaml
+App\Entity\Book:
+    itemOperations:
+        get: ~
+        special:
+            path: '/books/{id}/special'
+            controller: 'App\Controller\BookSpecial'
+            defaults:
+                _api_receive: false
+```
+
+Or in XML:
+
+```xml
+<?xml version="1.0" encoding="UTF-8" ?>
+<!-- api/config/api_platform/resources.xml -->
+
+<resources xmlns="https://api-platform.com/schema/metadata"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="https://api-platform.com/schema/metadata
+           https://api-platform.com/schema/metadata/metadata-2.0.xsd">
+    <resource class="App\Entity\Book">
+        <itemOperations>
+            <itemOperation name="get" />
+            <itemOperation name="special">
+                <attribute name="path">/books/{id}/special</attribute>
+                <attribute name="controller">App\Controller\BookSpecial</attribute>
+                <attribute name="defaults">
+                    <attribute name="_api_receive">false</attribute>
+                </attribute>
+            </itemOperation>
+        </itemOperations>
+    </resource>
+</resources>
+```
+
+This way, it will skip the `Read`, `Deserialize` and `Validate` listeners (see [the event system](events.md) for more
+information).
+
+### Alternative Method
+
+There is another way to create a custom operation. However, we do not encourage its use. Indeed, this one disperses
+the configuration at the same time in the routing and the resource configuration.
+
+First, let's create your resource configuration:
+>>>>>>> 2.2
 
 ```php
 <?php
@@ -589,47 +786,24 @@ class BookSpecial
      *     name="book_special",
      *     path="/books/{id}/special",
      *     methods={"PUT"},
-     *     defaults={"_api_resource_class"=Book::class, "_api_item_operation_name"="special"}
+     *     defaults={
+     *         "_api_resource_class"=Book::class,
+     *         "_api_item_operation_name"="special"
+     *     }
      * )
      */
-    public function __invoke(Book $data): object // API Platform retrieves the PHP entity using the data provider then (for POST and
-                                                 // PUT method) deserializes user data in it. Then passes it to the action. Here $data
-                                                 // is an instance of Book having the given ID. By convention, the action's parameter
-                                                 // must be called $data.
+    public function __invoke(Book $data): Book
     {
         $this->myService->doSomething($data);
 
-        return $data; // API Platform will automatically validate, persist (if you use Doctrine) and serialize an entity
-                      // for you. If you prefer to do it yourself, return an instance of Symfony\Component\HttpFoundation\Response
+        return $data;
     }
 }
 ```
 
-This custom operation behaves exactly like the built-in operation: it returns a JSON-LD document corresponding to the id
-passed in the URL.
-
-It is mandatory to set the `_api_resource_class` and `_api_item_operation_name` (or `_api_collection_operation_name` for a collection
+It is mandatory to set `_api_resource_class` and `_api_item_operation_name` (or `_api_collection_operation_name` for a collection
 operation) in the parameters of the route (`defaults` key). It allows API Platform and the Symfony routing system to hook
 together.
-
-Here we consider that the autowiring enabled for controller classes (the default when using the API Platform distribution).
-This action will be automatically registered as a service (the service name is the same as the class name: `App\Controller\BookSpecial`).
-
-API Platform automatically retrieves the appropriate PHP entity then deserializes it, and for `POST` and `PUT` requests
-updates the entity with data provided by the user.
-
-If you want to bypass the automatic retrieval of the entity, you can set the parameter `_api_receive` to `false`. 
-This way, it will skip the `Read`, `Deserialize` and `Validate` listeners (see [the event system](events.md) for more information).
-
-Services (`$myService` here) are automatically injected thanks to the autowiring feature. You can type-hint any service
-you need and it will be autowired too.
-
-The `__invoke` method of the action is called when the matching route is hit. It can return either an instance of `Symfony\Component\HttpFoundation\Response`
-(that will be displayed to the client immediately by the Symfony kernel) or, like in this example, an instance of an entity
-mapped as a resource (or a collection of instances for collection operations).
-In this case, the entity will pass through [all built-in event listeners](events.md) of API Platform. It will be
-automatically validated, persisted and serialized in JSON-LD. Then the Symfony kernel will send the resulting document to
-the client.
 
 Alternatively, you can also use standard Symfony controller and YAML or XML route declarations. The following example does
 exactly the same thing than the previous example in a more Symfony-like fashion:
@@ -645,7 +819,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
 class BookController extends Controller
 {
-    public function specialAction(Book $data, MyService $service): object
+    public function specialAction(Book $data, MyService $service): Book
     {
         return $service->doSomething($data);
     }

@@ -54,7 +54,7 @@ class Product // The class name will be used to name exposed resources
     public $id;
 
     /**
-     * @param string $name A name property - this description will be available in the API documentation too.
+     * @var string $name A name property - this description will be available in the API documentation too.
      *
      * @ORM\Column
      * @Assert\NotBlank
@@ -222,4 +222,4 @@ Run the Symfony app (`bin/console server:run`) and browse the API entrypoint at 
 
 Interact with the API using a REST client (we recommend [Postman](https://www.getpostman.com/)) or an Hydra aware application
 (you should give [Hydra Console](https://github.com/lanthaler/HydraConsole) a try). Take
-a look at the usage examples in [the `features` directory](https://github.com/api-platform/api-platform/tree/master/features).
+a look at the usage examples in [the `features` directory](https://github.com/api-platform/core/tree/master/features).

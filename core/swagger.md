@@ -70,8 +70,8 @@ final class SwaggerDecorator implements NormalizerInterface
 
 ## Using the Swagger Context
 
-Sometimes you may want to have additional information included in your Swagger documentation.
-The following configuration will provide additional context to your Swagger definitions:
+Sometimes you may want to change the information included in your Swagger documentation.
+The following configuration will give you total control over your Swagger definitions:
 
 ```php
 <?php
@@ -225,6 +225,32 @@ class User
 }
 ```
 
+## Changing Operations in the Swagger Documentation
+
+You also have full control over both built-in and custom operations documentation:
+
+```yaml
+resources:
+  App\Entity\Rabbit:
+    collectionOperations:
+      create_user:
+        method: get
+        path: '/rabbit/rand'
+        controller: App\Controller\RandomRabbit
+        swagger_context:
+          summary: Random rabbit picture
+          description: >
+            # Pop a great rabbit picture by color!
+
+            ![A great rabbit](https://rabbit.org/graphics/fun/netbunnies/jellybean1-brennan1.jpg)
+
+          requestBody: '{"days": 23}'
+          parameters:
+            - {name: 'theme', description: 'dark'}
+```
+
+![Impact on swagger ui](../distribution/images/swagger-ui-2.png)
+
 ## Changing the Swagger UI Location
 
 Sometimes you may want to have the API at one location, and the Swagger UI at a different location. This can be done by disabling the Swagger UI from the API Platform configuration file and manually adding the Swagger UI controller.
@@ -249,3 +275,39 @@ swagger_ui:
 ```
 
 Change `/docs` to your desired URI you wish Swagger to be accessible on.
+
+<<<<<<< HEAD
+## Using the Swagger Command
+
+You can also dump your current Swagger documentation using the provided command:
+
+```
+$ docker-compose exec php bin/console api:swagger:export
+# Swagger documentation in JSON format...
+```
+
+## Overriding the UI Template
+
+As described [in the Symfony documentation](https://symfony.com/doc/current/templating/overriding.html), it's possible to override the Twig template that loads Swagger UI and renders the documentation:
+
+```twig
+{# templates/bundles/ApiPlatformBundle/SwaggerUi/index.html.twig #}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>{% if title %}{{ title }} {% endif %}My custom template</title>
+    {# ... #}
+</html>
+```
+
+You may want to copy the [one shipped with API Platform](https://github.com/api-platform/core/blob/master/src/Bridge/Symfony/Bundle/Resources/views/SwaggerUi/index.html.twig) and customize it.
+
+### Enable Swagger doc for API Gateway
+
+[AWS API Gateway](https://aws.amazon.com/api-gateway/) supports Swagger 2.0 partially, but it [requires some changes](https://docs.aws.amazon.com/apigateway/latest/developerguide/api-gateway-known-issues.html).
+Fortunately, API Platform provides a way to be compatible with both Swagger 2.0 & API Gateway.
+
+To enable API Gateway compatibility on your Swagger doc, add `api_gateway=true` query parameter:
+
+`http://www.example.com/docs.json?api_gateway=true`

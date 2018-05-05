@@ -134,17 +134,23 @@ application using [Composer](https://getcomposer.org/):
 
     # Create a new Symfony Flex project
     $ composer create-project symfony/skeleton bookshop-api
+    # Enter the project folder
+    $ cd bookshop-api
     # Install the API Platform's server component in this skeleton
     $ composer req api
 
-Then, enter the project folder, create the database and its schema:
+Then, create the database and its schema:
 
-    $ cd bookshop-api
     $ bin/console doctrine:database:create
     $ bin/console doctrine:schema:create
 
-And start the built-in PHP server:
+And start the built-in PHP server or the Symfony WebServerBundle:
 
+    # Built-in PHP server
+    $ php -S 127.0.0.1:8000 -t public
+    
+    # Symfony WebServerBundle
+    $ composer req server --dev
     $ bin/console server:run
 
 All JavaScript components are also [available as standalone libraries](https://github.com/api-platform?language=javascript)
@@ -701,9 +707,9 @@ API Platform is incredibly efficient for prototyping and Rapid Application Devel
 designed to create complex API-driven projects, far beyond simple CRUD apps. It benefits from **strong extension points**
 and is **is continuously optimized for performance.** It powers numerous high-traffic websites.
 
-API Platform has a builtin HTTP cache invalidation system which allows to make API Platform apps blazing fast, and it uses
+API Platform has a built-in HTTP cache invalidation system which allows to make API Platform apps blazing fast, and it uses
 [Varnish](https://varnish-cache.org/) by default. Read more in the chapter
-[API Platform Core Library: Enabling the Builtin HTTP Cache Invalidation System](../core/performance.md#enabling-the-builtin-http-cache-invalidation-system).
+[API Platform Core Library: Enabling the Built-in HTTP Cache Invalidation System](../core/performance.md#enabling-the-builtin-http-cache-invalidation-system).
 
 API Platform can also be extended using PHP libraries and Symfony bundles.
 

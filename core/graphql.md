@@ -32,3 +32,145 @@ api_platform:
             enabled: false
 # ...            
 ```
+
+## Filters
+
+Filters are supported out-of-the-box. Follow the [filters](filters.md) documentation and your filters will be available as arguments of queries.
+
+However you don't necessarily have the same needs for your GraphQL endpoint as for your REST one.
+
+In the `ApiResource` declaration, you can choose to decorrelate the GraphQL filters in `query` of the `graphql` attribute.
+In order to keep the default behavior (possibility to fetch, delete, update or create), define all the operations (`query`, `delete`, `update` and `create`).
+
+For example, this entity will have a search filter for REST and a date filter for GraphQL:
+
+```php
+<?php
+// api/src/Entity/Offer.php
+
+namespace App\Entity;
+
+use ApiPlatform\Core\Annotation\ApiResource;
+
+/**
+ * @ApiResource(
+ *     attributes={
+ *         "filters"={"offer.search_filter"}
+ *     },
+ *     graphql={
+ *         "query"={
+ *              "filters"={"offer.date_filter"}
+ *          },
+ *          "delete",
+ *          "update",
+ *          "create"
+ *     }
+ * )
+ */
+class Offer
+{
+    // ...
+}
+```
+
+### Filtering on Nested Properties
+
+Unlike for REST, all built-in filters support nested properties using the underscore (`_`) syntax instead of the dot (`.`) syntax, e.g.:
+
+```php
+<?php
+// api/src/Entity/Offer.php
+
+namespace App\Entity;
+
+use ApiPlatform\Core\Annotation\ApiFilter;
+use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\OrderFilter;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
+
+/**
+ * @ApiResource
+ * @ApiFilter(OrderFilter::class, properties={"product.releaseDate"})
+ * @ApiFilter(SearchFilter::class, properties={"product.color": "exact"})
+ */
+class Offer
+{
+    // ...
+}
+```
+
+The above allows you to find offers by their respective product's color like for the REST Api.
+You can then filter using the following syntax:
+
+```graphql
+{
+  offers(product_color: "red") {
+    edges {
+      node {
+        id
+        product {
+          name
+          color
+        }
+      }
+    }
+  }
+}
+```
+
+Or order your results like:
+
+```graphql
+{
+  offers(order: {product_releaseDate: "DESC"}) {
+    edges {
+      node {
+        id
+        product {
+          name
+          color
+        }
+      }
+    }
+  }
+}
+```
+
+## Security (`access_control`)
+
+To add a security layer to your queries and mutations, follow the [security](security.md) documentation.
+
+If your security needs differ between REST and GraphQL, add the particular parts in the `graphql` key.
+
+In the example below, we want the same security rules as in REST, but we also want to allow an admin to delete a book in GraphQL only.
+Please note it's not possible to update a book in GraphQL because the `update` operation is not defined.
+
+```php
+<?php
+// api/src/Entity/Book.php
+
+namespace App\Entity;
+
+use ApiPlatform\Core\Annotation\ApiResource;
+
+/**
+ * @ApiResource(
+ *     attributes={"access_control"="is_granted('ROLE_USER')"},
+ *     collectionOperations={
+ *         "post"={"access_control"="is_granted('ROLE_ADMIN')", "access_control_message"="Only admins can add books."}
+ *     },
+ *     itemOperations={
+ *         "get"={"access_control"="is_granted('ROLE_USER') and object.owner == user", "access_control_message"="Sorry, but you are not the book owner."}
+ *     },
+ *     graphql={
+ *         "query"={"access_control"="is_granted('ROLE_USER') and object.owner == user"},
+ *         "delete"={"access_control"="is_granted('ROLE_ADMIN')"},
+ *         "create"={"access_control"="is_granted('ROLE_ADMIN')"}
+ *     }
+ * )
+ */
+class Book
+{
+    // ...
+}
+```

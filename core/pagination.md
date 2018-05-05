@@ -319,3 +319,29 @@ class Book
     // ...
 }
 ```
+
+## Avoiding double SQL requests on Doctrine
+
+By default, pagination assumes that there will be collection fetched on a resource and thus will set `useFetchJoinCollection` to `true` on the Doctrine Paginator class. Having this option imply that 2 sql requests will be executed (so this avoid having less results than expected).
+
+In most cases, even without collection on the resource, this parameter has little impact on performance. However when fetching a lot of results per page it can be counter productive.
+
+That's why this behavior can be configured with the `pagination_fetch_join_collection` parameter on a resource:
+
+```php
+<?php
+
+// src/Entity/Book.php
+
+use ApiPlatform\Core\Annotation\ApiResource;
+
+/**
+ * @ApiResource(attributes={"pagination_fetch_join_collection"=false})
+ */
+class Book
+{
+    // ...
+}
+```
+
+Please note that this parameter will always be forced to false when the resource have composite keys due to a [bug in doctrine](https://github.com/doctrine/doctrine2/issues/2910)

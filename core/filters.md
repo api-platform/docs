@@ -14,7 +14,7 @@ automatically appears in the [NelmioApiDoc documentation](nelmio-api-doc.md) if 
 
 ### Basic Knowledge
 
-Filters are services (see the section on [custom filters](core/filters.md#creating-custom-filters)), and they can be linked
+Filters are services (see the section on [custom filters](#creating-custom-filters)), and they can be linked
 to a Resource in two ways:
 
 1. Through the `ApiResource` declaration, as the `filters` attribute.
@@ -113,7 +113,7 @@ class Offer
 }
 ```
 
-Learn more on how the [ApiFilter annotation](core/filters.md#apifilter-annotation) works.
+Learn more on how the [ApiFilter annotation](filters.md#apifilter-annotation) works.
 
 For the sake of consistency, we're using the annotation in the below documentation.
 
@@ -145,6 +145,8 @@ In the following example, we will see how to allow the filtering of a list of e-
 namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Core\Annotation\ApiFilter;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
 
 /**
  * @ApiResource()
@@ -211,13 +213,17 @@ use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\DateFilter;
 
 /**
  * @ApiResource
- * @ApiFilter(DateFilter::class, properties={"dateProperty"})
+ * @ApiFilter(DateFilter::class, properties={"createdAt"})
  */
 class Offer
 {
     // ...
 }
 ```
+
+Given that the collection endpoint is `/offers`, you can filter offers by date with the following query: `/offers?createdAt[after]=2018-03-19`.
+
+It will return all offers where `createdAt` is superior or equal to `2018-03-19`.
 
 #### Managing `null` Values
 
@@ -257,9 +263,7 @@ class Offer
 
 The boolean filter allows you to search on boolean fields and values.
 
-Syntax: `?property=[true|false|1|0]`
-
-You can either use TRUE or true, the parameters are case insensitive.
+Syntax: `?property=<true|false|1|0>`
 
 Enable the filter:
 
@@ -274,7 +278,7 @@ use ApiPlatform\Core\Annotation\ApiResource;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\BooleanFilter;
 
 /**
- * @ApiResource(attributes={"filters"={"offer.boolean_filter"}})
+ * @ApiResource
  * @ApiFilter(BooleanFilter::class, properties={"isAvailableGenericallyInMyCountry"})
  */
 class Offer
@@ -283,7 +287,7 @@ class Offer
 }
 ```
 
-Given that the collection endpoint is `/offers`, you can filter offers by boolean  with the following query: `/offers?isAvailableGenericallyInMyCountry=true`.
+Given that the collection endpoint is `/offers`, you can filter offers by boolean with the following query: `/offers?isAvailableGenericallyInMyCountry=true`.
 
 It will return all offers where `isAvailableGenericallyInMyCountry` equals `true`.
 
@@ -291,7 +295,7 @@ It will return all offers where `isAvailableGenericallyInMyCountry` equals `true
 
 The numeric filter allows you to search on numeric fields and values.
 
-Syntax: `?property=int|bigint|decimal...`
+Syntax: `?property=<int|bigint|decimal...>`
 
 Enable the filter:
 
@@ -315,7 +319,7 @@ class Offer
 }
 ```
 
-Given that the collection endpoint is `/offers`, you can filter offers by boolean  with the following query: `/offers?sold=1`.
+Given that the collection endpoint is `/offers`, you can filter offers by boolean with the following query: `/offers?sold=1`.
 
 It will return all offers with `sold` equals `1`.
 
@@ -323,7 +327,7 @@ It will return all offers with `sold` equals `1`.
 
 The range filter allows you to filter by a value Lower than, Greater than, Lower than or equal, Greater than or equal and between two values.
 
-Syntax: `?property[lt]|[gt]|[lte]|[gte]|[between]=value`
+Syntax: `?property[<lt|gt|lte|gte|between>]=value`
 
 Enable the filter:
 
@@ -353,9 +357,41 @@ It will return all offers with `price` between 12.99 and 15.99.
 
 You can filter offers by joining two values, for example: `/offers?price[gt]=12.99&price[lt]=19.99`.
 
-### Order Filter
+### Exists Filter
 
-The order filter allows to order a collection against the given properties.
+The exists filter allows you to select items based on nullable field value.
+
+Syntax: `?property[exists]=<true|false|1|0>`
+
+Enable the filter:
+
+```php
+<?php
+// api/src/Entity/Offer.php
+
+namespace App\Entity;
+
+use ApiPlatform\Core\Annotation\ApiFilter;
+use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\ExistsFilter;
+
+/**
+ * @ApiResource
+ * @ApiFilter(ExistsFilter::class, properties={"transportFees"})
+ */
+class Offer
+{
+    // ...
+}
+```
+
+Given that the collection endpoint is `/offers`, you can filter offers on nullable field with the following query: `/offers?transportFees[exists]=true`.
+
+It will return all offers where `transportFees` is not `null`.
+
+### Order Filter (Sorting)
+
+The order filter allows to sort a collection against the given properties.
 
 Syntax: `?order[property]=<asc|desc>`
 
@@ -369,7 +405,7 @@ namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiFilter;
 use ApiPlatform\Core\Annotation\ApiResource;
-use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\RangeFilter;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\OrderFilter;
 
 /**
  * @ApiResource
@@ -395,7 +431,7 @@ namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiFilter;
 use ApiPlatform\Core\Annotation\ApiResource;
-use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\RangeFilter;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\OrderFilter;
 
 /**
  * @ApiResource
@@ -458,11 +494,6 @@ api_platform:
 Sometimes, you need to be able to perform filtering based on some linked resources (on the other side of a relation). All
 built-in filters support nested properties using the dot (`.`) syntax, e.g.:
 
-### Filtering on Nested Properties
-
-Sometimes, you need to be able to perform filtering based on some linked resources (on the other side of a relation). All
-built-in filters support nested properties using the dot (`.`) syntax, e.g.:
-
 ```php
 <?php
 // api/src/Entity/Offer.php
@@ -477,7 +508,7 @@ use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
 /**
  * @ApiResource
  * @ApiFilter(OrderFilter::class, properties={"product.releaseDate"})
- * @ApiFilter(SearchFilter::class, properties={"product.name": "exact"})
+ * @ApiFilter(SearchFilter::class, properties={"product.color": "exact"})
  */
 class Offer
 {
@@ -569,9 +600,9 @@ Given that the collection endpoint is `/books`, you can filter by serialization 
 
 ### Property filter
 
-The property filter adds the possibility to filter serialization properties.
+The property filter adds the possibility to select the properties to serialize (sparse fieldsets).
 
-Syntax: `?properties[]=<property>`
+Syntax: `?properties[]=<property>&properties[<relation>]=<property>`
 
 You can add as many properties as you need.
 
@@ -599,11 +630,12 @@ class Book
 ```
 
 Three arguments are available to configure the filter:
-- `parameterName` is the query parameter name (default `groups`)
+- `parameterName` is the query parameter name (default `properties`)
 - `overrideDefaultProperties` allows to override the default serialization properties (default `false`)
-- `whitelist` properties whitelist to avoid uncontrolled data exposure (default `null` to allow all groups)
+- `whitelist` properties whitelist to avoid uncontrolled data exposure (default `null` to allow all properties)
 
 Given that the collection endpoint is `/books`, you can filter the serialization properties with the following query: `/books?properties[]=title&properties[]=author`.
+If you want to include some properties of the nested "author" document, use: `/books?properties[]=title&properties[author]=name`.
 
 ## Creating Custom Filters
 
@@ -1040,7 +1072,7 @@ class DummyCar
 
 ```
 
-On the first property, `name`, it's straightforward. The first annotation argument is the filter class, the second sepcifies options, here the strategy:
+On the first property, `name`, it's straightforward. The first annotation argument is the filter class, the second specifies options, here the strategy:
 
 ```
 @ApiFilter(SearchFilter::class, strategy="partial")
@@ -1055,7 +1087,7 @@ Note that for each given property we specify the strategy:
 
 The `ApiFilter` annotation can be set on the class as well. If you don't specify any properties, it'll act on every property of the class.
 
-For example, let's define two data filters (`DateFilter`, `SearchFilter` and `BooleanFilter`) and two serialization filters (`PropertyFilter` and `GroupFilter`) on our `DummyCar` class:
+For example, let's define three data filters (`DateFilter`, `SearchFilter` and `BooleanFilter`) and two serialization filters (`PropertyFilter` and `GroupFilter`) on our `DummyCar` class:
 
 ```php
 <?php
@@ -1108,7 +1140,7 @@ The `SearchFilter` here adds properties. The result is the exact same as the exa
 
 Note that you can specify the `properties` argument on every filter.
 
-The next filters are not related to how the data is fetched but rather on the how the serialization is done On those, we can give an `arguments` option ([see here for the available arguments](#serializer-filters)):
+The next filters are not related to how the data is fetched but rather on the how the serialization is done on those, we can give an `arguments` option ([see here for the available arguments](#serializer-filters)):
 
 ```
 @ApiFilter(PropertyFilter::class, arguments={"parameterName": "foobar"})

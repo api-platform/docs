@@ -69,7 +69,7 @@ if you really need to.
 ## Configuring the Access Control Message
 
 By default when API request will be denied you will get the "Access Denied." message.
-You can change it by configuring "access_control_message" attribute.
+You can change it by configuring "access\_control\_message" attribute.
 
 For example:
 

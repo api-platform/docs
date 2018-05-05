@@ -1,6 +1,6 @@
 # Content Negotiation
 
-The API system has builtin [content negotiation](https://en.wikipedia.org/wiki/Content_negotiation) capabilities.
+The API system has built-in [content negotiation](https://en.wikipedia.org/wiki/Content_negotiation) capabilities.
 It leverages the [`willdurand/negotiation`](https://github.com/willdurand/Negotiation) library.
 
 By default, only the [JSON-LD](https://json-ld.org) format is enabled. However API Platform Core supports many more formats and can be extended.
@@ -25,7 +25,7 @@ XML                                                             | `xml`        |
 HTML (API docs)                                                 | `html`       | `text/html`                   | no
 
 If the client requested format is not specified (if it's not supported, it will throw an HTTP bad format error), the response format will be the first format defined in the `formats` configuration key (see below).
-An example using the builtin XML support is available in [Behat specs](https://github.com/api-platform/core/blob/master/features/main/content_negotiation.feature).
+An example using the built-in XML support is available in [Behat specs](https://github.com/api-platform/core/blob/master/features/main/content_negotiation.feature).
 
 The API Platform content negotiation system is extendable. Support for other formats (such as [JSONAPI](http://jsonapi.org/))
 can be added by [creating and registering appropriate encoders and, sometimes, normalizers](https://symfony.com/doc/current/serializer.html#adding-normalizers-and-encoders). Adding support for other

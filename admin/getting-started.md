@@ -15,14 +15,6 @@ Now, go to the newly created `my-admin` directory:
 
     $ cd my-admin
 
-React and React DOM will be directly provided as dependencies of Admin On REST. As having different versions of React
-causes issues, remove `react` and `react-dom` from the `dependencies` section of the generated `package.json` file:
-
-```patch
--    "react": "^15.6.1",
--    "react-dom": "^15.6.1"
-```
-
 Finally, install the `@api-platform/admin` library:
 
     $ yarn add @api-platform/admin
@@ -45,7 +37,7 @@ by default).
 
 Clear the cache to apply this change:
 
-    $ docker-compose exec app bin/console cache:clear --env=prod
+    $ docker-compose exec php bin/console cache:clear --env=prod
 
 Your new administration interface is ready! Type `yarn start` to try it!
 

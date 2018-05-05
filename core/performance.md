@@ -1,6 +1,6 @@
 # Performance
 
-## Enabling the Builtin HTTP Cache Invalidation System
+## Enabling the Built-in HTTP Cache Invalidation System
 
 Exposing a hypermedia API has [many advantages](http://blog.theamazingrando.com/in-band-vs-out-of-band.html). One of
 them is the ability to know exactly which resources are included in HTTP responses created by the API. We used this
@@ -25,6 +25,48 @@ distribution of API Platform, so this feature works out of the box.
 
 Integration with Varnish and the Doctrine ORM is shipped with the core library. You can easily implement the support for
 any other proxy or persistence system.
+
+### Extending Cache-Tags for invalidation
+
+Sometimes you need individual resources like `/me`. To work properly with Varnish, the cache tags need to be augmented with these resources. Here is an example how this can be done:
+
+```php
+<?php
+
+declare(strict_types=1);
+
+namespace AppBundle\EventSubscriber;
+
+use ApiPlatform\Core\EventListener\EventPriorities;
+use AppBundle\Entity\User;
+use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use Symfony\Component\HttpKernel\Event\GetResponseEvent;
+use Symfony\Component\HttpKernel\KernelEvents;
+
+final class UserResourcesSubscriber implements EventSubscriberInterface
+{
+    public static function getSubscribedEvents()
+    {
+        return [
+            KernelEvents::REQUEST => ['extendResources', EventPriorities::POST_READ]
+        ];
+    }
+
+    public function extendResources(GetResponseEvent $event)
+    {
+        $request = $event->getRequest();
+        $class = $request->attributes->get('_api_resource_class');
+
+        if ($class === User::class) {
+            $resources = [
+                '/me'
+            ];
+
+            $request->attributes->set('_resources', $request->attributes->get('_resources', []) + (array)$resources);
+        }
+    }
+}
+```
 
 ## Enabling the Metadata Cache
 
