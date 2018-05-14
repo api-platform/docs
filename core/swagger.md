@@ -259,7 +259,6 @@ Sometimes you may want to have the API at one location, and the Swagger UI at a 
 
 ```yaml
 # api/config/packages/api_platform.yaml
-
 api_platform:
     # ...
     enable_swagger_ui: false
@@ -276,7 +275,6 @@ swagger_ui:
 
 Change `/docs` to your desired URI you wish Swagger to be accessible on.
 
-<<<<<<< HEAD
 ## Using the Swagger Command
 
 You can also dump your current Swagger documentation using the provided command:
