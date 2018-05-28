@@ -35,7 +35,22 @@ the admin's domain to access it.
 To do so, update the value of the `CORS_ALLOW_ORIGIN` parameter in `api/.env` (it will be set to `^https?://localhost:?[0-9]*$`
 by default).
 
-If you're not using Api Platform distribution, you will need to adjust `nelmio-cors.yaml` to include `expose_headers: ['Link']` on the route under which api will be served (`/api` by default).
+If you're not using the API Platform distribution, you will need to adjust the NelmioCorsBundle configuration to expose the `Link` HTTP header and to send proper CORS headers on the route under which the API will be served (`/api` by default).
+Here is a sample configuration (if you use the API Platform distribution, you can skip this step):
+
+```yaml
+# config/packages/nelmio-cors.yaml
+
+nelmio_cors:
+    paths:
+        '^/api/':
+            origin_regex: true
+            allow_origin: ['^http://localhost:[0-9]+'] # You probably want to change this regex to match your real domain
+            allow_methods: ['GET', 'OPTIONS', 'POST', 'PUT', 'PATCH', 'DELETE']
+            allow_headers: ['Content-Type', 'Authorization']
+            expose_headers: ['Link']
+            max_age: 3600
+```
 
 Clear the cache to apply this change:
 
