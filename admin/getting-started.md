@@ -35,6 +35,8 @@ the admin's domain to access it.
 To do so, update the value of the `CORS_ALLOW_ORIGIN` parameter in `api/.env` (it will be set to `^https?://localhost:?[0-9]*$`
 by default).
 
+If you're not using Api Platform distribution, you will need to adjust `nelmio-cors.yaml` to include `expose_headers: ['Content-Disposition', 'Content-Length', 'Link']` on the route under which api will be served (`/api` by default).
+
 Clear the cache to apply this change:
 
     $ docker-compose exec php bin/console cache:clear --env=prod
