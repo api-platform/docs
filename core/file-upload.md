@@ -8,7 +8,7 @@ recommended you [read the documentation of
 VichUploaderBundle](https://github.com/dustin10/VichUploaderBundle/blob/master/Resources/doc/index.md)
 before proceeding. It will help you get a grasp on how the bundle works, and why we use it.
 
-## Install VichUploaderBundle
+## Installing VichUploaderBundle
 
 Install the bundle with the help of composer:
 
@@ -30,7 +30,7 @@ vich_uploader:
             upload_destination: '%kernel.project_dir%/public/media'
 ```
 
-## Configure the entity receiving the uploaded file
+## Configuring the Entity Receiving the Uploaded File
 
 In our exemple, we will create a `MediaObject` API resource. We will post files
 to this resource endpoint, and then link the newly created resource to another
@@ -51,7 +51,7 @@ use Symfony\Component\HttpFoundation\File\File;
 use Vich\UploaderBundle\Mapping\Annotation as Vich;
 
 /**
- * @ORM\Entity()
+ * @ORM\Entity
  * @ApiResource(iri="http://schema.org/MediaObject", collectionOperations={
  *     "get",
  *     "post"={
@@ -81,7 +81,7 @@ class MediaObject
 }
 ```
 
-## Handling file upload
+## Handling File Upload
 
 At this point, the entity is configured, but we still need to write the action
 that handles the file upload.
@@ -176,7 +176,7 @@ final class MediaObjectType extends AbstractType
 }
 ```
 
-## Making a request to the `/media-objects` endpoint.
+## Making a Request to The `/media-objects` Endpoint
 
 Your `/media-objects` endpoint is now ready to receive a `POST` request with a
 file. This endpoint accepts standard `multipart/form-data` encoded data, but
@@ -191,7 +191,7 @@ your data, you will get a response looking like this:
 }
 ```
 
-## Linking a MediaObject resource to another resource
+## Linking a MediaObject Resource to Another Resource
 
 We now need to update our `Book` resource, so that we can link a `MediaObject`
 to serve as the book cover.
@@ -201,6 +201,7 @@ We first need to edit our Book resource, and add a new property called `cover`.
 ```php
 <?php
 // src/Entity/Book.php
+
 namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
@@ -209,7 +210,7 @@ use Symfony\Component\HttpFoundation\File\File;
 use Vich\UploaderBundle\Mapping\Annotation as Vich;
 
 /**
- * @ORM\Entity()
+ * @ORM\Entity
  * @ApiResource(iri="http://schema.org/Book")
  */
 class Book
