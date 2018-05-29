@@ -121,6 +121,7 @@
     2. [Enabling GraphQL](core/graphql.md#enabling-graphql)
     3. [GraphiQL](core/graphql.md#graphiql)
 27. [Handling Data Transfer Objects (DTOs)](core/dto.md)
+28. [Handling File Upload with VichUploaderBundle](core/file-upload.md)
 
 ## The Schema Generator Component: Generate Data Models from Open Vocabularies
 
