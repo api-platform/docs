@@ -196,7 +196,7 @@ your data, you will get a response looking like this:
 We now need to update our `Book` resource, so that we can link a `MediaObject`
 to serve as the book cover.
 
-We first need to edit our Book resource, and add a new property called `cover`.
+We first need to edit our Book resource, and add a new property called `image`.
 
 ```php
 <?php
