@@ -25,6 +25,7 @@ Format                                                          | Format name  |
 [JSON](https://www.json.org/)                                   | `json`       |  `application/json`           | no
 [XML](https://www.w3.org/XML/)                                  | `xml`        | `application/xml`, `text/xml` | no
 [YAML](http://yaml.org/)                                        | `yaml`       | `application/x-yaml`          | no
+[CSV](https://tools.ietf.org/html/rfc4180)                      | `csv`        | `text/csv`                    | no
 [HTML](https://whatwg.org/) (API docs)                          | `html`       | `text/html`                   | no
 
 If the client requested format is not specified (if it's not supported, it will throw an HTTP bad request error), the response format will be the first format defined in the `formats` configuration key (see below).
