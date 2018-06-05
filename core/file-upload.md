@@ -188,7 +188,7 @@ final class MediaObjectType extends AbstractType
 }
 ```
 
-## Making a Request to the `/media_objects` Endpoint.
+## Making a Request to the `/media_objects` Endpoint
 
 Your `/media_objects` endpoint is now ready to receive a `POST` request with a
 file. This endpoint accepts standard `multipart/form-data` encoded data, but
