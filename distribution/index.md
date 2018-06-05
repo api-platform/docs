@@ -156,7 +156,7 @@ And start the built-in PHP server or the Symfony WebServerBundle:
 All JavaScript components are also [available as standalone libraries](https://github.com/api-platform?language=javascript)
 installable with NPM or Yarn.  
 
-**Note:** when installing API Platform this way, the API will be exposed as the `/api/` path. You need to open `https://localhost/api/` to see the API Platform welcome page.
+**Note:** when installing API Platform this way, the API will be exposed as the `/api/` path. You need to open `https://localhost/api/` to see the API documentation.
 
 ## It's Ready!
 
