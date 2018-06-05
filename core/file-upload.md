@@ -48,6 +48,7 @@ use ApiPlatform\Core\Annotation\ApiResource;
 use App\Controller\CreateMediaObjectAction;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\HttpFoundation\File\File;
+use Symfony\Component\Validator\Constraints as Assert;
 use Vich\UploaderBundle\Mapping\Annotation as Vich;
 
 /**
@@ -55,9 +56,10 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
  * @ApiResource(iri="http://schema.org/MediaObject", collectionOperations={
  *     "get",
  *     "post"={
- *         method="POST",
- *         path="/media-objects",
- *         controller=CreateMediaObjectAction::class,
+ *         "method"="POST",
+ *         "path"="/media_objects",
+ *         "controller"=CreateMediaObjectAction::class,
+ *         "defaults"={"_api_receive"=false},
  *     },
  * })
  * @Vich\Uploadable
@@ -68,6 +70,7 @@ class MediaObject
 
     /**
      * @var File|null
+     * @Assert\NotNull()
      * @Vich\UploadableField(mapping="media_object", fileNameProperty="contentUrl")
      */
     public $file;
@@ -131,6 +134,9 @@ final class CreateMediaObjectAction
             $em->persist($mediaObject);
             $em->flush();
 
+            // Prevent the serialization of the file property
+            $mediaObject->file = null;
+
             return $mediaObject;
         }
 
@@ -150,9 +156,9 @@ namespace App\Form;
 
 use App\Entity\MediaObject;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Vich\UploaderBundle\Form\Type\VichImageType;
 
 final class MediaObjectType extends AbstractType
 {
@@ -160,8 +166,8 @@ final class MediaObjectType extends AbstractType
     {
         $builder
             // Configure each fields you want to be submitted here, like a classic form.
-            ->add('file', VichImageType::class, [
-                'label' => 'label.file'
+            ->add('file', FileType::class, [
+                'label' => 'label.file',
                 'required' => false,
             ])
         ;
@@ -171,14 +177,20 @@ final class MediaObjectType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => MediaObject::class,
+            'csrf_protection' => false,
         ]);
+    }
+
+    public function getBlockPrefix()
+    {
+        return '';
     }
 }
 ```
 
-## Making a Request to The `/media-objects` Endpoint
+## Making a Request to the `/media_objects` Endpoint.
 
-Your `/media-objects` endpoint is now ready to receive a `POST` request with a
+Your `/media_objects` endpoint is now ready to receive a `POST` request with a
 file. This endpoint accepts standard `multipart/form-data` encoded data, but
 not JSON data. You will need to format your request accordingly. After posting
 your data, you will get a response looking like this:
@@ -186,8 +198,8 @@ your data, you will get a response looking like this:
 ```json
 {
     "@type": "http://schema.org/ImageObject",
-    "@id": "/media-objects/<id>",
-    "contentUrl": "/media/<filename>",
+    "@id": "/media_objects/<id>",
+    "contentUrl": "<filename>",
 }
 ```
 
@@ -234,7 +246,7 @@ uploaded cover, you can have a nice illustrated book record!
 ```json
 {
   "name": "The name",
-  "image": "/media-objects/<id>"
+  "image": "/media_objects/<id>"
 }
 ```
 
