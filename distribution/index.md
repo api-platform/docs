@@ -101,9 +101,9 @@ and [Php Inspections](https://plugins.jetbrains.com/plugin/7622-php-inspections-
 you'll got auto-completion for almost everything and awesome quality analysis.
 
 The API Platform distribution comes with a dummy entity for test purpose: `api/src/Entity/Greeting.php`. We will remove
-it later, but for now, create the related database table:
+it later, but for now, validate the database table:
 
-    $ docker-compose exec php bin/console doctrine:schema:create
+    $ docker-compose exec php bin/console doctrine:schema:validate
 
 The `php` container is where your API app stands. Prefixing a command by `docker-compose exec php` allows to execute the
 given command in this container. You may want [to create an alias](http://www.linfo.org/alias.html) to make your life easier.
