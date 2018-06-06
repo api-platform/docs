@@ -356,7 +356,7 @@ class Review
 As you can see there are two typical PHP objects with the corresponding PHPDoc (note that entities's and properties's descriptions
 included in their PHPDoc will appear in the API documentation).
 
-Doctrine's annotations map these entities to tables in the MySQL database. Annotations are convenient as they allow grouping
+Doctrine's annotations map these entities to tables in the database. Annotations are convenient as they allow grouping
 the code and the configuration but, if you want to decouple classes from their metadata, you can switch to XML or YAML mappings.
 They are supported as well.
 
