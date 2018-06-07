@@ -101,12 +101,7 @@ and [Php Inspections](https://plugins.jetbrains.com/plugin/7622-php-inspections-
 you'll got auto-completion for almost everything and awesome quality analysis.
 
 The API Platform distribution comes with a dummy entity for test purpose: `api/src/Entity/Greeting.php`. We will remove
-it later, but for now, create the related database table:
-
-    $ docker-compose exec php bin/console doctrine:schema:create
-
-The `php` container is where your API app stands. Prefixing a command by `docker-compose exec php` allows to execute the
-given command in this container. You may want [to create an alias](http://www.linfo.org/alias.html) to make your life easier.
+it later.
 
 If you're used to the PHP ecosystem, you probably guessed that this test entity uses the industry-leading [Doctrine ORM](http://www.doctrine-project.org/projects/orm.html)
 library as persistence system. It is shipped, in the API Platform distribution.
@@ -374,7 +369,11 @@ Finally, tell Doctrine to sync the database's tables structure with our new data
 
     $ docker-compose exec php bin/console doctrine:schema:update --force
 
-Later, you'll want to use [Doctrine Migrations](https://symfony.com/doc/current/doctrine.html#migrations-creating-the-database-tables-schema),
+
+The `php` container is where your API app stands. Prefixing a command by `docker-compose exec php` allows to execute the
+given command in this container. You may want [to create an alias](http://www.linfo.org/alias.html) to make your life easier.
+
+Later, you'll want to use [Doctrine Migrations](https://symfony.com/doc/current/doctrine.html#migrations-creating-the-database-tables-schema)
 when changing the database's structure.
 
 We now have a working data model that you can persist and query. To create an API endpoint with CRUD capabilities corresponding
