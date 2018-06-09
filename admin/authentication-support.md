@@ -8,7 +8,7 @@ The first step is to create a client to handle the authentication process:
 
 ```javascript
 // src/authClient.js
-import { AUTH_LOGIN, AUTH_LOGOUT, AUTH_ERROR, AUTH_CHECK } from 'admin-on-rest';
+import { AUTH_LOGIN, AUTH_LOGOUT, AUTH_ERROR, AUTH_CHECK } from 'react-admin';
 
 // Change this to be your own login check route.
 const login_uri = 'https://demo.api-platform.com/login_check';
@@ -70,7 +70,7 @@ const fetchHydra = (url, options = {}) => baseFetchHydra(url, {
     ...options,
     headers: new Headers(fetchHeaders),
 });
-const restClient = api => hydraClient(api, fetchHydra);
+const hydraClient = api => hydraClient(api, fetchHydra);
 const apiDocumentationParser = entrypoint => parseHydraDocumentation(entrypoint, { headers: new Headers(fetchHeaders) })
     .then(
         ({ api }) => ({ api }),
@@ -98,10 +98,10 @@ export default props => (
         apiDocumentationParser={apiDocumentationParser}
         authClient={authClient}
         entrypoint={entrypoint}
-        restClient={restClient}
+        dataProvider={hydraClient}
     />
 );
 ```
 
-Refer to [the chapter dedicated to authentication in the Admin On Rest documentation](https://marmelab.com/admin-on-rest/Authentication.html)
+Refer to [the chapter dedicated to authentication in the React Admin documentation](https://marmelab.com/react-admin/Authentication.html)
 for more information.

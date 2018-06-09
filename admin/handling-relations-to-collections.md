@@ -78,7 +78,7 @@ Let's customize the components used for the `authors` property:
 
 ```javascript
 import React, { Component } from 'react';
-import { ReferenceArrayField, SingleFieldList, ChipField, ReferenceArrayInput, SelectArrayInput } from 'admin-on-rest';
+import { ReferenceArrayField, SingleFieldList, ChipField, ReferenceArrayInput, SelectArrayInput } from 'react-admin';
 import { AdminBuilder, hydraClient } from '@api-platform/admin';
 import parseHydraDocumentation from 'api-doc-parser/lib/hydra/parseHydraDocumentation';
 
@@ -115,7 +115,7 @@ export default class extends Component {
   render() {
     if (null === this.state.api) return <div>Loading...</div>;
 
-    return <AdminBuilder api={this.state.api} restClient={hydraClient({entrypoint: entrypoint, resources: this.state.resources})}/>
+    return <AdminBuilder api={this.state.api} dataProvider={hydraClient({entrypoint: entrypoint, resources: this.state.resources})}/>
   }
 }
 ```

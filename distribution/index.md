@@ -16,7 +16,7 @@ It contains:
 * an API skeleton, including with [the server-side component](../core/index.md), [the Symfony 4
   microframework](https://symfony.com/doc/current/setup/flex.html) and [the Doctrine ORM](http://docs.doctrine-project.org/projects/doctrine-orm/)
 * a dynamic JavaScript admin, leveraging the hypermedia capabilities of API Platform and built on top of [React](https://reactjs.org/)
-  and [Admin On Rest](https://github.com/marmelab/admin-on-rest)
+  and [React Admin](https://marmelab.com/react-admin/)
 * a Progressive Web App skeleton, generated with [Create React App](https://github.com/facebookincubator/create-react-app)
   and containing the tools to scaffold your own React/[Redux](https://redux.js.org/) app in one command
 * a [Docker](https://docker.com)-based setup to bootstrap the project in a single command, providing:
@@ -668,7 +668,7 @@ Open `https://localhost:444` in your browser:
 ![The admin](images/api-platform-2.2-admin.png)
 
 This [Material Design](https://material.io/guidelines/) admin is a [Progressive Web App](https://developers.google.com/web/progressive-web-apps/)
-built with [API Platform Admin](../admin/index.md) (Admin On Rest, React and Redux inside). It is powerful and fully customizable,
+built with [API Platform Admin](../admin/index.md) (React Admin, React and Redux inside). It is powerful and fully customizable,
 refer to its documentation to learn more.
 It leverages the Hydra documentation exposed by the API component to build itself. It's 100% dynamic, **no code generation
 occurs**.
