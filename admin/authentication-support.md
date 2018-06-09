@@ -96,7 +96,7 @@ const apiDocumentationParser = entrypoint => parseHydraDocumentation(entrypoint,
 export default props => (
     <HydraAdmin
         apiDocumentationParser={apiDocumentationParser}
-        authClient={authClient}
+        authProvider={authClient}
         entrypoint={entrypoint}
         dataProvider={hydraClient}
     />
