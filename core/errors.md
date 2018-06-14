@@ -43,7 +43,7 @@ final class ProductManager implements EventSubscriberInterface
     public static function getSubscribedEvents(): array
     {
         return [
-            KernelEvents::REQUEST => ['checkProductAvailability', EventPriorities::POST_DESERIALIZE],
+            KernelEvents::VIEW => ['checkProductAvailability', EventPriorities::PRE_VALIDATE],
         ];
     }
 
