@@ -276,7 +276,6 @@ swagger_ui:
 
 Change `/docs` to your desired URI you wish Swagger to be accessible on.
 
-<<<<<<< HEAD
 ## Using the Swagger Command
 
 You can also dump your current Swagger documentation using the provided command:

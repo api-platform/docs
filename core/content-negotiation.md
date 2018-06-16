@@ -55,6 +55,32 @@ Because the Symfony Serializer component is able to serialize objects in XML, se
 `text/xml` string as value is enough to retrieve XML documents from our API. However API Platform knows nothing about the
 `myformat` format. We need to register an encoder and optionally a normalizer for this format.
 
+
+## Enabling Additional Formats On a Specific Resource/Operation 
+
+Since Api-platform 2.3, support for specific formats can also be added at resource or operation level, using the `formats` attribute.
+
+```php
+<?php
+// api/src/Entity/Book.php
+
+namespace App\Entity;
+
+/**
+ * @ApiResource(attributes={"formats"={"xml", "jsonld", "csv"={"text/csv"}}})
+ */
+class Book
+{
+    // ...
+}
+```
+
+In the example above, `xml` or `jsonld` will be allowed and there is no need to specify the mime types as they are already defined in the configuration.
+Additionally the `csv` format is added with the mime type `text/csv`.
+
+It is also important to notice that the usage of this attribute will override the formats defined in the configuration, therefore
+this configuration might disable the `json` or the `htlm` on this resource for example.
+
 ## Registering a Custom Serializer
 
 If you are adding support for a format not supported by default by API Platform nor by the Symfony Serializer Component,
