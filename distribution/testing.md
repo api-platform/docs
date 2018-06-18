@@ -1,6 +1,6 @@
 # Testing and Specifying the API
 
-A set of useful tools to specify and test your API are pre-configured in the API Platform distribution:
+A set of useful tools to specify and test your API are easily installable in the API Platform distribution:
 
 * [PHPUnit](https://phpunit.de/) allows to cover your classes with unit tests and to write functional tests thanks to his
   Symfony integration.
@@ -11,6 +11,14 @@ A set of useful tools to specify and test your API are pre-configured in the API
 
 Take a look at [the Symfony documentation about testing](https://symfony.com/doc/current/testing.html) to learn how to use
 PHPUnit in your API Platform project.
+
+Installing Behat is easy enough following these steps:
+
+    $ docker-compose exec php composer require --dev behat/behat
+    $ docker-compose exec php vendor/bin/behat -V
+    $ docker-compose exec php vendor/bin/behat --init
+
+This will install Behat in your project and creates a directory `features` where you can place your feature file(s).
 
 Here is an example of a [Gherkin](http://docs.behat.org/en/latest/user_guide/gherkin.html) feature file specifying the behavior
 of [the bookstore API we created in the tutorial](index.md). Thanks to Behatch, this feature file can be executed against

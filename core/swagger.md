@@ -259,7 +259,6 @@ Sometimes you may want to have the API at one location, and the Swagger UI at a 
 
 ```yaml
 # api/config/packages/api_platform.yaml
-
 api_platform:
     # ...
     enable_swagger_ui: false

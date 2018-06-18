@@ -53,7 +53,9 @@ class Book
     public $title;
 
     /**
-     * @ORM\Column
+     * @var User The owner
+     *
+     * @ORM\ManyToOne(targetEntity=User::class)
      */
     public $owner;
 }

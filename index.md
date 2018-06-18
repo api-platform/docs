@@ -124,6 +124,7 @@
 28. [Identifiers](core/identifiers.md)
     1. [Custom identifier normalizer](core/identifiers.md#custom-identifier-normalizer)
     2. [Supported identifiers](core/identifiers.md#supported-identifiers)
+29. [Handling File Upload with VichUploaderBundle](core/file-upload.md)
 
 ## The Schema Generator Component: Generate Data Models from Open Vocabularies
 

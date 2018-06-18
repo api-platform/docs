@@ -142,8 +142,8 @@ To add a security layer to your queries and mutations, follow the [security](sec
 
 If your security needs differ between REST and GraphQL, add the particular parts in the `graphql` key.
 
-In the example below, we want the same security rules as in REST, but we also want to allow an admin to delete a book in GraphQL only.
-Please note it's not possible to update a book in GraphQL because the `update` operation is not defined.
+In the example below, we want the same security rules as we have in REST, but we also want to allow an admin to delete a book only in GraphQL.
+Please note that, it's not possible to update a book in GraphQL because the `update` operation is not defined.
 
 ```php
 <?php
@@ -174,3 +174,65 @@ class Book
     // ...
 }
 ```
+
+## Serialization Groups
+
+You may want to restrict some resource's attributes to your GraphQL clients.
+
+As described in the [serialization process](serialization.md) documentation, you can use serialization groups to expose only the attributes you want in queries or in mutations.
+
+If the (de)normalization context between GraphQL and REST is different, use the `graphql` key to change it.
+
+Note that:
+
+* A **query** is only using the normalization context.
+* A **mutation** is using the denormalization context for its input and the normalization context for its output.
+
+The following example shows you what can be done:
+
+```php
+<?php
+// api/src/Entity/Book.php
+
+namespace App\Entity;
+
+use ApiPlatform\Core\Annotation\ApiResource;
+use Symfony\Component\Serializer\Annotation\Groups;
+
+/**
+ * @ApiResource(
+ *     attributes={
+ *         "normalization_context"={"groups"={"read"}},
+ *         "denormalization_context"={"groups"={"write"}}
+ *     },
+ *     graphql={
+ *         "query"={"normalization_context"={"groups"={"query"}}},
+ *         "create"={
+ *             "normalization_context"={"groups"={"query"}},
+ *             "denormalization_context"={"groups"={"mutation"}}
+ *         }
+ *     }
+ * )
+ */
+class Book
+{
+    // ...
+
+    /**
+     * @Groups({"read", "write", "query"})
+     */
+    private $name;
+
+    /**
+     * @Groups({"read", "mutation"})
+     */
+    private $author;
+
+    // ...
+}
+```
+
+In this case, the REST endpoint will be able to get the two attributes of the book and to modify only its name.
+
+The GraphQL endpoint will be able to query only the name. It will only be able to create a book with an author.
+When doing this mutation, the author of the created book will not be returned (the name will be instead).

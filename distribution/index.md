@@ -16,7 +16,7 @@ It contains:
 * an API skeleton, including with [the server-side component](../core/index.md), [the Symfony 4
   microframework](https://symfony.com/doc/current/setup/flex.html) and [the Doctrine ORM](http://docs.doctrine-project.org/projects/doctrine-orm/)
 * a dynamic JavaScript admin, leveraging the hypermedia capabilities of API Platform and built on top of [React](https://reactjs.org/)
-  and [Admin On Rest](https://github.com/marmelab/admin-on-rest)
+  and [React Admin](https://marmelab.com/react-admin/)
 * a Progressive Web App skeleton, generated with [Create React App](https://github.com/facebookincubator/create-react-app)
   and containing the tools to scaffold your own React/[Redux](https://redux.js.org/) app in one command
 * a [Docker](https://docker.com)-based setup to bootstrap the project in a single command, providing:
@@ -101,12 +101,7 @@ and [Php Inspections](https://plugins.jetbrains.com/plugin/7622-php-inspections-
 you'll got auto-completion for almost everything and awesome quality analysis.
 
 The API Platform distribution comes with a dummy entity for test purpose: `api/src/Entity/Greeting.php`. We will remove
-it later, but for now, create the related database table:
-
-    $ docker-compose exec php bin/console doctrine:schema:create
-
-The `php` container is where your API app stands. Prefixing a command by `docker-compose exec php` allows to execute the
-given command in this container. You may want [to create an alias](http://www.linfo.org/alias.html) to make your life easier.
+it later.
 
 If you're used to the PHP ecosystem, you probably guessed that this test entity uses the industry-leading [Doctrine ORM](http://www.doctrine-project.org/projects/orm.html)
 library as persistence system. It is shipped, in the API Platform distribution.
@@ -155,6 +150,8 @@ And start the built-in PHP server or the Symfony WebServerBundle:
 
 All JavaScript components are also [available as standalone libraries](https://github.com/api-platform?language=javascript)
 installable with NPM or Yarn.  
+
+**Note:** when installing API Platform this way, the API will be exposed as the `/api/` path. You need to open `http://localhost:8000/api/` to see the API documentation.
 
 ## It's Ready!
 
@@ -354,7 +351,7 @@ class Review
 As you can see there are two typical PHP objects with the corresponding PHPDoc (note that entities's and properties's descriptions
 included in their PHPDoc will appear in the API documentation).
 
-Doctrine's annotations map these entities to tables in the MySQL database. Annotations are convenient as they allow grouping
+Doctrine's annotations map these entities to tables in the database. Annotations are convenient as they allow grouping
 the code and the configuration but, if you want to decouple classes from their metadata, you can switch to XML or YAML mappings.
 They are supported as well.
 
@@ -372,7 +369,11 @@ Finally, tell Doctrine to sync the database's tables structure with our new data
 
     $ docker-compose exec php bin/console doctrine:schema:update --force
 
-Later, you'll want to use [Doctrine Migrations](https://symfony.com/doc/current/doctrine.html#migrations-creating-the-database-tables-schema),
+
+The `php` container is where your API app stands. Prefixing a command by `docker-compose exec php` allows to execute the
+given command in this container. You may want [to create an alias](http://www.linfo.org/alias.html) to make your life easier.
+
+Later, you'll want to use [Doctrine Migrations](https://symfony.com/doc/current/doctrine.html#migrations-creating-the-database-tables-schema)
 when changing the database's structure.
 
 We now have a working data model that you can persist and query. To create an API endpoint with CRUD capabilities corresponding
@@ -667,7 +668,7 @@ Open `https://localhost:444` in your browser:
 ![The admin](images/api-platform-2.2-admin.png)
 
 This [Material Design](https://material.io/guidelines/) admin is a [Progressive Web App](https://developers.google.com/web/progressive-web-apps/)
-built with [API Platform Admin](../admin/index.md) (Admin On Rest, React and Redux inside). It is powerful and fully customizable,
+built with [API Platform Admin](../admin/index.md) (React Admin, React and Redux inside). It is powerful and fully customizable,
 refer to its documentation to learn more.
 It leverages the Hydra documentation exposed by the API component to build itself. It's 100% dynamic, **no code generation
 occurs**.
