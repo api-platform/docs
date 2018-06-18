@@ -7,7 +7,7 @@ process is similar for other authentication mechanisms. The `login_uri` is the f
 The first step is to create a client to handle the authentication process:
 
 ```javascript
-// src/authClient.js
+// src/authProvider.js
 import { AUTH_LOGIN, AUTH_LOGOUT, AUTH_ERROR, AUTH_CHECK } from 'react-admin';
 
 // Change this to be your own login check route.
@@ -61,7 +61,7 @@ Then, configure the `Admin` component to use the authentication client we just c
 import React from 'react';
 import parseHydraDocumentation from '@api-platform/api-doc-parser/lib/hydra/parseHydraDocumentation';
 import { HydraAdmin, hydraClient, fetchHydra as baseFetchHydra } from '@api-platform/admin';
-import authClient from './authClient';
+import authProvider from './authProvider';
 import { Redirect } from 'react-router-dom';
 
 const entrypoint = 'https://demo.api-platform.com'; // Change this by your own entrypoint
@@ -96,7 +96,7 @@ const apiDocumentationParser = entrypoint => parseHydraDocumentation(entrypoint,
 export default props => (
     <HydraAdmin
         apiDocumentationParser={apiDocumentationParser}
-        authClient={authClient}
+        authProvider={authProvider}
         entrypoint={entrypoint}
         dataProvider={hydraClient}
     />
