@@ -58,7 +58,7 @@ Because the Symfony Serializer component is able to serialize objects in XML, se
 
 ## Enabling Additional Formats On a Specific Resource/Operation 
 
-Since Api-platform 2.3, support for specific formats can also be added at resource or operation level, using the `formats` attribute.
+Support for specific formats can also be added at resource or operation level, using the `formats` attribute.
 
 ```php
 <?php
