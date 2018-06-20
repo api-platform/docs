@@ -101,8 +101,8 @@ Constant           | Event             | Priority |
 `POST_VALIDATE`    | `kernel.view`     | 63       |
 `PRE_WRITE`        | `kernel.view`     | 33       |
 `POST_WRITE`       | `kernel.view`     | 31       |
-`PRE_SERIALIZE`    | `kernel.request`  | 17       |
-`POST_SERIALIZE`   | `kernel.request`  | 15       |
+`PRE_SERIALIZE`    | `kernel.view`     | 17       |
+`POST_SERIALIZE`   | `kernel.view`     | 15       |
 `PRE_RESPOND`      | `kernel.view`     | 9        |
 `POST_RESPOND`     | `kernel.response` | 0        |
 
