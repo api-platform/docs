@@ -271,6 +271,44 @@ Example:
         coordinates: { range: "GeoCoordinates", embedded: true, columnPrefix: false }
 ```
 
+or
+
+```yaml
+    QuantitativeValue:
+        embeddable: true
+    Product:
+        weight: { range: "QuantitativeValue", embedded: true, columnPrefix: "weight_" }
+```
+
+Output:
+
+```php
+<?php
+
+...
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * Any offered product or service.
+ *
+ * @see http://schema.org/Product Documentation on Schema.org
+ *
+ * @ORM\Entity
+ * @ApiResource(iri="http://schema.org/Product")
+ * @UniqueEntity("gtin13s")
+ */
+class Product
+{
+    /**
+     * @var QuantitativeValue|null the weight of the product or person
+     *
+     * @ORM\Embedded(class="App\Entity\QuantitativeValue", columnPrefix="weight_")
+     * @ApiProperty(iri="http://schema.org/weight")
+     */
+    private $weight;
+
+```
+
 ## Author PHPDoc
 
 Add a `@author` PHPDoc annotation to class' DocBlock.
@@ -634,7 +672,7 @@ config:
                     embedded:             false
 
                     # The property columnPrefix
-                    columnPrefix:         false
+                    columnPrefix:         false # Example: "weight_"
 
     # Annotation generators to use
     annotationGenerators:
