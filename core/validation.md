@@ -13,14 +13,14 @@ the `@ApiResource` annotation:
 
 ```php
 <?php
-// src/AppBundle/Entity/Product.php
+// src/Entity/Product.php
 
-namespace AppBundle\Entity;
+namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
+use App\Validator\Constraints\MinimalProperties; // A custom constraint
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert; // Symfony's built-in constraints
-use AppBundle\Validator\Constraints\MinimalProperties; // A custom constraint
 
 /**
  * A product.
@@ -63,9 +63,9 @@ Here is a custom constraint and the related validator:
 
 ```php
 <?php
-// src/AppBundle/Validator/Constraints/MinimalProperties.php
+// src/Validator/Constraints/MinimalProperties.php
 
-namespace AppBundle\Validator\Constraints;
+namespace App\Validator\Constraints;
 
 use Symfony\Component\Validator\Constraint;
 
@@ -80,9 +80,9 @@ class MinimalProperties extends Constraint
 
 ```php
 <?php
-// src/AppBundle/Validator/Constraints/MinimalPropertiesValidator.php
+// src/Validator/Constraints/MinimalPropertiesValidator.php
 
-namespace AppBundle\Validator\Constraints;
+namespace App\Validator\Constraints;
 
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
