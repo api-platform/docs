@@ -46,7 +46,7 @@ final class SwaggerDecorator implements NormalizerInterface
 
         $customDefinition = [
             'name' => 'fields',
-            'definition' => 'Fields to remove of the outpout',
+            'definition' => 'Fields to remove of the output',
             'default' => 'id',
             'in' => 'query',
         ];
