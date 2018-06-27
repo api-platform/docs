@@ -167,6 +167,70 @@ Of course, you can use XML or YAML configuration format instead of annotations i
 You may also pass in a [group sequence](http://symfony.com/doc/current/validation/sequence_provider.html) in place of
 the array of group names.
 
+## Using Validation Groups on Operations
+
+You can have different validation for each [operation](operations.md) related to your resource.
+
+```php
+<?php
+// api/src/Entity/Book.php
+
+use ApiPlatform\Core\Annotation\ApiResource;
+use Symfony\Component\Validator\Constraints as Assert;
+
+/**
+ * @ApiResource(
+ *     collectionOperations={
+ *         "get",
+ *         "post"={"validation_groups"={"Default", "postValidation"}}
+ *     },
+ *     itemOperations={
+ *         "delete",
+ *         "get",
+ *         "put"={"validation_groups"={"Default", "putValidation"}}
+ *     }
+ * )
+ * ...
+ */
+class Book
+{
+    /**
+     * @Assert\Uuid
+     */
+    private $id;
+
+    /**
+     * @Assert\NotBlank(groups={"postValidation"})
+     */
+    private $name;
+
+    /**
+     * @Assert\NotNull
+     * @Assert\Length(
+     *     min = 2,
+     *     max = 50,
+     *     groups={"postValidation"}
+     * )
+     * @Assert\Length(
+     *     min = 2,
+     *     max = 70,
+     *     groups={"putValidation"}
+     * )
+     */
+    private $author;
+
+    // ...
+}
+```
+
+With this configuration, there are three validation groups:
+
+`Default` contains the constraints that belong to no other group.
+
+`postValidation` contains the constraints on the name and author (length from 2 to 50) fields only.
+
+`putValidation` contains the constraints on the author (length from 2 to 70) field only.
+
 ## Dynamic Validation Groups
 
 If you need to dynamically determine which validation groups to use for an entity in different scenarios, just pass in a
