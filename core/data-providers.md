@@ -58,7 +58,7 @@ final class BlogPostCollectionDataProvider implements CollectionDataProviderInte
 }
 ```
 
-If you use the default configuration, the corresponding service will be automatically registered thanks to the [autowiring](https://symfony.com/doc/current/service_container/autowiring.html).
+If you use the default configuration, the corresponding service will be automatically registered thanks to [autowiring](https://symfony.com/doc/current/service_container/autowiring.html).
 To declare the service explicitly, or to set a custom priority, you can use the following snippet:
 
 ```yaml

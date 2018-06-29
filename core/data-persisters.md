@@ -24,7 +24,7 @@ This interface defines only 3 methods:
 
 * `persist`: to create or update the given data
 * `delete`: to delete the given data
-* `support`: to tell if the given data can be handled by this specific data persister
+* `support`: checks whether the given data is supported by this data persister
 
 Here is an implementation example:
 
@@ -54,10 +54,10 @@ final class BlogPostDataPersister implements DataPersisterInterface
 }
 ```
 
-If service autowiring and autoconfiguration are enabled (it's the case by default), you are done!
+If service autowiring and autoconfiguration are enabled (they are by default), you are done!
 
 Otherwise, if you use a custom dependency injection configuration, you need to register the corresponding service and add the
-`api_platform.data_persister` tag to it.  The `priority` attribute can be used to order persisters.
+`api_platform.data_persister` tag. The `priority` attribute can be used to order persisters.
 
 ```yaml
 # api/config/services.yaml
