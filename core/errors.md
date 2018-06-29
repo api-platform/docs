@@ -15,9 +15,9 @@ configure API Platform to convert it to a `404 Not Found` error:
 
 ```php
 <?php
-// src/AppBundle/Exception/ProductNotFoundException.php
+// src/Exception/ProductNotFoundException.php
 
-namespace AppBundle\Exception;
+namespace App\Exception;
 
 final class ProductNotFoundException extends \Exception
 {
@@ -26,13 +26,13 @@ final class ProductNotFoundException extends \Exception
 
 ```php
 <?php
-// src/AppBundle/EventSubscriber/CartManager.php
+// src/EventSubscriber/CartManager.php
 
-namespace AppBundle\EventSubscriber;
+namespace App\EventSubscriber;
 
 use ApiPlatform\Core\EventListener\EventPriorities;
-use AppBundle\Entity\Product;
-use AppBundle\Exception\ProductNotFoundException;
+use App\Entity\Product;
+use App\Exception\ProductNotFoundException;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\GetResponseForControllerResultEvent;
@@ -43,7 +43,7 @@ final class ProductManager implements EventSubscriberInterface
     public static function getSubscribedEvents(): array
     {
         return [
-            KernelEvents::REQUEST => ['checkProductAvailability', EventPriorities::POST_DESERIALIZE],
+            KernelEvents::VIEW => ['checkProductAvailability', EventPriorities::PRE_VALIDATE],
         ];
     }
 
@@ -65,7 +65,7 @@ final class ProductManager implements EventSubscriberInterface
 If you use the standard distribution of API Platform, this event listener will be automatically registered. If you use a
 custom installation, [learn how to register listeners](events.md).
 
-Then, configure the framework to catch `AppBundle\Exception\ProductNotFoundException` exceptions and convert them in `404`
+Then, configure the framework to catch `App\Exception\ProductNotFoundException` exceptions and convert them in `404`
 errors:
 
 ```yaml
@@ -77,7 +77,7 @@ api_platform:
         Symfony\Component\Serializer\Exception\ExceptionInterface: 400 # Use a raw status code (recommended)
         ApiPlatform\Core\Exception\InvalidArgumentException: 'HTTP_BAD_REQUEST' # Or a `Symfony\Component\HttpFoundation\Response`'s constant
 
-        AppBundle\Exception\ProductNotFoundException: 404 # Here is the handler for our custom exception
+        App\Exception\ProductNotFoundException: 404 # Here is the handler for our custom exception
 ```
 
 Any type of `Exception` can be thrown, API Platform will convert it to a Symfony's `HttpException`. The framework also takes
