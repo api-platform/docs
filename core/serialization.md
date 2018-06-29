@@ -405,7 +405,7 @@ The Normalizer class is a bit harder to understand because it has to make sure t
 
 namespace App\Serializer;
 
-class BookAttributeNormalizer implements NormalizerInterface, SerializerAwareInterface
+class BookAttributeNormalizer implements ContextAwareNormalizerInterface, SerializerAwareInterface
 {
     use SerializerAwareTrait;
 
