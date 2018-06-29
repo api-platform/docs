@@ -76,10 +76,10 @@ Built-in event listeners are:
 Name                          | Event              | Pre & Post hooks                     | Priority | Description
 ------------------------------|--------------------|--------------------------------------|----------|--------------------------------------------------------------------------------------------------------------------------
 `AddFormatListener`           | `kernel.request`   | None                                 | 7        | guess the best response format ([content negotiation](content-negotiation.md))
-`ReadListener`                | `kernel.request`   | `PRE_READ`, `POST_READ`              | 4        | retrieve data from the persistence system using the [data providers](data-providers.md)
+`ReadListener`                | `kernel.request`   | `PRE_READ`, `POST_READ`              | 4        | retrieve data from the persistence system using the [data providers](data-providers.md) (`GET`, `PUT`, `DELETE`)
 `DeserializeListener`         | `kernel.request`   | `PRE_DESERIALIZE`, `POST_DESERIALIZE`| 2        | deserialize data into a PHP entity (`GET`, `POST`, `DELETE`); update the entity retrieved using the data provider (`PUT`)
 `ValidateListener`            | `kernel.view`      | `PRE_VALIDATE`, `POST_VALIDATE`      | 64       | [validate data](validation.md) (`POST`, `PUT`)
-`WriteListener`               | `kernel.view`      | `PRE_WRITE`, `POST_WRITE`            | 32       | if using the Doctrine ORM, persist data (`POST`, `PUT`, `DELETE`)
+`WriteListener`               | `kernel.view`      | `PRE_WRITE`, `POST_WRITE`            | 32       | persist changes in the persistence system using the [data persisters](data-persisters.md) (`POST`, `PUT`, `DELETE`)
 `SerializeListener`           | `kernel.view`      | `PRE_SERIALIZE`, `POST_SERIALIZE`    | 16       | serialize the PHP entity in string [according to the request format](content-negotiation.md)
 `RespondListener`             | `kernel.view`      | `PRE_RESPOND`, `POST_RESPOND`        | 8        | transform serialized to a `Symfony\Component\HttpFoundation\Response` instance
 `AddLinkHeaderListener`       | `kernel.response`  | None                                 | 0        | add a `Link` HTTP header pointing to the Hydra documentation
