@@ -87,27 +87,28 @@ import parseHydraDocumentation from '@api-platform/api-doc-parser/lib/hydra/pars
 const entrypoint = 'https://demo.api-platform.com';
 
 export default class extends Component {
-  state = { api: null };
+  state = { api: null }
 
   componentDidMount() {
-    parseHydraDocumentation(entrypoint).then( ({api}) => {
-        const books = api.resources.find(r => 'books' === r.name);
+    parseHydraDocumentation(entrypoint).then(({api}) => {
+        const books = api.resources.find(({ name }) => 'books' === name)
+        const authors = books.fields.find(({ name }) => 'authors' === name)
 
         // Set the field in the list and the show views
-        books.readableFields.find(f => 'authors' === f.name).fieldComponent =
-          <ReferenceArrayField label="Authors" reference="people" source="authors" key="authors">
+        authors.field = props => (
+          <ReferenceArrayField source={authors.name} reference={authors.reference.name} key={authors.name} {...props}>
             <SingleFieldList>
               <ChipField source="name" key="name"/>
             </SingleFieldList>
           </ReferenceArrayField>
-        ;
+        );
 
         // Set the input in the edit and create views
-        books.writableFields.find(f => 'authors' === f.name).inputComponent =
-          <ReferenceArrayInput label="Authors" reference="people" source="authors" key="authors">
+        authors.input = props => (
+          <ReferenceArrayInput source={authors.name} reference={authors.reference.name} label="Authors" key={authors.name} {...props} allowEmpty>
             <SelectArrayInput optionText="name"/>
           </ReferenceArrayInput>
-        ;
+        );
 
         this.setState({ api });
       }
@@ -162,11 +163,11 @@ Then edit the configuration of API Platform Admin to pass a `filterToQuery` prop
     // ...
 
     // Set the input in the edit and create views
-    books.writableFields.find(f => 'authors' === f.name).inputComponent =
-      <ReferenceArrayInput label="Authors" reference="people" source="authors" key="authors" filterToQuery={searchText => ({ name: searchText })}>
-        <SelectArrayInput optionText="name"/>
-      </ReferenceArrayInput>
-    ;
+      authors.input = props => (
+        <ReferenceArrayInput source={authors.name} reference={authors.reference.name} label="Authors" key={authors.name} filterToQuery={searchText => ({ name: searchText })} {...props} allowEmpty>
+          <SelectArrayInput optionText="name"/>
+        </ReferenceArrayInput>
+      );
 
     // ...
   }
