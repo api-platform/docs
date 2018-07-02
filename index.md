@@ -143,7 +143,8 @@
         3.  [Using a Custom Validation Function or Inject Custom Props](admin/getting-started.md#using-a-custom-validation-function-or-inject-custom-props)
 3.  [Authentication Support](admin/authentication-support.md)
 4.  [Handling Relations to Collections](admin/handling-relations-to-collections.md)
-    1.  [Using an Autocomplete Input for Relations](admin/handling-relations-to-collections.md#using-an-autocomplete-input-for-relations)
+    1.  [Customizing a property](admin/handling-relations-to-collections.md#customizing-a-property)
+    2.  [Using an Autocomplete Input for Relations](admin/handling-relations-to-collections.md#using-an-autocomplete-input-for-relations)
 
 ## The Client Generator Component: Scaffold Progressive Web Apps and Native Apps
 

@@ -1,14 +1,9 @@
 # Handling Relations to Collections
 
-Currently, API Platform Admin doesn't handle `to-many` relations. The core library [is being patched](https://github.com/api-platform/core/pull/1189)
-to document relations to collections through OWL.
-
-Meanwhile, it is possible to manually configure API Platform to handle relations to collections.
-
-We will create the admin for an API exposing `Person` and `Book` resources linked with a `many-to-many`
+Considering an API exposing `Person` and `Book` resources linked with a `many-to-many`
 relation between them (through the `authors` property).
 
-This API can be created using the following PHP code:
+This API using the following PHP code:
 
 ```php
 <?php
@@ -74,22 +69,29 @@ class Book
 }
 ```
 
-Let's customize the components used for the `authors` property:
+The admin handles this `to-many` relation automatically!
+
+But we can go further:
+
+
+## Customizing a property
+
+Let's customize the components used for the `authors` property, to display them by their 'name' instead 'id' (the default behavior).
 
 ```javascript
 import React, { Component } from 'react';
 import { ReferenceArrayField, SingleFieldList, ChipField, ReferenceArrayInput, SelectArrayInput } from 'react-admin';
 import { AdminBuilder, hydraClient } from '@api-platform/admin';
-import parseHydraDocumentation from 'api-doc-parser/lib/hydra/parseHydraDocumentation';
+import parseHydraDocumentation from '@api-platform/api-doc-parser/lib/hydra/parseHydraDocumentation';
 
 const entrypoint = 'https://demo.api-platform.com';
 
 export default class extends Component {
-  state = {api: null, resources: null};
+  state = { api: null };
 
   componentDidMount() {
-    parseHydraDocumentation(entrypoint).then({api, resources} => {
-        const books = r.find(r => 'books' === r.name);
+    parseHydraDocumentation(entrypoint).then( ({api}) => {
+        const books = api.resources.find(r => 'books' === r.name);
 
         // Set the field in the list and the show views
         books.readableFields.find(f => 'authors' === f.name).fieldComponent =
@@ -107,7 +109,7 @@ export default class extends Component {
           </ReferenceArrayInput>
         ;
 
-        this.setState({api, resources});
+        this.setState({ api });
       }
     )
   }
@@ -115,12 +117,11 @@ export default class extends Component {
   render() {
     if (null === this.state.api) return <div>Loading...</div>;
 
-    return <AdminBuilder api={this.state.api} dataProvider={hydraClient({entrypoint: entrypoint, resources: this.state.resources})}/>
+    return <AdminBuilder api={ this.state.api } dataProvider={ hydraClient(this.state.api) }/>
   }
 }
 ```
 
-The admin now properly handles this `to-many` relation!
 
 ## Using an Autocomplete Input for Relations
 
