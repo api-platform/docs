@@ -199,32 +199,30 @@ Platform Admin. This is particularly useful to add custom validation rules:
 
 ```javascript
 import React, { Component } from 'react';
-import { AdminBuilder, hydraClient } from 'api-platform-admin';
-import parseHydraDocumentation from 'api-doc-parser/lib/hydra/parseHydraDocumentation';
+import { AdminBuilder, hydraClient } from '@api-platform-admin';
+import parseHydraDocumentation from '@api-platform/api-doc-parser/lib/hydra/parseHydraDocumentation';
 
 const entrypoint = 'https://demo.api-platform.com';
 
 export default class extends Component {
-  state = {api: null};
+  state = { api: null };
 
   componentDidMount() {
-    parseHydraDocumentation(entrypoint).then( ({ api }) =>  => {
+    parseHydraDocumentation(entrypoint).then( ({ api }) => {
       const books = api.resources.find(r => 'books' === r.name);
 
       books.writableFields.find(f => 'description' === f.name).inputProps = {
         validate: value => value.length >= 30 ? undefined : 'Minimum length: 30';
       };
 
-      this.setState({api: api});
-      
-      return { api };
+      this.setState({ api });
     });
   }
 
   render() {
     if (null === this.state.api) return <div>Loading...</div>;
 
-    return <AdminBuilder api={this.state.api} dataProvider={hydraClient(entrypoint)}/>
+    return <AdminBuilder api={ this.state.api } dataProvider={ hydraClient(this.state.api) }/>
   }
 }
 ```
