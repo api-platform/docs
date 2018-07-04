@@ -7,7 +7,7 @@
 API Platform allows to easily add a JWT-based authentication to your API using [LexikJWTAuthenticationBundle](https://github.com/lexik/LexikJWTAuthenticationBundle).
 To install this bundle, [just follow its documentation](https://github.com/lexik/LexikJWTAuthenticationBundle/blob/master/Resources/doc/index.md).
 
-# Installing LexikJWTAuthenticationBundle
+## Installing LexikJWTAuthenticationBundle
 
 `LexikJWTAuthenticationBundle` requires your application to have a properly configured user provider.
 You can either use the [Doctrine user provider](https://symfony.com/doc/current/security/entity_provider.html) provided
