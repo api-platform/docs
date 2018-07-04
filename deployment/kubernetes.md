@@ -18,9 +18,9 @@ package manager) chart to deploy in a wink on any of these platforms.
 
 1. Build the PHP and Nginx Docker images:
 
-        docker build -t gcr.io/test-api-platform/php -t gcr.io/test-api-platform/php:latest api
-        docker build -t gcr.io/test-api-platform/nginx -t gcr.io/test-api-platform/nginx:latest -f api/Dockerfile.nginx api
-        docker build -t gcr.io/test-api-platform/varnish -t gcr.io/test-api-platform/varnish:latest -f api/Dockerfile.varnish api
+        docker build -t gcr.io/test-api-platform/php -t gcr.io/test-api-platform/php:latest api --target api_platform_php
+        docker build -t gcr.io/test-api-platform/nginx -t gcr.io/test-api-platform/nginx:latest api --target api_platform_nginx
+        docker build -t gcr.io/test-api-platform/varnish -t gcr.io/test-api-platform/varnish:latest api --target api_platform_varnish
 
 2. Push your images to your Docker registry, example with [Google Container Registry](https://cloud.google.com/container-registry/):
 
