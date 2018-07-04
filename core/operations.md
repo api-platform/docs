@@ -67,7 +67,7 @@ use ApiPlatform\Core\Annotation\ApiResource;
  * @ApiResource(
  *     collectionOperations={"get"},
  *     itemOperations={"get"}
- *     )
+ * )
  */
 class Book
 {
@@ -88,7 +88,7 @@ use ApiPlatform\Core\Annotation\ApiResource;
  * @ApiResource(
  *     collectionOperations={"get"={"method"="GET"}},
  *     itemOperations={"get"={"method"="GET"}}
- *     )
+ * )
  */
 class Book
 {
