@@ -646,7 +646,3 @@ config:
         - ApiPlatform\SchemaGenerator\AnnotationGenerator\ConstraintAnnotationGenerator
         - ApiPlatform\SchemaGenerator\AnnotationGenerator\SerializerGroupsAnnotationGenerator
 ```
-
-Previous chapter: [Getting Started](getting-started.md)
-
-Next chapter: [The Admin Component: Introduction](../admin/index.md)

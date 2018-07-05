@@ -454,7 +454,3 @@ When cardinality cannot be automatically extracted, it's value is set to `unknow
 Usage:
 
     $ vendor/bin/schema extract-cardinalities
-
-Previous chapter: [Introduction](index.md)
-
-Next chapter: [Configuration](configuration.md)
