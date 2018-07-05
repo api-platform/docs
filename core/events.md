@@ -109,8 +109,7 @@ Constant           | Event             | Priority |
 Some of those built-in listeners can be enabled/disabled by setting request attributes ([for instance in the `defaults` 
 attribute of an operation](operations.md#recommended-method)):
 
-Listener              | Parameter      | Values         | Default | Description                            |
-----------------------|----------------|----------------|---------|----------------------------------------|
-`ReadListener`        | `_api_receive` | `true`/`false` | `true`  | set to `false` to disable the listener |
-`DeserializeListener` | `_api_receive` | `true`/`false` | `true`  | set to `false` to disable the listener |
-`ValidateListener`    | `_api_receive` | `true`/`false` | `true`  | set to `false` to disable the listener |
+Attribute      | Type   | Default | Description                                                               |
+---------------|--------|---------|---------------------------------------------------------------------------|
+`_api_receive` | `bool` | `true`  | Disables the `ReadListener`, `DeserializeListener` and `ValidateListener` |
+`_api_persist` | `bool` | `true`  | Disables the `WriteLister`                                                |
