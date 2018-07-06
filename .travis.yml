@@ -33,4 +33,4 @@ deploy:
   local_dir: public
   fqdn: api-platform.com
   on:
-    branch: 2.2
+    branch: 2.3
