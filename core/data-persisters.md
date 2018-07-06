@@ -23,7 +23,7 @@ To create a data persister, you have to implement the [`DataPersisterInterface`]
 This interface defines only 3 methods:
 
 * `persist`: to create or update the given data
-* `delete`: to delete the given data
+* `remove`: to delete the given data
 * `support`: checks whether the given data is supported by this data persister
 
 Here is an implementation example:
@@ -47,7 +47,7 @@ final class BlogPostDataPersister implements DataPersisterInterface
       return $data;
     }
     
-    public function delete($data): void
+    public function remove($data)
     {
       // call your persistence layer to delete $data
     }
