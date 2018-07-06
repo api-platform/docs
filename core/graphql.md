@@ -219,10 +219,8 @@ use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ApiResource(
- *     attributes={
- *         "normalization_context"={"groups"={"read"}},
- *         "denormalization_context"={"groups"={"write"}}
- *     },
+ *     normalizationContext={"groups"={"read"}},
+ *     denormalizationContext={"groups"={"write"}},
  *     graphql={
  *         "query"={"normalization_context"={"groups"={"query"}}},
  *         "create"={

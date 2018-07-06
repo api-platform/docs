@@ -70,10 +70,10 @@ use ApiPlatform\Core\Annotation\ApiResource;
 use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
- * @ApiResource(attributes={
- *     "normalization_context"={"groups"={"read"}},
- *     "denormalization_context"={"groups"={"write"}}
- * })
+ * @ApiResource(
+ *     normalizationContext={"groups"={"read"}},
+ *     denormalizationContext={"groups"={"write"}}
+ * )
  */
 class Book
 {
@@ -91,7 +91,21 @@ class Book
 }
 ```
 
-With the config of the previous example, the `name` property will be accessible in read and write, but the `author` property
+Alternatively, you can use the verbose syntax that is strictly equivalent:
+
+```php
+<?php
+// ...
+
+/**
+ * @ApiResource(attributes={
+ *     "normalization_context"={"groups"={"read"}},
+ *     "denormalization_context"={"groups"={"write"}}
+ * })
+ */
+```
+
+With the config of the previous examples, the `name` property will be accessible in read and write, but the `author` property
 will be write only, therefore the `author` property will never be included in documents returned by the API.
 
 The value of the `normalization_context` is passed to the Symfony Serializer during the normalization process. In the same
@@ -122,12 +136,12 @@ use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ApiResource(
- *     attributes={
- *         "normalization_context"={"groups"={"get"}}
- *     },
+ *     normalizationContext={"groups"={"get"}},
  *     itemOperations={
- *          "get",
- *          "put"={"normalization_context"={"groups"={"put"}}}
+ *         "get",
+ *         "put"={
+ *             "normalization_context"={"groups"={"put"}}
+ *         }
  *     }
  * )
  */
@@ -187,9 +201,7 @@ use ApiPlatform\Core\Annotation\ApiResource;
 use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
- * @ApiResource(attributes={
- *     "normalization_context"={"groups"={"book"}}
- * })
+ * @ApiResource(normalizationContext={"groups"={"book"}})
  */
 class Book
 {
@@ -265,9 +277,7 @@ namespace App\Entity;
 use ApiPlatform\Core\Annotation\ApiResource;
 
 /**
- * @ApiResource(attributes={
- *     "denormalization_context"={"groups"={"book"}}
- * })
+ * @ApiResource(denormalizationContext={"groups"={"book"}})
  */
 class Book
 {
@@ -297,10 +307,10 @@ use ApiPlatform\Core\Annotation\ApiResource;
 use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
- * @ApiResource(attributes={
- *     "normalization_context"={"groups"={"book_output"}},
- *     "denormalization_context"={"groups"={"book_input"}}
- * })
+ * @ApiResource(
+ *     normalizationContext={"groups"={"book:output"}},
+ *     denormalizationContext={"groups"={"book:input"}}
+ * )
  */
 class Book
 {
@@ -311,7 +321,7 @@ class Book
      *
      * @var bool
      *
-     * @Groups({"book_output", "admin_input"})
+     * @Groups({"book:output", "admin:input"})
      */
     private $active = false;
 
@@ -320,7 +330,7 @@ class Book
      *
      * @var string
      *
-     * @Groups({"book_output", "book_input"})
+     * @Groups({"book:output", "book:input"})
      */
     private $name;
 
@@ -329,7 +339,7 @@ class Book
 ```
 
 All entry points are the same for all users, so we should find a way to detect if authenticated user is admin, and if so
-dynamically add `admin_input` to deserialization groups.
+dynamically add `admin:input` to deserialization groups.
 
 API Platform implements a `ContextBuilder`, which prepares the context for serialization & deserialization. Let's
 [decorate this service](http://symfony.com/doc/current/service_container/service_decoration.html) to override the
@@ -612,9 +622,7 @@ namespace App\Entity;
 use ApiPlatform\Core\Annotation\ApiResource;
 
 /**
- * @ApiResource(
- *     attributes={"normalization_context"={"jsonld_embed_context"=true}
- * })
+ * @ApiResource(normalizationContext={"jsonld_embed_context"=true})
  */
 class Book
 {

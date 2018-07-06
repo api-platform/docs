@@ -192,7 +192,7 @@ thanks to the `swagger_definition_name` option:
  *      collectionOperations={
  *          "post"={
  *              "denormalization_context"={
- *                  "groups"={"user_read"},
+ *                  "groups"={"user:read"},
  *                  "swagger_definition_name": "Read",
  *              },
  *          },
@@ -219,7 +219,7 @@ It's also possible to re-use the (`de`)`normalization_context`:
 class User
 {
     const API_WRITE = [
-        'groups' => ['user_read'],
+        'groups' => ['user:read'],
         'swagger_definition_name' => 'Read',
     ];
 }
