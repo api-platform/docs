@@ -381,7 +381,12 @@ namespace App\Entity;
 use ApiPlatform\Core\Annotation\ApiResource;
 
 /**
- * @ApiResource(collectionOperations={"api_questions_answer_get_subresource"={"method"="GET", "normalization_context"={"groups"={"foobar"}}}})
+ * @ApiResource(collectionOperations={
+ *     "api_questions_answer_get_subresource"={
+ *         "method"="GET",
+ *         "normalization_context"={"groups"={"foobar"}}
+ *     }
+ * })
  */
 class Answer
 {
@@ -397,7 +402,7 @@ App\Entity\Answer:
     collectionOperations:
         api_questions_answer_get_subresource:
             method: 'GET' # nothing more to add if we want to keep the default controller
-            normalization_context: {'groups': ['foobar']}
+            normalization_context: {groups: ['foobar']}
 ```
 
 Or in XML:
@@ -446,7 +451,7 @@ You can control the path of subresources with the `path` option of the `subresou
  *      subresourceOperations={
  *          "answer_get_subresource"= {
  *              "method"="GET",
- *              "path"="/questions/{id}/all-answers",
+ *              "path"="/questions/{id}/all-answers"
  *          },
  *      },
  * )
