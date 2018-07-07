@@ -61,8 +61,8 @@ use Symfony\Component\Serializer\Annotation\Groups;
  * @ORM\Entity
  * @ApiResource(
  *     normalizationContext={"groups"={"user", "user:read"}},
- *     denormalizationContext"={"groups"={"user", "user:write"}}
- * })
+ *     denormalizationContext={"groups"={"user", "user:write"}}
+ * )
  */
 class User extends BaseUser
 {
