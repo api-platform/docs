@@ -242,7 +242,9 @@ use ApiPlatform\Core\Annotation\ApiResource;
 
 /**
  * ...
- * @ApiResource("attributes"={"routePrefix"="/library"})
+ * @ApiResource(attributes={"route_prefix"="/library"})
+ * or using the shorthand syntax:
+ * @ApiResource(routePrefix="/library")
  */
 class Book
 {
