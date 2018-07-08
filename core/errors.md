@@ -1,6 +1,6 @@
 # Errors Handling
 
-API Platform comes with a powerful error system. It handles excepted (such as faulty JSON documents sent by the
+API Platform comes with a powerful error system. It handles expected (such as faulty JSON documents sent by the
 client or validation errors) as well as unexpected errors (PHP exceptions and errors).
 API Platform automatically sends the appropriate HTTP status code to the client: `400` for expected errors, `500` for
 unexpected ones. It also provides a description of the error in [the Hydra error format](http://www.hydra-cg.com/spec/latest/core/#description-of-http-status-codes-and-errors)
