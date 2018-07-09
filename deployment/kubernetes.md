@@ -84,3 +84,6 @@ We noticed that some tiller RBAC trouble occured, you generally can resolve it r
 
     kubectl patch deploy --namespace kube-system tiller-deploy -p '{"spec":{"template":{"spec":{"serviceAccount":"tiller"}}}}'
       deployment "tiller-deploy" patched
+
+Please, see the [related issue](https://github.com/kubernetes/helm/issues/3130) for further details / informations
+You can also take a look to the [related documentation](https://github.com/kubernetes/helm/blob/master/docs/rbac.md)
