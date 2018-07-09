@@ -710,7 +710,6 @@ There is another way to create a custom operation. However, we do not encourage 
 the configuration at the same time in the routing and the resource configuration.
 
 First, let's create your resource configuration:
->>>>>>> 2.2
 
 ```php
 <?php
