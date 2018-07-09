@@ -232,7 +232,7 @@ In all the previous examples, you can safely remove the `method` because the met
 
 Sometimes it's also useful to put a whole resource into its own "namespace" regarding the URI. Let's say you want to
 put everything that's related to a `Book` into the `library` so that URIs become `library/book/{id}`. In that case
-you don't need to override all the operations to set the path but configure a `routePrefix` for the whole entity instead:
+you don't need to override all the operations to set the path but configure the `route_prefix` attribute for the whole entity instead:
 
 ```php
 <?php
@@ -241,14 +241,15 @@ you don't need to override all the operations to set the path but configure a `r
 use ApiPlatform\Core\Annotation\ApiResource;
 
 /**
- * ...
- * @ApiResource("attributes"={"routePrefix"="/library"})
+ * @ApiResource(routePrefix="/library")
  */
 class Book
 {
     //...
 }
 ```
+
+Alternatively, the more verbose attributes syntax can be used `@ApiResource(attributes={"route_prefix"="/library"})`
 
 ## Subresources
 
