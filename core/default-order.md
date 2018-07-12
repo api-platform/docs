@@ -57,7 +57,7 @@ class Book
 }
 ```
 
-It's also possible to configure the default filter on an association property:
+It's also possible to configure the default order on an association property:
 
 ```php
 <?php
