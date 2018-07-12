@@ -14,7 +14,7 @@ PHPUnit in your API Platform project.
 
 Installing Behat and Behatch is easy enough following these steps:
 
-    $ docker-compose exec php composer require --dev behat/behat behatch/contexts
+    $ docker-compose exec php composer require --dev behat behat/mink behat/mink-extension behat/mink-browserkit-driver behatch/contexts
     $ docker-compose exec php vendor/bin/behat --init
 
 This will install Behat in your project and creates a directory `features` where you can place your feature file(s).
@@ -25,7 +25,13 @@ Register the Behatch extension:
 # api/behat.yml.dist
 default:
     extensions:
-        Behatch\Extension: ~
+    Behat\Symfony2Extension: ~
+    Behat\MinkExtension:
+      base_url: "http://example.com/"
+      sessions:
+        default:
+          symfony2: ~
+    Behatch\Extension: ~
 ```
 
 Here is an example of a [Gherkin](http://docs.behat.org/en/latest/user_guide/gherkin.html) feature file specifying the behavior
