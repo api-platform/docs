@@ -11,7 +11,7 @@ The main serialization process has two stages:
 > As you can see in the picture above, an array is used as a man in the middle. This way, Encoders will only deal with turning specific formats into arrays and vice versa. The same way, Normalizers will deal with turning specific objects into arrays and vice versa.
 -- [The Symfony documentation](https://symfony.com/doc/current/components/serializer.html)
 
-Unlike Symfony itself, API Platform leverages custom normalizers, its router and the [data provider](data-providers.md) system to do an advanced tranformation. Metadata are added to the generated document including links, type information, pagination data or available filters.
+Unlike Symfony itself, API Platform leverages custom normalizers, its router and the [data provider](data-providers.md) system to do an advanced transformation. Metadata are added to the generated document including links, type information, pagination data or available filters.
 
 The API Platform Serializer is extendable, you can register custom normalizers and encoders to support other formats. You can also decorate existing normalizers to customize their behaviors.
 
