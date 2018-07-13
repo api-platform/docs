@@ -11,7 +11,7 @@ package manager) chart to deploy in a wink on any of these platforms.
 
 1. Create a Kubernetes cluster on your preferred Cloud provider or install Kubernetes locally on your servers
 2. Install [Helm](https://helm.sh/) locally and on your cluster following their documentation
-3. Be sure to be connected to the right Kubernetes container
+3. Be sure to be connected to the right Kubernetes container e.g. running: `gcloud config get-value core/project`
 4. Update the Helm repo: `helm repo update`
 
 ## Creating and Publishing the Docker Images
@@ -71,3 +71,19 @@ Before running your application for the first time, be sure to create the databa
 
     PHP_POD=$(kubectl --namespace=bar get pods -l app=php -o jsonpath="{.items[0].metadata.name}")
     kubectl --namespace=bar exec -it $PHP_POD -- bin/console doctrine:schema:create
+
+## Tiller RBAC Issue
+
+We noticed that some tiller RBAC trouble occured, you generally can resolve it running:
+
+    kubectl create serviceaccount --namespace kube-system tiller
+      serviceaccount "tiller" created
+
+    kubectl create clusterrolebinding tiller-cluster-rule --clusterrole=cluster-admin --serviceaccount=kube-system:tiller
+      clusterrolebinding "tiller-cluster-rule" created
+
+    kubectl patch deploy --namespace kube-system tiller-deploy -p '{"spec":{"template":{"spec":{"serviceAccount":"tiller"}}}}'
+      deployment "tiller-deploy" patched
+
+Please, see the [related issue](https://github.com/kubernetes/helm/issues/3130) for further details / informations
+You can also take a look to the [related documentation](https://github.com/kubernetes/helm/blob/master/docs/rbac.md)
