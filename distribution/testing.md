@@ -24,10 +24,20 @@ Register the Behatch extension:
 ```yaml
 # api/behat.yml.dist
 default:
-    extensions:
-    Behat\Symfony2Extension: ~
+  suites:
+    default:
+      contexts:
+        - FeatureContext: { doctrine: "@kernel" }
+        - Behat\MinkExtension\Context\MinkContext
+        - Behatch\Context\RestContext
+        - Behatch\Context\JsonContext
+  extensions:
+    Behat\Symfony2Extension:
+      kernel:
+        bootstrap: "features/bootstrap/bootstrap.php"
+        class: "App\\Kernel"
     Behat\MinkExtension:
-      base_url: "http://example.com/"
+      base_url: "http://localhost/"
       sessions:
         default:
           symfony2: ~
