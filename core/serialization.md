@@ -34,12 +34,12 @@ API Platform allows you to specify the `$context` variable used by the Symfony S
 It relies on the [serialization (and deserialization) groups](https://symfony.com/doc/current/components/serializer.html#attributes-groups)
 feature of the Symfony Serializer component.
 
-In addition to groups, you can use any option supported by the Symfony Serializer.  For example, you can use [`enable_max_depth`](https://symfony.com/doc/current/components/serializer.html#handling-serialization-depth)
+In addition to groups, you can use any option supported by the Symfony Serializer. For example, you can use [`enable_max_depth`](https://symfony.com/doc/current/components/serializer.html#handling-serialization-depth)
 to limit the serialization depth.
 
 ### Configuration
 
-Just like other Symfony and API Platform components, the Serializer component can be configured using annotations, XML, or YAML.
+Just like other Symfony and API Platform components, the Serializer component can be configured using annotations, XML or YAML.
 Since annotations are easy to understand, we will use them in the following examples.
 
 Note: if you aren't using the official distribution of API Platform, you will need to enable annotation support in the serializer
@@ -58,7 +58,7 @@ all set!
 
 It is simple to specify what groups to use in the API system:
 
-1. Add the `normalizationContext` and `denormalizationContext` annotation properties to the `@ApiResource` annotation, and specify which groups to use.  Here you see that we add `read` and `write`, respectively.  You can use any group names you wish.
+1. Add the `normalizationContext` and `denormalizationContext` annotation properties to the `@ApiResource` annotation, and specify which groups to use. Here you see that we add `read` and `write`, respectively.  You can use any group names you wish.
 2. Apply the `@Groups` annotation to properties in the object.
 
 ```php
@@ -119,7 +119,7 @@ In addition to the `groups` key, you can configure any Symfony Serializer option
 Any serialization and deserialization groups that you specify will also be leveraged by the built-in actions and the Hydra
 documentation generator.
 
-## Using serialization groups per operation
+## Using Serialization Groups per Operation
 
 It is possible to specify normalization and denormalization contexts (as well as any other attribute) on a per-operation
 basis. API Platform will always use the most specific definition. For instance, if normalization groups are set both
@@ -189,7 +189,7 @@ In the following JSON document, the relation from a book to an author is represe
 
 However, for performance reasons, it is sometimes prerable to avoid forcing the client to issue extra HTTP requests. 
 It is possible to embed related objects (in their entirity, or only some of their properties) directly in the parent 
-response through the use of serialization groups.  By using the following serialization groups annotations (`@Groups`), 
+response through the use of serialization groups. By using the following serialization groups annotations (`@Groups`), 
 a JSON representation of the author is embedded in the book response:
 
 ```php
@@ -267,7 +267,7 @@ This avoids the need for extra queries to be executed when serializing the relat
 ### Denormalization
 
 It is also possible to embed a relation in `PUT` and `POST` requests. To enable that feature, set the serialization groups
-the same way as normalization.  For example:
+the same way as normalization. For example:
 
 ```php
 <?php
@@ -289,12 +289,12 @@ class Book
 The following rules apply when denormalizating embedded relations:
 
 * If an `@id` key is present in the embedded resource, then the object corresponding to the given URI will be retrieved through
-the data provider.  Any changes in the embedded relation will also be applied to that object.
+the data provider. Any changes in the embedded relation will also be applied to that object.
 * If no `@id` key exists, a new object will be created containing data provided in the embedded JSON document.
 
 You can specify as many embedded relation levels as you want.
 
-## Changing the serialization context dynamically
+## Changing the Serialization Context Dynamically
 
 Let's imagine a resource where most fields can be managed by any user, but some can be managed only by admin users:
 
@@ -396,7 +396,7 @@ If the user has the `ROLE_ADMIN` permission and the subject is an instance of Bo
 denormalization context.  The `$normalization` variable lets you check whether the context is for normalization (if `TRUE`) or denormalization 
 (`FALSE`).
 
-## Changing the serialization context on a per-item basis
+## Changing the Serialization Context on a Per-item Basis
 
 The example above demonstrates how you can modify the normalization/denormalization context based on the current user 
 permissions for all books. Sometimes, however, the permissions vary depending on what book is being processed.
@@ -484,7 +484,7 @@ instance.
 Note: In this example, we use the `TokenStorageInterface` to verify access to the book instance.  However, Symfony 
 provides many useful other services that might be better suited to your use case.  For example, the [`AuthorizationChecker`](https://symfony.com/doc/current/components/security/authorization.html#authorization-checker).
 
-## Name conversion
+## Name Conversion
 
 The Serializer Component provides a handy way to map PHP field names to serialized names. See the related [Symfony documentation](http://symfony.com/doc/master/components/serializer.html#converting-property-names-when-serializing-and-deserializing).
 
@@ -503,7 +503,7 @@ api_platform:
     name_converter: 'Symfony\Component\Serializer\NameConverter\CamelCaseToSnakeCaseNameConverter'
 ```
 
-## Decorating a serializer and adding extra data
+## Decorating a Serializer and Adding Extra Data
 
 In the following example, we will see how we add extra informations to the serialized output.  Here is how we add the 
 date on each request in `GET`:
@@ -574,7 +574,7 @@ final class ApiNormalizer implements NormalizerInterface, DenormalizerInterface,
 }
 ```
 
-## Entity identifier case
+## Entity Identifier Case
 
 API Platform is able to guess the entity identifier using [Doctrine metadata](http://doctrine-orm.readthedocs.org/en/latest/reference/basic-mapping.html#identifiers-primary-keys).
 It also supports composite identifiers.
@@ -623,7 +623,7 @@ must do the following:
 3. if you use Doctrine ORM, be sure to **not** mark this property with [the `@GeneratedValue` annotation](http://docs.doctrine-project.org/projects/doctrine-orm/en/latest/reference/basic-mapping.html#identifier-generation-strategies)
   or use the `NONE` value
 
-## Embedding the JSON-LD context
+## Embedding the JSON-LD Context
 
 By default, the generated [JSON-LD context](https://www.w3.org/TR/json-ld/#the-context) (`@context`) is only referenced by
 an IRI. A client that uses JSON-LD must send a second HTTP request to retrieve it:
@@ -674,7 +674,3 @@ The JSON output will now include the embedded context:
   "author": "/people/59"
 }
 ```
-
-To do so, use the following configuration:
-
-
