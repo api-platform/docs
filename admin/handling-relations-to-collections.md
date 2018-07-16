@@ -73,8 +73,7 @@ The admin handles this `to-many` relation automatically!
 
 But we can go further:
 
-
-## Customizing a property
+## Customizing a Property
 
 Let's customize the components used for the `authors` property, to display them by their 'name' instead 'id' (the default behavior).
 
@@ -122,7 +121,6 @@ export default class extends Component {
   }
 }
 ```
-
 
 ## Using an Autocomplete Input for Relations
 
