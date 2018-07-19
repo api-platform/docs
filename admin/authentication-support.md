@@ -70,7 +70,7 @@ const fetchHydra = (url, options = {}) => baseFetchHydra(url, {
     ...options,
     headers: new Headers(fetchHeaders),
 });
-const hydraClient = api => hydraClient(api, fetchHydra);
+const dataProvider = api => hydraClient(api, fetchHydra);
 const apiDocumentationParser = entrypoint => parseHydraDocumentation(entrypoint, { headers: new Headers(fetchHeaders) })
     .then(
         ({ api }) => ({ api }),
@@ -98,7 +98,7 @@ export default props => (
         apiDocumentationParser={apiDocumentationParser}
         authProvider={authProvider}
         entrypoint={entrypoint}
-        dataProvider={hydraClient}
+        dataProvider={dataProvider}
     />
 );
 ```
