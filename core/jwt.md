@@ -161,3 +161,7 @@ default:
 ```
 
 Finally, mark your scenarios with the `@login` annotation to automatically add a valid `Authorization` header, and with `@logout` to be sure to destroy the token after this scenario.
+
+## Authenticate a Firebase user
+
+If you users login on [Firebase](https://firebase.google.com/) you can still validate the JWT in your application and thus authenticate the user. You can find a sample application with all set up info here: [hpatoio/api-platform-jwt-firebase](https://github.com/hpatoio/api-platform-jwt-firebase)
