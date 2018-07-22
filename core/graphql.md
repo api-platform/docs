@@ -16,7 +16,7 @@ To enable GraphQL and GraphiQL interface in your API, simply require the [graphq
 
     $ composer require webonyx/graphql-php && bin/console cache:clear
 
-You can now use GraphQL at the endpoint: `http://localhost/graphql`.
+You can now use GraphQL at the endpoint: `http://localhost:8080/graphql`.
 
 ## GraphiQL
 
