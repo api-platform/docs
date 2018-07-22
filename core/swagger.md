@@ -268,7 +268,7 @@ api_platform:
 
 ```yaml
 # app/config/routes.yaml
-swagger_ui:
+api_doc:
     path: /docs
     controller: api_platform.swagger.action.ui
 ```
