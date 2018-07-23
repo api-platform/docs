@@ -227,3 +227,118 @@ export default class extends Component {
   }
 }
 ```
+
+### Create a custom render for a specific resource creation & edition
+
+First you need to create a component which contains all the html you want to render. Here is a basic one :
+
+```
+import React, {Component} from 'react';
+import {Create, TextInput, SimpleForm} from 'react-admin';
+
+class BookFormRender extends Component {
+  render() {
+    return (
+      <div>
+        <div className="left-column">
+          <TextInput
+            label={'Name'}
+            source={'name'}
+            fullWidth
+          />
+        </div>
+        <div className="right-column">
+          <TextInput
+            label={'ISBN'}
+            source={'isbn'}
+            fullWidth
+          />
+        </div>
+      </div>
+    );
+  }
+}
+
+export default BookFormRender;
+```
+
+__Note__: If you want to customize rendering, you might be interested in adding dynamic conditionnal rendering. This might be a good idea to connect this component with the redux store.
+
+Then you have to create a component for creation and another one for edition :
+
+```
+import React, {Component} from 'react';
+import {Create, TextInput, SimpleForm} from 'react-admin';
+import {connect} from 'react-redux';
+import BookFormRender from './form-render';
+
+class BookCreate extends Component {
+  render() {
+    return (
+      <Create {...this.props}>
+        <SimpleForm>
+          <BookFormRender />
+        </SimpleForm>
+      </Create>
+    );
+  }
+}
+
+export default BookCreate;
+```
+
+```
+import React, {Component} from 'react';
+import {Edit, TextInput, SimpleForm} from 'react-admin';
+import {connect} from 'react-redux';
+import BookFormRender from './form-render';
+
+class BookEdit extends Component {
+  render() {
+    return (
+      <Edit {...this.props}>
+        <SimpleForm>
+          <BookFormRender />
+        </SimpleForm>
+      </Edit>
+    );
+  }
+}
+
+export default BookEdit;
+```
+
+__Note__: In this example, creation and edition will have the same display, but if you want different ones, simply replace `BookFormRender` by whatever you want :)
+
+
+Finally, you have to declare these components to your app :
+
+```
+import React, { Component } from 'react';
+import { AdminBuilder, hydraClient } from '@api-platform/admin';
+import parseHydraDocumentation from '@api-platform/api-doc-parser/lib/hydra/parseHydraDocumentation';
+import BookCreate from './components/program/create';
+import BookEdit from './components/program/edit';
+
+const entrypoint = process.env.REACT_APP_API_ENTRYPOINT;
+
+export default class extends Component {
+  state = { api: null };
+
+  componentDidMount() {
+    parseHydraDocumentation(entrypoint).then(({ api }) => {
+      const books = api.resources.find(({ name }) => 'books' === name);
+      books.create = BookCreate;
+      books.edit = BookEdit;
+
+      this.setState({ api });
+    });
+  }
+
+  render() {
+    if (null === this.state.api) return <div>Loading...</div>;
+
+    return <AdminBuilder api={ this.state.api } dataProvider={ hydraClient(this.state.api) }/>
+  }
+}
+```
