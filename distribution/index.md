@@ -1,6 +1,8 @@
 # Getting Started with API Platform: Hypermedia and GraphQL API, Admin and Progressive Web App
 
-![The welcome page](images/api-platform-2.2-welcome.png)
+![The welcome page][WelcomePage]
+
+[WelcomePage]: ../../images/distribution/api-platform-2.2-welcome.png
 
 > *API Platform* is the most advanced API platform, in any framework or language.
 > - Fabien Potencier (creator of Symfony), SymfonyCon 2017
@@ -157,7 +159,9 @@ installable with NPM or Yarn.
 
 Open `https://localhost` in your favorite web browser:
 
-![The welcome page](images/api-platform-2.2-welcome.png)
+![The welcome page][Welcome]
+
+[Welcome]: ../../images/distribution/api-platform-2.2-welcome.png
 
 You'll need to add a security exception in your browser to accept the self-signed TLS certificate that has been generated
 for this container when installing the framework. Repeat this step for all other services available through HTTPS.
@@ -168,7 +172,9 @@ now, we'll use this container later in this tutorial).
 
 Click on the "HTTPS API" button, or go to `https://localhost:8443/`:
 
-![The API](images/api-platform-2.2-api.png)
+![The API][API]
+
+[API]: ../../images/distribution/api-platform-2.2-api.png
 
 API Platform exposes a description of the API in the [OpenAPI](https://www.openapis.org/) format (formerly known as Swagger).
 It also integrates a customized version of [Swagger UI](https://swagger.io/swagger-ui/), a nice interface rendering the
@@ -420,7 +426,9 @@ class Review
 **Our API is (almost) ready!**
 Browse `https://localhost:8443` to load the development environment (including the awesome [Symfony profiler](https://symfony.com/blog/new-in-symfony-2-8-redesigned-profiler)).
 
-![The bookshop API](images/api-platform-2.2-bookshop-api.png)
+![The bookshop API][BookShop]
+
+[BookShop]: ../../images/distribution/api-platform-2.2-bookshop-api.png
 
 Operations available for our 2 resources types appear in the UI.
 
@@ -650,7 +658,9 @@ need to install the [graphql-php](https://webonyx.github.io/graphql-php/) librar
 You now have a GraphQL API! Open `https://localhost:8443/graphql` to play with it using the nice [GraphiQL](https://github.com/graphql/graphiql)
 UI that is shipped with API Platform:
 
-![GraphQL endpoint](images/api-platform-2.2-graphql.png)
+![GraphQL endpoint][GraphQL]
+
+[GraphQL]: ../../images/distribution/api-platform-2.2-graphql.png
 
 The GraphQL implementation supports [queries](http://graphql.org/learn/queries/), [mutations](http://graphql.org/learn/queries/),
 [100% of the Relay server specification](https://facebook.github.io/relay/docs/en/graphql-server-specification.html), pagination,
@@ -665,7 +675,9 @@ Wait... You already have one!
 
 Open `https://localhost:444` in your browser:
 
-![The admin](images/api-platform-2.2-admin.png)
+![The admin][Admin]
+
+[Admin]: ../../images/distribution/api-platform-2.2-admin.png
 
 This [Material Design](https://material.io/guidelines/) admin is a [Progressive Web App](https://developers.google.com/web/progressive-web-apps/)
 built with [API Platform Admin](../admin/index.md) (React Admin, React and Redux inside). It is powerful and fully customizable,
@@ -686,7 +698,9 @@ The distribution comes with a skeleton ready to welcome the React flavor of the 
 Open `client/src/index.js` and follow the copy/pasting instructions displayed in the console. Then open `https://localhost/books/`
 in your browser:
 
-![The React Progressive Web App](images/api-platform-2.2-pwa-react.png)
+![The React Progressive Web App][PWA]
+
+[PWA]: ../../images/distribution/api-platform-2.2-pwa-react.png
 
 You can also choose to generate the code for a specific resource with the `--resource` argument (example:
 `generate-api-platform-client --resource books`). 
