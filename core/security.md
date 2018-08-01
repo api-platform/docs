@@ -100,3 +100,17 @@ class Book
     // ...
 }
 ```
+
+Alternatively, using YAML:
+
+```yaml
+# api/config/api_platform/resources.yaml
+App\Entity\Book:
+    collectionOperations:
+        get:
+            method: 'GET'
+            access_control: 'is_granted("ROLE_ADMIN")'
+    attributes:
+        access_control: 'is_granted("ROLE_USER")'
+    # ...
+```
