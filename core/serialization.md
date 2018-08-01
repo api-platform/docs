@@ -106,6 +106,18 @@ Alternatively, you can use the more verbose syntax:
  */
 ```
 
+You can also use the YAML configuration format:
+
+```yaml
+# api/config/api_platform/resources.yaml
+App\Entity\Book:
+    attributes:
+        normalization_context:
+            groups: ['read']
+        denormalization_context:
+            groups: ['write']
+```
+
 In the previous example, the `name` property will be visible when reading (`GET`) the object, and it will also be available
 to write (`PUT/POST`).  The `author` property will be write-only; it will not be visible when serialized responses are 
 returned by the API.
