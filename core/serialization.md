@@ -396,7 +396,7 @@ final class BookContextBuilder implements SerializerContextBuilderInterface
         $resourceClass = $context['resource_class'] ?? null;
         
         if ($resourceClass === Book::class && isset($context['groups']) && $this->authorizationChecker->isGranted('ROLE_ADMIN') && false === $normalization) {
-            $context['groups'][] = 'admin_input';
+            $context['groups'][] = 'admin:input';
         }
 
         return $context;
