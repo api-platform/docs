@@ -118,6 +118,16 @@ App\Entity\Book:
             groups: ['write']
 ```
 
+```yaml
+# api/config/serialization/Book.yaml
+App\Entity\Book:
+    attributes:
+        name:
+            groups: ['read', 'write']
+        author:
+            groups: ['write']
+```
+
 In the previous example, the `name` property will be visible when reading (`GET`) the object, and it will also be available
 to write (`PUT/POST`).  The `author` property will be write-only; it will not be visible when serialized responses are 
 returned by the API.
