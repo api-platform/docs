@@ -209,7 +209,7 @@ In the following JSON document, the relation from a book to an author is represe
 }
 ```
 
-However, for performance reasons, it is sometimes prerable to avoid forcing the client to issue extra HTTP requests. 
+However, for performance reasons, it is sometimes preferable to avoid forcing the client to issue extra HTTP requests. 
 It is possible to embed related objects (in their entirity, or only some of their properties) directly in the parent 
 response through the use of serialization groups. By using the following serialization groups annotations (`@Groups`), 
 a JSON representation of the author is embedded in the book response:
