@@ -253,7 +253,7 @@ Alternatively, the more verbose attributes syntax can be used `@ApiResource(attr
 
 ## Subresources
 
-Since ApiPlatform 2.1, you can declare subresources. A subresource is a collection or an item that belongs to another resource.
+Since ApiPlatform 2.1, you can declare subresources (only for `GET` operation at the moment). A subresource is a collection or an item that belongs to another resource.
 The starting point of a subresource must be a relation on an existing resource.
 
 For example, let's create two entities (Question, Answer) and set up a subresource so that `/question/42/answer` gives us
