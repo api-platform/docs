@@ -244,9 +244,17 @@ resources:
 
             ![A great rabbit](https://rabbit.org/graphics/fun/netbunnies/jellybean1-brennan1.jpg)
 
-          requestBody: '{"days": 23}'
           parameters:
-            - {name: 'theme', description: 'dark'}
+            -
+               in: body
+               schema:
+                   type: object
+                   properties:
+                       name: {type: string}
+                       description: {type: string}
+               example:
+                   name: Rabbit
+                   description: Pink rabbit
 ```
 
 ![Impact on swagger ui](../distribution/images/swagger-ui-2.png)
