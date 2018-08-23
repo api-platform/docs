@@ -13,9 +13,7 @@ high performance API first projects.
 If you are starting a new project, the easiest way to get API Platform up is to install
 the [API Platform Distribution](../distribution/index.md).
 
-![Screenshot][Screenshot]
-
-[Screenshot]: ../../images/distribution/swagger-ui-1.png
+![Screenshot](../distribution/images/swagger-ui-1.png)
 
 ## Features
 
