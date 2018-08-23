@@ -80,7 +80,9 @@ api_platform:
 
 And the "Authorize" button will automatically appear in Swagger UI.
 
-![Screenshot of API Platform with Authorize button](images/JWTAuthorizeButton.png)
+![Screenshot of API Platform with Authorize button][AuthorizeButton]
+
+[AuthorizeButton]: ../../images/core/JWTAuthorizeButton.png
 
 ### Adding a New API Key
 
@@ -91,9 +93,9 @@ You must set the [JWT token](https://github.com/lexik/LexikJWTAuthenticationBund
 ```
 Bearer MY_NEW_TOKEN
 ```
+![Screenshot of API Platform with the configuration API Key][APIKey]
 
-![Screenshot of API Platform with the configuration API Key](images/JWTConfigureApiKey.png)
-
+[APIKey]: ../../images/core/JWTConfigureApiKey.png
 
 ## Testing with Behat
 

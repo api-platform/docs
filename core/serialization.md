@@ -6,7 +6,9 @@ API Platform embraces and extends the Symfony Serializer Component to transform 
 
 The main serialization process has two stages:
 
-![Serializer workflow](images/SerializerWorkflow.png)
+![Serializer workflow][SerializerWorkflow]
+
+[SerializerWorkflow]: ../../images/core/NelmioApiDocBundle.png
 
 > As you can see in the picture above, an array is used as a man-in-the-middle. This way, Encoders will only deal with turning specific formats into arrays and vice versa. The same way, Normalizers will deal with turning specific objects into arrays and vice versa.
 -- [The Symfony documentation](https://symfony.com/doc/current/components/serializer.html)

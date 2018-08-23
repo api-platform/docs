@@ -7,7 +7,9 @@ NelmioApiDocBundle between version 2.9 and 3.0.
 
 For new projects, prefer using the built-in Swagger support and/or NelmioApiDoc 3.
 
-![Screenshot of API Platform integrated with NelmioApiDocBundle](images/NelmioApiDocBundle.png)
+![Screenshot of API Platform integrated with NelmioApiDocBundle][NelmioApiDocBundle]
+
+[NelmioApiDocBundle]: ../../images/core/NelmioApiDocBundle.png
 
 [NelmioApiDocBundle](https://github.com/nelmio/NelmioApiDocBundle) is supported by API Platform since version 2.9.
 
