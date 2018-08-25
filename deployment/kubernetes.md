@@ -24,9 +24,18 @@ package manager) chart to deploy in a wink on any of these platforms.
 
 2. Push your images to your Docker registry, example with [Google Container Registry](https://cloud.google.com/container-registry/):
 
+    Docker client versions <= 18.03:
+    
         gcloud docker -- push gcr.io/test-api-platform/php
         gcloud docker -- push gcr.io/test-api-platform/nginx
         gcloud docker -- push gcr.io/test-api-platform/varnish
+        
+    Docker client versions > 18.03:
+    
+        gcloud auth configure-docker
+        docker push gcr.io/test-api-platform/php
+        docker push gcr.io/test-api-platform/nginx
+        docker push gcr.io/test-api-platform/varnish
 
 ## Deploying
 
