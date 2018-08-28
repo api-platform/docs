@@ -99,7 +99,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * An offer from my shop - this description will be automatically extracted form the PHPDoc to document the API.
+ * An offer from my shop - this description will be automatically extracted from the PHPDoc to document the API.
  *
  * @ApiResource(iri="http://schema.org/Offer")
  * @ORM\Entity
