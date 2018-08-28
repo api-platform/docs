@@ -36,7 +36,7 @@ In this case, the public (`@ApiResource`) and internal (Doctrine entity) data mo
 be able to query, filter, paginate and persist data automatically.
 This approach is super-convenient and efficient, but is probably **not a good idea** for non-[CRUD](https://en.wikipedia.org/wiki/Create,_read,_update_and_delete)
 and/or large systems.
-Again, it's up to the developers to use, or to not use those built-in data providers/persisters depending on the business
+Again, it's up to the developers to use, or to not use these built-in data providers/persisters depending on the business logic
 they are dealing with. API Platform makes it easy to create custom data providers and persisters, and to implement appropriate
 patterns such as [CQS](https://www.martinfowler.com/bliki/CommandQuerySeparation.html) or [CQRS](https://martinfowler.com/bliki/CQRS.html).
 
