@@ -10,7 +10,12 @@ Docker Toolbox is not supported anymore by API Platform. Please upgrade to [Dock
 
 ### Error starting userland proxy
 
-If the `app` container cannot start and display this `Error starting userland proxy: Bind for 0.0.0.0:80`, it means that port 80 is already in use.
+If the `app` container cannot start and display this `Error starting userland proxy: Bind for 0.0.0.0:80`, it means that port 80 is already in use. You can check to see which processes are currently listening on certain ports.
+
+```bash
+# Mac OS: Find out if any service listens on port 80.
+sudo lsof -n -i :80 | grep LISTEN
+```
 
 You can change the port to be used in the `docker-compose.yml` file (default is port 80).
 
