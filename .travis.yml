@@ -21,7 +21,7 @@ script:
   - find . -name '*.md' ! -name 'conduct.md' ! -name 'heroku.md' -exec proselint {} \;
   - cd $TRAVIS_BUILD_DIR/../website
   - bin/generate-nav
-  - yarn gatsby build
+  - GATSBY_BRANCH_NAME=$TRAVIS_BRANCH yarn gatsby build
   # Preserve artifacts
   - cd $TRAVIS_BUILD_DIR
   - mv ../website/public public
