@@ -54,6 +54,14 @@ final class SwaggerDecorator implements NormalizerInterface
 
 	// e.g. add a custom parameter
 	$docs['paths']['/foos']['get']['parameters'][] = $customDefinition;
+	
+        // e.g. remove an existing parameter
+        if ($index = $this->findParameterByName('bar', $docs['paths']['/foos']['get']['parameters'])) {
+            unset($docs['paths']['/foos']['get']['parameters'][$index]);
+            
+            // IMPORTANT: Reset the array keys after removing an element.
+            $docs['paths']['/foos']['get']['parameters'] = array_values($docs['paths']['/foos']['get']['parameters']);
+        }
 
 	// Override title
 	$docs['info']['title'] = 'My Api Foo';
@@ -65,6 +73,17 @@ final class SwaggerDecorator implements NormalizerInterface
     {
         return $this->decorated->supportsNormalization($data, $format);
     }
+    
+    private function findParameterByName(string $name, array $parameters)
+    {
+        foreach ($parameters as $index => $parameter) {
+            if ($parameter['name'] === $name) {
+                return $index;
+            }
+        }
+        return null;
+    }
+    
 }
 ```
 
