@@ -86,7 +86,7 @@ class Book
     /**
      * @Groups("write")
      */
-    private $author;
+    public $author;
 
     // ...
 }
