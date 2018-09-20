@@ -637,6 +637,84 @@ Or in XML:
 It is mandatory to set the `method`, `path` and `controller` attributes. They allow API platform to configure the routing path and
 the associated controller respectively.
 
+#### Serialization Groups
+
+You may want different serialization groups for your custom operations. Just configure the proper `normalization_context` and/or `denormalization_context`in your operation:
+
+```php
+<?php
+// src/Entity/Book.php
+
+use ApiPlatform\Core\Annotation\ApiResource;
+use App\Controller\BookSpecial;
+use Symfony\Component\Serializer\Annotation\Groups;
+
+/**
+ * @ApiResource(itemOperations={
+ *     "get",
+ *     "special"={
+ *         "path"="/books/{id}/special",
+ *         "controller"=BookSpecial::class,
+ *         "normalization_context"={"groups"={"special"}}
+ *     }
+ * })
+ */
+class Book
+{
+    //...
+    
+    /**
+     * @Groups("special")
+     */
+    private $isbn;
+}
+```
+
+Or in YAML:
+
+```yaml
+# api/config/api_platform/resources.yaml
+App\Entity\Book:
+    itemOperations:
+        get: ~
+        special:
+            method: 'GET'
+            path: '/books/{id}/special'
+            controller: 'App\Controller\BookSpecial'
+            normalization_context:
+                groups: ['special']
+```
+
+Or in XML:
+
+```xml
+<?xml version="1.0" encoding="UTF-8" ?>
+<!-- api/config/api_platform/resources.xml -->
+
+<resources xmlns="https://api-platform.com/schema/metadata"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="https://api-platform.com/schema/metadata
+           https://api-platform.com/schema/metadata/metadata-2.0.xsd">
+    <resource class="App\Entity\Book">
+        <itemOperations>
+            <itemOperation name="get" />
+            <itemOperation name="special">
+                <attribute name="method">GET</attribute>
+                <attribute name="path">/books/{id}/special</attribute>
+                <attribute name="controller">App\Controller\BookSpecial</attribute>
+                <attribute name="normalization_context">
+                  <attribute name="groups">
+                    <group>special</group>
+                  </attribute>
+                </attribute>
+            </itemOperation>
+        </itemOperations>
+    </resource>
+</resources>
+```
+
+#### Entity Retrieval
+
 If you want to bypass the automatic retrieval of the entity in your custom operation, you can set the parameter
 `_api_receive` to `false` in the `default` attribute:
 
