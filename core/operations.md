@@ -637,7 +637,7 @@ Or in XML:
 It is mandatory to set the `method`, `path` and `controller` attributes. They allow API platform to configure the routing path and
 the associated controller respectively.
 
-#### Serialization groups
+#### Serialization Groups
 
 You may want different serialization groups for your custom operations. Just configure the proper `normalization_context` and/or `denormalization_context`in your operation:
 
@@ -664,7 +664,7 @@ class Book
     //...
     
     /**
-     * @Groups({"special"})
+     * @Groups("special")
      */
     private $isbn;
 }
@@ -713,7 +713,7 @@ Or in XML:
 </resources>
 ```
 
-#### Entity retrieval
+#### Entity Retrieval
 
 If you want to bypass the automatic retrieval of the entity in your custom operation, you can set the parameter
 `_api_receive` to `false` in the `default` attribute:
