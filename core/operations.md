@@ -562,7 +562,7 @@ This action will be automatically registered as a service (the service name is t
 API Platform automatically retrieves the appropriate PHP entity using the data provider then deserializes user data in it,
 and for `POST` and `PUT` requests updates the entity with data provided by the user.
 
-**Warning: the `__invoke()` method parameter [MUST be called `$data`](https://symfony.com/doc/current/routing/extra_information.html)**, otherwise, it will not be filled correctly!
+**Warning: the `__invoke()` method parameter [MUST be called `$data`](https://symfony.com/doc/current/components/http_kernel.html#getting-the-controller-arguments)**, otherwise, it will not be filled correctly!
 
 Services (`$myService` here) are automatically injected thanks to the autowiring feature. You can type-hint any service
 you need and it will be autowired too.
