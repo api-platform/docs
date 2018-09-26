@@ -198,7 +198,8 @@ Example to add a minLength validator on the `description` field:
 
 ```javascript
 import React, { Component } from 'react';
-import { minLength, RichTextInput } from 'react-admin';
+import { minLength } from 'react-admin';
+import RichTextInput from 'ra-input-rich-text';
 import { AdminBuilder, hydraClient } from '@api-platform-admin';
 import parseHydraDocumentation from '@api-platform/api-doc-parser/lib/hydra/parseHydraDocumentation';
 
