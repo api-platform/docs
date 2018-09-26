@@ -81,11 +81,11 @@ currentTable:
         targetEntityRel: { range: TargetEntity, cardinality: (%%currentTableValue%%..%%TargetEntityValue%%) }
 ```
 
-| **X**ing | **0** (targetEntityValue: nullabe reference field) | **1** (targetEntityValue: non nullable  reference field) | ** * ** (targetEntityvalue: 0 or more reference fields) |
+| **X**ing | **0** (targetEntityValue: nullabe reference field) | **1** (targetEntityValue: non nullable  reference field) | **`*` (targetEntityvalue: 0 or more reference fields) ** |
 |---|---|---|---|
-| **0** (currentTableValue: nullabe reference field) | N/A | **(0..1)** OneToMany nullable | **(0..*)** OneToMany  nullable unique relationship |   
-| **1** (currentTableValue: non nullable  reference field) | N/A | **(1..1)** OneToOne not nullable | **(1..*)** OneToMany not nullable unique |   
-| ** * ** (currentTableValue: 0 or more reference fields) | **(*..0)** ManyToOne nullable | **(*..1)** ManyToOne not nullable |  **(*..*)** ManyToMany nullable |   
+| **0 (currentTableValue: nullabe reference field)** | N/A | **(0..1)** OneToMany nullable | **(0..*)** OneToMany  nullable unique relationship |   
+| **1 (currentTableValue: non nullable  reference field)** | N/A | **(1..1)** OneToOne not nullable | **(1..*)** OneToMany not nullable unique |   
+| **`*` (currentTableValue: 0 or more reference fields)** | **(*..0)** ManyToOne nullable | **(*..1)** ManyToOne not nullable |  **(*..*)** ManyToMany nullable |   
 
 ## Forcing a Relation Table Name
 
