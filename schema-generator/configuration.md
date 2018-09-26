@@ -53,13 +53,13 @@ types:
 The cardinality of a property is automatically guessed. The `cardinality` option allows to override the guessed value.
 Supported cardinalities are:
 
-* `(0..1)`: scalar, not required
-* `(0..*)`: array, not required
-* `(1..1)`: scalar, required
-* `(1..*)`: array, required
-* `(*..0)`
-* `(*..1)`
-* `(*..*)`
+* `(0..1)`: scalar, not required, annotate as OneToMany nullable
+* `(0..*)`: array, not required, annotate as ManyToMany, it is possible to specify cross table
+* `(1..1)`: scalar, required, annotate as OneToOne, ot nullable
+* `(1..*)`: array, required, annotate as ManyToMany, not nullable and unique
+* `(*..0)`: array, not required, annotate as ManyToOne nullable
+* `(*..1)`: array, required, annotate as ManyToOne not nullable
+* `(*..*)`: array, not required, annotate as ManyToMany nullable
 
 Cardinalities are enforced by the class generator, the Doctrine ORM generator and the Symfony validation generator.
 
@@ -72,6 +72,20 @@ types:
             sku:
                 cardinality: "(0..1)"
 ```
+
+For further understanding:
+Cardinality format: 
+```
+currentTable:
+    properties:
+        targetEntityRel: { range: TargetEntity, cardinality: (%%currentTableValue%%..%%TargetEntityValue%%) }
+```
+
+| **X**ing | **0** (targetEntityValue: nullabe reference field) | **1** (targetEntityValue: non nullable  reference field) | ** * ** (targetEntityvalue: 0 or more reference fields) |
+|---|---|---|---|
+| **0** (currentTableValue: nullabe reference field) | N/A | **(0..1)** OneToMany nullable | **(0..*)** OneToMany  nullable unique relationship |   
+| **1** (currentTableValue: non nullable  reference field) | N/A | **(1..1)** OneToOne not nullable | **(1..*)** OneToMany not nullable unique |   
+| ** * ** (currentTableValue: 0 or more reference fields) | **(*..0)** ManyToOne nullable | **(*..1)** ManyToOne not nullable |  **(*..*)** ManyToMany nullable |   
 
 ## Forcing a Relation Table Name
 
