@@ -73,19 +73,16 @@ types:
                 cardinality: "(0..1)"
 ```
 
-For further understanding:
 Cardinality format: 
 ```
-currentTable:
+currentEntity:
     properties:
-        targetEntityRel: { range: TargetEntity, cardinality: (%%currentTableValue%%..%%TargetEntityValue%%) }
+        targetEntityRel: { range: TargetEntity, cardinality: (%%currentEntityValue%%..%%targetEntityValue%%) }
 ```
-
-| **X**ing | **0** (targetEntityValue: nullabe reference field) | **1** (targetEntityValue: non nullable  reference field) | **`*` (targetEntityvalue: 0 or more reference fields) ** |
-|---|---|---|---|
-| **0 (currentTableValue: nullabe reference field)** | N/A | **(0..1)** OneToMany nullable | **(0..*)** OneToMany  nullable unique relationship |   
-| **1 (currentTableValue: non nullable  reference field)** | N/A | **(1..1)** OneToOne not nullable | **(1..*)** OneToMany not nullable unique |   
-| **`*` (currentTableValue: 0 or more reference fields)** | **(*..0)** ManyToOne nullable | **(*..1)** ManyToOne not nullable |  **(*..*)** ManyToMany nullable |   
+where both `currentEntityValue` and `targetEntityValue` values can be:
+ - 0 : a nullable element in the relationship
+ - 1 : a non nullable element in the relationship
+ - * : an array of elements
 
 ## Forcing a Relation Table Name
 
