@@ -1,6 +1,6 @@
 # Handling Data Transfer Objects (DTOs)
 
-## How to use a DTO for Writing
+## How to Use a DTO for Writing
 
 Sometimes it's easier to use a DTO than an Entity when performing simple
 operation. For example, the application should be able to send an email when
@@ -124,9 +124,9 @@ services:
         #tags: [ 'kernel.event_subscriber' ]
 ```
 
-## How to use a DTO for Reading
+## How to Use a DTO for Reading
 
-Sometimes, you need to retrieve data not related to an Entity.
+Sometimes, you need to retrieve data not related to an entity.
 For example, the application can send the
 [list of supported locales](https://github.com/symfony/demo/blob/master/config/services.yaml#L6)
 and the default locale.
@@ -189,13 +189,14 @@ class LocaleController extends AbstractController
 }
 ```
 
-As you can see, the controller don't return a `Response`, but the object directly.
-Behind, the `SerializeListener` catch the response, and thanks to `_api_respond`
-params, serialize the object correctly.
-To deal with arrays, we have to set `"_api_normalization_context"={"api_sub_level"=true}`
-to avoid ApiPlatform Serializers to search an ApiResourceClass not declared.
+As you can see, the controller doesn't return a `Response`, but the data object directly.
+Behind the scene, the `SerializeListener` catch the response, and thanks to the `_api_respond`
+flag, it serializes the object correctly.
 
-### Adding this custom DTO reading in Swagger documentation.
+To deal with arrays, we have to set the `api_sub_level` context option to `true`.
+It prevents API Platform's normalizers to look for a non-existing class marked as an API resource.
+
+### Adding this Custom DTO reading in Swagger Documentation.
 
 By default, ApiPlatform Swagger UI integration will display documentation only
 for ApiResource operations.
@@ -204,7 +205,7 @@ be displayed.
 
 There is two solutions to achieve that:
 
-#### 1. Use Swagger decorator
+#### Use Swagger Decorator
 
 By following the doc about [Override the Swagger Documentation](swagger.md##overriding-the-swagger-documentation)
 and adding the ability to retrieve a `_api_swagger_context` in route
@@ -317,7 +318,7 @@ use Swagger\Annotations as SWG;
     public function __invoke()
 ```
 
-#### 2. Use [NelmioApiDoc](nelmio-api-doc.md)
+#### Use [NelmioApiDoc](nelmio-api-doc.md)
 
 With NelmioApiDoc, you should be able to add annotations to your controllers :
 
