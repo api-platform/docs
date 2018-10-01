@@ -70,7 +70,6 @@ final class SwaggerDecorator implements NormalizerInterface
     {
         return $this->decorated->supportsNormalization($data, $format);
     }
-    
 }
 ```
 
