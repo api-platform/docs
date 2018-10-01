@@ -54,7 +54,12 @@ final class SwaggerDecorator implements NormalizerInterface
 
 	// e.g. add a custom parameter
 	$docs['paths']['/foos']['get']['parameters'][] = $customDefinition;
-
+	
+        // e.g. remove an existing parameter
+        $docs['paths']['/foos']['get']['parameters'] = array_values(array_filter($docs['paths']['/foos']['get']['parameters'], function ($param){
+            return $param['name'] !== 'bar';
+        }));
+	
 	// Override title
 	$docs['info']['title'] = 'My Api Foo';
 
