@@ -135,6 +135,24 @@ Or order your results like:
   }
 }
 ```
+Another difference with the REST API filters is that the keyword `_list` must be used instead of the traditional `[]` to filter over multiple values.
+
+For example, if you want to search the offers with a green or a red product you can use the following syntax:
+```graphql
+{
+  offers(product_color_list: ["red", "green"]) {
+    edges {
+      node {
+        id
+        product {
+          name
+          color
+        }
+      }
+    }
+  }
+}
+```
 
 ## Security (`access_control`)
 
@@ -201,10 +219,8 @@ use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ApiResource(
- *     attributes={
- *         "normalization_context"={"groups"={"read"}},
- *         "denormalization_context"={"groups"={"write"}}
- *     },
+ *     normalizationContext={"groups"={"read"}},
+ *     denormalizationContext={"groups"={"write"}},
  *     graphql={
  *         "query"={"normalization_context"={"groups"={"query"}}},
  *         "create"={

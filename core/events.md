@@ -106,10 +106,11 @@ Constant           | Event             | Priority |
 `PRE_RESPOND`      | `kernel.view`     | 9        |
 `POST_RESPOND`     | `kernel.response` | 0        |
 
-Some of those built-in listeners can be enabled/disabled by setting request attributes ([for instance in the `defaults` 
+Some of those built-in listeners can be enabled/disabled by setting request attributes ([for instance in the `defaults`
 attribute of an operation](operations.md#recommended-method)):
 
 Attribute      | Type   | Default | Description                                                                          |
 ---------------|--------|---------|--------------------------------------------------------------------------------------|
 `_api_receive` | `bool` | `true`  | Enables or disables the `ReadListener`, `DeserializeListener` and `ValidateListener` |
+`_api_respond` | `bool` | `true`  | Enables or disables `SerializeListener`                                              |
 `_api_persist` | `bool` | `true`  | Enables or disables `WriteLister`                                                    |

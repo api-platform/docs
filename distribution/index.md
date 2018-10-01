@@ -10,7 +10,7 @@ It contains a **PHP** library to create fully-featured APIs supporting industry-
 provides ambitious **JavaScript** tooling to consume those APIs in a snap (admin, PWA and mobile apps generators, hypermedia
 client...) and is shipped with a nice **Docker** and **Kubernetes** integration to develop and deploy instantly in the cloud.
 
-The easiest and more powerful way to get started is to download the API Platform official distribution.
+The easiest and most powerful way to get started is to download the API Platform official distribution.
 It contains:
 
 * an API skeleton, including with [the server-side component](../core/index.md), [the Symfony 4
@@ -64,7 +64,7 @@ The resulting directory contains an empty API Platform project structure. You wi
 it.
 
 API Platform is shipped with a [Docker](https://docker.com) setup that makes it easy to get a containerized development
-environment up and running. If you do not already have Docker on your computer, [it's the right time to install it](https://www.docker.com/products/overview#/install_the_platform).
+environment up and running. If you do not already have Docker on your computer, [it's the right time to install it](https://docs.docker.com/install/).
 
 Open a terminal, and navigate to the directory containing your project skeleton. Run the following command to start all
 services using [Docker Compose](https://docs.docker.com/compose/):
@@ -706,7 +706,7 @@ Then, they are many more features to learn! Read [the full documentation](../cor
 and how to extend API Platform to fit your needs.
 API Platform is incredibly efficient for prototyping and Rapid Application Development (RAD). But the framework is mostly
 designed to create complex API-driven projects, far beyond simple CRUD apps. It benefits from **strong extension points**
-and is **is continuously optimized for performance.** It powers numerous high-traffic websites.
+and it is **continuously optimized for performance.** It powers numerous high-traffic websites.
 
 API Platform has a built-in HTTP cache invalidation system which allows to make API Platform apps blazing fast, and it uses
 [Varnish](https://varnish-cache.org/) by default. Read more in the chapter

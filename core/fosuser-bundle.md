@@ -59,10 +59,10 @@ use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ORM\Entity
- * @ApiResource(attributes={
- *     "normalization_context"={"groups"={"user", "user-read"}},
- *     "denormalization_context"={"groups"={"user", "user-write"}}
- * })
+ * @ApiResource(
+ *     normalizationContext={"groups"={"user", "user:read"}},
+ *     denormalizationContext={"groups"={"user", "user:write"}}
+ * )
  */
 class User extends BaseUser
 {
@@ -85,7 +85,7 @@ class User extends BaseUser
     protected $fullname;
 
     /**
-     * @Groups({"user-write"})
+     * @Groups({"user:write"})
      */
     protected $plainPassword;
 

@@ -1,14 +1,9 @@
 # Handling Relations to Collections
 
-Currently, API Platform Admin doesn't handle `to-many` relations. The core library [is being patched](https://github.com/api-platform/core/pull/1189)
-to document relations to collections through OWL.
-
-Meanwhile, it is possible to manually configure API Platform to handle relations to collections.
-
-We will create the admin for an API exposing `Person` and `Book` resources linked with a `many-to-many`
+Considering an API exposing `Person` and `Book` resources linked with a `many-to-many`
 relation between them (through the `authors` property).
 
-This API can be created using the following PHP code:
+This API using the following PHP code:
 
 ```php
 <?php
@@ -74,40 +69,47 @@ class Book
 }
 ```
 
-Let's customize the components used for the `authors` property:
+The admin handles this `to-many` relation automatically!
+
+But we can go further:
+
+## Customizing a Property
+
+Let's customize the components used for the `authors` property, to display them by their 'name' instead 'id' (the default behavior).
 
 ```javascript
 import React, { Component } from 'react';
 import { ReferenceArrayField, SingleFieldList, ChipField, ReferenceArrayInput, SelectArrayInput } from 'react-admin';
 import { AdminBuilder, hydraClient } from '@api-platform/admin';
-import parseHydraDocumentation from 'api-doc-parser/lib/hydra/parseHydraDocumentation';
+import parseHydraDocumentation from '@api-platform/api-doc-parser/lib/hydra/parseHydraDocumentation';
 
 const entrypoint = 'https://demo.api-platform.com';
 
 export default class extends Component {
-  state = {api: null, resources: null};
+  state = { api: null }
 
   componentDidMount() {
-    parseHydraDocumentation(entrypoint).then({api, resources} => {
-        const books = r.find(r => 'books' === r.name);
+    parseHydraDocumentation(entrypoint).then(({api}) => {
+        const books = api.resources.find(({ name }) => 'books' === name)
+        const authors = books.fields.find(({ name }) => 'authors' === name)
 
         // Set the field in the list and the show views
-        books.readableFields.find(f => 'authors' === f.name).fieldComponent =
-          <ReferenceArrayField label="Authors" reference="people" source="authors" key="authors">
+        authors.field = props => (
+          <ReferenceArrayField source={authors.name} reference={authors.reference.name} key={authors.name} {...props}>
             <SingleFieldList>
               <ChipField source="name" key="name"/>
             </SingleFieldList>
           </ReferenceArrayField>
-        ;
+        );
 
         // Set the input in the edit and create views
-        books.writableFields.find(f => 'authors' === f.name).inputComponent =
-          <ReferenceArrayInput label="Authors" reference="people" source="authors" key="authors">
+        authors.input = props => (
+          <ReferenceArrayInput source={authors.name} reference={authors.reference.name} label="Authors" key={authors.name} {...props} allowEmpty>
             <SelectArrayInput optionText="name"/>
           </ReferenceArrayInput>
-        ;
+        );
 
-        this.setState({api, resources});
+        this.setState({ api });
       }
     )
   }
@@ -115,12 +117,10 @@ export default class extends Component {
   render() {
     if (null === this.state.api) return <div>Loading...</div>;
 
-    return <AdminBuilder api={this.state.api} dataProvider={hydraClient({entrypoint: entrypoint, resources: this.state.resources})}/>
+    return <AdminBuilder api={ this.state.api } dataProvider={ hydraClient(this.state.api) }/>
   }
 }
 ```
-
-The admin now properly handles this `to-many` relation!
 
 ## Using an Autocomplete Input for Relations
 
@@ -161,11 +161,11 @@ Then edit the configuration of API Platform Admin to pass a `filterToQuery` prop
     // ...
 
     // Set the input in the edit and create views
-    books.writableFields.find(f => 'authors' === f.name).inputComponent =
-      <ReferenceArrayInput label="Authors" reference="people" source="authors" key="authors" filterToQuery={searchText => ({ name: searchText })}>
-        <SelectArrayInput optionText="name"/>
-      </ReferenceArrayInput>
-    ;
+      authors.input = props => (
+        <ReferenceArrayInput source={authors.name} reference={authors.reference.name} label="Authors" key={authors.name} filterToQuery={searchText => ({ name: searchText })} {...props} allowEmpty>
+          <SelectArrayInput optionText="name"/>
+        </ReferenceArrayInput>
+      );
 
     // ...
   }

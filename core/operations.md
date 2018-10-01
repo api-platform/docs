@@ -232,7 +232,7 @@ In all the previous examples, you can safely remove the `method` because the met
 
 Sometimes it's also useful to put a whole resource into its own "namespace" regarding the URI. Let's say you want to
 put everything that's related to a `Book` into the `library` so that URIs become `library/book/{id}`. In that case
-you don't need to override all the operations to set the path but configure a `routePrefix` for the whole entity instead:
+you don't need to override all the operations to set the path but configure the `route_prefix` attribute for the whole entity instead:
 
 ```php
 <?php
@@ -241,8 +241,7 @@ you don't need to override all the operations to set the path but configure a `r
 use ApiPlatform\Core\Annotation\ApiResource;
 
 /**
- * ...
- * @ApiResource("attributes"={"routePrefix"="/library"})
+ * @ApiResource(routePrefix="/library")
  */
 class Book
 {
@@ -250,9 +249,11 @@ class Book
 }
 ```
 
+Alternatively, the more verbose attributes syntax can be used `@ApiResource(attributes={"route_prefix"="/library"})`
+
 ## Subresources
 
-Since ApiPlatform 2.1, you can declare subresources. A subresource is a collection or an item that belongs to another resource.
+Since ApiPlatform 2.1, you can declare subresources (only for `GET` operation at the moment). A subresource is a collection or an item that belongs to another resource.
 The starting point of a subresource must be a relation on an existing resource.
 
 For example, let's create two entities (Question, Answer) and set up a subresource so that `/question/42/answer` gives us
@@ -381,7 +382,12 @@ namespace App\Entity;
 use ApiPlatform\Core\Annotation\ApiResource;
 
 /**
- * @ApiResource(collectionOperations={"api_questions_answer_get_subresource"={"method"="GET", "normalization_context"={"groups"={"foobar"}}}})
+ * @ApiResource(collectionOperations={
+ *     "api_questions_answer_get_subresource"={
+ *         "method"="GET",
+ *         "normalization_context"={"groups"={"foobar"}}
+ *     }
+ * })
  */
 class Answer
 {
@@ -397,7 +403,7 @@ App\Entity\Answer:
     collectionOperations:
         api_questions_answer_get_subresource:
             method: 'GET' # nothing more to add if we want to keep the default controller
-            normalization_context: {'groups': ['foobar']}
+            normalization_context: {groups: ['foobar']}
 ```
 
 Or in XML:
@@ -444,9 +450,9 @@ You can control the path of subresources with the `path` option of the `subresou
  * ...
  * @ApiResource(
  *      subresourceOperations={
- *          "answer_get_subresource"= {
+ *          "answer_get_subresource"={
  *              "method"="GET",
- *              "path"="/questions/{id}/all-answers",
+ *              "path"="/questions/{id}/all-answers"
  *          },
  *      },
  * )
@@ -555,7 +561,8 @@ This action will be automatically registered as a service (the service name is t
 
 API Platform automatically retrieves the appropriate PHP entity using the data provider then deserializes user data in it,
 and for `POST` and `PUT` requests updates the entity with data provided by the user.
-By convention, the action's parameter must be called `$data`.
+
+**Warning: the `__invoke()` method parameter [MUST be called `$data`](https://symfony.com/doc/current/components/http_kernel.html#getting-the-controller-arguments)**, otherwise, it will not be filled correctly!
 
 Services (`$myService` here) are automatically injected thanks to the autowiring feature. You can type-hint any service
 you need and it will be autowired too.
@@ -631,6 +638,84 @@ Or in XML:
 It is mandatory to set the `method`, `path` and `controller` attributes. They allow API platform to configure the routing path and
 the associated controller respectively.
 
+#### Serialization Groups
+
+You may want different serialization groups for your custom operations. Just configure the proper `normalization_context` and/or `denormalization_context`in your operation:
+
+```php
+<?php
+// src/Entity/Book.php
+
+use ApiPlatform\Core\Annotation\ApiResource;
+use App\Controller\BookSpecial;
+use Symfony\Component\Serializer\Annotation\Groups;
+
+/**
+ * @ApiResource(itemOperations={
+ *     "get",
+ *     "special"={
+ *         "path"="/books/{id}/special",
+ *         "controller"=BookSpecial::class,
+ *         "normalization_context"={"groups"={"special"}}
+ *     }
+ * })
+ */
+class Book
+{
+    //...
+    
+    /**
+     * @Groups("special")
+     */
+    private $isbn;
+}
+```
+
+Or in YAML:
+
+```yaml
+# api/config/api_platform/resources.yaml
+App\Entity\Book:
+    itemOperations:
+        get: ~
+        special:
+            method: 'GET'
+            path: '/books/{id}/special'
+            controller: 'App\Controller\BookSpecial'
+            normalization_context:
+                groups: ['special']
+```
+
+Or in XML:
+
+```xml
+<?xml version="1.0" encoding="UTF-8" ?>
+<!-- api/config/api_platform/resources.xml -->
+
+<resources xmlns="https://api-platform.com/schema/metadata"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="https://api-platform.com/schema/metadata
+           https://api-platform.com/schema/metadata/metadata-2.0.xsd">
+    <resource class="App\Entity\Book">
+        <itemOperations>
+            <itemOperation name="get" />
+            <itemOperation name="special">
+                <attribute name="method">GET</attribute>
+                <attribute name="path">/books/{id}/special</attribute>
+                <attribute name="controller">App\Controller\BookSpecial</attribute>
+                <attribute name="normalization_context">
+                  <attribute name="groups">
+                    <group>special</group>
+                  </attribute>
+                </attribute>
+            </itemOperation>
+        </itemOperations>
+    </resource>
+</resources>
+```
+
+#### Entity Retrieval
+
 If you want to bypass the automatic retrieval of the entity in your custom operation, you can set the parameter
 `_api_receive` to `false` in the `default` attribute:
 
@@ -705,7 +790,6 @@ There is another way to create a custom operation. However, we do not encourage 
 the configuration at the same time in the routing and the resource configuration.
 
 First, let's create your resource configuration:
->>>>>>> 2.2
 
 ```php
 <?php

@@ -54,7 +54,12 @@ final class SwaggerDecorator implements NormalizerInterface
 
 	// e.g. add a custom parameter
 	$docs['paths']['/foos']['get']['parameters'][] = $customDefinition;
-
+	
+        // e.g. remove an existing parameter
+        $docs['paths']['/foos']['get']['parameters'] = array_values(array_filter($docs['paths']['/foos']['get']['parameters'], function ($param){
+            return $param['name'] !== 'bar';
+        }));
+	
 	// Override title
 	$docs['info']['title'] = 'My Api Foo';
 
@@ -192,7 +197,7 @@ thanks to the `swagger_definition_name` option:
  *      collectionOperations={
  *          "post"={
  *              "denormalization_context"={
- *                  "groups"={"user_read"},
+ *                  "groups"={"user:read"},
  *                  "swagger_definition_name": "Read",
  *              },
  *          },
@@ -219,7 +224,7 @@ It's also possible to re-use the (`de`)`normalization_context`:
 class User
 {
     const API_WRITE = [
-        'groups' => ['user_read'],
+        'groups' => ['user:read'],
         'swagger_definition_name' => 'Read',
     ];
 }
@@ -244,9 +249,17 @@ resources:
 
             ![A great rabbit](https://rabbit.org/graphics/fun/netbunnies/jellybean1-brennan1.jpg)
 
-          requestBody: '{"days": 23}'
           parameters:
-            - {name: 'theme', description: 'dark'}
+            -
+               in: body
+               schema:
+                   type: object
+                   properties:
+                       name: {type: string}
+                       description: {type: string}
+               example:
+                   name: Rabbit
+                   description: Pink rabbit
 ```
 
 ![Impact on swagger ui](../distribution/images/swagger-ui-2.png)

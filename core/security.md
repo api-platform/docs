@@ -100,3 +100,23 @@ class Book
     // ...
 }
 ```
+
+Alternatively, using YAML:
+
+```yaml
+# api/config/api_platform/resources.yaml
+App\Entity\Book:
+    attributes:
+        access_control: 'is_granted("ROLE_USER")'
+    collectionOperations:
+        post:
+            method: 'POST'
+            access_control: 'is_granted("ROLE_ADMIN")'
+            access_control_message: 'Only admins can add books.'
+    itemOperations:
+        get:
+            method: 'GET'
+            access_control: 'is_granted("ROLE_USER") and object.owner == user'
+            access_control_message: 'Sorry, but you are not the book owner.'
+    # ...
+```

@@ -831,7 +831,7 @@ class Order
 }
 ```
 
-The whole idea is that any query on the order table should add a WHERE user_id = :user_id condition.
+The whole idea is that any query on the order table should add a `WHERE user_id = :user_id` condition.
 
 Start by creating a custom annotation to mark restricted entities:
 
