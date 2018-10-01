@@ -450,6 +450,7 @@ namespace App\Serializer;
 
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Serializer\Normalizer\ContextAwareNormalizerInterface;
+use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 use Symfony\Component\Serializer\SerializerAwareInterface;
 use Symfony\Component\Serializer\SerializerAwareTrait;
 
@@ -495,7 +496,7 @@ class BookAttributeNormalizer implements ContextAwareNormalizerInterface, Serial
     private function passOn($object, $format = null, array $context = [])
     {
         if (!$this->serializer instanceof NormalizerInterface) {
-            throw new LogicException(sprintf('Cannot normalize object "%s" because the injected serializer is not a normalizer', $object));
+            throw new \LogicException(sprintf('Cannot normalize object "%s" because the injected serializer is not a normalizer', $object));
         }
 
         $context[self::BOOK_ATTRIBUTE_NORMALIZER_ALREADY_CALLED] = true;
