@@ -10,7 +10,7 @@ It contains a **PHP** library to create fully-featured APIs supporting industry-
 provides ambitious **JavaScript** tooling to consume those APIs in a snap (admin, PWA and mobile apps generators, hypermedia
 client...) and is shipped with a nice **Docker** and **Kubernetes** integration to develop and deploy instantly in the cloud.
 
-The easiest and more powerful way to get started is to download the API Platform official distribution.
+The easiest and most powerful way to get started is to download the API Platform official distribution.
 It contains:
 
 * an API skeleton, including with [the server-side component](../core/index.md), [the Symfony 4
