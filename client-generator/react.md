@@ -38,16 +38,19 @@ Bootstrap 4 - from release 0.1.16
 
 In the app directory, generate the files for the resource you want:
 
-    $ generate-api-platform-client https://demo.api-platform.com src/ --resource foo
-    # Replace the URL by the entrypoint of your Hydra-enabled API
-    # Omit the resource flag to generate files for all resource types exposed by the API
+```bash
+$ generate-api-platform-client https://demo.api-platform.com src/ --resource book
+# Replace the URL by the entrypoint of your Hydra-enabled API
+# Omit the resource flag to generate files for all resource types exposed by the API
+```
 
 The code is ready to be executed! Register the generated reducers and components in the `index.js` file, here is an example:
 
 ```javascript
 import React from 'react';
-import ReactDom from 'react-dom';
-import registerServiceWorker from './registerServiceWorker';
+import ReactDOM from 'react-dom';
+import * as serviceWorker from './serviceWorker';
+
 import { createStore, combineReducers, applyMiddleware } from 'redux';
 import { Provider } from 'react-redux';
 import thunk from 'redux-thunk';
@@ -56,22 +59,22 @@ import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import createBrowserHistory from 'history/createBrowserHistory';
 import { syncHistoryWithStore, routerReducer as routing } from 'react-router-redux'
 
-// Replace "foo" with the name of the resource type
-import foo from './reducers/foo/';
-import fooRoutes from './routes/foo';
+// Replace "book" with the name of the resource type
+import book from './reducers/book/';
+import bookRoutes from './routes/book';
 
 const store = createStore(
-  combineReducers({routing, form, foo}), // Don't forget to register the reducers here
+  combineReducers({routing, form, book}), // Don't forget to register the reducers here
   applyMiddleware(thunk),
 );
 
 const history = syncHistoryWithStore(createBrowserHistory(), store);
 
-ReactDom.render(
+ReactDOM.render(
   <Provider store={store}>
     <Router history={history}>
       <Switch>
-        {fooRoutes}
+        {bookRoutes}
         <Route render={() => <h1>Not Found</h1>}/>
       </Switch>
     </Router>
@@ -79,5 +82,8 @@ ReactDom.render(
   document.getElementById('root')
 );
 
-registerServiceWorker();
+// If you want your app to work offline and load faster, you can change
+// unregister() to register() below. Note this comes with some pitfalls.
+// Learn more about service workers: http://bit.ly/CRA-PWA
+serviceWorker.unregister();
 ```
