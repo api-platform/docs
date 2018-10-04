@@ -717,7 +717,7 @@ Or in XML:
 #### Entity Retrieval
 
 If you want to bypass the automatic retrieval of the entity in your custom operation, you can set the parameter
-`_api_receive` to `false` in the `default` attribute:
+`_api_receive` to `false` in the `defaults` attribute:
 
 ```php
 <?php
