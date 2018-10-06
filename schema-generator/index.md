@@ -20,7 +20,7 @@ support.
 
 Bonus:
 
-* The code generator is fully configurable and extensible: all features can be deactivated (e.g.: the Doctrine mapping generator)
+* The code generator is fully configurable and extendable: all features can be deactivated (e.g.: the Doctrine mapping generator)
 and custom generator can be added (e.g.: a Doctrine ODM mapping generator).
 * The generated code can be used as is in a [Symfony](http://symfony.com) app (but it will work too in a raw PHP project
 or any other framework including [Laravel](http://laravel.com) and [Zend Framework](http://framework.zend.com/)).
@@ -62,7 +62,3 @@ It opens the way to generic web API clients able to extract and process data fro
 
 * [Getting Started](getting-started.md)
 * [Configuration](configuration.md)
-
-Previous chapter: [API: The serialization process](../core/serialization.md)
-
-Next chapter: [Getting Started](getting-started.md)

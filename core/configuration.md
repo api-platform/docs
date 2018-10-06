@@ -3,7 +3,7 @@
 Here's the complete configuration of the Symfony bundle with including default values:
 
 ```yaml
-# app/config/config.yml
+# api/config/packages/api_platform.yaml
 api_platform:
 
     # The title of the API.
@@ -48,6 +48,12 @@ api_platform:
     # Enable Swagger ui.
     enable_swagger_ui: true
 
+    # Enable the entrypoint.
+    enable_entrypoint: true
+
+    # Enable the docs.
+    enable_docs: true
+
     oauth:
         # To enable or disable oauth.
         enabled: false
@@ -73,9 +79,14 @@ api_platform:
         # The oauth scopes.
         scopes: []
 
+    graphql:
+        enabled: false
+        graphiql:
+            enabled: true
+
     swagger:
         # The swagger api keys.
-        api_keys: []      
+        api_keys: []
 
     collection:
         # The default order of results.
@@ -109,9 +120,23 @@ api_platform:
             # The name of the query parameter to set the number of items per page.
             items_per_page_parameter_name: 'itemsPerPage'
 
+            # To allow partial pagination for all resource collections.
+            # This improves performances by skipping the `COUNT` query.
+            partial: true
+
+            # To allow the client to enable or disable the partial pagination.
+            client_partial: true
+
+            # The name of the query parameter to enable or disable the partial pagination.
+            partial_parameter_name: 'partial' # Default value
+
     mapping:
         # The list of paths with files or directories where the bundle will look for additional resource files.
         paths: []
+
+    # The list of your resources class directories. Defaults to the directories of the mapping paths but might differ.
+    resource_class_directories:
+        - '%kernel.project_dir%/src/Entity'
 
     http_cache:
         # Automatically generate etags for API responses.
@@ -135,6 +160,9 @@ api_platform:
 
           # URLs of the Varnish servers to purge using cache tags when a resource is updated.
           varnish_urls: []
+
+          # To pass options to the client charged with the request.
+          request_options: []
 
     # The list of exceptions mapped to their HTTP status code.
     exception_to_status:

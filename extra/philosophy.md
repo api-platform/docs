@@ -15,7 +15,7 @@ In 20 years of PHP, the web changed dramatically and is now evolving faster than
 to improve and professionalize the PHP ecosystem. The PHP world has closed the gap with most backend solutions and is often
 more innovative than them.
 
-But in critical area I've described previously, many things can be improved. Almost all existing solutions are still [designed
+However in critical area I've described previously, many things can be improved. Almost all existing solutions are still [designed
 and documented](https://symfony.com/doc/current/book/page_creation.html) to create websites the old way: a server generates
 then sends plain-old HTML documents to browsers.
 

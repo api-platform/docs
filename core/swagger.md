@@ -15,19 +15,19 @@ In the following example, we will see how to override the title of the Swagger d
 the `GET` operation of `/foos` path
 
 ```yaml
-# app/config/services.yml
+# api/config/services.yaml
 services:
-    'AppBundle\Swagger\SwaggerDecorator':
+    'App\Swagger\SwaggerDecorator':
         decorates: 'api_platform.swagger.normalizer.documentation'
-        arguments: [ '@AppBundle\Swagger\SwaggerDecorator.inner' ]
+        arguments: [ '@App\Swagger\SwaggerDecorator.inner' ]
         autoconfigure: false
 ```
 
 ```php
 <?php
-// src/AppBundle/Swagger/SwaggerDecorator.php
+// api/src/Swagger/SwaggerDecorator.php
 
-namespace AppBundle\Swagger;
+namespace App\Swagger;
 
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
@@ -46,7 +46,7 @@ final class SwaggerDecorator implements NormalizerInterface
 
         $customDefinition = [
             'name' => 'fields',
-            'definition' => 'Fields to remove of the outpout',
+            'definition' => 'Fields to remove of the output',
             'default' => 'id',
             'in' => 'query',
         ];
@@ -54,7 +54,12 @@ final class SwaggerDecorator implements NormalizerInterface
 
 	// e.g. add a custom parameter
 	$docs['paths']['/foos']['get']['parameters'][] = $customDefinition;
-
+	
+        // e.g. remove an existing parameter
+        $docs['paths']['/foos']['get']['parameters'] = array_values(array_filter($docs['paths']['/foos']['get']['parameters'], function ($param){
+            return $param['name'] !== 'bar';
+        }));
+	
 	// Override title
 	$docs['info']['title'] = 'My Api Foo';
 
@@ -70,14 +75,14 @@ final class SwaggerDecorator implements NormalizerInterface
 
 ## Using the Swagger Context
 
-Sometimes you may want to have additional information included in your Swagger documentation.
-The following configuration will provide additional context to your Swagger definitions:
+Sometimes you may want to change the information included in your Swagger documentation.
+The following configuration will give you total control over your Swagger definitions:
 
 ```php
 <?php
-// src/AppBundle/Entity/Product.php
+// api/src/Entity/Product.php
 
-namespace AppBundle\Entity;
+namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
 use ApiPlatform\Core\Annotation\ApiProperty;
@@ -108,7 +113,7 @@ class Product // The class name will be used to name exposed resources
      *         "swagger_context"={
      *             "type"="string",
      *             "enum"={"one", "two"},
-     *             "example"="one"          
+     *             "example"="one"
      *         }
      *     }
      * )
@@ -132,9 +137,9 @@ class Product // The class name will be used to name exposed resources
 Or in YAML:
 
 ```yaml
-# src/AppBundle/Resources/config/api_resources/resources.yml
+# api/config/api_platform/resources.yaml
 resources:
-    AppBundle\Entity\Product:
+    App\Entity\Product:
       properties:
         name:
           attributes:
@@ -179,3 +184,147 @@ Will produce the following Swagger documentation:
   }
 }
 ```
+
+## Changing the Name of a Definition
+
+API Platform generates a definition name based on the serializer `groups` defined
+in the (`de`)`normalization_context`. It's possible to override the name
+thanks to the `swagger_definition_name` option:
+
+```php
+/**
+ * @ApiResource(
+ *      collectionOperations={
+ *          "post"={
+ *              "denormalization_context"={
+ *                  "groups"={"user:read"},
+ *                  "swagger_definition_name": "Read",
+ *              },
+ *          },
+ *      },
+ * )
+ */
+class User
+{
+}
+```
+
+It's also possible to re-use the (`de`)`normalization_context`:
+
+```php
+/**
+ * @ApiResource(
+ *      collectionOperations={
+ *          "post"={
+ *              "denormalization_context"=User::API_WRITE,
+ *          },
+ *      },
+ * )
+ */
+class User
+{
+    const API_WRITE = [
+        'groups' => ['user:read'],
+        'swagger_definition_name' => 'Read',
+    ];
+}
+```
+
+## Changing Operations in the Swagger Documentation
+
+You also have full control over both built-in and custom operations documentation:
+
+```yaml
+resources:
+  App\Entity\Rabbit:
+    collectionOperations:
+      create_user:
+        method: get
+        path: '/rabbit/rand'
+        controller: App\Controller\RandomRabbit
+        swagger_context:
+          summary: Random rabbit picture
+          description: >
+            # Pop a great rabbit picture by color!
+
+            ![A great rabbit](https://rabbit.org/graphics/fun/netbunnies/jellybean1-brennan1.jpg)
+
+          parameters:
+            -
+               in: body
+               schema:
+                   type: object
+                   properties:
+                       name: {type: string}
+                       description: {type: string}
+               example:
+                   name: Rabbit
+                   description: Pink rabbit
+```
+
+![Impact on swagger ui](../distribution/images/swagger-ui-2.png)
+
+## Changing the Swagger UI Location
+
+Sometimes you may want to have the API at one location, and the Swagger UI at a different location. This can be done by disabling the Swagger UI from the API Platform configuration file and manually adding the Swagger UI controller.
+
+### Disabling Swagger UI
+
+```yaml
+# api/config/packages/api_platform.yaml
+api_platform:
+    # ...
+    enable_swagger_ui: false
+```
+
+### Manually Registering the Swagger UI Controller
+
+```yaml
+# app/config/routes.yaml
+swagger_ui:
+    path: /docs
+    controller: api_platform.swagger.action.ui
+```
+
+Change `/docs` to your desired URI you wish Swagger to be accessible on.
+
+## Using the Swagger Command
+
+You can also dump your current Swagger documentation using the provided command:
+
+```
+$ docker-compose exec php bin/console api:swagger:export
+# Swagger documentation in JSON format...
+
+$ docker-compose exec php bin/console api:swagger:export --yaml 
+# Swagger documentation in YAML format... 
+
+$ docker-compose exec php bin/console api:swagger:export --output=swagger_docs.json 
+# Swagger documentation dumped directly into JSON file (add --yaml to change format)
+```
+
+## Overriding the UI Template
+
+As described [in the Symfony documentation](https://symfony.com/doc/current/templating/overriding.html), it's possible to override the Twig template that loads Swagger UI and renders the documentation:
+
+```twig
+{# templates/bundles/ApiPlatformBundle/SwaggerUi/index.html.twig #}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>{% if title %}{{ title }} {% endif %}My custom template</title>
+    {# ... #}
+</html>
+```
+
+You may want to copy the [one shipped with API Platform](https://github.com/api-platform/core/blob/master/src/Bridge/Symfony/Bundle/Resources/views/SwaggerUi/index.html.twig) and customize it.
+
+### Enable Swagger doc for API Gateway
+
+[AWS API Gateway](https://aws.amazon.com/api-gateway/) supports Swagger 2.0 partially, but it [requires some changes](https://docs.aws.amazon.com/apigateway/latest/developerguide/api-gateway-known-issues.html).
+Fortunately, API Platform provides a way to be compatible with both Swagger 2.0 & API Gateway.
+
+To enable API Gateway compatibility on your Swagger doc, add `api_gateway=true` query parameter:
+
+`http://www.example.com/docs.json?api_gateway=true`

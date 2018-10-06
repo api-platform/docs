@@ -8,42 +8,16 @@ It ships with the API Platform Core library integrated with [the Symfony framewo
 and [Behat](http://behat.org).
 Basically, it is a Symfony edition packaged with the best tools to develop a REST API and sensible default settings.
 
-Alternatively, you can use [Composer](http://getcomposer.org) to install the standalone bundle in an existing Symfony project:
+Alternatively, you can use [Composer](http://getcomposer.org) to install the standalone bundle in an existing Symfony Flex
+project:
 
-`composer require api-platform/core`
-
-Then, update your `app/AppKernel.php` file:
-
-```php
-<?php
-// app/AppKernel.php
-
-public function registerBundles()
-{
-    $bundles = [
-        // ...
-        new ApiPlatform\Core\Bridge\Symfony\Bundle\ApiPlatformBundle(),
-    ];
-
-    // ...
-}
-```
-
-Register the routes of our API by adding the following lines to `app/config/routing.yml`:
-
-```yaml
-# app/config/routing.yml
-api:
-    resource: '.'
-    type: 'api_platform'
-    prefix: '/api' # Optional
-```
+`composer require api`
 
 There is no mandatory configuration options although [many settings are available](configuration.md).
 
 ## Before Reading this Documentation
 
-If you haven't read it already, take a look at [the "Creating your first API with API Platform, in a few minutes" guide](../distribution/index.md).
+If you haven't read it already, take a look at [the Getting Started guide](../distribution/index.md).
 This tutorial covers basic concepts required to understand how API Platform works including how it implements the REST pattern
 and what [JSON-LD](http://json-ld.org/) and [Hydra](http://www.hydra-cg.com/) formats are.
 
@@ -57,9 +31,9 @@ Here is an example of entities mapped using annotations which will be exposed th
 
 ```php
 <?php
-// src/AppBundle/Entity/Product.php
+// api/src/Entity/Product.php
 
-namespace AppBundle\Entity;
+namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
 use Doctrine\ORM\Mapping as ORM;
@@ -80,7 +54,7 @@ class Product // The class name will be used to name exposed resources
     public $id;
 
     /**
-     * @param string $name A name property - this description will be available in the API documentation too.
+     * @var string $name A name property - this description will be available in the API documentation too.
      *
      * @ORM\Column
      * @Assert\NotBlank
@@ -116,16 +90,16 @@ class Product // The class name will be used to name exposed resources
 
 ```php
 <?php
-// src/AppBundle/Entity/Offer.php
+// api/src/Entity/Offer.php
 
-namespace AppBundle\Entity;
+namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * An offer from my shop - this description will be automatically extracted form the PHPDoc to document the API.
+ * An offer from my shop - this description will be automatically extracted from the PHPDoc to document the API.
  *
  * @ApiResource(iri="http://schema.org/Offer")
  * @ORM\Entity
@@ -191,15 +165,16 @@ As an alternative to annotations, you can map entity classes using XML or YAML:
 XML:
 
 ```xml
-<!-- src/AppBundle/Resources/config/api_resources/resources.xml -->
 <?xml version="1.0" encoding="UTF-8" ?>
+<!-- api/config/api_platform/resources.xml -->
+
 <resources xmlns="https://api-platform.com/schema/metadata"
            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
            xsi:schemaLocation="https://api-platform.com/schema/metadata
            https://api-platform.com/schema/metadata/metadata-2.0.xsd">
-    <resource class="AppBundle\Entity\Product" />
+    <resource class="App\Entity\Product" />
     <resource
-        class="AppBundle\Entity\Offer"
+        class="App\Entity\Offer"
         shortName="Offer" <!-- optional -->
         description="An offer form my shop" <!-- optional -->
         iri="http://schema.org/Offer" <!-- optional -->
@@ -210,16 +185,35 @@ XML:
 YAML:
 
 ```yaml
-# src/AppBundle/Resources/config/api_resources/resources.yml
+# api/config/api_platform/resources.yaml
 resources:
-    AppBundle\Entity\Product: ~
-    AppBundle\Entity\Offer:
+    App\Entity\Product: ~
+    App\Entity\Offer:
         shortName: 'Offer'                   # optional
         description: 'An offer from my shop' # optional
         iri: 'http://schema.org/Offer'       # optional
         attributes:                          # optional
             pagination_items_per_page: 25    # optional
 ```
+
+If you prefer to use XML or YAML files instead of annotations, you must configure API Platform to load the appropriate files:
+
+```yaml
+# api/config/packages/api_platform.yaml
+api_platform:
+    mapping:
+        paths: 
+            - '%kernel.project_dir%/src/Entity' # default configuration for annotations
+            - '%kernel.project_dir%/config/api_platform' # yaml or xml directory configuration
+```
+
+The API Platform's configuration (annotations, `YAML` or `XML`) only allow to configure the context passed to the Symfony Serializer:
+
+* The `normalization_context` key will be passed as 3rd argument of [the `Serializer::serialize()` method](https://api.symfony.com/master/Symfony/Component/Serializer/SerializerInterface.html#method_serialize)
+* The `denormalization_context` key will be passed as 4th argument of [the `Serializer::deserialize()` method](https://api.symfony.com/master/Symfony/Component/Serializer/SerializerInterface.html#method_deserialize)
+
+
+To configure the serialization groups of classes's properties, you must use directly [the Symfony Serializer's configuration files or annotations](https://symfony.com/doc/current/components/serializer.html#attributes-groups).
 
 **You're done!**
 
@@ -228,4 +222,4 @@ Run the Symfony app (`bin/console server:run`) and browse the API entrypoint at 
 
 Interact with the API using a REST client (we recommend [Postman](https://www.getpostman.com/)) or an Hydra aware application
 (you should give [Hydra Console](https://github.com/lanthaler/HydraConsole) a try). Take
-a look at the usage examples in [the `features` directory](https://github.com/api-platform/api-platform/tree/master/features).
+a look at the usage examples in [the `features` directory](https://github.com/api-platform/core/tree/master/features).

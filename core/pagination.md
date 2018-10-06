@@ -42,7 +42,7 @@ of total items in the collection.
 The name of the page parameter can be changed with the following configuration:
 
 ```yaml
-# app/config/config.yml
+# api/config/packages/api_platform.yaml
 api_platform:
     collection:
         pagination:
@@ -60,7 +60,7 @@ However, for small collections, it can be convenient to fully disable the pagina
 The pagination can be disabled for all resources using this configuration:
 
 ```yaml
-# app/config/config.yml
+# api/config/packages/api_platform.yaml
 api_platform:
     collection:
         pagination:
@@ -73,7 +73,7 @@ It can also be disabled for specific resource:
 
 ```php
 <?php
-// src/AppBundle/Entity/Book.php
+// src/Entity/Book.php
 
 use ApiPlatform\Core\Annotation\ApiResource;
 
@@ -94,7 +94,7 @@ You can configure API Platform Core to let the client enable or disable the pagi
 use the following configuration:
 
 ```yaml
-# app/config/config.yml
+# api/config/packages/api_platform.yaml
 api_platform:
     collection:
         pagination:
@@ -116,7 +116,7 @@ The client ability to disable the pagination can also be set in the resource con
 
 ```php
 <?php
-// src/AppBundle/Entity/Book.php
+// src/Entity/Book.php
 
 use ApiPlatform\Core\Annotation\ApiResource;
 
@@ -138,7 +138,7 @@ In the same manner, the number of items per page is configurable and can be set 
 The number of items per page can be configured for all resources:
 
 ```yaml
-# app/config/config.yml
+# api/config/packages/api_platform.yaml
 api_platform:
     collection:
         pagination:
@@ -149,7 +149,7 @@ api_platform:
 
 ```php
 <?php
-// src/AppBundle/Entity/Book.php
+// src/Entity/Book.php
 
 use ApiPlatform\Core\Annotation\ApiResource;
 
@@ -167,7 +167,7 @@ class Book
 #### Globally
 
 ```yaml
-# app/config/config.yml
+# api/config/packages/api_platform.yaml
 api_platform:
     collection:
         pagination:
@@ -183,7 +183,7 @@ Changing the number of items per page can be enabled (or disabled) for a specifi
 
 ```php
 <?php
-// src/AppBundle/Entity/Book.php
+// src/Entity/Book.php
 
 use ApiPlatform\Core\Annotation\ApiResource;
 
@@ -195,3 +195,153 @@ class Book
     // ...
 }
 ```
+
+## Changing Maximum items per page
+
+### Globally
+
+The number of maximum items per page can be configured for all resources:
+
+```yaml
+# api/config/packages/api_platform.yaml
+api_platform:
+    collection:
+        pagination:
+            maximum_items_per_page: 50
+```
+
+### For a Specific Resource
+
+```php
+<?php
+// src/Entity/Book.php
+
+use ApiPlatform\Core\Annotation\ApiResource;
+
+/**
+ * @ApiResource(
+ *     attributes={"maximum_items_per_page"=50}
+ * )
+ */
+class Book
+{
+    // ...
+}
+```
+
+### For a Specific Resource Collection Operation
+
+```php
+<?php
+// src/Entity/Book.php
+
+use ApiPlatform\Core\Annotation\ApiResource;
+
+/**
+ * @ApiResource(
+ *     collectionOperations={
+ *         "get"={"maximum_items_per_page"=50}
+ *     }
+ * )
+ */
+class Book
+{
+    // ...
+}
+```
+
+## Partial Pagination
+
+When using the default pagination, a `COUNT` query will be issued against the current requested collection. This may have a
+performance impact on really big collections. The downside is that the information about the last page is lost (ie: `hydra:last`).
+
+### Globally
+
+The partial pagination retrieval can be configured for all resources:
+
+```yaml
+# api/config/packages/api_platform.yaml
+
+api_platform:
+    collection:
+        pagination:
+            partial: true # Disabled by default
+```
+
+### For a Specific Resource
+
+```php
+<?php
+
+// src/Entity/Book.php
+
+use ApiPlatform\Core\Annotation\ApiResource;
+
+/**
+ * @ApiResource(attributes={"pagination_partial"=true})
+ */
+class Book
+{
+    // ...
+}
+```
+
+### Client-side
+
+#### Globally
+
+```yaml
+# api/config/packages/api_platform.yaml
+
+api_platform:
+    collection:
+        pagination:
+            client_partial: true # Disabled by default
+            partial_parameter_name: 'partial' # Default value
+```
+
+The partial pagination retrieval can now be changed by toggling a query parameter named `partial`: `GET /books?partial=true`
+
+#### For a Specific Resource
+
+```php
+<?php
+
+// src/Entity/Book.php
+
+use ApiPlatform\Core\Annotation\ApiResource;
+
+/**
+ * @ApiResource(attributes={"pagination_client_partial"=true})
+ */
+class Book
+{
+    // ...
+}
+```
+
+## Avoiding double SQL requests on Doctrine
+
+By default, pagination assumes that there will be collection fetched on a resource and thus will set `useFetchJoinCollection` to `true` on the Doctrine Paginator class. Having this option imply that 2 sql requests will be executed (so this avoid having less results than expected).
+
+In most cases, even without collection on the resource, this parameter has little impact on performance. However when fetching a lot of results per page it can be counter productive.
+
+That's why this behavior can be configured with the `pagination_fetch_join_collection` parameter on a resource:
+
+```php
+<?php
+
+// src/Entity/Book.php
+
+use ApiPlatform\Core\Annotation\ApiResource;
+
+/**
+ * @ApiResource(attributes={"pagination_fetch_join_collection"=false})
+ */
+class Book
+{
+    // ...
+}
+```
+
+Please note that this parameter will always be forced to false when the resource have composite keys due to a [bug in doctrine](https://github.com/doctrine/doctrine2/issues/2910)

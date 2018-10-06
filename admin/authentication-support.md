@@ -7,8 +7,8 @@ process is similar for other authentication mechanisms. The `login_uri` is the f
 The first step is to create a client to handle the authentication process:
 
 ```javascript
-// src/authClient.js
-import { AUTH_LOGIN, AUTH_LOGOUT, AUTH_ERROR, AUTH_CHECK } from 'admin-on-rest';
+// src/authProvider.js
+import { AUTH_LOGIN, AUTH_LOGOUT, AUTH_ERROR, AUTH_CHECK } from 'react-admin';
 
 // Change this to be your own login check route.
 const login_uri = 'https://demo.api-platform.com/login_check';
@@ -31,6 +31,7 @@ export default (type, params) => {
         })
         .then(({ token }) => {
           localStorage.setItem('token', token); // The JWT token is stored in the browser's local storage
+          window.location.replace('/');
         });
 
     case AUTH_LOGOUT:
@@ -57,28 +58,50 @@ export default (type, params) => {
 Then, configure the `Admin` component to use the authentication client we just created:
 
 ```javascript
-// src/Admin.js
-import React, { Component } from 'react';
-import { HydraAdmin, hydraClient, fetchHydra } from '@api-platform/admin';
-import authClient from './authClient';
+import React from 'react';
+import parseHydraDocumentation from '@api-platform/api-doc-parser/lib/hydra/parseHydraDocumentation';
+import { HydraAdmin, hydraClient, fetchHydra as baseFetchHydra } from '@api-platform/admin';
+import authProvider from './authProvider';
+import { Redirect } from 'react-router-dom';
 
-const entrypoint = 'https://demo.api-platform.com';
+const entrypoint = 'https://demo.api-platform.com'; // Change this by your own entrypoint
+const fetchHeaders = {'Authorization': `Bearer ${window.localStorage.getItem('token')}`};
+const fetchHydra = (url, options = {}) => baseFetchHydra(url, {
+    ...options,
+    headers: new Headers(fetchHeaders),
+});
+const dataProvider = api => hydraClient(api, fetchHydra);
+const apiDocumentationParser = entrypoint => parseHydraDocumentation(entrypoint, { headers: new Headers(fetchHeaders) })
+    .then(
+        ({ api }) => ({ api }),
+        (result) => {
+            switch (result.status) {
+                case 401:
+                    return Promise.resolve({
+                        api: result.api,
+                        customRoutes: [{
+                            props: {
+                                path: '/',
+                                render: () => <Redirect to={`/login`}/>,
+                            },
+                        }],
+                    });
 
-const fetchWithAuth = (url, options = {}) => {
-  if (!options.headers) options.headers = new Headers({ Accept: 'application/ld+json' });
+                default:
+                    return Promise.reject(result);
+            }
+        },
+    );
 
-  options.headers.set('Authorization', `Bearer ${localStorage.getItem('token')}`);
-  return fetchHydra(url, options);
-};
-
-const restClient = (api) => (hydraClient(api, fetchWithAuth));
-
-export default class extends Component {
-  render() {
-    return <HydraAdmin entrypoint={entrypoint} restClient={restClient} authClient={authClient}/>;
-  }
-}
+export default props => (
+    <HydraAdmin
+        apiDocumentationParser={apiDocumentationParser}
+        authProvider={authProvider}
+        entrypoint={entrypoint}
+        dataProvider={dataProvider}
+    />
+);
 ```
 
-Refer to [the chapter dedicated to authentication in the Admin On Rest documentation](https://marmelab.com/admin-on-rest/Authentication.html)
+Refer to [the chapter dedicated to authentication in the React Admin documentation](https://marmelab.com/react-admin/Authentication.html)
 for more information.

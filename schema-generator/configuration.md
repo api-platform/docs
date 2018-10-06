@@ -57,6 +57,9 @@ Supported cardinalities are:
 * `(0..*)`: array, not required
 * `(1..1)`: scalar, required
 * `(1..*)`: array, required
+* `(*..0)`
+* `(*..1)`
+* `(*..*)`
 
 Cardinalities are enforced by the class generator, the Doctrine ORM generator and the Symfony validation generator.
 
@@ -196,7 +199,7 @@ In such case, no mutator method will be generated.
 
 ## Making a Property Write Only
 
-A property can be marked read only with the following configuration:
+A property can be marked write only with the following configuration:
 
 ```yaml
     Person:
@@ -423,7 +426,7 @@ doctrine:
 
 ## Custom Schemas
 
-The generator can use your own schema definitions. They must be wrote in RDFa and follow the format of the [Schema.org's
+The generator can use your own schema definitions. They must be written in RDFa and follow the format of the [Schema.org's
 definition](httsp://schema.org/docs/schema_org_rdfa.html). This is useful to document your [Schema.org extensions](https://schema.org/docs/extension.html) and use them
 to generate the PHP data model of your application.
 
@@ -527,13 +530,13 @@ config:
     namespaces:
 
         # The namespace of the generated entities
-        entity:               AppBundle\Entity # Example: Acme\Entity
+        entity:               App\Entity # Example: Acme\Entity
 
         # The namespace of the generated enumerations
-        enum:                 AppBundle\Enum # Example: Acme\Enum
+        enum:                 App\Enum # Example: Acme\Enum
 
         # The namespace of the generated interfaces
-        interface:            AppBundle\Model # Example: Acme\Model
+        interface:            App\Model # Example: Acme\Model
 
     # Doctrine
     doctrine:
@@ -646,7 +649,3 @@ config:
         - ApiPlatform\SchemaGenerator\AnnotationGenerator\ConstraintAnnotationGenerator
         - ApiPlatform\SchemaGenerator\AnnotationGenerator\SerializerGroupsAnnotationGenerator
 ```
-
-Previous chapter: [Getting Started](getting-started.md)
-
-Next chapter: [The Admin Component: Introduction](../admin/index.md)

@@ -1,11 +1,11 @@
 # Content Negotiation
 
-The API system has builtin [content negotiation](https://en.wikipedia.org/wiki/Content_negotiation) capabilities.
+The API system has built-in [content negotiation](https://en.wikipedia.org/wiki/Content_negotiation) capabilities.
 It leverages the [`willdurand/negotiation`](https://github.com/willdurand/Negotiation) library.
 
 By default, only the [JSON-LD](https://json-ld.org) format is enabled. However API Platform Core supports many more formats and can be extended.
 
-The framework natively supports JSON-LD, HAL, raw JSON, XML, YAML and CSV (YAML and CSV support is only available if you use Symfony 3.2+).
+The framework natively supports JSON-LD, GraphQL, JSONAPI, HAL, raw JSON, XML, YAML and CSV (YAML and CSV support is only available if you use Symfony 3.2+).
 
 Both XML and JSON formats are experimental and there are no assurance that we will not break them.
 
@@ -19,21 +19,21 @@ Available formats are:
 Format                                                          | Format name  | MIME types                    | Backward Compatibility guaranteed
 ----------------------------------------------------------------|--------------|-------------------------------|----------------------------------------
 [JSON-LD](https://json-ld.org)                                  | `jsonld`     | `application/ld+json`         | yes
+[GraphQL](graphql.md)                                           | n/a          | n/a                           | yes
+[JSONAPI](http://jsonapi.org/)                                  | `jsonapi`    | `application/vnd.api+json`    | yes
 [HAL](http://stateless.co/hal_specification.html)               | `jsonhal`    | `application/hal+json`        | yes
-JSON                                                            | `json`       |  `application/json`           | no
-XML                                                             | `xml`        | `application/xml`, `text/xml` | no
-HTML (API docs)                                                 | `html`       | `text/html`                   | no
+[JSON](https://www.json.org/)                                   | `json`       |  `application/json`           | no
+[XML](https://www.w3.org/XML/)                                  | `xml`        | `application/xml`, `text/xml` | no
+[YAML](http://yaml.org/)                                        | `yaml`       | `application/x-yaml`          | no
+[CSV](https://tools.ietf.org/html/rfc4180)                      | `csv`        | `text/csv`                    | no
+[HTML](https://whatwg.org/) (API docs)                          | `html`       | `text/html`                   | no
 
+If the client requested format is not specified (if it's not supported, it will throw an HTTP bad request error), the response format will be the first format defined in the `formats` configuration key (see below).
+An example using the built-in XML support is available in [Behat specs](https://github.com/api-platform/core/blob/master/features/main/content_negotiation.feature).
 
-If the client requested format is not specified (if it's not supported, it will throw an HTTP bad format error), the response format will be the first format defined in the `formats` configuration key (see below).
-An example using the builtin XML support is available in [Behat specs](https://github.com/api-platform/core/blob/master/features/main/content_negotiation.feature).
-
-
-The API Platform content negotiation system is extensible. Support for other formats (such as [JSONAPI](http://jsonapi.org/))
-can be added by [creating and registering appropriate encoders and, sometimes, normalizers](https://symfony.com/doc/current/serializer.html#adding-normalizers-and-encoders). Adding support for other
-standard hypermedia formats upstream is very welcome. Don't hesitate to contribute by adding your encoders and normalizers
+The API Platform content negotiation system is extendable. Support for other formats can be added by [creating and registering appropriate encoders and, sometimes, normalizers](https://symfony.com/doc/current/serializer.html#adding-normalizers-and-encoders). Adding support for other
+standard hypermedia formats upstream is welcome. Don't hesitate to contribute by adding your encoders and normalizers
 to API Platform Core.
-
 
 ## Enabling Several Formats
 
@@ -41,22 +41,53 @@ The first required step is to configure allowed formats. The following configura
 and of a custom format called `myformat` and having `application/vnd.myformat` as [MIME type](https://en.wikipedia.org/wiki/Media_type).
 
 ```yaml
-# app/config/config.yml
+# api/config/packages/api_platform.yaml
 api_platform:
     # ...
 
     formats:
         jsonld:   ['application/ld+json']
         jsonhal:  ['application/hal+json']
+        jsonapi:  ['application/vnd.api+json']
         json:     ['application/json']
         xml:      ['application/xml', 'text/xml']
+        yaml:     ['application/x-yaml']
+        csv:      ['text/csv']
         html:     ['text/html']
         myformat: ['application/vnd.myformat']
 ```
 
+To enable GraphQL support, [read the dedicated chapter](graphql.md).
+
 Because the Symfony Serializer component is able to serialize objects in XML, sending an `Accept` HTTP header with the
 `text/xml` string as value is enough to retrieve XML documents from our API. However API Platform knows nothing about the
 `myformat` format. We need to register an encoder and optionally a normalizer for this format.
+
+
+## Enabling Additional Formats On a Specific Resource/Operation 
+
+Support for specific formats can also be added at resource or operation level, using the `formats` attribute.
+
+```php
+<?php
+// api/src/Entity/Book.php
+
+namespace App\Entity;
+
+/**
+ * @ApiResource(attributes={"formats"={"xml", "jsonld", "csv"={"text/csv"}}})
+ */
+class Book
+{
+    // ...
+}
+```
+
+In the example above, `xml` or `jsonld` will be allowed and there is no need to specify the mime types as they are already defined in the configuration.
+Additionally the `csv` format is added with the mime type `text/csv`.
+
+It is also important to notice that the usage of this attribute will override the formats defined in the configuration, therefore
+this configuration might disable the `json` or the `htlm` on this resource for example.
 
 ## Registering a Custom Serializer
 
@@ -68,28 +99,27 @@ API Platform Core will automatically call the serializer with your defined forma
 as `format` parameter during the deserialization process. Then it will return the result to the client with the asked MIME
 type using its built-in responder.
 
-
 ## Writing a Custom Normalizer
 
 Using composition is the recommended way to implement a custom normalizer. You can use the following template to start with your
 own implementation of `CustomItemNormalizer`:
 
-
 ```yaml
-# app/config/services.yml
+# api/config/services.yaml
 services:
-# ...
-
-    'AppBundle\Serializer\CustomItemNormalizer':
+    'App\Serializer\CustomItemNormalizer':
         arguments: [ '@api_platform.serializer.normalizer.item' ]
-        tags: [ 'serializer.normalizer' ]
+        # Uncomment if you don't use the autoconfigure feature
+        #tags: [ 'serializer.normalizer' ]
+    
+    # ...
 ```
 
 ```php
 <?php
-// src/AppBundle/Serializer/CustomItemNormalizer.php
+// api/src/Serializer/CustomItemNormalizer.php
 
-namespace AppBundle\Serializer;
+namespace App\Serializer;
 
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
@@ -134,9 +164,9 @@ flatten or remove too complex relations:
 
 ```php
 <?php
-// src/AppBundle/Serializer/CustomItemNormalizer.php
+// api/src/Serializer/CustomItemNormalizer.php
 
-namespace AppBundle\Serializer;
+namespace App\Serializer;
 
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;

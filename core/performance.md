@@ -1,6 +1,6 @@
 # Performance
 
-## Enabling the Builtin HTTP Cache Invalidation System
+## Enabling the Built-in HTTP Cache Invalidation System
 
 Exposing a hypermedia API has [many advantages](http://blog.theamazingrando.com/in-band-vs-out-of-band.html). One of
 them is the ability to know exactly which resources are included in HTTP responses created by the API. We used this
@@ -25,6 +25,48 @@ distribution of API Platform, so this feature works out of the box.
 
 Integration with Varnish and the Doctrine ORM is shipped with the core library. You can easily implement the support for
 any other proxy or persistence system.
+
+### Extending Cache-Tags for invalidation
+
+Sometimes you need individual resources like `/me`. To work properly with Varnish, the cache tags need to be augmented with these resources. Here is an example how this can be done:
+
+```php
+<?php
+
+declare(strict_types=1);
+
+namespace App\EventSubscriber;
+
+use ApiPlatform\Core\EventListener\EventPriorities;
+use App\Entity\User;
+use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use Symfony\Component\HttpKernel\Event\GetResponseEvent;
+use Symfony\Component\HttpKernel\KernelEvents;
+
+final class UserResourcesSubscriber implements EventSubscriberInterface
+{
+    public static function getSubscribedEvents()
+    {
+        return [
+            KernelEvents::REQUEST => ['extendResources', EventPriorities::POST_READ]
+        ];
+    }
+
+    public function extendResources(GetResponseEvent $event)
+    {
+        $request = $event->getRequest();
+        $class = $request->attributes->get('_api_resource_class');
+
+        if ($class === User::class) {
+            $resources = [
+                '/me'
+            ];
+
+            $request->attributes->set('_resources', $request->attributes->get('_resources', []) + (array)$resources);
+        }
+    }
+}
+```
 
 ## Enabling the Metadata Cache
 
@@ -53,7 +95,7 @@ with a huge collection. [Here are some examples to index LIKE
 filters](http://use-the-index-luke.com/sql/where-clause/searching-for-ranges/like-performance-tuning) depending on your
 database driver.
 
-### Eager loading
+### Eager Loading
 
 By default Doctrine comes with [lazy loading](http://doctrine-orm.readthedocs.io/en/latest/reference/working-with-objects.html#by-lazy-loading).
 Usually a killer time-saving feature and also a performance killer with large applications.
@@ -73,14 +115,14 @@ you've to bypass `readable` and `readableLink` by using the `fetchEager` attribu
  public $foo;
 ```
 
-#### Max joins
+#### Max Joins
 
 There is a default restriction with this feature. We allow up to 30 joins per query. Beyond, an
 `ApiPlatform\Core\Exception\RuntimeException` exception will be thrown but this value can easily be increased with a
 little of configuration:
 
 ```yaml
-# app/config/config.yaml
+# api/config/packages/api_platform.yaml
 api_platform:
     eager_loading:
         max_joins: 100
@@ -89,28 +131,28 @@ api_platform:
 Be careful when you exceed this limit, it's often caused by the result of a circular reference. [Serializer groups](serialization.md)
 can be a good solution to fix this issue.
 
-#### Force eager
+#### Force Eager
 
 As mentioned above, by default we force eager loading for all relations. This behaviour can be modified with the
 configuration in order to apply it only on join relations having the `EAGER` fetch mode:
 
 ```yaml
-# app/config/config.yaml
+# api/config/packages/api_platform.yaml
 api_platform:
     eager_loading:
         force_eager: false
 ```
 
-#### Override at resource and operation level
+#### Override at Resource and Operation Level
 
 When eager loading is enabled, whatever the status of the `force_eager` parameter, you can easily override it directly
 from the configuration of each resource. You can do this at the resource level, at the operations level, or both:
 
 ```php
 <?php
-// src/AppBundle/Entity/Address.php
+// api/src/Entity/Address.php
 
-namespace AppBundle\Entity;
+namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
 use Doctrine\ORM\Mapping as ORM;
@@ -127,9 +169,9 @@ class Address
 
 ```php
 <?php
-// src/AppBundle/Entity/User.php
+// api/src/Entity/User.php
 
-namespace AppBundle\Entity;
+namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
 use Doctrine\ORM\Mapping as ORM;
@@ -159,9 +201,9 @@ class User
 
 ```php
 <?php
-// src/AppBundle/Entity/Group.php
+// api/src/Entity/Group.php
 
-namespace AppBundle\Entity;
+namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
 use Doctrine\ORM\Mapping as ORM;
@@ -170,12 +212,12 @@ use Doctrine\ORM\Mapping as ORM;
  * @ApiResource(
  *     attributes={"force_eager"=false},
  *     itemOperations={
- *         "get"={"method"="GET", "force_eager"=true},
- *         "post"={"method"="POST"}
+ *         "get"={"force_eager"=true},
+ *         "post"
  *     },
  *     collectionOperations={
- *         "get"={"method"="GET", "force_eager"=true},
- *         "post"={"method"="POST"}
+ *         "get"={"force_eager"=true},
+ *         "post"
  *     }
  * )
  * @ORM\Entity
@@ -194,15 +236,31 @@ class Group
 Be careful, the operation level is higher priority than the resource level but both are higher priority than the global
 configuration.
 
-#### Disable eager loading
+#### Disable Eager Loading
 
 If for any reason you don't want the eager loading feature, you can turn it off in the configuration:
 
 ```yaml
-# app/config/config.yaml
+# api/config/packages/api_platform.yaml
 api_platform:
     eager_loading:
         enabled: false
 ```
 
 The whole configuration seen before will no longer work and Doctrine will recover its default behavior.
+
+### Partial Pagination
+
+When using the default pagination, the Doctrine paginator will execute a `COUNT` query on the collection. The result of the
+`COUNT` query is used to compute the latest page available. With big collections this can lead to quite long response times.
+If you don't mind not having the latest page available, you can enable partial pagination and avoid the `COUNT` query:
+
+```yaml
+# api/config/packages/api_platform.yaml
+api_platform:
+    collection:
+        pagination:
+            partial: true # Disabled by default
+```
+
+More details are available on the [pagination documentation](pagination.md#partial-pagination).
