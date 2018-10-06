@@ -99,14 +99,14 @@ final class UuidNormalizer implements DenormalizerInterface
 Tag this service as a `api_platform.identifier.normalizer`:
 
 ```xml
-  <service id="App\identifier\UuidNormalizer" class="App\identifier\UuidNormalizer" public="false">
+  <service id="App\Identifier\UuidNormalizer" class="App\Identifier\UuidNormalizer" public="false">
       <tag name="api_platform.identifier.normalizer" />
   </service>
 ```
 
 ```yaml
 services:
-    App\identifier\UuidNormalizer:
+    App\Identifier\UuidNormalizer:
         tags:
             - { name: api_platform.identifier.normalizer }
 ```
