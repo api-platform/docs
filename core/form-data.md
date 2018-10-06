@@ -13,9 +13,9 @@ This decorator is able to denormalize posted form data to the target object. In 
 
 ```php
 <?php
-// src/AppBundle/EventListener/DeserializeListener.php
+// api/src/EventListener/DeserializeListener.php
 
-namespace AppBundle\EventListener;
+namespace App\EventListener;
 
 use ApiPlatform\Core\Exception\RuntimeException;
 use ApiPlatform\Core\Util\RequestAttributesExtractor;
@@ -38,7 +38,7 @@ final class DeserializeListener
         $this->decorated = $decorated;
     }
 
-    public function onKernelRequest(GetResponseEvent $event) {
+    public function onKernelRequest(GetResponseEvent $event): void {
         $request = $event->getRequest();
         if ($request->isMethodSafe() || $request->isMethod(Request::METHOD_DELETE)) {
             return;
@@ -51,7 +51,7 @@ final class DeserializeListener
         }
     }
 
-    private function denormalizeFormRequest(Request $request)
+    private function denormalizeFormRequest(Request $request): void
     {
         if (!$attributes = RequestAttributesExtractor::extractAttributes($request)) {
             return;
@@ -70,46 +70,18 @@ final class DeserializeListener
 }
 ```
 
-## Create the Service Definition
+## Creating the Service Definition
 
 ```yaml
-# app/config/services.yml
+# api/config/services.yaml
 services:
-
     # ...
-
-    'AppBundle\EventListener\DeserializeListener':
+    'App\EventListener\DeserializeListener':
         tags:
             - { name: 'kernel.event_listener', event: 'kernel.request', method: 'onKernelRequest', priority: 2 }
-```
-
-## Cleanup the Original Listener
-
-The decorated DeserializeListener is called on demand, so it's better to eliminate its own tags:
-
-```php
-<?php
-// src/AppBundle/AppBundle.php
-
-namespace AppBundle;
-
-use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
-use Symfony\Component\DependencyInjection\ContainerBuilder;
-use Symfony\Component\HttpKernel\Bundle\Bundle;
-
-class AppBundle extends Bundle
-{
-    public function build(ContainerBuilder $container)
-    {
-        parent::build($container);
-        $container->addCompilerPass(new class implements CompilerPassInterface {
-            public function process(ContainerBuilder $container) {
-                $container
-                    ->findDefinition('api_platform.listener.request.deserialize')
-                    ->clearTags();
-            }
-        });
-    }
-}
-
+        # Autoconfiguration must be disabled to set a custom priority
+        autoconfigure: false
+        decorates: 'api_platform.listener.request.deserialize'
+        arguments:
+            $decorated: '@App\EventListener\DeserializeListener.inner'
 ```

@@ -13,11 +13,10 @@ Service name                                          | Entity name  | Path resu
 `api_platform.path_segment_name_generator.dash`       | `MyResource` | `/my-resources`
 
 The default resolver is `api_platform.path_segment_name_generator.underscore`.
-To change it to the dash resolver, add the following lines to `app/config/config.yml`:
+To change it to the dash resolver, add the following lines to `api/config/packages/api_platform.yaml`:
 
 ```yaml
-# app/config/config.yml
-
+# api/config/packages/api_platform.yaml
 api_platform:
     path_segment_name_generator: api_platform.path_segment_name_generator.dash
 ```
@@ -33,9 +32,9 @@ Make sure the custom resolver implements [`ApiPlatform\Core\PathResolver\Operati
 ```php
 <?php
 
-// src/AppBundle/PathResolver/NoSeparatorsOperationPathResolver.php
+// api/src/PathResolver/NoSeparatorsOperationPathResolver.php
 
-namespace AppBundle\PathResolver;
+namespace App\PathResolver;
 
 use ApiPlatform\Core\PathResolver\OperationPathResolverInterface;
 use Doctrine\Common\Inflector\Inflector;
@@ -64,16 +63,16 @@ do.
 Otherwise, you must register this class a service like in the following example:
 
 ```yaml
-# app/config/services.yml
+# api/config/services.yaml
 services:
-    'AppBundle\PathResolver\NoSeparatorsOperationPathResolver': ~
+    # ...
+    'App\PathResolver\NoSeparatorsOperationPathResolver': ~
 ```
 
 ### Configure It
 
 ```yaml
-# app/config/config.yml
-
+# api/config/packages/api_platform.yaml
 api_platform:
-    path_segment_name_generator: 'AppBundle\PathResolver\NoSeparatorsOperationPathResolver'
+    path_segment_name_generator: 'App\PathResolver\NoSeparatorsOperationPathResolver'
 ```

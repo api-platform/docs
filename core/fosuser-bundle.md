@@ -22,7 +22,7 @@ If you are using the API Platform Standard Edition, you will need to enable the 
 configuration options:
 
 ```yaml
-# app/config/config.yml
+# api/config/packages/api_platform.yaml
 framework:
     form: { enabled: true }
 ```
@@ -31,7 +31,7 @@ framework:
 
 To enable the provided bridge with FOSUserBundle, you need to add the following configuration to api-platform:
 ```yaml
-# app/config/config.yml
+# api/config/packages/api_platform.yaml
 api_platform:
     enable_fos_user: true
 ```
@@ -47,9 +47,9 @@ Create your User entity with serialization groups:
 
 ```php
 <?php
-// src/AppBundle/Entity/User.php
+// api/src/Entity/User.php
 
-namespace AppBundle\Entity;
+namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
 use Doctrine\ORM\Mapping as ORM;
@@ -59,10 +59,10 @@ use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ORM\Entity
- * @ApiResource(attributes={
- *     "normalization_context"={"groups"={"user", "user-read"}},
- *     "denormalization_context"={"groups"={"user", "user-write"}}
- * })
+ * @ApiResource(
+ *     normalizationContext={"groups"={"user", "user:read"}},
+ *     denormalizationContext={"groups"={"user", "user:write"}}
+ * )
  */
 class User extends BaseUser
 {
@@ -85,7 +85,7 @@ class User extends BaseUser
     protected $fullname;
 
     /**
-     * @Groups({"user-write"})
+     * @Groups({"user:write"})
      */
     protected $plainPassword;
 
@@ -94,18 +94,17 @@ class User extends BaseUser
      */
     protected $username;
 
-    public function setFullname($fullname)
+    public function setFullname(?string $fullname): void
     {
         $this->fullname = $fullname;
-
-        return $this;
     }
-    public function getFullname()
+
+    public function getFullname(): ?string
     {
         return $this->fullname;
     }
 
-    public function isUser(UserInterface $user = null)
+    public function isUser(?UserInterface $user = null): bool
     {
         return $user instanceof self && $user->id === $this->id;
     }

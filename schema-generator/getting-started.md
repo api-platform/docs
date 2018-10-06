@@ -4,22 +4,26 @@
 
 If you use [the official distribution of API Platform](../distribution/index.md), the Schema Generator is already installed as a development dependency of your project and can be invoked through Docker:
 
-    $ docker-compose exec app vendor/bin/schema
+    $ docker-compose exec php vendor/bin/schema
 
 The Schema Generator can also [be downloaded independently as a PHAR](https://github.com/api-platform/schema-generator/releases) or installed in an existing project using [Composer](https://getcomposer.org):
 
     $ composer require --dev api-platform/schema-generator
 
-## Model scaffolding
+## Model Scaffolding
 
 Start by browsing [Schema.org](https://schema.org) and pick types applicable to your application. The website provides
 tons of schemas including (but not limited to) representations of people, organization, event, postal address, creative
 work and e-commerce structures.
-Then, write a simple YAML config file like the following (here we will generate a data model for an address book):
+Then, write a simple YAML config file like the following.
+
+Here we will generate a data model for an address book with these data:
+
+- a [`Person`](http://schema.org/Person) which inherits from [`Thing`](http://schema.org/Thing)
+- a [`PostalAddress`](http://schema.org/PostalAddress) which inherits from [`ContactPoint`](http://schema.org/ContactPoint), which inherits from [`StructuredValue`](http://schema.org/StructuredValue), etc.
 
 ```yaml
-# app/config/schema.yml
-
+# api/config/schema.yaml
 # The list of types and properties we want to use
 types:
     # Parent class of Person
@@ -31,13 +35,7 @@ types:
             familyName: ~
             givenName: ~
             additionalName: ~
-            gender: ~
             address: ~
-            birthDate: ~
-            telephone: ~
-            email: ~
-            url: ~
-            jobTitle: ~
     PostalAddress:
         # Disable the generation of the class hierarchy for this type
         parent: false
@@ -53,11 +51,13 @@ types:
 
 Run the generator with this config file as parameter:
 
-    $ vendor/bin/schema generate-types src/ app/config/schema.yml
+    $ vendor/bin/schema generate-types api/src/ api/config/schema.yaml
+      
+> Using docker: `$ docker-compose exec php vendor/bin/schema generate-types src/ config/schema.yaml`
 
 The following classes will be generated:
 
-```php
+```yaml
 types:
     Person:
         properties:
@@ -65,13 +65,7 @@ types:
             familyName: ~
             givenName: ~
             additionalName: ~
-            gender: ~
             address: ~
-            birthDate: ~
-            telephone: ~
-            email: ~
-            url: ~
-            jobTitle: ~
     PostalAddress:
         properties:
             # Force the type of the addressCountry property to text
@@ -88,12 +82,11 @@ types:
 
 declare(strict_types=1);
 
-namespace AppBundle\Entity;
+namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiProperty;
 use ApiPlatform\Core\Annotation\ApiResource;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * A person (alive, dead, undead, or fictional).
@@ -113,14 +106,6 @@ class Person
      * @ORM\Column(type="integer")
      */
     private $id;
-
-    /**
-     * @var string|null the name of the item
-     *
-     * @ORM\Column(type="text", nullable=true)
-     * @ApiProperty(iri="http://schema.org/name")
-     */
-    private $name;
 
     /**
      * @var string|null Family name. In the U.S., the last name of an Person. This can be used along with givenName instead of the name property.
@@ -147,77 +132,16 @@ class Person
     private $additionalName;
 
     /**
-     * @var string|null Gender of the person. While http://schema.org/Male and http://schema.org/Female may be used, text strings are also acceptable for people who do not identify as a binary gender.
-     *
-     * @ORM\Column(type="text", nullable=true)
-     * @ApiProperty(iri="http://schema.org/gender")
-     */
-    private $gender;
-
-    /**
      * @var PostalAddress|null physical address of the item
      *
-     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\PostalAddress")
+     * @ORM\ManyToOne(targetEntity="App\Entity\PostalAddress")
      * @ApiProperty(iri="http://schema.org/address")
      */
     private $address;
 
-    /**
-     * @var \DateTimeInterface|null date of birth
-     *
-     * @ORM\Column(type="date", nullable=true)
-     * @ApiProperty(iri="http://schema.org/birthDate")
-     * @Assert\Date
-     */
-    private $birthDate;
-
-    /**
-     * @var string|null the telephone number
-     *
-     * @ORM\Column(type="text", nullable=true)
-     * @ApiProperty(iri="http://schema.org/telephone")
-     */
-    private $telephone;
-
-    /**
-     * @var string|null email address
-     *
-     * @ORM\Column(type="text", nullable=true)
-     * @ApiProperty(iri="http://schema.org/email")
-     * @Assert\Email
-     */
-    private $email;
-
-    /**
-     * @var string|null URL of the item
-     *
-     * @ORM\Column(type="text", nullable=true)
-     * @ApiProperty(iri="http://schema.org/url")
-     * @Assert\Url
-     */
-    private $url;
-
-    /**
-     * @var string|null the job title of the person (for example, Financial Manager)
-     *
-     * @ORM\Column(type="text", nullable=true)
-     * @ApiProperty(iri="http://schema.org/jobTitle")
-     */
-    private $jobTitle;
-
     public function getId(): ?int
     {
         return $this->id;
-    }
-
-    public function setName(?string $name): void
-    {
-        $this->name = $name;
-    }
-
-    public function getName(): ?string
-    {
-        return $this->name;
     }
 
     public function setFamilyName(?string $familyName): void
@@ -250,16 +174,6 @@ class Person
         return $this->additionalName;
     }
 
-    public function setGender(?string $gender): void
-    {
-        $this->gender = $gender;
-    }
-
-    public function getGender(): ?string
-    {
-        return $this->gender;
-    }
-
     public function setAddress(?PostalAddress $address): void
     {
         $this->address = $address;
@@ -269,56 +183,6 @@ class Person
     {
         return $this->address;
     }
-
-    public function setBirthDate(?\DateTimeInterface $birthDate): void
-    {
-        $this->birthDate = $birthDate;
-    }
-
-    public function getBirthDate(): ?\DateTimeInterface
-    {
-        return $this->birthDate;
-    }
-
-    public function setTelephone(?string $telephone): void
-    {
-        $this->telephone = $telephone;
-    }
-
-    public function getTelephone(): ?string
-    {
-        return $this->telephone;
-    }
-
-    public function setEmail(?string $email): void
-    {
-        $this->email = $email;
-    }
-
-    public function getEmail(): ?string
-    {
-        return $this->email;
-    }
-
-    public function setUrl(?string $url): void
-    {
-        $this->url = $url;
-    }
-
-    public function getUrl(): ?string
-    {
-        return $this->url;
-    }
-
-    public function setJobTitle(?string $jobTitle): void
-    {
-        $this->jobTitle = $jobTitle;
-    }
-
-    public function getJobTitle(): ?string
-    {
-        return $this->jobTitle;
-    }
 }
 ```
 
@@ -327,7 +191,7 @@ class Person
 
 declare(strict_types=1);
 
-namespace AppBundle\Entity;
+namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiProperty;
 use ApiPlatform\Core\Annotation\ApiResource;
@@ -467,6 +331,61 @@ class PostalAddress
 }
 ```
 
+```php
+<?php
+
+declare(strict_types=1);
+
+namespace App\Entity;
+
+use ApiPlatform\Core\Annotation\ApiProperty;
+use ApiPlatform\Core\Annotation\ApiResource;
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * The most generic type of item.
+ *
+ * @see http://schema.org/Thing Documentation on Schema.org
+ *
+ * @ORM\Entity
+ * @ApiResource(iri="http://schema.org/Thing")
+ */
+class Thing
+{
+    /**
+     * @var int|null
+     *
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="AUTO")
+     * @ORM\Column(type="integer")
+     */
+    private $id;
+
+    /**
+     * @var string|null the name of the item
+     *
+     * @ORM\Column(type="text", nullable=true)
+     * @ApiProperty(iri="http://schema.org/name")
+     */
+    private $name;
+
+    public function getId(): ?int
+    {
+        return $this->id;
+    }
+
+    public function setName(?string $name): void
+    {
+        $this->name = $name;
+    }
+
+    public function getName(): ?string
+    {
+        return $this->name;
+    }
+}
+```
+
 Note that the generator takes care of creating directories corresponding to the namespace structure.
 
 Without configuration file, the tool will build the entire Schema.org vocabulary. If no properties are specified for a given
@@ -491,7 +410,7 @@ The related PHP class:
 
 declare(strict_types=1);
 
-namespace AppBundle\Enum;
+namespace App\Enum;
 
 use MyCLabs\Enum\Enum;
 
@@ -521,11 +440,11 @@ class OfferItemCondition extends Enum
 }
 ```
 
-### Going further
+### Going Further
 
 * Browse [the configuration documentation](configuration.md)
 
-## Cardinality extraction
+## Cardinality Extraction
 
 The Cardinality Extractor is a standalone tool (also used internally by the generator) extracting a property's cardinality.
 It uses [GoodRelations](http://www.heppnetz.de/projects/goodrelations/) data when available. Other cardinalities are
@@ -535,7 +454,3 @@ When cardinality cannot be automatically extracted, it's value is set to `unknow
 Usage:
 
     $ vendor/bin/schema extract-cardinalities
-
-Previous chapter: [Introduction](index.md)
-
-Next chapter: [Configuration](configuration.md)

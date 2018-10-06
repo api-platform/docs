@@ -7,9 +7,9 @@ customize this order, you must add an `order` attribute on your ApiResource anno
 
 ```php
 <?php
-// src/AppBundle/Entity/Book.php
+// api/src/Entity/Book.php
 
-namespace AppBundle\Entity;
+namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
 
@@ -32,9 +32,9 @@ If you only specify the key, `ASC` direction will be used as default. For exampl
 
 ```php
 <?php
-// src/AppBundle/Entity/Book.php
+// api/src/Entity/Book.php
 
-namespace AppBundle\Entity;
+namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
 
@@ -57,13 +57,13 @@ class Book
 }
 ```
 
-It's also possible to configure the default filter on an association property:
+It's also possible to configure the default order on an association property:
 
 ```php
 <?php
-// src/AppBundle/Entity/Book.php
+// api/src/Entity/Book.php
 
-namespace AppBundle\Entity;
+namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
 

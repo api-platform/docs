@@ -4,6 +4,7 @@ API Platform Client Generator is a generator for scaffolding apps with Create-Re
 
  * React/Redux
  * Vue.js
+ * Admin On REST
 
 The generator works especially well with APIs built with the [API Platform](https://api-platform.com) framework.
 

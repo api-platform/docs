@@ -7,7 +7,7 @@
 API Platform allows to easily add a JWT-based authentication to your API using [LexikJWTAuthenticationBundle](https://github.com/lexik/LexikJWTAuthenticationBundle).
 To install this bundle, [just follow its documentation](https://github.com/lexik/LexikJWTAuthenticationBundle/blob/master/Resources/doc/index.md).
 
-# Installing LexikJWTAuthenticationBundle
+## Installing LexikJWTAuthenticationBundle
 
 `LexikJWTAuthenticationBundle` requires your application to have a properly configured user provider.
 You can either use the [Doctrine user provider](https://symfony.com/doc/current/security/entity_provider.html) provided
@@ -17,7 +17,7 @@ or use [API Platform's FOSUserBundle integration](fosuser-bundle.md).
 Here's a sample configuration using the data provider provided by FOSUserBundle:
 
 ```yaml
-# app/config/security.yml
+# app/config/packages/security.yaml
 security:
     encoders:
         FOS\UserBundle\Model\UserInterface: bcrypt
@@ -28,7 +28,7 @@ security:
 
     providers:
         fos_userbundle:
-            id: fos_user.user_provider.username
+            id: fos_user.user_provider.username_email
 
     firewalls:
         login:
@@ -48,7 +48,9 @@ security:
             provider: fos_userbundle
             stateless: true
             anonymous: true
-            lexik_jwt: ~
+            guard:
+                authenticators:
+                    - lexik_jwt_authentication.jwt_token_authenticator
 
         dev:
             pattern:  ^/(_(profiler|wdt)|css|images|js)/
@@ -67,7 +69,7 @@ Want to test the routes of your JWT-authentication-protected API?
 ### Configuring API Platform
 
 ```yaml
-# app/config/config.yml
+# api/config/packages/api_platform.yaml
 api_platform:
     swagger:
          api_keys:
@@ -101,7 +103,7 @@ Let's configure Behat to automatically send an `Authorization` HTTP header conta
 <?php
 // features/bootstrap/FeatureContext.php
 
-use AppBundle\Entity\User;
+use App\Entity\User;
 use Behat\Behat\Hook\Scope\BeforeScenarioScope;
 use Behatch\Context\RestContext;
 

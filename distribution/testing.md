@@ -1,6 +1,6 @@
 # Testing and Specifying the API
 
-A set of useful tools to specify and test your API are pre-configured in the API Platform distribution:
+A set of useful tools to specify and test your API are easily installable in the API Platform distribution:
 
 * [PHPUnit](https://phpunit.de/) allows to cover your classes with unit tests and to write functional tests thanks to his
   Symfony integration.
@@ -11,6 +11,14 @@ A set of useful tools to specify and test your API are pre-configured in the API
 
 Take a look at [the Symfony documentation about testing](https://symfony.com/doc/current/testing.html) to learn how to use
 PHPUnit in your API Platform project.
+
+Installing Behat is easy enough following these steps:
+
+    $ docker-compose exec php composer require --dev behat/behat
+    $ docker-compose exec php vendor/bin/behat -V
+    $ docker-compose exec php vendor/bin/behat --init
+
+This will install Behat in your project and creates a directory `features` where you can place your feature file(s).
 
 Here is an example of a [Gherkin](http://docs.behat.org/en/latest/user_guide/gherkin.html) feature file specifying the behavior
 of [the bookstore API we created in the tutorial](index.md). Thanks to Behatch, this feature file can be executed against
@@ -160,11 +168,11 @@ The API Platform flavor of Behat also comes with a temporary SQLite database ded
 
 Clear the cache of the `test` environment:
 
-    $ docker-compose exec app bin/console cache:clear --env=test
+    $ docker-compose exec php bin/console cache:clear --env=test
 
 Then run:
 
-    $ docker-compose exec app vendor/bin/behat
+    $ docker-compose exec php vendor/bin/behat
 
 Everything should be green now. Your Linked Data API is now specified and tested thanks to Behat!
 
@@ -174,3 +182,9 @@ You may also be interested in these alternative testing tools (not included in t
   using a nice UI, benefit from [the Swagger integration](https://www.getpostman.com/docs/importing_swagger) and run tests
   test in the CI using [newman](https://github.com/postmanlabs/newman).
 * [PHP Matcher](https://github.com/coduo/php-matcher): the Swiss Army knife of JSON document testing.
+
+## Running Unit Tests with PHPUnit
+
+To run your [PHPUnit](https://phpunit.de/) test suite, execute the following command:
+
+    $ docker-compose exec php vendor/bin/phpunit

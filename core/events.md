@@ -16,12 +16,12 @@ In the following example, we will send a mail each time a new book is created us
 
 ```php
 <?php
-// src/AppBundle/EventSubscriber/BookMailSubscriber.php
+// api/src/EventSubscriber/BookMailSubscriber.php
 
-namespace AppBundle\EventSubscriber;
+namespace App\EventSubscriber;
 
 use ApiPlatform\Core\EventListener\EventPriorities;
-use AppBundle\Entity\Book;
+use App\Entity\Book;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\GetResponseForControllerResultEvent;
@@ -76,11 +76,11 @@ Built-in event listeners are:
 Name                          | Event              | Pre & Post hooks                     | Priority | Description
 ------------------------------|--------------------|--------------------------------------|----------|--------------------------------------------------------------------------------------------------------------------------
 `AddFormatListener`           | `kernel.request`   | None                                 | 7        | guess the best response format ([content negotiation](content-negotiation.md))
-`ReadListener`                | `kernel.request`   | `PRE_READ`, `POST_READ`              | 4        | retrieve data from the persistence system using the [data providers](data-providers.md)
+`ReadListener`                | `kernel.request`   | `PRE_READ`, `POST_READ`              | 4        | retrieve data from the persistence system using the [data providers](data-providers.md) (`GET`, `PUT`, `DELETE`)
 `DeserializeListener`         | `kernel.request`   | `PRE_DESERIALIZE`, `POST_DESERIALIZE`| 2        | deserialize data into a PHP entity (`GET`, `POST`, `DELETE`); update the entity retrieved using the data provider (`PUT`)
 `ValidateListener`            | `kernel.view`      | `PRE_VALIDATE`, `POST_VALIDATE`      | 64       | [validate data](validation.md) (`POST`, `PUT`)
-`WriteListener`               | `kernel.view`      | `PRE_WRITE`, `POST_WRITE`            | 32       | if using the Doctrine ORM, persist data (`POST`, `PUT`, `DELETE`)
-`SerializeListener`           | `kernel.view`      | None                                 | 16       | serialize the PHP entity in string [according to the request format](content-negotiation.md)
+`WriteListener`               | `kernel.view`      | `PRE_WRITE`, `POST_WRITE`            | 32       | persist changes in the persistence system using the [data persisters](data-persisters.md) (`POST`, `PUT`, `DELETE`)
+`SerializeListener`           | `kernel.view`      | `PRE_SERIALIZE`, `POST_SERIALIZE`    | 16       | serialize the PHP entity in string [according to the request format](content-negotiation.md)
 `RespondListener`             | `kernel.view`      | `PRE_RESPOND`, `POST_RESPOND`        | 8        | transform serialized to a `Symfony\Component\HttpFoundation\Response` instance
 `AddLinkHeaderListener`       | `kernel.response`  | None                                 | 0        | add a `Link` HTTP header pointing to the Hydra documentation
 `ValidationExceptionListener` | `kernel.exception` | None                                 | 0        | serialize validation exceptions in the Hydra format
@@ -101,5 +101,16 @@ Constant           | Event             | Priority |
 `POST_VALIDATE`    | `kernel.view`     | 63       |
 `PRE_WRITE`        | `kernel.view`     | 33       |
 `POST_WRITE`       | `kernel.view`     | 31       |
+`PRE_SERIALIZE`    | `kernel.view`     | 17       |
+`POST_SERIALIZE`   | `kernel.view`     | 15       |
 `PRE_RESPOND`      | `kernel.view`     | 9        |
 `POST_RESPOND`     | `kernel.response` | 0        |
+
+Some of those built-in listeners can be enabled/disabled by setting request attributes ([for instance in the `defaults`
+attribute of an operation](operations.md#recommended-method)):
+
+Attribute      | Type   | Default | Description                                                                          |
+---------------|--------|---------|--------------------------------------------------------------------------------------|
+`_api_receive` | `bool` | `true`  | Enables or disables the `ReadListener`, `DeserializeListener` and `ValidateListener` |
+`_api_respond` | `bool` | `true`  | Enables or disables `SerializeListener`                                              |
+`_api_persist` | `bool` | `true`  | Enables or disables `WriteLister`                                                    |
