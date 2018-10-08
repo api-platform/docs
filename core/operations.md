@@ -464,7 +464,7 @@ class Question
 
 ### Access Control of Subresources
 
-The `subresourceOperations` attribute also allows you to add an access control on each path with the attribute `access_control `.
+The `subresourceOperations` attribute also allows you to add an access control on each path with the attribute `access_control`.
 
 ```php
 <?php
