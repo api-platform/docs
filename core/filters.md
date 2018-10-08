@@ -136,7 +136,7 @@ Case insensitivity may already be enforced at the database level depending on th
 used. If you are using MySQL, note that the commonly used `utf8_unicode_ci` collation (and its sibling `utf8mb4_unicode_ci`)
 are already case insensitive, as indicated by the `_ci` part in their names.
 
-Note : Search filters with the exact strategy can have multiple values for a same property (in this case the condition will be similar to a SQL IN clause)
+Note: Search filters with the exact strategy can have multiple values for a same property (in this case the condition will be similar to a SQL IN clause).
 
 Syntax: `?property[]=foo&property[]=bar`
 
