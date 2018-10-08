@@ -462,6 +462,29 @@ class Question
 }
 ```
 
+### Access Control of Subresources
+
+The `subresourceOperations` attribute also allows you to add an access control on each path with the attribute `access_control `.
+
+```php
+<?php
+// api/src/Entity/Question.php
+
+/**
+ * ...
+ * @ApiResource(
+ *     subresourceOperations={
+ *          "answer_get_subresource"= {
+ *              "method"="GET",
+ *              "access_control"="has_role('ROLE_AUTHENTICATED')"
+ *          }
+ *      }
+ * )
+ class Question
+ {
+ }
+```
+
 ### Control the Depth of Subresources
 
 You can control depth of subresources with the parameter `maxDepth`. For example, if `Answer` entity also have subresource
@@ -663,7 +686,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
 class Book
 {
     //...
-    
+
     /**
      * @Groups("special")
      */
