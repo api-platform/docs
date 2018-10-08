@@ -71,7 +71,7 @@ class Book
 
 The admin handles this `to-many` relation automatically!
 
-But we can go further:
+Also we can go further:
 
 ## Customizing a Property
 

@@ -143,7 +143,7 @@ And start the built-in PHP server or the Symfony WebServerBundle:
 
     # Built-in PHP server
     $ php -S 127.0.0.1:8000 -t public
-    
+
     # Symfony WebServerBundle
     $ composer req server --dev
     $ bin/console server:run
@@ -270,7 +270,7 @@ class Book
      * @ORM\OneToMany(targetEntity="Review", mappedBy="book")
      */
     public $reviews;
-    
+
     public function __construct() {
         $this->reviews = new ArrayCollection();
     }
@@ -689,7 +689,7 @@ in your browser:
 ![The React Progressive Web App](images/api-platform-2.2-pwa-react.png)
 
 You can also choose to generate the code for a specific resource with the `--resource` argument (example:
-`generate-api-platform-client --resource books`). 
+`generate-api-platform-client --resource books`).
 
 The generated code contains a list (including pagination), a delete button, a creation and an edition form. It also includes
 [Bootstrap 4](http://getbootstrap.com) markup and [ARIA roles](https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA)
@@ -723,7 +723,7 @@ Here is a non-exhaustive list of popular API Platform extensions:
   (RabbitMQBundle)
 
 Keep in mind that you can use your favorite client-side technology: API Platform provides React and Vue.js components;
-but you can use your preferred client-side technology including Angular, Ionic and Swift. Any language able to send HTTP
+however you can use your preferred client-side technology including Angular, Ionic and Swift. Any language able to send HTTP
 requests is OK (even COBOL can do that).
 
 To go further, the API Platform team maintains a demo application showing more advanced use cases like leveraging serialization

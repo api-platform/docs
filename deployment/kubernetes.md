@@ -4,7 +4,7 @@
 Both [Google Cloud Platform](https://cloud.google.com/kubernetes-engine/), [Microsoft Azure](https://azure.microsoft.com/en-us/services/container-service/kubernetes/)
 and [Amazon Web Services](https://aws.amazon.com/eks/) provide managed Kubernetes environment.
 
-[The official API Platform distribution](../distribution/index.md) contains a built-in [Helm](https://helm.sh/) (the k8s
+[The official API Platform distribution](../distribution/index.md) contains a builtin [Helm](https://helm.sh/) (the k8s
 package manager) chart to deploy in a wink on any of these platforms.
 
 ## Preparing Your Cluster and Your Local Machine
@@ -25,13 +25,13 @@ package manager) chart to deploy in a wink on any of these platforms.
 2. Push your images to your Docker registry, example with [Google Container Registry](https://cloud.google.com/container-registry/):
 
     Docker client versions <= 18.03:
-    
+
         gcloud docker -- push gcr.io/test-api-platform/php
         gcloud docker -- push gcr.io/test-api-platform/nginx
         gcloud docker -- push gcr.io/test-api-platform/varnish
-        
+
     Docker client versions > 18.03:
-    
+
         gcloud auth configure-docker
         docker push gcr.io/test-api-platform/php
         docker push gcr.io/test-api-platform/nginx
@@ -83,7 +83,7 @@ Before running your application for the first time, be sure to create the databa
 
 ## Tiller RBAC Issue
 
-We noticed that some tiller RBAC trouble occured, you generally can resolve it running:
+We noticed that some tiller RBAC trouble occurred, you generally can resolve it running:
 
     kubectl create serviceaccount --namespace kube-system tiller
       serviceaccount "tiller" created
