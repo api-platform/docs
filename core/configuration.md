@@ -14,6 +14,9 @@ api_platform:
 
     # The version of the API.
     version: '0.0.0'
+    
+    # Set this to false if you want Webby to disapear.
+    show_webby: true
 
     # Specify a name converter to use.
     name_converter: ~
