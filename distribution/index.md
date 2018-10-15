@@ -151,7 +151,7 @@ And start the built-in PHP server or the Symfony WebServerBundle:
 All JavaScript components are also [available as standalone libraries](https://github.com/api-platform?language=javascript)
 installable with NPM or Yarn.  
 
-**Note:** when installing API Platform this way, the API will be exposed as the `/api/` path. You need to open `http://localhost:8000/api/` to see the API documentation.
+**Note:** when installing API Platform this way, the API will be exposed as the `/api/` path. You need to open `http://localhost:8000/api/` to see the API documentation. If you are deploying API Platform directly on an Apache or Nginx webserver and getting a 404 error on opening this link, you will need to enable the [rewriting rules](https://symfony.com/doc/current/setup/web_server_configuration.html) for your specific webserver software.
 
 ## It's Ready!
 
