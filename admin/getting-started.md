@@ -228,3 +228,168 @@ export default class extends Component {
   }
 }
 ```
+
+### How to build admin area with react-admin with custom list/create/edit/show blocks
+
+Another approach to build admin area is to use react-admin component and custom
+Resources per entry:
+
+Example for App.js
+
+```javascript
+import React, { Component } from 'react';
+import { Admin, Resource } from 'react-admin';
+import parseHydraDocumentation from '@api-platform/api-doc-parser/lib/hydra/parseHydraDocumentation';
+import { hydraClient, fetchHydra as baseFetchHydra  } from '@api-platform/admin';
+import authProvider from './authProvider';
+import { Redirect } from 'react-router-dom';
+import { createMuiTheme } from '@material-ui/core/styles';
+import Layout from "./Component/Layout";
+import { UserShow } from "./Components/User/Show";
+import { UserEdit } from "./Components/User/Edit";
+import { UserCreate } from "./Components/User/Create";
+import { UserList } from './Components/User/List';
+
+const theme = createMuiTheme({
+    palette: {
+        type: 'light'
+    },
+});
+
+const entrypoint = process.env.REACT_APP_API_ENTRYPOINT;
+const fetchHeaders = {'Authorization': `Bearer ${window.localStorage.getItem('token')}`};
+const fetchHydra = (url, options = {}) => baseFetchHydra(url, {
+    ...options,
+    headers: new Headers(fetchHeaders),
+});
+const dataProvider = api => hydraClient(api, fetchHydra);
+const apiDocumentationParser = entrypoint => parseHydraDocumentation(entrypoint, { headers: new Headers(fetchHeaders) })
+    .then(
+        ({ api }) => ({api}),
+        (result) => {
+            switch (result.status) {
+                case 401:
+                    return Promise.resolve({
+                        api: result.api,
+                        customRoutes: [{
+                            props: {
+                                path: '/',
+                                render: () => <Redirect to={`/login`}/>,
+                            },
+                        }],
+                    });
+
+                default:
+                    return Promise.reject(result);
+            }
+        },
+    );
+
+export default class extends Component {
+    state = { api: null };
+
+    componentDidMount() {
+        apiDocumentationParser(entrypoint).then(({ api }) => {
+            this.setState({ api });
+        }).catch((e) => {
+                console.log(e);
+            }
+        );
+    }
+
+    render() {
+        if (null === this.state.api) return <div>Loading...</div>;
+        return (
+            <Admin api={ this.state.api }
+                   apiDocumentationParser={apiDocumentationParser}
+                   dataProvider= {dataProvider(this.state.api) }
+                   theme={theme}
+                   appLayout={Layout}
+                   authProvider={authProvider}          
+            >                
+                <Resource name="users" list={UserList} create={UserCreate} show={UserShow} edit={UserEdit} title="Users"/>
+            </Admin>
+        )
+    }
+}
+```
+
+And accordingly create files Show.js, Create.js, List.js, Edit.js
+in Component/User directory:
+```javascript
+// Component/User/Create.js
+import React from 'react';
+import { Create, SimpleForm, TextInput, email, required } from 'react-admin';
+
+export const UserCreate = (props) => (
+    <Create {...props}>
+        <SimpleForm>
+            <TextInput source="email" label="Email" validate={email()} />
+            <TextInput source="plainPassword" label="Password" validate={required()} />
+            <TextInput source="name" label="Name"/>
+            <TextInput source="phone" label="Phone"/>
+        </SimpleForm>
+    </Create>
+);
+
+```
+
+
+```javascript
+// Component/User/Edit.js
+import React from 'react';
+import { Edit, SimpleForm, DisabledInput, TextInput, DateInput, email } from 'react-admin';
+
+export const UserEdit = (props) => (
+    <Edit {...props}>
+        <SimpleForm>
+            <DisabledInput source="originId" label="ID"/>
+            <TextInput source="email" label="Email" validate={email()} />
+            <TextInput source="name" label="Name"/>
+            <TextInput source="phone" label="Phone"/>
+            <DateInput disabled source="createdAt" label="Date"/>
+        </SimpleForm>
+    </Edit>
+);
+```
+
+```javascript
+// Component/User/List.js
+import React from 'react';
+import { List, Datagrid, TextField, EmailField, DateField, ShowButton, EditButton } from 'react-admin';
+import { CustomPagination } from "../Pagination/CustomPagination";
+
+export const UserList = (props) => (
+    <List {...props} title="Users" pagination={<CustomPagination/>}  perPage={30}>
+        <Datagrid>
+            <TextField source="originId" label="ID"/>
+            <EmailField source="email" label="Email" />
+            <TextField source="name" label="Name"/>
+            <TextField source="phone" label="Phone"/>
+            <DateField source="createdAt" label="Date"/>
+            <ShowButton />
+            <EditButton />
+        </Datagrid>
+    </List>
+);
+
+```
+
+```javascript
+// Component/User/Show.js
+import React from 'react';
+import { Show, SimpleShowLayout, TextField, DateField, EmailField, EditButton } from 'react-admin';
+
+export const UserShow = (props) => (
+    <Show {...props}>
+        <SimpleShowLayout>
+            <TextField source="originId" label="ID"/>
+            <EmailField source="email" label="Email" />
+            <TextField source="name" label="Name"/>
+            <TextField source="phone" label="Phone"/>
+            <DateField source="createdAt" label="Date"/>
+            <EditButton />
+        </SimpleShowLayout>
+    </Show>
+);
+```
