@@ -71,6 +71,73 @@ Alternatively, [the subscriber must be registered manually](http://symfony.com/d
 [Doctrine events](http://doctrine-orm.readthedocs.org/en/latest/reference/events.html#reference-events-lifecycle-events)
 are also available (if you use it) if you want to hook at the object lifecycle events.
 
+Different events require different methods for obtaining the item(s) created or retrieved by the api request. 
+In the following example, we will add a dynamically generated image URL to each image item, whether individual or part of 
+a collection, that is returned by the API:
+
+```php
+<?php
+// api/src/EventSubscriber/ImageUrlSubscriber.php
+
+namespace App\EventSubscriber;
+
+
+use ApiPlatform\Core\EventListener\EventPriorities;
+use App\Entity\ImageInterface;
+use App\Service\Images;
+use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpKernel\Event\GetResponseEvent;
+use Symfony\Component\HttpKernel\KernelEvents;
+
+class ImageUrlSubscriber implements EventSubscriberInterface
+{
+    private $imageService;
+    
+    public function __construct(Images $imageService)
+    {
+        $this->imageService = $imageService;
+    }
+    
+    public static function getSubscribedEvents()
+    {
+        return [
+            KernelEvents::REQUEST => ['addImageUrl', EventPriorities::POST_READ]
+        ];
+    }
+
+    public function addImageUrl(GetResponseEvent $event)
+    {
+        $data = $event->getRequest()->attributes->get('data');
+        $method = $event->getRequest()->getMethod();
+
+        if (Request::METHOD_GET !== $method) {
+            return;
+        }
+
+        if ($data instanceof ImageInterface) {
+            $this->generateAndSetImageUrl($data);
+            return;
+        }
+
+        if (is_iterable($data)) {
+            foreach ($data as $item) {
+                if (!$item instanceof ImageInterface) {
+                    return;
+                }
+                $this->generateAndSetImageUrl($item);
+            }
+        }
+    }
+
+    private function generateAndSetImageUrl(ImageInterface $image)
+    {
+        $image->setUrl($this->imageService->getCroppedImageUrl($image));
+        return $image;
+    }
+}
+```
+
 Built-in event listeners are:
 
 Name                          | Event              | Pre & Post hooks                     | Priority | Description
