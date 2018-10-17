@@ -264,3 +264,119 @@ api_platform:
 ```
 
 More details are available on the [pagination documentation](pagination.md#partial-pagination).
+
+### Appending data in bulk
+
+As stated in the [serialization documentation](serialization.md#decorating-a-serializer-and-adding-extra-data), you can use
+a normalizer decorator to append data to your entities before they are serialized. However, this is done on a per-item basis.
+If you use database queries or external sources for retreiving the data you're appending, the performance might suffer, as
+the data to append to each item is requested individually.
+
+An alternative method of appending data is through an event subscriber, using the `POST_READ` priority. In this example, the
+note count for a task or collection of tasks is loaded (Note having a unidirectional many-to-one relation to Task).
+
+```php
+<?php
+// api/src/EventSubscriber/TaskNoteCountSubscriber.php
+
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Paginator;
+use ApiPlatform\Core\EventListener\EventPriorities;
+use App\Entity\Task;
+use App\Repository\NoteRepository;
+use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpKernel\Event\GetResponseEvent;
+use Symfony\Component\HttpKernel\KernelEvents;
+
+class TaskNoteCountSubscriber implements EventSubscriberInterface
+{
+    /**
+     * @var NoteRepository
+     */
+    private $noteRepository;
+
+    public function __construct(NoteRepository $noteRepository)
+    {
+        $this->noteRepository = $noteRepository;
+    }
+
+    public static function getSubscribedEvents()
+    {
+        return [
+            KernelEvents::REQUEST => [
+                ['updateCollection', EventPriorities::POST_READ],
+                ['updateItem', EventPriorities::POST_READ],
+            ],
+        ];
+    }
+
+    public function updateCollection(GetResponseEvent $event): void
+    {
+        if ($event->getRequest()->getMethod() !== Request::METHOD_GET) {
+            return;
+        }
+
+        $data = $event->getRequest()->attributes->get('data');
+
+        if (!$data instanceof Paginator) {
+            return;
+        }
+
+        $tasks = [];
+        foreach ($data as $task) {
+            if (!$task instanceof Task) {
+                return;
+            }
+
+            $tasks[$task->getId()] = $task;
+        }
+
+        $counts = $this->getNoteCounts($tasks);
+
+        foreach ($counts as $id => $count) {
+            if (isset($tasks[$id])) {
+                $tasks[$id]->setNoteCount($count);
+            }
+        }
+    }
+
+    public function updateItem(GetResponseEvent $event): void
+    {
+        if ($event->getRequest()->getMethod() !== Request::METHOD_GET) {
+            return;
+        }
+
+        $task = $event->getRequest()->attributes->get('data');
+
+        if (!$task instanceof Task) {
+            return;
+        }
+
+        $counts = $this->getNoteCounts([$task]);
+
+        if (isset($counts[$task->getId()])) {
+            $task->setNoteCount($counts[$task->getId()]);
+        }
+    }
+
+    private function getNoteCounts($tasks)
+    {
+        $results = $this->noteRepository->createQueryBuilder('n')
+            ->select('c.id AS id, COUNT(n.id) AS amount')
+            ->join('n.tasks', 't')
+            ->where('n.tasks IN (:tasks)')
+            ->setParameter('tasks', $tasks)
+            ->groupBy('n.task')
+            ->getQuery()
+            ->getArrayResult();
+
+        $counts = [];
+        foreach ($results as ['id' => $id, 'amount' => $amount]) {
+            $counts[(int) $id] = (int) $amount;
+        }
+
+        return $counts;
+    }
+}
+```
+
