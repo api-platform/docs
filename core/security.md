@@ -120,3 +120,6 @@ App\Entity\Book:
             access_control_message: 'Sorry, but you are not the book owner.'
     # ...
 ```
+
+Into access control expression for collection, `object` property is not available.
+For add restriction on this, you need implement [a extension](extensions.md) to make a custom query.
