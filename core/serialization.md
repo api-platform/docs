@@ -308,7 +308,7 @@ class Book
 }
 ```
 
-The following rules apply when denormalizating embedded relations:
+The following rules apply when denormalizing embedded relations:
 
 * If an `@id` key is present in the embedded resource, then the object corresponding to the given URI will be retrieved through
 the data provider. Any changes in the embedded relation will also be applied to that object.
@@ -607,7 +607,7 @@ final class ApiNormalizer implements NormalizerInterface, DenormalizerInterface,
 API Platform is able to guess the entity identifier using [Doctrine metadata](http://doctrine-orm.readthedocs.org/en/latest/reference/basic-mapping.html#identifiers-primary-keys).
 It also supports composite identifiers.
 
-If you are not using the Doctrine ORM Provider, you must explictely mark the identifier using the `identifier` attribute of
+If you are not using the Doctrine ORM Provider, you must explicitly mark the identifier using the `identifier` attribute of
 the `ApiPlatform\Core\Annotation\ApiProperty` annotation.  For example:
 
 
