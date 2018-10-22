@@ -2,7 +2,7 @@
 
 ## Basic implementation
 
-[Traefik](https://traefik.io) is a reverse proxy / load balancer that's easy, dynamic, automatic, fast, full-featured, open source, production proven, providing metrics, and integrating with every major cluster technologie
+[Traefik](https://traefik.io) is a reverse proxy / load balancer that's easy, dynamic, automatic, fast, full-featured, open source, production proven, providing metrics, and integrating with every major cluster technology
 
 This tool will help you to define your own routes for your client, api and more generally for your containers.
 
