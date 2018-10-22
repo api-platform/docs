@@ -119,4 +119,4 @@ If you do that, you'll have to update the nelmio part in your```api/.env``` and 
 
 ## Known problems
 
-Take care of your network, if he's a type B network it may not work because of containers are in type B network and it will be in conflict with Traefik sub-network
+Take care of your network, if it's a type B network it may not work because containers are in type B network and it will be in conflict with Traefik sub-network
