@@ -207,7 +207,7 @@ There is two solutions to achieve that:
 
 #### Use Swagger Decorator
 
-By following the doc about [Override the Swagger Documentation](swagger.md##overriding-the-swagger-documentation)
+By following the doc about [Override the Swagger Documentation](swagger.md#overriding-the-swagger-documentation)
 and adding the ability to retrieve a `_api_swagger_context` in route
 parameters, you should be able to display your custom endpoint.
 

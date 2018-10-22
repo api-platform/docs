@@ -136,6 +136,10 @@ Case insensitivity may already be enforced at the database level depending on th
 used. If you are using MySQL, note that the commonly used `utf8_unicode_ci` collation (and its sibling `utf8mb4_unicode_ci`)
 are already case insensitive, as indicated by the `_ci` part in their names.
 
+Note: Search filters with the exact strategy can have multiple values for a same property (in this case the condition will be similar to a SQL IN clause).
+
+Syntax: `?property[]=foo&property[]=bar`
+
 In the following example, we will see how to allow the filtering of a list of e-commerce offers:
 
 ```php
@@ -160,6 +164,7 @@ class Offer
 
 `http://localhost:8000/api/offers?price=10` will return all offers with a price being exactly `10`.
 `http://localhost:8000/api/offers?name=shirt` will return all offers with a description containing the word "shirt".
+`http://localhost:8000/api/offers?name[]=shirt&name[]=sweat` will return all offers with a description containing the word "shirt" or containing the word "sweat".
 
 Filters can be combined together: `http://localhost:8000/api/offers?price=10&name=shirt`
 
@@ -680,7 +685,7 @@ final class RegexpFilter extends AbstractContextAwareFilter
         ) {
             return;
         }
-        
+
         $parameterName = $queryNameGenerator->generateParameterName($property); // Generate a unique parameter name to avoid collisions with other filters
         $queryBuilder
             ->andWhere(sprintf('REGEXP(o.%s, :%s) = 1', $property, $parameterName))
@@ -1074,7 +1079,7 @@ class DummyCar
      * @ApiFilter(SearchFilter::class, properties={"colors.prop": "ipartial"})
      */
     private $colors;
-    
+
     // ...
 }
 

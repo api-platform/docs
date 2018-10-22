@@ -32,7 +32,7 @@ vich_uploader:
 
 ## Configuring the Entity Receiving the Uploaded File
 
-In our exemple, we will create a `MediaObject` API resource. We will post files
+In our example, we will create a `MediaObject` API resource. We will post files
 to this resource endpoint, and then link the newly created resource to another
 resource (in our case: Book).
 

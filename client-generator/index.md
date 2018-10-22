@@ -3,6 +3,7 @@
 API Platform Client Generator is a generator for scaffolding apps with Create-Retrieve-Update-Delete features for any API exposing a Hydra documentation. Currently the following targets are available:
 
  * React/Redux
+ * React Native
  * Vue.js
 
 The generator works especially well with APIs built with the [API Platform](https://api-platform.com) framework.
