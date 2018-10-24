@@ -896,7 +896,7 @@ final class UserFilter extends SQLFilter
     public function addFilterConstraint(ClassMetadata $targetEntity, string $targetTableAlias): string
     {
         if (null === $this->reader) {
-            return throw new \RuntimeException(sprintf('An annotation reader must be provided. Be sure to call "%s::setAnnotationReader()".', __CLASS__));
+            throw new \RuntimeException(sprintf('An annotation reader must be provided. Be sure to call "%s::setAnnotationReader()".', __CLASS__));
         }
 
         // The Doctrine filter is called for any query on any entity
