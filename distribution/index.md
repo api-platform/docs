@@ -271,7 +271,8 @@ class Book
      */
     public $reviews;
     
-    public function __construct() {
+    public function __construct()
+    {
         $this->reviews = new ArrayCollection();
     }
 
