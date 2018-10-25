@@ -468,19 +468,18 @@ The `subresourceOperations` attribute also allows you to add an access control o
 
 ```php
 <?php
-// api/src/Entity/Question.php
+// api/src/Entity/Answer.php
 
 /**
  * ...
  * @ApiResource(
  *     subresourceOperations={
- *          "answer_get_subresource"= {
- *              "method"="GET",
+ *          "api_questions_answer_get_subresource"= {
  *              "access_control"="has_role('ROLE_AUTHENTICATED')"
  *          }
  *      }
  * )
- class Question
+ class Answer
  {
  }
 ```
