@@ -59,6 +59,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ORM\Entity
+ * @ORM\Table(name="fos_user")
  * @ApiResource(
  *     normalizationContext={"groups"={"user", "user:read"}},
  *     denormalizationContext={"groups"={"user", "user:write"}}

@@ -896,7 +896,7 @@ final class UserFilter extends SQLFilter
     public function addFilterConstraint(ClassMetadata $targetEntity, string $targetTableAlias): string
     {
         if (null === $this->reader) {
-            return throw new \RuntimeException(sprintf('An annotation reader must be provided. Be sure to call "%s::setAnnotationReader()".', __CLASS__));
+            throw new \RuntimeException(sprintf('An annotation reader must be provided. Be sure to call "%s::setAnnotationReader()".', __CLASS__));
         }
 
         // The Doctrine filter is called for any query on any entity
@@ -965,7 +965,7 @@ namespace App\EventListener;
 
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
-use Doctrine\Common\Persistence\ObjectManager;
+use Doctrine\Orm\EntityManagerInterface;
 use Doctrine\Common\Annotations\Reader;
 
 final class UserFilterConfigurator
@@ -974,7 +974,7 @@ final class UserFilterConfigurator
     private $tokenStorage;
     private $reader;
 
-    public function __construct(ObjectManager $em, TokenStorageInterface $tokenStorage, Reader $reader)
+    public function __construct(EntityManagerInterface $em, TokenStorageInterface $tokenStorage, Reader $reader)
     {
         $this->em = $em;
         $this->tokenStorage = $tokenStorage;

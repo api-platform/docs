@@ -41,7 +41,7 @@ Example:
 types:
     Brand:
         properties:
-            logo: { range: "ImageObject" } # Force the range of the logo propery to ImageObject (can also be URL according to Schema.org)
+            logo: { range: "ImageObject" } # Force the range of the logo property to ImageObject (can also be URL according to Schema.org)
 
     PostalAddress:
         properties:
@@ -375,7 +375,7 @@ doctrine:
 ## Changing the Field Visibility
 
 Generated fields have a `private` visibility and are exposed through getters and setters.
-The default visibility can be changed with the `fieldVisibility` otion.
+The default visibility can be changed with the `fieldVisibility` option.
 
 Example:
 

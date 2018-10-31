@@ -97,4 +97,4 @@ admin.addEntity(article);
 nga.configure(admin);
 ```
 
-You can look at what we have done as another exemple [api-platform/admin](https://github.com/api-platform/admin).
+You can look at what we have done as another example [api-platform/admin](https://github.com/api-platform/admin).
