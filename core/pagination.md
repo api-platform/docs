@@ -440,27 +440,11 @@ You can also use the Query object inside the service method and pass it to the P
 
 namespace App\Service\Book;
 
-use App\Entity\Book;
-use App\Entity\User;
-use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
-use Doctrine\ORM\Tools\Pagination\Paginator as DoctrinePaginator;
-use ApiPlatform\Core\Bridge\Doctrine\Orm\Paginator;
+// use...
 
 class BookService
 {
-    const ITEMS_PER_PAGE = 20;
-    
-    private $entityManager;
-    private $tokenStorage;
-    
-    public function __construct(
-        EntityManagerInterface $entityManager,
-        TokenStorageInterface $tokenStorage
-    ) {
-        $this->entityManager = $entityManager;
-        $this->tokenStorage = $tokenStorage;
-    }
+    // constant, variables and constructor...
     
     public function getBooksByFavoriteAuthor(int $page = 1): Paginator
     {
