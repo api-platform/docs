@@ -345,3 +345,143 @@ class Book
 ```
 
 Please note that this parameter will always be forced to false when the resource have composite keys due to a [bug in doctrine](https://github.com/doctrine/doctrine2/issues/2910)
+
+## Custom Controller Action
+
+In case you're using a custom controller action make sure you return the Paginator object to get the full hydra response with hydra:view (which contains information about first, last, next and previous page). The following examples show how to handle it within a service method which is called in the controller. You will need to use the Doctrine Paginator and pass it to the ApiPlatform Paginator.
+
+First example:
+
+```php
+<?php
+
+//src/Service/Book/BookService.php
+
+namespace App\Service\Book;
+
+use App\Entity\Book;
+use App\Entity\User;
+use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use Doctrine\ORM\Tools\Pagination\Paginator as DoctrinePaginator;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Paginator;
+use Doctrine\Common\Collections\Criteria;
+
+class BookService
+{
+    const ITEMS_PER_PAGE = 20;
+    
+    private $entityManager;
+    private $tokenStorage;
+    
+    public function __construct(
+        EntityManagerInterface $entityManager,
+        TokenStorageInterface $tokenStorage
+    ) {
+        $this->entityManager = $entityManager;
+        $this->tokenStorage = $tokenStorage;
+    }
+    
+    public function getBooksByFavoriteAuthor(int $page = 1): Paginator
+    {
+        $firstResult = ($page -1) * self::ITEMS_PER_PAGE;
+        
+        $user = $this->tokenStorage->getToken()->getUser();
+        $queryBuilder = $this->entityManager->createQueryBuilder();
+        $queryBuilder->select('b')
+            ->from(Book::class, 'b')
+            ->where('b.author = :author')
+            ->setParameter('author', $user->getFavoriteAuthor()->getId())
+            ->andWhere('b.publicatedOn IS NOT NULL');
+
+        $criteria = Criteria::create()
+            ->setFirstResult($firstResult)
+            ->setMaxResults(self::ITEMS_PER_PAGE);
+        $queryBuilder->addCriteria($criteria);
+
+        $doctrinePaginator = new DoctrinePaginator($queryBuilder);
+        $paginator = new Paginator($doctrinePaginator);
+
+        return $paginator;
+    }
+}
+```
+The Controller would look like this:
+
+```php
+<?php
+
+// src/Controller/Book/GetBooksByFavoriteAuthorAction.php
+
+namespace App\Controller\Book;
+
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Paginator;
+use App\Service\Book\BookService;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\Request;
+
+class GetBooksByFavoriteAuthorAction extends Controller
+{
+    public function __invoke(Request $request, BookService $bookService): Paginator
+    {
+        $page = (int)$request->query->get('page', 1);
+
+        return $bookService->getBooksByFavoriteAuthor($page);
+    }
+}
+```
+
+You can also use the Query object inside the service method and pass it to the Paginator instead of passing the QueryBuilder and using Criteria. Second Example:
+
+```php
+<?php
+
+//src/Service/Book/BookService.php
+
+namespace App\Service\Book;
+
+use App\Entity\Book;
+use App\Entity\User;
+use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use Doctrine\ORM\Tools\Pagination\Paginator as DoctrinePaginator;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Paginator;
+
+class BookService
+{
+    const ITEMS_PER_PAGE = 20;
+    
+    private $entityManager;
+    private $tokenStorage;
+    
+    public function __construct(
+        EntityManagerInterface $entityManager,
+        TokenStorageInterface $tokenStorage
+    ) {
+        $this->entityManager = $entityManager;
+        $this->tokenStorage = $tokenStorage;
+    }
+    
+    public function getBooksByFavoriteAuthor(int $page = 1): Paginator
+    {
+        $firstResult = ($page -1) * self::ITEMS_PER_PAGE;
+        
+        $user = $this->tokenStorage->getToken()->getUser();
+        $queryBuilder = $this->entityManager->createQueryBuilder();
+        $queryBuilder->select('b')
+            ->from(Book::class, 'b')
+            ->where('b.author = :author')
+            ->setParameter('author', $user->getFavoriteAuthor()->getId())
+            ->andWhere('b.publicatedOn IS NOT NULL');
+
+        $query = $queryBuilder->getQuery()
+            ->setFirstResult($firstResult)
+            ->setMaxResults(self::ITEMS_PER_PAGE);
+
+        $doctrinePaginator = new DoctrinePaginator($query);
+        $paginator = new Paginator($doctrinePaginator);
+
+        return $paginator;
+    }
+}
+```
