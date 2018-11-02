@@ -424,7 +424,7 @@ class GetBooksByFavoriteAuthorAction extends Controller
 {
     public function __invoke(Request $request, BookService $bookService): Paginator
     {
-        $page = (int)$request->query->get('page', 1);
+        $page = (int) $request->query->get('page', 1);
 
         return $bookService->getBooksByFavoriteAuthor($page);
     }
