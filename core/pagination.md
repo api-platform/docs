@@ -348,38 +348,38 @@ Please note that this parameter will always be forced to false when the resource
 
 ## Custom Controller Action
 
-In case you're using a custom controller action make sure you return the `Paginator` object to get the full hydra response with `hydra:view` (which contains information about first, last, next and previous page). The following examples show how to handle it within a service method which is called in the controller. You will need to use the Doctrine Paginator and pass it to the API Platform Paginator.
+In case you're using a custom controller action make sure you return the `Paginator` object to get the full hydra response with `hydra:view` (which contains information about first, last, next and previous page). The following examples show how to handle it within a repository method. The controller needs to pass through the page number. You will need to use the Doctrine Paginator and pass it to the API Platform Paginator.
 
 First example:
 
 ```php
 <?php
 
-//src/Service/Book/BookService.php
+//src/Repository/BookRepository.php
 
-namespace App\Service\Book;
+namespace App\Repository;
 
 use App\Entity\Book;
 use App\Entity\User;
+use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Doctrine\ORM\Tools\Pagination\Paginator as DoctrinePaginator;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Paginator;
 use Doctrine\Common\Collections\Criteria;
 
-class BookService
+class BookRepository extends ServiceEntityRepository
 {
     const ITEMS_PER_PAGE = 20;
     
-    private $entityManager;
     private $tokenStorage;
     
     public function __construct(
-        EntityManagerInterface $entityManager,
+        RegistryInterface $registry,
         TokenStorageInterface $tokenStorage
     ) {
-        $this->entityManager = $entityManager;
         $this->tokenStorage = $tokenStorage;
+        parent::__construct($registry, Book::class);
     }
     
     public function getBooksByFavoriteAuthor(int $page = 1): Paginator
@@ -387,7 +387,7 @@ class BookService
         $firstResult = ($page -1) * self::ITEMS_PER_PAGE;
         
         $user = $this->tokenStorage->getToken()->getUser();
-        $queryBuilder = $this->entityManager->createQueryBuilder();
+        $queryBuilder = $this->createQueryBuilder();
         $queryBuilder->select('b')
             ->from(Book::class, 'b')
             ->where('b.author = :author')
@@ -417,10 +417,10 @@ namespace App\Controller\Book;
 
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Paginator;
 use App\Service\Book\BookService;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 
-class GetBooksByFavoriteAuthorAction extends Controller
+class GetBooksByFavoriteAuthorAction extends AbstractController
 {
     public function __invoke(Request $request, BookService $bookService): Paginator
     {
@@ -431,18 +431,19 @@ class GetBooksByFavoriteAuthorAction extends Controller
 }
 ```
 
-You can also use the Query object inside the service method and pass it to the Paginator instead of passing the QueryBuilder and using Criteria. Second Example:
+The service need to use the proper repository method.
+You can also use the Query object inside the repository method and pass it to the Paginator instead of passing the QueryBuilder and using Criteria. Second Example:
 
 ```php
 <?php
 
-//src/Service/Book/BookService.php
+//src/Repository/BookRepository.php
 
-namespace App\Service\Book;
+namespace App\Repository;
 
 // use...
 
-class BookService
+class BookRepository extends ServiceEntityRepository
 {
     // constant, variables and constructor...
     
@@ -451,7 +452,7 @@ class BookService
         $firstResult = ($page -1) * self::ITEMS_PER_PAGE;
         
         $user = $this->tokenStorage->getToken()->getUser();
-        $queryBuilder = $this->entityManager->createQueryBuilder();
+        $queryBuilder = $this->createQueryBuilder();
         $queryBuilder->select('b')
             ->from(Book::class, 'b')
             ->where('b.author = :author')
