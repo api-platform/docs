@@ -642,6 +642,15 @@ class Book
 }
 ```
 
+You can also use the YAML configuration format:
+
+```yaml
+# api/config/api_platform/resources.yaml
+App\Entity\Book:
+    properties:
+        identifier: [id]
+```
+
 In some cases, you will want to set the identifier of a resource from the client (e.g. a client-side generated UUID, or a slug).
 In such cases, you must make the identifier property a writable class property.  Specifically, to use client-generated IDs, you 
 must do the following:
