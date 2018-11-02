@@ -348,7 +348,7 @@ Please note that this parameter will always be forced to false when the resource
 
 ## Custom Controller Action
 
-In case you're using a custom controller action make sure you return the Paginator object to get the full hydra response with hydra:view (which contains information about first, last, next and previous page). The following examples show how to handle it within a service method which is called in the controller. You will need to use the Doctrine Paginator and pass it to the ApiPlatform Paginator.
+In case you're using a custom controller action make sure you return the `Paginator` object to get the full hydra response with `hydra:view` (which contains information about first, last, next and previous page). The following examples show how to handle it within a service method which is called in the controller. You will need to use the Doctrine Paginator and pass it to the API Platform Paginator.
 
 First example:
 
