@@ -89,6 +89,66 @@ Additionally the `csv` format is added with the mime type `text/csv`.
 It is also important to notice that the usage of this attribute will override the formats defined in the configuration, therefore
 this configuration might disable the `json` or the `htlm` on this resource for example.
 
+You can specify different accepted formats at operation level too:
+```php
+<?php
+// api/src/Entity/Book.php
+
+namespace App\Entity;
+
+/**
+ * @ApiResource(
+*      collectionOperations={"get"={"formats"={"xml"={"text/xml"}}}},
+*      attributes={"formats"={"jsonld", "csv"={"text/csv"}}}
+*  )
+ */
+class Book
+{
+    // ...
+}
+```
+
+As an alternative to annotations, you can also use XML or YAML, the example above would become:
+
+XML:
+```xml
+<resources xmlns="https://api-platform.com/schema/metadata"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="https://api-platform.com/schema/metadata
+           https://api-platform.com/schema/metadata/metadata-2.0.xsd">
+    <resource class="App\Entity\Greeting">
+        <collectionOperations>
+            <collectionOperation name="get">
+                <attribute name="formats">
+                    <attribute name="xml">
+                        <attribute>text/xml</attribute>
+                    </attribute>
+                    <!-- works also with <attribute name="xml">text/xml</attribute> -->
+                </attribute>
+            </collectionOperation>
+        </collectionOperations>
+
+        <attribute name="formats">
+            <attribute>jsonld</attribute> <!-- format already defined in the config -->
+            <attribute name="csv">text/csv</attribute>
+        </attribute>
+    </resource>
+</resources>
+```
+YAML:
+```yaml
+resources:
+    App\Entity\Book:
+        collectionOperations:
+            get:
+                formats:
+                    xml: ['text/xml'] # works also with "text/html"
+        attributes:
+            formats:
+               0: 'jsonld' # format already defined in the config
+               csv: 'text/csv'
+```
+
 ## Registering a Custom Serializer
 
 If you are adding support for a format not supported by default by API Platform nor by the Symfony Serializer Component,
