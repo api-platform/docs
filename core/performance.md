@@ -264,3 +264,47 @@ api_platform:
 ```
 
 More details are available on the [pagination documentation](pagination.md#partial-pagination).
+
+## Profiling with Blackfire.io
+
+Blackfire.io allows you to monitor the performance of your applications. For more information, visit the [Blackfire.io website](https://blackfire.io/).
+
+To configure Blackfire.io follow these simple steps:
+
+1. Add the following to your `docker-compose.yml` file (or an [override file](https://docs.docker.com/compose/reference/overview/#specifying-multiple-compose-files), if only to be used in development)
+
+```yaml
+        blackfire:
+          image: blackfire/blackfire
+          environment:
+              # Exposes the host BLACKFIRE_SERVER_ID and TOKEN environment variables.
+              - BLACKFIRE_SERVER_ID
+              - BLACKFIRE_SERVER_TOKEN
+```
+
+2. Add your Blackfire.io id and server token to your `.env` file at the root of your project (be sure not to commit this to a public repository)
+
+        BLACKFIRE_SERVER_ID=xxxxxxxxxx
+        BLACKFIRE_SERVER_TOKEN=xxxxxxxxxx
+
+    or set it in the console before running Docker commands
+
+        $ export BLACKFIRE_SERVER_ID=xxxxxxxxxx
+        $ export BLACKFIRE_SERVER_TOKEN=xxxxxxxxxx
+
+3. Install and configure the Blackfire probe in the app container, by adding the following to your `./Dockerfile`
+
+```dockerfile
+        RUN version=$(php -r "echo PHP_MAJOR_VERSION.PHP_MINOR_VERSION;") \
+            && curl -A "Docker" -o /tmp/blackfire-probe.tar.gz -D - -L -s https://blackfire.io/api/v1/releases/probe/php/alpine/amd64/$version \
+            && tar zxpf /tmp/blackfire-probe.tar.gz -C /tmp \
+            && mv /tmp/blackfire-*.so $(php -r "echo ini_get('extension_dir');")/blackfire.so \
+            && printf "extension=blackfire.so\nblackfire.agent_socket=tcp://blackfire:8707\n" > $PHP_INI_DIR/conf.d/blackfire.ini
+```
+
+4. Rebuild and restart all your containers
+
+        $ docker-compose build
+        $ docker-compose up -d
+
+For details on how to perform profiling, see [the Blackfire.io documentation](https://blackfire.io/docs/integrations/docker#using-the-client-for-http-profiling).
