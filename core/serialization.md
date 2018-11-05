@@ -648,7 +648,8 @@ You can also use the YAML configuration format:
 # api/config/api_platform/resources.yaml
 App\Entity\Book:
     properties:
-        identifier: [id]
+        id:
+            identifier: true
 ```
 
 In some cases, you will want to set the identifier of a resource from the client (e.g. a client-side generated UUID, or a slug).
