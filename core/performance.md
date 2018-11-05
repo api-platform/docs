@@ -265,8 +265,7 @@ api_platform:
 
 More details are available on the [pagination documentation](pagination.md#partial-pagination).
 
-
-## Blackfire.io
+## Profiling with Blackfire.io
 
 Blackfire.io allows you to monitor the performance of your applications. For more information, visit the [Blackfire.io website](https://blackfire.io/).
 
