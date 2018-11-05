@@ -87,7 +87,7 @@ In the example above, `xml` or `jsonld` will be allowed and there is no need to 
 Additionally the `csv` format is added with the mime type `text/csv`.
 
 It is also important to notice that the usage of this attribute will override the formats defined in the configuration, therefore
-this configuration might disable the `json` or the `htlm` on this resource for example.
+this configuration might disable the `json` or the `html` on this resource for example.
 
 You can specify different accepted formats at operation level too:
 ```php
