@@ -120,3 +120,8 @@ App\Entity\Book:
             access_control_message: 'Sorry, but you are not the book owner.'
     # ...
 ```
+
+In access control expressions for collection, the `object` variable contains the list of resources that will be serialized.
+To remove entries from a collection, you should implement [a Doctrine extension](extensions.md) to customize the generated DQL query (e.g. add `WHERE` clauses depending of the currently connected user) instead of using access control expressions.
+
+If you use [custom data providers](data-providers.md), you'll have to implement the filtering logic accordingly to the persistence layer you rely on.
