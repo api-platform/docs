@@ -229,14 +229,15 @@ export default class extends Component {
 }
 ```
 
-### How to build admin area with react-admin with custom list/create/edit/show blocks
+### Using the Hydra Data Provider Directly with react-admin
 
-Another approach to build admin area is to use react-admin component and custom
-Resources per entry:
+By default, the `HydraAdmin` component shipped with API Platform Admin will generate a convenient admin interface for every resources and every properties exposed by the API. But sometimes, you may prefer having full control over the generated admin.
 
-Example for App.js
+To do so, an alternative approach is [to configure every react-admin components manually](https://marmelab.com/react-admin/Tutorial.html) instead of letting the library generating it, but to still leverage the built-in Hydra [data provider](https://marmelab.com/react-admin/DataProviders.html):
 
 ```javascript
+// admin/src/App.js
+
 import React, { Component } from 'react';
 import { Admin, Resource } from 'react-admin';
 import parseHydraDocumentation from '@api-platform/api-doc-parser/lib/hydra/parseHydraDocumentation';
@@ -244,10 +245,10 @@ import { hydraClient, fetchHydra as baseFetchHydra  } from '@api-platform/admin'
 import authProvider from './authProvider';
 import { Redirect } from 'react-router-dom';
 import { createMuiTheme } from '@material-ui/core/styles';
-import Layout from "./Component/Layout";
-import { UserShow } from "./Components/User/Show";
-import { UserEdit } from "./Components/User/Edit";
-import { UserCreate } from "./Components/User/Create";
+import Layout from './Component/Layout';
+import { UserShow } from './Components/User/Show';
+import { UserEdit } from './Components/User/Edit';
+import { UserCreate } from './Components/User/Create';
 import { UserList } from './Components/User/List';
 
 const theme = createMuiTheme({
@@ -292,40 +293,41 @@ export default class extends Component {
         apiDocumentationParser(entrypoint).then(({ api }) => {
             this.setState({ api });
         }).catch((e) => {
-                console.log(e);
-            }
-        );
+            console.log(e);
+        });
     }
 
     render() {
         if (null === this.state.api) return <div>Loading...</div>;
         return (
             <Admin api={ this.state.api }
-                   apiDocumentationParser={apiDocumentationParser}
-                   dataProvider= {dataProvider(this.state.api) }
-                   theme={theme}
-                   appLayout={Layout}
-                   authProvider={authProvider}          
+                   apiDocumentationParser={ apiDocumentationParser }
+                   dataProvider= { dataProvider(this.state.api) }
+                   theme={ theme }
+                   appLayout={ Layout }
+                   authProvider={ authProvider }          
             >                
-                <Resource name="users" list={UserList} create={UserCreate} show={UserShow} edit={UserEdit} title="Users"/>
+                <Resource name="users" list={ UserList } create={ UserCreate } show={ UserShow } edit={ UserEdit } title="Users"/>
             </Admin>
         )
     }
 }
 ```
 
-And accordingly create files Show.js, Create.js, List.js, Edit.js
-in Component/User directory:
+And accordingly create files `Show.js`, `Create.js`, `List.js`, `Edit.js`
+in the `admin/src/Component/User` directory:
+
 ```javascript
-// Component/User/Create.js
+// admin/src/Component/User/Create.js
+
 import React from 'react';
 import { Create, SimpleForm, TextInput, email, required } from 'react-admin';
 
 export const UserCreate = (props) => (
-    <Create {...props}>
+    <Create { ...props }>
         <SimpleForm>
-            <TextInput source="email" label="Email" validate={email()} />
-            <TextInput source="plainPassword" label="Password" validate={required()} />
+            <TextInput source="email" label="Email" validate={ email() } />
+            <TextInput source="plainPassword" label="Password" validate={ required() } />
             <TextInput source="name" label="Name"/>
             <TextInput source="phone" label="Phone"/>
         </SimpleForm>
@@ -334,9 +336,9 @@ export const UserCreate = (props) => (
 
 ```
 
-
 ```javascript
-// Component/User/Edit.js
+// admin/src/Component/User/Edit.js
+
 import React from 'react';
 import { Edit, SimpleForm, DisabledInput, TextInput, DateInput, email } from 'react-admin';
 
@@ -344,7 +346,7 @@ export const UserEdit = (props) => (
     <Edit {...props}>
         <SimpleForm>
             <DisabledInput source="originId" label="ID"/>
-            <TextInput source="email" label="Email" validate={email()} />
+            <TextInput source="email" label="Email" validate={ email() } />
             <TextInput source="name" label="Name"/>
             <TextInput source="phone" label="Phone"/>
             <DateInput disabled source="createdAt" label="Date"/>
@@ -354,13 +356,14 @@ export const UserEdit = (props) => (
 ```
 
 ```javascript
-// Component/User/List.js
+// admin/src/Component/User/List.js
+
 import React from 'react';
 import { List, Datagrid, TextField, EmailField, DateField, ShowButton, EditButton } from 'react-admin';
-import { CustomPagination } from "../Pagination/CustomPagination";
+import { CustomPagination } from '../Pagination/CustomPagination';
 
 export const UserList = (props) => (
-    <List {...props} title="Users" pagination={<CustomPagination/>}  perPage={30}>
+    <List {...props} title="Users" pagination={ <CustomPagination/> }  perPage={ 30 }>
         <Datagrid>
             <TextField source="originId" label="ID"/>
             <EmailField source="email" label="Email" />
@@ -372,16 +375,15 @@ export const UserList = (props) => (
         </Datagrid>
     </List>
 );
-
 ```
 
 ```javascript
-// Component/User/Show.js
+// admin/src/Component/User/Show.js
 import React from 'react';
 import { Show, SimpleShowLayout, TextField, DateField, EmailField, EditButton } from 'react-admin';
 
 export const UserShow = (props) => (
-    <Show {...props}>
+    <Show { ...props }>
         <SimpleShowLayout>
             <TextField source="originId" label="ID"/>
             <EmailField source="email" label="Email" />
