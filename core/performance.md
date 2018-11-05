@@ -265,7 +265,7 @@ api_platform:
 
 More details are available on the [pagination documentation](pagination.md#partial-pagination).
 
-### Appending data in bulk
+### Appending Data in Bulk
 
 As stated in the [serialization documentation](serialization.md#decorating-a-serializer-and-adding-extra-data), you can use
 a normalizer decorator to append data to your entities before they are serialized. However, this is done on a per-item basis.
@@ -288,11 +288,8 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 
-class TaskNoteCountSubscriber implements EventSubscriberInterface
+final class TaskNoteCountSubscriber implements EventSubscriberInterface
 {
-    /**
-     * @var NoteRepository
-     */
     private $noteRepository;
 
     public function __construct(NoteRepository $noteRepository)
@@ -347,7 +344,6 @@ class TaskNoteCountSubscriber implements EventSubscriberInterface
         }
 
         $task = $event->getRequest()->attributes->get('data');
-
         if (!$task instanceof Task) {
             return;
         }
@@ -361,6 +357,7 @@ class TaskNoteCountSubscriber implements EventSubscriberInterface
 
     private function getNoteCounts($tasks)
     {
+        // You should move this method in a Doctrine repository instead
         $results = $this->noteRepository->createQueryBuilder('n')
             ->select('c.id AS id, COUNT(n.id) AS amount')
             ->join('n.tasks', 't')
@@ -379,4 +376,3 @@ class TaskNoteCountSubscriber implements EventSubscriberInterface
     }
 }
 ```
-
