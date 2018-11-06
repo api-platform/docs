@@ -416,17 +416,17 @@ The Controller would look like this:
 namespace App\Controller\Book;
 
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Paginator;
-use App\Service\Book\BookService;
+use App\Repository\BookRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 
 class GetBooksByFavoriteAuthorAction extends AbstractController
 {
-    public function __invoke(Request $request, BookService $bookService): Paginator
+    public function __invoke(Request $request, BookRepository $bookRepository): Paginator
     {
         $page = (int) $request->query->get('page', 1);
 
-        return $bookService->getBooksByFavoriteAuthor($page);
+        return $bookRepository->getBooksByFavoriteAuthor($page);
     }
 }
 ```
