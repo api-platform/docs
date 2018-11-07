@@ -9,6 +9,16 @@ specificity to make API Platform apps blazing fast.
 When the cache mechanism [is enabled](configuration.md), API Platform collects identifiers of every resources
 included in a given HTTP response (including lists, embedded documents and subresources) and returns them in a special
 HTTP header called [Cache-Tags](https://support.cloudflare.com/hc/en-us/articles/206596608-How-to-Purge-Cache-Using-Cache-Tags-Enterprise-only-).
+You are also able to specify, which resources will be cached with Cache-Tags:
+
+```yaml
+# api/config/packages/api_platform.yaml
+api_platform:
+    http_cache:
+      invalidation:
+        resources: ['resource_path']
+```
+To cache all resources, keep the list empty.
 
 A [cache reverse proxy](https://en.wikipedia.org/wiki/Web_accelerator) supporting cache tags (Varnish, CloudFlare,
 Fastly…) must be put in front of the web server and store all responses returned by the API with a high

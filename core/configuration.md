@@ -158,6 +158,9 @@ api_platform:
           # To enable the tags-based cache invalidation system.
           enabled: false
 
+          # Which resources will be cached (all if empty).
+          resources: []
+
           # URLs of the Varnish servers to purge using cache tags when a resource is updated.
           varnish_urls: []
 
