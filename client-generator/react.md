@@ -20,7 +20,7 @@ supporting Hydra.
 
 If you use the API Platform, jump to the next section!
 Alternatively, you can generate a skeleton and install the generator using [npx](https://www.npmjs.com/package/npx).
-To run it, you need a proper [Node.js](https://nodejs.org/) and [Yarn](https://yarnpkg.com/) (or NPM) installation.
+To use this generator you need [Node.js](https://nodejs.org/) and [Yarn](https://yarnpkg.com/) (or [YPM](https://www.npmjs.com/)) installed.
 
 Bootstrap a React application:
 
