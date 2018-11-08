@@ -22,7 +22,7 @@ Client Generator works especially well with APIs built with the [API Platform](h
   * creation form
   * edition form
   * delete button
-* Support to-one and to-many relations
+* Supports to-one and to-many relations
 * Use the appropriate input type (`number`, `date`...)
 * Client-side validation
 * Subscribe to data updates pushed by server supporting [the Mercure protocol](https://mercure.rocks)
