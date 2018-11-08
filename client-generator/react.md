@@ -2,7 +2,7 @@
 
 ![List screenshot](images/react/list.png)
 
-The React Client Generator generate a Progressive Web App built with battle-tested libraries from the ecosystem:
+The React Client Generator generates a Progressive Web App built with battle-tested libraries from the ecosystem:
 
 * [React](https://facebook.github.io/react/)
 * [Redux](http://redux.js.org)
