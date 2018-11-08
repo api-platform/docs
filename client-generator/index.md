@@ -25,7 +25,7 @@ Client Generator works especially well with APIs built with the [API Platform](h
 * Supports to-one and to-many relations
 * Uses the appropriate input type (`number`, `date`...)
 * Client-side validation
-* Subscribe to data updates pushed by server supporting [the Mercure protocol](https://mercure.rocks)
+* Subscribe to data updates pushed by servers supporting [the Mercure protocol](https://mercure.rocks)
 * Display server-side validation errors under the related input (if using API Platform Core)
 * Integration with [Bootstrap](https://getbootstrap.com/) and [FontAwesome](https://fontawesome.com/) (Progressive Web Apps)
 * Integration with [React Native Elements](https://react-native-training.github.io/react-native-elements/)
