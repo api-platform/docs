@@ -54,7 +54,7 @@ const RouterComponent = () => {
 export default RouterComponent;
 ```
 
-Here is an example of a `App.js` file:
+Here is an example of an `App.js` file:
 
 ```javascript
 import React, { Component } from 'react';
