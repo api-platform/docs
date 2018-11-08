@@ -4,7 +4,7 @@
 
 ## Install
 
-To use this generator you need [Node.js](https://nodejs.org/) and [Yarn](https://yarnpkg.com/) (or [YPM](https://www.npmjs.com/)) installed.
+To use this generator you need [Node.js](https://nodejs.org/) and [Yarn](https://yarnpkg.com/) (or [NPM](https://www.npmjs.com/)) installed.
 To run the command line tool, we also recommend using [npx](https://www.npmjs.com/package/npx).
 
 Create a React Native application using [Expo CLI](https://docs.expo.io/versions/latest/workflow/expo-cli).
