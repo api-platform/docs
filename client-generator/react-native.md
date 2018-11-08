@@ -30,7 +30,7 @@ In the app directory, generate the files for the resource you want:
 $ npx @api-platform/client-generator https://demo.api-platform.com . -g react-native --resource book
 ```
 
-Replace the URL by the entrypoint of your Hydra-enabled API.
+Replace the URL with the entrypoint of your Hydra-enabled API.
 Omit the resource flag to generate files for all resource types exposed by the API.
 
 Create a `Router.js` file to import all routes:
