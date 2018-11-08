@@ -57,7 +57,7 @@ $ docker-compose exec client generate-api-platform-client --resource book
 
 Omit the resource flag to generate files for all resource types exposed by the API.
 
-If you don't use a standalone installation, run the following command instead:
+If you don't use the standalone installation, run the following command instead:
 
 ```bash
 $ npx @api-platform/client-generator https://demo.api-platform.com src/ --resource book
