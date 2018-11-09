@@ -1,83 +1,113 @@
-# React generator
+# React Generator
 
-Create a React application using [Facebook's Create React App](https://github.com/facebookincubator/create-react-app):
+![List screenshot](images/react/list.png)
 
-    $ create-react-app my-app
-    $ cd my-app
+The React Client Generator generates a Progressive Web App built with battle-tested libraries from the ecosystem:
 
-Install React Router, Redux, React Redux, React Router Redux, Redux Form and Redux Thunk (to handle AJAX requests):
+* [React](https://facebook.github.io/react/)
+* [Redux](http://redux.js.org)
+* [React Router](https://reacttraining.com/react-router/)
+* [Redux Form](http://redux-form.com/)
 
-    $ yarn add redux react-redux redux-thunk redux-form react-router-dom react-router-redux prop-types
+It is designed to generate code that works seamlessly with [Facebook's Create React App](https://github.com/facebook/create-react-app).
 
-Install the generator globally:
+## Install
 
-    $ yarn global add @api-platform/client-generator
+The easiest way to get started is to install [the API Platform distribution](../distribution/index.md).
+It contains the React Client Generator, all dependencies it needs, a Progressive Web App skeleton generated with Create React App,
+a development Docker container to serve the webapp, and all the API Platform components you may need, including an API server
+supporting Hydra.
 
-Reference the Bootstrap CSS stylesheet in `public/index.html` (optional):
+If you use the API Platform, jump to the next section!
+Alternatively, you can generate a skeleton and install the generator using [npx](https://www.npmjs.com/package/npx).
+To use this generator you need [Node.js](https://nodejs.org/) and [Yarn](https://yarnpkg.com/) (or [NPM](https://www.npmjs.com/)) installed.
 
-Bootstrap 3 - last release 0.1.15
-```html
-  <!-- ... -->
-    <title>React App</title>
-
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
-  </head>
-  <!-- ... -->
-```
-Bootstrap 4 - from release 0.1.16
-
-```html
-  <!-- ... -->
-    <title>React App</title>
-
-    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M" crossorigin="anonymous">
-    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
-  </head>
-  <!-- ... -->
-```
-
-In the app directory, generate the files for the resource you want:
+Bootstrap a React application:
 
 ```bash
-$ generate-api-platform-client https://demo.api-platform.com src/ --resource book
-# Replace the URL by the entrypoint of your Hydra-enabled API
-# Omit the resource flag to generate files for all resource types exposed by the API
+$ npx create-react-app client
+$ cd client
 ```
 
-The code is ready to be executed! Register the generated reducers and components in the `index.js` file, here is an example:
+Install the required dependencies:
+
+```bash
+$ yarn add redux react-redux redux-thunk redux-form react-router-dom connected-react-router prop-types lodash
+```
+
+Optionally, install Bootstrap and Font Awesome to get an app that looks good:
+
+```bash
+$ yarn add redux bootstrap font-awesome
+```
+
+Finally, start the integrated web server:
+
+```bash
+$ yarn start
+```
+
+## Generating a Progressive Web App
+
+If you use the API Platform distribution, generating all the code you need for a given resource is as simple as running the following command:
+
+```bash
+$ docker-compose exec client generate-api-platform-client --resource book
+```
+
+Omit the resource flag to generate files for all resource types exposed by the API.
+
+If you don't use the standalone installation, run the following command instead:
+
+```bash
+$ npx @api-platform/client-generator https://demo.api-platform.com src/ --resource book
+# Replace the URL by the entrypoint of your Hydra-enabled API
+```
+
+The code has been generated, and is ready to be executed!
+Register the reducers and the routes in the `client/src/index.js` file:
 
 ```javascript
 import React from 'react';
 import ReactDOM from 'react-dom';
-import * as serviceWorker from './serviceWorker';
-
 import { createStore, combineReducers, applyMiddleware } from 'redux';
 import { Provider } from 'react-redux';
 import thunk from 'redux-thunk';
 import { reducer as form } from 'redux-form';
-import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+import { Route, Switch } from 'react-router-dom';
 import createBrowserHistory from 'history/createBrowserHistory';
-import { syncHistoryWithStore, routerReducer as routing } from 'react-router-redux'
-
+import {
+  ConnectedRouter,
+  connectRouter,
+  routerMiddleware
+} from 'connected-react-router';
+import 'bootstrap/dist/css/bootstrap.css';
+import 'font-awesome/css/font-awesome.css';
+import * as serviceWorker from './serviceWorker';
 // Replace "book" with the name of the resource type
 import book from './reducers/book/';
 import bookRoutes from './routes/book';
 
+const history = createBrowserHistory();
 const store = createStore(
-  combineReducers({routing, form, book}), // Don't forget to register the reducers here
-  applyMiddleware(thunk),
+  combineReducers({
+    router: connectRouter(history),
+    form,
+    book
+    /* Replace book with the name of the resource type */
+  }),
+  applyMiddleware(routerMiddleware(history), thunk)
 );
-
-const history = syncHistoryWithStore(createBrowserHistory(), store);
 
 ReactDOM.render(
   <Provider store={store}>
-    <Router history={history}>
+    <ConnectedRouter history={history}>
       <Switch>
         {bookRoutes}
-        <Route render={() => <h1>Not Found</h1>}/>
+        {/* Replace bookRooutes with the name of the resource type */}
+        <Route render={() => <h1>Not Found</h1>} />
       </Switch>
-    </Router>
+    </ConnectedRouter>
   </Provider>,
   document.getElementById('root')
 );
@@ -87,3 +117,14 @@ ReactDOM.render(
 // Learn more about service workers: http://bit.ly/CRA-PWA
 serviceWorker.unregister();
 ```
+
+Go to `https://localhost/books/` to start using your app.
+That's all!
+
+## Screenshots
+
+![List](images/react/list.png)
+![Pagination](images/react/list-pagination.png)
+![Show](images/react/show.png)
+![Edit](images/react/edit.png)
+![Delete](images/react/delete.png)
