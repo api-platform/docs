@@ -438,7 +438,7 @@ services:
 ```
 
 The Normalizer class is a bit harder to understand, because it must ensure that it is only called once and that there is no recursion. 
-To accomplish this, it needs to be aware of the Serializer instance itself.
+To accomplish this, it needs to be aware of the parent Normalizer instance itself.
 
 Here is an example:
 
@@ -450,15 +450,15 @@ namespace App\Serializer;
 
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Serializer\Normalizer\ContextAwareNormalizerInterface;
+use Symfony\Component\Serializer\Normalizer\NormalizerAwareInterface;
+use Symfony\Component\Serializer\Normalizer\NormalizerAwareTrait;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
-use Symfony\Component\Serializer\SerializerAwareInterface;
-use Symfony\Component\Serializer\SerializerAwareTrait;
 
-class BookAttributeNormalizer implements ContextAwareNormalizerInterface, SerializerAwareInterface
+class BookAttributeNormalizer implements ContextAwareNormalizerInterface, NormalizerAwareInterface
 {
-    use SerializerAwareTrait;
+    use NormalizerAwareTrait;
 
-    private const BOOK_ATTRIBUTE_NORMALIZER_ALREADY_CALLED = 'BOOK_ATTRIBUTE_NORMALIZER_ALREADY_CALLED';
+    private const ALREADY_CALLED = 'BOOK_ATTRIBUTE_NORMALIZER_ALREADY_CALLED';
 
     private $tokenStorage;
 
@@ -473,13 +473,15 @@ class BookAttributeNormalizer implements ContextAwareNormalizerInterface, Serial
             $context['groups'][] = 'can_retrieve_book';
         }
 
-        return $this->passOn($object, $format, $context);
+        $context[self::ALREADY_CALLED] = true;
+
+        return $this->normalizer->normalize($object, $format, $context);
     }
     
     public function supportsNormalization($data, $format = null, array $context = [])
     {
         // Make sure we're not called twice
-        if (isset($context[self::BOOK_ATTRIBUTE_NORMALIZER_ALREADY_CALLED])) {
+        if (isset($context[self::ALREADY_CALLED])) {
             return false;
         }
 
@@ -491,17 +493,6 @@ class BookAttributeNormalizer implements ContextAwareNormalizerInterface, Serial
         // Get permissions from user in $this->tokenStorage
         // for the current $object (book) and
         // return true or false
-    }
-
-    private function passOn($object, $format = null, array $context = [])
-    {
-        if (!$this->serializer instanceof NormalizerInterface) {
-            throw new \LogicException(sprintf('Cannot normalize object "%s" because the injected serializer is not a normalizer', $object));
-        }
-
-        $context[self::BOOK_ATTRIBUTE_NORMALIZER_ALREADY_CALLED] = true;
-
-        return $this->serializer->normalize($object, $format, $context);
     }
 }
 ```
