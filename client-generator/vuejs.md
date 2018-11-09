@@ -1,4 +1,4 @@
-# Vue.js generator
+# Vue.js Generator
 
 Create a Vue.js application using [vue-cli](https://github.com/vuejs/vue-cli):
 

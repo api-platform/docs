@@ -1,24 +1,32 @@
 # The API Platform Client Generator
 
-API Platform Client Generator is a generator for scaffolding apps with Create-Retrieve-Update-Delete features for any API exposing a Hydra documentation. Currently the following targets are available:
+Client Generator is the fastest way to scaffold fully-featured webapps and native mobile apps from APIs supporting the [Hydra](http://www.hydra-cg.com/) format.
 
- * React/Redux
- * React Native
- * Vue.js
+![Screencast](images/demo.gif)
 
-The generator works especially well with APIs built with the [API Platform](https://api-platform.com) framework.
+*Generated React and React Native apps, updated in real time* 
+
+It is able to generate apps using the following frontend stacks:
+
+* [React with Redux](react.md)
+* [React Native](react-native.md)
+* [Vue.js](vuejs.md)
+
+Client Generator works especially well with APIs built with the [API Platform](https://api-platform.com) framework.
 
 ## Features
 
-* Generate high-quality ES6 components and files built with [React](https://facebook.github.io/react/), [Redux](http://redux.js.org), [React Router](https://reacttraining.com/react-router/) and [Redux Form](http://redux-form.com/) including:
-  * A list view
-  * A creation form
-  * An editing form
-  * A delete button
-* Use the Hydra API documentation to generate the code
-* Generate the suitable HTML5 input type (`number`, `date`...) according to the type of the API property
-* Display of the server-side validation errors under the related input (if using API Platform Core)
-* Client-side validation (`required` attributes)
-* The generated HTML is compatible with [Bootstrap](https://getbootstrap.com/) and includes mandatory classes
-* The generated HTML code is accessible to people with disabilities ([ARIA](https://www.w3.org/WAI/intro/aria) support)
-* The Redux and the React Router configuration is also generated
+* Generate high-quality ES6:
+  * list view (with pagination)
+  * detail view
+  * creation form
+  * edition form
+  * delete button
+* Supports to-one and to-many relations
+* Uses the appropriate input type (`number`, `date`...)
+* Client-side validation
+* Subscribe to data updates pushed by servers supporting [the Mercure protocol](https://mercure.rocks)
+* Display server-side validation errors under the related input (if using API Platform Core)
+* Integration with [Bootstrap](https://getbootstrap.com/) and [FontAwesome](https://fontawesome.com/) (Progressive Web Apps)
+* Integration with [React Native Elements](https://react-native-training.github.io/react-native-elements/)
+* Accessible to people with disabilities ([ARIA](https://www.w3.org/WAI/intro/aria) support in webapps)
