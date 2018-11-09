@@ -16,7 +16,7 @@ $ expo init my-app
 $ cd my-app
 ```
 
-Install the requires dependencies:
+Install the required dependencies:
 
 ```bash
 $ yarn add redux react-redux redux-thunk redux-form react-native-elements react-native-router-flux react-native-vector-icons prop-types whatwg-url buffer react-native-event-source
