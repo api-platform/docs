@@ -1,6 +1,6 @@
 # React Generator
 
-![List screenshot](images/react/list.png)
+![List screenshot](images/react/client-generator-react-list.png)
 
 The React Client Generator generates a Progressive Web App built with battle-tested libraries from the ecosystem:
 
@@ -123,8 +123,8 @@ That's all!
 
 ## Screenshots
 
-![List](images/react/list.png)
-![Pagination](images/react/list-pagination.png)
-![Show](images/react/show.png)
-![Edit](images/react/edit.png)
-![Delete](images/react/delete.png)
+![List](images/react/client-generator-react-list.png)
+![Pagination](images/react/client-generator-react-list-pagination.png)
+![Show](images/react/client-generator-react-show.png)
+![Edit](images/react/client-generator-react-edit.png)
+![Delete](images/react/client-generator-react-delete.png)
