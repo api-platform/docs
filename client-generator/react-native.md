@@ -1,6 +1,6 @@
 # React Native generator
 
-![List](images/list.png) 
+![List](images/react-native/client-generator-react-native-list.png) 
 
 ## Install
 
@@ -106,5 +106,5 @@ $ expo start
 
 ## Screenshots in iOS Simulator
 
-![List](images/react-native/list.png) ![Show](images/react-native/show.png)
-![Add](images/react-native/add.png) ![Delete](images/react-native/delete.png)
+![List](images/react-native/client-generator-react-native-list.png) ![Show](images/react-native/client-generator-react-native-show.png)
+![Add](images/react-native/client-generator-react-native-add.png) ![Delete](images/react-native/client-generator-react-native-delete.png)

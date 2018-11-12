@@ -2,7 +2,7 @@
 
 Client Generator is the fastest way to scaffold fully-featured webapps and native mobile apps from APIs supporting the [Hydra](http://www.hydra-cg.com/) format.
 
-![Screencast](images/demo.gif)
+![Screencast](images/client-generator-demo.gif)
 
 *Generated React and React Native apps, updated in real time* 
 
