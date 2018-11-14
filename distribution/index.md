@@ -6,7 +6,7 @@
 > - Fabien Potencier (creator of Symfony), SymfonyCon 2017
 
 [API Platform](https://api-platform.com) is a powerful but easy to use **full stack** framework dedicated to API-driven projects.
-It contains a **PHP** library to create fully-featured APIs supporting industry-leading standards (JSON-LD, GraphQL, OpenAPI...),
+It contains a **PHP** library to create fully featured APIs supporting industry-leading standards (JSON-LD, GraphQL, OpenAPI...),
 provides ambitious **JavaScript** tooling to consume those APIs in a snap (admin, PWA and mobile apps generators, hypermedia
 client...) and is shipped with a nice **Docker** and **Kubernetes** integration to develop and deploy instantly in the cloud.
 
@@ -510,7 +510,7 @@ Now try to add another book by issuing a `POST` request to `/books` with the fol
 }
 ```
 
-Oops, we missed to add the title. But submit the request anyway. You should get a 500 error with the following message:
+Oops, we missed to add the title. Submit the request anyway, you should get a 500 error with the following message:
 
     An exception occurred while executing 'INSERT INTO book [...] VALUES [...]' with params [...]:
     SQLSTATE[23000]: Integrity constraint violation: 1048 Column 'title' cannot be null
