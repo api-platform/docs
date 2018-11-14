@@ -4,7 +4,8 @@ node_js:
 
 cache:
   yarn: true
-  pip: true
+  directories:
+    - $HOME/.cache/pip
 
 env:
   global:
