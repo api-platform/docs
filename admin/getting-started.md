@@ -5,7 +5,7 @@
 Install the skeleton and the library:
 
 Start by installing [the Yarn package manager](https://yarnpkg.com/) ([NPM](https://www.npmjs.com/) is also supported) and
-the [Create React App](https://github.com/facebookincubator/create-react-app) tool.
+the [Create React App](https://facebook.github.io/create-react-app/) tool.
 
 Then, create a new React application for your admin:
 
@@ -58,7 +58,7 @@ Clear the cache to apply this change:
 
 Your new administration interface is ready! Type `yarn start` to try it!
 
-Note: if you don't want to hardcode the API URL, you can [use an environment variable](https://github.com/facebookincubator/create-react-app/blob/master/packages/react-scripts/template/README.md#adding-custom-environment-variables).
+Note: if you don't want to hardcode the API URL, you can [use an environment variable](https://facebook.github.io/create-react-app/docs/adding-custom-environment-variables).
 
 ## Customizing the Admin
 
