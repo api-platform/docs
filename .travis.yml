@@ -16,7 +16,12 @@ install:
   - pip install --user proselint
   - cp .proselintrc ~
   - cd ..
-  - if [ -d website ]; then cd website && git pull; else git clone https://github.com/api-platform/website.git && cd website; fi
+  - |
+    if [ -d website ]; then
+        cd website && git pull
+    else
+        git clone https://github.com/api-platform/website.git && cd website
+    fi
   - yarn install
   - ln -s $TRAVIS_BUILD_DIR src/pages/docs
   - cd $TRAVIS_BUILD_DIR
