@@ -252,5 +252,5 @@ uploaded cover, you can have a nice illustrated book record!
 }
 ```
 
-Voila! You can now send files to your API, and link them to any other resources
+Voilà! You can now send files to your API, and link them to any other resources
 in your app.
