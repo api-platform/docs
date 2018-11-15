@@ -54,7 +54,7 @@ You can also use this new `deprecationReason` attribute to deprecate specific [o
 
 ```php
 <?php
-// api/src/Entity/Review.php
+// api/src/Entity/Parchment.php
 
 /**
  * @ApiResource(itemOperations={
