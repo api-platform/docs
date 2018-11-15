@@ -58,7 +58,7 @@ all set!
 
 It is simple to specify what groups to use in the API system:
 
-1. Add the `normalizationContext` and `denormalizationContext` annotation properties to the `@ApiResource` annotation, and specify which groups to use. Here you see that we add `read` and `write`, respectively.  You can use any group names you wish.
+1. Add the `normalizationContext` and `denormalizationContext` annotation properties to the `@ApiResource` annotation, and specify which groups to use. Here you see that we add `read` and `write`, respectively. You can use any group names you wish.
 2. Apply the `@Groups` annotation to properties in the object.
 
 ```php
@@ -129,7 +129,7 @@ App\Entity\Book:
 ```
 
 In the previous example, the `name` property will be visible when reading (`GET`) the object, and it will also be available
-to write (`PUT/POST`).  The `author` property will be write-only; it will not be visible when serialized responses are 
+to write (`PUT/POST`). The `author` property will be write-only; it will not be visible when serialized responses are 
 returned by the API.
 
 Internally, API Platform passes the value of the `normalization_context` to the Symfony Serializer during the normalization
@@ -415,7 +415,7 @@ final class BookContextBuilder implements SerializerContextBuilderInterface
 ```
 
 If the user has the `ROLE_ADMIN` permission and the subject is an instance of Book, `admin_input` group will be dynamically added to the 
-denormalization context.  The `$normalization` variable lets you check whether the context is for normalization (if `TRUE`) or denormalization 
+denormalization context. The `$normalization` variable lets you check whether the context is for normalization (if `TRUE`) or denormalization 
 (`FALSE`).
 
 ## Changing the Serialization Context on a Per-item Basis
@@ -500,8 +500,8 @@ class BookAttributeNormalizer implements ContextAwareNormalizerInterface, Normal
 This will add the serialization group `can_retrieve_book` only if the currently logged-in user has access to the given book 
 instance.
 
-Note: In this example, we use the `TokenStorageInterface` to verify access to the book instance.  However, Symfony 
-provides many useful other services that might be better suited to your use case.  For example, the [`AuthorizationChecker`](https://symfony.com/doc/current/components/security/authorization.html#authorization-checker).
+Note: In this example, we use the `TokenStorageInterface` to verify access to the book instance. However, Symfony 
+provides many useful other services that might be better suited to your use case. For example, the [`AuthorizationChecker`](https://symfony.com/doc/current/components/security/authorization.html#authorization-checker).
 
 ## Name Conversion
 
@@ -524,7 +524,7 @@ api_platform:
 
 ## Decorating a Serializer and Adding Extra Data
 
-In the following example, we will see how we add extra informations to the serialized output.  Here is how we add the 
+In the following example, we will see how we add extra informations to the serialized output. Here is how we add the 
 date on each request in `GET`:
 
 ```yaml
@@ -599,7 +599,7 @@ API Platform is able to guess the entity identifier using [Doctrine metadata](ht
 It also supports composite identifiers.
 
 If you are not using the Doctrine ORM Provider, you must explicitly mark the identifier using the `identifier` attribute of
-the `ApiPlatform\Core\Annotation\ApiProperty` annotation.  For example:
+the `ApiPlatform\Core\Annotation\ApiProperty` annotation. For example:
 
 
 ```php
@@ -644,7 +644,7 @@ App\Entity\Book:
 ```
 
 In some cases, you will want to set the identifier of a resource from the client (e.g. a client-side generated UUID, or a slug).
-In such cases, you must make the identifier property a writable class property.  Specifically, to use client-generated IDs, you 
+In such cases, you must make the identifier property a writable class property. Specifically, to use client-generated IDs, you 
 must do the following:
 
 1. create a setter for the identifier of the entity (e.g. `public function setId(string $id)`) or make it a `public` property ,

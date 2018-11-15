@@ -22,7 +22,7 @@ If you are using the API Platform Standard Edition, you will need to enable the 
 configuration options:
 
 ```yaml
-# api/config/packages/api_platform.yaml
+# api/config/packages/framework.yaml
 framework:
     form: { enabled: true }
 ```

@@ -83,7 +83,7 @@ Before running your application for the first time, be sure to create the databa
 
 ## Tiller RBAC Issue
 
-We noticed that some tiller RBAC trouble occured, you generally can resolve it running:
+We noticed that some tiller RBAC trouble occurred, you generally can resolve it running:
 
     kubectl create serviceaccount --namespace kube-system tiller
       serviceaccount "tiller" created
