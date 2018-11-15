@@ -2,6 +2,8 @@
 
 ## How to Use a DTO for Writing
 
+!> The following isn't recommended anymore, please use [Input/Output](specify-an-input-and-or-output-class) instead
+
 Sometimes it's easier to use a DTO than an Entity when performing simple
 operation. For example, the application should be able to send an email when
 someone has lost its password.
@@ -125,6 +127,8 @@ services:
 ```
 
 ## How to Use a DTO for Reading
+
+!> The following isn't recommended anymore, please use [Input/Output](specify-an-input-and-or-output-class) instead
 
 Sometimes, you need to retrieve data not related to an entity.
 For example, the application can send the
@@ -349,4 +353,69 @@ use Swagger\Annotations as SWG;
      * )
      */
     public function __invoke()
+```
+
+### Specify an Input and/or Output Class
+
+For a given resource class, you may want to have a different representation of this class as input (write) or output (read).
+To do so, a resource can take an input and/or an output class:
+
+```php
+<?php
+// api/src/Entity/Data.php
+
+namespace App\Entity;
+
+use ApiPlatform\Core\Annotation\ApiResource;
+use App\Dto\Input;
+use App\Dto\Output;
+
+/**
+ * @ApiResource(
+ *   inputClass=Input::class,
+ *   outputClass=Output::class,
+ * )
+ */
+final class Data
+{
+}
+```
+
+The `input_class` attribute will be used in the denormalization phase, when transforming the user data to a resource instance.
+The `output_class` attribute will be used in the normalization phase, this class represents how the `Data` resource will be given in the `Response`.
+
+To create a `Data`, we `POST` an `Input` and get back an `Output` in the response.
+For this example to work, one could use the following `DataPersister`:
+
+```php
+<?php
+
+namespace App\DataPersister;
+
+use ApiPlatform\Core\DataPersister\DataPersisterInterface;
+use App\Dto\Input;
+use App\Dto\Output;
+
+final class InputDataPersister implements DataPersisterInterface
+{
+    public function supports($data): bool
+    {
+        return $data instanceof Input;
+    }
+
+    public function persist($data)
+    {
+        $output = new Output();
+        $output->name = $data->name;
+        $output->id = 1;
+
+        return $output;
+    }
+
+    public function remove($data)
+    {
+        // TODO: implement removal
+        return null;
+    }
+}
 ```
