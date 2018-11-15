@@ -422,7 +422,7 @@ Or in XML:
                 <attribute name="method">GET</attribute>
                 <attribute name="normalization_context">
                   <attribute name="groups">
-                    <attribute>foobar</group>
+                    <attribute>foobar</attribute>
                   </attribute>
                 </attribute>
             </collectionOperation>
@@ -728,7 +728,7 @@ Or in XML:
                 <attribute name="controller">App\Controller\BookSpecial</attribute>
                 <attribute name="normalization_context">
                   <attribute name="groups">
-                    <attribute>special</group>
+                    <attribute>special</attribute>
                   </attribute>
                 </attribute>
             </itemOperation>
