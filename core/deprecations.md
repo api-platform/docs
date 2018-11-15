@@ -95,3 +95,49 @@ class Review
 * With JSON-lD / Hydra, [an `owl:deprecated` annotation property](https://www.w3.org/TR/owl2-syntax/#Annotation_Properties) will be added to the appropriate data structure
 * With Swagger / OpenAPI, [a `deprecated` property](https://swagger.io/docs/specification/2-0/paths-and-operations/) will be added
 * With GraphQL, the [`isDeprecated` and `deprecationReason` properties](https://facebook.github.io/graphql/June2018/#sec-Deprecation) will be added to the schema
+
+## Setting the `Sunset` HTTP Header to Indicate When a Resource or an Operation Will Be Removed
+
+[The `Sunset` HTTP response header](https://tools.ietf.org/html/draft-wilde-sunset-header) indicates that a URI is likely to become unresponsive at a specified point in the future.
+It is especially useful to indicate when a deprecated URL will not be available anymore.
+
+Thanks to the `sunset` attribute, API Platform makes it easy to set this header for all URLs related to a resource class:
+
+```php
+<?php
+// api/src/Entity/Parchment.php
+
+/**
+ * @ApiResource(
+ *   deprecationReason="Create a Book instead",
+ *   sunset="01/01/2020"
+ * )
+ */
+class Parchment
+{
+    // ...
+}
+```
+
+The value of the `sunset` attribute can be any string compatible with [the `\DateTime` constructor](http://php.net/manual/en/datetime.construct.php).
+It will be automatically converted to a valid HTTP date.
+
+It's also possible to set the `Sunset` header only for a specific [operation](operations.md):
+
+```php
+<?php
+// api/src/Entity/Parchment.php
+
+/**
+ * @ApiResource(itemOperations={
+ *     "get"={
+ *         "deprecation_reason"="Retrieve a Book instead",
+ *         "sunset"="01/01/2020"
+ *     }
+ * })
+ */
+class Parchment
+{
+    // ...
+}
+```
