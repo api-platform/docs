@@ -305,8 +305,8 @@ export default class extends Component {
                    dataProvider= { dataProvider(this.state.api) }
                    theme={ theme }
                    appLayout={ Layout }
-                   authProvider={ authProvider }          
-            >                
+                   authProvider={ authProvider }
+            >
                 <Resource name="users" list={ UserList } create={ UserCreate } show={ UserShow } edit={ UserEdit } title="Users"/>
             </Admin>
         )
@@ -321,7 +321,7 @@ in the `admin/src/Component/User` directory:
 // admin/src/Component/User/Create.js
 
 import React from 'react';
-import { Create, SimpleForm, TextInput, email, required } from 'react-admin';
+import { Create, SimpleForm, SimpleFormIterator, TextInput, email, required } from 'react-admin';
 
 export const UserCreate = (props) => (
     <Create { ...props }>
@@ -330,6 +330,11 @@ export const UserCreate = (props) => (
             <TextInput source="plainPassword" label="Password" validate={ required() } />
             <TextInput source="name" label="Name"/>
             <TextInput source="phone" label="Phone"/>
+            <ArrayInput source="roles" label="Roles">
+                <SimpleFormIterator>
+                    <TextInput />
+                </SimpleFormIterator>
+            </ArrayInput>
         </SimpleForm>
     </Create>
 );
@@ -340,7 +345,7 @@ export const UserCreate = (props) => (
 // admin/src/Component/User/Edit.js
 
 import React from 'react';
-import { Edit, SimpleForm, DisabledInput, TextInput, DateInput, email } from 'react-admin';
+import { Edit, SimpleForm, SimpleFormIterator, DisabledInput, TextInput, DateInput, email } from 'react-admin';
 
 export const UserEdit = (props) => (
     <Edit {...props}>
@@ -349,6 +354,11 @@ export const UserEdit = (props) => (
             <TextInput source="email" label="Email" validate={ email() } />
             <TextInput source="name" label="Name"/>
             <TextInput source="phone" label="Phone"/>
+            <ArrayInput source="roles" label="Roles">
+                <SimpleFormIterator>
+                    <TextInput />
+                </SimpleFormIterator>
+            </ArrayInput>
             <DateInput disabled source="createdAt" label="Date"/>
         </SimpleForm>
     </Edit>
