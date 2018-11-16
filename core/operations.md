@@ -468,19 +468,18 @@ The `subresourceOperations` attribute also allows you to add an access control o
 
 ```php
 <?php
-// api/src/Entity/Question.php
+// api/src/Entity/Answer.php
 
 /**
  * ...
  * @ApiResource(
  *     subresourceOperations={
- *          "answer_get_subresource"= {
- *              "method"="GET",
+ *          "api_questions_answer_get_subresource"= {
  *              "access_control"="has_role('ROLE_AUTHENTICATED')"
  *          }
  *      }
  * )
- class Question
+ class Answer
  {
  }
 ```
@@ -740,7 +739,7 @@ Or in XML:
 #### Entity Retrieval
 
 If you want to bypass the automatic retrieval of the entity in your custom operation, you can set the parameter
-`_api_receive` to `false` in the `default` attribute:
+`_api_receive` to `false` in the `defaults` attribute:
 
 ```php
 <?php

@@ -57,6 +57,9 @@ Supported cardinalities are:
 * `(0..*)`: array, not required
 * `(1..1)`: scalar, required
 * `(1..*)`: array, required
+* `(*..0)`
+* `(*..1)`
+* `(*..*)`
 
 Cardinalities are enforced by the class generator, the Doctrine ORM generator and the Symfony validation generator.
 

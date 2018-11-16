@@ -20,7 +20,7 @@ use App\Uuid;
  */
 final class Person {
     /**
-     * @type Uuid
+     * @var Uuid
      * @ApiProperty(identifier=true)
      */
     public $code;
@@ -119,5 +119,5 @@ Your `PersonDataProvider` will now work as expected!
 ApiPlatform supports the following identifier types:
 
   - `scalar` (string, integer)
-  - `\DateTime` (uses the symfony `DateTimeNormalizer` internally, see [DateTimeIdentifierNormalizer](https://github.com/api-platform/core/blob/master/src/Identifier/Normalizer/DateTimeIdentifierNormalizer.php))
+  - `\DateTime` (uses the symfony `DateTimeNormalizer` internally, see [DateTimeIdentifierNormalizer](https://github.com/api-platform/core/blob/master/src/Identifier/Normalizer/DateTimeIdentifierDenormalizer.php))
   - `\Ramsey\Uuid\Uuid` (see [UuidNormalizer](https://github.com/api-platform/core/blob/master/src/Bridge/RamseyUuid/Identifier/Normalizer/UuidNormalizer.php))
