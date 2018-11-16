@@ -12,9 +12,9 @@ Once enabled, you have nothing to do: your schema describing your API is automat
 
 ## Enabling GraphQL
 
-To enable GraphQL and GraphiQL interface in your API, simply require the graphql-php package using Composer:
+To enable GraphQL and GraphiQL interface in your API, simply require the [graphql-php](https://webonyx.github.io/graphql-php/) package using Composer and clear the cache one more time:
 
-    $ composer require webonyx/graphql-php
+    $ composer require webonyx/graphql-php && bin/console cache:clear
 
 You can now use GraphQL at the endpoint: `http://localhost/graphql`.
 

@@ -480,6 +480,7 @@ The `subresourceOperations` attribute also allows you to add an access control o
  *          }
  *      }
  * )
+ */
  class Question
  {
  }
