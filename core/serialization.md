@@ -54,13 +54,12 @@ framework:
 If you use [Symfony Flex](https://github.com/symfony/flex), just execute `composer req doctrine/annotations` and you are
 all set!
 
-When using XML or YAML, you must configure the mapping path:
+If you want to use YAML or XML, please add the mapping path in the serializer configuration:
 
 ```yaml
 # api/config/packages/api_platform.yaml
 framework:
     serializer:
-        enabled: true
         mapping:
             paths: ['%kernel.project_dir%/config/serialization']
 ```
