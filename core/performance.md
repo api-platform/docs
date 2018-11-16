@@ -11,12 +11,14 @@ included in a given HTTP response (including lists, embedded documents and subre
 HTTP header called [Cache-Tags](https://support.cloudflare.com/hc/en-us/articles/206596608-How-to-Purge-Cache-Using-Cache-Tags-Enterprise-only-).
 You are also able to specify, which resources will be cached with Cache-Tags:
 
-```yaml
-# api/config/packages/api_platform.yaml
-api_platform:
-    http_cache:
-      invalidation:
-        resources: ['resource_path']
+```php
+// api/src/Entity/Foo.php
+...
+/**
+ * @ApiResource(cacheHeaders={"tags"=false})
+ */
+class Foo {
+...
 ```
 To cache all resources, keep the list empty.
 
