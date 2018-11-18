@@ -519,7 +519,7 @@ class Question
 
 API Platform can leverage the Symfony routing system to register custom operations related to custom controllers. Such custom
 controllers can be any valid [Symfony controller](http://symfony.com/doc/current/book/controller.html), including standard
-Symfony controllers extending the [`Symfony\Bundle\FrameworkBundle\Controller\Controller`](http://api.symfony.com/3.1/Symfony/Bundle/FrameworkBundle/Controller/Controller.html)
+Symfony controllers extending the [`Symfony\Bundle\FrameworkBundle\Controller\AbstractController`](http://api.symfony.com/4.1/Symfony/Bundle/FrameworkBundle/Controller/AbstractController.html)
 helper class.
 
 However, API Platform recommends to use **action classes** instead of typical Symfony controllers. Internally, API Platform
