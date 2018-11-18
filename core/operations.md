@@ -304,7 +304,6 @@ class Answer
 
 namespace App\Entity;
 
-use ApiPlatform\Core\Annotation\ApiProperty;
 use ApiPlatform\Core\Annotation\ApiResource;
 use ApiPlatform\Core\Annotation\ApiSubresource;
 use Doctrine\ORM\Mapping as ORM;
@@ -519,7 +518,7 @@ class Question
 
 API Platform can leverage the Symfony routing system to register custom operations related to custom controllers. Such custom
 controllers can be any valid [Symfony controller](http://symfony.com/doc/current/book/controller.html), including standard
-Symfony controllers extending the [`Symfony\Bundle\FrameworkBundle\Controller\Controller`](http://api.symfony.com/3.1/Symfony/Bundle/FrameworkBundle/Controller/Controller.html)
+Symfony controllers extending the [`Symfony\Bundle\FrameworkBundle\Controller\AbstractController`](http://api.symfony.com/4.1/Symfony/Bundle/FrameworkBundle/Controller/AbstractController.html)
 helper class.
 
 However, API Platform recommends to use **action classes** instead of typical Symfony controllers. Internally, API Platform
@@ -923,11 +922,11 @@ exactly the same thing than the previous example in a more Symfony-like fashion:
 namespace App\Controller;
 
 use App\Entity\Book;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
-class BookController extends Controller
+class BookController extends AbstractController
 {
-    public function specialAction(Book $data, MyService $service): Book
+    public function special(Book $data, MyService $service): Book
     {
         return $service->doSomething($data);
     }
