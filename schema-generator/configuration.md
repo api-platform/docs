@@ -431,7 +431,7 @@ Example:
 
 ```yaml
 rdfa:
-    - https://raw.githubusercontent.com/rvguha/schemaorg/master/data/schema.rdfa # Experimental version of Schema.org
+    - https://raw.githubusercontent.com/schemaorg/schemaorg/master/data/schema.rdfa # Experimental version of Schema.org
     - http://example.com/data/myschema.rfa # Additional types
 ```
 
