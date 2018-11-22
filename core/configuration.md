@@ -173,7 +173,7 @@ api_platform:
         Symfony\Component\Serializer\Exception\ExceptionInterface: 400
 
         # Or with a constant defined in the 'Symfony\Component\HttpFoundation\Response' class.
-        ApiPlatform\Core\Exception\InvalidArgumentException: !php/const:Symfony\Component\HttpFoundation\Response::HTTP_BAD_REQUEST
+        ApiPlatform\Core\Exception\InvalidArgumentException: !php/const Symfony\Component\HttpFoundation\Response::HTTP_BAD_REQUEST
 
         # ...
 

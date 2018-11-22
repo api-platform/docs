@@ -234,6 +234,8 @@ class User
 
 You also have full control over both built-in and custom operations documentation:
 
+In Yaml:
+
 ```yaml
 resources:
   App\Entity\Rabbit:
@@ -260,6 +262,54 @@ resources:
                example:
                    name: Rabbit
                    description: Pink rabbit
+```
+
+or with XML:
+
+```xml
+<?xml version="1.0" encoding="UTF-8" ?>
+<resources xmlns="https://api-platform.com/schema/metadata"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="https://api-platform.com/schema/metadata
+           https://api-platform.com/schema/metadata/metadata-2.0.xsd">
+    <resource class="App\Entity\Rabbit">
+        <collectionOperations>
+            <collectionOperation name="create_user">
+                <attribute name="method">get</attribute>
+                <attribute name="path">/rabbit/rand</attribute>
+                <attribute name="controller">App\Controller\RandomRabbit</attribute>
+                <attribute name="swagger_context">
+                    <attribute name="summary">Random rabbit picture</attribute>
+                    <attribute name="description">
+                        # Pop a great rabbit picture by color!
+
+                        ![A great rabbit](https://rabbit.org/graphics/fun/netbunnies/jellybean1-brennan1.jpg)
+                    </attribute>
+                    <attribute name="parameters">
+                        <attribute>
+                            <attribute name="in">body</attribute>
+                            <attribute name="schema">
+                                <attribute name="type">object</attribute>
+                                <attribute name="properties">
+                                    <attribute name="name">
+                                        <attribute name="type">string</attribute>
+                                    </attribute>
+                                    <attribute name="description">
+                                        <attribute name="type">string</attribute>
+                                    </attribute>
+                                </attribute>
+                            </attribute>
+                            <attribute name="example">
+                                <attribute name="name">Rabbit</attribute>
+                                <attribute name="description">Pink rabbit</attribute>
+                            </attribute>
+                        </attribute>
+                    </attribute>
+                </attribute>
+            </collectionOperation>
+        </collectionOperations>
+    </resource>
+</resources>
 ```
 
 ![Impact on swagger ui](../distribution/images/swagger-ui-2.png)

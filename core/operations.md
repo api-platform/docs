@@ -304,7 +304,6 @@ class Answer
 
 namespace App\Entity;
 
-use ApiPlatform\Core\Annotation\ApiProperty;
 use ApiPlatform\Core\Annotation\ApiResource;
 use ApiPlatform\Core\Annotation\ApiSubresource;
 use Doctrine\ORM\Mapping as ORM;
@@ -422,7 +421,7 @@ Or in XML:
                 <attribute name="method">GET</attribute>
                 <attribute name="normalization_context">
                   <attribute name="groups">
-                    <group>foobar</group>
+                    <attribute>foobar</attribute>
                   </attribute>
                 </attribute>
             </collectionOperation>
@@ -479,6 +478,7 @@ The `subresourceOperations` attribute also allows you to add an access control o
  *          }
  *      }
  * )
+ */
  class Answer
  {
  }
@@ -517,7 +517,7 @@ class Question
 
 API Platform can leverage the Symfony routing system to register custom operations related to custom controllers. Such custom
 controllers can be any valid [Symfony controller](http://symfony.com/doc/current/book/controller.html), including standard
-Symfony controllers extending the [`Symfony\Bundle\FrameworkBundle\Controller\Controller`](http://api.symfony.com/3.1/Symfony/Bundle/FrameworkBundle/Controller/Controller.html)
+Symfony controllers extending the [`Symfony\Bundle\FrameworkBundle\Controller\AbstractController`](http://api.symfony.com/4.1/Symfony/Bundle/FrameworkBundle/Controller/AbstractController.html)
 helper class.
 
 However, API Platform recommends to use **action classes** instead of typical Symfony controllers. Internally, API Platform
@@ -727,7 +727,7 @@ Or in XML:
                 <attribute name="controller">App\Controller\BookSpecial</attribute>
                 <attribute name="normalization_context">
                   <attribute name="groups">
-                    <group>special</group>
+                    <attribute>special</attribute>
                   </attribute>
                 </attribute>
             </itemOperation>
@@ -921,11 +921,11 @@ exactly the same thing than the previous example in a more Symfony-like fashion:
 namespace App\Controller;
 
 use App\Entity\Book;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
-class BookController extends Controller
+class BookController extends AbstractController
 {
-    public function specialAction(Book $data, MyService $service): Book
+    public function special(Book $data, MyService $service): Book
     {
         return $service->doSomething($data);
     }
