@@ -112,5 +112,5 @@ attribute of an operation](operations.md#recommended-method)):
 Attribute      | Type   | Default | Description                                                                          |
 ---------------|--------|---------|--------------------------------------------------------------------------------------|
 `_api_receive` | `bool` | `true`  | Enables or disables the `ReadListener`, `DeserializeListener` and `ValidateListener` |
-`_api_respond` | `bool` | `true`  | Enables or disables `SerializeListener`                                              |
+`_api_respond` | `bool` | `true`  | Enables or disables `SerializeListener`, `RespondListener`                           |
 `_api_persist` | `bool` | `true`  | Enables or disables `WriteLister`                                                    |
