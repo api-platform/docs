@@ -120,6 +120,51 @@ export default class extends Component {
 }
 ```
 
+
+## Customizing an Icon
+
+Now that our `authors` property it's displaying the name instead of an 'id', let change the icon shown in the list menu.
+
+Just add an import statement from `@material-design` for adding the icon, in this case, a user icon:
+
+`import UserIcon from '@material-ui/icons/People';`
+
+and add it to the `authors.icon` property
+
+The code for just customizing the icon will be:
+
+```javascript
+import React, { Component } from 'react';
+import { AdminBuilder, hydraClient } from '@api-platform/admin';
+import parseHydraDocumentation from '@api-platform/api-doc-parser/lib/hydra/parseHydraDocumentation';
+import UserIcon from '@material-ui/icons/People';
+
+const entrypoint = 'https://demo.api-platform.com';
+
+export default class extends Component {
+  state = { api: null }
+
+  componentDidMount() {
+    parseHydraDocumentation(entrypoint).then(({api}) => {
+
+        const authors = books.fields.find(({ name }) => 'authors' === name)
+
+        // Set the field in the list and the show views
+        authors.icon = UserIcon
+       
+        this.setState({ api });
+      }
+    )
+  }
+
+  render() {
+    if (null === this.state.api) return <div>Loading...</div>;
+
+    return <AdminBuilder api={ this.state.api } dataProvider={ hydraClient(this.state.api) }/>
+  }
+}
+```
+
 ## Using an Autocomplete Input for Relations
 
 We'll make one last improvement to our admin: transforming the relation selector we just created to use autocompletion.
