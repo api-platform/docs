@@ -123,9 +123,9 @@ export default class extends Component {
 
 ## Customizing an Icon
 
-Now that our `authors` property it's displaying the name instead of an 'id', let change the icon shown in the list menu.
+Now that our `authors` property is displaying the name instead of an 'id', let's change the icon shown in the list menu.
 
-Just add an import statement from `@material-design` for adding the icon, in this case, a user icon:
+Just add an import statement from `@material-ui` for adding the icon, in this case, a user icon:
 
 `import UserIcon from '@material-ui/icons/People';`
 
@@ -146,10 +146,9 @@ export default class extends Component {
 
   componentDidMount() {
     parseHydraDocumentation(entrypoint).then(({api}) => {
-
         const authors = books.fields.find(({ name }) => 'authors' === name)
 
-        // Set the field in the list and the show views
+        // Set the icon
         authors.icon = UserIcon
        
         this.setState({ api });
