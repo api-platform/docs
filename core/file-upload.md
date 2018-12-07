@@ -158,6 +158,7 @@ namespace App\Form;
 use App\Entity\MediaObject;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -169,6 +170,10 @@ final class MediaObjectType extends AbstractType
             // Configure each fields you want to be submitted here, like a classic form.
             ->add('file', FileType::class, [
                 'label' => 'label.file',
+                'required' => false,
+            ])
+            ->add('contentUrl', [
+                'label' => 'label.contentUrl',
                 'required' => false,
             ])
         ;
