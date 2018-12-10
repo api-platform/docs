@@ -26,12 +26,17 @@ You can change the port to be used in the `docker-compose.yml` file (default is 
 
 ## Using API Platform and JMS Serializer in the same project
 
-By default, [JMS Serializer Bundle](http://jmsyst.com/bundles/JMSSerializerBundle) replaces the `serializer` service by its own. However, API Platform requires the Symfony serializer (and not the JMS one) to work properly.
-Fortunately, this behavior can be deactivated using the following configuration:
+For the latest versions of [JMSSerializerBundle](http://jmsyst.com/bundles/JMSSerializerBundle), there is no conflict so everything should work out of the box.
+
+If you are still using the old, unmaintained v1 of JMSSerializerBundle, the best way should be to [upgrade to v2](https://github.com/schmittjoh/JMSSerializerBundle/blob/2.4.2/UPGRADING.md#upgrading-from-1x-to-20) of JMSSerializerBundle.
+
+In v1 of JMSSerializerBundle, the `serializer` alias is registered for the JMS Serializer service by default. However, API Platform requires the Symfony Serializer (and not the JMS one) to work properly. If you cannot upgrade for some reason, this behavior can be deactivated using the following configuration:
 
 ```yaml
-# api/config/packages/api_platform.yaml
+# app/config/config.yml
 
-jms_serializer:    
+jms_serializer:
     enable_short_alias: false
 ```
+
+The JMS Serializer service is available as `jms_serializer`.
