@@ -43,7 +43,7 @@ services:
       XDEBUG_CONFIG: >-
         remote_enable=1
         remote_host=host.docker.internal
-	remote_connect_back=1
+        remote_connect_back=1
         remote_port=9000
         idekey=PHPSTORM
       # This should correspond to the server declared in PHPStorm `Preferences | Languages & Frameworks | PHP | Servers`
