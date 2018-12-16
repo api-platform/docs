@@ -147,7 +147,7 @@ use ApiPlatform\Core\Annotation\ApiResource;
 /**
  * ...
  * @ApiResource(itemOperations={
- *     "get"={"method"="GET", "path"="/grimoire/{id}", "requirements"={"id"="\d+"}, "defaults"={"color"="brown"}, "options"={"my_option"="my_option_value", "schemes"={"https"}, "host"="{subdomain}.api-platform.com"}},
+ *     "get"={"method"="GET", "path"="/grimoire/{id}", "requirements"={"id"="\d+"}, "defaults"={"color"="brown"}, "options"={"my_option"="my_option_value"}, "schemes"={"https"}, "host"="{subdomain}.api-platform.com"},
  *     "put"={"method"="PUT", "path"="/grimoire/{id}/update", "hydra_context"={"foo"="bar"}},
  * })
  */
