@@ -58,7 +58,11 @@ Create a new file named `Procfile` in the `api/` directory with the following co
 web: vendor/bin/heroku-php-apache2 public/
 ```
 
-As Heroku doesn't support Varnish out of the box, let's remove it's integration:
+Be sure to add the Apache Pack in your dependencies:
+
+    composer require symfony/apache-pack
+
+As Heroku doesn't support Varnish out of the box, let's disable its integration:
 
 ```patch
 # api/config/packages/api_platform.yaml
