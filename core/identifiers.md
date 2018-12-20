@@ -20,7 +20,7 @@ use App\Uuid;
  */
 final class Person {
     /**
-     * @type Uuid
+     * @var Uuid
      * @ApiProperty(identifier=true)
      */
     public $code;

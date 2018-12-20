@@ -154,7 +154,7 @@ use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
 
 /**
  * @ApiResource()
- * @ApiFilter(SearchFilter::class, properties={"id": "exact", "price": "exact", "name": "partial"})
+ * @ApiFilter(SearchFilter::class, properties={"id": "exact", "price": "exact", "description": "partial"})
  */
 class Offer
 {
@@ -163,10 +163,9 @@ class Offer
 ```
 
 `http://localhost:8000/api/offers?price=10` will return all offers with a price being exactly `10`.
-`http://localhost:8000/api/offers?name=shirt` will return all offers with a description containing the word "shirt".
-`http://localhost:8000/api/offers?name[]=shirt&name[]=sweat` will return all offers with a description containing the word "shirt" or containing the word "sweat".
+`http://localhost:8000/api/offers?description=shirt` will return all offers with a description containing the word "shirt".
 
-Filters can be combined together: `http://localhost:8000/api/offers?price=10&name=shirt`
+Filters can be combined together: `http://localhost:8000/api/offers?price=10&description=shirt`
 
 It is possible to filter on relations too, if `Offer` has a `Product` relation:
 
@@ -241,6 +240,7 @@ Use the default behavior of the DBMS | `null`
 Exclude items                        | `ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\DateFilter::EXCLUDE_NULL` (`exclude_null`)
 Consider items as oldest             | `ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\DateFilter::INCLUDE_NULL_BEFORE` (`include_null_before`)
 Consider items as youngest           | `ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\DateFilter::INCLUDE_NULL_AFTER` (`include_null_after`)
+Always include items                 | `ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\DateFilter::INCLUDE_NULL_BEFORE_AND_AFTER` (`include_null_before_and_after`)
 
 For instance, exclude entries with a property value of `null`, with the following service definition:
 

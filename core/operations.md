@@ -147,7 +147,7 @@ use ApiPlatform\Core\Annotation\ApiResource;
 /**
  * ...
  * @ApiResource(itemOperations={
- *     "get"={"method"="GET", "path"="/grimoire/{id}", "requirements"={"id"="\d+"}, "defaults"={"color"="brown"}, "options"={"my_option"="my_option_value", "schemes"={"https"}, "host"="{subdomain}.api-platform.com"}},
+ *     "get"={"method"="GET", "path"="/grimoire/{id}", "requirements"={"id"="\d+"}, "defaults"={"color"="brown"}, "options"={"my_option"="my_option_value"}, "schemes"={"https"}, "host"="{subdomain}.api-platform.com"},
  *     "put"={"method"="PUT", "path"="/grimoire/{id}/update", "hydra_context"={"foo"="bar"}},
  * })
  */
@@ -534,11 +534,7 @@ Thanks to the [autowiring](http://symfony.com/doc/current/components/dependency_
 Symfony Dependency Injection container, services required by an action can be type-hinted in its constructor, it will be
 automatically instantiated and injected, without having to declare it explicitly.
 
-In the following examples, the built-in `GET` operation is registered as well as a custom operation called `special`.
-The `special` operation reference the Symfony route named `book_special`.
-
-Since version 2.3, you can also use the route name as operation name by convention as shown in the next example
-for `book_custom` if no `method` nor `route_name` attributes are specified.
+In the following examples, the built-in `GET` operation is registered as well as a custom operation called `post_publication`.
 
 By default, API Platform uses the first `GET` operation defined in `itemOperations` to generate the IRI of an item and the first `GET` operation defined in `collectionOperations` to generate the IRI of a collection.
 
@@ -550,24 +546,24 @@ First, let's create your custom operation:
 
 ```php
 <?php
-// api/src/Controller/BookSpecial.php
+// api/src/Controller/CreateBookPublication.php
 
 namespace App\Controller;
 
 use App\Entity\Book;
 
-class BookSpecial
+class CreateBookPublication
 {
-    private $myService;
+    private $bookPublishingHandler;
 
-    public function __construct(MyService $myService)
+    public function __construct(BookPublishingHandler $bookPublishingHandler)
     {
-        $this->myService = $myService;
+        $this->bookPublishingHandler = $bookPublishingHandler;
     }
 
     public function __invoke(Book $data): Book
     {
-        $this->myService->doSomething($data);
+        $this->bookPublishingHandler->handle($data);
 
         return $data;
     }
@@ -580,7 +576,7 @@ passed in the URL.
 Here we consider that [autowiring](https://symfony.com/doc/current/service_container/autowiring.html) is enabled for
 controller classes (the default when using the API Platform distribution).
 This action will be automatically registered as a service (the service name is the same as the class name:
-`App\Controller\BookSpecial`).
+`App\Controller\CreateBookPublication`).
 
 API Platform automatically retrieves the appropriate PHP entity using the data provider then deserializes user data in it,
 and for `POST` and `PUT` requests updates the entity with data provided by the user.
@@ -604,15 +600,15 @@ The routing has not been configured yet because we will add it at the resource c
 // src/Entity/Book.php
 
 use ApiPlatform\Core\Annotation\ApiResource;
-use App\Controller\BookSpecial;
+use App\Controller\CreateBookPublication;
 
 /**
  * @ApiResource(itemOperations={
  *     "get",
- *     "special"={
- *         "method"="GET",
- *         "path"="/books/{id}/special",
- *         "controller"=BookSpecial::class
+ *     "post_publication"={
+ *         "method"="POST",
+ *         "path"="/books/{id}/publication",
+ *         "controller"=CreateBookPublication::class,
  *     }
  * })
  */
@@ -629,10 +625,10 @@ Or in YAML:
 App\Entity\Book:
     itemOperations:
         get: ~
-        special:
-            method: 'GET'
-            path: '/books/{id}/special'
-            controller: 'App\Controller\BookSpecial'
+        post_publication:
+            method: POST
+            path: /books/{id}/publication
+            controller: App\Controller\CreateBookPublication
 ```
 
 Or in XML:
@@ -648,10 +644,10 @@ Or in XML:
     <resource class="App\Entity\Book">
         <itemOperations>
             <itemOperation name="get" />
-            <itemOperation name="special">
-                <attribute name="method">GET</attribute>
-                <attribute name="path">/books/{id}/special</attribute>
-                <attribute name="controller">App\Controller\BookSpecial</attribute>
+            <itemOperation name="post_publication">
+                <attribute name="method">POST</attribute>
+                <attribute name="path">/books/{id}/publication</attribute>
+                <attribute name="controller">App\Controller\CreateBookPublication</attribute>
             </itemOperation>
         </itemOperations>
     </resource>
@@ -670,16 +666,17 @@ You may want different serialization groups for your custom operations. Just con
 // src/Entity/Book.php
 
 use ApiPlatform\Core\Annotation\ApiResource;
-use App\Controller\BookSpecial;
+use App\Controller\CreateBookPublication;
 use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ApiResource(itemOperations={
  *     "get",
- *     "special"={
- *         "path"="/books/{id}/special",
- *         "controller"=BookSpecial::class,
- *         "normalization_context"={"groups"={"special"}}
+ *     "post_publication"={
+ *         "method"="POST",
+ *         "path"="/books/{id}/publication",
+ *         "controller"=CreateBookPublication::class,
+ *         "normalization_context"={"groups"={"publication"}},
  *     }
  * })
  */
@@ -688,7 +685,7 @@ class Book
     //...
 
     /**
-     * @Groups("special")
+     * @Groups("publication")
      */
     private $isbn;
 }
@@ -701,12 +698,12 @@ Or in YAML:
 App\Entity\Book:
     itemOperations:
         get: ~
-        special:
-            method: 'GET'
-            path: '/books/{id}/special'
-            controller: 'App\Controller\BookSpecial'
+        post_publication:
+            method: POST
+            path: /books/{id}/publication
+            controller: App\Controller\CreateBookPublication
             normalization_context:
-                groups: ['special']
+                groups: ['publication']
 ```
 
 Or in XML:
@@ -722,13 +719,13 @@ Or in XML:
     <resource class="App\Entity\Book">
         <itemOperations>
             <itemOperation name="get" />
-            <itemOperation name="special">
-                <attribute name="method">GET</attribute>
-                <attribute name="path">/books/{id}/special</attribute>
-                <attribute name="controller">App\Controller\BookSpecial</attribute>
+            <itemOperation name="post_publication">
+                <attribute name="method">POST</attribute>
+                <attribute name="path">/books/{id}/publication</attribute>
+                <attribute name="controller">App\Controller\CreateBookPublication</attribute>
                 <attribute name="normalization_context">
                   <attribute name="groups">
-                    <attribute>special</attribute>
+                    <attribute>publication</attribute>
                   </attribute>
                 </attribute>
             </itemOperation>
@@ -740,22 +737,23 @@ Or in XML:
 #### Entity Retrieval
 
 If you want to bypass the automatic retrieval of the entity in your custom operation, you can set the parameter
-`_api_receive` to `false` in the `default` attribute:
+`_api_receive` to `false` in the `defaults` attribute:
 
 ```php
 <?php
 // src/Entity/Book.php
 
 use ApiPlatform\Core\Annotation\ApiResource;
-use App\Controller\BookSpecial;
+use App\Controller\CreateBookPublication;
 
 /**
  * @ApiResource(itemOperations={
  *     "get",
- *     "special"={
- *         "path"="/books/{id}/special",
- *         "controller"=BookSpecial::class,
- *         "defaults"={"_api_receive"=false}
+ *     "post_publication"={
+ *         "method"="POST",
+ *         "path"="/books/{id}/publication",
+ *         "controller"=CreateBookPublication::class,
+ *         "defaults"={"_api_receive"=false},
  *     }
  * })
  */
@@ -772,9 +770,10 @@ Or in YAML:
 App\Entity\Book:
     itemOperations:
         get: ~
-        special:
-            path: '/books/{id}/special'
-            controller: 'App\Controller\BookSpecial'
+        post_publication:
+            method: POST
+            path: /books/{id}/publication
+            controller: App\Controller\CreateBookPublication
             defaults:
                 _api_receive: false
 ```
@@ -792,9 +791,10 @@ Or in XML:
     <resource class="App\Entity\Book">
         <itemOperations>
             <itemOperation name="get" />
-            <itemOperation name="special">
-                <attribute name="path">/books/{id}/special</attribute>
-                <attribute name="controller">App\Controller\BookSpecial</attribute>
+            <itemOperation name="post_publication">
+                <attribute name="method">POST</attribute>
+                <attribute name="path">/books/{id}/publication</attribute>
+                <attribute name="controller">App\Controller\CreateBookPublication</attribute>
                 <attribute name="defaults">
                     <attribute name="_api_receive">false</attribute>
                 </attribute>
@@ -812,6 +812,11 @@ information).
 There is another way to create a custom operation. However, we do not encourage its use. Indeed, this one disperses
 the configuration at the same time in the routing and the resource configuration.
 
+The `post_publication` operation references the Symfony route named `book_post_publication`.
+
+Since version 2.3, you can also use the route name as operation name by convention, as shown in the following example
+for `book_post_discontinuation` when neither `method` nor `route_name` attributes are specified.
+
 First, let's create your resource configuration:
 
 ```php
@@ -823,8 +828,8 @@ use ApiPlatform\Core\Annotation\ApiResource;
 /**
  * @ApiResource(itemOperations={
  *     "get",
- *     "special"={"route_name"="book_special"},
-*      "book_custom",
+ *     "post_publication"={"route_name"="book_post_publication"},
+*      "book_post_discontinuation",
  * })
  */
 class Book
@@ -840,9 +845,9 @@ Or in YAML:
 App\Entity\Book:
     itemOperations:
         get: ~
-        special:
-            route_name: 'book_special'
-        book_custom: ~
+        post_publication:
+            route_name: book_post_publication
+        book_post_discontinuation: ~
 ```
 
 Or in XML:
@@ -858,50 +863,50 @@ Or in XML:
     <resource class="App\Entity\Book">
         <itemOperations>
             <itemOperation name="get" />
-            <itemOperation name="special">
-                <attribute name="route_name">book_special</attribute>
+            <itemOperation name="post_publication">
+                <attribute name="route_name">book_post_publication</attribute>
             </itemOperation>
-            <itemOperation name="book_custom" />
+            <itemOperation name="book_post_discontinuation" />
         </itemOperations>
     </resource>
 </resources>
 ```
 
-API Platform will automatically map this `special` operation with the route `book_special`. Let's create a custom action
+API Platform will automatically map this `post_publication` operation to the route `book_post_publication`. Let's create a custom action
 and its related route using annotations:
 
 ```php
 <?php
-// api/src/Controller/BookSpecial.php
+// api/src/Controller/CreateBookPublication.php
 
 namespace App\Controller;
 
 use App\Entity\Book;
 use Symfony\Component\Routing\Annotation\Route;
 
-class BookSpecial
+class CreateBookPublication
 {
-    private $myService;
+    private $bookPublishingHandler;
 
-    public function __construct(MyService $myService)
+    public function __construct(BookPublishingHandler $bookPublishingHandler)
     {
-        $this->myService = $myService;
+        $this->bookPublishingHandler = $bookPublishingHandler;
     }
 
     /**
      * @Route(
-     *     name="book_special",
-     *     path="/books/{id}/special",
-     *     methods={"PUT"},
+     *     name="book_post_publication",
+     *     path="/books/{id}/publication",
+     *     methods={"POST"},
      *     defaults={
      *         "_api_resource_class"=Book::class,
-     *         "_api_item_operation_name"="special"
+     *         "_api_item_operation_name"="post_publication"
      *     }
      * )
      */
     public function __invoke(Book $data): Book
     {
-        $this->myService->doSomething($data);
+        $this->bookPublishingHandler->handle($data);
 
         return $data;
     }
@@ -909,11 +914,10 @@ class BookSpecial
 ```
 
 It is mandatory to set `_api_resource_class` and `_api_item_operation_name` (or `_api_collection_operation_name` for a collection
-operation) in the parameters of the route (`defaults` key). It allows API Platform and the Symfony routing system to hook
-together.
+operation) in the parameters of the route (`defaults` key). It allows API Platform to work with the Symfony routing system.
 
-Alternatively, you can also use standard Symfony controller and YAML or XML route declarations. The following example does
-exactly the same thing than the previous example in a more Symfony-like fashion:
+Alternatively, you can also use a traditional Symfony controller and YAML or XML route declarations. The following example does
+the exact same thing as the previous example:
 
 ```php
 <?php
@@ -926,20 +930,20 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class BookController extends AbstractController
 {
-    public function special(Book $data, MyService $service): Book
+    public function createPublication(Book $data, BookPublishingHandler $bookPublishingHandler): Book
     {
-        return $service->doSomething($data);
+        return $bookPublishingHandler->handle($data);
     }
 }
 ```
 
 ```yaml
 # api/config/routes.yaml
-book_special:
-    path: '/books/{id}/special'
-    methods:  ['PUT']
+book_post_publication:
+    path: /books/{id}/publication
+    methods: ['POST']
     defaults:
-        _controller: '\App\Controller\Book::special'
-        _api_resource_class: 'App\Entity\Book'
-        _api_item_operation_name: 'special'
+        _controller: App\Controller\BookController::createPublication
+        _api_resource_class: App\Entity\Book
+        _api_item_operation_name: post_publication
 ```
