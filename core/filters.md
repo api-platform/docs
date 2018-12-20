@@ -154,7 +154,7 @@ use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
 
 /**
  * @ApiResource()
- * @ApiFilter(SearchFilter::class, properties={"id": "exact", "price": "exact", "name": "partial"})
+ * @ApiFilter(SearchFilter::class, properties={"id": "exact", "price": "exact", "description": "partial"})
  */
 class Offer
 {
@@ -163,10 +163,9 @@ class Offer
 ```
 
 `http://localhost:8000/api/offers?price=10` will return all offers with a price being exactly `10`.
-`http://localhost:8000/api/offers?name=shirt` will return all offers with a description containing the word "shirt".
-`http://localhost:8000/api/offers?name[]=shirt&name[]=sweat` will return all offers with a description containing the word "shirt" or containing the word "sweat".
+`http://localhost:8000/api/offers?description=shirt` will return all offers with a description containing the word "shirt".
 
-Filters can be combined together: `http://localhost:8000/api/offers?price=10&name=shirt`
+Filters can be combined together: `http://localhost:8000/api/offers?price=10&description=shirt`
 
 It is possible to filter on relations too, if `Offer` has a `Product` relation:
 
