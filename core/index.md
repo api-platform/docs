@@ -23,7 +23,7 @@ Here is the fully featured REST API you'll get in minutes:
 * Hypermedia (JSON-LD and HAL)
 * Machine-readable documentation of the API in the Hydra and [Swagger/Open API](swagger.md) formats,
   guessed from PHPDoc, Serializer, Validator and Doctrine ORM metadata
-* Nice human-readable documentation built with Swagger UI and including a sandbox
+* Nice human-readable documentation built with Swagger UI (including a sandbox) and/or ReDoc
 * [Pagination](pagination.md)
 * A bunch of [filters](filters.md)
 * [Ordering](default-order.md)
