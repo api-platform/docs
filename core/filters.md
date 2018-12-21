@@ -1006,42 +1006,6 @@ final class UserFilterConfigurator
 
 Done: Doctrine will automatically filter all "UserAware" entities!
 
-### Overriding Extraction of Properties from the Request
-
-You can change the way the filter parameters are extracted from the request. This can be done by overriding the `extractProperties(\Symfony\Component\HttpFoundation\Request $request)`
-method.
-
-In the following example, we will completely change the syntax of the order filter to be the following: `?filter[order][property]`
-
-```php
-<?php
-// api/src/Filter/CustomOrderFilter.php
-
-namespace App\Filter;
-
-use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\OrderFilter;
-use Symfony\Component\HttpFoundation\Request;
-
-final class CustomOrderFilter extends OrderFilter
-{
-    protected function extractProperties(Request $request): array
-    {
-        return $request->query->get('filter[order]', []);
-    }
-}
-```
-
-Finally, register the custom filter:
-
-```yaml
-# api/config/services.yaml
-services:
-    # ...
-    'App\Filter\CustomOrderFilter': ~
-        # Uncomment only if autoconfiguration isn't enabled
-        #tags: [ 'api_platform.filter' ]
-```
-
 ## ApiFilter Annotation
 
 The annotation can be used on a `property` or on a `class`.
