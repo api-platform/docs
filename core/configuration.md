@@ -51,6 +51,9 @@ api_platform:
     # Enable Swagger ui.
     enable_swagger_ui: true
 
+    # Enable ReDoc.
+    enable_re_doc: true
+
     # Enable the entrypoint.
     enable_entrypoint: true
 

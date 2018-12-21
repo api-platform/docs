@@ -1,7 +1,7 @@
 # Swagger / Open API Support
 
 API Platform natively support the [Open API](https://www.openapis.org/) (formerly Swagger) API documentation format.
-It also integrates a customized version of [Swagger UI](https://swagger.io/swagger-ui/), a nice tool to display the
+It also integrates a customized version of [Swagger UI](https://swagger.io/swagger-ui/) and [ReDoc](https://rebilly.github.io/ReDoc/), some nice tools to display the
 API documentation in a user friendly way.
 
 ![Screenshot](../distribution/images/swagger-ui-1.png)
@@ -54,12 +54,12 @@ final class SwaggerDecorator implements NormalizerInterface
 
 	// e.g. add a custom parameter
 	$docs['paths']['/foos']['get']['parameters'][] = $customDefinition;
-	
+
         // e.g. remove an existing parameter
         $docs['paths']['/foos']['get']['parameters'] = array_values(array_filter($docs['paths']['/foos']['get']['parameters'], function ($param){
             return $param['name'] !== 'bar';
         }));
-	
+
 	// Override title
 	$docs['info']['title'] = 'My Api Foo';
 
@@ -346,10 +346,10 @@ You can also dump your current Swagger documentation using the provided command:
 $ docker-compose exec php bin/console api:swagger:export
 # Swagger documentation in JSON format...
 
-$ docker-compose exec php bin/console api:swagger:export --yaml 
-# Swagger documentation in YAML format... 
+$ docker-compose exec php bin/console api:swagger:export --yaml
+# Swagger documentation in YAML format...
 
-$ docker-compose exec php bin/console api:swagger:export --output=swagger_docs.json 
+$ docker-compose exec php bin/console api:swagger:export --output=swagger_docs.json
 # Swagger documentation dumped directly into JSON file (add --yaml to change format)
 ```
 
