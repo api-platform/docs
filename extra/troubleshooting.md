@@ -66,8 +66,8 @@ server {
         #fastcgi_pass $upstream_host:9000;
         
         # Bigger buffer size to handle cache invalidation headers expansion
-        fastcgi_buffer_size          128k;
-        fastcgi_buffers              4 256k;
+        fastcgi_buffer_size 32k;
+        fastcgi_buffers 8 16k;
 
         fastcgi_split_path_info ^(.+\.php)(/.*)$;
         include fastcgi_params;
