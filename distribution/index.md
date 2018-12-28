@@ -648,7 +648,8 @@ need to install the [graphql-php](https://webonyx.github.io/graphql-php/) librar
 
     $ docker-compose exec php composer req webonyx/graphql-php && bin/console cache:clear
 
-You now have a GraphQL API! Open `https://localhost:8443/api/graphql` to play with it using the nice [GraphiQL](https://github.com/graphql/graphiql)
+You now have a GraphQL API! Open `https://localhost:8443/graphql` to play with it using the nice [GraphiQL](https://github.com/graphql/graphiql)
+**Note** If you installed the API using `composer req api` then you will need to use `https://localhost:8443/api/graphql`
 UI that is shipped with API Platform:
 
 ![GraphQL endpoint](images/api-platform-2.2-graphql.png)
