@@ -370,7 +370,7 @@ As described [in the Symfony documentation](https://symfony.com/doc/current/temp
 
 You may want to copy the [one shipped with API Platform](https://github.com/api-platform/core/blob/master/src/Bridge/Symfony/Bundle/Resources/views/SwaggerUi/index.html.twig) and customize it.
 
-# Compatibilily Layer with Amazon API Gateway
+## Compatibilily Layer with Amazon API Gateway
 
 [AWS API Gateway](https://aws.amazon.com/api-gateway/) supports OpenAPI partially, but it [requires some changes](https://docs.aws.amazon.com/apigateway/latest/developerguide/api-gateway-known-issues.html).
 Fortunately, API Platform provides a way to be compatible with Amazon API Gateway.
