@@ -292,7 +292,7 @@ class Offer
 }
 ```
 
-Given that the collection endpoint is `/offers`, you can filter offers by boolean with the following query: `/offers?isAvailableGenericallyInMyCountry=true`.
+Given that the collection endpoint is `/offers`, you can filter offers with the following query: `/offers?isAvailableGenericallyInMyCountry=true`.
 
 It will return all offers where `isAvailableGenericallyInMyCountry` equals `true`.
 
@@ -324,7 +324,7 @@ class Offer
 }
 ```
 
-Given that the collection endpoint is `/offers`, you can filter offers by boolean with the following query: `/offers?sold=1`.
+Given that the collection endpoint is `/offers`, you can filter offers with the following query: `/offers?sold=1`.
 
 It will return all offers with `sold` equals `1`.
 
