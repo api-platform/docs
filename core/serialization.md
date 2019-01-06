@@ -677,7 +677,7 @@ an IRI. A client that uses JSON-LD must send a second HTTP request to retrieve i
 }
 ```
 
-You can configure API Platform to embed the JSON-LD context in the root document like the by adding the `jsonld_embed_context`
+You can configure API Platform to embed the JSON-LD context in the root document by adding the `jsonld_embed_context`
 attribute to the `@ApiResource` annotation:
 
 ```php
