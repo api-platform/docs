@@ -83,6 +83,10 @@ const myApiDocumentationParser = entrypoint => parseHydraDocumentation(entrypoin
     const books = api.resources.find(({ name }) => 'books' === name);
     const description = books.fields.find(f => 'description' === f.name);
 
+    description.field = props => (
+      <RichTextField {...props} source="description" />
+    );
+
     description.input = props => (
       <RichTextInput {...props} source="description" />
     );
