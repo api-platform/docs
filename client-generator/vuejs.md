@@ -41,7 +41,7 @@ import App from './App.vue';
 
 // Replace "foo" with the name of the resource type
 import foo from './store/modules/foo/';
-import fooRoutes from './routes/foo';
+import fooRoutes from './router/foo';
 
 Vue.use(Vuex);
 Vue.use(VueRouter);
