@@ -26,12 +26,72 @@ You can change the port to be used in the `docker-compose.yml` file (default is 
 
 ## Using API Platform and JMS Serializer in the same project
 
-By default, [JMS Serializer Bundle](http://jmsyst.com/bundles/JMSSerializerBundle) replaces the `serializer` service by its own. However, API Platform requires the Symfony serializer (and not the JMS one) to work properly.
-Fortunately, this behavior can be deactivated using the following configuration:
+For the latest versions of [JMSSerializerBundle](http://jmsyst.com/bundles/JMSSerializerBundle), there is no conflict so everything should work out of the box.
+
+If you are still using the old, unmaintained v1 of JMSSerializerBundle, the best way should be to [upgrade to v2](https://github.com/schmittjoh/JMSSerializerBundle/blob/2.4.2/UPGRADING.md#upgrading-from-1x-to-20) of JMSSerializerBundle.
+
+In v1 of JMSSerializerBundle, the `serializer` alias is registered for the JMS Serializer service by default. However, API Platform requires the Symfony Serializer (and not the JMS one) to work properly. If you cannot upgrade for some reason, this behavior can be deactivated using the following configuration:
 
 ```yaml
-# api/config/packages/api_platform.yaml
+# app/config/config.yml
 
-jms_serializer:    
+jms_serializer:
     enable_short_alias: false
 ```
+
+The JMS Serializer service is available as `jms_serializer`.
+
+## "upstream sent too big header while reading response header from upstream" 502 Error
+
+Some of your API calls fail with a 502 error and the logs for the api container shows the following error message `upstream sent too big header while reading response header from upstream`. 
+
+This can be due to the cache invalidation headers that are too big for NGINX. When you query the API, API Platform adds the ids of all returned entities and their dependencies in the headers like so : `Cache-Tags: /entity/1,/dependent_entity/1,/entity/2`. This can overflow the default header size (4k) when your API gets larger and more complex.
+
+You can modify the `api/docker/nginx/conf.d/default.conf` file and set values to `fastcgi_buffer_size` and `fastcgi_buffers` that suit your needs, like so:
+
+```
+server {
+    root /srv/api/public;
+
+    location / {
+        # try to serve file directly, fallback to index.php
+        try_files $uri /index.php$is_args$args;
+    }
+
+    location ~ ^/index\.php(/|$) {
+        # Comment the next line and uncomment the next to enable dynamic resolution (incompatible with Kubernetes)
+        fastcgi_pass php:9000;
+        #resolver 127.0.0.11;
+        #set $upstream_host php;
+        #fastcgi_pass $upstream_host:9000;
+        
+        # Bigger buffer size to handle cache invalidation headers expansion
+        fastcgi_buffer_size 32k;
+        fastcgi_buffers 8 16k;
+
+        fastcgi_split_path_info ^(.+\.php)(/.*)$;
+        include fastcgi_params;
+        # When you are using symlinks to link the document root to the
+        # current version of your application, you should pass the real
+        # application path instead of the path to the symlink to PHP
+        # FPM.
+        # Otherwise, PHP's OPcache may not properly detect changes to
+        # your PHP files (see https://github.com/zendtech/ZendOptimizerPlus/issues/126
+        # for more information).
+        fastcgi_param SCRIPT_FILENAME $realpath_root$fastcgi_script_name;
+        fastcgi_param DOCUMENT_ROOT $realpath_root;
+        # Prevents URIs that include the front controller. This will 404:
+        # http://domain.tld/index.php/some-path
+        # Remove the internal directive to allow URIs like this
+        internal;
+    }
+
+    # return 404 for all other php files not matching the front controller
+    # this prevents access to other php files you don't want to be accessible.
+    location ~ \.php$ {
+      return 404;
+    }
+}
+```
+
+You then need to rebuild your containers by running `docker-compose build`.

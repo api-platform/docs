@@ -1,6 +1,6 @@
 # Swagger / Open API Support
 
-API Platform natively support the [Open API](https://www.openapis.org/) (formerly Swagger) API documentation format.
+API Platform natively support the [Open API](https://www.openapis.org/) (formerly Swagger) API specification format.
 It also integrates a customized version of [Swagger UI](https://swagger.io/swagger-ui/) and [ReDoc](https://rebilly.github.io/ReDoc/), some nice tools to display the
 API documentation in a user friendly way.
 
@@ -46,7 +46,7 @@ final class SwaggerDecorator implements NormalizerInterface
 
         $customDefinition = [
             'name' => 'fields',
-            'definition' => 'Fields to remove of the output',
+            'description' => 'Fields to remove of the output',
             'default' => 'id',
             'in' => 'query',
         ];
@@ -370,11 +370,9 @@ As described [in the Symfony documentation](https://symfony.com/doc/current/temp
 
 You may want to copy the [one shipped with API Platform](https://github.com/api-platform/core/blob/master/src/Bridge/Symfony/Bundle/Resources/views/SwaggerUi/index.html.twig) and customize it.
 
-### Enable Swagger doc for API Gateway
+## Compatibilily Layer with Amazon API Gateway
 
-[AWS API Gateway](https://aws.amazon.com/api-gateway/) supports Swagger 2.0 partially, but it [requires some changes](https://docs.aws.amazon.com/apigateway/latest/developerguide/api-gateway-known-issues.html).
-Fortunately, API Platform provides a way to be compatible with both Swagger 2.0 & API Gateway.
+[AWS API Gateway](https://aws.amazon.com/api-gateway/) supports OpenAPI partially, but it [requires some changes](https://docs.aws.amazon.com/apigateway/latest/developerguide/api-gateway-known-issues.html).
+Fortunately, API Platform provides a way to be compatible with Amazon API Gateway.
 
-To enable API Gateway compatibility on your Swagger doc, add `api_gateway=true` query parameter:
-
-`http://www.example.com/docs.json?api_gateway=true`
+To enable API Gateway compatibility on your OpenAPI docs, add `api_gateway=true` as query parameter: `http://www.example.com/docs.json?api_gateway=true`

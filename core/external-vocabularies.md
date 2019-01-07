@@ -37,7 +37,7 @@ The generated JSON for products and the related context document will now use ex
 {
   "@context": "/contexts/Book",
   "@id": "/books/22",
-  "@type": "https://schema.org/Product",
+  "@type": "https://schema.org/Book",
   "name": "My awesome book"
 }
 ```

@@ -154,7 +154,7 @@ use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
 
 /**
  * @ApiResource()
- * @ApiFilter(SearchFilter::class, properties={"id": "exact", "price": "exact", "name": "partial"})
+ * @ApiFilter(SearchFilter::class, properties={"id": "exact", "price": "exact", "description": "partial"})
  */
 class Offer
 {
@@ -163,10 +163,9 @@ class Offer
 ```
 
 `http://localhost:8000/api/offers?price=10` will return all offers with a price being exactly `10`.
-`http://localhost:8000/api/offers?name=shirt` will return all offers with a description containing the word "shirt".
-`http://localhost:8000/api/offers?name[]=shirt&name[]=sweat` will return all offers with a description containing the word "shirt" or containing the word "sweat".
+`http://localhost:8000/api/offers?description=shirt` will return all offers with a description containing the word "shirt".
 
-Filters can be combined together: `http://localhost:8000/api/offers?price=10&name=shirt`
+Filters can be combined together: `http://localhost:8000/api/offers?price=10&description=shirt`
 
 It is possible to filter on relations too, if `Offer` has a `Product` relation:
 
@@ -241,6 +240,7 @@ Use the default behavior of the DBMS | `null`
 Exclude items                        | `ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\DateFilter::EXCLUDE_NULL` (`exclude_null`)
 Consider items as oldest             | `ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\DateFilter::INCLUDE_NULL_BEFORE` (`include_null_before`)
 Consider items as youngest           | `ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\DateFilter::INCLUDE_NULL_AFTER` (`include_null_after`)
+Always include items                 | `ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\DateFilter::INCLUDE_NULL_BEFORE_AND_AFTER` (`include_null_before_and_after`)
 
 For instance, exclude entries with a property value of `null`, with the following service definition:
 
@@ -292,7 +292,7 @@ class Offer
 }
 ```
 
-Given that the collection endpoint is `/offers`, you can filter offers by boolean with the following query: `/offers?isAvailableGenericallyInMyCountry=true`.
+Given that the collection endpoint is `/offers`, you can filter offers with the following query: `/offers?isAvailableGenericallyInMyCountry=true`.
 
 It will return all offers where `isAvailableGenericallyInMyCountry` equals `true`.
 
@@ -324,7 +324,7 @@ class Offer
 }
 ```
 
-Given that the collection endpoint is `/offers`, you can filter offers by boolean with the following query: `/offers?sold=1`.
+Given that the collection endpoint is `/offers`, you can filter offers with the following query: `/offers?sold=1`.
 
 It will return all offers with `sold` equals `1`.
 
@@ -1005,42 +1005,6 @@ final class UserFilterConfigurator
 ```
 
 Done: Doctrine will automatically filter all "UserAware" entities!
-
-### Overriding Extraction of Properties from the Request
-
-You can change the way the filter parameters are extracted from the request. This can be done by overriding the `extractProperties(\Symfony\Component\HttpFoundation\Request $request)`
-method.
-
-In the following example, we will completely change the syntax of the order filter to be the following: `?filter[order][property]`
-
-```php
-<?php
-// api/src/Filter/CustomOrderFilter.php
-
-namespace App\Filter;
-
-use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\OrderFilter;
-use Symfony\Component\HttpFoundation\Request;
-
-final class CustomOrderFilter extends OrderFilter
-{
-    protected function extractProperties(Request $request): array
-    {
-        return $request->query->get('filter[order]', []);
-    }
-}
-```
-
-Finally, register the custom filter:
-
-```yaml
-# api/config/services.yaml
-services:
-    # ...
-    'App\Filter\CustomOrderFilter': ~
-        # Uncomment only if autoconfiguration isn't enabled
-        #tags: [ 'api_platform.filter' ]
-```
 
 ## ApiFilter Annotation
 
