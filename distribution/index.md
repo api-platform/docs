@@ -646,7 +646,7 @@ Isn't API Platform a REST **and** GraphQL framework? That's true! GraphQL suppor
 need to install the [graphql-php](https://webonyx.github.io/graphql-php/) library. Run the following command (the cache needs to be cleared twice):
 
 ```bash
-docker-compose exec php composer req webonyx/graphql-php && bin/console cache:clear
+docker-compose exec php composer req webonyx/graphql-php && docker-compose exec php bin/console cache:clear
 ```
 
 You now have a GraphQL API! Open `https://localhost:8443/graphql` to play with it using the nice [GraphiQL](https://github.com/graphql/graphiql)
