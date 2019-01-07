@@ -66,9 +66,13 @@ it.
 API Platform is shipped with a [Docker](https://docker.com) setup that makes it easy to get a containerized development
 environment up and running. If you do not already have Docker on your computer, [it's the right time to install it](https://docs.docker.com/install/).
 
+On Mac, only [Docker for Mac](https://docs.docker.com/docker-for-mac/) is supported.
+Similarly, on Windows, only [Docker for Windows](https://docs.docker.com/docker-for-windows/) is supported. Docker Machine **is not** supported out of the box.
+
 Open a terminal, and navigate to the directory containing your project skeleton. Run the following command to start all
 services using [Docker Compose](https://docs.docker.com/compose/):
 
+    $ docker-compose pull # Download the latest versions of the pre-built images
     $ docker-compose up -d # Running in detached mode
 
 This starts the following services:
@@ -82,11 +86,6 @@ This starts the following services:
 | api         | The HTTP server for the API (Nginx)                           | 8080    | all
 | cache-proxy | A HTTP cache proxy for the API provided by Varnish            | 8081    | all (prefer using a managed service in prod)
 | h2-proxy    | A HTTP/2 and HTTPS development proxy for all apps             | 443 (client)<br>444 (admin)<br>8443 (api)<br>8444 (cache-proxy) | dev (configure properly your web server in prod)
-
-If you encounter problems running Docker on Windows (especially with Docker Toolbox), see [our Troubleshooting guide](../extra/troubleshooting.md#using-docker).
-
-The first time you start the containers, Docker downloads and builds images for you. It will take some time, but don't worry,
-this is done only once. Starting servers will then be lightning fast.
 
 To see the container's logs, run:
 
