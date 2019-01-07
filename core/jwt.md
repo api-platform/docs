@@ -72,9 +72,8 @@ Want to test the routes of your JWT-authentication-protected API?
 # api/config/packages/api_platform.yaml
 api_platform:
     swagger:
-         api_keys:
-             apiKey:
-                name: Authorization
+        api_keys:
+            -   name: Authorization
                 type: header
 ```
 
