@@ -13,7 +13,7 @@ namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
 use App\Dto\BookInput;
-use App\Dto\Output;
+use App\Dto\BookOutput;
 
 /**
  * @ApiResource(
