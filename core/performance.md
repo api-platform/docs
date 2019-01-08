@@ -1,4 +1,4 @@
-# Performance
+# Performance and Cache
 
 ## Enabling the Built-in HTTP Cache Invalidation System
 
@@ -65,6 +65,44 @@ final class UserResourcesSubscriber implements EventSubscriberInterface
             $request->attributes->set('_resources', $request->attributes->get('_resources', []) + (array)$resources);
         }
     }
+}
+```
+
+## Setting Custom HTTP Cache Headers
+
+The `cache_headers` attribute can be used to set custom HTTP cache headers:
+
+```php
+use ApiPlatform\Core\Annotation\ApiResource;
+
+/**
+ * @ApiResource(cacheHeaders={"max_age"=60, "shared_max_age"=120})
+ */
+class Book
+{
+    // ...
+}
+```
+
+For all endpoints related to this resource class, the following HTTP header will be set:
+
+`Cache-Controle: max-age=60, public, s-maxage=120`
+
+It's also possible to set different cache headers per operation:
+
+```php
+use ApiPlatform\Core\Annotation\ApiResource;
+
+/**
+ * @ApiResource(
+ *     itemOperations={
+ *         "get"={"cache_headers"={"max_age"=60, "shared_max_age"=120}}
+ *     }
+ * )
+ */
+class Book
+{
+    // ...
 }
 ```
 
