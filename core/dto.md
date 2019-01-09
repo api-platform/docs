@@ -51,9 +51,9 @@ So let's create a basic DTO for this request:
 
 ```php
 <?php
-// api/src/Api/Dto/ForgotPasswordRequest.php
+// api/src/Entity/ResetPasswordRequest.php
 
-namespace App\Entity\Dto;
+namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -62,44 +62,44 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @ApiResource(
  *     collectionOperations={
  *         "post"={
- *             "path"="/users/forgot-password-request",
- *             "status"=202
+ *             "path"="/users/forgot-password-request"
  *        },
  *     },
  *     itemOperations={},
  *     outputClass=false
  * )
  */
-final class ForgotPasswordRequest
+final class ResetPasswordRequest
 {
     /**
+     * @var string
+     *
      * @Assert\NotBlank
-     * @Assert\Email
      */
-    public $email;
+    public $username;
 }
 ```
 
 In this case, we disable all operations except `POST`. We also set the `output_class` attribute to `false` to hint API Platform that no data will be returned by this endpoint.
-Finally, we use the `status` attribute to configure API Platform to return a [202 Accepted HTTP status code](https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/202).
-It indicates that the request has been received and will be treated without giving an immediate return to the client.
 
 Then, thanks to [a custom data persister](data-persisters.md), it's possible to trigger some custom logic when the request is received.
 
 Create the data persister:
 
 ```php
-// api/src/DataPersister/ForgotPasswordRequestDataPersister.php
+<?php
+// api/src/DataPersister/ResetPasswordRequestDataPersister.php
+****
 namespace App\DataPersister;
 
 use ApiPlatform\Core\DataPersister\DataPersisterInterface;
-use App\Entity\ForgotPasswordRequest;
+use App\Entity\ResetPasswordRequest;
 
-final class ForgotPasswordRequestDataPersister implements DataPersisterInterface
+final class ResetPasswordRequestDataPersister implements DataPersisterInterface
 {
     public function supports($data): bool
     {
-        return $data instanceof ForgotPasswordRequest;
+        return $data instanceof ResetPasswordRequest;
     }
     
     public function persist($data)
@@ -121,9 +121,9 @@ And register it:
 # api/config/services.yaml
 services:
     # ...
-    'App\DataPersister\ForgotPasswordRequestDataPersister': ~
+    'App\DataPersister\ResetPasswordRequestDataPersister': ~
         # Uncomment only if autoconfiguration is disabled
         #tags: [ 'api_platform.data_persister' ]
 ```
 
-Instead of a custom data persister, you'll probably want to leverage the Symfony Messenger Component integration.
+Instead of a custom data persister, you'll probably want to leverage [the Symfony Messenger Component integration](messenger.md).

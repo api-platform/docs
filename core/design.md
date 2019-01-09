@@ -8,7 +8,7 @@ To do so, you have to write a plain old PHP object representing the input and ou
 that is [marked with the `@ApiResource` annotation](../distribution/index.md).
 This class **doesn't have** to be mapped with Doctrine ORM, or any other persistence system. It must be simple (it's usually
 just a data structure with no or minimal behaviors) and will be automatically converted to [Hydra](extending-jsonld-context.md),
-[OpenAPI / Swagger](swagger.md) and [GraphQL](graphql.md) documentations or schemas by API Platform (there is a 1-1 mapping
+[OpenAPI](swagger.md) and [GraphQL](graphql.md) documentations or schemas by API Platform (there is a 1-1 mapping
 between this class and those docs).
 
 Then, it's up to the developer to feed API Platform with an hydrated instance of this API resource object by implementing
@@ -37,13 +37,15 @@ be able to query, filter, paginate and persist data automatically.
 This approach is super-convenient and efficient, but is probably **not a good idea** for non-[CRUD](https://en.wikipedia.org/wiki/Create,_read,_update_and_delete)
 and/or large systems.
 Again, it's up to the developers to use, or to not use these built-in data providers/persisters depending on the business logic
-they are dealing with. API Platform makes it easy to create custom data providers and persisters, and to implement appropriate
-patterns such as [CQS](https://www.martinfowler.com/bliki/CommandQuerySeparation.html) or [CQRS](https://martinfowler.com/bliki/CQRS.html).
+they are dealing with.
+API Platform makes it easy to create custom data providers and persisters.
+It also makes it east to implement patterns such as [CQS](https://www.martinfowler.com/bliki/CommandQuerySeparation.html)
+or [CQRS](https://martinfowler.com/bliki/CQRS.html) thanks to [the Messenger Component integration](messenger.md) and the [DTO support](dto.md).
 
 Last but not least, to create [Event Sourcing](https://martinfowler.com/eaaDev/EventSourcing.html)-based systems, a convenient
 approach is:
 
-* to persist data in an event store using a custom [data persister](data-persisters.md)
+* to persist data in an event store using a Messenger handler or a custom [data persister](data-persisters.md)
 * to create projections in standard RDBMS (Postgres, MariaDB...) tables or views
 * to map those projections with read-only Doctrine entity classes **and** to mark those classes with `@ApiResource`
 

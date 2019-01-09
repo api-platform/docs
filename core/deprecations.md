@@ -107,6 +107,8 @@ Thanks to the `sunset` attribute, API Platform makes it easy to set this header 
 <?php
 // api/src/Entity/Parchment.php
 
+namespace App\Entity;
+
 /**
  * @ApiResource(
  *   deprecationReason="Create a Book instead",
@@ -127,6 +129,8 @@ It's also possible to set the `Sunset` header only for a specific [operation](op
 ```php
 <?php
 // api/src/Entity/Parchment.php
+
+namespace App\Entity;
 
 /**
  * @ApiResource(itemOperations={
