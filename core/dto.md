@@ -38,14 +38,14 @@ The `input_class` and `output_class` attributes are taken into account by all th
 
 ## Disabling the Input or the Output
 
-Both the `input_class` and the `output_class` attributes can be the to `false`.
-If `input_class` is `false`, the deserialization process will be skipped, and the no data persisters will be called.
+Both the `input_class` and the `output_class` attributes can be set to `false`.
+If `input_class` is `false`, the deserialization process will be skipped, and no data persisters will be called.
 If `output_class` is `false`, the serialization process will be skipped, and no data providers will be called. 
 
 ## Creating a Service-Oriented endpoint
 
 Sometimes it's convenient to create [RPC](https://en.wikipedia.org/wiki/Remote_procedure_call)-like endpoints.
-For example, the application should be able to send an email when someone has lost its password.
+For example, the application should be able to send an email when someone has lost his password.
 
 So let's create a basic DTO for this request:
 
@@ -80,8 +80,7 @@ final class ForgotPasswordRequest
 }
 ```
 
-In this case, we disable all operations except `POST`. We also set the `output_class` attribute to `false` to hint
-API Platform that no data will be returned by this endpoint.
+In this case, we disable all operations except `POST`. We also set the `output_class` attribute to `false` to hint API Platform that no data will be returned by this endpoint.
 Finally, we use the `status` attribute to configure API Platform to return a [202 Accepted HTTP status code](https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/202).
 It indicates that the request has been received and will be treated without giving an immediate return to the client.
 
@@ -127,4 +126,4 @@ services:
         #tags: [ 'api_platform.data_persister' ]
 ```
 
-Instead of a custom data provider, you'll probably want to leverage the Symfony Messenger Component integration.
+Instead of a custom data persister, you'll probably want to leverage the Symfony Messenger Component integration.
