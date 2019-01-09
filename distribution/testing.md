@@ -185,6 +185,10 @@ You may also be interested in these alternative testing tools (not included in t
 
 ## Running Unit Tests with PHPUnit
 
+To install [PHPUnit](https://phpunit.de/) test suite, execute the following command:
+
+    $ docker-compose exec php composer require --dev symfony/phpunit-bridge
+
 To run your [PHPUnit](https://phpunit.de/) test suite, execute the following command:
 
-    $ docker-compose exec php vendor/bin/phpunit
+    $ docker-compose exec php bin/phpunit
