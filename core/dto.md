@@ -1,12 +1,51 @@
-# Handling Data Transfer Objects (DTOs)
+# Using Data Transfer Objects (DTOs)
 
-## How to Use a DTO for Writing
+## Specifying an Input or an Output Class
 
-!> The following isn't recommended anymore, please use [Input/Output](specify-an-input-and-or-output-class) instead
+For a given resource class, you may want to have a different representation of this class as input (write) or output (read).
+To do so, a resource can take an input and/or an output class:
 
-Sometimes it's easier to use a DTO than an Entity when performing simple
-operation. For example, the application should be able to send an email when
-someone has lost its password.
+```php
+<?php
+// api/src/Entity/Book.php
+
+namespace App\Entity;
+
+use ApiPlatform\Core\Annotation\ApiResource;
+use App\Dto\BookInput;
+use App\Dto\BookOutput;
+
+/**
+ * @ApiResource(
+ *   inputClass=BookInput::class,
+ *   outputClass=BookOutput::class
+ * )
+ */
+final class Book
+{
+}
+```
+
+The `input_class` attribute is used during [the deserialization process](serialization.md), when transforming the user provided data to a resource instance.
+Similarly, the `output_class` attribute is used during the serialization process, this class represents how the `Book` resource will be represented in the `Response`.
+
+To create a `Book`, we `POST` a data structure corresponding to the `BookInput` class and get back in the response a data structure corresponding to the `BookOuput` class.
+
+To persist the input object, a custom [data persister](data-persisters.md) handling `BookInput` instances must be written.
+To retrieve an instance of the output class, a custom [data provider](data-providers.md) returning a `BookOutput` instance must be written.
+
+The `input_class` and `output_class` attributes are taken into account by all the documentation generators (GraphQL and OpenAPI, Hydra).
+
+## Disabling the Input or the Output
+
+Both the `input_class` and the `output_class` attributes can be set to `false`.
+If `input_class` is `false`, the deserialization process will be skipped, and no data persisters will be called.
+If `output_class` is `false`, the serialization process will be skipped, and no data providers will be called. 
+
+## Creating a Service-Oriented endpoint
+
+Sometimes it's convenient to create [RPC](https://en.wikipedia.org/wiki/Remote_procedure_call)-like endpoints.
+For example, the application should be able to send an email when someone has lost his password.
 
 So let's create a basic DTO for this request:
 
@@ -14,19 +53,21 @@ So let's create a basic DTO for this request:
 <?php
 // api/src/Api/Dto/ForgotPasswordRequest.php
 
-namespace App\Api\Dto;
+namespace App\Entity\Dto;
 
 use ApiPlatform\Core\Annotation\ApiResource;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ApiResource(
- *      collectionOperations={
- *          "post"={
- *              "path"="/users/forgot-password-request",
- *          },
- *      },
- *      itemOperations={},
+ *     collectionOperations={
+ *         "post"={
+ *             "path"="/users/forgot-password-request",
+ *             "status"=202
+ *        },
+ *     },
+ *     itemOperations={},
+ *     outputClass=false
  * )
  */
 final class ForgotPasswordRequest
@@ -39,383 +80,50 @@ final class ForgotPasswordRequest
 }
 ```
 
-In this case, we disable all operations except `POST`.
+In this case, we disable all operations except `POST`. We also set the `output_class` attribute to `false` to hint API Platform that no data will be returned by this endpoint.
+Finally, we use the `status` attribute to configure API Platform to return a [202 Accepted HTTP status code](https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/202).
+It indicates that the request has been received and will be treated without giving an immediate return to the client.
 
-Then, thanks to [the event system](events.md), it's possible to intercept the
-`POST` request and to handle it.
+Then, thanks to [a custom data persister](data-persisters.md), it's possible to trigger some custom logic when the request is received.
 
-First, we should define a custom loader paths and create an event subscriber:
-
-* define a custom loader paths for `Api/Dto`:
-
-```yaml
-api_platform:
-    mapping:
-        paths: ['%kernel.project_dir%/src/Api/Dto']
-```
-
-* create an event subscriber:
+Create the data persister:
 
 ```php
-<?php
-// api/src/Api/EventSubscriber/UserSubscriber.php
+// api/src/DataPersister/ForgotPasswordRequestDataPersister.php
+namespace App\DataPersister;
 
-namespace App\Api\EventSubscriber;
+use ApiPlatform\Core\DataPersister\DataPersisterInterface;
+use App\Entity\ForgotPasswordRequest;
 
-use ApiPlatform\Core\EventListener\EventPriorities;
-use App\Entity\User;
-use App\Manager\UserManager;
-use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpKernel\Event\GetResponseForControllerResultEvent;
-use Symfony\Component\HttpKernel\KernelEvents;
-
-final class UserSubscriber implements EventSubscriberInterface
+final class ForgotPasswordRequestDataPersister implements DataPersisterInterface
 {
-    private $userManager;
-
-    public function __construct(UserManager $userManager)
+    public function supports($data): bool
     {
-        $this->userManager = $userManager;
+        return $data instanceof ForgotPasswordRequest;
     }
-
-    public static function getSubscribedEvents()
+    
+    public function persist($data)
     {
-        return [
-            KernelEvents::VIEW => ['sendPasswordReset', EventPriorities::POST_VALIDATE],
-        ];
+      // Trigger your custom logic here
+      return $data;
     }
-
-    public function sendPasswordReset(GetResponseForControllerResultEvent $event)
+    
+    public function remove($data)
     {
-        $request = $event->getRequest();
-
-        if ('api_forgot_password_requests_post_collection' !== $request->attributes->get('_route')) {
-            return;
-        }
-
-        $forgotPasswordRequest = $event->getControllerResult();
-
-        $user = $this->userManager->findOneByEmail($forgotPasswordRequest->email);
-
-        // We do nothing if the user does not exist in the database
-        if ($user) {
-            $this->userManager->requestPasswordReset($user);
-        }
-
-        $event->setResponse(new JsonResponse(null, 204));
+      throw new \RuntimeException('"remove" is not supported');
     }
 }
 ```
 
-Then this class should be registered as a service, then tagged.
-
-If service autowiring and autoconfiguration are enabled (it's the case by
-default), you are done!
-
-Otherwise, the following configuration is needed:
+And register it:
 
 ```yaml
 # api/config/services.yaml
 services:
     # ...
-    'App\Api\EventSubscriber\UserSubscriber':
-        arguments:
-            - '@app.manager.user'
-        # Uncomment the following line only if you don't use autoconfiguration
-        #tags: [ 'kernel.event_subscriber' ]
+    'App\DataPersister\ForgotPasswordRequestDataPersister': ~
+        # Uncomment only if autoconfiguration is disabled
+        #tags: [ 'api_platform.data_persister' ]
 ```
 
-## How to Use a DTO for Reading
-
-!> The following isn't recommended anymore, please use [Input/Output](specify-an-input-and-or-output-class) instead
-
-Sometimes, you need to retrieve data not related to an entity.
-For example, the application can send the
-[list of supported locales](https://github.com/symfony/demo/blob/master/config/services.yaml#L6)
-and the default locale.
-
-So let's create a basic DTO for this datas:
-
-```php
-<?php
-// api/src/Dto/LocalesList.php
-
-namespace App\Dto;
-
-final class LocalesList
-{
-    /**
-     * @var array
-     */
-    public $locales;
-
-    /**
-     * @var string
-     */
-    public $defaultLocale;
-}
-```
-
-And create a controller to send them:
-
-```php
-<?php
-// api/src/Controller/LocaleController.php
-
-namespace App\Controller;
-
-use App\DTO\LocalesList;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\Routing\Annotation\Route;
-
-class LocaleController extends AbstractController
-{
-    /**
-     * @Route(
-     *     path="/api/locales",
-     *     name="api_get_locales",
-     *     methods={"GET"},
-     *     defaults={
-     *          "_api_respond"=true,
-     *          "_api_normalization_context"={"api_sub_level"=true}
-     *     }
-     * )
-     */
-    public function __invoke(): LocalesDTO
-    {
-        $response = new LocalesList();
-        $response->locales = explode('|', $this->getParameter('app_locales'));
-        $response->defaultLocale = $this->getParameter('locale');
-
-        return $response;
-    }
-}
-```
-
-As you can see, the controller doesn't return a `Response`, but the data object directly.
-Behind the scene, the `SerializeListener` catch the response, and thanks to the `_api_respond`
-flag, it serializes the object correctly.
-
-To deal with arrays, we have to set the `api_sub_level` context option to `true`.
-It prevents API Platform's normalizers to look for a non-existing class marked as an API resource.
-
-### Adding this Custom DTO reading in Swagger Documentation.
-
-By default, ApiPlatform Swagger UI integration will display documentation only
-for ApiResource operations.
-In this case, our DTO is not declared as ApiResource, so no documentation will
-be displayed.
-
-There is two solutions to achieve that:
-
-#### Use Swagger Decorator
-
-By following the doc about [Override the Swagger Documentation](swagger.md#overriding-the-swagger-documentation)
-and adding the ability to retrieve a `_api_swagger_context` in route
-parameters, you should be able to display your custom endpoint.
-
-```php
-<?php
-// src/App/Swagger/ControllerSwaggerDecorator
-
-namespace App\Swagger;
-
-use Symfony\Component\Routing\RouterInterface;
-use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
-
-final class ControllerSwaggerDecorator implements NormalizerInterface
-{
-    private $decorated;
-
-    private $router;
-
-    public function __construct(
-        NormalizerInterface $decorated,
-        RouterInterface $router
-    ) {
-        $this->decorated = $decorated;
-        $this->router = $router;
-    }
-
-    public function normalize($object, $format = null, array $context = [])
-    {
-        $docs = $this->decorated->normalize($object, $format, $context);
-        $mimeTypes = $object->getMimeTypes();
-        foreach ($this->router->getRouteCollection()->all() as $routeName => $route) {
-            $swaggerContext = $route->getDefault('_api_swagger_context');
-            if (!$swaggerContext) {
-                // No swagger_context set, continue
-                continue;
-            }
-
-            $methods = $route->getMethods();
-            $uri = $route->getPath();
-
-            foreach ($methods as $method) {
-                // Add available mimesTypes
-                $swaggerContext['produces'] ?? $swaggerContext['produces'] = $mimeTypes;
-
-                $docs['paths'][$uri][\strtolower($method)] = $swaggerContext;
-            }
-        }
-
-        return $docs;
-    }
-
-    public function supportsNormalization($data, $format = null)
-    {
-        return $this->decorated->supportsNormalization($data, $format);
-    }
-}
-```
-
-Register it as a service:
-
-```yaml
-#config/services.yaml
-# ...
-    'App\Swagger\ControllerSwaggerDecorator':
-        decorates: 'api_platform.swagger.normalizer.documentation'
-        arguments: [ '@App\Swagger\ControllerSwaggerDecorator.inner']
-        autoconfigure: false
-```
-
-And finally, complete the Route annotation of your controller like this:
-
-```php
-<?php
-// api/src/Controller/LocaleController.php
-
-use Nelmio\ApiDocBundle\Annotation\Model;
-use Swagger\Annotations as SWG;
-
-//...
-
-    /**
-     * @Route(
-     *     path="/api/locales",
-     *     name="api_get_locales",
-     *     methods={"GET"},
-     *     defaults={
-     *          "_api_respond"=true,
-     *          "_api_normalization_context"={"api_sub_level"=true},
-     *          "_api_swagger_context"={
-     *              "tags"={"Locales"},
-     *              "summary"="Retrieve locales availables",
-     *              "parameters"={},
-     *              "responses"={
-     *                  "200"={
-     *                      "description"="List of available locales and the default locale",
-     *                      "schema"={
-     *                          "type"="object",
-     *                          "properties"={
-     *                              "defaultLocale"={"type"="string"},
-     *                          }
-     *                      }
-     *                  }
-     *              }
-     *          }
-     *     }
-     * )
-     */
-    public function __invoke()
-```
-
-#### Use [NelmioApiDoc](nelmio-api-doc.md)
-
-With NelmioApiDoc, you should be able to add annotations to your controllers :
-
-```php
-<?php
-// api/src/Controller/LocaleController.php
-
-use Nelmio\ApiDocBundle\Annotation\Model;
-use Swagger\Annotations as SWG;
-
-//...
-
-    /**
-     * @Route(
-     *     path="/api/locales",
-     *     name="api_get_locales",
-     *     methods={"GET"},
-     *     defaults={
-     *          "_api_respond"=true,
-     *          "_api_normalization_context"={"api_sub_level"=true}
-     *     }
-     * )
-     * @SWG\Tag(name="Locales")
-     * @SWG\Response(
-     *     response=200,
-     *     description="List of available locales and the default locale",
-     *     @SWG\Schema(ref=@Model(type=LocalesList::class)),
-     * )
-     */
-    public function __invoke()
-```
-
-### Specify an Input and/or Output Class
-
-For a given resource class, you may want to have a different representation of this class as input (write) or output (read).
-To do so, a resource can take an input and/or an output class:
-
-```php
-<?php
-// api/src/Entity/Data.php
-
-namespace App\Entity;
-
-use ApiPlatform\Core\Annotation\ApiResource;
-use App\Dto\Input;
-use App\Dto\Output;
-
-/**
- * @ApiResource(
- *   inputClass=Input::class,
- *   outputClass=Output::class,
- * )
- */
-final class Data
-{
-}
-```
-
-The `input_class` attribute will be used in the denormalization phase, when transforming the user data to a resource instance.
-The `output_class` attribute will be used in the normalization phase, this class represents how the `Data` resource will be given in the `Response`.
-
-To create a `Data`, we `POST` an `Input` and get back an `Output` in the response.
-For this example to work, one could use the following `DataPersister`:
-
-```php
-<?php
-
-namespace App\DataPersister;
-
-use ApiPlatform\Core\DataPersister\DataPersisterInterface;
-use App\Dto\Input;
-use App\Dto\Output;
-
-final class InputDataPersister implements DataPersisterInterface
-{
-    public function supports($data): bool
-    {
-        return $data instanceof Input;
-    }
-
-    public function persist($data)
-    {
-        $output = new Output();
-        $output->name = $data->name;
-        $output->id = 1;
-
-        return $output;
-    }
-
-    public function remove($data)
-    {
-        // TODO: implement removal
-        return null;
-    }
-}
-```
+Instead of a custom data persister, you'll probably want to leverage the Symfony Messenger Component integration.
