@@ -292,8 +292,7 @@ The generated JSON using previous settings is below:
 }
 ```
 
-In order to optimize such embedded relations, the default Doctrine data provider will automatically join entities on relations
-marked as [`EAGER`](http://doctrine-orm.readthedocs.io/projects/doctrine-orm/en/latest/reference/annotations-reference.html#manytoone).
+These optimization will be done automatically, if one of the related objects's properties can be normalize(properties dose not have different validation groups).
 This avoids the need for extra queries to be executed when serializing the related objects.
 
 ### Denormalization
