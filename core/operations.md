@@ -174,6 +174,7 @@ App\Entity\Book:
             schemes: ['https']
             options:
                 my_option: 'my_option_value'
+            status: 200 # customize the HTTP status code to send
         put:
             method: 'PUT'
             path: '/grimoire/{id}/update'
@@ -203,13 +204,14 @@ Or in XML:
                 <attribute name="defaults">
                     <attribute name="color">brown</attribute>
                 </attribute>
-                <attribute name="options">
-                    <attribute name="color">brown</attribute>
-                </attribute>
+                <attribute name="host">{subdomain}.api-platform.com</attribute>
                 <attribute name="schemes">
                     <attribute>https</attribute>
                 </attribute>
-                <attribute name="host">{subdomain}.api-platform.com</attribute>
+                <attribute name="options">
+                    <attribute name="color">brown</attribute>
+                </attribute>
+                <attribute name="status">200</attribute>
             </itemOperation>
             <itemOperation name="put">
                 <attribute name="method">PUT</attribute>
