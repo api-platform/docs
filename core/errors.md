@@ -73,10 +73,13 @@ errors:
 api_platform:
     # ...
     exception_to_status:
-        # The 2 following handlers are registered by default, keep those lines to prevent unexpected side effects
+        # The 4 following handlers are registered by default, keep those lines to prevent unexpected side effects
         Symfony\Component\Serializer\Exception\ExceptionInterface: 400 # Use a raw status code (recommended)
         ApiPlatform\Core\Exception\InvalidArgumentException: 'HTTP_BAD_REQUEST' # Or a `Symfony\Component\HttpFoundation\Response`'s constant
+        ApiPlatform\Core\Exception\FilterValidationException: 400
+        Doctrine\ORM\OptimisticLockException: 409
 
+        # Custom mapping
         App\Exception\ProductNotFoundException: 404 # Here is the handler for our custom exception
 ```
 
