@@ -1,12 +1,38 @@
-# Swagger / Open API Support
+# OpenAPI Specification Support (formerly Swagger)
 
-API Platform natively support the [Open API](https://www.openapis.org/) (formerly Swagger) API specification format.
-It also integrates a customized version of [Swagger UI](https://swagger.io/swagger-ui/) and [ReDoc](https://rebilly.github.io/ReDoc/), some nice tools to display the
-API documentation in a user friendly way.
+API Platform natively support the [Open API](https://www.openapis.org/) API specification format.
 
 ![Screenshot](../distribution/images/swagger-ui-1.png)
 
-## Overriding the Swagger Documentation
+The specification of the API is available at the `/docs.json` path.
+By default, OpenAPI v2 is used.
+You can also get an OpenAPI v3 compliant version thanks to the `spec_version` query parameter: `/docs.json?spec_version=3`
+
+It also integrates a customized version of [Swagger UI](https://swagger.io/swagger-ui/) and [ReDoc](https://rebilly.github.io/ReDoc/), some nice tools to display the
+API documentation in a user friendly way.
+
+## Using the OpenAPI Command
+
+You can also dump an OpenAPI specification for your API by using the provided command:
+
+```
+$ docker-compose exec php bin/console api:openapi:export
+# OpenAPI v2, JSON format
+
+$ docker-compose exec php bin/console api:openapi:export --yaml
+# OpenAPI v2, YAML format
+
+$ docker-compose exec php bin/console api:openapi:export --spec-version=3
+# OpenAPI v3, JSON format
+
+$ docker-compose exec php bin/console api:openapi:export --spec-version=3 --yaml
+# OpenAPI v3, YAML format
+
+$ docker-compose exec php bin/console api:openapi:export --output=swagger_docs.json
+# Create a file containing the specification
+```
+
+## Overriding the OpenAPI Specification
 
 Symfony allows to [decorate services](https://symfony.com/doc/current/service_container/service_decoration.html), here we
 need to decorate `api_platform.swagger.normalizer.documentation`.
@@ -73,10 +99,10 @@ final class SwaggerDecorator implements NormalizerInterface
 }
 ```
 
-## Using the Swagger Context
+## Using the OpenAPI and Swagger Contexts
 
-Sometimes you may want to change the information included in your Swagger documentation.
-The following configuration will give you total control over your Swagger definitions:
+Sometimes you may want to change the information included in your OpenAPI documentation.
+The following configuration will give you total control over your OpenAPI definitions:
 
 ```php
 <?php
@@ -110,7 +136,7 @@ class Product // The class name will be used to name exposed resources
      *
      * @ApiProperty(
      *     attributes={
-     *         "swagger_context"={
+     *         "openapi_context"={
      *             "type"="string",
      *             "enum"={"one", "two"},
      *             "example"="one"
@@ -185,6 +211,8 @@ Will produce the following Swagger documentation:
 }
 ```
 
+To pass a context to the OpenAPI **v3** generator, use the `openapi_context` attribute (notice the prefix: `openapi_` instead of `swagger_`).
+
 ## Changing the Name of a Definition
 
 API Platform generates a definition name based on the serializer `groups` defined
@@ -230,7 +258,7 @@ class User
 }
 ```
 
-## Changing Operations in the Swagger Documentation
+## Changing Operations in the OpenAPI Documentation
 
 You also have full control over both built-in and custom operations documentation:
 
@@ -314,17 +342,20 @@ or with XML:
 
 ![Impact on swagger ui](../distribution/images/swagger-ui-2.png)
 
-## Changing the Swagger UI Location
+Again, you can use the `openapi_context` key instead of the `swagger_context` one to tweak the OpenAPI **v3** specification.
+
+## Changing the Location of Swagger UI
 
 Sometimes you may want to have the API at one location, and the Swagger UI at a different location. This can be done by disabling the Swagger UI from the API Platform configuration file and manually adding the Swagger UI controller.
 
-### Disabling Swagger UI
+### Disabling Swagger UI or of ReDoc
 
 ```yaml
 # api/config/packages/api_platform.yaml
 api_platform:
     # ...
     enable_swagger_ui: false
+    enable_re_doc: false
 ```
 
 ### Manually Registering the Swagger UI Controller
@@ -337,21 +368,6 @@ swagger_ui:
 ```
 
 Change `/docs` to your desired URI you wish Swagger to be accessible on.
-
-## Using the Swagger Command
-
-You can also dump your current Swagger documentation using the provided command:
-
-```
-$ docker-compose exec php bin/console api:swagger:export
-# Swagger documentation in JSON format...
-
-$ docker-compose exec php bin/console api:swagger:export --yaml
-# Swagger documentation in YAML format...
-
-$ docker-compose exec php bin/console api:swagger:export --output=swagger_docs.json
-# Swagger documentation dumped directly into JSON file (add --yaml to change format)
-```
 
 ## Overriding the UI Template
 
