@@ -39,7 +39,7 @@ and/or large systems.
 Again, it's up to the developers to use, or to not use these built-in data providers/persisters depending on the business logic
 they are dealing with.
 API Platform makes it easy to create custom data providers and persisters.
-It also makes it east to implement patterns such as [CQS](https://www.martinfowler.com/bliki/CommandQuerySeparation.html)
+It also makes it easy to implement patterns such as [CQS](https://www.martinfowler.com/bliki/CommandQuerySeparation.html)
 or [CQRS](https://martinfowler.com/bliki/CQRS.html) thanks to [the Messenger Component integration](messenger.md) and the [DTO support](dto.md).
 
 Last but not least, to create [Event Sourcing](https://martinfowler.com/eaaDev/EventSourcing.html)-based systems, a convenient
