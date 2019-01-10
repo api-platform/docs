@@ -29,7 +29,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ApiResource(
-*      messenger=true,
+ *      messenger=true,
  *     collectionOperations={
  *         "post"={"status"=202}
  *     },
@@ -48,7 +48,7 @@ final class ResetPasswordRequest
 }
 ```
 
-Because the `messenger` attribute is true, when a `POST` will be handled by API Platform, the corresponding instance of the `ResetPasswordRequest` will be dispatched.
+Because the `messenger` attribute is `true`, when a `POST` will be handled by API Platform, the corresponding instance of the `ResetPasswordRequest` will be dispatched.
 
 For this example, only the `POST` operation is enabled.
 We use the `status` attribute to configure API Platform to return a [202 Accepted HTTP status code](https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/202).
@@ -80,7 +80,7 @@ final class ResetPasswordRequestHandler implements MessageHandlerInterface
 That's all!
 
 By default, the handler will process your message synchronously.
-If you want it to be consumed asynchronously (e.g. by on a worker machine), [configure a transport and the consumer](https://symfony.com/doc/current/messenger.html#transports).
+If you want it to be consumed asynchronously (e.g. by a worker machine), [configure a transport and the consumer](https://symfony.com/doc/current/messenger.html#transports).
 
 ## Accessing to the Data Returned by the Handler
 
@@ -90,4 +90,4 @@ It means that if you use a synchronous handler, the data returned by the `__invo
 ## Detecting Removals
 
 When a `DELETE` operation occurs, API Platform automatically adds a `ApiPlatform\Core\Bridge\Symfony\Messenger\RemoveStamp` ["stamp"](https://symfony.com/doc/current/components/messenger.html#adding-metadata-to-messages-envelopes) instance to the "envelope".
-To differentiate typical persists calls (create and update) and removal calls, check for the presence of this stamp using a custom "middleware".
+To differentiate typical persists calls (create and update) and removal calls, check for the presence of this stamp using [a custom "middleware"](https://symfony.com/doc/current/components/messenger.html#adding-metadata-to-messages-envelopes).
