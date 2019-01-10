@@ -66,6 +66,7 @@ To process the message that will be dispatched, [a handler](https://symfony.com/
 
 namespace App\Handler;
 
+use App\Entity\ResetPasswordRequest;
 use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 
 final class ResetPasswordRequestHandler implements MessageHandlerInterface
