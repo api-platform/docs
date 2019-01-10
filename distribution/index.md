@@ -440,12 +440,12 @@ You just saved a new book resource through the bookshop API! API Platform automa
 an instance of the corresponding PHP entity class and uses Doctrine ORM to persist it in the database.
 
 By default, the API supports `GET` (retrieve, on collections and items), `POST` (create), `PUT` (update) and `DELETE` (self-explaining)
-HTTP methods. You are not limited to the built-in operations. You can [add new custom operations](../core/operations.md#creating-custom-operations-and-controllers)
-(`PATCH` operations, sub-resources...) or [disable the ones you don't want](../core/operations.md#enabling-and-disabling-operations).
+HTTP methods. You are not limited to the built-in operations. You can [add new custom operations](../../core/operations.md#creating-custom-operations-and-controllers)
+(`PATCH` operations, sub-resources...) or [disable the ones you don't want](../../core/operations.md#enabling-and-disabling-operations).
 
 Try the `GET` operation on the collection. The book we added appears. When the collection will contain more than 30 items,
-the pagination will automatically show up, [and this is entirely configurable](../core/pagination.md). You may be interested
-in [adding some filters and adding sorts to the collection](../core/filters.md) as well.
+the pagination will automatically show up, [and this is entirely configurable](../../core/pagination.md). You may be interested
+in [adding some filters and adding sorts to the collection](../../core/filters.md) as well.
 
 You may have noticed that some keys start with the `@` symbol in the generated JSON response (`@id`, `@type`, `@context`...)?
 API Platform comes with a full support of the [JSON-LD](http://json-ld.org/) format (and its [Hydra](http://www.hydra-cg.com/)
@@ -456,7 +456,7 @@ and allows to [give access to Google to your structured data](https://developers
 or to query your APIs in [SPARQL](https://en.wikipedia.org/wiki/SPARQL) using [Apache Jena](https://jena.apache.org/documentation/io/#formats)).
 
 We think that JSON-LD is the best default format for a new API.
-However, API Platform natively [supports many other formats](../core/content-negotiation.md) including [GraphQL](http://graphql.org/)
+However, API Platform natively [supports many other formats](../../core/content-negotiation.md) including [GraphQL](http://graphql.org/)
 (we'll come to it), [JSON API](http://jsonapi.org/), [HAL](http://stateless.co/hal_specification.html), raw [JSON](http://www.json.org/),
 [XML](https://www.w3.org/XML/) (experimental) and even [YAML](http://yaml.org/) and [CSV](https://en.wikipedia.org/wiki/Comma-separated_values).
 You can also easily [add support for other formats](../core/content-negotiation.md) and it's up to you to choose which format
