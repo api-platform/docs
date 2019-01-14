@@ -1,6 +1,6 @@
 # Configuration
 
-Here's the complete configuration of the Symfony bundle with including default values:
+Here's the complete configuration of the Symfony bundle including default values:
 
 ```yaml
 # api/config/packages/api_platform.yaml
