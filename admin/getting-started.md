@@ -27,12 +27,9 @@ Edit the `src/App.js` file like the following:
 import React from 'react';
 import { HydraAdmin } from '@api-platform/admin';
 
-/**
- * Replace with your own API entrypoint: if https://example.com/api/books is the path
- * to your Books entity, then, the entrypoint is "https://example.com/api"
- *
- */
-export default () => <HydraAdmin entrypoint="https://coupons-mic.dev/api"/>;
+// Replace with your own API entrypoint: if https://example.com/api/books is the path
+// to the collection of book resources, then the entrypoint is https://example.com/api
+export default () => <HydraAdmin entrypoint="https://demo.api-platform.com"/>;
 ```
 
 Be sure to make your API send proper [CORS HTTP headers](https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS) to allow
