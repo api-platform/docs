@@ -20,11 +20,36 @@ fresh, because the cache is purged in real time.
 The support for most specific cases such as the invalidation of collections when a document is added or removed or for
 relationships and inverse relations is built-in.
 
-We also included [Varnish](https://varnish-cache.org/) in the [Docker setup](../distribution/index.md#using-the-official-distribution-recommended) provided with the
-distribution of API Platform, so this feature works out of the box.
+Integration with Varnish and Doctrine ORM is shipped with the core library, and [Varnish](https://varnish-cache.org/) is included in the [Docker setup](../distribution/index.md#using-the-official-distribution-recommended) provided with the
+distribution of API Platform.
+If you use the distribution, this feature works out of the box.
 
-Integration with Varnish and the Doctrine ORM is shipped with the core library. You can easily implement the support for
-any other proxy or persistence system.
+If you don't, add the following configuration to enable the cache invalidation system:
+
+```yaml
+parameters:
+    # Adds a fallback VARNISH_URL if the env var is not set.
+    # This allows you to run cache:warmup even if your
+    # environment variables are not available yet.
+    # You should not need to change this value.
+    env(VARNISH_URL): ''
+
+api_platform:
+    # ...
+    http_cache:
+        invalidation:
+            enabled: true
+            varnish_urls: ['%env(VARNISH_URL)%']
+        # Adds sensitive default cache headers
+        max_age: 0
+        shared_max_age: 3600
+        vary: ['Content-Type', 'Authorization']
+        public: true
+```
+
+Support for reverse proxies other than Varnish can easily be added by implementing the `ApiPlatform\Core\HttpCache\PurgerInterface`.
+
+In addition to the cache invalidation mechanism, you may want to [use HTTP/2 Server Push to pre-emptively send relations to the client](push-relations.md).
 
 ### Extending Cache-Tags for invalidation
 
