@@ -21,9 +21,10 @@ The support for most specific cases such as the invalidation of collections when
 relationships and inverse relations is built-in.
 
 Integration with Varnish and the Doctrine ORM is shipped with the core library, and [Varnish](https://varnish-cache.org/) is included in the [Docker setup](../distribution/index.md#using-the-official-distribution-recommended) provided with the
-distribution of API Platform. If you use the distribution this feature works out of the box.
+distribution of API Platform.
+If you use the distribution, this feature works out of the box.
 
-If you don't use the distribution, add the following configuration to enable the cache invalidation system:
+If you don't, add the following configuration to enable the cache invalidation system:
 
 ```yaml
 parameters:
