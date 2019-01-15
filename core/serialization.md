@@ -296,6 +296,8 @@ In order to optimize such embedded relations, the default Doctrine data provider
 marked as [`EAGER`](http://doctrine-orm.readthedocs.io/projects/doctrine-orm/en/latest/reference/annotations-reference.html#manytoone).
 This avoids the need for extra queries to be executed when serializing the related objects.
 
+Instead of embedding relation in the main HTTP response, you may want [to "push" them to the client using HTTP/2 server push](push-relations.md).
+
 ### Denormalization
 
 It is also possible to embed a relation in `PUT` and `POST` requests. To enable that feature, set the serialization groups
