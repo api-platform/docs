@@ -192,3 +192,73 @@ To install [PHPUnit](https://phpunit.de/) test suite, execute the following comm
 To run your [PHPUnit](https://phpunit.de/) test suite, execute the following command:
 
     $ docker-compose exec php bin/phpunit
+
+## Setting up Behat yourself
+
+If instead of using the Official Distribution of API Platform you are integrating API Platform in your custom Symfony Flex project, you need to set up Behat yourself. To do so, proceed as follows:
+
+Install all required dependencies:
+
+    $ php composer require --dev behat/behat
+    $ php composer require --dev behat/mink
+    $ php composer require --dev behat/mink-browserkit-driver
+    $ php composer require --dev behat/mink-extension
+    $ php composer require --dev behat/mink-goutte-driver
+    $ php composer require --dev behatch/contexts
+    $ php composer require --dev behat/symfony2-extension
+
+Installing `behat/symfony2-extension` will set up some files in your project. Rename `behat.yml.dist` to `behat.yml`, and replace its content with the following:
+
+```yaml
+default:
+
+  suites:
+    default:
+      contexts:
+        - FeatureContext:
+            kernel: '@kernel'
+        - Behat\MinkExtension\Context\MinkContext
+        - behatch:context:json
+        - behatch:context:rest
+
+  extensions:
+    Behat\Symfony2Extension:
+      kernel:
+        bootstrap: features/bootstrap/bootstrap.php
+        class: App\Kernel # Change this if your namespace is not "App"!
+
+    Behat\MinkExtension:
+      base_url: "http://localhost:8000/"
+      sessions:
+        default:
+          symfony2: ~
+
+    Behatch\Extension: ~
+```
+
+Clear the cache for the `test` environment:
+
+    $ php bin/console cache:clear --env=test
+
+Run Behat to verify that the setup is working:
+
+    $ php vendor/bin/behat
+
+If everything works correctly, you will receive the following output:
+
+```text
+Feature:
+  In order to prove that the Behat Symfony extension is correctly installed
+  As a user
+  I want to have a demo scenario
+
+  Scenario: It receives a response from Symfony's kernel # features/demo.feature:10
+    When a demo scenario sends a request to "/"          # FeatureContext::aDemoScenarioSendsARequestTo()
+    Then the response should be received                 # FeatureContext::theResponseShouldBeReceived()
+
+1 scenario (1 passed)
+2 steps (2 passed)
+0m0.09s (23.85Mb)
+```
+
+You should then be able to create and run Gherkin feature definitions in the `features/` folder to test your API.
