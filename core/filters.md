@@ -425,7 +425,7 @@ class Offer
 Given that the collection endpoint is `/offers`, you can filter offers by name in ascending order and then by ID in descending
 order with the following query: `/offers?order[name]=desc&order[id]=asc`.
 
-By default, whenever the query does not specify the direction explicitly (e.g: `/offers?order[name]&order[id]`), filters
+By default, whenever the query does not specify the direction explicitly (e.g.: `/offers?order[name]&order[id]`), filters
 will not be applied unless you configure a default order direction to use:
 
 ```php
@@ -563,6 +563,174 @@ It means that the filter will be **silently** ignored if the property:
 * is not enabled
 * has an invalid value
 
+## Elasticsearch Filters
+
+### Ordering Filter (Sorting)
+
+The order filter allows to [sort](https://www.elastic.co/guide/en/elasticsearch/reference/current/search-request-sort.html)
+a collection against the given properties.
+
+Syntax: `?order[property]=<asc|desc>`
+
+Enable the filter:
+
+```php
+<?php
+// api/src/Model/Tweet.php
+
+namespace App\Model;
+
+use ApiPlatform\Core\Annotation\ApiFilter;
+use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Core\Bridge\Elasticsearch\DataProvider\Filter\OrderFilter;
+
+/**
+ * @ApiResource
+ * @ApiFilter(OrderFilter::class, properties={"id", "date"}, arguments={"orderParameterName"="order"})
+ */
+class Tweet
+{
+    // ...
+}
+```
+
+Given that the collection endpoint is `/tweets`, you can filter tweets by id and date in ascending or descending order:
+`/tweets?order[id]=asc&order[date]=desc`.
+
+By default, whenever the query does not specify the direction explicitly (e.g: `/tweets?order[id]&order[date]`), filters
+will not be applied unless you configure a default order direction to use:
+
+```php
+<?php
+// api/src/Model/Tweet.php
+
+namespace App\Model;
+
+use ApiPlatform\Core\Annotation\ApiFilter;
+use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Core\Bridge\Elasticsearch\DataProvider\Filter\OrderFilter;
+
+/**
+ * @ApiResource
+ * @ApiFilter(OrderFilter::class, properties={"id"="asc", "date"="desc"})
+ */
+class Tweet
+{
+    // ...
+}
+```
+
+#### Using a Custom Order Query Parameter Name
+
+A conflict will occur if `order`  is also the name of a property with the term filter enabled. Luckily, the query
+parameter name to use is configurable:
+
+```yaml
+# api/config/packages/api_platform.yaml
+api_platform:
+    collection:
+        order_parameter_name: '_order' # the URL query parameter to use is now "_order"
+```
+
+### Match Filter
+
+The match filter allows to find resources that [match](https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl-match-query.html)
+the specified text on full text fields.
+
+Syntax: `?property[]=value`
+
+Enable the filter:
+
+```php
+<?php
+// api/src/Model/Tweet.php
+
+namespace App\Model;
+
+use ApiPlatform\Core\Annotation\ApiFilter;
+use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Core\Bridge\Elasticsearch\DataProvider\Filter\MatchFilter;
+
+/**
+ * @ApiResource
+ * @ApiFilter(MatchFilter::class, properties={"message"})
+ */
+class Tweet
+{
+    // ...
+}
+```
+
+Given that the collection endpoint is `/tweets`, you can filter tweets by message content.
+
+`/tweets?message=Hello%20World` will return all tweets that match the text `Hello World`.
+
+### Term Filter
+
+The term filter allows to find resources that contain the exact specified
+[terms](https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl-term-query.html).
+
+Syntax: `?property[]=value`
+
+Enable the filter:
+
+```php
+<?php
+// api/src/Model/User.php
+
+namespace App\Model;
+
+use ApiPlatform\Core\Annotation\ApiFilter;
+use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Core\Bridge\Elasticsearch\DataProvider\Filter\TermFilter;
+
+/**
+ * @ApiResource
+ * @ApiFilter(TermFilter::class, properties={"gender", "age"})
+ */
+class User
+{
+    // ...
+}
+```
+
+Given that the collection endpoint is `/users`, you can filter users by gender and age.
+
+`/users?gender=female` will return all users whose gender is `female`.
+`/users?age=42` will return all users whose age is `42`.
+
+Filters can be combined together: `/users?gender=female&age=42`.
+
+### Filtering on Nested Properties
+
+Sometimes, you need to be able to perform filtering based on some linked resources (on the other side of a relation).
+All built-in filters support nested properties using the (`.`) syntax.
+
+```php
+<?php
+// api/src/Model/Tweet.php
+
+namespace App\Model;
+
+use ApiPlatform\Core\Annotation\ApiFilter;
+use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Core\Bridge\Elasticsearch\DataProvider\Filter\OrderFilter;
+use ApiPlatform\Core\Bridge\Elasticsearch\DataProvider\Filter\TermFilter;
+
+/**
+ * @ApiResource
+ * @ApiFilter(OrderFilter::class, properties={"author.firstName"})
+ * @ApiFilter(TermFilter::class, properties={"author.gender"})
+ */
+class Tweet
+{
+    // ...
+}
+```
+
+The above allows you to find tweets by their respective author's gender `/tweets?author.gender=male`, or order tweets by the
+author's first name `/tweets?order[author.firstName]=desc`.
+
 ## Serializer Filters
 
 ### Group Filter
@@ -577,7 +745,6 @@ Enable the filter:
 
 ```php
 <?php
-
 // api/src/Entity/Book.php
 
 namespace App\Entity;
@@ -615,7 +782,6 @@ Enable the filter:
 
 ```php
 <?php
-
 // api/src/Entity/Book.php
 
 namespace App\Entity;
@@ -785,6 +951,17 @@ class Offer
 
 You can now enable this filter using URLs like `http://example.com/offers?regexp_email=^[FOO]`. This new filter will also
 appear in Swagger and Hydra documentations.
+
+### Creating Custom Elasticsearch Filters
+
+Elasticsearch filters have access to the context created from the HTTP request and to the Elasticsearch query clause.
+They are only applied to collections. If you want to deal with the query DSL through the search request body, extensions
+are the way to go.
+
+Existing Elasticsearch filters are applied through a [constant score query](https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl-constant-score-query.html).
+A constant score query filter is basically a class implementing the `ApiPlatform\Core\Bridge\Elasticsearch\DataProvider\Filter\ConstantScoreFilterInterface`
+and the `ApiPlatform\Core\Bridge\Elasticsearch\DataProvider\Filter\FilterInterface`. API Platform includes a convenient
+abstract class implementing this last interface and providing utility methods: `ApiPlatform\Core\Bridge\Elasticsearch\DataProvider\Filter\AbstractFilter`.
 
 ### Using Doctrine Filters
 

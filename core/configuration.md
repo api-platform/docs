@@ -90,6 +90,16 @@ api_platform:
         graphiql:
             enabled: true
 
+    elasticsearch:
+        # To enable or disable Elasticsearch support.
+        enabled: false
+
+        # The hosts to the Elasticsearch nodes.
+        hosts: []
+
+        # The mapping between resource classes and indexes.
+        mapping: []
+
     swagger:
         # The swagger api keys.
         api_keys: []
