@@ -24,6 +24,8 @@ final class Person {
      * @ApiProperty(identifier=true)
      */
     public $code;
+    
+    // ...
 }
 ```
 

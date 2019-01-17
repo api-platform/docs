@@ -51,7 +51,7 @@ class Product // The class name will be used to name exposed resources
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
      */
-    public $id;
+    private $id;
 
     /**
      * @var string $name A name property - this description will be available in the API documentation too.
@@ -71,6 +71,11 @@ class Product // The class name will be used to name exposed resources
     {
         $this->offers = new ArrayCollection(); // Initialize $offers as an Doctrine collection
     }
+    
+    public function getId(): ?int
+    {
+        return $this->id;
+    }
 
     // Adding both an adder and a remover as well as updating the reverse relation are mandatory
     // if you want Doctrine to automatically update and persist (thanks to the "cascade" option) the related entity
@@ -85,6 +90,8 @@ class Product // The class name will be used to name exposed resources
         $offer->product = null;
         $this->offers->removeElement($offer);
     }
+    
+    // ...
 }
 ```
 
@@ -111,7 +118,7 @@ class Offer
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
      */
-    public $id;
+    private $id;
 
     /**
      * @ORM\Column(type="text")

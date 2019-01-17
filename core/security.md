@@ -42,7 +42,7 @@ class Book
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
      */
-    public $id;
+    private $id;
 
     /**
      * @var string The title
@@ -58,6 +58,8 @@ class Book
      * @ORM\ManyToOne(targetEntity=User::class)
      */
     public $owner;
+    
+    // ...
 }
 ```
 
@@ -77,7 +79,7 @@ For example:
 
 ```php
 <?php
-// src/Entity/Book.php
+// api/src/Entity/Book.php
 
 namespace App\Entity;
 

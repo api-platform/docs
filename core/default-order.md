@@ -24,6 +24,8 @@ class Book
      * ...
      */
     public $foo;
+    
+    // ...
 }
 ```
 
@@ -54,6 +56,8 @@ class Book
      * ...
      */
     public $bar;
+    
+    // ...
 }
 ```
 
@@ -78,5 +82,7 @@ class Book
      * @var User
      */
     public $author;
+    
+    // ...
 }
 ```

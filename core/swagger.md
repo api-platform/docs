@@ -126,7 +126,7 @@ class Product // The class name will be used to name exposed resources
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
      */
-    public $id;
+    private $id;
 
     /**
      * @param string $name A name property - this description will be available in the API documentation too.
@@ -157,6 +157,8 @@ class Product // The class name will be used to name exposed resources
      * )
      */
     public $timestamp;
+    
+    // ...
 }
 ```
 

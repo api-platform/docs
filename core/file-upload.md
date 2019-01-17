@@ -40,7 +40,7 @@ The `MediaObject` resource is implemented like this:
 
 ```php
 <?php
-// src/Entity/MediaObject.php
+// api/src/Entity/MediaObject.php
 
 namespace App\Entity;
 
@@ -82,6 +82,8 @@ class MediaObject
      * @ApiProperty(iri="http://schema.org/contentUrl")
      */
     public $contentUrl;
+    
+    // ...
 }
 ```
 
@@ -92,7 +94,7 @@ that handles the file upload.
 
 ```php
 <?php
-// src/Controller/CreateMediaObjectAction.php
+// api/src/Controller/CreateMediaObjectAction.php
 
 namespace App\Controller;
 
@@ -148,7 +150,7 @@ As you can see, the action uses a form. You will need this form to be like this:
 
 ```php
 <?php
-// src/Form/MediaObjectType.php
+// api/src/Form/MediaObjectType.php
 
 namespace App\Form;
 
@@ -210,7 +212,7 @@ We first need to edit our Book resource, and add a new property called `image`.
 
 ```php
 <?php
-// src/Entity/Book.php
+// api/src/Entity/Book.php
 
 namespace App\Entity;
 
@@ -227,6 +229,7 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
 class Book
 {
     // ...
+
     /**
      * @var MediaObject|null
      * @ORM\ManyToOne(targetEntity="App\Entity\MediaObject")
@@ -234,6 +237,8 @@ class Book
      * @ApiProperty(iri="http://schema.org/image")
      */
     public $image;
+    
+    // ...
 }
 ```
 

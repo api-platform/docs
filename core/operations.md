@@ -297,6 +297,8 @@ class Answer
     {
         return $this->id;
     }
+    
+    // ...
 }
 ```
 
@@ -339,6 +341,8 @@ class Question
     {
         return $this->id;
     }
+    
+    // ...
 }
 ```
 
@@ -529,7 +533,7 @@ implements the [Action-Domain-Responder](https://github.com/pmjones/adr) pattern
 Note: [the event system](events.md) should be preferred over custom controllers when applicable.
 
 The distribution of API Platform also eases the implementation of the ADR pattern: it automatically registers action classes
-stored in `src/App/Controller` as autowired services.
+stored in `api/src/App/Controller` as autowired services.
 
 Thanks to the [autowiring](http://symfony.com/doc/current/components/dependency_injection/autowiring.html) feature of the
 Symfony Dependency Injection container, services required by an action can be type-hinted in its constructor, it will be
@@ -598,7 +602,7 @@ The routing has not been configured yet because we will add it at the resource c
 
 ```php
 <?php
-// src/Entity/Book.php
+// api/src/Entity/Book.php
 
 use ApiPlatform\Core\Annotation\ApiResource;
 use App\Controller\CreateBookPublication;
@@ -664,7 +668,7 @@ You may want different serialization groups for your custom operations. Just con
 
 ```php
 <?php
-// src/Entity/Book.php
+// api/src/Entity/Book.php
 
 use ApiPlatform\Core\Annotation\ApiResource;
 use App\Controller\CreateBookPublication;
@@ -688,7 +692,9 @@ class Book
     /**
      * @Groups("publication")
      */
-    private $isbn;
+    public $isbn;
+    
+    // ...
 }
 ```
 
@@ -742,7 +748,7 @@ If you want to bypass the automatic retrieval of the entity in your custom opera
 
 ```php
 <?php
-// src/Entity/Book.php
+// api/src/Entity/Book.php
 
 use ApiPlatform\Core\Annotation\ApiResource;
 use App\Controller\CreateBookPublication;
@@ -822,7 +828,7 @@ First, let's create your resource configuration:
 
 ```php
 <?php
-// src/Entity/Book.php
+// api/src/Entity/Book.php
 
 use ApiPlatform\Core\Annotation\ApiResource;
 

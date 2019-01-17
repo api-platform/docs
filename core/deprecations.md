@@ -89,6 +89,8 @@ class Review
      * @ApiProperty(deprecationReason="Use the rating property instead")
      */
     public $letter;
+    
+    // ...
 }
 ```
 

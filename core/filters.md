@@ -1009,7 +1009,9 @@ class Order
      * @ORM\ManyToOne(targetEntity="User")
      * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
      **/
-    private $user;
+    public $user;
+    
+    // ...
 }
 ```
 
@@ -1213,13 +1215,13 @@ class DummyCar
      * @ORM\Column(type="string")
      * @ApiFilter(SearchFilter::class, strategy="partial")
      */
-    private $name;
+    public $name;
 
     /**
      * @ORM\OneToMany(targetEntity="DummyCarColor", mappedBy="car")
      * @ApiFilter(SearchFilter::class, properties={"colors.prop": "ipartial"})
      */
-    private $colors;
+    public $colors;
 
     // ...
 }

@@ -37,6 +37,8 @@ class Book
      * )
      */
     public $name;
+    
+    // ...
 }
 ```
 

@@ -52,7 +52,7 @@ class Offer
      * @var User
      * @ORM\ManyToOne(targetEntity="User")
      */
-    private $user;
+    public $user;
 
     //...
 }

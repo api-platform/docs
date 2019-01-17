@@ -13,7 +13,7 @@ the `@ApiResource` annotation:
 
 ```php
 <?php
-// src/Entity/Product.php
+// api/src/Entity/Product.php
 
 namespace App\Entity;
 
@@ -45,7 +45,7 @@ class Product
      * @Assert\NotBlank
      * @ORM\Column
      */
-    private name;
+    public $name;
 
     /**
      * @var string[] Describe the product
@@ -53,7 +53,7 @@ class Product
      * @MinimalProperties
      * @ORM\Column(type="json")
      */
-    private $properties;
+    public $properties;
 
     // Getters and setters...
 }
@@ -63,7 +63,7 @@ Here is a custom constraint and the related validator:
 
 ```php
 <?php
-// src/Validator/Constraints/MinimalProperties.php
+// api/src/Validator/Constraints/MinimalProperties.php
 
 namespace App\Validator\Constraints;
 
@@ -80,7 +80,7 @@ class MinimalProperties extends Constraint
 
 ```php
 <?php
-// src/Validator/Constraints/MinimalPropertiesValidator.php
+// api/src/Validator/Constraints/MinimalPropertiesValidator.php
 
 namespace App\Validator\Constraints;
 
@@ -146,12 +146,12 @@ class Book
     /**
      * @Assert\NotBlank(groups={"a"})
      */
-    private $name;
+    public $name;
 
     /**
      * @Assert\NotNull(groups={"b"})
      */
-    private $author;
+    public $author;
 
     // ...
 }
@@ -202,7 +202,7 @@ class Book
     /**
      * @Assert\NotBlank(groups={"postValidation"})
      */
-    private $name;
+    public $name;
 
     /**
      * @Assert\NotNull
@@ -217,7 +217,7 @@ class Book
      *     groups={"putValidation"}
      * )
      */
-    private $author;
+    public $author;
 
     // ...
 }
@@ -268,12 +268,12 @@ class Book
     /**
      * @Assert\NotBlank(groups={"a"})
      */
-    private $name;
+    public $name;
 
     /**
      * @Assert\NotNull(groups={"b"})
      */
-    private $author;
+    public $author;
 
     // ...
 }
@@ -330,12 +330,12 @@ class Book
     /**
      * @Assert\NotBlank(groups={"a"})
      */
-    private $name;
+    public $name;
 
     /**
      * @Assert\NotNull(groups={"b"})
      */
-    private $author;
+    public $author;
 
     // ...
 }

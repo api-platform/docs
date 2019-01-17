@@ -73,7 +73,7 @@ It can also be disabled for specific resource:
 
 ```php
 <?php
-// src/Entity/Book.php
+// api/src/Entity/Book.php
 
 use ApiPlatform\Core\Annotation\ApiResource;
 
@@ -116,7 +116,7 @@ The client ability to disable the pagination can also be set in the resource con
 
 ```php
 <?php
-// src/Entity/Book.php
+// api/src/Entity/Book.php
 
 use ApiPlatform\Core\Annotation\ApiResource;
 
@@ -149,7 +149,7 @@ api_platform:
 
 ```php
 <?php
-// src/Entity/Book.php
+// api/src/Entity/Book.php
 
 use ApiPlatform\Core\Annotation\ApiResource;
 
@@ -183,7 +183,7 @@ Changing the number of items per page can be enabled (or disabled) for a specifi
 
 ```php
 <?php
-// src/Entity/Book.php
+// api/src/Entity/Book.php
 
 use ApiPlatform\Core\Annotation\ApiResource;
 
@@ -214,7 +214,7 @@ api_platform:
 
 ```php
 <?php
-// src/Entity/Book.php
+// api/src/Entity/Book.php
 
 use ApiPlatform\Core\Annotation\ApiResource;
 
@@ -233,7 +233,7 @@ class Book
 
 ```php
 <?php
-// src/Entity/Book.php
+// api/src/Entity/Book.php
 
 use ApiPlatform\Core\Annotation\ApiResource;
 
@@ -273,7 +273,7 @@ api_platform:
 ```php
 <?php
 
-// src/Entity/Book.php
+// api/src/Entity/Book.php
 
 use ApiPlatform\Core\Annotation\ApiResource;
 
@@ -307,7 +307,7 @@ The partial pagination retrieval can now be changed by toggling a query paramete
 ```php
 <?php
 
-// src/Entity/Book.php
+// api/src/Entity/Book.php
 
 use ApiPlatform\Core\Annotation\ApiResource;
 
@@ -331,7 +331,7 @@ That's why this behavior can be configured with the `pagination_fetch_join_colle
 ```php
 <?php
 
-// src/Entity/Book.php
+// api/src/Entity/Book.php
 
 use ApiPlatform\Core\Annotation\ApiResource;
 
@@ -355,7 +355,7 @@ First example:
 ```php
 <?php
 
-//src/Repository/BookRepository.php
+// api/src/Repository/BookRepository.php
 
 namespace App\Repository;
 
@@ -411,7 +411,7 @@ The Controller would look like this:
 ```php
 <?php
 
-// src/Controller/Book/GetBooksByFavoriteAuthorAction.php
+// api/src/Controller/Book/GetBooksByFavoriteAuthorAction.php
 
 namespace App\Controller\Book;
 
@@ -437,7 +437,7 @@ You can also use the Query object inside the repository method and pass it to th
 ```php
 <?php
 
-//src/Repository/BookRepository.php
+// api/src/Repository/BookRepository.php
 
 namespace App\Repository;
 
