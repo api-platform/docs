@@ -29,7 +29,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ApiResource(
- *      messenger=true,
+ *     messenger=true,
  *     collectionOperations={
  *         "post"={"status"=202}
  *     },
