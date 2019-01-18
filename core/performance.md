@@ -111,7 +111,7 @@ class Book
 
 For all endpoints related to this resource class, the following HTTP header will be set:
 
-`Cache-Controle: max-age=60, public, s-maxage=120`
+`Cache-Control: max-age=60, public, s-maxage=120`
 
 It's also possible to set different cache headers per operation:
 
