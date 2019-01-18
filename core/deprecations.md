@@ -56,6 +56,10 @@ You can also use this new `deprecationReason` attribute to deprecate specific [o
 <?php
 // api/src/Entity/Parchment.php
 
+namespace App\Entity;
+
+use ApiPlatform\Core\Annotation\ApiResource;
+
 /**
  * @ApiResource(itemOperations={
  *     "get"={"deprecation_reason"="Retrieve a Book instead"}
@@ -109,6 +113,8 @@ Thanks to the `sunset` attribute, API Platform makes it easy to set this header 
 
 namespace App\Entity;
 
+use ApiPlatform\Core\Annotation\ApiResource;
+
 /**
  * @ApiResource(
  *   deprecationReason="Create a Book instead",
@@ -131,6 +137,8 @@ It's also possible to set the `Sunset` header only for a specific [operation](op
 // api/src/Entity/Parchment.php
 
 namespace App\Entity;
+
+use ApiPlatform\Core\Annotation\ApiResource;
 
 /**
  * @ApiResource(itemOperations={
