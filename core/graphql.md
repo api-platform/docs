@@ -239,12 +239,12 @@ class Book
     /**
      * @Groups({"read", "write", "query"})
      */
-    private $name;
+    public $name;
 
     /**
      * @Groups({"read", "mutation"})
      */
-    private $author;
+    public $author;
 
     // ...
 }

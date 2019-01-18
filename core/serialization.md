@@ -91,12 +91,12 @@ class Book
     /**
      * @Groups({"read", "write"})
      */
-    private $name;
+    public $name;
 
     /**
      * @Groups("write")
      */
-    private $author;
+    public $author;
 
     // ...
 }
@@ -185,12 +185,12 @@ class Book
     /**
      * @Groups({"get", "put"})
      */
-    private $name;
+    public $name;
 
     /**
      * @Groups("get")
      */
-    private $author;
+    public $author;
 
     // ...
 }
@@ -241,12 +241,12 @@ class Book
     /**
      * @Groups({"book"})
      */
-    private $name;
+    public $name;
 
     /**
      * @Groups({"book"})
      */
-    private $author;
+    public $author;
 
     // ...
 }
@@ -358,7 +358,7 @@ class Book
      *
      * @Groups({"book:output", "admin:input"})
      */
-    private $active = false;
+    public $active = false;
 
     /**
      * This field can be managed by any user
@@ -367,7 +367,7 @@ class Book
      *
      * @Groups({"book:output", "book:input"})
      */
-    private $name;
+    public $name;
 
     // ...
 }
@@ -632,14 +632,14 @@ class Book
      *
      * @var bool
      */
-    private $active = false;
+    public $active = false;
 
     /**
      * This field can be managed by any user
      *
      * @var string
      */
-    private $name;
+    public $name;
 
     // ...
 }

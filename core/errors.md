@@ -15,7 +15,7 @@ configure API Platform to convert it to a `404 Not Found` error:
 
 ```php
 <?php
-// src/Exception/ProductNotFoundException.php
+// api/src/Exception/ProductNotFoundException.php
 
 namespace App\Exception;
 
@@ -26,7 +26,7 @@ final class ProductNotFoundException extends \Exception
 
 ```php
 <?php
-// src/EventSubscriber/CartManager.php
+// api/src/EventSubscriber/CartManager.php
 
 namespace App\EventSubscriber;
 

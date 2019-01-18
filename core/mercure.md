@@ -109,6 +109,7 @@ use ApiPlatform\Core\Annotation\ApiResource;
 class Book
 {
     public $owners = [];
+
    // ...
 }
 ```

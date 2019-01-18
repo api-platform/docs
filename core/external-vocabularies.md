@@ -26,6 +26,8 @@ class Book
      * @ApiProperty(iri="http://schema.org/name")
      */
     public $name;
+    
+    // ...
 }
 ```
 

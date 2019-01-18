@@ -259,6 +259,8 @@ class User
      * @ORM\JoinTable(name="users_groups")
      */
     public $groups;
+    
+    // ...
 }
 ```
 
@@ -293,6 +295,8 @@ class Group
      * @ManyToMany(targetEntity="User", mappedBy="groups")
      */
     public $users;
+    
+    // ...
 }
 ```
 

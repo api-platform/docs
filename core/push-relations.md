@@ -28,6 +28,8 @@ class Book
      * @ApiProperty(push=true)
      */
     public $author;
+    
+    // ...
 }
 ```
 
