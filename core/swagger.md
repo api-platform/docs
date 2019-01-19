@@ -348,17 +348,7 @@ Again, you can use the `openapi_context` key instead of the `swagger_context` on
 
 ## Changing the Location of Swagger UI
 
-Sometimes you may want to have the API at one location, and the Swagger UI at a different location. This can be done by disabling the Swagger UI from the API Platform configuration file and manually adding the Swagger UI controller.
-
-### Disabling Swagger UI or of ReDoc
-
-```yaml
-# api/config/packages/api_platform.yaml
-api_platform:
-    # ...
-    enable_swagger_ui: false
-    enable_re_doc: false
-```
+Sometimes you may want to have the API at one location, and the Swagger UI at a different location. This can be done by manually adding the Swagger UI controller.
 
 ### Manually Registering the Swagger UI Controller
 
@@ -370,6 +360,18 @@ swagger_ui:
 ```
 
 Change `/docs` to your desired URI you wish Swagger to be accessible on.
+
+## Disabling Swagger UI or of ReDoc
+
+If you don't want expose the API documentation, this can be done by disabling the Swagger UI from the API Platform configuration 
+
+```yaml
+# api/config/packages/api_platform.yaml
+api_platform:
+    # ...
+    enable_swagger_ui: false
+    enable_re_doc: false
+```
 
 ## Overriding the UI Template
 
