@@ -7,10 +7,11 @@ process](serialization.md).
 
 A data persister using [Doctrine ORM](http://www.doctrine-project.org/projects/orm.html) is included with the library and
 is enabled by default. It is able to persist and delete objects that are also mapped as [Doctrine entities](https://www.doctrine-project.org/projects/doctrine-orm/en/2.6/reference/basic-mapping.html).
+A [Doctrine MongoDB ODM](https://www.doctrine-project.org/projects/mongodb-odm.html) data persister is also included and can be enabled by following the [MongoDB documentation](mongodb.md).
 
 However, you may want to:
 
-* store data to other persistence layers (ElasticSearch, MongoDB, external web services...)
+* store data to other persistence layers (ElasticSearch, external web services...)
 * not publicly expose the internal model mapped with the database through the API
 * use a separate model for [read operations](data-providers.md) and for updates by implementing patterns such as [CQRS](https://martinfowler.com/bliki/CQRS.html)
 

@@ -1,7 +1,7 @@
 # Filters
 
-API Platform Core provides a generic system to apply filters on collections. Useful filters for the Doctrine ORM are provided
-with the library. You can also create custom filters that would fit your specific needs.
+API Platform Core provides a generic system to apply filters on collections. Useful filters for the Doctrine ORM and
+MongoDB ODM are provided with the library. You can also create custom filters that would fit your specific needs.
 You can also add filtering support to your custom [data providers](data-providers.md) by implementing interfaces provided
 by the library.
 
@@ -10,7 +10,7 @@ By default, all filters are disabled. They must be enabled explicitly.
 When a filter is enabled, it is automatically documented as a `hydra:search` property in the collection response. It also
 automatically appears in the [NelmioApiDoc documentation](nelmio-api-doc.md) if it is available.
 
-## Doctrine ORM Filters
+## Doctrine ORM and MongoDB ODM Filters
 
 ### Basic Knowledge
 
@@ -117,10 +117,13 @@ Learn more on how the [ApiFilter annotation](filters.md#apifilter-annotation) wo
 
 For the sake of consistency, we're using the annotation in the below documentation.
 
+For MongoDB ODM, all the filters are in the namespace `ApiPlatform\Core\Bridge\Doctrine\MongoDbOdm\Filter`. The filter
+services all begin with `api_platform.doctrine_mongodb.odm`.
+
 ### Search Filter
 
-If Doctrine ORM support is enabled, adding filters is as easy as registering a filter service in the `api/config/services.yaml`
-file and adding an attribute to your resource configuration.
+If Doctrine ORM or MongoDB ODM support is enabled, adding filters is as easy as registering a filter service in the
+`api/config/services.yaml` file and adding an attribute to your resource configuration.
 
 The search filter supports `exact`, `partial`, `start`, `end`, and `word_start` matching strategies:
 
@@ -330,7 +333,7 @@ It will return all offers with `sold` equals `1`.
 
 ### Range Filter
 
-The range filter allows you to filter by a value Lower than, Greater than, Lower than or equal, Greater than or equal and between two values.
+The range filter allows you to filter by a value lower than, greater than, lower than or equal, greater than or equal and between two values.
 
 Syntax: `?property[<lt|gt|lte|gte|between>]=value`
 
@@ -622,7 +625,7 @@ class Tweet
 
 #### Using a Custom Order Query Parameter Name
 
-A conflict will occur if `order`  is also the name of a property with the term filter enabled. Luckily, the query
+A conflict will occur if `order` is also the name of a property with the term filter enabled. Luckily, the query
 parameter name to use is configurable:
 
 ```yaml
@@ -810,21 +813,20 @@ If you want to include some properties of the nested "author" document, use: `/b
 
 ## Creating Custom Filters
 
-Custom filters can be written by implementing the `ApiPlatform\Core\Api\FilterInterface`
-interface.
+Custom filters can be written by implementing the `ApiPlatform\Core\Api\FilterInterface` interface.
 
-API Platform provides a convenient way to create Doctrine ORM filters. If you use [custom data providers](data-providers.md),
+API Platform provides a convenient way to create Doctrine ORM and MongoDB ODM filters. If you use [custom data providers](data-providers.md),
 you can still create filters by implementing the previously mentioned interface, but - as API Platform isn't aware of your
 persistence system's internals - you have to create the filtering logic by yourself.
 
 ### Creating Custom Doctrine ORM Filters
 
-Doctrine filters have access to the HTTP request (Symfony's `Request` object) and to the `QueryBuilder` instance used to
+Doctrine ORM filters have access to the context created from the HTTP request and to the `QueryBuilder` instance used to
 retrieve data from the database. They are only applied to collections. If you want to deal with the DQL query generated
-to retrieve items, or don't need to access the HTTP request, [extensions](extensions.md) are the way to go.
+to retrieve items, [extensions](extensions.md) are the way to go.
 
 A Doctrine ORM filter is basically a class implementing the `ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\FilterInterface`.
-API Platform includes a convenient abstract class implementing this interface and providing utility methods: `ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\AbstractFilter`
+API Platform includes a convenient abstract class implementing this interface and providing utility methods: `ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\AbstractFilter`.
 
 In the following example, we create a class to filter a collection by applying a regexp to a property. The `REGEXP` DQL
 function used in this example can be found in the [`DoctrineExtensions`](https://github.com/beberlei/DoctrineExtensions)
@@ -902,7 +904,7 @@ it can also be enabled for some properties:
 # api/config/services.yaml
 services:
     'App\Filter\RegexpFilter':
-        arguments: [ '@doctrine', '@request_stack', '@?logger', { email: ~, anOtherProperty: ~ } ]
+        arguments: [ '@doctrine', ~, '@?logger', { email: ~, anOtherProperty: ~ } ]
         # Uncomment only if autoconfiguration isn't enabled
         #tags: [ 'api_platform.filter' ]
 ```
@@ -952,6 +954,15 @@ class Offer
 You can now enable this filter using URLs like `http://example.com/offers?regexp_email=^[FOO]`. This new filter will also
 appear in Swagger and Hydra documentations.
 
+### Creating Custom Doctrine MongoDB ODM Filters
+
+Doctrine MongoDB ODM filters have access to the context created from the HTTP request and to the [aggregation builder](https://www.doctrine-project.org/projects/doctrine-mongodb-odm/en/latest/reference/aggregation-builder.html)
+instance used to retrieve data from the database and to execute [complex operations on data](https://docs.mongodb.com/manual/aggregation/).
+They are only applied to collections. If you want to deal with the aggregation pipeline generated to retrieve items, [extensions](extensions.md) are the way to go.
+
+A Doctrine MongoDB ODM filter is basically a class implementing the `ApiPlatform\Core\Bridge\Doctrine\MongoDbOdm\Filter\FilterInterface`.
+API Platform includes a convenient abstract class implementing this interface and providing utility methods: `ApiPlatform\Core\Bridge\Doctrine\MongoDbOdm\Filter\AbstractFilter`.
+
 ### Creating Custom Elasticsearch Filters
 
 Elasticsearch filters have access to the context created from the HTTP request and to the Elasticsearch query clause.
@@ -963,9 +974,9 @@ A constant score query filter is basically a class implementing the `ApiPlatform
 and the `ApiPlatform\Core\Bridge\Elasticsearch\DataProvider\Filter\FilterInterface`. API Platform includes a convenient
 abstract class implementing this last interface and providing utility methods: `ApiPlatform\Core\Bridge\Elasticsearch\DataProvider\Filter\AbstractFilter`.
 
-### Using Doctrine Filters
+### Using Doctrine ORM Filters
 
-Doctrine features [a filter system](http://docs.doctrine-project.org/projects/doctrine-orm/en/latest/reference/filters.html) that allows the developer to add SQL to the conditional clauses of queries, regardless the place where the SQL is generated (e.g. from a DQL query, or by loading associated entities).
+Doctrine ORM features [a filter system](http://docs.doctrine-project.org/projects/doctrine-orm/en/latest/reference/filters.html) that allows the developer to add SQL to the conditional clauses of queries, regardless the place where the SQL is generated (e.g. from a DQL query, or by loading associated entities).
 These are applied on collections and items, so are incredibly useful.
 
 The following information, specific to Doctrine filters in Symfony, is based upon [a great article posted on Michaël Perrin's blog](http://blog.michaelperrin.fr/2014/12/05/doctrine-filters/).

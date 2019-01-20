@@ -607,10 +607,10 @@ final class ApiNormalizer implements NormalizerInterface, DenormalizerInterface,
 
 ## Entity Identifier Case
 
-API Platform is able to guess the entity identifier using [Doctrine metadata](http://doctrine-orm.readthedocs.org/en/latest/reference/basic-mapping.html#identifiers-primary-keys).
-It also supports composite identifiers.
+API Platform is able to guess the entity identifier using Doctrine metadata ([ORM](http://doctrine-orm.readthedocs.org/en/latest/reference/basic-mapping.html#identifiers-primary-keys), [MongoDB ODM](https://www.doctrine-project.org/projects/doctrine-mongodb-odm/en/latest/reference/basic-mapping.html#identifiers)).
+For ORM, it also supports composite identifiers.
 
-If you are not using the Doctrine ORM Provider, you must explicitly mark the identifier using the `identifier` attribute of
+If you are not using the Doctrine ORM or MongoDB ODM Provider, you must explicitly mark the identifier using the `identifier` attribute of
 the `ApiPlatform\Core\Annotation\ApiProperty` annotation. For example:
 
 

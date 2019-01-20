@@ -27,6 +27,14 @@ api_platform:
     # Allow using plain IDs for JSON format
     allow_plain_identifiers: false
 
+    doctrine:
+        # To enable or disable Doctrine ORM support.
+        enabled: true
+
+    doctrine_mongodb_odm:
+        # To enable or disable Doctrine MongoDB ODM support.
+        enabled: false
+
     eager_loading:
         # To enable or disable eager loading.
         enabled: true

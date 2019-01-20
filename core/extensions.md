@@ -2,7 +2,7 @@
 
 API Platform Core provides a system to extend queries on items and collections.
 
-Extensions are specific to Doctrine and Elasticsearch-PHP, and therefore, the Doctrine ORM support or the Elasticsearch
+Extensions are specific to Doctrine and Elasticsearch-PHP, and therefore, the Doctrine ORM / MongoDB ODM support or the Elasticsearch
 reading support must be enabled to use this feature. If you use custom providers it's up to you to implement your own
 extension system or not.
 
@@ -151,6 +151,19 @@ security:
         - { path: ^/offers, roles: IS_AUTHENTICATED_FULLY }
         - { path: ^/users, roles: IS_AUTHENTICATED_FULLY }
 ```
+
+## Custom Doctrine MongoDB ODM Extension
+
+Creating custom extensions is the same as Doctrine ORM.
+
+The interfaces are:
+* `ApiPlatform\Core\Bridge\Doctrine\MongoDbOdm\Extension\AggregationItemExtensionInterface` and `ApiPlatform\Core\Bridge\Doctrine\MongoDbOdm\Extension\AggregationCollectionExtensionInterface` to add stages to the [aggregation builder](https://www.doctrine-project.org/projects/doctrine-mongodb-odm/en/latest/reference/aggregation-builder.html).
+* `ApiPlatform\Core\Bridge\Doctrine\MongoDbOdm\Extension\AggregationResultItemExtensionInterface` and `ApiPlatform\Core\Bridge\Doctrine\MongoDbOdm\Extension\AggregationResultCollectionExtensionInterface` to return a result.
+
+The tags are `api_platform.doctrine.mongodb.aggregation_extension.item` and `api_platform.doctrine.mongodb.aggregation_extension.collection`.
+
+The custom extensions receive the [aggregation builder](https://www.doctrine-project.org/projects/doctrine-mongodb-odm/en/latest/reference/aggregation-builder.html),
+used to execute [complex operations on data](https://docs.mongodb.com/manual/aggregation/).
 
 ## Custom Elasticsearch Extension
 
