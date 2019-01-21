@@ -143,6 +143,12 @@ class Offer
 It is the minimal configuration required to expose `Product` and `Offer` entities as JSON-LD documents through an hypermedia
 web API.
 
+**Tip**: if you create your entities with Symfony's [MakerBundle](https://symfony.com/doc/current/bundles/SymfonyMakerBundle/index.html), you can also create your API resource entities with the `--api-resource` argument:
+
+```sh
+php bin/console make:entity --api-resource
+```
+
 If you are familiar with the Symfony ecosystem, you noticed that entity classes are also mapped with Doctrine ORM annotations
 and validation constraints from [the Symfony Validator Component](http://symfony.com/doc/current/book/validation.html).
 This isn't mandatory. You can use [your preferred persistence](data-providers.md) and [validation](validation.md) systems.
