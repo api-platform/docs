@@ -145,7 +145,7 @@ web API.
 
 **Tip**: if you create your entities with Symfony's [MakerBundle](https://symfony.com/doc/current/bundles/SymfonyMakerBundle/index.html), you can also create your API resource entities with the `--api-resource` argument:
 
-```sh
+```bash
 php bin/console make:entity --api-resource
 ```
 
