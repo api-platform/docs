@@ -143,10 +143,10 @@ class Offer
 It is the minimal configuration required to expose `Product` and `Offer` entities as JSON-LD documents through an hypermedia
 web API.
 
-**Tip**: if you create your entities with Symfony's [MakerBundle](https://symfony.com/doc/current/bundles/SymfonyMakerBundle/index.html), you can also create your API resource entities with the `--api-resource` argument:
+**Tip**: you can also use Symfony [MakerBundle](https://symfony.com/doc/current/bundles/SymfonyMakerBundle/index.html) thanks to the `--api-resource` option:
 
 ```bash
-php bin/console make:entity --api-resource
+docker-compose exec php bin/console make:entity --api-resource
 ```
 
 If you are familiar with the Symfony ecosystem, you noticed that entity classes are also mapped with Doctrine ORM annotations
