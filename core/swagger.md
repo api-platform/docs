@@ -35,7 +35,7 @@ $ docker-compose exec php bin/console api:openapi:export --output=swagger_docs.j
 ## Overriding the OpenAPI Specification
 
 Symfony allows to [decorate services](https://symfony.com/doc/current/service_container/service_decoration.html), here we
-need to decorate `api_platform.swagger.normalizer.documentation`.
+need to decorate `api_platform.swagger.normalizer.api_gateway` (which is already decorating the initial service `api_platform.swagger.normalizer.documentation`).
 
 In the following example, we will see how to override the title of the Swagger documentation and add a custom filter for
 the `GET` operation of `/foos` path
@@ -44,7 +44,7 @@ the `GET` operation of `/foos` path
 # api/config/services.yaml
 services:
     'App\Swagger\SwaggerDecorator':
-        decorates: 'api_platform.swagger.normalizer.documentation'
+        decorates: 'api_platform.swagger.normalizer.api_gateway'
         arguments: [ '@App\Swagger\SwaggerDecorator.inner' ]
         autoconfigure: false
 ```
