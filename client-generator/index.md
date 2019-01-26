@@ -20,7 +20,7 @@ Client Generator works especially well with APIs built with the [API Platform](h
   * list view (with pagination)
   * detail view
   * creation form
-  * edition form
+  * editation form
   * delete button
 * Supports to-one and to-many relations
 * Uses the appropriate input type (`number`, `date`...)
