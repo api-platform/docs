@@ -6,6 +6,7 @@ If you are starting a new project, the easiest way to get API Platform up is to 
 It ships with the API Platform Core library integrated with [the Symfony framework](https://symfony.com), [the schema generator](../schema-generator/),
 [Doctrine ORM](http://www.doctrine-project.org), [Elasticsearch-PHP](https://www.elastic.co/guide/en/elasticsearch/client/php-api/current/index.html),
 [NelmioCorsBundle](https://github.com/nelmio/NelmioCorsBundle) and [Behat](http://behat.org).
+[Doctrine MongoDB ODM](https://www.doctrine-project.org/projects/mongodb-odm.html) can also be enabled by following the [MongoDB documentation](mongodb.md).
 Basically, it is a Symfony edition packaged with the best tools to develop a REST API and sensible default settings.
 
 Alternatively, you can use [Composer](http://getcomposer.org) to install the standalone bundle in an existing Symfony Flex

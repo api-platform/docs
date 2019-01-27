@@ -109,6 +109,7 @@ distribution. It is optimized for performance and development convenience. For i
 is able to automatically optimize the generated SQL queries by adding the appropriate `JOIN` clauses. It also provides a
 lot of powerful built-in filters.
 Doctrine ORM and its bridge support most popular RDBMS including PostgreSQL, MySQL, MariaDB, SQL Server, Oracle and SQLite.
+There is also a shipped [Doctrine MongoDB ODM](https://www.doctrine-project.org/projects/mongodb-odm.html) optional support.
 
 That being said, keep in mind that API Platform is 100% independent of the persistence system. You can use the one(s) that
 best suit(s) your needs (including NoSQL databases or remote web services). API Platform even supports using several persistence
