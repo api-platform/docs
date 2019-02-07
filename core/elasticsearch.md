@@ -19,11 +19,12 @@ To enable the reading support for Elasticsearch, simply require the Elasticsearc
 Then, enable it inside the API Platform configuration:
 
 ```yaml
-# api/config/packages/api_platform.yaml
+# api/config/services.yaml
 parameters:
     # ...
     env(ELASTICSEARCH_HOST): 'http://localhost:9200'
-
+    
+# api/config/packages/api_platform.yaml
 api_platform:
     # ...
 
