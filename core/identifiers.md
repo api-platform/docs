@@ -98,11 +98,11 @@ final class UuidNormalizer implements DenormalizerInterface
 }
 ```
 
-Tag this service as a `api_platform.identifier.normalizer`:
+Tag this service as a `api_platform.identifier.denormalizer`:
 
 ```xml
   <service id="App\Identifier\UuidNormalizer" class="App\Identifier\UuidNormalizer" public="false">
-      <tag name="api_platform.identifier.normalizer" />
+      <tag name="api_platform.identifier.denormalizer" />
   </service>
 ```
 
@@ -110,7 +110,7 @@ Tag this service as a `api_platform.identifier.normalizer`:
 services:
     App\Identifier\UuidNormalizer:
         tags:
-            - { name: api_platform.identifier.normalizer }
+            - { name: api_platform.identifier.denormalizer }
 ```
 
 Your `PersonDataProvider` will now work as expected!
