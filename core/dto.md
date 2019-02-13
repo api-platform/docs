@@ -89,7 +89,7 @@ Create the data persister:
 ```php
 <?php
 // api/src/DataPersister/ResetPasswordRequestDataPersister.php
-****
+
 namespace App\DataPersister;
 
 use ApiPlatform\Core\DataPersister\DataPersisterInterface;
