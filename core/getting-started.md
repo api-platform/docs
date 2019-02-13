@@ -215,13 +215,7 @@ api_platform:
             - '%kernel.project_dir%/config/api_platform' # yaml or xml directory configuration
 ```
 
-The API Platform's configuration (annotations, `YAML` or `XML`) only allow to configure the context passed to the Symfony Serializer:
-
-* The `normalization_context` key will be passed as 3rd argument of [the `Serializer::serialize()` method](https://api.symfony.com/master/Symfony/Component/Serializer/SerializerInterface.html#method_serialize)
-* The `denormalization_context` key will be passed as 4th argument of [the `Serializer::deserialize()` method](https://api.symfony.com/master/Symfony/Component/Serializer/SerializerInterface.html#method_deserialize)
-
-
-To configure the serialization groups of classes's properties, you must use directly [the Symfony Serializer's configuration files or annotations](https://symfony.com/doc/current/components/serializer.html#attributes-groups).
+If you want to serialize only a subset of your data, please refer to the [Serialization documentation](serialization.md).
 
 **You're done!**
 
