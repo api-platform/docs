@@ -349,6 +349,12 @@ class Review
 }
 ```
 
+**Tip**: you can also use Symfony [MakerBundle](https://symfony.com/doc/current/bundles/SymfonyMakerBundle/index.html) thanks to the `--api-resource` option:
+
+```bash
+docker-compose exec php bin/console make:entity --api-resource
+```
+
 As you can see there are two typical PHP objects with the corresponding PHPDoc (note that entities's and properties's descriptions
 included in their PHPDoc will appear in the API documentation).
 
