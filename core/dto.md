@@ -1,6 +1,6 @@
 # Using Data Transfer Objects (DTOs)
 
-## Specifying an Input or an Output Class
+## Specifying an Input or an Output data representation
 
 For a given resource class, you may want to have a different representation of this class as input (write) or output (read).
 To do so, a resource can take an input and/or an output class:
@@ -17,8 +17,8 @@ use App\Dto\BookOutput;
 
 /**
  * @ApiResource(
- *   inputClass=BookInput::class,
- *   outputClass=BookOutput::class
+ *   input=BookInput::class,
+ *   output=BookOutput::class
  * )
  */
 final class Book
@@ -26,91 +26,59 @@ final class Book
 }
 ```
 
-The `input_class` attribute is used during [the deserialization process](serialization.md), when transforming the user provided data to a resource instance.
-Similarly, the `output_class` attribute is used during the serialization process, this class represents how the `Book` resource will be represented in the `Response`.
+The `input` attribute is used during [the deserialization process](serialization.md), when transforming the user provided data to a resource instance.
+Similarly, the `output` attribute is used during [the serialization process](serialization.md), this class represents how the `Book` resource will be represented in the `Response`.
 
-To create a `Book`, we `POST` a data structure corresponding to the `BookInput` class and get back in the response a data structure corresponding to the `BookOuput` class.
+The `input` and `output` attributes are taken into account by all the documentation generators (GraphQL and OpenAPI, Hydra).
 
-To persist the input object, a custom [data persister](data-persisters.md) handling `BookInput` instances must be written.
-To retrieve an instance of the output class, a custom [data provider](data-providers.md) returning a `BookOutput` instance must be written.
+To create a `Book`, we `POST` a data structure corresponding to the `BookInput` class and get back in the response a data structure corresponding to the `BookOuput` class:
 
-The `input_class` and `output_class` attributes are taken into account by all the documentation generators (GraphQL and OpenAPI, Hydra).
+![Diagram post input output](images/diagrams/api-platform-post-i-o.png)
 
-## Disabling the Input or the Output
+To simplify object transformations we have to implement a Data Transformer that will convert the input into a resource or a resource into an output.
 
-Both the `input_class` and the `output_class` attributes can be set to `false`.
-If `input_class` is `false`, the deserialization process will be skipped, and no data persisters will be called.
-If `output_class` is `false`, the serialization process will be skipped, and no data providers will be called. 
-
-## Creating a Service-Oriented endpoint
-
-Sometimes it's convenient to create [RPC](https://en.wikipedia.org/wiki/Remote_procedure_call)-like endpoints.
-For example, the application should be able to send an email when someone has lost his password.
-
-So let's create a basic DTO for this request:
+With the following `BookInput`:
 
 ```php
 <?php
-// api/src/Entity/ResetPasswordRequest.php
+// src/Dto/BookInput.php
 
-namespace App\Entity;
+namespace App\Dto;
 
-use ApiPlatform\Core\Annotation\ApiResource;
-use Symfony\Component\Validator\Constraints as Assert;
-
-/**
- * @ApiResource(
- *     collectionOperations={
- *         "post"={
- *             "path"="/users/forgot-password-request"
- *        },
- *     },
- *     itemOperations={},
- *     outputClass=false
- * )
- */
-final class ResetPasswordRequest
-{
-    /**
-     * @var string
-     *
-     * @Assert\NotBlank
-     */
-    public $username;
+final class BookInput {
+  public $isbn;
 }
 ```
 
-In this case, we disable all operations except `POST`. We also set the `output_class` attribute to `false` to hint API Platform that no data will be returned by this endpoint.
-
-Then, thanks to [a custom data persister](data-persisters.md), it's possible to trigger some custom logic when the request is received.
-
-Create the data persister:
+We can transform the `BookInput` to a `Book` resource instance:
 
 ```php
 <?php
-// api/src/DataPersister/ResetPasswordRequestDataPersister.php
+// src/DataTransformer/BookInputDataTransformer.php
 
-namespace App\DataPersister;
+namespace App\DataTransformer;
 
-use ApiPlatform\Core\DataPersister\DataPersisterInterface;
-use App\Entity\ResetPasswordRequest;
+use ApiPlatform\Core\DataTransformer\DataTransformerInterface;
+use App\Dto\BookInput;
 
-final class ResetPasswordRequestDataPersister implements DataPersisterInterface
+final class BookInputDataTransformer implements DataTransformerInterface
 {
-    public function supports($data): bool
+    /**
+     * {@inheritdoc}
+     */
+    public function transform($data, string $to, array $context = [])
     {
-        return $data instanceof ResetPasswordRequest;
+        $book = new Book();
+        $book->isbn = $data->isbn;
+        return $book;
     }
-    
-    public function persist($data)
+
+    /**
+     * {@inheritdoc}
+     */
+    public function supportsTransformation($data, string $to, array $context = []): bool
     {
-      // Trigger your custom logic here
-      return $data;
-    }
-    
-    public function remove($data)
-    {
-      throw new \RuntimeException('"remove" is not supported');
+        return Book::class === $to && $data instanceof BookInput;
     }
 }
 ```
@@ -121,9 +89,178 @@ And register it:
 # api/config/services.yaml
 services:
     # ...
-    'App\DataPersister\ResetPasswordRequestDataPersister': ~
+    'App\DataTransformer\BookInputDataTransformer': ~
         # Uncomment only if autoconfiguration is disabled
-        #tags: [ 'api_platform.data_persister' ]
+        #tags: [ 'api_platform.data_transformer' ]
 ```
 
-Instead of a custom data persister, you'll probably want to leverage [the Symfony Messenger Component integration](messenger.md).
+To manage the output, it's exactly the same process. For example with `BookOutput` being:
+
+```php
+<?php
+// src/Dto/BookOutput.php
+
+namespace App\Dto;
+
+final class BookOutput {
+  public $name;
+}
+```
+
+We can transform the `Book` to a `BookOutput` object:
+
+```php
+<?php
+// src/DataTransformer/BookOutputDataTransformer.php
+
+namespace App\DataTransformer;
+
+use ApiPlatform\Core\DataTransformer\DataTransformerInterface;
+use App\Dto\BookOutput;
+use App\Entity\Book;
+
+final class BookOutputDataTransformer implements DataTransformerInterface
+{
+    /**
+     * {@inheritdoc}
+     */
+    public function transform($data, string $to, array $context = [])
+    {
+        $output = new BookOutput();
+        $output->name = $data->name;
+        return $output;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function supportsTransformation($data, string $to, array $context = []): bool
+    {
+        return BookOutput::class === $to && $data instanceof Book;
+    }
+}
+```
+
+And register it:
+
+```yaml
+# api/config/services.yaml
+services:
+    # ...
+    'App\DataTransformer\BookOutputDataTransformer': ~
+        # Uncomment only if autoconfiguration is disabled
+        #tags: [ 'api_platform.data_transformer' ]
+```
+
+## Updating a resource with a custom input
+
+When performing an update (e.g. `PUT` operation), the resource to be updated is read by ApiPlatform before the deserialization phase. To do so, it uses a [data provider](data-providers.md) with the `:id` parameter given in the URL. The *body* of the request is the JSON object sent by the client, it is deserialized and is used to update the previously found resource.
+
+![Diagram put input output](images/diagrams/api-platform-put-i-o.png)
+
+Now, we will update our resource by using a different input representation.
+
+With the following `BookInput`:
+
+```
+<?php
+// src/Dto/BookInput.php
+
+namespace App\Dto;
+
+final class BookInput {
+  /**
+   * @var \App\Entity\Author
+   */
+  public $author;
+}
+```
+
+We will implement a `BookInputDataTransformer` that transforms the `BookInput` to our `Book` resource instance. In this case, the `Book` (`/books/1`) already exists, so we will just update it.
+
+```
+<?php
+// src/DataTransformer/BookInputDataTransformer.php
+
+namespace App\DataTransformer;
+
+use ApiPlatform\Core\DataTransformer\DataTransformerInterface;
+use ApiPlatform\Core\Serializer\AbstractItemNormalizer;
+use App\Dto\BookInput;
+
+final class BookInputDataTransformer implements DataTransformerInterface
+{
+    /**
+     * {@inheritdoc}
+     */
+    public function transform($data, string $to, array $context = [])
+    {
+        $existingBook = $context[AbstractItemNormalizer::OBJECT_TO_POPULATE];
+        $existingBook->author = $data->author;
+        return $existingBook;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function supportsTransformation($data, string $to, array $context = []): bool
+    {
+        return Book::class === $to && $data instanceof BookInput;
+    }
+}
+```
+
+```yaml
+# api/config/services.yaml
+services:
+    # ...
+    'App\DataTransformer\BookInputDataTransformer': ~
+        # Uncomment only if autoconfiguration is disabled
+        #tags: [ 'api_platform.data_transformer' ]
+```
+
+## Disabling the Input or the Output
+
+Both the `input` and the `output` attributes can be set to `false`.
+If `input` is `false`, the deserialization process will be skipped, and no data persisters will be called.
+If `output` is `false`, the serialization process will be skipped, and no data providers will be called.
+
+## Input/Output metadata
+
+When specified, `input` and `output` attributes support:
+- a string representing the class to use
+- a falsy boolean to disable them
+- an array to specify more metadata for example `['class' => BookInput::class, 'name' => 'BookInput', 'iri' => '/book_input']`
+
+
+## Using DTO objects inside resources
+
+Because ApiPlatform can (de)normalize anything in the supported formats (`jsonld`, `jsonapi`, `hal`, etc.), you can use any object you want inside resources. For example, let's say that the `Book` has an `attribute` property that can't be represented by a resource, we can do the following:
+
+```php
+<?php
+// api/src/Entity/Book.php
+
+namespace App\Entity;
+
+use ApiPlatform\Core\Annotation\ApiResource;
+use App\Dto\Attribute;
+
+/**
+ * @ApiResource(
+ *   input=BookInput::class,
+ *   output=BookOutput::class
+ * )
+ */
+final class Book
+{
+  /**
+   * @var Attribute
+   **/
+  public $attribute;
+
+  public $isbn;
+}
+```
+
+The `Book` `attribute` property will now be an instance of `Attribute` after the (de)normalization phase.
