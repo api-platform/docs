@@ -139,7 +139,7 @@ App\Entity\Book:
 ```
 
 In the previous example, the `name` property will be visible when reading (`GET`) the object, and it will also be available
-to write (`PUT/POST`). The `author` property will be write-only; it will not be visible when serialized responses are 
+to write (`PUT/POST`). The `author` property will be write-only; it will not be visible when serialized responses are
 returned by the API.
 
 Internally, API Platform passes the value of the `normalization_context` to the Symfony Serializer during the normalization
@@ -219,9 +219,9 @@ In the following JSON document, the relation from a book to an author is represe
 }
 ```
 
-However, for performance reasons, it is sometimes preferable to avoid forcing the client to issue extra HTTP requests. 
-It is possible to embed related objects (in their entirety, or only some of their properties) directly in the parent 
-response through the use of serialization groups. By using the following serialization groups annotations (`@Groups`), 
+However, for performance reasons, it is sometimes preferable to avoid forcing the client to issue extra HTTP requests.
+It is possible to embed related objects (in their entirety, or only some of their properties) directly in the parent
+response through the use of serialization groups. By using the following serialization groups annotations (`@Groups`),
 a JSON representation of the author is embedded in the book response:
 
 ```php
@@ -416,7 +416,7 @@ final class BookContextBuilder implements SerializerContextBuilderInterface
     {
         $context = $this->decorated->createFromRequest($request, $normalization, $extractedAttributes);
         $resourceClass = $context['resource_class'] ?? null;
-        
+
         if ($resourceClass === Book::class && isset($context['groups']) && $this->authorizationChecker->isGranted('ROLE_ADMIN') && false === $normalization) {
             $context['groups'][] = 'admin:input';
         }
@@ -426,17 +426,17 @@ final class BookContextBuilder implements SerializerContextBuilderInterface
 }
 ```
 
-If the user has the `ROLE_ADMIN` permission and the subject is an instance of Book, `admin_input` group will be dynamically added to the 
-denormalization context. The `$normalization` variable lets you check whether the context is for normalization (if `TRUE`) or denormalization 
+If the user has the `ROLE_ADMIN` permission and the subject is an instance of Book, `admin_input` group will be dynamically added to the
+denormalization context. The `$normalization` variable lets you check whether the context is for normalization (if `TRUE`) or denormalization
 (`FALSE`).
 
 ## Changing the Serialization Context on a Per-item Basis
 
-The example above demonstrates how you can modify the normalization/denormalization context based on the current user 
+The example above demonstrates how you can modify the normalization/denormalization context based on the current user
 permissions for all books. Sometimes, however, the permissions vary depending on what book is being processed.
 
-Think of ACL's: User "A" may retrieve Book "A" but not Book "B". In this case, we need to leverage the power of the 
-Symfony Serializer and register our own normalizer that adds the group on every single item (note: priority `64` is 
+Think of ACL's: User "A" may retrieve Book "A" but not Book "B". In this case, we need to leverage the power of the
+Symfony Serializer and register our own normalizer that adds the group on every single item (note: priority `64` is
 an example; it is always important to make sure your normalizer gets loaded first, so set the priority to whatever value
 is appropriate for your application; higher values are loaded earlier):
 
@@ -449,7 +449,7 @@ services:
             - { name: 'serializer.normalizer', priority: 64 }
 ```
 
-The Normalizer class is a bit harder to understand, because it must ensure that it is only called once and that there is no recursion. 
+The Normalizer class is a bit harder to understand, because it must ensure that it is only called once and that there is no recursion.
 To accomplish this, it needs to be aware of the parent Normalizer instance itself.
 
 Here is an example:
@@ -489,7 +489,7 @@ class BookAttributeNormalizer implements ContextAwareNormalizerInterface, Normal
 
         return $this->normalizer->normalize($object, $format, $context);
     }
-    
+
     public function supportsNormalization($data, $format = null, array $context = [])
     {
         // Make sure we're not called twice
@@ -499,7 +499,7 @@ class BookAttributeNormalizer implements ContextAwareNormalizerInterface, Normal
 
         return $data instanceof Book;
     }
-    
+
     private function userHasPermissionsForBook($object): bool
     {
         // Get permissions from user in $this->tokenStorage
@@ -509,17 +509,17 @@ class BookAttributeNormalizer implements ContextAwareNormalizerInterface, Normal
 }
 ```
 
-This will add the serialization group `can_retrieve_book` only if the currently logged-in user has access to the given book 
+This will add the serialization group `can_retrieve_book` only if the currently logged-in user has access to the given book
 instance.
 
-Note: In this example, we use the `TokenStorageInterface` to verify access to the book instance. However, Symfony 
+Note: In this example, we use the `TokenStorageInterface` to verify access to the book instance. However, Symfony
 provides many useful other services that might be better suited to your use case. For example, the [`AuthorizationChecker`](https://symfony.com/doc/current/components/security/authorization.html#authorization-checker).
 
 ## Name Conversion
 
 The Serializer Component provides a handy way to map PHP field names to serialized names. See the related [Symfony documentation](http://symfony.com/doc/master/components/serializer.html#converting-property-names-when-serializing-and-deserializing).
 
-To use this feature, declare a new service with id `app.name_converter`. For example, you can convert `CamelCase` to
+To use this feature, declare a new name converter service. For example, you can convert `CamelCase` to
 `snake_case` with the following configuration:
 
 ```yaml
@@ -534,9 +534,11 @@ api_platform:
     name_converter: 'Symfony\Component\Serializer\NameConverter\CamelCaseToSnakeCaseNameConverter'
 ```
 
+If symfony's `MetadataAwareNameConverter` is available it'll be used by default. If you specify one in ApiPlatform configuration, it'll be used. Note that you can use decoration to benefit from this name converter in your own implementation.
+
 ## Decorating a Serializer and Adding Extra Data
 
-In the following example, we will see how we add extra informations to the serialized output. Here is how we add the 
+In the following example, we will see how we add extra informations to the serialized output. Here is how we add the
 date on each request in `GET`:
 
 ```yaml
@@ -595,7 +597,7 @@ final class ApiNormalizer implements NormalizerInterface, DenormalizerInterface,
     {
         return $this->decorated->denormalize($data, $class, $format, $context);
     }
-    
+
     public function setSerializer(SerializerInterface $serializer)
     {
         if($this->decorated instanceof SerializerAwareInterface) {
@@ -621,7 +623,7 @@ the `ApiPlatform\Core\Annotation\ApiProperty` annotation. For example:
 class Book
 {
     // ...
-    
+
     /**
      * @ApiProperty(identifier=true)
      */
@@ -656,7 +658,7 @@ App\Entity\Book:
 ```
 
 In some cases, you will want to set the identifier of a resource from the client (e.g. a client-side generated UUID, or a slug).
-In such cases, you must make the identifier property a writable class property. Specifically, to use client-generated IDs, you 
+In such cases, you must make the identifier property a writable class property. Specifically, to use client-generated IDs, you
 must do the following:
 
 1. create a setter for the identifier of the entity (e.g. `public function setId(string $id)`) or make it a `public` property ,
