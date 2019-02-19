@@ -140,6 +140,16 @@ API Platform internally uses a [PSR-6](http://www.php-fig.org/psr/psr-6/) cache.
 Best performance is achieved using [APCu](https://github.com/krakjoe/apcu). Be sure to have the APCu extension installed
 on your production server, API Platform will automatically use it.
 
+This parameter can be changed by changing the value of `api_platform.metadata_cache`:
+
+```yaml
+# api/config/config.yaml
+
+parameters:
+    # Enable the metadata cache to speedup the builds
+    api_platform.metadata_cache: true
+```
+
 ## Using PPM (PHP-PM)
 
 Response time of the API can be improved up to 15x by using [PHP Process Manager](https://github.com/php-pm/php-pm). If
@@ -259,7 +269,7 @@ class User
      * @ORM\JoinTable(name="users_groups")
      */
     public $groups;
-    
+
     // ...
 }
 ```
@@ -295,7 +305,7 @@ class Group
      * @ManyToMany(targetEntity="User", mappedBy="groups")
      */
     public $users;
-    
+
     // ...
 }
 ```
