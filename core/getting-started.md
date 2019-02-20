@@ -6,6 +6,7 @@ If you are starting a new project, the easiest way to get API Platform up is to 
 It ships with the API Platform Core library integrated with [the Symfony framework](https://symfony.com), [the schema generator](../schema-generator/),
 [Doctrine ORM](http://www.doctrine-project.org), [Elasticsearch-PHP](https://www.elastic.co/guide/en/elasticsearch/client/php-api/current/index.html),
 [NelmioCorsBundle](https://github.com/nelmio/NelmioCorsBundle) and [Behat](http://behat.org).
+[Doctrine MongoDB ODM](https://www.doctrine-project.org/projects/mongodb-odm.html) can also be enabled by following the [MongoDB documentation](mongodb.md).
 Basically, it is a Symfony edition packaged with the best tools to develop a REST API and sensible default settings.
 
 Alternatively, you can use [Composer](http://getcomposer.org) to install the standalone bundle in an existing Symfony Flex
@@ -214,13 +215,7 @@ api_platform:
             - '%kernel.project_dir%/config/api_platform' # yaml or xml directory configuration
 ```
 
-The API Platform's configuration (annotations, `YAML` or `XML`) only allow to configure the context passed to the Symfony Serializer:
-
-* The `normalization_context` key will be passed as 3rd argument of [the `Serializer::serialize()` method](https://api.symfony.com/master/Symfony/Component/Serializer/SerializerInterface.html#method_serialize)
-* The `denormalization_context` key will be passed as 4th argument of [the `Serializer::deserialize()` method](https://api.symfony.com/master/Symfony/Component/Serializer/SerializerInterface.html#method_deserialize)
-
-
-To configure the serialization groups of classes's properties, you must use directly [the Symfony Serializer's configuration files or annotations](https://symfony.com/doc/current/components/serializer.html#attributes-groups).
+If you want to serialize only a subset of your data, please refer to the [Serialization documentation](serialization.md).
 
 **You're done!**
 

@@ -142,8 +142,11 @@ In the previous example, the `name` property will be visible when reading (`GET`
 to write (`PUT/POST`). The `author` property will be write-only; it will not be visible when serialized responses are 
 returned by the API.
 
-Internally, API Platform passes the value of the `normalization_context` to the Symfony Serializer during the normalization
-process; `denormalization_context` is passed during denormalization (writing).
+Internally, API Platform passes the value of the `normalization_context` as the 3rd argument of [the `Serializer::serialize()` method](https://api.symfony.com/master/Symfony/Component/Serializer/SerializerInterface.html#method_serialize) during the normalization
+process; `denormalization_context` is passed as the 4th argument of [the `Serializer::deserialize()` method](https://api.symfony.com/master/Symfony/Component/Serializer/SerializerInterface.html#method_deserialize) during denormalization (writing).
+
+To configure the serialization groups of classes's properties, you must use directly [the Symfony Serializer's configuration files or annotations](https://symfony.com/doc/current/components/serializer.html#attributes-groups).
+
 
 In addition to the `groups` key, you can configure any Symfony Serializer option through the `$context` parameter
 (e.g. the `enable_max_depth`key when using [the `@MaxDepth` annotation](https://symfony.com/doc/current/components/serializer.html#handling-serialization-depth)).
@@ -607,10 +610,10 @@ final class ApiNormalizer implements NormalizerInterface, DenormalizerInterface,
 
 ## Entity Identifier Case
 
-API Platform is able to guess the entity identifier using [Doctrine metadata](http://doctrine-orm.readthedocs.org/en/latest/reference/basic-mapping.html#identifiers-primary-keys).
-It also supports composite identifiers.
+API Platform is able to guess the entity identifier using Doctrine metadata ([ORM](http://doctrine-orm.readthedocs.org/en/latest/reference/basic-mapping.html#identifiers-primary-keys), [MongoDB ODM](https://www.doctrine-project.org/projects/doctrine-mongodb-odm/en/latest/reference/basic-mapping.html#identifiers)).
+For ORM, it also supports composite identifiers.
 
-If you are not using the Doctrine ORM Provider, you must explicitly mark the identifier using the `identifier` attribute of
+If you are not using the Doctrine ORM or MongoDB ODM Provider, you must explicitly mark the identifier using the `identifier` attribute of
 the `ApiPlatform\Core\Annotation\ApiProperty` annotation. For example:
 
 

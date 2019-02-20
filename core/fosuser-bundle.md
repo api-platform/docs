@@ -39,6 +39,7 @@ api_platform:
 ## Creating a `User` Entity with Serialization Groups
 
 Here's an example of declaration of a [Doctrine ORM User class](https://github.com/FriendsOfSymfony/FOSUserBundle/blob/master/Resources/doc/index.rst#a-doctrine-orm-user-class).
+There's also an example for a [Doctrine MongoDB ODM](https://github.com/FriendsOfSymfony/FOSUserBundle/blob/master/Resources/doc/index.rst#b-mongodb-user-class).
 You need to use serialization groups to hide some properties like `plainPassword` (only in read) and `password`. The properties
 shown are handled with the [`normalization_context`](serialization.md#normalization), while the properties
 you can modify are handled with [`denormalization_context`](serialization.md#denormalization).
