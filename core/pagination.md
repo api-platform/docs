@@ -320,6 +320,39 @@ class Book
 }
 ```
 
+## Cursor based pagination
+
+To configure your resource to use the cursor-based pagination, select your unique sorted field as well as the direction you’ll like the pagination to go via filters and enable the `pagination_via_cursor` option.
+Note that for now you have to declare a `RangeFilter` and an `OrderFilter` on the property used for the cursor-based pagination.
+
+The following configuration also works on a specific operation:
+
+```php
+<?php
+
+// api/src/Entity/Book.php
+
+use ApiPlatform\Core\Annotation\ApiFilter;
+use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Core\Bridge\Doctrine\MongoDbOdm\Filter\OrderFilter;
+use ApiPlatform\Core\Bridge\Doctrine\MongoDbOdm\Filter\RangeFilter;
+
+/**
+ * @ApiResource(attributes={
+ *   "pagination_partial"=true,
+ *   "pagination_via_cursor"={"field"="id", "direction"="DESC"}
+ * )
+ * @ApiFilter(RangeFilter::class, properties={"id"})
+ * @ApiFilter(OrderFilter::class, properties={"id"="DESC"})
+ */
+class Book
+{
+    // ...
+}
+```
+
+To know more about cursor-based pagination take a look at [this blog post on medium (draft)](https://medium.com/@sroze/74fd1d324723).
+
 ## Avoiding double SQL requests on Doctrine ORM
 
 By default, pagination assumes that there will be collection fetched on a resource and thus will set `useFetchJoinCollection` to `true` on the Doctrine Paginator class. Having this option implies that 2 SQL requests will be executed (so this avoid having less results than expected).
@@ -371,9 +404,9 @@ use Doctrine\Common\Collections\Criteria;
 class BookRepository extends ServiceEntityRepository
 {
     const ITEMS_PER_PAGE = 20;
-    
+
     private $tokenStorage;
-    
+
     public function __construct(
         RegistryInterface $registry,
         TokenStorageInterface $tokenStorage
@@ -381,11 +414,11 @@ class BookRepository extends ServiceEntityRepository
         $this->tokenStorage = $tokenStorage;
         parent::__construct($registry, Book::class);
     }
-    
+
     public function getBooksByFavoriteAuthor(int $page = 1): Paginator
     {
         $firstResult = ($page -1) * self::ITEMS_PER_PAGE;
-        
+
         $user = $this->tokenStorage->getToken()->getUser();
         $queryBuilder = $this->createQueryBuilder();
         $queryBuilder->select('b')
@@ -446,11 +479,11 @@ namespace App\Repository;
 class BookRepository extends ServiceEntityRepository
 {
     // constant, variables and constructor...
-    
+
     public function getBooksByFavoriteAuthor(int $page = 1): Paginator
     {
         $firstResult = ($page -1) * self::ITEMS_PER_PAGE;
-        
+
         $user = $this->tokenStorage->getToken()->getUser();
         $queryBuilder = $this->createQueryBuilder();
         $queryBuilder->select('b')
