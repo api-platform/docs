@@ -18,7 +18,8 @@ use App\Uuid;
 /**
  * @ApiResource
  */
-final class Person {
+final class Person
+{
     /**
      * @var Uuid
      * @ApiProperty(identifier=true)
@@ -41,8 +42,8 @@ namespace App\DataProvider;
 use App\Entity\Person;
 use App\Uuid;
 
-final class PersonDataProvider implements ItemDataProviderInterface, RestrictedDataProviderInterface {
-
+final class PersonDataProvider implements ItemDataProviderInterface, RestrictedDataProviderInterface
+{
     /**
      * {@inheritdoc}
      */
