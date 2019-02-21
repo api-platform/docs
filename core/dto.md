@@ -66,19 +66,19 @@ final class BookInputDataTransformer implements DataTransformerInterface
     /**
      * {@inheritdoc}
      */
-    public function transform($data, string $to, array $context = [])
+    public function transform($object, string $to, array $context = [])
     {
         $book = new Book();
-        $book->isbn = $data->isbn;
+        $book->isbn = $object->isbn;
         return $book;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function supportsTransformation($data, string $to, array $context = []): bool
+    public function supportsTransformation($object, string $to, array $context = []): bool
     {
-        return Book::class === $to && $data instanceof BookInput;
+        return Book::class === $to && $object instanceof BookInput;
     }
 }
 ```
@@ -124,19 +124,19 @@ final class BookOutputDataTransformer implements DataTransformerInterface
     /**
      * {@inheritdoc}
      */
-    public function transform($data, string $to, array $context = [])
+    public function transform($object, string $to, array $context = [])
     {
         $output = new BookOutput();
-        $output->name = $data->name;
+        $output->name = $object->name;
         return $output;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function supportsTransformation($data, string $to, array $context = []): bool
+    public function supportsTransformation($object, string $to, array $context = []): bool
     {
-        return BookOutput::class === $to && $data instanceof Book;
+        return BookOutput::class === $to && $object instanceof Book;
     }
 }
 ```
@@ -193,19 +193,19 @@ final class BookInputDataTransformer implements DataTransformerInterface
     /**
      * {@inheritdoc}
      */
-    public function transform($data, string $to, array $context = [])
+    public function transform($object, string $to, array $context = [])
     {
         $existingBook = $context[AbstractItemNormalizer::OBJECT_TO_POPULATE];
-        $existingBook->author = $data->author;
+        $existingBook->author = $object->author;
         return $existingBook;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function supportsTransformation($data, string $to, array $context = []): bool
+    public function supportsTransformation($object, string $to, array $context = []): bool
     {
-        return Book::class === $to && $data instanceof BookInput;
+        return Book::class === $to && $object instanceof BookInput;
     }
 }
 ```
