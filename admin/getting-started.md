@@ -149,16 +149,8 @@ const myApiDocumentationParser = entrypoint => parseHydraDocumentation(entrypoin
               src: value
             });
 
-            field.field = (
-              <FunctionField
-                key={field.name}
-                render={
-                  record => (
-                    <ImageField key={field.name} record={record} source={`${field.name}.src`}/>
-                  )
-                }
-                source={field.name}
-              />
+            field.field = props => (
+              <ImageField {...props} source={`${field.name}.src`} />
             );
 
             field.input = (
@@ -168,9 +160,9 @@ const myApiDocumentationParser = entrypoint => parseHydraDocumentation(entrypoin
             );
 
             field.normalizeData = value => {
-              if (value[0] && value[0].rawFile instanceof File) {
+              if (value && value.rawFile instanceof File) {
                 const body = new FormData();
-                body.append('file', value[0].rawFile);
+                body.append('file', value.rawFile);
 
                 return fetch(`${entrypoint}/images/upload`, { body, method: 'POST' })
                   .then(response => response.json());
