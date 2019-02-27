@@ -156,6 +156,67 @@ For example, if you want to search the offers with a green or a red product you 
 }
 ```
 
+## Pagination
+
+API Platform natively enables a cursor-based pagination for collections.
+It supports [GraphQL's Complete Connection Model](https://graphql.org/learn/pagination/#complete-connection-model) and is compatible with [Relay's Cursor Connections Specification](https://facebook.github.io/relay/graphql/connections.htm).
+
+Here is an example query leveraging the pagination system:
+
+```graphql
+{
+  offers(first: 10, after: "cursor") {
+    totalCount
+    pageInfo {
+      endCursor
+      hasNextPage
+    }
+    edges {
+      cursor
+      node {
+        id
+      }
+    }
+  }
+}
+```
+
+Two pairs of parameters work with the query:
+
+* `first` and `after`;
+* `last` and `before`.
+
+More precisely:
+
+* `first` corresponds to the items per page starting from the beginning;
+* `after` corresponds to the `cursor` from which the items are returned.
+
+* `last` corresponds to the items per page starting from the end;
+* `before` corresponds to the `cursor` from which the items are returned, from a backwards point of view.
+
+The current page always has a `startCursor` and an `endCursor`, present in the `pageInfo` field.
+
+To get the next page, you would add the `endCursor` from the current page as the `after` parameter.
+
+```graphql
+{
+  offers(first: 10, after: "endCursor") {
+  }
+}
+```
+
+For the previous page, you would add the `startCursor` from the current page as the `before` parameter.
+
+```graphql
+{
+  offers(last: 10, before: "startCursor") {
+  }
+}
+```
+
+How do you know when you have reached the last page? It is the aim of the property `hasNextPage` or `hasPreviousPage` in `pageInfo`.
+When it is false, you know it is the last page and moving forward or backward will give you an empty result.
+
 ## Security (`access_control`)
 
 To add a security layer to your queries and mutations, follow the [security](security.md) documentation.
