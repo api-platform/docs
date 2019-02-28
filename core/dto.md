@@ -31,7 +31,7 @@ Similarly, the `output` attribute is used during [the serialization process](ser
 
 The `input` and `output` attributes are taken into account by all the documentation generators (GraphQL and OpenAPI, Hydra).
 
-To create a `Book`, we `POST` a data structure corresponding to the `BookInput` class and get back in the response a data structure corresponding to the `BookOuput` class:
+To create a `Book`, we `POST` a data structure corresponding to the `BookInput` class and get back in the response a data structure corresponding to the `BookOutput` class:
 
 ![Diagram post input output](images/diagrams/api-platform-post-i-o.png)
 
