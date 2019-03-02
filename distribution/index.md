@@ -661,7 +661,7 @@ UI that is shipped with API Platform:
 
 ![GraphQL endpoint](images/api-platform-2.2-graphql.png)
 
-The GraphQL implementation supports [queries](http://graphql.org/learn/queries/), [mutations](http://graphql.org/learn/queries/),
+The GraphQL implementation supports [queries](https://graphql.org/learn/queries/), [mutations](https://graphql.org/learn/queries/#mutations),
 [100% of the Relay server specification](https://facebook.github.io/relay/docs/en/graphql-server-specification.html), pagination,
 [filters](../core/filters.md) and [access control rules](../core/security.md).
 You can use it with the popular [RelayJS](https://facebook.github.io/relay/) and [Apollo](https://www.apollographql.com/docs/react/)
