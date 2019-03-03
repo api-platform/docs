@@ -68,7 +68,7 @@ feature](http://symfony.com/doc/current/components/dependency_injection/autowiri
 
 Alternatively, [the subscriber must be registered manually](http://symfony.com/doc/current/components/http_kernel/introduction.html#creating-an-event-listener).
 
-Doctrine events ([ORM](http://doctrine-orm.readthedocs.org/en/latest/reference/events.html#reference-events-lifecycle-events), [MongoDB ODM](https://www.doctrine-project.org/projects/doctrine-mongodb-odm/en/latest/reference/events.html#lifecycle-events))
+Doctrine events ([ORM](https://www.doctrine-project.org/projects/doctrine-orm/en/current/reference/events.html), [MongoDB ODM](https://www.doctrine-project.org/projects/doctrine-mongodb-odm/en/latest/reference/events.html#lifecycle-events))
 are also available (if you use it) if you want to hook at the object lifecycle events.
 
 Built-in event listeners are:
