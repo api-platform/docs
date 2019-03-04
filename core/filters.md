@@ -1,7 +1,7 @@
 # Filters
 
 API Platform Core provides a generic system to apply filters on collections. Useful filters for the Doctrine ORM and
-MongoDB ODM are provided with the library. You can also create custom filters that would fit your specific needs.
+MongoDB ODM are provided with the library. You can also create custom filters that fit your specific needs.
 You can also add filtering support to your custom [data providers](data-providers.md) by implementing interfaces provided
 by the library.
 
@@ -127,19 +127,19 @@ If Doctrine ORM or MongoDB ODM support is enabled, adding filters is as easy as 
 
 The search filter supports `exact`, `partial`, `start`, `end`, and `word_start` matching strategies:
 
-* `partial` strategy uses `LIKE %text%` to search for fields that containing the text.
-* `start` strategy uses `LIKE text%` to search for fields that starts with text.
-* `end` strategy uses `LIKE %text` to search for fields that ends with text.
-* `word_start` strategy uses `LIKE text% OR LIKE % text%` to search for fields that contains the word starting with `text`.
+* `partial` strategy uses `LIKE %text%` to search for fields that contain `text`.
+* `start` strategy uses `LIKE text%` to search for fields that start with `text`.
+* `end` strategy uses `LIKE %text` to search for fields that end with `text`.
+* `word_start` strategy uses `LIKE text% OR LIKE % text%` to search for fields that contain words starting with `text`.
 
 Prepend the letter `i` to the filter if you want it to be case insensitive. For example `ipartial` or `iexact`. Note that
 this will use the `LOWER` function and **will** impact performance [if there is no proper index](performance.md#search-filter).
 
 Case insensitivity may already be enforced at the database level depending on the [collation](https://en.wikipedia.org/wiki/Collation)
 used. If you are using MySQL, note that the commonly used `utf8_unicode_ci` collation (and its sibling `utf8mb4_unicode_ci`)
-are already case insensitive, as indicated by the `_ci` part in their names.
+are already case-insensitive, as indicated by the `_ci` part in their names.
 
-Note: Search filters with the exact strategy can have multiple values for a same property (in this case the condition will be similar to a SQL IN clause).
+Note: Search filters with the `exact` strategy can have multiple values for the same property (in this case the condition will be similar to a SQL IN clause).
 
 Syntax: `?property[]=foo&property[]=bar`
 
@@ -191,14 +191,14 @@ class Offer
 ```
 
 With this service definition, it is possible to find all offers belonging to the product identified by a given IRI.
-Try the following: `http://localhost:8000/api/offers?product=/api/products/12`
+Try the following: `http://localhost:8000/api/offers?product=/api/products/12`.
 Using a numeric ID is also supported: `http://localhost:8000/api/offers?product=12`
 
-Previous URLs will return all offers for the product having the following IRI as JSON-LD identifier (`@id`): `http://localhost:8000/api/products/12`.
+The above URLs will return all offers for the product having the following IRI as JSON-LD identifier (`@id`): `http://localhost:8000/api/products/12`.
 
 ### Date Filter
 
-The date filter allows for filtering a collection by date intervals.
+The date filter allows to filter a collection by date intervals.
 
 Syntax: `?property[<after|before|strictly_after|strictly_before>]=value`
 
@@ -206,7 +206,7 @@ The value can take any date format supported by the [`\DateTime` constructor](ht
 
 The `after` and `before` filters will filter including the value whereas `strictly_after` and `strictly_before` will filter excluding the value.
 
-As others filters, the date filter must be explicitly enabled:
+Like others filters, the date filter must be explicitly enabled:
 
 ```php
 <?php
@@ -245,7 +245,7 @@ Consider items as oldest             | `ApiPlatform\Core\Bridge\Doctrine\Orm\Fil
 Consider items as youngest           | `ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\DateFilter::INCLUDE_NULL_AFTER` (`include_null_after`)
 Always include items                 | `ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\DateFilter::INCLUDE_NULL_BEFORE_AND_AFTER` (`include_null_before_and_after`)
 
-For instance, exclude entries with a property value of `null`, with the following service definition:
+For instance, exclude entries with a property value of `null` with the following service definition:
 
 ```php
 <?php
@@ -359,7 +359,7 @@ class Offer
 }
 ```
 
-Given that the collection endpoint is `/offers`, you can filters the price with the following query: `/offers?price[between]=12.99..15.99`.
+Given that the collection endpoint is `/offers`, you can filter the price with the following query: `/offers?price[between]=12.99..15.99`.
 
 It will return all offers with `price` between 12.99 and 15.99.
 
@@ -367,7 +367,7 @@ You can filter offers by joining two values, for example: `/offers?price[gt]=12.
 
 ### Exists Filter
 
-The exists filter allows you to select items based on nullable field value.
+The exists filter allows you to select items based on a nullable field value.
 
 Syntax: `?property[exists]=<true|false|1|0>`
 
@@ -553,9 +553,9 @@ class Offer
 }
 ```
 
-**Note: Filters on nested properties must still be enabled explicitly, in order to keep things sane**
+**Note: Filters on nested properties must still be enabled explicitly, in order to keep things sane.**
 
-Regardless of this option, filters can by applied on a property only if:
+Regardless of this option, filters can be applied on a property only if:
 
 * the property exists
 * the value is supported (ex: `asc` or `desc` for the order filters).
@@ -1003,12 +1003,12 @@ class AndOperatorFilterExtension implements RequestBodySearchCollectionExtension
 
 ### Using Doctrine ORM Filters
 
-Doctrine ORM features [a filter system](http://docs.doctrine-project.org/projects/doctrine-orm/en/latest/reference/filters.html) that allows the developer to add SQL to the conditional clauses of queries, regardless the place where the SQL is generated (e.g. from a DQL query, or by loading associated entities).
-These are applied on collections and items, so are incredibly useful.
+Doctrine ORM features [a filter system](http://docs.doctrine-project.org/projects/doctrine-orm/en/latest/reference/filters.html) that allows the developer to add SQL to the conditional clauses of queries, regardless of the place where the SQL is generated (e.g. from a DQL query, or by loading associated entities).
+These are applied on collections and items and therefore are incredibly useful.
 
 The following information, specific to Doctrine filters in Symfony, is based upon [a great article posted on Michaël Perrin's blog](http://blog.michaelperrin.fr/2014/12/05/doctrine-filters/).
 
-Suppose we have a `User` entity and an `Order` entity related to the `User` one. A user should only see his orders and no others's ones.
+Suppose we have a `User` entity and an `Order` entity related to the `User` one. A user should only see his orders and no one else's.
 
 ```php
 <?php
@@ -1157,7 +1157,7 @@ doctrine:
                 class: App\Filter\UserFilter
 ```
 
-And add a listener for every request that initializes the Doctrine filter with the current user in your bundle services declaration file.
+Add a listener for every request that initializes the Doctrine filter with the current user in your bundle services declaration file.
 
 ```yaml
 # api/config/services.yaml
@@ -1266,13 +1266,13 @@ class DummyCar
 
 ```
 
-On the first property, `name`, it's straightforward. The first annotation argument is the filter class, the second specifies options, here the strategy:
+On the first property, `name`, it's straightforward. The first annotation argument is the filter class, the second specifies options, here, the strategy:
 
 ```
 @ApiFilter(SearchFilter::class, strategy="partial")
 ```
 
-The second annotation, we specify `properties` on which the filter should apply. It's necessary here because we don't want to filter `colors` but the property `prop` of the `colors` association.
+In the second annotation, we specify `properties` on which the filter should apply. It's necessary here because we don't want to filter `colors` but the `prop` property of the `colors` association.
 Note that for each given property we specify the strategy:
 
 ```
@@ -1314,13 +1314,13 @@ class DummyCar
 
 ```
 
-The `BooleanFilter` is applied to every `Boolean` property of the class. Indeed, in each core filters we check the Doctrine type. It's written only by using the filter class:
+The `BooleanFilter` is applied to every `Boolean` property of the class. Indeed, in each core filter we check the Doctrine type. It's written only by using the filter class:
 
 ```
 @ApiFilter(BooleanFilter::class)
 ```
 
-The `DateFilter` given here will be applied to every `Date` property of the class `DummyCar` with the `DateFilter::EXCLUDE_NULL` strategy:
+The `DateFilter` given here will be applied to every `Date` property of the `DummyCar` class with the `DateFilter::EXCLUDE_NULL` strategy:
 
 ```
 @ApiFilter(DateFilter::class, strategy=DateFilter::EXCLUDE_NULL)
@@ -1334,7 +1334,7 @@ The `SearchFilter` here adds properties. The result is the exact same as the exa
 
 Note that you can specify the `properties` argument on every filter.
 
-The next filters are not related to how the data is fetched but rather on the how the serialization is done on those, we can give an `arguments` option ([see here for the available arguments](#serializer-filters)):
+The next filters are not related to how the data is fetched but rather to how the serialization is done on those. We can give an `arguments` option ([see here for the available arguments](#serializer-filters)):
 
 ```
 @ApiFilter(PropertyFilter::class, arguments={"parameterName": "foobar"})

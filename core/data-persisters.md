@@ -11,11 +11,11 @@ A [Doctrine MongoDB ODM](https://www.doctrine-project.org/projects/mongodb-odm.h
 
 However, you may want to:
 
-* store data to other persistence layers (ElasticSearch, external web services...)
+* store data to other persistence layers (Elasticsearch, external web services...)
 * not publicly expose the internal model mapped with the database through the API
 * use a separate model for [read operations](data-providers.md) and for updates by implementing patterns such as [CQRS](https://martinfowler.com/bliki/CQRS.html)
 
-Custom data persisters can be used to do so. A project can include as many data persisters as it needs. The first able to
+Custom data persisters can be used to do so. A project can include as many data persisters as needed. The first able to
 persist data for a given resource will be used.
 
 ## Creating a Custom Data Persister
@@ -25,7 +25,7 @@ This interface defines only 3 methods:
 
 * `persist`: to create or update the given data
 * `remove`: to delete the given data
-* `support`: checks whether the given data is supported by this data persister
+* `support`: to check whether the given data is supported by this data persister
 
 Here is an implementation example:
 

@@ -11,7 +11,7 @@ The main serialization process has two stages:
 > As you can see in the picture above, an array is used as a man-in-the-middle. This way, Encoders will only deal with turning specific formats into arrays and vice versa. The same way, Normalizers will deal with turning specific objects into arrays and vice versa.
 -- [The Symfony documentation](https://symfony.com/doc/current/components/serializer.html)
 
-Unlike Symfony itself, API Platform leverages custom normalizers, its router and the [data provider](data-providers.md) system to do an advanced transformation. Metadata are added to the generated document including links, type information, pagination data or available filters.
+Unlike Symfony itself, API Platform leverages custom normalizers, its router and the [data provider](data-providers.md) system to perform an advanced transformation. Metadata are added to the generated document including links, type information, pagination data or available filters.
 
 The API Platform Serializer is extendable. You can register custom normalizers and encoders in order to support other formats. You can also decorate existing normalizers to customize their behaviors.
 
@@ -143,7 +143,7 @@ to write (`PUT/POST`). The `author` property will be write-only; it will not be 
 returned by the API.
 
 Internally, API Platform passes the value of the `normalization_context` as the 3rd argument of [the `Serializer::serialize()` method](https://api.symfony.com/master/Symfony/Component/Serializer/SerializerInterface.html#method_serialize) during the normalization
-process; `denormalization_context` is passed as the 4th argument of [the `Serializer::deserialize()` method](https://api.symfony.com/master/Symfony/Component/Serializer/SerializerInterface.html#method_deserialize) during denormalization (writing).
+process. `denormalization_context` is passed as the 4th argument of [the `Serializer::deserialize()` method](https://api.symfony.com/master/Symfony/Component/Serializer/SerializerInterface.html#method_deserialize) during denormalization (writing).
 
 To configure the serialization groups of classes's properties, you must use directly [the Symfony Serializer's configuration files or annotations](https://symfony.com/doc/current/components/serializer.html#attributes-groups).
 
@@ -151,7 +151,7 @@ To configure the serialization groups of classes's properties, you must use dire
 In addition to the `groups` key, you can configure any Symfony Serializer option through the `$context` parameter
 (e.g. the `enable_max_depth`key when using [the `@MaxDepth` annotation](https://symfony.com/doc/current/components/serializer.html#handling-serialization-depth)).
 
-Any serialization and deserialization groups that you specify will also be leveraged by the built-in actions and the Hydra
+Any serialization and deserialization group that you specify will also be leveraged by the built-in actions and the Hydra
 documentation generator.
 
 ## Using Serialization Groups per Operation
@@ -207,7 +207,7 @@ Refer to the [operations](operations.md) documentation to learn more.
 
 ### Embedding Relations
 
-By default, the serializer provided with API Platform represents relations between objects using [dereferenceables IRIs](https://en.wikipedia.org/wiki/Internationalized_Resource_Identifier).
+By default, the serializer provided with API Platform represents relations between objects using [dereferenceable IRIs](https://en.wikipedia.org/wiki/Internationalized_Resource_Identifier).
 They allow you to retrieve details for related objects by issuing extra HTTP requests.
 
 In the following JSON document, the relation from a book to an author is represented by an URI:
@@ -296,10 +296,10 @@ The generated JSON using previous settings is below:
 ```
 
 In order to optimize such embedded relations, the default Doctrine data provider will automatically join entities on relations
-marked as [`EAGER`](http://doctrine-orm.readthedocs.io/projects/doctrine-orm/en/latest/reference/annotations-reference.html#manytoone).
+marked as [`EAGER`](https://www.doctrine-project.org/projects/doctrine-orm/en/2.6/reference/annotations-reference.html#manytoone).
 This avoids the need for extra queries to be executed when serializing the related objects.
 
-Instead of embedding relation in the main HTTP response, you may want [to "push" them to the client using HTTP/2 server push](push-relations.md).
+Instead of embedding relations in the main HTTP response, you may want [to "push" them to the client using HTTP/2 server push](push-relations.md).
 
 ### Denormalization
 
@@ -376,8 +376,8 @@ class Book
 }
 ```
 
-All entry points are the same for all users, so we should find a way to detect if authenticated user is an admin, and if so
-dynamically add `admin:input` value to deserialization groups in the `$context` array.
+All entry points are the same for all users, so we should find a way to detect if the authenticated user is an admin, and if so
+dynamically add the `admin:input` value to deserialization groups in the `$context` array.
 
 API Platform implements a `ContextBuilder`, which prepares the context for serialization & deserialization. Let's
 [decorate this service](http://symfony.com/doc/current/service_container/service_decoration.html) to override the
@@ -516,13 +516,13 @@ This will add the serialization group `can_retrieve_book` only if the currently 
 instance.
 
 Note: In this example, we use the `TokenStorageInterface` to verify access to the book instance. However, Symfony
-provides many useful other services that might be better suited to your use case. For example, the [`AuthorizationChecker`](https://symfony.com/doc/current/components/security/authorization.html#authorization-checker).
+provides many useful other services that might be better suited to your use case (for example, the [`AuthorizationChecker`](https://symfony.com/doc/current/components/security/authorization.html#authorization-checker)).
 
 ## Name Conversion
 
 The Serializer Component provides a handy way to map PHP field names to serialized names. See the related [Symfony documentation](http://symfony.com/doc/master/components/serializer.html#converting-property-names-when-serializing-and-deserializing).
 
-To use this feature, declare a new service with id `app.name_converter`. For example, you can convert `CamelCase` to
+To use this feature, declare a new service with the id `app.name_converter`. For example, you can convert `CamelCase` to
 `snake_case` with the following configuration:
 
 ```yaml
@@ -539,7 +539,7 @@ api_platform:
 
 ## Decorating a Serializer and Adding Extra Data
 
-In the following example, we will see how we add extra informations to the serialized output. Here is how we add the
+In the following example, we will see how we can add extra information to the serialized output. Here is how we can add the
 date on each request in `GET`:
 
 ```yaml
@@ -719,9 +719,9 @@ The JSON output will now include the embedded context:
 }
 ```
 
-## Collection relation
+## Collection Relation
 
-This is a special case where, in an entity, you have a `toMany` relation. By default, Doctrine will use an `ArrayCollection` to store your values. This is fine when you have a *read* operation, but when you try to *write* you can observe some an issue where the response is not reflecting the changes correctly. It can lead to client errors even though the update was correct.
+This is a special case where, in an entity, you have a `toMany` relation. By default, Doctrine will use an `ArrayCollection` to store your values. This is fine when you have a *read* operation, but when you try to *write* you can observe an issue where the response is not reflecting the changes correctly. It can lead to client errors even though the update was correct.
 Indeed, after an update on this relation, the collection looks wrong because `ArrayCollection`'s indexes are not sequential. To change this, we recommend to use a getter that returns `$collectionRelation->getValues()`. Thanks to this, the relation is now a real array which is sequentially indexed.
 
 ```php

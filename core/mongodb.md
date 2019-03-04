@@ -11,14 +11,14 @@ API Platform uses [Doctrine MongoDB ODM 2](https://www.doctrine-project.org/proj
 its [aggregation builder](https://www.doctrine-project.org/projects/doctrine-mongodb-odm/en/latest/reference/aggregation-builder.html)
 to leverage all the possibilities of the database.
 
-Doctrine MongoDB ODM 2 relies on the [mongodb](https://secure.php.net/manual/en/set.mongodb.php) PHP extension and not
+Doctrine MongoDB ODM 2 relies on the [mongodb](https://secure.php.net/manual/en/set.mongodb.php) PHP extension and not on
 the legacy [mongo](https://secure.php.net/manual/en/book.mongo.php) extension.
 
 ## Enabling MongoDB support
 
 If the mongodb PHP extension is not installed yet, [install it beforehand](https://secure.php.net/manual/en/mongodb.installation.pecl.php).
 
-If you are using the [API Platform Distribution](../distribution/index.md), modify the Dockerfile to add the extension:
+If you are using the [API Platform Distribution](../distribution/), modify the Dockerfile to add the extension:
 
 ```diff
  // api/Dockerfile
@@ -98,7 +98,7 @@ api_platform:
     # ...
 ```
 
-## Creating documents
+## Creating Documents
 
 Creating resources mapped to MongoDB documents is as simple as creating entities:
 
@@ -205,7 +205,7 @@ class Offer
 ```
 
 Some important information about the mapping:
-* Identifier fields always need to be integer with an increment strategy. API Platform does not support the native
+* Identifier fields always need to be integers with an increment strategy. API Platform does not support the native
 [ObjectId](https://docs.mongodb.com/manual/reference/bson-types/#objectid).
 * When defining references, always use the id for storing them instead of the native [DBRef](https://docs.mongodb.com/manual/reference/database-references/#dbrefs).
 It allows API Platform to manage [filtering on nested properties](filters.md#apifilter-annotation) by using [lookups](https://docs.mongodb.com/manual/reference/operator/aggregation/lookup/).

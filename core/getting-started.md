@@ -3,18 +3,18 @@
 ## Installing API Platform Core
 
 If you are starting a new project, the easiest way to get API Platform up is to install the [API Platform Distribution](../distribution/index.md).
-It ships with the API Platform Core library integrated with [the Symfony framework](https://symfony.com), [the schema generator](../schema-generator/),
+It comes with the API Platform Core library integrated with [the Symfony framework](https://symfony.com), [the schema generator](../schema-generator/),
 [Doctrine ORM](http://www.doctrine-project.org), [Elasticsearch-PHP](https://www.elastic.co/guide/en/elasticsearch/client/php-api/current/index.html),
 [NelmioCorsBundle](https://github.com/nelmio/NelmioCorsBundle) and [Behat](http://behat.org).
 [Doctrine MongoDB ODM](https://www.doctrine-project.org/projects/mongodb-odm.html) can also be enabled by following the [MongoDB documentation](mongodb.md).
 Basically, it is a Symfony edition packaged with the best tools to develop a REST API and sensible default settings.
 
-Alternatively, you can use [Composer](http://getcomposer.org) to install the standalone bundle in an existing Symfony Flex
+Alternatively, you can use [Composer](http://getcomposer.org) to install the stand-alone bundle in an existing Symfony Flex
 project:
 
 `composer require api`
 
-There is no mandatory configuration options although [many settings are available](configuration.md).
+There are no mandatory configuration options although [many settings are available](configuration.md).
 
 ## Before Reading this Documentation
 
@@ -70,7 +70,7 @@ class Product // The class name will be used to name exposed resources
 
     public function __construct()
     {
-        $this->offers = new ArrayCollection(); // Initialize $offers as an Doctrine collection
+        $this->offers = new ArrayCollection(); // Initialize $offers as a Doctrine collection
     }
     
     public function getId(): ?int
@@ -78,7 +78,7 @@ class Product // The class name will be used to name exposed resources
         return $this->id;
     }
 
-    // Adding both an adder and a remover as well as updating the reverse relation are mandatory
+    // Adding both an adder and a remover as well as updating the reverse relation is mandatory
     // if you want Doctrine to automatically update and persist (thanks to the "cascade" option) the related entity
     public function addOffer(Offer $offer): void
     {
@@ -147,18 +147,18 @@ web API.
 If you are familiar with the Symfony ecosystem, you noticed that entity classes are also mapped with Doctrine ORM annotations
 and validation constraints from [the Symfony Validator Component](http://symfony.com/doc/current/book/validation.html).
 This isn't mandatory. You can use [your preferred persistence](data-providers.md) and [validation](validation.md) systems.
-However, API Platform Core has built-in support for those library and is able to use them without requiring any specific
-code or configuration to automatically persist and validate your data. They are good default and we encourage you to use
+However, API Platform Core has built-in support for those libraries and is able to use them without requiring any specific
+code or configuration to automatically persist and validate your data. They are a good default option and we encourage you to use
 them unless you know what you are doing.
 
 Thanks to the mapping done previously, API Platform Core will automatically register the following REST [operations](operations.md)
 for resources of the product type:
 
-Product
+*Product*
 
 Method | URL            | Description
 -------|----------------|--------------------------------
-GET    | /products      | Retrieve the (paged) collection
+GET    | /products      | Retrieve the (paginated) collection
 POST   | /products      | Create a new product
 GET    | /products/{id} | Retrieve a product
 PUT    | /products/{id} | Update a product
@@ -184,7 +184,7 @@ XML:
     <resource
         class="App\Entity\Offer"
         shortName="Offer" <!-- optional -->
-        description="An offer form my shop" <!-- optional -->
+        description="An offer from my shop" <!-- optional -->
         iri="http://schema.org/Offer" <!-- optional -->
     />
 </resources>
@@ -222,6 +222,6 @@ If you want to serialize only a subset of your data, please refer to the [Serial
 You now have a fully featured API exposing your entities.
 Run the Symfony app (`bin/console server:run`) and browse the API entrypoint at `http://localhost:8000/api`.
 
-Interact with the API using a REST client (we recommend [Postman](https://www.getpostman.com/)) or an Hydra aware application
+Interact with the API using a REST client (we recommend [Postman](https://www.getpostman.com/)) or an Hydra-aware application
 (you should give [Hydra Console](https://github.com/lanthaler/HydraConsole) a try). Take
 a look at the usage examples in [the `features` directory](https://github.com/api-platform/core/tree/master/features).
