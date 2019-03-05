@@ -138,7 +138,7 @@ Notice the priority level for the `api_platform.doctrine.orm.query_extension.col
 
 #### Blocking Anonymous Users
 
-This example adds a `WHERE` clause condition only when a fully authenticated user without `ROLE_ADMIN` tries to access to a resource. It means that anonymous users will be able to access to all data. To prevent this potential security issue, the API must ensure that the current user is authenticated.
+This example adds a `WHERE` clause condition only when a fully authenticated user without `ROLE_ADMIN` tries to access a resource. It means that anonymous users will be able to access to all data. To prevent this potential security issue, the API must ensure that the current user is authenticated.
 
 To secure the access to endpoints, use the following access control rule:
 
@@ -154,7 +154,7 @@ security:
 
 ## Custom Doctrine MongoDB ODM Extension
 
-Creating custom extensions is the same as Doctrine ORM.
+Creating custom extensions is the same as with Doctrine ORM.
 
 The interfaces are:
 * `ApiPlatform\Core\Bridge\Doctrine\MongoDbOdm\Extension\AggregationItemExtensionInterface` and `ApiPlatform\Core\Bridge\Doctrine\MongoDbOdm\Extension\AggregationCollectionExtensionInterface` to add stages to the [aggregation builder](https://www.doctrine-project.org/projects/doctrine-mongodb-odm/en/latest/reference/aggregation-builder.html).

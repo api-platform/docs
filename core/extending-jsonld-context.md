@@ -1,8 +1,8 @@
-# Extending JSON-LD context
+# Extending JSON-LD Context
 
-API Platform Core provides the possibility to extend the JSON-LD context of properties. This allows you to describe JSON-LD
-typed values, inverse properties using the `@reverse` keyword and you can even overwrite the `@id` property this way. Everything you define
-within the following annotation, will be passed to the context, that provides a generic way to extend the context.
+API Platform Core provides the possibility to extend the JSON-LD context of properties. This allows you to describe JSON-LD-typed 
+values, inverse properties using the `@reverse` keyword and you can even overwrite the `@id` property this way. Everything you define
+within the following annotation will be passed to the context. This provides a generic way to extend the context.
 
 ```php
 <?php
@@ -63,4 +63,4 @@ The generated context will now have your custom attributes set:
 }
 ```
 
-Note that you do not have to provide the `@id` attribute, if you do not provide an `@id` attribute, the value from `iri` will be taken.
+Note that you do not have to provide the `@id` attribute. If you do not provide an `@id` attribute, the value from `iri` will be used.

@@ -1,6 +1,6 @@
 # AngularJS Integration
 
-Warning: For new project, you should consider using [the API Platform's Progressive Web App generator](../client-generator/index.md)
+Warning: for a new project, you should consider using [the API Platform's Progressive Web App generator](../client-generator/)
 (that supports React and Vue.js) instead of this Angular v1 integration.
 
 ## Restangular
@@ -97,4 +97,4 @@ admin.addEntity(article);
 nga.configure(admin);
 ```
 
-You can look at what we have done as another example [api-platform/admin](https://github.com/api-platform/admin).
+You can look at what we have done on [api-platform/admin](https://github.com/api-platform/admin).

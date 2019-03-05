@@ -2,7 +2,7 @@
 
 ## Installation
 
-If you use [the official distribution of API Platform](../distribution/index.md), the Schema Generator is already installed as a development dependency of your project and can be invoked through Docker:
+If you use [the official distribution of API Platform](../distribution/), the Schema Generator is already installed as a development dependency of your project and can be invoked through Docker:
 
     $ docker-compose exec php vendor/bin/schema
 
@@ -13,14 +13,14 @@ The Schema Generator can also [be downloaded independently as a PHAR](https://gi
 ## Model Scaffolding
 
 Start by browsing [Schema.org](https://schema.org) and pick types applicable to your application. The website provides
-tons of schemas including (but not limited to) representations of people, organization, event, postal address, creative
+tons of schemas including (but not limited to) representations of people, organizations, events, postal addresses, creative
 work and e-commerce structures.
-Then, write a simple YAML config file like the following.
+Then, write a simple YAML config file similar to the following.
 
-Here we will generate a data model for an address book with these data:
+Here we will generate a data model for an address book with the following data:
 
 - a [`Person`](http://schema.org/Person) which inherits from [`Thing`](http://schema.org/Thing)
-- a [`PostalAddress`](http://schema.org/PostalAddress) which inherits from [`ContactPoint`](http://schema.org/ContactPoint), which inherits from [`StructuredValue`](http://schema.org/StructuredValue), etc.
+- a [`PostalAddress`](http://schema.org/PostalAddress) which inherits from [`ContactPoint`](http://schema.org/ContactPoint), which itself inherits from [`StructuredValue`](http://schema.org/StructuredValue), etc.
 
 ```yaml
 # api/config/schema.yaml
@@ -53,7 +53,9 @@ Run the generator with this config file as parameter:
 
     $ vendor/bin/schema generate-types api/src/ api/config/schema.yaml
       
-> Using docker: `$ docker-compose exec php vendor/bin/schema generate-types src/ config/schema.yaml`
+Using docker: 
+
+    $ docker-compose exec php vendor/bin/schema generate-types src/ config/schema.yaml
 
 The following classes will be generated:
 
@@ -391,7 +393,7 @@ Note that the generator takes care of creating directories corresponding to the 
 Without configuration file, the tool will build the entire Schema.org vocabulary. If no properties are specified for a given
 type, all its properties will be generated.
 
-The generator also supports enumerations generation. For subclasses of [`Enumeration`](https://schema.org/Enumeration), the
+The generator also supports enumeration generation. For subclasses of [`Enumeration`](https://schema.org/Enumeration), the
 generator will automatically create a class extending the Enum type provided by [myclabs/php-enum](https://github.com/myclabs/php-enum).
 Don't forget to install this library in your project. Refer you to PHP Enum documentation to see how to use it. The Symfony
 validation annotation generator automatically takes care of enumerations to validate choices values.
@@ -449,7 +451,7 @@ class OfferItemCondition extends Enum
 The Cardinality Extractor is a standalone tool (also used internally by the generator) extracting a property's cardinality.
 It uses [GoodRelations](http://www.heppnetz.de/projects/goodrelations/) data when available. Other cardinalities are
 guessed using the property's comment.
-When cardinality cannot be automatically extracted, it's value is set to `unknown`.
+When cardinality cannot be automatically extracted, its value is set to `unknown`.
 
 Usage:
 

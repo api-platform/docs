@@ -7,7 +7,7 @@ By default, only the [JSON-LD](https://json-ld.org) format is enabled. However A
 
 The framework natively supports JSON-LD, GraphQL, JSONAPI, HAL, raw JSON, XML, YAML and CSV (YAML and CSV support is only available if you use Symfony 3.2+).
 
-Both XML and JSON formats are experimental and there are no assurance that we will not break them.
+Both XML and JSON formats are experimental and there is no assurance that we will not break them.
 
 API Platform Core will automatically detect the best resolving format depending on:
 
@@ -28,7 +28,7 @@ Format                                                          | Format name  |
 [CSV](https://tools.ietf.org/html/rfc4180)                      | `csv`        | `text/csv`                    | no
 [HTML](https://whatwg.org/) (API docs)                          | `html`       | `text/html`                   | no
 
-If the client requested format is not specified (if it's not supported, it will throw an HTTP bad request error), the response format will be the first format defined in the `formats` configuration key (see below).
+If the client's requested format is not specified (if it's not supported, it will throw an HTTP bad request error), the response format will be the first format defined in the `formats` configuration key (see below).
 An example using the built-in XML support is available in [Behat specs](https://github.com/api-platform/core/blob/master/features/main/content_negotiation.feature).
 
 The API Platform content negotiation system is extendable. Support for other formats can be added by [creating and registering appropriate encoders and, sometimes, normalizers](https://symfony.com/doc/current/serializer.html#adding-normalizers-and-encoders). Adding support for other
@@ -83,8 +83,8 @@ class Book
 }
 ```
 
-In the example above, `xml` or `jsonld` will be allowed and there is no need to specify the mime types as they are already defined in the configuration.
-Additionally the `csv` format is added with the mime type `text/csv`.
+In the example above, `xml` or `jsonld` will be allowed and there is no need to specify the MIME types as they are already defined in the configuration.
+Additionally the `csv` format is added with the MIME type `text/csv`.
 
 It is also important to notice that the usage of this attribute will override the formats defined in the configuration, therefore
 this configuration might disable the `json` or the `html` on this resource for example.
@@ -151,17 +151,17 @@ resources:
 
 ## Registering a Custom Serializer
 
-If you are adding support for a format not supported by default by API Platform nor by the Symfony Serializer Component,
-you need to create custom encoder, decoder and eventually a normalizer and a denormalizer. Refer to the
+If you are adding support for a format supported by default neither by API Platform nor by the Symfony Serializer Component,
+you need to create a custom encoder, decoder and eventually a normalizer and a denormalizer. Refer to the
 Symfony documentation to learn [how to create and register such classes](https://symfony.com/doc/current/cookbook/serializer.html#adding-normalizers-and-encoders).
 
 API Platform Core will automatically call the serializer with your defined format name (`myformat` in previous examples)
-as `format` parameter during the deserialization process. Then it will return the result to the client with the asked MIME
+as `format` parameter during the deserialization process. It will then return the result to the client with the requested MIME
 type using its built-in responder.
 
 ## Writing a Custom Normalizer
 
-Using composition is the recommended way to implement a custom normalizer. You can use the following template to start with your
+Using composition is the recommended way to implement a custom normalizer. You can use the following template to start your
 own implementation of `CustomItemNormalizer`:
 
 ```yaml
@@ -220,7 +220,7 @@ final class CustomItemNormalizer implements NormalizerInterface, DenormalizerInt
 ```
 
 For example if you want to make the `csv` format work for even complex entities with a lot of hierarchy, you have to
-flatten or remove too complex relations:
+flatten or remove overly complex relations:
 
 ```php
 <?php

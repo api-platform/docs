@@ -105,7 +105,7 @@ Example:
 
 ## Forcing a Class to be Abstract
 
-Force a class to be `abstract` (or to be not).
+Force a class to be (or to not be) `abstract`.
 
 Example:
 
@@ -117,9 +117,9 @@ Example:
 
 ## Forcing a Nullable Property
 
-Force a property to be `nullable` (or to be not).
+Force a property to be (or to not be) `nullable`.
 
-By default this option is `true`
+By default this option is `true`.
 
 Example:
 
@@ -129,7 +129,7 @@ Example:
             name: { nullable: false }
 ```
 
-The `@Assert\NotNull` constrain is automatically added
+The `@Assert\NotNull` constrain is automatically added.
 
 ```php
 <?php
@@ -146,9 +146,9 @@ The `@Assert\NotNull` constrain is automatically added
 
 ## Forcing a Unique Property
 
-Force a property to be `unique` (or to be not).
+Force a property to be (or to not be) `unique`.
 
-By default this option is `false`
+By default this option is `false`.
 
 Example:
 
@@ -185,9 +185,9 @@ class Person
     private $email;
 ```
 
-## Making a Property Read Only
+## Making a Property Read-Only
 
-A property can be marked read only with the following configuration:
+A property can be marked read-only with the following configuration:
 
 ```yaml
     Person:
@@ -197,9 +197,9 @@ A property can be marked read only with the following configuration:
 
 In such case, no mutator method will be generated.
 
-## Making a Property Write Only
+## Making a Property Write-Only
 
-A property can be marked write only with the following configuration:
+A property can be marked write-only with the following configuration:
 
 ```yaml
     Person:
@@ -319,8 +319,6 @@ To skip the generation of accessor methods, use the following config:
 accessorMethods: false
 ```
 
-It's possible to skip
-
 ## Disabling the `id` Generator
 
 By default, the generator adds a property called `id` not provided by Schema.org.
@@ -343,7 +341,7 @@ id:
 
 ## User submitted UUIDs
 
-To set manually a UUID instead of letting the DBMS generating it, use the following config:
+To manually set a UUID instead of letting the DBMS generate it, use the following config:
 
 ```yaml
 id:
@@ -354,16 +352,16 @@ id:
 ## Generating Custom IDs
 
 With this configuration option, an `$id` property of type `string` and the corresponding getters and setters will be
-generated, but the DBMS will not generate anything, the ID must be set manually.
+generated, but the DBMS will not generate anything. The ID must be set manually.
 
 ```yaml
 id:
   generationStrategy: none
 ```
 
-## Disabling Usage of Doctrine Collection
+## Disabling Usage of Doctrine Collections
 
-By default, the generator use classes provided by the [Doctrine Collections](https://github.com/doctrine/collections) library
+By default, the generator uses classes provided by the [Doctrine Collections](https://github.com/doctrine/collections) library
 to store collections of entities. This is useful (and required) when using Doctrine ORM or Doctrine ODM.
 This behavior can be disabled (to fallback to standard arrays) with the following setting:
 
@@ -397,7 +395,7 @@ validator:
 The standard behavior of the generator is to use the `@MappedSuperclass` Doctrine annotation for classes with children and
 `@Entity` for classes with no child.
 
-The inheritance annotation can be forced for a given type like the following:
+The inheritance annotation can be forced for a given type in the following way:
 
 ```yaml
 types:
@@ -410,14 +408,14 @@ types:
 
 ## Interfaces and Doctrine Resolve Target Entity Listener
 
-[`ResolveTargetEntityListener`](http://doctrine-orm.readthedocs.org/en/latest/cookbook/resolve-target-entity-listener.html)
+[`ResolveTargetEntityListener`](https://www.doctrine-project.org/projects/doctrine-orm/en/2.6/cookbook/resolve-target-entity-listener.html)
 is a feature of Doctrine to keep modules independent. It allows to specify interfaces and `abstract` classes in relation
 mappings.
 
 If you set the option `useInterface` to true, the generator will generate an interface corresponding to each generated
 entity and will use them in relation mappings.
 
-To let PHP Schema generating the XML mapping file usable with Symfony add the following to your config file:
+To let PHP Schema generate the XML mapping file usable with Symfony, add the following to your config file:
 
 ```yaml
 doctrine:
@@ -427,7 +425,7 @@ doctrine:
 ## Custom Schemas
 
 The generator can use your own schema definitions. They must be written in RDFa and follow the format of the [Schema.org's
-definition](httsp://schema.org/docs/schema_org_rdfa.html). This is useful to document your [Schema.org extensions](https://schema.org/docs/extension.html) and use them
+definition](https://schema.org/docs/schema_org_rdfa.html). This is useful to document your [Schema.org extensions](https://schema.org/docs/extension.html) and use them
 to generate the PHP data model of your application.
 
 Example:
@@ -458,7 +456,7 @@ types:
 If the `checkIsGoodRelations` option is set to `true`, the generator will emit a warning if an encountered property is not
 par of the [GoodRelations](http://www.heppnetz.de/projects/goodrelations/) schema.
 
-This is useful when generating e-commerce data model.
+This is useful when generating e-commerce data models.
 
 ## PHP File Header
 

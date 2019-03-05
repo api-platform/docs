@@ -14,7 +14,7 @@ to leverage all the possibilities of the database.
 Doctrine MongoDB ODM 2 relies on the [mongodb](https://secure.php.net/manual/en/set.mongodb.php) PHP extension and not on
 the legacy [mongo](https://secure.php.net/manual/en/book.mongo.php) extension.
 
-## Enabling MongoDB support
+## Enabling MongoDB Support
 
 If the mongodb PHP extension is not installed yet, [install it beforehand](https://secure.php.net/manual/en/mongodb.installation.pecl.php).
 
@@ -216,6 +216,6 @@ Doctrine MongoDB ODM filters are practically the same as Doctrine ORM filters.
 
 See how to use them and how to create custom ones in the [filters documentation](filters.md).
 
-## Creating custom extensions
+## Creating Custom Extensions
 
 See how to create Doctrine MongoDB ODM custom extensions in the [extensions documentation](extensions.md).

@@ -2,7 +2,7 @@
 
 ## Installation
 
-Install the skeleton and the library:
+You'll need to install the skeleton and the library.
 
 Start by installing [the Yarn package manager](https://yarnpkg.com/) ([NPM](https://www.npmjs.com/) is also supported) and
 the [Create React App](https://facebook.github.io/create-react-app/) tool.
@@ -21,7 +21,7 @@ Finally, install the `@api-platform/admin` library:
 
 ## Creating the Admin
 
-Edit the `src/App.js` file like the following:
+Edit the `src/App.js` file the following way:
 
 ```javascript
 import React from 'react';
