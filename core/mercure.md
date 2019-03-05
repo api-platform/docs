@@ -12,7 +12,7 @@ Then, the Mercure hub dispatches the updates to all connected clients using [Ser
 
 ## Installing the Mercure Support
 
-The Mercure support is already installed, configured and enabled in [the official distribution](../distribution/index.md).
+The Mercure support is already installed, configured and enabled in [the official distribution](../distribution/).
 If you use the distribution, you have nothing more to do, and you can jump to the next section.
 
 If you have installed API Platform using another method (such as `composer require api`), you need to install a Mercure hub, and the [Symfony MercureBundle](https://github.com/symfony/mercure-bundle):
@@ -63,7 +63,7 @@ This header allows smart clients to automatically discover the Mercure hub.
 
 ![Mercure subscriptions](images/mercure-discovery.png)
 
-Clients generated using [the API Platform Client Generator](../client-generator/index.md) will use this capability to automatically subscribe to Mercure updates when available:
+Clients generated using [the API Platform Client Generator](../client-generator/) will use this capability to automatically subscribe to Mercure updates when available:
 
 ![Screencast](../client-generator/images/client-generator-demo.gif)
 
