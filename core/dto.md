@@ -243,7 +243,7 @@ When specified, `input` and `output` attributes support:
 - an array to specify more metadata for example `['class' => BookInput::class, 'name' => 'BookInput', 'iri' => '/book_input']`
 
 
-## Using DTO objects inside resources
+## Using objects as relations inside resources
 
 Because ApiPlatform can (de)normalize anything in the supported formats (`jsonld`, `jsonapi`, `hal`, etc.), you can use any object you want inside resources. For example, let's say that the `Book` has an `attribute` property that can't be represented by a resource, we can do the following:
 
@@ -254,13 +254,10 @@ Because ApiPlatform can (de)normalize anything in the supported formats (`jsonld
 namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
-use App\Dto\Attribute;
+use App\Model\Attribute;
 
 /**
- * @ApiResource(
- *   input=BookInput::class,
- *   output=BookOutput::class
- * )
+ * @ApiResource
  */
 final class Book
 {
