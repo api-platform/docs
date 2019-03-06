@@ -13,7 +13,7 @@ code complies with [PSR](http://www.php-fig.org/) coding standards.
 inheritance (through the `@AbstractSuperclass` annotation).
 * Data validation through [Symfony Validator](http://symfony.com/doc/current/book/validation.html) annotations including
 data type validation, enum support (choices) and check for required properties.
-* Interfaces and [Doctrine `ResolveTargetEntityListener`](https://www.doctrine-project.org/projects/doctrine-orm/en/latest/cookbook/resolve-target-entity-listener.html)
+* Interfaces and [Doctrine `ResolveTargetEntityListener`](https://www.doctrine-project.org/projects/doctrine-orm/en/current/cookbook/resolve-target-entity-listener.html)
 support.
 * Custom PHP namespace support.
 * List of values provided by Schema.org with [PHP Enum](https://github.com/myclabs/php-enum) classes.
