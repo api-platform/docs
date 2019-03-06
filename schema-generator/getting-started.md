@@ -2,7 +2,7 @@
 
 ## Installation
 
-If you use [the official distribution of API Platform](../distribution/), the Schema Generator is already installed as a development dependency of your project and can be invoked through Docker:
+If you use [the official distribution of API Platform](../distribution/index.md), the Schema Generator is already installed as a development dependency of your project and can be invoked through Docker:
 
     $ docker-compose exec php vendor/bin/schema
 
