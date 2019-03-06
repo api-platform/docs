@@ -21,7 +21,7 @@ services:
     labels: 
       - "traefik.frontend.rule=Host:api.localhost"
 ``` 
-The Api DNS will be specified with `traefik.frontend.rule=Host:your.host` (here api.localhost)  
+The API DNS will be specified with `traefik.frontend.rule=Host:your.host` (here api.localhost)  
 
 `--traefik.port=3000` The port specified to Traefik will be exposed by the container (here the React app exposes the 3000 port)  
 
