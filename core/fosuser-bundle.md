@@ -29,7 +29,7 @@ framework:
 
 ## Enabling the Bridge
 
-To enable the provided bridge with FOSUserBundle, you need to add the following configuration to Api Platform:
+To enable the provided bridge with FOSUserBundle, you need to add the following configuration to API Platform:
 ```yaml
 # api/config/packages/api_platform.yaml
 api_platform:
