@@ -13,12 +13,12 @@ It is designed to generate code that works seamlessly with [Facebook's Create Re
 
 ## Install
 
-The easiest way to get started is to install [the API Platform distribution](../distribution/index.md).
+The easiest way to get started is to install [the API Platform distribution](../distribution/).
 It contains the React Client Generator, all dependencies it needs, a Progressive Web App skeleton generated with Create React App,
 a development Docker container to serve the webapp, and all the API Platform components you may need, including an API server
 supporting Hydra.
 
-If you use the API Platform, jump to the next section!
+If you use API Platform, jump to the next section!
 Alternatively, you can generate a skeleton and install the generator using [npx](https://www.npmjs.com/package/npx).
 To use this generator you need [Node.js](https://nodejs.org/) and [Yarn](https://yarnpkg.com/) (or [NPM](https://www.npmjs.com/)) installed.
 

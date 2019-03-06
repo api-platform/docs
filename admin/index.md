@@ -18,7 +18,7 @@ You can also customize all screens by using React Admin components and even raw 
 ## Features
 
 * Automatically generates an admin interface for all the resources of the API thanks to hypermedia features of Hydra
-* Generates listing, creation, display, and edit screens, as well as a delete button
+* Generates 'list', 'create', 'show', and 'edit' screens, as well as a delete button
 * Generates suitable inputs and fields according to the API doc (e.g. number HTML input for numbers, checkbox for booleans, selectbox for relationships...)
 * Generates suitable inputs and fields according to Schema.org types if available (e.g. email field for http://schema.org/email)
 * Handles relationships

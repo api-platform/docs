@@ -12,8 +12,8 @@ Deploying API Platform applications on Heroku is straightforward and you will le
 Edition.*
 
 If you don't already have one, [create an account on Heroku](https://signup.heroku.com/signup/dc). Then install [the Heroku
-toolbelt](https://devcenter.heroku.com/articles/getting-started-with-php#local-workstation-setup). We guess you already
-have a working install of [Composer](http://getcomposer.org), perfect, we will need it.
+toolbelt](https://devcenter.heroku.com/articles/getting-started-with-php#set-up). We're guessing you already
+have a working install of [Composer](http://getcomposer.org). Perfect, we will need it.
 
 Create a new API Platform project as usual:
 
@@ -58,7 +58,7 @@ Create a new file named `Procfile` in the `api/` directory with the following co
 web: vendor/bin/heroku-php-apache2 public/
 ```
 
-Be sure to add the Apache Pack in your dependencies:
+Be sure to add the Apache Pack to your dependencies:
 
     composer require symfony/apache-pack
 
@@ -77,7 +77,7 @@ As Heroku doesn't support Varnish out of the box, let's disable its integration:
 ```
 
 Heroku provides another free service, [Logplex](https://devcenter.heroku.com/articles/logplex), which allows us to centralize
-and persist applications logs. Because API Platform writes logs on `STDERR`, it will work seamlessly.
+and persist application logs. Because API Platform writes logs on `STDERR`, it will work seamlessly.
 
 However, if you use Monolog instead of the default logger, you'll need to configure it to output to `STDERR` instead of
 in a file.

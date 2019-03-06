@@ -4,7 +4,7 @@
 Both [Google Cloud Platform](https://cloud.google.com/kubernetes-engine/), [Microsoft Azure](https://azure.microsoft.com/en-us/services/container-service/kubernetes/)
 and [Amazon Web Services](https://aws.amazon.com/eks/) provide managed Kubernetes environment.
 
-[The official API Platform distribution](../distribution/index.md) contains a built-in [Helm](https://helm.sh/) (the k8s
+[The official API Platform distribution](../distribution/) contains a built-in [Helm](https://helm.sh/) (the k8s
 package manager) chart to deploy in a wink on any of these platforms.
 
 ## Preparing Your Cluster and Your Local Machine
@@ -83,7 +83,7 @@ Before running your application for the first time, be sure to create the databa
 
 ## Tiller RBAC Issue
 
-We noticed that some tiller RBAC trouble occurred, you generally can resolve it running:
+We noticed that some tiller RBAC trouble occurred. You can usually resolve it by running:
 
     kubectl create serviceaccount --namespace kube-system tiller
       serviceaccount "tiller" created
@@ -94,5 +94,5 @@ We noticed that some tiller RBAC trouble occurred, you generally can resolve it 
     kubectl patch deploy --namespace kube-system tiller-deploy -p '{"spec":{"template":{"spec":{"serviceAccount":"tiller"}}}}'
       deployment "tiller-deploy" patched
 
-Please, see the [related issue](https://github.com/kubernetes/helm/issues/3130) for further details / informations
-You can also take a look to the [related documentation](https://github.com/kubernetes/helm/blob/master/docs/rbac.md)
+Please, see the [related issue](https://github.com/kubernetes/helm/issues/3130) for further details / information.
+You can also take a look at the [related documentation](https://github.com/kubernetes/helm/blob/master/docs/rbac.md)

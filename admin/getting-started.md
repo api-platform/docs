@@ -62,11 +62,11 @@ Note: if you don't want to hardcode the API URL, you can [use an environment var
 
 ## Customizing the Admin
 
-The API Platform's admin parses the Hydra documentation exposed by the API and transforms it to an object data structure. This data structure can be customized to add, remove or customize resources and properties. To do so, we can leverage the `AdminBuilder` component provided by the library. It's a lower level component than the `HydraAdmin` one we used in the previous example. It allows to access to the object storing the structure of admin's screens.
+The API Platform's admin parses the Hydra documentation exposed by the API and transforms it to an object data structure. This data structure can be tailored to add, remove or customize resources and properties. To do so, we can leverage the `AdminBuilder` component provided by the library. It's a lower level component than the `HydraAdmin` one we used in the previous example. It allows to access the object storing the structure of admin's screens.
 
 ### Using Custom Components
 
-In the following example, we change components used for the `description` property of the `books` resource to ones accepting HTML (respectively `RichTextField` that renders HTML markup and `RichTextInput`, a WYSWYG editor).
+In the following example, we change components used for the `description` property of the `books` resource to ones accepting HTML (respectively `RichTextField` that renders HTML markup and `RichTextInput`, a WYSIWYG editor).
 (To use the `RichTextInput`, the `ra-input-rich-text` package is must be installed: `yarn add ra-input-rich-text`).
 
 ```javascript
@@ -104,7 +104,7 @@ export default (props) => <HydraAdmin apiDocumentationParser={myApiDocumentation
 ```
 
 The `field` property of the `Field` class allows to set the component used to render a property in list and show screens.
-The `input` property allows to set the component to use to render the input used in create and edit screens.
+The `input` property allows to set the component used to render the input used in create and edit screens.
 
 Any [field](https://marmelab.com/react-admin/Fields.html) or [input](https://marmelab.com/react-admin/Inputs.html) provided by the React Admin library can be used.
 
@@ -113,7 +113,7 @@ To go further, take a look to the "[Including react-admin on another React app](
 ### Managing Files and Images
 
 In the following example, we will:
-* find every [ImageObject](http://schema.org/ImageObject) resources. For each [contentUrl](http://schema.org/contentUrl) fields, we will use [ImageField](https://marmelab.com/react-admin/Fields.html#imagefield) as `field` and [ImageInput](https://marmelab.com/react-admin/Inputs.html#imageinput) as `input`.
+* find every [ImageObject](http://schema.org/ImageObject) resource. For each [contentUrl](http://schema.org/contentUrl) field, we will use [ImageField](https://marmelab.com/react-admin/Fields.html#imagefield) as `field` and [ImageInput](https://marmelab.com/react-admin/Inputs.html#imageinput) as `input`.
 * [ImageInput](https://marmelab.com/react-admin/Inputs.html#imageinput) will return a [File](https://developer.mozilla.org/en/docs/Web/API/File) instance. In this example, we will send a multi-part form data to a special action (`https://demo.api-platform.com/images/upload`). The action will return the ID of the uploaded image. We will "replace" the [File](https://developer.mozilla.org/en/docs/Web/API/File) instance by the ID in `normalizeData`.
 * As `contentUrl` fields will return a string, we have to convert Hydra data to React Admin data. This action will be done by `denormalizeData`.
 
@@ -227,9 +227,9 @@ export default class extends Component {
 
 ### Using the Hydra Data Provider Directly with react-admin
 
-By default, the `HydraAdmin` component shipped with API Platform Admin will generate a convenient admin interface for every resources and every properties exposed by the API. But sometimes, you may prefer having full control over the generated admin.
+By default, the `HydraAdmin` component shipped with API Platform Admin will generate a convenient admin interface for every resource and every propertie exposed by the API. But sometimes, you may prefer having full control over the generated admin.
 
-To do so, an alternative approach is [to configure every react-admin components manually](https://marmelab.com/react-admin/Tutorial.html) instead of letting the library generating it, but to still leverage the built-in Hydra [data provider](https://marmelab.com/react-admin/DataProviders.html):
+To do so, an alternative approach is [to configure every react-admin component manually](https://marmelab.com/react-admin/Tutorial.html) instead of letting the library generate them, but to still leverage the built-in Hydra [data provider](https://marmelab.com/react-admin/DataProviders.html):
 
 ```javascript
 // admin/src/App.js
