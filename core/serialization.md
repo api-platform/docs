@@ -296,7 +296,7 @@ The generated JSON using previous settings is below:
 ```
 
 In order to optimize such embedded relations, the default Doctrine data provider will automatically join entities on relations
-marked as [`EAGER`](https://www.doctrine-project.org/projects/doctrine-orm/en/latest/reference/annotations-reference.html#manytoone).
+marked as [`EAGER`](https://www.doctrine-project.org/projects/doctrine-orm/en/current/reference/annotations-reference.html#manytoone).
 This avoids the need for extra queries to be executed when serializing the related objects.
 
 Instead of embedding relations in the main HTTP response, you may want [to "push" them to the client using HTTP/2 server push](push-relations.md).
