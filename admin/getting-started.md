@@ -227,7 +227,7 @@ export default class extends Component {
 
 ### Using the Hydra Data Provider Directly with react-admin
 
-By default, the `HydraAdmin` component shipped with API Platform Admin will generate a convenient admin interface for every resource and every propertie exposed by the API. But sometimes, you may prefer having full control over the generated admin.
+By default, the `HydraAdmin` component shipped with API Platform Admin will generate a convenient admin interface for every resource and every property exposed by the API. But sometimes, you may prefer having full control over the generated admin.
 
 To do so, an alternative approach is [to configure every react-admin component manually](https://marmelab.com/react-admin/Tutorial.html) instead of letting the library generate them, but to still leverage the built-in Hydra [data provider](https://marmelab.com/react-admin/DataProviders.html):
 
