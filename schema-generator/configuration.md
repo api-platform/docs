@@ -408,7 +408,7 @@ types:
 
 ## Interfaces and Doctrine Resolve Target Entity Listener
 
-[`ResolveTargetEntityListener`](https://www.doctrine-project.org/projects/doctrine-orm/en/latest/cookbook/resolve-target-entity-listener.html)
+[`ResolveTargetEntityListener`](https://www.doctrine-project.org/projects/doctrine-orm/en/current/cookbook/resolve-target-entity-listener.html)
 is a feature of Doctrine to keep modules independent. It allows to specify interfaces and `abstract` classes in relation
 mappings.
 
