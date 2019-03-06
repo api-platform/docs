@@ -9,7 +9,7 @@ It comes with the API Platform Core library integrated with [the Symfony framewo
 [Doctrine MongoDB ODM](https://www.doctrine-project.org/projects/mongodb-odm.html) can also be enabled by following the [MongoDB documentation](mongodb.md).
 Basically, it is a Symfony edition packaged with the best tools to develop a REST API and sensible default settings.
 
-Alternatively, you can use [Composer](http://getcomposer.org) to install the stand-alone bundle in an existing Symfony Flex
+Alternatively, you can use [Composer](http://getcomposer.org) to install the standalone bundle in an existing Symfony Flex
 project:
 
 `composer require api`
