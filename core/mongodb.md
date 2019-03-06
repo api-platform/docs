@@ -18,7 +18,7 @@ the legacy [mongo](https://secure.php.net/manual/en/book.mongo.php) extension.
 
 If the mongodb PHP extension is not installed yet, [install it beforehand](https://secure.php.net/manual/en/mongodb.installation.pecl.php).
 
-If you are using the [API Platform Distribution](../distribution/), modify the Dockerfile to add the extension:
+If you are using the [API Platform Distribution](../distribution/index.md), modify the Dockerfile to add the extension:
 
 ```diff
  // api/Dockerfile
