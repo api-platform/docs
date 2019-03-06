@@ -20,7 +20,7 @@ fresh, because the cache is purged in real time.
 The support for most specific cases such as the invalidation of collections when a document is added or removed or for
 relationships and inverse relations is built-in.
 
-Integration with Varnish and Doctrine ORM is shipped with the core library, and [Varnish](https://varnish-cache.org/) is included in the [Docker setup](../distribution/#using-the-official-distribution-recommended) provided with the
+Integration with Varnish and Doctrine ORM is shipped with the core library, and [Varnish](https://varnish-cache.org/) is included in the [Docker setup](../distribution/index.md#using-the-official-distribution-recommended) provided with the
 distribution of API Platform.
 If you use the distribution, this feature works out of the box.
 
