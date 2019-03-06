@@ -118,7 +118,7 @@ Your `PersonDataProvider` will now work as expected!
 
 ## Supported Identifiers
 
-Api Platform supports the following identifier types:
+API Platform supports the following identifier types:
 
   - `scalar` (string, integer)
   - `\DateTime` (uses the symfony `DateTimeNormalizer` internally, see [DateTimeIdentifierNormalizer](https://github.com/api-platform/core/blob/master/src/Identifier/Normalizer/DateTimeIdentifierDenormalizer.php))
