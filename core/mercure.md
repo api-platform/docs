@@ -6,7 +6,7 @@ API Platform can automatically send real time updates to the currently connected
 > - https://mercure.rocks
 
 API Platform detects changes made to your Doctrine entities, and sends the updated resources to the Mercure hub.
-Then, the Mercure hub dispatches the updates to all connected clients using [Server-Sent Events (SSE)](https://developer.mozilla.org/en-US/docs/Web/API/Server-sent_events).
+Then, the Mercure hub dispatches the updates to all connected clients using [Server-sent Events (SSE)](https://developer.mozilla.org/en-US/docs/Web/API/Server-sent_events).
 
 ![Mercure subscriptions](images/mercure-subscriptions.png)
 
