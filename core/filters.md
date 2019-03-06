@@ -974,6 +974,33 @@ A constant score query filter is basically a class implementing the `ApiPlatform
 and the `ApiPlatform\Core\Bridge\Elasticsearch\DataProvider\Filter\FilterInterface`. API Platform includes a convenient
 abstract class implementing this last interface and providing utility methods: `ApiPlatform\Core\Bridge\Elasticsearch\DataProvider\Filter\AbstractFilter`.
 
+Suppose you want to use the [match filter](https://api-platform.com/docs/core/filters/#match-filter) on a property named `$fullName` and you want to add the [and operator](https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl-match-query.html#query-dsl-match-query-boolean) to your query:
+
+```php
+<?php
+// api/src/ElasticSearch/AndOperatorFilterExtension.php
+
+namespace App\ElasticSearch;
+
+use ApiPlatform\Core\Bridge\Elasticsearch\DataProvider\Extension\RequestBodySearchCollectionExtensionInterface;
+
+class AndOperatorFilterExtension implements RequestBodySearchCollectionExtensionInterface
+{
+    public function applyToCollection(array $requestBody, string $resourceClass, ?string $operationName = null, array $context = []): array
+    {
+        $requestBody['query'] = $requestBody['query'] ?? [];
+        $andQuery = [
+            'query' => $context['filters']['fullName'],
+            'operator' => 'and',
+        ];
+        
+        $requestBody['query']['constant_score']['filter']['bool']['must'][0]['match']['full_name'] = $andQuery;
+        
+        return $requestBody;
+    }
+}
+```
+
 ### Using Doctrine ORM Filters
 
 Doctrine ORM features [a filter system](http://docs.doctrine-project.org/projects/doctrine-orm/en/latest/reference/filters.html) that allows the developer to add SQL to the conditional clauses of queries, regardless the place where the SQL is generated (e.g. from a DQL query, or by loading associated entities).
