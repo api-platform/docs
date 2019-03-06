@@ -13,7 +13,7 @@ It is designed to generate code that works seamlessly with [Facebook's Create Re
 
 ## Install
 
-The easiest way to get started is to install [the API Platform distribution](../distribution/).
+The easiest way to get started is to install [the API Platform distribution](../distribution/index.md).
 It contains the React Client Generator, all dependencies it needs, a Progressive Web App skeleton generated with Create React App,
 a development Docker container to serve the webapp, and all the API Platform components you may need, including an API server
 supporting Hydra.
