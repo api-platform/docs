@@ -974,7 +974,7 @@ A constant score query filter is basically a class implementing the `ApiPlatform
 and the `ApiPlatform\Core\Bridge\Elasticsearch\DataProvider\Filter\FilterInterface`. API Platform includes a convenient
 abstract class implementing this last interface and providing utility methods: `ApiPlatform\Core\Bridge\Elasticsearch\DataProvider\Filter\AbstractFilter`.
 
-Suppose you want to use the [match filter](https://api-platform.com/docs/core/filters/#match-filter) on a property $fullName and you want to add the [and operator](https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl-match-query.html#query-dsl-match-query-boolean) to your query.
+Suppose you want to use the [match filter](https://api-platform.com/docs/core/filters/#match-filter) on a property named `$fullName` and you want to add the [and operator](https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl-match-query.html#query-dsl-match-query-boolean) to your query:
 
 ```php
 <?php
@@ -1000,6 +1000,7 @@ class AndOperatorFilterExtension implements RequestBodySearchCollectionExtension
     }
 }
 ```
+
 ### Using Doctrine ORM Filters
 
 Doctrine ORM features [a filter system](http://docs.doctrine-project.org/projects/doctrine-orm/en/latest/reference/filters.html) that allows the developer to add SQL to the conditional clauses of queries, regardless the place where the SQL is generated (e.g. from a DQL query, or by loading associated entities).
