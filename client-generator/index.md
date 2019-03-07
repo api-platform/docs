@@ -1,6 +1,6 @@
 # The API Platform Client Generator
 
-Client Generator is the fastest way to scaffold fully-featured webapps and native mobile apps from APIs supporting the [Hydra](http://www.hydra-cg.com/) format.
+Client Generator is the fastest way to scaffold fully featured webapps and native mobile apps from APIs supporting the [Hydra](http://www.hydra-cg.com/) format.
 
 ![Screencast](images/client-generator-demo.gif)
 
