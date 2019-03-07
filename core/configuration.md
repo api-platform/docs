@@ -116,10 +116,13 @@ api_platform:
         api_keys: []
 
     collection:
+        # The name of the query parameter to filter nullable results (with the ExistsFilter).
+        exists_parameter_name: 'exists'
+
         # The default order of results.
         order: 'ASC'
 
-        # The name of the query parameter to order results.
+        # The name of the query parameter to order results (with the OrderFilter).
         order_parameter_name: 'order'
 
         pagination:
