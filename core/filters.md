@@ -929,7 +929,7 @@ class Offer
 }
 ```
 
-Or by using the `ApiFilter` annotation:
+Or by using the `ApiFilter` annotation 
 
 ```php
 <?php
@@ -950,29 +950,9 @@ class Offer
     // ...
 }
 ```
+When using `ApiFilter` annotation, the declared properties in the `services.yaml` will not be taken into account. You have to use the `ApiFilter` way (see the [documentation](#apifilter-annotation))
 
-When using `ApiFilter` annotation, you can specify specific properties for which the filter will be applied:
-```
-<?php
-// api/src/Entity/Offer.php
-
-namespace App\Entity;
-
-use ApiPlatform\Core\Annotation\ApiFilter;
-use ApiPlatform\Core\Annotation\ApiResource;
-use App\Filter\RegexpFilter;
-
-/**
- * @ApiResource
- * @ApiFilter(RegexpFilter::class, properties={"email","anOtherProperty"})
- */
-class Offer
-{
-    // ...
-}
-```
-
-You can now enable this filter using URLs like `http://example.com/offers?regexp_email=^[FOO]`. This new filter will also
+Finally you can use this filter in the URL like `http://example.com/offers?regexp_email=^[FOO]`. This new filter will also
 appear in Swagger and Hydra documentations.
 
 ### Creating Custom Doctrine MongoDB ODM Filters
