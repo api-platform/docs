@@ -929,7 +929,7 @@ class Offer
 }
 ```
 
-Or by using the `ApiFilter` annotation 
+Or by using the `ApiFilter` annotation:
 
 ```php
 <?php
