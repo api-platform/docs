@@ -3,8 +3,8 @@
 API Platform Core is shipped with a bridge for [FOSUserBundle](https://github.com/FriendsOfSymfony/FOSUserBundle).
 If the FOSUser bundle is enabled, this bridge will use its `UserManager` to create, update and delete user resources.
 
-Note: FOSUserBundle is not well suited for APIs. We strongly encourage you to use the [Doctrine user provider](https://symfony.com/doc/current/security/entity_provider.html)
-shipped with Symfony or to [create a custom user provider](http://symfony.com/doc/current/security/custom_provider.html)
+Note: FOSUserBundle is not well suited for APIs. We strongly encourage you to use the [Doctrine user provider](https://symfony.com/doc/current/security/user_provider.html#entity-user-provider)
+shipped with Symfony or to [create a custom user provider](https://symfony.com/doc/current/security/user_provider.html#creating-a-custom-user-provider)
 instead of using this bundle.
 
 ## Installing the Bundle
@@ -13,9 +13,9 @@ The installation procedure of the FOSUserBundle is described [in the main Symfon
 
 You can:
 
-* Skip the [step 3 (Create your User class)](https://symfony.com/doc/master/bundles/FOSUserBundle/index.html#step-3-create-your-user-class)
+* Skip [step 3 (Create your User class)](https://symfony.com/doc/master/bundles/FOSUserBundle/index.html#step-3-create-your-user-class)
 and use the class provided in the next paragraph to set up serialization groups the correct way
-* Skip the [step 4 (Configure your application's security.yml)](https://symfony.com/doc/master/bundles/FOSUserBundle/index.html#step-4-configure-your-application-s-security-yml)
+* Skip [step 4 (Configure your application's security.yml)](https://symfony.com/doc/master/bundles/FOSUserBundle/index.html#step-4-configure-your-application-s-security-yml)
 if you are planning to [use a JWT-based authentication using `LexikJWTAuthenticationBundle`](jwt.md)
 
 If you are using the API Platform Standard Edition, you will need to enable the form services in the symfony framework
@@ -29,7 +29,7 @@ framework:
 
 ## Enabling the Bridge
 
-To enable the provided bridge with FOSUserBundle, you need to add the following configuration to api-platform:
+To enable the provided bridge with FOSUserBundle, you need to add the following configuration to API Platform:
 ```yaml
 # api/config/packages/api_platform.yaml
 api_platform:
@@ -41,7 +41,7 @@ api_platform:
 Here's an example of declaration of a [Doctrine ORM User class](https://github.com/FriendsOfSymfony/FOSUserBundle/blob/master/Resources/doc/index.rst#a-doctrine-orm-user-class).
 There's also an example for a [Doctrine MongoDB ODM](https://github.com/FriendsOfSymfony/FOSUserBundle/blob/master/Resources/doc/index.rst#b-mongodb-user-class).
 You need to use serialization groups to hide some properties like `plainPassword` (only in read) and `password`. The properties
-shown are handled with the [`normalization_context`](serialization.md#normalization), while the properties
+shown are handled with [`normalization_context`](serialization.md#normalization), while the properties
 you can modify are handled with [`denormalization_context`](serialization.md#denormalization).
 
 Create your User entity with serialization groups:

@@ -1,13 +1,13 @@
 # Identifiers
 
-Every item operation has an identifier in it's URL. Although this identifier is usually a number, it can also be an `UUID`, a date, or the type of your choice.
+Every item operation has an identifier in its URL. Although this identifier is usually a number, it can also be an `UUID`, a date, or the type of your choice.
 To help with your development experience, we introduced an identifier normalization process.
 
-## Custom identifier normalizer
+## Custom Identifier Normalizer
 
 > In the following chapter, we're assuming that `App\Uuid` is a project-owned class that manages a time-based UUID.
 
-Let's say you have the following class, which is identified by a `UUID` type. In this example, `UUID` is not a simple string but it's an object with many attributes.
+Let's say you have the following class, which is identified by a `UUID` type. In this example, `UUID` is not a simple string but an object with many attributes.
 
 ```php
 <?php
@@ -98,7 +98,7 @@ final class UuidNormalizer implements DenormalizerInterface
 }
 ```
 
-Tag this service as a `api_platform.identifier.denormalizer`:
+Tag this service as an `api_platform.identifier.denormalizer`:
 
 ```xml
   <service id="App\Identifier\UuidNormalizer" class="App\Identifier\UuidNormalizer" public="false">
@@ -116,9 +116,9 @@ services:
 Your `PersonDataProvider` will now work as expected!
 
 
-## Supported identifiers
+## Supported Identifiers
 
-ApiPlatform supports the following identifier types:
+API Platform supports the following identifier types:
 
   - `scalar` (string, integer)
   - `\DateTime` (uses the symfony `DateTimeNormalizer` internally, see [DateTimeIdentifierNormalizer](https://github.com/api-platform/core/blob/master/src/Identifier/Normalizer/DateTimeIdentifierDenormalizer.php))

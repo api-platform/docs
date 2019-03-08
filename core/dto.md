@@ -1,6 +1,6 @@
 # Using Data Transfer Objects (DTOs)
 
-## Specifying an Input or an Output data representation
+## Specifying an Input or an Output Data Representation
 
 For a given resource class, you may want to have a different representation of this class as input (write) or output (read).
 To do so, a resource can take an input and/or an output class:
@@ -26,8 +26,8 @@ final class Book
 }
 ```
 
-The `input` attribute is used during [the deserialization process](serialization.md), when transforming the user provided data to a resource instance.
-Similarly, the `output` attribute is used during [the serialization process](serialization.md), this class represents how the `Book` resource will be represented in the `Response`.
+The `input` attribute is used during [the deserialization process](serialization.md), when transforming the user-provided data to a resource instance.
+Similarly, the `output` attribute is used during [the serialization process](serialization.md). This class represents how the `Book` resource will be represented in the `Response`.
 
 The `input` and `output` attributes are taken into account by all the documentation generators (GraphQL and OpenAPI, Hydra).
 
@@ -37,7 +37,7 @@ To create a `Book`, we `POST` a data structure corresponding to the `BookInput` 
 
 To simplify object transformations we have to implement a Data Transformer that will convert the input into a resource or a resource into an output.
 
-With the following `BookInput`:
+We have the following `BookInput`:
 
 ```php
 <?php
@@ -89,7 +89,7 @@ final class BookInputDataTransformer implements DataTransformerInterface
 }
 ```
 
-And register it:
+We now register it:
 
 ```yaml
 # api/config/services.yaml
@@ -100,7 +100,7 @@ services:
         #tags: [ 'api_platform.data_transformer' ]
 ```
 
-To manage the output, it's exactly the same process. For example with `BookOutput` being:
+To manage the output, it's exactly the same process. For example, we have the following `BookOutput`:
 
 ```php
 <?php
@@ -147,7 +147,7 @@ final class BookOutputDataTransformer implements DataTransformerInterface
 }
 ```
 
-And register it:
+We now register it:
 
 ```yaml
 # api/config/services.yaml
@@ -158,7 +158,7 @@ services:
         #tags: [ 'api_platform.data_transformer' ]
 ```
 
-## Updating a resource with a custom input
+## Updating a Resource with a Custom Input
 
 When performing an update (e.g. `PUT` operation), the resource to be updated is read by ApiPlatform before the deserialization phase. To do so, it uses a [data provider](data-providers.md) with the `:id` parameter given in the URL. The *body* of the request is the JSON object sent by the client, it is deserialized and is used to update the previously found resource.
 
@@ -232,10 +232,10 @@ services:
 ## Disabling the Input or the Output
 
 Both the `input` and the `output` attributes can be set to `false`.
-If `input` is `false`, the deserialization process will be skipped, and no data persisters will be called.
-If `output` is `false`, the serialization process will be skipped, and no data providers will be called.
+If `input` is `false`, the deserialization process will be skipped, and no data persister will be called.
+If `output` is `false`, the serialization process will be skipped, and no data provider will be called.
 
-## Input/Output metadata
+## Input/Output Metadata
 
 When specified, `input` and `output` attributes support:
 - a string representing the class to use
@@ -243,9 +243,9 @@ When specified, `input` and `output` attributes support:
 - an array to specify more metadata for example `['class' => BookInput::class, 'name' => 'BookInput', 'iri' => '/book_input']`
 
 
-## Using objects as relations inside resources
+## Using Objects As Relations Inside Resources
 
-Because ApiPlatform can (de)normalize anything in the supported formats (`jsonld`, `jsonapi`, `hal`, etc.), you can use any object you want inside resources. For example, let's say that the `Book` has an `attribute` property that can't be represented by a resource, we can do the following:
+Because API Platform can (de)normalize anything in the supported formats (`jsonld`, `jsonapi`, `hal`, etc.), you can use any object you want inside resources. For example, let's say that the `Book` has an `attribute` property that can't be represented by a resource, we can do the following:
 
 ```php
 <?php

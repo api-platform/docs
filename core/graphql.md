@@ -4,7 +4,7 @@
 
 [GraphQL](http://graphql.org/) is a query language made to communicate with an API and therefore is an alternative to REST.
 
-It has some advantages compared to REST: it solves the over-fetching or under-fetching of data, is strongly typed, and is capable of retrieving multiple and nested data in one time; but it also comes with drawbacks: for example it creates overhead depending of the request.
+It has some advantages compared to REST: it solves the over-fetching or under-fetching of data, is strongly typed, and is capable of retrieving multiple and nested data in one go, but it also comes with drawbacks. For example it creates overhead depending on the request.
 
 API Platform creates a REST API by default. But you can choose to enable GraphQL as well.
 

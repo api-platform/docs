@@ -2,7 +2,7 @@
 
 The default Docker stack is shipped without a Xdebug stage. It's easy
 though to add [Xdebug](https://xdebug.org/) to your project, for development
-purposes such as debugging tests or API requests remotely.
+purposes such as debugging tests or remote API requests.
 
 ## Add a Development Stage to the Dockerfile
 
@@ -23,11 +23,10 @@ RUN set -eux; \
 
 ## Configure Xdebug with Docker Compose Override
 
-Using an [override](https://docs.docker.com/compose/reference/overview/#specifying-multiple-compose-files)  
- file named `docker-compose.override.yml` ensures that the production
-configuration remains untouched.
+Using an [override](https://docs.docker.com/compose/reference/overview/#specifying-multiple-compose-files) file named 
+`docker-compose.override.yml` ensures that the production configuration remains untouched.
 
-As example, an override could look like this:
+As an example, an override could look like this:
 
 ```yml
 version: "3.4"

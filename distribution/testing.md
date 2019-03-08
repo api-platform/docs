@@ -1,8 +1,8 @@
 # Testing and Specifying the API
 
-A set of useful tools to specify and test your API are easily installable in the API Platform distribution:
+A set of useful tools to specify and test your API is easily installable in the API Platform distribution:
 
-* [PHPUnit](https://phpunit.de/) allows to cover your classes with unit tests and to write functional tests thanks to his
+* [PHPUnit](https://phpunit.de/) allows you to cover your classes with unit tests and to write functional tests thanks to its
   Symfony integration.
 * [Behat](http://docs.behat.org/) (a [Behavior-driven development](http://en.wikipedia.org/wiki/Behavior-driven_development)
   framework) and its [Behatch extension](https://github.com/Behatch/contexts) (a set of contexts dedicated to REST API and
@@ -178,9 +178,9 @@ Everything should be green now. Your Linked Data API is now specified and tested
 
 You may also be interested in these alternative testing tools (not included in the API Platform distribution):
 
-* [Postman tests](https://www.getpostman.com/docs/writing_tests) (proprietary): create functional test for your API Platform project
+* [Postman tests](https://www.getpostman.com/docs/writing_tests) (proprietary): create functional tests for your API Platform project
   using a nice UI, benefit from [the Swagger integration](https://www.getpostman.com/docs/importing_swagger) and run tests
-  test in the CI using [newman](https://github.com/postmanlabs/newman).
+  in the CI using [newman](https://github.com/postmanlabs/newman).
 * [PHP Matcher](https://github.com/coduo/php-matcher): the Swiss Army knife of JSON document testing.
 
 ## Running Unit Tests with PHPUnit

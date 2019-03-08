@@ -165,7 +165,7 @@ final class MediaObjectType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            // Configure each fields you want to be submitted here, like a classic form.
+            // Configure each field you want to be submitted here, like a classic form.
             ->add('file', FileType::class, [
                 'label' => 'label.file',
                 'required' => false,
@@ -191,7 +191,7 @@ final class MediaObjectType extends AbstractType
 ## Making a Request to the `/media_objects` Endpoint
 
 Your `/media_objects` endpoint is now ready to receive a `POST` request with a
-file. This endpoint accepts standard `multipart/form-data` encoded data, but
+file. This endpoint accepts standard `multipart/form-data`-encoded data, but
 not JSON data. You will need to format your request accordingly. After posting
 your data, you will get a response looking like this:
 
@@ -254,5 +254,5 @@ uploaded cover, you can have a nice illustrated book record!
 }
 ```
 
-Voilà! You can now send files to your API, and link them to any other resources
+Voilà! You can now send files to your API, and link them to any other resource
 in your app.
