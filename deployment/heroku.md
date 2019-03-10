@@ -52,7 +52,7 @@ The file also tells the Heroku deployment system to build a PHP container and to
 We are almost done, but API Platform (and Symfony) has a particular directory structure which requires further configuration.
 We must tell Heroku that the document root is `public/`, and that all other directories must be private.
 
-Create a new file named `Procfile` in the `api/` directory with the following content:
+Create a new file named `Procfile` in the `api-platform/` directory with the following content:
 
 ```yaml
 web: vendor/bin/heroku-php-apache2 public/
@@ -65,7 +65,7 @@ Be sure to add the Apache Pack to your dependencies:
 As Heroku doesn't support Varnish out of the box, let's disable its integration:
 
 ```patch
-# api/config/packages/api_platform.yaml
+# api-platform/config/packages/api_platform.yaml
 -    http_cache:
 -        invalidation:
 -            enabled: true
@@ -82,7 +82,7 @@ and persist application logs. Because API Platform writes logs on `STDERR`, it w
 However, if you use Monolog instead of the default logger, you'll need to configure it to output to `STDERR` instead of
 in a file.
 
-Open `api/config/packages/prod/monolog.yaml` and apply the following patch:
+Open `api-platform/config/packages/prod/monolog.yaml` and apply the following patch:
 
 ```yaml
 monolog:
@@ -100,7 +100,7 @@ monolog:
 
 We are now ready to deploy our app!
 
-Go to the `api/` directory, then
+Go to the `api-platform/` directory, then
 
 1. Initialize a git repository:
 
