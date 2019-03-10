@@ -38,7 +38,7 @@ $ yarn add redux react-redux redux-thunk redux-form react-router-dom connected-r
 Optionally, install Bootstrap and Font Awesome to get an app that looks good:
 
 ```bash
-$ yarn add redux bootstrap font-awesome
+$ yarn add bootstrap font-awesome
 ```
 
 Finally, start the integrated web server:
