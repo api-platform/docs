@@ -267,7 +267,7 @@ class Book
     /**
      * @var Review[] Available reviews for this book.
      *
-     * @ORM\OneToMany(targetEntity="Review", mappedBy="book")
+     * @ORM\OneToMany(targetEntity="Review", mappedBy="book", cascade={"persist", "remove"})
      */
     public $reviews;
     
@@ -331,7 +331,7 @@ class Review
     /**
      * @var \DateTimeInterface The date of publication of this review.
      *
-     * @ORM\Column(type="datetime_immutable")
+     * @ORM\Column(type="datetime")
      */
     public $publicationDate;
 
