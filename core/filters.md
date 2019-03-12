@@ -950,8 +950,9 @@ class Offer
     // ...
 }
 ```
+When using `ApiFilter` annotation, the declared properties in the `services.yaml` will not be taken into account. You have to use the `ApiFilter` way (see the [documentation](#apifilter-annotation)).
 
-You can now enable this filter using URLs like `http://example.com/offers?regexp_email=^[FOO]`. This new filter will also
+Finally you can use this filter in the URL like `http://example.com/offers?regexp_email=^[FOO]`. This new filter will also
 appear in Swagger and Hydra documentations.
 
 ### Creating Custom Doctrine MongoDB ODM Filters
