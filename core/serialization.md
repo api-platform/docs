@@ -516,13 +516,13 @@ This will add the serialization group `can_retrieve_book` only if the currently 
 instance.
 
 Note: In this example, we use the `TokenStorageInterface` to verify access to the book instance. However, Symfony
-provides many useful other services that might be better suited to your use case (for example, the [`AuthorizationChecker`](https://symfony.com/doc/current/components/security/authorization.html#authorization-checker)).
+provides many useful other services that might be better suited to your use case. For example, the [`AuthorizationChecker`](https://symfony.com/doc/current/components/security/authorization.html#authorization-checker).
 
 ## Name Conversion
 
 The Serializer Component provides a handy way to map PHP field names to serialized names. See the related [Symfony documentation](http://symfony.com/doc/master/components/serializer.html#converting-property-names-when-serializing-and-deserializing).
 
-To use this feature, declare a new service with the id `app.name_converter`. For example, you can convert `CamelCase` to
+To use this feature, declare a new name converter service. For example, you can convert `CamelCase` to
 `snake_case` with the following configuration:
 
 ```yaml
@@ -537,9 +537,11 @@ api_platform:
     name_converter: 'Symfony\Component\Serializer\NameConverter\CamelCaseToSnakeCaseNameConverter'
 ```
 
+If symfony's `MetadataAwareNameConverter` is available it'll be used by default. If you specify one in ApiPlatform configuration, it'll be used. Note that you can use decoration to benefit from this name converter in your own implementation.
+
 ## Decorating a Serializer and Adding Extra Data
 
-In the following example, we will see how we can add extra information to the serialized output. Here is how we can add the
+In the following example, we will see how we add extra informations to the serialized output. Here is how we add the
 date on each request in `GET`:
 
 ```yaml
