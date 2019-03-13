@@ -91,7 +91,7 @@ To see the container's logs, run:
 
     $ docker-compose logs -f # follow the logs
 
-Project's files are automatically shared between your local host machine and the container thanks to a pre-configured [Docker
+Project files are automatically shared between your local host machine and the container thanks to a pre-configured [Docker
 volume](https://docs.docker.com/engine/tutorials/dockervolumes/). It means that you can edit files of your project locally
 using your preferred IDE or code editor, they will be transparently taken into account in the container.
 Speaking about IDEs, our favorite software to develop API Platform apps is [PHPStorm](https://www.jetbrains.com/phpstorm/)
@@ -109,6 +109,7 @@ distribution. It is optimized for performance and development convenience. For i
 is able to automatically optimize the generated SQL queries by adding the appropriate `JOIN` clauses. It also provides a
 lot of powerful built-in filters.
 Doctrine ORM and its bridge support most popular RDBMS including PostgreSQL, MySQL, MariaDB, SQL Server, Oracle and SQLite.
+There is also a shipped [Doctrine MongoDB ODM](https://www.doctrine-project.org/projects/mongodb-odm.html) optional support.
 
 That being said, keep in mind that API Platform is 100% independent of the persistence system. You can use the one(s) that
 best suit(s) your needs (including NoSQL databases or remote web services). API Platform even supports using several persistence
@@ -120,7 +121,7 @@ Alternatively, the API Platform server component can also be installed directly 
 **This method is recommended only for advanced users that want full control over the directory structure and the installed
 dependencies.**
 
-The rest of this tutorial assumes that you have installed API Platform using the official distribution, go straight to the
+The rest of this tutorial assumes that you have installed API Platform using the official distribution. Go straight to the
 next section if it's your case.
 
 API Platform has an official Symfony Flex recipe. It means that you can easily install it from any Flex-compatible Symfony
@@ -176,7 +177,7 @@ Click on an operation to display its details. You can also send requests to the 
 Try to create a new *Greeting* resource using the `POST` operation, then access it using the `GET` operation and, finally,
 delete it by executing the `DELETE` operation.
 If you access any API URL using a web browser, API Platform detects it (by scanning the `Accept` HTTP header) and displays
-the corresponding API request in the UI. Try yourself by browsing to `http://localhost:8080/greetings`. If the `Accept` header
+the corresponding API request in the UI. Try it yourself by browsing to `http://localhost:8080/greetings`. If the `Accept` header
 doesn't contain `text/html` as the preferred format, a JSON-LD response is sent ([configurable behavior](../core/content-negotiation.md)).
 
 So, if you want to access the raw data, you have two alternatives:
@@ -200,7 +201,7 @@ Our bookshop API will start simple. It will be composed of a `Book` resource typ
 Books have an id, an ISBN, a title, a description, an author, a publication date and are related to a list of reviews.
 Reviews have an id, a rating (between 0 and 5), a body, an author, a publication date and are related to one book.
 
-Let's describe this data model as a set of Plain Old PHP Objects (POPO) and map it to database's tables using annotations
+Let's describe this data model as a set of Plain Old PHP Objects (POPO) and map it to database tables using annotations
 provided by the Doctrine ORM:
 
 ```php
@@ -348,6 +349,12 @@ class Review
 }
 ```
 
+**Tip**: you can also use Symfony [MakerBundle](https://symfony.com/doc/current/bundles/SymfonyMakerBundle/index.html) thanks to the `--api-resource` option:
+
+```bash
+docker-compose exec php bin/console make:entity --api-resource
+```
+
 As you can see there are two typical PHP objects with the corresponding PHPDoc (note that entities's and properties's descriptions
 included in their PHPDoc will appear in the API documentation).
 
@@ -361,11 +368,11 @@ or in Kévin's book "[Persistence in PHP with the Doctrine ORM](https://www.amaz
 For the sake of simplicity, in this example we used public properties (except for the id, see below). API Platform as well
 as Doctrine also support accessor methods (getters/setters), use them if you want to.
 We used a private property for the id and a getter for the id to enforce the fact that it is read only (the ID will be generated
-by the RDMS because the `@ORM\GeneratedValue` annotation). API Platform also has first-grade support for UUIDs, [you should
+by the RDMS because of the `@ORM\GeneratedValue` annotation). API Platform also has first-grade support for UUIDs. [You should
 probably use them instead of auto-incremented ids](https://www.clever-cloud.com/blog/engineering/2015/05/20/why-auto-increment-is-a-terrible-idea/).
 
-Then, delete the file `api/src/Entity/Greeting.php`, this demo entity isn't useful anymore.
-Finally, tell Doctrine to sync the database's tables structure with our new data model:
+Then, delete the file `api/src/Entity/Greeting.php`. This demo entity isn't useful anymore.
+Finally, tell Doctrine to sync the database tables structure with our new data model:
 
     $ docker-compose exec php bin/console doctrine:schema:update --force
 
@@ -422,7 +429,7 @@ Browse `https://localhost:8443` to load the development environment (including t
 
 ![The bookshop API](images/api-platform-2.2-bookshop-api.png)
 
-Operations available for our 2 resources types appear in the UI.
+Operations available for our 2 resource types appear in the UI.
 
 Click on the `POST` operation of the `Book` resource type, click on "Try it out" and send the following JSON document as request body:
 
@@ -439,11 +446,11 @@ Click on the `POST` operation of the `Book` resource type, click on "Try it out"
 You just saved a new book resource through the bookshop API! API Platform automatically transforms the JSON document to
 an instance of the corresponding PHP entity class and uses Doctrine ORM to persist it in the database.
 
-By default, the API supports `GET` (retrieve, on collections and items), `POST` (create), `PUT` (update) and `DELETE` (self-explaining)
+By default, the API supports `GET` (retrieve, on collections and items), `POST` (create), `PUT` (update) and `DELETE` (self-explanatory)
 HTTP methods. You are not limited to the built-in operations. You can [add new custom operations](../core/operations.md#creating-custom-operations-and-controllers)
 (`PATCH` operations, sub-resources...) or [disable the ones you don't want](../core/operations.md#enabling-and-disabling-operations).
 
-Try the `GET` operation on the collection. The book we added appears. When the collection will contain more than 30 items,
+Try the `GET` operation on the collection. The book we added appears. When the collection contains more than 30 items,
 the pagination will automatically show up, [and this is entirely configurable](../core/pagination.md). You may be interested
 in [adding some filters and adding sorts to the collection](../core/filters.md) as well.
 
@@ -457,7 +464,7 @@ or to query your APIs in [SPARQL](https://en.wikipedia.org/wiki/SPARQL) using [A
 
 We think that JSON-LD is the best default format for a new API.
 However, API Platform natively [supports many other formats](../core/content-negotiation.md) including [GraphQL](http://graphql.org/)
-(we'll come to it), [JSON API](http://jsonapi.org/), [HAL](http://stateless.co/hal_specification.html), raw [JSON](http://www.json.org/),
+(we'll get to it), [JSON API](http://jsonapi.org/), [HAL](http://stateless.co/hal_specification.html), raw [JSON](http://www.json.org/),
 [XML](https://www.w3.org/XML/) (experimental) and even [YAML](http://yaml.org/) and [CSV](https://en.wikipedia.org/wiki/Comma-separated_values).
 You can also easily [add support for other formats](../core/content-negotiation.md) and it's up to you to choose which format
 to enable and to use by default.
@@ -481,11 +488,11 @@ A URL is a valid IRI, and it's what API Platform uses. The `@id` property of eve
 it. You can use this IRI to reference this document from other documents. In the previous request, we used the IRI of the
 book we created earlier to link it with the `Review` we were creating. API Platform is smart enough to deal with IRIs.
 By the way, you may want to [embed documents](../core/serialization.md) instead of referencing them
-(e.g. to reduce the number of HTTP requests). You can even [let the client selecting only the properties it needs](../core/filters.md#property-filter).
+(e.g. to reduce the number of HTTP requests). You can even [let the client select only the properties it needs](../core/filters.md#property-filter).
 
 The other interesting thing is how API Platform handles dates (the `publicationDate` property). API Platform understands
 [any date format supported by PHP](http://php.net/manual/en/datetime.formats.date.php). In production we strongly recommend
-to use the format specified by the [RFC 3339](http://tools.ietf.org/html/rfc3339), but, as you can see, most common formats
+using the format specified by the [RFC 3339](http://tools.ietf.org/html/rfc3339), but, as you can see, most common formats
 including `September 21, 2016` can be used.
 
 To summarize, if you want to expose any entity you just have to:
@@ -494,7 +501,7 @@ To summarize, if you want to expose any entity you just have to:
 2. If you use Doctrine, map it with the database
 3. Mark it with the `@ApiPlatform\Core\Annotation\ApiResource` annotation
 
-How can it be more easy?!
+Could it be any easier?!
 
 ## Validating Data
 
@@ -509,19 +516,19 @@ Now try to add another book by issuing a `POST` request to `/books` with the fol
 }
 ```
 
-Oops, we missed to add the title. Submit the request anyway, you should get a 500 error with the following message:
+Oops, we forgot to add the title. Submit the request anyway, you should get a 500 error with the following message:
 
     An exception occurred while executing 'INSERT INTO book [...] VALUES [...]' with params [...]:
     SQLSTATE[23000]: Integrity constraint violation: 1048 Column 'title' cannot be null
 
-Did you notice that the error was automatically serialized in JSON-LD and respect the Hydra Core vocabulary for errors?
+Did you notice that the error was automatically serialized in JSON-LD and respects the Hydra Core vocabulary for errors?
 It allows the client to easily extract useful information from the error. Anyway, it's bad to get a SQL error when submitting
 a request. It means that we didn't use a valid input, and [it's a bad and dangerous practice](https://www.owasp.org/index.php/Input_Validation_Cheat_Sheet).
 
 API Platform comes with a bridge with [the Symfony Validator Component](http://symfony.com/doc/current/validation.html).
 Adding some of [its numerous validation constraints](http://symfony.com/doc/current/validation.html#supported-constraints)
 (or [creating custom ones](http://symfony.com/doc/current/validation/custom_constraint.html)) to our entities is enough
-to validate user submitted data. Let's add some validation rules to our data model:
+to validate user-submitted data. Let's add some validation rules to our data model:
 
 ```php
 <?php
@@ -613,7 +620,7 @@ class Review
 }
 ```
 
-After updating the entities by adding those `@Assert\*` annotations (as for Doctrine, you can also use XML or YAML), try
+After updating the entities by adding those `@Assert\*` annotations (as with Doctrine, you can also use XML or YAML), try
 again the previous `POST` request.
 
 ```json
@@ -642,7 +649,7 @@ ISBN isn't valid...
 
 ## Adding GraphQL Support
 
-Isn't API Platform a REST **and** GraphQL framework? That's true! GraphQL support isn't enabled by default, to add it we
+Isn't API Platform a REST **and** GraphQL framework? That's true! GraphQL support isn't enabled by default. To add it we
 need to install the [graphql-php](https://webonyx.github.io/graphql-php/) library. Run the following command (the cache needs to be cleared twice):
 
 ```bash
@@ -654,7 +661,7 @@ UI that is shipped with API Platform:
 
 ![GraphQL endpoint](images/api-platform-2.2-graphql.png)
 
-The GraphQL implementation supports [queries](http://graphql.org/learn/queries/), [mutations](http://graphql.org/learn/queries/),
+The GraphQL implementation supports [queries](https://graphql.org/learn/queries/), [mutations](https://graphql.org/learn/queries/#mutations),
 [100% of the Relay server specification](https://facebook.github.io/relay/docs/en/graphql-server-specification.html), pagination,
 [filters](../core/filters.md) and [access control rules](../core/security.md).
 You can use it with the popular [RelayJS](https://facebook.github.io/relay/) and [Apollo](https://www.apollographql.com/docs/react/)
@@ -670,14 +677,14 @@ Open `https://localhost:444` in your browser:
 ![The admin](images/api-platform-2.2-admin.png)
 
 This [Material Design](https://material.io/guidelines/) admin is a [Progressive Web App](https://developers.google.com/web/progressive-web-apps/)
-built with [API Platform Admin](../admin/index.md) (React Admin, React and Redux inside). It is powerful and fully customizable,
-refer to its documentation to learn more.
-It leverages the Hydra documentation exposed by the API component to build itself. It's 100% dynamic, **no code generation
+built with [API Platform Admin](../admin/index.md) (React Admin, React and Redux inside). It is powerful and fully customizable.
+Refer to its documentation to learn more.
+It leverages the Hydra documentation exposed by the API component to build itself. It's 100% dynamic - **no code generation
 occurs**.
 
 ## A React/Redux Progressive Web App
 
-API Platform also have an awesome [client generator](../client-generator/index.md) able to scaffold fully working React/Redux
+API Platform also has an awesome [client generator](../client-generator/index.md) able to scaffold fully working React/Redux
 and [Vue.js](https://vuejs.org/) Progressive Web Apps that you can easily tune and customize. The generator also supports
 [React Native](https://facebook.github.io/react-native/) if you prefer to leverage all capabilities of mobile devices.
 
@@ -706,7 +713,7 @@ integration](../deployment/kubernetes.md).
 
 Then, they are many more features to learn! Read [the full documentation](../core/index.md) to discover how to use them
 and how to extend API Platform to fit your needs.
-API Platform is incredibly efficient for prototyping and Rapid Application Development (RAD). But the framework is mostly
+API Platform is incredibly efficient for prototyping and Rapid Application Development (RAD), but the framework is mostly
 designed to create complex API-driven projects, far beyond simple CRUD apps. It benefits from **strong extension points**
 and it is **continuously optimized for performance.** It powers numerous high-traffic websites.
 
@@ -724,7 +731,7 @@ Here is a non-exhaustive list of popular API Platform extensions:
 * [Execute async jobs and create micro-service architectures using RabbitMQ](https://github.com/php-amqplib/RabbitMqBundle)
   (RabbitMQBundle)
 
-Keep in mind that you can use your favorite client-side technology: API Platform provides React and Vue.js components;
+Keep in mind that you can use your favorite client-side technology: API Platform provides React and Vue.js components,
 but you can use your preferred client-side technology including Angular, Ionic and Swift. Any language able to send HTTP
 requests is OK (even COBOL can do that).
 

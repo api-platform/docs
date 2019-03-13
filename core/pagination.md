@@ -69,7 +69,7 @@ api_platform:
 
 ### For a Specific Resource
 
-It can also be disabled for specific resource:
+It can also be disabled for a specific resource:
 
 ```php
 <?php
@@ -175,7 +175,7 @@ api_platform:
             items_per_page_parameter_name: itemsPerPage # Default value
 ```
 
-The number of items per page can now be changed adding a query parameter named `itemsPerPage`: `GET /books?itemsPerPage=20`
+The number of items per page can now be changed adding a query parameter named `itemsPerPage`: `GET /books?itemsPerPage=20`.
 
 #### For a Specific Resource
 
@@ -300,7 +300,7 @@ api_platform:
             partial_parameter_name: 'partial' # Default value
 ```
 
-The partial pagination retrieval can now be changed by toggling a query parameter named `partial`: `GET /books?partial=true`
+The partial pagination retrieval can now be changed by toggling a query parameter named `partial`: `GET /books?partial=true`.
 
 #### For a Specific Resource
 
@@ -320,9 +320,9 @@ class Book
 }
 ```
 
-## Avoiding double SQL requests on Doctrine
+## Avoiding double SQL requests on Doctrine ORM
 
-By default, pagination assumes that there will be collection fetched on a resource and thus will set `useFetchJoinCollection` to `true` on the Doctrine Paginator class. Having this option imply that 2 sql requests will be executed (so this avoid having less results than expected).
+By default, the pagination assumes that there will be a collection fetched on a resource and thus will set `useFetchJoinCollection` to `true` on the Doctrine Paginator class. Having this option implies that 2 SQL requests will be executed (to avoid having less results than expected).
 
 In most cases, even without collection on the resource, this parameter has little impact on performance. However when fetching a lot of results per page it can be counter productive.
 
@@ -344,7 +344,7 @@ class Book
 }
 ```
 
-Please note that this parameter will always be forced to false when the resource have composite keys due to a [bug in doctrine](https://github.com/doctrine/doctrine2/issues/2910)
+Please note that this parameter will always be forced to false when the resource has composite keys due to a [bug in Doctrine](https://github.com/doctrine/orm/issues/2910).
 
 ## Custom Controller Action
 
@@ -431,7 +431,7 @@ class GetBooksByFavoriteAuthorAction extends AbstractController
 }
 ```
 
-The service need to use the proper repository method.
+The service needs to use the proper repository method.
 You can also use the Query object inside the repository method and pass it to the Paginator instead of passing the QueryBuilder and using Criteria. Second Example:
 
 ```php

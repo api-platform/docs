@@ -1,6 +1,6 @@
 # Configuration
 
-Here's the complete configuration of the Symfony bundle with including default values:
+Here's the complete configuration of the Symfony bundle including default values:
 
 ```yaml
 # api/config/packages/api_platform.yaml
@@ -23,6 +23,17 @@ api_platform:
 
     # Specify a path name generator to use.
     path_segment_name_generator: 'api_platform.path_segment_name_generator.underscore'
+
+    # Allow using plain IDs for JSON format
+    allow_plain_identifiers: false
+
+    doctrine:
+        # To enable or disable Doctrine ORM support.
+        enabled: true
+
+    doctrine_mongodb_odm:
+        # To enable or disable Doctrine MongoDB ODM support.
+        enabled: false
 
     eager_loading:
         # To enable or disable eager loading.

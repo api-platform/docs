@@ -2,7 +2,7 @@
 
 API Platform Core provides a system to extend queries on items and collections.
 
-Extensions are specific to Doctrine and Elasticsearch-PHP, and therefore, the Doctrine ORM support or the Elasticsearch
+Extensions are specific to Doctrine and Elasticsearch-PHP, and therefore, the Doctrine ORM / MongoDB ODM support or the Elasticsearch
 reading support must be enabled to use this feature. If you use custom providers it's up to you to implement your own
 extension system or not.
 
@@ -68,51 +68,37 @@ use ApiPlatform\Core\Bridge\Doctrine\Orm\Extension\QueryCollectionExtensionInter
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Extension\QueryItemExtensionInterface;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Util\QueryNameGeneratorInterface;
 use App\Entity\Offer;
-use App\Entity\User;
 use Doctrine\ORM\QueryBuilder;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
-use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
+use Symfony\Component\Security\Core\Security;
 
 final class CurrentUserExtension implements QueryCollectionExtensionInterface, QueryItemExtensionInterface
 {
-    private $tokenStorage;
-    private $authorizationChecker;
+    private $security;
 
-    public function __construct(TokenStorageInterface $tokenStorage, AuthorizationCheckerInterface $checker)
+    public function __construct(Security $security)
     {
-        $this->tokenStorage = $tokenStorage;
-        $this->authorizationChecker = $checker;
+        $this->security = $security;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function applyToCollection(QueryBuilder $queryBuilder, QueryNameGeneratorInterface $queryNameGenerator, string $resourceClass, string $operationName = null)
     {
         $this->addWhere($queryBuilder, $resourceClass);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function applyToItem(QueryBuilder $queryBuilder, QueryNameGeneratorInterface $queryNameGenerator, string $resourceClass, array $identifiers, string $operationName = null, array $context = [])
     {
         $this->addWhere($queryBuilder, $resourceClass);
     }
 
-    /**
-     *
-     * @param QueryBuilder $queryBuilder
-     * @param string       $resourceClass
-     */
-    private function addWhere(QueryBuilder $queryBuilder, string $resourceClass)
+    private function addWhere(QueryBuilder $queryBuilder, string $resourceClass): void
     {
-        $user = $this->tokenStorage->getToken()->getUser();
-        if ($user instanceof User && Offer::class === $resourceClass && !$this->authorizationChecker->isGranted('ROLE_ADMIN')) {
-            $rootAlias = $queryBuilder->getRootAliases()[0];
-            $queryBuilder->andWhere(sprintf('%s.user = :current_user', $rootAlias));
-            $queryBuilder->setParameter('current_user', $user->getId());
+        if (Offer::class !== $resourceClass || $this->security->isGranted('ROLE_ADMIN') || null === $user = $this->security->getUser()) {
+            return;
         }
+
+        $rootAlias = $queryBuilder->getRootAliases()[0];
+        $queryBuilder->andWhere(sprintf('%s.user = :current_user', $rootAlias));
+        $queryBuilder->setParameter('current_user', $user));
     }
 }
 
@@ -138,7 +124,7 @@ Notice the priority level for the `api_platform.doctrine.orm.query_extension.col
 
 #### Blocking Anonymous Users
 
-This example adds a `WHERE` clause condition only when a fully authenticated user without `ROLE_ADMIN` tries to access to a resource. It means that anonymous users will be able to access to all data. To prevent this potential security issue, the API must ensure that the current user is authenticated.
+This example adds a `WHERE` clause condition only when a fully authenticated user without `ROLE_ADMIN` tries to access a resource. It means that anonymous users will be able to access to all data. To prevent this potential security issue, the API must ensure that the current user is authenticated.
 
 To secure the access to endpoints, use the following access control rule:
 
@@ -151,6 +137,19 @@ security:
         - { path: ^/offers, roles: IS_AUTHENTICATED_FULLY }
         - { path: ^/users, roles: IS_AUTHENTICATED_FULLY }
 ```
+
+## Custom Doctrine MongoDB ODM Extension
+
+Creating custom extensions is the same as with Doctrine ORM.
+
+The interfaces are:
+* `ApiPlatform\Core\Bridge\Doctrine\MongoDbOdm\Extension\AggregationItemExtensionInterface` and `ApiPlatform\Core\Bridge\Doctrine\MongoDbOdm\Extension\AggregationCollectionExtensionInterface` to add stages to the [aggregation builder](https://www.doctrine-project.org/projects/doctrine-mongodb-odm/en/latest/reference/aggregation-builder.html).
+* `ApiPlatform\Core\Bridge\Doctrine\MongoDbOdm\Extension\AggregationResultItemExtensionInterface` and `ApiPlatform\Core\Bridge\Doctrine\MongoDbOdm\Extension\AggregationResultCollectionExtensionInterface` to return a result.
+
+The tags are `api_platform.doctrine.mongodb.aggregation_extension.item` and `api_platform.doctrine.mongodb.aggregation_extension.collection`.
+
+The custom extensions receive the [aggregation builder](https://www.doctrine-project.org/projects/doctrine-mongodb-odm/en/latest/reference/aggregation-builder.html),
+used to execute [complex operations on data](https://docs.mongodb.com/manual/aggregation/).
 
 ## Custom Elasticsearch Extension
 

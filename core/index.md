@@ -1,14 +1,14 @@
 # The API Platform Core Library
 
-API Platform Core is an easy to use and powerful library to create [hypermedia-driven REST APIs](http://en.wikipedia.org/wiki/HATEOAS).
-It is a component of the [API Platform framework](https://api-platform.com). It can be used standalone or with [the Symfony
+API Platform Core is an easy-to-use and powerful library to create [hypermedia-driven REST APIs](http://en.wikipedia.org/wiki/HATEOAS).
+It is a component of the [API Platform framework](https://api-platform.com). It can be used as a standalone or with [the Symfony
 framework](https://symfony.com) (recommended).
 
 It embraces [JSON for Linked Data (JSON-LD)](http://json-ld.org) and [Hydra Core Vocabulary](http://www.hydra-cg.com) web
 standards but also supports [HAL](http://stateless.co/hal_specification.html), [Swagger/Open API](https://www.openapis.org/), XML, JSON, CSV and YAML.
 
 Build a working and fully featured CRUD API in minutes. Leverage the awesome features of the tool to develop complex and
-high performance API first projects.
+high-performance API-first projects.
 
 If you are starting a new project, the easiest way to get API Platform up is to install
 the [API Platform Distribution](../distribution/index.md).
@@ -22,7 +22,7 @@ Here is the fully featured REST API you'll get in minutes:
 * [Automatic CRUD](operations.md)
 * Hypermedia (JSON-LD and HAL)
 * Machine-readable documentation of the API in the Hydra and [Swagger/Open API](swagger.md) formats,
-  guessed from PHPDoc, Serializer, Validator and Doctrine ORM metadata
+  guessed from PHPDoc, Serializer, Validator and Doctrine ORM / MongoDB ODM metadata
 * Nice human-readable documentation built with Swagger UI (including a sandbox) and/or ReDoc
 * [Pagination](pagination.md)
 * A bunch of [filters](filters.md)
@@ -39,7 +39,7 @@ Here is the fully featured REST API you'll get in minutes:
 
 Everything is fully customizable through a powerful event system and strong OOP.
 
-This bundle is extensively tested (unit and functional). The [`Fixtures/` directory](https://github.com/api-platform/core/tree/master/tests/Fixtures)) contains a working app covering all features of the library.
+This bundle is extensively tested (unit and functional). The [`Fixtures/` directory](https://github.com/api-platform/core/tree/master/tests/Fixtures) contains a working app covering all features of the library.
 
 ## Other resources
 

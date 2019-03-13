@@ -1,19 +1,19 @@
 # OpenAPI Specification Support (formerly Swagger)
 
-API Platform natively support the [Open API](https://www.openapis.org/) API specification format.
+API Platform natively support the [OpenAPI](https://www.openapis.org/) API specification format.
 
 ![Screenshot](../distribution/images/swagger-ui-1.png)
 
 The specification of the API is available at the `/docs.json` path.
 By default, OpenAPI v2 is used.
-You can also get an OpenAPI v3 compliant version thanks to the `spec_version` query parameter: `/docs.json?spec_version=3`
+You can also get an OpenAPI v3-compliant version thanks to the `spec_version` query parameter: `/docs.json?spec_version=3`
 
 It also integrates a customized version of [Swagger UI](https://swagger.io/swagger-ui/) and [ReDoc](https://rebilly.github.io/ReDoc/), some nice tools to display the
 API documentation in a user friendly way.
 
 ## Using the OpenAPI Command
 
-You can also dump an OpenAPI specification for your API by using the provided command:
+You can also dump an OpenAPI specification for your API by using the following command:
 
 ```
 $ docker-compose exec php bin/console api:openapi:export
@@ -38,7 +38,7 @@ Symfony allows to [decorate services](https://symfony.com/doc/current/service_co
 need to decorate `api_platform.swagger.normalizer.documentation`.
 
 In the following example, we will see how to override the title of the Swagger documentation and add a custom filter for
-the `GET` operation of `/foos` path
+the `GET` operation of `/foos` path.
 
 ```yaml
 # api/config/services.yaml
@@ -182,7 +182,7 @@ resources:
               format: date-time
 ```
 
-Will produce the following Swagger documentation:
+This will produce the following Swagger documentation:
 ```json
 {
   "swagger": "2.0",
@@ -262,7 +262,7 @@ class User
 
 ## Changing Operations in the OpenAPI Documentation
 
-You also have full control over both built-in and custom operations documentation:
+You also have full control over both built-in and custom operations documentation.
 
 In Yaml:
 
@@ -350,7 +350,7 @@ Again, you can use the `openapi_context` key instead of the `swagger_context` on
 
 Sometimes you may want to have the API at one location, and the Swagger UI at a different location. This can be done by disabling the Swagger UI from the API Platform configuration file and manually adding the Swagger UI controller.
 
-### Disabling Swagger UI or of ReDoc
+### Disabling Swagger UI or ReDoc
 
 ```yaml
 # api/config/packages/api_platform.yaml
@@ -369,7 +369,7 @@ swagger_ui:
     controller: api_platform.swagger.action.ui
 ```
 
-Change `/docs` to your desired URI you wish Swagger to be accessible on.
+Change `/docs` to the URI you wish Swagger to be accessible on.
 
 ## Overriding the UI Template
 

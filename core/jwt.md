@@ -1,8 +1,7 @@
 # JWT Authentication
 
 > [JSON Web Token (JWT)](https://jwt.io/) is a JSON-based open standard ([RFC 7519](https://tools.ietf.org/html/rfc7519)) for creating access tokens that assert some number of claims. For example, a server could generate a token that has the claim "logged in as admin" and provide that to a client. The client could then use that token to prove that he/she is logged in as admin. The tokens are signed by the server's key, so the server is able to verify that the token is legitimate. The tokens are designed to be compact, URL-safe and usable especially in web browser single sign-on (SSO) context.
-
-[Wikipedia](https://en.wikipedia.org/wiki/JSON_Web_Token)
+> - [Wikipedia](https://en.wikipedia.org/wiki/JSON_Web_Token)
 
 API Platform allows to easily add a JWT-based authentication to your API using [LexikJWTAuthenticationBundle](https://github.com/lexik/LexikJWTAuthenticationBundle).
 To install this bundle, [just follow its documentation](https://github.com/lexik/LexikJWTAuthenticationBundle/blob/master/Resources/doc/index.md).
@@ -10,8 +9,8 @@ To install this bundle, [just follow its documentation](https://github.com/lexik
 ## Installing LexikJWTAuthenticationBundle
 
 `LexikJWTAuthenticationBundle` requires your application to have a properly configured user provider.
-You can either use the [Doctrine user provider](https://symfony.com/doc/current/security/entity_provider.html) provided
-by Symfony (recommended), [create a custom user provider](http://symfony.com/doc/current/security/custom_provider.html)
+You can either use the [Doctrine user provider](https://symfony.com/doc/current/security/user_provider.html#entity-user-provider) provided
+by Symfony (recommended), [create a custom user provider](https://symfony.com/doc/current/security/user_provider.html#creating-a-custom-user-provider)
 or use [API Platform's FOSUserBundle integration](fosuser-bundle.md).
 
 Here's a sample configuration using the data provider provided by FOSUserBundle:
@@ -78,13 +77,13 @@ api_platform:
                 type: header
 ```
 
-And the "Authorize" button will automatically appear in Swagger UI.
+The "Authorize" button will automatically appear in Swagger UI.
 
 ![Screenshot of API Platform with Authorize button](images/JWTAuthorizeButton.png)
 
 ### Adding a New API Key
 
-All you have to do is configuring the API key in the `value` field.
+All you have to do is configure the API key in the `value` field.
 By default, [only the authorization header mode is enabled](https://github.com/lexik/LexikJWTAuthenticationBundle/blob/master/Resources/doc/index.md#2-use-the-token) in [LexikJWTAuthenticationBundle](https://github.com/lexik/LexikJWTAuthenticationBundle).
 You must set the [JWT token](https://github.com/lexik/LexikJWTAuthenticationBundle/blob/master/Resources/doc/index.md#1-obtain-the-token) as below and click on the "Authorize" button.
 

@@ -6,7 +6,7 @@ Exposing a hypermedia API has [many advantages](http://blog.theamazingrando.com/
 them is the ability to know exactly which resources are included in HTTP responses created by the API. We used this
 specificity to make API Platform apps blazing fast.
 
-When the cache mechanism [is enabled](configuration.md), API Platform collects identifiers of every resources
+When the cache mechanism [is enabled](configuration.md), API Platform collects identifiers of every resource
 included in a given HTTP response (including lists, embedded documents and subresources) and returns them in a special
 HTTP header called [Cache-Tags](https://support.cloudflare.com/hc/en-us/articles/206596608-How-to-Purge-Cache-Using-Cache-Tags-Enterprise-only-).
 
@@ -24,7 +24,7 @@ Integration with Varnish and Doctrine ORM is shipped with the core library, and 
 distribution of API Platform.
 If you use the distribution, this feature works out of the box.
 
-If you don't, add the following configuration to enable the cache invalidation system:
+If you don't use the distribution, add the following configuration to enable the cache invalidation system:
 
 ```yaml
 parameters:
@@ -53,7 +53,7 @@ In addition to the cache invalidation mechanism, you may want to [use HTTP/2 Ser
 
 ### Extending Cache-Tags for invalidation
 
-Sometimes you need individual resources like `/me`. To work properly with Varnish, the cache tags need to be augmented with these resources. Here is an example how this can be done:
+Sometimes you need individual resources like `/me`. To work properly with Varnish, the Cache-Tags need to be augmented with these resources. Here is an example of how this can be done:
 
 ```php
 <?php
@@ -138,7 +138,17 @@ API Platform internally uses a [PSR-6](http://www.php-fig.org/psr/psr-6/) cache.
 (the default in the official distribution), it automatically enables the support for the best cache adapter available.
 
 Best performance is achieved using [APCu](https://github.com/krakjoe/apcu). Be sure to have the APCu extension installed
-on your production server, API Platform will automatically use it.
+on your production server. API Platform will automatically use it.
+
+This parameter can be changed by changing the value of `api_platform.metadata_cache`:
+
+```yaml
+# api/config/config.yaml
+
+parameters:
+    # Enable the metadata cache to speedup the builds
+    api_platform.metadata_cache: true
+```
 
 ## Using PPM (PHP-PM)
 
@@ -160,16 +170,15 @@ database driver.
 
 ### Eager Loading
 
-By default Doctrine comes with [lazy loading](http://doctrine-orm.readthedocs.io/en/latest/reference/working-with-objects.html#by-lazy-loading).
-Usually a killer time-saving feature and also a performance killer with large applications.
+By default Doctrine comes with [lazy loading](https://www.doctrine-project.org/projects/doctrine-orm/en/latest/reference/working-with-objects.html#by-lazy-loading) - usually a killer time-saving feature but also a performance killer with large applications.
 
-Fortunately, Doctrine proposes another approach to remedy this problem: [eager loading](http://doctrine-orm.readthedocs.io/en/latest/reference/working-with-objects.html#by-eager-loading).
+Fortunately, Doctrine offers another approach to solve this problem: [eager loading](https://www.doctrine-project.org/projects/doctrine-orm/en/current/reference/working-with-objects.html#by-eager-loading).
 This can easily be enabled for a relation: `@ORM\ManyToOne(fetch="EAGER")`.
 
 By default in API Platform, we made the choice to force eager loading for all relations, with or without the Doctrine
 `fetch` attribute. Thanks to the eager loading [extension](extensions.md). The `EagerLoadingExtension` will join every
-readable association according to the serialization context. If you want to fetch an association that is not serializable
-you've to bypass `readable` and `readableLink` by using the `fetchEager` attribute on the property declaration, for example:
+readable association according to the serialization context. If you want to fetch an association that is not serializable,
+you have to bypass `readable` and `readableLink` by using the `fetchEager` attribute on the property declaration, for example:
 
 ```php
 /**
@@ -180,9 +189,9 @@ you've to bypass `readable` and `readableLink` by using the `fetchEager` attribu
 
 #### Max Joins
 
-There is a default restriction with this feature. We allow up to 30 joins per query. Beyond, an
+There is a default restriction with this feature. We allow up to 30 joins per query. Beyond that, an
 `ApiPlatform\Core\Exception\RuntimeException` exception will be thrown but this value can easily be increased with a
-little of configuration:
+bit of configuration:
 
 ```yaml
 # api/config/packages/api_platform.yaml
@@ -196,7 +205,7 @@ can be a good solution to fix this issue.
 
 #### Force Eager
 
-As mentioned above, by default we force eager loading for all relations. This behaviour can be modified with the
+As mentioned above, by default we force eager loading for all relations. This behaviour can be modified in the
 configuration in order to apply it only on join relations having the `EAGER` fetch mode:
 
 ```yaml
@@ -209,7 +218,7 @@ api_platform:
 #### Override at Resource and Operation Level
 
 When eager loading is enabled, whatever the status of the `force_eager` parameter, you can easily override it directly
-from the configuration of each resource. You can do this at the resource level, at the operations level, or both:
+from the configuration of each resource. You can do this at the resource level, at the operation level, or both:
 
 ```php
 <?php
@@ -259,7 +268,7 @@ class User
      * @ORM\JoinTable(name="users_groups")
      */
     public $groups;
-    
+
     // ...
 }
 ```
@@ -295,7 +304,7 @@ class Group
      * @ManyToMany(targetEntity="User", mappedBy="groups")
      */
     public $users;
-    
+
     // ...
 }
 ```
@@ -314,13 +323,13 @@ api_platform:
         enabled: false
 ```
 
-The whole configuration seen before will no longer work and Doctrine will recover its default behavior.
+The whole configuration described before will no longer work and Doctrine will recover its default behavior.
 
 ### Partial Pagination
 
 When using the default pagination, the Doctrine paginator will execute a `COUNT` query on the collection. The result of the
-`COUNT` query is used to compute the latest page available. With big collections this can lead to quite long response times.
-If you don't mind not having the latest page available, you can enable partial pagination and avoid the `COUNT` query:
+`COUNT` query is used to compute the last page available. With big collections this can lead to quite long response times.
+If you don't mind not having the last page available, you can enable partial pagination and avoid the `COUNT` query:
 
 ```yaml
 # api/config/packages/api_platform.yaml
@@ -364,8 +373,9 @@ To configure Blackfire.io follow these simple steps:
 ```dockerfile
         RUN version=$(php -r "echo PHP_MAJOR_VERSION.PHP_MINOR_VERSION;") \
             && curl -A "Docker" -o /tmp/blackfire-probe.tar.gz -D - -L -s https://blackfire.io/api/v1/releases/probe/php/alpine/amd64/$version \
-            && tar zxpf /tmp/blackfire-probe.tar.gz -C /tmp \
-            && mv /tmp/blackfire-*.so $(php -r "echo ini_get('extension_dir');")/blackfire.so \
+            && mkdir -p /tmp/blackfire \
+            && tar zxpf /tmp/blackfire-probe.tar.gz -C /tmp/blackfire \                        
+            && mv /tmp/blackfire/blackfire-*.so $(php -r "echo ini_get('extension_dir');")/blackfire.so \
             && printf "extension=blackfire.so\nblackfire.agent_socket=tcp://blackfire:8707\n" > $PHP_INI_DIR/conf.d/blackfire.ini
 ```
 

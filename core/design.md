@@ -32,7 +32,7 @@ For [Rapid Application Development](https://en.wikipedia.org/wiki/Rapid_applicat
 **if and only if the class marked with `@ApiResource` is also a Doctrine entity**, the developer can use the Doctrine
 ORM's data provider and persister implementations shipped with API Platform.
 
-In this case, the public (`@ApiResource`) and internal (Doctrine entity) data model are shared. Then, API Platform will
+In this case, the public (`@ApiResource`) and internal (Doctrine entity) data models are shared. Then, API Platform will
 be able to query, filter, paginate and persist data automatically.
 This approach is super-convenient and efficient, but is probably **not a good idea** for non-[CRUD](https://en.wikipedia.org/wiki/Create,_read,_update_and_delete)
 and/or large systems.

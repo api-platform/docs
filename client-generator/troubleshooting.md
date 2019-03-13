@@ -13,7 +13,7 @@ api_jsonld_context                         ANY      ANY      ANY    /contexts/{s
 specified the documentation URL instead of the entrypoint. For example if you are using API Platform and your
 documentation URL is at [https://demo.api-platform.com/docs](https://demo.api-platform.com/docs) the entry point is
 likely at [https://demo.api-platform.com](https://demo.api-platform.com). You can see an example of the expected
-response from an entrypoint in your browser by clicking visiting
+response from an entrypoint in your browser by visiting
 [https://demo.api-platform.com/index.jsonld](https://demo.api-platform.com/index.jsonld).
 
 * If you receive `TypeError: Cannot read property '@type' of undefined` or `TypeError: Cannot read property '0'

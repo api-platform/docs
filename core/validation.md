@@ -1,6 +1,6 @@
 # Validation
 
-API Platform take care of validating data sent to the API by the client (usually user data entered through forms).
+API Platform takes care of validating the data sent to the API by the client (usually user data entered through forms).
 By default, the framework relies on [the powerful Symfony Validator Component](http://symfony.com/doc/current/validation.html)
 for this task, but you can replace it by your preferred validation library such as [the PHP filter extension](http://php.net/manual/en/intro.filter.php)
 if you want to.
@@ -157,10 +157,10 @@ class Book
 }
 ```
 
-With the previous configuration, the validations groups `a` and `b` will be used when validation is performed.
+With the previous configuration, the validation groups `a` and `b` will be used when validation is performed.
 
 Like for [serialization groups](serialization.md#using-different-serialization-groups-per-operation),
-you can specify validation groups globally or on a per operation basis.
+you can specify validation groups globally or on a per-operation basis.
 
 Of course, you can use XML or YAML configuration format instead of annotations if you prefer.
 
@@ -306,7 +306,7 @@ final class AdminGroupsGenerator
 }
 ```
 
-This class selects the groups to apply regarding the role of the current user: if the current user has the `ROLE_ADMIN` role, groups `a` and `b` are returned. In other cases, just `a` is returned.
+This class selects the groups to apply based on the role of the current user: if the current user has the `ROLE_ADMIN` role, groups `a` and `b` are returned. In other cases, just `a` is returned.
 
 This class is automatically registered as a service thanks to [the autowiring feature of the Symfony Dependency Injection Component](https://symfony.com/doc/current/service_container/autowiring.html). Just note that this service must be public.
 
@@ -367,3 +367,36 @@ api_platform:
 ```
 
 In this example, only `severity` and `anotherPayloadField` will be serialized.
+
+## Validation on Collection Relations
+
+Note: this is related to the [collection relation denormalization](./serialization.md#collection-relation).
+You may have an issue when trying to validate a relation representing a collection (`toMany`). After fixing the denormalization by using a getter that returns `$collectionRelation->getValues()`, you should define your validation on the getter instead of the property.
+
+For example:
+
+```xml
+<getter property="cars">
+    <constraint name="Valid"/>
+</getter>
+```
+
+```php
+final class Brand
+{
+    // ...
+
+    public function __construct()
+    {
+        $this->cars = new ArrayCollection();
+    }
+
+    /**
+     * @Assert\Valid
+     */
+    public function getCars()
+    {
+        return $this->cars->getValues();
+    }
+}
+```

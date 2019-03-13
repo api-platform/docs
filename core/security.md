@@ -4,7 +4,7 @@ To completely disable some operations from your application, refer to the [disab
 section.
 
 Using API Platform, you can leverage all security features provided by the [Symfony Security component](http://symfony.com/doc/current/book/security.html).
-For instance, if you wish to restrict the access of some endpoints, you can use [access controls directives](http://symfony.com/doc/current/book/security.html#securing-url-patterns-access-control).
+For instance, if you wish to restrict the access of some endpoints, you can use [access control directives](http://symfony.com/doc/current/book/security.html#securing-url-patterns-access-control).
 
 Since 2.1, you can add security through [Symfony's access control expressions](https://symfony.com/doc/current/expressions.html#security-complex-access-controls-with-expressions) in your entities.
 
@@ -63,8 +63,8 @@ class Book
 }
 ```
 
-This example is going to allow only fetching the book related to the current user. If he tries to fetch a book which is not
-linked to his account, that will not return the resource. In addition, only admins are able to create books which means
+This example is only going to allow fetching the book related to the current user. If the user tries to fetch a book which is not
+linked to his account, it will not return the resource. In addition, only admins are able to create books which means
 that a user could not create a book.
 
 It is also possible to use the [event system](events.md) for more advanced logic or even [custom actions](operations.md#creating-custom-operations-and-controllers)
@@ -72,8 +72,8 @@ if you really need to.
 
 ## Configuring the Access Control Message
 
-By default when API request will be denied you will get the "Access Denied." message.
-You can change it by configuring "access\_control\_message" attribute.
+By default when API requests are denied, you will get the "Access Denied" message.
+You can change it by configuring the "access\_control\_message" attribute.
 
 For example:
 
@@ -123,7 +123,7 @@ App\Entity\Book:
     # ...
 ```
 
-In access control expressions for collection, the `object` variable contains the list of resources that will be serialized.
+In access control expressions for collections, the `object` variable contains the list of resources that will be serialized.
 To remove entries from a collection, you should implement [a Doctrine extension](extensions.md) to customize the generated DQL query (e.g. add `WHERE` clauses depending of the currently connected user) instead of using access control expressions.
 
-If you use [custom data providers](data-providers.md), you'll have to implement the filtering logic accordingly to the persistence layer you rely on.
+If you use [custom data providers](data-providers.md), you'll have to implement the filtering logic according to the persistence layer you rely on.

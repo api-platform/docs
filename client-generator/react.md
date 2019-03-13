@@ -18,7 +18,7 @@ It contains the React Client Generator, all dependencies it needs, a Progressive
 a development Docker container to serve the webapp, and all the API Platform components you may need, including an API server
 supporting Hydra.
 
-If you use the API Platform, jump to the next section!
+If you use API Platform, jump to the next section!
 Alternatively, you can generate a skeleton and install the generator using [npx](https://www.npmjs.com/package/npx).
 To use this generator you need [Node.js](https://nodejs.org/) and [Yarn](https://yarnpkg.com/) (or [NPM](https://www.npmjs.com/)) installed.
 
@@ -38,7 +38,7 @@ $ yarn add redux react-redux redux-thunk redux-form react-router-dom connected-r
 Optionally, install Bootstrap and Font Awesome to get an app that looks good:
 
 ```bash
-$ yarn add redux bootstrap font-awesome
+$ yarn add bootstrap font-awesome
 ```
 
 Finally, start the integrated web server:
