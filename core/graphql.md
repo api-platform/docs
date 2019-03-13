@@ -315,3 +315,19 @@ In this case, the REST endpoint will be able to get the two attributes of the bo
 
 The GraphQL endpoint will be able to query only the name. It will only be able to create a book with an author.
 When doing this mutation, the author of the created book will not be returned (the name will be instead).
+
+## Export the Schema in SDL
+
+You may need to export your schema in SDL (Schema Definition Language) to import it in some tools.
+
+The `api:graphql:export` command is provided to do so:
+
+```bash
+docker-compose exec php bin/console api:graphql:export -o path/to/your/volume/schema.graphql
+```
+
+Since the command prints the schema to the output if you don't use the `-o` option, you can also use this command:
+
+```bash
+docker-compose exec php bin/console api:graphql:export > path/in/host/schema.graphql
+```
