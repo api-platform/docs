@@ -68,51 +68,37 @@ use ApiPlatform\Core\Bridge\Doctrine\Orm\Extension\QueryCollectionExtensionInter
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Extension\QueryItemExtensionInterface;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Util\QueryNameGeneratorInterface;
 use App\Entity\Offer;
-use App\Entity\User;
 use Doctrine\ORM\QueryBuilder;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
-use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
+use Symfony\Component\Security\Core\Security;
 
 final class CurrentUserExtension implements QueryCollectionExtensionInterface, QueryItemExtensionInterface
 {
-    private $tokenStorage;
-    private $authorizationChecker;
+    private $security;
 
-    public function __construct(TokenStorageInterface $tokenStorage, AuthorizationCheckerInterface $checker)
+    public function __construct(Security $security)
     {
-        $this->tokenStorage = $tokenStorage;
-        $this->authorizationChecker = $checker;
+        $this->security = $security;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function applyToCollection(QueryBuilder $queryBuilder, QueryNameGeneratorInterface $queryNameGenerator, string $resourceClass, string $operationName = null)
     {
         $this->addWhere($queryBuilder, $resourceClass);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function applyToItem(QueryBuilder $queryBuilder, QueryNameGeneratorInterface $queryNameGenerator, string $resourceClass, array $identifiers, string $operationName = null, array $context = [])
     {
         $this->addWhere($queryBuilder, $resourceClass);
     }
 
-    /**
-     *
-     * @param QueryBuilder $queryBuilder
-     * @param string       $resourceClass
-     */
-    private function addWhere(QueryBuilder $queryBuilder, string $resourceClass)
+    private function addWhere(QueryBuilder $queryBuilder, string $resourceClass): void
     {
-        $user = $this->tokenStorage->getToken()->getUser();
-        if ($user instanceof User && Offer::class === $resourceClass && !$this->authorizationChecker->isGranted('ROLE_ADMIN')) {
-            $rootAlias = $queryBuilder->getRootAliases()[0];
-            $queryBuilder->andWhere(sprintf('%s.user = :current_user', $rootAlias));
-            $queryBuilder->setParameter('current_user', $user->getId());
+        if (Offer::class !== $resourceClass || $this->security->isGranted('ROLE_ADMIN') || null === $user = $this->security->getUser()) {
+            return;
         }
+
+        $rootAlias = $queryBuilder->getRootAliases()[0];
+        $queryBuilder->andWhere(sprintf('%s.user = :current_user', $rootAlias));
+        $queryBuilder->setParameter('current_user', $user));
     }
 }
 
