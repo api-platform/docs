@@ -20,6 +20,9 @@ docker-compose exec php composer req webonyx/graphql-php && bin/console cache:cl
 
 You can now use GraphQL at the endpoint: `https://localhost:8443/graphql`.
 
+*Note:* If you used [Symfony Flex to install API Platform](../distribution/index.md#using-symfony-flex-and-composer-advanced-users),
+the GraphQL endpoint will be: `https://localhost:8443/api/graphql`.
+
 ## GraphiQL
 
 If Twig is installed in your project, go to the GraphQL endpoint with your browser. You will see a nice interface provided by GraphiQL to interact with your API.
