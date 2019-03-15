@@ -407,7 +407,6 @@ Or using YAML:
 App\Entity\Answer:
     collectionOperations:
         api_questions_answer_get_subresource:
-            method: 'GET' # nothing more to add if we want to keep the default controller
             normalization_context: {groups: ['foobar']}
 ```
 
