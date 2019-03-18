@@ -21,7 +21,7 @@ Then, in the app directory, generate the files for the resource you want:
     # "src/" represents where the interfaces will be generated
     # Omit the resource flag to generate files for all resource types exposed by the API
 
-This command parses the Hydra documentation and creates one `.ts` file for each Api Resource you have defined in your application, in the `interfaces` subfolder.
+This command parses the Hydra documentation and creates one `.ts` file for each API Resource you have defined in your application, in the `interfaces` subfolder.
 
 NOTE: If you are not sure what the entrypoint is, see [Troubleshooting](troubleshooting.md)
 
