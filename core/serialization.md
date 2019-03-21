@@ -66,6 +66,8 @@ framework:
 
 ## Using Serialization Groups
 
+**This feature is not support by GraphQL query.**
+
 It is simple to specify what groups to use in the API system:
 
 1. Add the `normalizationContext` and `denormalizationContext` annotation properties to the `@ApiResource` annotation, and specify which groups to use. Here you see that we add `read` and `write`, respectively. You can use any group names you wish.
@@ -155,6 +157,8 @@ Any serialization and deserialization group that you specify will also be levera
 documentation generator.
 
 ## Using Serialization Groups per Operation
+
+**This feature is not support by GraphQL query.**
 
 It is possible to specify normalization and denormalization contexts (as well as any other attribute) on a per-operation
 basis. API Platform will always use the most specific definition. For instance, if normalization groups are set both
