@@ -48,6 +48,21 @@ final class ResetPasswordRequest
 }
 ```
 
+Alternatively, you can use the YAML configuration format:
+
+```yaml
+# api/config/api_platform/resources.yaml
+resources:
+  App\Entity\ResetPasswordRequest:
+    collectionOperations:
+      post:
+        status: 202
+    itemOperations: []
+    attributes:
+        messenger: true
+        output: false
+```
+
 Because the `messenger` attribute is `true`, when a `POST` is handled by API Platform, the corresponding instance of the `ResetPasswordRequest` will be dispatched.
 
 For this example, only the `POST` operation is enabled.
