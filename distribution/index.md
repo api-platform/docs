@@ -56,12 +56,12 @@ asynchronous jobs to your APIs is straightforward.
 
 ## Installing the Framework
 
-### Using the Official Distribution (recommended)
+### Using the Official Distribution (Recommended)
 
-Start by [downloading the API Platform distribution](https://github.com/api-platform/api-platform/releases/latest) and extract
-its content.
-The resulting directory contains an empty API Platform project structure. You will add your own code and configuration inside
-it.
+Start by [downloading the API Platform distribution `.tar.gz` file](https://github.com/api-platform/api-platform/releases/latest).
+Once you have extracted its contents, the resulting directory contains the API Platform project structure. You will add your own code and configuration inside it.
+
+**Note**: Try to avoid using the `.zip` file, as it may cause potential [permission](https://github.com/api-platform/api-platform/issues/319#issuecomment-307037562) [issues](https://github.com/api-platform/api-platform/issues/777#issuecomment-412515342).
 
 API Platform is shipped with a [Docker](https://docker.com) setup that makes it easy to get a containerized development
 environment up and running. If you do not already have Docker on your computer, [it's the right time to install it](https://docs.docker.com/install/).
