@@ -68,6 +68,19 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
  *             },
  *             "access_control"="is_granted('ROLE_USER')",
  *             "validation_groups"={"Default", "media_object_create"},
+ *             "swagger_context"={
+ *                 "consumes"={
+ *                     "multipart/form-data",
+ *                 },
+ *                 "parameters"={
+ *                     {
+ *                         "in"="formData",
+ *                         "name"="file",
+ *                         "type"="file",
+ *                         "description"="The file to upload",
+ *                     },
+ *                 },
+ *             },
  *         },
  *         "get",
  *     },
