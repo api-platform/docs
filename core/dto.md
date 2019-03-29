@@ -168,7 +168,7 @@ Now, we will update our resource by using a different input representation.
 
 With the following `BookInput`:
 
-```
+```php
 <?php
 // src/Dto/BookInput.php
 
@@ -184,7 +184,7 @@ final class BookInput {
 
 We will implement a `BookInputDataTransformer` that transforms the `BookInput` to our `Book` resource instance. In this case, the `Book` (`/books/1`) already exists, so we will just update it.
 
-```
+```php
 <?php
 // src/DataTransformer/BookInputDataTransformer.php
 
