@@ -387,7 +387,7 @@ namespace App\Entity;
 use ApiPlatform\Core\Annotation\ApiResource;
 
 /**
- * @ApiResource(collectionOperations={
+ * @ApiResource(subresourceOperations={
  *     "api_questions_answer_get_subresource"={
  *         "method"="GET",
  *         "normalization_context"={"groups"={"foobar"}}
@@ -405,7 +405,7 @@ Or using YAML:
 ```yaml
 # api/config/api_platform/resources.yaml
 App\Entity\Answer:
-    collectionOperations:
+    subresourceOperations:
         api_questions_answer_get_subresource:
             normalization_context: {groups: ['foobar']}
 ```
