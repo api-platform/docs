@@ -376,7 +376,7 @@ If you put the subresource on a relation that is to-many, you will retrieve a co
 
 Last but not least, subresources can be nested, such that `/questions/42/answer/comments` will get the collection of comments for the answer to question 42.
 
-You may want custom groups on subresources. Because a subresource is nothing more than a collection operation, you can set `normalization_context` or `denormalization_context` on that operation. To do so, you need to override `collectionOperations`. Based on the above operation, because we retrieve an answer, we need to alter its configuration:
+You may want custom groups on subresources. Because a subresource is nothing more than a collection operation, you can set `normalization_context` or `denormalization_context` on that operation. To do so, you need to override `subresourceOperations`. Based on the above operation, because we retrieve an answer, we need to alter its configuration:
 
 ```php
 <?php
@@ -421,16 +421,16 @@ Or in XML:
            xsi:schemaLocation="https://api-platform.com/schema/metadata
            https://api-platform.com/schema/metadata/metadata-2.0.xsd">
     <resource class="App\Entity\Answer">
-        <collectionOperations>
-            <collectionOperation name="api_questions_answer_get_subresource">
+        <subresourceOperations>
+            <subresourceOperation name="api_questions_answer_get_subresource">
                 <attribute name="method">GET</attribute>
                 <attribute name="normalization_context">
                   <attribute name="groups">
                     <attribute>foobar</attribute>
                   </attribute>
                 </attribute>
-            </collectionOperation>
-        </collectionOperations>
+            </subresourceOperation>
+        </subresourceOperations>
     </resource>
 </resources>
 ```
