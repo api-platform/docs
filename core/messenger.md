@@ -128,7 +128,7 @@ use App\Dto\ResetPasswordRequest;
  *         "post"={"status"=202}
  *     },
  *     itemOperations={},
- *     messenger=true,
+ *     messenger=input,
  *     input=ResetPasswordRequest::class,
  *     output=false
  * )
