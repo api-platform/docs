@@ -46,7 +46,7 @@ Note: if you aren't using the official distribution of API Platform, you will ne
 configuration:
 
 ```yaml
-# api/config/packages/api_platform.yaml
+# api/config/packages/framework.yaml
 framework:
     serializer: { enable_annotations: true }
 ```
@@ -57,7 +57,7 @@ all set!
 If you want to use YAML or XML, please add the mapping path in the serializer configuration:
 
 ```yaml
-# api/config/packages/api_platform.yaml
+# api/config/packages/framework.yaml
 framework:
     serializer:
         mapping:
