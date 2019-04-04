@@ -297,7 +297,7 @@ class Answer
     {
         return $this->id;
     }
-    
+
     // ...
 }
 ```
@@ -341,7 +341,7 @@ class Question
     {
         return $this->id;
     }
-    
+
     // ...
 }
 ```
@@ -376,7 +376,7 @@ If you put the subresource on a relation that is to-many, you will retrieve a co
 
 Last but not least, subresources can be nested, such that `/questions/42/answer/comments` will get the collection of comments for the answer to question 42.
 
-You may want custom groups on subresources. Because a subresource is nothing more than a collection operation, you can set `normalization_context` or `denormalization_context` on that operation. To do so, you need to override `subresourceOperations`. Based on the above operation, because we retrieve an answer, we need to alter its configuration:
+You may want custom groups on subresources, you can set `normalization_context` or `denormalization_context` on that operation. To do so, add a `subresourceOperations` node. For example:
 
 ```php
 <?php
@@ -692,7 +692,7 @@ class Book
      * @Groups("publication")
      */
     public $isbn;
-    
+
     // ...
 }
 ```
