@@ -27,7 +27,7 @@ class Book
      *     attributes={
      *         "jsonld_context"={
      *             "@id"="http://yourcustomid.com",
-     *             "@type"="http://www.w3.org/2001/XMLSchema#string"
+     *             "@type"="http://www.w3.org/2001/XMLSchema#string",
      *             "someProperty"={
      *                 "a"="textA",
      *                 "b"="textB"
