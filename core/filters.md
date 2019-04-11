@@ -975,7 +975,7 @@ A constant score query filter is basically a class implementing the `ApiPlatform
 and the `ApiPlatform\Core\Bridge\Elasticsearch\DataProvider\Filter\FilterInterface`. API Platform includes a convenient
 abstract class implementing this last interface and providing utility methods: `ApiPlatform\Core\Bridge\Elasticsearch\DataProvider\Filter\AbstractFilter`.
 
-Suppose you want to use the [match filter](https://api-platform.com/docs/core/filters/#match-filter) on a property named `$fullName` and you want to add the [and operator](https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl-match-query.html#query-dsl-match-query-boolean) to your query:
+Suppose you want to use the [match filter](#match-filter) on a property named `$fullName` and you want to add the [and operator](https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl-match-query.html#query-dsl-match-query-boolean) to your query:
 
 ```php
 <?php

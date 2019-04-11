@@ -1,5 +1,7 @@
 # Security
 
+If you have yet to set up authentication for your API, refer to the section on [JWT authentication](jwt.md).
+
 To completely disable some operations from your application, refer to the [disabling operations](operations.md#enabling-and-disabling-operations)
 section.
 
