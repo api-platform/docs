@@ -403,7 +403,7 @@ final class Brand
 
 ## Open Vocabulary Generated from Validation Metadata
 
-API Platform automatically detects Symfony's built-in validators and generate schema.org IRI metadata accordingly. This allows for rich clients such as the Admin component to infer the field types for most basic use cases.
+API Platform automatically detects Symfony's built-in validators and generates schema.org IRI metadata accordingly. This allows for rich clients such as the Admin component to infer the field types for most basic use cases.
 
 The following validation constraints are covered:
 
