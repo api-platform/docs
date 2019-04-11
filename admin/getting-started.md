@@ -225,7 +225,7 @@ export default class extends Component {
 }
 ```
 
-### Show the Names of your Entities instead of their IRIs
+### Show the Names of your Entities Instead of their IRIs
 
 When you install API Platform Admin, you might see objects being referred as their IRIs instead of the name you would expect to see. This is because the component looks for this information in the Hydra data.
 
