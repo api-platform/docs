@@ -225,6 +225,25 @@ export default class extends Component {
 }
 ```
 
+### Show the Names of your Entities instead of their IRIs
+
+When you install API Platform Admin, you might see objects being referred as their IRIs instead of the name you would expect to see. This is because the component looks for this information in the Hydra data.
+
+To configure which property should be shown to represent your entity, you have to include the following line in the docblock preceding your property:
+
+```php
+// api/src/Entity/Book.php
+
+/**
+ * @ApiProperty(iri="http://schema.org/name")
+ */
+private $name;
+```
+
+Besides, it is also possible to use the documentation to customize some fields automatically while configuring the semantics of your data.
+
+You can use the `http://schema.org/email` and `http://schema.org/url` properties to create an `EmailField` and an `UrlField`, respectively.
+
 ### Using the Hydra Data Provider Directly with react-admin
 
 By default, the `HydraAdmin` component shipped with API Platform Admin will generate a convenient admin interface for every resource and every property exposed by the API. But sometimes, you may prefer having full control over the generated admin.

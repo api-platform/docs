@@ -400,3 +400,27 @@ final class Brand
     }
 }
 ```
+
+## Open Vocabulary generated from Validation Metadata
+
+API Platform automatically detects Symfony's built-in validators and generate schema.org IRI metadata accordingly. This allows for rich clients such as the Admin component to infer the field types for most basic use cases.
+
+The following validation constraints are covered:
+
+Constraints                                                                           | Vocabulary                        |
+--------------------------------------------------------------------------------------|-----------------------------------|
+[`Url`](https://symfony.com/doc/current/reference/constraints/Url.html)               | `http://schema.org/url`           |
+[`Email`](https://symfony.com/doc/current/reference/constraints/Email.html)           | `http://schema.org/email`         |
+[`Uuid`](https://symfony.com/doc/current/reference/constraints/Uuid.html)             | `http://schema.org/identifier`    |
+[`CardScheme`](https://symfony.com/doc/current/reference/constraints/CardScheme.html) | `http://schema.org/identifier`    |
+[`Bic`](https://symfony.com/doc/current/reference/constraints/Bic.html)               | `http://schema.org/identifier`    |
+[`Iban`](https://symfony.com/doc/current/reference/constraints/Iban.html)             | `http://schema.org/identifier`    |
+[`Date`](https://symfony.com/doc/current/reference/constraints/Date.html)             | `http://schema.org/Date`          |
+[`DateTime`](https://symfony.com/doc/current/reference/constraints/DateTime.html)     | `http://schema.org/DateTime`      |
+[`Time`](https://symfony.com/doc/current/reference/constraints/Time.html)             | `http://schema.org/Time`          |
+[`Image`](https://symfony.com/doc/current/reference/constraints/Image.html)           | `http://schema.org/image`         |
+[`File`](https://symfony.com/doc/current/reference/constraints/File.html)             | `http://schema.org/MediaObject`   |
+[`Currency`](https://symfony.com/doc/current/reference/constraints/Currency.html)     | `http://schema.org/priceCurrency` |
+[`Isbn`](https://symfony.com/doc/current/reference/constraints/Isbn.html)             | `http://schema.org/isbn`          |
+[`Issn`](https://symfony.com/doc/current/reference/constraints/Issn.html)             | `http://schema.org/issn`          |
+
