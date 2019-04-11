@@ -92,7 +92,14 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
  */
 class MediaObject
 {
-    // ...
+    /**
+     * @var int|null
+     *
+     * @ORM\Column(type="integer")
+     * @ORM\GeneratedValue
+     * @ORM\Id
+     */
+    protected $id;
 
     /**
      * @var string|null
@@ -117,7 +124,10 @@ class MediaObject
      */
     public $filePath;
 
-    // ...
+    public function getId(): ?int
+    {
+        return $this->id;
+    }
 }
 ```
 
