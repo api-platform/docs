@@ -64,6 +64,7 @@ import { HydraAdmin, hydraClient, fetchHydra as baseFetchHydra } from '@api-plat
 import authProvider from './authProvider';
 import { Route, Redirect } from 'react-router-dom';
 
+const entrypoint = 'https://demo.api-platform.com'; // Change this by your own entrypoint
 const fetchHeaders = {'Authorization': `Bearer ${localStorage.getItem('token')}`};
 const fetchHydra = (url, options = {}) => baseFetchHydra(url, {
     ...options,
@@ -96,7 +97,7 @@ export default () => (
     <HydraAdmin
         apiDocumentationParser={apiDocumentationParser}
         authProvider={authProvider}
-        entrypoint="https://demo.api-platform.com" // Change this by your own entrypoint
+        entrypoint={entrypoint}
         dataProvider={dataProvider}
     />
 );
