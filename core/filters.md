@@ -1183,7 +1183,7 @@ namespace App\EventListener;
 
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
-use Doctrine\Orm\EntityManagerInterface;
+use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Common\Annotations\Reader;
 
 final class UserFilterConfigurator
