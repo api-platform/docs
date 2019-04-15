@@ -42,6 +42,7 @@ Or using XML:
     </resource>
 </resources>
 ```
+
 Or using YAML:
 
 ```yaml
@@ -52,7 +53,6 @@ resources:
             input: App\Dto\BookInput
             output: App\Dto\BookOutput
 ```
-
 
 The `input` attribute is used during [the deserialization process](serialization.md), when transforming the user-provided data to a resource instance.
 Similarly, the `output` attribute is used during [the serialization process](serialization.md). This class represents how the `Book` resource will be represented in the `Response`.
