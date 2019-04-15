@@ -26,7 +26,7 @@ final class Book
 }
 ```
 
-Or using YAML:
+Or using XML:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" ?>
