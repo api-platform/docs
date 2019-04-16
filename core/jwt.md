@@ -1,64 +1,142 @@
 # JWT Authentication
 
 > [JSON Web Token (JWT)](https://jwt.io/) is a JSON-based open standard ([RFC 7519](https://tools.ietf.org/html/rfc7519)) for creating access tokens that assert some number of claims. For example, a server could generate a token that has the claim "logged in as admin" and provide that to a client. The client could then use that token to prove that he/she is logged in as admin. The tokens are signed by the server's key, so the server is able to verify that the token is legitimate. The tokens are designed to be compact, URL-safe and usable especially in web browser single sign-on (SSO) context.
-> - [Wikipedia](https://en.wikipedia.org/wiki/JSON_Web_Token)
+>
+> ―[Wikipedia](https://en.wikipedia.org/wiki/JSON_Web_Token)
 
 API Platform allows to easily add a JWT-based authentication to your API using [LexikJWTAuthenticationBundle](https://github.com/lexik/LexikJWTAuthenticationBundle).
-To install this bundle, [just follow its documentation](https://github.com/lexik/LexikJWTAuthenticationBundle/blob/master/Resources/doc/index.md).
 
 ## Installing LexikJWTAuthenticationBundle
 
-`LexikJWTAuthenticationBundle` requires your application to have a properly configured user provider.
-You can either use the [Doctrine user provider](https://symfony.com/doc/current/security/user_provider.html#entity-user-provider) provided
-by Symfony (recommended), [create a custom user provider](https://symfony.com/doc/current/security/user_provider.html#creating-a-custom-user-provider)
-or use [API Platform's FOSUserBundle integration](fosuser-bundle.md).
+We begin by installing the bundle:
 
-Here's a sample configuration using the data provider provided by FOSUserBundle:
+    $ docker-compose exec php composer require jwt-auth
+
+Then we need to generate the public and private keys used for signing JWT tokens. If you're using the [API Platform distribution](../distribution/index.md), you may run this from the project's root directory:
+
+    $ docker-compose exec php sh -c '
+        set -e
+        apk add openssl
+        mkdir -p config/jwt
+        jwt_passhrase=$(grep ''^JWT_PASSPHRASE='' .env | cut -f 2 -d ''='')
+        echo "$jwt_passhrase" | openssl genpkey -out config/jwt/private.pem -pass stdin -aes256 -algorithm rsa -pkeyopt rsa_keygen_bits:4096
+        echo "$jwt_passhrase" | openssl pkey -in config/jwt/private.pem -passin stdin -out config/jwt/public.pem -pubout
+        setfacl -R -m u:www-data:rX -m u:"$(whoami)":rwX config/jwt
+        setfacl -dR -m u:www-data:rX -m u:"$(whoami)":rwX config/jwt
+    '
+
+This takes care of using the correct passphrase to encrypt the private key, and setting the correct permissions on the
+keys allowing the web server to read them.
+
+If you want the keys to be auto generated in `dev` environment, see an example in the [docker-entrypoint script of api-platform/demo](https://github.com/api-platform/demo/blob/master/api/docker/php/docker-entrypoint.sh).
+
+The keys should not be checked in to the repository (i.e. it's in `api/.gitignore`). However, note that a JWT token could
+only pass signature validation against the same pair of keys it was signed with. This is especially relevant in a production
+environment, where you don't want to accidentally invalidate all your clients' tokens at every deployment.
+
+For more information, refer to [the bundle's documentation](https://github.com/lexik/LexikJWTAuthenticationBundle/blob/master/Resources/doc/index.md)
+or read a [general introduction to JWT here](https://jwt.io/introduction/).
+
+We're not done yet! Let's move on to configuring the Symfony SecurityBundle for JWT authentication.
+
+## Configuring the Symfony SecurityBundle
+
+It is necessary to configure a user provider. You can either use the [Doctrine entity user provider](https://symfony.com/doc/current/security/user_provider.html#entity-user-provider)
+provided by Symfony (recommended), [create a custom user provider](https://symfony.com/doc/current/security/user_provider.html#creating-a-custom-user-provider)
+or use [API Platform's FOSUserBundle integration](fosuser-bundle.md) (not recommended).
+
+If you choose to use the Doctrine entity user provider, start by [creating your `User` class](https://symfony.com/doc/current/security.html#a-create-your-user-class).
+
+Then update the security configuration:
 
 ```yaml
-# app/config/packages/security.yaml
+# api/config/packages/security.yaml
 security:
     encoders:
-        FOS\UserBundle\Model\UserInterface: bcrypt
+        App\Entity\User:
+            algorithm: argon2i
 
-    role_hierarchy:
-        ROLE_READER: ROLE_USER
-        ROLE_ADMIN: ROLE_READER
-
+    # https://symfony.com/doc/current/security.html#where-do-users-come-from-user-providers
     providers:
-        fos_userbundle:
-            id: fos_user.user_provider.username_email
+        # used to reload user from session & other features (e.g. switch_user)
+        app_user_provider:
+            entity:
+                class: App\Entity\User
+                property: email
 
     firewalls:
-        login:
-            pattern:  ^/login
+        dev:
+            pattern: ^/_(profiler|wdt)
+            security: false
+        main:
             stateless: true
             anonymous: true
-            provider: fos_userbundle
+            provider: app_user_provider
             json_login:
-                check_path: /login_check
+                check_path: /authentication_token
                 username_path: email
                 password_path: password
                 success_handler: lexik_jwt_authentication.handler.authentication_success
                 failure_handler: lexik_jwt_authentication.handler.authentication_failure
-
-        main:
-            pattern:   ^/
-            provider: fos_userbundle
-            stateless: true
-            anonymous: true
             guard:
                 authenticators:
                     - lexik_jwt_authentication.jwt_token_authenticator
+```
 
+You must also declare the route used for `/authentication_token`:
+
+```yaml
+# api/config/routes.yaml
+authentication_token:
+    path: /authentication_token
+    methods: ['POST']
+```
+
+If you want to avoid loading the `User` entity from database each time a JWT token needs to be authenticated, you may consider using
+the [database-less user provider](https://github.com/lexik/LexikJWTAuthenticationBundle/blob/master/Resources/doc/8-jwt-user-provider.md) provided by LexikJWTAuthenticationBundle. However, it means you will have to fetch the `User` entity from the database yourself as needed (probably through the Doctrine EntityManager).
+
+Refer to the section on [Security](security.md) to learn how to control access to API resources and operations. You may
+also want to [configure Swagger UI for JWT authentication](#documenting-the-authentication-mechanism-with-swaggeropen-api).
+
+### Adding Authentication to an API Which Uses a Path Prefix
+
+If your API uses a [path prefix](https://symfony.com/doc/current/routing/external_resources.html#prefixing-the-urls-of-imported-routes), the security configuration would look something like this instead:
+
+```yaml
+# api/config/packages/security.yaml
+security:
+    encoders:
+        App\Entity\User:
+            algorithm: argon2i
+
+    # https://symfony.com/doc/current/security.html#where-do-users-come-from-user-providers
+    providers:
+        # used to reload user from session & other features (e.g. switch_user)
+        app_user_provider:
+            entity:
+                class: App\Entity\User
+                property: email
+
+    firewalls:
         dev:
-            pattern:  ^/(_(profiler|wdt)|css|images|js)/
+            pattern: ^/_(profiler|wdt)
             security: false
-
-    access_control:
-        - { path: ^/login, role: IS_AUTHENTICATED_ANONYMOUSLY }
-        - { path: ^/books, roles: [ ROLE_READER ] }
-        - { path: ^/, roles: [ ROLE_READER ] }
+        api:
+            pattern: ^/api/
+            stateless: true
+            anonymous: true
+            provider: app_user_provider
+            guard:
+                authenticators:
+                    - lexik_jwt_authentication.jwt_token_authenticator
+        main:
+            anonymous: true
+            json_login:
+                check_path: /authentication_token
+                username_path: email
+                password_path: password
+                success_handler: lexik_jwt_authentication.handler.authentication_success
+                failure_handler: lexik_jwt_authentication.handler.authentication_failure
 ```
 
 ## Documenting the Authentication Mechanism with Swagger/Open API
@@ -84,7 +162,7 @@ The "Authorize" button will automatically appear in Swagger UI.
 ### Adding a New API Key
 
 All you have to do is configure the API key in the `value` field.
-By default, [only the authorization header mode is enabled](https://github.com/lexik/LexikJWTAuthenticationBundle/blob/master/Resources/doc/index.md#2-use-the-token) in [LexikJWTAuthenticationBundle](https://github.com/lexik/LexikJWTAuthenticationBundle).
+By default, [only the authorization header mode is enabled](https://github.com/lexik/LexikJWTAuthenticationBundle/blob/master/Resources/doc/index.md#2-use-the-token) in LexikJWTAuthenticationBundle.
 You must set the [JWT token](https://github.com/lexik/LexikJWTAuthenticationBundle/blob/master/Resources/doc/index.md#1-obtain-the-token) as below and click on the "Authorize" button.
 
 ```
@@ -92,7 +170,6 @@ Bearer MY_NEW_TOKEN
 ```
 
 ![Screenshot of API Platform with the configuration API Key](images/JWTConfigureApiKey.png)
-
 
 ## Testing with Behat
 

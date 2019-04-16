@@ -1,23 +1,23 @@
 # Authentication Support
 
 Authentication can easily be handled when using the API Platform's admin library.
-In the following section, we will assume [the API is secured using JWT](https://api-platform.com/docs/core/jwt), but the
-process is similar for other authentication mechanisms. The `login_uri` is the full URI to the route specified by the `firewalls.login.json_login.check_path` config in the [JWT documentation](https://api-platform.com/docs/core/jwt).
+In the following section, we will assume [the API is secured using JWT](../core/jwt.md), but the
+process is similar for other authentication mechanisms. The `authenticationTokenUri` is the full URI to the path / route specified by the `firewalls.{name}.json_login.check_path` config in the [JWT documentation](../core/jwt.md).
 
 The first step is to create a client to handle the authentication process:
 
 ```javascript
-// src/authProvider.js
+// admin/src/authProvider.js
 import { AUTH_LOGIN, AUTH_LOGOUT, AUTH_ERROR, AUTH_CHECK } from 'react-admin';
 
-// Change this to be your own login check route.
-const login_uri = 'https://demo.api-platform.com/login_check';
+// Change this to be your own authentication token URI.
+const authenticationTokenUri = 'https://localhost:8443/authentication_token';
 
 export default (type, params) => {
   switch (type) {
     case AUTH_LOGIN:
       const { username, password } = params;
-      const request = new Request(`${login_uri}`, {
+      const request = new Request(authenticationTokenUri, {
         method: 'POST',
         body: JSON.stringify({ email: username, password }),
         headers: new Headers({ 'Content-Type': 'application/json' }),
