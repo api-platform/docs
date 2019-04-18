@@ -28,6 +28,13 @@ final class Person {
     // ...
 }
 ```
+```yaml
+App\Entity\Person:
+    properties:
+        code:
+            identifier: true
+        # ...
+```
 
 Once registered as an `ApiResource`, having an existing person, it will be accessible through the following URL: `/people/110e8400-e29b-11d4-a716-446655440000`.
 Note that the property identifying our resource is named `code`.
