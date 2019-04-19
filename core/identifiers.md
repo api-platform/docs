@@ -28,6 +28,9 @@ final class Person {
     // ...
 }
 ```
+
+You can also use the YAML configuration format:
+
 ```yaml
 App\Entity\Person:
     properties:
