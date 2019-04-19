@@ -231,9 +231,8 @@ services:
 
 ## Disabling the Input or the Output
 
-Both the `input` and the `output` attributes can be set to `false`.
-If `input` is `false`, the deserialization process will be skipped, and no data persister will be called.
-If `output` is `false`, the serialization process will be skipped, and no data provider will be called.
+Both the `input` and the `output` attributes can be set to `false`. If `input` is `false`, the deserialization process
+will be skipped. If `output` is `false`, the serialization process will be skipped.
 
 ## Input/Output Metadata
 
