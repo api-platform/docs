@@ -26,7 +26,7 @@ Finally, 3 environment variables [must be set](https://symfony.com/doc/current/c
 
 * `MERCURE_PUBLISH_URL`: the URL that must be used by API Platform to publish updates to your Mercure hub (can be an internal or a public URL)
 * `MERCURE_SUBSCRIBE_URL`: the **public** URL of the Mercure hub that clients will use to subscribe to updates
-* `MERCURE_JWT`: a valid Mercure [JSON Web Token (JWT)](https://jwt.io/) allowing API Platform to publish updates to the hub
+* `MERCURE_JWT_SECRET`: a valid Mercure [JSON Web Token (JWT)](https://jwt.io/) allowing API Platform to publish updates to the hub
 
 The JWT **must** contain a `mercure.publish` property containing an array of targets.
 This array can be empty to allow publishing anonymous updates only.
