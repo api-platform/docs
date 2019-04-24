@@ -73,8 +73,6 @@ services:
     # Comment out this volume in production
     volumes:
       - ./api/public:/srv/api/public:ro
-    ports:
-      - "8080:80"
       
   db:
     # In production, you may want to use a managed database service
