@@ -11,7 +11,7 @@ The first step is to create a client to handle the authentication process:
 import { AUTH_LOGIN, AUTH_LOGOUT, AUTH_ERROR, AUTH_CHECK } from 'react-admin';
 
 // Change this to be your own authentication token URI.
-const authenticationTokenUri = 'https://localhost:8443/authentication_token';
+const authenticationTokenUri = `${process.env.REACT_APP_API_ENTRYPOINT}/authentication_token`;
 
 export default (type, params) => {
   switch (type) {
