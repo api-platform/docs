@@ -7,7 +7,7 @@ To do so, a resource can take an input and/or an output class:
 
 ```php
 <?php
-// api/src/Entity/Book.php
+// src/Entity/Book.php
 
 namespace App\Entity;
 
@@ -248,7 +248,7 @@ Because API Platform can (de)normalize anything in the supported formats (`jsonl
 
 ```php
 <?php
-// api/src/Entity/Book.php
+// src/Entity/Book.php
 
 namespace App\Entity;
 
