@@ -31,7 +31,6 @@ export default (type, params) => {
         })
         .then(({ token }) => {
           localStorage.setItem('token', token); // The JWT token is stored in the browser's local storage
-          window.location.replace('/');
         });
 
     case AUTH_LOGOUT:
@@ -39,7 +38,8 @@ export default (type, params) => {
       break;
 
     case AUTH_ERROR:
-      if (401 === params.status || 403 === params.status) {
+      const status  = params.response.status;
+      if (401 === status || 403 === status) {
         localStorage.removeItem('token');
 
         return Promise.reject();
@@ -65,11 +65,13 @@ import authProvider from './authProvider';
 import { Route, Redirect } from 'react-router-dom';
 
 const entrypoint = 'https://demo.api-platform.com'; // Change this by your own entrypoint
-const fetchHeaders = {'Authorization': `Bearer ${localStorage.getItem('token')}`};
-const fetchHydra = (url, options = {}) => baseFetchHydra(url, {
+const fetchHydra = (url, options = {}) => {
+  const fetchHeaders = {'Authorization': `Bearer ${localStorage.getItem('token')}`};
+  return baseFetchHydra(url, {
     ...options,
     headers: new Headers(fetchHeaders),
-});
+  });
+};
 const dataProvider = api => hydraClient(api, fetchHydra);
 const apiDocumentationParser = entrypoint =>
   parseHydraDocumentation(entrypoint, {
