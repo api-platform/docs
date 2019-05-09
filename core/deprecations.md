@@ -1,6 +1,6 @@
 # Deprecating Resources and Properties (Alternative to Versioning)
 
-A best practice regarding web APIs development is to apply [the evolution strategy](https://philsturgeon.uk/api/2018/05/02/api-evolution-for-rest-http-apis/)
+A best practice regarding web APIs development is to apply [the evolution strategy](https://phil.tech/api/2018/05/02/api-evolution-for-rest-http-apis/)
 to indicate to client applications which resource types, operations and fields are deprecated and shouldn't be used anymore.
 
 While versioning an API requires modifying all clients to upgrade, even the ones not impacted by the changes.
