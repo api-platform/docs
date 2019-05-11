@@ -18,12 +18,12 @@ install:
   - git clone --depth 1 https://github.com/api-platform/website.git
   - cd website
   - yarn install --silent
-  - ln -s $TRAVIS_BUILD_DIR src/pages/docs
   - cd $TRAVIS_BUILD_DIR
 
 script:
   - find . -name '*.md' -exec proselint {} \;
   - cd ../website
+  - bin/checkout-documentation
   - bin/generate-nav
   - GATSBY_BRANCH_NAME=$TRAVIS_BRANCH yarn gatsby build
   # Preserve artifacts
@@ -37,4 +37,5 @@ deploy:
   local_dir: public
   fqdn: api-platform.com
   on:
-    branch: 2.4
+    all_branches: true
+    condition: $TRAVIS_BRANCH =~ "^master|2.4|2.3|2.2|2.1$"
