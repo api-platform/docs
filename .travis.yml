@@ -37,4 +37,5 @@ deploy:
   local_dir: public
   fqdn: api-platform.com
   on:
-    branch: 2.4
+    all_branches: true
+    condition: $TRAVIS_BRANCH =~ "^master|2.4|2.3|2.2|2.1$"
