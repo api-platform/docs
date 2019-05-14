@@ -187,6 +187,29 @@ export default [
 ];
 ```
 
+#### Customizing the displayed fields
+
+If you want to hide some fields, you can specify each fields that are visible by their names:
+
+```javascript
+import React from 'react';
+
+const greetings = {
+  name: 'greetings',
+  fields: [],
+  readableFields: [
+    'id'
+    'visibleField2',
+    'visibleField3',
+    ...
+  ],
+};
+
+export default [
+  greetings,
+];
+```
+
 ### Create
 
 #### Customizing the Form Layout
