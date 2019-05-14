@@ -215,6 +215,11 @@ const GreetingCreate = props => {
   );
 };
 
+const greetings = {
+  name: 'greetings',
+  create: GreetingCreate,
+};
+
 export default [
   greetings,
 ];
@@ -288,6 +293,11 @@ const GreetingEdit = props => {
       </SimpleForm>
     </Edit>
   );
+};
+
+const greetings = {
+  name: 'greetings',
+  edit: GreetingEdit,
 };
 
 export default [
