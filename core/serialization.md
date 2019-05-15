@@ -420,11 +420,7 @@ final class SerializerContextBuilder implements SerializerContextBuilderInterfac
         $context = $this->decorated->createFromRequest($request, $normalization, $extractedAttributes);
         $resourceClass = $context['resource_class'] ?? null;
 
-        if (!isset($context['groups'])) {
-            $context['groups'] = [];
-        }
-
-        if ($resourceClass === Book::class && $this->authorizationChecker->isGranted('ROLE_ADMIN') && false === $normalization) {
+        if ($resourceClass === Book::class && isset($context['groups']) && $this->authorizationChecker->isGranted('ROLE_ADMIN') && false === $normalization) {
             $context['groups'][] = 'admin:input';
         }
 
