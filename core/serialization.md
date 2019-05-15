@@ -387,15 +387,15 @@ API Platform implements a `ContextBuilder`, which prepares the context for seria
 # api/config/services.yaml
 services:
     # ...
-    'App\Serializer\BookContextBuilder':
+    'App\Serializer\SerializerContextBuilder':
         decorates: 'api_platform.serializer.context_builder'
-        arguments: [ '@App\Serializer\BookContextBuilder.inner' ]
+        arguments: [ '@App\Serializer\SerializerContextBuilder.inner' ]
         autoconfigure: false
 ```
 
 ```php
 <?php
-// api/src/Serializer/BookContextBuilder.php
+// api/src/Serializer/SerializerContextBuilder.php
 
 namespace App\Serializer;
 
@@ -404,7 +404,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use App\Entity\Book;
 
-final class BookContextBuilder implements SerializerContextBuilderInterface
+final class SerializerContextBuilder implements SerializerContextBuilderInterface
 {
     private $decorated;
     private $authorizationChecker;
@@ -420,7 +420,11 @@ final class BookContextBuilder implements SerializerContextBuilderInterface
         $context = $this->decorated->createFromRequest($request, $normalization, $extractedAttributes);
         $resourceClass = $context['resource_class'] ?? null;
 
-        if ($resourceClass === Book::class && isset($context['groups']) && $this->authorizationChecker->isGranted('ROLE_ADMIN') && false === $normalization) {
+        if (!isset($context['groups'])) {
+            $context['groups'] = [];
+        }
+
+        if ($resourceClass === Book::class && $this->authorizationChecker->isGranted('ROLE_ADMIN') && false === $normalization) {
             $context['groups'][] = 'admin:input';
         }
 
@@ -429,9 +433,9 @@ final class BookContextBuilder implements SerializerContextBuilderInterface
 }
 ```
 
-If the user has the `ROLE_ADMIN` permission and the subject is an instance of Book, `admin_input` group will be dynamically added to the
+If the user has the `ROLE_ADMIN` permission and the subject is an instance of `Book`, `admin:input` group will be dynamically added to the
 denormalization context. The `$normalization` variable lets you check whether the context is for normalization (if `TRUE`) or denormalization
-(`FALSE`).
+(`FALSE`). 
 
 ## Changing the Serialization Context on a Per-item Basis
 
