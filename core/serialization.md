@@ -473,8 +473,6 @@ class BookAttributeNormalizer implements ContextAwareNormalizerInterface, Normal
 {
     use NormalizerAwareTrait;
 
-    private const ALREADY_CALLED = 'BOOK_ATTRIBUTE_NORMALIZER_ALREADY_CALLED';
-
     private $tokenStorage;
 
     public function __construct(TokenStorageInterface $tokenStorage)
@@ -488,18 +486,11 @@ class BookAttributeNormalizer implements ContextAwareNormalizerInterface, Normal
             $context['groups'][] = 'can_retrieve_book';
         }
 
-        $context[self::ALREADY_CALLED] = true;
-
         return $this->normalizer->normalize($object, $format, $context);
     }
 
     public function supportsNormalization($data, $format = null, array $context = [])
     {
-        // Make sure we're not called twice
-        if (isset($context[self::ALREADY_CALLED])) {
-            return false;
-        }
-
         return $data instanceof Book;
     }
 
