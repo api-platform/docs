@@ -452,8 +452,8 @@ services:
             - { name: 'serializer.normalizer', priority: 64 }
 ```
 
-The Normalizer class is a bit harder to understand, because it must ensure that it is only called once and that there is no recursion.
-To accomplish this, it needs to be aware of the parent Normalizer instance itself.
+The Normalizer class is a bit harder to understand: it needs to be aware of the parent normalizer so
+that it can normalize the object, and making any changes to the context.
 
 Here is an example:
 
