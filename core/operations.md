@@ -613,7 +613,7 @@ use App\Controller\CreateBookPublication;
  *     "post_publication"={
  *         "method"="POST",
  *         "path"="/books/{id}/publication",
- *         "controller"=CreateBookPublication::class,
+ *         "controller"=App\Controller\CreateBookPublication::class,
  *     }
  * })
  */
