@@ -10,6 +10,7 @@ It is able to generate apps using the following frontend stacks:
 
 * [React with Redux](react.md)
 * [React Native](react-native.md)
+* [Next.js](nextjs.md)
 * [Vue.js](vuejs.md)
 
 Client Generator works especially well with APIs built with the [API Platform](https://api-platform.com) framework.
