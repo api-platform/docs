@@ -25,7 +25,7 @@ const greetings = {
     }
   ],
   listFields: [
-    // list here all the fields you want to be disaplayed in the List view
+    // list here all fields you want to be displayed in the List view
   ],
 };
 
