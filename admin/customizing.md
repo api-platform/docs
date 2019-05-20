@@ -24,7 +24,9 @@ const greetings = {
       field: greetingsNameField,
     }
   ],
-  listFields: [],
+  listFields: [
+    // list here all the fields you want to be disaplayed in the List view
+  ],
 };
 
 const books = {
