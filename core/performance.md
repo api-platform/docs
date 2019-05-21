@@ -101,7 +101,7 @@ The `cache_headers` attribute can be used to set custom HTTP cache headers:
 use ApiPlatform\Core\Annotation\ApiResource;
 
 /**
- * @ApiResource(cacheHeaders={"max_age"=60, "shared_max_age"=120, "vary"={"Vary-1", "Vary-2"}})
+ * @ApiResource(cacheHeaders={"max_age"=60, "shared_max_age"=120, "vary"={"Authorization", "Accept-Language"}})
  */
 class Book
 {
@@ -113,7 +113,7 @@ For all endpoints related to this resource class, the following HTTP headers wil
 
 ```
 Cache-Control: max-age=60, public, s-maxage=120
-Vary: Vary-1, Vary-2
+Vary: Authorization, Accept-Language
 ```
 
 It's also possible to set different cache headers per operation:
