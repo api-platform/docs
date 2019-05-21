@@ -63,9 +63,7 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
  *     collectionOperations={
  *         "post"={
  *             "controller"=CreateMediaObjectAction::class,
- *             "defaults"={
- *                 "_api_receive"=false,
- *             },
+ *             "deserialize"=false,
  *             "access_control"="is_granted('ROLE_USER')",
  *             "validation_groups"={"Default", "media_object_create"},
  *             "swagger_context"={
@@ -142,32 +140,15 @@ that handles the file upload.
 
 namespace App\Controller;
 
-use ApiPlatform\Core\Bridge\Symfony\Validator\Exception\ValidationException;
-use ApiPlatform\Core\Metadata\Resource\Factory\ResourceMetadataFactoryInterface;
-use ApiPlatform\Core\Util\RequestAttributesExtractor;
-use ApiPlatform\Core\Validator\ValidatorInterface;
 use App\Entity\MediaObject;
-use Doctrine\Common\Persistence\ManagerRegistry;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
 final class CreateMediaObjectAction
 {
-    private $managerRegistry;
-    private $validator;
-    private $resourceMetadataFactory;
-
-    public function __construct(ManagerRegistry $managerRegistry, ValidatorInterface $validator, ResourceMetadataFactoryInterface $resourceMetadataFactory)
-    {
-        $this->managerRegistry = $managerRegistry;
-        $this->validator = $validator;
-        $this->resourceMetadataFactory = $resourceMetadataFactory;
-    }
-
     public function __invoke(Request $request): MediaObject
     {
         $uploadedFile = $request->files->get('file');
-
         if (!$uploadedFile) {
             throw new BadRequestHttpException('"file" is required');
         }
@@ -175,25 +156,7 @@ final class CreateMediaObjectAction
         $mediaObject = new MediaObject();
         $mediaObject->file = $uploadedFile;
 
-        $this->validate($mediaObject, $request);
-
-        $em = $this->managerRegistry->getManager();
-        $em->persist($mediaObject);
-        $em->flush();
-
         return $mediaObject;
-    }
-
-    /**
-    * @throws ValidationException
-    */
-    private function validate(MediaObject $mediaObject, Request $request): void
-    {
-        $attributes = RequestAttributesExtractor::extractAttributes($request);
-        $resourceMetadata = $this->resourceMetadataFactory->create(MediaObject::class);
-        $validationGroups = $resourceMetadata->getOperationAttribute($attributes, 'validation_groups', null, true);
-
-        $this->validator->validate($mediaObject, ['groups' => $validationGroups]);
     }
 }
 ```
@@ -203,7 +166,7 @@ final class CreateMediaObjectAction
 Returning the plain file path on the filesystem where the file is stored is not useful for the client, which needs a
 URL to work with.
 
-An [event subscriber](events.md) could be used to set the `contentUrl` property:
+An [event subscriber](events.md#custom-event-listeners) could be used to set the `contentUrl` property:
 
 ```php
 <?php

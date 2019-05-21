@@ -593,7 +593,7 @@ you need and it will be autowired too.
 The `__invoke` method of the action is called when the matching route is hit. It can return either an instance of
 `Symfony\Component\HttpFoundation\Response` (that will be displayed to the client immediately by the Symfony kernel) or,
 like in this example, an instance of an entity mapped as a resource (or a collection of instances for collection operations).
-In this case, the entity will pass through [all built-in event listeners](events.md) of API Platform. It will be
+In this case, the entity will pass through [all built-in event listeners](events.md#built-in-event-listeners) of API Platform. It will be
 automatically validated, persisted and serialized in JSON-LD. Then the Symfony kernel will send the resulting document to
 the client.
 
@@ -742,8 +742,8 @@ Or in XML:
 
 #### Entity Retrieval
 
-If you want to bypass the automatic retrieval of the entity in your custom operation, you can set the parameter
-`_api_receive` to `false` in the `defaults` attribute:
+If you want to bypass the automatic retrieval of the entity in your custom operation, you can set `"read"=false` in the
+operation attribute:
 
 ```php
 <?php
@@ -759,7 +759,7 @@ use App\Controller\CreateBookPublication;
  *         "method"="POST",
  *         "path"="/books/{id}/publication",
  *         "controller"=CreateBookPublication::class,
- *         "defaults"={"_api_receive"=false},
+ *         "read"=false,
  *     }
  * })
  */
@@ -780,8 +780,7 @@ App\Entity\Book:
             method: POST
             path: /books/{id}/publication
             controller: App\Controller\CreateBookPublication
-            defaults:
-                _api_receive: false
+            read: false
 ```
 
 Or in XML:
@@ -801,17 +800,15 @@ Or in XML:
                 <attribute name="method">POST</attribute>
                 <attribute name="path">/books/{id}/publication</attribute>
                 <attribute name="controller">App\Controller\CreateBookPublication</attribute>
-                <attribute name="defaults">
-                    <attribute name="_api_receive">false</attribute>
-                </attribute>
+                <attribute name="read">false</attribute>
             </itemOperation>
         </itemOperations>
     </resource>
 </resources>
 ```
 
-This way, it will skip the `Read`, `Deserialize` and `Validate` listeners (see [the event system](events.md) for more
-information).
+This way, it will skip the `ReadListener`. You can do the same for some other built-in listeners. See [Built-in Event Listeners](events.md#built-in-event-listeners)
+for more information.
 
 ### Alternative Method
 
