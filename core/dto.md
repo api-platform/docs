@@ -11,6 +11,7 @@ To do so, a resource can take an input and/or an output class:
 
 namespace App\Entity;
 
+use ApiPlatform\Core\Annotation\ApiProperty;
 use ApiPlatform\Core\Annotation\ApiResource;
 use App\Dto\BookInput;
 use App\Dto\BookOutput;
@@ -23,6 +24,12 @@ use App\Dto\BookOutput;
  */
 final class Book
 {
+    /**
+     * At least one property should be identifier
+     * @ApiProperty(identifier=true)
+     */
+    public $name;
+    public $isbn;
 }
 ```
 
@@ -46,7 +53,12 @@ We have the following `BookInput`:
 namespace App\Dto;
 
 final class BookInput {
-  public $isbn;
+    public $isbn;
+
+    /*
+     * Setter is required to generate documentation of example model
+     */
+    public function setIsbn(string $isbn) { $this->isbn = $isbn; }
 }
 ```
 
@@ -60,36 +72,46 @@ namespace App\DataTransformer;
 
 use ApiPlatform\Core\DataTransformer\DataTransformerInterface;
 use App\Dto\BookInput;
+use App\Entity\Book;
 
 final class BookInputDataTransformer implements DataTransformerInterface
 {
     /**
-     * {@inheritdoc}
+     * Convert BookInput into Book
+     *
+     * @param BookInput $data
+     * @param string $to
+     * @param array $context
+     * @return Book
      */
     public function transform($data, string $to, array $context = [])
     {
-        $book = new Book();
-        $book->isbn = $data->isbn;
-        return $book;
+        if($data instanceof BookInput) {
+            $book = new Book();
+            $book->isbn = $data->isbn;
+            $book->name = strrev($data->isbn); // there can be called service that calculate lacking fields, `strrev` is used for example
+            return $book;
+        }
     }
 
     /**
-     * {@inheritdoc}
+     * BookInput -> Book
+     *
+     * @param array $data
+     * @param string $to
+     * @param array $context
+     * @return bool
      */
     public function supportsTransformation($data, string $to, array $context = []): bool
     {
-        // in the case of an input, the value given here is an array (the JSON decoded).
-        // if it's a book we transformed the data already
-        if ($data instanceof Book) {
-          return false;
-        }
-
-        return Book::class === $to && null !== ($context['input']['class'] ?? null);
+        return !($data instanceof Book) // prevent executing many times
+            && $context["input"]["class"] === BookInput::class
+            && $to === Book::class;
     }
 }
 ```
 
-We now register it:
+For symfony < 3.3 we need register it:
 
 ```yaml
 # api/config/services.yaml
@@ -109,7 +131,12 @@ To manage the output, it's exactly the same process. For example, we have the fo
 namespace App\Dto;
 
 final class BookOutput {
-  public $name;
+    public $name;
+
+    /*
+     * Getter is required to generate documentation of example model
+     */
+    public function getName() : string { return $this->name; }
 }
 ```
 
@@ -128,26 +155,39 @@ use App\Entity\Book;
 final class BookOutputDataTransformer implements DataTransformerInterface
 {
     /**
-     * {@inheritdoc}
+     * Convert Book into BookOutput
+     *
+     * @param Book $data
+     * @param string $to
+     * @param array $context
+     * @return BookOutput
      */
     public function transform($data, string $to, array $context = [])
     {
-        $output = new BookOutput();
-        $output->name = $data->name;
-        return $output;
+        if($data instanceof Book) {
+            $output = new BookOutput();
+            $output->name = $data->name;
+            return $output;
+        }
     }
 
     /**
-     * {@inheritdoc}
+     * Book -> BookOutput
+     *
+     * @param $data
+     * @param string $to
+     * @param array $context
+     * @return bool
      */
     public function supportsTransformation($data, string $to, array $context = []): bool
     {
-        return BookOutput::class === $to && $data instanceof Book;
+        return $data instanceof Book
+            && $to === BookOutput::class;
     }
 }
 ```
 
-We now register it:
+For symfony < 3.3 we need register it:
 
 ```yaml
 # api/config/services.yaml
