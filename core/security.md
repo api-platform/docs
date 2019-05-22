@@ -30,7 +30,8 @@ use Symfony\Component\Validator\Constraints as Assert;
  *         "post"={"access_control"="is_granted('ROLE_ADMIN')"}
  *     },
  *     itemOperations={
- *         "get"={"access_control"="is_granted('ROLE_USER') and object.owner == user"}
+ *         "get"={"access_control"="is_granted('ROLE_USER') and object.owner == user"},
+ *         "put"={"access_control"="is_granted('ROLE_USER') and previous_object.owner == user"},
  *     }
  * )
  * @ORM\Entity
@@ -60,7 +61,7 @@ class Book
      * @ORM\ManyToOne(targetEntity=User::class)
      */
     public $owner;
-    
+
     // ...
 }
 ```
@@ -68,6 +69,8 @@ class Book
 This example is only going to allow fetching the book related to the current user. If the user tries to fetch a book which is not
 linked to his account, it will not return the resource. In addition, only admins are able to create books which means
 that a user could not create a book.
+
+Additionally, in some cases you need to perform security checks on the original data. For example here, only the actual owner should be allowed to edit their book. In these cases, you can use the `previous_object` variable which contains the object that was read from the data provider.
 
 It is also possible to use the [event system](events.md) for more advanced logic or even [custom actions](operations.md#creating-custom-operations-and-controllers)
 if you really need to.
