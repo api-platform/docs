@@ -60,7 +60,7 @@ Note that `$resourceShortName` contains a camel case string, by default the reso
 
 If you haven't disabled the autowiring option, the service will be registered automatically and you have nothing more to
 do.
-Otherwise, you must register this class a service like in the following example:
+Otherwise, you must register this class as a service like in the following example:
 
 ```yaml
 # api/config/services.yaml
@@ -69,7 +69,7 @@ services:
     'App\PathResolver\NoSeparatorsOperationPathResolver': ~
 ```
 
-### Configure It
+### Configuring It
 
 ```yaml
 # api/config/packages/api_platform.yaml

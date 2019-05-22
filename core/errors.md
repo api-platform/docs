@@ -63,7 +63,7 @@ final class ProductManager implements EventSubscriberInterface
 ```
 
 If you use the standard distribution of API Platform, this event listener will be automatically registered. If you use a
-custom installation, [learn how to register listeners](events.md).
+custom installation, [learn how to register listeners](events.md#custom-event-listeners).
 
 Then, configure the framework to catch `App\Exception\ProductNotFoundException` exceptions and convert them in `404`
 errors:

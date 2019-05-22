@@ -5,20 +5,20 @@ ORM](http://www.doctrine-project.org/projects/orm.html) to retrieve data from a 
 [Doctrine MongoDB ODM](https://www.doctrine-project.org/projects/mongodb-odm.html) to retrieve data from a document
 database, and a data provider using [Elasticsearch-PHP](https://www.elastic.co/guide/en/elasticsearch/client/php-api/current/index.html)
 to retrieve data from an Elasticsearch cluster are included with the library. The first one is enabled by default. These
-data providers natively support paged collections and filters. They can be used as is and fits perfectly with common usages.
+data providers natively support paged collections and filters. They can be used as-is and are perfectly suited to common uses.
 
-However, you sometime want to retrieve data from other sources such as another persistence layer or a webservice.
-Custom data providers can be used to do so. A project can include as many data providers as it needs. The first able to
+However, you sometimes want to retrieve data from other sources such as another persistence layer or a webservice.
+Custom data providers can be used to do so. A project can include as many data providers as needed. The first able to
 retrieve data for a given resource will be used.
 
-For a given resource, you can implement two kind of interfaces:
+For a given resource, you can implement two kinds of interface:
 
 * the [`CollectionDataProviderInterface`](https://github.com/api-platform/core/blob/master/src/DataProvider/CollectionDataProviderInterface.php)
   is used when fetching a collection.
 * the [`ItemDataProviderInterface`](https://github.com/api-platform/core/blob/master/src/DataProvider/ItemDataProviderInterface.php)
   is used when fetching items.
 
-Both implementations can also implement a third, optional interface called
+Both implementations can also implement a third, optional, interface called
 ['RestrictedDataProviderInterface'](https://github.com/api-platform/core/blob/master/src/DataProvider/RestrictedDataProviderInterface.php)
 if you want to limit their effects to a single resource or operation.
 
@@ -167,7 +167,7 @@ final class BlogPostItemDataProvider implements ItemDataProviderInterface, Seria
 ## Injecting Extensions (Pagination, Filter, EagerLoading etc.)
 
 ApiPlatform provides a few extensions that you can reuse in your custom DataProvider.
-Note that there are a few kind of extensions which are detailed in [their own chapter of the documentation](extensions.md).
+Note that there are a few kinds of extensions which are detailed in [their own chapter of the documentation](extensions.md).
 Because extensions are tagged services, you can use the [injection of tagged services](https://symfony.com/blog/new-in-symfony-3-4-simpler-injection-of-tagged-services):
 
 ```yaml

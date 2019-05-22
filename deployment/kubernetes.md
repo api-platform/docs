@@ -83,7 +83,7 @@ Before running your application for the first time, be sure to create the databa
 
 ## Tiller RBAC Issue
 
-We noticed that some tiller RBAC trouble occurred, you generally can resolve it running:
+We noticed that some tiller RBAC trouble occurred. You can usually resolve it by running:
 
     kubectl create serviceaccount --namespace kube-system tiller
       serviceaccount "tiller" created
@@ -94,5 +94,5 @@ We noticed that some tiller RBAC trouble occurred, you generally can resolve it 
     kubectl patch deploy --namespace kube-system tiller-deploy -p '{"spec":{"template":{"spec":{"serviceAccount":"tiller"}}}}'
       deployment "tiller-deploy" patched
 
-Please, see the [related issue](https://github.com/kubernetes/helm/issues/3130) for further details / informations
-You can also take a look to the [related documentation](https://github.com/kubernetes/helm/blob/master/docs/rbac.md)
+Please, see the [related issue](https://github.com/kubernetes/helm/issues/3130) for further details / information.
+You can also take a look at the [related documentation](https://github.com/kubernetes/helm/blob/master/docs/rbac.md)

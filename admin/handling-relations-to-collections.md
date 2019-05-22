@@ -1,9 +1,9 @@
 # Handling Relations to Collections
 
-Considering an API exposing `Person` and `Book` resources linked with a `many-to-many`
-relation between them (through the `authors` property).
+Let's consider an API exposing `Person` and `Book` resources linked by a `many-to-many`
+relation (through the `authors` property).
 
-This API using the following PHP code:
+This API uses the following PHP code:
 
 ```php
 <?php
@@ -73,7 +73,7 @@ The admin handles this `to-many` relation automatically!
 
 ## Customizing a Property
 
-Let's customize the components used for the `authors` property, to display them by their 'name' instead 'id' (the default behavior).
+Let's customize the components used for the `authors` property, to display them by their 'name' instead of their 'id' (the default behavior).
 
 ```javascript
 import React, { Component } from 'react';
@@ -123,15 +123,15 @@ export default class extends Component {
 
 ## Customizing an Icon
 
-Now that our `authors` property is displaying the name instead of an 'id', let's change the icon shown in the list menu.
+Now that our `authors` property is displaying the name instead of the 'id', let's change the icon shown in the list menu.
 
-Just add an import statement from `@material-ui` for adding the icon, in this case, a user icon:
+Just add an import statement from `@material-ui` for adding the icon - in this case, a user icon:
 
 `import UserIcon from '@material-ui/icons/People';`
 
-and add it to the `authors.icon` property
+and add it to the `authors.icon` property.
 
-The code for just customizing the icon will be:
+The code for customizing only the icon will be:
 
 ```javascript
 import React, { Component } from 'react';

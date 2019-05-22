@@ -1,23 +1,23 @@
 # Authentication Support
 
 Authentication can easily be handled when using the API Platform's admin library.
-In the following section, we will assume [the API is secured using JWT](https://api-platform.com/docs/core/jwt), but the
-process is similar for other authentication mechanisms. The `login_uri` is the full URI to the route specified by the `firewalls.login.json_login.check_path` config in the [JWT documentation](https://api-platform.com/docs/core/jwt).
+In the following section, we will assume [the API is secured using JWT](../core/jwt.md), but the
+process is similar for other authentication mechanisms. The `authenticationTokenUri` is the full URI to the path / route specified by the `firewalls.{name}.json_login.check_path` config in the [JWT documentation](../core/jwt.md).
 
 The first step is to create a client to handle the authentication process:
 
 ```javascript
-// src/authProvider.js
+// admin/src/authProvider.js
 import { AUTH_LOGIN, AUTH_LOGOUT, AUTH_ERROR, AUTH_CHECK } from 'react-admin';
 
-// Change this to be your own login check route.
-const login_uri = 'https://demo.api-platform.com/login_check';
+// Change this to be your own authentication token URI.
+const authenticationTokenUri = `${process.env.REACT_APP_API_ENTRYPOINT}/authentication_token`;
 
 export default (type, params) => {
   switch (type) {
     case AUTH_LOGIN:
       const { username, password } = params;
-      const request = new Request(`${login_uri}`, {
+      const request = new Request(authenticationTokenUri, {
         method: 'POST',
         body: JSON.stringify({ email: username, password }),
         headers: new Headers({ 'Content-Type': 'application/json' }),
@@ -62,38 +62,38 @@ import React from 'react';
 import parseHydraDocumentation from '@api-platform/api-doc-parser/lib/hydra/parseHydraDocumentation';
 import { HydraAdmin, hydraClient, fetchHydra as baseFetchHydra } from '@api-platform/admin';
 import authProvider from './authProvider';
-import { Redirect } from 'react-router-dom';
+import { Route, Redirect } from 'react-router-dom';
 
-const entrypoint = 'https://demo.api-platform.com'; // Change this by your own entrypoint
-const fetchHeaders = {'Authorization': `Bearer ${window.localStorage.getItem('token')}`};
+const entrypoint = process.env.REACT_APP_API_ENTRYPOINT; // Change this by your own entrypoint if you're not using API Platform distribution
+const fetchHeaders = {'Authorization': `Bearer ${localStorage.getItem('token')}`};
 const fetchHydra = (url, options = {}) => baseFetchHydra(url, {
     ...options,
     headers: new Headers(fetchHeaders),
 });
 const dataProvider = api => hydraClient(api, fetchHydra);
-const apiDocumentationParser = entrypoint => parseHydraDocumentation(entrypoint, { headers: new Headers(fetchHeaders) })
-    .then(
-        ({ api }) => ({ api }),
-        (result) => {
-            switch (result.status) {
-                case 401:
-                    return Promise.resolve({
-                        api: result.api,
-                        customRoutes: [{
-                            props: {
-                                path: '/',
-                                render: () => <Redirect to={`/login`}/>,
-                            },
-                        }],
-                    });
+const apiDocumentationParser = entrypoint =>
+  parseHydraDocumentation(entrypoint, {
+    headers: new Headers(fetchHeaders),
+  }).then(
+    ({ api }) => ({ api }),
+    result => {
+      const { api, status } = result;
 
-                default:
-                    return Promise.reject(result);
-            }
-        },
-    );
+      if (status === 401) {
+        return Promise.resolve({
+          api,
+          status,
+          customRoutes: [
+            <Route path="/" render={() => <Redirect to="/login" />} />,
+          ],
+        });
+      }
 
-export default props => (
+      return Promise.reject(result);
+    }
+  );
+
+export default () => (
     <HydraAdmin
         apiDocumentationParser={apiDocumentationParser}
         authProvider={authProvider}

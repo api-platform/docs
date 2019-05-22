@@ -4,7 +4,7 @@
 
 [GraphQL](http://graphql.org/) is a query language made to communicate with an API and therefore is an alternative to REST.
 
-It has some advantages compared to REST: it solves the over-fetching or under-fetching of data, is strongly typed, and is capable of retrieving multiple and nested data in one time; but it also comes with drawbacks: for example it creates overhead depending of the request.
+It has some advantages compared to REST: it solves the over-fetching or under-fetching of data, is strongly typed, and is capable of retrieving multiple and nested data in one go, but it also comes with drawbacks. For example it creates overhead depending on the request.
 
 API Platform creates a REST API by default. But you can choose to enable GraphQL as well.
 
@@ -20,6 +20,9 @@ docker-compose exec php composer req webonyx/graphql-php && bin/console cache:cl
 
 You can now use GraphQL at the endpoint: `https://localhost:8443/graphql`.
 
+*Note:* If you used [Symfony Flex to install API Platform](../distribution/index.md#using-symfony-flex-and-composer-advanced-users),
+the GraphQL endpoint will be: `https://localhost:8443/api/graphql`.
+
 ## GraphiQL
 
 If Twig is installed in your project, go to the GraphQL endpoint with your browser. You will see a nice interface provided by GraphiQL to interact with your API.
@@ -33,6 +36,97 @@ api_platform:
         graphiql:
             enabled: false
 # ...            
+```
+
+## Queries
+
+If you don't know what queries are yet, the documentation about them is [here](https://graphql.org/learn/queries/).
+
+For each resource, two queries are available: one for retrieving an item and the other one for the collection.
+For example, if you have a `Book` resource, the queries `book` and `books` can be used.
+
+### Global Object Identifier
+
+When querying an item, you need to pass an identifier as argument. Following the [Relay Global Object Identification Specification](https://facebook.github.io/relay/graphql/objectidentification.htm),
+the identifier needs to be globally unique. In API Platform, this argument is represented as an [IRI (Internationalized Resource Identifier)](https://www.w3.org/TR/ld-glossary/#internationalized-resource-identifier).
+
+For example, to query a book having as identifier `89`, you have to run the following:
+
+```graphql
+{
+  book(id: "/books/89") {
+    title
+    isbn
+  }
+}
+```
+
+Note that in this example, we're retrieving two fields: `title` and `isbn`.
+
+### Pagination
+
+API Platform natively enables a cursor-based pagination for collections.
+It supports [GraphQL's Complete Connection Model](https://graphql.org/learn/pagination/#complete-connection-model) and is compatible with [Relay's Cursor Connections Specification](https://facebook.github.io/relay/graphql/connections.htm).
+
+Here is an example query leveraging the pagination system:
+
+```graphql
+{
+  offers(first: 10, after: "cursor") {
+    totalCount
+    pageInfo {
+      endCursor
+      hasNextPage
+    }
+    edges {
+      cursor
+      node {
+        id
+      }
+    }
+  }
+}
+```
+
+The two parameters `first` and `after` are necessary to make the paginated query work, more precisely:
+
+* `first` corresponds to the items per page starting from the beginning;
+* `after` corresponds to the `cursor` from which the items are returned.
+
+The current page always has an `endCursor` present in the `pageInfo` field.
+To get the next page, you would add the `endCursor` from the current page as the `after` parameter.
+
+```graphql
+{
+  offers(first: 10, after: "endCursor") {
+  }
+}
+```
+
+When the property `hasNextPage` of the `pageInfo` field is false, you've reached the last page.
+If you move forward, you'll end up having an empty result.
+
+## Mutations
+
+If you don't know what mutations are yet, the documentation about them is [here](https://graphql.org/learn/queries/#mutations).
+
+For each resource, three mutations are available: one for creating it (`create`), one for updating it (`update`) and one for deleting it (`delete`).
+
+When updating or deleting a resource, you need to pass the **IRI** of the resource as argument. See [Global Object Identifier](#global-object-identifier) for more information.
+
+### Client Mutation Id
+
+Following the [Relay Input Object Mutations Specification](https://facebook.github.io/relay/graphql/mutations.htm),
+you can pass a `clientMutationId` as argument and can ask its value as a field.
+
+For example, if you delete a book:
+
+```graphql
+mutation DeleteBook($id: ID!, $clientMutationId: String!) {
+  deleteBook(input: {id: $id, clientMutationId: $clientMutationId}) {
+    clientMutationId
+  }
+}
 ```
 
 ## Filters
