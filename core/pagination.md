@@ -69,7 +69,7 @@ api_platform:
 
 ### For a Specific Resource
 
-It can also be disabled for specific resource:
+It can also be disabled for a specific resource:
 
 ```php
 <?php
@@ -175,7 +175,7 @@ api_platform:
             items_per_page_parameter_name: itemsPerPage # Default value
 ```
 
-The number of items per page can now be changed adding a query parameter named `itemsPerPage`: `GET /books?itemsPerPage=20`
+The number of items per page can now be changed adding a query parameter named `itemsPerPage`: `GET /books?itemsPerPage=20`.
 
 #### For a Specific Resource
 
@@ -300,7 +300,7 @@ api_platform:
             partial_parameter_name: 'partial' # Default value
 ```
 
-The partial pagination retrieval can now be changed by toggling a query parameter named `partial`: `GET /books?partial=true`
+The partial pagination retrieval can now be changed by toggling a query parameter named `partial`: `GET /books?partial=true`.
 
 #### For a Specific Resource
 
@@ -353,31 +353,67 @@ class Book
 
 To know more about cursor-based pagination take a look at [this blog post on medium (draft)](https://medium.com/@sroze/74fd1d324723).
 
-## Avoiding double SQL requests on Doctrine ORM
+## Controlling the behavior of the Doctrine ORM Paginator
 
-By default, pagination assumes that there will be collection fetched on a resource and thus will set `useFetchJoinCollection` to `true` on the Doctrine Paginator class. Having this option implies that 2 SQL requests will be executed (so this avoid having less results than expected).
+The [PaginationExtension](https://github.com/api-platform/core/blob/master/src/Bridge/Doctrine/Orm/Extension/PaginationExtension.php) of API Platform performs some checks on the `QueryBuilder` to guess, in most common cases, the correct values to use when configuring the Doctrine ORM Paginator:
 
-In most cases, even without collection on the resource, this parameter has little impact on performance. However when fetching a lot of results per page it can be counter productive.
+-   `$fetchJoinCollection` argument: Whether there is a join to a collection-valued association. When set to `true`, the Doctrine ORM Paginator will perform an additional query, in order to get the correct number of results.
 
-That's why this behavior can be configured with the `pagination_fetch_join_collection` parameter on a resource:
+    You can configure this using the `pagination_fetch_join_collection` attribute on a resource or on a per-operation basis:
 
-```php
-<?php
+    ```php
+    <?php
+    // api/src/Entity/Book.php
 
-// api/src/Entity/Book.php
+    use ApiPlatform\Core\Annotation\ApiResource;
 
-use ApiPlatform\Core\Annotation\ApiResource;
+    /**
+    * @ApiResource(
+    *     attributes={"pagination_fetch_join_collection"=false},
+    *     collectionOperations={
+    *         "get",
+    *         "get_custom"={
+    *             ...
+    *             "pagination_fetch_join_collection"=true,
+    *         },
+    *     },
+    * )
+    */
+    class Book
+    {
+        // ...
+    }
+    ```
 
-/**
- * @ApiResource(attributes={"pagination_fetch_join_collection"=false})
- */
-class Book
-{
-    // ...
-}
-```
+-   `setUseOutputWalkers` setter: Whether to use output walkers. When set to `true`, the Doctrine ORM Paginator will use output walkers, which are compulsory for some types of queries.
 
-Please note that this parameter will always be forced to false when the resource have composite keys due to a [bug in Doctrine](https://github.com/doctrine/orm/issues/2910).
+    You can configure this using the `pagination_use_output_walkers` attribute on a resource or on a per-operation basis:
+
+    ```php
+    <?php
+    // api/src/Entity/Book.php
+
+    use ApiPlatform\Core\Annotation\ApiResource;
+
+    /**
+    * @ApiResource(
+    *     attributes={"pagination_use_output_walkers"=false},
+    *     collectionOperations={
+    *         "get",
+    *         "get_custom"={
+    *             ...
+    *             "pagination_use_output_walkers"=true,
+    *         },
+    *     },
+    * )
+    */
+    class Book
+    {
+        // ...
+    }
+    ```
+
+For more information, please see the [Pagination](https://www.doctrine-project.org/projects/doctrine-orm/en/current/tutorials/pagination.html) entry in the Doctrine ORM documentation.
 
 ## Custom Controller Action
 
@@ -464,7 +500,7 @@ class GetBooksByFavoriteAuthorAction extends AbstractController
 }
 ```
 
-The service need to use the proper repository method.
+The service needs to use the proper repository method.
 You can also use the Query object inside the repository method and pass it to the Paginator instead of passing the QueryBuilder and using Criteria. Second Example:
 
 ```php

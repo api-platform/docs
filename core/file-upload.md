@@ -10,7 +10,7 @@ before proceeding. It will help you get a grasp on how the bundle works, and why
 
 ## Installing VichUploaderBundle
 
-Install the bundle with the help of composer:
+Install the bundle with the help of Composer:
 
 ```bash
 docker-compose exec php composer require vich/uploader-bundle
@@ -20,7 +20,7 @@ This will create a new configuration file that you will need to slightly change
 to make it look like this.
 
 ```yaml
-# config/packages/vich_uploader.yaml
+# api/config/packages/vich_uploader.yaml
 vich_uploader:
     db_driver: orm
 
@@ -49,41 +49,83 @@ use ApiPlatform\Core\Annotation\ApiResource;
 use App\Controller\CreateMediaObjectAction;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\HttpFoundation\File\File;
+use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 use Vich\UploaderBundle\Mapping\Annotation as Vich;
 
 /**
  * @ORM\Entity
- * @ApiResource(iri="http://schema.org/MediaObject", collectionOperations={
- *     "get",
- *     "post"={
- *         "method"="POST",
- *         "path"="/media_objects",
- *         "controller"=CreateMediaObjectAction::class,
- *         "defaults"={"_api_receive"=false},
+ * @ApiResource(
+ *     iri="http://schema.org/MediaObject",
+ *     normalizationContext={
+ *         "groups"={"media_object_read"},
  *     },
- * })
+ *     collectionOperations={
+ *         "post"={
+ *             "controller"=CreateMediaObjectAction::class,
+ *             "deserialize"=false,
+ *             "access_control"="is_granted('ROLE_USER')",
+ *             "validation_groups"={"Default", "media_object_create"},
+ *             "swagger_context"={
+ *                 "consumes"={
+ *                     "multipart/form-data",
+ *                 },
+ *                 "parameters"={
+ *                     {
+ *                         "in"="formData",
+ *                         "name"="file",
+ *                         "type"="file",
+ *                         "description"="The file to upload",
+ *                     },
+ *                 },
+ *             },
+ *         },
+ *         "get",
+ *     },
+ *     itemOperations={
+ *         "get",
+ *     },
+ * )
  * @Vich\Uploadable
  */
 class MediaObject
 {
-    // ...
+    /**
+     * @var int|null
+     *
+     * @ORM\Column(type="integer")
+     * @ORM\GeneratedValue
+     * @ORM\Id
+     */
+    protected $id;
+
+    /**
+     * @var string|null
+     *
+     * @ApiProperty(iri="http://schema.org/contentUrl")
+     * @Groups({"media_object_read"})
+     */
+    public $contentUrl;
 
     /**
      * @var File|null
-     * @Assert\NotNull()
-     * @Vich\UploadableField(mapping="media_object", fileNameProperty="contentUrl")
+     *
+     * @Assert\NotNull(groups={"media_object_create"})
+     * @Vich\UploadableField(mapping="media_object", fileNameProperty="filePath")
      */
     public $file;
 
     /**
      * @var string|null
+     *
      * @ORM\Column(nullable=true)
-     * @ApiProperty(iri="http://schema.org/contentUrl")
      */
-    public $contentUrl;
-    
-    // ...
+    public $filePath;
+
+    public function getId(): ?int
+    {
+        return $this->id;
+    }
 }
 ```
 
@@ -98,92 +140,91 @@ that handles the file upload.
 
 namespace App\Controller;
 
-use ApiPlatform\Core\Bridge\Symfony\Validator\Exception\ValidationException;
 use App\Entity\MediaObject;
-use App\Form\MediaObjectType;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
-use Symfony\Bridge\Doctrine\RegistryInterface;
-use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Validator\Validator\ValidatorInterface;
+use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
 final class CreateMediaObjectAction
 {
-    private $validator;
-    private $doctrine;
-    private $factory;
-
-    public function __construct(RegistryInterface $doctrine, FormFactoryInterface $factory, ValidatorInterface $validator)
-    {
-        $this->validator = $validator;
-        $this->doctrine = $doctrine;
-        $this->factory = $factory;
-    }
-
-    /**
-     * @IsGranted("ROLE_USER")
-     */
     public function __invoke(Request $request): MediaObject
     {
-        $mediaObject = new MediaObject();
-
-        $form = $this->factory->create(MediaObjectType::class, $mediaObject);
-        $form->handleRequest($request);
-        if ($form->isSubmitted() && $form->isValid()) {
-            $em = $this->doctrine->getManager();
-            $em->persist($mediaObject);
-            $em->flush();
-
-            // Prevent the serialization of the file property
-            $mediaObject->file = null;
-
-            return $mediaObject;
+        $uploadedFile = $request->files->get('file');
+        if (!$uploadedFile) {
+            throw new BadRequestHttpException('"file" is required');
         }
 
-        // This will be handled by API Platform and returns a validation error.
-        throw new ValidationException($this->validator->validate($mediaObject));
+        $mediaObject = new MediaObject();
+        $mediaObject->file = $uploadedFile;
+
+        return $mediaObject;
     }
 }
 ```
 
-As you can see, the action uses a form. You will need this form to be like this:
+## Resolving the File URL
+
+Returning the plain file path on the filesystem where the file is stored is not useful for the client, which needs a
+URL to work with.
+
+An [event subscriber](events.md#custom-event-listeners) could be used to set the `contentUrl` property:
 
 ```php
 <?php
-// api/src/Form/MediaObjectType.php
+// api/src/EventSubscriber/ResolveMediaObjectContentUrlSubscriber.php
 
-namespace App\Form;
+namespace App\EventSubscriber;
 
+use ApiPlatform\Core\EventListener\EventPriorities;
+use ApiPlatform\Core\Util\RequestAttributesExtractor;
 use App\Entity\MediaObject;
-use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\FileType;
-use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Event\GetResponseForControllerResultEvent;
+use Symfony\Component\HttpKernel\KernelEvents;
+use Vich\UploaderBundle\Storage\StorageInterface;
 
-final class MediaObjectType extends AbstractType
+final class ResolveMediaObjectContentUrlSubscriber implements EventSubscriberInterface
 {
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    private $storage;
+
+    public function __construct(StorageInterface $storage)
     {
-        $builder
-            // Configure each fields you want to be submitted here, like a classic form.
-            ->add('file', FileType::class, [
-                'label' => 'label.file',
-                'required' => false,
-            ])
-        ;
+        $this->storage = $storage;
     }
 
-    public function configureOptions(OptionsResolver $resolver)
+    public static function getSubscribedEvents(): array
     {
-        $resolver->setDefaults([
-            'data_class' => MediaObject::class,
-            'csrf_protection' => false,
-        ]);
+        return [
+            KernelEvents::VIEW => ['onPreSerialize', EventPriorities::PRE_SERIALIZE],
+        ];
     }
 
-    public function getBlockPrefix()
+    public function onPreSerialize(GetResponseForControllerResultEvent $event): void
     {
-        return '';
+        $controllerResult = $event->getControllerResult();
+        $request = $event->getRequest();
+
+        if ($controllerResult instanceof Response || !$request->attributes->getBoolean('_api_respond', true)) {
+            return;
+        }
+
+        if (!$attributes = RequestAttributesExtractor::extractAttributes($request) || !\is_a($attributes['resource_class'], MediaObject::class, true)) {
+            return;
+        }
+
+        $mediaObjects = $controllerResult;
+
+        if (!is_iterable($mediaObjects)) {
+            $mediaObjects = [$mediaObjects];
+        }
+
+        foreach ($mediaObjects as $mediaObject) {
+            if (!$mediaObject instanceof MediaObject) {
+                continue;
+            }
+
+            $mediaObject->contentUrl = $this->storage->resolveUri($mediaObject, 'file');
+        }
     }
 }
 ```
@@ -191,15 +232,15 @@ final class MediaObjectType extends AbstractType
 ## Making a Request to the `/media_objects` Endpoint
 
 Your `/media_objects` endpoint is now ready to receive a `POST` request with a
-file. This endpoint accepts standard `multipart/form-data` encoded data, but
+file. This endpoint accepts standard `multipart/form-data`-encoded data, but
 not JSON data. You will need to format your request accordingly. After posting
 your data, you will get a response looking like this:
 
 ```json
 {
-    "@type": "http://schema.org/ImageObject",
-    "@id": "/media_objects/<id>",
-    "contentUrl": "<filename>",
+  "@type": "http://schema.org/MediaObject",
+  "@id": "/media_objects/<id>",
+  "contentUrl": "<url>"
 }
 ```
 
@@ -232,7 +273,8 @@ class Book
 
     /**
      * @var MediaObject|null
-     * @ORM\ManyToOne(targetEntity="App\Entity\MediaObject")
+     *
+     * @ORM\ManyToOne(targetEntity=MediaObject::class)
      * @ORM\JoinColumn(nullable=true)
      * @ApiProperty(iri="http://schema.org/image")
      */
@@ -254,5 +296,5 @@ uploaded cover, you can have a nice illustrated book record!
 }
 ```
 
-Voilà! You can now send files to your API, and link them to any other resources
+Voilà! You can now send files to your API, and link them to any other resource
 in your app.

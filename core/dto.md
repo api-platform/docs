@@ -1,6 +1,6 @@
 # Using Data Transfer Objects (DTOs)
 
-## Specifying an Input or an Output data representation
+## Specifying an Input or an Output Data Representation
 
 For a given resource class, you may want to have a different representation of this class as input (write) or output (read).
 To do so, a resource can take an input and/or an output class:
@@ -26,18 +26,18 @@ final class Book
 }
 ```
 
-The `input` attribute is used during [the deserialization process](serialization.md), when transforming the user provided data to a resource instance.
-Similarly, the `output` attribute is used during [the serialization process](serialization.md), this class represents how the `Book` resource will be represented in the `Response`.
+The `input` attribute is used during [the deserialization process](serialization.md), when transforming the user-provided data to a resource instance.
+Similarly, the `output` attribute is used during [the serialization process](serialization.md). This class represents how the `Book` resource will be represented in the `Response`.
 
 The `input` and `output` attributes are taken into account by all the documentation generators (GraphQL and OpenAPI, Hydra).
 
-To create a `Book`, we `POST` a data structure corresponding to the `BookInput` class and get back in the response a data structure corresponding to the `BookOuput` class:
+To create a `Book`, we `POST` a data structure corresponding to the `BookInput` class and get back in the response a data structure corresponding to the `BookOutput` class:
 
 ![Diagram post input output](images/diagrams/api-platform-post-i-o.png)
 
 To simplify object transformations we have to implement a Data Transformer that will convert the input into a resource or a resource into an output.
 
-With the following `BookInput`:
+We have the following `BookInput`:
 
 ```php
 <?php
@@ -78,12 +78,18 @@ final class BookInputDataTransformer implements DataTransformerInterface
      */
     public function supportsTransformation($data, string $to, array $context = []): bool
     {
-        return Book::class === $to && $data instanceof BookInput;
+        // in the case of an input, the value given here is an array (the JSON decoded).
+        // if it's a book we transformed the data already
+        if ($data instanceof Book) {
+          return false;
+        }
+
+        return Book::class === $to && null !== ($context['input']['class'] ?? null);
     }
 }
 ```
 
-And register it:
+We now register it:
 
 ```yaml
 # api/config/services.yaml
@@ -94,7 +100,7 @@ services:
         #tags: [ 'api_platform.data_transformer' ]
 ```
 
-To manage the output, it's exactly the same process. For example with `BookOutput` being:
+To manage the output, it's exactly the same process. For example, we have the following `BookOutput`:
 
 ```php
 <?php
@@ -141,7 +147,7 @@ final class BookOutputDataTransformer implements DataTransformerInterface
 }
 ```
 
-And register it:
+We now register it:
 
 ```yaml
 # api/config/services.yaml
@@ -152,7 +158,7 @@ services:
         #tags: [ 'api_platform.data_transformer' ]
 ```
 
-## Updating a resource with a custom input
+## Updating a Resource with a Custom Input
 
 When performing an update (e.g. `PUT` operation), the resource to be updated is read by ApiPlatform before the deserialization phase. To do so, it uses a [data provider](data-providers.md) with the `:id` parameter given in the URL. The *body* of the request is the JSON object sent by the client, it is deserialized and is used to update the previously found resource.
 
@@ -162,7 +168,7 @@ Now, we will update our resource by using a different input representation.
 
 With the following `BookInput`:
 
-```
+```php
 <?php
 // src/Dto/BookInput.php
 
@@ -178,7 +184,7 @@ final class BookInput {
 
 We will implement a `BookInputDataTransformer` that transforms the `BookInput` to our `Book` resource instance. In this case, the `Book` (`/books/1`) already exists, so we will just update it.
 
-```
+```php
 <?php
 // src/DataTransformer/BookInputDataTransformer.php
 
@@ -205,7 +211,11 @@ final class BookInputDataTransformer implements DataTransformerInterface
      */
     public function supportsTransformation($data, string $to, array $context = []): bool
     {
-        return Book::class === $to && $data instanceof BookInput;
+        if ($data instanceof Book) {
+          return false;
+        }
+
+        return Book::class === $to && null !== ($context['input']['class'] ?? null);
     }
 }
 ```
@@ -221,11 +231,10 @@ services:
 
 ## Disabling the Input or the Output
 
-Both the `input` and the `output` attributes can be set to `false`.
-If `input` is `false`, the deserialization process will be skipped, and no data persisters will be called.
-If `output` is `false`, the serialization process will be skipped, and no data providers will be called.
+Both the `input` and the `output` attributes can be set to `false`. If `input` is `false`, the deserialization process
+will be skipped. If `output` is `false`, the serialization process will be skipped.
 
-## Input/Output metadata
+## Input/Output Metadata
 
 When specified, `input` and `output` attributes support:
 - a string representing the class to use
@@ -233,9 +242,9 @@ When specified, `input` and `output` attributes support:
 - an array to specify more metadata for example `['class' => BookInput::class, 'name' => 'BookInput', 'iri' => '/book_input']`
 
 
-## Using DTO objects inside resources
+## Using Objects As Relations Inside Resources
 
-Because ApiPlatform can (de)normalize anything in the supported formats (`jsonld`, `jsonapi`, `hal`, etc.), you can use any object you want inside resources. For example, let's say that the `Book` has an `attribute` property that can't be represented by a resource, we can do the following:
+Because API Platform can (de)normalize anything in the supported formats (`jsonld`, `jsonapi`, `hal`, etc.), you can use any object you want inside resources. For example, let's say that the `Book` has an `attribute` property that can't be represented by a resource, we can do the following:
 
 ```php
 <?php
@@ -244,13 +253,10 @@ Because ApiPlatform can (de)normalize anything in the supported formats (`jsonld
 namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
-use App\Dto\Attribute;
+use App\Model\Attribute;
 
 /**
- * @ApiResource(
- *   input=BookInput::class,
- *   output=BookOutput::class
- * )
+ * @ApiResource
  */
 final class Book
 {

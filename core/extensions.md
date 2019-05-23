@@ -68,57 +68,43 @@ use ApiPlatform\Core\Bridge\Doctrine\Orm\Extension\QueryCollectionExtensionInter
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Extension\QueryItemExtensionInterface;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Util\QueryNameGeneratorInterface;
 use App\Entity\Offer;
-use App\Entity\User;
 use Doctrine\ORM\QueryBuilder;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
-use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
+use Symfony\Component\Security\Core\Security;
 
 final class CurrentUserExtension implements QueryCollectionExtensionInterface, QueryItemExtensionInterface
 {
-    private $tokenStorage;
-    private $authorizationChecker;
+    private $security;
 
-    public function __construct(TokenStorageInterface $tokenStorage, AuthorizationCheckerInterface $checker)
+    public function __construct(Security $security)
     {
-        $this->tokenStorage = $tokenStorage;
-        $this->authorizationChecker = $checker;
+        $this->security = $security;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function applyToCollection(QueryBuilder $queryBuilder, QueryNameGeneratorInterface $queryNameGenerator, string $resourceClass, string $operationName = null)
     {
         $this->addWhere($queryBuilder, $resourceClass);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function applyToItem(QueryBuilder $queryBuilder, QueryNameGeneratorInterface $queryNameGenerator, string $resourceClass, array $identifiers, string $operationName = null, array $context = [])
     {
         $this->addWhere($queryBuilder, $resourceClass);
     }
 
-    /**
-     *
-     * @param QueryBuilder $queryBuilder
-     * @param string       $resourceClass
-     */
-    private function addWhere(QueryBuilder $queryBuilder, string $resourceClass)
+    private function addWhere(QueryBuilder $queryBuilder, string $resourceClass): void
     {
-        $user = $this->tokenStorage->getToken()->getUser();
-        if ($user instanceof User && Offer::class === $resourceClass && !$this->authorizationChecker->isGranted('ROLE_ADMIN')) {
-            $rootAlias = $queryBuilder->getRootAliases()[0];
-            $queryBuilder->andWhere(sprintf('%s.user = :current_user', $rootAlias));
-            $queryBuilder->setParameter('current_user', $user->getId());
+        if (Offer::class !== $resourceClass || $this->security->isGranted('ROLE_ADMIN') || null === $user = $this->security->getUser()) {
+            return;
         }
+
+        $rootAlias = $queryBuilder->getRootAliases()[0];
+        $queryBuilder->andWhere(sprintf('%s.user = :current_user', $rootAlias));
+        $queryBuilder->setParameter('current_user', $user);
     }
 }
 
 ```
 
-Finally register the custom extension:
+Finally, if you're not using the autoconfiguration, you have to register the custom extension with either of those tags:
 
 ```yaml
 # api/config/services.yaml
@@ -128,17 +114,27 @@ services:
 
     'App\Doctrine\CurrentUserExtension':
         tags:
-            - { name: api_platform.doctrine.orm.query_extension.collection, priority: 9 }
+            - { name: api_platform.doctrine.orm.query_extension.collection }
             - { name: api_platform.doctrine.orm.query_extension.item }
 ```
 
-Thanks to the `api_platform.doctrine.orm.query_extension.collection` tag, API Platform will register this service as a collection extension. The `api_platform.doctrine.orm.query_extension.item` do the same thing for items.
+The `api_platform.doctrine.orm.query_extension.collection` tag will register this service as a collection extension.
+The `api_platform.doctrine.orm.query_extension.item` do the same thing for items.
 
-Notice the priority level for the `api_platform.doctrine.orm.query_extension.collection` tag. When an extension implements the `ApiPlatform\Core\Bridge\Doctrine\Orm\Extension\QueryResultCollectionExtensionInterface` or the `ApiPlatform\Core\Bridge\Doctrine\Orm\Extension\QueryResultItemExtensionInterface` interface to return results by itself, any lower priority extension will not be executed. Because the pagination is enabled by default with a priority of 8, the priority of the `app.doctrine.orm.query_extension.current_user` service must be at least 9 to ensure its execution.
+Note that your extensions should have a positive priority if defined. Internal extensions have negative priorities, for reference:
+
+| Service name                                               | Priority | Class                                              |
+|------------------------------------------------------------|------|---------------------------------------------------------|
+| api_platform.doctrine.orm.query_extension.eager_loading (collection) | -8 | ApiPlatform\Core\Bridge\Doctrine\Orm\Extension\EagerLoadingExtension |
+| api_platform.doctrine.orm.query_extension.eager_loading (item) | -8 | ApiPlatform\Core\Bridge\Doctrine\Orm\Extension\EagerLoadingExtension |
+| api_platform.doctrine.orm.query_extension.filter | -16 | ApiPlatform\Core\Bridge\Doctrine\Orm\Extension\FilterExtension |
+| api_platform.doctrine.orm.query_extension.filter_eager_loading | -17 | ApiPlatform\Core\Bridge\Doctrine\Orm\Extension\FilterEagerLoadingExtension |
+| api_platform.doctrine.orm.query_extension.order | -32 | ApiPlatform\Core\Bridge\Doctrine\Orm\Extension\OrderExtension |
+| api_platform.doctrine.orm.query_extension.pagination | -64 | ApiPlatform\Core\Bridge\Doctrine\Orm\Extension\PaginationExtension |
 
 #### Blocking Anonymous Users
 
-This example adds a `WHERE` clause condition only when a fully authenticated user without `ROLE_ADMIN` tries to access to a resource. It means that anonymous users will be able to access to all data. To prevent this potential security issue, the API must ensure that the current user is authenticated.
+This example adds a `WHERE` clause condition only when a fully authenticated user without `ROLE_ADMIN` tries to access a resource. It means that anonymous users will be able to access to all data. To prevent this potential security issue, the API must ensure that the current user is authenticated.
 
 To secure the access to endpoints, use the following access control rule:
 
@@ -154,7 +150,7 @@ security:
 
 ## Custom Doctrine MongoDB ODM Extension
 
-Creating custom extensions is the same as Doctrine ORM.
+Creating custom extensions is the same as with Doctrine ORM.
 
 The interfaces are:
 * `ApiPlatform\Core\Bridge\Doctrine\MongoDbOdm\Extension\AggregationItemExtensionInterface` and `ApiPlatform\Core\Bridge\Doctrine\MongoDbOdm\Extension\AggregationCollectionExtensionInterface` to add stages to the [aggregation builder](https://www.doctrine-project.org/projects/doctrine-mongodb-odm/en/latest/reference/aggregation-builder.html).
