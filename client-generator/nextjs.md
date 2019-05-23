@@ -6,7 +6,7 @@ The Next.js Client Generator generates routes and components for Server Side Ren
 
 ## Install
 
-### Next + Express server
+### Next + Express Server
 
 Create a [Next.js application with express server](https://github.com/zeit/next.js/tree/canary/examples/custom-server-express). The easiest way is to execute:  
 
@@ -16,7 +16,7 @@ $ npx create-next-app --example custom-server-express your-app-name
 $ yarn create next-app --example custom-server-express your-app-name
 ```
 
-### Enable Typescript
+### Enabling Typescript
 
 Install typescript dependencies  
 
@@ -24,14 +24,15 @@ Install typescript dependencies
 $ yarn add @types/next @zeit/next-typescript
 ```
 
-Enable Typescript in your Next.js configuration file ("next.config.js")
+Enable Typescript in your Next.js configuration file (`next.config.js`):
+
 ```javascript
 const withTypescript = require('@zeit/next-typescript');
 
 module.exports = withTypescript();
 ```
 
-Create a ".babelrc" file to store Babel configuration
+Create a `.babelrc` file to store Babel configuration:
 ```json
 {
   "presets": [
@@ -41,7 +42,7 @@ Create a ".babelrc" file to store Babel configuration
 }
 ```
 
-Create a "tsconfig.json" file to store Typescript configuration
+Create a `tsconfig.json` file to store Typescript configuration:
 ```json
 {
   "compilerOptions": {
@@ -67,7 +68,7 @@ Create a "tsconfig.json" file to store Typescript configuration
 }
 ```
 
-### Generator dependencies
+### Installing the Generator Dependencies
 
 Install required dependencies:
 
@@ -75,16 +76,16 @@ Install required dependencies:
 $ yarn add lodash @types/lodash isomorphic-unfetch
 ```
 
-## Launch
+## Starting the Project
 
 You can launch the server with 
 ```bash
 $ yarn dev
 ```
 
-and access it through [http://localhost:3000](http://localhost:3000)
+and access it through `http://localhost:3000`
 
-## Generating routes
+## Generating Routes
 
 ```bash
 $ npx @api-platform/client-generator https://demo.api-platform.com src/ -g next --resource book
