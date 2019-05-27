@@ -140,6 +140,65 @@ API Platform internally uses a [PSR-6](http://www.php-fig.org/psr/psr-6/) cache.
 Best performance is achieved using [APCu](https://github.com/krakjoe/apcu). Be sure to have the APCu extension installed
 on your production server. API Platform will automatically use it.
 
+## Doctrine Cache
+### Enabling Query Result Cache
+
+Doctrine provides a [result cache](https://www.doctrine-project.org/projects/doctrine-orm/en/2.6/reference/caching.html#result-cache).
+The result cache can be used to cache the results of your operations so that we don't have to query the database or hydrate the data again after the first time.
+The configuration of the result cache is configured by [default](https://github.com/symfony/recipes/blob/master/doctrine/doctrine-bundle/1.6/config/packages/prod/doctrine.yaml). 
+Make sure this or comparable configuration is in place.
+
+To enable the result cache for a specific resource you must provide the `use_result_cache` attribute:
+```php
+<?php
+
+/**
+ * @ApiResource(doctrineCache={"use_result_cache"={true, 3600, 'cache-id'}})
+ * @ORM\Entity()
+ */
+class Book {
+}
+```
+The first argument is mandatory and enables the result cache. 
+The other two are optional and determine lifetime (TTL - in seconds) and set a custom cache id.
+
+## Enabling Second Level Cache
+
+Doctrine provides a [second level cache](https://www.doctrine-project.org/projects/doctrine-orm/en/2.6/reference/second-level-cache.html).
+Although this is still marked as experimental implementing this may be stable for your api resource. 
+
+To enable second level cache provide [cache definitions](https://www.doctrine-project.org/projects/doctrine-orm/en/2.6/reference/second-level-cache.html#entity-cache-definition) for your resources.
+The [documented](https://www.doctrine-project.org/projects/doctrine-orm/en/2.6/reference/second-level-cache.html#using-the-query-cache) Query methods `setCacheable`, `setCacheMode` can be triggered by adding attributes to your ApiResource:
+
+```php
+<?php
+
+use Doctrine\ORM\Cache;
+
+/**
+ * @Cache(usage="READ_ONLY", region="my_entity_region")
+ * @ApiResource(doctrineCache={"cacheable"=true, "cache_mode"=Cache::MODE_NORMAL})
+ * @ORM\Entity()
+ */
+class Book {
+}
+```
+
+You may also provide a `cacheHint`:
+```php
+<?php
+
+use Doctrine\ORM\Query;
+
+/**
+ * @Cache(usage="READ_ONLY", region="my_entity_region")
+ * @ApiResource(doctrineCache={"cache_hint"={Query::HINT_REFRESH=true})
+ * @ORM\Entity()
+ */
+class Book {
+}
+```
+
 ## Using PPM (PHP-PM)
 
 Response time of the API can be improved up to 15x by using [PHP Process Manager](https://github.com/php-pm/php-pm). If
