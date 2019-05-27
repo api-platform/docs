@@ -192,7 +192,7 @@ use Doctrine\ORM\Query;
 
 /**
  * @Cache(usage="READ_ONLY", region="my_entity_region")
- * @ApiResource(doctrineCache={"cache_hint"={Query::HINT_REFRESH=true})
+ * @ApiResource(doctrineCache={"cache_hint"={Query::HINT_REFRESH=true}})
  * @ORM\Entity()
  */
 class Book {
