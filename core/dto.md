@@ -24,11 +24,11 @@ use App\Dto\BookOutput;
  */
 final class Book
 {
+    public $name;
     /**
      * At least one property should be identifier
      * @ApiProperty(identifier=true)
      */
-    public $name;
     public $isbn;
 }
 ```
