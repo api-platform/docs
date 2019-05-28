@@ -162,7 +162,7 @@ class Book {
 The first argument is mandatory and enables the result cache. 
 The other two are optional and determine lifetime (TTL - in seconds) and set a custom cache id.
 
-## Enabling Second Level Cache
+### Enabling Second Level Cache
 
 Doctrine provides a [second level cache](https://www.doctrine-project.org/projects/doctrine-orm/en/2.6/reference/second-level-cache.html).
 Although this is still marked as experimental implementing this may be stable for your api resource. 
