@@ -94,6 +94,8 @@ $ npx @api-platform/client-generator https://demo.api-platform.com src/ -g next 
 
 > Note: Omit the resource flag to generate files for all resource types exposed by the API.
 
+If your express server is compatible with the `custom-server-express` Next.js example, you can use the `server-path` flag to specify path to the server file. Routes will be added automatically to this file, otherwise, you will receive some hints on how to them to your own custom server.
+
 Go to `https://localhost:3000/books/` to start using your app.
 That's it!
 
