@@ -60,6 +60,7 @@ namespace App\DataTransformer;
 
 use ApiPlatform\Core\DataTransformer\DataTransformerInterface;
 use App\Dto\BookInput;
+use App\Entity\Book;
 
 final class BookInputDataTransformer implements DataTransformerInterface
 {
@@ -193,6 +194,7 @@ namespace App\DataTransformer;
 use ApiPlatform\Core\DataTransformer\DataTransformerInterface;
 use ApiPlatform\Core\Serializer\AbstractItemNormalizer;
 use App\Dto\BookInput;
+use App\Entity\Book;
 
 final class BookInputDataTransformer implements DataTransformerInterface
 {
