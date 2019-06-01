@@ -106,7 +106,180 @@ To get the next page, you would add the `endCursor` from the current page as the
 When the property `hasNextPage` of the `pageInfo` field is false, you've reached the last page.
 If you move forward, you'll end up having an empty result.
 
-## Mutations
+### Custom Queries
+
+To create a custom query, first of all you need to create its resolver.
+
+If you want a custom query for a collection, create a class like this:
+
+```php
+<?php
+
+namespace App\Resolver;
+
+use ApiPlatform\Core\GraphQl\Resolver\QueryCollectionResolverInterface;
+use App\Model\Book;
+
+final class BookCollectionResolver implements QueryCollectionResolverInterface
+{
+    /**
+     * @param iterable<Book> $collection
+     *
+     * @return iterable<Book>
+     */
+    public function __invoke(iterable $collection, array $context): iterable
+    {
+        // Query arguments are in $context['args'].
+
+        foreach ($collection as $book) {
+            // Do something with the book.
+        }
+
+        return $collection;
+    }
+}
+```
+
+If you use autoconfiguration (the default Symfony configuration) in your application, then you are done!
+
+Else, you need to tag your resolver like this:
+
+```yaml
+# api/config/services.yaml
+services:
+    # ...
+    App\Resolver\BookCollectionResolver:
+        tags:
+            - { name: api_platform.graphql.query_resolver }
+```
+
+The resolver for an item is very similar:
+
+```php
+<?php
+
+namespace App\Resolver;
+
+use ApiPlatform\Core\GraphQl\Resolver\QueryItemResolverInterface;
+use App\Model\Book;
+
+final class BookResolver implements QueryItemResolverInterface
+{
+    /**
+     * @param Book|null $item
+     *
+     * @return Book
+     */
+    public function __invoke($item, array $context)
+    {
+        // Query arguments are in $context['args'].
+
+        // Do something with the book.
+        // Or fetch the book if it has not been retrieved.
+
+        return $item;
+    }
+}
+```
+
+Note that you will receive the retrieved item or not in this resolver depending on how you configure your query in your resource.
+
+Since the resolver is a service, you can inject some dependencies and fetch your item in the resolver if you want.
+
+If you don't use autoconfiguration, don't forget to tag your resolver with `api_platform.graphql.query_resolver`.
+
+Now that your resolver is created and registered, you can configure your custom query and link its resolver.
+
+In your resource, add the following:
+
+```php
+<?php
+
+namespace App\Model;
+
+use ApiPlatform\Core\Annotation\ApiResource;
+use App\Resolver\BookCollectionResolver;
+use App\Resolver\BookResolver;
+
+/**
+ * @ApiResource(graphql={
+ *     "retrievedQuery"={
+ *         "item_query"=BookResolver::class
+ *     },
+ *     "notRetrievedQuery"={
+ *         "item_query"=BookResolver::class,
+ *         "args"={}
+ *     },
+ *     "withDefaultArgsNotRetrievedQuery"={
+ *         "item_query"=BookResolver::class,
+ *         "read"=false
+ *     },
+ *     "withCustomArgsQuery"={
+ *         "item_query"=BookResolver::class,
+ *         "args"={
+ *             "id"={"type"="ID!"},
+ *             "log"={"type"="Boolean!", "description"="Is logging activated?"},
+ *             "logDate"={"type"="DateTime"}
+ *         }
+ *     },
+ *     "collectionQuery"={
+ *         "collection_query"=BookCollectionResolver::class
+ *     }
+ * })
+ */
+class Book
+{
+    // ...
+}
+```
+
+As you can see, it's possible to define your own arguments for your custom queries.
+They are following the GraphQL type system.
+If you don't define the `args` property, it will be the default ones (for example `id` for an item).
+
+If you don't want API Platform to retrieve the item for you, disable the `read` step like in `withDefaultArgsNotRetrievedQuery`.
+Some other steps [can be disabled](#disabling-resolver-steps).
+Another option would be to make sure there is no `id` argument.
+This is the case for `notRetrievedQuery` (empty args).
+Conversely, if you need to add custom arguments, make sure `id` is added among the arguments if you need the item to be retrieved automatically.
+
+Note also that:
+- If you have added your [own custom types](#custom-types), you can use them directly for your arguments types (it's the case here for `DateTime`).
+- You can also add a custom description for your custom arguments. You can see the [field arguments documentation](https://webonyx.github.io/graphql-php/type-system/object-types/#field-arguments) for more options.
+
+The arguments you have defined or the default ones and their value will be in `$context['args']` of your resolvers.
+
+You custom queries will be available like this:
+
+```graphql
+{
+  retrievedQueryBook(id: "/books/56") {
+    title
+  }
+
+  notRetrievedQueryBook {
+    title
+  }
+
+  withDefaultArgsNotRetrievedQueryBook(id: "/books/56") {
+    title
+  }
+
+  withCustomArgsQueryBook(id: "/books/23", log: true, logDate: "2019-12-20") {
+    title
+  }
+
+  collectionQueryBooks {
+    edges {
+      node {
+        title
+      }
+    }
+  }
+}
+```
+
+# Mutations
 
 If you don't know what mutations are yet, the documentation about them is [here](https://graphql.org/learn/queries/#mutations).
 
@@ -126,6 +299,186 @@ mutation DeleteBook($id: ID!, $clientMutationId: String!) {
   deleteBook(input: {id: $id, clientMutationId: $clientMutationId}) {
     clientMutationId
   }
+}
+```
+
+### Custom Mutations
+
+Creating custom mutations is comparable to creating [custom queries](#custom-queries).
+
+Create your resolver:
+
+```php
+<?php
+
+namespace App\Resolver;
+
+use ApiPlatform\Core\GraphQl\Resolver\MutationResolverInterface;
+use App\Model\Book;
+
+final class BookMutationResolver implements MutationResolverInterface
+{
+    /**
+     * @param Book|null $item
+     *
+     * @return Book
+     */
+    public function __invoke($item, array $context)
+    {
+        // Mutation input arguments are in $context['args']['input'].
+
+        // Do something with the book.
+        // Or fetch the book if it has not been retrieved.
+
+        // The returned item will pe persisted.
+        return $item;
+    }
+}
+```
+
+As you can see, depending on how you configure your custom mutation in the resource, the item is retrieved or not.
+For instance, if you don't set an `id` argument or if you disable the `read` or the `deserialize` step (other steps [can also be disabled](#disabling-resolver-steps)),
+the received item will be `null`.
+
+Likewise, if you don't want your item to be persisted by API Platform,
+you can return `null` instead of the mutated item (be careful: the response will also be `null`) or disable the `write` step.
+
+Don't forget the resolver is a service and you can inject the dependencies you want.
+
+If you don't use autoconfiguration, add the tag `api_platform.graphql.mutation_resolver` to the resolver service.
+
+Now in your resource:
+
+```php
+<?php
+
+namespace App\Model;
+
+use ApiPlatform\Core\Annotation\ApiResource;
+use App\Resolver\BookMutationResolver;
+
+/**
+ * @ApiResource(graphql={
+ *     "mutation"={
+ *         "mutation"=BookMutationResolver::class
+ *     },
+ *     "withCustomArgsMutation"={
+ *         "mutation"=BookMutationResolver::class,
+ *         "args"={
+ *             "sendMail"={"type"="Boolean!", "description"="Send a mail?"}
+ *         }
+ *     },
+ *     "disabledStepsMutation"={
+ *         "mutation"=BookMutationResolver::class,
+ *         "deserialize"=false,
+ *         "write"=false
+ *     }
+ * })
+ */
+class Book
+{
+    // ...
+}
+```
+
+As the custom queries, you can define your own arguments if you don't want to use the default ones (extracted from your resource).
+The only difference with them is that, even if you define your own arguments, the `clientMutationId` will always be set.
+
+The arguments will be in `$context['args']['input']` of your resolvers.
+
+Your custom mutations will be available like this:
+
+```graphql
+{
+  mutation {
+    mutationBook(input: {id: "/books/18", title: "The Fitz and the Fool"}) {
+      book {
+        title
+      }
+    }
+  }
+
+  mutation {
+    withCustomArgsMutationBook(input: {sendMail: true, clientMutationId: "myId}) {
+      book {
+        title
+      }
+      clientMutationId
+    }
+  }
+
+  mutation {
+    disabledStepsMutationBook(input: {id: "/books/18", title: "The Fitz and the Fool"}) {
+      book {
+        title
+      }
+      clientMutationId
+    }
+  }
+}
+```
+
+## Disabling Resolver Steps
+
+API Platform resolves the queries and mutations by using its own resolvers.
+
+Even if you create your [custom queries](#custom-queries) or your [custom mutations](#custom-mutations),
+these resolvers will be used and yours will be called at the right time.
+
+But if you need to, you can disable some steps they are doing, for instance if you want to persist your mutated item yourself.
+
+The following table lists the steps you can disable in your resource configuration.
+
+Attribute     | Type   | Default | Description
+--------------|--------|---------|-------------
+`read`        | `bool` | `true`  | Enables or disables the reading of data
+`deserialize` | `bool` | `true`  | Enables or disables the deserialization of data (mutation only)
+`validate`    | `bool` | `true`  | Enables or disables the validation of the denormalized data (mutation only)
+`write`       | `bool` | `true`  | Enables or disables the writing of data into the persistence system (mutation only)
+`serialize`   | `bool` | `true`  | Enables or disables the serialization of data
+
+A step can be disabled at the operation level:
+
+```php
+<?php
+
+namespace App\Model;
+
+use ApiPlatform\Core\Annotation\ApiResource;
+
+/**
+ * @ApiResource(graphql={
+ *     "mutation"={
+ *         "write"=false
+ *     }
+ * })
+ */
+class Book
+{
+    // ...
+}
+```
+
+Or at the resource attributes level (will be also applied in REST and for all operations):
+
+```php
+<?php
+
+namespace App\Model;
+
+use ApiPlatform\Core\Annotation\ApiResource;
+
+/**
+ * @ApiResource(
+ *     graphql={...},
+ *     attributes={
+ *         "write"=false
+ *     }
+ * })
+ */
+class Book
+{
+    // ...
 }
 ```
 
@@ -409,6 +762,178 @@ In this case, the REST endpoint will be able to get the two attributes of the bo
 
 The GraphQL endpoint will be able to query only the name. It will only be able to create a book with an author.
 When doing this mutation, the author of the created book will not be returned (the name will be instead).
+
+## Custom Types
+
+You might need to add your own types to your GraphQL application.
+
+Create your type class by implementing the interface `ApiPlatform\Core\GraphQl\Type\Definition\TypeInterface`.
+
+You should extend the `GraphQL\Type\Definition\ScalarType` class too to take advantage of its useful methods.
+
+For instance, to create a custom `DateType`:
+
+```php
+<?php
+
+namespace App\Type\Definition;
+
+use ApiPlatform\Core\GraphQl\Type\Definition\TypeInterface;
+use GraphQL\Error\Error;
+use GraphQL\Language\AST\StringValueNode;
+use GraphQL\Type\Definition\ScalarType;
+use GraphQL\Utils\Utils;
+
+final class DateTimeType extends ScalarType implements TypeInterface
+{
+    public function __construct()
+    {
+        $this->name = 'DateTime';
+        $this->description = 'The `DateTime` scalar type represents time data.';
+
+        parent::__construct();
+    }
+
+    public function getName(): string
+    {
+        return $this->name;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function serialize($value)
+    {
+        // Already serialized.
+        if (\is_string($value)) {
+            return (new \DateTime($value))->format('Y-m-d');
+        }
+
+        if (!($value instanceof \DateTime)) {
+            throw new Error(sprintf('Value must be an instance of DateTime to be represented by DateTime: %s', Utils::printSafe($value)));
+        }
+
+        return $value->format(\DateTime::ATOM);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function parseValue($value)
+    {
+        if (!\is_string($value)) {
+            throw new Error(sprintf('DateTime cannot represent non string value: %s', Utils::printSafeJson($value)));
+        }
+
+        if (false === \DateTime::createFromFormat(\DateTime::ATOM, $value)) {
+            throw new Error(sprintf('DateTime cannot represent non date value: %s', Utils::printSafeJson($value)));
+        }
+
+        // Will be denormalized into a \DateTime.
+        return $value;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function parseLiteral($valueNode, ?array $variables = null)
+    {
+        if ($valueNode instanceof StringValueNode && false !== \DateTime::createFromFormat(\DateTime::ATOM, $valueNode->value)) {
+            return $valueNode->value;
+        }
+
+        // Intentionally without message, as all information already in wrapped Exception
+        throw new \Exception();
+    }
+}
+```
+
+You can also check the documentation of [graphql-php](https://webonyx.github.io/graphql-php/type-system/scalar-types/#writing-custom-scalar-types).
+
+The big difference in API Platform is that the value is already serialized when it's received in your type class.
+Similarly, you would not want to denormalize your parsed value since it will be done by API Platform later.
+
+If you use autoconfiguration (the default Symfony configuration) in your application, then you are done!
+
+Else, you need to tag your type class like this:
+
+```yaml
+# api/config/services.yaml
+services:
+    # ...
+    App\Type\Definition\DateTimeType:
+        tags:
+            - { name: api_platform.graphql.type }
+```
+
+Your custom type is now registered and is available in the `TypesContainer`.
+
+To use it please [modify the extracted types](#modify-the-extracted-types) or use it directly in [custom queries](#custom-queries) or [custom mutations](#custom-mutations).
+
+## Modify the Extracted Types
+
+The GraphQL schema and its types are extracted from your resources.
+In some cases, you would want to modify the extracted types for instance to use your custom ones.
+
+To do so, you need to decorate the `api_platform.graphql.type_converter` service:
+
+```yaml
+# api/config/services.yaml
+services:
+    # ...
+    'App\Type\TypeConverter':
+        decorates: api_platform.graphql.type_converter
+```
+
+Your class needs to look like this:
+
+```php
+<?php
+
+namespace App\Type;
+
+use ApiPlatform\Core\GraphQl\Type\TypeConverterInterface;
+use App\Model\Book;
+use Symfony\Component\PropertyInfo\Type;
+
+final class TypeConverter implements TypeConverterInterface
+{
+    private $defaultTypeConverter;
+
+    public function __construct(TypeConverterInterface $defaultTypeConverter)
+    {
+        $this->defaultTypeConverter = $defaultTypeConverter;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function convertType(Type $type, bool $input, ?string $queryName, ?string $mutationName, string $resourceClass, ?string $property, int $depth)
+    {
+        if ('publicationDate' === $property
+            && Book::class === $resourceClass
+        ) {
+            return 'DateTime';
+        }
+
+        return $this->defaultTypeConverter->convertType($type, $input, $queryName, $mutationName, $resourceClass, $property, $depth);
+    }
+}
+```
+
+In this case, the `publicationDate` property of the `Book` class will have a custom `DateTime` type.
+
+You can even apply this logic for a kind of property. Replace the previous condition with something like this:
+
+```php
+if (Type::BUILTIN_TYPE_OBJECT === $type->getBuiltinType()
+    && is_a($type->getClassName(), \DateTimeInterface::class, true)
+) {
+    return 'DateTime';
+}
+```
+
+All `DateTimeInterface` properties will have the `DateTime` type in this example.
 
 ## Export the Schema in SDL
 
