@@ -208,7 +208,7 @@ final class ResolveMediaObjectContentUrlSubscriber implements EventSubscriberInt
             return;
         }
 
-        if (!$attributes = RequestAttributesExtractor::extractAttributes($request) || !\is_a($attributes['resource_class'], MediaObject::class, true)) {
+        if (!($attributes = RequestAttributesExtractor::extractAttributes($request)) || !\is_a($attributes['resource_class'], MediaObject::class, true)) {
             return;
         }
 
