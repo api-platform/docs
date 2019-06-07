@@ -270,3 +270,52 @@ final class Book
 ```
 
 The `Book` `attribute` property will now be an instance of `Attribute` after the (de)normalization phase.
+
+## Validating Data Transfer Objects
+
+Before transforming DTO to your API Resource you may want to ensure that the DTO
+has valid data. In this case we can inject the validator to your data transformer
+and validate it.
+
+```php
+<?php
+// src/DataTransformer/BookInputDataTransformer.php
+
+namespace App\DataTransformer;
+
+use ApiPlatform\Core\DataTransformer\DataTransformerInterface;
+use ApiPlatform\Core\Validator\ValidatorInterface;
+use App\Dto\BookInput;
+use App\Entity\Book;
+
+final class BookInputDataTransformer implements DataTransformerInterface
+{
+    private $validator;
+    
+    public function __construct(ValidatorInterface $validator)
+    {
+        $this->validator = $validator;
+    }
+
+    /**
+     * @param BookInput $data
+     */
+    public function transform($data, string $to, array $context = []): Book
+    {
+        $this->validator->validate($data);
+        
+        $book = new Book();
+        $book->isbn = $data->isbn;
+        return $book;
+    }
+
+    public function supportsTransformation($data, string $to, array $context = []): bool
+    {
+        if ($data instanceof Book) {
+          return false;
+        }
+
+        return Book::class === $to && null !== ($context['input']['class'] ?? null);
+    }
+}
+```
