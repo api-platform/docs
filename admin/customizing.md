@@ -24,7 +24,9 @@ const greetings = {
       field: greetingsNameField,
     }
   ],
-  listFields: [],
+  listFields: [
+    // list here all fields you want to be displayed in the List view
+  ],
 };
 
 const books = {
