@@ -15,13 +15,11 @@ If you don't already have one, [create an account on Heroku](https://signup.hero
 toolbelt](https://devcenter.heroku.com/articles/getting-started-with-php#set-up). We're guessing you already
 have a working install of [Composer](http://getcomposer.org). Perfect, we will need it.
 
-Create a new API Platform project as usual:
-
-    composer create-project api-platform/api-platform
+Create a new [API Platform project](distribution/index.md#using-the-official-distribution-recommended) which will be used in the rest of this example 
 
 Heroku relies on [environment variables](https://devcenter.heroku.com/articles/config-vars) for its configuration. Regardless
 of what provider you choose for hosting your application, using environment variables to configure your production environment
-is a best practice supported out of the box by API Platform.
+is a best practice promoted by API Platform.
 
 Create a Heroku's `app.json` file at the root of the `api/` directory to configure the deployment:
 
@@ -122,7 +120,7 @@ Go to the `api/` directory, then
 
     git push heroku master
 
-**We're done.** You can play with the demo bookstore API provided with API Platform. It is ready for production and you
+**We're done.** You can play with the demo API provided with API Platform. It is ready for production and you
 can scale it in one click from the Heroku interface.
 
 To see your logs, run `heroku logs --tail`.
