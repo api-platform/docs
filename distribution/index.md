@@ -58,7 +58,7 @@ asynchronous jobs to your APIs is straightforward.
 
 ### Using the Official Distribution (Recommended)
 
-Start by [downloading the API Platform distribution `.tar.gz` file](https://github.com/api-platform/api-platform/releases/latest).
+Start by [downloading the API Platform distribution `.tar.gz` file](https://github.com/api-platform/api-platform/releases/latest), or [generate a GitHub repository from the template we provide](https://github.com/api-platform/api-platform/generate).
 Once you have extracted its contents, the resulting directory contains the API Platform project structure. You will add your own code and configuration inside it.
 
 **Note**: Try to avoid using the `.zip` file, as it may cause potential [permission](https://github.com/api-platform/api-platform/issues/319#issuecomment-307037562) [issues](https://github.com/api-platform/api-platform/issues/777#issuecomment-412515342).
