@@ -73,7 +73,7 @@ Create a `tsconfig.json` file to store Typescript configuration:
 Install required dependencies:
 
 ```bash
-$ yarn add lodash @types/lodash isomorphic-unfetch
+$ yarn add lodash.get lodash.has @types/lodash isomorphic-unfetch
 ```
 
 ## Starting the Project
@@ -88,13 +88,17 @@ and access it through `http://localhost:3000`
 ## Generating Routes
 
 ```bash
-$ npx @api-platform/client-generator https://demo.api-platform.com src/ -g next --resource book
+$ npx @api-platform/client-generator https://demo.api-platform.com src/ --generator next --resource book
 # Replace the URL by the entrypoint of your Hydra-enabled API
 ```
 
 > Note: Omit the resource flag to generate files for all resource types exposed by the API.
 
 If your express server is compatible with the `custom-server-express` Next.js example, you can use the `server-path` flag to specify path to the server file. Routes will be added automatically to this file, otherwise, you will receive some hints on how to them to your own custom server.
+
+```bash
+$ npx @api-platform/client-generator https://demo.api-platform.com src/ --generator next --server-path ./server.js
+```
 
 Go to `https://localhost:3000/books/` to start using your app.
 That's it!

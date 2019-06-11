@@ -27,7 +27,7 @@ $ yarn add redux react-redux redux-thunk redux-form react-native-elements react-
 In the app directory, generate the files for the resource you want:
 
 ```bash
-$ npx @api-platform/client-generator https://demo.api-platform.com . -g react-native --resource book
+$ npx @api-platform/client-generator https://demo.api-platform.com . --generator react-native --resource book
 ```
 
 Replace the URL with the entrypoint of your Hydra-enabled API.
