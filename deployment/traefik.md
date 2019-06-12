@@ -26,7 +26,7 @@ The API DNS will be specified with `traefik.frontend.rule=Host:your.host` (here 
 
 
 ```yaml
-# api-platform-app/docker-compose.yml
+# docker-compose.yml
 version: '3.4'
 
 x-cache:
@@ -181,10 +181,10 @@ If your network is of type B, it may conflict with the Traefik sub-network.
 
 ## Going Further
 
-You may want multiple api-platform instances on same server. To deal with it, you'll have to externalize first traefik to another docker-compose file anywhere on your server, but as traefik will listen on external 80 & 443 ports you can run only 1 traefik instance with this configuration per server  
-Then you'll have something like this example :  
+As this Traefik configuration listens on 80 and 443 ports, you can run only 1 Traefik instance per server. However, you may want to run multiple API Platform projects on same server. To deal with it, you'll have to externalize the Traefik configuration to another `docker-compose.yml` file, anywhere on your server.
+Here is a working example:  
 ```yaml
-# traefik/docker-compose.yml
+# /somewhere/docker-compose.yml
 version: '3.4'
 
 services:
@@ -197,7 +197,7 @@ services:
       - "8080:8080"
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
-# Uncomment these following lines to enable toml files & let's encrypt certificates, refer to traefik doc : https://docs.traefik.io/user-guide/docker-and-lets-encrypt/
+# load a TOML configuration file and to generate Let's Encrypt certificated as explained in https://docs.traefik.io/user-guide/docker-and-lets-encrypt/
 #      - ./traefik.toml:/traefik.toml
 #      - ./acme.json:/acme.json
     networks:
@@ -210,9 +210,9 @@ networks:
   # Add other networks here
 ```
 
-After that, you must define your api-platform docker-compose file  
-```yaml
-# api-platform-app/docker-compose.yml
+Then update the `docker-compose.yaml` file belonging to your API Platform projects:  
+```patch
+# docker-compose.yml
 version: '3.4'
 
 x-cache:
@@ -222,22 +222,22 @@ x-cache:
     - ${CONTAINER_REGISTRY_BASE}/nginx
     - ${CONTAINER_REGISTRY_BASE}/varnish
 
-x-network:
-  &network
-  networks:
-    - api_platform_network
++x-network:
++  &network
++  networks:
++    - api_platform_network
 
 services:
 # Uncomment these lines only if you want to run one api-platform instance using traefik
-#  traefik:
-#    image: traefik:latest
-#    command: --api --docker
-#    ports:
-#      - "80:80"
-#      - "443:443"
-#    volumes:
-#      - /var/run/docker.sock:/var/run/docker.sock
-#    <<: *network
+-  traefik:
+-    image: traefik:latest
+-    command: --api --docker
+-    ports:
+-      - "80:80"
+-      - "443:443"
+-    volumes:
+-      - /var/run/docker.sock:/var/run/docker.sock
+-    <<: *network
 
   php:
     image: ${CONTAINER_REGISTRY_BASE}/php
@@ -247,17 +247,17 @@ services:
       <<: *cache
     depends_on: 
       - db
-    environment:
-      # You should remove these variables from .env into api folder
-      - TRUSTED_HOSTS=^(((${SUBDOMAINS_LIST}\.)?${DOMAIN_NAME})|api)$$
-      - CORS_ALLOW_ORIGIN=^${HTTP_OR_SSL}(${SUBDOMAINS_LIST}.)?${DOMAIN_NAME}$$
-      - DATABASE_URL=postgres://${DB_USER}:${DB_PASS}@db/${DB_NAME}
-      - MERCURE_SUBSCRIBE_URL=${HTTP_OR_SSL}mercure.${DOMAIN_NAME}$$
-      - MERCURE_PUBLISH_URL=${HTTP_OR_SSL}mercure.${DOMAIN_NAME}$$
-      - MERCURE_JWT_SECRET=${JWT_KEY}
++    environment:
++      # You should remove these variables from .env into api folder
++      - TRUSTED_HOSTS=^(((${SUBDOMAINS_LIST}\.)?${DOMAIN_NAME})|api)$$
++      - CORS_ALLOW_ORIGIN=^${HTTP_OR_SSL}(${SUBDOMAINS_LIST}.)?${DOMAIN_NAME}$$
++      - DATABASE_URL=postgres://${DB_USER}:${DB_PASS}@db/${DB_NAME}
++      - MERCURE_SUBSCRIBE_URL=${HTTP_OR_SSL}mercure.${DOMAIN_NAME}$$
++      - MERCURE_PUBLISH_URL=${HTTP_OR_SSL}mercure.${DOMAIN_NAME}$$
++      - MERCURE_JWT_SECRET=${JWT_KEY}
     volumes:
       - ./api:/srv/api:rw,cached
-    <<: *network
++    <<: *network
 
   api:
     image: ${CONTAINER_REGISTRY_BASE}/nginx
@@ -271,7 +271,7 @@ services:
       - ./api/public:/srv/api/public:ro
     labels:
       - traefik.frontend.rule=Host:api.${DOMAIN_NAME}
-    <<: *network
++    <<: *network
 
   cache-proxy:
     image: ${CONTAINER_REGISTRY_BASE}/varnish
@@ -287,7 +287,7 @@ services:
       - /usr/local/var/varnish:exec
     labels:
       - traefik.frontend.rule=Host:cache.${DOMAIN_NAME}
-    <<: *network
++    <<: *network
 
   db:
     image: postgres:10-alpine
@@ -297,7 +297,7 @@ services:
       - POSTGRES_PASSWORD=${DB_PASS}
     volumes:
       - db-data:/var/lib/postgresql/data:rw
-    <<: *network
++    <<: *network
 
   mercure:
     image: dunglas/mercure
@@ -309,7 +309,7 @@ services:
       - DEMO=1
     labels:
       - traefik.frontend.rule=Host:mercure.${DOMAIN_NAME}
-    <<: *network
++    <<: *network
 
   client:
     image: ${CONTAINER_REGISTRY_BASE}/client
@@ -328,7 +328,7 @@ services:
     environment:
       # You should remove this variable from .env into client folder
       - REACT_APP_API_ENTRYPOINT=${HTTP_OR_SSL}api.${DOMAIN_NAME}
-    <<: *network
++    <<: *network
 
   admin:
     image: ${CONTAINER_REGISTRY_BASE}/admin
@@ -347,17 +347,17 @@ services:
     labels:
       - traefik.frontend.rule=Host:admin.${DOMAIN_NAME}
       - traefik.port=3000
-    <<: *network
++    <<: *network
 
 volumes:
   db-data: {}
 
-networks:
-  api_platform_network:
-    external: true
++networks:
++  api_platform_network:
++    external: true
 ```
 
-Then as you can see, there is some env vars must be defined, here is an example of .env file :  
+Finally, some environment variables must be defined, here is an example of a `.env` file to set them: 
 ```dotenv
 CONTAINER_REGISTRY_BASE=quay.io/api-platform
 DOMAIN_NAME=localhost
@@ -369,4 +369,4 @@ JWT_KEY=!UnsecureChangeMe!
 SUBDOMAINS_LIST=(admin|api|cache|mercure|www)
 ```
 
-This way let you configure your main variables into one single file
+This way, you can configure your main variables into one single file.
