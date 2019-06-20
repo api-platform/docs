@@ -35,7 +35,6 @@ Here is the fully featured REST API you'll get in minutes:
 * Automatic entrypoint generation giving access to all resources
 * [JWT](jwt.md) and [OAuth](https://oauth.net/) support
 * Files and `\DateTime` and serialization and deserialization
-* [FOSUserBundle](fosuser-bundle.md) integration (user management)
 
 Everything is fully customizable through a powerful [event system](events.md) and strong OOP.
 
