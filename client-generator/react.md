@@ -75,7 +75,7 @@ import { Provider } from 'react-redux';
 import thunk from 'redux-thunk';
 import { reducer as form } from 'redux-form';
 import { Route, Switch } from 'react-router-dom';
-import createBrowserHistory from 'history/createBrowserHistory';
+import { createBrowserHistory } from "history";
 import {
   ConnectedRouter,
   connectRouter,
