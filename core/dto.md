@@ -54,7 +54,7 @@ namespace App\Dto;
 
 final class BookInput {
     /**
-     * @var string $isbn The ISBN number
+     * @var string $isbn The ISBN
      */
     public $isbn;
 }
@@ -109,7 +109,7 @@ For symfony < 3.3 we need register it:
 ```yaml
 # api/config/services.yaml
 services:
-    # ...
+    # …
     'App\DataTransformer\BookInputDataTransformer': ~
         # Uncomment only if autoconfiguration is disabled
         #tags: [ 'api_platform.data_transformer' ]
@@ -143,7 +143,6 @@ namespace App\DataTransformer;
 
 use ApiPlatform\Core\DataTransformer\DataTransformerInterface;
 use App\Dto\BookOutput;
-use App\Entity\Book;
 
 final class BookOutputDataTransformer implements DataTransformerInterface
 {
@@ -181,7 +180,7 @@ For symfony < 3.3 we need register it:
 ```yaml
 # api/config/services.yaml
 services:
-    # ...
+    # …
     'App\DataTransformer\BookOutputDataTransformer': ~
         # Uncomment only if autoconfiguration is disabled
         #tags: [ 'api_platform.data_transformer' ]
@@ -246,7 +245,7 @@ final class BookInputDataTransformer implements DataTransformerInterface
 ```yaml
 # api/config/services.yaml
 services:
-    # ...
+    # …
     'App\DataTransformer\BookInputDataTransformer': ~
         # Uncomment only if autoconfiguration is disabled
         #tags: [ 'api_platform.data_transformer' ]
