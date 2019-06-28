@@ -53,12 +53,10 @@ We have the following `BookInput`:
 namespace App\Dto;
 
 final class BookInput {
-    public $isbn;
-
-    /*
-     * Setter is required to generate documentation of example model
+    /**
+     * @var string $isbn The ISBN number
      */
-    public function setIsbn(string $isbn) { $this->isbn = $isbn; }
+    public $isbn;
 }
 ```
 
@@ -72,13 +70,10 @@ namespace App\DataTransformer;
 
 use ApiPlatform\Core\DataTransformer\DataTransformerInterface;
 use App\Dto\BookInput;
-use App\Entity\Book;
 
 final class BookInputDataTransformer implements DataTransformerInterface
 {
     /**
-     * Convert BookInput into Book
-     *
      * @param BookInput $data
      * @param string $to
      * @param array $context
@@ -86,12 +81,10 @@ final class BookInputDataTransformer implements DataTransformerInterface
      */
     public function transform($data, string $to, array $context = [])
     {
-        if($data instanceof BookInput) {
-            $book = new Book();
-            $book->isbn = $data->isbn;
-            $book->name = strrev($data->isbn); // there can be called service that calculate lacking fields, `strrev` is used for example
-            return $book;
-        }
+        $book = new Book();
+        $book->isbn = $data->isbn;
+        $book->name = strrev($data->isbn); // there can be called service that calculate lacking fields, `strrev` is used for example
+        return $book;
     }
 
     /**
@@ -155,8 +148,6 @@ use App\Entity\Book;
 final class BookOutputDataTransformer implements DataTransformerInterface
 {
     /**
-     * Convert Book into BookOutput
-     *
      * @param Book $data
      * @param string $to
      * @param array $context
@@ -164,11 +155,9 @@ final class BookOutputDataTransformer implements DataTransformerInterface
      */
     public function transform($data, string $to, array $context = [])
     {
-        if($data instanceof Book) {
-            $output = new BookOutput();
-            $output->name = $data->name;
-            return $output;
-        }
+        $output = new BookOutput();
+        $output->name = $data->name;
+        return $output;
     }
 
     /**
@@ -236,9 +225,6 @@ use App\Dto\BookInput;
 
 final class BookInputDataTransformer implements DataTransformerInterface
 {
-    /**
-     * {@inheritdoc}
-     */
     public function transform($data, string $to, array $context = [])
     {
         $existingBook = $context[AbstractItemNormalizer::OBJECT_TO_POPULATE];
@@ -246,9 +232,6 @@ final class BookInputDataTransformer implements DataTransformerInterface
         return $existingBook;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function supportsTransformation($data, string $to, array $context = []): bool
     {
         if ($data instanceof Book) {
