@@ -87,7 +87,7 @@ We can transform the `BookInput` to a `Book` resource instance:
 namespace App\DataTransformer;
 
 use ApiPlatform\Core\DataTransformer\DataTransformerInterface;
-use App\Dto\BookInput;
+use App\Entity\Book;
 
 final class BookInputDataTransformer implements DataTransformerInterface
 {
@@ -220,7 +220,7 @@ namespace App\DataTransformer;
 
 use ApiPlatform\Core\DataTransformer\DataTransformerInterface;
 use ApiPlatform\Core\Serializer\AbstractItemNormalizer;
-use App\Dto\BookInput;
+use App\Entity\Book;
 
 final class BookInputDataTransformer implements DataTransformerInterface
 {
@@ -313,7 +313,6 @@ namespace App\DataTransformer;
 
 use ApiPlatform\Core\DataTransformer\DataTransformerInterface;
 use ApiPlatform\Core\Validator\ValidatorInterface;
-use App\Dto\BookInput;
 use App\Entity\Book;
 
 final class BookInputDataTransformer implements DataTransformerInterface
@@ -326,7 +325,7 @@ final class BookInputDataTransformer implements DataTransformerInterface
     }
 
     /**
-     * @param BookInput $data
+     * {@inheritdoc}
      */
     public function transform($data, string $to, array $context = []): Book
     {
@@ -337,6 +336,9 @@ final class BookInputDataTransformer implements DataTransformerInterface
         return $book;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function supportsTransformation($data, string $to, array $context = []): bool
     {
         if ($data instanceof Book) {
