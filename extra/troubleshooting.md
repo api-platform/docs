@@ -95,3 +95,9 @@ server {
 ```
 
 You then need to rebuild your containers by running `docker-compose build`.
+
+## "connect() failed (111: Connection refused) while connecting to upstream" 502 error
+
+Some of your API calls fail with a 502 error and the logs for the api container shows the following error message `connect() failed (111: Connection refused) while connecting to upstream`.
+
+This can be due to the api console which is not executable. Just run `chmod 755 api/bin/console`.
