@@ -75,7 +75,17 @@ const apiDocumentationParser = entrypoint =>
   parseHydraDocumentation(entrypoint, {
     headers: new Headers(fetchHeaders),
   }).then(
-    ({ api }) => ({ api }),
+    ({ api }) => {
+      api.resources = api.resources.map(resource => {
+        resource.getParameters = () => {
+          return getParameters(resource, {
+            headers: new Headers(fetchHeaders)
+          });
+        };
+        return resource;
+      });
+      return { api }
+    },
     result => {
       const { api, status } = result;
 
