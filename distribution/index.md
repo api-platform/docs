@@ -523,7 +523,7 @@ Oops, we forgot to add the title. Submit the request anyway, you should get a 50
 
 Did you notice that the error was automatically serialized in JSON-LD and respects the Hydra Core vocabulary for errors?
 It allows the client to easily extract useful information from the error. Anyway, it's bad to get a SQL error when submitting
-a request. It means that we didn't use a valid input, and [it's a bad and dangerous practice](https://www.owasp.org/index.php/Input_Validation_Cheat_Sheet).
+a request. It means that we didn't use a valid input, and [it's a bad and dangerous practice](https://github.com/OWASP/CheatSheetSeries/blob/master/cheatsheets/Input_Validation_Cheat_Sheet.md).
 
 API Platform comes with a bridge with [the Symfony Validator Component](http://symfony.com/doc/current/validation.html).
 Adding some of [its numerous validation constraints](http://symfony.com/doc/current/validation.html#supported-constraints)
