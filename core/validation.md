@@ -351,7 +351,7 @@ You can retrieve the payload field by setting the `serialize_payload_fields` opt
 
 api_platform:
     validator:
-        serialize_payload_fields: true
+        serialize_payload_fields: ~
 ```
 
 Then, the serializer will return all payload values in the error response.
