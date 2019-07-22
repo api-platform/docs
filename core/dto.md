@@ -290,7 +290,7 @@ final class Book
 {
   /**
    * @var Attribute
-   **/
+   */
   public $attribute;
 
   public $isbn;
