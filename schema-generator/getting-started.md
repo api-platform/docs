@@ -402,7 +402,8 @@ A config file generating an enum class:
 
 ```yaml
 types:
-    OfferItemCondition: ~ # The generator will automatically guess that OfferItemCondition is subclass of Enum
+    OfferItemCondition: # The generator will automatically guess that OfferItemCondition is subclass of Enum
+      properties: {} # Remove all properties of the parent class
 ```
 
 The related PHP class:
