@@ -98,9 +98,11 @@ api_platform:
 
     graphql:
         enabled: false
-        # The default IDE used when going to the GraphQL endpoint. False to disable.
+        # The default IDE (graphiql or graphql-playground) used when going to the GraphQL endpoint. False to disable.
         default_ide: 'graphiql'
         graphiql:
+            enabled: true
+        graphql_playground:
             enabled: true
 
     elasticsearch:
