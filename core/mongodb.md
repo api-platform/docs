@@ -201,6 +201,11 @@ class Offer
      * @ODM\ReferenceOne(targetDocument=Product::class, inversedBy="offers", storeAs="id")
      */
     public $product;
+
+    public function getId(): ?int
+    {
+        return $this->id;
+    }
 }
 ```
 
