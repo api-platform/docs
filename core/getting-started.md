@@ -138,6 +138,11 @@ class Offer
      * @ORM\ManyToOne(targetEntity="Product", inversedBy="offers")
      */
     public $product;
+
+    public function getId(): ?int
+    {
+        return $this->id;
+    }
 }
 ```
 
