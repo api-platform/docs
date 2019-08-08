@@ -301,8 +301,8 @@ As you can see, it's possible to define your own arguments for your custom queri
 They are following the GraphQL type system.
 If you don't define the `args` property, it will be the default ones (for example `id` for an item).
 
-If you don't want API Platform to retrieve the item for you, disable the `read` step like in `withDefaultArgsNotRetrievedQuery`.
-Some other steps [can be disabled](#disabling-resolver-steps).
+If you don't want API Platform to retrieve the item for you, disable the `read` stage like in `withDefaultArgsNotRetrievedQuery`.
+Some other stages [can be disabled](#disabling-resolver-stages).
 Another option would be to make sure there is no `id` argument.
 This is the case for `notRetrievedQuery` (empty args).
 Conversely, if you need to add custom arguments, make sure `id` is added among the arguments if you need the item to be retrieved automatically.
@@ -401,11 +401,11 @@ final class BookMutationResolver implements MutationResolverInterface
 ```
 
 As you can see, depending on how you configure your custom mutation in the resource, the item is retrieved or not.
-For instance, if you don't set an `id` argument or if you disable the `read` or the `deserialize` step (other steps [can also be disabled](#disabling-resolver-steps)),
+For instance, if you don't set an `id` argument or if you disable the `read` or the `deserialize` stage (other stages [can also be disabled](#disabling-resolver-stages)),
 the received item will be `null`.
 
 Likewise, if you don't want your item to be persisted by API Platform,
-you can return `null` instead of the mutated item (be careful: the response will also be `null`) or disable the `write` step.
+you can return `null` instead of the mutated item (be careful: the response will also be `null`) or disable the `write` stage.
 
 Don't forget the resolver is a service and you can inject the dependencies you want.
 
@@ -432,7 +432,7 @@ use App\Resolver\BookMutationResolver;
  *             "sendMail"={"type"="Boolean!", "description"="Send a mail?"}
  *         }
  *     },
- *     "disabledStepsMutation"={
+ *     "disabledStagesMutation"={
  *         "mutation"=BookMutationResolver::class,
  *         "deserialize"=false,
  *         "write"=false
@@ -472,7 +472,7 @@ Your custom mutations will be available like this:
   }
 
   mutation {
-    disabledStepsMutationBook(input: {id: "/books/18", title: "The Fitz and the Fool"}) {
+    disabledStagesMutationBook(input: {id: "/books/18", title: "The Fitz and the Fool"}) {
       book {
         title
       }
@@ -482,16 +482,71 @@ Your custom mutations will be available like this:
 }
 ```
 
-## Disabling Resolver Steps
+## Workflow of the Resolvers
 
-API Platform resolves the queries and mutations by using its own resolvers.
+API Platform resolves the queries and mutations by using its own **resolvers**.
 
 Even if you create your [custom queries](#custom-queries) or your [custom mutations](#custom-mutations),
 these resolvers will be used and yours will be called at the right time.
 
-But if you need to, you can disable some steps they are doing, for instance if you want to persist your mutated item yourself.
+Each resolver follows a workflow composed of **stages**.
 
-The following table lists the steps you can disable in your resource configuration.
+The schema below describes them:
+
+![Resolvers Workflow](images/diagrams/resolvers-workflow.svg)
+
+Each stage corresponds to a service. It means you can take control of the workflow wherever you want by decorating them!
+
+Here is an example of the decoration of the write stage, for instance if you want to persist your data as you want.
+
+Create your *WriteStage*:
+
+```php
+<?php
+
+namespace App\Stage;
+
+use ApiPlatform\Core\GraphQl\Resolver\Stage\WriteStageInterface;
+
+final class WriteStage implements WriteStageInterface
+{
+    private $writeStage;
+
+    public function __construct(WriteStageInterface $writeStage)
+    {
+        $this->writeStage = $writeStage;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function apply($data, string $resourceClass, string $operationName, array $context)
+    {
+        // Use the provided write stage. Or not.
+        $writtenObject = $this->writeStage->apply($data, $resourceClass, $operationName, $context);
+
+        // Do whatever you want.
+
+        return $writtenObject;
+    }
+}
+```
+
+Decorate the API Platform stage service:
+
+```yaml
+# api/config/services.yaml
+services:
+    # ...
+    'App\Stage\WriteStage':
+        decorates: api_platform.graphql.resolver.stage.write
+```
+
+### Disabling Resolver Stages
+
+If you need to, you can disable some stages done by the resolvers, for instance if you don't want your data to be validated.
+
+The following table lists the stages you can disable in your resource configuration.
 
 Attribute     | Type   | Default | Description
 --------------|--------|---------|-------------
@@ -501,7 +556,7 @@ Attribute     | Type   | Default | Description
 `write`       | `bool` | `true`  | Enables or disables the writing of data into the persistence system (mutation only)
 `serialize`   | `bool` | `true`  | Enables or disables the serialization of data
 
-A step can be disabled at the operation level:
+A stage can be disabled at the operation level:
 
 ```php
 <?php
@@ -998,6 +1053,50 @@ if (Type::BUILTIN_TYPE_OBJECT === $type->getBuiltinType()
 ```
 
 All `DateTimeInterface` properties will have the `DateTime` type in this example.
+
+## Changing the Serialization Context Dynamically
+
+[As REST](serialization.md#changing-the-serialization-context-dynamically), it's possible to add dynamically a (de)serialization group when resolving a query or a mutation.
+
+There are some differences though.
+
+The service is `api_platform.graphql.serializer.context_builder` and the method to override is `create`.
+
+The decorator could be like this:
+
+```php
+<?php
+
+namespace App\Serializer;
+
+use ApiPlatform\Core\GraphQl\Serializer\SerializerContextBuilderInterface;
+use App\Entity\Book;
+use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
+
+final class BookContextBuilder implements SerializerContextBuilderInterface
+{
+    private $decorated;
+    private $authorizationChecker;
+
+    public function __construct(SerializerContextBuilderInterface $decorated, AuthorizationCheckerInterface $authorizationChecker)
+    {
+        $this->decorated = $decorated;
+        $this->authorizationChecker = $authorizationChecker;
+    }
+
+    public function create(?string $resourceClass, string $operationName, array $resolverContext, bool $normalization): array
+    {
+        $context = $this->decorated->create($resourceClass, $operationName, $resolverContext, $normalization);
+        $resourceClass = $context['resource_class'] ?? null;
+
+        if ($resourceClass === Book::class && isset($context['groups']) && $this->authorizationChecker->isGranted('ROLE_ADMIN') && false === $normalization) {
+            $context['groups'][] = 'admin:input';
+        }
+
+        return $context;
+    }
+}
+```
 
 ## Export the Schema in SDL
 
