@@ -396,9 +396,8 @@ First example:
 namespace App\Repository;
 
 use App\Entity\Book;
-use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
-use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\Common\Persistence\ManagerRegistry;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Doctrine\ORM\Tools\Pagination\Paginator as DoctrinePaginator;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Paginator;
@@ -407,21 +406,21 @@ use Doctrine\Common\Collections\Criteria;
 class BookRepository extends ServiceEntityRepository
 {
     const ITEMS_PER_PAGE = 20;
-    
+
     private $tokenStorage;
-    
+
     public function __construct(
-        RegistryInterface $registry,
+        ManagerRegistry $registry,
         TokenStorageInterface $tokenStorage
     ) {
         $this->tokenStorage = $tokenStorage;
         parent::__construct($registry, Book::class);
     }
-    
+
     public function getBooksByFavoriteAuthor(int $page = 1): Paginator
     {
         $firstResult = ($page -1) * self::ITEMS_PER_PAGE;
-        
+
         $user = $this->tokenStorage->getToken()->getUser();
         $queryBuilder = $this->createQueryBuilder();
         $queryBuilder->select('b')
@@ -482,11 +481,11 @@ namespace App\Repository;
 class BookRepository extends ServiceEntityRepository
 {
     // constant, variables and constructor...
-    
+
     public function getBooksByFavoriteAuthor(int $page = 1): Paginator
     {
         $firstResult = ($page -1) * self::ITEMS_PER_PAGE;
-        
+
         $user = $this->tokenStorage->getToken()->getUser();
         $queryBuilder = $this->createQueryBuilder();
         $queryBuilder->select('b')
