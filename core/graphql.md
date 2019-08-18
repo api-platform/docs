@@ -520,10 +520,10 @@ final class WriteStage implements WriteStageInterface
     /**
      * {@inheritdoc}
      */
-    public function apply($data, string $resourceClass, string $operationName, array $context)
+    public function __invoke($data, string $resourceClass, string $operationName, array $context)
     {
         // Use the provided write stage. Or not.
-        $writtenObject = $this->writeStage->apply($data, $resourceClass, $operationName, $context);
+        $writtenObject = ($this->writeStage)($data, $resourceClass, $operationName, $context);
 
         // Do whatever you want.
 
@@ -1027,7 +1027,7 @@ final class TypeConverter implements TypeConverterInterface
     /**
      * {@inheritdoc}
      */
-    public function convertType(Type $type, bool $input, ?string $queryName, ?string $mutationName, string $resourceClass, ?string $property, int $depth)
+    public function convertType(Type $type, bool $input, ?string $queryName, ?string $mutationName, string $resourceClass, string $rootResource, ?string $property, int $depth)
     {
         if ('publicationDate' === $property
             && Book::class === $resourceClass
@@ -1035,7 +1035,7 @@ final class TypeConverter implements TypeConverterInterface
             return 'DateTime';
         }
 
-        return $this->defaultTypeConverter->convertType($type, $input, $queryName, $mutationName, $resourceClass, $property, $depth);
+        return $this->defaultTypeConverter->convertType($type, $input, $queryName, $mutationName, $resourceClass, $rootResource, $property, $depth);
     }
 }
 ```
