@@ -24,13 +24,13 @@ use Symfony\Component\Validator\Constraints as Assert;
  * Secured resource.
  *
  * @ApiResource(
- *     attributes={"access_control"="is_granted('ROLE_USER')"},
+ *     attributes={"security"="is_granted('ROLE_USER')"},
  *     collectionOperations={
  *         "get",
- *         "post"={"access_control"="is_granted('ROLE_ADMIN')"}
+ *         "post"={"security"="is_granted('ROLE_ADMIN')"}
  *     },
  *     itemOperations={
- *         "get"={"access_control"="is_granted('ROLE_USER') and object.owner == user"},
+ *         "get"={"security"="is_granted('ROLE_USER') and object.owner == user"},
  *         "put"={"access_control"="is_granted('ROLE_USER') and previous_object.owner == user"},
  *     }
  * )
@@ -78,7 +78,7 @@ if you really need to.
 ## Configuring the Access Control Message
 
 By default when API requests are denied, you will get the "Access Denied" message.
-You can change it by configuring the "access\_control\_message" attribute.
+You can change it by configuring the "security\_message" attribute.
 
 For example:
 
@@ -93,12 +93,12 @@ use ApiPlatform\Core\Annotation\ApiResource;
 /**
  * ...
  * @ApiResource(
- *     attributes={"access_control"="is_granted('ROLE_USER')"},
+ *     attributes={"security"="is_granted('ROLE_USER')"},
  *     collectionOperations={
- *         "post"={"access_control"="is_granted('ROLE_ADMIN')", "access_control_message"="Only admins can add books."}
+ *         "post"={"security"="is_granted('ROLE_ADMIN')", "security_message"="Only admins can add books."}
  *     },
  *     itemOperations={
- *         "get"={"access_control"="is_granted('ROLE_USER') and object.owner == user", "access_control_message"="Sorry, but you are not the book owner."}
+ *         "get"={"security"="is_granted('ROLE_USER') and object.owner == user", "security_message"="Sorry, but you are not the book owner."}
  *     }
  * )
  */
@@ -114,17 +114,62 @@ Alternatively, using YAML:
 # api/config/api_platform/resources.yaml
 App\Entity\Book:
     attributes:
-        access_control: 'is_granted("ROLE_USER")'
+        security: 'is_granted("ROLE_USER")'
     collectionOperations:
         post:
             method: 'POST'
-            access_control: 'is_granted("ROLE_ADMIN")'
-            access_control_message: 'Only admins can add books.'
+            security: 'is_granted("ROLE_ADMIN")'
+            security_message: 'Only admins can add books.'
     itemOperations:
         get:
             method: 'GET'
-            access_control: 'is_granted("ROLE_USER") and object.owner == user'
-            access_control_message: 'Sorry, but you are not the book owner.'
+            security: 'is_granted("ROLE_USER") and object.owner == user'
+            security_message: 'Sorry, but you are not the book owner.'
+    # ...
+```
+
+## Execute security after denormalization
+
+The "security" attribute is executed before the object denormalization. For some cases, it might be useful to execute
+a security after the denormalization.
+To do so, prefer using "security\_post\_denormalize", which allows you to use the "previous\_object" as the original object:
+
+```php
+<?php
+// src/Entity/Book.php
+
+namespace App\Entity;
+
+use ApiPlatform\Core\Annotation\ApiResource;
+
+/**
+ * ...
+ * @ApiResource(
+ *     attributes={"security"="is_granted('ROLE_USER')"},
+ *     itemOperations={
+ *         "get",
+ *         "put"={"security_post_denormalize"="is_granted("ROLE_USER") and previous_object.owner == user"}
+ *     }
+ * )
+ */
+class Book
+{
+    // ...
+}
+```
+
+Alternatively, using YAML:
+
+```yaml
+# api/config/api_platform/resources.yaml
+App\Entity\Book:
+    attributes:
+        security: 'is_granted("ROLE_USER")'
+    itemOperations:
+        get: ~
+        put:
+            method: 'PUT'
+            security_post_denormalize: 'is_granted("ROLE_USER") and previous_object.owner == user'
     # ...
 ```
 

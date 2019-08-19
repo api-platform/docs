@@ -468,7 +468,7 @@ class Question
 
 ### Access Control of Subresources
 
-The `subresourceOperations` attribute also allows you to add an access control on each path with the attribute `access_control`.
+The `subresourceOperations` attribute also allows you to add an access control on each path with the attribute `security`.
 
 ```php
 <?php
@@ -479,7 +479,7 @@ The `subresourceOperations` attribute also allows you to add an access control o
  * @ApiResource(
  *     subresourceOperations={
  *          "api_questions_answer_get_subresource"= {
- *              "access_control"="has_role('ROLE_AUTHENTICATED')"
+ *              "security"="has_role('ROLE_AUTHENTICATED')"
  *          }
  *      }
  * )
