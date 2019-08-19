@@ -72,6 +72,8 @@ that a user could not create a book.
 
 Additionally, in some cases you need to perform security checks on the original data. For example here, only the actual owner should be allowed to edit their book. In these cases, you can use the `previous_object` variable which contains the object that was read from the data provider.
 
+N.B `previous_object` is cloned from the original object. Note that this clone is not a deep one (it doesn't clone relationships, relationships are references), to [make a deep clone](https://www.php.net/manual/fr/language.oop5.cloning.php#object.clone) implement `__clone` method in the concerned resource class.
+
 It is also possible to use the [event system](events.md) for more advanced logic or even [custom actions](operations.md#creating-custom-operations-and-controllers)
 if you really need to.
 
