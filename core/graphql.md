@@ -783,7 +783,7 @@ For the previous page, you would add the `startCursor` from the current page as 
 How do you know when you have reached the last page? It is the aim of the property `hasNextPage` or `hasPreviousPage` in `pageInfo`.
 When it is false, you know it is the last page and moving forward or backward will give you an empty result.
 
-## Security (`access_control`)
+## Security
 
 To add a security layer to your queries and mutations, follow the [security](security.md) documentation.
 
@@ -802,17 +802,17 @@ use ApiPlatform\Core\Annotation\ApiResource;
 
 /**
  * @ApiResource(
- *     attributes={"access_control"="is_granted('ROLE_USER')"},
+ *     attributes={"security"="is_granted('ROLE_USER')"},
  *     collectionOperations={
- *         "post"={"access_control"="is_granted('ROLE_ADMIN')", "access_control_message"="Only admins can add books."}
+ *         "post"={"security"="is_granted('ROLE_ADMIN')", "security_message"="Only admins can add books."}
  *     },
  *     itemOperations={
- *         "get"={"access_control"="is_granted('ROLE_USER') and object.owner == user", "access_control_message"="Sorry, but you are not the book owner."}
+ *         "get"={"security"="is_granted('ROLE_USER') and object.owner == user", "security_message"="Sorry, but you are not the book owner."}
  *     },
  *     graphql={
- *         "query"={"access_control"="is_granted('ROLE_USER') and object.owner == user"},
- *         "delete"={"access_control"="is_granted('ROLE_ADMIN')"},
- *         "create"={"access_control"="is_granted('ROLE_ADMIN')"}
+ *         "query"={"security"="is_granted('ROLE_USER') and object.owner == user"},
+ *         "delete"={"security"="is_granted('ROLE_ADMIN')"},
+ *         "create"={"security"="is_granted('ROLE_ADMIN')"}
  *     }
  * )
  */
