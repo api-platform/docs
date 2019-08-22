@@ -139,14 +139,10 @@ Then, create the database and its schema:
     $ bin/console doctrine:database:create
     $ bin/console doctrine:schema:create
 
-And start the built-in PHP server or the Symfony WebServerBundle:
+And start the built-in PHP server:
 
     # Built-in PHP server
     $ php -S 127.0.0.1:8000 -t public
-    
-    # Symfony WebServerBundle
-    $ composer req server --dev
-    $ bin/console server:run
 
 All JavaScript components are also [available as standalone libraries](https://github.com/api-platform?language=javascript)
 installable with NPM or Yarn.  
