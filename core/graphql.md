@@ -626,7 +626,7 @@ use ApiPlatform\Core\Annotation\ApiResource;
  *         "filters"={"offer.search_filter"}
  *     },
  *     graphql={
- *         "query"={
+ *         "collection_quey"={
  *              "filters"={"offer.date_filter"}
  *          },
  *          "delete",
@@ -810,7 +810,8 @@ use ApiPlatform\Core\Annotation\ApiResource;
  *         "get"={"security"="is_granted('ROLE_USER') and object.owner == user", "security_message"="Sorry, but you are not the book owner."}
  *     },
  *     graphql={
- *         "query"={"security"="is_granted('ROLE_USER') and object.owner == user"},
+ *         "item_query"={"security"="is_granted('ROLE_USER') and object.owner == user"},
+ *         "collection_query"={"security"="is_granted('ROLE_USER')"},
  *         "delete"={"security"="is_granted('ROLE_ADMIN')"},
  *         "create"={"security"="is_granted('ROLE_ADMIN')"}
  *     }
@@ -851,7 +852,8 @@ use Symfony\Component\Serializer\Annotation\Groups;
  *     normalizationContext={"groups"={"read"}},
  *     denormalizationContext={"groups"={"write"}},
  *     graphql={
- *         "query"={"normalization_context"={"groups"={"query"}}},
+ *         "item_query"={"normalization_context"={"groups"={"query-item"}}},
+ *         "collection_query"={"normalization_context"={"groups"={"query-collection"}}},
  *         "create"={
  *             "normalization_context"={"groups"={"query"}},
  *             "denormalization_context"={"groups"={"mutation"}}
@@ -864,12 +866,12 @@ class Book
     // ...
 
     /**
-     * @Groups({"read", "write", "query"})
+     * @Groups({"read", "write", "query-item","query-collection"})
      */
     public $name;
 
     /**
-     * @Groups({"read", "mutation"})
+     * @Groups({"read", "mutation","query-collection"})
      */
     public $author;
 
@@ -879,7 +881,10 @@ class Book
 
 In this case, the REST endpoint will be able to get the two attributes of the book and to modify only its name.
 
-The GraphQL endpoint will be able to query only the name. It will only be able to create a book with an author.
+The GraphQL item endpoint will be able to query only the name.
+The GraphQL collection endpoint will be able to query the name and author.
+It will only be able to create a book with an author.
+
 When doing this mutation, the author of the created book will not be returned (the name will be instead).
 
 ## Custom Types
