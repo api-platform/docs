@@ -10,6 +10,12 @@ API Platform creates a REST API by default. But you can choose to enable GraphQL
 
 Once enabled, you have nothing to do: your schema describing your API is automatically built and your GraphQL endpoint is ready to go!
 
+## Preface
+Because GraphQL is strongly typed it is important to define type of your properties and insure that they are readable.
+API Platform is using [`ApiPlatform\Core\GraphQl\Type\SchemaBuilder`](https://github.com/api-platform/core/blob/8f0b897c6d12c11698b7d37f41c42fe6c99e1882/src/GraphQl/Type/SchemaBuilder.php#L47) to build schema for GraphQL
+
+API Platform is using `PropertyInfo` component which will try to extract field type using: ORM, PhpDoc and Reflection
+
 ## Enabling GraphQL
 
 To enable GraphQL and GraphiQL interface in your API, simply require the [graphql-php](https://webonyx.github.io/graphql-php/) package using Composer and clear the cache one more time:
