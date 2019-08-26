@@ -607,8 +607,8 @@ Filters are supported out-of-the-box. Follow the [filters](filters.md) documenta
 
 However you don't necessarily have the same needs for your GraphQL endpoint as for your REST one.
 
-In the `ApiResource` declaration, you can choose to decorrelate the GraphQL filters in `query` of the `graphql` attribute.
-In order to keep the default behavior (possibility to fetch, delete, update or create), define all the operations (`query`, `delete`, `update` and `create`).
+In the `ApiResource` declaration, you can choose to decorrelate the GraphQL filters in `collection_query` of the `graphql` attribute.
+In order to keep the default behavior (possibility to fetch, delete, update or create), define all the operations (`item_query` ,`collection_query` , `delete`, `update` and `create`).
 
 For example, this entity will have a search filter for REST and a date filter for GraphQL:
 
@@ -626,7 +626,8 @@ use ApiPlatform\Core\Annotation\ApiResource;
  *         "filters"={"offer.search_filter"}
  *     },
  *     graphql={
- *         "query"={
+*          "item_query",
+ *         "collection_query"={
  *              "filters"={"offer.date_filter"}
  *          },
  *          "delete",
@@ -810,7 +811,8 @@ use ApiPlatform\Core\Annotation\ApiResource;
  *         "get"={"security"="is_granted('ROLE_USER') and object.owner == user", "security_message"="Sorry, but you are not the book owner."}
  *     },
  *     graphql={
- *         "query"={"security"="is_granted('ROLE_USER') and object.owner == user"},
+ *         "item_query"={"security"="is_granted('ROLE_USER') and object.owner == user"},
+ *         "collection_query"={"security"="is_granted('ROLE_ADMIN')"},
  *         "delete"={"security"="is_granted('ROLE_ADMIN')"},
  *         "create"={"security"="is_granted('ROLE_ADMIN')"}
  *     }
@@ -851,9 +853,10 @@ use Symfony\Component\Serializer\Annotation\Groups;
  *     normalizationContext={"groups"={"read"}},
  *     denormalizationContext={"groups"={"write"}},
  *     graphql={
- *         "query"={"normalization_context"={"groups"={"query"}}},
+ *         "item_query"={"normalization_context"={"groups"={"item-query"}}},
+ *         "collection_query"={"normalization_context"={"groups"={"collection-query"}}},
  *         "create"={
- *             "normalization_context"={"groups"={"query"}},
+ *             "normalization_context"={"groups"={"item-query"}},
  *             "denormalization_context"={"groups"={"mutation"}}
  *         }
  *     }
@@ -864,12 +867,12 @@ class Book
     // ...
 
     /**
-     * @Groups({"read", "write", "query"})
+     * @Groups({"read", "write", "item-query","collection-query"})
      */
     public $name;
 
     /**
-     * @Groups({"read", "mutation"})
+     * @Groups({"read", "mutation","collection-query"})
      */
     public $author;
 
@@ -879,7 +882,9 @@ class Book
 
 In this case, the REST endpoint will be able to get the two attributes of the book and to modify only its name.
 
-The GraphQL endpoint will be able to query only the name. It will only be able to create a book with an author.
+The GraphQL item endpoint will be able to query only the name.
+The GraphQL collection endpoint will be able to query the name and author.
+It will only be able to create a book with an author.
 When doing this mutation, the author of the created book will not be returned (the name will be instead).
 
 ## Custom Types
