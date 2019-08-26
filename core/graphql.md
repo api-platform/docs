@@ -135,6 +135,19 @@ mutation DeleteBook($id: ID!, $clientMutationId: String!) {
 }
 ```
 
+if you publish a book
+
+```graphql
+mutation publishBook($name: String!, $author: String!) {
+    publishBook(input: {name: $name, author: $author}) {
+        book {
+            id
+        }
+    }
+}
+
+```
+
 ## Filters
 
 Filters are supported out-of-the-box. Follow the [filters](filters.md) documentation and your filters will be available as arguments of queries.
@@ -173,6 +186,20 @@ class Offer
 {
     // ...
 }
+```
+
+```yaml
+App\Entity\Offer:
+    attributes:
+        filters:
+            - "offer.search_filter"
+    graphql:
+        query:
+            filters:
+                - "offer.search_filter"
+        delete: ~
+        update: ~
+        create: ~
 ```
 
 ### Filtering on Nested Properties
