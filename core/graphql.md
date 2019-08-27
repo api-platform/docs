@@ -853,10 +853,10 @@ use Symfony\Component\Serializer\Annotation\Groups;
  *     normalizationContext={"groups"={"read"}},
  *     denormalizationContext={"groups"={"write"}},
  *     graphql={
- *         "item_query"={"normalization_context"={"groups"={"item-query"}}},
- *         "collection_query"={"normalization_context"={"groups"={"collection-query"}}},
+ *         "item_query"={"normalization_context"={"groups"={"item_query"}}},
+ *         "collection_query"={"normalization_context"={"groups"={"collection_query"}}},
  *         "create"={
- *             "normalization_context"={"groups"={"item-query"}},
+ *             "normalization_context"={"groups"={"collection_query"}},
  *             "denormalization_context"={"groups"={"mutation"}}
  *         }
  *     }
@@ -867,12 +867,12 @@ class Book
     // ...
 
     /**
-     * @Groups({"read", "write", "item-query","collection-query"})
+     * @Groups({"read", "write", "item_query", "collection_query"})
      */
     public $name;
 
     /**
-     * @Groups({"read", "mutation","collection-query"})
+     * @Groups({"read", "mutation", "item_query"})
      */
     public $author;
 
@@ -882,8 +882,8 @@ class Book
 
 In this case, the REST endpoint will be able to get the two attributes of the book and to modify only its name.
 
-The GraphQL item endpoint will be able to query only the name.
-The GraphQL collection endpoint will be able to query the name and author.
+The GraphQL item endpoint will be able to query the name and author of an item.
+It will be able to query the name of the items in the collection.
 It will only be able to create a book with an author.
 When doing this mutation, the author of the created book will not be returned (the name will be instead).
 
