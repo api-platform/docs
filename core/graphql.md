@@ -882,7 +882,7 @@ class Book
 
 In this case, the REST endpoint will be able to get the two attributes of the book and to modify only its name.
 
-The GraphQL item endpoint will be able to query the name and author of an item.
+The GraphQL endpoint will be able to query the name and author of an item.
 It will be able to query the name of the items in the collection.
 It will only be able to create a book with an author.
 When doing this mutation, the author of the created book will not be returned (the name will be instead).
