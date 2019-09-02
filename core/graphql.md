@@ -127,49 +127,6 @@ For example, to query a book having as identifier `89`, you have to run the foll
 
 Note that in this example, we're retrieving two fields: `title` and `isbn`.
 
-### Pagination
-
-API Platform natively enables a cursor-based pagination for collections.
-It supports [GraphQL's Complete Connection Model](https://graphql.org/learn/pagination/#complete-connection-model) and is compatible with [Relay's Cursor Connections Specification](https://facebook.github.io/relay/graphql/connections.htm).
-
-Here is an example query leveraging the pagination system:
-
-```graphql
-{
-  offers(first: 10, after: "cursor") {
-    totalCount
-    pageInfo {
-      endCursor
-      hasNextPage
-    }
-    edges {
-      cursor
-      node {
-        id
-      }
-    }
-  }
-}
-```
-
-The two parameters `first` and `after` are necessary to make the paginated query work, more precisely:
-
-* `first` corresponds to the items per page starting from the beginning;
-* `after` corresponds to the `cursor` from which the items are returned.
-
-The current page always has an `endCursor` present in the `pageInfo` field.
-To get the next page, you would add the `endCursor` from the current page as the `after` parameter.
-
-```graphql
-{
-  offers(first: 10, after: "endCursor") {
-  }
-}
-```
-
-When the property `hasNextPage` of the `pageInfo` field is false, you've reached the last page.
-If you move forward, you'll end up having an empty result.
-
 ### Custom Queries
 
 To create a custom query, first of all you need to create its resolver.
@@ -343,7 +300,7 @@ You custom queries will be available like this:
 }
 ```
 
-# Mutations
+## Mutations
 
 If you don't know what mutations are yet, the documentation about them is [here](https://graphql.org/learn/queries/#mutations).
 
@@ -728,6 +685,8 @@ For example, if you want to search the offers with a green or a red product you 
 API Platform natively enables a cursor-based pagination for collections.
 It supports [GraphQL's Complete Connection Model](https://graphql.org/learn/pagination/#complete-connection-model) and is compatible with [Relay's Cursor Connections Specification](https://facebook.github.io/relay/graphql/connections.htm).
 
+### Using the Cursor-based Pagination
+
 Here is an example query leveraging the pagination system:
 
 ```graphql
@@ -783,6 +742,61 @@ For the previous page, you would add the `startCursor` from the current page as 
 
 How do you know when you have reached the last page? It is the aim of the property `hasNextPage` or `hasPreviousPage` in `pageInfo`.
 When it is false, you know it is the last page and moving forward or backward will give you an empty result.
+
+### Disabling the Pagination
+
+See also the [pagination documentation](pagination.md#disabling-the-pagination).
+
+### Globally
+
+The pagination can be disabled for all GraphQL resources using this configuration:
+
+```yaml
+# api/config/packages/api_platform.yaml
+api_platform:
+    graphql:
+        collection:
+            pagination:
+                enabled: false
+```
+
+### For a Specific Resource
+
+It can also be disabled for a specific resource (REST and GraphQL):
+
+```php
+<?php
+// api/src/Entity/Book.php
+
+use ApiPlatform\Core\Annotation\ApiResource;
+
+/**
+ * @ApiResource(attributes={"pagination_enabled"=false})
+ */
+class Book
+{
+    // ...
+}
+```
+
+### For a Specific Resource Collection Operation
+
+You can also disable the pagination for a specific collection operation:
+
+```php
+<?php
+// api/src/Entity/Book.php
+
+use ApiPlatform\Core\Annotation\ApiResource;
+
+/**
+ * @ApiResource(graphql={"collection_query"={"pagination_enabled"=false}})
+ */
+class Book
+{
+    // ...
+}
+```
 
 ## Security
 
