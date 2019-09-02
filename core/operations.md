@@ -979,7 +979,7 @@ class Place
       * @var int
       * 
       * @ORM\Id
-      * @ORM\GeneratedValue()
+      * @ORM\GeneratedValue
       * @ORM\Column(type="integer")
       */
     private $id;
@@ -987,21 +987,21 @@ class Place
     /**
       * @var string
       * 
-      * Column(type="string")
+      * @ORM\Column
       */
     private $name;
 
     /**
       * @var float
       * 
-      * Column(type="float")
+      * @ORM\Column(type="float")
       */
     private $latitude;
 
     /**
       * @var float
       * 
-      * Column(type="float")
+      * @ORM\Column(type="float")
       */
     private $longitude;
 
