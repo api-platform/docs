@@ -971,8 +971,8 @@ namespace App\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
-  * @ORM\Entity
-  */
+ * @ORM\Entity
+ */
 class Place
 {
     /**
@@ -1041,24 +1041,25 @@ Because we want to get the weather for a known place, it is more reasonable to q
 
 namespace App\Entity;
 
+use ApiPlatform\Core\Annotation\ApiResource;
 use App\Controller\GetWeather;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
-  * @ORM\Entity
-  *
-  * @ApiResource(
-  *     itemOperations={
-  *         "get",
-  *         "put",
-  *         "delete",
-  *         "get_weather": {
-  *             "method": "GET",
-  *             "path": "/places/{id}/weather",
-  *             "controller": GetWeather::class
-  *         }
-  * }, collectionOperations={"get", "post"})
-  */
+ * @ORM\Entity
+ *
+ * @ApiResource(
+ *     itemOperations={
+ *         "get",
+ *         "put",
+ *         "delete",
+ *         "get_weather": {
+ *             "method": "GET",
+ *             "path": "/places/{id}/weather",
+ *             "controller": GetWeather::class
+ *         }
+ * }, collectionOperations={"get", "post"})
+ */
 class Place
 {
     // ...
@@ -1074,9 +1075,11 @@ This implies that API Platform has to know about this entity, so we will need to
 
 namespace App\Entity;
 
+use ApiPlatform\Core\Annotation\ApiResource;
+
 /**
-  * @ApiResource
-  */
+ * @ApiResource
+ */
 class Weather
 {
     // ...
@@ -1092,14 +1095,16 @@ Since we are required to expose at least one route, let's expose just one and di
 
 namespace App\Entity;
 
+use ApiPlatform\Core\Annotation\ApiResource;
+
 /**
-  * @ApiResource(itemOperations={
-  *     "get": {
-  *         "method": "GET",
-  *         "controller": SomeRandomController::class
-  *     }
-  * })
-  */
+ * @ApiResource(itemOperations={
+ *     "get": {
+ *         "method": "GET",
+ *         "controller": SomeRandomController::class
+ *     }
+ * })
+ */
 class Weather
 {
     // ...
