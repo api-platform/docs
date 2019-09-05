@@ -104,6 +104,9 @@ api_platform:
             enabled: true
         graphql_playground:
             enabled: true
+        collection:
+            pagination:
+                enabled: true
 
     elasticsearch:
         # To enable or disable Elasticsearch support.
