@@ -707,7 +707,7 @@ If you prefer to generate a PWA built on top of Vue.js, or a native mobile app, 
 First, you may want to learn [how to deploy your application](../deployment/index.md) in the cloud using [the built-in Kubernetes
 integration](../deployment/kubernetes.md).
 
-Then, they are many more features to learn! Read [the full documentation](../core/index.md) to discover how to use them
+Then, there are many more features to learn! Read [the full documentation](../core/index.md) to discover how to use them
 and how to extend API Platform to fit your needs.
 API Platform is incredibly efficient for prototyping and Rapid Application Development (RAD), but the framework is mostly
 designed to create complex API-driven projects, far beyond simple CRUD apps. It benefits from **strong extension points**
