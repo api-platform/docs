@@ -156,7 +156,7 @@ The interfaces are:
 * `ApiPlatform\Core\Bridge\Doctrine\MongoDbOdm\Extension\AggregationItemExtensionInterface` and `ApiPlatform\Core\Bridge\Doctrine\MongoDbOdm\Extension\AggregationCollectionExtensionInterface` to add stages to the [aggregation builder](https://www.doctrine-project.org/projects/doctrine-mongodb-odm/en/latest/reference/aggregation-builder.html).
 * `ApiPlatform\Core\Bridge\Doctrine\MongoDbOdm\Extension\AggregationResultItemExtensionInterface` and `ApiPlatform\Core\Bridge\Doctrine\MongoDbOdm\Extension\AggregationResultCollectionExtensionInterface` to return a result.
 
-The tags are `api_platform.doctrine.mongodb.aggregation_extension.item` and `api_platform.doctrine.mongodb.aggregation_extension.collection`.
+The tags are `api_platform.doctrine_mongodb.odm.aggregation_extension.item` and `api_platform.doctrine_mongodb.odm.aggregation_extension.collection`.
 
 The custom extensions receive the [aggregation builder](https://www.doctrine-project.org/projects/doctrine-mongodb-odm/en/latest/reference/aggregation-builder.html),
 used to execute [complex operations on data](https://docs.mongodb.com/manual/aggregation/).
