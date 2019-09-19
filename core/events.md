@@ -85,7 +85,7 @@ use ApiPlatform\Core\EventListener\EventPriorities;
 use App\Entity\Book;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpKernel\Event\GetResponseForControllerResultEvent;
+use Symfony\Component\HttpKernel\Event\ViewEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 
 final class BookMailSubscriber implements EventSubscriberInterface
@@ -104,7 +104,7 @@ final class BookMailSubscriber implements EventSubscriberInterface
         ];
     }
 
-    public function sendMail(GetResponseForControllerResultEvent $event)
+    public function sendMail(ViewEvent $event)
     {
         $book = $event->getControllerResult();
         $method = $event->getRequest()->getMethod();

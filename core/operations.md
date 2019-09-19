@@ -587,7 +587,7 @@ and for `POST` and `PUT` requests updates the entity with data provided by the u
 
 **Warning: the `__invoke()` method parameter [MUST be called `$data`](https://symfony.com/doc/current/components/http_kernel.html#getting-the-controller-arguments)**, otherwise, it will not be filled correctly!
 
-Services (`$myService` here) are automatically injected thanks to the autowiring feature. You can type-hint any service
+Services (`$bookPublishingHandler` here) are automatically injected thanks to the autowiring feature. You can type-hint any service
 you need and it will be autowired too.
 
 The `__invoke` method of the action is called when the matching route is hit. It can return either an instance of
