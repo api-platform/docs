@@ -1,4 +1,6 @@
-# Handling Relations to Collections
+# Handling Relations
+
+API Platform Admin handles all types of relations (including `to-many` ones automatically!
 
 Let's consider an API exposing `Person` and `Book` resources linked by a `many-to-many`
 relation (through the `authors` property).
@@ -69,148 +71,70 @@ class Book
 }
 ```
 
-The admin handles this `to-many` relation automatically!
+You have nothing to do! API Platform Admin is smart enough to deal with relations.
 
-## Customizing a Property
+## Show the Names of your Entities Instead of their IRIs
 
-Let's customize the components used for the `authors` property, to display them by their 'name' instead of their 'id' (the default behavior).
+See [how to use the Schema.org vocabulary](schema.org.md).
 
-```javascript
-import React, { Component } from 'react';
-import { ReferenceArrayField, SingleFieldList, ChipField, ReferenceArrayInput, SelectArrayInput } from 'react-admin';
-import { AdminBuilder, hydraClient } from '@api-platform/admin';
-import parseHydraDocumentation from '@api-platform/api-doc-parser/lib/hydra/parseHydraDocumentation';
+## Using an Autocomplete Input
 
-const entrypoint = 'https://demo.api-platform.com';
+A nice improvement to our admin could be to use an autocomplete input to select a pick a related object.
 
-export default class extends Component {
-  state = { api: null }
-
-  componentDidMount() {
-    parseHydraDocumentation(entrypoint).then(({api}) => {
-        const books = api.resources.find(({ name }) => 'books' === name)
-        const authors = books.fields.find(({ name }) => 'authors' === name)
-
-        // Set the field in the list and the show views
-        authors.field = props => (
-          <ReferenceArrayField source={authors.name} reference={authors.reference.name} key={authors.name} {...props}>
-            <SingleFieldList>
-              <ChipField source="name" key="name"/>
-            </SingleFieldList>
-          </ReferenceArrayField>
-        );
-
-        // Set the input in the edit and create views
-        authors.input = props => (
-          <ReferenceArrayInput source={authors.name} reference={authors.reference.name} label="Authors" key={authors.name} {...props} allowEmpty>
-            <SelectArrayInput optionText="name"/>
-          </ReferenceArrayInput>
-        );
-
-        this.setState({ api });
-      }
-    )
-  }
-
-  render() {
-    if (null === this.state.api) return <div>Loading...</div>;
-
-    return <AdminBuilder api={ this.state.api } dataProvider={ hydraClient(this.state.api) }/>
-  }
-}
-```
-
-
-## Customizing an Icon
-
-Now that our `authors` property is displaying the name instead of the 'id', let's change the icon shown in the list menu.
-
-Just add an import statement from `@material-ui` for adding the icon - in this case, a user icon:
-
-`import UserIcon from '@material-ui/icons/People';`
-
-and add it to the `authors.icon` property.
-
-The code for customizing only the icon will be:
-
-```javascript
-import React, { Component } from 'react';
-import { AdminBuilder, hydraClient } from '@api-platform/admin';
-import parseHydraDocumentation from '@api-platform/api-doc-parser/lib/hydra/parseHydraDocumentation';
-import UserIcon from '@material-ui/icons/People';
-
-const entrypoint = 'https://demo.api-platform.com';
-
-export default class extends Component {
-  state = { api: null }
-
-  componentDidMount() {
-    parseHydraDocumentation(entrypoint).then(({api}) => {
-        const authors = books.fields.find(({ name }) => 'authors' === name)
-
-        // Set the icon
-        authors.icon = UserIcon
-       
-        this.setState({ api });
-      }
-    )
-  }
-
-  render() {
-    if (null === this.state.api) return <div>Loading...</div>;
-
-    return <AdminBuilder api={ this.state.api } dataProvider={ hydraClient(this.state.api) }/>
-  }
-}
-```
-
-## Using an Autocomplete Input for Relations
-
-We'll make one last improvement to our admin: transforming the relation selector we just created to use autocompletion.
-
-Start by adding a "partial search" filter on the `name` property of the `Book` resource class.
-
-```yaml
-# api/config/services.yaml
-services:
-    person.search_filter:
-        parent: 'api_platform.doctrine.orm.search_filter'
-        arguments: [ { name: 'partial' } ]
-        # Uncomment only if you don't use autoconfiguration
-        #tags: ['api_platform.filter']
-```
+Server-side, start by adding a "partial search" filter on the `name` property of the `Book` resource class.
 
 ```php
 <?php
 // api/src/Entity/Person.php
 // ...
 
-/**
- * @ApiResource(attributes={"filters"={"person.search_filter"}})
- * @ORM\Entity
- */
+use ApiPlatform\Core\Annotation\ApiFilter;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter
+
 class Person
 {
+    /**
+     * @ApiFilter(SearchFilter::class, strategy="ipartial")
+     * ...
+     */
+    public $title;
+
     // ...
 }
 ```
 
-Then edit the configuration of API Platform Admin to pass a `filterToQuery` property to the `ReferenceArrayInput` component.
+Then [customize API Platform Admin](customize.md) by using [the `<AutocompleteInput>` component provided by React Admin](https://marmelab.com/react-admin/Inputs.html#autocompleteinput), and configure it to leverage this new filter:
 
 ```javascript
-  componentDidMount() {
+import React from "react";
+import {
+  HydraAdmin,
+  ResourceGuesser,
+  CreateGuesser,
+  InputGuesser
+} from "@api-platform/admin";
+import { ReferenceInput, AutocompleteInput } from "react-admin";
 
-    // ...
+const ReviewsCreate = props => (
+  <CreateGuesser {...props}>
+    <ReferenceInput
+      source="book"
+      reference="books"
+      label="Books"
+      filterToQuery={searchText => ({ title: searchText })}
+    >
+      <AutocompleteInput optionText="title" />
+    </ReferenceInput>
+    {/* ... */}
+  </CreateGuesser>
+);
 
-    // Set the input in the edit and create views
-      authors.input = props => (
-        <ReferenceArrayInput source={authors.name} reference={authors.reference.name} label="Authors" key={authors.name} filterToQuery={searchText => ({ name: searchText })} {...props} allowEmpty>
-          <SelectArrayInput optionText="name"/>
-        </ReferenceArrayInput>
-      );
-
-    // ...
-  }
+export default () => (
+  <HydraAdmin entrypoint="https://demo.api-platform.com">
+    <ResourceGuesser name="reviews" create={ReviewsCreate} />
+    {/* ... */}
+  </HydraAdmin>
+);
 ```
 
-The autocomplete field should now work properly!
+And it works!
