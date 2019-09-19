@@ -26,7 +26,7 @@ final class ProductNotFoundException extends \Exception
 
 ```php
 <?php
-// api/src/EventSubscriber/CartManager.php
+// api/src/EventSubscriber/ProductManager.php
 
 namespace App\EventSubscriber;
 

@@ -44,7 +44,7 @@ the `GET` operation of `/foos` path.
 # api/config/services.yaml
 services:
     'App\Swagger\SwaggerDecorator':
-        decorates: 'api_platform.swagger.normalizer.documentation'
+        decorates: 'api_platform.swagger.normalizer.api_gateway'
         arguments: [ '@App\Swagger\SwaggerDecorator.inner' ]
         autoconfigure: false
 ```
