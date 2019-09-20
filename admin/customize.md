@@ -1,6 +1,6 @@
 # Customizing the Admin
 
-Customizing API Platform Admin is easy and idiomatic. The tool give you the ability to customize everything, from the list of resource types that must administrable to the every single inputs or buttons.
+Customizing API Platform Admin is easy and idiomatic. The tool gives you the ability to customize everything, from the list of resource types that must be administrable to every single inputs or buttons.
 
 To do so, you can use the React components provided by API Platform Admin itself, [React Admin](https://marmelab.com/react-admin/), [Material UI](https://material-ui.com/), [community libraries](https://github.com/brillout/awesome-react-components), or [write your own](https://reactjs.org/tutorial/tutorial.html).
 
