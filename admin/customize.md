@@ -6,7 +6,7 @@ To do so, you can use the React components provided by API Platform Admin itself
 
 ## Customizing the Admin's Main Page and the Resource List
 
-By default, API Platform Admin automatically builds a tailored [`<Resource>` component](https://marmelab.com/react-admin/Resource.html) (and all its appropriated children) for each resource type exposed by a web API.
+By default, API Platform Admin automatically builds a tailored [`<Resource>` component](https://marmelab.com/react-admin/Resource.html) (and all its appropriate children) for each resource type exposed by a web API.
 Under the hood it uses the `@api-platform/api-doc-parser` library to parse the API documentation. The API documentation can use Hydra, OpenAPI and any other format supported by the library.
 Resources are listed in the order they appear in the machine-readable documentation.
 
