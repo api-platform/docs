@@ -176,7 +176,7 @@ export default () => (
 );
 ```
 
-In addition to the `<InputGuesser>` component, [all React Admin Input components](https://marmelab.com/react-admin/Inputs.html) can be passed as children of `<ShowGuesser>`.
+In addition to the `<InputGuesser>` component, [all React Admin Input components](https://marmelab.com/react-admin/Inputs.html) can be passed as children of `<EditGuesser>`.
 
 For instance, using an autocomplete input is straightforward, [checkout the dedicated documentation entry](handling-relations-to-collections.md#using-an-autocomplete-input)!
 
