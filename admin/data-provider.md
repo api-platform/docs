@@ -1,4 +1,3 @@
-
 # Using the Hydra Data Provider Directly with react-admin
 
 By default, the `HydraAdmin` component shipped with API Platform Admin will generate a convenient admin interface for every resource and every property exposed by the API. But sometimes, you may prefer having full control over the generated admin.
@@ -16,18 +15,11 @@ import parseHydraDocumentation from '@api-platform/api-doc-parser/lib/hydra/pars
 import { hydraClient, fetchHydra as baseFetchHydra  } from '@api-platform/admin';
 import authProvider from './authProvider';
 import { Redirect } from 'react-router-dom';
-import { createMuiTheme } from '@material-ui/core/styles';
 import Layout from './Component/Layout';
 import { UserShow } from './Components/User/Show';
 import { UserEdit } from './Components/User/Edit';
 import { UserCreate } from './Components/User/Create';
 import { UserList } from './Components/User/List';
-
-const theme = createMuiTheme({
-    palette: {
-        type: 'light'
-    },
-});
 
 const entrypoint = process.env.REACT_APP_API_ENTRYPOINT;
 const fetchHeaders = {'Authorization': `Bearer ${window.localStorage.getItem('token')}`};
@@ -75,7 +67,6 @@ export default class extends Component {
             <Admin api={ this.state.api }
                    apiDocumentationParser={ apiDocumentationParser }
                    dataProvider= { dataProvider(this.state.api) }
-                   theme={ theme }
                    appLayout={ Layout }
                    authProvider={ authProvider }          
             >                
