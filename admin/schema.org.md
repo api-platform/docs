@@ -1,6 +1,6 @@
 # Using the Schema.org Vocabulary
 
-API Platform Admin has native support for the popular the [Schema.org](https://schema.org) vocabulary.
+API Platform Admin has native support for the popular [Schema.org](https://schema.org) vocabulary.
 
 > Schema.org is a collaborative, community activity with a mission to create, maintain, and promote schemas for structured data on the Internet, on web pages, in email messages, and beyond.
 
