@@ -23,8 +23,7 @@ install:
 script:
   - find . -name '*.md' -exec proselint {} \;
   - cd ../website
-  - bin/checkout-documentation
-  - bin/generate-nav
+  - bin/retrieve-documentation
   - GATSBY_BRANCH_NAME=$TRAVIS_BRANCH yarn gatsby build
   # Preserve artifacts
   - cd $TRAVIS_BUILD_DIR
