@@ -220,7 +220,7 @@ use ApiPlatform\Core\Annotation\ApiResource;
 
 /**
  * @ApiResource(
- *     attributes={"maximum_items_per_page"=50}
+ *     attributes={"pagination_maximum_items_per_page"=50}
  * )
  */
 class Book
@@ -240,7 +240,7 @@ use ApiPlatform\Core\Annotation\ApiResource;
 /**
  * @ApiResource(
  *     collectionOperations={
- *         "get"={"maximum_items_per_page"=50}
+ *         "get"={"pagination_maximum_items_per_page"=50}
  *     }
  * )
  */
