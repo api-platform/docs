@@ -1,34 +1,36 @@
 # Testing and Specifying the API
 
-Now that you have a functional API, it might be interesting to write some tests to ensure your API have no potential
-bugs. A set of useful tools to specify and test your API are easily installable in the API Platform distribution. We
-recommend you and we will focus on two tools:
+Now that you have a functional API, you should write tests to ensure it has no bugs, and to prevent future regressions.
+Some would argue that it's even better to [write tests first](https://martinfowler.com/bliki/TestDrivenDevelopment.html).
 
-* [Alice](https://github.com/nelmio/alice), an expressive fixtures generator to write data fixtures, and its Symfony
-integration, [AliceBundle](https://github.com/hautelook/AliceBundle#database-testing);
+API Platform provides a set of helpful testing utilities to write unit tests, functional tests, and to create [test fixtures](https://en.wikipedia.org/wiki/Test_fixture#Software).
+
+Let's learn how to use them! In this article you'll learn how to use:
+
 * [PHPUnit](https://phpunit.de/index.html), a testing framework to cover your classes with unit tests and to write
-functional tests thanks to its Symfony integration, [PHPUnit Bridge](https://symfony.com/doc/current/components/phpunit_bridge.html).
+API-oriented functional tests thanks to its API Platform and [Symfony](https://symfony.com/doc/current/testing.html) integrations.
+* [Alice](https://github.com/nelmio/alice) and [its Symfony
+integration](https://github.com/hautelook/AliceBundle#database-testing), an expressive fixtures generator to write data fixtures.
 
-Official Symfony recipes are provided for both tools.
+Official [Symfony recipes](https://flex.symfony.com/) are provided for both tools.
 
 ## Creating Data Fixtures
 
 Before creating your functional tests, you will need a dataset to pre-populate your API and be able to test it.
 
-First, install [Alice](https://github.com/nelmio/alice) and [AliceBundle](https://github.com/hautelook/AliceBundle):
+First, install [Alice](https://github.com/nelmio/alice):
 
     $ docker-compose exec php composer require --dev alice
 
-Thanks to Symfony Flex, [AliceBundle](https://github.com/hautelook/AliceBundle/blob/master/README.md) is ready to use
-and you can place your data fixtures files in a directory named `fixtures/`.
+Thanks to Symfony Flex, Alice (and [AliceBundle](https://github.com/hautelook/AliceBundle)) are ready to use!
+Place your data fixtures files in a directory named `fixtures/`.
 
 Then, create some fixtures for [the bookstore API you created in the tutorial](index.md):
 
 ```yaml
-# api/fixtures/book.yaml
-
+# api/fixtures/books.yaml
 App\Entity\Book:
-    book_{1..10}:
+    book_{1..100}:
         isbn: <isbn13()>
         title: <sentence(4)>
         description: <text()>
@@ -37,10 +39,9 @@ App\Entity\Book:
 ```
 
 ```yaml
-# api/fixtures/review.yaml
-
+# api/fixtures/reviews.yaml
 App\Entity\Review:
-    review_{1..20}:
+    review_{1..200}:
         rating: <numberBetween(0, 5)>
         body: <text()>
         author: <name()>
@@ -52,16 +53,17 @@ You can now load your fixtures in the database with the following command:
 
     $ docker-compose exec php bin/console hautelook:fixtures:load
 
-To learn more about fixtures, take a look at the documentation of [Alice](https://github.com/nelmio/alice/blob/master/README.md#table-of-contents)
-and [AliceBundle](https://github.com/hautelook/AliceBundle/blob/master/README.md).
+To learn more about fixtures, take a look at the documentation of [Alice](https://github.com/nelmio/alice)
+and [AliceBundle](https://github.com/hautelook/AliceBundle).
+The list of available generators as well as a cookbook explaining how to create custom generators can be found in the documentation of [Faker](https://github.com/fzaninotto/Faker), the library used by Alice under the hood.
 
 ## Writing Functional Tests
 
 Now that you have some data fixtures for your API, you are ready to write functional tests with [PHPUnit](https://phpunit.de/index.html).
 
-Install the Symfony test pack which includes [PHPUnit Bridge](https://symfony.com/doc/current/components/phpunit_bridge.html):
+Install the Symfony test pack (which includes PHPUnit and [PHPUnit Bridge](https://symfony.com/doc/current/components/phpunit_bridge.html)), [Symfony HttpClient](https://symfony.com/doc/current/components/http_client.html) (the API Platform test client is built on top of Symfony HttpClient, and allows to leverage all its features) and [JSON Schema for PHP](https://github.com/justinrainbow/json-schema) (used by API Platform to provide [JSON Schema](https://json-schema.org/) test assertions):
 
-    $ docker-compose exec php composer require --dev test-pack
+    $ docker-compose exec php composer require --dev test-pack http-client justinrainbow/json-schema
 
 Your API is ready to be functionally tested. Create your test classes under the `tests/` directory.
 
@@ -69,174 +71,130 @@ Here is an example of functional tests specifying the behavior of [the bookstore
 
 ```php
 <?php
-// api/tests/ApiTest.php
+// api/tests/BooksTest.php
 
 namespace App\Tests;
 
+use ApiPlatform\Core\Bridge\Symfony\Bundle\Test\ApiTestCase;
 use App\Entity\Book;
 use Hautelook\AliceBundle\PhpUnit\RefreshDatabaseTrait;
-use Symfony\Bundle\FrameworkBundle\Client;
-use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
-use Symfony\Component\HttpFoundation\Response;
 
-class ApiTest extends WebTestCase
+class BooksTest extends ApiTestCase
 {
+    // This trait provided by HautelookAliceBundle will take care of refreshing the database content to a known state before each test
     use RefreshDatabaseTrait;
 
-    /** @var Client */
-    protected $client;
-
-    /**
-     * Retrieves the book list.
-     */
-    public function testRetrieveTheBookList(): void
+    public function testGetCollection(): void
     {
-        $response = $this->request('GET', '/books');
-        $json = json_decode($response->getContent(), true);
+        // The client implements Symfony HttpClient's `HttpClientInterface`, and the response `ResponseInterface`
+        $response = static::createClient()->request('GET', '/books');
 
-        $this->assertEquals(200, $response->getStatusCode());
-        $this->assertEquals('application/ld+json; charset=utf-8', $response->headers->get('Content-Type'));
+        $this->assertResponseIsSuccessful();
+        // Asserts that the returned content type is JSON-LD (the default)
+        $this->assertResponseHeaderSame('content-type', 'application/ld+json; charset=utf-8');
 
-        $this->assertArrayHasKey('hydra:totalItems', $json);
-        $this->assertEquals(10, $json['hydra:totalItems']);
+        // Asserts that the returned JSON is a superset of this one
+        $this->assertJsonContains([
+            '@context' => '/contexts/Book',
+            '@id' => '/books',
+            '@type' => 'hydra:Collection',
+            'hydra:totalItems' => 100,
+            'hydra:view' => [
+                '@id' => '/books?page=1',
+                '@type' => 'hydra:PartialCollectionView',
+                'hydra:first' => '/books?page=1',
+                'hydra:last' => '/books?page=4',
+                'hydra:next' => '/books?page=2',
+            ],
+        ]);
 
-        $this->assertArrayHasKey('hydra:member', $json);
-        $this->assertCount(10, $json['hydra:member']);
+        // Because test fixtures are automatically loaded between each test, you can assert on them
+        $this->assertCount(30, $response->toArray()['hydra:member']);
+
+        // Asserts that the returned JSON is validated by the JSON Schema generated for this resource by API Platform
+        // This generated JSON Schema is also used in the OpenAPI spec!
+        $this->assertMatchesResourceCollectionJsonSchema(Book::class);
     }
 
-    /**
-     * Throws errors when data are invalid.
-     */
-    public function testThrowErrorsWhenDataAreInvalid(): void
+    public function testCreateBook(): void
     {
-        $data = [
-            'isbn' => '1312',
-            'title' => '',
-            'author' => 'Kévin Dunglas',
-            'description' => 'This book is designed for PHP developers and architects who want to modernize their skills through better understanding of Persistence and ORM.',
-            'publicationDate' => '2013-12-01',
-        ];
+        $response = static::createClient()->request('POST', '/books', ['json' => [
+            'isbn' => '0099740915',
+            'title' => 'The Handmaid\'s Tale',
+            'description' => 'Brilliantly conceived and executed, this powerful evocation of twenty-first century America gives full rein to Margaret Atwood\'s devastating irony, wit and astute perception.',
+            'author' => 'Margaret Atwood',
+            'publicationDate' => '1985-07-31T00:00:00+00:00',
+        ]]);
 
-        $response = $this->request('POST', '/books', $data);
-        $json = json_decode($response->getContent(), true);
-
-        $this->assertEquals(400, $response->getStatusCode());
-        $this->assertEquals('application/ld+json; charset=utf-8', $response->headers->get('Content-Type'));
-
-        $this->assertArrayHasKey('violations', $json);
-        $this->assertCount(2, $json['violations']);
-
-        $this->assertArrayHasKey('propertyPath', $json['violations'][0]);
-        $this->assertEquals('isbn', $json['violations'][0]['propertyPath']);
-
-        $this->assertArrayHasKey('propertyPath', $json['violations'][1]);
-        $this->assertEquals('title', $json['violations'][1]['propertyPath']);
+        $this->assertResponseStatusCodeSame(201);
+        $this->assertResponseHeaderSame('content-type', 'application/ld+json; charset=utf-8');
+        $this->assertJsonContains([
+            '@context' => '/contexts/Book',
+            '@type' => 'Book',
+            'isbn' => '0099740915',
+            'title' => 'The Handmaid\'s Tale',
+            'description' => 'Brilliantly conceived and executed, this powerful evocation of twenty-first century America gives full rein to Margaret Atwood\'s devastating irony, wit and astute perception.',
+            'author' => 'Margaret Atwood',
+            'publicationDate' => '1985-07-31T00:00:00+00:00',
+            'reviews' => [],
+        ]);
+        $this->assertRegExp('~^/books/\d+$~', $response->toArray()['@id']);
+        $this->assertMatchesResourceItemJsonSchema(Book::class);
     }
 
-    /**
-     * Creates a book.
-     */
-    public function testCreateABook(): void
+    public function testCreateInvalidBook(): void
     {
-        $data = [
-            'isbn' => '9781782164104',
-            'title' => 'Persistence in PHP with Doctrine ORM',
-            'description' => 'This book is designed for PHP developers and architects who want to modernize their skills through better understanding of Persistence and ORM. You\'ll learn through explanations and code samples, all tied to the full development of a web application.',
-            'author' => 'Kévin Dunglas',
-            'publicationDate' => '2013-12-01',
-        ];
+        static::createClient()->request('POST', '/books', ['json' => [
+            'isbn' => 'invalid',
+        ]]);
 
-        $response = $this->request('POST', '/books', $data);
-        $json = json_decode($response->getContent(), true);
+        $this->assertResponseStatusCodeSame(400);
+        $this->assertResponseHeaderSame('content-type', 'application/ld+json; charset=utf-8');
 
-        $this->assertEquals(201, $response->getStatusCode());
-        $this->assertEquals('application/ld+json; charset=utf-8', $response->headers->get('Content-Type'));
-
-        $this->assertArrayHasKey('isbn', $json);
-        $this->assertEquals('9781782164104', $json['isbn']);
+        $this->assertJsonContains([
+            '@context' => '/contexts/ConstraintViolationList',
+            '@type' => 'ConstraintViolationList',
+            'hydra:title' => 'An error occurred',
+            'hydra:description' => 'isbn: This value is neither a valid ISBN-10 nor a valid ISBN-13.
+title: This value should not be blank.
+description: This value should not be blank.
+author: This value should not be blank.
+publicationDate: This value should not be null.',
+        ]);
     }
 
-    /**
-     * Updates a book.
-     */
-    public function testUpdateABook(): void
+    public function testUpdateBook(): void
     {
-        $data = [
-            'isbn' => '9781234567897',
-        ];
+        $client = static::createClient();
+        // findIriBy allows to retrieve the IRI of an item by searching for some of its properties.
+        // ISBN 9786644879585 has been generated by Alice when loading test fixtures.
+        // Because Alice use a seeded pseudo-random number generator, we're sure that this ISBN will always be generated.
+        $iri = static::findIriBy(Book::class, ['isbn' => '9781344037075']);
 
-        $response = $this->request('PUT', $this->findOneIriBy(Book::class, ['isbn' => '9790456981541']), $data);
-        $json = json_decode($response->getContent(), true);
+        $client->request('PUT', $iri, ['json' => [
+            'title' => 'updated title',
+        ]]);
 
-        $this->assertEquals(200, $response->getStatusCode());
-        $this->assertEquals('application/ld+json; charset=utf-8', $response->headers->get('Content-Type'));
-
-        $this->assertArrayHasKey('isbn', $json);
-        $this->assertEquals('9781234567897', $json['isbn']);
+        $this->assertResponseIsSuccessful();
+        $this->assertJsonContains([
+            '@id' => $iri,
+            'isbn' => '9781344037075',
+            'title' => 'updated title',
+        ]);
     }
 
-    /**
-     * Deletes a book.
-     */
-    public function testDeleteABook(): void
+    public function testDeleteBook(): void
     {
-        $response = $this->request('DELETE', $this->findOneIriBy(Book::class, ['isbn' => '9790456981541']));
+        $client = static::createClient();
+        $iri = static::findIriBy(Book::class, ['isbn' => '9781344037075']);
 
-        $this->assertEquals(204, $response->getStatusCode());
+        $client->request('DELETE', $iri);
 
-        $this->assertEmpty($response->getContent());
-    }
-
-    /**
-     * Retrieves the documentation.
-     */
-    public function testRetrieveTheDocumentation(): void
-    {
-        $response = $this->request('GET', '/', null, ['Accept' => 'text/html']);
-
-        $this->assertEquals(200, $response->getStatusCode());
-        $this->assertEquals('text/html; charset=UTF-8', $response->headers->get('Content-Type'));
-
-        $this->assertContains('Hello API Platform', $response->getContent());
-    }
-
-    protected function setUp()
-    {
-        parent::setUp();
-
-        $this->client = static::createClient();
-    }
-
-    /**
-     * @param string|array|null $content
-     */
-    protected function request(string $method, string $uri, $content = null, array $headers = []): Response
-    {
-        $server = ['CONTENT_TYPE' => 'application/ld+json', 'HTTP_ACCEPT' => 'application/ld+json'];
-        foreach ($headers as $key => $value) {
-            if (strtolower($key) === 'content-type') {
-                $server['CONTENT_TYPE'] = $value;
-
-                continue;
-            }
-
-            $server['HTTP_'.strtoupper(str_replace('-', '_', $key))] = $value;
-        }
-
-        if (is_array($content) && false !== preg_match('#^application/(?:.+\+)?json$#', $server['CONTENT_TYPE'])) {
-            $content = json_encode($content);
-        }
-
-        $this->client->request($method, $uri, [], [], $server, $content);
-
-        return $this->client->getResponse();
-    }
-
-    protected function findOneIriBy(string $resourceClass, array $criteria): string
-    {
-        $resource = static::$container->get('doctrine')->getRepository($resourceClass)->findOneBy($criteria);
-
-        return static::$container->get('api_platform.iri_converter')->getIriFromitem($resource);
+        $this->assertResponseStatusCodeSame(204);
+        $this->assertNull(
+            // Through the container, you can access all your services from the tests, including the ORM, the mailer, remote API clients...
+            static::$container->get('doctrine')->getRepository(Book::class)->findOneBy(['isbn' => '9781344037075'])
+        );
     }
 }
 ```
@@ -248,17 +206,22 @@ transaction previously begun. Because of this, you can run your tests without wo
 
 All you have to do now is to run your tests:
 
-    $ docker-compose exec php bin/phpunit
+    $ docker-compose exec php vendor/bin/simple-phpunit
 
-If everything is working properly, you should see `OK (6 tests, 27 assertions)`. Your Linked Data API is now specified
-and tested thanks to [PHPUnit](https://phpunit.de/index.html)!
+If everything is working properly, you should see `OK (5 tests, 17 assertions)`.
+Your REST API is now properly tested!
 
-### Additional and Alternative Testing Tools
+Check out the [testing documentation](../core/testing.md) to discover the full range of assertions and other features provided by API Platform's test utilities.
+
+## Writing Unit Tests
+
+In addition to integration tests written using the helpers provided by `ApiTestCase`, all the classes of your project should be covered by [unit tests](https://en.wikipedia.org/wiki/Unit_testing).
+To do so, learn how to write unit tests with [PHPUnit](https://phpunit.de/index.html) and [its Symfony/API Platform integration](https://symfony.com/doc/current/testing.html).
+
+## Additional and Alternative Testing Tools
 
 You may also be interested in these alternative testing tools (not included in the API Platform distribution):
 
-* [ApiTestCase](https://github.com/lchrusciel/ApiTestCase), a handy [PHPUnit](https://phpunit.de/index.html) test case
-  for going further by testing JSON and XML APIs in your Symfony applications;
 * [Behat](http://behat.org/en/latest/) and its [Behatch extension](https://github.com/Behatch/contexts), a
   [Behavior-Driven development](https://en.wikipedia.org/wiki/Behavior-driven_development) framework to write the API
   specification as user stories and in natural language then execute these scenarios against the application to validate
@@ -269,8 +232,3 @@ You may also be interested in these alternative testing tools (not included in t
   Platform project using a nice UI, benefit from [the Swagger integration](https://www.getpostman.com/docs/importing_swagger)
   and run tests in the CI using [newman](https://github.com/postmanlabs/newman);
 * [PHP Matcher](https://github.com/coduo/php-matcher), the Swiss Army knife of JSON document testing.
-
-## Writing Unit Tests
-
-Take a look at [the Symfony documentation about testing](https://symfony.com/doc/current/testing.html) to learn how to
-write unit tests with [PHPUnit](https://phpunit.de/index.html) in your API Platform project.
