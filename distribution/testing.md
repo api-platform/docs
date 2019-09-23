@@ -1,4 +1,4 @@
-# Testing and Specifying the API
+# Testing the API
 
 Now that you have a functional API, you should write tests to ensure it has no bugs, and to prevent future regressions.
 Some would argue that it's even better to [write tests first](https://martinfowler.com/bliki/TestDrivenDevelopment.html).
