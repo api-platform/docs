@@ -765,7 +765,7 @@ final class Brand
 
     public function addCar(DummyCar $car)
     {
-        $this->cars[] = $car;
+        $this->cars->add($car);
     }
 
     public function removeCar(DummyCar $car)
