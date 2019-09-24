@@ -1,4 +1,6 @@
-# Extending JSON-LD Context
+# Extending JSON-LD AND Hydra Contexts
+
+## JSON-LD
 
 API Platform Core provides the possibility to extend the JSON-LD context of properties. This allows you to describe JSON-LD-typed 
 values, inverse properties using the `@reverse` keyword and you can even overwrite the `@id` property this way. Everything you define
@@ -64,3 +66,57 @@ The generated context will now have your custom attributes set:
 ```
 
 Note that you do not have to provide the `@id` attribute. If you do not provide an `@id` attribute, the value from `iri` will be used.
+
+## Hydra
+
+It's also possible to replace the Hydra context used documentation generator:
+
+```php
+<?php
+// api/src/Entity/Book.php
+
+use ApiPlatform\Core\Annotation\ApiResource;
+
+/**
+ * ...
+ * @ApiResource(itemOperations={
+ *     "get"={"hydra_context"={"foo"="bar"}}
+ * })
+ */
+class Book
+{
+    //...
+}
+```
+
+Or in YAML:
+
+```yaml
+# api/config/api_platform/resources.yaml
+App\Entity\Book:
+    itemOperations:
+        get:
+            hydra_context: { foo: 'bar' }
+```
+
+Or in XML:
+
+```xml
+<?xml version="1.0" encoding="UTF-8" ?>
+<!-- api/config/api_platform/resources.xml -->
+
+<resources xmlns="https://api-platform.com/schema/metadata"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="https://api-platform.com/schema/metadata
+           https://api-platform.com/schema/metadata/metadata-2.0.xsd">
+    <resource class="App\Entity\Book">
+        <itemOperations>
+            <itemOperation name="get">              
+                <attribute name="hydra_context">
+                    <attribute name="foo">bar</attribute>
+                </attribute>
+            </itemOperation>
+        </itemOperations>
+    </resource>
+</resources>
+```
