@@ -38,9 +38,9 @@ API Platform uses these model classes to expose a web API having a bunch of buil
 * filtering
 * sorting
 * hypermedia/[HATEOAS](https://en.wikipedia.org/wiki/HATEOAS) and content negotiation support ([JSON-LD](http://json-ld.org),
-  [HAL](http://blog.stateless.co/post/13296666138/json-linking-with-hal), [JSON API](http://jsonapi.org/))
+  [HAL](http://blog.stateless.co/post/13296666138/json-linking-with-hal), [JSON API](http://jsonapi.org/)...)
 * [GraphQL support](http://graphql.org/)
-* Nice UI and machine-readable documentations ([Swagger/OpenAPI](https://swagger.io), [Hydra](http://hydra-cg.com))
+* Nice UI and machine-readable documentations ([Swagger UI/OpenAPI](https://swagger.io), [Hydra](http://hydra-cg.com))
 * authentication ([Basic HTTP](https://en.wikipedia.org/wiki/Basic_access_authentication), cookies as well as [JWT](https://jwt.io/)
   and [OAuth](https://oauth.net/) through extensions)
 * [CORS headers](https://developer.mozilla.org/en-US/docs/Web/HTTP/Access_control_CORS)
@@ -49,7 +49,7 @@ API Platform uses these model classes to expose a web API having a bunch of buil
 * and basically everything needed to build modern APIs.
 
 One more thing, before we start: as the API Platform distribution includes [the Symfony framework](https://symfony.com),
-it is compatible with most [Symfony bundles](https://symfony.com/blog/the-30-most-useful-symfony-bundles-and-making-them-even-better)
+it is compatible with most [Symfony bundles](https://flex.symfony.com)
 (plugins) and benefits from the numerous extensions points provided by this rock-solid foundation (events, DIC...).
 Adding features like custom, service-oriented, API endpoints, JWT or OAuth authentication, HTTP caching, mail sending or
 asynchronous jobs to your APIs is straightforward.
