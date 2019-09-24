@@ -11,36 +11,39 @@ chapters:
       - index
       - getting-started
       - design
+      - testing
       - operations
       - graphql
+      - data-providers
+      - data-persisters
       - filters
+      - subresources
       - serialization
       - validation
       - security
-      - data-providers
-      - data-persisters
-      - mercure
-      - mongodb
-      - elasticsearch
-      - pagination
-      - events
       - content-negotiation
+      - pagination
       - deprecations
+      - default-order
       - performance
       - extensions
       - swagger
       - messenger
       - dto
+      - mercure
       - push-relations
-      - file-upload
-      - default-order
       - errors
       - external-vocabularies
       - operation-path-naming
       - extending-jsonld-context
-      - form-data
       - identifiers
+      - mongodb
+      - elasticsearch
+      - controllers
+      - events
+      - file-upload
       - jwt
+      - form-data
       - angularjs-integration
       - fosuser-bundle
       - nelmio-api-doc
