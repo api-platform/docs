@@ -1,0 +1,78 @@
+chapters:
+  - title: 'The Distribution: Create Powerful APIs with Ease'
+    path: distribution
+    items:
+      - index
+      - testing
+      - debugging
+  - title: The API Component
+    path: core
+    items:
+      - index
+      - getting-started
+      - design
+      - operations
+      - graphql
+      - filters
+      - serialization
+      - validation
+      - security
+      - data-providers
+      - data-persisters
+      - pagination
+      - events
+      - content-negotiation
+      - deprecations
+      - performance
+      - extensions
+      - swagger
+      - dto
+      - file-upload
+      - default-order
+      - errors
+      - external-vocabularies
+      - operation-path-naming
+      - extending-jsonld-context
+      - form-data
+      - identifiers
+      - jwt
+      - angularjs-integration
+      - fosuser-bundle
+      - nelmio-api-doc
+      - configuration
+  - title: The Schema Generator Component
+    path: schema-generator
+    items:
+      - index
+      - getting-started
+      - configuration
+  - title: The Admin Component
+    path: admin
+    items:
+      - index
+      - getting-started
+      - authentication-support
+      - handling-relations-to-collections
+  - title: The Client Generator Component
+    path: client-generator
+    items:
+      - index
+      - react
+      - react-native
+      - vuejs
+      - troubleshooting
+  - title: Deployment
+    path: deployment
+    items:
+      - index
+      - kubernetes
+      - heroku
+      - traefik
+  - title: Extra
+    path: extra
+    items:
+      - releases
+      - philosophy
+      - troubleshooting
+      - contribution-guides
+      - conduct
