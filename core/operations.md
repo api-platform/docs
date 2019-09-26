@@ -134,6 +134,31 @@ Or the XML configuration format:
 API Platform Core is smart enough to automatically register the applicable Symfony route referencing a built-in CRUD action
 just by specifying the method name as key, or by checking the explicitly configured HTTP method.
 
+If you want to completely remove item operations, you have to declare a default GET operation so that the resource can still be identified by an IRI. For example:
+
+```
+<?php
+
+use ApiPlatform\Core\Action\NotFoundAction;
+use ApiPlatform\Core\Annotation\ApiResource;
+
+/**
+ * @ApiResource(
+ *     collectionOperations={
+ *         "get",
+ *     },
+ *     itemOperations={
+ *         "get"={
+ *             "controller"=NotFoundAction::class,
+ *             "read"=false,
+ *             "output"=false,
+ *         },
+ *     },
+ * )
+ */
+ class Book {}
+```
+
 ## Configuring Operations
 
 The URL, the method and the default status code (among other options) can be configured per operation.
