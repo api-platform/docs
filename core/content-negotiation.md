@@ -117,7 +117,7 @@ Additionally the `csv` format is added with the MIME type `text/csv`.
 It is also important to notice that the usage of this attribute will override the formats defined in the configuration, therefore
 this configuration might disable the `json` or the `html` on this resource for example.
 
-You can specify different accepted formats at operation level too, it's especially convenient for to configure formats available for the `PATH` method:
+You can specify different accepted formats at operation level too, it's especially convenient for to configure formats available for the `PATCH` method:
 
 ```php
 <?php
