@@ -2,7 +2,7 @@
  
  As stated in [the general design considerations](design.md), in most cases [the DTO pattern](https://en.wikipedia.org/wiki/Data_transfer_object) should be implemented using an API Resource class representing the public data model exposed through the API and [a custom data provider](data-providers.md). In such cases, the class marked with `@ApiResource` will act as a DTO.
 
-However, it's sometimes useful to use a specific class to represent and manipulate the input or the output related to a resource. It's what enable API Platform's DTO mechanism and data transformers.
+However, it's sometimes useful to use a specific class to represent the input or output data structure related to an operation.
 
 ## Specifying an Input or an Output Data Representation
 
