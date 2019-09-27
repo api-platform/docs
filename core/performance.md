@@ -2,58 +2,51 @@
 
 ## Enabling the Built-in HTTP Cache Invalidation System
 
-Exposing a hypermedia API has [many advantages](http://blog.theamazingrando.com/in-band-vs-out-of-band.html). One of
-them is the ability to know exactly which resources are included in HTTP responses created by the API. We used this
-specificity to make API Platform apps blazing fast.
+Exposing a hypermedia API has [many advantages](http://blog.theamazingrando.com/in-band-vs-out-of-band.html). One of them
+is the ability to know exactly which resources are included in HTTP responses created by the API. We used this specificity
+to make API Platform apps blazing fast.
 
-When the cache mechanism [is enabled](configuration.md), API Platform collects identifiers of every resource
-included in a given HTTP response (including lists, embedded documents and subresources) and returns them in a special
-HTTP header called [Cache-Tags](https://support.cloudflare.com/hc/en-us/articles/206596608-How-to-Purge-Cache-Using-Cache-Tags-Enterprise-only-).
+When the cache mechanism [is enabled](configuration.md), API Platform collects identifiers of every resource included in
+a given HTTP response (including lists, embedded documents and subresources) and returns them in a special HTTP header
+called [Cache-Tags](https://support.cloudflare.com/hc/en-us/articles/206596608-How-to-Purge-Cache-Using-Cache-Tags-Enterprise-only-).
 
-A [cache reverse proxy](https://en.wikipedia.org/wiki/Web_accelerator) supporting cache tags (Varnish, CloudFlare,
-Fastly…) must be put in front of the web server and store all responses returned by the API with a high
-[TTL](https://en.wikipedia.org/wiki/Time_to_live). When a resource is modified, API Platform takes care of purging all
-responses containing it in the proxy’s cache. It means that after the first request, all subsequent requests will not
-touch the web server, and will be served instantly from the cache. It also means that the content served will always be
-fresh, because the cache is purged in real time.
+A caching [reverse proxy](https://en.wikipedia.org/wiki/Reverse_proxy) supporting cache tags (e.g. Varnish, Cloudflare,
+Fastly) must be put in front of the web server and store all responses returned by the API with a high [TTL](https://en.wikipedia.org/wiki/Time_to_live).
+This means that after the first request, all subsequent requests will not hit the web server, and will be served instantly
+from the cache.
 
-The support for most specific cases such as the invalidation of collections when a document is added or removed or for
-relationships and inverse relations is built-in.
+When a resource is modified, API Platform takes care of purging all responses containing it in the proxy’s
+cache. This ensures that the content served will always be fresh, because the cache is purged in real time. Support for
+most specific cases such as the invalidation of collections when a document is added or removed or for relationships and
+inverse relations is built-in.
 
-Integration with Varnish and Doctrine ORM is shipped with the core library, and [Varnish](https://varnish-cache.org/) is included in the [Docker setup](../distribution/index.md#using-the-official-distribution-recommended) provided with the
-distribution of API Platform.
-If you use the distribution, this feature works out of the box.
+Integration with Varnish and Doctrine ORM is shipped with the core library, and [Varnish](https://varnish-cache.org/) is
+included in the Docker setup provided with the [API Platform distribution](../distribution/index.md). If you use the distribution,
+this feature works out of the box.
 
 If you don't use the distribution, add the following configuration to enable the cache invalidation system:
 
 ```yaml
-parameters:
-    # Adds a fallback VARNISH_URL if the env var is not set.
-    # This allows you to run cache:warmup even if your
-    # environment variables are not available yet.
-    # You should not need to change this value.
-    env(VARNISH_URL): ''
-
 api_platform:
-    # ...
     http_cache:
         invalidation:
             enabled: true
             varnish_urls: ['%env(VARNISH_URL)%']
-        # Adds sensitive default cache headers
         max_age: 0
         shared_max_age: 3600
-        vary: ['Content-Type', 'Authorization']
+        vary: ['Content-Type', 'Authorization', 'Origin']
         public: true
 ```
 
 Support for reverse proxies other than Varnish can easily be added by implementing the `ApiPlatform\Core\HttpCache\PurgerInterface`.
 
-In addition to the cache invalidation mechanism, you may want to [use HTTP/2 Server Push to pre-emptively send relations to the client](push-relations.md).
+In addition to the cache invalidation mechanism, you may want to [use HTTP/2 Server Push to pre-emptively send relations
+to the client](push-relations.md).
 
-### Extending Cache-Tags for invalidation
+### Extending Cache-Tags for Invalidation
 
-Sometimes you need individual resources like `/me`. To work properly with Varnish, the Cache-Tags need to be augmented with these resources. Here is an example of how this can be done:
+Sometimes you need individual resources like `/me`. To work properly with Varnish, the `Cache-Tags` header needs to be
+augmented with these resources. Here is an example of how this can be done:
 
 ```php
 <?php
@@ -134,8 +127,8 @@ class Book
 ## Enabling the Metadata Cache
 
 Computing metadata used by the bundle is a costly operation. Fortunately, metadata can be computed once and then cached.
-API Platform internally uses a [PSR-6](http://www.php-fig.org/psr/psr-6/) cache. If the Symfony Cache Component is available
-(the default in the official distribution), it automatically enables the support for the best cache adapter available.
+API Platform internally uses a [PSR-6](http://www.php-fig.org/psr/psr-6/) cache. If the Symfony Cache component is available
+(the default in the API Platform distribution), it automatically enables support for the best cache adapter available.
 
 Best performance is achieved using [APCu](https://github.com/krakjoe/apcu). Be sure to have the APCu extension installed
 on your production server. API Platform will automatically use it.
@@ -337,15 +330,15 @@ Blackfire.io allows you to monitor the performance of your applications. For mor
 
 To configure Blackfire.io follow these simple steps:
 
-1. Add the following to your `docker-compose.yml` file (or an [override file](https://docs.docker.com/compose/reference/overview/#specifying-multiple-compose-files), if only to be used in development)
+1. Add the following to your `docker-compose.yml` file
 
 ```yaml
-        blackfire:
-          image: blackfire/blackfire
-          environment:
-              # Exposes the host BLACKFIRE_SERVER_ID and TOKEN environment variables.
-              - BLACKFIRE_SERVER_ID
-              - BLACKFIRE_SERVER_TOKEN
+    blackfire:
+        image: blackfire/blackfire
+        environment:
+            # Exposes the host BLACKFIRE_SERVER_ID and TOKEN environment variables.
+            - BLACKFIRE_SERVER_ID
+            - BLACKFIRE_SERVER_TOKEN
 ```
 
 2. Add your Blackfire.io id and server token to your `.env` file at the root of your project (be sure not to commit this to a public repository)
