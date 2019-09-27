@@ -43,7 +43,7 @@ final class Book
      *
      * @Assert\NotBlank
      */
-    public title;
+    public $title;
 }
 ```
 
