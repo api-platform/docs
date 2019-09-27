@@ -1,5 +1,14 @@
 # Using Data Transfer Objects (DTOs)
 
+ The DTO mechanism of API Platform allows to create specialized representations of a (usually large) object or graph of objects also available through their own endpoints.
+ For internal objects, a simple [data provider](data-providers.md) and a corresponding public class mapped as an API Resource must be used instead.
+ Using API Platform DTOs and data transformers should be rare.
+ 
+ In most cases, [the DTO pattern](https://en.wikipedia.org/wiki/Data_transfer_object) can be implemented using an API Resource class representing the public data model exposed through the API.
+ This class **don't have to be mapped with a Doctrine entity**, as explained in [the General Design Considerations](design.md).
+ It must not be tight to the internal data model. It's the responsibility of the [Data Provider](data-providers.md) to fetch data from the persistence system and to convert it to a API Resource class.
+ **API Platform's Data Transformers must not be used for this purpose.**
+
 ## Specifying an Input or an Output Data Representation
 
 For a given resource class, you may want to have a different representation of this class as input (write) or output (read).

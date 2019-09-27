@@ -1,14 +1,16 @@
 # Filters
 
-API Platform Core provides a generic system to apply filters on collections. Useful filters for the Doctrine ORM and
-MongoDB ODM are provided with the library. You can also create custom filters that fit your specific needs.
+API Platform Core provides a generic system to apply filters and sort criteria on collections.
+Useful filters for Doctrine ORM, MongoDB ODM and ElasticSearch are provided with the library.
+
+You can also create custom filters that fit your specific needs.
 You can also add filtering support to your custom [data providers](data-providers.md) by implementing interfaces provided
 by the library.
 
 By default, all filters are disabled. They must be enabled explicitly.
 
-When a filter is enabled, it is automatically documented as a `hydra:search` property in the collection response. It also
-automatically appears in the [NelmioApiDoc documentation](nelmio-api-doc.md) if it is available.
+When a filter is enabled, it automatically appears in the [OpenAPI](swagger.md) and [GraphQL](graphql.md) documentations.
+It is also automatically documented as a `hydra:search` property for JSON-LD responses.
 
 ## Doctrine ORM and MongoDB ODM Filters
 
