@@ -719,7 +719,7 @@ Then, there are many more features to learn! Read [the full documentation](../co
 and how to extend API Platform to fit your needs.
 API Platform is incredibly efficient for prototyping and Rapid Application Development (RAD), but the framework is mostly
 designed to create complex API-driven projects, far beyond simple CRUD apps. It benefits from [**strong extension points**](../core/extending.md)
-and it is **continuously optimized for [performance](../core/performance.md).** It powers numerous high-traffic websites.
+and it is **continuously optimized for [performance](../core/performance.md).** It powers numerous high traffic websites.
 
 API Platform has a built-in HTTP cache invalidation system which allows to make API Platform apps blazing fast, and it uses
 [Varnish](https://varnish-cache.org/) by default. Read more in the chapter

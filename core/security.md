@@ -81,7 +81,7 @@ In this example:
 * Only users having [the role](https://symfony.com/doc/current/security.html#roles) `ROLE_ADMIN` can create a new resource (configured on the `post` operation)
 * Only users having the `ROLE_ADMIN` or owning the current object can replace an existing book (configured on the `put` operation)
 
-Available variables are `user` (the current logged in object, if any), and `object` (the the current resource, of collection of ressources for collection operations).
+Available variables are `user` (the current logged in object, if any), and `object` (the current resource, or collection of ressources for collection operations).
 
 Access control checks in the `security` attribute are always executed before the [denormalization step](serialization.md).
 It means than for `PUT` requests, `object` doesn't contain the value submitted by the user, but values currently stored in [the persistence layer](data-persisters.md).
@@ -103,7 +103,7 @@ use ApiPlatform\Core\Annotation\ApiResource;
  * @ApiResource(
  *     itemOperations={
  *         "get",
- *         "put"={"security"="is_granted('ROLE_ADMIN') or (object.owner == user and previous_object.owner == user)"},
+ *         "put"={"security_post_denormalize"="is_granted('ROLE_ADMIN') or (object.owner == user and previous_object.owner == user)"},
  *     }
  * )
  */
@@ -141,7 +141,7 @@ The easiest and recommended way to hook custom access control logic is [to write
 ## Configuring the Access Control Error Message
 
 By default when API requests are denied, you will get the "Access Denied" message.
-You can change it by configuring the `security_message"`attribute.
+You can change it by configuring the `security_message` attribute.
 
 For example:
 
@@ -194,7 +194,7 @@ App\Entity\Book:
 ## Filtering Collection According to the Current User Permissions
 
 Filtering collections according to the role or permissions of the current user must be done directly at [the data provider](data-providers.md) level. For instance, when using the built-in adapters for Doctrine ORM, MongoDB and ElasticSearch, removing entries from a collection should be done using [extensions](extensions.md).
-Extensions allows to customize the generated DQL/Mongo/Elastic/... query used to retrieve the collection (e.g. add `WHERE` clauses depending of the currently connected user) instead of using access control expressions. As extensions are services, you can [inject the Symfony `Security` class](https://symfony.com/doc/current/security.html#b-fetching-the-user-from-a-service) into them to access to current user's roles and permissions.
+Extensions allow to customize the generated DQL/Mongo/Elastic/... query used to retrieve the collection (e.g. add `WHERE` clauses depending of the currently connected user) instead of using access control expressions. As extensions are services, you can [inject the Symfony `Security` class](https://symfony.com/doc/current/security.html#b-fetching-the-user-from-a-service) into them to access to current user's roles and permissions.
 
 If you use [custom data providers](data-providers.md), you'll have to implement the filtering logic according to the persistence layer you rely on.
 
@@ -205,4 +205,4 @@ section.
 
 ## Changing Serialization Groups Depending of the Current User
 
-See [how to change dynamically](serialization.md#changing-the-serialization-context-dynamically) the current Serializer context according to the current logged in user.
+See [how to dynamically change](serialization.md#changing-the-serialization-context-dynamically) the current Serializer context according to the current logged in user.
