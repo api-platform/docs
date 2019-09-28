@@ -156,7 +156,9 @@ use ApiPlatform\Core\Annotation\ApiResource;
  *     },
  * )
  */
- class Book {}
+ class Book
+ {
+ }
 ```
 
 ## Configuring Operations
