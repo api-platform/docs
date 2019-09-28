@@ -16,38 +16,32 @@ the legacy [mongo](https://secure.php.net/manual/en/book.mongo.php) extension.
 
 ## Enabling MongoDB Support
 
-If the mongodb PHP extension is not installed yet, [install it beforehand](https://secure.php.net/manual/en/mongodb.installation.pecl.php).
+If the `mongodb` PHP extension is not installed yet, [install it beforehand](https://secure.php.net/manual/en/mongodb.installation.pecl.php).
 
-If you are using the [API Platform Distribution](../distribution/index.md), modify the Dockerfile to add the extension:
+If you are using the [API Platform Distribution](../distribution/index.md), modify the `Dockerfile` to add the extension:
 
 ```diff
- // api/Dockerfile
-
- ...
+# api/Dockerfile
  	pecl install \
  		apcu-${APCU_VERSION} \
 +		mongodb \
  	; \
- ...
+ 	pecl clear-cache; \
  	docker-php-ext-enable \
  		apcu \
- 		opcache \
 +		mongodb \
+ 		opcache \
  	; \
- ...
 ```
 
 Then rebuild the `php` image:
 
-```bash
-docker-compose build php
-```
+    $ docker-compose build php
 
 Add a MongoDB image to the docker-compose file:
 
 ```yaml
 # docker-compose.yml
-
 # ...
   db-mongodb:
       # In production, you may want to use a managed database service
@@ -69,9 +63,7 @@ Add a MongoDB image to the docker-compose file:
 Once the extension is installed, to enable the MongoDB support, require the [Doctrine MongoDB ODM bundle](https://github.com/doctrine/DoctrineMongoDBBundle)
 package using Composer:
 
-```bash
-docker-compose exec php composer req doctrine/mongodb-odm-bundle:^4.0.0@beta doctrine/mongodb-odm:^2.0.0@beta
-```
+    $ docker-compose exec php composer req doctrine/mongodb-odm-bundle:^4.0.0@beta doctrine/mongodb-odm:^2.0.0@beta
 
 Execute the contrib recipe to have it already configured.
 
@@ -79,7 +71,6 @@ Change the MongoDB environment variables to match your Docker image:
 
 ```
 # api/.env
-
 MONGODB_URL=mongodb://api-platform:!ChangeMe!@db-mongodb
 MONGODB_DB=api
 ```
@@ -88,7 +79,6 @@ Change the configuration of API Platform to add the right mapping path:
 
 ```yaml
 # api/config/packages/api_platform.yaml
-
 api_platform:
     # ...
 

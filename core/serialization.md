@@ -39,11 +39,10 @@ to limit the serialization depth.
 
 ### Configuration
 
-Just like other Symfony and API Platform components, the Serializer component can be configured using annotations, XML or YAML.
-Since annotations are easy to understand, we will use them in the following examples.
+Just like other Symfony and API Platform components, the Serializer component can be configured using annotations, XML
+or YAML. Since annotations are easy to understand, we will use them in the following examples.
 
-Note: if you aren't using the official distribution of API Platform, you will need to enable annotation support in the serializer
-configuration:
+Note: if you aren't using the API Platform distribution, you will need to enable annotation support in the serializer configuration:
 
 ```yaml
 # api/config/packages/framework.yaml

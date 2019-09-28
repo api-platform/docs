@@ -1,29 +1,31 @@
 # Implement Traefik Into API Platform Dockerized
 
+> An open-source reverse proxy and load balancer for HTTP and TCP-based applications that is easy, dynamic, automatic, fast, full-featured, production proven, provides metrics, and integrates with every major cluster technology.
+>
+> —https://traefik.io
+
 ## Basic Implementation
 
-[Traefik](https://traefik.io) is a reverse proxy / load balancer that's easy, dynamic, automatic, fast, full-featured, open source, production proven, and that provides metrics and integrates with every major cluster technology.
+This tutorial will help you to define your own routes for your client, api and more generally for your containers.
 
-This tool will help you to define your own routes for your client, api and more generally for your containers.
+Use this custom API Platform `docker-compose.yml` file which implements ready-to-use Traefik container configuration. Override
+ports and add labels to tell Traefik to listen on the routes mentioned and redirect routes to specified container.
 
-Use this custom API Platform `docker-compose.yml` file which implements ready-to-use Traefik container configuration.  
-Override ports and add labels to tell Traefik to listen on the routes mentionned and redirect routes to specified container.
+A few points to note:
+* `--api` Tells Traefik to generate a browser view to watch containers and IP/DNS associated easier  
+* `--docker` Tells Traefik to listen on Docker Api  
+* `labels:` Key for Traefik configuration into Docker integration
 
+  ```yaml
+  services:
+  #  ...
+    api:
+      labels: 
+        - traefik.frontend.rule=Host:api.localhost
+  ``` 
 
-`--api` Tells Traefik to generate a browser view to watch containers and IP/DNS associated easier  
-`--docker` Tells Traefik to listen on Docker Api  
-`labels:` Key for Traefik configuration into Docker integration  
-```yaml
-services:
-#  ...
-  api:
-    labels: 
-      - traefik.frontend.rule=Host:api.localhost
-``` 
-The API DNS will be specified with `traefik.frontend.rule=Host:your.host` (here api.localhost)  
-
-`--traefik.port=3000` The port specified to Traefik will be exposed by the container (here the React app exposes the 3000 port)  
-
+  The API DNS will be specified with `traefik.frontend.rule=Host:your.host` (here api.localhost)
+* `--traefik.port=3000` The port specified to Traefik will be exposed by the container (here the React app exposes the 3000 port)
 
 ```yaml
 # docker-compose.yml
@@ -35,7 +37,6 @@ x-cache:
     - ${CONTAINER_REGISTRY_BASE}/php
     - ${CONTAINER_REGISTRY_BASE}/nginx
     - ${CONTAINER_REGISTRY_BASE}/varnish
-
 
 services:
   traefik:
@@ -182,7 +183,9 @@ If your network is of type B, it may conflict with the Traefik sub-network.
 ## Going Further
 
 As this Traefik configuration listens on 80 and 443 ports, you can run only 1 Traefik instance per server. However, you may want to run multiple API Platform projects on same server. To deal with it, you'll have to externalize the Traefik configuration to another `docker-compose.yml` file, anywhere on your server.
-Here is a working example:  
+
+Here is a working example:
+
 ```yaml
 # /somewhere/docker-compose.yml
 version: '3.4'
@@ -210,8 +213,9 @@ networks:
   # Add other networks here
 ```
 
-Then update the `docker-compose.yaml` file belonging to your API Platform projects:  
-```patch
+Then update the `docker-compose.yml` file belonging to your API Platform projects:
+
+```diff
 # docker-compose.yml
 version: '3.4'
 

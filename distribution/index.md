@@ -3,15 +3,16 @@
 ![The welcome page](images/api-platform-2.2-welcome.png)
 
 > *API Platform* is the most advanced API platform, in any framework or language.
-> - Fabien Potencier (creator of Symfony), SymfonyCon 2017
+>
+> —Fabien Potencier (creator of Symfony), SymfonyCon 2017
 
-[API Platform](https://api-platform.com) is a powerful but easy to use **full stack** framework dedicated to API-driven projects.
-It contains a **PHP** library to create fully featured APIs supporting industry-leading standards (JSON-LD, GraphQL, OpenAPI...),
-provides ambitious **JavaScript** tooling to consume those APIs in a snap (admin, PWA and mobile apps generators, hypermedia
-client...) and is shipped with a nice **Docker** and **Kubernetes** integration to develop and deploy instantly in the cloud.
+[API Platform](https://api-platform.com) is a powerful but easy to use **full stack** framework dedicated to API-driven
+projects. It contains a **PHP** library to create fully featured APIs supporting industry-leading standards (JSON-LD,
+GraphQL, OpenAPI...), provides ambitious **JavaScript** tooling to consume those APIs in a snap (admin, PWA and mobile
+app generators, hypermedia client...) and is shipped with a nice **Docker** and **Kubernetes** integration to develop and
+deploy instantly on the cloud.
 
-The easiest and most powerful way to get started is to download the API Platform official distribution.
-It contains:
+The easiest and most powerful way to get started is to download the API Platform distribution. It contains:
 
 * an API skeleton, including with [the server-side component](../core/index.md), [the Symfony 4
   microframework](https://symfony.com/doc/current/setup/flex.html) and [the Doctrine ORM](http://docs.doctrine-project.org/projects/doctrine-orm/)
@@ -21,13 +22,13 @@ It contains:
   and containing the tools to scaffold your own React/[Redux](https://redux.js.org/) app in one command
 * a [Docker](https://docker.com)-based setup to bootstrap the project in a single command, providing:
   * servers for the API and JavaScript apps
-  * a [Varnish Cache](http://varnish-cache.org/) server enabling the [API Platform's built-in invalidation cache mechanism](../core/performance.md#enabling-the-builtin-http-cache-invalidation-system)
+  * a [Varnish Cache](http://varnish-cache.org/) server enabling [API Platform's built-in invalidation cache mechanism](../core/performance.md#enabling-the-built-in-http-cache-invalidation-system)
   * a development HTTP/2 and HTTPS proxy (allowing, for instance, to test the provided [service workers](https://developer.mozilla.org/fr/docs/Web/API/Service_Worker_API))
   * a [Helm](https://helm.sh/) chart to deploy the API in any [Kubernetes](https://kubernetes.io/) cluster
 
 To discover how the framework works, we will create an API to manage a bookshop.
 
-To create a fully featured API, an admin interface and a Progressive Web app, we will only have to design the public data
+To create a fully featured API, an admin interface and a Progressive Web App, we will only have to design the public data
 model of our API and handcraft it as *Plain Old PHP Objects*.
 
 API Platform uses these model classes to expose a web API having a bunch of built-in features:
@@ -56,7 +57,7 @@ asynchronous jobs to your APIs is straightforward.
 
 ## Installing the Framework
 
-### Using the Official Distribution (Recommended)
+### Using the API Platform Distribution (Recommended)
 
 Start by [downloading the API Platform distribution `.tar.gz` file](https://github.com/api-platform/api-platform/releases/latest), or [generate a GitHub repository from the template we provide](https://github.com/api-platform/api-platform/generate).
 Once you have extracted its contents, the resulting directory contains the API Platform project structure. You will add your own code and configuration inside it.
@@ -85,6 +86,7 @@ This starts the following services:
 | admin       | A development server for the admin                            | 81      | dev (use a static website hosting service in prod)
 | api         | The HTTP server for the API (Nginx)                           | 8080    | all
 | cache-proxy | A HTTP cache proxy for the API provided by Varnish            | 8081    | all (prefer using a managed service in prod)
+| mercure     | Mercure hub                                                   | 1337    | all
 | h2-proxy    | A HTTP/2 and HTTPS development proxy for all apps             | 443 (client)<br>444 (admin)<br>8443 (api)<br>8444 (cache-proxy) | dev (configure properly your web server in prod)
 
 To see the container's logs, run:
@@ -118,7 +120,7 @@ systems together in the same project.
 ### Using Symfony Flex and Composer (advanced users)
 
 Alternatively, the API Platform server component can also be installed directly on a local machine.
-**This method is recommended only for advanced users that want full control over the directory structure and the installed
+**This method is recommended only for advanced users who want full control over the directory structure and the installed
 dependencies.**
 
 The rest of this tutorial assumes that you have installed API Platform using the official distribution. Go straight to the
@@ -347,9 +349,7 @@ class Review
 
 **Tip**: you can also use Symfony [MakerBundle](https://symfony.com/doc/current/bundles/SymfonyMakerBundle/index.html) thanks to the `--api-resource` option:
 
-```bash
-docker-compose exec php bin/console make:entity --api-resource
-```
+    $ docker-compose exec php bin/console make:entity --api-resource
 
 As you can see there are two typical PHP objects with the corresponding PHPDoc (note that entities's and properties's descriptions
 included in their PHPDoc will appear in the API documentation).
@@ -648,9 +648,7 @@ ISBN isn't valid...
 Isn't API Platform a REST **and** GraphQL framework? That's true! GraphQL support isn't enabled by default. To add it we
 need to install the [graphql-php](https://webonyx.github.io/graphql-php/) library. Run the following command (the cache needs to be cleared twice):
 
-```bash
-docker-compose exec php composer req webonyx/graphql-php && docker-compose exec php bin/console cache:clear
-```
+    $ docker-compose exec php composer req webonyx/graphql-php && docker-compose exec php bin/console cache:clear
 
 You now have a GraphQL API! Open `https://localhost:8443/graphql` (or `https://localhost:8443/api/graphql` if you used Symfony Flex to install API Platform) to play with it using the nice [GraphiQL](https://github.com/graphql/graphiql)
 UI that is shipped with API Platform:
@@ -715,7 +713,7 @@ and it is **continuously optimized for performance.** It powers numerous high-tr
 
 API Platform has a built-in HTTP cache invalidation system which allows to make API Platform apps blazing fast, and it uses
 [Varnish](https://varnish-cache.org/) by default. Read more in the chapter
-[API Platform Core Library: Enabling the Built-in HTTP Cache Invalidation System](../core/performance.md#enabling-the-builtin-http-cache-invalidation-system).
+[API Platform Core Library: Enabling the Built-in HTTP Cache Invalidation System](../core/performance.md#enabling-the-built-in-http-cache-invalidation-system).
 
 API Platform can also be extended using PHP libraries and Symfony bundles.
 

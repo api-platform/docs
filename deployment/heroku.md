@@ -1,8 +1,8 @@
 # Deploying an API Platform App on Heroku
 
 [Heroku](http://heroku.com) is a popular, fast, scalable and reliable *Platform As A Service* (PaaS). As Heroku offers a
-free plan including database support through [Heroku Postgres](https://www.heroku.com/postgres), it's
-a convenient way to experiment with the API Platform.
+free plan including database support through [Heroku Postgres](https://www.heroku.com/postgres), it's a convenient way
+to experiment with API Platform.
 
 The API Platform Heroku integration also supports MySQL databases provided by [the ClearDB add-on](https://addons.heroku.com/cleardb).
 
@@ -15,13 +15,13 @@ If you don't already have one, [create an account on Heroku](https://signup.hero
 toolbelt](https://devcenter.heroku.com/articles/getting-started-with-php#set-up). We're guessing you already
 have a working install of [Composer](http://getcomposer.org). Perfect, we will need it.
 
-Create a new [API Platform project](distribution/index.md#using-the-official-distribution-recommended) which will be used in the rest of this example 
+Create a new [API Platform project](distribution/index.md) which will be used in the rest of this example.
 
 Heroku relies on [environment variables](https://devcenter.heroku.com/articles/config-vars) for its configuration. Regardless
 of what provider you choose for hosting your application, using environment variables to configure your production environment
 is a best practice promoted by API Platform.
 
-Create a Heroku's `app.json` file at the root of the `api/` directory to configure the deployment:
+Create a Heroku `app.json` file at the root of the `api/` directory to configure the deployment:
 
 ```json
 {
@@ -62,7 +62,7 @@ Be sure to add the Apache Pack to your dependencies:
 
 As Heroku doesn't support Varnish out of the box, let's disable its integration:
 
-```patch
+```diff
 # api/config/packages/api_platform.yaml
 -    http_cache:
 -        invalidation:
@@ -70,7 +70,7 @@ As Heroku doesn't support Varnish out of the box, let's disable its integration:
 -            varnish_urls: ['%env(VARNISH_URL)%']
 -        max_age: 0
 -        shared_max_age: 3600
--        vary: ['Content-Type', 'Authorization']
+-        vary: ['Content-Type', 'Authorization', 'Origin']
 -        public: true
 ```
 
@@ -82,18 +82,13 @@ in a file.
 
 Open `api/config/packages/prod/monolog.yaml` and apply the following patch:
 
-```yaml
-monolog:
-    # ...
-    handlers:
-        nested:
-            type: stream
-            path: "%kernel.logs_dir%/%kernel.environment%.log"
-            level: debug
-+       nested:
-+           type: stream
-+           path: 'php://stderr'
-+           level: debug
+```diff
+     handlers:
+         nested:
+             type: stream
+-            path: "%kernel.logs_dir%/%kernel.environment%.log"
++            path: php://stderr
+             level: debug
 ```
 
 We are now ready to deploy our app!
