@@ -24,45 +24,33 @@ To use this generator you need [Node.js](https://nodejs.org/) and [Yarn](https:/
 
 Bootstrap a React application:
 
-```bash
-$ npx create-react-app client
-$ cd client
-```
+    $ npx create-react-app client
+    $ cd client
 
 Install the required dependencies:
 
-```bash
-$ yarn add redux react-redux redux-thunk redux-form react-router-dom connected-react-router prop-types lodash
-```
+    $ yarn add redux react-redux redux-thunk redux-form react-router-dom connected-react-router prop-types lodash
 
 Optionally, install Bootstrap and Font Awesome to get an app that looks good:
 
-```bash
-$ yarn add bootstrap font-awesome
-```
+    $ yarn add bootstrap font-awesome
 
 Finally, start the integrated web server:
 
-```bash
-$ yarn start
-```
+    $ yarn start
 
 ## Generating a Progressive Web App
 
 If you use the API Platform distribution, generating all the code you need for a given resource is as simple as running the following command:
 
-```bash
-$ docker-compose exec client generate-api-platform-client --resource book
-```
+    $ docker-compose exec client generate-api-platform-client --resource book
 
 Omit the resource flag to generate files for all resource types exposed by the API.
 
 If you don't use the standalone installation, run the following command instead:
 
-```bash
-$ npx @api-platform/client-generator https://demo.api-platform.com src/ --resource book
-# Replace the URL by the entrypoint of your Hydra-enabled API
-```
+    $ npx @api-platform/client-generator https://demo.api-platform.com src/ --resource book
+    # Replace the URL by the entrypoint of your Hydra-enabled API
 
 The code has been generated, and is ready to be executed!
 Register the reducers and the routes in the `client/src/index.js` file:

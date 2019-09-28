@@ -12,9 +12,7 @@ before proceeding. It will help you get a grasp on how the bundle works, and why
 
 Install the bundle with the help of Composer:
 
-```bash
-docker-compose exec php composer require vich/uploader-bundle
-```
+    $ docker-compose exec php composer require vich/uploader-bundle
 
 This will create a new configuration file that you will need to slightly change
 to make it look like this.

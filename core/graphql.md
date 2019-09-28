@@ -1,7 +1,5 @@
 # GraphQL Support
 
-## Overall View
-
 [GraphQL](http://graphql.org/) is a query language made to communicate with an API and therefore is an alternative to REST.
 
 It has some advantages compared to REST: it solves the over-fetching or under-fetching of data, is strongly typed, and is capable of retrieving multiple and nested data in one go, but it also comes with drawbacks. For example it creates overhead depending on the request.
@@ -14,9 +12,7 @@ Once enabled, you have nothing to do: your schema describing your API is automat
 
 To enable GraphQL and GraphiQL interface in your API, simply require the [graphql-php](https://webonyx.github.io/graphql-php/) package using Composer and clear the cache one more time:
 
-```bash
-docker-compose exec php composer req webonyx/graphql-php && bin/console cache:clear
-```
+    $ docker-compose exec php composer req webonyx/graphql-php && bin/console cache:clear
 
 You can now use GraphQL at the endpoint: `https://localhost:8443/graphql`.
 
