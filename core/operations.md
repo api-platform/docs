@@ -134,7 +134,7 @@ Or the XML configuration format:
 API Platform Core is smart enough to automatically register the applicable Symfony route referencing a built-in CRUD action
 just by specifying the method name as key, or by checking the explicitly configured HTTP method.
 
-If you want to completely remove item operations, you have to declare a default GET operation so that the resource can still be identified by an IRI. For example:
+If you do not want to allow access to the resource item (i.e. you don't want a `GET` item operation), instead of omitting it altogether, you should instead declare a `GET` item operation which returns HTTP 404 (Not Found), so that the resource item can still be identified by an IRI. For example:
 
 ```
 <?php
