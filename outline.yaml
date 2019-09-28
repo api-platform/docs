@@ -59,7 +59,7 @@ chapters:
     items:
       - index
       - getting-started
-      - customize
+      - customizing
       - schema.org
       - authentication-support
       - data-provider
