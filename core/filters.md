@@ -1105,7 +1105,7 @@ Now, create a Doctrine filter class:
 namespace App\Filter;
 
 use App\Annotation\UserAware;
-use Doctrine\ORM\Mapping\ClassMetaData;
+use Doctrine\ORM\Mapping\ClassMetadata;
 use Doctrine\ORM\Query\Filter\SQLFilter;
 use Doctrine\Common\Annotations\Reader;
 
