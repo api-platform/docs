@@ -63,6 +63,8 @@ will be automatically added.
 <?php
 // api/src/Entity/Book.php
 
+namespace App\Entity;
+
 use ApiPlatform\Core\Annotation\ApiResource;
 
 /**
@@ -83,6 +85,8 @@ The previous example can also be written with an explicit method definition:
 ```php
 <?php
 // api/src/Entity/Book.php
+
+namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
 
@@ -134,6 +138,36 @@ Or the XML configuration format:
 API Platform Core is smart enough to automatically register the applicable Symfony route referencing a built-in CRUD action
 just by specifying the method name as key, or by checking the explicitly configured HTTP method.
 
+If you do not want to allow access to the resource item (i.e. you don't want a `GET` item operation), instead of omitting it altogether, you should instead declare a `GET` item operation which returns HTTP 404 (Not Found), so that the resource item can still be identified by an IRI. For example:
+
+```
+<?php
+// api/src/Entity/Book.php
+
+namespace App\Entity;
+
+use ApiPlatform\Core\Action\NotFoundAction;
+use ApiPlatform\Core\Annotation\ApiResource;
+
+/**
+ * @ApiResource(
+ *     collectionOperations={
+ *         "get",
+ *     },
+ *     itemOperations={
+ *         "get"={
+ *             "controller"=NotFoundAction::class,
+ *             "read"=false,
+ *             "output"=false,
+ *         },
+ *     },
+ * )
+ */
+ class Book
+ {
+ }
+```
+
 ## Configuring Operations
 
 The URL, the method and the default status code (among other options) can be configured per operation.
@@ -144,6 +178,8 @@ In addition to that, we require the `id` parameter in the URL of the `GET` opera
 ```php
 <?php
 // api/src/Entity/Book.php
+
+namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
 
@@ -244,6 +280,8 @@ you don't need to override all the operations to set the path but configure the 
 ```php
 <?php
 // api/src/Entity/Book.php
+
+namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
 
