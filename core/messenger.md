@@ -30,10 +30,12 @@ use Symfony\Component\Validator\Constraints as Assert;
 /**
  * @ApiResource(
  *     collectionOperations={
- *         "output"=false,
- *         "post"={"status"=202}
+ *         "post"={
+ *             "status"=202,
+ *             "output"=false,
+ *             "messenger"=true,
+ *         },
  *     },
- *     messenger=true,
  * )
  */
 final class Book
@@ -141,21 +143,15 @@ use App\Dto\PasswordResetRequest;
 /**
  * @ApiResource(
  *     collectionOperations={
- *         "post",
  *         "get",
+ *         "post",
  *         "post_password_reset_request"={
  *             "method"="POST",
  *             "path"="/users/password_reset_request",
  *             "messenger"="input",
  *             "input"=PasswordResetRequest::class,
  *             "status"=202,
- *             "output"=false,
- *             "normalization_context"={
- *                 "groups"={"user_password_reset_request"},
- *             },
- *             "denormalization_context"={
- *                 "groups"={"user_password_reset_request"},
- *             },
+ *             "output"=false
  *         },
  *     }
  * )
@@ -174,24 +170,9 @@ Where `PasswordResetRequest` would be:
 
 namespace App\Dto;
 
-use Symfony\Component\Serializer\Annotation\Groups;
-
 final class PasswordResetRequest
 {
-    /**
-     * @Groups({"user_password_reset_request"})
-     */
-    private $email;
-
-    public function __construct(string $email = '')
-    {
-        $this->email = $email;
-    }
-
-    public function getEmail(): string
-    {
-        return $this->email;
-    }
+    public $email;
 }
 ```
 
