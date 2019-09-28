@@ -63,6 +63,8 @@ will be automatically added.
 <?php
 // api/src/Entity/Book.php
 
+namespace App\Entity;
+
 use ApiPlatform\Core\Annotation\ApiResource;
 
 /**
@@ -83,6 +85,8 @@ The previous example can also be written with an explicit method definition:
 ```php
 <?php
 // api/src/Entity/Book.php
+
+namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
 
@@ -138,6 +142,9 @@ If you do not want to allow access to the resource item (i.e. you don't want a `
 
 ```
 <?php
+// api/src/Entity/Book.php
+
+namespace App\Entity;
 
 use ApiPlatform\Core\Action\NotFoundAction;
 use ApiPlatform\Core\Annotation\ApiResource;
@@ -171,6 +178,8 @@ In addition to that, we require the `id` parameter in the URL of the `GET` opera
 ```php
 <?php
 // api/src/Entity/Book.php
+
+namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
 
@@ -271,6 +280,8 @@ you don't need to override all the operations to set the path but configure the 
 ```php
 <?php
 // api/src/Entity/Book.php
+
+namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
 
