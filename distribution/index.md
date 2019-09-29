@@ -73,7 +73,6 @@ services using [Docker Compose](https://docs.docker.com/compose/):
 
 This starts the following services:
 
-<<<<<<< HEAD
 | Name        | Description                                                   | Port(s) | Environment(s)
 | ----------- | ------------------------------------------------------------- | ------- | --------------
 | php         | The API with PHP, PHP-FPM 7.2, Composer and sensitive configs | n/a     | all
