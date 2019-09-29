@@ -60,6 +60,7 @@ chapters:
       - index
       - getting-started
       - customizing
+      - handling-relations-to-collections
       - schema.org
       - authentication-support
       - data-provider
