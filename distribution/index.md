@@ -7,19 +7,15 @@
 > —Fabien Potencier (creator of Symfony), SymfonyCon 2017
 
 [API Platform](https://api-platform.com) is a powerful but easy to use **full stack** framework dedicated to API-driven
-projects. It contains a **PHP** library to create fully featured APIs supporting industry-leading standards (JSON-LD,
-GraphQL, OpenAPI...), provides ambitious **JavaScript** tooling to consume those APIs in a snap (admin, PWA and mobile
-app generators, hypermedia client...) and is shipped with a nice **Docker** and **Kubernetes** integration to develop and
-deploy instantly on the cloud.
+projects. It contains a **PHP** library to create fully featured APIs supporting industry-leading standards ([JSON-LD](https://json-ld.org/) and **[Hydra](http://www.hydra-cg.com/)**, [GraphQL](https://graphql.org/), [OpenAPI](https://www.openapis.org/)...), provides ambitious **JavaScript** tooling to consume those APIs in a snap (admin, PWA and mobile
+app generators, hypermedia client...) and is shipped with a nice **[Docker](https://www.docker.com/)** and **[Kubernetes](https://kubernetes.io/)**integration to develop and deploy instantly on the cloud.
 
 The easiest and most powerful way to get started is to download the API Platform distribution. It contains:
 
 * an API skeleton, including with [the server-side component](../core/index.md), [the Symfony 4
-  microframework](https://symfony.com/doc/current/setup/flex.html) and [the Doctrine ORM](http://docs.doctrine-project.org/projects/doctrine-orm/)
-* a dynamic JavaScript admin, leveraging the hypermedia capabilities of API Platform and built on top of [React](https://reactjs.org/)
-  and [React Admin](https://marmelab.com/react-admin/)
-* a Progressive Web App skeleton, generated with [Create React App](https://github.com/facebookincubator/create-react-app)
-  and containing the tools to scaffold your own React/[Redux](https://redux.js.org/) app in one command
+  microframework](https://symfony.com/doc/current/setup/flex.html) and [the Doctrine ORM](https://www.doctrine-project.org/projects/orm.html) (optional)
+* [a dynamic JavaScript admin](../admin/), leveraging the hypermedia capabilities of API Platform (or any Hydra API), built on top of [React Admin](https://marmelab.com/react-admin/)
+* [a client generator](../client-generator/) to scaffold [React](https://reactjs.org), [Vue](https://vuejs.org/), [React Native](https://facebook.github.io/react-native/), [Next.js](https://nextjs.org/) and [Quasar](https://quasar.dev/) apps in one command, from any Hydra API
 * a [Docker](https://docker.com)-based setup to bootstrap the project in a single command, providing:
   * servers for the API and JavaScript apps
   * a [Varnish Cache](http://varnish-cache.org/) server enabling [API Platform's built-in invalidation cache mechanism](../core/performance.md#enabling-the-built-in-http-cache-invalidation-system)
@@ -31,17 +27,16 @@ To discover how the framework works, we will create an API to manage a bookshop.
 To create a fully featured API, an admin interface and a Progressive Web App, we will only have to design the public data
 model of our API and handcraft it as *Plain Old PHP Objects*.
 
-API Platform uses these model classes to expose a web API having a bunch of built-in features:
+API Platform uses these model classes to expose and document a web API having a bunch of built-in features:
 
 * creating, retrieving, updating and deleting (CRUD) resources
 * data validation
 * pagination
 * filtering
 * sorting
-* hypermedia/[HATEOAS](https://en.wikipedia.org/wiki/HATEOAS) and content negotiation support ([JSON-LD](http://json-ld.org),
-  [HAL](http://blog.stateless.co/post/13296666138/json-linking-with-hal), [JSON API](http://jsonapi.org/)...)
+* hypermedia/[HATEOAS](https://en.wikipedia.org/wiki/HATEOAS) and content negotiation support ([JSON-LD](http://json-ld.org) and [Hydra](http://www.hydra-cg.com/), [JSON:API](http://jsonapi.org/), [HAL](https://tools.ietf.org/html/draft-kelly-json-hal-08)...)
 * [GraphQL support](http://graphql.org/)
-* Nice UI and machine-readable documentations ([Swagger UI/OpenAPI](https://swagger.io), [Hydra](http://hydra-cg.com))
+* Nice UI and machine-readable documentations ([Swagger UI/OpenAPI](https://swagger.io), [GraphiQL](https://github.com/graphql/graphiql)...)
 * authentication ([Basic HTTP](https://en.wikipedia.org/wiki/Basic_access_authentication), cookies as well as [JWT](https://jwt.io/)
   and [OAuth](https://oauth.net/) through extensions)
 * [CORS headers](https://developer.mozilla.org/en-US/docs/Web/HTTP/Access_control_CORS)
@@ -51,7 +46,7 @@ API Platform uses these model classes to expose a web API having a bunch of buil
 
 One more thing, before we start: as the API Platform distribution includes [the Symfony framework](https://symfony.com),
 it is compatible with most [Symfony bundles](https://flex.symfony.com)
-(plugins) and benefits from the numerous extensions points provided by this rock-solid foundation (events, DIC...).
+(plugins) and benefits from [the numerous extensions points](../core/extending.md) provided by this rock-solid foundation (events, DIC...).
 Adding features like custom, service-oriented, API endpoints, JWT or OAuth authentication, HTTP caching, mail sending or
 asynchronous jobs to your APIs is straightforward.
 
@@ -78,6 +73,7 @@ services using [Docker Compose](https://docs.docker.com/compose/):
 
 This starts the following services:
 
+<<<<<<< HEAD
 | Name        | Description                                                   | Port(s) | Environment(s)
 | ----------- | ------------------------------------------------------------- | ------- | --------------
 | php         | The API with PHP, PHP-FPM 7.2, Composer and sensitive configs | n/a     | all
@@ -88,6 +84,17 @@ This starts the following services:
 | cache-proxy | A HTTP cache proxy for the API provided by Varnish            | 8081    | all (prefer using a managed service in prod)
 | mercure     | Mercure hub                                                   | 1337    | all
 | h2-proxy    | A HTTP/2 and HTTPS development proxy for all apps             | 443 (client)<br>444 (admin)<br>8443 (api)<br>8444 (cache-proxy) | dev (configure properly your web server in prod)
+=======
+| Name     | Description                                                       | Port(s)                                                     | Environment(s)                                     |
+|----------|-------------------------------------------------------------------|-------------------------------------------------------------|----------------------------------------------------|
+| php      | The API with PHP, PHP-FPM 7.2, Composer and sensitive configs     | n/a                                                         | all                                                |
+| db       | A PostgreSQL database server                                      | 5432                                                        | all (prefer using a managed service in prod)       |
+| client   | A development server for the Progressive Web App                  | 80                                                          | dev (use a static website hosting service in prod) |
+| admin    | A development server for the admin                                | 81                                                          | dev (use a static website hosting service in prod) |
+| api      | The HTTP server for the API (Nginx)                               | 8080                                                        | all                                                |
+| mercure  | The Mercure hub, [for real-time capabilities](../core/mercure.md) | 1337                                                        | all (prefer using the managed version in prod)     |
+| h2-proxy | A HTTP/2 and HTTPS development proxy for all apps                 | 443 (client)<br>444 (admin)<br>8443 (api)<br>1338 (mercure) | dev (configure properly your web server in prod)   |
+>>>>>>> Add extending docs, improve security docs and getting started
 
 To see the container's logs, run:
 
@@ -113,11 +120,11 @@ lot of powerful built-in filters.
 Doctrine ORM and its bridge support most popular RDBMS including PostgreSQL, MySQL, MariaDB, SQL Server, Oracle and SQLite.
 There is also a shipped [Doctrine MongoDB ODM](https://www.doctrine-project.org/projects/mongodb-odm.html) optional support.
 
-That being said, keep in mind that API Platform is 100% independent of the persistence system. You can use the one(s) that
-best suit(s) your needs (including NoSQL databases or remote web services). API Platform even supports using several persistence
+That being said, keep in mind that API Platform is 100% independent of the persistence system. [You can use the one(s) that
+best suit(s) your needs](../core/data-providers.md) (including NoSQL databases or remote web services). API Platform even supports using several persistence
 systems together in the same project.
 
-### Using Symfony Flex and Composer (advanced users)
+### Using Symfony Flex and Composer (Advanced Users)
 
 Alternatively, the API Platform server component can also be installed directly on a local machine.
 **This method is recommended only for advanced users who want full control over the directory structure and the installed
@@ -351,7 +358,7 @@ class Review
 
     $ docker-compose exec php bin/console make:entity --api-resource
 
-As you can see there are two typical PHP objects with the corresponding PHPDoc (note that entities's and properties's descriptions
+As you can see there are two typical PHP objects with the corresponding PHPDoc (note that entities' and properties' descriptions
 included in their PHPDoc will appear in the API documentation).
 
 Doctrine's annotations map these entities to tables in the database. Annotations are convenient as they allow grouping
@@ -442,9 +449,8 @@ Click on the `POST` operation of the `Book` resource type, click on "Try it out"
 You just saved a new book resource through the bookshop API! API Platform automatically transforms the JSON document to
 an instance of the corresponding PHP entity class and uses Doctrine ORM to persist it in the database.
 
-By default, the API supports `GET` (retrieve, on collections and items), `POST` (create), `PUT` (update) and `DELETE` (self-explanatory)
-HTTP methods. You are not limited to the built-in operations. You can [add new custom operations](../core/operations.md#creating-custom-operations-and-controllers)
-(`PATCH` operations, sub-resources...) or [disable the ones you don't want](../core/operations.md#enabling-and-disabling-operations).
+By default, the API supports `GET` (retrieve, on collections and items), `POST` (create), `PUT` (replace), `PATCH` (partial update) and `DELETE` (self-explanatory)
+HTTP methods. Don't forget to [disable the ones you don't want](../core/operations.md#enabling-and-disabling-operations)!
 
 Try the `GET` operation on the collection. The book we added appears. When the collection contains more than 30 items,
 the pagination will automatically show up, [and this is entirely configurable](../core/pagination.md). You may be interested
@@ -676,7 +682,7 @@ Refer to its documentation to learn more.
 It leverages the Hydra documentation exposed by the API component to build itself. It's 100% dynamic - **no code generation
 occurs**.
 
-## A React/Redux Progressive Web App
+## A React Progressive Web App
 
 API Platform also has an awesome [client generator](../client-generator/index.md) able to scaffold fully working React/Redux
 and [Vue.js](https://vuejs.org/) Progressive Web Apps that you can easily tune and customize. The generator also supports
@@ -700,6 +706,10 @@ to make the app usable by people with disabilities.
 
 If you prefer to generate a PWA built on top of Vue.js, or a native mobile app, read [the dedicated documentation](../client-generator/index.md).
 
+## Hooking Your Own Business Logic
+
+Now that you learned the basics, be sure to read [the general design considerations](../core/design.md) and [how to extend API Platform](../core/extending.md) to understand how API Platform is designed, and how to hook your custom business logic!
+
 ## Other Features
 
 First, you may want to learn [how to deploy your application](../deployment/index.md) in the cloud using [the built-in Kubernetes
@@ -708,22 +718,12 @@ integration](../deployment/kubernetes.md).
 Then, there are many more features to learn! Read [the full documentation](../core/index.md) to discover how to use them
 and how to extend API Platform to fit your needs.
 API Platform is incredibly efficient for prototyping and Rapid Application Development (RAD), but the framework is mostly
-designed to create complex API-driven projects, far beyond simple CRUD apps. It benefits from **strong extension points**
-and it is **continuously optimized for performance.** It powers numerous high-traffic websites.
+designed to create complex API-driven projects, far beyond simple CRUD apps. It benefits from [**strong extension points**](../core/extending.md)
+and it is **continuously optimized for [performance](../core/performance.md).** It powers numerous high traffic websites.
 
 API Platform has a built-in HTTP cache invalidation system which allows to make API Platform apps blazing fast, and it uses
 [Varnish](https://varnish-cache.org/) by default. Read more in the chapter
 [API Platform Core Library: Enabling the Built-in HTTP Cache Invalidation System](../core/performance.md#enabling-the-built-in-http-cache-invalidation-system).
-
-API Platform can also be extended using PHP libraries and Symfony bundles.
-
-Here is a non-exhaustive list of popular API Platform extensions:
-
-* [Secure the API with JWT](https://github.com/lexik/LexikJWTAuthenticationBundle) (LexikJwtAuthenticationBundle) or [OAuth](https://github.com/FriendsOfSymfony/FOSOAuthServerBundle)
-  (FosOAuthServer)
-* [Send mails](https://symfony.com/doc/current/cookbook/email/email.html) (Swift Mailer)
-* [Execute async jobs and create micro-service architectures using RabbitMQ](https://github.com/php-amqplib/RabbitMqBundle)
-  (RabbitMQBundle)
 
 Keep in mind that you can use your favorite client-side technology: API Platform provides React and Vue.js components,
 but you can use your preferred client-side technology including Angular, Ionic and Swift. Any language able to send HTTP

@@ -2,8 +2,7 @@
 
 API Platform takes care of validating the data sent to the API by the client (usually user data entered through forms).
 By default, the framework relies on [the powerful Symfony Validator Component](http://symfony.com/doc/current/validation.html)
-for this task, but you can replace it by your preferred validation library such as [the PHP filter extension](http://php.net/manual/en/intro.filter.php)
-if you want to.
+for this task, but you can replace it with your preferred validation library such as [the PHP filter extension](http://php.net/manual/en/intro.filter.php) if you want to.
 
 ## Validating Submitted Data
 
@@ -59,7 +58,7 @@ class Product
 }
 ```
 
-Here is a custom constraint and the related validator:
+And here is the custom `MinimalProperties` constraint and the related validator:
 
 ```php
 <?php

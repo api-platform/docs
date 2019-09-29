@@ -49,4 +49,4 @@ approach is:
 * to create projections in standard RDBMS (Postgres, MariaDB...) tables or views
 * to map those projections with read-only Doctrine entity classes **and** to mark those classes with `@ApiResource`
 
-You can then benefit from the built-in Doctrine filters, sorting, pagination, auto-joins, etc provided by API Platform.
+You can then benefit from the built-in Doctrine filters, sorting, pagination, auto-joins and all of [the extension points](extending.md) provided by API Platform.

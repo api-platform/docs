@@ -11,6 +11,7 @@ chapters:
       - index
       - getting-started
       - design
+      - extending
       - testing
       - operations
       - graphql

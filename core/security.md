@@ -1,16 +1,8 @@
 # Security
 
-If you have yet to set up authentication for your API, refer to the section on [JWT authentication](jwt.md).
-
-To completely disable some operations from your application, refer to the [disabling operations](operations.md#enabling-and-disabling-operations)
-section.
-
-Using API Platform, you can leverage all security features provided by the [Symfony Security component](http://symfony.com/doc/current/book/security.html).
-For instance, if you wish to restrict the access of some endpoints, you can use [access control directives](http://symfony.com/doc/current/book/security.html#securing-url-patterns-access-control).
-
-Since 2.1, you can add security through [Symfony's access control expressions](https://symfony.com/doc/current/expressions.html#security-complex-access-controls-with-expressions) in your entities.
-
-Here is an example:
+The API Platform security layer is built on top of the [Symfony Security component](http://symfony.com/doc/current/book/security.html).
+All its features, including [global access control directives](http://symfony.com/doc/current/book/security.html#securing-url-patterns-access-control) are supported.
+API Platform also provides convenient [access control expressions](https://symfony.com/doc/current/expressions.html#security-complex-access-controls-with-expressions) which you can apply at resource and operation level:
 
 ```php
 <?php
@@ -30,8 +22,8 @@ use Symfony\Component\Validator\Constraints as Assert;
  *         "post"={"security"="is_granted('ROLE_ADMIN')"}
  *     },
  *     itemOperations={
- *         "get"={"security"="is_granted('ROLE_USER') and object.owner == user"},
- *         "put"={"access_control"="is_granted('ROLE_USER') and previous_object.owner == user"},
+ *         "get",
+ *         "put"={"security"="is_granted('ROLE_ADMIN') or object.owner == user"},
  *     }
  * )
  * @ORM\Entity
@@ -66,21 +58,90 @@ class Book
 }
 ```
 
-This example is only going to allow fetching the book related to the current user. If the user tries to fetch a book which is not
-linked to his account, it will not return the resource. In addition, only admins are able to create books which means
-that a user could not create a book.
+Alternatively, using YAML:
+
+```yaml
+# api/config/api_platform/resources.yaml
+App\Entity\Book:
+    attributes:
+        security: 'is_granted("ROLE_USER")'
+    collectionOperations:
+        get: ~
+        post:
+            security: 'is_granted("ROLE_ADMIN")'
+    itemOperations:
+        get: ~
+        put:
+            security_: 'is_granted("ROLE_ADMIN") or object.owner == user'
+```
+
+In this example:
+
+* The user must be logged in to interact with `Book` resources (configured at the resource level)
+* Only users having [the role](https://symfony.com/doc/current/security.html#roles) `ROLE_ADMIN` can create a new resource (configured on the `post` operation)
+* Only users having the `ROLE_ADMIN` or owning the current object can replace an existing book (configured on the `put` operation)
+
+Available variables are `user` (the current logged in object, if any), and `object` (the current resource, or collection of ressources for collection operations).
+
+Access control checks in the `security` attribute are always executed before the [denormalization step](serialization.md).
+It means than for `PUT` requests, `object` doesn't contain the value submitted by the user, but values currently stored in [the persistence layer](data-persisters.md).
+
+## Executing Access Control Rules After Denormalization
+
+In some cases, it might be useful to execute a security after the denormalization step.
+To do so, use the `security_post_denormalize` attribute:
+
+```php
+<?php
+// src/Entity/Book.php
+
+namespace App\Entity;
+
+use ApiPlatform\Core\Annotation\ApiResource;
+
+/**
+ * @ApiResource(
+ *     itemOperations={
+ *         "get",
+ *         "put"={"security_post_denormalize"="is_granted('ROLE_ADMIN') or (object.owner == user and previous_object.owner == user)"},
+ *     }
+ * )
+ */
+class Book
+{
+    // ...
+}
+```
+
+Alternatively, using YAML:
+
+```yaml
+# api/config/api_platform/resources.yaml
+App\Entity\Book:
+    itemOperations:
+        get: ~
+        put:
+            security_post_denormalize: "is_granted('ROLE_ADMIN') or (object.owner == user and previous_object.owner == user)"
+    # ...
+```
+
+This time, the `object` variable contains data that have been extracted from the HTTP request body during the denormalization process.
+However, the object is not persisted yet.
 
 Additionally, in some cases you need to perform security checks on the original data. For example here, only the actual owner should be allowed to edit their book. In these cases, you can use the `previous_object` variable which contains the object that was read from the data provider.
 
-N.B `previous_object` is cloned from the original object. Note that this clone is not a deep one (it doesn't clone relationships, relationships are references), to [make a deep clone](https://www.php.net/manual/fr/language.oop5.cloning.php#object.clone) implement `__clone` method in the concerned resource class.
+The value in the `previous_object` variable is cloned from the original object.
+Note that, by default, this clone is not a deep one (it doesn't clone relationships, relationships are references).
+To make a deep clone, [implement `__clone` method](https://www.php.net/manual/en/language.oop5.cloning.php) in the concerned resource class.
 
-It is also possible to use the [event system](events.md) for more advanced logic or even [custom actions](operations.md#creating-custom-operations-and-controllers)
-if you really need to.
+## Hooking Custom Permission Checks Using Voters
 
-## Configuring the Access Control Message
+The easiest and recommended way to hook custom access control logic is [to write Symfony Voter classes](https://symfony.com/doc/current/security/voters.html). Your custom voters will automatically be used in security expressions through the `is_granted()` function.
+
+## Configuring the Access Control Error Message
 
 By default when API requests are denied, you will get the "Access Denied" message.
-You can change it by configuring the "security\_message" attribute.
+You can change it by configuring the `security_message` attribute.
 
 For example:
 
@@ -130,52 +191,18 @@ App\Entity\Book:
     # ...
 ```
 
-## Execute security after denormalization
+## Filtering Collection According to the Current User Permissions
 
-The "security" attribute is executed before the object denormalization. For some cases, it might be useful to execute
-a security after the denormalization.
-To do so, prefer using "security\_post\_denormalize", which allows you to use the "previous\_object" as the original object:
-
-```php
-<?php
-// src/Entity/Book.php
-
-namespace App\Entity;
-
-use ApiPlatform\Core\Annotation\ApiResource;
-
-/**
- * ...
- * @ApiResource(
- *     attributes={"security"="is_granted('ROLE_USER')"},
- *     itemOperations={
- *         "get",
- *         "put"={"security_post_denormalize"="is_granted("ROLE_USER") and previous_object.owner == user"}
- *     }
- * )
- */
-class Book
-{
-    // ...
-}
-```
-
-Alternatively, using YAML:
-
-```yaml
-# api/config/api_platform/resources.yaml
-App\Entity\Book:
-    attributes:
-        security: 'is_granted("ROLE_USER")'
-    itemOperations:
-        get: ~
-        put:
-            method: 'PUT'
-            security_post_denormalize: 'is_granted("ROLE_USER") and previous_object.owner == user'
-    # ...
-```
-
-In access control expressions for collections, the `object` variable contains the list of resources that will be serialized.
-To remove entries from a collection, you should implement [a Doctrine extension](extensions.md) to customize the generated DQL query (e.g. add `WHERE` clauses depending of the currently connected user) instead of using access control expressions.
+Filtering collections according to the role or permissions of the current user must be done directly at [the data provider](data-providers.md) level. For instance, when using the built-in adapters for Doctrine ORM, MongoDB and ElasticSearch, removing entries from a collection should be done using [extensions](extensions.md).
+Extensions allow to customize the generated DQL/Mongo/Elastic/... query used to retrieve the collection (e.g. add `WHERE` clauses depending of the currently connected user) instead of using access control expressions. As extensions are services, you can [inject the Symfony `Security` class](https://symfony.com/doc/current/security.html#b-fetching-the-user-from-a-service) into them to access to current user's roles and permissions.
 
 If you use [custom data providers](data-providers.md), you'll have to implement the filtering logic according to the persistence layer you rely on.
+
+## Disabling Operations
+
+To completely disable some operations from your application, refer to the [disabling operations](operations.md#enabling-and-disabling-operations)
+section.
+
+## Changing Serialization Groups Depending of the Current User
+
+See [how to dynamically change](serialization.md#changing-the-serialization-context-dynamically) the current Serializer context according to the current logged in user.
