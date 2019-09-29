@@ -1,5 +1,10 @@
 # Debugging
 
+[!["API Platform debugging" screencast](../distribution/images/symfonycasts-player.png)](https://symfonycasts.com/screencast/api-platform/profiler?cid=apip)
+[Watch the "API Platform debugging" screencast on SymfonyCasts](https://symfonycasts.com/screencast/api-platform/profiler?cid=apip)
+
+## Xdebug
+
 The default Docker stack is shipped without a Xdebug stage. It's easy
 though to add [Xdebug](https://xdebug.org/) to your project, for development
 purposes such as debugging tests or remote API requests.

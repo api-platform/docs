@@ -24,6 +24,9 @@ and what [JSON-LD](http://json-ld.org/) and [Hydra](http://www.hydra-cg.com/) fo
 
 ## Mapping the Entities
 
+[![Watch the "create an API resource" screencast on SymfonyCasts](../distribution/images/symfonycasts-player.png)](https://symfonycasts.com/screencast/api-platform/api-resource?cid=apip)
+[Watch the "create an API resource" screencast on SymfonyCasts](https://symfonycasts.com/screencast/api-platform/api-resource?cid=apip)
+
 API Platform Core is able to automatically expose entities mapped as "API resources" through a REST API supporting CRUD
 operations.
 To expose your entities, you can use Docblock annotations, XML and YAML configuration files.

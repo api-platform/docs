@@ -5,7 +5,12 @@ Some would argue that it's even better to [write tests first](https://martinfowl
 
 API Platform provides a set of helpful testing utilities to write unit tests, functional tests, and to create [test fixtures](https://en.wikipedia.org/wiki/Test_fixture#Software).
 
-Let's learn how to use them! In this article you'll learn how to use:
+Let's learn how to use them! 
+
+[![API Tests & Assertions screencast](../distribution/images/symfonycasts-player.png)](https://symfonycasts.com/screencast/api-platform-security/api-tests?cid=apip)
+[Watch the API Tests & Assertions screencast on SymfonyCasts](https://symfonycasts.com/screencast/api-platform-security/api-tests?cid=apip)
+
+In this article you'll learn how to use:
 
 * [PHPUnit](https://phpunit.de/index.html), a testing framework to cover your classes with unit tests and to write
 API-oriented functional tests thanks to its API Platform and [Symfony](https://symfony.com/doc/current/testing.html) integrations.

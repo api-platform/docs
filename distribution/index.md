@@ -130,6 +130,8 @@ Alternatively, the API Platform server component can also be installed directly 
 **This method is recommended only for advanced users who want full control over the directory structure and the installed
 dependencies.**
 
+[For a good introduction, watch how to install API Platform without the distribution on SymfonyCasts](https://symfonycasts.com/screencast/api-platform/install?cid=apip).
+
 The rest of this tutorial assumes that you have installed API Platform using the official distribution. Go straight to the
 next section if it's your case.
 
@@ -732,3 +734,9 @@ requests is OK (even COBOL can do that).
 To go further, the API Platform team maintains a demo application showing more advanced use cases like leveraging serialization
 groups, user management or JWT and OAuth authentication. [Checkout the demo code source on GitHub](https://github.com/api-platform/demo)
 and [browse it online](https://demo.api-platform.com).
+
+## Screencasts
+
+[![SymfonyCasts](images/symfonycasts-player.png)](https://symfonycasts.com/tracks/rest?cid=apip#api-platform)
+
+The easiest and funniest way to learn how to use API Platform is to watch [the more than 60 screencasts available on SymfonyCasts](https://symfonycasts.com/tracks/rest?cid=apip#api-platform)!
