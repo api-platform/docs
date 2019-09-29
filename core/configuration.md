@@ -15,6 +15,10 @@ api_platform:
     # The version of the API.
     version: '0.0.0'
 
+    # Return IRIs as Absolute Urls.
+    # ex. http://example.com/authors/1
+    absolute_url: false
+
     # Set this to false if you want Webby to disappear.
     show_webby: true
 
