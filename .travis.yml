@@ -37,4 +37,4 @@ deploy:
   fqdn: api-platform.com
   on:
     all_branches: true
-    condition: $TRAVIS_BRANCH =~ ^(master|2.4|2.3|2.2|2.1)$
+    condition: $TRAVIS_BRANCH =~ ^(master|2.5|2.4|2.3|2.2|2.1)$
