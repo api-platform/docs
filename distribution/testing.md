@@ -5,10 +5,9 @@ Some would argue that it's even better to [write tests first](https://martinfowl
 
 API Platform provides a set of helpful testing utilities to write unit tests, functional tests, and to create [test fixtures](https://en.wikipedia.org/wiki/Test_fixture#Software).
 
-Let's learn how to use them! 
+Let's learn how to use them!
 
-[![API Tests & Assertions screencast](../distribution/images/symfonycasts-player.png)](https://symfonycasts.com/screencast/api-platform-security/api-tests?cid=apip)
-[Watch the API Tests & Assertions screencast on SymfonyCasts](https://symfonycasts.com/screencast/api-platform-security/api-tests?cid=apip)
+<p align="center"><a href="https://symfonycasts.com/screencast/api-platform-security/api-tests?cid=apip"><img src="../distribution/images/symfonycasts-player.png" alt="Tests and Assertions screencast"><br>Watch the Tests & Assertions screencast</a></p>
 
 In this article you'll learn how to use:
 

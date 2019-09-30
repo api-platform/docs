@@ -3,8 +3,7 @@
 API Platform Core provides a set of useful utilities dedicated to API testing.
 For an overview of how to test an API Platform app, be sure to read [the testing cookbook first](../distribution/testing.md).
 
-[![API Tests & Assertions screencast](../distribution/images/symfonycasts-player.png)](https://symfonycasts.com/screencast/api-platform-security/api-tests?cid=apip)
-[Watch the API Tests & Assertions screencast on SymfonyCasts](https://symfonycasts.com/screencast/api-platform-security/api-tests?cid=apip)
+<p align="center"><a href="https://symfonycasts.com/screencast/api-platform-security/api-tests?cid=apip"><img src="../distribution/images/symfonycasts-player.png" alt="Test and Assertions screencast"><br>Watch the API Tests & Assertions screencast</a></p>
 
 ## The Test HttpClient
 

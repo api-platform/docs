@@ -7,8 +7,7 @@ Note: FOSUserBundle is not well suited for APIs. We strongly encourage you to us
 shipped with Symfony or to [create a custom user provider](https://symfony.com/doc/current/security/user_provider.html#creating-a-custom-user-provider)
 instead of using this bundle.
 
-[![User screencast](../distribution/images/symfonycasts-player.png)](https://symfonycasts.com/screencast/api-platform/user-entity?cid=apip)
-[Watch the "Create a user entity" (without FOSUser) screencast on SymfonyCasts](https://symfonycasts.com/screencast/api-platform/user-entity?cid=apip)
+<p align="center"><a href="https://symfonycasts.com/screencast/api-platform/user-entity?cid=apip"><img src="../distribution/images/symfonycasts-player.png" alt="User Entity screencast"><br>Watch the User Entity screencast</a></p>
 
 ## Installing the Bundle
 

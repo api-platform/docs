@@ -42,6 +42,6 @@ This bundle is extensively tested (unit and functional). The [`Fixtures/` direct
 
 ## Screencasts
 
-[![SymfonyCasts](../distribution/images/symfonycasts-player.png)](https://symfonycasts.com/tracks/rest?cid=apip#api-platform)
+<p align="center"><a href="https://symfonycasts.com/tracks/rest?cid=apip#api-platform"><img src="../distribution/images/symfonycasts-player.png" alt="API Platform screencasts"></a></p>
 
 The easiest and funniest way to learn how to use API Platform is to watch [the more than 60 screencasts available on SymfonyCasts](https://symfonycasts.com/tracks/rest?cid=apip#api-platform)!

@@ -1,7 +1,6 @@
 # Debugging
 
-[!["API Platform debugging" screencast](../distribution/images/symfonycasts-player.png)](https://symfonycasts.com/screencast/api-platform/profiler?cid=apip)
-[Watch the "API Platform debugging" screencast on SymfonyCasts](https://symfonycasts.com/screencast/api-platform/profiler?cid=apip)
+<p align="center"><a href="https://symfonycasts.com/screencast/api-platform/profiler?cid=apip"><img src="../distribution/images/symfonycasts-player.png" alt="API Platform debugging screencast"><br>Watch the Debugging API Platform screencast</a></p>
 
 ## Xdebug
 
