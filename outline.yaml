@@ -28,9 +28,10 @@ chapters:
       - default-order
       - performance
       - extensions
-      - swagger
       - messenger
       - dto
+      - swagger
+      - json-schema
       - mercure
       - push-relations
       - errors
