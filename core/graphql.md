@@ -897,6 +897,16 @@ It will be able to query the name of the items in the collection.
 It will only be able to create a book with an author.
 When doing this mutation, the author of the created book will not be returned (the name will be instead).
 
+### Different Types when Using Different Serialization Groups
+
+When you use different serialization groups, it will create different types in your schema.
+
+Make sure you understand the implications when doing this: having different types means breaking the cache features in some GraphQL clients (in [Apollo Client](https://www.apollographql.com/docs/react/caching/cache-configuration/#automatic-cache-updates) for example).
+
+For instance:
+- If you use a different `normalization_context` for a mutation, a `MyResourcePayloadData` type with the restricted fields will be generated and used instead of `MyResource` (the query type).
+- If you use a different `normalization_context` for the query of an item (`item_query` operation) and for the query of a collection (`collection_query` operation), two types `MyResourceItem` and `MyResourceCollection` with the restricted fields will be generated and used instead of `MyResource` (the query type).
+
 ## Custom Types
 
 You might need to add your own types to your GraphQL application.
