@@ -9,6 +9,9 @@ Using the raw JSON or raw XML formats is discouraged, prefer using JSON-LD inste
 
 API Platform also supports [JSON Merge Patch (RFC 7396)](https://tools.ietf.org/html/rfc7396) the JSON:API [`PATCH`](https://tools.ietf.org/html/rfc5789) formats, as well as [Problem Details (RFC 7807)](https://tools.ietf.org/html/rfc7807), Hydra and JSON:API error formats.
 
+[![Formats screencast](../distribution/images/symfonycasts-player.png)](https://symfonycasts.com/screencast/api-platform/formats?cid=apip)
+[Watch the Formats screencast on SymfonyCasts](https://symfonycasts.com/screencast/api-platform/formats?cid=apip)
+
 API Platform Core will automatically detect the best resolving format depending on:
 
 * enabled formats (see below)

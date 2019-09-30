@@ -2,6 +2,9 @@
 
 ## JSON-LD
 
+[![Watch the JSON-LD screencast on SymfonyCasts](../distribution/images/symfonycasts-player.png)](https://symfonycasts.com/screencast/api-platform/json-ld?cid=apip)
+[Watch the JSON-LD screencast on SymfonyCasts](https://symfonycasts.com/screencast/api-platform/json-ld?cid=apip)
+
 API Platform Core provides the possibility to extend the JSON-LD context of properties. This allows you to describe JSON-LD-typed 
 values, inverse properties using the `@reverse` keyword and you can even overwrite the `@id` property this way. Everything you define
 within the following annotation will be passed to the context. This provides a generic way to extend the context.
@@ -68,6 +71,10 @@ The generated context will now have your custom attributes set:
 Note that you do not have to provide the `@id` attribute. If you do not provide an `@id` attribute, the value from `iri` will be used.
 
 ## Hydra
+
+[Watch the Hydra screencast on SymfonyCasts](https://symfonycasts.com/screencast/api-platform/hydra?cid=apip):
+
+[![Watch the Hydra screencast](../distribution/images/symfonycasts-player.png)](https://symfonycasts.com/screencast/api-platform/hydra?cid=apip)
 
 It's also possible to replace the Hydra context used documentation generator:
 

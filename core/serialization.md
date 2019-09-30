@@ -4,6 +4,9 @@
 
 API Platform embraces and extends the Symfony Serializer Component to transform PHP entities in (hypermedia) API responses.
 
+[![serializer screencast](../distribution/images/symfonycasts-player.png)](https://symfonycasts.com/screencast/api-platform/serializer?cid=apip)
+[Watch the Serializer screencast on SymfonyCasts](https://symfonycasts.com/screencast/api-platform/serializer?cid=apip)
+
 The main serialization process has two stages:
 
 ![Serializer workflow](images/SerializerWorkflow.png)
@@ -29,6 +32,8 @@ JSON-LD, or JavaScript Object Notation for Linked Data, is a method of encoding 
 `api_platform.serializer.normalizer.item`
 
 ## The Serialization Context, Groups and Relations
+
+[Watch the Serialization Groups screencast on SymfonyCasts](https://symfonycasts.com/screencast/api-platform/serialization-groups?cid=apip)
 
 API Platform allows you to specify the `$context` variable used by the Symfony Serializer. This variable is an associative array that has a handy `groups` key allowing you to choose which attributes of the resource are exposed during the normalization (read) and denormalization (write) processes.
 It relies on the [serialization (and deserialization) groups](https://symfony.com/doc/current/components/serializer.html#attributes-groups)
@@ -205,6 +210,9 @@ include the `name` property because of the specific configuration for this opera
 Refer to the [operations](operations.md) documentation to learn more.
 
 ### Embedding Relations
+
+[![Relations screencast](../distribution/images/symfonycasts-player.png)](https://symfonycasts.com/screencast/api-platform/relations?cid=apip)
+[Watch the Relations screencast on SymfonyCasts](https://symfonycasts.com/screencast/api-platform/relations?cid=apip)
 
 By default, the serializer provided with API Platform represents relations between objects using [dereferenceable IRIs](https://en.wikipedia.org/wiki/Internationalized_Resource_Identifier).
 They allow you to retrieve details for related objects by issuing extra HTTP requests.

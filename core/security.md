@@ -2,7 +2,10 @@
 
 The API Platform security layer is built on top of the [Symfony Security component](http://symfony.com/doc/current/book/security.html).
 All its features, including [global access control directives](http://symfony.com/doc/current/book/security.html#securing-url-patterns-access-control) are supported.
-API Platform also provides convenient [access control expressions](https://symfony.com/doc/current/expressions.html#security-complex-access-controls-with-expressions) which you can apply at resource and operation level:
+API Platform also provides convenient [access control expressions](https://symfony.com/doc/current/expressions.html#security-complex-access-controls-with-expressions) which you can apply at resource and operation level.
+
+[![Security screencast](../distribution/images/symfonycasts-player.png)](https://symfonycasts.com/screencast/api-platform-security/?cid=apip)
+[Watch the Security screencast on SymfonyCasts](https://symfonycasts.com/screencast/api-platform-security/?cid=apip)
 
 ```php
 <?php

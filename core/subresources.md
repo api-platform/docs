@@ -3,6 +3,9 @@
 A subresource is a collection or an item that belongs to another resource.
 API Platform makes it easy to create such operations.
 
+[![Subresources screencast](../distribution/images/symfonycasts-player.png)](https://symfonycasts.com/screencast/api-platform/subresources?cid=apip)
+[Watch the Subresources screencast on SymfonyCasts](https://symfonycasts.com/screencast/api-platform/subresources?cid=apip)
+
 The starting point of a subresource must be a relation on an existing resource.
 For example, let's create two entities (Question, Answer) and set up a subresource so that `/question/42/answer` gives us
 the answer to the question 42:

@@ -4,6 +4,9 @@ API Platform takes care of validating the data sent to the API by the client (us
 By default, the framework relies on [the powerful Symfony Validator Component](http://symfony.com/doc/current/validation.html)
 for this task, but you can replace it with your preferred validation library such as [the PHP filter extension](http://php.net/manual/en/intro.filter.php) if you want to.
 
+[![Validation screencast](../distribution/images/symfonycasts-player.png)](https://symfonycasts.com/screencast/api-platform/validation?cid=apip)
+[Watch the Validation screencast on SymfonyCasts](https://symfonycasts.com/screencast/api-platform/validation?cid=apip)
+
 ## Validating Submitted Data
 
 Validating submitted data is as simple as adding [Symfony's built-in constraints](http://symfony.com/doc/current/reference/constraints.html)
