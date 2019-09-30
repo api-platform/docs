@@ -1,6 +1,6 @@
 # Debugging
 
-<p align="center"><a href="https://symfonycasts.com/screencast/api-platform/profiler?cid=apip"><img src="../distribution/images/symfonycasts-player.png" alt="API Platform debugging screencast"><br>Watch the Debugging API Platform screencast</a></p>
+<p align="center" class="symfonycasts"><a href="https://symfonycasts.com/screencast/api-platform/profiler?cid=apip"><img src="../distribution/images/symfonycasts-player.png" alt="API Platform debugging screencast"><br>Watch the Debugging API Platform screencast</a></p>
 
 ## Xdebug
 

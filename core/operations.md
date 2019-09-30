@@ -3,7 +3,7 @@
 API Platform Core relies on the concept of operations. Operations can be applied to a resource exposed by the API. From
 an implementation point of view, an operation is a link between a resource, a route and its related controller.
 
-<p align="center"><a href="https://symfonycasts.com/screencast/api-platform/operations?cid=apip"><img src="../distribution/images/symfonycasts-player.png" alt="Operations screencast"><br>Watch the Operations screencast</a></p>
+<p align="center" class="symfonycasts"><a href="https://symfonycasts.com/screencast/api-platform/operations?cid=apip"><img src="../distribution/images/symfonycasts-player.png" alt="Operations screencast"><br>Watch the Operations screencast</a></p>
 
 API Platform automatically registers typical [CRUD](https://en.wikipedia.org/wiki/Create,_read,_update_and_delete) operations
 and describes them in the exposed documentation (Hydra and Swagger). It also creates and registers routes corresponding

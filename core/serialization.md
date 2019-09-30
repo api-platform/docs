@@ -4,7 +4,7 @@
 
 API Platform embraces and extends the Symfony Serializer Component to transform PHP entities in (hypermedia) API responses.
 
-<p align="center"><a href="https://symfonycasts.com/screencast/api-platform/serializer?cid=apip"><img src="../distribution/images/symfonycasts-player.png" alt="Serializer screencast"><br>Watch the Serializer screencast</a></p>
+<p align="center" class="symfonycasts"><a href="https://symfonycasts.com/screencast/api-platform/serializer?cid=apip"><img src="../distribution/images/symfonycasts-player.png" alt="Serializer screencast"><br>Watch the Serializer screencast</a></p>
 
 The main serialization process has two stages:
 
@@ -32,7 +32,7 @@ JSON-LD, or JavaScript Object Notation for Linked Data, is a method of encoding 
 
 ## The Serialization Context, Groups and Relations
 
-<p align="center"><a href="https://symfonycasts.com/screencast/api-platform/serialization-groups?cid=apip"><img src="../distribution/images/symfonycasts-player.png" alt="Serialization Groups screencast"><br>Watch the Serialization Groups screencast</a></p>
+<p align="center" class="symfonycasts"><a href="https://symfonycasts.com/screencast/api-platform/serialization-groups?cid=apip"><img src="../distribution/images/symfonycasts-player.png" alt="Serialization Groups screencast"><br>Watch the Serialization Groups screencast</a></p>
 
 API Platform allows you to specify the `$context` variable used by the Symfony Serializer. This variable is an associative array that has a handy `groups` key allowing you to choose which attributes of the resource are exposed during the normalization (read) and denormalization (write) processes.
 It relies on the [serialization (and deserialization) groups](https://symfony.com/doc/current/components/serializer.html#attributes-groups)
@@ -210,7 +210,7 @@ Refer to the [operations](operations.md) documentation to learn more.
 
 ### Embedding Relations
 
-<p align="center"><a href="https://symfonycasts.com/screencast/api-platform/relations?cid=apip"><img src="../distribution/images/symfonycasts-player.png" alt="Relations screencast"><br>Watch the Relations screencast</a></p>
+<p align="center" class="symfonycasts"><a href="https://symfonycasts.com/screencast/api-platform/relations?cid=apip"><img src="../distribution/images/symfonycasts-player.png" alt="Relations screencast"><br>Watch the Relations screencast</a></p>
 
 By default, the serializer provided with API Platform represents relations between objects using [dereferenceable IRIs](https://en.wikipedia.org/wiki/Internationalized_Resource_Identifier).
 They allow you to retrieve details for related objects by issuing extra HTTP requests.

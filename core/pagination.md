@@ -1,6 +1,6 @@
 # Pagination
 
-<p align="center"><a href="https://symfonycasts.com/screencast/api-platform/pagination?cid=apip"><img src="../distribution/images/symfonycasts-player.png" alt="Pagination screencast"><br>Watch the Pagination screencast</a></p>
+<p align="center" class="symfonycasts"><a href="https://symfonycasts.com/screencast/api-platform/pagination?cid=apip"><img src="../distribution/images/symfonycasts-player.png" alt="Pagination screencast"><br>Watch the Pagination screencast</a></p>
 
 API Platform Core has native support for paged collections. Pagination is enabled by default for all collections. Each collections
 contains 30 items per page.
