@@ -129,7 +129,7 @@ class Parchment
 }
 ```
 
-The value of the `sunset` attribute can be any string compatible with [the `\DateTime` constructor](http://php.net/manual/en/datetime.construct.php).
+The value of the `sunset` attribute can be any string compatible with [the `\DateTime` constructor](https://www.php.net/manual/en/datetime.construct.php).
 It will be automatically converted to a valid HTTP date.
 
 It's also possible to set the `Sunset` header only for a specific [operation](operations.md):

@@ -1,6 +1,6 @@
 # Deploying an API Platform App on Heroku
 
-[Heroku](http://heroku.com) is a popular, fast, scalable and reliable *Platform As A Service* (PaaS). As Heroku offers a
+[Heroku](https://www.heroku.com) is a popular, fast, scalable and reliable *Platform As A Service* (PaaS). As Heroku offers a
 free plan including database support through [Heroku Postgres](https://www.heroku.com/postgres), it's a convenient way
 to experiment with API Platform.
 

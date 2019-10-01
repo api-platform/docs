@@ -98,7 +98,7 @@ you'll got auto-completion for almost everything and awesome quality analysis.
 The API Platform distribution comes with a dummy entity for test purpose: `api/src/Entity/Greeting.php`. We will remove
 it later.
 
-If you're used to the PHP ecosystem, you probably guessed that this test entity uses the industry-leading [Doctrine ORM](http://www.doctrine-project.org/projects/orm.html)
+If you're used to the PHP ecosystem, you probably guessed that this test entity uses the industry-leading [Doctrine ORM](https://www.doctrine-project.org/projects/orm.html)
 library as persistence system. It is shipped, in the API Platform distribution.
 Doctrine ORM is the easiest way to persist and query data in an API Platform project thanks to the bridge shipped with the
 distribution. It is optimized for performance and development convenience. For instance, when using Doctrine, API Platform
@@ -143,7 +143,7 @@ And start the built-in PHP server:
     $ php -S 127.0.0.1:8000 -t public
 
 All JavaScript components are also [available as standalone libraries](https://github.com/api-platform?language=javascript)
-installable with NPM or Yarn.  
+installable with npm or Yarn.  
 
 **Note:** when installing API Platform this way, the API will be exposed as the `/api/` path. You need to open `http://localhost:8000/api/` to see the API documentation. If you are deploying API Platform directly on an Apache or Nginx webserver and getting a 404 error on opening this link, you will need to enable the [rewriting rules](https://symfony.com/doc/current/setup/web_server_configuration.html) for your specific webserver software.
 
@@ -482,7 +482,7 @@ By the way, you may want to [embed documents](../core/serialization.md) instead 
 (e.g. to reduce the number of HTTP requests). You can even [let the client select only the properties it needs](../core/filters.md#property-filter).
 
 The other interesting thing is how API Platform handles dates (the `publicationDate` property). API Platform understands
-[any date format supported by PHP](http://php.net/manual/en/datetime.formats.date.php). In production we strongly recommend
+[any date format supported by PHP](https://www.php.net/manual/en/datetime.formats.date.php). In production we strongly recommend
 using the format specified by the [RFC 3339](http://tools.ietf.org/html/rfc3339), but, as you can see, most common formats
 including `September 21, 2016` can be used.
 

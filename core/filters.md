@@ -208,7 +208,7 @@ The date filter allows to filter a collection by date intervals.
 
 Syntax: `?property[<after|before|strictly_after|strictly_before>]=value`
 
-The value can take any date format supported by the [`\DateTime` constructor](http://php.net/manual/en/datetime.construct.php).
+The value can take any date format supported by the [`\DateTime` constructor](https://www.php.net/manual/en/datetime.construct.php).
 
 The `after` and `before` filters will filter including the value whereas `strictly_after` and `strictly_before` will filter excluding the value.
 

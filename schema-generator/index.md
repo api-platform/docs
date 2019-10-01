@@ -27,8 +27,8 @@ or any other framework including [Laravel](http://laravel.com) and [Zend Framewo
 
 ## What Is Schema.org?
 
-Schema.org is a vocabulary representing common data structures and their relations. Schema.org can be exposed as [JSON-LD](http://en.wikipedia.org/wiki/JSON-LD),
-[microdata](https://en.wikipedia.org/wiki/Microdata_(HTML)) and [RDFa](http://en.wikipedia.org/wiki/RDFa).
+Schema.org is a vocabulary representing common data structures and their relations. Schema.org can be exposed as [JSON-LD](https://en.wikipedia.org/wiki/JSON-LD),
+[microdata](https://en.wikipedia.org/wiki/Microdata_(HTML)) and [RDFa](https://en.wikipedia.org/wiki/RDFa).
 Extracting semantical data exposed in the Schema.org vocabulary is supported by a growing number of companies including
 Google (Search, Gmail), Yahoo!, Bing and Yandex.
 

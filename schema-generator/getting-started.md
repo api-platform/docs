@@ -220,7 +220,7 @@ class PostalAddress
     private $id;
 
     /**
-     * @var string|null The country. For example, USA. You can also provide the two-letter \[ISO 3166-1 alpha-2 country code\](http://en.wikipedia.org/wiki/ISO\_3166-1).
+     * @var string|null The country. For example, USA. You can also provide the two-letter \[ISO 3166-1 alpha-2 country code\](https://en.wikipedia.org/wiki/ISO\_3166-1).
      *
      * @ORM\Column(type="text", nullable=true)
      * @ApiProperty(iri="http://schema.org/addressCountry")
