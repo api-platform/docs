@@ -73,27 +73,15 @@ services using [Docker Compose](https://docs.docker.com/compose/):
 
 This starts the following services:
 
-| Name        | Description                                                   | Port(s) | Environment(s)
-| ----------- | ------------------------------------------------------------- | ------- | --------------
-| php         | The API with PHP, PHP-FPM 7.2, Composer and sensitive configs | n/a     | all
-| db          | A PostgreSQL database server                                  | 5432    | all (prefer using a managed service in prod)
-| client      | A development server for the Progressive Web App              | 80      | dev (use a static website hosting service in prod)
-| admin       | A development server for the admin                            | 81      | dev (use a static website hosting service in prod)
-| api         | The HTTP server for the API (Nginx)                           | 8080    | all
-| cache-proxy | A HTTP cache proxy for the API provided by Varnish            | 8081    | all (prefer using a managed service in prod)
-| mercure     | Mercure hub                                                   | 1337    | all
-| h2-proxy    | A HTTP/2 and HTTPS development proxy for all apps             | 443 (client)<br>444 (admin)<br>8443 (api)<br>8444 (cache-proxy) | dev (configure properly your web server in prod)
-=======
 | Name     | Description                                                       | Port(s)                                                     | Environment(s)                                     |
 |----------|-------------------------------------------------------------------|-------------------------------------------------------------|----------------------------------------------------|
-| php      | The API with PHP, PHP-FPM 7.2, Composer and sensitive configs     | n/a                                                         | all                                                |
+| php      | The API with PHP, PHP-FPM 7.3, Composer and sensitive configs     | n/a                                                         | all                                                |
 | db       | A PostgreSQL database server                                      | 5432                                                        | all (prefer using a managed service in prod)       |
 | client   | A development server for the Progressive Web App                  | 80                                                          | dev (use a static website hosting service in prod) |
 | admin    | A development server for the admin                                | 81                                                          | dev (use a static website hosting service in prod) |
 | api      | The HTTP server for the API (Nginx)                               | 8080                                                        | all                                                |
 | mercure  | The Mercure hub, [for real-time capabilities](../core/mercure.md) | 1337                                                        | all (prefer using the managed version in prod)     |
 | h2-proxy | A HTTP/2 and HTTPS development proxy for all apps                 | 443 (client)<br>444 (admin)<br>8443 (api)<br>1338 (mercure) | dev (configure properly your web server in prod)   |
->>>>>>> Add extending docs, improve security docs and getting started
 
 To see the container's logs, run:
 
