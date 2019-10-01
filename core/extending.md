@@ -35,4 +35,4 @@ For instance, if you want to send a mail after a resource has been persisted, bu
 
 To replace existing API Platform's services by your decorators, [check out how to decorate services](https://symfony.com/doc/current/service_container/service_decoration.html).
 
-<p align="center" class="symfonycasts"><a href="https://symfonycasts.com/screencast/api-platform/user-entity?cid=apip"><img src="../distribution/images/symfonycasts-player.png" alt="User Entity screencast"><br>Watch the User Entity screencast</a></p>
+<p align="center" class="symfonycasts"><a href="https://symfonycasts.com/screencast/api-platform-security/service-decoration?cid=apip"><img src="../distribution/images/symfonycasts-player.png" alt="Service Decoration screencast"><br>Watch the Service Decoration screencast</a></p>
