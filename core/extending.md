@@ -34,3 +34,5 @@ While most API Platform's classes are marked as `final`, built-in services are s
 For instance, if you want to send a mail after a resource has been persisted, but still want to benefit from the native Doctrine ORM [data persister](data-persisters.md), use [the decorator design pattern](https://en.wikipedia.org/wiki/Decorator_pattern#PHP) to wrap the native data persister in your own class sending the mail.
 
 To replace existing API Platform's services by your decorators, [check out how to decorate services](https://symfony.com/doc/current/service_container/service_decoration.html).
+
+<p align="center" class="symfonycasts"><a href="https://symfonycasts.com/screencast/api-platform/user-entity?cid=apip"><img src="../distribution/images/symfonycasts-player.png" alt="User Entity screencast"><br>Watch the User Entity screencast</a></p>

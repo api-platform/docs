@@ -14,3 +14,5 @@ The clients are [Create React App](https://github.com/facebook/create-react-app/
 on any static website hosting service (including [Netlify](https://www.netlify.com/), [Firebase Hosting](https://firebase.google.com/docs/hosting/),
 [GitHub Pages](https://pages.github.com/), or [Amazon S3](https://docs.aws.amazon.com/en_us/AmazonS3/latest/dev/WebsiteHosting.html)
 by following [the relevant documentation](https://facebook.github.io/create-react-app/docs/deployment).
+
+<p align="center" class="symfonycasts"><a href="https://symfonycasts.com/screencast/ansistrano?cid=apip"><img src="../distribution/images/symfonycasts-player.png" alt="JWT screencast"><br>Watch the Animated Deployment with Ansistrano screencast</a></p>
