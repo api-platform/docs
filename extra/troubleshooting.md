@@ -43,7 +43,7 @@ The JMS Serializer service is available as `jms_serializer`.
 
 Some of your API calls fail with a 502 error and the logs for the api container shows the following error message `upstream sent too big header while reading response header from upstream`. 
 
-This can be due to the cache invalidation headers that are too big for Nginx. When you query the API, API Platform adds the ids of all returned entities and their dependencies in the headers like so : `Cache-Tags: /entity/1,/dependent_entity/1,/entity/2`. This can overflow the default header size (4k) when your API gets larger and more complex.
+This can be due to the cache invalidation headers that are too big for NGINX. When you query the API, API Platform adds the ids of all returned entities and their dependencies in the headers like so : `Cache-Tags: /entity/1,/dependent_entity/1,/entity/2`. This can overflow the default header size (4k) when your API gets larger and more complex.
 
 You can modify the `api/docker/nginx/conf.d/default.conf` file and set values to `fastcgi_buffer_size` and `fastcgi_buffers` that suit your needs, like so:
 

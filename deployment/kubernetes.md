@@ -16,7 +16,7 @@ package manager) chart to deploy in a wink on any of these platforms.
 
 ## Creating and Publishing the Docker Images
 
-1. Build the PHP and Nginx Docker images:
+1. Build the PHP and NGINX Docker images:
 
         docker build -t gcr.io/test-api-platform/php -t gcr.io/test-api-platform/php:latest api --target api_platform_php
         docker build -t gcr.io/test-api-platform/nginx -t gcr.io/test-api-platform/nginx:latest api --target api_platform_nginx
