@@ -3,7 +3,7 @@
 JSON-LD allows to define classes and properties of your API with open vocabularies such as [Schema.org](https://schema.org)
 and [Good Relations](http://www.heppnetz.de/projects/goodrelations/).
 
-API Platform Core provides annotations usable on PHP classes and properties for specifying a related external [IRI](http://en.wikipedia.org/wiki/Internationalized_resource_identifier).
+API Platform Core provides annotations usable on PHP classes and properties for specifying a related external [IRI](https://en.wikipedia.org/wiki/Internationalized_resource_identifier).
 
 ```php
 <?php

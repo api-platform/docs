@@ -1,6 +1,6 @@
 # The API Platform Core Library
 
-API Platform Core is an easy-to-use and powerful library to create [hypermedia-driven REST APIs](http://en.wikipedia.org/wiki/HATEOAS).
+API Platform Core is an easy-to-use and powerful library to create [hypermedia-driven REST APIs](https://en.wikipedia.org/wiki/HATEOAS).
 It is a component of the [API Platform framework](https://api-platform.com). It can be used as a standalone or with [the Symfony
 framework](https://symfony.com) (recommended).
 

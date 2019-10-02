@@ -109,7 +109,7 @@ The pagination can now be enabled or disabled by adding a query parameter named 
 * `GET /books?pagination=false`: disabled
 * `GET /books?pagination=true`: enabled
 
-Any value accepted by the [`FILTER_VALIDATE_BOOLEAN`](http://php.net/manual/en/filter.filters.validate.php) filter can be
+Any value accepted by the [`FILTER_VALIDATE_BOOLEAN`](https://www.php.net/manual/en/filter.filters.validate.php) filter can be
 used as the value.
 
 #### For a specific resource

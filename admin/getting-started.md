@@ -4,7 +4,7 @@
 
 If you use the [API Platform Distribution](../distribution/), API Platform Admin is already installed, you can skip this installation guide.
 
-Otherwise, all you need to install API Platform Admin is a JavaScript package manager. We recommend [Yarn](https://yarnpkg.com/) ([NPM](https://www.npmjs.com/) is also supported).
+Otherwise, all you need to install API Platform Admin is a JavaScript package manager. We recommend [Yarn](https://yarnpkg.com/) ([npm](https://www.npmjs.com/) is also supported).
 
 If you don't have an existing React Application, create one using [Create React App](https://create-react-app.dev/):
 

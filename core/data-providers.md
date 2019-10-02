@@ -1,7 +1,7 @@
 # Data Providers
 
 To retrieve data exposed by the API, API Platform uses classes called **data providers**. A data provider using [Doctrine
-ORM](http://www.doctrine-project.org/projects/orm.html) to retrieve data from a database, a data provider using
+ORM](https://www.doctrine-project.org/projects/orm.html) to retrieve data from a database, a data provider using
 [Doctrine MongoDB ODM](https://www.doctrine-project.org/projects/mongodb-odm.html) to retrieve data from a document
 database, and a data provider using [Elasticsearch-PHP](https://www.elastic.co/guide/en/elasticsearch/client/php-api/current/index.html)
 to retrieve data from an Elasticsearch cluster are included with the library. The first one is enabled by default. These

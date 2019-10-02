@@ -1,6 +1,6 @@
 # GraphQL Support
 
-[GraphQL](http://graphql.org/) is a query language made to communicate with an API and therefore is an alternative to REST.
+[GraphQL](https://graphql.org/) is a query language made to communicate with an API and therefore is an alternative to REST.
 
 It has some advantages compared to REST: it solves the over-fetching or under-fetching of data, is strongly typed, and is capable of retrieving multiple and nested data in one go, but it also comes with drawbacks. For example it creates overhead depending on the request.
 
