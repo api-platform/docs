@@ -70,7 +70,10 @@ api_platform:
 
     # Enable the docs.
     enable_docs: true
-
+    
+    # Enable the data collector and the WebProfilerBundle integration.
+    enable_profiler: true
+    
     oauth:
         # To enable or disable oauth.
         enabled: false
@@ -119,6 +122,9 @@ api_platform:
         mapping: []
 
     swagger:
+        # The active versions of OpenAPI to be exported or used in the swagger_ui. The first value is the default.
+        versions: [2, 3]
+                
         # The swagger api keys.
         api_keys: []
 
@@ -159,10 +165,10 @@ api_platform:
 
             # To allow partial pagination for all resource collections.
             # This improves performances by skipping the `COUNT` query.
-            partial: true
+            partial: false
 
             # To allow the client to enable or disable the partial pagination.
-            client_partial: true
+            client_partial: false
 
             # The name of the query parameter to enable or disable the partial pagination.
             partial_parameter_name: 'partial' # Default value
