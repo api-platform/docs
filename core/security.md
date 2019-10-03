@@ -140,6 +140,8 @@ To make a deep clone, [implement `__clone` method](https://www.php.net/manual/en
 
 The easiest and recommended way to hook custom access control logic is [to write Symfony Voter classes](https://symfony.com/doc/current/security/voters.html). Your custom voters will automatically be used in security expressions through the `is_granted()` function.
 
+In order to give the current `object` to your voter, use the expression `is_granted('READ', object)`
+
 ## Configuring the Access Control Error Message
 
 By default when API requests are denied, you will get the "Access Denied" message.
