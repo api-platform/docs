@@ -20,11 +20,8 @@ cache. This ensures that the content served will always be fresh, because the ca
 most specific cases such as the invalidation of collections when a document is added or removed or for relationships and
 inverse relations is built-in.
 
-Integration with Varnish and Doctrine ORM is shipped with the core library, and [Varnish](https://varnish-cache.org/) is
-included in the Docker setup provided with the [API Platform distribution](../distribution/index.md). If you use the distribution,
-this feature works out of the box.
-
-If you don't use the distribution, add the following configuration to enable the cache invalidation system:
+Integration with Varnish and Doctrine ORM is shipped with the core library.
+Add the following configuration to enable the cache invalidation system:
 
 ```yaml
 api_platform:

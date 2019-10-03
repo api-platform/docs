@@ -16,9 +16,8 @@ The easiest and most powerful way to get started is to download the API Platform
   microframework](https://symfony.com/doc/current/setup/flex.html) and [the Doctrine ORM](https://www.doctrine-project.org/projects/orm.html) (optional)
 * [a dynamic JavaScript admin](../admin/), leveraging the hypermedia capabilities of API Platform (or any Hydra API), built on top of [React Admin](https://marmelab.com/react-admin/)
 * [a client generator](../client-generator/) to scaffold [React](https://reactjs.org), [Vue](https://vuejs.org/), [React Native](https://facebook.github.io/react-native/), [Next.js](https://nextjs.org/) and [Quasar](https://quasar.dev/) apps in one command, from any Hydra API
-* a [Docker](https://docker.com)-based setup to bootstrap the project in a single command, providing:
+* a [Docker](https://docker.com)-based development setup to bootstrap the project in a single command, providing:
   * servers for the API and JavaScript apps
-  * a [Varnish Cache](http://varnish-cache.org/) server enabling [API Platform's built-in invalidation cache mechanism](../core/performance.md#enabling-the-built-in-http-cache-invalidation-system)
   * a development HTTP/2 and HTTPS proxy (allowing, for instance, to test the provided [service workers](https://developer.mozilla.org/fr/docs/Web/API/Service_Worker_API))
   * a [Helm](https://helm.sh/) chart to deploy the API in any [Kubernetes](https://kubernetes.io/) cluster
 
