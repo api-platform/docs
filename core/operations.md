@@ -142,7 +142,7 @@ just by specifying the method name as key, or by checking the explicitly configu
 
 If you do not want to allow access to the resource item (i.e. you don't want a `GET` item operation), instead of omitting it altogether, you should instead declare a `GET` item operation which returns HTTP 404 (Not Found), so that the resource item can still be identified by an IRI. For example:
 
-```
+```php
 <?php
 // api/src/Entity/Book.php
 
