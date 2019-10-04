@@ -20,7 +20,7 @@ persist data for a given resource will be used.
 
 ## Creating a Custom Data Persister
 
-To create a data persister, you have to implement the [`DataPersisterInterface`](https://github.com/api-platform/core/blob/master/src/DataPersister/DataPersisterInterface.php).
+To create a data persister, you have to implement the [`ContextAwareDataPersisterInterface`](https://github.com/api-platform/core/blob/master/src/DataPersister/ContextAwareDataPersisterInterface.php).
 This interface defines only 3 methods:
 
 * `persist`: to create or update the given data
@@ -32,23 +32,23 @@ Here is an implementation example:
 ```php
 namespace App\DataPersister;
 
-use ApiPlatform\Core\DataPersister\DataPersisterInterface;
+use ApiPlatform\Core\DataPersister\ContextAwareDataPersisterInterface;
 use App\Entity\BlogPost;
 
-final class BlogPostDataPersister implements DataPersisterInterface
+final class BlogPostDataPersister implements ContextAwareDataPersisterInterface
 {
-    public function supports($data): bool
+    public function supports($data, array $context = []): bool
     {
         return $data instanceof BlogPost;
     }
-    
-    public function persist($data)
+
+    public function persist($data, array $context = [])
     {
       // call your persistence layer to save $data
       return $data;
     }
-    
-    public function remove($data)
+
+    public function remove($data, array $context = [])
     {
       // call your persistence layer to delete $data
     }
@@ -68,3 +68,5 @@ services:
         # Uncomment only if autoconfiguration is disabled
         #tags: [ 'api_platform.data_persister' ]
 ```
+
+Note that if you don't need any `$context` in your data persister's methods, you can implement the [`DataPersisterInterface`](https://github.com/api-platform/core/blob/master/src/DataPersister/DataPersisterInterface.php) instead.
