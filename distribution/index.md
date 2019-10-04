@@ -79,7 +79,7 @@ This starts the following services:
 | db       | A PostgreSQL database server                                      | 5432                                                        | all (prefer using a managed service in prod)       |
 | client   | A development server for the Progressive Web App                  | 80                                                          | dev (use a static website hosting service in prod) |
 | admin    | A development server for the admin                                | 81                                                          | dev (use a static website hosting service in prod) |
-| api      | The HTTP server for the API (NGINX)                               | 8080                                                        | all                                                |
+| api      | The HTTP server for the API (nginx)                               | 8080                                                        | all                                                |
 | mercure  | The Mercure hub, [for real-time capabilities](../core/mercure.md) | 1337                                                        | all (prefer using the managed version in prod)     |
 | h2-proxy | A HTTP/2 and HTTPS development proxy for all apps                 | 443 (client)<br>444 (admin)<br>8443 (api)<br>1338 (mercure) | dev (configure properly your web server in prod)   |
 
@@ -145,7 +145,10 @@ And start the built-in PHP server:
 All JavaScript components are also [available as standalone libraries](https://github.com/api-platform?language=javascript)
 installable with npm or Yarn.  
 
-**Note:** when installing API Platform this way, the API will be exposed as the `/api/` path. You need to open `http://localhost:8000/api/` to see the API documentation. If you are deploying API Platform directly on an Apache or NGINX webserver and getting a 404 error on opening this link, you will need to enable the [rewriting rules](https://symfony.com/doc/current/setup/web_server_configuration.html) for your specific webserver software.
+**Note:** When installing API Platform this way, the API will be exposed as the `/api/` path. You need to open `http://localhost:8000/api/`
+to see the API documentation. If you are deploying API Platform directly on an Apache or nginx webserver and getting a
+404 error on opening this link, you will need to enable the [rewriting rules](https://symfony.com/doc/current/setup/web_server_configuration.html)
+for your specific webserver software.
 
 ## It's Ready!
 
