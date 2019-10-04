@@ -110,6 +110,8 @@ api_platform:
         collection:
             pagination:
                 enabled: true
+        # The nesting separator used in the filter names.
+        nesting_separator: _
 
     elasticsearch:
         # To enable or disable Elasticsearch support.
