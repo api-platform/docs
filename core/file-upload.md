@@ -45,6 +45,7 @@ namespace App\Entity;
 use ApiPlatform\Core\Annotation\ApiProperty;
 use ApiPlatform\Core\Annotation\ApiResource;
 use App\Controller\CreateMediaObjectAction;
+use App\Resolver\CreateMediaObjectResolver;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\Serializer\Annotation\Groups;
@@ -82,6 +83,15 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
  *     },
  *     itemOperations={
  *         "get",
+ *     },
+ *     graphql={
+ *         "upload"={
+ *             "mutation"=CreateMediaObjectResolver::class,
+ *             "deserialize"=false,
+ *             "args"={
+ *                 "file"={"type"="Upload!", "description"="The file to upload"}
+ *             }
+ *         },
  *     },
  * )
  * @Vich\Uploadable
@@ -129,8 +139,9 @@ class MediaObject
 
 ## Handling File Upload
 
-At this point, the entity is configured, but we still need to write the action
-that handles the file upload.
+At this point, the entity is configured, but we still need to write the handler for the uploaded file.
+
+### REST
 
 ```php
 <?php
@@ -150,6 +161,32 @@ final class CreateMediaObjectAction
         if (!$uploadedFile) {
             throw new BadRequestHttpException('"file" is required');
         }
+
+        $mediaObject = new MediaObject();
+        $mediaObject->file = $uploadedFile;
+
+        return $mediaObject;
+    }
+}
+```
+
+### GraphQL
+
+```php
+<?php
+// api/src/Resolver/CreateMediaObjectResolver.php
+
+namespace App\Resolver;
+
+use ApiPlatform\Core\GraphQl\Resolver\MutationResolverInterface;
+use App\Entity\MediaObject;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
+
+final class CreateMediaObjectResolver implements MutationResolverInterface
+{
+    public function __invoke($item, array $context): MediaObject
+    {
+        $uploadedFile = $context['args']['input']['file'];
 
         $mediaObject = new MediaObject();
         $mediaObject->file = $uploadedFile;
@@ -227,7 +264,9 @@ final class ResolveMediaObjectContentUrlSubscriber implements EventSubscriberInt
 }
 ```
 
-## Making a Request to the `/media_objects` Endpoint
+## Making a Request to upload a file
+
+### REST
 
 Your `/media_objects` endpoint is now ready to receive a `POST` request with a
 file. This endpoint accepts standard `multipart/form-data`-encoded data, but
@@ -239,6 +278,21 @@ your data, you will get a response looking like this:
   "@type": "http://schema.org/MediaObject",
   "@id": "/media_objects/<id>",
   "contentUrl": "<url>"
+}
+```
+
+### GraphQL
+
+You can now upload files using the `createMediaObject` mutation, for details check [graphql-multipart-request-spec](https://github.com/jaydenseric/graphql-multipart-request-spec) and for an example implementation for the Apollo client check out [apollo-upload-client](https://github.com/jaydenseric/apollo-upload-client).
+
+```graphql
+mutation CreateMediaObject($file: Upload!) {
+    createMediaObject(input: {file: $file}) {
+        mediaObject {
+            id
+            contentUrl
+        }
+    }
 }
 ```
 
