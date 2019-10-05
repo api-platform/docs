@@ -164,64 +164,65 @@ final class CreateMediaObjectAction
 Returning the plain file path on the filesystem where the file is stored is not useful for the client, which needs a
 URL to work with.
 
-An [event subscriber](events.md#custom-event-listeners) could be used to set the `contentUrl` property:
+We will be [decorating a serializer](serialization.md#decorating-a-serializer-and-adding-extra-data) to resolve the `contentUrl` property:
 
 ```php
 <?php
-// api/src/EventSubscriber/ResolveMediaObjectContentUrlSubscriber.php
+// api/src/Serializer/MediaObjectContentUrlNormalizer.php
 
-namespace App\EventSubscriber;
+namespace App\Serializer;
 
-use ApiPlatform\Core\EventListener\EventPriorities;
-use ApiPlatform\Core\Util\RequestAttributesExtractor;
 use App\Entity\MediaObject;
-use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpKernel\Event\GetResponseForControllerResultEvent;
-use Symfony\Component\HttpKernel\KernelEvents;
+use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
+use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
+use Symfony\Component\Serializer\SerializerAwareInterface;
+use Symfony\Component\Serializer\SerializerInterface;
 use Vich\UploaderBundle\Storage\StorageInterface;
 
-final class ResolveMediaObjectContentUrlSubscriber implements EventSubscriberInterface
+final class MediaObjectContentUrlNormalizer implements NormalizerInterface, DenormalizerInterface, SerializerAwareInterface
 {
+    private $decorated;
     private $storage;
 
-    public function __construct(StorageInterface $storage)
+    public function __construct(NormalizerInterface $decorated, StorageInterface $storage)
     {
+        if (!$decorated instanceof DenormalizerInterface) {
+            throw new \InvalidArgumentException(sprintf('The decorated normalizer must implement the %s.', DenormalizerInterface::class));
+        }
+
+        $this->decorated = $decorated;
         $this->storage = $storage;
     }
 
-    public static function getSubscribedEvents(): array
+    public function supportsNormalization($data, $format = null)
     {
-        return [
-            KernelEvents::VIEW => ['onPreSerialize', EventPriorities::PRE_SERIALIZE],
-        ];
+        return $this->decorated->supportsNormalization($data, $format);
     }
 
-    public function onPreSerialize(GetResponseForControllerResultEvent $event): void
+    public function normalize($object, $format = null, array $context = [])
     {
-        $controllerResult = $event->getControllerResult();
-        $request = $event->getRequest();
-
-        if ($controllerResult instanceof Response || !$request->attributes->getBoolean('_api_respond', true)) {
-            return;
+        $data = $this->decorated->normalize($object, $format, $context);
+        if ($object instanceof MediaObject) {
+            $data->contentUrl = $this->storage->resolveUri($data, 'file');
         }
 
-        if (!($attributes = RequestAttributesExtractor::extractAttributes($request)) || !\is_a($attributes['resource_class'], MediaObject::class, true)) {
-            return;
-        }
+        return $data;
+    }
 
-        $mediaObjects = $controllerResult;
+    public function supportsDenormalization($data, $type, $format = null)
+    {
+        return $this->decorated->supportsDenormalization($data, $type, $format);
+    }
 
-        if (!is_iterable($mediaObjects)) {
-            $mediaObjects = [$mediaObjects];
-        }
+    public function denormalize($data, $class, $format = null, array $context = [])
+    {
+        return $this->decorated->denormalize($data, $class, $format, $context);
+    }
 
-        foreach ($mediaObjects as $mediaObject) {
-            if (!$mediaObject instanceof MediaObject) {
-                continue;
-            }
-
-            $mediaObject->contentUrl = $this->storage->resolveUri($mediaObject, 'file');
+    public function setSerializer(SerializerInterface $serializer)
+    {
+        if($this->decorated instanceof SerializerAwareInterface) {
+            $this->decorated->setSerializer($serializer);
         }
     }
 }
