@@ -546,7 +546,7 @@ If symfony's `MetadataAwareNameConverter` is available it'll be used by default.
 
 ## Decorating a Serializer and Adding Extra Data
 
-In the following example, we will see how we add extra informations to the serialized output. Here is how we add the
+In the following example, we will see how we add extra information to the serialized output. Here is how we add the
 date on each request in `GET`:
 
 ```yaml
