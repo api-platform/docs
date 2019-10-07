@@ -214,3 +214,67 @@ See how to use them and how to create custom ones in the [filters documentation]
 ## Creating Custom Extensions
 
 See how to create Doctrine MongoDB ODM custom extensions in the [extensions documentation](extensions.md).
+
+## Adding Execute Options
+
+If you want to add some command options when executing an aggregate query (see the [related documentation in MongoDB manual](https://docs.mongodb.com/manual/reference/command/aggregate/#command-fields)),
+you can do it in your resource configuration, at the operation or the resource level.
+
+For instance at the operation level:
+
+```php
+<?php
+// api/src/Document/Offer.php
+
+namespace App\Document;
+
+use ApiPlatform\Core\Annotation\ApiResource;
+use Doctrine\ODM\MongoDB\Mapping\Annotations as ODM;
+
+/**
+ * @ApiResource(attributes={
+ *     collectionOperations={
+ *         "get"={
+ *             "method"="GET",
+ *             "doctrine_mongodb"={
+ *                 "execute_options"={
+ *                     "allowDiskUse"=true
+ *                 }
+ *             }
+ *         }
+ *     }
+ * })
+ * @ODM\Document
+ */
+class Offer
+{
+    // ...
+}
+```
+
+Or at the resource level:
+
+```php
+<?php
+// api/src/Document/Offer.php
+
+namespace App\Document;
+
+use ApiPlatform\Core\Annotation\ApiResource;
+use Doctrine\ODM\MongoDB\Mapping\Annotations as ODM;
+
+/**
+ * @ApiResource(attributes={
+ *     "doctrine_mongodb"={
+ *         "execute_options"={
+ *             "allowDiskUse"=true
+ *         }
+ *     }
+ * })
+ * @ODM\Document
+ */
+class Offer
+{
+    // ...
+}
+```
