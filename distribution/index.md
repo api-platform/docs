@@ -7,7 +7,7 @@
 > —Fabien Potencier (creator of Symfony), SymfonyCon 2017
 
 [API Platform](https://api-platform.com) is a powerful but easy to use **full stack** framework dedicated to API-driven
-projects. It contains a **PHP** library to create fully featured APIs supporting industry-leading standards ([JSON-LD](https://json-ld.org/) and **[Hydra](http://www.hydra-cg.com/)**, [GraphQL](https://graphql.org/), [OpenAPI](https://www.openapis.org/)...), provides ambitious **JavaScript** tooling to consume those APIs in a snap (admin, PWA and mobile
+projects. It contains a **PHP** library to create fully featured APIs supporting industry-leading standards ([JSON-LD](https://json-ld.org/) and **[Hydra](https://www.hydra-cg.com/)**, [GraphQL](https://graphql.org/), [OpenAPI](https://www.openapis.org/)...), provides ambitious **JavaScript** tooling to consume those APIs in a snap (admin, PWA and mobile
 app generators, hypermedia client...) and is shipped with a nice **[Docker](https://www.docker.com/)** and **[Kubernetes](https://kubernetes.io/)**integration to develop and deploy instantly on the cloud.
 
 The easiest and most powerful way to get started is to download the API Platform distribution. It contains:
@@ -18,7 +18,7 @@ The easiest and most powerful way to get started is to download the API Platform
 * [a client generator](../client-generator/) to scaffold [React](https://reactjs.org), [Vue](https://vuejs.org/), [React Native](https://facebook.github.io/react-native/), [Next.js](https://nextjs.org/) and [Quasar](https://quasar.dev/) apps in one command, from any Hydra API
 * a [Docker](https://docker.com)-based setup to bootstrap the project in a single command, providing:
   * servers for the API and JavaScript apps
-  * a [Varnish Cache](http://varnish-cache.org/) server enabling [API Platform's built-in invalidation cache mechanism](../core/performance.md#enabling-the-built-in-http-cache-invalidation-system)
+  * a [Varnish Cache](https://varnish-cache.org/) server enabling [API Platform's built-in invalidation cache mechanism](../core/performance.md#enabling-the-built-in-http-cache-invalidation-system)
   * a development HTTP/2 and HTTPS proxy (allowing, for instance, to test the provided [service workers](https://developer.mozilla.org/fr/docs/Web/API/Service_Worker_API))
   * a [Helm](https://helm.sh/) chart to deploy the API in any [Kubernetes](https://kubernetes.io/) cluster
 
@@ -34,8 +34,8 @@ API Platform uses these model classes to expose and document a web API having a 
 * pagination
 * filtering
 * sorting
-* hypermedia/[HATEOAS](https://en.wikipedia.org/wiki/HATEOAS) and content negotiation support ([JSON-LD](http://json-ld.org) and [Hydra](http://www.hydra-cg.com/), [JSON:API](http://jsonapi.org/), [HAL](https://tools.ietf.org/html/draft-kelly-json-hal-08)...)
-* [GraphQL support](http://graphql.org/)
+* hypermedia/[HATEOAS](https://en.wikipedia.org/wiki/HATEOAS) and content negotiation support ([JSON-LD](https://json-ld.org) and [Hydra](https://www.hydra-cg.com/), [JSON:API](https://jsonapi.org/), [HAL](https://tools.ietf.org/html/draft-kelly-json-hal-08)...)
+* [GraphQL support](https://graphql.org/)
 * Nice UI and machine-readable documentations ([Swagger UI/OpenAPI](https://swagger.io), [GraphiQL](https://github.com/graphql/graphiql)...)
 * authentication ([Basic HTTP](https://en.wikipedia.org/wiki/Basic_access_authentication), cookies as well as [JWT](https://jwt.io/)
   and [OAuth](https://oauth.net/) through extensions)
@@ -354,7 +354,7 @@ Doctrine's annotations map these entities to tables in the database. Annotations
 the code and the configuration but, if you want to decouple classes from their metadata, you can switch to XML or YAML mappings.
 They are supported as well.
 
-Learn more about how to map entities with the Doctrine ORM in [the project's official documentation](http://docs.doctrine-project.org/projects/doctrine-orm/en/latest/reference/association-mapping.html)
+Learn more about how to map entities with the Doctrine ORM in [the project's official documentation](https://docs.doctrine-project.org/projects/doctrine-orm/en/latest/reference/association-mapping.html)
 or in Kévin's book "[Persistence in PHP with the Doctrine ORM](https://www.amazon.fr/gp/product/B00HEGSKYQ/ref=as_li_tl?ie=UTF8&camp=1642&creative=6746&creativeASIN=B00HEGSKYQ&linkCode=as2&tag=kevidung-21)".
 
 For the sake of simplicity, in this example we used public properties (except for the id, see below). API Platform as well
@@ -446,7 +446,7 @@ the pagination will automatically show up, [and this is entirely configurable](.
 in [adding some filters and adding sorts to the collection](../core/filters.md) as well.
 
 You may have noticed that some keys start with the `@` symbol in the generated JSON response (`@id`, `@type`, `@context`...)?
-API Platform comes with a full support of the [JSON-LD](http://json-ld.org/) format (and its [Hydra](http://www.hydra-cg.com/)
+API Platform comes with a full support of the [JSON-LD](https://json-ld.org/) format (and its [Hydra](https://www.hydra-cg.com/)
 extension). It allows to build smart clients, with auto-discoverability capabilities such as the API Platform Admin that
 we will discover in a few lines.
 It is useful for open data, SEO and interoperability, especially when [used with open vocabularies such as Schema.org](http://blog.schema.org/2013/06/schemaorg-and-json-ld.html)
@@ -454,9 +454,9 @@ and allows to [give access to Google to your structured data](https://developers
 or to query your APIs in [SPARQL](https://en.wikipedia.org/wiki/SPARQL) using [Apache Jena](https://jena.apache.org/documentation/io/#formats)).
 
 We think that JSON-LD is the best default format for a new API.
-However, API Platform natively [supports many other formats](../core/content-negotiation.md) including [GraphQL](http://graphql.org/)
-(we'll get to it), [JSON API](http://jsonapi.org/), [HAL](http://stateless.co/hal_specification.html), raw [JSON](http://www.json.org/),
-[XML](https://www.w3.org/XML/) (experimental) and even [YAML](http://yaml.org/) and [CSV](https://en.wikipedia.org/wiki/Comma-separated_values).
+However, API Platform natively [supports many other formats](../core/content-negotiation.md) including [GraphQL](https://graphql.org/)
+(we'll get to it), [JSON API](https://jsonapi.org/), [HAL](https://github.com/zircote/Hal), raw [JSON](https://www.json.org/),
+[XML](https://www.w3.org/XML/) (experimental) and even [YAML](https://yaml.org/) and [CSV](https://en.wikipedia.org/wiki/Comma-separated_values).
 You can also easily [add support for other formats](../core/content-negotiation.md) and it's up to you to choose which format
 to enable and to use by default.
 
@@ -483,7 +483,7 @@ By the way, you may want to [embed documents](../core/serialization.md) instead 
 
 The other interesting thing is how API Platform handles dates (the `publicationDate` property). API Platform understands
 [any date format supported by PHP](https://www.php.net/manual/en/datetime.formats.date.php). In production we strongly recommend
-using the format specified by the [RFC 3339](http://tools.ietf.org/html/rfc3339), but, as you can see, most common formats
+using the format specified by the [RFC 3339](https://tools.ietf.org/html/rfc3339), but, as you can see, most common formats
 including `September 21, 2016` can be used.
 
 To summarize, if you want to expose any entity you just have to:
@@ -516,9 +516,9 @@ Did you notice that the error was automatically serialized in JSON-LD and respec
 It allows the client to easily extract useful information from the error. Anyway, it's bad to get a SQL error when submitting
 a request. It means that we didn't use a valid input, and [it's a bad and dangerous practice](https://github.com/OWASP/CheatSheetSeries/blob/master/cheatsheets/Input_Validation_Cheat_Sheet.md).
 
-API Platform comes with a bridge with [the Symfony Validator Component](http://symfony.com/doc/current/validation.html).
-Adding some of [its numerous validation constraints](http://symfony.com/doc/current/validation.html#supported-constraints)
-(or [creating custom ones](http://symfony.com/doc/current/validation/custom_constraint.html)) to our entities is enough
+API Platform comes with a bridge with [the Symfony Validator Component](https://symfony.com/doc/current/validation.html).
+Adding some of [its numerous validation constraints](https://symfony.com/doc/current/validation.html#supported-constraints)
+(or [creating custom ones](https://symfony.com/doc/current/validation/custom_constraint.html)) to our entities is enough
 to validate user-submitted data. Let's add some validation rules to our data model:
 
 ```php
@@ -690,7 +690,7 @@ You can also choose to generate the code for a specific resource with the `--res
 `generate-api-platform-client --resource books`). 
 
 The generated code contains a list (including pagination), a delete button, a creation and an edition form. It also includes
-[Bootstrap 4](http://getbootstrap.com) markup and [ARIA roles](https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA)
+[Bootstrap 4](https://getbootstrap.com) markup and [ARIA roles](https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA)
 to make the app usable by people with disabilities.
 
 If you prefer to generate a PWA built on top of Vue.js, or a native mobile app, read [the dedicated documentation](../client-generator/index.md).
