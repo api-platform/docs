@@ -7,10 +7,10 @@ Here's the complete configuration of the Symfony bundle including default values
 api_platform:
 
     # The title of the API.
-    title: ''
+    title: 'API title'
 
     # The description of the API.
-    description: ''
+    description: 'API description'
 
     # The version of the API.
     version: '0.0.0'
@@ -136,7 +136,7 @@ api_platform:
             items_per_page: 30
 
             # The maximum number of items per page.
-            maximum_items_per_page: ~
+            maximum_items_per_page: 10
 
             # The default name of the parameter handling the page number.
             page_parameter_name: 'page'
@@ -170,10 +170,10 @@ api_platform:
         etag: true
 
         # Default value for the response max age.
-        max_age: ~
+        max_age: 3600
 
         # Default value for the response shared (proxy) max age.
-        shared_max_age: ~
+        shared_max_age: 3600
 
         # Default values of the "Vary" HTTP header.
         vary: ['Accept']
