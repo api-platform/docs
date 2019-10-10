@@ -81,6 +81,7 @@ chapters:
     items:
       - index
       - kubernetes
+      - docker-compose
       - heroku
       - traefik
   - title: Extra
