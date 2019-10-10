@@ -11,7 +11,7 @@ To do so, run the client generator:
 
 This command parses the Hydra documentation and creates one `.ts` file for each API Resource you have defined in your application, in the `interfaces` subfolder.
 
-NOTE: If you are not sure what the entrypoint is, see [Troubleshooting](troubleshooting.md)
+**Note**: If you are not sure what the entrypoint is, see [Troubleshooting](troubleshooting.md)
 
 ## Example
 

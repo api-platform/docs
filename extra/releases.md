@@ -8,7 +8,7 @@ Only 3 versions are maintained at the same time:
 * **old-stable** (currently **2.4** branch): security fixes are integrated in this version, regular bug fixes are **not** backported in it
 * **development** (**master** branch): new features target this branch
 
-Older versions (1.x, 2.0...) **are not maintained**. If you still use them, you must upgrade as soon as possible.
+Older versions (1.x, 2.0, …) **are not maintained**. If you still use them, you must upgrade as soon as possible.
 
 The **old-stable** branch is merged in the **stable** branch on a regular basis to propagate security fixes.
 The **stable** branch is merged in the **development** branch on a regular basis to propagate security and regular bug fixes.

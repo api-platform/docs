@@ -7,8 +7,8 @@
 > —Fabien Potencier (creator of Symfony), SymfonyCon 2017
 
 [API Platform](https://api-platform.com) is a powerful but easy to use **full stack** framework dedicated to API-driven
-projects. It contains a **PHP** library to create fully featured APIs supporting industry-leading standards ([JSON-LD](https://json-ld.org/) and **[Hydra](https://www.hydra-cg.com/)**, [GraphQL](https://graphql.org/), [OpenAPI](https://www.openapis.org/)...), provides ambitious **JavaScript** tooling to consume those APIs in a snap (admin, PWA and mobile
-app generators, hypermedia client...) and is shipped with a nice **[Docker](https://www.docker.com/)** and **[Kubernetes](https://kubernetes.io/)**integration to develop and deploy instantly on the cloud.
+projects. It contains a **PHP** library to create fully featured APIs supporting industry-leading standards ([JSON-LD](https://json-ld.org/) and **[Hydra](https://www.hydra-cg.com/)**, [GraphQL](https://graphql.org/), [OpenAPI](https://www.openapis.org/), …), provides ambitious **JavaScript** tooling to consume those APIs in a snap (admin, PWA and mobile
+app generators, hypermedia client, …) and is shipped with a nice **[Docker](https://www.docker.com/)** and **[Kubernetes](https://kubernetes.io/)**integration to develop and deploy instantly on the cloud.
 
 The easiest and most powerful way to get started is to download the API Platform distribution. It contains:
 
@@ -34,9 +34,9 @@ API Platform uses these model classes to expose and document a web API having a 
 * pagination
 * filtering
 * sorting
-* hypermedia/[HATEOAS](https://en.wikipedia.org/wiki/HATEOAS) and content negotiation support ([JSON-LD](https://json-ld.org) and [Hydra](https://www.hydra-cg.com/), [JSON:API](https://jsonapi.org/), [HAL](https://tools.ietf.org/html/draft-kelly-json-hal-08)...)
+* hypermedia/[HATEOAS](https://en.wikipedia.org/wiki/HATEOAS) and content negotiation support ([JSON-LD](https://json-ld.org) and [Hydra](https://www.hydra-cg.com/), [JSON:API](https://jsonapi.org/), [HAL](https://tools.ietf.org/html/draft-kelly-json-hal-08), …)
 * [GraphQL support](https://graphql.org/)
-* Nice UI and machine-readable documentations ([Swagger UI/OpenAPI](https://swagger.io), [GraphiQL](https://github.com/graphql/graphiql)...)
+* Nice UI and machine-readable documentations ([Swagger UI/OpenAPI](https://swagger.io), [GraphiQL](https://github.com/graphql/graphiql), …)
 * authentication ([Basic HTTP](https://en.wikipedia.org/wiki/Basic_access_authentication), cookies as well as [JWT](https://jwt.io/)
   and [OAuth](https://oauth.net/) through extensions)
 * [CORS headers](https://developer.mozilla.org/en-US/docs/Web/HTTP/Access_control_CORS)
@@ -46,7 +46,7 @@ API Platform uses these model classes to expose and document a web API having a 
 
 One more thing, before we start: as the API Platform distribution includes [the Symfony framework](https://symfony.com),
 it is compatible with most [Symfony bundles](https://flex.symfony.com)
-(plugins) and benefits from [the numerous extensions points](../core/extending.md) provided by this rock-solid foundation (events, DIC...).
+(plugins) and benefits from [the numerous extensions points](../core/extending.md) provided by this rock-solid foundation (events, DIC, …).
 Adding features like custom, service-oriented, API endpoints, JWT or OAuth authentication, HTTP caching, mail sending or
 asynchronous jobs to your APIs is straightforward.
 
@@ -445,8 +445,8 @@ Try the `GET` operation on the collection. The book we added appears. When the c
 the pagination will automatically show up, [and this is entirely configurable](../core/pagination.md). You may be interested
 in [adding some filters and adding sorts to the collection](../core/filters.md) as well.
 
-You may have noticed that some keys start with the `@` symbol in the generated JSON response (`@id`, `@type`, `@context`...)?
-API Platform comes with a full support of the [JSON-LD](https://json-ld.org/) format (and its [Hydra](https://www.hydra-cg.com/)
+You may have noticed that some keys start with the `@` symbol in the generated JSON response (`@id`, `@type`, `@context`, …)?
+API Platform comes with full support for the [JSON-LD](https://json-ld.org/) format (and its [Hydra](https://www.hydra-cg.com/)
 extension). It allows to build smart clients, with auto-discoverability capabilities such as the API Platform Admin that
 we will discover in a few lines.
 It is useful for open data, SEO and interoperability, especially when [used with open vocabularies such as Schema.org](http://blog.schema.org/2013/06/schemaorg-and-json-ld.html)
@@ -636,7 +636,7 @@ again the previous `POST` request.
 You now get proper validation error messages, always serialized using the Hydra error format ([RFC 7807](https://tools.ietf.org/html/rfc7807)
 is also supported).
 Those errors are easy to parse client-side. By adding the proper validation constraints, we also noticed that the provided
-ISBN isn't valid...
+ISBN isn't valid …
 
 ## Adding GraphQL Support
 
@@ -659,7 +659,7 @@ clients.
 ## The Admin
 
 Wouldn't it be nice to have an administration backend to manage the data exposed by your API?
-Wait... You already have one!
+Wait… You already have one!
 
 Open `https://localhost:444` in your browser:
 

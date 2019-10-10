@@ -13,7 +13,7 @@ between this class and those docs).
 
 Then, it's up to the developer to feed API Platform with an hydrated instance of this API resource object by implementing
 the [`DataProviderInterface`](data-providers.md). Basically, the data provider will query the persistence system (RDBMS,
-document or graph DB, external API...), and must hydrate and return the POPO that has been designed as mentioned above.
+document or graph DB, external API, …), and must hydrate and return the POPO that has been designed as mentioned above.
 
 When updating a state (`POST`, `PUT`, `PATCH`, `DELETE` HTTP methods), it's up to the developer to properly persist the
 data provided by API Platform's resource object [hydrated by the serializer](serialization.md).
@@ -46,7 +46,7 @@ Last but not least, to create [Event Sourcing](https://martinfowler.com/eaaDev/E
 approach is:
 
 * to persist data in an event store using a Messenger handler or a custom [data persister](data-persisters.md)
-* to create projections in standard RDBMS (PostgreSQL, MariaDB...) tables or views
+* to create projections in standard RDBMS (PostgreSQL, MariaDB, …) tables or views
 * to map those projections with read-only Doctrine entity classes **and** to mark those classes with `@ApiResource`
 
 You can then benefit from the built-in Doctrine filters, sorting, pagination, auto-joins and all of [the extension points](extending.md) provided by API Platform.

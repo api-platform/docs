@@ -1,6 +1,6 @@
 # Pushing Live Updates Using the Mercure Protocol
 
-API Platform can automatically send real time updates to the currently connected clients (webapps, mobile apps...) using [the Mercure protocol](https://mercure.rocks).
+API Platform can automatically send real time updates to the currently connected clients (webapps, mobile apps, …) using [the Mercure protocol](https://mercure.rocks).
 
 > *Mercure* is a protocol allowing to push data updates to web browsers and other HTTP clients in a convenient, fast, reliable and battery-efficient way. It is especially useful to publish real-time updates of resources served through web APIs, to reactive web and mobile apps.
 >

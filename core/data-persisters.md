@@ -11,7 +11,7 @@ A [Doctrine MongoDB ODM](https://www.doctrine-project.org/projects/mongodb-odm.h
 
 However, you may want to:
 
-* store data to other persistence layers (Elasticsearch, external web services...)
+* store data to other persistence layers (e.g. Elasticsearch, external web services, …)
 * not publicly expose the internal model mapped with the database through the API
 * use a separate model for [read operations](data-providers.md) and for updates by implementing patterns such as [CQRS](https://martinfowler.com/bliki/CQRS.html)
 

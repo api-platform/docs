@@ -82,7 +82,7 @@ class MyTest extends ApiTestCase
 
 ## HTTP Test Assertions
 
-All tests assertions provided by Symfony (assertions for status codes, headers, cookies, XML documents...) can be used out of the box with the API Platform test client:
+All tests assertions provided by Symfony (assertions for status codes, headers, cookies, XML documents, …) can be used out of the box with the API Platform test client:
 
 ```php
 <?php

@@ -1,6 +1,6 @@
 # Accept `application/x-www-form-urlencoded` Form Data
 
-API Platform only supports raw documents as request input (encoded in JSON, XML, YAML...). This has many advantages including support of types and the ability to send back to the API documents originally retrieved through a `GET` request.
+API Platform only supports raw documents as request input (encoded in JSON, XML, YAML, …). This has many advantages including support of types and the ability to send back to the API documents originally retrieved through a `GET` request.
 However, sometimes - for instance, to support legacy clients - it is necessary to accept inputs encoded in the traditional [`application/x-www-form-urlencoded`](https://www.w3.org/TR/html401/interact/forms.html#h-17.13.4.1) format (HTML form content type). This can easily be done using [the powerful event system](events.md) of the framework.
 
 **⚠ Adding support for `application/x-www-form-urlencoded` makes your API vulnerable to [CSRF attacks](https://www.owasp.org/index.php/Cross-Site_Request_Forgery_(CSRF)). Be sure to enable proper countermeasures [such as DunglasAngularCsrfBundle](https://github.com/dunglas/DunglasAngularCsrfBundle).**

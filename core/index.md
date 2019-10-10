@@ -30,7 +30,7 @@ Here is the fully featured REST API you'll get in minutes:
 * [Validation](validation.md) using the Symfony Validator Component (with groups support)
 * Advanced [authentication and authorization](security.md) rules
 * Errors serialization (Hydra and the [RFC 7807](https://tools.ietf.org/html/rfc7807) are supported)
-* Advanced [serialization](serialization.md) thanks to the Symfony Serializer Component (groups support, relation embedding, max depth...)
+* Advanced [serialization](serialization.md) thanks to the Symfony Serializer Component (groups support, relation embedding, max depth, …)
 * Automatic routes registration
 * Automatic entrypoint generation giving access to all resources
 * [JWT](jwt.md) and [OAuth](https://oauth.net/) support

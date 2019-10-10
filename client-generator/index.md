@@ -25,7 +25,7 @@ Client Generator works especially well with APIs built with the [API Platform](h
   * update form
   * delete button
 * Supports to-one and to-many relations
-* Uses the appropriate input type (`number`, `date`...)
+* Uses the appropriate input type (e.g. `number`, `date`, …)
 * Client-side validation
 * Subscribes to data updates pushed by servers supporting [the Mercure protocol](https://mercure.rocks)
 * Displays server-side validation errors under the related input (if using API Platform Core)

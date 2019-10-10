@@ -198,7 +198,7 @@ App\Entity\Book:
 ## Filtering Collection According to the Current User Permissions
 
 Filtering collections according to the role or permissions of the current user must be done directly at [the data provider](data-providers.md) level. For instance, when using the built-in adapters for Doctrine ORM, MongoDB and ElasticSearch, removing entries from a collection should be done using [extensions](extensions.md).
-Extensions allow to customize the generated DQL/Mongo/Elastic/... query used to retrieve the collection (e.g. add `WHERE` clauses depending of the currently connected user) instead of using access control expressions. As extensions are services, you can [inject the Symfony `Security` class](https://symfony.com/doc/current/security.html#b-fetching-the-user-from-a-service) into them to access to current user's roles and permissions.
+Extensions allow to customize the generated DQL/Mongo/Elastic/… query used to retrieve the collection (e.g. add `WHERE` clauses depending of the currently connected user) instead of using access control expressions. As extensions are services, you can [inject the Symfony `Security` class](https://symfony.com/doc/current/security.html#b-fetching-the-user-from-a-service) into them to access to current user's roles and permissions.
 
 If you use [custom data providers](data-providers.md), you'll have to implement the filtering logic according to the persistence layer you rely on.
 
