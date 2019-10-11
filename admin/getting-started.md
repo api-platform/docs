@@ -44,7 +44,7 @@ If you use a custom installation of Symfony and [API Platform Core](../core/), y
 Here is a sample configuration:
 
 ```yaml
-# config/packages/nelmio-cors.yaml
+# config/packages/nelmio_cors.yaml
 
 nelmio_cors:
     paths:
