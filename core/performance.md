@@ -147,7 +147,7 @@ Keep in mind that PPM is still in an early stage of development and can cause is
 
 ### Search Filter
 
-When using the `SearchFilter` and case insensivity, Doctrine will use the `LOWER` SQL function. Depending on your
+When using the `SearchFilter` and case insensitivity, Doctrine will use the `LOWER` SQL function. Depending on your
 driver, you may want to carefully index it by using a [function-based
 index](http://use-the-index-luke.com/sql/where-clause/functions/case-insensitive-search) or it will impact performance
 with a huge collection. [Here are some examples to index LIKE
