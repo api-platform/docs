@@ -9,9 +9,9 @@ package manager) chart to deploy in a wink on any of these platforms.
 
 ## Preparing Your Cluster and Your Local Machine
 
-1. Create a Kubernetes cluster on your preferred Cloud provider or install Kubernetes locally on your servers
-2. Install [Helm](https://helm.sh/) locally and on your cluster following their documentation
-3. Be sure to be connected to the right Kubernetes container e.g. running: `gcloud config get-value core/project`
+1. Create a Kubernetes cluster on your preferred Cloud provider or install Kubernetes locally on your servers.
+2. Install [Helm](https://helm.sh/) locally and on your cluster following their documentation.
+3. Be sure to be connected to the right Kubernetes container e.g. running: `gcloud config get-value core/project`.
 4. Update the Helm repo: `helm repo update`
 
 ## Creating and Publishing the Docker Images
@@ -95,4 +95,4 @@ We noticed that some tiller RBAC trouble occurred. You can usually resolve it by
       deployment "tiller-deploy" patched
 
 Please, see the [related issue](https://github.com/kubernetes/helm/issues/3130) for further details / information.
-You can also take a look at the [related documentation](https://github.com/kubernetes/helm/blob/master/docs/rbac.md)
+You can also take a look at the [related documentation](https://github.com/kubernetes/helm/blob/master/docs/rbac.md).
