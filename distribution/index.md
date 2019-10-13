@@ -177,8 +177,8 @@ doesn't contain `text/html` as the preferred format, a JSON-LD response is sent 
 So, if you want to access the raw data, you have two alternatives:
 
 * Add the correct `Accept` header (or don't set any `Accept` header at all if you don't care about security) - preferred
-  when writing API clients
-* Add the format you want as the extension of the resource - for debug purpose only
+  when writing API clients.
+* Add the format you want as the extension of the resource - for debug purpose only.
 
 For instance, go to `http://localhost:8080/greetings.jsonld` to retrieve the list of `Greeting` resources in JSON-LD, or to
 `http://localhost:8080/greetings.json` to retrieve data in raw JSON.
@@ -488,9 +488,9 @@ including `September 21, 2016` can be used.
 
 To summarize, if you want to expose any entity you just have to:
 
-1. Put it in the `Entity` directory of a bundle
-2. If you use Doctrine, map it with the database
-3. Mark it with the `@ApiPlatform\Core\Annotation\ApiResource` annotation
+1. Put it in the `Entity` directory of a bundle.
+2. If you use Doctrine, map it with the database.
+3. Mark it with the `@ApiPlatform\Core\Annotation\ApiResource` annotation.
 
 Could it be any easier?!
 
