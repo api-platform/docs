@@ -97,23 +97,23 @@ Go to the `api/` directory, then
 
 1. Initialize a git repository:
 
-    `git init`
+    git init
 
 2. Add all existing files:
 
-    `git add --all`
+    git add --all
 
 3. Commit:
 
-    `git commit -a -m "My first API Platform app running on Heroku!"`
+    git commit -a -m "My first API Platform app running on Heroku!"
 
 4. Create the Heroku application:
 
-    `heroku create`
+    heroku create
 
 5. And deploy for the first time:
 
-    `git push heroku master`
+    git push heroku master
 
 **We're done.** You can play with the demo API provided with API Platform. It is ready for production and you
 can scale it in one click from the Heroku interface.
