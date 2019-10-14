@@ -2,6 +2,7 @@
   "checks": {
     "typography.symbols": false,
     "typography.exclamation": false,
+    "hyperbole.misc": false,
     "cliches.misc": false
   }
 }

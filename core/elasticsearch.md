@@ -38,7 +38,7 @@ api_platform:
 
 ## Creating Models
 
-First of all, API Platform follows the best practices of Elasticsearch:
+API Platform follows the best practices of Elasticsearch:
 * a single index per resource should be used because Elasticsearch is going to [drop support for index types and will allow only a single type per
 index](https://www.elastic.co/guide/en/elasticsearch/reference/current/removal-of-types.html);
 * index name should be the short resource name in lower case;
