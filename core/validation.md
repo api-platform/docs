@@ -345,14 +345,14 @@ class Book
 ## Error Levels and Payload Serialization
 
 As stated in the [Symfony documentation](https://symfony.com/doc/current/validation/severity.html), you can use the payload field to define error levels.
-You can retrieve the payload field by setting the `serialize_payload_fields` option to `true` in the API Platform config:
+You can retrieve the payload field by setting the `serialize_payload_fields` to an empty `array` in the API Platform config:
 
 ```yaml
 # api/config/packages/api_platform.yaml
 
 api_platform:
     validator:
-        serialize_payload_fields: true
+        serialize_payload_fields: []
 ```
 
 Then, the serializer will return all payload values in the error response.
