@@ -107,9 +107,6 @@ lot of powerful built-in filters.
 Doctrine ORM and its bridge support most popular RDBMS including PostgreSQL, MySQL, MariaDB, SQL Server, Oracle and SQLite.
 There is also a shipped [Doctrine MongoDB ODM](https://www.doctrine-project.org/projects/mongodb-odm.html) optional support.
 
-If you don't want to use the built-in Doctrine system, alternative approaches which offer an integration with API Platform exist.
-For instance, [Pomm](http://www.pomm-project.org/) is a database access framework for PHP dedicated to PostgreSQL. The bundle to integrate it with API Platform can be found [here](https://github.com/pomm-project/pomm-api-platform).
-
 That being said, keep in mind that API Platform is 100% independent of the persistence system. You can use the one(s) that
 best suit(s) your needs (including NoSQL databases or remote web services) by implementing the [right interfaces](../core/data-providers.md). API Platform even supports using several persistence
 systems together in the same project.
