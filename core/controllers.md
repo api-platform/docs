@@ -400,7 +400,7 @@ It is mandatory to set `_api_resource_class` and `_api_item_operation_name` (or 
 operation) in the parameters of the route (`defaults` key). It allows API Platform to work with the Symfony routing system.
 
 Alternatively, you can also use a traditional Symfony controller and YAML or XML route declarations. The following example does
-the exact same thing as the previous example:
+the same thing as the previous example:
 
 ```php
 <?php

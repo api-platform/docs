@@ -717,8 +717,7 @@ API Platform has a built-in HTTP cache invalidation system which allows to make 
 [Varnish](https://varnish-cache.org/) by default. Read more in the chapter
 [API Platform Core Library: Enabling the Built-in HTTP Cache Invalidation System](../core/performance.md#enabling-the-built-in-http-cache-invalidation-system).
 
-Keep in mind that you can use your favorite client-side technology: API Platform provides React and Vue.js components,
-but you can use your preferred client-side technology including Angular, Ionic and Swift. Any language able to send HTTP
+Keep in mind that you can use your favorite client-side technology: API Platform provides React and Vue.js components, but you can use your preferred client-side technology including Angular, Ionic and Swift. Any language able to send HTTP
 requests is OK (even COBOL can do that).
 
 To go further, the API Platform team maintains a demo application showing more advanced use cases like leveraging serialization

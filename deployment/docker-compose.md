@@ -30,7 +30,7 @@ Then commit the changes to your git repository. The `docker-compose-prod` direct
 
 These steps should be performed in a CI job (recommended) or on your development machine.
 
-1.  Make sure the environment variables required for the build are set.
+1. Make sure the environment variables required for the build are set.
 
     If you are building the images in a CI job, these environment variables should be set as part of your CI job's environment.
 
@@ -52,12 +52,12 @@ These steps should be performed in a CI job (recommended) or on your development
     See [this discussion for possible workarounds](https://github.com/facebook/create-react-app/issues/2353) if this limitation
     is unacceptable for your project.
 
-2.  Build the Docker images:
+2. Build the Docker images:
 
         $ docker-compose -f docker-compose-prod/docker-compose.build.yml pull --ignore-pull-failures
         $ docker-compose -f docker-compose-prod/docker-compose.build.yml build --pull
 
-3.  Push the built images to the container registry:
+3. Push the built images to the container registry:
 
         $ docker-compose -f docker-compose-prod/docker-compose.build.yml push
 
@@ -65,7 +65,7 @@ These steps should be performed in a CI job (recommended) or on your development
 
 These steps should be performed on the production server.
 
-1.  Make sure the environment variables required are set.
+1. Make sure the environment variables required are set.
 
     You could set the environment variables in the `.env` file at the top level of the distribution project (not to be
     confused with `api/.env` which is used by the Symfony application). For example:
@@ -95,14 +95,14 @@ These steps should be performed on the production server.
 
     **Important**: Please make sure to change all the passwords, keys and secret values to your own.
 
-2.  Set up a redirect from e.g. `www.example.com` to `example.com`:
+2. Set up a redirect from e.g. `www.example.com` to `example.com`:
 
         $ mkdir -p docker-compose-prod/docker/nginx-proxy/vhost.d
         $ echo 'return 301 https://example.com$request_uri;' > docker-compose-prod/docker/nginx-proxy/vhost.d/www.example.com
 
     **Note**: If you do not want such a redirect, or you want it to be the other way round, please adapt to suit your needs.
 
-3.  *(optional)* Set up the Let's Encrypt integration.
+3. *(optional)* Set up the Let's Encrypt integration.
 
     **Note**: If you are using Cloudflare, you might consider using their [free SSL/TLS encryption](https://www.cloudflare.com/ssl/)
     setup as a simpler alternative. But if you would prefer to have full control, read on.
@@ -131,7 +131,7 @@ These steps should be performed on the production server.
     **Note**: Replace the `api-platform` prefix in `api-platform_nginx-proxy_1` with your [Docker Compose project name
     (it defaults to the project directory name)](https://docs.docker.com/compose/reference/envvars/#compose_project_name).
 
-4.  Pull the Docker images.
+4. Pull the Docker images.
 
     If you are **not** using the (optional) Let's Encrypt integration:
 
@@ -141,7 +141,7 @@ These steps should be performed on the production server.
 
         $ docker-compose -f docker-compose-prod/docker-compose.yml -f docker-compose-prod/docker-compose.letsencrypt.yml pull
 
-5.  Bring up the services.
+5. Bring up the services.
 
     If you are **not** using the (optional) Let's Encrypt integration:
 
