@@ -2,7 +2,7 @@
 
 API Platform takes care of validating the data sent to the API by the client (usually user data entered through forms).
 By default, the framework relies on [the powerful Symfony Validator Component](http://symfony.com/doc/current/validation.html)
-for this task, but you can replace it with your preferred validation library such as [the PHP filter extension](http://php.net/manual/en/intro.filter.php) if you want to.
+for this task, but you can replace it with your preferred validation library such as [the PHP filter extension](https://www.php.net/manual/en/intro.filter.php) if you want to.
 
 <p align="center" class="symfonycasts"><a href="https://symfonycasts.com/screencast/api-platform/validation?cid=apip"><img src="../distribution/images/symfonycasts-player.png" alt="Validation screencast"><br>Watch the Validation screencast</a></p>
 
@@ -235,7 +235,7 @@ With this configuration, there are three validation groups:
 ## Dynamic Validation Groups
 
 If you need to dynamically determine which validation groups to use for an entity in different scenarios, just pass in a
-[callable](http://php.net/manual/en/language.types.callable.php). The callback will receive the entity object as its first
+[callable](https://www.php.net/manual/en/language.types.callable.php). The callback will receive the entity object as its first
 argument, and should return an array of group names or a [group sequence](http://symfony.com/doc/current/validation/sequence_provider.html).
 
 In the following example, we use a static method to return the validation groups:
@@ -345,14 +345,14 @@ class Book
 ## Error Levels and Payload Serialization
 
 As stated in the [Symfony documentation](https://symfony.com/doc/current/validation/severity.html), you can use the payload field to define error levels.
-You can retrieve the payload field by setting the `serialize_payload_fields` option to `true` in the API Platform config:
+You can retrieve the payload field by setting the `serialize_payload_fields` to an empty `array` in the API Platform config:
 
 ```yaml
 # api/config/packages/api_platform.yaml
 
 api_platform:
     validator:
-        serialize_payload_fields: true
+        serialize_payload_fields: []
 ```
 
 Then, the serializer will return all payload values in the error response.

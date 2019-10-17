@@ -46,7 +46,7 @@ Last but not least, to create [Event Sourcing](https://martinfowler.com/eaaDev/E
 approach is:
 
 * to persist data in an event store using a Messenger handler or a custom [data persister](data-persisters.md)
-* to create projections in standard RDBMS (Postgres, MariaDB...) tables or views
+* to create projections in standard RDBMS (PostgreSQL, MariaDB...) tables or views
 * to map those projections with read-only Doctrine entity classes **and** to mark those classes with `@ApiResource`
 
 You can then benefit from the built-in Doctrine filters, sorting, pagination, auto-joins and all of [the extension points](extending.md) provided by API Platform.

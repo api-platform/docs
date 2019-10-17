@@ -1,33 +1,21 @@
 # Vue.js Generator
 
-Create a Vue.js application using [vue-cli](https://github.com/vuejs/vue-cli):
+Bootstrap a Vue.js application using [vue-cli](https://github.com/vuejs/vue-cli):
 
     $ vue init webpack-simple my-app
     $ cd my-app
 
-Install Vue Router, Vuex and babel-plugin-transform-builtin-extend (to allow extending built-in types like Error and Array):
+Install the required dependencies:
 
-    $ yarn add vue-router vuex babel-plugin-transform-builtin-extend babel-preset-es2015 babel-preset-stage-2
+    $ yarn add vue-router vuex vuex-map-fields babel-plugin-transform-builtin-extend babel-preset-es2015 babel-preset-stage-2 lodash
 
-Install the generator globally:
+Optionally, install Bootstrap and Font Awesome to get an app that looks good:
 
-    $ yarn global add @api-platform/client-generator
+    $ yarn add bootstrap font-awesome
 
-Reference the Bootstrap CSS stylesheet in `public/index.html` (optional):
+To generate all the code you need for a given resource run the following command:
 
-```html
-  <!-- ... -->
-    <title>vue-generator</title>
-
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
-  </head>
-  <!-- ... -->
-```
-
-In the app directory, generate the files for the resource you want:
-
-    $ generate-api-platform-client --generator vue https://demo.api-platform.com src/ --resource foo
+    $ npx @api-platform/client-generator https://demo.api-platform.com src/ --generator vue --resource book
     # Replace the URL by the entrypoint of your Hydra-enabled API
     # Omit the resource flag to generate files for all resource types exposed by the API
 
@@ -38,33 +26,35 @@ import Vue from 'vue'
 import Vuex from 'vuex';
 import VueRouter from 'vue-router';
 import App from './App.vue';
+import 'bootstrap/dist/css/bootstrap.css';
+import 'font-awesome/css/font-awesome.css';
+import book from './store/modules/book/';
+import bookRoutes from './router/book';
 
-// Replace "foo" with the name of the resource type
-import foo from './store/modules/foo/';
-import fooRoutes from './router/foo';
+Vue.config.productionTip = false;
 
 Vue.use(Vuex);
 Vue.use(VueRouter);
 
 const store = new Vuex.Store({
   modules: {
-    foo
+    book,
   }
 });
 
 const router = new VueRouter({
   mode: 'history',
   routes: [
-      ...fooRoutes
-  ]
+      ...bookRoutes,
+  ],
 });
 
 new Vue({
-  el: '#app',
   store,
   router,
-  render: h => h(App)
-});
+  render: h => h(App),
+}).$mount('#app');
+
 ```
 
 Make sure to update the `.babelrc` file with the following:
@@ -83,21 +73,5 @@ Make sure to update the `.babelrc` file with the following:
 }
 ```
 
-Replace the `App.vue` file with the following :
-
-```html
-<template>
-  <div class="container">
-    <nav>
-      <ul class="nav nav-justified">
-        <!-- Replace Foo with your resource name -->
-        <li class="active"><router-link :to="{ name: 'FooList' }" class="active">Foos</router-link></li>
-      </ul>
-    </nav>
-
-    <div>
-      <router-view></router-view>
-    </div>
-  </div>
-</template>
-```
+Go to `https://localhost/books/` to start using your app.
+That's all!

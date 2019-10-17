@@ -64,17 +64,21 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
  *             "deserialize"=false,
  *             "access_control"="is_granted('ROLE_USER')",
  *             "validation_groups"={"Default", "media_object_create"},
- *             "swagger_context"={
- *                 "consumes"={
- *                     "multipart/form-data",
- *                 },
- *                 "parameters"={
- *                     {
- *                         "in"="formData",
- *                         "name"="file",
- *                         "type"="file",
- *                         "description"="The file to upload",
- *                     },
+ *             "openapi_context"={
+ *                 "requestBody"={
+ *                     "content"={
+ *                         "multipart/form-data"={
+ *                             "schema"={
+ *                                 "type"="object",
+ *                                 "properties"={
+ *                                     "file"={
+ *                                         "type"="string",
+ *                                         "format"="binary"
+ *                                     }
+ *                                 }
+ *                             }
+ *                         }
+ *                     }
  *                 },
  *             },
  *         },

@@ -3,7 +3,7 @@
 `schema` is a command line tool part of [the API Platform framework](https://api-platform.com) that instantly generates
 a PHP data model from the [Schema.org](http://schema.org) vocabulary.
 Browse Schema.org, choose the types and properties you need, run our code generator and you're done! You get
-a fully-featured PHP data model including:
+a fully featured PHP data model including:
 
 * A set of PHP entities with properties, constants (enum values), getters, setters, adders and removers. The class
 hierarchy provided by Schema.org will be translated to a PHP class hierarchy with parents as `abstract` classes. The generated
@@ -27,8 +27,8 @@ or any other framework including [Laravel](http://laravel.com) and [Zend Framewo
 
 ## What Is Schema.org?
 
-Schema.org is a vocabulary representing common data structures and their relations. Schema.org can be exposed as [JSON-LD](http://en.wikipedia.org/wiki/JSON-LD),
-[microdata](https://en.wikipedia.org/wiki/Microdata_(HTML)) and [RDFa](http://en.wikipedia.org/wiki/RDFa).
+Schema.org is a vocabulary representing common data structures and their relations. Schema.org can be exposed as [JSON-LD](https://en.wikipedia.org/wiki/JSON-LD),
+[microdata](https://en.wikipedia.org/wiki/Microdata_(HTML)) and [RDFa](https://en.wikipedia.org/wiki/RDFa).
 Extracting semantical data exposed in the Schema.org vocabulary is supported by a growing number of companies including
 Google (Search, Gmail), Yahoo!, Bing and Yandex.
 

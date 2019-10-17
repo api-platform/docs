@@ -7,10 +7,10 @@ Here's the complete configuration of the Symfony bundle including default values
 api_platform:
 
     # The title of the API.
-    title: ''
+    title: 'API title'
 
     # The description of the API.
-    description: ''
+    description: 'API description'
 
     # The version of the API.
     version: '0.0.0'
@@ -70,7 +70,10 @@ api_platform:
 
     # Enable the docs.
     enable_docs: true
-
+    
+    # Enable the data collector and the WebProfilerBundle integration.
+    enable_profiler: true
+    
     oauth:
         # To enable or disable oauth.
         enabled: false
@@ -107,6 +110,8 @@ api_platform:
         collection:
             pagination:
                 enabled: true
+        # The nesting separator used in the filter names.
+        nesting_separator: _
 
     elasticsearch:
         # To enable or disable Elasticsearch support.
@@ -119,6 +124,9 @@ api_platform:
         mapping: []
 
     swagger:
+        # The active versions of OpenAPI to be exported or used in the swagger_ui. The first value is the default.
+        versions: [2, 3]
+                
         # The swagger api keys.
         api_keys: []
 
@@ -146,7 +154,7 @@ api_platform:
             items_per_page: 30
 
             # The maximum number of items per page.
-            maximum_items_per_page: ~
+            maximum_items_per_page: 10
 
             # The default name of the parameter handling the page number.
             page_parameter_name: 'page'
@@ -159,10 +167,10 @@ api_platform:
 
             # To allow partial pagination for all resource collections.
             # This improves performances by skipping the `COUNT` query.
-            partial: true
+            partial: false
 
             # To allow the client to enable or disable the partial pagination.
-            client_partial: true
+            client_partial: false
 
             # The name of the query parameter to enable or disable the partial pagination.
             partial_parameter_name: 'partial' # Default value
@@ -180,10 +188,10 @@ api_platform:
         etag: true
 
         # Default value for the response max age.
-        max_age: ~
+        max_age: 3600
 
         # Default value for the response shared (proxy) max age.
-        shared_max_age: ~
+        shared_max_age: 3600
 
         # Default values of the "Vary" HTTP header.
         vary: ['Accept']

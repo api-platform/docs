@@ -43,7 +43,7 @@ Refer to [the Symfony HttpClient documentation](https://symfony.com/doc/current/
 
 ## API Test Assertions
 
-In addition to [the built-in ones](https://phpunit.readthedocs.io/fr/latest/assertions.html), API Platform provides convenient PHPUnit assertions dedicated to API testing:
+In addition to [the built-in ones](https://phpunit.readthedocs.io/en/latest/assertions.html), API Platform provides convenient PHPUnit assertions dedicated to API testing:
 
 ```php
 <?php

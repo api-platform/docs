@@ -1,6 +1,6 @@
 # GraphQL Support
 
-[GraphQL](http://graphql.org/) is a query language made to communicate with an API and therefore is an alternative to REST.
+[GraphQL](https://graphql.org/) is a query language made to communicate with an API and therefore is an alternative to REST.
 
 It has some advantages compared to REST: it solves the over-fetching or under-fetching of data, is strongly typed, and is capable of retrieving multiple and nested data in one go, but it also comes with drawbacks. For example it creates overhead depending on the request.
 
@@ -906,6 +906,141 @@ Make sure you understand the implications when doing this: having different type
 For instance:
 - If you use a different `normalization_context` for a mutation, a `MyResourcePayloadData` type with the restricted fields will be generated and used instead of `MyResource` (the query type).
 - If you use a different `normalization_context` for the query of an item (`item_query` operation) and for the query of a collection (`collection_query` operation), two types `MyResourceItem` and `MyResourceCollection` with the restricted fields will be generated and used instead of `MyResource` (the query type).
+
+## Name Conversion
+
+You can modify how the property names of your resources are converted into field and filter names of your GraphQL schema.
+
+By default the property name will be used without conversion. If you want to apply a name converter, follow the [Name Conversion documentation](serialization.md#name-conversion).
+
+For instance, your resource can have properties in camelCase:
+
+```php
+<?php
+// api/src/Entity/Book.php
+
+namespace App\Entity;
+
+use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Core\Annotation\ApiFilter;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
+
+/**
+ * @ApiResource
+ * @ApiFilter(SearchFilter::class, properties={"publicationDate": "partial"})
+ */
+class Book
+{
+    // ...
+
+    public $publicationDate;
+
+    // ...
+}
+```
+
+By default, with the search filter, the query to retrieve a collection will be:
+
+```graphql
+{
+  books(publicationDate: "2010") {
+    edges {
+      node {
+        publicationDate
+      }
+    }
+  }
+}
+```
+
+But if you use the `CamelCaseToSnakeCaseNameConverter`, it will be:
+
+```graphql
+{
+  books(publication_date: "2010") {
+    edges {
+      node {
+        publication_date
+      }
+    }
+  }
+}
+```
+
+### Nesting Separator
+
+If you use snake_case, you can wonder how to make the difference between an underscore and the separator of the nested fields in the filter names, by default an underscore too.
+
+For instance if you have this resource:
+
+```php
+<?php
+// api/src/Entity/Book.php
+
+namespace App\Entity;
+
+use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Core\Annotation\ApiFilter;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
+
+/**
+ * @ApiResource
+ * @ApiFilter(SearchFilter::class, properties={"relatedBooks.name": "exact"})
+ */
+class Book
+{
+    // ...
+
+    public $name;
+
+    /**
+     * @ORM\OneToMany(targetEntity="Book")
+     */
+    public $relatedBooks;
+
+    // ...
+}
+```
+
+You would need to use the search filter like this:
+
+```graphql
+{
+  books(related_books_name: "The Fitz and the Fool") {
+    edges {
+      node {
+        name
+      }
+    }
+  }
+}
+```
+
+To avoid this issue, you can configure the nesting separator to use, for example, `__` instead of `_`:
+
+```yaml
+# api/config/packages/api_platform.yaml
+api_platform:
+    graphql:
+        nesting_separator: __
+# ...
+```
+
+In this case, your query will be:
+
+```graphql
+{
+  books(related_books__name: "The Fitz and the Fool") {
+    edges {
+      node {
+        name
+      }
+    }
+  }
+}
+```
+
+Much better, isn't it?
 
 ## Custom Types
 

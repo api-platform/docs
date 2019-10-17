@@ -84,7 +84,7 @@ final class SwaggerDecorator implements NormalizerInterface
 	$docs['paths']['/foos']['get']['parameters'][] = $customDefinition;
 
         // e.g. remove an existing parameter
-        $docs['paths']['/foos']['get']['parameters'] = array_values(array_filter($docs['paths']['/foos']['get']['parameters'], function ($param){
+        $docs['paths']['/foos']['get']['parameters'] = array_values(array_filter($docs['paths']['/foos']['get']['parameters'], function ($param) {
             return $param['name'] !== 'bar';
         }));
 
@@ -344,7 +344,7 @@ or with XML:
 </resources>
 ```
 
-![Impact on swagger ui](../distribution/images/swagger-ui-2.png)
+![Impact on Swagger UI](../distribution/images/swagger-ui-2.png)
 
 Again, you can use the `openapi_context` key instead of the `swagger_context` one to tweak the OpenAPI **v3** specification.
 
@@ -390,7 +390,7 @@ As described [in the Symfony documentation](https://symfony.com/doc/current/temp
 
 You may want to copy the [one shipped with API Platform](https://github.com/api-platform/core/blob/master/src/Bridge/Symfony/Bundle/Resources/views/SwaggerUi/index.html.twig) and customize it.
 
-## Compatibilily Layer with Amazon API Gateway
+## Compatibility Layer with Amazon API Gateway
 
 [AWS API Gateway](https://aws.amazon.com/api-gateway/) supports OpenAPI partially, but it [requires some changes](https://docs.aws.amazon.com/apigateway/latest/developerguide/api-gateway-known-issues.html).
 Fortunately, API Platform provides a way to be compatible with Amazon API Gateway.

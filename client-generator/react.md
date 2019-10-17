@@ -20,7 +20,7 @@ supporting Hydra.
 
 If you use API Platform, jump to the next section!
 Alternatively, you can generate a skeleton and install the generator using [npx](https://www.npmjs.com/package/npx).
-To use this generator you need [Node.js](https://nodejs.org/) and [Yarn](https://yarnpkg.com/) (or [NPM](https://www.npmjs.com/)) installed.
+To use this generator you need [Node.js](https://nodejs.org/) and [Yarn](https://yarnpkg.com/) (or [npm](https://www.npmjs.com/)) installed.
 
 Bootstrap a React application:
 
@@ -92,7 +92,7 @@ ReactDOM.render(
     <ConnectedRouter history={history}>
       <Switch>
         {bookRoutes}
-        {/* Replace bookRooutes with the name of the resource type */}
+        {/* Replace bookRoutes with the name of the resource type */}
         <Route render={() => <h1>Not Found</h1>} />
       </Switch>
     </ConnectedRouter>

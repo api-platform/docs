@@ -16,7 +16,7 @@ Create a [Next.js application with express server](https://github.com/zeit/next.
 
 ### Installing the Generator Dependencies
 
-Enable Typescript in your next project
+Enable TypeScript in your next project
 
     $ yarn add --dev typescript @types/react @types/node
 

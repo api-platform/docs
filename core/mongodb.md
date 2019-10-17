@@ -63,7 +63,7 @@ Add a MongoDB image to the docker-compose file:
 Once the extension is installed, to enable the MongoDB support, require the [Doctrine MongoDB ODM bundle](https://github.com/doctrine/DoctrineMongoDBBundle)
 package using Composer:
 
-    $ docker-compose exec php composer req doctrine/mongodb-odm-bundle:^4.0.0@beta doctrine/mongodb-odm:^2.0.0@beta
+    $ docker-compose exec php composer req doctrine/mongodb-odm-bundle
 
 Execute the contrib recipe to have it already configured.
 
