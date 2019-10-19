@@ -5,7 +5,7 @@ The TypeScript Generator allows you to create [TypeScript interfaces](https://ww
 To do so, run the client generator:
 
     $ npx @api-platform/client-generator --generator typescript https://demo.api-platform.com src/ --resource foo
-    # Replace the URL by the entrypoint of your Hydra-enabled API
+    # Replace the URL with the entrypoint of your Hydra-enabled API
     # "src/" represents where the interfaces will be generated
     # Omit the resource flag to generate files for all resource types exposed by the API
 
