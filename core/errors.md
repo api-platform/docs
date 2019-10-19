@@ -8,7 +8,7 @@ or in the format described in the [RFC 7807](https://tools.ietf.org/html/rfc7807
 
 ## Converting PHP Exceptions to HTTP Errors
 
-The framework also allows to configure the HTTP status code sent to the clients when custom exceptions are thrown.
+The framework also allows you configure the HTTP status code sent to the clients when custom exceptions are thrown.
 
 In the following example, we throw a domain exception from the business layer of the application and
 configure API Platform to convert it to a `404 Not Found` error:
@@ -65,7 +65,7 @@ final class ProductManager implements EventSubscriberInterface
 If you use the standard distribution of API Platform, this event listener will be automatically registered. If you use a
 custom installation, [learn how to register listeners](events.md#custom-event-listeners).
 
-Then, configure the framework to catch `App\Exception\ProductNotFoundException` exceptions and convert them in `404`
+Then, configure the framework to catch `App\Exception\ProductNotFoundException` exceptions and convert them into `404`
 errors:
 
 ```yaml

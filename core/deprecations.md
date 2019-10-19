@@ -1,6 +1,6 @@
 # Deprecating Resources and Properties (Alternative to Versioning)
 
-A best practice regarding web APIs development is to apply [the evolution strategy](https://phil.tech/api/2018/05/02/api-evolution-for-rest-http-apis/)
+A best practice regarding web API development is to apply [the evolution strategy](https://phil.tech/api/2018/05/02/api-evolution-for-rest-http-apis/)
 to indicate to client applications which resource types, operations and fields are deprecated and shouldn't be used anymore.
 
 While versioning an API requires modifying all clients to upgrade, even the ones not impacted by the changes.
@@ -10,7 +10,7 @@ On the other hand, the evolution strategy (also known as versionless APIs) consi
 types or operations that will be removed at some point.
 
 Most modern API formats including [JSON-LD / Hydra](content-negotiation.md), [GraphQL](graphql.md) and [OpenAPI](swagger.md)
-allow to mark resources types, operations or fields as deprecated.
+allow you to mark resources types, operations or fields as deprecated.
 
 ## Deprecating Resource Classes, Operations and Properties
 
