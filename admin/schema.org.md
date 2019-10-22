@@ -5,7 +5,7 @@ API Platform Admin has native support for the popular [Schema.org](https://schem
 > Schema.org is a collaborative, community activity with a mission to create, maintain, and promote schemas for structured data on the Internet, on web pages, in email messages, and beyond.
 
 To leverage this capability, your API must use the JSON-LD format and the appropriate Schema.org types.
-The following examples will use [API Platform Core](../core/) to create such API, but keep in mind that this feature will work with any JSON-LD API using the Schema.org vocabulary, regardless of the used web framework or programming language.
+The following examples will use [API Platform Core](../api-component/getting-started/index.md) to create such API, but keep in mind that this feature will work with any JSON-LD API using the Schema.org vocabulary, regardless of the used web framework or programming language.
 
 ## Displaying Related Resource's Name Instead of its IRI
 

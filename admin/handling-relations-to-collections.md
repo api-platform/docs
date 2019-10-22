@@ -80,7 +80,7 @@ class Book
 }
 ```
 
-Notice the "partial search" [filter](../core/filters.md) on the `name` property of the `Book` resource class.
+Notice the "partial search" [filter](../api-component/pagination-filters-sorting/index.md) on the `name` property of the `Book` resource class.
 
 Now, let's configure API Platform Admin to enable autocompletion for the relation selector:
 

@@ -438,7 +438,7 @@ rdfa:
 
 You can also use any other vocabulary. Check the [Linked Open Vocabularies](https://lov.okfn.org/dataset/lov/) to find one fitting your needs.
 
-For instance, to generate a data model from the [Video Game Ontology](http://purl.org/net/VideoGameOntology), use the following config file:
+For instance, to generate a data model from the [Video Game Ontology](https://purl.org/net/VideoGameOntology), use the following config file:
 
 ```
 rdfa:

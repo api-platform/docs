@@ -1,17 +1,17 @@
 # The Schema Generator
 
 `schema` is a command line tool part of [the API Platform framework](https://api-platform.com) that instantly generates
-a PHP data model from the [Schema.org](http://schema.org) vocabulary.
+a PHP data model from the [Schema.org](https://schema.org) vocabulary.
 Browse Schema.org, choose the types and properties you need, run our code generator and you're done! You get
 a fully featured PHP data model including:
 
 * A set of PHP entities with properties, constants (enum values), getters, setters, adders and removers. The class
 hierarchy provided by Schema.org will be translated to a PHP class hierarchy with parents as `abstract` classes. The generated
-code complies with [PSR](http://www.php-fig.org/) coding standards.
+code complies with [PSR](https://www.php-fig.org/) coding standards.
 * Full high-quality PHPDoc for classes, properties, constants and methods extracted from Schema.org.
 * Doctrine ORM annotation mapping including database columns with type guessing, relations with cardinality guessing, class
 inheritance (through the `@AbstractSuperclass` annotation).
-* Data validation through [Symfony Validator](http://symfony.com/doc/current/book/validation.html) annotations including
+* Data validation through [Symfony Validator](https://symfony.com/doc/current/book/validation.html) annotations including
 data type validation, enum support (choices) and check for required properties.
 * Interfaces and [Doctrine `ResolveTargetEntityListener`](https://www.doctrine-project.org/projects/doctrine-orm/en/current/cookbook/resolve-target-entity-listener.html)
 support.
@@ -22,8 +22,8 @@ Bonus:
 
 * The code generator is fully configurable and extendable: all features can be deactivated (e.g.: the Doctrine mapping generator)
 and a custom generator can be added (e.g.: a Doctrine ODM mapping generator).
-* The generated code can be used as is in a [Symfony](http://symfony.com) app (but it will work too in a raw PHP project
-or any other framework including [Laravel](http://laravel.com) and [Zend Framework](http://framework.zend.com/)).
+* The generated code can be used as is in a [Symfony](https://symfony.com) app (but it will work too in a raw PHP project
+or any other framework including [Laravel](https://laravel.com) and [Zend Framework](https://framework.zend.com/)).
 
 ## What Is Schema.org?
 
@@ -54,7 +54,7 @@ specific mapping nor adaptation. It's a matter of minutes.
 
 ### Be Ready for The Future
 
-Schema.org improves the interoperability of your applications. Used with hypermedia technologies such as [Hydra](http://www.hydra-cg.com/)
+Schema.org improves the interoperability of your applications. Used with hypermedia technologies such as [Hydra](https://www.hydra-cg.com/)
 it's a big step towards the semantic and machine readable web.
 It opens the way to generic web API clients able to extract and process data from any website or app using such technologies.
 

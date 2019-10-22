@@ -12,13 +12,13 @@ app generators, hypermedia client...) and is shipped with a nice **[Docker](http
 
 The easiest and most powerful way to get started is to download the API Platform distribution. It contains:
 
-* an API skeleton, including with [the server-side component](../core/index.md), [the Symfony 4
+* an API skeleton, including with [the server-side component](../api-component/getting-started/index.md), [the Symfony 4
   microframework](https://symfony.com/doc/current/setup/flex.html) and [the Doctrine ORM](https://www.doctrine-project.org/projects/orm.html) (optional)
-* [a dynamic JavaScript admin](../admin/), leveraging the hypermedia capabilities of API Platform (or any Hydra API), built on top of [React Admin](https://marmelab.com/react-admin/)
-* [a client generator](../client-generator/) to scaffold [React](https://reactjs.org), [Vue](https://vuejs.org/), [React Native](https://facebook.github.io/react-native/), [Next.js](https://nextjs.org/) and [Quasar](https://quasar.dev/) apps in one command, from any Hydra API
+* [a dynamic JavaScript admin](../admin/index.md), leveraging the hypermedia capabilities of API Platform (or any Hydra API), built on top of [React Admin](https://marmelab.com/react-admin/)
+* [a client generator](../api-clients/client-generator/index.md) to scaffold [React](https://reactjs.org), [Vue](https://vuejs.org/), [React Native](https://facebook.github.io/react-native/), [Next.js](https://nextjs.org/) and [Quasar](https://quasar.dev/) apps in one command, from any Hydra API
 * a [Docker](https://docker.com)-based setup to bootstrap the project in a single command, providing:
   * servers for the API and JavaScript apps
-  * a [Varnish Cache](https://varnish-cache.org/) server enabling [API Platform's built-in invalidation cache mechanism](../core/performance.md#enabling-the-built-in-http-cache-invalidation-system)
+  * a [Varnish Cache](https://varnish-cache.org/) server enabling [API Platform's built-in invalidation cache mechanism](../api-component/caching-performance-optimization/cache.md#enabling-the-built-in-http-cache-invalidation-system)
   * a development HTTP/2 and HTTPS proxy (allowing, for instance, to test the provided [service workers](https://developer.mozilla.org/fr/docs/Web/API/Service_Worker_API))
   * a [Helm](https://helm.sh/) chart to deploy the API in any [Kubernetes](https://kubernetes.io/) cluster
 
@@ -46,149 +46,10 @@ API Platform uses these model classes to expose and document a web API having a 
 
 One more thing, before we start: as the API Platform distribution includes [the Symfony framework](https://symfony.com),
 it is compatible with most [Symfony bundles](https://flex.symfony.com)
-(plugins) and benefits from [the numerous extensions points](../core/extending.md) provided by this rock-solid foundation (events, DIC...).
+(plugins) and benefits from [the numerous extensions points](../api-component/getting-started/extending.md) provided by this rock-solid foundation (events, DIC...).
 Adding features like custom, service-oriented, API endpoints, JWT or OAuth authentication, HTTP caching, mail sending or
 asynchronous jobs to your APIs is straightforward.
 
-## Installing the Framework
-
-### Using the API Platform Distribution (Recommended)
-
-Start by [downloading the API Platform distribution `.tar.gz` file](https://github.com/api-platform/api-platform/releases/latest), or [generate a GitHub repository from the template we provide](https://github.com/api-platform/api-platform/generate).
-Once you have extracted its contents, the resulting directory contains the API Platform project structure. You will add your own code and configuration inside it.
-
-**Note**: Try to avoid using the `.zip` file, as it may cause potential [permission](https://github.com/api-platform/api-platform/issues/319#issuecomment-307037562) [issues](https://github.com/api-platform/api-platform/issues/777#issuecomment-412515342).
-
-API Platform is shipped with a [Docker](https://docker.com) setup that makes it easy to get a containerized development
-environment up and running. If you do not already have Docker on your computer, [it's the right time to install it](https://docs.docker.com/install/).
-
-On Mac, only [Docker for Mac](https://docs.docker.com/docker-for-mac/) is supported.
-Similarly, on Windows, only [Docker for Windows](https://docs.docker.com/docker-for-windows/) is supported. Docker Machine **is not** supported out of the box.
-
-Open a terminal, and navigate to the directory containing your project skeleton. Run the following command to start all
-services using [Docker Compose](https://docs.docker.com/compose/):
-
-    $ docker-compose pull # Download the latest versions of the pre-built images
-    $ docker-compose up -d # Running in detached mode
-
-This starts the following services:
-
-| Name     | Description                                                       | Port(s)                                                     | Environment(s)                                     |
-|----------|-------------------------------------------------------------------|-------------------------------------------------------------|----------------------------------------------------|
-| php      | The API with PHP, PHP-FPM 7.3, Composer and sensitive configs     | n/a                                                         | all                                                |
-| db       | A PostgreSQL database server                                      | 5432                                                        | all (prefer using a managed service in prod)       |
-| client   | A development server for the Progressive Web App                  | 80                                                          | dev (use a static website hosting service in prod) |
-| admin    | A development server for the admin                                | 81                                                          | dev (use a static website hosting service in prod) |
-| api      | The HTTP server for the API (NGINX)                               | 8080                                                        | all                                                |
-| mercure  | The Mercure hub, [for real-time capabilities](../core/mercure.md) | 1337                                                        | all (prefer using the managed version in prod)     |
-| h2-proxy | A HTTP/2 and HTTPS development proxy for all apps                 | 443 (client)<br>444 (admin)<br>8443 (api)<br>1338 (mercure) | dev (configure properly your web server in prod)   |
-
-To see the container's logs, run:
-
-    $ docker-compose logs -f # follow the logs
-
-Project files are automatically shared between your local host machine and the container thanks to a pre-configured [Docker
-volume](https://docs.docker.com/engine/tutorials/dockervolumes/). It means that you can edit files of your project locally
-using your preferred IDE or code editor, they will be transparently taken into account in the container.
-Speaking about IDEs, our favorite software to develop API Platform apps is [PHPStorm](https://www.jetbrains.com/phpstorm/)
-with its awesome [Symfony](https://confluence.jetbrains.com/display/PhpStorm/Getting+Started+-+Symfony+Development+using+PhpStorm)
-and [Php Inspections](https://plugins.jetbrains.com/plugin/7622-php-inspections-ea-extended-) plugins. Give them a try,
-you'll got auto-completion for almost everything and awesome quality analysis.
-
-The API Platform distribution comes with a dummy entity for test purpose: `api/src/Entity/Greeting.php`. We will remove
-it later.
-
-If you're used to the PHP ecosystem, you probably guessed that this test entity uses the industry-leading [Doctrine ORM](https://www.doctrine-project.org/projects/orm.html)
-library as persistence system. It is shipped, in the API Platform distribution.
-Doctrine ORM is the easiest way to persist and query data in an API Platform project thanks to the bridge shipped with the
-distribution. It is optimized for performance and development convenience. For instance, when using Doctrine, API Platform
-is able to automatically optimize the generated SQL queries by adding the appropriate `JOIN` clauses. It also provides a
-lot of powerful built-in filters.
-Doctrine ORM and its bridge support most popular RDBMS including PostgreSQL, MySQL, MariaDB, SQL Server, Oracle and SQLite.
-There is also a shipped [Doctrine MongoDB ODM](https://www.doctrine-project.org/projects/mongodb-odm.html) optional support.
-
-If you don't want to use the built-in Doctrine system, alternative approaches which offer an integration with API Platform exist.
-For instance, [Pomm](http://www.pomm-project.org/) is a database access framework for PHP dedicated to PostgreSQL. The bundle to integrate it with API Platform can be found [here](https://github.com/pomm-project/pomm-api-platform).
-
-That being said, keep in mind that API Platform is 100% independent of the persistence system. You can use the one(s) that
-best suit(s) your needs (including NoSQL databases or remote web services) by implementing the [right interfaces](../core/data-providers.md). API Platform even supports using several persistence
-systems together in the same project.
-
-### Using Symfony Flex and Composer (Advanced Users)
-
-Alternatively, the API Platform server component can also be installed directly on a local machine.
-**This method is recommended only for advanced users who want full control over the directory structure and the installed
-dependencies.**
-
-[For a good introduction, watch how to install API Platform without the distribution on SymfonyCasts](https://symfonycasts.com/screencast/api-platform/install?cid=apip).
-
-The rest of this tutorial assumes that you have installed API Platform using the official distribution. Go straight to the
-next section if it's your case.
-
-API Platform has an official Symfony Flex recipe. It means that you can easily install it from any Flex-compatible Symfony
-application using [Composer](https://getcomposer.org/):
-
-    # Create a new Symfony Flex project
-    $ composer create-project symfony/skeleton bookshop-api
-    # Enter the project folder
-    $ cd bookshop-api
-    # Install the API Platform's server component in this skeleton
-    $ composer req api
-
-Then, create the database and its schema:
-
-    $ bin/console doctrine:database:create
-    $ bin/console doctrine:schema:create
-
-And start the built-in PHP server:
-
-    # Built-in PHP server
-    $ php -S 127.0.0.1:8000 -t public
-
-All JavaScript components are also [available as standalone libraries](https://github.com/api-platform?language=javascript)
-installable with npm or Yarn.  
-
-**Note:** when installing API Platform this way, the API will be exposed as the `/api/` path. You need to open `http://localhost:8000/api/` to see the API documentation. If you are deploying API Platform directly on an Apache or NGINX webserver and getting a 404 error on opening this link, you will need to enable the [rewriting rules](https://symfony.com/doc/current/setup/web_server_configuration.html) for your specific webserver software.
-
-## It's Ready!
-
-Open `https://localhost` in your favorite web browser:
-
-![The welcome page](images/api-platform-2.5-welcome.png)
-
-You'll need to add a security exception in your browser to accept the self-signed TLS certificate that has been generated
-for this container when installing the framework. Repeat this step for all other services available through HTTPS.
-
-Later you will probably replace this welcome screen by the homepage of your Progressive Web App. If you don't plan to create
-a Progressive Web App, you can remove the `client/` directory and the related lines in `docker-compose.yaml` (don't do it
-now, we'll use this container later in this tutorial).
-
-Click on the "HTTPS API" button, or go to `https://localhost:8443/`:
-
-![The API](images/api-platform-2.5-api.png)
-
-API Platform exposes a description of the API in the [OpenAPI](https://www.openapis.org/) format (formerly known as Swagger).
-It also integrates a customized version of [Swagger UI](https://swagger.io/swagger-ui/), a nice interface rendering the
-Open API documentation.
-Click on an operation to display its details. You can also send requests to the API directly from the UI.
-Try to create a new *Greeting* resource using the `POST` operation, then access it using the `GET` operation and, finally,
-delete it by executing the `DELETE` operation.
-If you access any API URL using a web browser, API Platform detects it (by scanning the `Accept` HTTP header) and displays
-the corresponding API request in the UI. Try it yourself by browsing to `http://localhost:8080/greetings`. If the `Accept` header
-doesn't contain `text/html` as the preferred format, a JSON-LD response is sent ([configurable behavior](../core/content-negotiation.md)).
-
-So, if you want to access the raw data, you have two alternatives:
-
-* Add the correct `Accept` header (or don't set any `Accept` header at all if you don't care about security) - preferred
-  when writing API clients
-* Add the format you want as the extension of the resource - for debug purpose only
-
-For instance, go to `http://localhost:8080/greetings.jsonld` to retrieve the list of `Greeting` resources in JSON-LD, or to
-`http://localhost:8080/greetings.json` to retrieve data in raw JSON.
-
-Of course, you can also use your favorite HTTP client to query the API.
-We are fond of [Postman](https://www.getpostman.com/). It works perfectly well with API Platform, has native Open API support,
-allows to easily write functional tests and has good team collaboration features.
 
 ## Bringing your Own Model
 
@@ -442,14 +303,14 @@ You just saved a new book resource through the bookshop API! API Platform automa
 an instance of the corresponding PHP entity class and uses Doctrine ORM to persist it in the database.
 
 By default, the API supports `GET` (retrieve, on collections and items), `POST` (create), `PUT` (replace), `PATCH` (partial update) and `DELETE` (self-explanatory)
-HTTP methods. Don't forget to [disable the ones you don't want](../core/operations.md#enabling-and-disabling-operations)!
+HTTP methods. Don't forget to [disable the ones you don't want](../api-component/usage-and-configuration/operations.md#enabling-and-disabling-operations)!
 
 Try the `GET` operation on the collection. The book we added appears. When the collection contains more than 30 items,
-the pagination will automatically show up, [and this is entirely configurable](../core/pagination.md). You may be interested
-in [adding some filters and adding sorts to the collection](../core/filters.md) as well.
+the pagination will automatically show up, [and this is entirely configurable](../api-component/pagination-filters-sorting/pagination.md). You may be interested
+in [adding some filters and adding sorts to the collection](../api-component/pagination-filters-sorting/index.md) as well.
 
 You may have noticed that some keys start with the `@` symbol in the generated JSON response (`@id`, `@type`, `@context`...)?
-API Platform comes with a full support of the [JSON-LD](https://json-ld.org/) format (and its [Hydra](https://www.hydra-cg.com/)
+API Platform comes with a full support of the [JSON-LD](http://json-ld.org/) format (and its [Hydra](http://www.hydra-cg.com/)
 extension). It allows to build smart clients, with auto-discoverability capabilities such as the API Platform Admin that
 we will discover in a few lines.
 It is useful for open data, SEO and interoperability, especially when [used with open vocabularies such as Schema.org](http://blog.schema.org/2013/06/schemaorg-and-json-ld.html)
@@ -457,10 +318,10 @@ and allows to [give access to Google to your structured data](https://developers
 or to query your APIs in [SPARQL](https://en.wikipedia.org/wiki/SPARQL) using [Apache Jena](https://jena.apache.org/documentation/io/#formats)).
 
 We think that JSON-LD is the best default format for a new API.
-However, API Platform natively [supports many other formats](../core/content-negotiation.md) including [GraphQL](https://graphql.org/)
+However, API Platform natively [supports many other formats](../api-component/getting-started/content-negotiation.md) including [GraphQL](https://graphql.org/)
 (we'll get to it), [JSON API](https://jsonapi.org/), [HAL](https://github.com/zircote/Hal), raw [JSON](https://www.json.org/),
 [XML](https://www.w3.org/XML/) (experimental) and even [YAML](https://yaml.org/) and [CSV](https://en.wikipedia.org/wiki/Comma-separated_values).
-You can also easily [add support for other formats](../core/content-negotiation.md) and it's up to you to choose which format
+You can also easily [add support for other formats](../api-component/getting-started/content-negotiation.md) and it's up to you to choose which format
 to enable and to use by default.
 
 Now, add a review for this book using the `POST` operation for the `Review` resource:
@@ -481,11 +342,11 @@ First, we learned how to work with relations. In a hypermedia API, every resourc
 A URL is a valid IRI, and it's what API Platform uses. The `@id` property of every JSON-LD document contains the IRI identifying
 it. You can use this IRI to reference this document from other documents. In the previous request, we used the IRI of the
 book we created earlier to link it with the `Review` we were creating. API Platform is smart enough to deal with IRIs.
-By the way, you may want to [embed documents](../core/serialization.md) instead of referencing them
-(e.g. to reduce the number of HTTP requests). You can even [let the client select only the properties it needs](../core/filters.md#property-filter).
+By the way, you may want to [embed documents](../api-component/serialization/index.md) instead of referencing them
+(e.g. to reduce the number of HTTP requests). You can even [let the client select only the properties it needs](../api-component/pagination-filters-sorting/index.md#property-filter).
 
 The other interesting thing is how API Platform handles dates (the `publicationDate` property). API Platform understands
-[any date format supported by PHP](https://www.php.net/manual/en/datetime.formats.date.php). In production we strongly recommend
+[any date format supported by PHP](https://php.net/manual/en/datetime.formats.date.php). In production we strongly recommend
 using the format specified by the [RFC 3339](https://tools.ietf.org/html/rfc3339), but, as you can see, most common formats
 including `September 21, 2016` can be used.
 
@@ -655,7 +516,7 @@ UI that is shipped with API Platform:
 
 The GraphQL implementation supports [queries](https://graphql.org/learn/queries/), [mutations](https://graphql.org/learn/queries/#mutations),
 [100% of the Relay server specification](https://facebook.github.io/relay/docs/en/graphql-server-specification.html), pagination,
-[filters](../core/filters.md) and [access control rules](../core/security.md).
+[filters](../api-component/pagination-filters-sorting/index.md) and [access control rules](../api-component/security/security.md).
 You can use it with the popular [RelayJS](https://facebook.github.io/relay/) and [Apollo](https://www.apollographql.com/docs/react/)
 clients.
 
@@ -696,26 +557,26 @@ The generated code contains a list (including pagination), a delete button, a cr
 [Bootstrap 4](https://getbootstrap.com) markup and [ARIA roles](https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA)
 to make the app usable by people with disabilities.
 
-If you prefer to generate a PWA built on top of Vue.js, or a native mobile app, read [the dedicated documentation](../client-generator/index.md).
+If you prefer to generate a PWA built on top of Vue.js, or a native mobile app, read [the dedicated documentation](../api-clients/client-generator/index.md).
 
 ## Hooking Your Own Business Logic
 
-Now that you learned the basics, be sure to read [the general design considerations](../core/design.md) and [how to extend API Platform](../core/extending.md) to understand how API Platform is designed, and how to hook your custom business logic!
+Now that you learned the basics, be sure to read [the general design considerations](../api-component/usage-and-configuration/design.md) and [how to extend API Platform](../api-component/getting-started/extending.md) to understand how API Platform is designed, and how to hook your custom business logic!
 
 ## Other Features
 
 First, you may want to learn [how to deploy your application](../deployment/index.md) in the cloud using [the built-in Kubernetes
 integration](../deployment/kubernetes.md).
 
-Then, there are many more features to learn! Read [the full documentation](../core/index.md) to discover how to use them
+Then, there are many more features to learn! Read [the full documentation](../api-component/index.md) to discover how to use them
 and how to extend API Platform to fit your needs.
 API Platform is incredibly efficient for prototyping and Rapid Application Development (RAD), but the framework is mostly
-designed to create complex API-driven projects, far beyond simple CRUD apps. It benefits from [**strong extension points**](../core/extending.md)
-and it is **continuously optimized for [performance](../core/performance.md).** It powers numerous high traffic websites.
+designed to create complex API-driven projects, far beyond simple CRUD apps. It benefits from [**strong extension points**](../api-component/getting-started/extending.md)
+and it is **continuously optimized for [performance](../api-component/caching-performance-optimization/cache.md).** It powers numerous high traffic websites.
 
 API Platform has a built-in HTTP cache invalidation system which allows to make API Platform apps blazing fast, and it uses
 [Varnish](https://varnish-cache.org/) by default. Read more in the chapter
-[API Platform Core Library: Enabling the Built-in HTTP Cache Invalidation System](../core/performance.md#enabling-the-built-in-http-cache-invalidation-system).
+[API Platform Core Library: Enabling the Built-in HTTP Cache Invalidation System](../api-component/caching-performance-optimization/cache.md#enabling-the-built-in-http-cache-invalidation-system).
 
 Keep in mind that you can use your favorite client-side technology: API Platform provides React and Vue.js components, but you can use your preferred client-side technology including Angular, Ionic and Swift. Any language able to send HTTP
 requests is OK (even COBOL can do that).
