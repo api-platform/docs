@@ -1,7 +1,7 @@
 # Handling Relations to Collections
 
 API Platform Admin handles `to-one` and `to-many` relations automatically.
-Thanks to [the Schema.org support](schema.org.md), it's also easy to display the name of a related objects instead of its IRI.
+Thanks to [the Schema.org support](schema.org.md), it's also easy to display the name of a related object instead of its IRI.
 
 Let's go one step further thanks to the [customization capabilities](customizing.md) of API Platform Admin by adding autocompletion support to form inputs.
 
