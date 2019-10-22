@@ -16,7 +16,7 @@ Optionally, install Bootstrap and Font Awesome to get an app that looks good:
 To generate all the code you need for a given resource run the following command:
 
     $ npx @api-platform/client-generator https://demo.api-platform.com src/ --generator vue --resource book
-    # Replace the URL by the entrypoint of your Hydra-enabled API
+    # Replace the URL with the entrypoint of your Hydra-enabled API
     # Omit the resource flag to generate files for all resource types exposed by the API
 
 The code is ready to be executed! Register the generated routes and store modules in the `main.js` file. Here is an example:
