@@ -69,7 +69,7 @@ JSON Merge Patch support must be enabled explicitly:
 ```yaml
 # api/config/packages/api_platform.yaml
 api_platform:
-    patch_formats:
+    formats:
         json:     ['application/merge-patch+json']
         jsonapi:  ['application/vnd.api+json']
 ```
