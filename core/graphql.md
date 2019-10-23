@@ -12,7 +12,7 @@ Once enabled, you have nothing to do: your schema describing your API is automat
 
 To enable GraphQL and its IDE (GraphiQL and GraphQL Playground) in your API, simply require the [graphql-php](https://webonyx.github.io/graphql-php/) package using Composer and clear the cache one more time:
 
-    $ docker-compose exec php composer req webonyx/graphql-php && bin/console cache:clear
+    $ docker-compose exec php composer req webonyx/graphql-php && docker-compose exec php bin/console cache:clear
 
 You can now use GraphQL at the endpoint: `https://localhost:8443/graphql`.
 
