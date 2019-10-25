@@ -32,29 +32,36 @@ Make sure the custom resolver implements [`ApiPlatform\Core\PathResolver\Operati
 ```php
 <?php
 
-// api/src/PathResolver/NoSeparatorsOperationPathResolver.php
+// api/src/Operation/SingularPathSegmentNameGenerator.php
 
-namespace App\PathResolver;
+namespace App\Operation;
 
-use ApiPlatform\Core\PathResolver\OperationPathResolverInterface;
-use Doctrine\Common\Inflector\Inflector;
+use ApiPlatform\Core\Operation\PathSegmentNameGeneratorInterface;
 
-final class NoSeparatorsOperationPathResolver implements OperationPathResolverInterface
+class SingularPathSegmentNameGenerator implements PathSegmentNameGeneratorInterface
 {
-    public function resolveOperationPath(string $resourceShortName, array $operation, bool $collection) : string
+    /**
+     * Transforms a given string to a valid path name which can be pluralized (eg. for collections).
+     *
+     * @param string $name usually a ResourceMetadata shortname
+     *
+     * @return string A string that is a part of the route name
+     */
+    public function getSegmentName(string $name, bool $collection = true): string
     {
-        $path = Inflector::pluralize(strtolower($resourceShortName));
-        if (!$collection) {
-            $path .= '/{id}';
-        }
-        $path .= '.{_format}';
+        $name = $this->dashize($name);
 
-        return $path;
+        return $name;
+    }
+
+    private function dashize(string $string): string
+    {
+        return strtolower(preg_replace('~(?<=\\w)([A-Z])~', '-$1', $string));
     }
 }
 ```
 
-Note that `$resourceShortName` contains a camel case string, by default the resource class name (e.g. `MyResource`).
+Note that `$name` contains a camel case string, by default the resource class name (e.g. `MyResource`).
 
 ### Registering the Service
 
