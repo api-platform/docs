@@ -11,11 +11,6 @@ This tutorial will help you to define your own routes for your client, api and m
 Use this custom API Platform `docker-compose.yml` file which implements ready-to-use Traefik container configuration. Override
 ports and add labels to tell Traefik to listen on the routes mentioned and redirect routes to specified container.
 
-A few points to note:
-* `--api` Tells Traefik to generate a browser view to watch containers and IP/DNS associated easier  
-* `--docker` Tells Traefik to listen on Docker Api  
-* `labels:` Key for Traefik configuration into Docker integration
-
   ```yaml
   services:
   #  ...
@@ -23,10 +18,6 @@ A few points to note:
       labels: 
         - traefik.frontend.rule=Host:api.localhost
   ``` 
-
-  The API DNS will be specified with `traefik.frontend.rule=Host:your.host` (here api.localhost)
-* `--traefik.port=3000` The port specified to Traefik will be exposed by the container (here the React app exposes the 3000 port)
-
 ```yaml
 # docker-compose.yml
 version: '3.4'
@@ -40,14 +31,22 @@ x-cache:
 
 services:
   traefik:
-    image: traefik
-    command: --api --docker
+    image: traefik:2.0.2
+    command:
+      - --api.insecure # dashboard URL: http://localhost:8080/dashboard/
+      - --entrypoints.web.address=:80 # http port
+      - --entrypoints.websecure.address=:443 # https port
+      - --entrypoints.postgresql.address=:5432 # postgresql port
+      - --log.level=INFO # log level
+      - --providers.docker # enable docker provider
+      - --providers.docker.exposedbydefault=false # disable automatich provisioning
     ports:
-      - "80:80" #All HTTP access will be caught by Traefik
-      - "443:443" #All HTTPS access will be caught by Traefik
-      - "8080:8080" #Access Traefik webview
+      - "80:80"
+      - "8080:8080"
+      - "443:443"
+      - "5432:5432"
     volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
+      - /var/run/docker.sock:/var/run/docker.sock:ro
 
   php:
     image: ${CONTAINER_REGISTRY_BASE}/php
@@ -66,7 +65,10 @@ services:
   api:
     image: ${CONTAINER_REGISTRY_BASE}/nginx
     labels:
-      - traefik.frontend.rule=Host:api.localhost
+      - traefik.enable=true
+      - traefik.http.routers.api.rule=Host(`api.localhost`)
+      - traefik.http.routers.api.entrypoints=websecure
+      - traefik.http.routers.api.tls
     build:
       context: ./api
       target: api_platform_nginx
@@ -90,13 +92,19 @@ services:
     tmpfs:
       - /usr/local/var/varnish:exec
     labels:
-      - traefik.frontend.rule=Host:cache.localhost
+      - traefik.enable=true
+      - traefik.http.routers.cache-proxy.rule=Host(`cache.localhost`)
+      - traefik.http.routers.cache-proxy.entrypoints=websecure
+      - traefik.http.routers.cache-proxy.tls
 
   db:
     # In production, you may want to use a managed database service
-    image: postgres:10-alpine
+    image: postgres:11.5-alpine
     labels:
-      - traefik.frontend.rule=Host:db.localhost
+      - traefik.enable=true
+      - traefik.tcp.routers.db.rule=HostSNI(`*`)
+      - traefik.tcp.routers.db.entrypoints=postgresql
+      - traefik.tcp.services.db.loadbalancer.server.port=5432
     environment:
       - POSTGRES_DB=api
       - POSTGRES_USER=api-platform
@@ -106,8 +114,6 @@ services:
       - db-data:/var/lib/postgresql/data:rw
       # You may use a bind-mounted host directory instead, so that it is harder to accidentally remove the volume and lose all your data!
       # - ./docker/db/data:/var/lib/postgresql/data:rw
-    ports:
-      - "5432:5432"
 
   mercure:
     # In production, you may want to use the managed version of Mercure, https://mercure.rocks
@@ -120,7 +126,10 @@ services:
       - PUBLISH_ALLOWED_ORIGINS=http://mercure.localhost
       - DEMO=1
     labels:
-      - traefik.frontend.rule=Host:localhost
+      - traefik.enable=true
+      - traefik.http.routers.mercure.rule=Host(`mercure.localhost`)
+      - traefik.http.routers.mercure.entrypoints=websecure
+      - traefik.http.routers.mercure.tls
 
   client:
     # Use a static website hosting service in production
@@ -138,8 +147,11 @@ services:
     expose:
       - 3000
     labels:
-      - traefik.port=3000
-      - traefik.frontend.rule=Host:localhost
+      - traefik.enable=true
+      - traefik.http.routers.client.rule=Host(`localhost`)
+      - traefik.http.routers.client.entrypoints=websecure
+      - traefik.http.routers.client.tls
+      - traefik.http.services.client.loadbalancer.server.port=3000
 
   admin:
     # Use a static website hosting service in production
@@ -155,8 +167,11 @@ services:
     expose:
       - 3000
     labels:
-      - traefik.port=3000
-      - traefik.frontend.rule=Host:admin.localhost
+      - traefik.enable=true
+      - traefik.http.routers.admin.rule=Host(`admin.localhost`)
+      - traefik.http.routers.admin.entrypoints=websecure
+      - traefik.http.routers.admin.tls
+      - traefik.http.services.admin.loadbalancer.server.port=3000
 
 volumes:
   db-data: {}
