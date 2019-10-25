@@ -74,7 +74,7 @@ App\Entity\Book:
     itemOperations:
         get: ~
         put:
-            security_: 'is_granted("ROLE_ADMIN") or object.owner == user'
+            security: 'is_granted("ROLE_ADMIN") or object.owner == user'
 ```
 
 In this example:
