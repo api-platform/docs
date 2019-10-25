@@ -11,13 +11,6 @@ This tutorial will help you to define your own routes for your client, api and m
 Use this custom API Platform `docker-compose.yml` file which implements ready-to-use Traefik container configuration. Override
 ports and add labels to tell Traefik to listen on the routes mentioned and redirect routes to specified container.
 
-  ```yaml
-  services:
-  #  ...
-    api:
-      labels: 
-        - traefik.frontend.rule=Host:api.localhost
-  ``` 
 ```yaml
 # docker-compose.yml
 version: '3.4'
@@ -39,7 +32,7 @@ services:
       - --entrypoints.postgresql.address=:5432 # postgresql port
       - --log.level=INFO # log level
       - --providers.docker # enable docker provider
-      - --providers.docker.exposedbydefault=false # disable automatich provisioning
+      - --providers.docker.exposedbydefault=false # disable automatic provisioning
     ports:
       - "80:80"
       - "8080:8080"
