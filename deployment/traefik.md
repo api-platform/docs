@@ -26,6 +26,7 @@ services:
   traefik:
     image: traefik:2.0.2
     command:
+      # Do not use api.insecure in production https://docs.traefik.io/v2.0/operations/api/#configuration
       - --api.insecure # dashboard URL: http://localhost:8080/dashboard/
       - --entrypoints.web.address=:80 # http port
       - --entrypoints.websecure.address=:443 # https port
