@@ -56,7 +56,7 @@ api_platform:
     # Enable the Nelmio Api doc integration.
     enable_nelmio_api_doc: false
 
-    # Enable the Swagger documentation and export.
+    # Enable Swagger documentation and export.
     enable_swagger: true
 
     # Enable Swagger ui.
@@ -71,8 +71,8 @@ api_platform:
     # Enable the docs.
     enable_docs: true
 
-    oauth:
-        # To enable or disable oauth.
+    OAuth:
+        # To enable or disable OAuth.
         enabled: false
 
         # The oauth client id.
@@ -84,7 +84,7 @@ api_platform:
         # The oauth type.
         type: 'oauth2'
 
-        # The oauth flow grant type.
+        # The OAuth flow grant type.
         flow: 'application'
 
         # The oauth token url.
@@ -93,7 +93,7 @@ api_platform:
         # The oauth authentication url.
         authorizationUrl: '/oauth/v2/auth'
 
-        # The oauth scopes.
+        # The OAuth scopes.
         scopes: []
 
     graphql:
