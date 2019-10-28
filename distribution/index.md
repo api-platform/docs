@@ -47,7 +47,7 @@ API Platform uses these model classes to expose and document a web API having a 
 One more thing, before we start: as the API Platform distribution includes [the Symfony framework](https://symfony.com),
 it is compatible with most [Symfony bundles](https://flex.symfony.com)
 (plugins) and benefits from [the numerous extensions points](../core/extending.md) provided by this rock-solid foundation (events, DIC...).
-Adding features like custom, service-oriented, API endpoints, JWT or OAuth authentication, HTTP caching, mail sending or
+Adding features like a custom, service-oriented, API endpoints, JWT or OAuth authentication, HTTP caching, mail sending or
 asynchronous jobs to your APIs is straightforward.
 
 ## Installing the Framework
@@ -75,7 +75,7 @@ This starts the following services:
 
 | Name     | Description                                                       | Port(s)                                                     | Environment(s)                                     |
 |----------|-------------------------------------------------------------------|-------------------------------------------------------------|----------------------------------------------------|
-| php      | The API with PHP, PHP-FPM 7.3, Composer and sensitive configs     | n/a                                                         | all                                                |
+| PHP      | The API with PHP, PHP-FPM 7.3, Composer and sensitive configs     | n/a                                                         | all                                                |
 | db       | A PostgreSQL database server                                      | 5432                                                        | all (prefer using a managed service in prod)       |
 | client   | A development server for the Progressive Web App                  | 80                                                          | dev (use a static website hosting service in prod) |
 | admin    | A development server for the admin                                | 81                                                          | dev (use a static website hosting service in prod) |
@@ -93,7 +93,7 @@ using your preferred IDE or code editor, they will be transparently taken into a
 Speaking about IDEs, our favorite software to develop API Platform apps is [PHPStorm](https://www.jetbrains.com/phpstorm/)
 with its awesome [Symfony](https://confluence.jetbrains.com/display/PhpStorm/Getting+Started+-+Symfony+Development+using+PhpStorm)
 and [Php Inspections](https://plugins.jetbrains.com/plugin/7622-php-inspections-ea-extended-) plugins. Give them a try,
-you'll got auto-completion for almost everything and awesome quality analysis.
+you'll get auto-completion for almost everything and awesome quality analysis.
 
 The API Platform distribution comes with a dummy entity for test purpose: `api/src/Entity/Greeting.php`. We will remove
 it later.
@@ -372,7 +372,7 @@ Finally, tell Doctrine to sync the database tables structure with our new data m
     $ docker-compose exec php bin/console doctrine:schema:update --force
 
 
-The `php` container is where your API app stands. Prefixing a command by `docker-compose exec php` allows to execute the
+The `php` container is where your API app stands. Prefixing a command by `docker-compose exec php` allows executing the
 given command in this container. You may want [to create an alias](http://www.linfo.org/alias.html) to make your life easier.
 
 Later, you'll want to use [Doctrine Migrations](https://symfony.com/doc/current/doctrine.html#migrations-creating-the-database-tables-schema)
