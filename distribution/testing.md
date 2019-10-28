@@ -1,6 +1,6 @@
 # Testing the API
 
-Now that you have a functional API, you should write tests to ensure it has no bugs, and to prevent future regressions.
+Now that you have a functional API, you should write tests to ensure it has no bugs and to prevent future regressions.
 Some would argue that it's even better to [write tests first](https://martinfowler.com/bliki/TestDrivenDevelopment.html).
 
 API Platform provides a set of helpful testing utilities to write unit tests, functional tests, and to create [test fixtures](https://en.wikipedia.org/wiki/Test_fixture#Software).
@@ -16,7 +16,7 @@ API-oriented functional tests thanks to its API Platform and [Symfony](https://s
 * [Alice](https://github.com/nelmio/alice) and [its Symfony
 integration](https://github.com/hautelook/AliceBundle#database-testing), an expressive fixtures generator to write data fixtures.
 
-Official [Symfony recipes](https://flex.symfony.com/) are provided for both tools.
+The official [Symfony recipes](https://flex.symfony.com/) are provided for both tools.
 
 ## Creating Data Fixtures
 
@@ -59,7 +59,7 @@ You can now load your fixtures in the database with the following command:
 
 To learn more about fixtures, take a look at the documentation of [Alice](https://github.com/nelmio/alice)
 and [AliceBundle](https://github.com/hautelook/AliceBundle).
-The list of available generators as well as a cookbook explaining how to create custom generators can be found in the documentation of [Faker](https://github.com/fzaninotto/Faker), the library used by Alice under the hood.
+The list of available generators, as well as a cookbook explaining how to create custom generators, can be found in the documentation of [Faker](https://github.com/fzaninotto/Faker), the library used by Alice under the hood.
 
 ## Writing Functional Tests
 
@@ -229,7 +229,7 @@ You may also be interested in these alternative testing tools (not included in t
 * [Behat](http://behat.org/en/latest/) and its [Behatch extension](https://github.com/Behatch/contexts), a
   [Behavior-Driven development](https://en.wikipedia.org/wiki/Behavior-driven_development) framework to write the API
   specification as user stories and in natural language then execute these scenarios against the application to validate
-  its behavior;
+  it's behavior;
 * [Blackfire Player](https://blackfire.io/player), a nice DSL to crawl HTTP services, assert responses, and extract data
   from HTML/XML/JSON responses ([see example in API Platform Demo](https://github.com/api-platform/demo/blob/master/test-api.bkf));
 * [Postman tests](https://www.getpostman.com/docs/writing_tests) (proprietary), create functional test for your API
