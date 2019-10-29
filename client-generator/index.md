@@ -1,6 +1,6 @@
 # The API Platform Client Generator
 
-Client Generator is the fastest way to scaffold fully featured webapps and native mobile apps from APIs supporting the [Hydra](http://www.hydra-cg.com/) format.
+Client Generator is the fastest way to scaffold fully featured Web Apps and native mobile apps from APIs supporting the [Hydra](http://www.hydra-cg.com/) format.
 
 ![Screencast](images/client-generator-demo.gif)
 
@@ -31,4 +31,4 @@ Client Generator works especially well with APIs built with the [API Platform](h
 * Displays server-side validation errors under the related input (if using API Platform Core)
 * Integration with [Bootstrap](https://getbootstrap.com/) and [FontAwesome](https://fontawesome.com/) (Progressive Web Apps)
 * Integration with [React Native Elements](https://react-native-training.github.io/react-native-elements/)
-* Accessible to people with disabilities ([ARIA](https://www.w3.org/WAI/intro/aria) support in webapps)
+* Accessible to people with disabilities ([ARIA](https://www.w3.org/WAI/intro/aria) support in Web Apps)
