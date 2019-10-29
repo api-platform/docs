@@ -27,7 +27,7 @@ Install required dependencies:
 ## Generating Routes
 
     $ npx @api-platform/client-generator https://demo.api-platform.com . --generator next --resource book
-    # Replace the URL by the entrypoint of your Hydra-enabled API
+    # Replace the URL by the entry point of your Hydra-enabled API
 
 > Note: Omit the resource flag to generate files for all resource types exposed by the API.
 
