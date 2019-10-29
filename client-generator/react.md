@@ -47,7 +47,7 @@ If you use the API Platform distribution, generating all the code you need for a
 
 Omit the resource flag to generate files for all resource types exposed by the API.
 
-If you don't use the standalone installation, run the following command instead:
+If you don't use the stand-alone installation, run the following command instead:
 
     $ npx @api-platform/client-generator https://demo.api-platform.com src/ --resource book
     # Replace the URL with the entrypoint of your Hydra-enabled API
