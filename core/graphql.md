@@ -475,10 +475,12 @@ final class WriteStage implements WriteStageInterface
      */
     public function __invoke($data, string $resourceClass, string $operationName, array $context)
     {
-        // Use the provided write stage. Or not.
+        // You can add pre-write code here.
+
+        // Call the decorated write stage (this syntax calls the __invoke method).
         $writtenObject = ($this->writeStage)($data, $resourceClass, $operationName, $context);
 
-        // Do whatever you want.
+        // You can add post-write code here.
 
         return $writtenObject;
     }
