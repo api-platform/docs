@@ -25,9 +25,9 @@ api_platform:
 
 Let's assume we need URLs without separators (e.g. `api.tld/myresources`)
 
-### Defining the Operation Path Resolver
+### Defining the Operation Segment Name Generator
 
-Make sure the custom resolver implements [`ApiPlatform\Core\PathResolver\OperationPathResolverInterface`](https://github.com/api-platform/core/blob/master/src/PathResolver/OperationPathResolverInterface.php):
+Make sure the custom segment generator implements [`ApiPlatform\Core\Operation\PathSegmentNameGeneratorInterface`](https://github.com/api-platform/core/blob/master/src/Operation/PathSegmentNameGeneratorInterface.php):
 
 ```php
 <?php
