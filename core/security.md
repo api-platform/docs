@@ -145,7 +145,7 @@ In order to give the current `object` to your voter, use the expression `is_gran
 ## Configuring the Access Control Error Message
 
 By default when API requests are denied, you will get the "Access Denied" message.
-You can change it by configuring the `security_message` attribute.
+You can change it by configuring the `security_message` attribute or the `security_post_denormalize_message` attribute.
 
 For example:
 
@@ -166,6 +166,7 @@ use ApiPlatform\Core\Annotation\ApiResource;
  *     },
  *     itemOperations={
  *         "get"={"security"="is_granted('ROLE_USER') and object.owner == user", "security_message"="Sorry, but you are not the book owner."}
+ *         "put"={"security_post_denormalize"="is_granted('ROLE_ADMIN') or (object.owner == user and previous_object.owner == user)", "security_post_denormalize_message"="Sorry, but you are not the actual book owner."},
  *     }
  * )
  */
@@ -192,6 +193,10 @@ App\Entity\Book:
             method: 'GET'
             security: 'is_granted("ROLE_USER") and object.owner == user'
             security_message: 'Sorry, but you are not the book owner.'
+        put:
+            method: 'PUT'
+            security_post_denormalize: "is_granted('ROLE_ADMIN') or (object.owner == user and previous_object.owner == user)"
+            security_post_denormalize_message: 'Sorry, but you are not the actual book owner.'
     # ...
 ```
 
