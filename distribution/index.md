@@ -93,7 +93,7 @@ using your preferred IDE or code editor, they will be transparently taken into a
 Speaking about IDEs, our favorite software to develop API Platform apps is [PHPStorm](https://www.jetbrains.com/phpstorm/)
 with its awesome [Symfony](https://confluence.jetbrains.com/display/PhpStorm/Getting+Started+-+Symfony+Development+using+PhpStorm)
 and [Php Inspections](https://plugins.jetbrains.com/plugin/7622-php-inspections-ea-extended-) plugins. Give them a try,
-you'll got auto-completion for almost everything and awesome quality analysis.
+you'll get auto-completion for almost everything and awesome quality analysis.
 
 The API Platform distribution comes with a dummy entity for test purpose: `api/src/Entity/Greeting.php`. We will remove
 it later.
