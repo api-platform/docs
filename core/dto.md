@@ -262,7 +262,7 @@ services:
 Both the `input` and the `output` attributes can be set to `false`. If `input` is `false`, the deserialization process
 will be skipped. If `output` is `false`, the serialization process will be skipped.
 
-## Per operation `input` and `output`
+## Per Operation `input` and `output`
 
 `input` and `output` attributes can be set on a per operation basis:
 
