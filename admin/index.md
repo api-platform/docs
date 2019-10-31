@@ -2,8 +2,8 @@
 
 ![Screencast](images/admin-demo.gif)
 
-API Platform Admin is a tool to automatically create a beautiful and fully featured administration interface
-for any API supporting [the Hydra Core Vocabulary](http://www.hydra-cg.com/) or other API specification formats supported by [`@api-platform/api-doc-parser`](https://github.com/api-platform/api-doc-parser) (experimental support for [OpenAPI](https://www.openapis.org/) is also available).
+API Platform Admin is a tool used to automatically create a beautiful and fully featured administration interface
+for any API supporting [the Hydra Core Vocabulary](http://www.hydra-cg.com/), or other API specification formats supported by [`@api-platform/api-doc-parser`](https://github.com/api-platform/api-doc-parser) (experimental support for [OpenAPI](https://www.openapis.org/) is also available).
 
 API Platform Admin is the perfect companion of APIs created
 using [the API Platform framework](https://api-platform.com), but also supports APIs written with any other programming language or framework as long as they expose a standard Hydra API documentation. 
@@ -12,7 +12,7 @@ API Platform Admin is a 100% standalone Single-Page-Application with no coupling
 according to the API-first paradigm.
 
 API Platform Admin parses the API documentation then uses the awesome [React Admin](https://marmelab.com/react-admin/)
-library to expose a nice, responsive, management interface (Create-Retrieve-Update-Delete) for all documented resource types.
+library to expose a nice and responsive management interface (Create-Retrieve-Update-Delete) for all documented resource types.
 
 You can  **customize everything** by using provided React Admin and [Material UI](https://material-ui.com/) components, or by writing your custom [React](https://reactjs.org/) components.
 
