@@ -373,4 +373,4 @@ JWT_KEY=!UnsecureChangeMe!
 SUBDOMAINS_LIST=(admin|api|cache|mercure|www)
 ```
 
-This way, you can configure your main variables into one single file.
+By this way, you can configure your main variables into one single file.
