@@ -98,9 +98,22 @@ api_platform:
 # ...
 ```
 
+## Request with `application/graphql` Content-Type
+
+If you wish to send a [POST request using the `application/graphql` Content-Type](https://graphql.org/learn/serving-over-http/#post-request),
+you need to enable it in the [allowed formats of API Platform](content-negotiation.md#configuring-formats-globally):
+
+```yaml
+# api/config/packages/api_platform.yaml
+api_platform:
+    formats:
+        # ...
+        graphql: ['application/graphql']
+```
+
 ## Queries
 
-If you don't know what queries are yet, the documentation about them is [here](https://graphql.org/learn/queries/).
+If you don't know what queries are yet, please [read the documentation about them](https://graphql.org/learn/queries/).
 
 For each resource, two queries are available: one for retrieving an item and the other one for the collection.
 For example, if you have a `Book` resource, the queries `book` and `books` can be used.
@@ -1281,4 +1294,159 @@ Since the command prints the schema to the output if you don't use the `-o` opti
 
 ```bash
 docker-compose exec php bin/console api:graphql:export > path/in/host/schema.graphql
+```
+
+## Handling File Upload
+
+Please follow the [file upload documentation](file-upload.md), only the differences will be documented here.
+
+The file upload with GraphQL follows the [GraphQL multipart request specification](https://github.com/jaydenseric/graphql-multipart-request-spec).
+
+You can also upload multiple files at the same time.
+
+### Configuring the Entity Receiving the Uploaded File
+
+Configure the entity by adding a [custom mutation resolver](#custom-mutations):
+
+```php
+<?php
+// api/src/Entity/MediaObject.php
+
+namespace App\Entity;
+
+use ApiPlatform\Core\Annotation\ApiProperty;
+use ApiPlatform\Core\Annotation\ApiResource;
+use App\Resolver\CreateMediaObjectResolver;
+use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\HttpFoundation\File\File;
+use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Validator\Constraints as Assert;
+use Vich\UploaderBundle\Mapping\Annotation as Vich;
+
+/**
+ * @ORM\Entity
+ * @ApiResource(
+ *     iri="http://schema.org/MediaObject",
+ *     normalizationContext={
+ *         "groups"={"media_object_read"}
+ *     },
+ *     graphql={
+ *         "upload"={
+ *             "mutation"=CreateMediaObjectResolver::class,
+ *             "deserialize"=false,
+ *             "args"={
+ *                 "file"={"type"="Upload!", "description"="The file to upload"}
+ *             }
+ *         }
+ *     }
+ * )
+ * @Vich\Uploadable
+ */
+class MediaObject
+{
+    /**
+     * @var int|null
+     *
+     * @ORM\Column(type="integer")
+     * @ORM\GeneratedValue
+     * @ORM\Id
+     */
+    protected $id;
+
+    /**
+     * @var string|null
+     *
+     * @ApiProperty(iri="http://schema.org/contentUrl")
+     * @Groups({"media_object_read"})
+     */
+    public $contentUrl;
+
+    /**
+     * @var File|null
+     *
+     * @Assert\NotNull(groups={"media_object_create"})
+     * @Vich\UploadableField(mapping="media_object", fileNameProperty="filePath")
+     */
+    public $file;
+
+    /**
+     * @var string|null
+     *
+     * @ORM\Column(nullable=true)
+     */
+    public $filePath;
+
+    public function getId(): ?int
+    {
+        return $this->id;
+    }
+}
+```
+
+As you can see, a dedicated type `Upload` is used in the argument of the `upload` mutation.
+
+If you need to upload multiple files, replace `"file"={"type"="Upload!", "description"="The file to upload"}`
+with `"files"={"type"="[Upload!]!", "description"="Files to upload"}`.
+
+You don't need to create it, it's provided in API Platform.
+
+### Resolving the File Upload
+
+The corresponding resolver you added in the resource configuration should be written like this:
+
+```php
+<?php
+// api/src/Resolver/CreateMediaObjectResolver.php
+
+namespace App\Resolver;
+
+use ApiPlatform\Core\GraphQl\Resolver\MutationResolverInterface;
+use App\Entity\MediaObject;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
+
+final class CreateMediaObjectResolver implements MutationResolverInterface
+{
+    /**
+     * @param null $item
+     */
+    public function __invoke($item, array $context): MediaObject
+    {
+        $uploadedFile = $context['args']['input']['file'];
+
+        $mediaObject = new MediaObject();
+        $mediaObject->file = $uploadedFile;
+
+        return $mediaObject;
+    }
+}
+```
+
+For handling the upload of multiple files, iterate over `$context['args']['input']['files']`.
+
+### Using the `createMediaObject` Mutation
+
+Following the specification, the upload must be done with a `multipart/form-data` content type.
+
+You need to enable it in the [allowed formats of API Platform](content-negotiation.md#configuring-formats-globally):
+
+```yaml
+# api/config/packages/api_platform.yaml
+api_platform:
+    formats:
+        # ...
+        multipart: ['multipart/form-data']
+```
+
+You can now upload files using the `createMediaObject` mutation, for details check [GraphQL multipart request specification](https://github.com/jaydenseric/graphql-multipart-request-spec)
+and for an example implementation for the Apollo client check out [Apollo Upload Client](https://github.com/jaydenseric/apollo-upload-client).
+
+```graphql
+mutation CreateMediaObject($file: Upload!) {
+    createMediaObject(input: {file: $file}) {
+        mediaObject {
+            id
+            contentUrl
+        }
+    }
+}
 ```
