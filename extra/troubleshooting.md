@@ -6,11 +6,13 @@ This is a list of common pitfalls while using API Platform, and how to avoid the
 
 ### With Docker Toolbox on Windows
 
-Docker Toolbox is not supported anymore by API Platform. Please upgrade to [Docker for Windows](https://www.docker.com/docker-windows).
+Docker Toolbox is not supported anymore by API Platform.
+Please upgrade to [Docker for Windows](https://www.docker.com/docker-windows).
 
-### Error starting userland proxy
+### Error starting Userland Proxy
 
-If the `app` container cannot start and display this `Error starting userland proxy: Bind for 0.0.0.0:80`, it means that port 80 is already in use. You can check to see which processes are currently listening on certain ports.
+If the `app` container cannot start and displays this `Error starting userland proxy: Bind for 0.0.0.0:80`, it means that port 80 is already in use. 
+You can check to see which processes are currently listening on certain ports by doing the following:
 
     # Find out if any service listens on port 80.
     # You can use this command on UNIX-based OSes like MacOS and Linux.
@@ -41,7 +43,7 @@ The JMS Serializer service is available as `jms_serializer`.
 
 ## "upstream sent too big header while reading response header from upstream" 502 Error
 
-Some of your API calls fail with a 502 error and the logs for the api container shows the following error message `upstream sent too big header while reading response header from upstream`. 
+Some of your API calls fail with a 502 error and the logs for the API container shows the following error message `upstream sent too big header while reading response header from upstream`. 
 
 This can be due to the cache invalidation headers that are too big for NGINX. When you query the API, API Platform adds the ids of all returned entities and their dependencies in the headers like so : `Cache-Tags: /entity/1,/dependent_entity/1,/entity/2`. This can overflow the default header size (4k) when your API gets larger and more complex.
 
@@ -92,4 +94,4 @@ server {
 }
 ```
 
-You then need to rebuild your containers by running `docker-compose build`.
+You will then need to rebuild your containers by running `docker-compose build`.
