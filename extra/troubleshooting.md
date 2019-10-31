@@ -28,7 +28,7 @@ For the latest versions of [JMSSerializerBundle](http://jmsyst.com/bundles/JMSSe
 
 If you are still using the old, unmaintained v1 of JMSSerializerBundle, the best way would be to [upgrade to v2](https://github.com/schmittjoh/JMSSerializerBundle/blob/2.4.2/UPGRADING.md#upgrading-from-1x-to-20) of JMSSerializerBundle.
 
-In v1 of JMSSerializerBundle, the `serializer` alias is registered for the JMS Serializer service by default. However, API Platform requires the Symfony Serializer (and not the JMS one) to work properly. If you cannot upgrade for some reason, this behavior can be deactivated using the following configuration:
+In v1 of JMSSerializerBundle, the `serializer` alias is registered for the JMS Serializer service by default. However, API Platform requires the Symfony Serializer (and not the JMS one) to work properly. If you cannot upgrade for some reason, this behaviour can be deactivated using the following configuration:
 
 ```yaml
 # app/config/config.yml
