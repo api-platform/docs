@@ -238,3 +238,8 @@ final class BlogPostItemDataProvider implements ItemDataProviderInterface, Restr
 }
 
 ```
+
+## Community Data Providers
+
+If you don't want to use the built-in Doctrine system, alternative approaches which offer an integration with API Platform exist.
+* [Pomm Data Provider](https://github.com/pomm-project/pomm-api-platform): ([Pomm](http://www.pomm-project.org/) is a database access framework dedicated to PostgreSQL database.
