@@ -1,6 +1,6 @@
 # Implement Traefik Into API Platform Dockerized
 
-> An open-source reverse proxy and load balancer for HTTP and TCP-based applications that is easy, dynamic, automatic, fast, full-featured, production proven, provides metrics, and integrates with every major cluster technology.
+> An open-source reverse proxy and load balancer for HTTP and TCP-based applications that is easy, dynamic, automatic, fast, full-featured, production proven, provides metrics and integrates with every major cluster technology.
 >
 > —https://traefik.io
 
@@ -9,7 +9,7 @@
 This tutorial will help you to define your own routes for your client, api and more generally for your containers.
 
 Use this custom API Platform `docker-compose.yml` file which implements ready-to-use Traefik container configuration. Override
-ports and add labels to tell Traefik to listen on the routes mentioned and redirect routes to specified container.
+ports and add labels to tell Traefik to listen on the routes mentioned and redirect routes to a specified container.
 
 A few points to note:
 * `--api` Tells Traefik to generate a browser view to watch containers and IP/DNS associated easier  
@@ -182,7 +182,7 @@ If your network is of type B, it may conflict with the Traefik sub-network.
 
 ## Going Further
 
-As this Traefik configuration listens on 80 and 443 ports, you can run only 1 Traefik instance per server. However, you may want to run multiple API Platform projects on same server. To deal with it, you'll have to externalize the Traefik configuration to another `docker-compose.yml` file, anywhere on your server.
+As this Traefik configuration listens on 80 and 443 ports, you can run only 1 Traefik instance per server. However, you may want to run multiple API Platform projects on the same server. To deal with it, you'll have to externalize the Traefik configuration to another `docker-compose.yml` file, anywhere on your server.
 
 Here is a working example:
 
