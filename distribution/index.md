@@ -650,6 +650,30 @@ UI that is shipped with API Platform:
 
 ![GraphQL endpoint](images/api-platform-2.5-graphql.png)
 
+Try it out by creating a greeting:
+
+```graphql
+mutation {
+  createGreeting(input: {name: "Test2"}) {
+    greeting {
+      id
+      name
+    }
+  }
+}
+```
+
+And by reading out the greeting:
+```graphql
+{
+  greeting(id: "/greetings/1") {
+    id
+    name
+    _id
+  }
+}
+```
+
 The GraphQL implementation supports [queries](https://graphql.org/learn/queries/), [mutations](https://graphql.org/learn/queries/#mutations),
 [100% of the Relay server specification](https://facebook.github.io/relay/docs/en/graphql-server-specification.html), pagination,
 [filters](../core/filters.md) and [access control rules](../core/security.md).
