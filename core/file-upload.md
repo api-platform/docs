@@ -26,6 +26,7 @@ vich_uploader:
         media_object:
             uri_prefix: /media
             upload_destination: '%kernel.project_dir%/public/media'
+            namer: Vich\UploaderBundle\Naming\OrignameNamer
 ```
 
 ## Configuring the Entity Receiving the Uploaded File
