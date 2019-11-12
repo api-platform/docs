@@ -93,7 +93,7 @@ using your preferred IDE or code editor, they will be transparently taken into a
 Speaking about IDEs, our favorite software to develop API Platform apps is [PHPStorm](https://www.jetbrains.com/phpstorm/)
 with its awesome [Symfony](https://confluence.jetbrains.com/display/PhpStorm/Getting+Started+-+Symfony+Development+using+PhpStorm)
 and [Php Inspections](https://plugins.jetbrains.com/plugin/7622-php-inspections-ea-extended-) plugins. Give them a try,
-you'll got auto-completion for almost everything and awesome quality analysis.
+you'll get auto-completion for almost everything and awesome quality analysis.
 
 The API Platform distribution comes with a dummy entity for test purpose: `api/src/Entity/Greeting.php`. We will remove
 it later.
@@ -106,9 +106,6 @@ is able to automatically optimize the generated SQL queries by adding the approp
 lot of powerful built-in filters.
 Doctrine ORM and its bridge support most popular RDBMS including PostgreSQL, MySQL, MariaDB, SQL Server, Oracle and SQLite.
 There is also a shipped [Doctrine MongoDB ODM](https://www.doctrine-project.org/projects/mongodb-odm.html) optional support.
-
-If you don't want to use the built-in Doctrine system, alternative approaches which offer an integration with API Platform exist.
-For instance, [Pomm](http://www.pomm-project.org/) is a database access framework for PHP dedicated to PostgreSQL. The bundle to integrate it with API Platform can be found [here](https://github.com/pomm-project/pomm-api-platform).
 
 That being said, keep in mind that API Platform is 100% independent of the persistence system. You can use the one(s) that
 best suit(s) your needs (including NoSQL databases or remote web services) by implementing the [right interfaces](../core/data-providers.md). API Platform even supports using several persistence
@@ -652,6 +649,30 @@ You now have a GraphQL API! Open `https://localhost:8443/graphql` (or `https://l
 UI that is shipped with API Platform:
 
 ![GraphQL endpoint](images/api-platform-2.5-graphql.png)
+
+Try it out by creating a greeting:
+
+```graphql
+mutation {
+  createGreeting(input: {name: "Test2"}) {
+    greeting {
+      id
+      name
+    }
+  }
+}
+```
+
+And by reading out the greeting:
+```graphql
+{
+  greeting(id: "/greetings/1") {
+    id
+    name
+    _id
+  }
+}
+```
 
 The GraphQL implementation supports [queries](https://graphql.org/learn/queries/), [mutations](https://graphql.org/learn/queries/#mutations),
 [100% of the Relay server specification](https://facebook.github.io/relay/docs/en/graphql-server-specification.html), pagination,

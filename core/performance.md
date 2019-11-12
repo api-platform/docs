@@ -189,6 +189,19 @@ api_platform:
 Be careful when you exceed this limit, it's often caused by the result of a circular reference. [Serializer groups](serialization.md)
 can be a good solution to fix this issue.
 
+#### Fetch Partial
+
+If you want to fetch only partial data according to serialization groups, you can enable `fetch_partial` parameter:
+
+```yaml
+# api/config/packages/api_platform.yaml
+api_platform:
+    eager_loading:
+        fetch_partial: true
+```
+It is disabled by default.
+If enabled, Doctrine ORM entities will not work as expected if any of the other fields are used.
+
 #### Force Eager
 
 As mentioned above, by default we force eager loading for all relations. This behaviour can be modified in the

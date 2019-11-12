@@ -1,6 +1,6 @@
 # Customizing the Admin
 
-Customizing API Platform Admin is easy and idiomatic. The tool gives you the ability to customize everything, from the list of resource types that must be administrable to every single inputs or buttons.
+Customizing API Platform Admin is easy and idiomatic. The tool gives you the ability to customize everything, from the list of resource types that must be administrable to every single input or button.
 
 To do so, you can use the React components provided by API Platform Admin itself, [React Admin](https://marmelab.com/react-admin/), [Material UI](https://material-ui.com/), [community libraries](https://github.com/brillout/awesome-react-components), or [write your own](https://reactjs.org/tutorial/tutorial.html).
 
@@ -10,7 +10,7 @@ By default, API Platform Admin automatically builds a tailored [`<Resource>` com
 Under the hood it uses the `@api-platform/api-doc-parser` library to parse the API documentation. The API documentation can use Hydra, OpenAPI and any other format supported by the library.
 Resources are listed in the order they appear in the machine-readable documentation.
 
-However, it's also possible to display only specific resources, and to order them, while still benefiting of all discovery features provided by API Platform Admin.
+However, it's also possible to display only specific resources, and to order them, while still benefiting from all discovery features provided by API Platform Admin.
 To cherry-pick the resources to make available through the admin, pass a list of `<ResourceGuesser>` components as children of the root component:
 
 ```javascript
@@ -104,7 +104,7 @@ In addition to the `<FieldGuesser>` component, [all React Admin Fields component
 
 ## Customizing the Create Form
 
-Again, the same logic applies to forms, here is how to customize the create form:
+Again, the same logic applies to forms. Here is how to customize the create form:
 
 ```javascript
 import React from "react";

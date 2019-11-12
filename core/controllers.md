@@ -1,7 +1,7 @@
 # Creating Custom Operations and Controllers
 
 Note: using custom controllers with API Platform is **discouraged**. Also, GraphQL is **not supported**.
-[For most use cases, better extensions points, working both with REST and GraphQL, are available](design.md).
+[For most use cases, better extension points, working both with REST and GraphQL, are available](design.md).
 
 API Platform can leverage the Symfony routing system to register custom operations related to custom controllers. Such custom
 controllers can be any valid [Symfony controller](http://symfony.com/doc/current/book/controller.html), including standard
@@ -138,12 +138,12 @@ Or in XML:
 </resources>
 ```
 
-It is mandatory to set the `method`, `path` and `controller` attributes. They allow API platform to configure the routing path and
+It is mandatory to set the `method`, `path` and `controller` attributes. They allow API Platform to configure the routing path and
 the associated controller respectively.
 
 ## Using Serialization Groups
 
-You may want different serialization groups for your custom operations. Just configure the proper `normalization_context` and/or `denormalization_context`in your operation:
+You may want different serialization groups for your custom operations. Just configure the proper `normalization_context` and/or `denormalization_context` in your operation:
 
 ```php
 <?php
