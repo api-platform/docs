@@ -119,7 +119,7 @@ services:
 ```
 
 The `api_platform.doctrine.orm.query_extension.collection` tag will register this service as a collection extension.
-The `api_platform.doctrine.orm.query_extension.item` do the same thing for items.
+The `api_platform.doctrine.orm.query_extension.item` does the same thing for items.
 
 Note that your extensions should have a positive priority if defined. Internal extensions have negative priorities, for reference:
 
@@ -134,7 +134,7 @@ Note that your extensions should have a positive priority if defined. Internal e
 
 #### Blocking Anonymous Users
 
-This example adds a `WHERE` clause condition only when a fully authenticated user without `ROLE_ADMIN` tries to access a resource. It means that anonymous users will be able to access to all data. To prevent this potential security issue, the API must ensure that the current user is authenticated.
+This example adds a `WHERE` clause condition only when a fully authenticated user without `ROLE_ADMIN` tries to access a resource. It means that anonymous users will be able to access all data. To prevent this potential security issue, the API must ensure that the current user is authenticated.
 
 To secure the access to endpoints, use the following access control rule:
 

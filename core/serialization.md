@@ -434,7 +434,7 @@ final class BookContextBuilder implements SerializerContextBuilderInterface
 }
 ```
 
-If the user has the `ROLE_ADMIN` permission and the subject is an instance of Book, `admin_input` group will be dynamically added to the
+If the user has the `ROLE_ADMIN` permission and the subject is an instance of Book, `admin:input` group will be dynamically added to the
 denormalization context. The `$normalization` variable lets you check whether the context is for normalization (if `TRUE`) or denormalization
 (`FALSE`).
 
