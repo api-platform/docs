@@ -929,6 +929,82 @@ For instance:
 - If you use a different `normalization_context` for a mutation, a `MyResourcePayloadData` type with the restricted fields will be generated and used instead of `MyResource` (the query type).
 - If you use a different `normalization_context` for the query of an item (`item_query` operation) and for the query of a collection (`collection_query` operation), two types `MyResourceItem` and `MyResourceCollection` with the restricted fields will be generated and used instead of `MyResource` (the query type).
 
+## Exception and Error Formatting
+
+By default, if an exception is sent when resolving a query or a mutation, it is normalized following the [GraphQL specification](https://github.com/graphql/graphql-spec/blob/master/spec/Section%207%20--%20Response.md#errors).
+
+It means an `errors` entry will be returned in the response, containing the following entries: `message`, `extensions`, `locations` and `path`.
+For more information, please [refer to the documentation in graphql-php](https://webonyx.github.io/graphql-php/error-handling/#default-error-formatting).
+
+In `prod` mode, the displayed message will be a generic one, excepted for a `RuntimeException` (and all exceptions inherited from it) for which it will be its actual message.
+This behavior is different from what is described in the [graphql-php documentation](https://webonyx.github.io/graphql-php/error-handling).
+It's because a built-in [custom exception normalizer](#custom-exception-normalizer) is used to normalize the `RuntimeException` and change the default behavior.
+
+If you are in `dev` mode, more entries will be added in the response: `debugMessage` (containing the actual exception message, for instance in the case of a `LogicException`) and `trace` (the formatted exception trace).
+
+For some specific exceptions, built-in [custom exception normalizers](#custom-exception-normalizer) are also used to add more information.
+It's the case for a `HttpException` for which the `status` entry will be added under `extensions` and for a `ValidationException` for which `status` (always 400) and `violations` entries will be added.
+
+### Custom Exception Normalizer
+
+If you want to add more specific behaviors depending on the exception or if you want to change the behavior of the built-in ones, you can do so by creating your own normalizer.
+
+Please follow the [Symfony documentation to create a custom normalizer](https://symfony.com/doc/current/serializer/custom_normalizer.html).
+
+The code should look like this:
+
+```php
+<?php
+// api/src/Serializer/Exception/MyExceptionNormalizer.php
+
+namespace App\Serializer\Exception;
+
+use App\Exception\MyException;
+use GraphQL\Error\Error;
+use GraphQL\Error\FormattedError;
+use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
+
+final class MyExceptionNormalizer implements NormalizerInterface
+{
+    /**
+     * {@inheritdoc}
+     */
+    public function normalize($object, $format = null, array $context = []): array
+    {
+        $exception = $object->getPrevious();
+        $error = FormattedError::createFromException($object);
+
+        // Add your logic here and add your specific data in the $error array (in the 'extensions' entry to follow the GraphQL specification).
+        // $error['extensions']['yourEntry'] = ...;
+
+        return $error;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function supportsNormalization($data, $format = null): bool
+    {
+        return $data instanceof Error && $data->getPrevious() instanceof MyException;
+    }
+}
+```
+
+You can see that, in the `normalize` method, you should add a call to `FormattedError::createFromException` in order to have the same behavior as the other normalizers.
+
+When registering your custom normalizer, you can add a priority to order your normalizers between themselves.
+
+If you use a positive priority (or no priority), your normalizer will always be called before the built-in normalizers.
+For instance, you can register a custom normalizer like this:
+
+```yaml
+# api/config/services.yaml
+services:
+    App\Serializer\Exception\MyExceptionNormalizer:
+        tags:
+            - { name: 'serializer.normalizer', priority: 12 }
+```
+
 ## Name Conversion
 
 You can modify how the property names of your resources are converted into field and filter names of your GraphQL schema.
