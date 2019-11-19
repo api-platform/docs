@@ -703,6 +703,8 @@ For example, if you want to search the offers with a green or a red product you 
 API Platform natively enables a cursor-based pagination for collections.
 It supports [GraphQL's Complete Connection Model](https://graphql.org/learn/pagination/#complete-connection-model) and is compatible with [Relay's Cursor Connections Specification](https://facebook.github.io/relay/graphql/connections.htm).
 
+A page-based pagination can also be enabled per resource or per operation.
+
 ### Using the Cursor-based Pagination
 
 Here is an example query leveraging the pagination system:
@@ -760,6 +762,88 @@ For the previous page, you would add the `startCursor` from the current page as 
 
 How do you know when you have reached the last page? It is the aim of the property `hasNextPage` or `hasPreviousPage` in `pageInfo`.
 When it is false, you know it is the last page and moving forward or backward will give you an empty result.
+
+### Using the Page-based Pagination
+
+In order to use the page-based pagination, you need to enable it in the resource.
+
+For instance at the operation level:
+
+```php
+<?php
+// api/src/Entity/Offer.php
+
+namespace App\Entity;
+
+use ApiPlatform\Core\Annotation\ApiResource;
+
+/**
+ * @ApiResource(
+ *     graphql={
+ *          "item_query",
+ *          "collection_query"={
+ *              "paginationType"="page"
+ *          },
+ *          "delete",
+ *          "update",
+ *          "create"
+ *     }
+ * )
+ */
+class Offer
+{
+    // ...
+}
+```
+
+Or if you want to do it at the resource level:
+
+```php
+<?php
+// api/src/Entity/Offer.php
+
+namespace App\Entity;
+
+use ApiPlatform\Core\Annotation\ApiResource;
+
+/**
+ * @ApiResource(
+ *     attributes={
+ *          "paginationType"="page"
+ *     }
+ * )
+ */
+class Offer
+{
+    // ...
+}
+```
+
+Once enabled, a `page` filter will be available in the collection query (its name [can be changed in the configuration](pagination.md)) and an `itemsPerPage` filter will be available too if [client-side-pagination](pagination.md#client-side) is enabled.
+
+A `paginationInfo` field can be queried to obtain the following information:
+- `itemsPerPage`: the number of items per page. To change it, follow the [pagination documentation](pagination.md#changing-the-number-of-items-per-page).
+- `lastPage`: the last page of the collection.
+- `totalCount`: the total number of items in the collection.
+
+The collection items data are available in the `collection` field.
+
+An example of a query:
+
+```graphql
+{
+  offers(page: 3, itemsPerPage: 15) {
+    collection {
+      id
+    }
+    paginationInfo {
+      itemsPerPage
+      lastPage
+      totalCount
+    }
+  }
+}
+```
 
 ### Disabling the Pagination
 
