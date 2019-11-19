@@ -73,6 +73,7 @@ chapters:
       - nextjs
       - react-native
       - vuejs
+      - vuetify
       - quasar
       - typescript
       - troubleshooting
