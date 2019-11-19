@@ -601,7 +601,7 @@ use ApiPlatform\Core\Annotation\ApiResource;
  *         "filters"={"offer.search_filter"}
  *     },
  *     graphql={
-*          "item_query",
+ *         "item_query",
  *         "collection_query"={
  *              "filters"={"offer.date_filter"}
  *          },
@@ -765,7 +765,7 @@ When it is false, you know it is the last page and moving forward or backward wi
 
 See also the [pagination documentation](pagination.md#disabling-the-pagination).
 
-### Globally
+#### Globally
 
 The pagination can be disabled for all GraphQL resources using this configuration:
 
@@ -778,7 +778,7 @@ api_platform:
                 enabled: false
 ```
 
-### For a Specific Resource
+#### For a Specific Resource
 
 It can also be disabled for a specific resource (REST and GraphQL):
 
@@ -797,7 +797,7 @@ class Book
 }
 ```
 
-### For a Specific Resource Collection Operation
+#### For a Specific Resource Collection Operation
 
 You can also disable the pagination for a specific collection operation:
 
