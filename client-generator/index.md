@@ -13,6 +13,7 @@ It is able to generate apps using the following frontend stacks:
 * [Next.js](nextjs.md)
 * [Vue.js](vuejs.md)
 * [Quasar Framework](quasar.md)
+* [Vuetify](vuetify.md)
 
 Client Generator works especially well with APIs built with the [API Platform](https://api-platform.com) framework.
 
