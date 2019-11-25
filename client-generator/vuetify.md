@@ -74,6 +74,7 @@ export default store;
 ```
 
 Update the `src/plugins/vuetify.js` file with the following:
+
 ```javascript
 import Vue from 'vue';
 import Vuetify from 'vuetify/lib';
@@ -87,10 +88,12 @@ const opts = {
 };
 
 export default new Vuetify(opts);
+```
 
 The generator comes with a i18n feature to allow quick translations of some labels in the generated code, to make it
 work, you need to create the `src/i18n.js` file with the following:
-```
+
+```javascript
 import Vue from 'vue';
 import VueI18n from 'vue-i18n';
 import messages from './locales/en';
@@ -104,11 +107,11 @@ export default new VueI18n({
     en: messages
   }
 });
-
 ```
 
 Update your App.vue with following:
-```
+
+```javascript
 <template>
   <v-app id="inspire">
     <snackbar></snackbar>
