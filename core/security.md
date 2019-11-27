@@ -77,11 +77,28 @@ App\Entity\Book:
             security: 'is_granted("ROLE_ADMIN") or object.owner == user'
 ```
 
+Resource signature can be modified at the property level as well:
+
+```php
+class Book
+{
+    //...
+
+    /**
+     * @var string Property viewable and writtable only by users with ROLE_ADMIN
+     *
+     * @ApiProperty(security="is_granted('ROLE_ADMIN')")
+     */
+    private $adminOnlyProperty;
+}
+```
+
 In this example:
 
 * The user must be logged in to interact with `Book` resources (configured at the resource level)
 * Only users having [the role](https://symfony.com/doc/current/security.html#roles) `ROLE_ADMIN` can create a new resource (configured on the `post` operation)
 * Only users having the `ROLE_ADMIN` or owning the current object can replace an existing book (configured on the `put` operation)
+* Only users having the `ROLE_ADMIN` can view or modify the `adminOnlyProperty` property. Only users having the `ROLE_ADMIN` can create a new resource specifying `adminOnlyProperty` value.
 
 Available variables are `user` (the current logged in object, if any), and `object` (the current resource, or collection of resources for collection operations).
 
