@@ -39,6 +39,8 @@ Let's create a `DataProvider` for the `Person` entity:
 <?php
 namespace App\DataProvider;
 
+use ApiPlatform\Core\DataProvider\ItemDataProviderInterface;
+use ApiPlatform\Core\DataProvider\RestrictedDataProviderInterface;
 use App\Entity\Person;
 use App\Uuid;
 
