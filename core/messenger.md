@@ -103,6 +103,9 @@ If you want it to be consumed asynchronously (e.g. by a worker machine), [config
 API Platform automatically uses the `Symfony\Component\Messenger\Stamp\HandledStamp` when set.
 It means that if you use a synchronous handler, the data returned by the `__invoke` method replaces the original data.
 
+In cases where multiple handlers are registered, the last handler return value will be used as output. If none are returned, ensure resource configuration defines no output with `output=false`.
+Handler ordering can be configured [using messenger priority tag](https://symfony.com/doc/current/messenger.html#manually-configuring-handlers).
+
 ## Detecting Removals
 
 When a `DELETE` operation occurs, API Platform automatically adds a `ApiPlatform\Core\Bridge\Symfony\Messenger\RemoveStamp` ["stamp"](https://symfony.com/doc/current/components/messenger.html#adding-metadata-to-messages-envelopes) instance to the "envelope".
