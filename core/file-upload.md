@@ -5,7 +5,7 @@ implementation in your app. This page will guide you in handling file upload in
 your API, with the help of
 [VichUploaderBundle](https://github.com/dustin10/VichUploaderBundle). It is
 recommended you [read the documentation of
-VichUploaderBundle](https://github.com/dustin10/VichUploaderBundle/blob/master/Resources/doc/index.md)
+VichUploaderBundle](https://github.com/dustin10/VichUploaderBundle/blob/master/docs/index.md)
 before proceeding. It will help you get a grasp on how the bundle works, and why we use it.
 
 ## Installing VichUploaderBundle
