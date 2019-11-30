@@ -67,7 +67,7 @@ const uploadCapableDataProvider = addUploadFeature(dataProvider);
 export default props => (
     <HydraAdmin
         apiDocumentationParser={ apiDocumentationParser }
-        dataProvider={ dataProvider }
+        dataProvider={ uploadCapableDataProvider }
         authProvider={ authProvider }
         entrypoint={ entrypoint }
     />
