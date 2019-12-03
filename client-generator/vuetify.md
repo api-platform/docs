@@ -50,24 +50,16 @@ Vue.use(Vuex);
 
 const store = new Vuex.Store({
   modules: {
-    notifications
+    notifications,
+    book: makeCrudModule({
+      service: bookService
+    }),
+    review: makeCrudModule({
+      service: reviewService
+    })
   },
   strict: process.env.NODE_ENV !== 'production'
 });
-
-store.registerModule(
-  'book',
-  makeCrudModule({
-    service: bookService
-  })
-);
-
-store.registerModule(
-  'review',
-  makeCrudModule({
-    service: reviewService
-  })
-);
 
 export default store;
 
