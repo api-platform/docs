@@ -343,7 +343,7 @@ use ApiPlatform\Core\Bridge\Doctrine\MongoDbOdm\Filter\RangeFilter;
  * @ApiResource(attributes={
  *   "pagination_partial"=true,
  *   "pagination_via_cursor"={"field"="id", "direction"="DESC"}
- * )
+ * })
  * @ApiFilter(RangeFilter::class, properties={"id"})
  * @ApiFilter(OrderFilter::class, properties={"id"="DESC"})
  */
