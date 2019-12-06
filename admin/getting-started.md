@@ -75,6 +75,13 @@ You also need to install the js libraries :
 
     $ yarn add react react-dom @babel/preset-react
     
+Don't forget to activate the following lines in your `webpack.config.js` file : 
+
+```javascript
+.enableReactPreset()
+.addEntry('admin', './assets/js/admin.js')
+```
+
 If you try to access to your `/admin` route, the new admin will show.
 You can customize the render in `templates/admin.html.twig`. 
 The file contains actually this : 
