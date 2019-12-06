@@ -71,7 +71,7 @@ You can install the admin component with Composer by using:
 
     $ composer require api-admin
     
-You also need to install the js libraries : 
+You also need to install the JavaScript libraries: 
 
     $ yarn add react react-dom @babel/preset-react
     
