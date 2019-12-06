@@ -75,7 +75,7 @@ You also need to install the JavaScript libraries:
 
     $ yarn add react react-dom @babel/preset-react
     
-Don't forget to activate the following lines in your `webpack.config.js` file : 
+Don't forget to uncomment the following lines in your `webpack.config.js` file:
 
 ```javascript
 .enableReactPreset()
