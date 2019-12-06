@@ -67,7 +67,7 @@ Note: if you don't want to hardcode the API URL, you can [use an environment var
 
 ## Creating the Admin (React) and Customize It With Twig
 
-You can install the admin component with composer by using : 
+You can install the admin component with Composer by using:
 
     $ composer require api-admin
     
