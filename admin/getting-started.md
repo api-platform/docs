@@ -18,7 +18,7 @@ Finally, install the `@api-platform/admin` library:
 
     $ yarn add @api-platform/admin
 
-## Creating the Admin with React.js
+## Creating the Admin (React)
 
 To initialize API Platform Admin, register it in your application.
 For instance, if you used Create React App, replace the content of `src/App.js` by:
