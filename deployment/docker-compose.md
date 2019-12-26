@@ -150,3 +150,11 @@ These steps should be performed on the production server.
     If you are using the (optional) Let's Encrypt integration:
 
         $ docker-compose -f docker-compose-prod/docker-compose.yml -f docker-compose-prod/docker-compose.letsencrypt.yml up -d
+
+##  Running the Docker Compose Setup for Production Locally
+
+Sometimes, you may need to run a production-like setup locally; for example, for [end-to-end testing](../distribution/testing.md#using-the-api-platform-distribution-for-end-to-end-testing)
+or to troubleshoot problems which can only be reproduced with a production setup (e.g. Varnish errors or cache misses).
+
+You may (re)use the same [Docker Compose setup for production](https://github.com/api-platform/docker-compose-prod) we
+have [installed above](#installing-the-docker-compose-setup-for-production).
