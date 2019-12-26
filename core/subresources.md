@@ -159,6 +159,7 @@ Or using YAML:
 App\Entity\Answer:
     subresourceOperations:
         api_questions_answer_get_subresource:
+            method: 'GET'
             normalization_context: {groups: ['foobar']}
 ```
 
