@@ -82,7 +82,6 @@ This starts the following services:
 | api      | The HTTP server for the API (NGINX)                               | n/a                                                         | all                                                |
 | vulcain  | The [Vulcain](https://vulcain.rocks) gateaway                     | 8443                                                        | all (prefer using a managed service in prod)       |
 | mercure  | The Mercure hub, [for real-time capabilities](../core/mercure.md) | 1337                                                        | all (prefer using the managed version in prod)     |
-| h2-proxy | A HTTP/2 and HTTPS development proxy for all apps                 | 443 (client)<br>444 (admin)<br>8443 (api)<br>1338 (mercure) | dev (configure properly your web server in prod)   |
 
 To see the container's logs, run:
 
