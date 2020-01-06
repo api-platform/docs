@@ -405,6 +405,10 @@ Given that the collection endpoint is `/offers`, you can filter offers on nullab
 
 It will return all offers where `transportFees` is not `null`.
 
+#### Exists Filter and toMany relations
+
+Exists filter also works with `toMany` relations. If a property of the filter is a `toMany` relation, then `exists[property]=true` will return all items for which the relation has at least 1 item, whereas `exists[property]=false` will return all items whose `property` relation has 0 items.
+
 #### Using a Custom Exists Query Parameter Name
 
 A conflict will occur if `exists` is also the name of a property with the search filter enabled.
