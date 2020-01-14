@@ -2,7 +2,7 @@
 
 API Platform Admin delegates the authentication support to React Admin.
 Refer to [the chapter dedicated to authentication in the React Admin documentation](https://marmelab.com/react-admin/Authentication.html)
-for more information.
+for more information. Be careful to select the proper version of the react-admin documentation (eg 2.9 for api-platform v2.5)
 
 In short, you have to tweak data provider and api document parser, like this:
 
