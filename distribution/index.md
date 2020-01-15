@@ -80,7 +80,7 @@ This starts the following services:
 | client   | A development server for the Progressive Web App                  | 443                                                         | dev (use a static website hosting service in prod) |
 | admin    | A development server for the admin                                | 444                                                         | dev (use a static website hosting service in prod) |
 | api      | The HTTP server for the API (NGINX)                               | n/a                                                         | all                                                |
-| vulcain  | The [Vulcain](https://vulcain.rocks) gateway                      | 8443                                                        | all (prefer using a managed service in prod)       |
+| vulcain  | The [Vulcain](https://vulcain.rocks) gateway                      | 8443                                                        | all                                                |
 | mercure  | The Mercure hub, [for real-time capabilities](../core/mercure.md) | 1337                                                        | all (prefer using the managed version in prod)     |
 
 To see the container's logs, run:
