@@ -276,6 +276,7 @@ resources:
         method: get
         path: '/rabbit/rand'
         controller: App\Controller\RandomRabbit
+        # if you are using OpenApi V3 use 'openapi_context' instead of 'swagger_context'
         swagger_context:
           summary: Random rabbit picture
           description: >
@@ -310,6 +311,7 @@ or with XML:
                 <attribute name="method">get</attribute>
                 <attribute name="path">/rabbit/rand</attribute>
                 <attribute name="controller">App\Controller\RandomRabbit</attribute>
+                <!-- if you are using OpenApi V3 use 'openapi_context' instead of 'swagger_context' -->
                 <attribute name="swagger_context">
                     <attribute name="summary">Random rabbit picture</attribute>
                     <attribute name="description">
@@ -345,8 +347,6 @@ or with XML:
 ```
 
 ![Impact on Swagger UI](../distribution/images/swagger-ui-2.png)
-
-Again, you can use the `openapi_context` key instead of the `swagger_context` one to tweak the OpenAPI **v3** specification.
 
 ## Changing the Location of Swagger UI
 
