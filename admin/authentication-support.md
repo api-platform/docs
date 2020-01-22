@@ -10,7 +10,7 @@ In short, you have to tweak data provider and api documentation parser, like thi
 // admin/src/App.js
 
 import React from "react";
-import { Redirect } from "react-router-dom";
+import { Redirect, Route } from "react-router-dom";
 import { HydraAdmin, hydraDataProvider as baseHydraDataProvider, fetchHydra as baseFetchHydra } from "@api-platform/admin";
 import parseHydraDocumentation from "@api-platform/api-doc-parser/lib/hydra/parseHydraDocumentation";
 import authProvider from "./authProvider";
@@ -29,12 +29,7 @@ const apiDocumentationParser = entrypoint => parseHydraDocumentation(entrypoint,
                 case 401:
                     return Promise.resolve({
                         api: result.api,
-                        customRoutes: [{
-                            props: {
-                                path: "/",
-                                render: () => <Redirect to={"/login"}/>,
-                            },
-                        }],
+                        customRoutes: [<Route path="/" render={() => <Redirect to="/login" />} />],
                     });
 
                 default:
@@ -46,7 +41,6 @@ const dataProvider = baseHydraDataProvider(entrypoint, fetchHydra, apiDocumentat
 
 export default () => (
     <HydraAdmin
-        apiDocumentationParser={ apiDocumentationParser }
         dataProvider={ dataProvider }
         authProvider={ authProvider }
         entrypoint={ entrypoint }
