@@ -29,7 +29,11 @@ const apiDocumentationParser = entrypoint => parseHydraDocumentation(entrypoint,
                 case 401:
                     return Promise.resolve({
                         api: result.api,
-                        customRoutes: [<Route path="/" render={() => <Redirect to="/login" />} />],
+                        customRoutes: [
+                            <Route path="/" render={() => {
+                                window.localStorage.getItem("token") ? window.location.reload() : <Redirect to="/login" />
+                            }} />
+                        ],
                     });
 
                 default:
