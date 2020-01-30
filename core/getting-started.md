@@ -169,6 +169,7 @@ GET    | /products      | Retrieve the (paginated) collection
 POST   | /products      | Create a new product
 GET    | /products/{id} | Retrieve a product
 PUT    | /products/{id} | Update a product
+PATCH  | /products/{id} | Apply a partial modification to a product
 DELETE | /products/{id} | Delete a product
 
 The same operations are available for the offer method (routes will start with the `/offers` pattern).
