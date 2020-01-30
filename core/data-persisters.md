@@ -64,7 +64,7 @@ Otherwise, if you use a custom dependency injection configuration, you need to r
 # api/config/services.yaml
 services:
     # ...
-    'App\DataPersister\BlogPostDataPersister': ~
+    App\DataPersister\BlogPostDataPersister: ~
         # Uncomment only if autoconfiguration is disabled
         #tags: [ 'api_platform.data_persister' ]
 ```
@@ -73,7 +73,7 @@ Note that if you don't need any `$context` in your data persister's methods, you
 
 ## Decorating the Built-In Data Persisters
 
-If you want to execute custom business logic before, during or after peristence, this can be achieved by [decorating](https://symfony.com/doc/current/service_container/service_decoration.html) the built-in data persisters.
+If you want to execute custom business logic before or after peristence, this can be achieved by [decorating](https://symfony.com/doc/current/service_container/service_decoration.html) the built-in data persisters.
 
 Here is an implementation example which sends new users a welcome email after a REST `POST` or GraphQL `create` operation, in a project using the native Doctrine ORM data persister:
 
@@ -134,7 +134,7 @@ Even with service autowiring and autoconfiguration enabled, you must still confi
 # api/config/services.yaml
 services:
     # ...
-    'App\DataPersister\UserDataPersister':
+    App\DataPersister\UserDataPersister:
         decorates: 'api_platform.doctrine.orm.data_persister'
         # Uncomment only if autoconfiguration is disabled
         #arguments: ['@App\DataPersister\UserDataPersister.inner']
