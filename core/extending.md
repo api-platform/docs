@@ -31,7 +31,7 @@ The following tables summarizes which extension point to use depending on what y
 
 While most API Platform classes are marked as `final`, built-in services are straightforward to reuse and customize [using composition](https://en.wikipedia.org/wiki/Composition_over_inheritance).
 
-For instance, if you want to send a mail after a resource has been persisted, but still want to benefit from the native Doctrine ORM [data persister](data-persisters.md), use [the decorator design pattern](https://en.wikipedia.org/wiki/Decorator_pattern#PHP) to wrap the native data persister in your own class sending the mail.
+For instance, if you want to send a mail after a resource has been persisted, but still want to benefit from the native Doctrine ORM [data persister](data-persisters.md), use [the decorator design pattern](https://en.wikipedia.org/wiki/Decorator_pattern#PHP) to wrap the native data persister in your own class sending the mail, as demonstrated in [this example](data-persisters.md#decorating-the-built-in-data-persisters).
 
 To replace existing API Platform services with your decorators, [check out how to decorate services](https://symfony.com/doc/current/service_container/service_decoration.html).
 
