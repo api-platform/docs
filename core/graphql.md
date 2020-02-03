@@ -448,6 +448,94 @@ Your custom mutations will be available like this:
 }
 ```
 
+## Subscriptions
+
+Subscriptions are an [RFC](https://github.com/graphql/graphql-spec/blob/master/rfcs/Subscriptions.md#rfc-graphql-subscriptions) to allow a client to receive pushed realtime data from the server.
+
+In API Platform, the built-in subscription support is handled by using [Mercure](https://mercure.rocks/) as its underlying protocol.
+
+### Enable Update Subscriptions for a Resource
+
+To enable update subscriptions for a resource, three conditions have to be met:
+- the [Mercure hub and bundle need to be installed and configured](mercure.md#installing-mercure-support).
+- Mercure needs to be enabled for the resource.
+- the `update` mutation needs to be enabled for the resource.
+
+For instance, your resource should look like this:
+
+```php
+<?php
+
+namespace App\Model;
+
+use ApiPlatform\Core\Annotation\ApiResource;
+
+/**
+ * @ApiResource(
+ *     graphql={
+ *         ...
+ *         "update",
+ *         ...
+ *     },
+ *     mercure=true
+ * )
+ */
+class Book
+{
+    // ...
+}
+```
+
+### Subscribe
+
+Doing a subscription is very similar to doing a query:
+
+```graphql
+{
+  subscription {
+    updateBookSubscribe(input: {id: "/books/1", clientSubscriptionId: "myId"}) {
+      book {
+        title
+        isbn
+      }
+      mercureUrl
+      clientSubscriptionId
+    }
+  }
+}
+```
+
+As you can see, you need to pass the **IRI** of the resource as argument. See [Global Object Identifier](#global-object-identifier) for more information.
+
+You can also pass `clientSubscriptionId` as argument and can ask its value as a field.
+
+In the payload of the subscription, the given fields of the resource will be the fields you subscribe to: if any of these fields is updated, you will be pushed their updated values.
+
+The `mercureUrl` field is the Mercure URL you need to use to [subscribe to the updates](https://mercure.rocks/docs/getting-started#subscribing) on the client side.
+
+### Receiving an Update
+
+On the client side, you will receive the pushed updated data like you would receive the updated data if you did an `update` mutation.
+
+For instance, you could receive a JSON payload like this:
+
+```json
+{
+  "book": {
+    "title": "Updated title",
+    "isbn": "978-6-6344-4051-1"
+  }
+}
+```
+
+### Subscriptions Cache
+
+Internally, API Platform stores the subscriptions in a cache, using the [Symfony Cache](https://symfony.com/doc/current/cache.html).
+
+The cache is named `api_platform.graphql.cache.subscription` and the subscription keys are generated from the subscription payload by using a SHA-256 hash.
+
+It's recommended to use an adapter like Redis for this cache.
+
 ## Workflow of the Resolvers
 
 API Platform resolves the queries and mutations by using its own **resolvers**.
