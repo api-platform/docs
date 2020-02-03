@@ -50,65 +50,60 @@ Vue.use(Vuex);
 
 const store = new Vuex.Store({
   modules: {
-    notifications
+    notifications,
+    book: makeCrudModule({
+      service: bookService
+    }),
+    review: makeCrudModule({
+      service: reviewService
+    })
   },
   strict: process.env.NODE_ENV !== 'production'
 });
-
-store.registerModule(
-  'book',
-  makeCrudModule({
-    service: bookService
-  })
-);
-
-store.registerModule(
-  'review',
-  makeCrudModule({
-    service: reviewService
-  })
-);
 
 export default store;
 
 ```
 
 Update the `src/plugins/vuetify.js` file with the following:
+
 ```javascript
 import Vue from 'vue';
 import Vuetify from 'vuetify/lib';
-import i18n from '../i18n';
 
 Vue.use(Vuetify);
 
 const opts = {
   icons: {
     iconfont: 'mdi'
-  },
-  lang: {
-    t: (key, ...params) => i18n.t(key, params)
   }
 };
 
 export default new Vuetify(opts);
+```
 
 The generator comes with a i18n feature to allow quick translations of some labels in the generated code, to make it
 work, you need to create the `src/i18n.js` file with the following:
-```
+
+```javascript
 import Vue from 'vue';
 import VueI18n from 'vue-i18n';
 import messages from './locales/en';
+
 Vue.use(VueI18n);
 
 export default new VueI18n({
   locale: process.env.VUE_APP_I18N_LOCALE || 'en',
   fallbackLocale: process.env.VUE_APP_I18N_FALLBACK_LOCALE || 'en',
-  messages
+  messages: {
+    en: messages
+  }
 });
 ```
 
 Update your App.vue with following:
-```
+
+```javascript
 <template>
   <v-app id="inspire">
     <snackbar></snackbar>

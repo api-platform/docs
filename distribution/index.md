@@ -8,14 +8,14 @@
 
 [API Platform](https://api-platform.com) is a powerful but easy to use **full stack** framework dedicated to API-driven
 projects. It contains a **PHP** library to create fully featured APIs supporting industry-leading standards ([JSON-LD](https://json-ld.org/) and **[Hydra](https://www.hydra-cg.com/)**, [GraphQL](https://graphql.org/), [OpenAPI](https://www.openapis.org/)...), provides ambitious **JavaScript** tooling to consume those APIs in a snap (admin, PWA and mobile
-app generators, hypermedia client...) and is shipped with a nice **[Docker](https://www.docker.com/)** and **[Kubernetes](https://kubernetes.io/)**integration to develop and deploy instantly on the cloud.
+app generators, hypermedia client...) and is shipped with a nice **[Docker](https://www.docker.com/)** and **[Kubernetes](https://kubernetes.io/)** integration to develop and deploy instantly on the cloud.
 
 The easiest and most powerful way to get started is to download the API Platform distribution. It contains:
 
 * an API skeleton, including with [the server-side component](../core/index.md), [the Symfony 4
   microframework](https://symfony.com/doc/current/setup/flex.html) and [the Doctrine ORM](https://www.doctrine-project.org/projects/orm.html) (optional)
 * [a dynamic JavaScript admin](../admin/), leveraging the hypermedia capabilities of API Platform (or any Hydra API), built on top of [React Admin](https://marmelab.com/react-admin/)
-* [a client generator](../client-generator/) to scaffold [React](https://reactjs.org), [Vue](https://vuejs.org/), [React Native](https://facebook.github.io/react-native/), [Next.js](https://nextjs.org/) and [Quasar](https://quasar.dev/) apps in one command, from any Hydra API
+* [a client generator](../client-generator/) to scaffold [React](https://reactjs.org), [Vue](https://vuejs.org/), [React Native](https://facebook.github.io/react-native/), [Next.js](https://nextjs.org/), [Quasar](https://quasar.dev/) and [Vuetify](https://vuetifyjs.com/) apps in one command, from any Hydra API
 * a [Docker](https://docker.com)-based setup to bootstrap the project in a single command, providing:
   * servers for the API and JavaScript apps
   * a [Varnish Cache](https://varnish-cache.org/) server enabling [API Platform's built-in invalidation cache mechanism](../core/performance.md#enabling-the-built-in-http-cache-invalidation-system)
@@ -77,11 +77,11 @@ This starts the following services:
 |----------|-------------------------------------------------------------------|-------------------------------------------------------------|----------------------------------------------------|
 | php      | The API with PHP, PHP-FPM 7.3, Composer and sensitive configs     | n/a                                                         | all                                                |
 | db       | A PostgreSQL database server                                      | 5432                                                        | all (prefer using a managed service in prod)       |
-| client   | A development server for the Progressive Web App                  | 80                                                          | dev (use a static website hosting service in prod) |
-| admin    | A development server for the admin                                | 81                                                          | dev (use a static website hosting service in prod) |
-| api      | The HTTP server for the API (NGINX)                               | 8080                                                        | all                                                |
+| client   | A development server for the Progressive Web App                  | 443                                                         | dev (use a static website hosting service in prod) |
+| admin    | A development server for the admin                                | 444                                                         | dev (use a static website hosting service in prod) |
+| api      | The HTTP server for the API (NGINX)                               | n/a                                                         | all                                                |
+| vulcain  | The [Vulcain](https://vulcain.rocks) gateway                      | 8443                                                        | all                                                |
 | mercure  | The Mercure hub, [for real-time capabilities](../core/mercure.md) | 1337                                                        | all (prefer using the managed version in prod)     |
-| h2-proxy | A HTTP/2 and HTTPS development proxy for all apps                 | 443 (client)<br>444 (admin)<br>8443 (api)<br>1338 (mercure) | dev (configure properly your web server in prod)   |
 
 To see the container's logs, run:
 
@@ -171,7 +171,7 @@ Click on an operation to display its details. You can also send requests to the 
 Try to create a new *Greeting* resource using the `POST` operation, then access it using the `GET` operation and, finally,
 delete it by executing the `DELETE` operation.
 If you access any API URL using a web browser, API Platform detects it (by scanning the `Accept` HTTP header) and displays
-the corresponding API request in the UI. Try it yourself by browsing to `http://localhost:8080/greetings`. If the `Accept` header
+the corresponding API request in the UI. Try it yourself by browsing to `http://localhost:8443/greetings`. If the `Accept` header
 doesn't contain `text/html` as the preferred format, a JSON-LD response is sent ([configurable behavior](../core/content-negotiation.md)).
 
 So, if you want to access the raw data, you have two alternatives:
@@ -180,8 +180,8 @@ So, if you want to access the raw data, you have two alternatives:
   when writing API clients
 * Add the format you want as the extension of the resource - for debug purpose only
 
-For instance, go to `http://localhost:8080/greetings.jsonld` to retrieve the list of `Greeting` resources in JSON-LD, or to
-`http://localhost:8080/greetings.json` to retrieve data in raw JSON.
+For instance, go to `http://localhost:8443/greetings.jsonld` to retrieve the list of `Greeting` resources in JSON-LD, or to
+`http://localhost:8443/greetings.json` to retrieve data in raw JSON.
 
 Of course, you can also use your favorite HTTP client to query the API.
 We are fond of [Postman](https://www.getpostman.com/). It works perfectly well with API Platform, has native Open API support,
