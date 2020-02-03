@@ -159,6 +159,7 @@ Or using YAML:
 App\Entity\Answer:
     subresourceOperations:
         api_questions_answer_get_subresource:
+            method: 'GET'
             normalization_context: {groups: ['foobar']}
 ```
 
@@ -206,7 +207,7 @@ You can control the path of subresources with the `path` option of the `subresou
  * ...
  * @ApiResource(
  *      subresourceOperations={
- *          "answer_get_subresource"={
+ *          "api_questions_answer_get_subresource"={
  *              "method"="GET",
  *              "path"="/questions/{id}/all-answers"
  *          },
