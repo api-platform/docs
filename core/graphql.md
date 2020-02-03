@@ -120,7 +120,7 @@ For example, if you have a `Book` resource, the queries `book` and `books` can b
 
 ### Global Object Identifier
 
-When querying an item, you need to pass an identifier as argument. Following the [Relay Global Object Identification Specification](https://facebook.github.io/relay/graphql/objectidentification.htm),
+When querying an item, you need to pass an identifier as argument. Following the [GraphQL Global Object Identification Specification](https://relay.dev/graphql/objectidentification.htm),
 the identifier needs to be globally unique. In API Platform, this argument is represented as an [IRI (Internationalized Resource Identifier)](https://www.w3.org/TR/ld-glossary/#internationalized-resource-identifier).
 
 For example, to query a book having as identifier `89`, you have to run the following:
@@ -319,7 +319,7 @@ When updating or deleting a resource, you need to pass the **IRI** of the resour
 
 ### Client Mutation Id
 
-Following the [Relay Input Object Mutations Specification](https://facebook.github.io/relay/graphql/mutations.htm),
+Following the [Relay Input Object Mutations Specification](https://github.com/facebook/relay/blob/v7.1.0/website/spec/Mutations.md#relay-input-object-mutations-specification),
 you can pass a `clientMutationId` as argument and can ask its value as a field.
 
 For example, if you delete a book:
@@ -701,7 +701,7 @@ For example, if you want to search the offers with a green or a red product you 
 ## Pagination
 
 API Platform natively enables a cursor-based pagination for collections.
-It supports [GraphQL's Complete Connection Model](https://graphql.org/learn/pagination/#complete-connection-model) and is compatible with [Relay's Cursor Connections Specification](https://facebook.github.io/relay/graphql/connections.htm).
+It supports [GraphQL's Complete Connection Model](https://graphql.org/learn/pagination/#complete-connection-model) and is compatible with [GraphQL Cursor Connections Specification](https://relay.dev/graphql/connections.htm).
 
 ### Using the Cursor-based Pagination
 
