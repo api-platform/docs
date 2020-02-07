@@ -200,6 +200,16 @@ publicationDate: This value should not be null.',
             static::$container->get('doctrine')->getRepository(Book::class)->findOneBy(['isbn' => '9781344037075'])
         );
     }
+    
+    private function testLogin(): void
+    {
+        $response = static::createClient()->request('POST', '/login', ['json' => [
+            'email' => 'admin@example.com',
+            'password' => 'admin',
+        ]]);
+        
+        $this->assertResponseIsSuccessfull();
+    }
 }
 ```
 
