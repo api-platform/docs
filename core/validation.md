@@ -425,3 +425,55 @@ Constraints                                                                     
 [`Isbn`](https://symfony.com/doc/current/reference/constraints/Isbn.html)             | `http://schema.org/isbn`          |
 [`Issn`](https://symfony.com/doc/current/reference/constraints/Issn.html)             | `http://schema.org/issn`          |
 
+
+## Specification property restrictions
+
+API Platform generates specification property restrictions based on Symfony’s built-in validator.
+
+For example, from [`Regex`](https://symfony.com/doc/4.4/reference/constraints/Regex.html) constraint API
+ Platform builds [`pattern`](https://swagger.io/docs/specification/data-models/data-types/#pattern) restriction.
+
+
+For building custom property schema based on custom validation constraints you can create a custom class 
+for generating property scheme restriction.
+
+To create property schema, you have to implement the [`PropertySchemaRestrictionMetadataInterface`](https://github.com/api-platform/core/blob/caca7f26b7f22a0abf84390463a1ea47c47d7757/src/Bridge/Symfony/Validator/Metadata/Property/Restriction/PropertySchemaRestrictionMetadataInterface.php).
+This interface defines only 2 methods:
+
+* `create`: to create property schema
+* `supports`: to check whether the property and constraint is supported
+
+Here is an implementation example:
+
+```php
+namespace App\PropertySchemaRestriction;
+
+use ApiPlatform\Core\Metadata\Property\PropertyMetadata;
+use Symfony\Component\Validator\Constraint;
+use App\Validator\CustomConstraint;
+
+final class CustomPropertySchemaRestriction implements PropertySchemaRestrictionMetadataInterface
+{
+    public function supports(Constraint $constraint, PropertyMetadata $propertyMetadata): bool
+    {
+        return $constraint instanceof CustomConstraint;
+    }
+
+    public function create(Constraint $constraint, PropertyMetadata $propertyMetadata): array 
+    {
+      // your logic to create property schema restriction based on constraint
+      return $restriction;
+    }
+}
+```
+
+If you use a custom dependency injection configuration, you need to register the corresponding service and add the
+`api_platform.metadata.property_schema_restriction` tag. The `priority` attribute can be used for service ordering.
+
+```yaml
+# api/config/services.yaml
+services:
+    # ...
+    'App\PropertySchemaRestriction\CustomPropertySchemaRestriction': ~
+        # Uncomment only if autoconfiguration is disabled
+        #tags: [ 'api_platform.metadata.property_schema_restriction' ]
