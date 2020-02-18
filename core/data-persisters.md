@@ -25,7 +25,7 @@ This interface defines only 3 methods:
 
 * `persist`: to create or update the given data
 * `remove`: to delete the given data
-* `support`: to check whether the given data is supported by this data persister
+* `supports`: to check whether the given data is supported by this data persister
 
 Here is an implementation example:
 
@@ -64,9 +64,79 @@ Otherwise, if you use a custom dependency injection configuration, you need to r
 # api/config/services.yaml
 services:
     # ...
-    'App\DataPersister\BlogPostDataPersister': ~
+    App\DataPersister\BlogPostDataPersister: ~
         # Uncomment only if autoconfiguration is disabled
         #tags: [ 'api_platform.data_persister' ]
 ```
 
 Note that if you don't need any `$context` in your data persister's methods, you can implement the [`DataPersisterInterface`](https://github.com/api-platform/core/blob/master/src/DataPersister/DataPersisterInterface.php) instead.
+
+## Decorating the Built-In Data Persisters
+
+If you want to execute custom business logic before or after peristence, this can be achieved by [decorating](https://symfony.com/doc/current/service_container/service_decoration.html) the built-in data persisters.
+
+Here is an implementation example which sends new users a welcome email after a REST `POST` or GraphQL `create` operation, in a project using the native Doctrine ORM data persister:
+
+```php
+namespace App\DataPersister;
+
+use ApiPlatform\Core\Bridge\Doctrine\Common\DataPersister;
+use ApiPlatform\Core\DataPersister\ContextAwareDataPersisterInterface;
+use App\Entity\User;
+use Symfony\Component\Mailer\MailerInterface;
+
+final class UserDataPersister implements ContextAwareDataPersisterInterface
+{
+    private $decorated;
+    private $mailer;
+
+    public function __construct(DataPersister $decorated, MailerInterface $mailer)
+    {
+        $this->decorated = $decorated;
+        $this->mailer = $mailer;
+    }
+
+    public function supports($data, array $context = []): bool
+    {
+        return $data instanceof User;
+    }
+
+    public function persist($data, array $context = [])
+    {
+        $result = $this->decorated->persist($data, $context);
+
+        if (
+            ($context['collection_operation_name'] ?? null) === 'post' ||
+            ($context['graphql_operation_name'] ?? null) === 'create'
+        ) {
+            $this->sendWelcomeMail($data);
+        }
+
+        return $result;
+    }
+
+    public function remove($data, array $context = [])
+    {
+        return $this->decorated->remove($data, $context);
+    }
+
+    private function sendWelcomeEmail(User $user)
+    {
+        // Your welcome email logic...
+        // $this->mailer->send(...);
+    }
+}
+```
+
+Even with service autowiring and autoconfiguration enabled, you must still configure the decoration:
+
+```yaml
+# api/config/services.yaml
+services:
+    # ...
+    App\DataPersister\UserDataPersister:
+        decorates: 'api_platform.doctrine.orm.data_persister'
+        # Uncomment only if autoconfiguration is disabled
+        #arguments: ['@App\DataPersister\UserDataPersister.inner']
+        #tags: [ 'api_platform.data_persister' ]
+```
