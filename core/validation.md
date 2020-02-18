@@ -127,7 +127,7 @@ errors to HTTP errors.
 ## Using Validation Groups
 
 Without specific configuration, the default validation group is always used, but this behavior is customizable: the framework
-is able to leverage Symfony's [validation groups](http://symfony.com/doc/current/book/validation.html#validation-groups).
+is able to leverage Symfony's [validation groups](https://symfony.com/doc/current/validation/groups.html).
 
 You can configure the groups you want to use when the validation occurs directly through the `ApiResource` annotation:
 
