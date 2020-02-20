@@ -82,8 +82,7 @@ final class BookInput {
 }
 ```
 
-> Note: When using serialization group annotations (@Groups("book") for example) the fields in the data transformers (for example BookInput::isbn) which are to be serialized should also have their serialization group annotation added.
-
+When using serialization groups, you need to specify these to the class and also to the Input itself.
 We can transform the `BookInput` to a `Book` resource instance:
 
 ```php
