@@ -82,6 +82,7 @@ final class BookInput {
 }
 ```
 
+When using serialization groups, you need to specify these to the class and also to the Input itself.
 We can transform the `BookInput` to a `Book` resource instance:
 
 ```php
