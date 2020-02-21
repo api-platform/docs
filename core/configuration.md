@@ -70,6 +70,9 @@ api_platform:
 
     # Enable the docs.
     enable_docs: true
+
+    # If enabled, the documentation can vary based on the serialization context (dynamic groups).
+    enable_serialization_context_doc: false
     
     # Enable the data collector and the WebProfilerBundle integration.
     enable_profiler: true

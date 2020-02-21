@@ -384,46 +384,45 @@ class Book
 All entry points are the same for all users, so we should find a way to detect if the authenticated user is an admin, and if so
 dynamically add the `admin:input` value to deserialization groups in the `$context` array.
 
-API Platform implements a `ContextBuilder`, which prepares the context for serialization & deserialization. Let's
+API Platform implements a `ContextFactory`, which prepares the context for serialization & deserialization. Let's
 [decorate this service](http://symfony.com/doc/current/service_container/service_decoration.html) to override the
-`createFromRequest` method:
+`create` method:
 
 ```yaml
 # api/config/services.yaml
 services:
     # ...
-    'App\Serializer\BookContextBuilder':
-        decorates: 'api_platform.serializer.context_builder'
-        arguments: [ '@App\Serializer\BookContextBuilder.inner' ]
+    App\Serializer\BookContextFactory:
+        decorates: 'api_platform.serializer.context_factory'
+        arguments: [ '@App\Serializer\BookContextFactory.inner' ]
         autoconfigure: false
 ```
 
 ```php
 <?php
-// api/src/Serializer/BookContextBuilder.php
+// api/src/Serializer/BookContextFactory.php
 
 namespace App\Serializer;
 
-use ApiPlatform\Core\Serializer\SerializerContextBuilderInterface;
+use ApiPlatform\Core\Serializer\SerializerContextFactoryInterface;
+use App\Entity\Book;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
-use App\Entity\Book;
 
-final class BookContextBuilder implements SerializerContextBuilderInterface
+final class BookContextFactory implements SerializerContextFactoryInterface
 {
     private $decorated;
     private $authorizationChecker;
 
-    public function __construct(SerializerContextBuilderInterface $decorated, AuthorizationCheckerInterface $authorizationChecker)
+    public function __construct(SerializerContextFactoryInterface $decorated, AuthorizationCheckerInterface $authorizationChecker)
     {
         $this->decorated = $decorated;
         $this->authorizationChecker = $authorizationChecker;
     }
 
-    public function createFromRequest(Request $request, bool $normalization, ?array $extractedAttributes = null): array
+    public function create(string $resourceClass, string $operationName, bool $normalization, array $context): array
     {
-        $context = $this->decorated->createFromRequest($request, $normalization, $extractedAttributes);
-        $resourceClass = $context['resource_class'] ?? null;
+        $context = $this->decorated->create($resourceClass, $operationName, $normalization, $context);
 
         if ($resourceClass === Book::class && isset($context['groups']) && $this->authorizationChecker->isGranted('ROLE_ADMIN') && false === $normalization) {
             $context['groups'][] = 'admin:input';
@@ -437,6 +436,19 @@ final class BookContextBuilder implements SerializerContextBuilderInterface
 If the user has the `ROLE_ADMIN` permission and the subject is an instance of Book, `admin:input` group will be dynamically added to the
 denormalization context. The `$normalization` variable lets you check whether the context is for normalization (if `TRUE`) or denormalization
 (`FALSE`).
+
+### Affect the Documentation (OpenAPI, Hydra) Based on the Dynamic Serialization Context
+
+If you need the OpenAPI or Hydra documentation to reflect the dynamic serialization context, for instance if a property is hidden by default because you use a dynamic "admin:output" group,
+you can change the configuration like this:
+
+```yaml
+# api/config/packages/api_platform.yaml
+api_platform:
+    enable_serialization_context_doc: true
+```
+
+When enabled, the OpenAPI documentation (at `/docs.json` path) will vary if the admin is connected or not, and the Hydra context (at `/contexts/Book` for instance) will change too.
 
 ## Changing the Serialization Context on a Per-item Basis
 

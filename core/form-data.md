@@ -17,23 +17,26 @@ This decorator is able to denormalize posted form data to the target object. In 
 
 namespace App\EventListener;
 
+use ApiPlatform\Core\EventListener\DeserializeListener as DecoratedListener;
+use ApiPlatform\Core\Serializer\ContextTrait;
+use ApiPlatform\Core\Serializer\SerializerContextFactoryInterface;
 use ApiPlatform\Core\Util\RequestAttributesExtractor;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
-use ApiPlatform\Core\EventListener\DeserializeListener as DecoratedListener;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
-use ApiPlatform\Core\Serializer\SerializerContextBuilderInterface;
 
 final class DeserializeListener
 {
+    use ContextTrait;
+
     private $decorated;
     private $denormalizer;
-    private $serializerContextBuilder;
+    private $serializerContextFactory;
 
-    public function __construct(DenormalizerInterface $denormalizer, SerializerContextBuilderInterface $serializerContextBuilder, DecoratedListener $decorated)
+    public function __construct(DenormalizerInterface $denormalizer, SerializerContextFactoryInterface $serializerContextFactory, DecoratedListener $decorated)
     {
         $this->denormalizer = $denormalizer;
-        $this->serializerContextBuilder = $serializerContextBuilder;
+        $this->serializerContextFactory = $serializerContextFactory;
         $this->decorated = $decorated;
     }
 
@@ -56,7 +59,9 @@ final class DeserializeListener
             return;
         }
 
-        $context = $this->serializerContextBuilder->createFromRequest($request, false, $attributes);
+        $operationName = $this->getOperationNameFromContext($attributes);
+        $context = $this->addRequestContext($request, $attributes);
+        $context = $this->serializerContextFactory->create($attributes['resource_class'], $operationName, false, $context);
         $populated = $request->attributes->get('data');
         if (null !== $populated) {
             $context['object_to_populate'] = $populated;

@@ -1490,7 +1490,7 @@ All `DateTimeInterface` properties will have the `DateTime` type in this example
 
 There are some differences though.
 
-The service is `api_platform.graphql.serializer.context_builder` and the method to override is `create`.
+The service is `api_platform.graphql.serializer.context_factory`.
 
 The decorator could be like this:
 
@@ -1499,24 +1499,24 @@ The decorator could be like this:
 
 namespace App\Serializer;
 
-use ApiPlatform\Core\GraphQl\Serializer\SerializerContextBuilderInterface;
+use ApiPlatform\Core\Serializer\SerializerContextFactoryInterface;
 use App\Entity\Book;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
-final class BookContextBuilder implements SerializerContextBuilderInterface
+final class BookContextFactory implements SerializerContextFactoryInterface
 {
     private $decorated;
     private $authorizationChecker;
 
-    public function __construct(SerializerContextBuilderInterface $decorated, AuthorizationCheckerInterface $authorizationChecker)
+    public function __construct(SerializerContextFactoryInterface $decorated, AuthorizationCheckerInterface $authorizationChecker)
     {
         $this->decorated = $decorated;
         $this->authorizationChecker = $authorizationChecker;
     }
 
-    public function create(?string $resourceClass, string $operationName, array $resolverContext, bool $normalization): array
+    public function create(?string $resourceClass, string $operationName, bool $normalization, array $resolverContext): array
     {
-        $context = $this->decorated->create($resourceClass, $operationName, $resolverContext, $normalization);
+        $context = $this->decorated->create($resourceClass, $operationName, $normalization, $resolverContext);
         $resourceClass = $context['resource_class'] ?? null;
 
         if ($resourceClass === Book::class && isset($context['groups']) && $this->authorizationChecker->isGranted('ROLE_ADMIN') && false === $normalization) {
