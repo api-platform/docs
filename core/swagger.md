@@ -149,12 +149,31 @@ class Product // The class name will be used to name exposed resources
     public $name;
 
     /**
+     * @param array $name List of product pictures' relative URLs.
+     *
+     * @ORM\Column(type="simple_array", nullable=true)
+     *
+     * @ApiProperty(
+     *     attributes={
+     *         "openapi_context"={
+     *             "type"="array",
+     *             "items"={
+     *                 "type"="string",
+     *                 "example"="/assets/img/photo.jpg"
+     *             }
+     *         }
+     *     }
+     * )
+     */
+    public $pictures;
+
+    /**
      * @ORM\Column
      * @Assert\DateTime
      *
      * @ApiProperty(
      *     attributes={
-     *         "swagger_context"={"type"="string", "format"="date-time"}
+     *         "openapi_context"={"type"="string", "format"="date-time"}
      *     }
      * )
      */
@@ -173,13 +192,20 @@ resources:
       properties:
         name:
           attributes:
-            swagger_context:
+            openapi_context:
               type: string
               enum: ['one', 'two']
               example: one
+        pictures:
+          attributes:
+            openapi_context:
+              type: array
+              items: 
+                type: string
+                example: /assets/img/photo.jpg
         timestamp:
           attributes:
-            swagger_context:
+            openapi_context:
               type: string
               format: date-time
 ```
@@ -204,6 +230,13 @@ This will produce the following Swagger documentation:
           "description": "This is a name.",
           "enum": ["one", "two"],
           "example": "one"
+        },
+        "pictures": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "example": "/assets/img/photo.jpg"
+          }
         },
         "timestamp": {
           "type": "string",
