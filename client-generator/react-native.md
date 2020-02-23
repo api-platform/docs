@@ -16,7 +16,7 @@ Create a React Native application using [Expo CLI](https://docs.expo.io/versions
 
 Install the required dependencies:
 
-    $ yarn add redux react-redux redux-thunk redux-form react-native-elements react-native-router-flux react-native-vector-icons prop-types whatwg-url buffer react-native-event-source
+    $ yarn add redux react-redux redux-thunk redux-form react-native-elements react-native-router-flux react-native-vector-icons prop-types whatwg-url buffer react-native-event-source react-native-gesture-handler react-native-reanimated react-native-screens
 
 ## Generating a Native App
 
