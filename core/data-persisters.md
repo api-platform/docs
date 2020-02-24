@@ -21,6 +21,7 @@ persist data for a given resource will be used.
 ## Creating a Custom Data Persister
 
 To create a data persister, you have to implement the [`ContextAwareDataPersisterInterface`](https://github.com/api-platform/core/blob/master/src/DataPersister/ContextAwareDataPersisterInterface.php).
+You will need to avoid recursion by using the context to let the persister know it was already called when going through the chain of persisters. Using $context[self::ALREADY_CALLED] = true in persist and remove. And adding a check in the support method.
 This interface defines only 3 methods:
 
 * `persist`: to create or update the given data
@@ -37,19 +38,26 @@ use App\Entity\BlogPost;
 
 final class BlogPostDataPersister implements ContextAwareDataPersisterInterface
 {
+    private const ALREADY_CALLED = 'BLOG_POST_PERSISTER_ALREADY_CALLED';
+    
     public function supports($data, array $context = []): bool
     {
+        if (isset($context[self::ALREADY_CALLED])) {
+            return false;
+        }    
         return $data instanceof BlogPost;
     }
 
     public function persist($data, array $context = [])
     {
+      $context[self::ALREADY_CALLED] = true;    
       // call your persistence layer to save $data
       return $data;
     }
 
     public function remove($data, array $context = [])
     {
+      $context[self::ALREADY_CALLED] = true;    
       // call your persistence layer to delete $data
     }
 }
@@ -75,7 +83,7 @@ Note that if you don't need any `$context` in your data persister's methods, you
 
 If you want to execute custom business logic before or after peristence, this can be achieved by [decorating](https://symfony.com/doc/current/service_container/service_decoration.html) the built-in data persisters.
 
-Here is an implementation example which sends new users a welcome email after a REST `POST` or GraphQL `create` operation, in a project using the native Doctrine ORM data persister:
+Here is an implementation example which sends new users a welcome email after a REST `POST` or GraphQL `create` operation, in a project using the native Doctrine ORM data persister: Again here don't forget to use the context to avoid recursion.
 
 ```php
 namespace App\DataPersister;
@@ -87,6 +95,7 @@ use Symfony\Component\Mailer\MailerInterface;
 
 final class UserDataPersister implements ContextAwareDataPersisterInterface
 {
+    private const ALREADY_CALLED = 'BLOG_POST_PERSISTER_ALREADY_CALLED';
     private $decorated;
     private $mailer;
 
@@ -98,11 +107,15 @@ final class UserDataPersister implements ContextAwareDataPersisterInterface
 
     public function supports($data, array $context = []): bool
     {
+        if (isset($context[self::ALREADY_CALLED])) {
+            return false;
+        } 
         return $data instanceof User;
     }
 
     public function persist($data, array $context = [])
     {
+        $context[self::ALREADY_CALLED] = true;    
         $result = $this->decorated->persist($data, $context);
 
         if (
@@ -117,6 +130,7 @@ final class UserDataPersister implements ContextAwareDataPersisterInterface
 
     public function remove($data, array $context = [])
     {
+        $context[self::ALREADY_CALLED] = true;    
         return $this->decorated->remove($data, $context);
     }
 
