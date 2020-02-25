@@ -8,7 +8,7 @@ Otherwise, all you need to install API Platform Admin is a JavaScript package ma
 
 If you don't have an existing React Application, create one using [Create React App](https://create-react-app.dev/):
 
-    $ yarn create react-app my-admin
+    $ yarn dlx create-react-app my-admin
 
 Go to the directory of your project:
 

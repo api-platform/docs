@@ -143,7 +143,7 @@ And start the built-in PHP server:
     $ php -S 127.0.0.1:8000 -t public
 
 All JavaScript components are also [available as standalone libraries](https://github.com/api-platform?language=javascript)
-installable with npm or Yarn.  
+installable with Yarn or npm.  
 
 **Note:** when installing API Platform this way, the API will be exposed as the `/api/` path. You need to open `http://localhost:8000/api/` to see the API documentation. If you are deploying API Platform directly on an Apache or NGINX webserver and getting a 404 error on opening this link, you will need to enable the [rewriting rules](https://symfony.com/doc/current/setup/web_server_configuration.html) for your specific webserver software.
 

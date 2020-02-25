@@ -9,7 +9,7 @@ The React Client Generator generates a Progressive Web App built with battle-tes
 * [React Router](https://reacttraining.com/react-router/)
 * [Redux Form](http://redux-form.com/)
 
-It is designed to generate code that works seamlessly with [Facebook's Create React App](https://github.com/facebook/create-react-app).
+It is designed to generate code that works seamlessly with [Facebook's Create React App](https://create-react-app.dev/).
 
 ## Install
 
@@ -19,12 +19,12 @@ a development Docker container to serve the webapp, and all the API Platform com
 supporting Hydra.
 
 If you use API Platform, jump to the next section!
-Alternatively, you can generate a skeleton and install the generator using [npx](https://www.npmjs.com/package/npx).
+Alternatively, you can generate a skeleton and install the generator by yourself.
 To use this generator you need [Node.js](https://nodejs.org/) and [Yarn](https://yarnpkg.com/) (or [npm](https://www.npmjs.com/)) installed.
 
 Bootstrap a React application:
 
-    $ npx create-react-app client
+    $ yarn dlx create-react-app client
     $ cd client
 
 Install the required dependencies:
@@ -49,7 +49,7 @@ Omit the resource flag to generate files for all resource types exposed by the A
 
 If you don't use the standalone installation, run the following command instead:
 
-    $ npx @api-platform/client-generator https://demo.api-platform.com src/ --resource book
+    $ yarn dlx @api-platform/client-generator https://demo.api-platform.com src/ --resource book
     # Replace the URL with the entrypoint of your Hydra-enabled API
 
 The code has been generated, and is ready to be executed!

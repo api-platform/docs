@@ -118,6 +118,8 @@ services:
       - traefik.http.routers.db.rule=Host(`db.localhost`)
 
   mercure:
+    # Try the managed version or the On Premise version in production
+    # See https://mercure.rocks/docs/hub/cluster
     image: dunglas/mercure
     environment:
 #      - ACME_HOSTS=${DOMAIN_NAME}
@@ -135,6 +137,8 @@ services:
     labels:
       - traefik.http.routers.mercure.rule=Host(`mercure.localhost`)
 
+  # Use a static website hosting service in production
+  # See https://create-react-app.dev/docs/deployment
   client:
     build:
       context: ./client

@@ -5,7 +5,6 @@
 ## Install
 
 To use this generator you need [Node.js](https://nodejs.org/) and [Yarn](https://yarnpkg.com/) (or [npm](https://www.npmjs.com/)) installed.
-To run the command line tool, we also recommend using [npx](https://www.npmjs.com/package/npx).
 
 Create a React Native application using [Expo CLI](https://docs.expo.io/versions/latest/workflow/expo-cli).
 
@@ -22,7 +21,7 @@ Install the required dependencies:
 
 In the app directory, generate the files for the resource you want:
 
-    $ npx @api-platform/client-generator https://demo.api-platform.com . --generator react-native --resource book
+    $ yarn dlx @api-platform/client-generator https://demo.api-platform.com . --generator react-native --resource book
 
 Replace the URL with the entrypoint of your Hydra-enabled API.
 Omit the resource flag to generate files for all resource types exposed by the API.

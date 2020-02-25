@@ -64,7 +64,7 @@ Install the required dependencies:
 
 In the app directory, generate the files for the resource you want:
 
-    $ npx @api-platform/client-generator -g vuetify https://demo.api-platform.com src/
+    $ yarn dlx @api-platform/client-generator -g vuetify https://demo.api-platform.com src/
     # Replace the URL with the entrypoint of your Hydra-enabled API
     # Omit the resource flag to generate files for all resource types exposed by the API
 

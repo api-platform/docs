@@ -10,9 +10,7 @@ The Next.js Client Generator generates components for Server Side Rendered appli
 
 Create a [Next.js application with express server](https://github.com/zeit/next.js/tree/canary/examples/custom-server-express). The easiest way is to execute:  
 
-    $ npx create-next-app your-app-name
-    # or
-    $ yarn create next-app your-app-name
+    $ yarn dlx create-next-app your-app-name
 
 ### Installing the Generator Dependencies
 
@@ -26,7 +24,7 @@ Install required dependencies:
 
 ## Generating Routes
 
-    $ npx @api-platform/client-generator https://demo.api-platform.com . --generator next --resource book
+    $ yarn dlx @api-platform/client-generator https://demo.api-platform.com . --generator next --resource book
     # Replace the URL by the entrypoint of your Hydra-enabled API
 
 > Note: Omit the resource flag to generate files for all resource types exposed by the API.
