@@ -173,6 +173,117 @@ Bearer MY_NEW_TOKEN
 
 ![Screenshot of API Platform with the configuration API Key](images/JWTConfigureApiKey.png)
 
+### Adding endpoint to SwaggerUI to retrieve a JWT token
+
+We can add `POST /authentication_token` endpoiint to SwaggerUI to conveniently retreive the token when it's needed.
+
+![API Endpoint to retrieve JWT Token from SwaggerUI](images/jwt-token-swagger-ui.png)
+
+To do it, we need to create a `SwaggerDocrator`:
+
+```php
+<?php
+
+declare(strict_types=1);
+
+namespace App\Swagger;
+
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
+
+final class SwaggerDecorator implements NormalizerInterface
+{
+    private NormalizerInterface $decorated;
+
+    public function __construct(NormalizerInterface $decorated)
+    {
+        $this->decorated = $decorated;
+    }
+
+    public function supportsNormalization($data, $format = null): bool
+    {
+        return $this->decorated->supportsNormalization($data, $format);
+    }
+
+    public function normalize($object, $format = null, array $context = [])
+    {
+        $docs = $this->decorated->normalize($object, $format, $context);
+
+        $docs['components']['schemas']['Token'] = [
+            'type' => 'object',
+            'properties' => [
+                'token' => [
+                    'type' => 'string',
+                    'readOnly' => true,
+                ],
+            ],
+        ];
+
+        $docs['components']['schemas']['Credentials'] = [
+            'type' => 'object',
+            'properties' => [
+                'username' => [
+                    'type' => 'string',
+                    'example' => 'api',
+                ],
+                'password' => [
+                    'type' => 'string',
+                    'example' => 'api',
+                ],
+            ],
+        ];
+
+        $tokenDocumentation = [
+            'paths' => [
+                '/authentication_token' => [
+                    'post' => [
+                        'tags' => ['Token'],
+                        'operationId' => 'postCredentialsItem',
+                        'summary' => 'Get JWT token to login.',
+                        'requestBody' => [
+                            'description' => 'Create new JWT Token',
+                            'content' => [
+                                'application/json' => [
+                                    'schema' => [
+                                        '$ref' => '#/components/schemas/Credentials',
+                                    ],
+                                ],
+                            ],
+                        ],
+                        'responses' => [
+                            Response::HTTP_OK => [
+                                'description' => 'Get JWT token',
+                                'content' => [
+                                    'application/json' => [
+                                        'schema' => [
+                                            '$ref' => '#/components/schemas/Token',
+                                        ],
+                                    ],
+                                ],
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+        ];
+
+        return array_merge_recursive($docs, $tokenDocumentation);
+    }
+}
+```
+
+And register this service in `config/services.yaml`:
+
+```yaml
+services:
+    # ...   
+
+    App\Swagger\SwaggerDecorator:
+        decorates: 'api_platform.swagger.normalizer.documentation'
+        arguments: ['@App\Swagger\SwaggerDecorator.inner']
+        autoconfigure: false
+```
+
 ## Testing with Behat
 
 Let's configure Behat to automatically send an `Authorization` HTTP header containing a valid JWT token when a scenario is marked with a `@login` annotation. Edit `features/bootstrap/FeatureContext.php` and add the following methods:
