@@ -175,7 +175,7 @@ Bearer MY_NEW_TOKEN
 
 ### Adding endpoint to SwaggerUI to retrieve a JWT token
 
-We can add `POST /authentication_token` endpoiint to SwaggerUI to conveniently retreive the token when it's needed.
+We can add a `POST /authentication_token` endpoint to SwaggerUI to conveniently retrieve the token when it's needed.
 
 ![API Endpoint to retrieve JWT Token from SwaggerUI](images/jwt-token-swagger-ui.png)
 
