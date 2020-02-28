@@ -179,7 +179,7 @@ We can add a `POST /authentication_token` endpoint to SwaggerUI to conveniently 
 
 ![API Endpoint to retrieve JWT Token from SwaggerUI](images/jwt-token-swagger-ui.png)
 
-To do it, we need to create a `SwaggerDocrator`:
+To do it, we need to create a `SwaggerDecorator`:
 
 ```php
 <?php
