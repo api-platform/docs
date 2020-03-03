@@ -288,10 +288,11 @@ Alternatively, you can use a service to retrieve the groups to use:
 
 namespace App\Validator;
 
+use ApiPlatform\Core\Bridge\Symfony\Validator\ValidationGroupsGeneratorInterface;
 use App\Entity\Book;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
-final class AdminGroupsGenerator
+final class AdminGroupsGenerator implements ValidationGroupsGeneratorInterface
 {
     private $authorizationChecker;
 
@@ -300,8 +301,13 @@ final class AdminGroupsGenerator
         $this->authorizationChecker = $authorizationChecker;
     }
 
-    public function __invoke(Book $book): array
+    /**
+     * {@inheritdoc}
+     */
+    public function __invoke($book): array
     {
+        assert($book instanceof Book);
+
         return $this->authorizationChecker->isGranted('ROLE_ADMIN', $book) ? ['a', 'b'] : ['a'];
     }
 }
@@ -309,7 +315,7 @@ final class AdminGroupsGenerator
 
 This class selects the groups to apply based on the role of the current user: if the current user has the `ROLE_ADMIN` role, groups `a` and `b` are returned. In other cases, just `a` is returned.
 
-This class is automatically registered as a service thanks to [the autowiring feature of the Symfony Dependency Injection Component](https://symfony.com/doc/current/service_container/autowiring.html). Just note that this service must be public.
+This class is automatically registered as a service thanks to [the autowiring feature of the Symfony DependencyInjection component](https://symfony.com/doc/current/service_container/autowiring.html).
 
 Then, configure the entity class to use this service to retrieve validation groups:
 
