@@ -28,6 +28,18 @@ Update the entrypoint in the `client/src/config/entrypoint.js` file:
 export const ENTRYPOINT = 'https://localhost:8443';
 ```
 
+Update the scripts part of the new `composer.json`:
+
+```ecmascript 6
+  "scripts": {
+    "build": "vue-cli-service build",
+    "lint": "vue-cli-service lint",
+    "start": "vue-cli-service serve --port 3000 --https"
+  },
+```
+
+Rebuild the docker containers again to install the Vue App and start the vue server.
+
 Generate the vuetify components with the client generator:
 
 ```shell script
