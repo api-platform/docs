@@ -30,7 +30,7 @@ Then we need to generate the public and private keys used for signing JWT tokens
 This takes care of using the correct passphrase to encrypt the private key, and setting the correct permissions on the
 keys allowing the web server to read them.
 
-Since these keys are created by the `root` user from a container, your host user will not be read them during `docker-compose build api` process. Add the `config/jwt/` folder to `api/.dockerignore` file so that they are skipped from the result image.
+Since these keys are created by the `root` user from a container, your host user will not be able to read them during `docker-compose build api` process. Add the `config/jwt/` folder to `api/.dockerignore` file so that they are skipped from the result image.
 
 If you want the keys to be auto generated in `dev` environment, see an example in the [docker-entrypoint script of api-platform/demo](https://github.com/api-platform/demo/blob/master/api/docker/php/docker-entrypoint.sh).
 
