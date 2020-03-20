@@ -109,7 +109,7 @@ final class UserDataPersister implements ContextAwareDataPersisterInterface
             ($context['collection_operation_name'] ?? null) === 'post' ||
             ($context['graphql_operation_name'] ?? null) === 'create'
         ) {
-            $this->sendWelcomeMail($data);
+            $this->sendWelcomeEmail($data);
         }
 
         return $result;
