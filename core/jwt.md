@@ -151,6 +151,51 @@ security:
         - { path: ^/, roles: IS_AUTHENTICATED_FULLY }
 ```
 
+### Use separate login firewall
+
+If you want use a dedied firewall for our login, you can do something like instead of:
+
+```yaml
+# api/config/packages/security.yaml
+security:
+    encoders:
+        App\Entity\User:
+            algorithm: argon2i
+
+    # https://symfony.com/doc/current/security.html#where-do-users-come-from-user-providers
+    providers:
+        # used to reload user from session & other features (e.g. switch_user)
+        app_user_provider:
+            entity:
+                class: App\Entity\User
+                property: email
+
+    firewalls:
+        dev:
+            pattern: ^/_(profiler|wdt)
+            security: false
+        login:
+            pattern: ^/authentication_token #must be same of json_login: check_path
+            stateless: true
+            anonymous: true
+            json_login:
+                check_path: /authentication_token
+                success_handler: lexik_jwt_authentication.handler.authentication_success
+                failure_handler: lexik_jwt_authentication.handler.authentication_failure
+        api:
+            pattern: ^/api/
+            stateless: true
+            anonymous: true
+            provider: app_user_provider
+            guard:
+                authenticators:
+                - lexik_jwt_authentication.jwt_token_authenticator
+
+    access_control:
+        - { path: ^/api/docs, roles: IS_AUTHENTICATED_ANONYMOUSLY } # Allows accessing the Swagger UI
+        - { path: ^/, roles: IS_AUTHENTICATED_FULLY }
+```
+
 ## Documenting the Authentication Mechanism with Swagger/Open API
 
 Want to test the routes of your JWT-authentication-protected API?
