@@ -6,7 +6,7 @@ However, it's sometimes useful to use a specific class to represent the input or
 
 ## Specifying an Input or an Output Data Representation
 
-For a given resource class, you may want to have a different representation of this class as input (write) or output (read).
+For a given resource class, you may want to have a different representation of this class as input (write) or output (read). 
 To do so, a resource can take an input and/or an output class:
 
 ```php
@@ -27,6 +27,7 @@ use App\Dto\BookOutput;
  */
 final class Book
 {
+    public $id;
 }
 ```
 
@@ -78,6 +79,9 @@ We have the following `BookInput`:
 namespace App\Dto;
 
 final class BookInput {
+  /**
+    * @var string
+  */
   public $isbn;
 }
 ```
@@ -142,6 +146,9 @@ To manage the output, it's exactly the same process. For example, we have the fo
 namespace App\Dto;
 
 final class BookOutput {
+  /**
+    * @var string
+  */
   public $name;
 }
 ```
