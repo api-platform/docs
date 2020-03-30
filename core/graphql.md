@@ -448,6 +448,46 @@ Your custom mutations will be available like this:
 }
 ```
 
+## Operations
+
+To understand what an operation is, please refer to the [operations documentation](operations.md).
+
+For GraphQL, the operations are defined under the `graphql` attribute.
+By default, all operations are enabled.
+
+For the queries, the operations are:
+- `item_query`
+- `collection_query`
+
+For the mutations, the operations are:
+- `create`
+- `update`
+- `delete`
+
+You can of course disable or configure these operations.
+
+For instance, in the following example, only the query of an item and the create mutation are enabled:
+
+```php
+<?php
+// api/src/Entity/Book.php
+
+namespace App\Entity;
+
+use ApiPlatform\Core\Annotation\ApiResource;
+
+/**
+ * @ApiResource(graphql={
+ *     "item_query",
+ *     "create"
+ * })
+ */
+class Book
+{
+    // ...
+}
+```
+
 ## Workflow of the Resolvers
 
 API Platform resolves the queries and mutations by using its own **resolvers**.
