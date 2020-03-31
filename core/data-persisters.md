@@ -98,7 +98,7 @@ final class UserDataPersister implements ContextAwareDataPersisterInterface
 
     public function supports($data, array $context = []): bool
     {
-        return $data instanceof User;
+        return $this->decorated->supports($data, $context);
     }
 
     public function persist($data, array $context = [])
@@ -106,8 +106,10 @@ final class UserDataPersister implements ContextAwareDataPersisterInterface
         $result = $this->decorated->persist($data, $context);
 
         if (
-            ($context['collection_operation_name'] ?? null) === 'post' ||
-            ($context['graphql_operation_name'] ?? null) === 'create'
+            $data instanceof User && (
+                ($context['collection_operation_name'] ?? null) === 'post' ||
+                ($context['graphql_operation_name'] ?? null) === 'create'
+            )
         ) {
             $this->sendWelcomeEmail($data);
         }
