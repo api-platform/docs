@@ -228,7 +228,7 @@ If you want to serialize only a subset of your data, please refer to the [Serial
 **You're done!**
 
 You now have a fully featured API exposing your entities.
-Run the Symfony app (`bin/console server:run`) and browse the API entrypoint at `http://localhost:8000/api`.
+Run the Symfony app with the [Symfony Local Web Server](https://symfony.com/doc/current/setup/symfony_server.html) (`symfony server:start`) and browse the API entrypoint at `https://localhost:8000/api`.
 
 Interact with the API using a REST client (we recommend [Postman](https://www.getpostman.com/)) or an Hydra-aware application
 (you should give [Hydra Console](https://github.com/lanthaler/HydraConsole) a try). Take
