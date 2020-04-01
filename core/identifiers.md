@@ -118,6 +118,44 @@ services:
 
 Your `PersonDataProvider` will now work as expected!
 
+### Changing identifier in a Doctrine entity
+
+If your ApiResource is also a Doctrine entity, you have to unmark its id as identifier:
+
+```php
+<?php
+namespace App\Entity;
+
+use App\Uuid;
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * @ORM\Entity
+ * @ApiResource
+ */
+final class Person
+{
+
+    /**
+     * @var int
+     * @ApiProperty(identifier=false)
+     *
+     * @ORM\Id()
+     * @ORM\GeneratedValue()
+     * @ORM\Column(type="integer")
+     */
+    private $id;
+    
+    /**
+     * @var Uuid
+     * @ApiProperty(identifier=true)
+     */
+    public $code;
+    
+    // ...
+}
+```
+
 
 ## Supported Identifiers
 
