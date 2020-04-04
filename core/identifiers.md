@@ -155,7 +155,6 @@ final class Person
 }
 ```
 
-
 ## Supported Identifiers
 
 API Platform supports the following identifier types:
