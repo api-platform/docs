@@ -374,6 +374,7 @@ You can filter offers by joining two values, for example: `/offers?price[gt]=12.
 ### Exists Filter
 
 The exists filter allows you to select items based on a nullable field value.
+It will also check the emptiness of a collection association.
 
 Syntax: `?exists[property]=<true|false|1|0>`
 
