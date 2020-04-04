@@ -135,7 +135,6 @@ use Doctrine\ORM\Mapping as ORM;
  */
 final class Person
 {
-
     /**
      * @var int
      * @ApiProperty(identifier=false)
