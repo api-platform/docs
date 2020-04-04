@@ -412,6 +412,8 @@ class Greeting
      * @var string A nice person
      *
      * @ORM\Column
+     * 
+     * I want this "second" validation to be executed after the "first" one even though I wrote them in this order.
      * @One(groups={"second"})
      * @Two(groups={"first"})
      */
