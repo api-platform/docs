@@ -344,7 +344,7 @@ class Book
 
 ## Sequential Validation Groups
 
-If you need to determine the order in which your validation groups must be tested against, you can use a [group sequence](http://symfony.com/doc/current/validation/sequence_provider.html).  
+If you need to specify the order in which your validation groups must be tested against, you can use a [group sequence](http://symfony.com/doc/current/validation/sequence_provider.html).
 First, you need to create your sequenced group.
 
 ```php
