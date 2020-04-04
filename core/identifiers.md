@@ -118,7 +118,7 @@ services:
 
 Your `PersonDataProvider` will now work as expected!
 
-### Changing identifier in a Doctrine entity
+## Changing Identifier in a Doctrine Entity
 
 If your ApiResource is also a Doctrine entity, you have to unmark its id as identifier:
 
