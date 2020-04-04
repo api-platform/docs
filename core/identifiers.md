@@ -126,6 +126,7 @@ If your resource is also a Doctrine entity and you want to use another identifie
 <?php
 namespace App\Entity;
 
+use ApiPlatform\Core\Annotation\ApiResource;
 use App\Uuid;
 use Doctrine\ORM\Mapping as ORM;
 
