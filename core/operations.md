@@ -189,7 +189,7 @@ use ApiPlatform\Core\Annotation\ApiResource;
  * ...
  * @ApiResource(
  *     collectionOperations={
- *         "post"={"path"="/grimoire", status=301}
+ *         "post"={"path"="/grimoire", "status"=301}
  *     },
  *     itemOperations={
  *         "get"={

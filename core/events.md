@@ -107,7 +107,7 @@ final class BookMailSubscriber implements EventSubscriberInterface
         ];
     }
 
-    public function sendMail(ViewEvent $event)
+    public function sendMail(ViewEvent $event): void
     {
         $book = $event->getControllerResult();
         $method = $event->getRequest()->getMethod();
