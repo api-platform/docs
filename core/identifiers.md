@@ -120,7 +120,7 @@ Your `PersonDataProvider` will now work as expected!
 
 ## Changing Identifier in a Doctrine Entity
 
-If your ApiResource is also a Doctrine entity, you have to unmark its id as identifier:
+If your resource is also a Doctrine entity and you want to use another identifier other than the Doctrine one, you have to unmark it:
 
 ```php
 <?php
