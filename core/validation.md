@@ -360,7 +360,7 @@ class MySequencedGroup
 {
     public function __invoke()
     {
-        return new GroupSequence(['first', 'second']); // now, no matter who's first in the class declaration, it will be tested in this order.
+        return new GroupSequence(['first', 'second']); // now, no matter which is first in the class declaration, it will be tested in this order.
     }
 }
 ```
@@ -506,4 +506,3 @@ Constraints                                                                     
 [`Currency`](https://symfony.com/doc/current/reference/constraints/Currency.html)     | `http://schema.org/priceCurrency` |
 [`Isbn`](https://symfony.com/doc/current/reference/constraints/Isbn.html)             | `http://schema.org/isbn`          |
 [`Issn`](https://symfony.com/doc/current/reference/constraints/Issn.html)             | `http://schema.org/issn`          |
-
