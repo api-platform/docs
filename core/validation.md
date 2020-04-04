@@ -365,7 +365,7 @@ class MySequencedGroup
 }
 ```
 
-Just creating the class is not enough because Symfony does not see this service as being used. Therefor to prevent the service to be inlined, you need to enforce it to be public.
+Just creating the class is not enough because Symfony does not see this service as being used. Therefore to prevent the service to be removed, you need to enforce it to be public.
 
 ```yaml
 # api/config/services.yaml
