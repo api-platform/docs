@@ -13,6 +13,7 @@ Let's say you have the following class, which is identified by a `UUID` type. In
 <?php
 namespace App\Entity;
 
+use ApiPlatform\Core\Annotation\ApiResource;
 use App\Uuid;
 
 /**
