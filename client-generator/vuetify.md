@@ -1,8 +1,6 @@
 # Vuetify Generator
 
-## Install
-
-#### On API Platform distribution with docker
+## Install with Docker
 
 If you use the API Platform distribution with docker, first you have to add the [Vue CLI](https://cli.vuejs.org/guide/) to the `yarn global add` command in `client/Dockerfile`:
 
