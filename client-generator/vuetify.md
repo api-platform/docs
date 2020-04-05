@@ -41,7 +41,8 @@ Rebuild the docker containers again to install the Vue App and start the vue ser
 Generate the vuetify components with the client generator:
 
 ```shell script
-docker-compose exec client generate-api-platform-client -g vuetify
+$ docker-compose exec client generate-api-platform-client -g vuetify --resource book
+# Omit the resource flag to generate files for all resource types exposed by the API
 ```
 
 Continue by [generating the VueJS Web App](#generating-the-vuejs-web-app)
