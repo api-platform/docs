@@ -46,7 +46,7 @@ docker-compose exec client generate-api-platform-client -g vuetify
 
 Continue by [generating the VueJS Web App](#generating-the-vuejs-web-app)
 
-#### On a local environment
+## Install without Docker
 
 Create a Vuetify application using
 [Vue CLI 3](https://cli.vuejs.org/guide/):
