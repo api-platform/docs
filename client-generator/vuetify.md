@@ -67,7 +67,7 @@ In the app directory, generate the files for the resource you want:
     # Replace the URL with the entrypoint of your Hydra-enabled API
     # Omit the resource flag to generate files for all resource types exposed by the API
 
-## Generating a Vue Web App
+## Generating the VueJS Web App
 
 The code is ready to be executed! Register the generated routes in `src/router/index.js`
 
