@@ -150,6 +150,7 @@ final class Person
     /**
      * @var Uuid
      * @ApiProperty(identifier=true)
+     * @ORM\Column(type="uuid", unique=true)
      */
     public $code;
     
