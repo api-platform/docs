@@ -6,7 +6,7 @@ However, it's sometimes useful to use a specific class to represent the input or
 
 ## Specifying an Input or an Output Data Representation
 
-For a given resource class, you may want to have a different representation of this class as input (write) or output (read). 
+For a given resource class, you may want to have a different representation of this class as input (write) or output (read).
 To do so, a resource can take an input and/or an output class:
 
 ```php
