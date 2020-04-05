@@ -46,7 +46,7 @@ Generate the vuetify components with the client generator:
 docker-compose exec client generate-api-platform-client -g vuetify
 ```
 
-Proceed with **Generating a Vue Web App**
+Continue by [generating the VueJS Web App](#generating-the-vuejs-web-app)
 
 #### On a local environment
 
