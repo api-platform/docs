@@ -320,12 +320,11 @@ namespace App\Entity;
 use ApiPlatform\Core\Annotation\ApiResource;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
-use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ApiResource(
  *     collectionOperations={
- *          "get" = {"normalization_context" = {"groups" = "Greeting:Collection:Get"}},
+ *          "get"={"normalization_context"={"groups"="greeting:collection:get"}},
  *     }
  * )
  * @ORM\Entity
@@ -338,7 +337,7 @@ class Greeting
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
-     * @Groups("Greeting:Collection:Get")
+     * @Groups("greeting:collection:get")
      */
     private $id;
     
@@ -350,7 +349,7 @@ class Greeting
      * @var string A nice person
      *
      * @ORM\Column
-     * @Groups("Greeting:Collection:Get")
+     * @Groups("greeting:collection:get")
      */
     public $name = '';
 
@@ -360,13 +359,11 @@ class Greeting
     }
 
     /**
-     * @return int
-     *
-     * @Groups("Greeting:Collection:Get") <- MAGIC IS HERE, You can set a group on a method.
+     * @Groups("greeting:collection:get") <- MAGIC IS HERE, you can set a group on a method.
      */
-    public function getSum()
+    public function getSum(): int
     {
-        return $this->a+$this->b;
+            return $this->a + $this->b;
     }
 }
 ```
