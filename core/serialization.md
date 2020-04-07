@@ -306,6 +306,68 @@ This avoids the need for extra queries to be executed when serializing the relat
 
 Instead of embedding relations in the main HTTP response, you may want [to "push" them to the client using HTTP/2 server push](push-relations.md).
 
+### Calculated Field
+
+Sometimes you need to expose calculated fields. This can be done by leveraging the groups. This time not on a property, but on a method.
+
+```php
+<?php
+
+declare(strict_types=1);
+
+namespace App\Entity;
+
+use ApiPlatform\Core\Annotation\ApiResource;
+use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
+
+/**
+ * @ApiResource(
+ *     collectionOperations={
+ *          "get"={"normalization_context"={"groups"="greeting:collection:get"}},
+ *     }
+ * )
+ * @ORM\Entity
+ */
+class Greeting
+{
+    /**
+     * @var int The entity Id
+     *
+     * @ORM\Id
+     * @ORM\GeneratedValue
+     * @ORM\Column(type="integer")
+     * @Groups("greeting:collection:get")
+     */
+    private $id;
+    
+    private $a = 1;
+    
+    private $b = 2;
+
+    /**
+     * @var string A nice person
+     *
+     * @ORM\Column
+     * @Groups("greeting:collection:get")
+     */
+    public $name = '';
+
+    public function getId(): int
+    {
+        return $this->id;
+    }
+
+    /**
+     * @Groups("greeting:collection:get") <- MAGIC IS HERE, you can set a group on a method.
+     */
+    public function getSum(): int
+    {
+            return $this->a + $this->b;
+    }
+}
+```
+
 ### Denormalization
 
 It is also possible to embed a relation in `PUT` and `POST` requests. To enable that feature, set the serialization groups
