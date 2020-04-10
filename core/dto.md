@@ -16,6 +16,7 @@ To do so, a resource can take an input and/or an output class:
 namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Core\Bridge\Symfony\Validator\Exception\ValidationException;
 use App\Dto\BookInput;
 use App\Dto\BookOutput;
 
