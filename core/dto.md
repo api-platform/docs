@@ -333,8 +333,14 @@ final class BookInputDataTransformer implements DataTransformerInterface
      * {@inheritdoc}
      */
     public function transform($data, string $to, array $context = []): Book
-    {
-        $this->validator->validate($data);
+    {        
+        $violations = $this->validator->validate($data);
+        
+        if (\count($violations) > 0) {
+            // Returns a list of violations normalized in Hydra format
+            // and sets HTTP "Bad Request" status code by throwing ValidationException.
+            throw new ValidationException($violations);
+        }
         
         $book = new Book();
         $book->isbn = $data->isbn;
