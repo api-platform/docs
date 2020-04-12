@@ -81,10 +81,10 @@ We have the following `BookInput`:
 namespace App\Dto;
 
 final class BookInput {
-  /**
-   * @var string
-   */
-  public $isbn;
+    /**
+     * @var string
+     */
+    public $isbn;
 }
 ```
 
@@ -148,10 +148,10 @@ To manage the output, it's exactly the same process. For example, we have the fo
 namespace App\Dto;
 
 final class BookOutput {
-  /**
-   * @var string
-   */
-  public $name;
+    /**
+     * @var string
+     */
+    public $name;
 }
 ```
 
