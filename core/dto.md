@@ -27,6 +27,7 @@ use App\Dto\BookOutput;
  */
 final class Book
 {
+    public $id;
 }
 ```
 
@@ -63,6 +64,8 @@ Similarly, the `output` attribute is used during [the serialization process](ser
 
 The `input` and `output` attributes are taken into account by all the documentation generators (GraphQL and OpenAPI, Hydra).
 
+Note that `Book` entity needs an id property. The simplest way is adding a public property called `$id`, as in the example. However, as in any other entity, you can use a private property, with getter and setter functions, and/or named it as you wish, provided you annotate it with `@ApiProperty(identifier=true)`. For instance, you could have a property called `$code`. So the `InputDataTransformer` actually transforms the isbn into a code. And then in the `OutputDataTransformer`, from this code into the name.
+
 To create a `Book`, we `POST` a data structure corresponding to the `BookInput` class and get back in the response a data structure corresponding to the `BookOutput` class:
 
 ![Diagram post input output](images/diagrams/api-platform-post-i-o.png)
@@ -78,7 +81,10 @@ We have the following `BookInput`:
 namespace App\Dto;
 
 final class BookInput {
-  public $isbn;
+    /**
+     * @var string
+     */
+    public $isbn;
 }
 ```
 
@@ -142,7 +148,10 @@ To manage the output, it's exactly the same process. For example, we have the fo
 namespace App\Dto;
 
 final class BookOutput {
-  public $name;
+    /**
+     * @var string
+     */
+    public $name;
 }
 ```
 
