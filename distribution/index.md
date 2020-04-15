@@ -471,7 +471,7 @@ Now, add a review for this book using the `POST` operation for the `Review` reso
     "publicationDate": "September 21, 2016"
 }
 ```
-**Tip:** If you are using symfony flex, the content of the key `book` should be `"/api/books/1"`
+**Note:** If you have installed API Platform in an existing project using `composer`, the content of the key `book` must be `"/api/books/1"`
 
 There are two interesting things to mention about this request:
 
