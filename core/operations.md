@@ -950,3 +950,197 @@ book_post_publication:
         _api_resource_class: App\Entity\Book
         _api_item_operation_name: post_publication
 ```
+
+## Expose a model without any routes
+
+Sometimes, you may want to expose a model, but want it to be used through subrequests only, and never through item or collection operations.
+Because the OpenAPI standard requires at least one route to be exposed to make your models consumable, let's see how you can manage this kind
+of issue.
+
+Let's say you have the following entities in your project:
+
+```php
+<?php
+// src/Entity/Place.php
+
+namespace App\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * @ORM\Entity
+ */
+class Place
+{
+    /**
+      * @var int
+      * 
+      * @ORM\Id
+      * @ORM\GeneratedValue
+      * @ORM\Column(type="integer")
+      */
+    private $id;
+
+    /**
+      * @var string
+      * 
+      * @ORM\Column
+      */
+    private $name;
+
+    /**
+      * @var float
+      * 
+      * @ORM\Column(type="float")
+      */
+    private $latitude;
+
+    /**
+      * @var float
+      * 
+      * @ORM\Column(type="float")
+      */
+    private $longitude;
+
+    // ...
+}
+```
+
+```php
+<?php
+// src/Entity/Weather.php
+
+namespace App\Entity;
+
+class Weather
+{
+    /**
+      * @var float
+      */
+    private $temperature;
+
+    /**
+      * @var float
+      */
+    private $pressure;
+
+    // ...
+}
+```
+
+We don't save the `Weather` entity in the database, since we want to return the weather in real time when it is queried.
+Because we want to get the weather for a known place, it is more reasonable to query it through a subresource of the `Place` entity, so let's do this:
+
+
+```php
+<?php
+// src/Entity/Place.php
+
+namespace App\Entity;
+
+use ApiPlatform\Core\Annotation\ApiResource;
+use App\Controller\GetWeather;
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * @ORM\Entity
+ *
+ * @ApiResource(
+ *     itemOperations={
+ *         "get",
+ *         "put",
+ *         "delete",
+ *         "get_weather": {
+ *             "method": "GET",
+ *             "path": "/places/{id}/weather",
+ *             "controller": GetWeather::class
+ *         }
+ * }, collectionOperations={"get", "post"})
+ */
+class Place
+{
+    // ...
+```
+
+The `GetWeather` controller fetches the weather for the given city and returns an instance of the `Weather` entity.
+This implies that API Platform has to know about this entity, so we will need to make it an API resource too:
+
+
+```php
+<?php
+// src/Entity/Weather.php
+
+namespace App\Entity;
+
+use ApiPlatform\Core\Annotation\ApiResource;
+
+/**
+ * @ApiResource
+ */
+class Weather
+{
+    // ...
+```
+
+This will expose the `Weather` model, but also all the default CRUD routes: `GET`, `PUT`, `DELETE` and `POST`, which is a non-sense in our context.
+Since we are required to expose at least one route, let's expose just one:
+
+
+```php
+<?php
+// src/Entity/Weather.php
+
+namespace App\Entity;
+
+use ApiPlatform\Core\Annotation\ApiResource;
+
+/**
+ * @ApiResource(itemOperations={
+ *     "get": {
+ *         "method": "GET",
+ *         "controller": SomeRandomController::class
+ *     }
+ * })
+ */
+class Weather
+{
+    // ...
+```
+
+This way, we expose a route that will do… nothing. Note that the controller does not even need to exist.
+
+It's almost done, we have just one final issue: our fake item operation is visible in the API docs.
+To remove it, we will need to [decorate the Swagger documentation](/docs/core/swagger/#overriding-the-openapi-specification).
+Then, remove the route from the decorator:
+
+```php
+<?php
+// src/Swagger/SwaggerDecorator.php
+
+namespace App\Swagger;
+
+use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
+
+final class SwaggerDecorator implements NormalizerInterface
+{
+    private $decorated;
+
+    public function __construct(NormalizerInterface $decorated)
+    {
+        $this->decorated = $decorated;
+    }
+
+    public function normalize($object, $format = null, array $context = [])
+    {
+        $docs = $this->decorated->normalize($object, $format, $context);
+
+        // If a prefix is configured on API Platform's routes, it must appear here.
+        unset($docs['paths']['/weathers/{id}']);
+
+        return $docs;
+    }
+
+    // ...
+```
+
+That's it: your route is gone!
