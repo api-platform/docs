@@ -65,7 +65,7 @@ Your new administration interface is ready! Type `yarn start` to try it!
 
 Note: if you don't want to hardcode the API URL, you can [use an environment variable](https://create-react-app.dev/docs/adding-custom-environment-variables).
 
-## Creating the Admin (React) and Customize It With Twig
+## Creating the Admin (React) and customize it with Twig
 
 You can install the admin component with Composer by using:
 
