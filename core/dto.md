@@ -276,6 +276,91 @@ services:
 Both the `input` and the `output` attributes can be set to `false`. If `input` is `false`, the deserialization process
 will be skipped. If `output` is `false`, the serialization process will be skipped.
 
+## Per Operation `input` and `output`
+
+`input` and `output` attributes can be set on a per operation basis:
+
+```php
+<?php
+// api/src/Entity/Book.php
+
+namespace App\Entity;
+
+use ApiPlatform\Core\Annotation\ApiResource;
+use App\Dto\BookOutput;
+use App\Dto\CreateBook;
+use App\Dto\UpdateBook;
+
+/**
+ * @ApiResource(
+ *     collectionOperations={
+ *         "create"={
+ *             "method"="POST",
+ *             "input"=CreateBook::class,
+ *             "output"=BookOutput::class
+ *         }
+ *     },
+ *     itemOperations={
+ *         "update"={
+ *             "method"="PUT",
+ *             "input"=UpdateBook::class,
+ *             "output"=BookOutput::class
+ *         }
+ *     }
+ * )
+ */
+final class Book
+{
+}
+```
+
+Or using XML:
+
+```xml
+<?xml version="1.0" encoding="UTF-8" ?>
+<!-- api/config/api_platform/resources.xml -->
+
+<resources xmlns="https://api-platform.com/schema/metadata"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="https://api-platform.com/schema/metadata
+           https://api-platform.com/schema/metadata/metadata-2.0.xsd">
+    <resource class="App\Entity\Book">
+      <collectionOperations>
+        <collectionOperation name="create">
+          <attribute name="method">POST</attribute>
+          <attribute name="input">App\Dto\CreateBook</attribute>
+          <attribute name="output">App\Dto\BookOutput</attribute>
+        </collectionOperation>
+      </collectionOperations>
+      <itemOperations>
+        <itemOperation name="update">
+          <attribute name="method">PUT</attribute>
+          <attribute name="input">App\Dto\UpdateBook</attribute>
+          <attribute name="output">App\Dto\BookOutput</attribute>
+        </itemOperation>
+      </itemOperations>
+    </resource>
+</resources>
+```
+
+Or using YAML:
+
+```yaml
+# api/config/api_platform/resources.yaml
+resources:
+    App\Entity\Book:
+        collectionOperations:
+            create:
+                method: POST,
+                input: App\Dto\CreateBook,
+                output: App\Dto\BookOutput
+        itemOperations:
+            update:
+                method: PUT,
+                input: App\Dto\UpdateBook,
+                output: App\Dto\BookOutput
+```
+
 ## Input/Output Metadata
 
 When specified, `input` and `output` attributes support:

@@ -297,3 +297,306 @@ class Book
 ```
 
 Alternatively, the more verbose attribute syntax can be used `@ApiResource(attributes={"route_prefix"="/library"})`
+Or in YAML:
+
+```yaml
+# api/config/api_platform/resources.yaml
+App\Entity\Book:
+    itemOperations:
+        get: ~
+        post_publication:
+            route_name: book_post_publication
+        book_post_discontinuation: ~
+```
+
+Or in XML:
+
+```xml
+<?xml version="1.0" encoding="UTF-8" ?>
+<!-- api/config/api_platform/resources.xml -->
+
+<resources xmlns="https://api-platform.com/schema/metadata"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="https://api-platform.com/schema/metadata
+           https://api-platform.com/schema/metadata/metadata-2.0.xsd">
+    <resource class="App\Entity\Book">
+        <itemOperations>
+            <itemOperation name="get" />
+            <itemOperation name="post_publication">
+                <attribute name="route_name">book_post_publication</attribute>
+            </itemOperation>
+            <itemOperation name="book_post_discontinuation" />
+        </itemOperations>
+    </resource>
+</resources>
+```
+
+API Platform will automatically map this `post_publication` operation to the route `book_post_publication`. Let's create a custom action
+and its related route using annotations:
+
+```php
+<?php
+// api/src/Controller/CreateBookPublication.php
+
+namespace App\Controller;
+
+use App\Entity\Book;
+use Symfony\Component\Routing\Annotation\Route;
+
+class CreateBookPublication
+{
+    private $bookPublishingHandler;
+
+    public function __construct(BookPublishingHandler $bookPublishingHandler)
+    {
+        $this->bookPublishingHandler = $bookPublishingHandler;
+    }
+
+    /**
+     * @Route(
+     *     name="book_post_publication",
+     *     path="/books/{id}/publication",
+     *     methods={"POST"},
+     *     defaults={
+     *         "_api_resource_class"=Book::class,
+     *         "_api_item_operation_name"="post_publication"
+     *     }
+     * )
+     */
+    public function __invoke(Book $data): Book
+    {
+        $this->bookPublishingHandler->handle($data);
+
+        return $data;
+    }
+}
+```
+
+It is mandatory to set `_api_resource_class` and `_api_item_operation_name` (or `_api_collection_operation_name` for a collection
+operation) in the parameters of the route (`defaults` key). It allows API Platform to work with the Symfony routing system.
+
+Alternatively, you can also use a traditional Symfony controller and YAML or XML route declarations. The following example does
+the exact same thing as the previous example:
+
+```php
+<?php
+// api/src/Controller/BookController.php
+
+namespace App\Controller;
+
+use App\Entity\Book;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+
+class BookController extends AbstractController
+{
+    public function createPublication(Book $data, BookPublishingHandler $bookPublishingHandler): Book
+    {
+        return $bookPublishingHandler->handle($data);
+    }
+}
+```
+
+```yaml
+# api/config/routes.yaml
+book_post_publication:
+    path: /books/{id}/publication
+    methods: ['POST']
+    defaults:
+        _controller: App\Controller\BookController::createPublication
+        _api_resource_class: App\Entity\Book
+        _api_item_operation_name: post_publication
+```
+
+## Expose a model without any routes
+
+Sometimes, you may want to expose a model, but want it to be used through subrequests only, and never through item or collection operations.
+Because the OpenAPI standard requires at least one route to be exposed to make your models consumable, let's see how you can manage this kind
+of issue.
+
+Let's say you have the following entities in your project:
+
+```php
+<?php
+// src/Entity/Place.php
+
+namespace App\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * @ORM\Entity
+ */
+class Place
+{
+    /**
+      * @var int
+      * 
+      * @ORM\Id
+      * @ORM\GeneratedValue
+      * @ORM\Column(type="integer")
+      */
+    private $id;
+
+    /**
+      * @var string
+      * 
+      * @ORM\Column
+      */
+    private $name;
+
+    /**
+      * @var float
+      * 
+      * @ORM\Column(type="float")
+      */
+    private $latitude;
+
+    /**
+      * @var float
+      * 
+      * @ORM\Column(type="float")
+      */
+    private $longitude;
+
+    // ...
+}
+```
+
+```php
+<?php
+// src/Entity/Weather.php
+
+namespace App\Entity;
+
+class Weather
+{
+    /**
+      * @var float
+      */
+    private $temperature;
+
+    /**
+      * @var float
+      */
+    private $pressure;
+
+    // ...
+}
+```
+
+We don't save the `Weather` entity in the database, since we want to return the weather in real time when it is queried.
+Because we want to get the weather for a known place, it is more reasonable to query it through a subresource of the `Place` entity, so let's do this:
+
+
+```php
+<?php
+// src/Entity/Place.php
+
+namespace App\Entity;
+
+use ApiPlatform\Core\Annotation\ApiResource;
+use App\Controller\GetWeather;
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * @ORM\Entity
+ *
+ * @ApiResource(
+ *     itemOperations={
+ *         "get",
+ *         "put",
+ *         "delete",
+ *         "get_weather": {
+ *             "method": "GET",
+ *             "path": "/places/{id}/weather",
+ *             "controller": GetWeather::class
+ *         }
+ * }, collectionOperations={"get", "post"})
+ */
+class Place
+{
+    // ...
+```
+
+The `GetWeather` controller fetches the weather for the given city and returns an instance of the `Weather` entity.
+This implies that API Platform has to know about this entity, so we will need to make it an API resource too:
+
+
+```php
+<?php
+// src/Entity/Weather.php
+
+namespace App\Entity;
+
+use ApiPlatform\Core\Annotation\ApiResource;
+
+/**
+ * @ApiResource
+ */
+class Weather
+{
+    // ...
+```
+
+This will expose the `Weather` model, but also all the default CRUD routes: `GET`, `PUT`, `DELETE` and `POST`, which is a non-sense in our context.
+Since we are required to expose at least one route, let's expose just one:
+
+
+```php
+<?php
+// src/Entity/Weather.php
+
+namespace App\Entity;
+
+use ApiPlatform\Core\Annotation\ApiResource;
+
+/**
+ * @ApiResource(itemOperations={
+ *     "get": {
+ *         "method": "GET",
+ *         "controller": SomeRandomController::class
+ *     }
+ * })
+ */
+class Weather
+{
+    // ...
+```
+
+This way, we expose a route that will do… nothing. Note that the controller does not even need to exist.
+
+It's almost done, we have just one final issue: our fake item operation is visible in the API docs.
+To remove it, we will need to [decorate the Swagger documentation](/docs/core/swagger/#overriding-the-openapi-specification).
+Then, remove the route from the decorator:
+
+```php
+<?php
+// src/Swagger/SwaggerDecorator.php
+
+namespace App\Swagger;
+
+use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
+
+final class SwaggerDecorator implements NormalizerInterface
+{
+    private $decorated;
+
+    public function __construct(NormalizerInterface $decorated)
+    {
+        $this->decorated = $decorated;
+    }
+
+    public function normalize($object, $format = null, array $context = [])
+    {
+        $docs = $this->decorated->normalize($object, $format, $context);
+
+        // If a prefix is configured on API Platform's routes, it must appear here.
+        unset($docs['paths']['/weathers/{id}']);
+
+        return $docs;
+    }
+
+    // ...
+```
+
+That's it: your route is gone!
