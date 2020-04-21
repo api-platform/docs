@@ -54,6 +54,20 @@ services:
       PHP_IDE_CONFIG: serverName=api-platform
 ```
 
+Note for Mac environments use the following:
+
+```yml
+      XDEBUG_CONFIG: >-
+        remote_enable=1
+        remote_host=docker.for.mac.localhost
+        remote_connect_back=0
+        remote_port=9000
+        idekey=PHPSTORM
+        remote_autostart=1
+        remote_mode=req
+        remote_handler=dbgp
+```
+
 ## Troubleshooting
 
 Inspect the installation with the following command. The requested Xdebug
