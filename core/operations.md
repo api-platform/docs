@@ -566,7 +566,7 @@ class Weather
 This way, we expose a route that will do… nothing. Note that the controller does not even need to exist.
 
 It's almost done, we have just one final issue: our fake item operation is visible in the API docs.
-To remove it, we will need to [decorate the Swagger documentation](/docs/core/swagger/#overriding-the-openapi-specification).
+To remove it, we will need to [decorate the Swagger documentation](swagger.md#overriding-the-openapi-specification).
 Then, remove the route from the decorator:
 
 ```php
