@@ -1698,3 +1698,31 @@ mutation CreateMediaObject($file: Upload!) {
     }
 }
 ```
+
+## Change Default Descriptions
+
+By default, API Platform generates descriptions for mutations and subscriptions.
+
+If you want to change them, or add some for queries, you can do it in the resource declaration, at the operation level, with the `description` attribute.
+
+For instance, if you want to change the description of the `create` mutation:
+
+```php
+<?php
+
+namespace App\Model;
+
+use ApiPlatform\Core\Annotation\ApiResource;
+
+/**
+ * @ApiResource(graphql={
+ *     "create"={
+ *         "description"="My custom description."
+ *     }
+ * })
+ */
+class Book
+{
+    // ...
+}
+```
