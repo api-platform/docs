@@ -184,6 +184,35 @@ resources:
               format: date-time
 ```
 
+Or in XML:  
+
+```xml
+<?xml version="1.0" encoding="UTF-8" ?>
+<resources xmlns="https://api-platform.com/schema/metadata"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="https://api-platform.com/schema/metadata
+           https://api-platform.com/schema/metadata/metadata-2.0.xsd">
+    <resource class="App\Entity\Product">
+        <property name="name">
+            <attribute name="swagger_context">
+                <attribute name="type">type</attribute>
+                <attribute name="enum">
+                    <attribute>one</attribute>
+                    <attribute>two</attribute>
+                </attribute>
+                <attribute name="example">one</attribute>
+            </attribute>
+        </property>
+        <property name="timestamp">
+            <attribute name="swagger_context">
+                <attribute name="type">string</attribute>
+                <attribute name="format">date-time</attribute>
+            </attribute>
+        </property>
+    </resource>
+</resources>
+```
+
 This will produce the following Swagger documentation:
 ```json
 {
