@@ -551,19 +551,14 @@ namespace App\Entity;
 use ApiPlatform\Core\Annotation\ApiResource;
 
 /**
- * @ApiResource(itemOperations={
- *     "get": {
- *         "method": "GET",
- *         "controller": SomeRandomController::class
- *     }
- * })
+ * @ApiResource(itemOperations={}, collectionOperations={})
  */
 class Weather
 {
     // ...
 ```
 
-This way, we expose a route that will do… nothing. Note that the controller does not even need to exist.
+This way, we expose a route that will do… nothing. 
 
 It's almost done, we have just one final issue: our fake item operation is visible in the API docs.
 To remove it, we will need to [decorate the Swagger documentation](swagger.md#overriding-the-openapi-specification).
