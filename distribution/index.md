@@ -75,7 +75,7 @@ This starts the following services:
 
 | Name     | Description                                                       | Port(s)                                                     | Environment(s)                                     |
 |----------|-------------------------------------------------------------------|-------------------------------------------------------------|----------------------------------------------------|
-| PHP      | The API with PHP, PHP-FPM 7.3, Composer and sensitive configs     | n/a                                                         | all                                                |
+| php      | The API with PHP, PHP-FPM 7.3, Composer and sensitive configs     | n/a                                                         | all                                                |
 | db       | A PostgreSQL database server                                      | 5432                                                        | all (prefer using a managed service in prod)       |
 | client   | A development server for the Progressive Web App                  | 80                                                          | dev (use a static website hosting service in prod) |
 | admin    | A development server for the admin                                | 81                                                          | dev (use a static website hosting service in prod) |
