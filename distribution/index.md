@@ -47,7 +47,7 @@ API Platform uses these model classes to expose and document a web API having a 
 One more thing, before we start: as the API Platform distribution includes [the Symfony framework](https://symfony.com),
 it is compatible with most [Symfony bundles](https://flex.symfony.com)
 (plugins) and benefits from [the numerous extensions points](../core/extending.md) provided by this rock-solid foundation (events, DIC...).
-Adding features like custom, service-oriented, API endpoints, JWT or OAuth authentication, HTTP caching, mail sending or
+Adding features like custom or service-oriented API endpoints, JWT or OAuth authentication, HTTP caching, mail sending or
 asynchronous jobs to your APIs is straightforward.
 
 ## Installing the Framework
@@ -369,7 +369,7 @@ Finally, tell Doctrine to sync the database tables structure with our new data m
     $ docker-compose exec php bin/console doctrine:schema:update --force
 
 
-The `php` container is where your API app stands. Prefixing a command by `docker-compose exec php` allows to execute the
+The `php` container is where your API app stands. Prefixing a command by `docker-compose exec php` allows executing the
 given command in this container. You may want [to create an alias](http://www.linfo.org/alias.html) to make your life easier.
 
 Later, you'll want to use [Doctrine Migrations](https://symfony.com/doc/current/doctrine.html#migrations-creating-the-database-tables-schema)
