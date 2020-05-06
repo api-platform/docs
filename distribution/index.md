@@ -47,7 +47,7 @@ API Platform uses these model classes to expose and document a web API having a 
 One more thing, before we start: as the API Platform distribution includes [the Symfony framework](https://symfony.com),
 it is compatible with most [Symfony bundles](https://flex.symfony.com)
 (plugins) and benefits from [the numerous extensions points](../core/extending.md) provided by this rock-solid foundation (events, DIC...).
-Adding features like a custom, service-oriented, API endpoints, JWT or OAuth authentication, HTTP caching, mail sending or
+Adding features like custom or service-oriented API endpoints, JWT or OAuth authentication, HTTP caching, mail sending or
 asynchronous jobs to your APIs is straightforward.
 
 ## Installing the Framework
