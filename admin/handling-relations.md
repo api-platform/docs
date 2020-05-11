@@ -2,14 +2,14 @@
 
 API Platform Admin handles `to-one` and `to-many` relations automatically.
 
-If the relation is [embedded](serialization.md#embedding-relations), the admin automatically replaces the embedded resource data by their(s) IRI.
+If the relation is [embedded](../core/serialization.md#embedding-relations), the admin automatically replaces the embedded resource data by their(s) IRI.
 However, the embedded data is inserted to a local cache: it will not be necessary to make more requests if you reference some fields of the embedded resource later on.
 
 Thanks to [the Schema.org support](schema.org.md), you can easily display the name of a related resource instead of its IRI.
 
 ## Display a Field of an Embedded Relation
 
-If you use [embedded relations](serialization.md#embedding-relations) and need to display a nested field, make sure you write the code as if the relation needs to be fetched as a reference.
+If you use [embedded relations](../core/serialization.md#embedding-relations) and need to display a nested field, make sure you write the code as if the relation needs to be fetched as a reference.
 
 You *cannot* use the dot separator to do so.
 
