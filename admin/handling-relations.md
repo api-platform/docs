@@ -1,11 +1,77 @@
-# Handling Relations to Collections
+# Handling Relations
 
 API Platform Admin handles `to-one` and `to-many` relations automatically.
-Thanks to [the Schema.org support](schema.org.md), it's also easy to display the name of a related object instead of its IRI.
 
-Let's go one step further thanks to the [customization capabilities](customizing.md) of API Platform Admin by adding autocompletion support to form inputs.
+If the relation is [embedded](serialization.md#embedding-relations), the admin automatically replaces the embedded resource data by their(s) IRI.
+However, the embedded data is inserted to a local cache: it will not be necessary to make more requests if you reference some fields of the embedded resource later on.
+
+Thanks to [the Schema.org support](schema.org.md), you can easily display the name of a related resource instead of its IRI.
+
+## Display a Field of an Embedded Relation
+
+If you use [embedded relations](serialization.md#embedding-relations) and need to display a nested field, make sure you write the code as if the relation needs to be fetched as a reference.
+
+You *cannot* use the dot separator to do so.
+
+For instance, if your API returns:
+
+```json
+{
+  "@context": "/contexts/Book",
+  "@id": "/books",
+  "@type": "hydra:Collection",
+  "hydra:member": [
+    {
+      "@id": "/books/07b90597-542e-480b-a6bf-5db223c761aa",
+      "@type": "http://schema.org/Book",
+      "title": "War and Peace",
+      "author": {
+        "@id": "/authors/d7a133c1-689f-4083-8cfc-afa6d867f37d",
+        "@type": "http://schema.org/Author",
+        "firstName": "Leo",
+        "lastName": "Tolstoi"
+      }
+    }
+  ],
+  "hydra:totalItems": 1
+}
+```
+
+If you want to display the author first name in the list, you need to write the following code:
+
+```javascript
+import React from "react";
+import {
+  HydraAdmin,
+  FieldGuesser,
+  ListGuesser,
+  ResourceGuesser
+} from "@api-platform/admin";
+import { ReferenceField, TextField } from "react-admin";
+
+const BooksList = (props) => (
+  <ListGuesser {...props}>
+    <FieldGuesser source="title" />
+    {/* Use react-admin components directly when you want complex fields. */}
+    <ReferenceField label="Author first name" source="author" reference="authors">
+      <TextField source="firstName" />
+    </ReferenceField>
+  </ListGuesser>
+);
+
+export default () => (
+  <HydraAdmin entrypoint={process.env.REACT_APP_API_ENTRYPOINT}>
+    <ResourceGuesser
+      name="books"
+      list={BooksList}
+    />
+  </HydraAdmin>
+);
+```
 
 ## Using an Autocomplete Input for Relations
+
+Let's go one step further thanks to the [customization capabilities](customizing.md) of API Platform Admin by adding autocompletion support to form inputs for relations.
 
 Let's consider an API exposing `Person` and `Book` resources linked by a `many-to-many`
 relation (through the `authors` property).

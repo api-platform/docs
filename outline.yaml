@@ -62,7 +62,7 @@ chapters:
       - index
       - getting-started
       - customizing
-      - handling-relations-to-collections
+      - handling-relations
       - schema.org
       - authentication-support
   - title: The Client Generator Component
