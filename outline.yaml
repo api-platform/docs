@@ -61,10 +61,11 @@ chapters:
     items:
       - index
       - getting-started
-      - customizing
       - handling-relations
       - schema.org
       - authentication-support
+      - performance
+      - customizing
   - title: The Client Generator Component
     path: client-generator
     items:
