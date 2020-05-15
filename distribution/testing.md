@@ -29,7 +29,7 @@ First, install [Alice](https://github.com/nelmio/alice):
 Thanks to Symfony Flex, Alice (and [AliceBundle](https://github.com/hautelook/AliceBundle)) are ready to use!
 Place your data fixtures files in a directory named `fixtures/`.
 
-Then, create some fixtures for [the bookstore API you created in the tutorial](index.md):
+Then, create some fixtures for the bookstore API you created in the tutorial:
 
 ```yaml
 # api/fixtures/books.yaml
