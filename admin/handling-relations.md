@@ -2,16 +2,55 @@
 
 API Platform Admin handles `to-one` and `to-many` relations automatically.
 
-If the relation is [embedded](../core/serialization.md#embedding-relations), the admin automatically replaces the embedded resource data by their(s) IRI.
+Thanks to [the Schema.org support](schema.org.md), you can easily display the name of a related resource instead of its IRI.
+
+## Embedded Relations
+
+If the relation is an array of [embeddeds](../core/serialization.md#embedding-relations), the admin automatically replaces the embedded resources' data by their IRI.
 However, the embedded data is inserted to a local cache: it will not be necessary to make more requests if you reference some fields of the embedded resource later on.
 
-Thanks to [the Schema.org support](schema.org.md), you can easily display the name of a related resource instead of its IRI.
+If the relation is an embedded resource, by default, the admin also replaces it by its IRI.
+However, if you need to edit the embedded data or if you want to display some of the nested fields by using the dot notation for complex structures,
+you can keep the embedded data by setting the `useEmbedded` parameter of the Hydra data provider to `true`.
+
+```javascript
+// admin/src/App.js
+
+import React from "react";
+import { HydraAdmin, fetchHydra, hydraDataProvider } from "@api-platform/admin";
+import { parseHydraDocumentation } from "@api-platform/api-doc-parser";
+
+const entrypoint = process.env.REACT_APP_API_ENTRYPOINT;
+
+const dataProvider = hydraDataProvider(
+    entrypoint,
+    fetchHydra,
+    parseHydraDocumentation,
+    true // useEmbedded parameter
+);
+
+export default () => (
+    <HydraAdmin
+        dataProvider={ dataProvider }
+        entrypoint={ entrypoint }
+    />
+);
+```
+
+The embedded data will be displayed as a text field: the admin cannot determine the fields present in it.
+To display the fields you want, see [this section](handling-relations.md#display-a-field-of-an-embedded-relation).
+
+This behavior will be the default one in 3.0.
 
 ## Display a Field of an Embedded Relation
 
-If you use [embedded relations](../core/serialization.md#embedding-relations) and need to display a nested field, make sure you write the code as if the relation needs to be fetched as a reference.
+If you have an [embedded relation](../core/serialization.md#embedding-relations) and need to display a nested field, the code you need to write depends of the value of `useEmbedded` of the Hydra data provider.
 
-You *cannot* use the dot separator to do so.
+If `false` (default behavior), make sure you write the code as if the relation needs to be fetched as a reference.
+
+In this case, you *cannot* use the dot separator to do so.
+
+Note that you cannot edit the embedded data directly with this behavior.
 
 For instance, if your API returns:
 
@@ -56,6 +95,36 @@ const BooksList = (props) => (
     <ReferenceField label="Author first name" source="author" reference="authors">
       <TextField source="firstName" />
     </ReferenceField>
+  </ListGuesser>
+);
+
+export default () => (
+  <HydraAdmin entrypoint={process.env.REACT_APP_API_ENTRYPOINT}>
+    <ResourceGuesser
+      name="books"
+      list={BooksList}
+    />
+  </HydraAdmin>
+);
+```
+
+If the `useEmbedded` parameter is set to `true` (will be the default behavior in 3.0), you need to use the dot notation to display a field:
+
+```javascript
+import React from "react";
+import {
+  HydraAdmin,
+  FieldGuesser,
+  ListGuesser,
+  ResourceGuesser
+} from "@api-platform/admin";
+import { TextField } from "react-admin";
+
+const BooksList = (props) => (
+  <ListGuesser {...props}>
+    <FieldGuesser source="title" />
+    {/* Use react-admin components directly when you want complex fields. */}
+    <TextField label="Author first name" source="author.firstName" />
   </ListGuesser>
 );
 
