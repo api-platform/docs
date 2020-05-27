@@ -142,27 +142,25 @@ export default () => (
 
 Let's go one step further thanks to the [customization capabilities](customizing.md) of API Platform Admin by adding autocompletion support to form inputs for relations.
 
-Let's consider an API exposing `Person` and `Book` resources linked by a `many-to-many`
-relation (through the `authors` property).
+Let's consider an API exposing `Review` and `Book` resources linked by a `many-to-one`
+relation (through the `book` property).
 
 This API uses the following PHP code:
 
 ```php
 <?php
-// api/src/Entity/Person.php
+// api/src/Entity/Review.php
 
 namespace App\Entity;
 
-use ApiPlatform\Core\Annotation\ApiFilter;
 use ApiPlatform\Core\Annotation\ApiResource;
-use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ApiResource
  * @ORM\Entity
  */
-class Person
+class Review
 {
     /**
      * @ORM\Column(type="integer")
@@ -172,10 +170,9 @@ class Person
     public $id;
 
     /**
-     * @ORM\Column
-     * @ApiFilter(SearchFilter::class, strategy="ipartial")
+     * @ORM\ManyToOne(targetEntity=Book::class, inversedBy="reviews")
      */
-    public $name;
+    public $book;
 }
 ```
 
@@ -185,6 +182,7 @@ class Person
 
 namespace App\Entity;
 
+use ApiPlatform\Core\Annotation\ApiFilter;
 use ApiPlatform\Core\Annotation\ApiResource;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -204,18 +202,24 @@ class Book
     public $id;
 
     /**
-     * @ORM\ManyToMany(targetEntity="Person")
+     * @ORM\Column
+     * @ApiFilter(SearchFilter::class, strategy="ipartial")
      */
-    public $authors;
+    public $title;
+
+    /**
+     * @ORM\OneToMany(targetEntity=Review::class, mappedBy="book")
+     */
+    public $reviews;
 
     public function __construct()
     {
-        $this->authors = new ArrayCollection();
+        $this->reviews = new ArrayCollection();
     }
 }
 ```
 
-Notice the "partial search" [filter](../core/filters.md) on the `name` property of the `Book` resource class.
+Notice the "partial search" [filter](../core/filters.md) on the `title` property of the `Book` resource class.
 
 Now, let's configure API Platform Admin to enable autocompletion for the relation selector:
 
@@ -257,6 +261,69 @@ const ReviewsEdit = props => (
       reference="books"
       label="Books"
       filterToQuery={searchText => ({ title: searchText })}
+    >
+      <AutocompleteInput optionText="title" />
+    </ReferenceInput>
+
+    <InputGuesser source="rating" />
+    <InputGuesser source="body" />
+    <InputGuesser source="publicationDate" />
+  </EditGuesser>
+);
+
+export default () => (
+  <HydraAdmin entrypoint={process.env.REACT_APP_API_ENTRYPOINT}>
+    <ResourceGuesser
+      name="reviews"
+      create={ReviewsCreate}
+      edit={ReviewsEdit}
+    />
+  </HydraAdmin>
+);
+```
+
+If the book is embedded into a review and if the `useEmbedded` parameter is set to `true` (will be the default behavior in 3.0),
+you need to change the `ReferenceInput` for the edit component:
+
+```javascript
+import React from "react";
+import {
+  HydraAdmin,
+  ResourceGuesser,
+  CreateGuesser,
+  EditGuesser,
+  InputGuesser
+} from "@api-platform/admin";
+import { ReferenceInput, AutocompleteInput } from "react-admin";
+
+const ReviewsCreate = props => (
+  <CreateGuesser {...props}>
+    <InputGuesser source="author" />
+    <ReferenceInput
+      source="book"
+      reference="books"
+      label="Books"
+      filterToQuery={searchText => ({ title: searchText })}
+    >
+      <AutocompleteInput optionText="title" />
+    </ReferenceInput>
+
+    <InputGuesser source="rating" />
+    <InputGuesser source="body" />
+    <InputGuesser source="publicationDate" />
+  </CreateGuesser>
+);
+
+const ReviewsEdit = props => (
+  <EditGuesser {...props}>
+    <InputGuesser source="author" />
+
+    <ReferenceInput
+      source="book"
+      reference="books"
+      label="Books"
+      filterToQuery={searchText => ({ title: searchText })}
+      format={v => v['@id'] ?? v}
     >
       <AutocompleteInput optionText="title" />
     </ReferenceInput>
