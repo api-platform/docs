@@ -1,6 +1,6 @@
-# Pushing Live Updates Using the Mercure Protocol
+# Creating Async APIs using the Mercure Protocol
 
-API Platform can automatically send real time updates to the currently connected clients (webapps, mobile apps...) using [the Mercure protocol](https://mercure.rocks).
+API Platform can automatically push the modified version of the resources exposed by the API to the currently connected clients (webapps, mobile apps...) using [the Mercure protocol](https://mercure.rocks).
 
 > *Mercure* is a protocol allowing to push data updates to web browsers and other HTTP clients in a convenient, fast, reliable and battery-efficient way. It is especially useful to publish real-time updates of resources served through web APIs, to reactive web and mobile apps.
 >
@@ -18,7 +18,7 @@ If you use the distribution, you have nothing more to do, and you can skip to th
 
 If you have installed API Platform using another method (such as `composer require api`), you need to install a Mercure hub, and the [Symfony MercureBundle](https://github.com/symfony/mercure-bundle):
 
-First, [download and run a Mercure hub](https://github.com/dunglas/mercure#hub-implementation).
+First, [download and run a Mercure hub](https://mercure.rocks/docs/hub/install).
 Then, install the Symfony bundle:
 
      $ composer require mercure
@@ -29,11 +29,11 @@ Finally, 3 environment variables [must be set](https://symfony.com/doc/current/c
 * `MERCURE_SUBSCRIBE_URL`: the **public** URL of the Mercure hub that clients will use to subscribe to updates
 * `MERCURE_JWT_SECRET`: a valid Mercure [JSON Web Token (JWT)](https://jwt.io/) allowing API Platform to publish updates to the hub
 
-The JWT **must** contain a `mercure.publish` property containing an array of targets.
-This array can be empty to allow publishing anonymous updates only.
-[Example publisher JWT](https://jwt.io/#debugger-io?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJtZXJjdXJlIjp7InN1YnNjcmliZSI6WyJmb28iLCJiYXIiXSwicHVibGlzaCI6WyJmb28iXX19.LRLvirgONK13JgacQ_VbcjySbVhkSmHy3IznH3tA9PM) (demo key: `!UnsecureChangeMe!`).
+The JWT **must** contain a `mercure.publish` property containing an array of topic selectors.
+This array can be empty to allow publishing anonymous updates only. It can also be `["*"]` to allow publishing on every topics.
+[Example publisher JWT](https://jwt.io/#debugger-io?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJtZXJjdXJlIjp7InB1Ymxpc2giOlsiKiJdfX0.obDjwCgqtPuIvwBlTxUEmibbBf0zypKCNzNKP7Op2UM) (demo key: `!ChangeMe!`).
 
-[Learn more about Mercure authorization.](https://github.com/dunglas/mercure/blob/master/spec/mercure.md#authorization)
+[Learn more about Mercure authorization.](https://mercure.rocks/spec#authorization)
 
 ## Pushing the API Updates
 
@@ -68,14 +68,14 @@ Clients generated using [the API Platform Client Generator](../client-generator/
 
 ![Screencast](../client-generator/images/client-generator-demo.gif)
 
-[Learn how to use the discovery capabilities of Mercure in your own clients](https://github.com/dunglas/mercure#examples).
+[Learn how to use the discovery capabilities of Mercure in your own clients](https://mercure.rocks/docs/ecosystem/awesome).
 
 ## Dispatching Private Updates (Authorized Mode)
 
-Mercure allows to dispatch [private updates, that will be received only by authorized clients](https://github.com/dunglas/mercure/blob/master/spec/mercure.md#authorization).
-To receive this kind of updates, the client must hold a JWT containing at least one *target* marking the update.
+Mercure allows to dispatch [private updates, that will be received only by authorized clients](https://mercure.rocks/spec#authorization).
+To receive this kind of updates, the client must hold a JWT containing at least one *target selector* matched by the update.
 
-Then, hint API Platform to dispatch the updates only to the selected targets:
+Then, use options to mark the published updates as privates:
 
 ```php
 <?php
@@ -86,7 +86,7 @@ namespace App\Entity;
 use ApiPlatform\Core\Annotation\ApiResource;
 
 /**
- * @ApiResource(mercure={"a-group", "another-group"})
+ * @ApiResource(mercure={"private": true})
  */
 class Book
 {
@@ -94,7 +94,7 @@ class Book
 }
 ```
 
-It's also possible to execute an *expression* (using the [Symfony Expression Language component](https://symfony.com/doc/current/components/expression_language.html)), to generate a dynamic list of targets:
+It's also possible to execute an *expression* (using the [Symfony Expression Language component](https://symfony.com/doc/current/components/expression_language.html)), to generate the options dynamically:
 
 ```php
 <?php
@@ -105,12 +105,22 @@ namespace App\Entity;
 use ApiPlatform\Core\Annotation\ApiResource;
 
 /**
- * @ApiResource(mercure="object.owners")
+ * @ApiResource(mercure="object.mercureOptions")
  */
 class Book
 {
-    public $owners = [];
+    public $mercureOptions = ['private' => true];
 
    // ...
 }
 ```
+
+## Available Options
+
+In addition to `private`, the following options are available:
+
+* `topics`: the list of topics of this update, if not the resource IRI is used
+* `data`: the content of this update, if not set the content will be the serialization of the resource using the default format
+* `id`: the SSE id of this event, if not set the ID will be generated by the mercure Hub
+* `type`: the SSE type of this event, if not set this field is omitted
+* `retry`: the `retry` field of the SSE, if not set this field is omitted
