@@ -219,10 +219,10 @@ api_platform:
           request_options: []
 
     mercure:
-        # Enabled by default with installed GraphQL
+        # Enabled by default with installed symfony/mercure-bundle
         enabled: false
 
-        # The URL sent in the Link HTTP header. If not set, will default to the URL for MercureBundle's default hub.
+        # The URL sent in the Link HTTP header. If not set, will default to MercureBundle's default hub URL.
         hub_url: null
 
     messenger:
