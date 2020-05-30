@@ -6,11 +6,11 @@ Thanks to [the Schema.org support](schema.org.md), you can easily display the na
 
 ## Embedded Relations
 
-If the relation is an array of [embeddeds](../core/serialization.md#embedding-relations), the admin automatically replaces the embedded resources' data by their IRI.
+If a relation is an array of [embeddeds or an embedded](../core/serialization.md#embedding-relations) resource,
+by default, the admin automatically replaces the embedded resources' data by their IRI.
 However, the embedded data is inserted to a local cache: it will not be necessary to make more requests if you reference some fields of the embedded resource later on.
 
-If the relation is an embedded resource, by default, the admin also replaces it by its IRI.
-However, if you need to edit the embedded data or if you want to display some of the nested fields by using the dot notation for complex structures,
+If you need to edit the embedded data or if you want to display some of the nested fields by using the dot notation for complex structures,
 you can keep the embedded data by setting the `useEmbedded` parameter of the Hydra data provider to `true`.
 
 ```javascript
@@ -37,7 +37,7 @@ export default () => (
 );
 ```
 
-The embedded data will be displayed as a text field: the admin cannot determine the fields present in it.
+The embedded data will be displayed as text field and editable as text input: the admin cannot determine the fields present in it.
 To display the fields you want, see [this section](handling-relations.md#display-a-field-of-an-embedded-relation).
 
 This behavior will be the default one in 3.0.
@@ -142,8 +142,7 @@ export default () => (
 
 Let's go one step further thanks to the [customization capabilities](customizing.md) of API Platform Admin by adding autocompletion support to form inputs for relations.
 
-Let's consider an API exposing `Review` and `Book` resources linked by a `many-to-one`
-relation (through the `book` property).
+Let's consider an API exposing `Review` and `Book` resources linked by a `many-to-one` relation (through the `book` property).
 
 This API uses the following PHP code:
 
@@ -323,7 +322,7 @@ const ReviewsEdit = props => (
       reference="books"
       label="Books"
       filterToQuery={searchText => ({ title: searchText })}
-      format={v => v['@id'] ?? v}
+      format={v => v['@id'] || v}
     >
       <AutocompleteInput optionText="title" />
     </ReferenceInput>
