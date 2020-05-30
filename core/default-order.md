@@ -86,3 +86,27 @@ class Book
     // ...
 }
 ```
+
+When you want to sort by a number of views, you can do the following.
+
+<?php
+// api/src/Entity/Book.php
+
+namespace App\Entity;
+
+use ApiPlatform\Core\Annotation\ApiResource;
+
+/**
+ * @ApiResource(attributes={"order"={"viewCount": "DESC"}})
+ */
+class Book
+{
+    // ...
+
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $viewCount;
+    
+    // ...
+}
