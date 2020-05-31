@@ -1326,14 +1326,14 @@ You may need to export your schema in SDL (Schema Definition Language) to import
 
 The `api:graphql:export` command is provided to do so:
 
-```bash
-docker-compose exec php bin/console api:graphql:export -o path/to/your/volume/schema.graphql
+```shell-session
+$ docker-compose exec php bin/console api:graphql:export -o path/to/your/volume/schema.graphql
 ```
 
 Since the command prints the schema to the output if you don't use the `-o` option, you can also use this command:
 
-```bash
-docker-compose exec php bin/console api:graphql:export > path/in/host/schema.graphql
+```shell-session
+$ docker-compose exec php bin/console api:graphql:export > path/in/host/schema.graphql
 ```
 
 ## Handling File Upload

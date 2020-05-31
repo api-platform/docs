@@ -14,21 +14,21 @@ Remove the directories `client\src\` and `client\public\` and the files `client\
 
 Create a new Vue App and install vuetify and other vue packages:
 
-```shell script
-docker-compose exec client vue create -d .
-docker-compose exec client vue add vuetify
-docker-compose exec client yarn add router lodash moment vue-i18n vue-router vuelidate vuex vuex-map-fields
+```shell-session
+$ docker-compose exec client vue create -d .
+$ docker-compose exec client vue add vuetify
+$ docker-compose exec client yarn add router lodash moment vue-i18n vue-router vuelidate vuex vuex-map-fields
 ```
 
 Update the entrypoint in the `client/src/config/entrypoint.js` file:
 
-```ecmascript 6
+```javascript
 export const ENTRYPOINT = 'https://localhost:8443';
 ```
 
 Update the scripts part of the new `composer.json`:
 
-```ecmascript 6
+```json
   "scripts": {
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint",
@@ -40,7 +40,7 @@ Rebuild the docker containers again to install the Vue App and start the vue ser
 
 Generate the vuetify components with the client generator:
 
-```shell script
+```shell-session
 $ docker-compose exec client generate-api-platform-client -g vuetify --resource book
 # Omit the resource flag to generate files for all resource types exposed by the API
 ```

@@ -73,7 +73,7 @@ Note for Mac environments use the following:
 Inspect the installation with the following command. The requested Xdebug
 version should be displayed in the output.
 
-```console
+```shell-session
 $ docker-compose exec php php --version
 
 PHP …
