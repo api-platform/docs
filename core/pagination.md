@@ -421,7 +421,7 @@ For more information, please see the [Pagination](https://www.doctrine-project.o
 
 ## Custom Controller Action
 
-In case you're using a custom controller action make sure you return the `Paginator` object to get the full hydra response with `hydra:view` (which contains information about first, last, next and previous page). The following examples show how to handle it within a repository method. The controller needs to pass through the page number. You will need to use the Doctrine Paginator and pass it to the API Platform Paginator.
+In case you're using a custom controller action, make sure you return the `Paginator` object to get the full hydra response with `hydra:view` (which contains information about first, last, next and previous page). The following examples show how to handle it within a repository method. The controller needs to pass through the page number. You will need to use the Doctrine Paginator and pass it to the API Platform Paginator.
 
 First example:
 
