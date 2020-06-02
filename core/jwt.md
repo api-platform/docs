@@ -214,12 +214,12 @@ final class SwaggerDecorator implements NormalizerInterface
         $this->decorated = $decorated;
     }
 
-    public function supportsNormalization($data, $format = null): bool
+    public function supportsNormalization($data, string $format = null): bool
     {
         return $this->decorated->supportsNormalization($data, $format);
     }
 
-    public function normalize($object, $format = null, array $context = [])
+    public function normalize($object, string $format = null, array $context = [])
     {
         $docs = $this->decorated->normalize($object, $format, $context);
 
