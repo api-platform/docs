@@ -54,11 +54,11 @@ explicitly configure `itemOperations`. The reverse is also true.
 Operations can be configured using annotations, XML or YAML. In the following examples, we enable only the built-in operation
 for the `GET` method for both `collectionOperations` and `itemOperations` to create a readonly endpoint.
 
-`itemOperations` and `collectionOperations` are arrays containing a list of operation. Each operation is defined by a key
+`itemOperations` and `collectionOperations` are arrays containing a list of operations. Each operation is defined by a key
 corresponding to the name of the operation that can be anything you want and an array of properties as value. If an
 empty list of operations is provided, all operations are disabled.
 
-If the operation's name match a supported HTTP methods (`GET`, `POST`, `PUT`, `PATCH` or `DELETE`), the corresponding `method` property
+If the operation's name matches a supported HTTP methods (`GET`, `POST`, `PUT`, `PATCH` or `DELETE`), the corresponding `method` property
 will be automatically added.
 
 ```php
