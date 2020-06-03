@@ -118,8 +118,6 @@ services:
       - JWT_KEY=!ChangeMe!
       - KEY_FILE=/certs/localhost.key
       - PUBLISH_ALLOWED_ORIGINS=https://mercure.localhost
-    depends_on:
-      - dev-tls
     volumes:
       - ./certs:/certs:ro,nocopy
     labels:
@@ -136,8 +134,6 @@ services:
     environment:
       - API_PLATFORM_CLIENT_GENERATOR_ENTRYPOINT=http://api
       - API_PLATFORM_CLIENT_GENERATOR_OUTPUT=src
-    depends_on:
-      - dev-tls
     volumes:
       - ./client:/usr/src/client:rw,cached
     labels:
@@ -152,8 +148,6 @@ services:
         - ${ADMIN_IMAGE:-quay.io/api-platform/admin}
     image: ${ADMIN_IMAGE:-quay.io/api-platform/admin}
     tty: true
-    depends_on:
-      - dev-tls
     volumes:
       - ./admin:/usr/src/admin:rw,cached
     labels:
@@ -274,7 +268,7 @@ services:
       start_period: 30s
     depends_on:
       - db
-      - dev-tls
+-      - dev-tls
     volumes:
       - ./api:/srv/api:rw,cached
       - ./api/docker/php/conf.d/api-platform.dev.ini:/usr/local/etc/php/conf.d/api-platform.ini
@@ -303,7 +297,7 @@ services:
       - UPSTREAM=http://api
     depends_on:
       - api
-      - dev-tls
+-      - dev-tls
     volumes:
       - ./certs:/certs:ro,nocopy
     labels:
@@ -333,8 +327,8 @@ services:
       - ALLOW_ANONYMOUS=1
       - CERT_FILE=/certs/localhost.crt
       - KEY_FILE=/certs/localhost.key
-    depends_on:
-      - dev-tls
+-    depends_on:
+-      - dev-tls
     volumes:
       - ./certs:/certs:ro,nocopy
     labels:
@@ -354,8 +348,8 @@ services:
       - API_PLATFORM_CLIENT_GENERATOR_OUTPUT=src
 +      # You should remove this variable from .env into client folder
 +      - REACT_APP_API_ENTRYPOINT=${HTTP_OR_SSL}api.${DOMAIN_NAME}
-    depends_on:
-      - dev-tls
+-    depends_on:
+-      - dev-tls
     volumes:
       - ./client:/usr/src/client:rw,cached
     expose:
@@ -373,8 +367,8 @@ services:
         - ${ADMIN_IMAGE:-quay.io/api-platform/admin}
     image: ${ADMIN_IMAGE:-quay.io/api-platform/admin}
     tty: true
-    depends_on:
-      - dev-tls
+-    depends_on:
+-      - dev-tls
 +    environment:
 +      # You should remove this variable from .env into client folder
 +      - REACT_APP_API_ENTRYPOINT=${HTTP_OR_SSL}api.${DOMAIN_NAME}
@@ -526,7 +520,6 @@ services:
       start_period: 30s
     depends_on:
       - db
-      - dev-tls
     volumes:
       - ./api:/srv/api:rw,cached
       - ./api/docker/php/conf.d/api-platform.dev.ini:/usr/local/etc/php/conf.d/api-platform.ini
@@ -553,7 +546,6 @@ services:
       - UPSTREAM=http://api
     depends_on:
       - api
-      - dev-tls
     volumes:
       - ./certs:/certs:ro,nocopy
     <<: *network
@@ -579,8 +571,6 @@ services:
       - ALLOW_ANONYMOUS=1
       - CERT_FILE=/certs/localhost.crt
       - KEY_FILE=/certs/localhost.key
-    depends_on:
-      - dev-tls
     volumes:
       - ./certs:/certs:ro,nocopy
     <<: *network
@@ -598,8 +588,6 @@ services:
       - API_PLATFORM_CLIENT_GENERATOR_OUTPUT=src
       # You should remove this variable from .env into client folder
       - REACT_APP_API_ENTRYPOINT=${HTTP_OR_SSL}api.${DOMAIN_NAME}
-    depends_on:
-      - dev-tls
     volumes:
       - ./client:/usr/src/client:rw,cached
     <<: *network
@@ -612,8 +600,6 @@ services:
         - ${ADMIN_IMAGE:-quay.io/api-platform/admin}
     image: ${ADMIN_IMAGE:-quay.io/api-platform/admin}
     tty: true
-    depends_on:
-      - dev-tls
     environment:
       # You should remove this variable from .env into client folder
       - REACT_APP_API_ENTRYPOINT=${HTTP_OR_SSL}api.${DOMAIN_NAME}
