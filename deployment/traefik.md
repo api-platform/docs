@@ -27,6 +27,8 @@ A few points to note:
   The API DNS will be specified with ``traefik.http.routers.api.rule=Host(`your.host`)`` (here api.localhost)
 * `--traefik.routers.clientloadbalancer.server.port=3000` The port specified to Træfik will be exposed by the container (here the React app exposes the 3000 port), but if your container exposes only one port, it can be ignored
 
+We assume that you've generated a SSL `localhost.crt` and associated `localhost.key` combo under `./certs` folder
+
 ```yaml
 # docker-compose.yml
 version: '3.4'
@@ -67,11 +69,9 @@ services:
       start_period: 30s
     depends_on:
       - db
-      - dev-tls
     volumes:
       - ./api:/srv/api:rw,cached
       - ./api/docker/php/conf.d/api-platform.dev.ini:/usr/local/etc/php/conf.d/api-platform.ini
-      - dev-certs:/certs:ro,nocopy
 
   api:
     build:
@@ -92,9 +92,8 @@ services:
       - UPSTREAM=http://api
     depends_on:
       - api
-      - dev-tls
     volumes:
-      - dev-certs:/certs:ro,nocopy
+      - ./certs:/certs:ro,nocopy
     labels:
       - traefik.http.routers.vulcain.rule=Host(`vulcain.localhost`)
 
@@ -118,11 +117,11 @@ services:
       - DEMO=1
       - JWT_KEY=!ChangeMe!
       - KEY_FILE=/certs/localhost.key
-      - PUBLISH_ALLOWED_ORIGINS=https://localhost:1337
+      - PUBLISH_ALLOWED_ORIGINS=https://mercure.localhost
     depends_on:
       - dev-tls
     volumes:
-      - dev-certs:/certs:ro,nocopy
+      - ./certs:/certs:ro,nocopy
     labels:
       - traefik.http.routers.mercure.rule=Host(`mercure.localhost`)
 
@@ -163,7 +162,6 @@ services:
 
 volumes:
   db-data: {}
-  dev-certs: {}
 ```
 
 Don't forget the db-data, or the database won't work in this dockerized solution.
@@ -280,7 +278,7 @@ services:
     volumes:
       - ./api:/srv/api:rw,cached
       - ./api/docker/php/conf.d/api-platform.dev.ini:/usr/local/etc/php/conf.d/api-platform.ini
-      - dev-certs:/certs:ro,nocopy
+      - ./certs:/certs:ro,nocopy
 +    <<: *network
 
   api:
@@ -307,7 +305,7 @@ services:
       - api
       - dev-tls
     volumes:
-      - dev-certs:/certs:ro,nocopy
+      - ./certs:/certs:ro,nocopy
     labels:
       - traefik.http.routers.vulcain.rule=Host(`vulcain.${DOMAIN_NAME}`)
 +    <<: *network
@@ -338,7 +336,7 @@ services:
     depends_on:
       - dev-tls
     volumes:
-      - dev-certs:/certs:ro,nocopy
+      - ./certs:/certs:ro,nocopy
     labels:
       - traefik.http.routers.mercure.rule=Host(`mercure.${DOMAIN_NAME}`)
 +    <<: *network
@@ -391,7 +389,6 @@ services:
 
 volumes:
   db-data: {}
-  dev-certs: {}
 
 +networks:
 +  api_platform_network:
@@ -412,9 +409,9 @@ SUBDOMAINS_LIST=(admin|api|cache|mercure|www)
 
 This way, you can configure your main variables into one single file.
 
-## Multiple instances
+## Multiple Instances
 
-If you want to run multiple API Platform instances on same server, behind only one Træfik instance, you'll have to define different services names for each service to avoid named conflicts error since Træfik v2.0.  
+If you want to run multiple API Platform instances on the same server and behind only one Træfik instance, you'll have to define different service names for each service to avoid named conflicts error since Træfik v2.0.  
 To achieve that, by setting only one more environment variable, you'll be able to make each instance unique. Here is a working example below:
 ```dotenv
 # /anywhere/first/api-platform/.env
@@ -436,7 +433,7 @@ Then update each traefik http routers names and services following this sample f
       - traefik.http.services.admin-${RANDOM_UNIQUE_KEY}.loadbalancer.server.port=3000
 ```
 
-## More generic approach
+## More Generic Approach
 Here is a fully working sample for Træfik generic config with a little script using docker-compose override approach.  
 We assume that you've set `EXPOSE 3000` in your client and admin Dockerfile.
 
@@ -445,7 +442,7 @@ Create a new `init-dc.sh` which contains the generation code that will be writte
 #!/bin/sh
 # /anywhere/api-platform/init-dc.sh
 
-services=("admin:admin." "api:api." "cache:cache." "mercure:mercure." "ssr:") # Define your services keys following format "{container key}:{sub DNS}"
+services=("admin:admin." "api:api." "cache:cache." "mercure:mercure.") # Define your services keys following this format: "{container key}:{sub DNS}". To define root DNS write nothing after the colon
 text="version: '3.4'
 services:"
 
@@ -467,7 +464,7 @@ done
 echo "$text" > ./docker-compose.override.yml
 ```
 
-Write this minimal configuration into your `traefik.toml` file
+Write this minimal configuration into your `traefik.toml` file:
 ```toml
 # /anywhere/traefik/traefik.toml
 [providers.docker]
@@ -490,7 +487,7 @@ Write this minimal configuration into your `traefik.toml` file
   address = ":443"
 ```
 
-Then after that update respectively your api-platform and Træfik `docker-compose.yml` following these example below.
+Then after that update respectively your API Platform and Træfik `docker-compose.yml` following these examples below.
 ```yaml
 # /anywhere/api-platform/docker-compose.yml
 version: '3.4'
@@ -533,7 +530,7 @@ services:
     volumes:
       - ./api:/srv/api:rw,cached
       - ./api/docker/php/conf.d/api-platform.dev.ini:/usr/local/etc/php/conf.d/api-platform.ini
-      - dev-certs:/certs:ro,nocopy
+      - ./certs:/certs:ro,nocopy
     <<: *network
 
   api:
@@ -558,7 +555,7 @@ services:
       - api
       - dev-tls
     volumes:
-      - dev-certs:/certs:ro,nocopy
+      - ./certs:/certs:ro,nocopy
     <<: *network
 
   db:
@@ -585,7 +582,7 @@ services:
     depends_on:
       - dev-tls
     volumes:
-      - dev-certs:/certs:ro,nocopy
+      - ./certs:/certs:ro,nocopy
     <<: *network
 
   client:
@@ -626,7 +623,6 @@ services:
 
 volumes:
   db-data: {}
-  dev-certs: {}
 
 networks:
   api_platform_network:
@@ -667,4 +663,4 @@ networks:
     external: true
 ```
 
-For more detailed step-by-step configuration, take a look at [this repository](https://github.com/darkweak/WorkshopContainous) which include Fail2ban link to Træfik instance.
+For a more detailed step-by-step configuration, take a look at [this repository](https://github.com/darkweak/WorkshopContainous) which include Fail2ban link to Træfik instance.
