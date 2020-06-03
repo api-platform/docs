@@ -241,10 +241,17 @@ x-cache:
 services:
 -  traefik:
 -    image: traefik:latest
--    command: --api --docker
+-    command: --api.insecure=true --providers.docker
 -    ports:
--      - "80:80"
--      - "443:443"
+-      - target: 80
+-        published: 80
+-        protocol: tcp
+-      - target: 443
+-        published: 443
+-        protocol: tcp
+-      - target: 8080
+-        published: 8080
+-        protocol: tcp
 -    volumes:
 -      - /var/run/docker.sock:/var/run/docker.sock
 
@@ -466,6 +473,11 @@ Write this minimal configuration into your `traefik.toml` file
 [providers.docker]
   endpoint = "unix:///var/run/docker.sock"
 
+[api]
+  insecure = true
+  dashboard = true
+  debug = true
+
 [entryPoints.web]
   address = ":80"
   [entryPoints.web.http]
@@ -632,11 +644,18 @@ x-network:
 
 services:
   traefik:
-    image: traefik:v2.2
+    image: traefik:latest
     ports:
-      - "80:80"
-      - "8080:8080"
-      - "443:443"
+      - target: 80
+        published: 80
+        protocol: tcp
+      - target: 443
+        published: 443
+        protocol: tcp
+      - target: 8080
+        published: 8080
+        protocol: tcp
+
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - ./traefik.toml:/etc/traefik/traefik.toml
