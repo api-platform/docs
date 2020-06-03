@@ -93,7 +93,7 @@ services:
     depends_on:
       - api
     volumes:
-      - ./certs:/certs:ro,nocopy
+      - ./certs:/certs:ro
     labels:
       - traefik.http.routers.vulcain.rule=Host(`vulcain.localhost`)
 
@@ -119,7 +119,7 @@ services:
       - KEY_FILE=/certs/localhost.key
       - PUBLISH_ALLOWED_ORIGINS=https://mercure.localhost
     volumes:
-      - ./certs:/certs:ro,nocopy
+      - ./certs:/certs:ro
     labels:
       - traefik.http.routers.mercure.rule=Host(`mercure.localhost`)
 
@@ -272,7 +272,7 @@ services:
     volumes:
       - ./api:/srv/api:rw,cached
       - ./api/docker/php/conf.d/api-platform.dev.ini:/usr/local/etc/php/conf.d/api-platform.ini
-      - ./certs:/certs:ro,nocopy
+      - ./certs:/certs:ro
 +    <<: *network
 
   api:
@@ -299,7 +299,7 @@ services:
       - api
 -      - dev-tls
     volumes:
-      - ./certs:/certs:ro,nocopy
+      - ./certs:/certs:ro
     labels:
       - traefik.http.routers.vulcain.rule=Host(`vulcain.${DOMAIN_NAME}`)
 +    <<: *network
@@ -330,7 +330,7 @@ services:
 -    depends_on:
 -      - dev-tls
     volumes:
-      - ./certs:/certs:ro,nocopy
+      - ./certs:/certs:ro
     labels:
       - traefik.http.routers.mercure.rule=Host(`mercure.${DOMAIN_NAME}`)
 +    <<: *network
@@ -523,7 +523,7 @@ services:
     volumes:
       - ./api:/srv/api:rw,cached
       - ./api/docker/php/conf.d/api-platform.dev.ini:/usr/local/etc/php/conf.d/api-platform.ini
-      - ./certs:/certs:ro,nocopy
+      - ./certs:/certs:ro
     <<: *network
 
   api:
@@ -547,7 +547,7 @@ services:
     depends_on:
       - api
     volumes:
-      - ./certs:/certs:ro,nocopy
+      - ./certs:/certs:ro
     <<: *network
 
   db:
@@ -572,7 +572,7 @@ services:
       - CERT_FILE=/certs/localhost.crt
       - KEY_FILE=/certs/localhost.key
     volumes:
-      - ./certs:/certs:ro,nocopy
+      - ./certs:/certs:ro
     <<: *network
 
   client:
