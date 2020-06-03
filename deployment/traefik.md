@@ -398,7 +398,7 @@ DB_NAME=api-platform-db-name
 DB_PASS=YouMustChangeThisPassword
 DB_USER=api-platform
 JWT_KEY=!UnsecureChangeMe!
-SUBDOMAINS_LIST=(admin|api|cache|mercure|www)
+SUBDOMAINS_LIST=(admin|api|mercure|www)
 ```
 
 This way, you can configure your main variables into one single file.
@@ -436,7 +436,7 @@ Create a new `init-dc.sh` which contains the generation code that will be writte
 #!/bin/sh
 # /anywhere/api-platform/init-dc.sh
 
-services=("admin:admin." "api:api." "cache:cache." "mercure:mercure.") # Define your services keys following this format: "{container key}:{sub DNS}". To define root DNS write nothing after the colon
+services=("admin:admin." "api:api." "mercure:mercure.") # Define your services keys following this format: "{container key}:{sub DNS}". To define root DNS write nothing after the colon
 text="version: '3.4'
 services:"
 
@@ -446,12 +446,12 @@ for k in "${services[@]}" ; do
     text+="
   $key:
     labels:
-      - traefik.http.routers.$key.entrypoints=web-secure
-      - traefik.http.routers.$key.rule=Host(\`${value}\${DOMAIN_NAME}\`)
-      - traefik.http.routers.$key.tls=true
-      - traefik.http.routers.$key.tls.domains[0].main=\${DOMAIN_NAME}
-      - traefik.http.routers.$key.tls.domains[0].sans=*.\${DOMAIN_NAME}
-      - traefik.http.routers.$key.tls.certresolver=sample
+      - traefik.http.routers.$key-\${RANDOM_UNIQUE_KEY}.entrypoints=web-secure
+      - traefik.http.routers.$key-\${RANDOM_UNIQUE_KEY}.rule=Host(\`${value}\${DOMAIN_NAME}\`)
+      - traefik.http.routers.$key-\${RANDOM_UNIQUE_KEY}.tls=true
+      - traefik.http.routers.$key-\${RANDOM_UNIQUE_KEY}.tls.domains[0].main=\${DOMAIN_NAME}
+      - traefik.http.routers.$key-\${RANDOM_UNIQUE_KEY}.tls.domains[0].sans=*.\${DOMAIN_NAME}
+      - traefik.http.routers.$key-\${RANDOM_UNIQUE_KEY}.tls.certresolver=sample
 "
 done
 
