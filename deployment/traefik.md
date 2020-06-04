@@ -28,6 +28,15 @@ A few points to note:
 * `--traefik.routers.clientloadbalancer.server.port=3000` The port specified to Træfik will be exposed by the container (here the React app exposes the 3000 port), but if your container exposes only one port, it can be ignored
 
 We assume that you've generated a SSL `localhost.crt` and associated `localhost.key` combo under `./certs` folder
+Then you edited your `admin/Dockerfile` and `client/Dockerfile` like this:
+
+```diff
+-ENV HTTPS true
++EXPOSE 3000
+```
+
+After that, don't forget to re-build your containers
+
 
 ```yaml
 # docker-compose.yml
@@ -111,13 +120,16 @@ services:
   mercure:
     image: dunglas/mercure
     environment:
+#      - ACME_HOSTS=${DOMAIN_NAME}
+#      - CERT_FILE=/certs/localhost.crt
+#      - KEY_FILE=/certs/localhost.key
+      - JWT_KEY=${JWT_KEY}
       - ALLOW_ANONYMOUS=1
-      - CERT_FILE=/certs/localhost.crt
+      - USE_FORWARDED_HEADERS=true
       - CORS_ALLOWED_ORIGINS=*
-      - DEMO=1
-      - JWT_KEY=!ChangeMe!
-      - KEY_FILE=/certs/localhost.key
-      - PUBLISH_ALLOWED_ORIGINS=https://mercure.localhost
+      - READ_TIMEOUT=0s
+      - WRITE_TIMEOUT=0s
+      - PUBLISH_ALLOWED_ORIGINS=*
     volumes:
       - ./certs:/certs:ro
     labels:
@@ -260,7 +272,7 @@ services:
 +      - DATABASE_URL=postgres://${DB_USER}:${DB_PASS}@db/${DB_NAME}
 +      - MERCURE_SUBSCRIBE_URL=${HTTP_OR_SSL}mercure.${DOMAIN_NAME}$$
 +      - MERCURE_PUBLISH_URL=${HTTP_OR_SSL}mercure.${DOMAIN_NAME}$$
-+      - MERCURE_JWT_SECRET=${JWT_KEY}
++      - MERCURE_JWT_TOKEN=${JWT_KEY}
     healthcheck:
       interval: 10s
       timeout: 3s
@@ -319,14 +331,16 @@ services:
   mercure:
     image: dunglas/mercure
     environment:
+#      - ACME_HOSTS=${DOMAIN_NAME}
+#      - CERT_FILE=/certs/localhost.crt
+#      - KEY_FILE=/certs/localhost.key
       - JWT_KEY=${JWT_KEY}
-      - ALLOW_ANONYMOUS=0
-      - CORS_ALLOWED_ORIGINS=^${HTTP_OR_SSL}(${SUBDOMAINS_LIST}.)?${DOMAIN_NAME}$$
-      - PUBLISH_ALLOWED_ORIGINS=^${HTTP_OR_SSL}(${SUBDOMAINS_LIST}.)?${DOMAIN_NAME}$$
-      - DEMO=1
       - ALLOW_ANONYMOUS=1
-      - CERT_FILE=/certs/localhost.crt
-      - KEY_FILE=/certs/localhost.key
+      - USE_FORWARDED_HEADERS=true
+      - CORS_ALLOWED_ORIGINS=*
+      - READ_TIMEOUT=0s
+      - WRITE_TIMEOUT=0s
+      - PUBLISH_ALLOWED_ORIGINS=*
 -    depends_on:
 -      - dev-tls
     volumes:
@@ -393,12 +407,12 @@ Finally, some environment variables must be defined, here is an example of a `.e
 ```dotenv
 CONTAINER_REGISTRY_BASE=quay.io/api-platform
 DOMAIN_NAME=localhost
-HTTP_OR_SSL=http://
+HTTP_OR_SSL=https://
 DB_NAME=api-platform-db-name
 DB_PASS=YouMustChangeThisPassword
 DB_USER=api-platform
 JWT_KEY=!UnsecureChangeMe!
-SUBDOMAINS_LIST=(admin|api|mercure|www)
+SUBDOMAINS_LIST=(admin|api|mercure)
 ```
 
 This way, you can configure your main variables into one single file.
@@ -510,9 +524,9 @@ services:
       - TRUSTED_HOSTS=^(((${SUBDOMAINS_LIST}\.)?${DOMAIN_NAME})|api)$$
       - CORS_ALLOW_ORIGIN=^${HTTP_OR_SSL}(${SUBDOMAINS_LIST}.)?${DOMAIN_NAME}$$
       - DATABASE_URL=postgres://${DB_USER}:${DB_PASS}@db/${DB_NAME}
-      - MERCURE_SUBSCRIBE_URL=${HTTP_OR_SSL}mercure.${DOMAIN_NAME}$$
-      - MERCURE_PUBLISH_URL=${HTTP_OR_SSL}mercure.${DOMAIN_NAME}$$
-      - MERCURE_JWT_SECRET=${JWT_KEY}
+      - MERCURE_SUBSCRIBE_URL=http://mercure/.well-known/mercure
+      - MERCURE_PUBLISH_URL=http://mercure/.well-known/mercure
+      - MERCURE_JWT_TOKEN=${JWT_KEY}
     healthcheck:
       interval: 10s
       timeout: 3s
@@ -563,14 +577,16 @@ services:
   mercure:
     image: dunglas/mercure
     environment:
+#      - ACME_HOSTS=${DOMAIN_NAME}
+#      - CERT_FILE=/certs/localhost.crt
+#      - KEY_FILE=/certs/localhost.key
       - JWT_KEY=${JWT_KEY}
-      - ALLOW_ANONYMOUS=0
-      - CORS_ALLOWED_ORIGINS=^${HTTP_OR_SSL}(${SUBDOMAINS_LIST}.)?${DOMAIN_NAME}$$
-      - PUBLISH_ALLOWED_ORIGINS=^${HTTP_OR_SSL}(${SUBDOMAINS_LIST}.)?${DOMAIN_NAME}$$
-      - DEMO=1
       - ALLOW_ANONYMOUS=1
-      - CERT_FILE=/certs/localhost.crt
-      - KEY_FILE=/certs/localhost.key
+      - USE_FORWARDED_HEADERS=true
+      - CORS_ALLOWED_ORIGINS=*
+      - READ_TIMEOUT=0s
+      - WRITE_TIMEOUT=0s
+      - PUBLISH_ALLOWED_ORIGINS=*
     volumes:
       - ./certs:/certs:ro
     <<: *network
