@@ -176,9 +176,20 @@ The same operations are available for the offer method (routes will start with t
 Route prefixes are built by pluralizing the name of the mapped entity class.
 It is also possible to override the naming convention using [operation path namings](operation-path-naming.md).
 
-As an alternative to annotations, you can map entity classes using XML or YAML:
+As an alternative to annotations, you can map entity classes using YAML or XML:
 
-XML:
+[codeSelector]
+```yaml
+# api/config/api_platform/resources.yaml
+resources:
+    App\Entity\Product: ~
+    App\Entity\Offer:
+        shortName: 'Offer'                   # optional
+        description: 'An offer from my shop' # optional
+        iri: 'http://schema.org/Offer'       # optional
+        attributes:                          # optional
+            pagination_items_per_page: 25    # optional
+```
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" ?>
@@ -197,22 +208,9 @@ XML:
     />
 </resources>
 ```
+[/codeSelector]
 
-YAML:
-
-```yaml
-# api/config/api_platform/resources.yaml
-resources:
-    App\Entity\Product: ~
-    App\Entity\Offer:
-        shortName: 'Offer'                   # optional
-        description: 'An offer from my shop' # optional
-        iri: 'http://schema.org/Offer'       # optional
-        attributes:                          # optional
-            pagination_items_per_page: 25    # optional
-```
-
-If you prefer to use XML or YAML files instead of annotations, you must configure API Platform to load the appropriate files:
+If you prefer to use YAML or XML files instead of annotations, you must configure API Platform to load the appropriate files:
 
 ```yaml
 # api/config/packages/api_platform.yaml

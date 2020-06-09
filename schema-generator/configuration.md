@@ -159,6 +159,7 @@ Example:
 ```
 
 Output:
+
 ```php
 <?php
 

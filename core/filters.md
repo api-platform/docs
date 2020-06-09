@@ -21,7 +21,7 @@ It is also automatically documented as a `hydra:search` property for JSON-LD res
 Filters are services (see the section on [custom filters](#creating-custom-filters)), and they can be linked
 to a Resource in two ways:
 
-1. Through the `ApiResource` declaration, as the `filters` attribute.
+1. Through the resource declaration, as the `filters` attribute.
 
 For example having a filter service declaration:
 
@@ -40,8 +40,9 @@ services:
         public: false
 ```
 
-We're linking the filter `offer.date_filter` with the `@ApiResource` annotation:
+We're linking the filter `offer.date_filter` with the resource like this:
 
+[codeSelector]
 ```php
 <?php
 // api/src/Entity/Offer.php
@@ -59,8 +60,6 @@ class Offer
 }
 ```
 
-Alternatively, using YAML:
-
 ```yaml
 # api/config/api_platform/resources.yaml
 App\Entity\Offer:
@@ -69,8 +68,6 @@ App\Entity\Offer:
             filters: ['offer.date_filter']
     # ...
 ```
-
-Or XML:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" ?>
@@ -92,6 +89,7 @@ Or XML:
     </resource>
 </resources>
 ```
+[/codeSelector]
 
 2. By using the `@ApiFilter` annotation.
 

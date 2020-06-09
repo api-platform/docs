@@ -9,6 +9,7 @@ However, it's sometimes useful to use a specific class to represent the input or
 For a given resource class, you may want to have a different representation of this class as input (write) or output (read).
 To do so, a resource can take an input and/or an output class:
 
+[codeSelector]
 ```php
 <?php
 // api/src/Entity/Book.php
@@ -31,7 +32,14 @@ final class Book
 }
 ```
 
-Or using XML:
+```yaml
+# api/config/api_platform/resources.yaml
+resources:
+    App\Entity\Book:
+        attributes:
+            input: App\Dto\BookInput
+            output: App\Dto\BookOutput
+```
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" ?>
@@ -47,17 +55,7 @@ Or using XML:
     </resource>
 </resources>
 ```
-
-Or using YAML:
-
-```yaml
-# api/config/api_platform/resources.yaml
-resources:
-    App\Entity\Book:
-        attributes:
-            input: App\Dto\BookInput
-            output: App\Dto\BookOutput
-```
+[/codeSelector]
 
 The `input` attribute is used during [the deserialization process](serialization.md), when transforming the user-provided data to a resource instance.
 Similarly, the `output` attribute is used during [the serialization process](serialization.md). This class represents how the `Book` resource will be represented in the `Response`.
@@ -280,6 +278,7 @@ will be skipped. If `output` is `false`, the serialization process will be skipp
 
 `input` and `output` attributes can be set on a per operation basis:
 
+[codeSelector]
 ```php
 <?php
 // api/src/Entity/Book.php
@@ -314,7 +313,21 @@ final class Book
 }
 ```
 
-Or using XML:
+```yaml
+# api/config/api_platform/resources.yaml
+resources:
+    App\Entity\Book:
+        collectionOperations:
+            create:
+                method: POST,
+                input: App\Dto\CreateBook,
+                output: App\Dto\BookOutput
+        itemOperations:
+            update:
+                method: PUT,
+                input: App\Dto\UpdateBook,
+                output: App\Dto\BookOutput
+```
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" ?>
@@ -342,24 +355,7 @@ Or using XML:
     </resource>
 </resources>
 ```
-
-Or using YAML:
-
-```yaml
-# api/config/api_platform/resources.yaml
-resources:
-    App\Entity\Book:
-        collectionOperations:
-            create:
-                method: POST,
-                input: App\Dto\CreateBook,
-                output: App\Dto\BookOutput
-        itemOperations:
-            update:
-                method: PUT,
-                input: App\Dto\UpdateBook,
-                output: App\Dto\BookOutput
-```
+[/codeSelector]
 
 ## Input/Output Metadata
 
