@@ -80,16 +80,16 @@ final class SwaggerDecorator implements NormalizerInterface
         ];
 
 
-	// e.g. add a custom parameter
-	$docs['paths']['/foos']['get']['parameters'][] = $customDefinition;
+        // e.g. add a custom parameter
+        $docs['paths']['/foos']['get']['parameters'][] = $customDefinition;
 
         // e.g. remove an existing parameter
         $docs['paths']['/foos']['get']['parameters'] = array_values(array_filter($docs['paths']['/foos']['get']['parameters'], function ($param) {
             return $param['name'] !== 'bar';
         }));
 
-	// Override title
-	$docs['info']['title'] = 'My Api Foo';
+        // Override title
+        $docs['info']['title'] = 'My Api Foo';
 
         return $docs;
     }
@@ -106,6 +106,7 @@ final class SwaggerDecorator implements NormalizerInterface
 Sometimes you may want to change the information included in your OpenAPI documentation.
 The following configuration will give you total control over your OpenAPI definitions:
 
+[codeSelector]
 ```php
 <?php
 // api/src/Entity/Product.php
@@ -164,8 +165,6 @@ class Product // The class name will be used to name exposed resources
 }
 ```
 
-Or in YAML:
-
 ```yaml
 # api/config/api_platform/resources.yaml
 resources:
@@ -183,8 +182,6 @@ resources:
               type: string
               format: date-time
 ```
-
-Or in XML:  
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" ?>
@@ -212,6 +209,7 @@ Or in XML:
     </resource>
 </resources>
 ```
+[/codeSelector]
 
 This will produce the following Swagger documentation:
 ```json
@@ -295,8 +293,7 @@ class User
 
 You also have full control over both built-in and custom operations documentation.
 
-In Yaml:
-
+[codeSelector]
 ```yaml
 resources:
   App\Entity\Rabbit:
@@ -325,8 +322,6 @@ resources:
                    name: Rabbit
                    description: Pink rabbit
 ```
-
-or with XML:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" ?>
@@ -374,6 +369,7 @@ or with XML:
     </resource>
 </resources>
 ```
+[/codeSelector]
 
 ![Impact on Swagger UI](../distribution/images/swagger-ui-2.png)
 

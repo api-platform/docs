@@ -71,9 +71,10 @@ framework:
 
 It is simple to specify what groups to use in the API system:
 
-1. Add the `normalizationContext` and `denormalizationContext` annotation properties to the `@ApiResource` annotation, and specify which groups to use. Here you see that we add `read` and `write`, respectively. You can use any group names you wish.
-2. Apply the `@Groups` annotation to properties in the object.
+1. Add the normalization context and denormalization context attributes to the resource, and specify which groups to use. Here you see that we add `read` and `write`, respectively. You can use any group names you wish.
+2. Apply the groups to properties in the object.
 
+[codeSelector]
 ```php
 <?php
 // api/src/Entity/Book.php
@@ -105,6 +106,25 @@ class Book
 }
 ```
 
+```yaml
+# api/config/api_platform/resources.yaml
+App\Entity\Book:
+    attributes:
+        normalization_context:
+            groups: ['read']
+        denormalization_context:
+            groups: ['write']
+
+# api/config/serialization/Book.yaml
+App\Entity\Book:
+    attributes:
+        name:
+            groups: ['read', 'write']
+        author:
+            groups: ['write']
+```
+[/codeSelector]
+
 Alternatively, you can use the more verbose syntax:
 
 ```php
@@ -117,28 +137,6 @@ Alternatively, you can use the more verbose syntax:
  *     "denormalization_context"={"groups"={"write"}}
  * })
  */
-```
-
-You can also use the YAML configuration format:
-
-```yaml
-# api/config/api_platform/resources.yaml
-App\Entity\Book:
-    attributes:
-        normalization_context:
-            groups: ['read']
-        denormalization_context:
-            groups: ['write']
-```
-
-```yaml
-# api/config/serialization/Book.yaml
-App\Entity\Book:
-    attributes:
-        name:
-            groups: ['read', 'write']
-        author:
-            groups: ['write']
 ```
 
 In the previous example, the `name` property will be visible when reading (`GET`) the object, and it will also be available

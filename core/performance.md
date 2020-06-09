@@ -199,6 +199,7 @@ api_platform:
     eager_loading:
         fetch_partial: true
 ```
+
 It is disabled by default.
 If enabled, Doctrine ORM entities will not work as expected if any of the other fields are used.
 

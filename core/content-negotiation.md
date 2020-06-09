@@ -121,6 +121,7 @@ this configuration might disable the `json` or the `html` on this resource for e
 
 You can specify different accepted formats at operation level too, it's especially convenient for to configure formats available for the `PATCH` method:
 
+[codeSelector]
 ```php
 <?php
 // api/src/Entity/Book.php
@@ -143,8 +144,6 @@ class Book
 }
 ```
 
-As an alternative to annotations, you can also use XML or YAML, the example above would become, in YAML:
-
 ```yaml
 resources:
     App\Entity\Book:
@@ -157,9 +156,6 @@ resources:
                 formats:
                     json: ['application/merge-patch+json'] # works also with "application/merge-patch+json"
 ```
-
-
-Or in XML:
 
 ```xml
 <resources xmlns="https://api-platform.com/schema/metadata"
@@ -185,6 +181,7 @@ Or in XML:
     </resource>
 </resources>
 ```
+[/codeSelector]
 
 ## Supporting Custom Formats
 

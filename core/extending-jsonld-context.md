@@ -73,8 +73,9 @@ Note that you do not have to provide the `@id` attribute. If you do not provide 
 
 <p align="center" class="symfonycasts"><a href="https://symfonycasts.com/screencast/api-platform/hydra?cid=apip"><img src="../distribution/images/symfonycasts-player.png" alt="Hydra screencast"><br>Watch the Hydra screencast</a></p>
 
-It's also possible to replace the Hydra context used documentation generator:
+It's also possible to replace the Hydra context used by the documentation generator:
 
+[codeSelector]
 ```php
 <?php
 // api/src/Entity/Book.php
@@ -93,8 +94,6 @@ class Book
 }
 ```
 
-Or in YAML:
-
 ```yaml
 # api/config/api_platform/resources.yaml
 App\Entity\Book:
@@ -102,8 +101,6 @@ App\Entity\Book:
         get:
             hydra_context: { foo: 'bar' }
 ```
-
-Or in XML:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" ?>
@@ -124,3 +121,4 @@ Or in XML:
     </resource>
 </resources>
 ```
+[/codeSelector]

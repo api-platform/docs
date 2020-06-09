@@ -6,6 +6,7 @@ API Platform also provides convenient [access control expressions](https://symfo
 
 <p align="center" class="symfonycasts"><a href="https://symfonycasts.com/screencast/api-platform-security/?cid=apip"><img src="../distribution/images/symfonycasts-player.png" alt="Security screencast"><br>Watch the Security screencast</a>
 
+[codeSelector]
 ```php
 <?php
 // api/src/Entity/Book.php
@@ -60,8 +61,6 @@ class Book
 }
 ```
 
-Alternatively, using YAML:
-
 ```yaml
 # api/config/api_platform/resources.yaml
 App\Entity\Book:
@@ -76,6 +75,7 @@ App\Entity\Book:
         put:
             security: 'is_granted("ROLE_ADMIN") or object.owner == user'
 ```
+[/codeSelector]
 
 In this example:
 
@@ -93,6 +93,7 @@ It means than for `PUT` requests, `object` doesn't contain the value submitted b
 In some cases, it might be useful to execute a security after the denormalization step.
 To do so, use the `security_post_denormalize` attribute:
 
+[codeSelector]
 ```php
 <?php
 // src/Entity/Book.php
@@ -115,8 +116,6 @@ class Book
 }
 ```
 
-Alternatively, using YAML:
-
 ```yaml
 # api/config/api_platform/resources.yaml
 App\Entity\Book:
@@ -126,6 +125,7 @@ App\Entity\Book:
             security_post_denormalize: "is_granted('ROLE_ADMIN') or (object.owner == user and previous_object.owner == user)"
     # ...
 ```
+[/codeSelector]
 
 This time, the `object` variable contains data that have been extracted from the HTTP request body during the denormalization process.
 However, the object is not persisted yet.
@@ -149,6 +149,7 @@ You can change it by configuring the `security_message` attribute or the `securi
 
 For example:
 
+[codeSelector]
 ```php
 <?php
 // api/src/Entity/Book.php
@@ -176,8 +177,6 @@ class Book
 }
 ```
 
-Alternatively, using YAML:
-
 ```yaml
 # api/config/api_platform/resources.yaml
 App\Entity\Book:
@@ -199,6 +198,7 @@ App\Entity\Book:
             security_post_denormalize_message: 'Sorry, but you are not the actual book owner.'
     # ...
 ```
+[/codeSelector]
 
 ## Filtering Collection According to the Current User Permissions
 

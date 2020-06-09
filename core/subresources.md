@@ -9,6 +9,7 @@ The starting point of a subresource must be a relation on an existing resource.
 For example, let's create two entities (Question, Answer) and set up a subresource so that `/question/42/answer` gives us
 the answer to the question 42:
 
+[codeSelector]
 ```php
 <?php
 // api/src/Entity/Answer.php
@@ -48,10 +49,7 @@ class Answer
 
     // ...
 }
-```
 
-```php
-<?php
 // api/src/Entity/Question.php
 
 namespace App\Entity;
@@ -94,8 +92,6 @@ class Question
 }
 ```
 
-Alternatively, you can use the YAML configuration format:
-
 ```yaml
 # api/config/api_platform/resources.yaml
 App\Entity\Answer: ~
@@ -106,6 +102,7 @@ App\Entity\Question:
                 resourceClass: 'App\Entity\Answer'
                 collection: false
 ```
+[/codeSelector]
 
 Note that all we had to do is to set up `@ApiSubresource` on the `Question::answer` relation. Because the `answer` is a to-one relation, we know that this subresource is an item. Therefore the response will look like this:
 
@@ -130,6 +127,7 @@ Note: only for `GET` operations are supported at the moment
 
 You may want custom groups on subresources, you can set `normalization_context` or `denormalization_context` on that operation. To do so, add a `subresourceOperations` node. For example:
 
+[codeSelector]
 ```php
 <?php
 // api/src/Entity/Answer.php
@@ -152,8 +150,6 @@ class Answer
 }
 ```
 
-Or using YAML:
-
 ```yaml
 # api/config/api_platform/resources.yaml
 App\Entity\Answer:
@@ -162,8 +158,6 @@ App\Entity\Answer:
             method: 'GET'
             normalization_context: {groups: ['foobar']}
 ```
-
-Or in XML:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" ?>
@@ -187,6 +181,7 @@ Or in XML:
     </resource>
 </resources>
 ```
+[/codeSelector]
 
 In the previous examples, the `method` attribute is mandatory, because the operation name doesn't match a supported HTTP
 method.
