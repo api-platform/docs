@@ -860,7 +860,9 @@ class Book
 
 To add a security layer to your queries and mutations, follow the [security](security.md) documentation.
 
-If your security needs differ between REST and GraphQL, add the particular parts in the `graphql` key.
+The REST security configuration and the GraphQL one are **not** correlated.
+
+If you have only some parts differing between REST and GraphQL, you have to redefine the common parts anyway.
 
 In the example below, we want the same security rules as we have in REST, but we also want to allow an admin to delete a book only in GraphQL.
 Please note that, it's not possible to update a book in GraphQL because the `update` operation is not defined.
