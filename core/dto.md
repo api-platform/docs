@@ -106,7 +106,7 @@ final class BookInputDataTransformer implements DataTransformerInterface
     public function transform($data, string $to, array $context = [])
     {
         $book = new Book();
-        $book->isbn = $data->isbn;
+        $book->code = $data->isbn;
         return $book;
     }
 
@@ -173,7 +173,7 @@ final class BookOutputDataTransformer implements DataTransformerInterface
     public function transform($data, string $to, array $context = [])
     {
         $output = new BookOutput();
-        $output->name = $data->name;
+        $output->name = $data->code;
         return $output;
     }
 
