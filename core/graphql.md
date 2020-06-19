@@ -870,7 +870,7 @@ use ApiPlatform\Core\Annotation\ApiResource;
  *     graphql={
  *          "item_query",
  *          "collection_query"={
- *              "paginationType"="page"
+ *              "pagination_type"="page"
  *          },
  *          "delete",
  *          "update",
@@ -897,7 +897,7 @@ use ApiPlatform\Core\Annotation\ApiResource;
 /**
  * @ApiResource(
  *     attributes={
- *          "paginationType"="page"
+ *          "pagination_type"="page"
  *     }
  * )
  */
