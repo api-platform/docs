@@ -90,7 +90,7 @@ final class UserDataPersister implements ContextAwareDataPersisterInterface
     private $decorated;
     private $mailer;
 
-    public function __construct(DataPersisterInterface $decorated, MailerInterface $mailer)
+    public function __construct(ContextAwareDataPersisterInterface $decorated, MailerInterface $mailer)
     {
         $this->decorated = $decorated;
         $this->mailer = $mailer;
