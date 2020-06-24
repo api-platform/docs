@@ -595,3 +595,45 @@ final class SwaggerDecorator implements NormalizerInterface
 ```
 
 That's it: your route is gone!
+
+## Disabling ElasticSearch on Operations
+After enabling [Elasticsearch Support](elasticsearch.md) in your project, there may come a time you would prefer not to read your data from your Elasticsearch server and would rather fetch your data directly from your database. To achieve this, you can pass in a parameter to your api operation with the value `elasticsearch: true`. A simple example is below.
+
+```php
+<?php
+// src/Entity/Place.php
+
+namespace App\Entity;
+
+use ApiPlatform\Core\Annotation\ApiResource;
+use App\Controller\GetWeather;
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * @ORM\Entity
+ *
+ * @ApiResource(
+ *     itemOperations={
+ *         "get": {"elasticsearch": false},
+ *         "put",
+ *         "delete",
+ *         "get_weather": {
+ *             "method": "GET",
+ *             "path": "/places/{id}/weather",
+ *             "controller": GetWeather::class
+ *         }
+ *      }, 
+ *     collectionOperations={
+ *        "get" : {
+ *          "elasticsearch": false
+ *        }, 
+ *       "post"
+ *     }
+ * )
+ */
+class Place
+{
+    // ...
+}
+```
+
