@@ -597,7 +597,8 @@ final class SwaggerDecorator implements NormalizerInterface
 That's it: your route is gone!
 
 ## Disabling ElasticSearch on Operations
-After enabling [Elasticsearch Support](elasticsearch.md) in your project, there may come a time you would prefer not to read your data from your Elasticsearch server and would rather fetch your data directly from your database. To achieve this, you can pass in a parameter to your api operation with the value `elasticsearch: true`. A simple example is below.
+After enabling [Elasticsearch Support](elasticsearch.md) in your project, there may come a time you would prefer not to read your data from your Elasticsearch server and would rather fetch your data directly from your database. To achieve this, you can pass in a parameter to your api operation with the value `elasticsearch: true`. 
+For example:
 
 ```php
 <?php
@@ -636,4 +637,3 @@ class Place
     // ...
 }
 ```
-
