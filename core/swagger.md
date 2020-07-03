@@ -369,6 +369,28 @@ resources:
     </resource>
 </resources>
 ```
+
+```php
+/**
+ * NOTE: if you are using OpenApi V3 use 'openapi_context' instead of 'swagger_context'
+ *
+ * @ApiResource(
+ *     collectionOperations={
+ *          "post"={
+ *             "method"="POST",
+ *             "path"="/rabbit",
+ *             "swagger_context"={
+ *                  "summary" = "Create a AgentStat resource from CSV (actually TSV...)",
+ *                  "description" = "<h1>Pop a great rabbit picture by color!<h1/>![A great rabbit](https://rabbit.org/graphics/fun/netbunnies/jellybean1-brennan1.jpg)"
+ *              }
+ *          }
+ *      },
+ * )
+ */
+class Rabbit
+{
+}
+```
 [/codeSelector]
 
 ![Impact on Swagger UI](../distribution/images/swagger-ui-2.png)
