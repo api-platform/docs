@@ -380,7 +380,7 @@ resources:
  *             "method"="POST",
  *             "path"="/rabbit",
  *             "swagger_context"={
- *                  "summary" = "Create a AgentStat resource from CSV (actually TSV...)",
+ *                  "summary" = "Random rabbit picture",
  *                  "description" = "<h1>Pop a great rabbit picture by color!<h1/>![A great rabbit](https://rabbit.org/graphics/fun/netbunnies/jellybean1-brennan1.jpg)"
  *              }
  *          }
@@ -389,6 +389,32 @@ resources:
  */
 class Rabbit
 {
+}
+
+// If you like lengthy descriptions you might use a class constant as well:
+/**
+ * NOTE: if you are using OpenApi V3 use 'openapi_context' instead of 'swagger_context'
+ *
+ * @ApiResource(
+ *     collectionOperations={
+ *          "post"={
+ *             "method"="POST",
+ *             "path"="/rabbit",
+ *             "swagger_context"=RABBIT:API_POST
+ *          }
+ *      },
+ * )
+ */
+class Rabbit
+{
+    public const API_POST
+        = [
+            'summary'     => 'Random rabbit picture',
+            'description' => '# Pop a great rabbit picture by color!'
+                ."\n"
+                .'![A great rabbit](https://rabbit.org/graphics/fun/netbunnies/jellybean1-brennan1.jpg)',
+            'parameters'  => [],
+        ];
 }
 ```
 [/codeSelector]
