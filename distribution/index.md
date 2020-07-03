@@ -171,7 +171,7 @@ Click on an operation to display its details. You can also send requests to the 
 Try to create a new *Greeting* resource using the `POST` operation, then access it using the `GET` operation and, finally,
 delete it by executing the `DELETE` operation.
 If you access any API URL using a web browser, API Platform detects it (by scanning the `Accept` HTTP header) and displays
-the corresponding API request in the UI. Try it yourself by browsing to `http://localhost:8443/greetings`. If the `Accept` header
+the corresponding API request in the UI. Try it yourself by browsing to `https://localhost:8443/greetings`. If the `Accept` header
 doesn't contain `text/html` as the preferred format, a JSON-LD response is sent ([configurable behavior](../core/content-negotiation.md)).
 
 So, if you want to access the raw data, you have two alternatives:
@@ -180,8 +180,8 @@ So, if you want to access the raw data, you have two alternatives:
   when writing API clients
 * Add the format you want as the extension of the resource - for debug purpose only
 
-For instance, go to `http://localhost:8443/greetings.jsonld` to retrieve the list of `Greeting` resources in JSON-LD, or to
-`http://localhost:8443/greetings.json` to retrieve data in raw JSON.
+For instance, go to `https://localhost:8443/greetings.jsonld` to retrieve the list of `Greeting` resources in JSON-LD, or to
+`https://localhost:8443/greetings.json` to retrieve data in raw JSON.
 
 Of course, you can also use your favorite HTTP client to query the API.
 We are fond of [Postman](https://www.getpostman.com/). It works perfectly well with API Platform, has native Open API support,
