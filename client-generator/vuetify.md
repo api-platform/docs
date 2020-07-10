@@ -26,7 +26,7 @@ Update the entrypoint in the `client/src/config/entrypoint.js` file:
 export const ENTRYPOINT = 'https://localhost:8443';
 ```
 
-Update the scripts part of the new `composer.json`:
+Update the scripts part of the new `package.json`:
 
 ```json
   "scripts": {
