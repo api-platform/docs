@@ -9,7 +9,7 @@ The React Client Generator generates a Progressive Web App built with battle-tes
 * [React Router](https://reacttraining.com/react-router/)
 * [Redux Form](http://redux-form.com/)
 
-It is designed to generate code that works seamlessly with [Facebook's Create React App](https://github.com/facebook/create-react-app).
+It is designed to generate code that works seamlessly with [Facebook's Create React App](https://create-react-app.dev/).
 
 ## Install
 
