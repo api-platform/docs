@@ -410,7 +410,11 @@ class Rabbit
     public const API_POST
         = [
             'summary'     => 'Random rabbit picture',
-            'description' => '# Pop a great rabbit picture by color!'
+            'description' => <<<'MD'
+# Pop a great rabbit picture by color!
+
+![A great rabbit](https://rabbit.org/graphics/fun/netbunnies/jellybean1-brennan1.jpg
+MD,
                 ."\n"
                 .'![A great rabbit](https://rabbit.org/graphics/fun/netbunnies/jellybean1-brennan1.jpg)',
             'parameters'  => [],
