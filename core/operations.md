@@ -19,7 +19,7 @@ There are two types of operations: collection operations and item operations.
 
 Collection operations act on a collection of resources. By default two routes are implemented: `POST` and `GET`. Item
 operations act on an individual resource. Three default routes are defined: `GET`, `PUT` and `DELETE` (`PATCH` is also supported
-when [using the JSON API format](content-negotiation.md), as required by the specification).
+when [using the JSON:API format](content-negotiation.md), as required by the specification).
 
 When the `ApiPlatform\Core\Annotation\ApiResource` annotation is applied to an entity class, the following built-in CRUD
 operations are automatically enabled:
