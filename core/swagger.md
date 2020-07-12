@@ -400,14 +400,14 @@ class Rabbit
  *          "post"={
  *             "method"="POST",
  *             "path"="/rabbit",
- *             "swagger_context"=RABBIT:API_POST
+ *             "swagger_context"=RABBIT:API_POST_CONTEXT
  *          }
  *      },
  * )
  */
 class Rabbit
 {
-    public const API_POST
+    public const API_POST_CONTEXT
         = [
             'summary' => 'Random rabbit picture',
             'description' => <<<'MD'
@@ -416,6 +416,25 @@ class Rabbit
 ![A great rabbit](https://rabbit.org/graphics/fun/netbunnies/jellybean1-brennan1.jpg
 MD,
             'parameters' => [],
+            'responses' => [
+                '201' => [
+                  'description' => 'Rabbit created.',
+                  'security' => ['name' => 'api_key'],
+                  'content' => [
+                        'application/json' => [
+                            'schema' =>
+                                [
+                                    'example' => <<<JSON
+{
+    "example": "value"
+}
+JSON,
+                                ],
+                        ],
+                    ],
+                ],
+                '409' => ['description' => 'Invalid Rabbit.'],
+            ]
         ];
 }
 ```
