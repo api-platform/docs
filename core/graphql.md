@@ -19,6 +19,20 @@ You can now use GraphQL at the endpoint: `https://localhost:8443/graphql`.
 *Note:* If you used [Symfony Flex to install API Platform](../distribution/index.md#using-symfony-flex-and-composer-advanced-users),
 the GraphQL endpoint will be: `https://localhost:8443/api/graphql`.
 
+## Changing Location of the GraphQL Endpoint
+
+Sometimes you may want to have the GraphQL endpoint at a different location. This can be done by manually configuring the GraphQL controller.
+
+```yaml    
+# api/config/routes.yaml
+api_graphql_entrypoint:
+    path: /api/graphql
+    controller: api_platform.graphql.action.entrypoint
+# ...
+```
+
+Change `/api/graphql` to the URI you wish the GraphQL endpoint to be accessible on.
+
 ## GraphiQL
 
 If Twig is installed in your project, go to the GraphQL endpoint with your browser. You will see a nice interface provided by GraphiQL to interact with your API.
