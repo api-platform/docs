@@ -22,6 +22,7 @@ the GraphQL endpoint will be: `https://localhost:8443/api/graphql`.
 ## Changing Location of the GraphQL Endpoint
 
 Sometimes you may want to have the GraphQL endpoint at a different location. This can be done by manually configuring the GraphQL controller.
+
 ```yaml    
 # api/config/routes.yaml
 api_graphql_entrypoint:
@@ -29,6 +30,7 @@ api_graphql_entrypoint:
     controller: api_platform.graphql.action.entrypoint
 # ...
 ```
+
 Change `/api/graphql` to the URI you wish the GraphQL endpoint to be accessible on.
 
 ## GraphiQL
