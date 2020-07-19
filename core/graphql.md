@@ -1101,9 +1101,93 @@ For instance:
 - If you use a different `normalization_context` for a mutation, a `MyResourcePayloadData` type with the restricted fields will be generated and used instead of `MyResource` (the query type).
 - If you use a different `normalization_context` for the query of an item (`item_query` operation) and for the query of a collection (`collection_query` operation), two types `MyResourceItem` and `MyResourceCollection` with the restricted fields will be generated and used instead of `MyResource` (the query type).
 
-## Exception and Error Formatting
+## Exception and Error
 
-By default, if an exception is sent when resolving a query or a mutation, it is normalized following the [GraphQL specification](https://github.com/graphql/graphql-spec/blob/master/spec/Section%207%20--%20Response.md#errors).
+### Handling Exceptions and Errors (Logging, Filtering, ...)
+
+When there are errors (GraphQL ones, or if an exception is sent), a default error handler (`api_platform.graphql.error_handler`) is called.
+Its main responsibility is to apply a formatter to them.
+
+If you need to log the errors, or if you want to filter them, you have to decorate this service.
+
+For instance, create a class like this:
+
+```php
+<?php
+// api/src/Error/ErrorHandler.php
+
+namespace App\Error;
+
+use ApiPlatform\Core\GraphQl\Error\ErrorHandlerInterface;
+
+final class ErrorHandler implements ErrorHandlerInterface
+{
+    private $defaultErrorHandler;
+
+    public function __construct(ErrorHandlerInterface $defaultErrorHandler)
+    {
+        $this->defaultErrorHandler = $defaultErrorHandler;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function __invoke(array $errors, callable $formatter): array
+    {
+        // Log or filter the errors.
+
+        return ($this->defaultErrorHandler)($errors, $formatter);
+    }
+}
+```
+
+Then register the service:
+
+[codeSelector]
+```yaml
+# api/config/services.yaml
+services:
+    # ...
+    App\Error\ErrorHandler:
+        decorates: api_platform.graphql.error_handler
+```
+
+```xml
+<?xml version="1.0" encoding="UTF-8" ?>
+<!-- api/config/services.xml -->
+<container xmlns="http://symfony.com/schema/dic/services"
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema-instance"
+    xsd:schemaLocation="http://symfony.com/schema/dic/services https://symfony.com/schema/dic/services/services-1.0.xsd">
+
+    <services>
+        <service id="App\Error\ErrorHandler"
+            decorates="api_platform.graphql.error_handler"
+        />
+    </services>
+</container>
+```
+
+```php
+<?php
+// api/config/services.php
+
+namespace Symfony\Component\DependencyInjection\Loader\Configurator;
+
+use App\Error\ErrorHandler;
+use App\Mailer;
+
+return function(ContainerConfigurator $configurator) {
+    $services = $configurator->services();
+
+    $services->set(ErrorHandler::class)
+        ->decorate('api_platform.graphql.error_handler');
+};
+```
+[/codeSelector]
+
+### Formatting Exceptions and Errors
+
+By default, if an exception is sent when resolving a query or a mutation or if there are GraphQL errors, they are normalized following the [GraphQL specification](https://github.com/graphql/graphql-spec/blob/master/spec/Section%207%20--%20Response.md#errors).
 
 It means an `errors` entry will be returned in the response, containing the following entries: `message`, `extensions`, `locations` and `path`.
 For more information, please [refer to the documentation in graphql-php](https://webonyx.github.io/graphql-php/error-handling/#default-error-formatting).
@@ -1117,7 +1201,7 @@ If you are in `dev` mode, more entries will be added in the response: `debugMess
 For some specific exceptions, built-in [custom exception normalizers](#custom-exception-normalizer) are also used to add more information.
 It's the case for a `HttpException` for which the `status` entry will be added under `extensions` and for a `ValidationException` for which `status` (always 400) and `violations` entries will be added.
 
-### Custom Exception Normalizer
+#### Custom Exception Normalizer
 
 If you want to add more specific behaviors depending on the exception or if you want to change the behavior of the built-in ones, you can do so by creating your own normalizer.
 
