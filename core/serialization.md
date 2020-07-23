@@ -361,7 +361,7 @@ class Greeting
      */
     public function getSum(): int
     {
-            return $this->a + $this->b;
+        return $this->a + $this->b;
     }
 }
 ```
