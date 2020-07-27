@@ -7,7 +7,7 @@ API Platform natively support the [OpenAPI](https://www.openapis.org/) API speci
 <p align="center" class="symfonycasts"><a href="https://symfonycasts.com/screencast/api-platform/open-api-spec?cid=apip"><img src="../distribution/images/symfonycasts-player.png" alt="OpenAPI screencast"><br>Watch the OpenAPI screencast</a></p>
 
 The specification of the API is available at the `/docs.json` path.
-By default, OpenAPI v2 is used.
+By default, OpenAPI v3 is used.
 You can also get an OpenAPI v3-compliant version thanks to the `spec_version` query parameter: `/docs.json?spec_version=3`
 
 It also integrates a customized version of [Swagger UI](https://swagger.io/swagger-ui/) and [ReDoc](https://rebilly.github.io/ReDoc/), some nice tools to display the
@@ -19,87 +19,79 @@ You can also dump an OpenAPI specification for your API by using the following c
 
 ```
 $ docker-compose exec php bin/console api:openapi:export
-# OpenAPI v2, JSON format
+# OpenAPI, JSON format
 
 $ docker-compose exec php bin/console api:openapi:export --yaml
-# OpenAPI v2, YAML format
-
-$ docker-compose exec php bin/console api:openapi:export --spec-version=3
-# OpenAPI v3, JSON format
-
-$ docker-compose exec php bin/console api:openapi:export --spec-version=3 --yaml
-# OpenAPI v3, YAML format
+# OpenAPI, YAML format
 
 $ docker-compose exec php bin/console api:openapi:export --output=swagger_docs.json
 # Create a file containing the specification
 ```
 
+If you want to use the old OpenAPI v2 (swagger) format, use:
+
+```
+$ docker-compose exec php bin/console api:swagger:export
+# OpenAPI v2, JSON format
+```
+
 ## Overriding the OpenAPI Specification
 
 Symfony allows to [decorate services](https://symfony.com/doc/current/service_container/service_decoration.html), here we
-need to decorate `api_platform.swagger.normalizer.documentation`.
+need to decorate `api_platform.openapi.factory`.
 
 In the following example, we will see how to override the title of the Swagger documentation and add a custom filter for
 the `GET` operation of `/foos` path.
 
 ```yaml
 # api/config/services.yaml
-services:
-    'App\Swagger\SwaggerDecorator':
-        decorates: 'api_platform.swagger.normalizer.api_gateway'
-        arguments: [ '@App\Swagger\SwaggerDecorator.inner' ]
+    App\OpenApi\OpenApiFactory:
+        decorates: 'api_platform.openapi.factory'
+        arguments: [ '@App\OpenApi\OpenApiFactory.inner' ]
         autoconfigure: false
 ```
 
 ```php
 <?php
-// api/src/Swagger/SwaggerDecorator.php
+namespace App\OpenApi;
 
-namespace App\Swagger;
+use ApiPlatform\Core\OpenApi\Factory\OpenApiFactoryInterface;
+use ApiPlatform\Core\OpenApi\OpenApi;
+use ApiPlatform\Core\OpenApi\Model;
 
-use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
-
-final class SwaggerDecorator implements NormalizerInterface
-{
+class OpenApiFactory implements OpenApiFactoryInterface {
     private $decorated;
 
-    public function __construct(NormalizerInterface $decorated)
+    public function __construct(OpenApiFactoryInterface $decorated) 
     {
         $this->decorated = $decorated;
     }
 
-    public function normalize($object, $format = null, array $context = [])
+    public function __invoke(array $context = []): OpenApi 
     {
-        $docs = $this->decorated->normalize($object, $format, $context);
+        $openApi = $this->decorated->__invoke($context);
+        $pathItem = $openApi->getPaths()->getPath('/api/grumpy_pizzas/{id}');
+        $operation = $pathItem->getGet();
 
-        $customDefinition = [
-            'name' => 'fields',
-            'description' => 'Fields to remove of the output',
-            'default' => 'id',
-            'in' => 'query',
-        ];
+        $openApi->getPaths()->addPath('/api/grumpy_pizzas/{id}', $pathItem->withGet(
+            $operation->withParameters(array_merge(
+                $operation->getParameters(),
+                [new Model\Parameter('fields', 'query', 'Fields to remove of the output')]
+            ))
+        ));
 
+        $openApi = $openApi->withInfo((new Model\Info('New Title', 'v2', 'Description of my custom API'))->withExtensionProperty('info-key', 'Info value'));
+        $openApi = $openApi->withExtensionProperty('key', 'Custom x-key value');
+        $openApi = $openApi->withExtensionProperty('x-value', 'Custom x-value value');
 
-	// e.g. add a custom parameter
-	$docs['paths']['/foos']['get']['parameters'][] = $customDefinition;
-
-        // e.g. remove an existing parameter
-        $docs['paths']['/foos']['get']['parameters'] = array_values(array_filter($docs['paths']['/foos']['get']['parameters'], function ($param) {
-            return $param['name'] !== 'bar';
-        }));
-
-	// Override title
-	$docs['info']['title'] = 'My Api Foo';
-
-        return $docs;
-    }
-
-    public function supportsNormalization($data, $format = null)
-    {
-        return $this->decorated->supportsNormalization($data, $format);
+        return $openApi;
     }
 }
 ```
+
+The impact on the swagger-ui is the following:
+
+![](core/images/swagger-ui-modified.png)
 
 ## Using the OpenAPI and Swagger Contexts
 
@@ -154,7 +146,7 @@ class Product // The class name will be used to name exposed resources
      *
      * @ApiProperty(
      *     attributes={
-     *         "swagger_context"={"type"="string", "format"="date-time"}
+     *         "openapi_context"={"type"="string", "format"="date-time"}
      *     }
      * )
      */
@@ -173,49 +165,60 @@ resources:
       properties:
         name:
           attributes:
-            swagger_context:
+            openapi_context:
               type: string
               enum: ['one', 'two']
               example: one
         timestamp:
           attributes:
-            swagger_context:
+            openapi_context:
               type: string
               format: date-time
 ```
 
-This will produce the following Swagger documentation:
+This will produce the following Swagger documentation (substract):
 ```json
-{
-  "swagger": "2.0",
-  "basePath": "/",
-
-  "definitions": {
-    "Product": {
-      "type": "object",
-      "description": "This is a product.",
-      "properties": {
-        "id": {
-          "type": "integer",
-          "readOnly": true
-        },
-        "name": {
-          "type": "string",
-          "description": "This is a name.",
-          "enum": ["one", "two"],
-          "example": "one"
-        },
-        "timestamp": {
-          "type": "string",
-          "format": "date-time"
+"components": {
+    "schemas": {
+        "GrumpyPizza:jsonld": {
+            "type": "object",
+            "description": "",
+            "properties": {
+                "@context": {
+                    "readOnly": true,
+                    "type": "string"
+                },
+                "@id": {
+                    "readOnly": true,
+                    "type": "string"
+                },
+                "@type": {
+                    "readOnly": true,
+                    "type": "string"
+                },
+                "timestamp": {
+                    "type": "string",
+                    "format": "date-time"
+                },
+                "id": {
+                    "readOnly": true,
+                    "type": "integer"
+                },
+                "name": {
+                    "type": "string",
+                    "enum": [
+                        "one",
+                        "two"
+                    ],
+                    "example": "one"
+                },
+            }
         }
-      }
     }
-  }
 }
 ```
 
-To pass a context to the OpenAPI **v3** generator, use the `openapi_context` attribute (notice the prefix: `openapi_` instead of `swagger_`).
+To pass a context to the OpenAPI **v2** generator, use the `swagger_context` attribute (notice the prefix: `swagger_` instead of `openapi_`).
 
 ## Changing the Name of a Definition
 
@@ -276,8 +279,8 @@ resources:
         method: get
         path: '/rabbit/rand'
         controller: App\Controller\RandomRabbit
-        # if you are using OpenApi V3 use 'openapi_context' instead of 'swagger_context'
-        swagger_context:
+        # if you are using OpenApi V2 (Swagger) use 'swagger_context' instead of 'openapi_context'
+        openapi_context:
           summary: Random rabbit picture
           description: >
             # Pop a great rabbit picture by color!
@@ -311,8 +314,8 @@ or with XML:
                 <attribute name="method">get</attribute>
                 <attribute name="path">/rabbit/rand</attribute>
                 <attribute name="controller">App\Controller\RandomRabbit</attribute>
-                <!-- if you are using OpenApi V3 use 'openapi_context' instead of 'swagger_context' -->
-                <attribute name="swagger_context">
+                <!-- if you are using OpenApi V2 (Swagger) use 'swagger_context' instead of 'openapi_context' -->
+                <attribute name="openapi_context">
                     <attribute name="summary">Random rabbit picture</attribute>
                     <attribute name="description">
                         # Pop a great rabbit picture by color!
@@ -393,6 +396,41 @@ You may want to copy the [one shipped with API Platform](https://github.com/api-
 ## Compatibility Layer with Amazon API Gateway
 
 [AWS API Gateway](https://aws.amazon.com/api-gateway/) supports OpenAPI partially, but it [requires some changes](https://docs.aws.amazon.com/apigateway/latest/developerguide/api-gateway-known-issues.html).
-Fortunately, API Platform provides a way to be compatible with Amazon API Gateway.
+API Platform provides a way to be compatible with Amazon API Gateway.
 
-To enable API Gateway compatibility on your OpenAPI docs, add `api_gateway=true` as query parameter: `http://www.example.com/docs.json?api_gateway=true`
+To enable API Gateway compatibility on your OpenAPI docs, add `api_gateway=true` as query parameter: `http://www.example.com/docs.json?api_gateway=true`. 
+The flag `--api-gateway` is also available through the command line.
+
+## OAuth
+
+If you implemented OAuth on your API, you should configure OpenApi's authorization using API Platform's configuration:
+
+```
+api_platform:
+    oauth:
+        # To enable or disable oauth.
+        enabled: false
+
+        # The oauth client id.
+        clientId: ''
+
+        # The oauth client secret.
+        clientSecret: ''
+
+        # The oauth type.
+        type: 'oauth2'
+
+        # The oauth flow grant type.
+        flow: 'application'
+
+        # The oauth token url.
+        tokenUrl: '/oauth/v2/token'
+
+        # The oauth authentication url.
+        authorizationUrl: '/oauth/v2/auth'
+
+        # The oauth scopes.
+        scopes: []
+```
+
+Note that `clientId` and `clientSecret` are being used by the SwaggerUI if enabled.
