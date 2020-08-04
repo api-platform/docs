@@ -30,7 +30,7 @@ chapters:
       - extensions
       - messenger
       - dto
-      - swagger
+      - openapi
       - json-schema
       - mercure
       - push-relations
