@@ -40,6 +40,86 @@ class BooksTest extends ApiTestCase
 
 Refer to [the Symfony HttpClient documentation](https://symfony.com/doc/current/components/http_client.html) to discover all the features of the client (custom headers, JSON encoding and decoding, HTTP Basic and Bearer authentication and cookies support, among other things).
 
+Note that you can create your own test case class extending the ApiTestCase. For example to set up a Json Web Token authentification:
+
+```php
+<?php
+
+namespace App\Tests;
+
+use ApiPlatform\Core\Bridge\Symfony\Bundle\Test\ApiTestCase;
+use ApiPlatform\Core\Bridge\Symfony\Bundle\Test\Client;
+use Hautelook\AliceBundle\PhpUnit\RefreshDatabaseTrait;
+
+abstract class AbstractTest extends ApiTestCase
+{
+    private $token;
+    private $clientWithCredentials;
+
+    use RefreshDatabaseTrait;
+
+    public function setUp(): void
+    {
+        self::bootKernel();
+    }
+
+    protected function createClientWithCredentials($token = null): Client
+    {
+        $token = $token ?: $this->getToken();
+
+        return static::createClient([], ['headers' => ['authorization' => 'Bearer '.$token]]);
+    }
+
+    /**
+     * Use other credentials if needed.
+     */
+    protected function getToken($body = []): string
+    {
+        if ($this->token) {
+            return $this->token;
+        }
+
+        $response = static::createClient()->request('POST', '/login', ['body' => $body ?: [
+            'username' => 'admin@example.com',
+            'password' => '$3cr3t',
+        ]]);
+
+        $this->assertResponseIsSuccessful();
+        $data = json_decode($response->getContent());
+        $this->token = $data->access_token;
+
+        return $data->access_token;
+    }
+}
+```
+
+Use it by extending the `AbstractTest` class. For example this class tests the `/users` resource accessibility where only the admin can retrieve the collection:
+
+```php
+<?php
+namespace App\Tests;
+
+final class UsersTest extends AbstractTest
+{
+    public function testAdminResource()
+    {
+        $response = $this->createClientWithCredentials()->request('GET', '/users');
+        $this->assertResponseIsSuccessful();
+    }
+
+    public function testLoginAsUser()
+    {
+        $token = $this->getToken([
+            'username' => 'user@example.com',
+            'password' => '$3cr3t',
+        ]);
+
+        $response = $this->createClientWithCredentials($token)->request('GET', '/users');
+        $this->assertJsonContains(['hydra:description' => 'Access Denied.']);
+        $this->assertResponseStatusCodeSame('403');
+    }
+}
+```
 
 ## API Test Assertions
 
@@ -76,6 +156,28 @@ class MyTest extends ApiTestCase
         $this->assertMatchesResourceCollectionJsonSchema(YourApiResource::class);
         // And for items
         $this->assertMatchesResourceItemJsonSchema(YourApiResource::class);
+    }
+}
+```
+
+There is a also a method to find the IRI matching a given resource and some criterias:
+
+```php
+<?php
+// api/tests/BooksTest.php
+
+namespace App\Tests;
+
+use ApiPlatform\Core\Bridge\Symfony\Bundle\Test\ApiTestCase;
+
+class BooksTest extends ApiTestCase
+{
+    public function testFindBook(): void
+    {
+        // Asserts that the returned JSON is equal to the passed one
+        $iri = $this->findIriBy(Book::class, ['isbn' => '9780451524935']);
+        static::createClient()->request('GET', $iri);
+        $this->assertResponseIsSuccessful();
     }
 }
 ```
