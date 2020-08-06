@@ -619,7 +619,7 @@ services:
 
 ```php
 <?php
-// api/src/Serializer/ApiNormalizer
+// api/src/Serializer/ApiNormalizer.php
 
 namespace App\Serializer;
 
