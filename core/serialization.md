@@ -213,7 +213,7 @@ Refer to the [operations](operations.md) documentation to learn more.
 By default, the serializer provided with API Platform represents relations between objects using [dereferenceable IRIs](https://en.wikipedia.org/wiki/Internationalized_Resource_Identifier).
 They allow you to retrieve details for related objects by issuing extra HTTP requests. However, for performance reasons, it is sometimes preferable to avoid forcing the client to issue extra HTTP requests.
 
-### Serialization
+### Normalization
 In the following JSON document, the relation from a book to an author is by default represented by an URI:
 
 ```json
@@ -375,7 +375,7 @@ class Person
 
 ```
 
-The problem here is that the **$parent** property become automatically an embedded object. Beside, the property won't be shown on the OpenAPi view.
+The problem here is that the **$parent** property become automatically an embedded object. Besides, the property won't be shown on the OpenAPI view.
 
 To force the **$parent** property to be used as an IRI, add an **@ApiProperty(readableLink=false, writableLink=false)** annotation:
 ```php
