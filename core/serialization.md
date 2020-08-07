@@ -206,14 +206,15 @@ include the `name` property because of the specific configuration for this opera
 
 Refer to the [operations](operations.md) documentation to learn more.
 
-### Embedding Relations
+## Embedding Relations
 
 <p align="center" class="symfonycasts"><a href="https://symfonycasts.com/screencast/api-platform/relations?cid=apip"><img src="../distribution/images/symfonycasts-player.png" alt="Relations screencast"><br>Watch the Relations screencast</a></p>
 
 By default, the serializer provided with API Platform represents relations between objects using [dereferenceable IRIs](https://en.wikipedia.org/wiki/Internationalized_Resource_Identifier).
-They allow you to retrieve details for related objects by issuing extra HTTP requests.
+They allow you to retrieve details for related objects by issuing extra HTTP requests. However, for performance reasons, it is sometimes preferable to avoid forcing the client to issue extra HTTP requests.
 
-In the following JSON document, the relation from a book to an author is represented by an URI:
+### Normalization
+In the following JSON document, the relation from a book to an author is by default represented by an URI:
 
 ```json
 {
@@ -225,7 +226,6 @@ In the following JSON document, the relation from a book to an author is represe
 }
 ```
 
-However, for performance reasons, it is sometimes preferable to avoid forcing the client to issue extra HTTP requests.
 It is possible to embed related objects (in their entirety, or only some of their properties) directly in the parent
 response through the use of serialization groups. By using the following serialization groups annotations (`@Groups`),
 a JSON representation of the author is embedded in the book response:
@@ -304,7 +304,120 @@ This avoids the need for extra queries to be executed when serializing the relat
 
 Instead of embedding relations in the main HTTP response, you may want [to "push" them to the client using HTTP/2 server push](push-relations.md).
 
-### Calculated Field
+### Denormalization
+
+It is also possible to embed a relation in `PUT` and `POST` requests. To enable that feature, set the serialization groups
+the same way as normalization. For example:
+
+```php
+<?php
+// api/src/Entity/Book.php
+
+namespace App\Entity;
+
+use ApiPlatform\Core\Annotation\ApiResource;
+
+/**
+ * @ApiResource(denormalizationContext={"groups"={"book"}})
+ */
+class Book
+{
+    // ...
+}
+```
+
+The following rules apply when denormalizing embedded relations:
+
+* If an `@id` key is present in the embedded resource, then the object corresponding to the given URI will be retrieved through
+the data provider. Any changes in the embedded relation will also be applied to that object.
+* If no `@id` key exists, a new object will be created containing data provided in the embedded JSON document.
+
+You can specify as many embedded relation levels as you want.
+
+### Force IRI with relations of the same type (parent/childs relations)
+
+It is a common problem to have entities that reference other entities of the same type:
+```php
+<?php
+// api/src/Entity/Person.php
+
+namespace App\Entity;
+
+use ApiPlatform\Core\Annotation\ApiResource;
+use Symfony\Component\Serializer\Annotation\Groups;
+
+/**
+ * @ApiResource(
+ *   normalizationContext = {
+ *      "groups" = {"person"}
+ *   },
+ *   denormalizationContext = {
+ *      "groups" = {"person"}
+ *   }
+ * )
+ */
+class Person
+{
+    /**
+     * ...
+     * @Groups("person")
+     */
+    public $name;
+
+   /**
+    * @var Person
+    * @Groups("person")
+    */
+   public $parent;  // Note that a Person instance has a relation with another Person.
+	
+    // ...
+}
+
+```
+
+The problem here is that the **$parent** property become automatically an embedded object. Besides, the property won't be shown on the OpenAPI view.
+
+To force the **$parent** property to be used as an IRI, add an **@ApiProperty(readableLink=false, writableLink=false)** annotation:
+```php
+<?php
+// api/src/Entity/Person.php
+
+namespace App\Entity;
+
+use ApiPlatform\Core\Annotation\ApiResource;
+use Symfony\Component\Serializer\Annotation\Groups;
+
+/**
+ * @ApiResource(
+ *   normalizationContext = {
+ *      "groups" = {"person"}
+ *   },
+ *   denormalizationContext = {
+ *      "groups" = {"person"}
+ *   }
+ * )
+ */
+class Person
+{
+    /**
+     * ...
+     * @Groups("person")
+     */
+    public $name;
+
+   /**
+    * @var Person
+    * @Groups("person")
+    * @ApiProperty(readableLink=false, writableLink=false)
+    */
+   public $parent;  // This property is now serialized/deserialized as an IRI.
+	
+    // ...
+}
+
+```
+
+## Calculated Field
 
 Sometimes you need to expose calculated fields. This can be done by leveraging the groups. This time not on a property, but on a method.
 
@@ -365,36 +478,6 @@ class Greeting
     }
 }
 ```
-
-### Denormalization
-
-It is also possible to embed a relation in `PUT` and `POST` requests. To enable that feature, set the serialization groups
-the same way as normalization. For example:
-
-```php
-<?php
-// api/src/Entity/Book.php
-
-namespace App\Entity;
-
-use ApiPlatform\Core\Annotation\ApiResource;
-
-/**
- * @ApiResource(denormalizationContext={"groups"={"book"}})
- */
-class Book
-{
-    // ...
-}
-```
-
-The following rules apply when denormalizing embedded relations:
-
-* If an `@id` key is present in the embedded resource, then the object corresponding to the given URI will be retrieved through
-the data provider. Any changes in the embedded relation will also be applied to that object.
-* If no `@id` key exists, a new object will be created containing data provided in the embedded JSON document.
-
-You can specify as many embedded relation levels as you want.
 
 ## Changing the Serialization Context Dynamically
 
@@ -497,6 +580,7 @@ final class BookContextBuilder implements SerializerContextBuilderInterface
 If the user has the `ROLE_ADMIN` permission and the subject is an instance of Book, `admin:input` group will be dynamically added to the
 denormalization context. The `$normalization` variable lets you check whether the context is for normalization (if `TRUE`) or denormalization
 (`FALSE`).
+
 
 ## Changing the Serialization Context on a Per-item Basis
 
