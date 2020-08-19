@@ -90,7 +90,7 @@ To see the container's logs, run:
 Project files are automatically shared between your local host machine and the container thanks to a pre-configured [Docker
 volume](https://docs.docker.com/engine/tutorials/dockervolumes/). It means that you can edit files of your project locally
 using your preferred IDE or code editor, they will be transparently taken into account in the container.
-Speaking about IDEs, our favorite software to develop API Platform apps is [PHPStorm](https://www.jetbrains.com/phpstorm/)
+Speaking about IDEs, our favorite software to develop API Platform apps is [PhpStorm](https://www.jetbrains.com/phpstorm/)
 with its awesome [Symfony](https://confluence.jetbrains.com/display/PhpStorm/Getting+Started+-+Symfony+Development+using+PhpStorm)
 and [Php Inspections](https://plugins.jetbrains.com/plugin/7622-php-inspections-ea-extended-) plugins. Give them a try,
 you'll get auto-completion for almost everything and awesome quality analysis.
