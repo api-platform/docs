@@ -108,12 +108,13 @@ class Book
 
 ```yaml
 # api/config/api_platform/resources.yaml
-App\Entity\Book:
-    attributes:
-        normalization_context:
-            groups: ['read']
-        denormalization_context:
-            groups: ['write']
+resources:
+    App\Entity\Book:
+        attributes:
+            normalization_context:
+                groups: ['read']
+            denormalization_context:
+                groups: ['write']
 
 # api/config/serialization/Book.yaml
 App\Entity\Book:
