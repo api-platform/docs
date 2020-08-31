@@ -1490,7 +1490,8 @@ You need to enable it in the [allowed formats of API Platform](content-negotiati
 api_platform:
     formats:
         # ...
-        multipart: ['multipart/form-data']
+        multipart: 
+            mime_types: ['multipart/form-data']
 ```
 
 You can now upload files using the `createMediaObject` mutation, for details check [GraphQL multipart request specification](https://github.com/jaydenseric/graphql-multipart-request-spec)
