@@ -104,6 +104,7 @@ export default () => (
       name="books"
       list={BooksList}
     />
+    <ResourceGuesser name="authors" />
   </HydraAdmin>
 );
 ```
