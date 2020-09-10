@@ -5,6 +5,8 @@ classes called **data persisters**. Data persisters receive an instance of the c
 the `@ApiResource` annotation). This instance contains data submitted by the client during [the deserialization
 process](serialization.md).
 
+<p align="center" class="symfonycasts"><a href="https://symfonycasts.com/screencast/api-platform-security/encode-user-password?cid=apip"><img src="../distribution/images/symfonycasts-player.png" alt="Data Persister screencast"><br>Watch the Data Persister screencast</a></p>
+
 A data persister using [Doctrine ORM](https://www.doctrine-project.org/projects/orm.html) is included with the library and
 is enabled by default. It is able to persist and delete objects that are also mapped as [Doctrine entities](https://www.doctrine-project.org/projects/doctrine-orm/en/current/reference/basic-mapping.html).
 A [Doctrine MongoDB ODM](https://www.doctrine-project.org/projects/mongodb-odm.html) data persister is also included and can be enabled by following the [MongoDB documentation](mongodb.md).
@@ -72,6 +74,8 @@ services:
 Note that if you don't need any `$context` in your data persister's methods, you can implement the [`DataPersisterInterface`](https://github.com/api-platform/core/blob/master/src/DataPersister/DataPersisterInterface.php) instead.
 
 ## Decorating the Built-In Data Persisters
+
+<p align="center" class="symfonycasts"><a href="https://symfonycasts.com/screencast/api-platform-extending/persister-decoration?cid=apip"><img src="../distribution/images/symfonycasts-player.png" alt="Data Persister Decoration screencast"><br>Watch the Data Persister Decoration screencast</a></p>
 
 If you want to execute custom business logic before or after peristence, this can be achieved by [decorating](https://symfony.com/doc/current/service_container/service_decoration.html) the built-in data persisters.
 
