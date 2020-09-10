@@ -482,6 +482,8 @@ class Greeting
 
 ## Changing the Serialization Context Dynamically
 
+<p align="center" class="symfonycasts"><a href="https://symfonycasts.com/screencast/api-platform-security/service-decoration?cid=apip"><img src="../distribution/images/symfonycasts-player.png" alt="Context Builder & Service Decoration screencast"><br>Watch the Context Builder & Service Decoration screencast</a></p>
+
 Let's imagine a resource where most fields can be managed by any user, but some can be managed only by admin users:
 
 ```php
@@ -581,7 +583,6 @@ final class BookContextBuilder implements SerializerContextBuilderInterface
 If the user has the `ROLE_ADMIN` permission and the subject is an instance of Book, `admin:input` group will be dynamically added to the
 denormalization context. The `$normalization` variable lets you check whether the context is for normalization (if `TRUE`) or denormalization
 (`FALSE`).
-
 
 ## Changing the Serialization Context on a Per-item Basis
 
