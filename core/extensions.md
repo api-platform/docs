@@ -80,12 +80,12 @@ final class CurrentUserExtension implements QueryCollectionExtensionInterface, Q
         $this->security = $security;
     }
 
-    public function applyToCollection(QueryBuilder $queryBuilder, QueryNameGeneratorInterface $queryNameGenerator, string $resourceClass, string $operationName = null)
+    public function applyToCollection(QueryBuilder $queryBuilder, QueryNameGeneratorInterface $queryNameGenerator, string $resourceClass, string $operationName = null): void
     {
         $this->addWhere($queryBuilder, $resourceClass);
     }
 
-    public function applyToItem(QueryBuilder $queryBuilder, QueryNameGeneratorInterface $queryNameGenerator, string $resourceClass, array $identifiers, string $operationName = null, array $context = [])
+    public function applyToItem(QueryBuilder $queryBuilder, QueryNameGeneratorInterface $queryNameGenerator, string $resourceClass, array $identifiers, string $operationName = null, array $context = []): void
     {
         $this->addWhere($queryBuilder, $resourceClass);
     }
@@ -98,7 +98,7 @@ final class CurrentUserExtension implements QueryCollectionExtensionInterface, Q
 
         $rootAlias = $queryBuilder->getRootAliases()[0];
         $queryBuilder->andWhere(sprintf('%s.user = :current_user', $rootAlias));
-        $queryBuilder->setParameter('current_user', $user);
+        $queryBuilder->setParameter('current_user', $user->getId());
     }
 }
 
@@ -125,12 +125,12 @@ Note that your extensions should have a positive priority if defined. Internal e
 
 | Service name                                               | Priority | Class                                              |
 |------------------------------------------------------------|------|---------------------------------------------------------|
-| api_platform.doctrine.orm.query_extension.eager_loading (collection) | -8 | ApiPlatform\Core\Bridge\Doctrine\Orm\Extension\EagerLoadingExtension |
-| api_platform.doctrine.orm.query_extension.eager_loading (item) | -8 | ApiPlatform\Core\Bridge\Doctrine\Orm\Extension\EagerLoadingExtension |
-| api_platform.doctrine.orm.query_extension.filter | -16 | ApiPlatform\Core\Bridge\Doctrine\Orm\Extension\FilterExtension |
-| api_platform.doctrine.orm.query_extension.filter_eager_loading | -17 | ApiPlatform\Core\Bridge\Doctrine\Orm\Extension\FilterEagerLoadingExtension |
-| api_platform.doctrine.orm.query_extension.order | -32 | ApiPlatform\Core\Bridge\Doctrine\Orm\Extension\OrderExtension |
-| api_platform.doctrine.orm.query_extension.pagination | -64 | ApiPlatform\Core\Bridge\Doctrine\Orm\Extension\PaginationExtension |
+| `api_platform.doctrine.orm.query_extension.eager_loading` (collection) | -8 | ApiPlatform\Core\Bridge\Doctrine\Orm\Extension\EagerLoadingExtension |
+| `api_platform.doctrine.orm.query_extension.eager_loading` (item) | -8 | ApiPlatform\Core\Bridge\Doctrine\Orm\Extension\EagerLoadingExtension |
+| `api_platform.doctrine.orm.query_extension.filter` | -16 | ApiPlatform\Core\Bridge\Doctrine\Orm\Extension\FilterExtension |
+| `api_platform.doctrine.orm.query_extension.filter_eager_loading` | -17 | ApiPlatform\Core\Bridge\Doctrine\Orm\Extension\FilterEagerLoadingExtension |
+| `api_platform.doctrine.orm.query_extension.order` | -32 | ApiPlatform\Core\Bridge\Doctrine\Orm\Extension\OrderExtension |
+| `api_platform.doctrine.orm.query_extension.pagination` | -64 | ApiPlatform\Core\Bridge\Doctrine\Orm\Extension\PaginationExtension |
 
 #### Blocking Anonymous Users
 

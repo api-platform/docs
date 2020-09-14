@@ -98,6 +98,7 @@ The impact on the swagger-ui is the following:
 Sometimes you may want to change the information included in your OpenAPI documentation.
 The following configuration will give you total control over your OpenAPI definitions:
 
+[codeSelector]
 ```php
 <?php
 // api/src/Entity/Product.php
@@ -156,8 +157,6 @@ class Product // The class name will be used to name exposed resources
 }
 ```
 
-Or in YAML:
-
 ```yaml
 # api/config/api_platform/resources.yaml
 resources:
@@ -176,7 +175,36 @@ resources:
               format: date-time
 ```
 
-This will produce the following Swagger documentation (substract):
+```xml
+<?xml version="1.0" encoding="UTF-8" ?>
+<resources xmlns="https://api-platform.com/schema/metadata"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="https://api-platform.com/schema/metadata
+           https://api-platform.com/schema/metadata/metadata-2.0.xsd">
+    <resource class="App\Entity\Product">
+        <property name="name">
+            <attribute name="openapi_context">
+                <attribute name="type">type</attribute>
+                <attribute name="enum">
+                    <attribute>one</attribute>
+                    <attribute>two</attribute>
+                </attribute>
+                <attribute name="example">one</attribute>
+            </attribute>
+        </property>
+        <property name="timestamp">
+            <attribute name="openapi_context">
+                <attribute name="type">string</attribute>
+                <attribute name="format">date-time</attribute>
+            </attribute>
+        </property>
+    </resource>
+</resources>
+```
+[/codeSelector]
+
+This will produce the following Swagger documentation:
+
 ```json
 "components": {
     "schemas": {
@@ -269,8 +297,7 @@ class User
 
 You also have full control over both built-in and custom operations documentation.
 
-In Yaml:
-
+[codeSelector]
 ```yaml
 resources:
   App\Entity\Rabbit:
@@ -299,8 +326,6 @@ resources:
                    name: Rabbit
                    description: Pink rabbit
 ```
-
-or with XML:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" ?>
@@ -348,6 +373,7 @@ or with XML:
     </resource>
 </resources>
 ```
+[/codeSelector]
 
 ![Impact on Swagger UI](../distribution/images/swagger-ui-2.png)
 

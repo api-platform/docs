@@ -72,7 +72,7 @@ provided by API Platform:
         --set varnish.url=https://myvarnish.com
 
 Finally, build the `client` and `admin` JavaScript apps and [deploy them on a static
-website hosting service](https://github.com/facebookincubator/create-react-app/blob/master/packages/react-scripts/template/README.md#deployment).
+website hosting service](https://create-react-app.dev/docs/deployment/).
 
 ## Initializing the Database
 

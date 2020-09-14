@@ -6,6 +6,7 @@ API Platform also provides convenient [access control expressions](https://symfo
 
 <p align="center" class="symfonycasts"><a href="https://symfonycasts.com/screencast/api-platform-security/?cid=apip"><img src="../distribution/images/symfonycasts-player.png" alt="Security screencast"><br>Watch the Security screencast</a>
 
+[codeSelector]
 ```php
 <?php
 // api/src/Entity/Book.php
@@ -60,8 +61,6 @@ class Book
 }
 ```
 
-Alternatively, using YAML:
-
 ```yaml
 # api/config/api_platform/resources.yaml
 App\Entity\Book:
@@ -76,6 +75,7 @@ App\Entity\Book:
         put:
             security: 'is_granted("ROLE_ADMIN") or object.owner == user'
 ```
+[/codeSelector]
 
 Resource signature can be modified at the property level as well:
 
@@ -110,6 +110,7 @@ It means than for `PUT` requests, `object` doesn't contain the value submitted b
 In some cases, it might be useful to execute a security after the denormalization step.
 To do so, use the `security_post_denormalize` attribute:
 
+[codeSelector]
 ```php
 <?php
 // src/Entity/Book.php
@@ -132,8 +133,6 @@ class Book
 }
 ```
 
-Alternatively, using YAML:
-
 ```yaml
 # api/config/api_platform/resources.yaml
 App\Entity\Book:
@@ -143,6 +142,7 @@ App\Entity\Book:
             security_post_denormalize: "is_granted('ROLE_ADMIN') or (object.owner == user and previous_object.owner == user)"
     # ...
 ```
+[/codeSelector]
 
 This time, the `object` variable contains data that have been extracted from the HTTP request body during the denormalization process.
 However, the object is not persisted yet.
@@ -159,6 +159,95 @@ The easiest and recommended way to hook custom access control logic is [to write
 
 In order to give the current `object` to your voter, use the expression `is_granted('READ', object)`
 
+For example:
+
+```php
+<?php
+// api/src/Entity/Book.php
+
+namespace App\Entity;
+
+use ApiPlatform\Core\Annotation\ApiResource;
+
+/**
+ * ...
+ * @ApiResource(
+ *     attributes={"security"="is_granted('ROLE_USER')"},
+ *     collectionOperations={
+ *          "get",
+ *          "post" = { "security_post_denormalize" = "is_granted('BOOK_CREATE', object)" }
+ *     },
+ *     itemOperations={
+ *          "get" = { "security" = "is_granted('BOOK_READ', object)" },
+ *          "put" = { "security" = "is_granted('BOOK_EDIT', object)" },
+ *          "delete" = { "security" = "is_granted('BOOK_DELETE', object)" }
+ *     },
+ * )
+ */
+class Book
+{
+    // ...
+}
+```
+
+Create a *BookVoter* with the `bin/console make:voter` command:
+
+```php
+<?php
+// api/src/Security/Voter/BookVoter.php
+
+namespace App\Security\Voter;
+
+use App\Entity\Book;
+use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
+use Symfony\Component\Security\Core\Authorization\Voter\Voter;
+use Symfony\Component\Security\Core\Security;
+use Symfony\Component\Security\Core\User\UserInterface;
+
+class BookVoter extends Voter
+{
+    private $security = null;
+
+    public function __construct(Security $security)
+    {
+        $this->security = $security;
+    }
+
+    protected function supports($attribute, $subject): bool
+    {
+        $supportsAttribute = in_array($attribute, ['BOOK_CREATE', 'BOOK_READ', 'BOOK_EDIT', 'BOOK_DELETE']);
+        $supportsSubject = $subject instanceof Book;
+
+        return $supportsAttribute && $supportsSubject;
+    }
+
+    /**
+     * @param string $attribute
+     * @param Book $subject
+     * @param TokenInterface $token
+     * @return bool
+     */
+    protected function voteOnAttribute($attribute, $subject, TokenInterface $token): bool
+    {
+        /** ... check if the user is anonymous ... **/
+
+        switch ($attribute) {
+            case 'BOOK_CREATE':
+                if ( $this->security->isGranted(Role::ADMIN) ) { return true; }  // only admins can create books
+                break;
+            case 'BOOK_READ':
+                /** ... other autorization rules ... **/
+        }
+
+        return false;
+    }
+}
+```
+
+*Note 1: when using Voters on POST methods: The voter needs an `$attribute` and `$subject` as input parameter, so you have to use the `security_post_denormalize` (i.e. `"post" = { "security_post_denormalize" = "is_granted('BOOK_CREATE', object)" }` ) because the object does not exist before denormalization (it is not created, yet.)*
+
+*Note 2: You can't use Voters on the collection GET method, use [Collection Filters](https://api-platform.com/docs/core/security/#filtering-collection-according-to-the-current-user-permissions) instead.
+
 ## Configuring the Access Control Error Message
 
 By default when API requests are denied, you will get the "Access Denied" message.
@@ -166,6 +255,7 @@ You can change it by configuring the `security_message` attribute or the `securi
 
 For example:
 
+[codeSelector]
 ```php
 <?php
 // api/src/Entity/Book.php
@@ -193,8 +283,6 @@ class Book
 }
 ```
 
-Alternatively, using YAML:
-
 ```yaml
 # api/config/api_platform/resources.yaml
 App\Entity\Book:
@@ -216,6 +304,7 @@ App\Entity\Book:
             security_post_denormalize_message: 'Sorry, but you are not the actual book owner.'
     # ...
 ```
+[/codeSelector]
 
 ## Filtering Collection According to the Current User Permissions
 

@@ -13,6 +13,7 @@ Let's say you have the following class, which is identified by a `UUID` type. In
 <?php
 namespace App\Entity;
 
+use ApiPlatform\Core\Annotation\ApiResource;
 use App\Uuid;
 
 /**
@@ -103,12 +104,7 @@ final class UuidNormalizer implements DenormalizerInterface
 
 Tag this service as an `api_platform.identifier.denormalizer`:
 
-```xml
-  <service id="App\Identifier\UuidNormalizer" class="App\Identifier\UuidNormalizer" public="false">
-      <tag name="api_platform.identifier.denormalizer" />
-  </service>
-```
-
+[codeSelector]
 ```yaml
 services:
     App\Identifier\UuidNormalizer:
@@ -116,8 +112,53 @@ services:
             - { name: api_platform.identifier.denormalizer }
 ```
 
+```xml
+  <service id="App\Identifier\UuidNormalizer" class="App\Identifier\UuidNormalizer" public="false">
+      <tag name="api_platform.identifier.denormalizer" />
+  </service>
+```
+[/codeSelector]
+
 Your `PersonDataProvider` will now work as expected!
 
+## Changing Identifier in a Doctrine Entity
+
+If your resource is also a Doctrine entity and you want to use another identifier other than the Doctrine one, you have to unmark it:
+
+```php
+<?php
+namespace App\Entity;
+
+use ApiPlatform\Core\Annotation\ApiResource;
+use App\Uuid;
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * @ORM\Entity
+ * @ApiResource
+ */
+final class Person
+{
+    /**
+     * @var int
+     * @ApiProperty(identifier=false)
+     *
+     * @ORM\Id()
+     * @ORM\GeneratedValue()
+     * @ORM\Column(type="integer")
+     */
+    private $id;
+    
+    /**
+     * @var Uuid
+     * @ApiProperty(identifier=true)
+     * @ORM\Column(type="uuid", unique=true)
+     */
+    public $code;
+    
+    // ...
+}
+```
 
 ## Supported Identifiers
 

@@ -73,7 +73,7 @@ Otherwise, you must register this class as a service like in the following examp
 # api/config/services.yaml
 services:
     # ...
-    'App\PathResolver\NoSeparatorsOperationPathResolver': ~
+    'App\Operation\SingularPathSegmentNameGenerator': ~
 ```
 
 ### Configuring It
@@ -81,5 +81,5 @@ services:
 ```yaml
 # api/config/packages/api_platform.yaml
 api_platform:
-    path_segment_name_generator: 'App\PathResolver\NoSeparatorsOperationPathResolver'
+    path_segment_name_generator: 'App\Operation\SingularPathSegmentNameGenerator'
 ```

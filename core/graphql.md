@@ -19,6 +19,20 @@ You can now use GraphQL at the endpoint: `https://localhost:8443/graphql`.
 *Note:* If you used [Symfony Flex to install API Platform](../distribution/index.md#using-symfony-flex-and-composer-advanced-users),
 the GraphQL endpoint will be: `https://localhost:8443/api/graphql`.
 
+## Changing Location of the GraphQL Endpoint
+
+Sometimes you may want to have the GraphQL endpoint at a different location. This can be done by manually configuring the GraphQL controller.
+
+```yaml    
+# api/config/routes.yaml
+api_graphql_entrypoint:
+    path: /api/graphql
+    controller: api_platform.graphql.action.entrypoint
+# ...
+```
+
+Change `/api/graphql` to the URI you wish the GraphQL endpoint to be accessible on.
+
 ## GraphiQL
 
 If Twig is installed in your project, go to the GraphQL endpoint with your browser. You will see a nice interface provided by GraphiQL to interact with your API.
@@ -109,6 +123,44 @@ api_platform:
     formats:
         # ...
         graphql: ['application/graphql']
+```
+
+
+## Operations
+
+To understand what an operation is, please refer to the [operations documentation](operations.md).
+
+For GraphQL, the operations are defined under the `graphql` attribute.
+By default, all operations are enabled.
+
+For the queries, the operations are:
+- `item_query`
+- `collection_query`
+
+For the mutations, the operations are:
+- `create`
+- `update`
+- `delete`
+
+You can of course disable or configure these operations.
+
+For instance, in the following example, only the query of an item and the create mutation are enabled:
+
+```php
+<?php
+// api/src/Entity/Book.php
+
+namespace App\Entity;
+
+ * @ApiResource(graphql={
+ *     "item_query",
+ *     "create"
+ * })
+ */
+class Book
+{
+    // ...
+}
 ```
 
 ## Queries
@@ -992,7 +1044,9 @@ class Book
 
 To add a security layer to your queries and mutations, follow the [security](security.md) documentation.
 
-If your security needs differ between REST and GraphQL, add the particular parts in the `graphql` key.
+The REST security configuration and the GraphQL one are **not** correlated.
+
+If you have only some parts differing between REST and GraphQL, you have to redefine the common parts anyway.
 
 In the example below, we want the same security rules as we have in REST, but we also want to allow an admin to delete a book only in GraphQL.
 Please note that, it's not possible to update a book in GraphQL because the `update` operation is not defined.
@@ -1618,14 +1672,14 @@ You may need to export your schema in SDL (Schema Definition Language) to import
 
 The `api:graphql:export` command is provided to do so:
 
-```bash
-docker-compose exec php bin/console api:graphql:export -o path/to/your/volume/schema.graphql
+```shell-session
+$ docker-compose exec php bin/console api:graphql:export -o path/to/your/volume/schema.graphql
 ```
 
 Since the command prints the schema to the output if you don't use the `-o` option, you can also use this command:
 
-```bash
-docker-compose exec php bin/console api:graphql:export > path/in/host/schema.graphql
+```shell-session
+$ docker-compose exec php bin/console api:graphql:export > path/in/host/schema.graphql
 ```
 
 ## Handling File Upload

@@ -27,13 +27,10 @@ api_platform:
     # Allow using plain IDs for JSON format
     allow_plain_identifiers: false
 
-    doctrine:
-        # To enable or disable Doctrine ORM support.
-        enabled: true
-
-    doctrine_mongodb_odm:
-        # To enable or disable Doctrine MongoDB ODM support.
-        enabled: false
+    validator:
+        # Enable the serialization of payload fields when a validation error is thrown
+        # If you want to serialize only some payload fields, define them like this [ severity, anotherPayloadField ]
+        serialize_payload_fields: []
 
     eager_loading:
         # To enable or disable eager loading.
@@ -53,7 +50,8 @@ api_platform:
     # Enable the FOSUserBundle integration.
     enable_fos_user: false
 
-    # Enable the Nelmio Api doc integration.
+    # Enabling the NelmioApiDocBundle integration has been deprecated in 2.2 and will be removed in 3.0.
+    # NelmioApiDocBundle 3 has native support for API Platform
     enable_nelmio_api_doc: false
 
     # Enable the Swagger documentation and export.
@@ -73,7 +71,68 @@ api_platform:
     
     # Enable the data collector and the WebProfilerBundle integration.
     enable_profiler: true
-    
+
+    collection:
+        # The name of the query parameter to filter nullable results (with the ExistsFilter).
+        exists_parameter_name: 'exists'
+
+        # The default order of results.
+        order: 'ASC'
+
+        # The name of the query parameter to order results (with the OrderFilter).
+        order_parameter_name: 'order'
+
+        pagination:
+            # To enable or disable pagination for all resource collections by default.
+            enabled: true
+
+            # To allow partial pagination for all resource collections.
+            # This improves performances by skipping the `COUNT` query.
+            partial: false
+
+            # To allow the client to enable or disable the pagination.
+            client_enabled: false
+
+            # To allow the client to set the number of items per page.
+            client_items_per_page: false
+
+            # To allow the client to enable or disable the partial pagination.
+            client_partial: false
+
+            # The default number of items per page.
+            items_per_page: 30
+
+            # The maximum number of items per page.
+            maximum_items_per_page: ~
+
+            # The default name of the parameter handling the page number.
+            page_parameter_name: 'page'
+
+            # The name of the query parameter to enable or disable pagination.
+            enabled_parameter_name: 'pagination'
+
+            # The name of the query parameter to set the number of items per page.
+            items_per_page_parameter_name: 'itemsPerPage'
+
+            # The name of the query parameter to enable or disable the partial pagination.
+            partial_parameter_name: 'partial'
+
+    mapping:
+        # The list of paths with files or directories where the bundle will look for additional resource files.
+        paths: []
+
+    # The list of your resources class directories. Defaults to the directories of the mapping paths but might differ.
+    resource_class_directories:
+        - '%kernel.project_dir%/src/Entity'
+
+    doctrine:
+        # To enable or disable Doctrine ORM support.
+        enabled: true
+
+    doctrine_mongodb_odm:
+        # To enable or disable Doctrine MongoDB ODM support.
+        enabled: false
+
     oauth:
         # To enable or disable oauth.
         enabled: false
@@ -100,28 +159,26 @@ api_platform:
         scopes: []
 
     graphql:
+        # Enabled by default with installed GraphQL
         enabled: false
+
         # The default IDE (graphiql or graphql-playground) used when going to the GraphQL endpoint. False to disable.
         default_ide: 'graphiql'
+
         graphiql:
-            enabled: true
+            # Enabled by default with installed GraphQL and Twig
+            enabled: false
+
         graphql_playground:
-            enabled: true
-        collection:
-            pagination:
-                enabled: true
+            # Enabled by default with installed GraphQL and Twig
+            enabled: false
+
         # The nesting separator used in the filter names.
         nesting_separator: _
 
-    elasticsearch:
-        # To enable or disable Elasticsearch support.
-        enabled: false
-
-        # The hosts to the Elasticsearch nodes.
-        hosts: []
-
-        # The mapping between resource classes and indexes.
-        mapping: []
+        collection:
+            pagination:
+                enabled: true
 
     swagger:
         # The active versions of OpenAPI to be exported or used in the swagger_ui. The first value is the default.
@@ -129,59 +186,11 @@ api_platform:
                 
         # The swagger api keys.
         api_keys: []
+            # The name of the header or query parameter containing the api key.
+            # name: ''
 
-    collection:
-        # The name of the query parameter to filter nullable results (with the ExistsFilter).
-        exists_parameter_name: 'exists'
-
-        # The default order of results.
-        order: 'ASC'
-
-        # The name of the query parameter to order results (with the OrderFilter).
-        order_parameter_name: 'order'
-
-        pagination:
-            # To enable or disable pagination for all resource collections by default.
-            enabled: true
-
-            # To allow the client to enable or disable the pagination.
-            client_enabled: false
-
-            # To allow the client to set the number of items per page.
-            client_items_per_page: false
-
-            # The default number of items per page.
-            items_per_page: 30
-
-            # The maximum number of items per page.
-            maximum_items_per_page: 10
-
-            # The default name of the parameter handling the page number.
-            page_parameter_name: 'page'
-
-            # The name of the query parameter to enable or disable pagination.
-            enabled_parameter_name: 'pagination'
-
-            # The name of the query parameter to set the number of items per page.
-            items_per_page_parameter_name: 'itemsPerPage'
-
-            # To allow partial pagination for all resource collections.
-            # This improves performances by skipping the `COUNT` query.
-            partial: false
-
-            # To allow the client to enable or disable the partial pagination.
-            client_partial: false
-
-            # The name of the query parameter to enable or disable the partial pagination.
-            partial_parameter_name: 'partial' # Default value
-
-    mapping:
-        # The list of paths with files or directories where the bundle will look for additional resource files.
-        paths: []
-
-    # The list of your resources class directories. Defaults to the directories of the mapping paths but might differ.
-    resource_class_directories:
-        - '%kernel.project_dir%/src/Entity'
+            # Whether the api key should be a query parameter or a header.
+            # type: 'query' or 'header'
 
     http_cache:
         # Automatically generate etags for API responses.
@@ -209,6 +218,27 @@ api_platform:
           # To pass options to the client charged with the request.
           request_options: []
 
+    mercure:
+        # Enabled by default with installed symfony/mercure-bundle
+        enabled: false
+
+        # The URL sent in the Link HTTP header. If not set, will default to MercureBundle's default hub URL.
+        hub_url: null
+
+    messenger:
+        # Enabled by default with installed symfony/messenger and not installed symfony/symfony
+        enabled: false
+
+    elasticsearch:
+        # To enable or disable Elasticsearch support.
+        enabled: false
+
+        # The hosts to the Elasticsearch nodes.
+        hosts: []
+
+        # The mapping between resource classes and indexes.
+        mapping: []
+
     # The list of exceptions mapped to their HTTP status code.
     exception_to_status:
         # With a status code.
@@ -216,6 +246,10 @@ api_platform:
 
         # Or with a constant defined in the 'Symfony\Component\HttpFoundation\Response' class.
         ApiPlatform\Core\Exception\InvalidArgumentException: !php/const Symfony\Component\HttpFoundation\Response::HTTP_BAD_REQUEST
+
+        ApiPlatform\Core\Exception\FilterValidationException: 400
+
+        Doctrine\ORM\OptimisticLockException: 409
 
         # ...
 
@@ -231,6 +265,9 @@ api_platform:
             mime_types: ['text/html']
 
         # ...
+
+    # The list of enabled patch formats. The first one will be the default.
+    patch_formats: []
 
     # The list of enabled error formats. The first one will be the default.
     error_formats:

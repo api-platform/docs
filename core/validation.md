@@ -127,7 +127,7 @@ errors to HTTP errors.
 ## Using Validation Groups
 
 Without specific configuration, the default validation group is always used, but this behavior is customizable: the framework
-is able to leverage Symfony's [validation groups](http://symfony.com/doc/current/book/validation.html#validation-groups).
+is able to leverage Symfony's [validation groups](https://symfony.com/doc/current/validation/groups.html).
 
 You can configure the groups you want to use when the validation occurs directly through the `ApiResource` annotation:
 
@@ -348,6 +348,90 @@ class Book
 }
 ```
 
+## Sequential Validation Groups
+
+If you need to specify the order in which your validation groups must be tested against, you can use a [group sequence](http://symfony.com/doc/current/validation/sequence_provider.html).
+First, you need to create your sequenced group.
+
+```php
+<?php
+
+declare(strict_types=1);
+
+namespace App\Validator;
+
+use Symfony\Component\Validator\Constraints\GroupSequence;
+
+class MySequencedGroup
+{
+    public function __invoke()
+    {
+        return new GroupSequence(['first', 'second']); // now, no matter which is first in the class declaration, it will be tested in this order.
+    }
+}
+```
+
+Just creating the class is not enough because Symfony does not see this service as being used. Therefore to prevent the service to be removed, you need to enforce it to be public.
+
+```yaml
+# api/config/services.yaml
+services:
+    App\Validator\MySequencedGroup: ~
+        public: true
+```
+
+And then, you need to use your class as a validation group.
+
+```php
+<?php
+
+namespace App\Entity;
+
+use ApiPlatform\Core\Annotation\ApiResource;
+use App\Validator\One; // classic custom constraint
+use App\Validator\Two; // classic custom constraint
+use App\Validator\MySequencedGroup; // the sequence group to use
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * @ApiResource(
+ *     collectionOperations={
+ *          "post" = {
+ *              "validation_groups" = MySequencedGroup::class
+ *          }
+ *     }
+ * )
+ * @ORM\Entity
+ */
+class Greeting
+{
+    /**
+     * @var int The entity Id
+     *
+     * @ORM\Id
+     * @ORM\GeneratedValue
+     * @ORM\Column(type="integer")
+     */
+    private $id;
+
+    /**
+     * @var string A nice person
+     *
+     * @ORM\Column
+     * 
+     * I want this "second" validation to be executed after the "first" one even though I wrote them in this order.
+     * @One(groups={"second"})
+     * @Two(groups={"first"})
+     */
+    public $name = '';
+
+    public function getId(): int
+    {
+        return $this->id;
+    }
+}
+```
+
 ## Error Levels and Payload Serialization
 
 As stated in the [Symfony documentation](https://symfony.com/doc/current/validation/severity.html), you can use the payload field to define error levels.
@@ -358,7 +442,7 @@ You can retrieve the payload field by setting the `serialize_payload_fields` to 
 
 api_platform:
     validator:
-        serialize_payload_fields: []
+        serialize_payload_fields: ~
 ```
 
 Then, the serializer will return all payload values in the error response.
@@ -430,7 +514,6 @@ Constraints                                                                     
 [`Currency`](https://symfony.com/doc/current/reference/constraints/Currency.html)     | `http://schema.org/priceCurrency` |
 [`Isbn`](https://symfony.com/doc/current/reference/constraints/Isbn.html)             | `http://schema.org/isbn`          |
 [`Issn`](https://symfony.com/doc/current/reference/constraints/Issn.html)             | `http://schema.org/issn`          |
-
 
 ## Specification property restrictions
 

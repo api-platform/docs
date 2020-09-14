@@ -71,9 +71,10 @@ framework:
 
 It is simple to specify what groups to use in the API system:
 
-1. Add the `normalizationContext` and `denormalizationContext` annotation properties to the `@ApiResource` annotation, and specify which groups to use. Here you see that we add `read` and `write`, respectively. You can use any group names you wish.
-2. Apply the `@Groups` annotation to properties in the object.
+1. Add the normalization context and denormalization context attributes to the resource, and specify which groups to use. Here you see that we add `read` and `write`, respectively. You can use any group names you wish.
+2. Apply the groups to properties in the object.
 
+[codeSelector]
 ```php
 <?php
 // api/src/Entity/Book.php
@@ -105,6 +106,26 @@ class Book
 }
 ```
 
+```yaml
+# api/config/api_platform/resources.yaml
+resources:
+    App\Entity\Book:
+        attributes:
+            normalization_context:
+                groups: ['read']
+            denormalization_context:
+                groups: ['write']
+
+# api/config/serialization/Book.yaml
+App\Entity\Book:
+    attributes:
+        name:
+            groups: ['read', 'write']
+        author:
+            groups: ['write']
+```
+[/codeSelector]
+
 Alternatively, you can use the more verbose syntax:
 
 ```php
@@ -117,28 +138,6 @@ Alternatively, you can use the more verbose syntax:
  *     "denormalization_context"={"groups"={"write"}}
  * })
  */
-```
-
-You can also use the YAML configuration format:
-
-```yaml
-# api/config/api_platform/resources.yaml
-App\Entity\Book:
-    attributes:
-        normalization_context:
-            groups: ['read']
-        denormalization_context:
-            groups: ['write']
-```
-
-```yaml
-# api/config/serialization/Book.yaml
-App\Entity\Book:
-    attributes:
-        name:
-            groups: ['read', 'write']
-        author:
-            groups: ['write']
 ```
 
 In the previous example, the `name` property will be visible when reading (`GET`) the object, and it will also be available
@@ -208,14 +207,15 @@ include the `name` property because of the specific configuration for this opera
 
 Refer to the [operations](operations.md) documentation to learn more.
 
-### Embedding Relations
+## Embedding Relations
 
 <p align="center" class="symfonycasts"><a href="https://symfonycasts.com/screencast/api-platform/relations?cid=apip"><img src="../distribution/images/symfonycasts-player.png" alt="Relations screencast"><br>Watch the Relations screencast</a></p>
 
 By default, the serializer provided with API Platform represents relations between objects using [dereferenceable IRIs](https://en.wikipedia.org/wiki/Internationalized_Resource_Identifier).
-They allow you to retrieve details for related objects by issuing extra HTTP requests.
+They allow you to retrieve details for related objects by issuing extra HTTP requests. However, for performance reasons, it is sometimes preferable to avoid forcing the client to issue extra HTTP requests.
 
-In the following JSON document, the relation from a book to an author is represented by an URI:
+### Normalization
+In the following JSON document, the relation from a book to an author is by default represented by an URI:
 
 ```json
 {
@@ -227,7 +227,6 @@ In the following JSON document, the relation from a book to an author is represe
 }
 ```
 
-However, for performance reasons, it is sometimes preferable to avoid forcing the client to issue extra HTTP requests.
 It is possible to embed related objects (in their entirety, or only some of their properties) directly in the parent
 response through the use of serialization groups. By using the following serialization groups annotations (`@Groups`),
 a JSON representation of the author is embedded in the book response:
@@ -336,7 +335,154 @@ the data provider. Any changes in the embedded relation will also be applied to 
 
 You can specify as many embedded relation levels as you want.
 
+### Force IRI with relations of the same type (parent/childs relations)
+
+It is a common problem to have entities that reference other entities of the same type:
+```php
+<?php
+// api/src/Entity/Person.php
+
+namespace App\Entity;
+
+use ApiPlatform\Core\Annotation\ApiResource;
+use Symfony\Component\Serializer\Annotation\Groups;
+
+/**
+ * @ApiResource(
+ *   normalizationContext = {
+ *      "groups" = {"person"}
+ *   },
+ *   denormalizationContext = {
+ *      "groups" = {"person"}
+ *   }
+ * )
+ */
+class Person
+{
+    /**
+     * ...
+     * @Groups("person")
+     */
+    public $name;
+
+   /**
+    * @var Person
+    * @Groups("person")
+    */
+   public $parent;  // Note that a Person instance has a relation with another Person.
+	
+    // ...
+}
+
+```
+
+The problem here is that the **$parent** property become automatically an embedded object. Besides, the property won't be shown on the OpenAPI view.
+
+To force the **$parent** property to be used as an IRI, add an **@ApiProperty(readableLink=false, writableLink=false)** annotation:
+```php
+<?php
+// api/src/Entity/Person.php
+
+namespace App\Entity;
+
+use ApiPlatform\Core\Annotation\ApiResource;
+use Symfony\Component\Serializer\Annotation\Groups;
+
+/**
+ * @ApiResource(
+ *   normalizationContext = {
+ *      "groups" = {"person"}
+ *   },
+ *   denormalizationContext = {
+ *      "groups" = {"person"}
+ *   }
+ * )
+ */
+class Person
+{
+    /**
+     * ...
+     * @Groups("person")
+     */
+    public $name;
+
+   /**
+    * @var Person
+    * @Groups("person")
+    * @ApiProperty(readableLink=false, writableLink=false)
+    */
+   public $parent;  // This property is now serialized/deserialized as an IRI.
+	
+    // ...
+}
+
+```
+
+## Calculated Field
+
+Sometimes you need to expose calculated fields. This can be done by leveraging the groups. This time not on a property, but on a method.
+
+```php
+<?php
+
+declare(strict_types=1);
+
+namespace App\Entity;
+
+use ApiPlatform\Core\Annotation\ApiResource;
+use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
+
+/**
+ * @ApiResource(
+ *     collectionOperations={
+ *          "get"={"normalization_context"={"groups"="greeting:collection:get"}},
+ *     }
+ * )
+ * @ORM\Entity
+ */
+class Greeting
+{
+    /**
+     * @var int The entity Id
+     *
+     * @ORM\Id
+     * @ORM\GeneratedValue
+     * @ORM\Column(type="integer")
+     * @Groups("greeting:collection:get")
+     */
+    private $id;
+    
+    private $a = 1;
+    
+    private $b = 2;
+
+    /**
+     * @var string A nice person
+     *
+     * @ORM\Column
+     * @Groups("greeting:collection:get")
+     */
+    public $name = '';
+
+    public function getId(): int
+    {
+        return $this->id;
+    }
+
+    /**
+     * @Groups("greeting:collection:get") <- MAGIC IS HERE, you can set a group on a method.
+     */
+    public function getSum(): int
+    {
+        return $this->a + $this->b;
+    }
+}
+```
+
 ## Changing the Serialization Context Dynamically
+
+<p align="center" class="symfonycasts"><a href="https://symfonycasts.com/screencast/api-platform-security/service-decoration?cid=apip"><img src="../distribution/images/symfonycasts-player.png" alt="Context Builder & Service Decoration screencast"><br>Watch the Context Builder & Service Decoration screencast</a></p>
 
 Let's imagine a resource where most fields can be managed by any user, but some can be managed only by admin users:
 
@@ -617,8 +763,8 @@ final class ApiNormalizer implements NormalizerInterface, DenormalizerInterface,
 
 ## Entity Identifier Case
 
-API Platform is able to guess the entity identifier using Doctrine metadata ([ORM](http://doctrine-orm.readthedocs.org/en/latest/reference/basic-mapping.html#identifiers-primary-keys), [MongoDB ODM](https://www.doctrine-project.org/projects/doctrine-mongodb-odm/en/latest/reference/basic-mapping.html#identifiers)).
-For ORM, it also supports composite identifiers.
+API Platform is able to guess the entity identifier using Doctrine metadata ([ORM](https://www.doctrine-project.org/projects/doctrine-orm/en/current/reference/basic-mapping.html#identifiers-primary-keys), [MongoDB ODM](https://www.doctrine-project.org/projects/doctrine-mongodb-odm/en/latest/reference/basic-mapping.html#identifiers)).
+For ORM, it also supports [composite identifiers](https://www.doctrine-project.org/projects/doctrine-orm/en/current/tutorials/composite-primary-keys.html).
 
 If you are not using the Doctrine ORM or MongoDB ODM Provider, you must explicitly mark the identifier using the `identifier` attribute of
 the `ApiPlatform\Core\Annotation\ApiProperty` annotation. For example:

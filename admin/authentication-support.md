@@ -31,7 +31,7 @@ const apiDocumentationParser = entrypoint => parseHydraDocumentation(entrypoint,
                         api: result.api,
                         customRoutes: [
                             <Route path="/" render={() => {
-                                window.localStorage.getItem("token") ? window.location.reload() : <Redirect to="/login" />
+                                return window.localStorage.getItem("token") ? window.location.reload() : <Redirect to="/login" />
                             }} />
                         ],
                     });

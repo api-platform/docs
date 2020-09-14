@@ -5,6 +5,8 @@ classes called **data persisters**. Data persisters receive an instance of the c
 the `@ApiResource` annotation). This instance contains data submitted by the client during [the deserialization
 process](serialization.md).
 
+<p align="center" class="symfonycasts"><a href="https://symfonycasts.com/screencast/api-platform-security/encode-user-password?cid=apip"><img src="../distribution/images/symfonycasts-player.png" alt="Data Persister screencast"><br>Watch the Data Persister screencast</a></p>
+
 A data persister using [Doctrine ORM](https://www.doctrine-project.org/projects/orm.html) is included with the library and
 is enabled by default. It is able to persist and delete objects that are also mapped as [Doctrine entities](https://www.doctrine-project.org/projects/doctrine-orm/en/current/reference/basic-mapping.html).
 A [Doctrine MongoDB ODM](https://www.doctrine-project.org/projects/mongodb-odm.html) data persister is also included and can be enabled by following the [MongoDB documentation](mongodb.md).
@@ -25,7 +27,7 @@ This interface defines only 3 methods:
 
 * `persist`: to create or update the given data
 * `remove`: to delete the given data
-* `support`: to check whether the given data is supported by this data persister
+* `supports`: to check whether the given data is supported by this data persister
 
 Here is an implementation example:
 
@@ -64,9 +66,82 @@ Otherwise, if you use a custom dependency injection configuration, you need to r
 # api/config/services.yaml
 services:
     # ...
-    'App\DataPersister\BlogPostDataPersister': ~
+    App\DataPersister\BlogPostDataPersister: ~
         # Uncomment only if autoconfiguration is disabled
         #tags: [ 'api_platform.data_persister' ]
 ```
 
 Note that if you don't need any `$context` in your data persister's methods, you can implement the [`DataPersisterInterface`](https://github.com/api-platform/core/blob/master/src/DataPersister/DataPersisterInterface.php) instead.
+
+## Decorating the Built-In Data Persisters
+
+<p align="center" class="symfonycasts"><a href="https://symfonycasts.com/screencast/api-platform-extending/persister-decoration?cid=apip"><img src="../distribution/images/symfonycasts-player.png" alt="Data Persister Decoration screencast"><br>Watch the Data Persister Decoration screencast</a></p>
+
+If you want to execute custom business logic before or after peristence, this can be achieved by [decorating](https://symfony.com/doc/current/service_container/service_decoration.html) the built-in data persisters.
+
+Here is an implementation example which sends new users a welcome email after a REST `POST` or GraphQL `create` operation, in a project using the native Doctrine ORM data persister:
+
+```php
+namespace App\DataPersister;
+
+use ApiPlatform\Core\DataPersister\DataPersisterInterface;
+use App\Entity\User;
+use Symfony\Component\Mailer\MailerInterface;
+
+final class UserDataPersister implements ContextAwareDataPersisterInterface
+{
+    private $decorated;
+    private $mailer;
+
+    public function __construct(ContextAwareDataPersisterInterface $decorated, MailerInterface $mailer)
+    {
+        $this->decorated = $decorated;
+        $this->mailer = $mailer;
+    }
+
+    public function supports($data, array $context = []): bool
+    {
+        return $this->decorated->supports($data, $context);
+    }
+
+    public function persist($data, array $context = [])
+    {
+        $result = $this->decorated->persist($data, $context);
+
+        if (
+            $data instanceof User && (
+                ($context['collection_operation_name'] ?? null) === 'post' ||
+                ($context['graphql_operation_name'] ?? null) === 'create'
+            )
+        ) {
+            $this->sendWelcomeEmail($data);
+        }
+
+        return $result;
+    }
+
+    public function remove($data, array $context = [])
+    {
+        return $this->decorated->remove($data, $context);
+    }
+
+    private function sendWelcomeEmail(User $user)
+    {
+        // Your welcome email logic...
+        // $this->mailer->send(...);
+    }
+}
+```
+
+Even with service autowiring and autoconfiguration enabled, you must still configure the decoration:
+
+```yaml
+# api/config/services.yaml
+services:
+    # ...
+    App\DataPersister\UserDataPersister:
+        decorates: 'api_platform.doctrine.orm.data_persister'
+        # Uncomment only if autoconfiguration is disabled
+        #arguments: ['@App\DataPersister\UserDataPersister.inner']
+        #tags: [ 'api_platform.data_persister' ]
+```

@@ -9,6 +9,7 @@ However, it's sometimes useful to use a specific class to represent the input or
 For a given resource class, you may want to have a different representation of this class as input (write) or output (read).
 To do so, a resource can take an input and/or an output class:
 
+[codeSelector]
 ```php
 <?php
 // api/src/Entity/Book.php
@@ -27,10 +28,18 @@ use App\Dto\BookOutput;
  */
 final class Book
 {
+    public $id;
 }
 ```
 
-Or using XML:
+```yaml
+# api/config/api_platform/resources.yaml
+resources:
+    App\Entity\Book:
+        attributes:
+            input: App\Dto\BookInput
+            output: App\Dto\BookOutput
+```
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" ?>
@@ -46,22 +55,14 @@ Or using XML:
     </resource>
 </resources>
 ```
-
-Or using YAML:
-
-```yaml
-# api/config/api_platform/resources.yaml
-resources:
-    App\Entity\Book:
-        attributes:
-            input: App\Dto\BookInput
-            output: App\Dto\BookOutput
-```
+[/codeSelector]
 
 The `input` attribute is used during [the deserialization process](serialization.md), when transforming the user-provided data to a resource instance.
 Similarly, the `output` attribute is used during [the serialization process](serialization.md). This class represents how the `Book` resource will be represented in the `Response`.
 
 The `input` and `output` attributes are taken into account by all the documentation generators (GraphQL and OpenAPI, Hydra).
+
+Note that `Book` entity needs an id property. The simplest way is adding a public property called `$id`, as in the example. However, as in any other entity, you can use a private property, with getter and setter functions, and/or named it as you wish, provided you annotate it with `@ApiProperty(identifier=true)`. For instance, you could have a property called `$code`. So the `InputDataTransformer` actually transforms the isbn into a code. And then in the `OutputDataTransformer`, from this code into the name.
 
 To create a `Book`, we `POST` a data structure corresponding to the `BookInput` class and get back in the response a data structure corresponding to the `BookOutput` class:
 
@@ -78,10 +79,14 @@ We have the following `BookInput`:
 namespace App\Dto;
 
 final class BookInput {
-  public $isbn;
+    /**
+     * @var string
+     */
+    public $isbn;
 }
 ```
 
+When using serialization groups, you need to specify these to the class and also to the Input itself.
 We can transform the `BookInput` to a `Book` resource instance:
 
 ```php
@@ -141,7 +146,10 @@ To manage the output, it's exactly the same process. For example, we have the fo
 namespace App\Dto;
 
 final class BookOutput {
-  public $name;
+    /**
+     * @var string
+     */
+    public $name;
 }
 ```
 
@@ -265,6 +273,89 @@ services:
 
 Both the `input` and the `output` attributes can be set to `false`. If `input` is `false`, the deserialization process
 will be skipped. If `output` is `false`, the serialization process will be skipped.
+
+## Per Operation `input` and `output`
+
+`input` and `output` attributes can be set on a per operation basis:
+
+[codeSelector]
+```php
+<?php
+// api/src/Entity/Book.php
+
+namespace App\Entity;
+
+use ApiPlatform\Core\Annotation\ApiResource;
+use App\Dto\BookOutput;
+use App\Dto\CreateBook;
+use App\Dto\UpdateBook;
+
+/**
+ * @ApiResource(
+ *     collectionOperations={
+ *         "create"={
+ *             "method"="POST",
+ *             "input"=CreateBook::class,
+ *             "output"=BookOutput::class
+ *         }
+ *     },
+ *     itemOperations={
+ *         "update"={
+ *             "method"="PUT",
+ *             "input"=UpdateBook::class,
+ *             "output"=BookOutput::class
+ *         }
+ *     }
+ * )
+ */
+final class Book
+{
+}
+```
+
+```yaml
+# api/config/api_platform/resources.yaml
+resources:
+    App\Entity\Book:
+        collectionOperations:
+            create:
+                method: POST,
+                input: App\Dto\CreateBook,
+                output: App\Dto\BookOutput
+        itemOperations:
+            update:
+                method: PUT,
+                input: App\Dto\UpdateBook,
+                output: App\Dto\BookOutput
+```
+
+```xml
+<?xml version="1.0" encoding="UTF-8" ?>
+<!-- api/config/api_platform/resources.xml -->
+
+<resources xmlns="https://api-platform.com/schema/metadata"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="https://api-platform.com/schema/metadata
+           https://api-platform.com/schema/metadata/metadata-2.0.xsd">
+    <resource class="App\Entity\Book">
+      <collectionOperations>
+        <collectionOperation name="create">
+          <attribute name="method">POST</attribute>
+          <attribute name="input">App\Dto\CreateBook</attribute>
+          <attribute name="output">App\Dto\BookOutput</attribute>
+        </collectionOperation>
+      </collectionOperations>
+      <itemOperations>
+        <itemOperation name="update">
+          <attribute name="method">PUT</attribute>
+          <attribute name="input">App\Dto\UpdateBook</attribute>
+          <attribute name="output">App\Dto\BookOutput</attribute>
+        </itemOperation>
+      </itemOperations>
+    </resource>
+</resources>
+```
+[/codeSelector]
 
 ## Input/Output Metadata
 

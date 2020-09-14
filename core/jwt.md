@@ -20,15 +20,19 @@ Then we need to generate the public and private keys used for signing JWT tokens
         set -e
         apk add openssl
         mkdir -p config/jwt
-        jwt_passhrase=$(grep ''^JWT_PASSPHRASE='' .env | cut -f 2 -d ''='')
-        echo "$jwt_passhrase" | openssl genpkey -out config/jwt/private.pem -pass stdin -aes256 -algorithm rsa -pkeyopt rsa_keygen_bits:4096
-        echo "$jwt_passhrase" | openssl pkey -in config/jwt/private.pem -passin stdin -out config/jwt/public.pem -pubout
+        jwt_passphrase=${JWT_PASSPHRASE:-$(grep ''^JWT_PASSPHRASE='' .env | cut -f 2 -d ''='')}
+        echo "$jwt_passphrase" | openssl genpkey -out config/jwt/private.pem -pass stdin -aes256 -algorithm rsa -pkeyopt rsa_keygen_bits:4096
+        echo "$jwt_passphrase" | openssl pkey -in config/jwt/private.pem -passin stdin -out config/jwt/public.pem -pubout
         setfacl -R -m u:www-data:rX -m u:"$(whoami)":rwX config/jwt
         setfacl -dR -m u:www-data:rX -m u:"$(whoami)":rwX config/jwt
     '
 
+Note that the `setfacl` command relies on the `acl` package. This is installed by default when using the API Platform docker distribution but may need be installed in your working environment in order to execute the `setfacl` command.
+
 This takes care of using the correct passphrase to encrypt the private key, and setting the correct permissions on the
 keys allowing the web server to read them.
+
+Since these keys are created by the `root` user from a container, your host user will not be able to read them during the `docker-compose build api` process. Add the `config/jwt/` folder to the `api/.dockerignore` file so that they are skipped from the result image.
 
 If you want the keys to be auto generated in `dev` environment, see an example in the [docker-entrypoint script of api-platform/demo](https://github.com/api-platform/demo/blob/master/api/docker/php/docker-entrypoint.sh).
 
@@ -83,6 +87,11 @@ security:
             guard:
                 authenticators:
                     - lexik_jwt_authentication.jwt_token_authenticator
+
+    access_control:
+        - { path: ^/docs, roles: IS_AUTHENTICATED_ANONYMOUSLY } # Allows accessing the Swagger UI
+        - { path: ^/authentication_token, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/, roles: IS_AUTHENTICATED_FULLY }
 ```
 
 You must also declare the route used for `/authentication_token`:
@@ -139,6 +148,11 @@ security:
                 password_path: password
                 success_handler: lexik_jwt_authentication.handler.authentication_success
                 failure_handler: lexik_jwt_authentication.handler.authentication_failure
+
+    access_control:
+        - { path: ^/api/docs, roles: IS_AUTHENTICATED_ANONYMOUSLY } # Allows accessing the Swagger UI
+        - { path: ^/authentication_token, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/, roles: IS_AUTHENTICATED_FULLY }
 ```
 
 ## Documenting the Authentication Mechanism with Swagger/Open API
@@ -172,6 +186,117 @@ Bearer MY_NEW_TOKEN
 ```
 
 ![Screenshot of API Platform with the configuration API Key](images/JWTConfigureApiKey.png)
+
+### Adding endpoint to SwaggerUI to retrieve a JWT token
+
+We can add a `POST /authentication_token` endpoint to SwaggerUI to conveniently retrieve the token when it's needed.
+
+![API Endpoint to retrieve JWT Token from SwaggerUI](images/jwt-token-swagger-ui.png)
+
+To do it, we need to create a `SwaggerDecorator`:
+
+```php
+<?php
+
+declare(strict_types=1);
+
+namespace App\Swagger;
+
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
+
+final class SwaggerDecorator implements NormalizerInterface
+{
+    private NormalizerInterface $decorated;
+
+    public function __construct(NormalizerInterface $decorated)
+    {
+        $this->decorated = $decorated;
+    }
+
+    public function supportsNormalization($data, string $format = null): bool
+    {
+        return $this->decorated->supportsNormalization($data, $format);
+    }
+
+    public function normalize($object, string $format = null, array $context = [])
+    {
+        $docs = $this->decorated->normalize($object, $format, $context);
+
+        $docs['components']['schemas']['Token'] = [
+            'type' => 'object',
+            'properties' => [
+                'token' => [
+                    'type' => 'string',
+                    'readOnly' => true,
+                ],
+            ],
+        ];
+
+        $docs['components']['schemas']['Credentials'] = [
+            'type' => 'object',
+            'properties' => [
+                'username' => [
+                    'type' => 'string',
+                    'example' => 'api',
+                ],
+                'password' => [
+                    'type' => 'string',
+                    'example' => 'api',
+                ],
+            ],
+        ];
+
+        $tokenDocumentation = [
+            'paths' => [
+                '/authentication_token' => [
+                    'post' => [
+                        'tags' => ['Token'],
+                        'operationId' => 'postCredentialsItem',
+                        'summary' => 'Get JWT token to login.',
+                        'requestBody' => [
+                            'description' => 'Create new JWT Token',
+                            'content' => [
+                                'application/json' => [
+                                    'schema' => [
+                                        '$ref' => '#/components/schemas/Credentials',
+                                    ],
+                                ],
+                            ],
+                        ],
+                        'responses' => [
+                            Response::HTTP_OK => [
+                                'description' => 'Get JWT token',
+                                'content' => [
+                                    'application/json' => [
+                                        'schema' => [
+                                            '$ref' => '#/components/schemas/Token',
+                                        ],
+                                    ],
+                                ],
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+        ];
+
+        return array_merge_recursive($docs, $tokenDocumentation);
+    }
+}
+```
+
+And register this service in `config/services.yaml`:
+
+```yaml
+services:
+    # ...   
+
+    App\Swagger\SwaggerDecorator:
+        decorates: 'api_platform.swagger.normalizer.documentation'
+        arguments: ['@App\Swagger\SwaggerDecorator.inner']
+        autoconfigure: false
+```
 
 ## Testing with Behat
 

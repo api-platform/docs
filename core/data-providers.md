@@ -170,14 +170,13 @@ API Platform provides a few extensions that you can reuse in your custom DataPro
 Note that there are a few kinds of extensions which are detailed in [their own chapter of the documentation](extensions.md).
 Because extensions are tagged services, you can use the [injection of tagged services](https://symfony.com/blog/new-in-symfony-3-4-simpler-injection-of-tagged-services):
 
+[codeSelector]
 ```yaml
 services:
     'App\DataProvider\BlogPostItemDataProvider':
         arguments:
           $itemExtensions: !tagged api_platform.doctrine.orm.query_extension.item
 ```
-
-Or in XML:
 
 ```xml
 <services>
@@ -186,6 +185,7 @@ Or in XML:
     </service>
 </services>
 ```
+[/codeSelector]
 
 Your data provider will now have access to the core extensions, here is an example on how to use them:
 
@@ -195,6 +195,7 @@ Your data provider will now have access to the core extensions, here is an examp
 
 namespace App\DataProvider;
 
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Extension\QueryResultItemExtensionInterface;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Util\QueryNameGenerator;
 use ApiPlatform\Core\DataProvider\ItemDataProviderInterface;
 use ApiPlatform\Core\DataProvider\RestrictedDataProviderInterface;
@@ -236,7 +237,6 @@ final class BlogPostItemDataProvider implements ItemDataProviderInterface, Restr
         return $queryBuilder->getQuery()->getOneOrNullResult();
     }
 }
-
 ```
 
 ## Community Data Providers

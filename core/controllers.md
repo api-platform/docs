@@ -13,7 +13,7 @@ implements the [Action-Domain-Responder](https://github.com/pmjones/adr) pattern
 [MVC](https://en.wikipedia.org/wiki/Model%E2%80%93view%E2%80%93controller).
 
 The distribution of API Platform also eases the implementation of the ADR pattern: it automatically registers action classes
-stored in `api/src/App/Controller` as autowired services.
+stored in `api/src/Controller` as autowired services.
 
 Thanks to the [autowiring](http://symfony.com/doc/current/components/dependency_injection/autowiring.html) feature of the
 Symfony Dependency Injection container, services required by an action can be type-hinted in its constructor, it will be
@@ -79,6 +79,7 @@ the client.
 
 The routing has not been configured yet because we will add it at the resource configuration level:
 
+[codeSelector]
 ```php
 <?php
 // api/src/Entity/Book.php
@@ -102,8 +103,6 @@ class Book
 }
 ```
 
-Or in YAML:
-
 ```yaml
 # api/config/api_platform/resources.yaml
 App\Entity\Book:
@@ -114,8 +113,6 @@ App\Entity\Book:
             path: /books/{id}/publication
             controller: App\Controller\CreateBookPublication
 ```
-
-Or in XML:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" ?>
@@ -137,6 +134,7 @@ Or in XML:
     </resource>
 </resources>
 ```
+[/codeSelector]
 
 It is mandatory to set the `method`, `path` and `controller` attributes. They allow API Platform to configure the routing path and
 the associated controller respectively.
@@ -145,6 +143,7 @@ the associated controller respectively.
 
 You may want different serialization groups for your custom operations. Just configure the proper `normalization_context` and/or `denormalization_context` in your operation:
 
+[codeSelector]
 ```php
 <?php
 // api/src/Entity/Book.php
@@ -177,8 +176,6 @@ class Book
 }
 ```
 
-Or in YAML:
-
 ```yaml
 # api/config/api_platform/resources.yaml
 App\Entity\Book:
@@ -191,8 +188,6 @@ App\Entity\Book:
             normalization_context:
                 groups: ['publication']
 ```
-
-Or in XML:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" ?>
@@ -219,12 +214,14 @@ Or in XML:
     </resource>
 </resources>
 ```
+[/codeSelector]
 
 ## Retrieving the Entity
 
 If you want to bypass the automatic retrieval of the entity in your custom operation, you can set `"read"=false` in the
 operation attribute:
 
+[codeSelector]
 ```php
 <?php
 // api/src/Entity/Book.php
@@ -249,8 +246,6 @@ class Book
 }
 ```
 
-Or in YAML:
-
 ```yaml
 # api/config/api_platform/resources.yaml
 App\Entity\Book:
@@ -262,8 +257,6 @@ App\Entity\Book:
             controller: App\Controller\CreateBookPublication
             read: false
 ```
-
-Or in XML:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" ?>
@@ -286,6 +279,7 @@ Or in XML:
     </resource>
 </resources>
 ```
+[/codeSelector]
 
 This way, it will skip the `ReadListener`. You can do the same for some other built-in listeners. See [Built-in Event Listeners](events.md#built-in-event-listeners)
 for more information.
@@ -302,6 +296,7 @@ for `book_post_discontinuation` when neither `method` nor `route_name` attribute
 
 First, let's create your resource configuration:
 
+[codeSelector]
 ```php
 <?php
 // api/src/Entity/Book.php
@@ -321,8 +316,6 @@ class Book
 }
 ```
 
-Or in YAML:
-
 ```yaml
 # api/config/api_platform/resources.yaml
 App\Entity\Book:
@@ -332,8 +325,6 @@ App\Entity\Book:
             route_name: book_post_publication
         book_post_discontinuation: ~
 ```
-
-Or in XML:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" ?>
@@ -354,6 +345,7 @@ Or in XML:
     </resource>
 </resources>
 ```
+[/codeSelector]
 
 API Platform will automatically map this `post_publication` operation to the route `book_post_publication`. Let's create a custom action
 and its related route using annotations:

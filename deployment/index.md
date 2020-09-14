@@ -12,9 +12,9 @@ tools and PaaS (Platform as a Service) are also available:
 * [Deploying on Heroku](heroku.md)
 * [Deploying on Platform.sh](https://platform.sh/blog/deploy-api-platform-on-platformsh)
 
-The clients are [Create React App](https://github.com/facebook/create-react-app/) skeletons. You can deploy them in a wink
+The clients are [Create React App](https://create-react-app.dev/) skeletons. You can deploy them in a wink
 on any static website hosting service (including [Netlify](https://www.netlify.com/), [Firebase Hosting](https://firebase.google.com/docs/hosting/),
 [GitHub Pages](https://pages.github.com/), or [Amazon S3](https://docs.aws.amazon.com/en_us/AmazonS3/latest/dev/WebsiteHosting.html)
-by following [the relevant documentation](https://facebook.github.io/create-react-app/docs/deployment).
+by following [the relevant documentation](https://create-react-app.dev/docs/deployment/).
 
 <p align="center" class="symfonycasts"><a href="https://symfonycasts.com/screencast/ansistrano?cid=apip"><img src="../distribution/images/symfonycasts-player.png" alt="JWT screencast"><br>Watch the Animated Deployment with Ansistrano screencast</a></p>

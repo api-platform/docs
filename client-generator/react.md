@@ -9,7 +9,7 @@ The React Client Generator generates a Progressive Web App built with battle-tes
 * [React Router](https://reacttraining.com/react-router/)
 * [Redux Form](http://redux-form.com/)
 
-It is designed to generate code that works seamlessly with [Facebook's Create React App](https://github.com/facebook/create-react-app).
+It is designed to generate code that works seamlessly with [Facebook's Create React App](https://create-react-app.dev/).
 
 ## Install
 
@@ -63,7 +63,7 @@ import { Provider } from 'react-redux';
 import thunk from 'redux-thunk';
 import { reducer as form } from 'redux-form';
 import { Route, Switch } from 'react-router-dom';
-import { createBrowserHistory } from "history";
+import { createBrowserHistory } from 'history';
 import {
   ConnectedRouter,
   connectRouter,
@@ -72,17 +72,15 @@ import {
 import 'bootstrap/dist/css/bootstrap.css';
 import 'font-awesome/css/font-awesome.css';
 import * as serviceWorker from './serviceWorker';
-// Replace "book" with the name of the resource type
-import book from './reducers/book/';
-import bookRoutes from './routes/book';
+// Import your reducers and routes here
+import Welcome from './Welcome';
 
 const history = createBrowserHistory();
 const store = createStore(
   combineReducers({
     router: connectRouter(history),
     form,
-    book
-    /* Replace book with the name of the resource type */
+    /* Add your reducers here */
   }),
   applyMiddleware(routerMiddleware(history), thunk)
 );
@@ -91,8 +89,8 @@ ReactDOM.render(
   <Provider store={store}>
     <ConnectedRouter history={history}>
       <Switch>
-        {bookRoutes}
-        {/* Replace bookRoutes with the name of the resource type */}
+        <Route path="/" component={Welcome} strict={true} exact={true}/>
+        {/* Add your routes here */}
         <Route render={() => <h1>Not Found</h1>} />
       </Switch>
     </ConnectedRouter>
@@ -102,7 +100,7 @@ ReactDOM.render(
 
 // If you want your app to work offline and load faster, you can change
 // unregister() to register() below. Note this comes with some pitfalls.
-// Learn more about service workers: http://bit.ly/CRA-PWA
+// Learn more about service workers: https://bit.ly/CRA-PWA
 serviceWorker.unregister();
 ```
 

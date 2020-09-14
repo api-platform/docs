@@ -47,7 +47,7 @@ API Platform uses these model classes to expose and document a web API having a 
 One more thing, before we start: as the API Platform distribution includes [the Symfony framework](https://symfony.com),
 it is compatible with most [Symfony bundles](https://flex.symfony.com)
 (plugins) and benefits from [the numerous extensions points](../core/extending.md) provided by this rock-solid foundation (events, DIC...).
-Adding features like custom, service-oriented, API endpoints, JWT or OAuth authentication, HTTP caching, mail sending or
+Adding features like custom or service-oriented API endpoints, JWT or OAuth authentication, HTTP caching, mail sending or
 asynchronous jobs to your APIs is straightforward.
 
 ## Installing the Framework
@@ -60,7 +60,7 @@ Once you have extracted its contents, the resulting directory contains the API P
 **Note**: Try to avoid using the `.zip` file, as it may cause potential [permission](https://github.com/api-platform/api-platform/issues/319#issuecomment-307037562) [issues](https://github.com/api-platform/api-platform/issues/777#issuecomment-412515342).
 
 API Platform is shipped with a [Docker](https://docker.com) setup that makes it easy to get a containerized development
-environment up and running. If you do not already have Docker on your computer, [it's the right time to install it](https://docs.docker.com/install/).
+environment up and running. If you do not already have Docker on your computer, it's the right time to [install it](https://docs.docker.com/install/).
 
 On Mac, only [Docker for Mac](https://docs.docker.com/docker-for-mac/) is supported.
 Similarly, on Windows, only [Docker for Windows](https://docs.docker.com/docker-for-windows/) is supported. Docker Machine **is not** supported out of the box.
@@ -90,7 +90,7 @@ To see the container's logs, run:
 Project files are automatically shared between your local host machine and the container thanks to a pre-configured [Docker
 volume](https://docs.docker.com/engine/tutorials/dockervolumes/). It means that you can edit files of your project locally
 using your preferred IDE or code editor, they will be transparently taken into account in the container.
-Speaking about IDEs, our favorite software to develop API Platform apps is [PHPStorm](https://www.jetbrains.com/phpstorm/)
+Speaking about IDEs, our favorite software to develop API Platform apps is [PhpStorm](https://www.jetbrains.com/phpstorm/)
 with its awesome [Symfony](https://confluence.jetbrains.com/display/PhpStorm/Getting+Started+-+Symfony+Development+using+PhpStorm)
 and [Php Inspections](https://plugins.jetbrains.com/plugin/7622-php-inspections-ea-extended-) plugins. Give them a try,
 you'll get auto-completion for almost everything and awesome quality analysis.
@@ -171,7 +171,7 @@ Click on an operation to display its details. You can also send requests to the 
 Try to create a new *Greeting* resource using the `POST` operation, then access it using the `GET` operation and, finally,
 delete it by executing the `DELETE` operation.
 If you access any API URL using a web browser, API Platform detects it (by scanning the `Accept` HTTP header) and displays
-the corresponding API request in the UI. Try it yourself by browsing to `http://localhost:8443/greetings`. If the `Accept` header
+the corresponding API request in the UI. Try it yourself by browsing to `https://localhost:8443/greetings`. If the `Accept` header
 doesn't contain `text/html` as the preferred format, a JSON-LD response is sent ([configurable behavior](../core/content-negotiation.md)).
 
 So, if you want to access the raw data, you have two alternatives:
@@ -180,8 +180,8 @@ So, if you want to access the raw data, you have two alternatives:
   when writing API clients
 * Add the format you want as the extension of the resource - for debug purpose only
 
-For instance, go to `http://localhost:8443/greetings.jsonld` to retrieve the list of `Greeting` resources in JSON-LD, or to
-`http://localhost:8443/greetings.json` to retrieve data in raw JSON.
+For instance, go to `https://localhost:8443/greetings.jsonld` to retrieve the list of `Greeting` resources in JSON-LD, or to
+`https://localhost:8443/greetings.json` to retrieve data in raw JSON.
 
 Of course, you can also use your favorite HTTP client to query the API.
 We are fond of [Postman](https://www.getpostman.com/). It works perfectly well with API Platform, has native Open API support,
@@ -369,7 +369,7 @@ Finally, tell Doctrine to sync the database tables structure with our new data m
     $ docker-compose exec php bin/console doctrine:schema:update --force
 
 
-The `php` container is where your API app stands. Prefixing a command by `docker-compose exec php` allows to execute the
+The `php` container is where your API app stands. Prefixing a command by `docker-compose exec php` allows executing the
 given command in this container. You may want [to create an alias](http://www.linfo.org/alias.html) to make your life easier.
 
 Later, you'll want to use [Doctrine Migrations](https://symfony.com/doc/current/doctrine.html#migrations-creating-the-database-tables-schema)
@@ -471,6 +471,7 @@ Now, add a review for this book using the `POST` operation for the `Review` reso
     "publicationDate": "September 21, 2016"
 }
 ```
+**Note:** If you have installed API Platform in an existing project using `composer`, the content of the key `book` must be `"/api/books/1"`
 
 There are two interesting things to mention about this request:
 

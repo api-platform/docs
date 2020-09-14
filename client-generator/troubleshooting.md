@@ -1,5 +1,12 @@
 # Troubleshooting
 
+* If you are running API Platform on development machine which does not have valid TLS certificate,
+add `NODE_TLS_REJECT_UNAUTHORIZED=0` before running client-generator
+
+```
+NODE_TLS_REJECT_UNAUTHORIZED=0 npx @api-platform/client-generator --generator typescript https://127.0.0.1:8000/api src/
+``` 
+
 * The generator does not perform any authentication, so you must ensure that all referenced Hydra paths for your API are
 accessible anonymously. If you are using API Platform this will at least include:
 

@@ -169,15 +169,27 @@ GET    | /products      | Retrieve the (paginated) collection
 POST   | /products      | Create a new product
 GET    | /products/{id} | Retrieve a product
 PUT    | /products/{id} | Update a product
+PATCH  | /products/{id} | Apply a partial modification to a product
 DELETE | /products/{id} | Delete a product
 
 The same operations are available for the offer method (routes will start with the `/offers` pattern).
 Route prefixes are built by pluralizing the name of the mapped entity class.
 It is also possible to override the naming convention using [operation path namings](operation-path-naming.md).
 
-As an alternative to annotations, you can map entity classes using XML or YAML:
+As an alternative to annotations, you can map entity classes using YAML or XML:
 
-XML:
+[codeSelector]
+```yaml
+# api/config/api_platform/resources.yaml
+resources:
+    App\Entity\Product: ~
+    App\Entity\Offer:
+        shortName: 'Offer'                   # optional
+        description: 'An offer from my shop' # optional
+        iri: 'http://schema.org/Offer'       # optional
+        attributes:                          # optional
+            pagination_items_per_page: 25    # optional
+```
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" ?>
@@ -196,22 +208,9 @@ XML:
     />
 </resources>
 ```
+[/codeSelector]
 
-YAML:
-
-```yaml
-# api/config/api_platform/resources.yaml
-resources:
-    App\Entity\Product: ~
-    App\Entity\Offer:
-        shortName: 'Offer'                   # optional
-        description: 'An offer from my shop' # optional
-        iri: 'http://schema.org/Offer'       # optional
-        attributes:                          # optional
-            pagination_items_per_page: 25    # optional
-```
-
-If you prefer to use XML or YAML files instead of annotations, you must configure API Platform to load the appropriate files:
+If you prefer to use YAML or XML files instead of annotations, you must configure API Platform to load the appropriate files:
 
 ```yaml
 # api/config/packages/api_platform.yaml
@@ -227,7 +226,7 @@ If you want to serialize only a subset of your data, please refer to the [Serial
 **You're done!**
 
 You now have a fully featured API exposing your entities.
-Run the Symfony app (`bin/console server:run`) and browse the API entrypoint at `http://localhost:8000/api`.
+Run the Symfony app with the [Symfony Local Web Server](https://symfony.com/doc/current/setup/symfony_server.html) (`symfony server:start`) and browse the API entrypoint at `http://localhost:8000/api`.
 
 Interact with the API using a REST client (we recommend [Postman](https://www.getpostman.com/)) or an Hydra-aware application
 (you should give [Hydra Console](https://github.com/lanthaler/HydraConsole) a try). Take

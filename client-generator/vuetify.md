@@ -1,5 +1,54 @@
 # Vuetify Generator
 
+## Install with Docker
+
+If you use the API Platform distribution with docker, first you have to add the [Vue CLI](https://cli.vuejs.org/guide/) to the `yarn global add` command in `client/Dockerfile`:
+
+```dockerfile
+RUN yarn global add @api-platform/client-generator @vue/cli @vue/cli-service-global
+```
+
+Rebuild your containers to install the Vue CLI in docker client container.
+
+Remove the directories `client\src\` and `client\public\` and the files `client\package.json\` and `client\yarn.lock\`  (because the distribution comes with a prebuilt react app.)
+
+Create a new Vue App and install vuetify and other vue packages:
+
+```shell-session
+$ docker-compose exec client vue create -d .
+$ docker-compose exec client vue add vuetify
+$ docker-compose exec client yarn add router lodash moment vue-i18n vue-router vuelidate vuex vuex-map-fields
+```
+
+Update the entrypoint in the `client/src/config/entrypoint.js` file:
+
+```javascript
+export const ENTRYPOINT = 'https://localhost:8443';
+```
+
+Update the scripts part of the new `package.json`:
+
+```json
+  "scripts": {
+    "build": "vue-cli-service build",
+    "lint": "vue-cli-service lint",
+    "start": "vue-cli-service serve --port 3000 --https"
+  },
+```
+
+Rebuild the docker containers again to install the Vue App and start the vue server.
+
+Generate the vuetify components with the client generator:
+
+```shell-session
+$ docker-compose exec client generate-api-platform-client -g vuetify --resource book
+# Omit the resource flag to generate files for all resource types exposed by the API
+```
+
+Continue by [generating the VueJS Web App](#generating-the-vuejs-web-app)
+
+## Install without Docker
+
 Create a Vuetify application using
 [Vue CLI 3](https://cli.vuejs.org/guide/):
 
@@ -18,6 +67,8 @@ In the app directory, generate the files for the resource you want:
     $ npx @api-platform/client-generator -g vuetify https://demo.api-platform.com src/
     # Replace the URL with the entrypoint of your Hydra-enabled API
     # Omit the resource flag to generate files for all resource types exposed by the API
+
+## Generating the VueJS Web App
 
 The code is ready to be executed! Register the generated routes in `src/router/index.js`
 

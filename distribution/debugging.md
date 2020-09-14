@@ -17,7 +17,7 @@ it's recommended to add a custom stage to the end of the `api/Dockerfile`.
 # api/Dockerfile
 FROM api_platform_php as api_platform_php_dev
 
-ARG XDEBUG_VERSION=2.8.0
+ARG XDEBUG_VERSION=2.9.2
 RUN set -eux; \
 	apk add --no-cache --virtual .build-deps $PHPIZE_DEPS; \
 	pecl install xdebug-$XDEBUG_VERSION; \
@@ -54,14 +54,28 @@ services:
       PHP_IDE_CONFIG: serverName=api-platform
 ```
 
+Note for Mac environments use the following:
+
+```yml
+      XDEBUG_CONFIG: >-
+        remote_enable=1
+        remote_host=docker.for.mac.localhost
+        remote_connect_back=0
+        remote_port=9000
+        idekey=PHPSTORM
+        remote_autostart=1
+        remote_mode=req
+        remote_handler=dbgp
+```
+
 ## Troubleshooting
 
 Inspect the installation with the following command. The requested Xdebug
 version should be displayed in the output.
 
-```console
+```shell-session
 $ docker-compose exec php php --version
 
 PHP …
-    with Xdebug v2.8.0 …
+    with Xdebug v2.9.2 …
 ```
