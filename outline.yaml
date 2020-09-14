@@ -86,11 +86,13 @@ chapters:
       - docker-compose
       - heroku
       - traefik
-  - title: Extra
+  - title: General Information
     path: extra
     items:
-      - releases
       - philosophy
+      - releases
+      - enterprise
+      - security
       - troubleshooting
       - contribution-guides
       - conduct

@@ -5,4 +5,6 @@
 3.  [API Platform Admin](https://github.com/api-platform/admin/blob/master/CONTRIBUTING.md)
 4.  [API Platform CRUD Generator](https://github.com/api-platform/client-generator/blob/master/CONTRIBUTING.md)
 
+**To report a security issue, please refer to [the dedicated document](security.md).**
+
 <p align="center" class="symfonycasts"><a href="https://symfonycasts.com/screencast/contributing?cid=apip"><img src="../distribution/images/symfonycasts-player.png" alt="JWT screencast"><br>Watch the Contributing back to Symfony screencast (free-</a></p>
