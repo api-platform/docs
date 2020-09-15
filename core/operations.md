@@ -581,7 +581,7 @@ final class SwaggerDecorator implements NormalizerInterface
         $this->decorated = $decorated;
     }
 
-    public function normalize($object, $format = null, array $context = [])
+    public function normalize($object, string $format = null, array $context = [])
     {
         $docs = $this->decorated->normalize($object, $format, $context);
 
