@@ -224,7 +224,14 @@ api_platform:
             name:
             # URL to the license used for the API. MUST be in the format of a URL.
             url:       
-        
+
+        # Display resources config
+        display:
+            # Controls the default expansion setting for the operations and tags. It can be 'list' (expands only the tags), 'full' (expands the tags and operations) or 'none' (expands nothing). 
+            doc_expansion: list
+            # If set, enables filtering. The top bar will show an edit box that you can use to filter the tagged operations that are shown.
+            filter: false
+
     http_cache:
         # To make all responses public by default.
         public: ~
