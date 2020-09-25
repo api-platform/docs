@@ -25,7 +25,7 @@ Format                                                          | Format name  |
 [JSON:API](http://jsonapi.org/)                                 | `jsonapi`    | `application/vnd.api+json`    | yes
 [HAL](http://stateless.co/hal_specification.html)               | `jsonhal`    | `application/hal+json`        | yes
 [YAML](http://yaml.org/)                                        | `yaml`       | `application/x-yaml`          | no
-[CSV](https://tools.ietf.org/html/rfc4180)                      | `csv`        | `text/csv`                    | no
+[CSV](https://tools.ietf.org/html/rfc4180)                      | `csv`        | `application/csv`             | no
 [HTML](https://whatwg.org/) (API docs)                          | `html`       | `text/html`                   | no
 [XML](https://www.w3.org/XML/)                                  | `xml`        | `application/xml`, `text/xml` | no
 [JSON](https://www.json.org/)                                   | `json`       |  `application/json`           | no
