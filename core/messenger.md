@@ -72,7 +72,7 @@ Finally, the `output` attribute is set to `false`, so the HTTP response that wil
 
 **Note:** when using `messenger=true` ApiResource attribute in a Doctrine entity, the Doctrine DataPersister is not called. You must use the `messenger="persist"` ApiResource attribute.
 
-**Note:** when using `messenger="input"` ApiResource attribute in a Doctrine entity, the Doctrine DataPersister is not called. You must use an array containing `persist` and `input` values.
+**Note:** when using `messenger="input"` ApiResource attribute in a Doctrine entity, the Doctrine DataPersister is not called. You must use an array containing `persist` and `input` if you want it to be called, for example:
 
 [codeSelector]
 ```php
