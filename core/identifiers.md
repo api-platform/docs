@@ -14,6 +14,7 @@ Let's say you have the following class, which is identified by a `UUID` type. In
 namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Core\Annotation\ApiProperty;
 use App\Uuid;
 
 /**
@@ -130,6 +131,7 @@ If your resource is also a Doctrine entity and you want to use another identifie
 namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Core\Annotation\ApiProperty;
 use App\Uuid;
 use Doctrine\ORM\Mapping as ORM;
 
