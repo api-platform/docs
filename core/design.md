@@ -4,7 +4,7 @@ Since you only need to describe the structure of the data to expose, API Platfor
 API framework. However, the "design-first" methodology is strongly recommended: first you design the **public shape** of
 API endpoints.
 
-To do so, you have to write a plain old PHP object representing the input and output of your endpoint. This is the class
+To do so, you have to write a plain old PHP object (POPO) representing the input and output of your endpoint. This is the class
 that is [marked with the `@ApiResource` annotation](../distribution/index.md).
 This class **doesn't have** to be mapped with Doctrine ORM, or any other persistence system. It must be simple (it's usually
 just a data structure with no or minimal behaviors) and will be automatically converted to [Hydra](extending-jsonld-context.md),
