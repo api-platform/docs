@@ -72,6 +72,7 @@ chapters:
       - index
       - react
       - nextjs
+      - nuxtjs
       - react-native
       - vuejs
       - vuetify
