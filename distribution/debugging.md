@@ -17,7 +17,7 @@ it's recommended to add a custom stage to the end of the `api/Dockerfile`.
 # api/Dockerfile
 FROM api_platform_php as api_platform_php_dev
 
-ARG XDEBUG_VERSION=2.9.2
+ARG XDEBUG_VERSION=2.9.8
 RUN set -eux; \
 	apk add --no-cache --virtual .build-deps $PHPIZE_DEPS; \
 	pecl install xdebug-$XDEBUG_VERSION; \
@@ -77,5 +77,5 @@ version should be displayed in the output.
 $ docker-compose exec php php --version
 
 PHP …
-    with Xdebug v2.9.2 …
+    with Xdebug v2.9.8 …
 ```
