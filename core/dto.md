@@ -319,13 +319,13 @@ resources:
     App\Entity\Book:
         collectionOperations:
             create:
-                method: POST,
-                input: App\Dto\CreateBook,
+                method: POST
+                input: App\Dto\CreateBook
                 output: App\Dto\BookOutput
         itemOperations:
             update:
-                method: PUT,
-                input: App\Dto\UpdateBook,
+                method: PUT
+                input: App\Dto\UpdateBook
                 output: App\Dto\BookOutput
 ```
 
