@@ -540,7 +540,9 @@ services:
     # ...
     'App\Serializer\BookContextBuilder':
         decorates: 'api_platform.serializer.context_builder'
-        arguments: [ '@App\Serializer\BookContextBuilder.inner' ]
+        arguments:
+            - '@App\Serializer\BookContextBuilder.inner'
+            - '@security.authorization_checker'
         autoconfigure: false
 ```
 
