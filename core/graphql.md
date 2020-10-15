@@ -588,7 +588,7 @@ The cache is named `api_platform.graphql.cache.subscription` and the subscriptio
 
 It's recommended to use an adapter like Redis for this cache.
 
-## Workflow of the Resolvers
+## Workflow of the Resolvers
 
 API Platform resolves the queries and mutations by using its own **resolvers**.
 
@@ -757,6 +757,45 @@ class Offer
 }
 ```
 
+### Syntax for Filters with a List of Key / Value Arguments
+
+Some filters like the [exists filter](filters.md#exists-filter) or the [order filter](filters.md#order-filter-sorting) take a list of key / value as arguments.
+
+The first syntax coming to mind to use them is to write:
+
+```graphql
+{
+  offers(order: {id: "ASC", name: "DESC"}) {
+    edges {
+      node {
+        id
+        name
+      }
+    }
+  }
+}
+```
+
+However this syntax has a problematic issue: it doesn't keep the order of the arguments.
+These filters usually need a proper order to give results as expected.
+
+That's why this syntax needs to be used instead:
+
+```graphql
+{
+  offers(order: [{id: "ASC"}, {name: "DESC"}]) {
+    edges {
+      node {
+        id
+        name
+      }
+    }
+  }
+}
+```
+
+Since a list is used for the arguments, the order is preserved.
+
 ### Filtering on Nested Properties
 
 Unlike for REST, all built-in filters support nested properties using the underscore (`_`) syntax instead of the dot (`.`) syntax, e.g.:
@@ -806,7 +845,7 @@ Or order your results like:
 
 ```graphql
 {
-  offers(order: {product_releaseDate: "DESC"}) {
+  offers(order: [{product_releaseDate: "DESC"}]) {
     edges {
       node {
         id
