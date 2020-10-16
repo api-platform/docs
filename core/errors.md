@@ -35,7 +35,7 @@ use App\Entity\Product;
 use App\Exception\ProductNotFoundException;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpKernel\Event\GetResponseForControllerResultEvent;
+use Symfony\Component\HttpKernel\Event\ViewEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 
 final class ProductManager implements EventSubscriberInterface
@@ -47,7 +47,7 @@ final class ProductManager implements EventSubscriberInterface
         ];
     }
 
-    public function checkProductAvailability(GetResponseForControllerResultEvent $event): void
+    public function checkProductAvailability(ViewEvent $event): void
     {
         $product = $event->getControllerResult();
         if (!$product instanceof Product || !$event->getRequest()->isMethodSafe(false)) {
