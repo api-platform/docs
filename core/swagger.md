@@ -155,7 +155,7 @@ class Product // The class name will be used to name exposed resources
      *
      * @ApiProperty(
      *     attributes={
-     *         "swagger_context"={"type"="string", "format"="date-time"}
+     *         "openapi_context"={"type"="string", "format"="date-time"}
      *     }
      * )
      */
@@ -172,13 +172,13 @@ resources:
       properties:
         name:
           attributes:
-            swagger_context:
+            openapi_context:
               type: string
               enum: ['one', 'two']
               example: one
         timestamp:
           attributes:
-            swagger_context:
+            openapi_context:
               type: string
               format: date-time
 ```
@@ -191,7 +191,7 @@ resources:
            https://api-platform.com/schema/metadata/metadata-2.0.xsd">
     <resource class="App\Entity\Product">
         <property name="name">
-            <attribute name="swagger_context">
+            <attribute name="openapi_context">
                 <attribute name="type">type</attribute>
                 <attribute name="enum">
                     <attribute>one</attribute>
@@ -201,7 +201,7 @@ resources:
             </attribute>
         </property>
         <property name="timestamp">
-            <attribute name="swagger_context">
+            <attribute name="openapi_context">
                 <attribute name="type">string</attribute>
                 <attribute name="format">date-time</attribute>
             </attribute>
@@ -302,8 +302,8 @@ resources:
         method: get
         path: '/rabbit/rand'
         controller: App\Controller\RandomRabbit
-        # if you are using OpenApi V3 use 'openapi_context' instead of 'swagger_context'
-        swagger_context:
+        # if you are using OpenApi V2 instead of V3 use 'swagger_context' instead of 'openapi_context'
+        openapi_context:
           summary: Random rabbit picture
           description: >
             # Pop a great rabbit picture by color!
@@ -335,8 +335,8 @@ resources:
                 <attribute name="method">get</attribute>
                 <attribute name="path">/rabbit/rand</attribute>
                 <attribute name="controller">App\Controller\RandomRabbit</attribute>
-                <!-- if you are using OpenApi V3 use 'openapi_context' instead of 'swagger_context' -->
-                <attribute name="swagger_context">
+                <!-- if you are using OpenApi V2 instead of V3 use 'swagger_context' instead of 'openapi_context' -->
+                <attribute name="openapi_context">
                     <attribute name="summary">Random rabbit picture</attribute>
                     <attribute name="description">
                         # Pop a great rabbit picture by color!
