@@ -16,7 +16,9 @@ import parseHydraDocumentation from "@api-platform/api-doc-parser/lib/hydra/pars
 import authProvider from "./authProvider";
 
 const entrypoint = process.env.REACT_APP_API_ENTRYPOINT;
-const fetchHeaders = { Authorization: `Bearer ${window.localStorage.getItem("token")}` };
+const fetchHeaders = () => ({
+  Authorization: `Bearer ${window.localStorage.getItem("token")}`,
+});
 const fetchHydra = (url, options = {}) =>
     localStorage.getItem("token")
         ? baseFetchHydra(url, {
