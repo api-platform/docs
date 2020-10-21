@@ -21,14 +21,14 @@ const fetchHydra = (url, options = {}) =>
     localStorage.getItem("token")
         ? baseFetchHydra(url, {
               ...options,
-              headers: new Headers(fetchHeaders()),
+              headers: new Headers(fetchHeaders),
           })
         : baseFetchHydra(url, options);
 const apiDocumentationParser = (entrypoint) =>
     parseHydraDocumentation(
         entrypoint,
         localStorage.getItem("token")
-            ? { headers: new Headers(fetchHeaders()) }
+            ? { headers: new Headers(fetchHeaders) }
             : {}
     ).then(
         ({ api }) => ({ api }),
