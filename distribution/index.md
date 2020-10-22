@@ -57,6 +57,9 @@ asynchronous jobs to your APIs is straightforward.
 Start by [downloading the API Platform distribution `.tar.gz` file](https://github.com/api-platform/api-platform/releases/latest), or [generate a GitHub repository from the template we provide](https://github.com/api-platform/api-platform/generate).
 Once you have extracted its contents, the resulting directory contains the API Platform project structure. You will add your own code and configuration inside it.
 
+**Note**: Be careful that if you use the GitHub template, it will be based on the master branch, not on the last stable tag. If you want to use the template, verify that there is no problem with the master branch.
+Otherwise prefer, using the download method.
+
 **Note**: Try to avoid using the `.zip` file, as it may cause potential [permission](https://github.com/api-platform/api-platform/issues/319#issuecomment-307037562) [issues](https://github.com/api-platform/api-platform/issues/777#issuecomment-412515342).
 
 API Platform is shipped with a [Docker](https://docker.com) setup that makes it easy to get a containerized development
