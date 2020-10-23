@@ -166,7 +166,7 @@ final class BlogPostItemDataProvider implements ItemDataProviderInterface, Seria
 
 ## Injecting Extensions (Pagination, Filter, EagerLoading etc.)
 
-API Platform provides a few extensions that you can reuse in your custom DataProvider.
+API Platform provides a vendor specific extensions that you can reuse in your custom DataProvider.
 Note that there are a few kinds of extensions which are detailed in [their own chapter of the documentation](extensions.md).
 Because extensions are tagged services, you can use the [injection of tagged services](https://symfony.com/blog/new-in-symfony-3-4-simpler-injection-of-tagged-services):
 
