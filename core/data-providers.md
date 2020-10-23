@@ -166,7 +166,7 @@ final class BlogPostItemDataProvider implements ItemDataProviderInterface, Seria
 
 ## Injecting Extensions (Pagination, Filter, EagerLoading etc.)
 
-API Platform provides a vendor specific extensions that you can reuse in your custom DataProvider.
+API Platform provides a few extensions that you can reuse in your custom DataProvider.
 Note that there are a few kinds of extensions which are detailed in [their own chapter of the documentation](extensions.md).
 Because extensions are tagged services, you can use the [injection of tagged services](https://symfony.com/blog/new-in-symfony-3-4-simpler-injection-of-tagged-services):
 
@@ -234,6 +234,54 @@ final class BlogPostItemDataProvider implements ItemDataProviderInterface, Restr
         }
 
         return $queryBuilder->getQuery()->getOneOrNullResult();
+    }
+}
+```
+
+## Use Pagination in Custom Collection Data Provider
+
+If you are implementing your own collection data provider, you might also want to support pagination. You can do
+this by returning a `ApiPlatform\Core\DataProvider\PaginatorInterface` instance.
+
+API Platform provides a few paginators, e.g. `ApiPlatform\Core\DataProvider\ArrayPaginator` and
+`ApiPlatform\Core\DataProvider\TraversablePaginator`.
+See the [Pagination page](pagination.md) for more information on pagination.
+
+You can access the paging information by injecting the `ApiPlatform\Core\DataProvider\Pagination` service, and
+using it within your data provider.
+
+```php
+<?php
+// api/src/DataProvider/CustomCollectionDataProvider.php
+
+declare(strict_types=1);
+
+namespace App\DataProvider;
+
+use ApiPlatform\Core\DataProvider\CollectionDataProviderInterface;
+use ApiPlatform\Core\DataProvider\Pagination;
+use ApiPlatform\Core\DataProvider\PaginatorInterface;
+use ApiPlatform\Core\DataProvider\TraversablePaginator;
+
+final class CustomCollectionDataProvider implements CollectionDataProviderInterface
+{
+    private Pagination $pagination;
+
+    public function __construct(Pagination $pagination)
+    {
+        $this->pagination = $pagination;
+    }
+
+    public function getCollection(string $resourceClass, string $operationName = null, array $context = []): PaginatorInterface
+    {
+        $page = $this->pagination->getPage($context);
+        $itemsPerPage = $this->pagination->getLimit($resourceClass, $operationName, $context);
+
+        $data = [/* results */];
+        $results = new \ArrayIterator($data);
+        $totalItems = count($data);
+
+        return new TraversablePaginator($results, $page, $itemsPerPage, $totalItems);
     }
 }
 ```
