@@ -38,19 +38,19 @@ If no data is available, you should return an empty array.
 
 namespace App\DataProvider;
 
-use ApiPlatform\Core\DataProvider\CollectionDataProviderInterface;
+use ApiPlatform\Core\DataProvider\ContextAwareCollectionDataProviderInterface;
 use ApiPlatform\Core\DataProvider\RestrictedDataProviderInterface;
 use ApiPlatform\Core\Exception\ResourceClassNotSupportedException;
 use App\Entity\BlogPost;
 
-final class BlogPostCollectionDataProvider implements CollectionDataProviderInterface, RestrictedDataProviderInterface
+final class BlogPostCollectionDataProvider implements ContextAwareCollectionDataProviderInterface, RestrictedDataProviderInterface
 {
     public function supports(string $resourceClass, string $operationName = null, array $context = []): bool
     {
         return BlogPost::class === $resourceClass;
     }
 
-    public function getCollection(string $resourceClass, string $operationName = null): \Generator
+    public function getCollection(string $resourceClass, string $operationName = null, array $context = []): iterable
     {
         // Retrieve the blog post collection from somewhere
         yield new BlogPost(1);
