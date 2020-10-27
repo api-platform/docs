@@ -35,3 +35,5 @@ According to the [Preload W3C Candidate Recommendation](https://www.w3.org/TR/pr
 
 Using this feature maximises HTTP cache hits for your API resources.
 For best performance, this feature should be used in conjunction with [the built-in HTTP cache invalidation system (based on Varnish)](performance.md#enabling-the-built-in-http-cache-invalidation-system).
+
+Make sure that you have Symfony HTTP Client installed: `composer require symfony/http-client`.
