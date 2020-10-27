@@ -467,6 +467,9 @@ For example:
 ```
 
 ```php
+
+use Doctrine\Common\Collections\ArrayCollection;
+
 final class Brand
 {
     // ...
