@@ -73,7 +73,7 @@ services:
 
 Tagging the service with the tag `api_platform.collection_data_provider` will enable API Platform Core to automatically
 register and use this data provider. The optional attribute `priority` allows you to define the order in which the
-data providers are called. Implementing the `ApiPlatform\Core\DataProvider\RestrictedDataProviderInterface` let you restrict the data provider use. Alternatively, you can also throw a `ApiPlatform\Core\Exception\ResourceClassNotSupportedException`. The first data provider not throwing this exception will be used.
+data providers are called. Implementing the `ApiPlatform\Core\DataProvider\RestrictedDataProviderInterface` let you restrict the data provider use. Alternatively, you can also throw a `ApiPlatform\Core\Exception\ResourceClassNotSupportedException`. Without the `RestrictedDataProviderInterface`, the first data provider not throwing this exception will be used.
 
 ## Custom Item Data Provider
 
