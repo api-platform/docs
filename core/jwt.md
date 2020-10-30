@@ -223,7 +223,21 @@ final class SwaggerDecorator implements NormalizerInterface
     {
         $docs = $this->decorated->normalize($object, $format, $context);
 
-        $docs['components']['schemas']['Token'] = [
+        $docs['definitions']['Token'] = new \ArrayObject([
+            'type' => 'object',
+            'properties' => [
+                'username' => [
+                    'type' => 'string',
+                    'example' => 'john',
+                ],
+                'password' => [
+                    'type' => 'string',
+                    'example' => 'mypass',
+                ],
+            ],
+        ]);
+
+        $docs['definitions']['Credentials'] = new \ArrayObject([
             'type' => 'object',
             'properties' => [
                 'token' => [
@@ -231,21 +245,7 @@ final class SwaggerDecorator implements NormalizerInterface
                     'readOnly' => true,
                 ],
             ],
-        ];
-
-        $docs['components']['schemas']['Credentials'] = [
-            'type' => 'object',
-            'properties' => [
-                'username' => [
-                    'type' => 'string',
-                    'example' => 'api',
-                ],
-                'password' => [
-                    'type' => 'string',
-                    'example' => 'api',
-                ],
-            ],
-        ];
+        ]);
 
         $tokenDocumentation = [
             'paths' => [
@@ -253,17 +253,21 @@ final class SwaggerDecorator implements NormalizerInterface
                     'post' => [
                         'tags' => ['Token'],
                         'operationId' => 'postCredentialsItem',
-                        'summary' => 'Get JWT token to login.',
-                        'requestBody' => [
-                            'description' => 'Create new JWT Token',
-                            'content' => [
-                                'application/json' => [
-                                    'schema' => [
-                                        '$ref' => '#/components/schemas/Credentials',
-                                    ],
+                        'summary' => 'curl -X POST -H
+                            "Content-Type: application/json" http://localhost:8096/api/token/login/check
+                            -d \'{"username":"admin@example.com","password":"pass"}\'',
+                        'parameters' => [
+                            [
+                                'name' => 'Token creation',
+                                'in' => 'body',
+                                'description' => 'API Login and receive a token',
+                                'schema' => [
+                                    '$ref' => '#/definitions/Credentials',
                                 ],
                             ],
                         ],
+                        'consumes' => 'application/json',
+                        'produces' => 'application/json',
                         'responses' => [
                             Response::HTTP_OK => [
                                 'description' => 'Get JWT token',
