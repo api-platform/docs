@@ -272,7 +272,7 @@ final class SwaggerDecorator implements NormalizerInterface
                                 'content' => [
                                     'application/json' => [
                                         'schema' => [
-                                            '$ref' => '#/components/schemas/Token',
+                                            '$ref' => '#/definitions/Token',
                                         ],
                                     ],
                                 ],
