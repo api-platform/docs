@@ -253,14 +253,12 @@ final class SwaggerDecorator implements NormalizerInterface
                     'post' => [
                         'tags' => ['Token'],
                         'operationId' => 'postCredentialsItem',
-                        'summary' => 'curl -X POST -H
-                            "Content-Type: application/json" http://localhost:8096/api/token/login/check
-                            -d \'{"username":"admin@example.com","password":"pass"}\'',
+                        'summary' => 'Create new JWT Token',
                         'parameters' => [
                             [
                                 'name' => 'Token creation',
                                 'in' => 'body',
-                                'description' => 'API Login and receive a token',
+                                'description' => 'Credentials to authenticate',
                                 'schema' => [
                                     '$ref' => '#/definitions/Credentials',
                                 ],
