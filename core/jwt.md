@@ -226,13 +226,9 @@ final class SwaggerDecorator implements NormalizerInterface
         $docs['definitions']['Token'] = new \ArrayObject([
             'type' => 'object',
             'properties' => [
-                'username' => [
+                'token' => [
                     'type' => 'string',
-                    'example' => 'john',
-                ],
-                'password' => [
-                    'type' => 'string',
-                    'example' => 'mypass',
+                    'readOnly' => true,
                 ],
             ],
         ]);
@@ -240,9 +236,13 @@ final class SwaggerDecorator implements NormalizerInterface
         $docs['definitions']['Credentials'] = new \ArrayObject([
             'type' => 'object',
             'properties' => [
-                'token' => [
+                'username' => [
                     'type' => 'string',
-                    'readOnly' => true,
+                    'example' => 'john',
+                ],
+                'password' => [
+                    'type' => 'string',
+                    'example' => 'mypass',
                 ],
             ],
         ]);
