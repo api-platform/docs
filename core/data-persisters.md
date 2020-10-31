@@ -84,7 +84,7 @@ Here is an implementation example which sends new users a welcome email after a 
 ```php
 namespace App\DataPersister;
 
-use ApiPlatform\Core\DataPersister\DataPersisterInterface;
+use ApiPlatform\Core\DataPersister\ContextAwareDataPersisterInterface;
 use App\Entity\User;
 use Symfony\Component\Mailer\MailerInterface;
 
