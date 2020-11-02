@@ -41,7 +41,7 @@ api_platform:
 API Platform follows the best practices of Elasticsearch:
 * a single index per resource should be used because Elasticsearch is going to [drop support for index types and will allow only a single type per
 index](https://www.elastic.co/guide/en/elasticsearch/reference/current/removal-of-types.html);
-* index name should be the short resource name in lower case;
+* index name should be the short resource name in lower snake case;
 * the default `_doc` type should be used;
 * all fields should be lower case and should use snake case for combining words.
 
