@@ -43,7 +43,7 @@ API Platform follows the best practices of Elasticsearch:
 index](https://www.elastic.co/guide/en/elasticsearch/reference/current/removal-of-types.html);
 * index name should be the short resource name in lower case;
 * the default `_doc` type should be used;
-* all fields should be lower case and should use snake case for combining words.
+* all fields should be lower case and should use camel case for combining words.
 
 This involves having mappings and models which absolutely match each other.
 
@@ -222,7 +222,7 @@ class Tweet
 }
 ```
 
-API Platform will automatically disable write operations and snake case document fields will automatically be converted to 
+API Platform will automatically disable write operations and camel case document fields will automatically be converted to 
 camel case object properties during serialization.
 
 Keep in mind that it is your responsibility to populate your Elasticsearch index. To do so, you can use [Logstash](https://www.elastic.co/products/logstash),
