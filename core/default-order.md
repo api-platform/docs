@@ -86,3 +86,26 @@ class Book
     // ...
 }
 ```
+
+Another possibility is to apply the default order for a specific collection operation, which will override the global default order configuration.
+
+```
+/**
+ *     collectionOperations={
+ *         "get",
+ *         "get_desc_custom"={"method"="GET", "path"="custom_collection_desc_foos", "order"={"name"="DESC"}},
+ *         "get_asc_custom"={"method"="GET", "path"="custom_collection_asc_foos", "order"={ "name"="ASC"}},
+ *     }
+ */
+class Book
+{
+    // ...
+
+    /**
+     * @var string
+     */
+    public $name;
+    
+    // ...
+}
+```
