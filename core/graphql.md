@@ -1292,7 +1292,7 @@ It's because a built-in [custom exception normalizer](#custom-exception-normaliz
 If you are in `dev` mode, more entries will be added in the response: `debugMessage` (containing the actual exception message, for instance in the case of a `LogicException`) and `trace` (the formatted exception trace).
 
 For some specific exceptions, built-in [custom exception normalizers](#custom-exception-normalizer) are also used to add more information.
-It's the case for a `HttpException` for which the `status` entry will be added under `extensions` and for a `ValidationException` for which `status` (always 400) and `violations` entries will be added.
+It's the case for a `HttpException` for which the `status` entry will be added under `extensions` and for a `ValidationException` for which `status` (by default 422) and `violations` entries will be added.
 
 #### Custom Exception Normalizer
 
