@@ -152,7 +152,7 @@ class BooksTest extends ApiTestCase
             'isbn' => 'invalid',
         ]]);
 
-        $this->assertResponseStatusCodeSame(400);
+        $this->assertResponseStatusCodeSame(422);
         $this->assertResponseHeaderSame('content-type', 'application/ld+json; charset=utf-8');
 
         $this->assertJsonContains([

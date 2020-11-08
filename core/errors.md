@@ -79,6 +79,9 @@ api_platform:
         ApiPlatform\Core\Exception\FilterValidationException: 400
         Doctrine\ORM\OptimisticLockException: 409
 
+        # Validation exception
+        ApiPlatform\Core\Bridge\Symfony\Validator\Exception\ValidationException: !php/const Symfony\Component\HttpFoundation\Response::HTTP_UNPROCESSABLE_ENTITY
+
         # Custom mapping
         App\Exception\ProductNotFoundException: 404 # Here is the handler for our custom exception
 ```

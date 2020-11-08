@@ -102,7 +102,7 @@ final class MinimalPropertiesValidator extends ConstraintValidator
 }
 ```
 
-If the data submitted by the client is invalid, the HTTP status code will be set to `400 Bad Request` and the response's
+If the data submitted by the client is invalid, the HTTP status code will be set to `422 Unprocessable Entity` and the response's
 body will contain the list of violations serialized in a format compliant with the requested one. For instance, a validation
 error will look like the following if the requested format is JSON-LD (the default):
 
