@@ -12,7 +12,7 @@ By default, all filters are disabled. They must be enabled explicitly.
 When a filter is enabled, it automatically appears in the [OpenAPI](swagger.md) and [GraphQL](graphql.md) documentations.
 It is also automatically documented as a `hydra:search` property for JSON-LD responses.
 
-<p align="center" class="symfonycasts"><a href="https://symfonycasts.com/screencast/api-platform/json-ld?cid=apip"><img src="../distribution/images/symfonycasts-player.png" alt="Filtering and Searching screencast"><br>Watch the Filtering & Searching screencast</a>
+<p align="center" class="symfonycasts"><a href="https://symfonycasts.com/screencast/api-platform/filters?cid=apip"><img src="../distribution/images/symfonycasts-player.png" alt="Filtering and Searching screencast"><br>Watch the Filtering & Searching screencast</a>
 
 ## Doctrine ORM and MongoDB ODM Filters
 
