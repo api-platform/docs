@@ -77,6 +77,8 @@ register and use this data provider. The optional attribute `priority` allows yo
 data providers are called. The first data provider not throwing a `ApiPlatform\Core\Exception\ResourceClassNotSupportedException`
 will be used.
 
+You can find a full working example in the [API Platform's demo application](https://github.com/api-platform/demo/blob/master/api/src/DataProvider/TopBookCollectionDataProvider.php).
+
 ## Custom Item Data Provider
 
 The process is similar for item data providers. Create a `BlogPostItemDataProvider` implementing the [`ItemDataProviderInterface`](https://github.com/api-platform/core/blob/master/src/DataProvider/ItemDataProviderInterface.php)
@@ -124,6 +126,8 @@ services:
         # Uncomment only if autoconfiguration is disabled
         #tags: [ 'api_platform.item_data_provider' ]
 ```
+
+You can find a full working example in the [API Platform's demo application](https://github.com/api-platform/demo/blob/master/api/src/DataProvider/TopBookItemDataProvider.php).
 
 ## Injecting the Serializer in an `ItemDataProvider`
 
