@@ -6,6 +6,8 @@ Extensions are specific to Doctrine and Elasticsearch-PHP, and therefore, the Do
 reading support must be enabled to use this feature. If you use custom providers it's up to you to implement your own
 extension system or not.
 
+You can find a working example of a custom data provider using a pagination extension in the [API Platform's demo application](https://github.com/api-platform/demo/blob/master/api/src/DataProvider/Extension/TopBookPaginationExtension.php).
+
 ## Custom Doctrine ORM Extension
 
 Custom extensions must implement the `ApiPlatform\Core\Bridge\Doctrine\Orm\Extension\QueryCollectionExtensionInterface` and / or the `ApiPlatform\Core\Bridge\Doctrine\Orm\Extension\QueryItemExtensionInterface` interfaces, to be run when querying for a collection of items and when querying for an item respectively.
