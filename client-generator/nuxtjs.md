@@ -30,7 +30,7 @@ Deployment target: Static (Static/JAMStack hosting)
 
 Install required dependencies:
 
-    $ yarn add moment lodash vue-i18n vuelidate vuex-map-fields
+    $ yarn add moment lodash vue-i18n vuelidate vuex-map-fields nuxt-i18n
     # yarn add --dev @nuxtjs/vuetify @nuxtjs/fontawesome
 
 ## Updating nuxtjs config
@@ -41,7 +41,8 @@ Update your `nuxt.config.js` with following:
   buildModules: [
     // ...
     '@nuxtjs/vuetify',
-    '@nuxtjs/fontawesome'
+    '@nuxtjs/fontawesome',
+    'nuxt-i18n'
   ],
 ```
 ## Generating Routes
