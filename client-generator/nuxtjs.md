@@ -31,7 +31,19 @@ Deployment target: Static (Static/JAMStack hosting)
 Install required dependencies:
 
     $ yarn add moment lodash vue-i18n vuelidate vuex-map-fields
+    # yarn add --dev @nuxtjs/vuetify @nuxtjs/fontawesome
 
+## Updating nuxtjs config
+
+Update your `nuxt.config.js` with following:
+
+```javascript
+  buildModules: [
+    // ...
+    '@nuxtjs/vuetify',
+    '@nuxtjs/fontawesome'
+  ],
+```
 ## Generating Routes
 
     $ npx @api-platform/client-generator https://demo.api-platform.com . --generator nuxt
