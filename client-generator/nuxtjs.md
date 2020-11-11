@@ -44,6 +44,9 @@ Update your `nuxt.config.js` with following:
     '@nuxtjs/fontawesome',
     'nuxt-i18n'
   ],
+  // ...
+  // to avoid name conflicts in generators
+  components: false,  
 ```
 ## Generating Routes
 
