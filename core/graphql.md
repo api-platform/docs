@@ -1227,7 +1227,7 @@ Your custom type is now registered and is available in the `TypesContainer`.
 
 To use it please [modify the extracted types](#modify-the-extracted-types) or use it directly in [custom queries](#custom-queries) or [custom mutations](#custom-mutations).
 
-## Modify the Extracted Types
+## Modify the Extracted Types
 
 The GraphQL schema and its types are extracted from your resources.
 In some cases, you would want to modify the extracted types for instance to use your custom ones.
@@ -1251,6 +1251,7 @@ namespace App\Type;
 
 use ApiPlatform\Core\GraphQl\Type\TypeConverterInterface;
 use App\Model\Book;
+use GraphQL\Type\Definition\Type as GraphQLType;
 use Symfony\Component\PropertyInfo\Type;
 
 final class TypeConverter implements TypeConverterInterface
@@ -1274,6 +1275,14 @@ final class TypeConverter implements TypeConverterInterface
         }
 
         return $this->defaultTypeConverter->convertType($type, $input, $queryName, $mutationName, $resourceClass, $rootResource, $property, $depth);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function resolveType(string $type): ?GraphQLType
+    {
+        return $this->defaultTypeConverter->resolveType($type);
     }
 }
 ```
