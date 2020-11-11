@@ -107,7 +107,7 @@ Update your `layouts/default.vue` with following:
 </template>
 
 <script>
-import Alert from '../components/Alert';
+import Alert from '../components/Alert'
 
 export default {
   components: {
@@ -115,10 +115,14 @@ export default {
   },
 
   data: () => ({
-    date: new Date().getFullYear(),
+    date: null,
     drawer: null
-  })
-};
+  }),
+
+  mounted () {
+    this.date = new Date().getFullYear()
+  }
+}
 </script>
 ```
 
