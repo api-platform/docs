@@ -66,6 +66,7 @@ chapters:
       - authentication-support
       - performance
       - customizing
+      - components
   - title: The Client Generator Component
     path: client-generator
     items:
