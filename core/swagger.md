@@ -79,7 +79,6 @@ final class SwaggerDecorator implements NormalizerInterface
             'in' => 'query',
         ];
 
-
         // e.g. add a custom parameter
         $docs['paths']['/foos']['get']['parameters'][] = $customDefinition;
 
