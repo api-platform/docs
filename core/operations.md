@@ -140,6 +140,7 @@ just by specifying the method name as key, or by checking the explicitly configu
 
 If you do not want to allow access to the resource item (i.e. you don't want a `GET` item operation), instead of omitting it altogether, you should instead declare a `GET` item operation which returns HTTP 404 (Not Found), so that the resource item can still be identified by an IRI. For example:
 
+[codeSelector]
 ```php
 <?php
 // api/src/Entity/Book.php
@@ -167,6 +168,42 @@ use ApiPlatform\Core\Annotation\ApiResource;
  {
  }
 ```
+
+```yaml
+# api/config/api_platform/resources.yaml
+App\Entity\Book:
+    collectionOperations:
+        get: ~
+    itemOperations:
+        get:
+            controller: App\Controller\NotFoundAction
+            read: false
+            output: false
+```
+
+```xml
+<?xml version="1.0" encoding="UTF-8" ?>
+<!-- api/config/api_platform/resources.xml -->
+
+<resources xmlns="https://api-platform.com/schema/metadata"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="https://api-platform.com/schema/metadata
+           https://api-platform.com/schema/metadata/metadata-2.0.xsd">
+    <resource class="App\Entity\Book">
+        <collectionOperations>
+            <collectionOperation name="get" />
+        </collectionOperations>
+        <itemOperations>
+            <itemOperation name="get">
+                <attribute name="controller">App\Controller\NotFoundAction</attribute>
+                <attribute name="read">false</attribute>
+                <attribute name="output">false</attribute>
+            </itemOperation>
+        </itemOperations>
+    </resource>
+</resources>
+```
+[/codeSelector]
 
 ## Configuring Operations
 
