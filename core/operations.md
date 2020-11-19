@@ -394,6 +394,7 @@ class BookController extends AbstractController
 ```yaml
 # api/config/routes.yaml
 book_post_publication:
+    name: book_post_publication
     path: /books/{id}/publication
     methods: ['POST']
     defaults:
