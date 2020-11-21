@@ -208,7 +208,7 @@ publicationDate: This value should not be null.',
             'password' => 'admin',
         ]]);
         
-        $this->assertResponseIsSuccessfull();
+        $this->assertResponseIsSuccessful();
     }
 }
 ```
