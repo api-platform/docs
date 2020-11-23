@@ -461,8 +461,10 @@ In this example, only `severity` and `anotherPayloadField` will be serialized.
 
 ## Validation on Collection Relations
 
+Use the [Valid](https://symfony.com/doc/current/reference/constraints/Valid.html) constraint.
+
 Note: this is related to the [collection relation denormalization](./serialization.md#collection-relation).
-You may have an issue when trying to validate a relation representing a collection (`toMany`). After fixing the denormalization by using a getter that returns `$collectionRelation->getValues()`, you should define your validation on the getter instead of the property.
+You may have an issue when trying to validate a relation representing a Doctrine's `ArrayCollection` (`toMany`). Fix the denormalization using the property getter. Return an `array` instead of an `ArrayCollection` with `$collectionRelation->getValues()`. Then, define your validation on the getter instead of the property.
 
 For example:
 
@@ -473,6 +475,13 @@ For example:
 ```
 
 ```php
+<?php
+
+namespace App\Entity;
+
+use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\Validator\Constraints as Assert;
+
 final class Brand
 {
     // ...
