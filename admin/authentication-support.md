@@ -11,7 +11,7 @@ In short, you have to tweak data provider and api documentation parser, like thi
 
 import React from "react";
 import { Redirect, Route } from "react-router-dom";
-import { HydraAdmin, hydraDataProvider as baseHydraDataProvider, fetchHydra as baseFetchHydra } from "@api-platform/admin";
+import { HydraAdmin, hydraDataProvider as baseHydraDataProvider, fetchHydra as baseFetchHydra, useIntrospection } from "@api-platform/admin";
 import parseHydraDocumentation from "@api-platform/api-doc-parser/lib/hydra/parseHydraDocumentation";
 import authProvider from "./authProvider";
 
@@ -26,6 +26,15 @@ const fetchHydra = (url, options = {}) =>
               headers: new Headers(fetchHeaders()),
           })
         : baseFetchHydra(url, options);
+const RedirectToLogin = () => {
+  const introspect = useIntrospection();
+
+  if (localStorage.getItem('token')) {
+    introspect();
+    return <></>;
+  }
+  return <Redirect to='/login' />;
+}
 const apiDocumentationParser = (entrypoint) =>
     parseHydraDocumentation(
         entrypoint,
@@ -42,9 +51,7 @@ const apiDocumentationParser = (entrypoint) =>
                 return Promise.resolve({
                     api: result.api,
                     customRoutes: [
-                        <Route path="/" render={() => {
-                            return localStorage.getItem("token") ? window.location.reload() : <Redirect to="/login" />
-                        }} />
+                        <Route path="/" component={RedirectToLogin} />
                     ],
                 });
             }
