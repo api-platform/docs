@@ -77,7 +77,7 @@ Note that if you don't need any `$context` in your data persister's methods, you
 
 <p align="center" class="symfonycasts"><a href="https://symfonycasts.com/screencast/api-platform-extending/persister-decoration?cid=apip"><img src="../distribution/images/symfonycasts-player.png" alt="Data Persister Decoration screencast"><br>Watch the Data Persister Decoration screencast</a></p>
 
-If you want to execute custom business logic before or after peristence, this can be achieved by [decorating](https://symfony.com/doc/current/service_container/service_decoration.html) the built-in data persisters.
+If you want to execute custom business logic before or after persistence, this can be achieved by [decorating](https://symfony.com/doc/current/service_container/service_decoration.html) the built-in data persisters.
 
 Here is an implementation example which sends new users a welcome email after a REST `POST` or GraphQL `create` operation, in a project using the native Doctrine ORM data persister:
 
