@@ -28,7 +28,7 @@ Note, that if your entity is not Doctrine-related, you need to flag the identifi
 ## Custom Collection Data Provider
 
 First, your `BlogPostCollectionDataProvider` has to implement the [`CollectionDataProviderInterface`](https://github.com/api-platform/core/blob/master/src/DataProvider/CollectionDataProviderInterface.php):
-
+nn,
 The `getCollection` method must return an `array`, a `Traversable` or a [`ApiPlatform\Core\DataProvider\PaginatorInterface`](https://github.com/api-platform/core/blob/master/src/DataProvider/PaginatorInterface.php) instance.
 If no data is available, you should return an empty array.
 
