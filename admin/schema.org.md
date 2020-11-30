@@ -32,3 +32,5 @@ The following Schema.org types are currently supported by API Platform Admin:
 * `http://schema.org/email`: the field will be rendered using the `<EmailField>` React Admin component
 * `http://schema.org/url`: the field will be rendered using the `<UrlField>` React Admin component
 * `http://schema.org/identifier`: the field will be formatted properly in inputs
+
+Note: if you already use validation on your properties, the semantics are already configured correctly (see [the correspondence table](../core/validation.md#open-vocabulary-generated-from-validation-metadata))!
