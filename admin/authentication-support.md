@@ -69,3 +69,5 @@ export default () => (
     />
 );
 ```
+
+For the implementation of the auth provider, you can find a working example in the [API Platform's demo application](https://github.com/api-platform/demo/blob/master/admin/src/authProvider.js).
