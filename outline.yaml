@@ -64,6 +64,7 @@ chapters:
       - handling-relations
       - schema.org
       - authentication-support
+      - file-upload
       - performance
       - customizing
       - components
