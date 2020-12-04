@@ -16,57 +16,51 @@ import parseHydraDocumentation from "@api-platform/api-doc-parser/lib/hydra/pars
 import authProvider from "./authProvider";
 
 const entrypoint = process.env.REACT_APP_API_ENTRYPOINT;
-const fetchHeaders = () => ({
-  Authorization: `Bearer ${window.localStorage.getItem("token")}`,
-});
+const getHeaders = () => localStorage.getItem("token") ? {
+  Authorization: `Bearer ${localStorage.getItem("token")}`,
+} : {};
 const fetchHydra = (url, options = {}) =>
-    localStorage.getItem("token")
-        ? baseFetchHydra(url, {
-              ...options,
-              headers: new Headers(fetchHeaders()),
-          })
-        : baseFetchHydra(url, options);
+  baseFetchHydra(url, {
+    ...options,
+    headers: getHeaders,
+  });
 const RedirectToLogin = () => {
   const introspect = useIntrospection();
 
-  if (localStorage.getItem('token')) {
+  if (localStorage.getItem("token")) {
     introspect();
     return <></>;
   }
-  return <Redirect to='/login' />;
-}
-const apiDocumentationParser = (entrypoint) =>
-    parseHydraDocumentation(
-        entrypoint,
-        localStorage.getItem("token")
-            ? { headers: new Headers(fetchHeaders()) }
-            : {}
-    ).then(
-        ({ api }) => ({ api }),
-        (result) => {
-            if (result.status === 401) {
-                // Prevent infinite loop if the token is expired
-                localStorage.removeItem("token");
+  return <Redirect to="/login" />;
+};
+const apiDocumentationParser = async (entrypoint) => {
+  try {
+    const { api } = await parseHydraDocumentation(entrypoint, { headers: getHeaders });
+    return { api };
+  } catch (result) {
+    if (result.status === 401) {
+      // Prevent infinite loop if the token is expired
+      localStorage.removeItem("token");
 
-                return Promise.resolve({
-                    api: result.api,
-                    customRoutes: [
-                        <Route path="/" component={RedirectToLogin} />
-                    ],
-                });
-            }
+      return {
+        api: result.api,
+        customRoutes: [
+          <Route path="/" component={RedirectToLogin} />
+        ],
+      };
+    }
 
-            return Promise.reject(result);
-        },
-    );
+    throw result;
+  }
+};
 const dataProvider = baseHydraDataProvider(entrypoint, fetchHydra, apiDocumentationParser);
 
 export default () => (
-    <HydraAdmin
-        dataProvider={ dataProvider }
-        authProvider={ authProvider }
-        entrypoint={ entrypoint }
-    />
+  <HydraAdmin
+    dataProvider={ dataProvider }
+    authProvider={ authProvider }
+    entrypoint={ entrypoint }
+  />
 );
 ```
 
