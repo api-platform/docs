@@ -140,7 +140,13 @@ Even with service autowiring and autoconfiguration enabled, you must still confi
 services:
     # ...
     App\DataPersister\UserDataPersister:
-        decorates: 'api_platform.doctrine.orm.data_persister'
+        # Use this if you want to pass arguments only instead of replacing the service.
+        bind:
+            $decorated: '@api_platform.doctrine.orm.data_persister'
+        # This configuration replaces "api_platform.doctrine.orm.data_persister" with a new one, but keeps a reference.
+        # The decorates option tells the container that the App\DataPersister\UserDataPersister service replaces the api_platform.doctrine.orm.data_persister service.
+        #decorates: 'api_platform.doctrine.orm.data_persister'
+        
         # Uncomment only if autoconfiguration is disabled
         #arguments: ['@App\DataPersister\UserDataPersister.inner']
         #tags: [ 'api_platform.data_persister' ]
