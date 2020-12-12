@@ -90,7 +90,6 @@ security:
 
     access_control:
         - { path: ^/docs, roles: IS_AUTHENTICATED_ANONYMOUSLY } # Allows accessing the Swagger UI
-        - { path: ^/contexts, roles: IS_AUTHENTICATED_ANONYMOUSLY } # Allows accessing the JSON-LD context
         - { path: ^/authentication_token, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/, roles: IS_AUTHENTICATED_FULLY }
 ```
