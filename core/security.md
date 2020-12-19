@@ -83,7 +83,11 @@ In this example:
 * Only users having [the role](https://symfony.com/doc/current/security.html#roles) `ROLE_ADMIN` can create a new resource (configured on the `post` operation)
 * Only users having the `ROLE_ADMIN` or owning the current object can replace an existing book (configured on the `put` operation)
 
-Available variables are `user` (the current logged in object, if any), and `object` (the current resource, or collection of resources for collection operations).
+Available variables are:
+
+* `user`: the current logged in object, if any
+* `object`: the current resource, or collection of resources for collection operations
+* `request`: the current request
 
 Access control checks in the `security` attribute are always executed before the [denormalization step](serialization.md).
 It means than for `PUT` requests, `object` doesn't contain the value submitted by the user, but values currently stored in [the persistence layer](data-persisters.md).
