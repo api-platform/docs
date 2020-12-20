@@ -419,6 +419,201 @@ The [PaginationExtension](https://github.com/api-platform/core/blob/master/src/B
 
 For more information, please see the [Pagination](https://www.doctrine-project.org/projects/doctrine-orm/en/current/tutorials/pagination.html) entry in the Doctrine ORM documentation.
 
+## Extending the Elasticsearch Paginator
+
+The default implementation of the built-in paginator for Elasticsearch only supports pagination of stored documents / resources. One of the main advantages of using Elasticsearch is to leveraging its search capabilities including [aggregations](https://www.elastic.co/guide/en/elasticsearch/reference/current/search-aggregations.html).
+
+According to Elasticsearch's documentation, an *aggregation summarizes your data as metrics, statistics, or other analytics*. Aggregations are also known as *facets* in common search terminology and other data indexing technologies.
+
+Imagine you're building a search engine for an e-commerce website. All of your indexed `Product` entities / documents have attributes such as a name, a category, a price and a manufacturing country code.
+
+Elasticsearch aggregations will enable your system to know how many products there are for each category, price range and manufacturing country whenever a user performs a search query. Elasticsearch will automatically append an `aggregations` key to the raw JSON search response where you can find all computed aggregated data, metrics and statistics requested by your search query thanks to the `aggs` clause.
+
+The built-in API Platform Elasticsearch paginator doesn't allow to capture aggregations in order to inject them into your API collection responses.
+
+The way to achieve it is to follow the following steps:
+
+1. Create a custom `AggregationPaginator` class that implements the `PaginatorInterface` interface. This class decorates a standard paginator and captures Elasticsearch aggregations in one of its attributes.
+1. Create a custom `AggregationPaginatorFactory` class that implements the `PaginatorFactorInterface` interface. This class decorates the standard `PaginatorFactory` and produces an instance of `AggregationPaginator`.
+1. Create a custom `AggregationCollectionNormalizer` that decorates the built-in `CollectionNormalizer` in order to inject the aggregated data when the normalizer receives an instance of `AggregationPaginator` class.
+1. Register the `AggregationPaginatorFactory` and `AggregationCollectionNormalizer` class into your application service container.
+
+API Platform design leverages loose coupling and is flexible enough to enable one to extend its core components by custom implementations.
+
+### The `AggregationPaginator` Class
+
+The `AggregationPaginator` class is a decorator for a `PaginatorInterface` implementation. It holds the decorated paginator as well as the list of aggregated data computed by Elasticsearch.
+
+```php
+<?php
+
+// api/Elasticsearch/DataProvider/AggregationPaginator.php
+
+namespace App\Elasticsearch\DataProvider;
+
+use ApiPlatform\Core\DataProvider\PaginatorInterface;
+
+final class AggregationPaginator implements \IteratorAggregate, PaginatorInterface
+{
+    private PaginatorInterface $paginator;
+    private array $aggregations;
+
+    public function __construct(PaginatorInterface $paginator, array $aggregations)
+    {
+        $this->paginator = $paginator;
+        $this->aggregations = $aggregations;
+    }
+
+    public function getIterator(): \Traversable
+    {
+        return $this->paginator;
+    }
+
+    public function count(): int
+    {
+        return $this->paginator->count();
+    }
+
+    public function getLastPage(): float
+    {
+        return $this->paginator->getLastPage();
+    }
+
+    public function getTotalItems(): float
+    {
+        return $this->paginator->getTotalItems();
+    }
+
+    public function getCurrentPage(): float
+    {
+        return $this->paginator->getCurrentPage();
+    }
+
+    public function getItemsPerPage(): float
+    {
+        return $this->paginator->getItemsPerPage();
+    }
+
+    public function getAggregations(): array
+    {
+        return $this->aggregations;
+    }
+}
+```
+
+### The `AggregationPaginatorFactory` Class
+
+The `AggregationPaginatorFactory` class is a decorator for a `PaginatorFactoryInterface` implementation. It holds the decorated paginator factory and always produces an instance of `AggregationPaginator` class.
+
+```php
+<?php
+
+// api/Elasticsearch/DataProvider/AggregationPaginatorFactory.php
+
+namespace App\Elasticsearch\DataProvider;
+
+use ApiPlatform\Core\DataProvider\PaginatorInterface;
+use ApiPlatform\Core\DataProvider\PaginatorFactoryInterface;
+
+final class AggregationPaginatorFactory implements PaginatorFactoryInterface
+{
+    private PaginatorFactoryInterface $factory;
+
+    public function __construct(PaginatorFactoryInterface $factory)
+    {
+        $this->factory = $factory;
+    }
+
+    public function createPaginator($documents, int $limit, int $offset, array $context = []): PaginatorInterface
+    {
+        return new AggregationPaginator(
+            $this->factory->createPaginator($documents, $limit, $offset, $context),
+            $documents['aggregations'] ?? []
+        );
+    }
+}
+```
+
+### The `AggregationCollectionNormalizer` Class
+
+The `AggregationCollectionNormalizer` is a decorator for the built-in collection normalizer. It automatically injects the aggregated data from Elasticsearch into the API collection response payload.
+
+```php
+<?php
+
+// api/Elasticsearch/Serializer/AggregationCollectionNormalizer.php
+
+namespace App\Elasticsearch\Serializer;
+
+use ApiPlatform\Core\DataProvider\PaginatorInterface;
+use ApiPlatform\Core\Hydra\Serializer\CollectionNormalizer as BaseCollectionNormalizer;
+use App\Elasticsearch\DataProvider\AggregationPaginator;
+use Symfony\Component\Serializer\Normalizer\CacheableSupportsMethodInterface;
+use Symfony\Component\Serializer\Normalizer\NormalizerAwareInterface;
+use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
+
+final class AggregationCollectionNormalizer implements NormalizerInterface, NormalizerAwareInterface, CacheableSupportsMethodInterface
+{
+    private BaseCollectionNormalizer $collectionNormalizer;
+
+    public function __construct(BaseCollectionNormalizer $collectionNormalizer)
+    {
+        $this->collectionNormalizer = $collectionNormalizer;
+    }
+
+    public function setNormalizer(NormalizerInterface $normalizer): void
+    {
+        $this->collectionNormalizer->setNormalizer($normalizer);
+    }
+
+    public function hasCacheableSupportsMethod(): bool
+    {
+        return $this->collectionNormalizer->hasCacheableSupportsMethod();
+    }
+
+    public function normalize($object, ?string $format = null, array $context = [])
+    {
+        $data = $this->collectionNormalizer->normalize($object, $format, $context);
+
+        if (! $object instanceof AggregationPaginator) {
+            return $data;
+        }
+
+        if (\count($aggregations = $object->getAggregations())) {
+            $data['aggregations'] = $aggregations;
+        }
+
+        return $data;
+    }
+
+    public function supportsNormalization($data, ?string $format = null): bool
+    {
+        return $this->collectionNormalizer->supportsNormalization($data, $format);
+    }
+}
+```
+
+### Override Paginator Factory & Collection Normalizer Services
+
+The last step is to override the built-in `api_platform.elasticsearch.paginator_factory` and `` services in your Symfony container configuration:
+
+```yaml
+# config/services.yaml
+services:
+    _defaults:
+        autowire: true
+        autoconfigure: true
+
+    # ...
+
+    App\Elasticsearch\DataProvider\AggregationPaginatorFactory:
+        decorates: api_platform.elasticsearch.paginator_factory
+
+    App\Elasticsearch\Serializer\AggregationCollectionNormalizer:
+        decorates: api_platform.hydra.normalizer.collection
+
+```
+
 ## Custom Controller Action
 
 In case you're using a custom controller action, make sure you return the `Paginator` object to get the full hydra response with `hydra:view` (which contains information about first, last, next and previous page). The following examples show how to handle it within a repository method. The controller needs to pass through the page number. You will need to use the Doctrine Paginator and pass it to the API Platform Paginator.
