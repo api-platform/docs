@@ -87,8 +87,9 @@ chapters:
     path: deployment
     items:
       - index
-      - kubernetes
       - docker-compose
+      - kubernetes
+      - minikube
       - heroku
       - traefik
   - title: General Information
