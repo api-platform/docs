@@ -118,7 +118,7 @@ If your API uses a [path prefix](https://symfony.com/doc/current/routing/externa
 security:
     encoders:
         App\Entity\User:
-            algorithm: argon2i
+            algorithm: auto
 
     # https://symfony.com/doc/current/security.html#where-do-users-come-from-user-providers
     providers:
@@ -150,7 +150,7 @@ security:
                 failure_handler: lexik_jwt_authentication.handler.authentication_failure
 
     access_control:
-        - { path: ^/api/docs, roles: IS_AUTHENTICATED_ANONYMOUSLY } # Allows accessing the Swagger UI
+        - { path: ^/docs, roles: IS_AUTHENTICATED_ANONYMOUSLY } # Allows accessing API documentations and Swagger UI
         - { path: ^/authentication_token, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/, roles: IS_AUTHENTICATED_FULLY }
 ```
@@ -181,9 +181,7 @@ All you have to do is configure the API key in the `value` field.
 By default, [only the authorization header mode is enabled](https://github.com/lexik/LexikJWTAuthenticationBundle/blob/master/Resources/doc/index.md#2-use-the-token) in LexikJWTAuthenticationBundle.
 You must set the [JWT token](https://github.com/lexik/LexikJWTAuthenticationBundle/blob/master/Resources/doc/index.md#1-obtain-the-token) as below and click on the "Authorize" button.
 
-```
-Bearer MY_NEW_TOKEN
-```
+    Bearer MY_NEW_TOKEN
 
 ![Screenshot of API Platform with the configuration API Key](images/JWTConfigureApiKey.png)
 
@@ -193,37 +191,32 @@ We can add a `POST /authentication_token` endpoint to SwaggerUI to conveniently 
 
 ![API Endpoint to retrieve JWT Token from SwaggerUI](images/jwt-token-swagger-ui.png)
 
-To do it, we need to create a `SwaggerDecorator`:
+To do it, we need to create a decorator:
 
 ```php
 <?php
+// api/src/OpenApi/JwtDecorator.php
 
 declare(strict_types=1);
 
-namespace App\Swagger;
+namespace App\OpenApi;
 
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
+use ApiPlatform\Core\OpenApi\Factory\OpenApiFactoryInterface;
+use ApiPlatform\Core\OpenApi\OpenApi;
+use ApiPlatform\Core\OpenApi\Model;
 
-final class SwaggerDecorator implements NormalizerInterface
+final class JwtDecorator implements OpenApiFactoryInterface
 {
-    private NormalizerInterface $decorated;
+    public function __construct(
+        private OpenApiFactoryInterface $decorated
+    ) {}
 
-    public function __construct(NormalizerInterface $decorated)
+    public function __invoke(array $context = []): OpenApi
     {
-        $this->decorated = $decorated;
-    }
+        $openApi = ($this->decorated)($context);
+        $schemas = $openApi->getComponents()->getSchemas();
 
-    public function supportsNormalization($data, string $format = null): bool
-    {
-        return $this->decorated->supportsNormalization($data, $format);
-    }
-
-    public function normalize($object, string $format = null, array $context = [])
-    {
-        $docs = $this->decorated->normalize($object, $format, $context);
-
-        $docs['components']['schemas']['Token'] = [
+        $schemas['Token'] = new ArrayObject([
             'type' => 'object',
             'properties' => [
                 'token' => [
@@ -231,57 +224,53 @@ final class SwaggerDecorator implements NormalizerInterface
                     'readOnly' => true,
                 ],
             ],
-        ];
-
-        $docs['components']['schemas']['Credentials'] = [
+        ]);
+        $schemas['Credentials'] = new ArrayObject([
             'type' => 'object',
             'properties' => [
-                'username' => [
+                'email' => [
                     'type' => 'string',
-                    'example' => 'api',
+                    'example' => 'johndoe@example.com',
                 ],
                 'password' => [
                     'type' => 'string',
-                    'example' => 'api',
+                    'example' => 'apassword',
                 ],
             ],
-        ];
+        ]);
 
-        $tokenDocumentation = [
-            'paths' => [
-                '/authentication_token' => [
-                    'post' => [
-                        'tags' => ['Token'],
-                        'operationId' => 'postCredentialsItem',
-                        'summary' => 'Get JWT token to login.',
-                        'requestBody' => [
-                            'description' => 'Create new JWT Token',
-                            'content' => [
-                                'application/json' => [
-                                    'schema' => [
-                                        '$ref' => '#/components/schemas/Credentials',
-                                    ],
-                                ],
-                            ],
-                        ],
-                        'responses' => [
-                            Response::HTTP_OK => [
-                                'description' => 'Get JWT token',
-                                'content' => [
-                                    'application/json' => [
-                                        'schema' => [
-                                            '$ref' => '#/components/schemas/Token',
-                                        ],
-                                    ],
+        $pathItem = new Model\PathItem(
+            ref: 'JWT Token',
+            post: new Model\Operation(
+                operationId: 'postCredentialsItem',
+                responses: [
+                    '200' => [
+                        'description' => 'Get JWT token',
+                        'content' => [
+                            'application/json' => [
+                                'schema' => [
+                                    '$ref' => '#/components/schemas/Token',
                                 ],
                             ],
                         ],
                     ],
                 ],
-            ],
-        ];
+                summary: 'Get JWT token to login.',
+                requestBody: new Model\RequestBody(
+                    description: 'Generate new JWT Token',
+                    content: new ArrayObject([
+                        'application/json' => [
+                            'schema' => [
+                                '$ref' => '#/components/schemas/Credentials',
+                            ],
+                        ],
+                    ]),
+                ),
+            ),
+        );
+        $openApi->getPaths()->addPath('/authentication_token', $pathItem);
 
-        return array_merge_recursive($docs, $tokenDocumentation);
+        return $openApi;
     }
 }
 ```
@@ -289,12 +278,12 @@ final class SwaggerDecorator implements NormalizerInterface
 And register this service in `config/services.yaml`:
 
 ```yaml
+# api/config/services.yaml
 services:
     # ...   
 
-    App\Swagger\SwaggerDecorator:
-        decorates: 'api_platform.swagger.normalizer.documentation'
-        arguments: ['@App\Swagger\SwaggerDecorator.inner']
+    App\OpenApi\JwtDecorator:
+        decorates: 'api_platform.openapi.factory'
         autoconfigure: false
 ```
 
