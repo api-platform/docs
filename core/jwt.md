@@ -118,7 +118,7 @@ If your API uses a [path prefix](https://symfony.com/doc/current/routing/externa
 security:
     encoders:
         App\Entity\User:
-            algorithm: argon2i
+            algorithm: auto
 
     # https://symfony.com/doc/current/security.html#where-do-users-come-from-user-providers
     providers:
@@ -150,7 +150,7 @@ security:
                 failure_handler: lexik_jwt_authentication.handler.authentication_failure
 
     access_control:
-        - { path: ^/api/docs, roles: IS_AUTHENTICATED_ANONYMOUSLY } # Allows accessing the Swagger UI
+        - { path: ^/docs, roles: IS_AUTHENTICATED_ANONYMOUSLY } # Allows accessing API documentations and Swagger UI
         - { path: ^/authentication_token, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/, roles: IS_AUTHENTICATED_FULLY }
 ```
@@ -181,9 +181,7 @@ All you have to do is configure the API key in the `value` field.
 By default, [only the authorization header mode is enabled](https://github.com/lexik/LexikJWTAuthenticationBundle/blob/master/Resources/doc/index.md#2-use-the-token) in LexikJWTAuthenticationBundle.
 You must set the [JWT token](https://github.com/lexik/LexikJWTAuthenticationBundle/blob/master/Resources/doc/index.md#1-obtain-the-token) as below and click on the "Authorize" button.
 
-```
-Bearer MY_NEW_TOKEN
-```
+    Bearer MY_NEW_TOKEN
 
 ![Screenshot of API Platform with the configuration API Key](images/JWTConfigureApiKey.png)
 
@@ -193,35 +191,32 @@ We can add a `POST /authentication_token` endpoint to SwaggerUI to conveniently 
 
 ![API Endpoint to retrieve JWT Token from SwaggerUI](images/jwt-token-swagger-ui.png)
 
-To do it, we need to create a `SwaggerDecorator`:
+To do it, we need to create a decorator:
 
 ```php
 <?php
+// api/src/OpenApi/JwtDecorator.php
 
 declare(strict_types=1);
 
-namespace App\Swagger;
+namespace App\OpenApi;
 
 use ApiPlatform\Core\OpenApi\Factory\OpenApiFactoryInterface;
 use ApiPlatform\Core\OpenApi\OpenApi;
 use ApiPlatform\Core\OpenApi\Model;
-use ArrayObject;
-use Symfony\Component\HttpFoundation\Response;
 
-final class JWTSwaggerDecorator implements OpenApiFactoryInterface
+final class JwtDecorator implements OpenApiFactoryInterface
 {
-    private OpenApiFactoryInterface $decorated;
-
-    public function __construct(OpenApiFactoryInterface $decorated)
-    {
-        $this->decorated = $decorated;
-    }
+    public function __construct(
+        private OpenApiFactoryInterface $decorated
+    ) {}
 
     public function __invoke(array $context = []): OpenApi
     {
-        $openApi = $this->decorated->__invoke($context);
+        $openApi = ($this->decorated)($context);
+        $schemas = $openApi->getComponents()->getSchemas();
 
-        $openApi->getComponents()->getSchemas()['Token'] = new ArrayObject([
+        $schemas['Token'] = new ArrayObject([
             'type' => 'object',
             'properties' => [
                 'token' => [
@@ -230,51 +225,48 @@ final class JWTSwaggerDecorator implements OpenApiFactoryInterface
                 ],
             ],
         ]);
-
-        $openApi->getComponents()->getSchemas()['Credentials'] = new ArrayObject([
-                'type' => 'object',
-                'properties' => [
-                    'email' => [
-                        'type' => 'string',
-                        'example' => 'johndoe@example.com',
-                    ],
-                    'password' => [
-                        'type' => 'string',
-                        'example' => 'apassword',
-                    ],
+        $schemas['Credentials'] = new ArrayObject([
+            'type' => 'object',
+            'properties' => [
+                'email' => [
+                    'type' => 'string',
+                    'example' => 'johndoe@example.com',
                 ],
-            ]
-        );
+                'password' => [
+                    'type' => 'string',
+                    'example' => 'apassword',
+                ],
+            ],
+        ]);
 
         $pathItem = new Model\PathItem(
             ref: 'JWT Token',
             post: new Model\Operation(
                 operationId: 'postCredentialsItem',
                 responses: [
-                Response::HTTP_OK => [
-                    'description' => 'Get JWT token',
-                    'content' => [
-                        'application/json' => [
-                            'schema' => [
-                                '$ref' => '#/components/schemas/Token',
+                    '200' => [
+                        'description' => 'Get JWT token',
+                        'content' => [
+                            'application/json' => [
+                                'schema' => [
+                                    '$ref' => '#/components/schemas/Token',
+                                ],
                             ],
                         ],
                     ],
-                ]],
+                ],
                 summary: 'Get JWT token to login.',
                 requestBody: new Model\RequestBody(
-                description: 'Generate new JWT Token',
-                content: new ArrayObject(
-                [
-                    'application/json' => [
-                        'schema' => [
-                            '$ref' => '#/components/schemas/Credentials',
+                    description: 'Generate new JWT Token',
+                    content: new ArrayObject([
+                        'application/json' => [
+                            'schema' => [
+                                '$ref' => '#/components/schemas/Credentials',
+                            ],
                         ],
-                    ],
-                ]),
+                    ]),
+                ),
             ),
-
-            )
         );
         $openApi->getPaths()->addPath('/authentication_token', $pathItem);
 
@@ -286,12 +278,12 @@ final class JWTSwaggerDecorator implements OpenApiFactoryInterface
 And register this service in `config/services.yaml`:
 
 ```yaml
+# api/config/services.yaml
 services:
     # ...   
 
-    App\Swagger\JWTSwaggerDecorator:
+    App\OpenApi\JwtDecorator:
         decorates: 'api_platform.openapi.factory'
-        arguments: ['@App\Swagger\JWTSwaggerDecorator.inner']
         autoconfigure: false
 ```
 
