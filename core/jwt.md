@@ -300,7 +300,7 @@ services:
 
 ## Testing
 
-To test your authentication with ApiTestCase, you can write a method as below:
+To test your authentication with `ApiTestCase`, you can write a method as below:
 
 ```php
 <?php
@@ -308,15 +308,16 @@ To test your authentication with ApiTestCase, you can write a method as below:
 
 namespace App\Tests;
 
-use App\Entity\User;
 use ApiPlatform\Core\Bridge\Symfony\Bundle\Test\ApiTestCase;
+use App\Entity\User;
 use Hautelook\AliceBundle\PhpUnit\ReloadDatabaseTrait;
 
 class AuthenticationTest extends ApiTestCase
 {
     use ReloadDatabaseTrait;
 
-    public function testLogin(): void {
+    public function testLogin(): void
+    {
         $client = self::createClient();
 
         $user = new User();
