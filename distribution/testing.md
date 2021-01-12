@@ -220,7 +220,7 @@ transaction previously begun. Because of this, you can run your tests without wo
 
 All you have to do now is to run your tests:
 
-    $ docker-compose exec php vendor/bin/simple-phpunit
+    $ docker-compose exec php bin/phpunit
 
 If everything is working properly, you should see `OK (5 tests, 17 assertions)`.
 Your REST API is now properly tested!
