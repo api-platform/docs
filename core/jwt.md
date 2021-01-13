@@ -298,69 +298,60 @@ services:
         autoconfigure: false
 ```
 
-## Testing with Behat
+## Testing
 
-Let's configure Behat to automatically send an `Authorization` HTTP header containing a valid JWT token when a scenario is marked with a `@login` annotation. Edit `features/bootstrap/FeatureContext.php` and add the following methods:
+To test your authentication with `ApiTestCase`, you can write a method as below:
 
 ```php
 <?php
-// features/bootstrap/FeatureContext.php
+// tests/AuthenticationTest.php
 
+namespace App\Tests;
+
+use ApiPlatform\Core\Bridge\Symfony\Bundle\Test\ApiTestCase;
 use App\Entity\User;
-use Behat\Behat\Hook\Scope\BeforeScenarioScope;
-use Behatch\Context\RestContext;
+use Hautelook\AliceBundle\PhpUnit\ReloadDatabaseTrait;
 
-class FeatureContext implements Context, SnippetAcceptingContext
+class AuthenticationTest extends ApiTestCase
 {
-    // ...
-    // Must be after createDatabase() and dropDatabase() functions (the order matters)
+    use ReloadDatabaseTrait;
 
-    /**
-     * @BeforeScenario
-     * @login
-     *
-     * @see https://symfony.com/doc/current/security/entity_provider.html#creating-your-first-user
-     */
-    public function login(BeforeScenarioScope $scope)
+    public function testLogin(): void
     {
+        $client = self::createClient();
+
         $user = new User();
-        $user->setUsername('admin');
-        $user->setPassword('ATestPassword');
-        $user->setEmail('test@test.com');
+        $user->setEmail('test@example.com');
+        $user->setPassword(
+            self::$container->get('security.password_encoder')->encodePassword($user, '$3CR3T')
+        );
 
-        $this->manager->persist($user);
-        $this->manager->flush();
+        $manager = self::$container->get('doctrine')->getManager();
+        $manager->persist($user);
+        $manager->flush();
 
-        $token = $this->jwtManager->create($user);
+        // retrieve a token
+        $response = $client->request('POST', '/authentication_token', [
+            'headers' => ['Content-Type' => 'application/json'],
+            'json' => [
+                'email' => 'test@example.com',
+                'password' => '$3CR3T',
+            ],
+        ]);
 
-        $this->restContext = $scope->getEnvironment()->getContext(RestContext::class);
-        $this->restContext->iAddHeaderEqualTo('Authorization', "Bearer $token");
-    }
+        $json = $response->toArray();
+        $this->assertResponseIsSuccessful();
+        $this->assertArrayHasKey('token', $json);
 
-    /**
-     * @AfterScenario
-     * @logout
-     */
-    public function logout() {
-        $this->restContext->iAddHeaderEqualTo('Authorization', '');
+        // test not authorized
+        $client->request('GET', '/greetings');
+        $this->assertResponseStatusCodeSame(401);
+
+        // test authorized
+        $client->request('GET', '/greetings', ['auth_bearer' => $json['token']]);
+        $this->assertResponseIsSuccessful();
     }
 }
 ```
 
-Then, update `behat.yml` to inject the `lexik_jwt_authentication.jwt_manager`:
-
-```yaml
-# behat.yml
-default:
-  # ...
-  suites:
-    default:
-      contexts:
-        - FeatureContext: { doctrine: '@doctrine', 'jwtManager': '@lexik_jwt_authentication.jwt_manager' }
-        - Behat\MinkExtension\Context\MinkContext
-        - Behatch\Context\RestContext
-        - Behatch\Context\JsonContext
-  # ...
-```
-
-Finally, mark your scenarios with the `@login` annotation to automatically add a valid `Authorization` header, and with `@logout` to be sure to destroy the token after this scenario.
+Refer to [Testing the API](../distribution/testing.md) for more information about testing API Platform.
