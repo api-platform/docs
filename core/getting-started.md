@@ -54,7 +54,7 @@ class Product // The class name will be used to name exposed resources
      * @ORM\GeneratedValue(strategy="AUTO")
      * @ORM\Column(type="integer")
      */
-    private int $id;
+    private ?int $id = null;
 
     /**
      * A name property - this description will be available in the API documentation too.
@@ -62,7 +62,7 @@ class Product // The class name will be used to name exposed resources
      * @ORM\Column
      */
     #[Assert\NotBlank]
-    public string $name;
+    public string $name = '';
 
     // Notice the "cascade" option below, this is mandatory if you want Doctrine to automatically persist the related entity
     /**
@@ -70,7 +70,7 @@ class Product // The class name will be used to name exposed resources
      *
      * @ORM\OneToMany(targetEntity="Offer", mappedBy="product", cascade={"persist"})
      */
-    public $offers;
+    public iterable $offers;
 
     public function __construct()
     {
@@ -123,24 +123,24 @@ class Offer
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
      */
-    private int $id;
+    private ?int $id = null;
 
     /**
      * @ORM\Column(type="text")
      */
-    public string $description;
+    public string $description = '';
 
     /**
      * @ORM\Column(type="float")
      */
     #[Assert\NotBlank]
     #[Assert\Range(minMessage: 'The price must be superior to 0.', min: 0)]
-    public float $price;
+    public float $price = -1.0;
 
     /**
      * @ORM\ManyToOne(targetEntity="Product", inversedBy="offers")
      */
-    public ?Product $product;
+    public ?Product $product = null;
 
     public function getId(): ?int
     {
