@@ -8,7 +8,7 @@ The Next.js Client Generator generates components for Server Side Rendered appli
 
 ### Next + Express Server
 
-Create a [Next.js application with express server](https://github.com/zeit/next.js/tree/canary/examples/custom-server-express). The easiest way is to execute:  
+Create a [Next.js application with express server](https://github.com/zeit/next.js/tree/canary/examples/custom-server-express). The easiest way is to execute:
 
     $ npx create-next-app your-app-name
     # or
@@ -33,13 +33,13 @@ Install required dependencies:
 
 ## Starting the Project
 
-You can launch the server with 
+You can launch the server with
 
     $ yarn dev
 
-Go to `https://localhost:3000/books/` to start using your app.
+Go to `http://localhost:3000/books/` to start using your app.
 
 ## Screenshots
 
-![List](images/nextjs/client-generator-nextjs-list.png)  
+![List](images/nextjs/client-generator-nextjs-list.png)
 ![Show](images/nextjs/client-generator-nextjs-show.png)
