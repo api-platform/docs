@@ -70,13 +70,10 @@ namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
 
-/**
- * ...
- * @ApiResource(
- *     collectionOperations={"get"},
- *     itemOperations={"get"}
- * )
- */
+#[ApiResource(
+    collectionOperations: ['get'],
+    itemOperations: ['get'],
+)]
 class Book
 {
     // ...
@@ -122,13 +119,14 @@ namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
 
-/**
- * ...
- * @ApiResource(
- *     collectionOperations={"get"={"method"="GET"}},
- *     itemOperations={"get"={"method"="GET"}}
- * )
- */
+#[ApiResource(
+    collectionOperations: [
+        'get' => ['method' => 'get'],
+    ],
+    itemOperations: [
+        'get' => ['method' => 'get'],
+    ],
+)]
 class Book
 {
     // ...
@@ -149,23 +147,21 @@ namespace App\Entity;
 use ApiPlatform\Core\Action\NotFoundAction;
 use ApiPlatform\Core\Annotation\ApiResource;
 
-/**
- * @ApiResource(
- *     collectionOperations={
- *         "get",
- *     },
- *     itemOperations={
- *         "get"={
- *             "controller"=NotFoundAction::class,
- *             "read"=false,
- *             "output"=false,
- *         },
- *     },
- * )
- */
- class Book
- {
- }
+#[ApiResource(
+    collectionOperations: [
+        'get' => ['method' => 'get'],
+    ],
+    itemOperations: [
+        'get' => [
+            'controller' => NotFoundAction::class,
+            'read' => false,
+            'output' => false,
+        ],
+    ],
+)]
+class Book
+{
+}
 ```
 
 ## Configuring Operations
@@ -184,24 +180,24 @@ namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
 
-/**
- * ...
- * @ApiResource(
- *     collectionOperations={
- *         "post"={"path"="/grimoire", "status"=301}
- *     },
- *     itemOperations={
- *         "get"={
- *             "path"="/grimoire/{id}",
- *             "requirements"={"id"="\d+"},
- *             "defaults"={"color"="brown"},
- *             "options"={"my_option"="my_option_value"},
- *             "schemes"={"https"},
- *             "host"="{subdomain}.api-platform.com"
- *         }
- *     }
- * )
- */
+#[ApiResource(
+    collectionOperations: [
+        'post' => [
+            'path' => '/grimoire',
+            'status' => 301,
+        ],
+    ],
+    itemOperations: [
+        'get' => [
+            'path' => '/grimoire/{id}',
+            'requirements' => ['id' => '\d+'],
+            'defaults' => ['color' => 'brown'],
+            'options' => ['my_option' => 'my_option_value'],
+            'schemes' => ['https'],
+            'host' => '{subdomain}.api-platform.com',
+        ],
+    ],
+)]
 class Book
 {
     //...
@@ -284,9 +280,7 @@ namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
 
-/**
- * @ApiResource(routePrefix="/library")
- */
+#[ApiResource(routePrefix: '/library')]
 class Book
 {
     //...
@@ -340,24 +334,19 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class CreateBookPublication
 {
-    private $bookPublishingHandler;
-
-    public function __construct(BookPublishingHandler $bookPublishingHandler)
-    {
-        $this->bookPublishingHandler = $bookPublishingHandler;
-    }
-
-    /**
-     * @Route(
-     *     name="book_post_publication",
-     *     path="/books/{id}/publication",
-     *     methods={"POST"},
-     *     defaults={
-     *         "_api_resource_class"=Book::class,
-     *         "_api_item_operation_name"="post_publication"
-     *     }
-     * )
-     */
+    public function __construct(
+        private BookPublishingHandler $bookPublishingHandler
+    ) {}
+    
+    #[Route(
+        path: '/books/{id}/publication',
+        name: 'book_post_publication',
+        defaults: [
+            '_api_resource_class' => Book::class,
+            '_api_item_operation_name' => 'post_publication',
+        ],
+        methods: ['POST'],
+    )]
     public function __invoke(Book $data): Book
     {
         $this->bookPublishingHandler->handle($data);
@@ -424,34 +413,26 @@ use Doctrine\ORM\Mapping as ORM;
 class Place
 {
     /**
-      * @var int
-      * 
-      * @ORM\Id
-      * @ORM\GeneratedValue
-      * @ORM\Column(type="integer")
-      */
-    private $id;
+     * @ORM\Id
+     * @ORM\GeneratedValue
+     * @ORM\Column(type="integer")
+     */
+    private ?int $id = null;
 
     /**
-      * @var string
-      * 
-      * @ORM\Column
-      */
-    private $name;
+     * @ORM\Column
+     */
+    private string $name = '';
 
     /**
-      * @var float
-      * 
-      * @ORM\Column(type="float")
-      */
-    private $latitude;
+     * @ORM\Column(type="float")
+     */
+    private float $latitude = 0;
 
     /**
-      * @var float
-      * 
-      * @ORM\Column(type="float")
-      */
-    private $longitude;
+     * @ORM\Column(type="float")
+     */
+    private float $longitude = 0;
 
     // ...
 }
@@ -465,15 +446,9 @@ namespace App\Entity;
 
 class Weather
 {
-    /**
-      * @var float
-      */
-    private $temperature;
+    private float $temperature;
 
-    /**
-      * @var float
-      */
-    private $pressure;
+    private float $pressure;
 
     // ...
 }
@@ -495,19 +470,23 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity
- *
- * @ApiResource(
- *     itemOperations={
- *         "get",
- *         "put",
- *         "delete",
- *         "get_weather": {
- *             "method": "GET",
- *             "path": "/places/{id}/weather",
- *             "controller": GetWeather::class
- *         }
- * }, collectionOperations={"get", "post"})
  */
+#[ApiResource(
+    collectionOperations: [
+        'get',
+        'post',
+    ],
+    itemOperations: [
+        'get',
+        'put',
+        'delete',
+        'get_weather' => [
+            'method' => 'GET',
+            'path' => '/places/{id}/weather',
+            'controller' => GetWeather::class,
+        ],
+    ],
+)]
 class Place
 {
     // ...
@@ -525,9 +504,7 @@ namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
 
-/**
- * @ApiResource
- */
+#[ApiResource]
 class Weather
 {
     // ...
@@ -545,14 +522,14 @@ namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
 
-/**
- * @ApiResource(itemOperations={
- *     "get": {
- *         "method": "GET",
- *         "controller": SomeRandomController::class
- *     }
- * })
- */
+#[ApiResource(
+    itemOperations: [
+        'get' => [
+            'method' => 'GET',
+            'controller' => SomeRandomController::class,
+        ],
+    ],
+)]
 class Weather
 {
     // ...
@@ -574,12 +551,9 @@ use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
 final class SwaggerDecorator implements NormalizerInterface
 {
-    private $decorated;
-
-    public function __construct(NormalizerInterface $decorated)
-    {
-        $this->decorated = $decorated;
-    }
+    public function __construct(
+        private NormalizerInterface $decorated
+    ) {}
 
     public function normalize($object, $format = null, array $context = [])
     {
