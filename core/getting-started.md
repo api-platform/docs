@@ -44,37 +44,39 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * @ApiResource
  * @ORM\Entity
  */
+#[ApiResource]
 class Product // The class name will be used to name exposed resources
 {
     /**
-     * @ORM\Column(type="integer")
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
+     * @ORM\Column(type="integer")
      */
-    private $id;
+    private ?int $id = null;
 
     /**
-     * @var string $name A name property - this description will be available in the API documentation too.
+     * A name property - this description will be available in the API documentation too.
      *
      * @ORM\Column
-     * @Assert\NotBlank
      */
-    public $name;
+    #[Assert\NotBlank]
+    public string $name = '';
 
     // Notice the "cascade" option below, this is mandatory if you want Doctrine to automatically persist the related entity
     /**
+     * @var Offer[]|ArrayCollection
+     *
      * @ORM\OneToMany(targetEntity="Offer", mappedBy="product", cascade={"persist"})
      */
-    public $offers;
+    public iterable $offers;
 
     public function __construct()
     {
         $this->offers = new ArrayCollection(); // Initialize $offers as a Doctrine collection
     }
-    
+
     public function getId(): ?int
     {
         return $this->id;
@@ -93,7 +95,7 @@ class Product // The class name will be used to name exposed resources
         $offer->product = null;
         $this->offers->removeElement($offer);
     }
-    
+
     // ...
 }
 ```
@@ -111,9 +113,9 @@ use Symfony\Component\Validator\Constraints as Assert;
 /**
  * An offer from my shop - this description will be automatically extracted from the PHPDoc to document the API.
  *
- * @ApiResource(iri="http://schema.org/Offer")
  * @ORM\Entity
  */
+#[ApiResource(iri: 'http://schema.org/Offer')]
 class Offer
 {
     /**
@@ -121,25 +123,23 @@ class Offer
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
      */
-    private $id;
+    private ?int $id = null;
 
     /**
      * @ORM\Column(type="text")
      */
-    public $description;
+    public string $description = '';
 
     /**
      * @ORM\Column(type="float")
-     * @Assert\NotBlank
-     * @Assert\Range(min=0, minMessage="The price must be superior to 0.")
-     * @Assert\Type(type="float")
      */
-    public $price;
+    #[Assert\Range(minMessage: 'The price must be superior to 0.', min: 0)]
+    public float $price = -1.0;
 
     /**
      * @ORM\ManyToOne(targetEntity="Product", inversedBy="offers")
      */
-    public $product;
+    public ?Product $product = null;
 
     public function getId(): ?int
     {
