@@ -702,6 +702,15 @@ services:
         decorates: 'api_platform.jsonld.normalizer.item'
         arguments: [ '@App\Serializer\ApiNormalizer.inner' ]
 ```
+You can also use the new simplified decorators as follow :
+
+```yaml
+# api/config/services.yaml
+services:
+    'App\Serializer\ApiNormalizer':
+        # By default .inner is passed as argument
+        decorates: 'api_platform.jsonld.normalizer.item'
+```
 
 Note: this normalizer will work only for JSON-LD format, if you want to process JSON data too, you have to decorate another service:
 
