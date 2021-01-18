@@ -699,10 +699,16 @@ date on each request in `GET`:
 # api/config/services.yaml
 services:
     'App\Serializer\ApiNormalizer':
+        # By default .inner is passed as argument
         decorates: 'api_platform.jsonld.normalizer.item'
-        arguments: [ '@App\Serializer\ApiNormalizer.inner' ]
 ```
 
+Note: this normalizer will only work for JSON-LD format, if you want to process JSON data too, you have to decorate another service:
+
+```yaml
+    App\Serializer\ApiNormalizer:
+        decorates: 'api_platform.serializer.normalizer.item'
+```
 ```php
 <?php
 // api/src/Serializer/ApiNormalizer
