@@ -86,7 +86,7 @@ api_platform:
         App\Exception\ProductNotFoundException: 404 # Here is the handler for our custom exception
 ```
 
-Any type of `Exception` can be thrown, API Platform will convert it to a Symfony's `HttpException`. The framework also takes
+Any type of `Exception` can be thrown, API Platform will convert it to a Symfony's `HttpException` (note that it means the exception will be flattened and lose all of its custom properties). The framework also takes
 care of serializing the error description according to the request format. For instance, if the API should respond in JSON-LD,
 the error will be returned in this format as well:
 
