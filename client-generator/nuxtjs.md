@@ -30,8 +30,24 @@ Deployment target: Static (Static/JAMStack hosting)
 
 Install required dependencies:
 
-    $ yarn add moment lodash vue-i18n vuelidate vuex-map-fields
+    $ yarn add moment lodash vue-i18n vuelidate vuex-map-fields nuxt-i18n
+    # yarn add --dev @nuxtjs/vuetify @nuxtjs/fontawesome
 
+## Updating nuxtjs config
+
+Update your `nuxt.config.js` with following:
+
+```javascript
+  buildModules: [
+    // ...
+    '@nuxtjs/vuetify',
+    '@nuxtjs/fontawesome',
+    'nuxt-i18n'
+  ],
+  // ...
+  // to avoid name conflicts in generators
+  components: false,  
+```
 ## Generating Routes
 
     $ npx @api-platform/client-generator https://demo.api-platform.com . --generator nuxt
@@ -95,7 +111,7 @@ Update your `layouts/default.vue` with following:
 </template>
 
 <script>
-import Alert from '../components/Alert';
+import Alert from '../components/Alert'
 
 export default {
   components: {
@@ -103,10 +119,14 @@ export default {
   },
 
   data: () => ({
-    date: new Date().getFullYear(),
+    date: null,
     drawer: null
-  })
-};
+  }),
+
+  mounted () {
+    this.date = new Date().getFullYear()
+  }
+}
 </script>
 ```
 
