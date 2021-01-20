@@ -1,22 +1,22 @@
 # Uploading Images and Linking to Other Entities
 
-Api-platform Core has file uploading support as shown in [Handling File Upload](https://api-platform.com/docs/master/core/file-upload/#handling-file-upload). With React admin's excellent [customization capabilities](customizing.md) we can add file and Image support in the admin panel . 
+API Platform Core has file uploading support as shown in [Handling File Upload](../core/file-upload/#handling-file-upload.md). With React Admin's excellent [customization capabilities](customizing.md) we can add file and Image support in the admin panel. 
 
 ## Decorating your Data Provider to add upload features
 
 Instead of writing your own Data Provider, you can enhance the capabilities of an existing data provider. You can even restrict the feature only for a given resource (entity) . 
 
 ```javascript
-//in addUploadFeature.js
+// addUploadFeature.js
 
-//retreiving URL and Headers for AJAX request using fetch api . 
-const entrypoint = "http://localhost:8000/api";
+// Retreiving URL and Headers for AJAX request using fetch api . 
+const entrypoint = 'ttp://localhost:8000/api';
 const fetchHeaders = {'Authorization': `Bearer ${window.localStorage.getItem('token')}`};
 
 const addUploadCapabilities = requestHandler => {
     return (type, resource, params) => {
 
-//upload image to image_objects endpoint and link back the image
+        // Upload image to image_objects endpoint and link back the image
         if (type === 'CREATE' && resource === 'books') {
 
             if (params.data.file.rawFile instanceof File) {
@@ -51,18 +51,18 @@ const addUploadCapabilities = requestHandler => {
 export default addUploadCapabilities;
 ```
 
-Take a more complete App.js example from [Authentication Docs](https://api-platform.com/docs/master/admin/authentication-support/#authentication-support).To enhance the provider with the upload feature, compose addUploadFeature function with the data provider function:
-```javascript
+Take a more complete App.js example from [Authentication Docs](authentication-support.md).To enhance the provider with the upload feature, compose addUploadFeature function with the data provider function:
 
+```javascript
 import addUploadFeature from '../addUploadFeature';
 
-...
+// ...
 
 const dataProvider = baseDataProvider(entrypoint, fetchHydra, apiDocumentationParser);
-//add your existing dataprovider to have upload feature and use that instead
+// Add your existing dataprovider to have upload feature and use that instead
 const uploadCapableDataProvider = addUploadFeature(dataProvider);
 
-...
+// ...
 
 export default props => (
     <HydraAdmin
@@ -74,10 +74,9 @@ export default props => (
 );
 ```
 
-The Admin is now capable of handling files . What is now left is to set appropriate Fields and Input for our `Book` resources . Hence we refer back to  [Customising](customizing.md) the admin part to change the Create Book View . 
+The Admin is now capable of handling files. What is now left is to set appropriate Fields and Input for our `Book` resources. Hence we refer back to [Customising](customizing.md) the admin part to change the Create Book View.
 
 ```javascript
-
 const BookCreate = props => (
     <CreateGuesser {...props}>
         <InputGuesser source={"title"} />
@@ -89,4 +88,4 @@ const BookCreate = props => (
     </CreateGuesser>
 ```
 
-Upon submission , The file is handled on the client side first , and `POST` uploaded to `/image_objects` endpoint . The response is parsed and the image_object `id`  is added back to default request to be made by the admin. 
+Upon submission, The file is handled on the client side first, and `POST` uploaded to `/image_objects` endpoint. The response is parsed and the image_object `id`  is added back to default request to be made by the admin. 
