@@ -367,6 +367,8 @@ class Book
 ```yaml
 # api/config/api_platform/resources.yaml
 App\Entity\Book:
+    attributes:
+        route_prefix: /library
     itemOperations:
         get: ~
         post_publication:
