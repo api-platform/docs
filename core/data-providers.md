@@ -40,7 +40,6 @@ namespace App\DataProvider;
 
 use ApiPlatform\Core\DataProvider\ContextAwareCollectionDataProviderInterface;
 use ApiPlatform\Core\DataProvider\RestrictedDataProviderInterface;
-use ApiPlatform\Core\Exception\ResourceClassNotSupportedException;
 use App\Entity\BlogPost;
 
 final class BlogPostCollectionDataProvider implements ContextAwareCollectionDataProviderInterface, RestrictedDataProviderInterface
@@ -74,8 +73,7 @@ services:
 
 Tagging the service with the tag `api_platform.collection_data_provider` will enable API Platform Core to automatically
 register and use this data provider. The optional attribute `priority` allows you to define the order in which the
-data providers are called. The first data provider not throwing a `ApiPlatform\Core\Exception\ResourceClassNotSupportedException`
-will be used.
+data providers are called. Implementing the `ApiPlatform\Core\DataProvider\RestrictedDataProviderInterface` let you restrict the data provider use. Alternatively, you can also throw a `ApiPlatform\Core\Exception\ResourceClassNotSupportedException`. Without the `RestrictedDataProviderInterface`, the first data provider not throwing this exception will be used.
 
 You can find a full working example in the [API Platform's demo application](https://github.com/api-platform/demo/blob/master/api/src/DataProvider/TopBookCollectionDataProvider.php).
 
@@ -94,7 +92,6 @@ namespace App\DataProvider;
 
 use ApiPlatform\Core\DataProvider\ItemDataProviderInterface;
 use ApiPlatform\Core\DataProvider\RestrictedDataProviderInterface;
-use ApiPlatform\Core\Exception\ResourceClassNotSupportedException;
 use App\Entity\BlogPost;
 
 final class BlogPostItemDataProvider implements ItemDataProviderInterface, RestrictedDataProviderInterface
@@ -145,7 +142,6 @@ namespace App\DataProvider;
 use ApiPlatform\Core\DataProvider\ItemDataProviderInterface;
 use ApiPlatform\Core\DataProvider\SerializerAwareDataProviderInterface;
 use ApiPlatform\Core\DataProvider\SerializerAwareDataProviderTrait;
-use ApiPlatform\Core\Exception\ResourceClassNotSupportedException;
 use App\Entity\BlogPost;
 
 final class BlogPostItemDataProvider implements ItemDataProviderInterface, SerializerAwareDataProviderInterface
@@ -203,7 +199,6 @@ use ApiPlatform\Core\Bridge\Doctrine\Orm\Extension\QueryResultItemExtensionInter
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Util\QueryNameGenerator;
 use ApiPlatform\Core\DataProvider\ItemDataProviderInterface;
 use ApiPlatform\Core\DataProvider\RestrictedDataProviderInterface;
-use ApiPlatform\Core\Exception\ResourceClassNotSupportedException;
 use App\Entity\BlogPost;
 use Doctrine\Persistence\ManagerRegistry;
 
