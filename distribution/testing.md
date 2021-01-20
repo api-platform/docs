@@ -208,7 +208,7 @@ publicationDate: This value should not be null.',
             'password' => 'admin',
         ]]);
         
-        $this->assertResponseIsSuccessfull();
+        $this->assertResponseIsSuccessful();
     }
 }
 ```
@@ -220,7 +220,7 @@ transaction previously begun. Because of this, you can run your tests without wo
 
 All you have to do now is to run your tests:
 
-    $ docker-compose exec php vendor/bin/simple-phpunit
+    $ docker-compose exec php bin/phpunit
 
 If everything is working properly, you should see `OK (5 tests, 17 assertions)`.
 Your REST API is now properly tested!
@@ -237,7 +237,7 @@ To do so, learn how to write unit tests with [PHPUnit](https://phpunit.de/index.
 You may also be interested in these alternative testing tools (not included in the API Platform distribution):
 
 * [Behat](http://behat.org/en/latest/) and its [Behatch extension](https://github.com/Behatch/contexts), a
-  [Behavior-Driven development](https://en.wikipedia.org/wiki/Behavior-driven_development) framework to write the API
+  [behavior-driven development (BDD)](https://en.wikipedia.org/wiki/Behavior-driven_development) framework to write the API
   specification as user stories and in natural language then execute these scenarios against the application to validate
   its behavior;
 * [Blackfire Player](https://blackfire.io/player), a nice DSL to crawl HTTP services, assert responses, and extract data
@@ -246,3 +246,15 @@ You may also be interested in these alternative testing tools (not included in t
   Platform project using a nice UI, benefit from [the Swagger integration](https://www.getpostman.com/docs/importing_swagger)
   and run tests in the CI using [newman](https://github.com/postmanlabs/newman);
 * [PHP Matcher](https://github.com/coduo/php-matcher), the Swiss Army knife of JSON document testing.
+
+## Using the API Platform Distribution for End-to-end Testing
+
+If you would like to verify that your stack (including services such as the DBMS, web server, [Varnish](https://varnish-cache.org/))
+works, you need [end-to-end (E2E) testing](https://wiki.c2.com/?EndToEndPrinciple).
+
+It is also useful to do a [smoke test](https://en.wikipedia.org/wiki/Smoke_testing_(software)) to check that your application
+is working; for example, that the application's entrypoint is accessible. This could be used as a quick test after each
+Docker build to ensure that the Docker images are not broken.
+
+Usually, this should be done with a production-like setup. For your convenience, you may [run our Docker Compose setup
+for production locally](../deployment/docker-compose.md#running-the-docker-compose-setup-for-production-locally).

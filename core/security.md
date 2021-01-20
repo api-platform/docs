@@ -194,6 +194,8 @@ class Book
 }
 ```
 
+Please note that if you use both `attributes={"security"="..` and then `"post" = { "security_post_denormalize" = "...`, the `security` on top level is called first, and after `security_post_denormalize`. This could lead to unwanted behaviour, so avoid using both of them simultaneously. If you need to use `security_post_denormalize`, consider adding `security` for the other operations instead of the global one.
+
 Create a *BookVoter* with the `bin/console make:voter` command:
 
 ```php
@@ -248,9 +250,9 @@ class BookVoter extends Voter
 }
 ```
 
-*Note 1: when using Voters on POST methods: The voter needs an `$attribute` and `$subject` as input parameter, so you have to use the `security_post_denormalize` (i.e. `"post" = { "security_post_denormalize" = "is_granted('BOOK_CREATE', object)" }` ) because the object does not exist before denormalization (it is not created, yet.)*
+*Note 1: When using Voters on POST methods: The voter needs an `$attribute` and `$subject` as input parameter, so you have to use the `security_post_denormalize` (i.e. `"post" = { "security_post_denormalize" = "is_granted('BOOK_CREATE', object)" }` ) because the object does not exist before denormalization (it is not created, yet.)*
 
-*Note 2: You can't use Voters on the collection GET method, use [Collection Filters](https://api-platform.com/docs/core/security/#filtering-collection-according-to-the-current-user-permissions) instead.
+*Note 2: You can't use Voters on the collection GET method, use [Collection Filters](https://api-platform.com/docs/core/security/#filtering-collection-according-to-the-current-user-permissions) instead.*
 
 ## Configuring the Access Control Error Message
 

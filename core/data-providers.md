@@ -38,19 +38,18 @@ If no data is available, you should return an empty array.
 
 namespace App\DataProvider;
 
-use ApiPlatform\Core\DataProvider\CollectionDataProviderInterface;
+use ApiPlatform\Core\DataProvider\ContextAwareCollectionDataProviderInterface;
 use ApiPlatform\Core\DataProvider\RestrictedDataProviderInterface;
-use ApiPlatform\Core\Exception\ResourceClassNotSupportedException;
 use App\Entity\BlogPost;
 
-final class BlogPostCollectionDataProvider implements CollectionDataProviderInterface, RestrictedDataProviderInterface
+final class BlogPostCollectionDataProvider implements ContextAwareCollectionDataProviderInterface, RestrictedDataProviderInterface
 {
     public function supports(string $resourceClass, string $operationName = null, array $context = []): bool
     {
         return BlogPost::class === $resourceClass;
     }
 
-    public function getCollection(string $resourceClass, string $operationName = null): \Generator
+    public function getCollection(string $resourceClass, string $operationName = null, array $context = []): iterable
     {
         // Retrieve the blog post collection from somewhere
         yield new BlogPost(1);
@@ -74,8 +73,9 @@ services:
 
 Tagging the service with the tag `api_platform.collection_data_provider` will enable API Platform Core to automatically
 register and use this data provider. The optional attribute `priority` allows you to define the order in which the
-data providers are called. The first data provider not throwing a `ApiPlatform\Core\Exception\ResourceClassNotSupportedException`
-will be used.
+data providers are called. Implementing the `ApiPlatform\Core\DataProvider\RestrictedDataProviderInterface` let you restrict the data provider use. Alternatively, you can also throw a `ApiPlatform\Core\Exception\ResourceClassNotSupportedException`. Without the `RestrictedDataProviderInterface`, the first data provider not throwing this exception will be used.
+
+You can find a full working example in the [API Platform's demo application](https://github.com/api-platform/demo/blob/master/api/src/DataProvider/TopBookCollectionDataProvider.php).
 
 ## Custom Item Data Provider
 
@@ -92,7 +92,6 @@ namespace App\DataProvider;
 
 use ApiPlatform\Core\DataProvider\ItemDataProviderInterface;
 use ApiPlatform\Core\DataProvider\RestrictedDataProviderInterface;
-use ApiPlatform\Core\Exception\ResourceClassNotSupportedException;
 use App\Entity\BlogPost;
 
 final class BlogPostItemDataProvider implements ItemDataProviderInterface, RestrictedDataProviderInterface
@@ -125,6 +124,8 @@ services:
         #tags: [ 'api_platform.item_data_provider' ]
 ```
 
+You can find a full working example in the [API Platform's demo application](https://github.com/api-platform/demo/blob/master/api/src/DataProvider/TopBookItemDataProvider.php).
+
 ## Injecting the Serializer in an `ItemDataProvider`
 
 In some cases, you may need to inject the `Serializer` in your `DataProvider`. There are no issues with the
@@ -141,7 +142,6 @@ namespace App\DataProvider;
 use ApiPlatform\Core\DataProvider\ItemDataProviderInterface;
 use ApiPlatform\Core\DataProvider\SerializerAwareDataProviderInterface;
 use ApiPlatform\Core\DataProvider\SerializerAwareDataProviderTrait;
-use ApiPlatform\Core\Exception\ResourceClassNotSupportedException;
 use App\Entity\BlogPost;
 
 final class BlogPostItemDataProvider implements ItemDataProviderInterface, SerializerAwareDataProviderInterface
@@ -199,9 +199,8 @@ use ApiPlatform\Core\Bridge\Doctrine\Orm\Extension\QueryResultItemExtensionInter
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Util\QueryNameGenerator;
 use ApiPlatform\Core\DataProvider\ItemDataProviderInterface;
 use ApiPlatform\Core\DataProvider\RestrictedDataProviderInterface;
-use ApiPlatform\Core\Exception\ResourceClassNotSupportedException;
 use App\Entity\BlogPost;
-use Doctrine\Common\Persistence\ManagerRegistry;
+use Doctrine\Persistence\ManagerRegistry;
 
 final class BlogPostItemDataProvider implements ItemDataProviderInterface, RestrictedDataProviderInterface
 {

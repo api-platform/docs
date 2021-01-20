@@ -12,7 +12,7 @@ By default, all filters are disabled. They must be enabled explicitly.
 When a filter is enabled, it automatically appears in the [OpenAPI](swagger.md) and [GraphQL](graphql.md) documentations.
 It is also automatically documented as a `hydra:search` property for JSON-LD responses.
 
-<p align="center" class="symfonycasts"><a href="https://symfonycasts.com/screencast/api-platform/json-ld?cid=apip"><img src="../distribution/images/symfonycasts-player.png" alt="Filtering and Searching screencast"><br>Watch the Filtering & Searching screencast</a>
+<p align="center" class="symfonycasts"><a href="https://symfonycasts.com/screencast/api-platform/filters?cid=apip"><img src="../distribution/images/symfonycasts-player.png" alt="Filtering and Searching screencast"><br>Watch the Filtering & Searching screencast</a>
 
 ## Doctrine ORM and MongoDB ODM Filters
 
@@ -905,50 +905,9 @@ final class RegexpFilter extends AbstractContextAwareFilter
 }
 ```
 
-Then, register this filter as a service:
+Thanks to [Symfony's automatic service loading](https://symfony.com/doc/current/service_container.html#service-container-services-load-example), which is enabled by default in the API Platform distribution, the filter is automatically registered as a service!
 
-```yaml
-# api/config/services.yaml
-services:
-    # ...
-    'App\Filter\RegexpFilter':
-        # Uncomment only if autoconfiguration isn't enabled
-        #tags: [ 'api_platform.filter' ]
-```
-
-In the previous example, the filter can be applied on any property. However, thanks to the `AbstractFilter` class,
-it can also be enabled for some properties:
-
-```yaml
-# api/config/services.yaml
-services:
-    'App\Filter\RegexpFilter':
-        arguments: [ '@doctrine', ~, '@?logger', { email: ~, anOtherProperty: ~ } ]
-        # Uncomment only if autoconfiguration isn't enabled
-        #tags: [ 'api_platform.filter' ]
-```
-
-Finally, add this filter to resources you want to be filtered:
-
-```php
-<?php
-// api/src/Entity/Offer.php
-
-namespace App\Entity;
-
-use ApiPlatform\Core\Annotation\ApiResource;
-use App\Filter\RegexpFilter;
-
-/**
- * @ApiResource(attributes={"filters"={RegexpFilter::class}})
- */
-class Offer
-{
-    // ...
-}
-```
-
-Or by using the `ApiFilter` annotation:
+Finally, add this filter to resources you want to be filtered by using the `ApiFilter` annotation:
 
 ```php
 <?php
@@ -969,10 +928,87 @@ class Offer
     // ...
 }
 ```
-When using `ApiFilter` annotation, the declared properties in the `services.yaml` will not be taken into account. You have to use the `ApiFilter` way (see the [documentation](#apifilter-annotation)).
 
-Finally you can use this filter in the URL like `http://example.com/offers?regexp_email=^[FOO]`. This new filter will also
-appear in Swagger and Hydra documentations.
+You can now use this filter in the URL like `http://example.com/offers?regexp_email=^[FOO]`. This new filter will also
+appear in OpenAPI and Hydra documentations.
+
+In the previous example, the filter can be applied on any property. You can also apply this filter on a specific property:
+
+```php
+<?php
+// api/src/Entity/Offer.php
+
+namespace App\Entity;
+
+use ApiPlatform\Core\Annotation\ApiFilter;
+use ApiPlatform\Core\Annotation\ApiResource;
+use App\Filter\RegexpFilter;
+
+/**
+ * @ApiResource
+ */
+class Offer
+{
+    // ...
+
+    /**
+     * @ApiFilter(RegexpFilter::class)
+     */
+    public string $name;
+}
+```
+
+#### Manual Service and Attribute Registration
+
+If you don't use Symfony's automatic service loading, you have to register the filter as a service by yourself.
+Use the following service definition (remember, by default, this isn't needed!):
+
+```yaml
+# api/config/services.yaml
+services:
+    # ...
+    # This whole definition can be omitted if automatic service loading is enabled
+    'App\Filter\RegexpFilter':
+        # The "arguments" key can be omitted if the autowiring is enabled
+        arguments: [ '@doctrine', ~, '@?logger' ]
+        # The "tags" key can be omitted if the autoconfiguration is enabled
+        tags: [ 'api_platform.filter' ]
+```
+
+In the previous example, the filter can be applied on any property. However, thanks to the `AbstractFilter` class,
+it can also be enabled for some properties:
+
+```yaml
+# api/config/services.yaml
+services:
+    'App\Filter\RegexpFilter':
+        arguments: [ '@doctrine', ~, '@?logger', { email: ~, anOtherProperty: ~ } ]
+        tags: [ 'api_platform.filter' ]
+```
+
+Finally, if you don't want to use the `@ApiFilter` annotation, you can register the filter on an API resource class using the `filters` attribute:
+
+```php
+<?php
+// api/src/Entity/Offer.php
+
+namespace App\Entity;
+
+use ApiPlatform\Core\Annotation\ApiResource;
+use App\Filter\RegexpFilter;
+
+/**
+ * @ApiResource(
+ *   attributes={
+ *     "filters"={RegexpFilter::class}
+ *   }
+ * )
+ */
+class Offer
+{
+    // ...
+}
+```
 
 ### Creating Custom Doctrine MongoDB ODM Filters
 

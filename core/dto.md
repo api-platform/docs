@@ -66,7 +66,7 @@ Note that `Book` entity needs an id property. The simplest way is adding a publi
 
 To create a `Book`, we `POST` a data structure corresponding to the `BookInput` class and get back in the response a data structure corresponding to the `BookOutput` class:
 
-![Diagram post input output](images/diagrams/api-platform-post-i-o.png)
+![Diagram post input output](images/diagrams/api-platform-post-i-o.svg)
 
 To simplify object transformations we have to implement a Data Transformer that will convert the input into a resource or a resource into an output.
 
@@ -202,7 +202,7 @@ services:
 
 When performing an update (e.g. `PUT` operation), the resource to be updated is read by ApiPlatform before the deserialization phase. To do so, it uses a [data provider](data-providers.md) with the `:id` parameter given in the URL. The *body* of the request is the JSON object sent by the client, it is deserialized and is used to update the previously found resource.
 
-![Diagram put input output](images/diagrams/api-platform-put-i-o.png)
+![Diagram put input output](images/diagrams/api-platform-put-i-o.svg)
 
 Now, we will update our resource by using a different input representation.
 
@@ -319,13 +319,13 @@ resources:
     App\Entity\Book:
         collectionOperations:
             create:
-                method: POST,
-                input: App\Dto\CreateBook,
+                method: POST
+                input: App\Dto\CreateBook
                 output: App\Dto\BookOutput
         itemOperations:
             update:
-                method: PUT,
-                input: App\Dto\UpdateBook,
+                method: PUT
+                input: App\Dto\UpdateBook
                 output: App\Dto\BookOutput
 ```
 

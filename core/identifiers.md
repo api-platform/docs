@@ -9,11 +9,13 @@ To help with your development experience, we introduced an identifier normalizat
 
 Let's say you have the following class, which is identified by a `UUID` type. In this example, `UUID` is not a simple string but an object with many attributes.
 
+[codeSelector]
 ```php
 <?php
 namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Core\Annotation\ApiProperty;
 use App\Uuid;
 
 /**
@@ -30,6 +32,15 @@ final class Person
     // ...
 }
 ```
+
+```xml
+<resources xmlns="https://api-platform.com/schema/metadata">
+    <resource class="App\EntityPerson">
+        <property name="code" identifier="true"/>
+    </resource>
+</resources>
+```
+[/codeSelector]
 
 Once registered as an `ApiResource`, having an existing person, it will be accessible through the following URL: `/people/110e8400-e29b-11d4-a716-446655440000`.
 Note that the property identifying our resource is named `code`.
@@ -130,6 +141,7 @@ If your resource is also a Doctrine entity and you want to use another identifie
 namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Core\Annotation\ApiProperty;
 use App\Uuid;
 use Doctrine\ORM\Mapping as ORM;
 

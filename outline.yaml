@@ -65,14 +65,17 @@ chapters:
       - handling-relations
       - schema.org
       - authentication-support
+      - file-upload
       - performance
       - customizing
+      - components
   - title: The Client Generator Component
     path: client-generator
     items:
       - index
       - react
       - nextjs
+      - nuxtjs
       - react-native
       - vuejs
       - vuetify

@@ -703,12 +703,13 @@ services:
         decorates: 'api_platform.jsonld.normalizer.item'
 ```
 
-Note: this normalizer will only work for JSON-LD format, if you want to process JSON data too, you have to decorate another service:
+Note: this normalizer will work only for JSON-LD format, if you want to process JSON data too, you have to decorate another service:
 
 ```yaml
     App\Serializer\ApiNormalizer:
         decorates: 'api_platform.serializer.normalizer.item'
 ```
+
 ```php
 <?php
 // api/src/Serializer/ApiNormalizer
