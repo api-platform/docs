@@ -25,6 +25,9 @@ api_platform:
     # Specify a name converter to use.
     name_converter: ~
 
+    # Specify an asset package name to use.
+    asset_package: null
+
     # Specify a path name generator to use.
     path_segment_name_generator: 'api_platform.path_segment_name_generator.underscore'
 

@@ -402,6 +402,31 @@ swagger_ui:
 
 Change `/docs` to the URI you wish Swagger to be accessible on.
 
+## Using a custom Asset Package in Swagger UI
+
+Sometimes you may want to use a different [Asset Package](https://symfony.com/doc/current/reference/configuration/framework.html#packages) for the Swagger UI. In this way you'll have more fine-grained control over the asset url generations. This is useful i.e. if you want to use different base path, base url or asset versioning strategy.
+
+Specify a custom asset package name:
+
+```yaml
+# config/packages/api_platform.yaml
+api_platform:
+    asset_package: 'api_platform'
+```
+
+Set or override asset properties per package:
+
+```yaml
+# config/packages/framework.yaml
+framework:
+    # ...
+    assets:
+        base_path: '/custom_base_path' # the default
+        packages:
+            api_platform:
+                base_path: '/'
+```
+
 ## Overriding the UI Template
 
 As described [in the Symfony documentation](https://symfony.com/doc/current/templating/overriding.html), it's possible to override the Twig template that loads Swagger UI and renders the documentation:
