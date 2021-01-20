@@ -138,7 +138,7 @@ use ApiPlatform\Core\Annotation\ApiResource;
 
 /**
  * @ApiResource(subresourceOperations={
- *     "api_questions_answer_get_subresource"={
+ *     "answer_get"={
  *         "method"="GET",
  *         "normalization_context"={"groups"={"foobar"}}
  *     }
@@ -154,7 +154,7 @@ class Answer
 # api/config/api_platform/resources.yaml
 App\Entity\Answer:
     subresourceOperations:
-        api_questions_answer_get_subresource:
+        answer_get:
             method: 'GET'
             normalization_context: {groups: ['foobar']}
 ```
@@ -169,7 +169,7 @@ App\Entity\Answer:
            https://api-platform.com/schema/metadata/metadata-2.0.xsd">
     <resource class="App\Entity\Answer">
         <subresourceOperations>
-            <subresourceOperation name="api_questions_answer_get_subresource">
+            <subresourceOperation name="answer_get">
                 <attribute name="method">GET</attribute>
                 <attribute name="normalization_context">
                   <attribute name="groups">
@@ -186,9 +186,12 @@ App\Entity\Answer:
 In the previous examples, the `method` attribute is mandatory, because the operation name doesn't match a supported HTTP
 method.
 
-Note that the operation name, here `api_questions_answer_get_subresource`, is the important keyword.
-It'll be automatically set to `$resources_$subresource(s)_get_subresource`. To find the correct operation name you
-may use `bin/console debug:router`.
+Note that the operation name, here `answer_get`, is the important keyword.
+It's a shortcut name for the operation id: `api_$resources_$subresource(s)_get_subresource`. 
+If you want to customize a nested operation (`question/{id}/answer/question`), the operation name will match the nesting order (`answer_question_get`)
+
+You may find the correct operation name by using `bin/console debug:router`,
+then remove the prefix `api_$resources` and the suffix `_subresource`.
 
 ## Using Custom Paths
 
@@ -202,7 +205,7 @@ You can control the path of subresources with the `path` option of the `subresou
  * ...
  * @ApiResource(
  *      subresourceOperations={
- *          "api_questions_answer_get_subresource"={
+ *          "answer_get"={
  *              "method"="GET",
  *              "path"="/questions/{id}/all-answers"
  *          },
@@ -226,7 +229,7 @@ The `subresourceOperations` attribute also allows you to add an access control o
  * ...
  * @ApiResource(
  *     subresourceOperations={
- *          "api_questions_answer_get_subresource"= {
+ *          "answer_get"= {
  *              "security"="has_role('ROLE_AUTHENTICATED')"
  *          }
  *      }
