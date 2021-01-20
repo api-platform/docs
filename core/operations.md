@@ -114,6 +114,7 @@ App\Entity\Book:
 
 The previous example can also be written with an explicit method definition:
 
+[codeSelector]
 ```php
 <?php
 // api/src/Entity/Book.php
@@ -134,6 +135,39 @@ class Book
     // ...
 }
 ```
+
+```yaml
+# api/config/api_platform/resources.yaml
+App\Entity\Book:
+    collectionOperations:
+        get:
+            method: GET
+    itemOperations:
+        get:
+            method: GET
+```
+
+```xml
+<?xml version="1.0" encoding="UTF-8" ?>
+<!-- api/config/api_platform/resources.xml -->
+
+<resources xmlns="https://api-platform.com/schema/metadata"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="https://api-platform.com/schema/metadata
+           https://api-platform.com/schema/metadata/metadata-2.0.xsd">
+    <resource class="App\Entity\Book">
+        <collectionOperations>
+            <collectionOperation name="get" />
+        </collectionOperations>
+        <itemOperations>
+            <itemOperation name="get">
+                <attribute name="method">GET</attribute>
+            </itemOperation>
+        </itemOperations>
+    </resource>
+</resources>
+```
+[/codeSelector]
 
 API Platform Core is smart enough to automatically register the applicable Symfony route referencing a built-in CRUD action
 just by specifying the method name as key, or by checking the explicitly configured HTTP method.
