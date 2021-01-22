@@ -199,6 +199,24 @@ api_platform:
             # Whether the api key should be a query parameter or a header.
             # type: 'query' or 'header'
 
+    openapi:
+        # The contact information for the exposed API.
+        contact:
+            # The identifying name of the contact person/organization.
+            name:
+            # The URL pointing to the contact information. MUST be in the format of a URL.
+            url:
+            # The email address of the contact person/organization. MUST be in the format of an email address.
+            email:
+        # A URL to the Terms of Service for the API. MUST be in the format of a URL.
+        termsOfService:
+        # The license information for the exposed API.
+        license:
+            # The license name used for the API.
+            name:
+            # URL to the license used for the API. MUST be in the format of a URL.
+            url:       
+        
     http_cache:
         # Automatically generate etags for API responses.
         etag: true
