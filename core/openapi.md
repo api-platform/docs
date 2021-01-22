@@ -460,11 +460,9 @@ api_platform:
 ```
 
 Note that `clientId` and `clientSecret` are being used by the SwaggerUI if enabled.
-
-
 ## Info Object
 
-The [info object](https://swagger.io/specification/#info-object) provides metadata about the API like licensing information or a contact. You can specify this information using Api Platform's configuration:
+The [info object](https://swagger.io/specification/#info-object) provides metadata about the API like licensing information or a contact. You can specify this information using API Platform's configuration:
 
 ```
 api_platform:
