@@ -5,7 +5,7 @@ API framework. However, the "design-first" methodology is strongly recommended: 
 API endpoints.
 
 To do so, you have to write a plain old PHP object (POPO) representing the input and output of your endpoint. This is the class
-that is [marked with the `@ApiResource` annotation](../distribution/index.md).
+that is [marked with the `#[ApiResource]` attribute](../distribution/index.md).
 This class **doesn't have** to be mapped with Doctrine ORM, or any other persistence system. It must be simple (it's usually
 just a data structure with no or minimal behaviors) and will be automatically converted to [Hydra](extending-jsonld-context.md),
 [OpenAPI](swagger.md) and [GraphQL](graphql.md) documentations or schemas by API Platform (there is a 1-1 mapping
@@ -19,8 +19,8 @@ When updating a state (`POST`, `PUT`, `PATCH`, `DELETE` HTTP methods), it's up t
 data provided by API Platform's resource object [hydrated by the serializer](serialization.md).
 To do so, there is another interface to implement: [`DataPersisterInterface`](data-persisters.md).
 
-This class will read the API resource object (the one marked with `@ApiResource`) and:
- 
+This class will read the API resource object (the one marked with `#[ApiResource]`) and:
+
 * persist it directly in the database;
 * or hydrate a DTO then trigger a command;
 * or populate an event store;
@@ -29,10 +29,10 @@ This class will read the API resource object (the one marked with `@ApiResource`
 The logic of data persisters is the responsibility of application developers, and is **out of the API Platform's scope**.
 
 For [Rapid Application Development](https://en.wikipedia.org/wiki/Rapid_application_development), convenience and prototyping,
-**if and only if the class marked with `@ApiResource` is also a Doctrine entity**, the developer can use the Doctrine
+**if and only if the class marked with `#[ApiResource]` is also a Doctrine entity**, the developer can use the Doctrine
 ORM's data provider and persister implementations shipped with API Platform.
 
-In this case, the public (`@ApiResource`) and internal (Doctrine entity) data models are shared. Then, API Platform will
+In this case, the public (`#[ApiResource]`) and internal (Doctrine entity) data models are shared. Then, API Platform will
 be able to query, filter, paginate and persist data automatically.
 This approach is super-convenient and efficient, but is probably **not a good idea** for non-[CRUD](https://en.wikipedia.org/wiki/Create,_read,_update_and_delete)
 and/or large systems.
@@ -47,6 +47,6 @@ approach is:
 
 * to persist data in an event store using a Messenger handler or a custom [data persister](data-persisters.md)
 * to create projections in standard RDBMS (PostgreSQL, MariaDB...) tables or views
-* to map those projections with read-only Doctrine entity classes **and** to mark those classes with `@ApiResource`
+* to map those projections with read-only Doctrine entity classes **and** to mark those classes with `#[ApiResource]`
 
 You can then benefit from the built-in Doctrine filters, sorting, pagination, auto-joins and all of [the extension points](extending.md) provided by API Platform.

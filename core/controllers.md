@@ -87,16 +87,14 @@ The routing has not been configured yet because we will add it at the resource c
 use ApiPlatform\Core\Annotation\ApiResource;
 use App\Controller\CreateBookPublication;
 
-/**
- * @ApiResource(itemOperations={
- *     "get",
- *     "post_publication"={
- *         "method"="POST",
- *         "path"="/books/{id}/publication",
- *         "controller"=CreateBookPublication::class,
- *     }
- * })
- */
+#[ApiResource(itemOperations: [
+    'get',
+    'post_publication' => [
+        'method' => 'POST',
+        'path' => '/books/{id}/publication',
+        'controller" => CreateBookPublication::class,
+    ],
+])
 class Book
 {
     //...

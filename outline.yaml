@@ -73,13 +73,13 @@ chapters:
     path: client-generator
     items:
       - index
-      - react
       - nextjs
       - nuxtjs
-      - react-native
-      - vuejs
       - vuetify
       - quasar
+      - react
+      - react-native
+      - vuejs
       - typescript
       - troubleshooting
   - title: Deployment

@@ -6,6 +6,9 @@
 
 API Platform leverages this capability by pushing relations of a resource to clients.
 
+**Note:** We strongly recommend using [Vulcain](https://vulcain.rocks) instead of this feature.
+Vulcain is faster, cleaner, more flexible, and is supported out of the box in the API Platform distribution.
+
 ```php
 <?php
 
