@@ -201,7 +201,7 @@ For instance, go to `https://localhost:8443/greetings.jsonld` to retrieve the li
 `https://localhost:8443/greetings.json` to retrieve data in raw JSON.
 
 Of course, you can also use your favorite HTTP client to query the API.
-We are fond of [Postman](https://hoppscotch.io/). It works perfectly well with API Platform, has native OpenAPI support,
+We are fond of [Postman](https://www.getpostman.com/). It works perfectly well with API Platform, has native OpenAPI support,
 allows to easily write functional tests and has good team collaboration features.
 
 ## Bringing your Own Model
