@@ -30,7 +30,7 @@ The easiest and most powerful way to get started is [to download the API Platfor
 
 To discover how the framework works, we will create an API to manage a bookshop.
 
-To create a fully featured API, an admin interface and a Progressive Web App using Next.js, we will only have to design **the public data
+To create a fully featured API, an admin interface and a Progressive Web App using Next.js, all you need is to design **the public data
 model of our API** and handcraft it as *Plain Old PHP Objects*.
 
 API Platform uses these model classes to expose and document a web API having a bunch of built-in features:
