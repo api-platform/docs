@@ -322,7 +322,7 @@ To retrieve and save data, API Platform proposes two main options (and we can mi
 
 Be sure to read the [General Design Considerations](../core/design.md) document to learn more about the architecture of API Platform and how to choose between these two approaches.
 
-For the sake of simplicity, we will use the built-in Doctrine ORM data provider in the rest of this tutorial.
+Here, we will use the built-in Doctrine ORM data provider in the rest of this tutorial.
 
 Modify the classes to map them to database tables using the annotations provided by the Doctrine ORM:
 
