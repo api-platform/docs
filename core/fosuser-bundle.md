@@ -1,11 +1,13 @@
 # FOSUserBundle Integration
 
-API Platform Core is shipped with a bridge for [FOSUserBundle](https://github.com/FriendsOfSymfony/FOSUserBundle).
-If the FOSUser bundle is enabled, this bridge will use its `UserManager` to create, update and delete user resources.
+**Deprecated: this integration is deprecated and will be removed in API Platform 3**
 
-Note: FOSUserBundle is not well suited for APIs. We strongly encourage you to use the [Doctrine user provider](https://symfony.com/doc/current/security/user_provider.html#entity-user-provider)
+FOSUserBundle is not well suited for APIs. We strongly encourage you to use the [Doctrine user provider](https://symfony.com/doc/current/security/user_provider.html#entity-user-provider)
 shipped with Symfony or to [create a custom user provider](https://symfony.com/doc/current/security/user_provider.html#creating-a-custom-user-provider)
 instead of using this bundle.
+
+API Platform Core is shipped with a bridge for [FOSUserBundle](https://github.com/FriendsOfSymfony/FOSUserBundle).
+If the FOSUser bundle is enabled, this bridge will use its `UserManager` to create, update and delete user resources.
 
 <p align="center" class="symfonycasts"><a href="https://symfonycasts.com/screencast/api-platform/user-entity?cid=apip"><img src="../distribution/images/symfonycasts-player.png" alt="User Entity screencast"><br>Watch the User Entity screencast</a></p>
 

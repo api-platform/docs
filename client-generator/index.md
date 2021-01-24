@@ -8,13 +8,13 @@ Client Generator is the fastest way to scaffold fully featured webapps and nativ
 
 It is able to generate apps using the following frontend stacks:
 
-* [React with Redux](react.md)
-* [React Native](react-native.md)
 * [Next.js](nextjs.md)
 * [Nuxt.js](nuxtjs.md)
-* [Vue.js](vuejs.md)
 * [Quasar Framework](quasar.md)
 * [Vuetify](vuetify.md)
+* [React with Redux](react.md)
+* [React Native](react-native.md)
+* [Vue.js](vuejs.md)
 
 Client Generator works especially well with APIs built with the [API Platform](https://api-platform.com) framework.
 

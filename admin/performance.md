@@ -26,9 +26,9 @@ use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ApiResource
  * @ORM\Entity
  */
+ #[ApiResource]
 class Author
 {
     /**

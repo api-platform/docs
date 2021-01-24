@@ -15,7 +15,7 @@ Be careful, API Platform only supports Elasticsearch >= 6.5.0.
 To enable the reading support for Elasticsearch, simply require the Elasticsearch-PHP package using Composer:
 
     $ composer require elasticsearch/elasticsearch:^6.0
-    
+
 Then, enable it inside the API Platform configuration:
 
 ```yaml
@@ -39,6 +39,7 @@ api_platform:
 ## Creating Models
 
 API Platform follows the best practices of Elasticsearch:
+
 * a single index per resource should be used because Elasticsearch is going to [drop support for index types and will allow only a single type per
 index](https://www.elastic.co/guide/en/elasticsearch/reference/current/removal-of-types.html);
 * index name should be the short resource name in lower snake case;
@@ -145,42 +146,24 @@ namespace App\Model;
 use ApiPlatform\Core\Annotation\ApiProperty;
 use ApiPlatform\Core\Annotation\ApiResource;
 
-/**
- * @ApiResource
- */
+#[ApiResource]
 class User
 {
-    /**
-     * @ApiProperty(identifier=true)
-     *
-     * @var string
-     */
-    public $id;
+    #[ApiProperty(identifier: true)]
+    public string $id = '';
 
-    /**
-     * @var string
-     */
-    public $gender;
+    public string $gender;
 
-    /**
-     * @var int
-     */
-    public $age;
+    public int $age;
 
-    /**
-     * @var string
-     */
-    public $firstName;
+    public string $firstName;
 
-    /**
-     * @var string
-     */
-    public $lastName;
+    public string $lastName;
 
     /**
      * @var Tweet[]
      */
-    public $tweets = [];
+    public iterable $tweets = [];
 }
 ```
 
@@ -193,36 +176,21 @@ namespace App\Model;
 use ApiPlatform\Core\Annotation\ApiProperty;
 use ApiPlatform\Core\Annotation\ApiResource;
 
-/**
- * @ApiResource
- */
+ #[ApiResource]
 class Tweet
 {
-    /**
-     * @ApiProperty(identifier=true)
-     *
-     * @var string
-     */
-    public $id;
+    #[ApiProperty(identifier: true)]
+    public string $id = '';
 
-    /**
-     * @var User
-     */
-    public $author;
+    public User $author;
 
-    /**
-     * @var \DateTimeInterface
-     */
-    public $date;
+    public \DateTimeInterface $date;
 
-    /**
-     * @var string
-     */
-    public $message;
+    public string $message;
 }
 ```
 
-API Platform will automatically disable write operations and snake case document fields will automatically be converted to 
+API Platform will automatically disable write operations and snake case document fields will automatically be converted to
 camel case object properties during serialization.
 
 Keep in mind that it is your responsibility to populate your Elasticsearch index. To do so, you can use [Logstash](https://www.elastic.co/products/logstash),

@@ -1,4 +1,4 @@
-#   Deploying with Docker Compose
+# Deploying with Docker Compose
 
 While [Docker Compose](https://docs.docker.com/compose/) is mainly known and used in a development environment, it [can
 actually be used in production too](https://docs.docker.com/compose/production/). This is especially suitable for prototyping

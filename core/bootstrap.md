@@ -1,4 +1,4 @@
-# Bootstraping the core library 
+# Bootstraping the core library
 
 You may want to run a minimal version of API Platform. This one file runs API Platform (without graphql, doctrine and mongodb).
 It requires the following composer packages:

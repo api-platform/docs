@@ -104,9 +104,9 @@ The `format` attribute can be used as a shortcut, it sets both the `input_format
 
 namespace App\Entity;
 
-/**
- * @ApiResource(formats={"xml", "jsonld", "csv"={"text/csv"}})
- */
+use ApiPlatform\Core\Annotation\ApiResource;
+
+ #[ApiResource(formats: ['xml', 'jsonld', 'csv' => ['text/csv']])]
 class Book
 {
     // ...
@@ -128,16 +128,18 @@ You can specify different accepted formats at operation level too, it's especial
 
 namespace App\Entity;
 
-/**
- * @ApiResource(
- *      formats={"jsonld", "csv"={"text/csv"}},
- *      itemOperations={
- *          "patch"={
- *              "input_formats"={"json"={"application/merge-patch+json"}}
- *          }
- *      }
- *  )
- */
+use ApiPlatform\Core\Annotation\ApiResource;
+
+#[ApiResource(
+    formats: ['jsonld', 'csv' => ['text/csv']],
+    itemOperations: [
+        'patch' => [
+            'input_formats' => [
+                'json' => ['application/merge-patch+json'],
+            ],
+        ],
+    ],
+)]
 class Book
 {
     // ...

@@ -2,7 +2,7 @@
 
 To mutate the application states during `POST`, `PUT`, `PATCH` or `DELETE` [operations](operations.md), API Platform uses
 classes called **data persisters**. Data persisters receive an instance of the class marked as an API resource (usually using
-the `@ApiResource` annotation). This instance contains data submitted by the client during [the deserialization
+the `#[ApiResource]` attribute). This instance contains data submitted by the client during [the deserialization
 process](serialization.md).
 
 <p align="center" class="symfonycasts"><a href="https://symfonycasts.com/screencast/api-platform-security/encode-user-password?cid=apip"><img src="../distribution/images/symfonycasts-player.png" alt="Data Persister screencast"><br>Watch the Data Persister screencast</a></p>
