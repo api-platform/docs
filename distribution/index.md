@@ -12,9 +12,9 @@
 
 API Platform contains [a **PHP** library (Core)](../core/index.md) to create fully featured hypermedia (or [GraphQL](../core/graphql.md)) web APIs supporting industry-leading standards: [JSON-LD](https://json-ld.org/) with [Hydra](https://www.hydra-cg.com/), [OpenAPI](../core/swagger.md)...
 
-It also provides ambitious **JavaScript** tools to create web and mobile apps based on the most popular frontend technologies in a snap. To do so, these tools parse the documentation of the API (or of any other API supporting Hydra or OpenAPI).
+API Platform also provides ambitious **JavaScript** tools to create web and mobile applications based on the most popular frontend technologies in a snap. These tools parse the documentation of the API (or of any other API supporting Hydra or OpenAPI).
 
- API Platform is also shipped with **[Docker](../deployment/docker-compose.md)** and **[Kubernetes](../deployment/kubernetes.md)** definitions, to develop and deploy instantly on the cloud.
+ API Platform is shipped with **[Docker](../deployment/docker-compose.md)** and **[Kubernetes](../deployment/kubernetes.md)** definitions, to develop and deploy instantly on the cloud.
 
 The easiest and most powerful way to get started is [to download the API Platform distribution](https://github.com/api-platform/api-platform/releases). It contains:
 
