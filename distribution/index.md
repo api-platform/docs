@@ -18,7 +18,7 @@ It also provides ambitious **JavaScript** tools to create web and mobile apps ba
 
 The easiest and most powerful way to get started is [to download the API Platform distribution](https://github.com/api-platform/api-platform/releases). It contains:
 
-* the API skeleton, including with [the Core library](../core/index.md), [the Symfony framework](https://symfony.com/) ([optional](../core/bootstrap.md)) and [the Doctrine ORM](https://www.doctrine-project.org/projects/orm.html) ([optional](../core/extending.md))
+* the API skeleton, including [the Core library](../core/index.md), [the Symfony framework](https://symfony.com/) ([optional](../core/bootstrap.md)) and [the Doctrine ORM](https://www.doctrine-project.org/projects/orm.html) ([optional](../core/extending.md))
 * [the client scaffolding tool](../client-generator/) to generate [Next.js](../client-generator/
 ) web applications from the API documentation ([Nuxt.js](https://nuxtjs.org/), [Vue](https://vuejs.org/), [Create React App](https://reactjs.org), [React Native](https://facebook.github.io/react-native/), [Quasar](https://quasar.dev/) and [Vuetify](https://vuetifyjs.com/) are also supported)
 * [a beautiful admin interface](../admin/), built on top of React Admin, dynamically created by parsing the API documentation
