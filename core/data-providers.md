@@ -13,13 +13,13 @@ retrieve data for a given resource will be used.
 
 For a given resource, you can implement two kinds of interface:
 
-* the [`CollectionDataProviderInterface`](https://github.com/api-platform/core/blob/master/src/DataProvider/CollectionDataProviderInterface.php)
+* the [`CollectionDataProviderInterface`](https://github.com/api-platform/core/blob/main/src/DataProvider/CollectionDataProviderInterface.php)
   is used when fetching a collection.
-* the [`ItemDataProviderInterface`](https://github.com/api-platform/core/blob/master/src/DataProvider/ItemDataProviderInterface.php)
+* the [`ItemDataProviderInterface`](https://github.com/api-platform/core/blob/main/src/DataProvider/ItemDataProviderInterface.php)
   is used when fetching items.
 
 Both implementations can also implement a third, optional, interface called
-['RestrictedDataProviderInterface'](https://github.com/api-platform/core/blob/master/src/DataProvider/RestrictedDataProviderInterface.php)
+['RestrictedDataProviderInterface'](https://github.com/api-platform/core/blob/main/src/DataProvider/RestrictedDataProviderInterface.php)
 if you want to limit their effects to a single resource or operation.
 
 In the following examples we will create custom data providers for an entity class called `App\Entity\BlogPost`.
@@ -27,9 +27,9 @@ Note, that if your entity is not Doctrine-related, you need to flag the identifi
 
 ## Custom Collection Data Provider
 
-First, your `BlogPostCollectionDataProvider` has to implement the [`CollectionDataProviderInterface`](https://github.com/api-platform/core/blob/master/src/DataProvider/CollectionDataProviderInterface.php):
+First, your `BlogPostCollectionDataProvider` has to implement the [`CollectionDataProviderInterface`](https://github.com/api-platform/core/blob/main/src/DataProvider/CollectionDataProviderInterface.php):
 
-The `getCollection` method must return an `array`, a `Traversable` or a [`ApiPlatform\Core\DataProvider\PaginatorInterface`](https://github.com/api-platform/core/blob/master/src/DataProvider/PaginatorInterface.php) instance.
+The `getCollection` method must return an `array`, a `Traversable` or a [`ApiPlatform\Core\DataProvider\PaginatorInterface`](https://github.com/api-platform/core/blob/main/src/DataProvider/PaginatorInterface.php) instance.
 If no data is available, you should return an empty array.
 
 ```php
@@ -75,11 +75,11 @@ Tagging the service with the tag `api_platform.collection_data_provider` will en
 register and use this data provider. The optional attribute `priority` allows you to define the order in which the
 data providers are called. Implementing the `ApiPlatform\Core\DataProvider\RestrictedDataProviderInterface` let you restrict the data provider use. Alternatively, you can also throw a `ApiPlatform\Core\Exception\ResourceClassNotSupportedException`. Without the `RestrictedDataProviderInterface`, the first data provider not throwing this exception will be used.
 
-You can find a full working example in the [API Platform's demo application](https://github.com/api-platform/demo/blob/master/api/src/DataProvider/TopBookCollectionDataProvider.php).
+You can find a full working example in the [API Platform's demo application](https://github.com/api-platform/demo/blob/main/api/src/DataProvider/TopBookCollectionDataProvider.php).
 
 ## Custom Item Data Provider
 
-The process is similar for item data providers. Create a `BlogPostItemDataProvider` implementing the [`ItemDataProviderInterface`](https://github.com/api-platform/core/blob/master/src/DataProvider/ItemDataProviderInterface.php)
+The process is similar for item data providers. Create a `BlogPostItemDataProvider` implementing the [`ItemDataProviderInterface`](https://github.com/api-platform/core/blob/main/src/DataProvider/ItemDataProviderInterface.php)
 interface:
 
 The `getItem` method can return `null` if no result has been found.
@@ -124,7 +124,7 @@ services:
         #tags: [ 'api_platform.item_data_provider' ]
 ```
 
-You can find a full working example in the [API Platform's demo application](https://github.com/api-platform/demo/blob/master/api/src/DataProvider/TopBookItemDataProvider.php).
+You can find a full working example in the [API Platform's demo application](https://github.com/api-platform/demo/blob/main/api/src/DataProvider/TopBookItemDataProvider.php).
 
 ## Injecting the Serializer in an `ItemDataProvider`
 

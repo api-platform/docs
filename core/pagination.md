@@ -359,7 +359,7 @@ To know more about cursor-based pagination take a look at [this blog post on med
 
 ## Controlling the behavior of the Doctrine ORM Paginator
 
-The [PaginationExtension](https://github.com/api-platform/core/blob/master/src/Bridge/Doctrine/Orm/Extension/PaginationExtension.php) of API Platform performs some checks on the `QueryBuilder` to guess, in most common cases, the correct values to use when configuring the Doctrine ORM Paginator:
+The [PaginationExtension](https://github.com/api-platform/core/blob/main/src/Bridge/Doctrine/Orm/Extension/PaginationExtension.php) of API Platform performs some checks on the `QueryBuilder` to guess, in most common cases, the correct values to use when configuring the Doctrine ORM Paginator:
 
 -   `$fetchJoinCollection` argument: Whether there is a join to a collection-valued association. When set to `true`, the Doctrine ORM Paginator will perform an additional query, in order to get the correct number of results.
 

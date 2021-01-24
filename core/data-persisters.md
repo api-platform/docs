@@ -22,7 +22,7 @@ persist data for a given resource will be used.
 
 ## Creating a Custom Data Persister
 
-To create a data persister, you have to implement the [`ContextAwareDataPersisterInterface`](https://github.com/api-platform/core/blob/master/src/DataPersister/ContextAwareDataPersisterInterface.php).
+To create a data persister, you have to implement the [`ContextAwareDataPersisterInterface`](https://github.com/api-platform/core/blob/main/src/DataPersister/ContextAwareDataPersisterInterface.php).
 This interface defines only 3 methods:
 
 * `persist`: to create or update the given data
@@ -71,7 +71,7 @@ services:
         #tags: [ 'api_platform.data_persister' ]
 ```
 
-Note that if you don't need any `$context` in your data persister's methods, you can implement the [`DataPersisterInterface`](https://github.com/api-platform/core/blob/master/src/DataPersister/DataPersisterInterface.php) instead.
+Note that if you don't need any `$context` in your data persister's methods, you can implement the [`DataPersisterInterface`](https://github.com/api-platform/core/blob/main/src/DataPersister/DataPersisterInterface.php) instead.
 
 ## Decorating the Built-In Data Persisters
 

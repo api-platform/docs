@@ -177,5 +177,5 @@ final class Person
 API Platform supports the following identifier types:
 
   - `scalar` (string, integer)
-  - `\DateTime` (uses the symfony `DateTimeNormalizer` internally, see [DateTimeIdentifierNormalizer](https://github.com/api-platform/core/blob/master/src/Identifier/Normalizer/DateTimeIdentifierDenormalizer.php))
-  - `\Ramsey\Uuid\Uuid` (see [UuidNormalizer](https://github.com/api-platform/core/blob/master/src/Bridge/RamseyUuid/Identifier/Normalizer/UuidNormalizer.php))
+  - `\DateTime` (uses the symfony `DateTimeNormalizer` internally, see [DateTimeIdentifierNormalizer](https://github.com/api-platform/core/blob/main/src/Identifier/Normalizer/DateTimeIdentifierDenormalizer.php))
+  - `\Ramsey\Uuid\Uuid` (see [UuidNormalizer](https://github.com/api-platform/core/blob/main/src/Bridge/RamseyUuid/Identifier/Normalizer/UuidNormalizer.php))

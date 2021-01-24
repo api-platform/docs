@@ -44,7 +44,7 @@ API Platform follows the best practices of Elasticsearch:
 index](https://www.elastic.co/guide/en/elasticsearch/reference/current/removal-of-types.html);
 * index name should be the short resource name in lower snake case;
 * the default `_doc` type should be used;
-* all fields should be lower case and should use snake case for combining words.
+* all fields should be lower case and should use camel case for combining words.
 
 This involves having mappings and models which absolutely match each other.
 

@@ -111,7 +111,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 class Product
 {
     /**
-     * @ODM\Id(strategy="INCREMENT", type="integer")
+     * @ODM\Id(strategy="INCREMENT", type="int")
      */
     private $id;
 
@@ -170,7 +170,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 class Offer
 {
     /**
-     * @ODM\Id(strategy="INCREMENT", type="integer")
+     * @ODM\Id(strategy="INCREMENT", type="int")
      */
     private $id;
 
