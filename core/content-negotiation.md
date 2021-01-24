@@ -136,7 +136,7 @@ use ApiPlatform\Core\Annotation\ApiResource;
         'patch' => [
             'input_formats' => [
                 'json' => ['application/merge-patch+json'],
-            ]
+            ],
         ],
     ],
 )]
