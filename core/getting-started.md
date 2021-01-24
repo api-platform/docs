@@ -230,4 +230,4 @@ Run the Symfony app with the [Symfony Local Web Server](https://symfony.com/doc/
 
 Interact with the API using a REST client (we recommend [Postman](https://www.getpostman.com/)) or an Hydra-aware application
 (you should give [Hydra Console](https://github.com/lanthaler/HydraConsole) a try). Take
-a look at the usage examples in [the `features` directory](https://github.com/api-platform/core/tree/master/features).
+a look at the usage examples in [the `features` directory](https://github.com/api-platform/core/tree/main/features).

@@ -59,7 +59,7 @@ Attribute      | Type   | Default | Description
 
 Registering your own event listeners to add extra logic is convenient.
 
-The [`ApiPlatform\Core\EventListener\EventPriorities`](https://github.com/api-platform/core/blob/master/src/EventListener/EventPriorities.php) class comes with a convenient set of class constants corresponding to commonly used priorities:
+The [`ApiPlatform\Core\EventListener\EventPriorities`](https://github.com/api-platform/core/blob/main/src/EventListener/EventPriorities.php) class comes with a convenient set of class constants corresponding to commonly used priorities:
 
 Constant           | Event             | Priority |
 -------------------|-------------------|----------|

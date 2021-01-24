@@ -33,7 +33,7 @@ Format                                                          | Format name  |
 If the client's requested format is not specified, the response format will be the first format defined in the `formats` configuration key (see below).
 If the request format is not supported, an [Unsupported Media Type](https://developer.mozilla.org/fr/docs/Web/HTTP/Status/415) error will be returned.
 
-Examples showcasing how to use the different mechanisms are available [in the API Platform test suite](https://github.com/api-platform/core/blob/master/features/main/content_negotiation.feature).
+Examples showcasing how to use the different mechanisms are available [in the API Platform test suite](https://github.com/api-platform/core/blob/main/features/main/content_negotiation.feature).
 
 ## Configuring Formats Globally
 
