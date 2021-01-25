@@ -1,10 +1,10 @@
 # Getting Started With API Platform: Create Your API and Your Jamstack Site!
 
-![The welcome page](images/api-platform-2.5-welcome.png)
+![The welcome page](images/api-platform-2.6-welcome.png)
 
 > *API Platform* is the most advanced API platform, in any framework or language.
 >
-> —Fabien Potencier (creator of Symfony), SymfonyCon 2017
+> —Fabien Potencier (creator of Symfony)
 
 [API Platform](https://api-platform.com) is a powerful yet easy to use **full stack** framework dedicated to API-driven projects and implementing the [Jamstack](https://jamstack.org/) architecture.
 
@@ -129,7 +129,7 @@ That being said, keep in mind that API Platform is 100% independent of the persi
 best suit(s) your needs (including NoSQL databases or remote web services) by implementing the [right interfaces](../core/data-providers.md). API Platform even supports using several persistence
 systems together in the same project.
 
-### Using Symfony Flex and Composer
+### Using Symfony and Composer
 
 Alternatively, the API Platform server component can also be installed directly on a local machine.
 **This method is recommended only for users who want full control over the directory structure and the installed
@@ -140,12 +140,12 @@ dependencies.**
 The rest of this tutorial assumes that you have installed API Platform using the official distribution. Go straight to the
 next section if it's your case.
 
-API Platform has an official Symfony Flex recipe. It means that you can easily install it from any Flex-compatible Symfony
+API Platform has an official Symfony Flex recipe. It means that you can easily install it from any Symfony
 application using [Composer](https://getcomposer.org/):
 
-    # Create a new Symfony Flex project
+    # Create a new Symfony project
     $ composer create-project symfony/skeleton bookshop-api
-    # Enter the project folder
+    # Enter the project directory
     $ cd bookshop-api
     # Install the API Platform's server component in this skeleton
     $ composer req api
@@ -169,7 +169,7 @@ installable with npm or Yarn.
 
 Open `https://localhost` in your favorite web browser:
 
-![The welcome page](images/api-platform-2.5-welcome.png)
+![The welcome page](images/api-platform-2.6-welcome.png)
 
 You'll need to add a security exception in your browser to accept the self-signed TLS certificate that has been generated
 for this container when installing the framework.
@@ -180,7 +180,7 @@ now, we'll use this container later in this tutorial).
 
 Click on the "API" button, or go to `https://localhost/docs/`:
 
-![The API](images/api-platform-2.5-api.png)
+![The API](images/api-platform-2.6-api.png)
 
 API Platform exposes a description of the API in the [OpenAPI](https://www.openapis.org/) format (formerly known as Swagger).
 It also integrates a customized version of [Swagger UI](https://swagger.io/swagger-ui/), a nice interface rendering the
@@ -197,8 +197,8 @@ So, if you want to access the raw data, you have two alternatives:
   when writing API clients
 * Add the format you want as the extension of the resource - for debug purpose only
 
-For instance, go to `https://localhost:8443/greetings.jsonld` to retrieve the list of `Greeting` resources in JSON-LD, or to
-`https://localhost:8443/greetings.json` to retrieve data in raw JSON.
+For instance, go to `https://localhost/greetings.jsonld` to retrieve the list of `Greeting` resources in JSON-LD, or to
+`https://localhost/greetings.json` to retrieve data in raw JSON.
 
 Of course, you can also use your favorite HTTP client to query the API.
 We are fond of [Postman](https://www.getpostman.com/). It works perfectly well with API Platform, has native OpenAPI support,
@@ -301,8 +301,13 @@ We created two typical PHP objects with the corresponding PHPDoc, both marked wi
 
 Reload `https://localhost/docs/`: API Platform used these classes to generate an OpenAPI documentation (a Hydra documentation is also exposed), and registered for us [the typical REST routes](../core/operations.md).
 
-Note that entities' and properties' descriptions
-included in their PHPDoc appear in the API documentation, and that API Platform use PHP types to generate the appropriate JSON Schemas.
+![The bookshop API](images/api-platform-2.6-bookshop-api.png)
+
+Operations available for our 2 resource types appear in the UI. We can also see the awesome [Web Debug Toolbar](https://symfonycasts.com/screencast/symfony/profiler?cid=apip)).
+
+Note that entities' and properties' descriptions in the API documentation, and that API Platform use PHP types to generate the appropriate JSON Schemas.
+
+![Bookshop JSON Schemas](images/api-platform-2.6-bookshop-json-schemas.png)
 
 The framework also use these metadata to serialize and deserialize data from JSON (and other formats) to PHP objects (back and forth)!
 
@@ -311,7 +316,9 @@ as Symfony and Doctrine) also supports accessor methods (getters/setters), use t
 We used a private property and a getter for the id to enforce the fact that it is read only (we will let the DBMS generating it). API Platform also has first-grade support for UUIDs. [You should
 probably use them instead of auto-incremented ids](https://www.clever-cloud.com/blog/engineering/2015/05/20/why-auto-increment-is-a-terrible-idea/).
 
-Because API Platform provides all the infrastructure for us, our API is almost ready! The only remaining task to have a working API is to be able to query and persist data.
+Because API Platform provides all the infrastructure for us, our API is almost ready!
+
+The only remaining task to have a working API is to be able to query and persist data.
 
 ## Plugging the Persistence System
 
@@ -327,21 +334,23 @@ Here, we will use the built-in Doctrine ORM data provider in the rest of this tu
 Modify the classes to map them to database tables using the annotations provided by the Doctrine ORM:
 
 ```patch
-<?php
-// api/src/Entity/Book.php
-
-use Doctrine\Common\Collections\ArrayCollection;
+--- a/api/src/Entity/Book.php
++++ b/api/src/Entity/Book.php
+@@ -5,30 +5,65 @@ namespace App\Entity;
+ 
+ use ApiPlatform\Core\Annotation\ApiResource;
+ use Doctrine\Common\Collections\ArrayCollection;
 +use Doctrine\ORM\Mapping as ORM;
-
+ 
 -/** A book. */
 +/**
 + * A book.
 + *
 + * @ORM\Entity
 + */
-#[ApiResource]
-class Book
-{
+ #[ApiResource]
+ class Book
+ {
 -    /** The id of this book. */
 +    /**
 +     * The id of this book.
@@ -350,73 +359,77 @@ class Book
 +     * @ORM\GeneratedValue
 +     * @ORM\Column(type="integer")
 +     */
-    private ?int $id = null;
-
+     private ?int $id = null;
+ 
 -    /** The ISBN of this book (or null if doesn't have one). */
 +    /**
 +     * The ISBN of this book (or null if doesn't have one).
 +     *
 +     * @ORM\Column(nullable=true)
 +     */
-    public ?string $isbn = null;
-
+     public ?string $isbn = null;
+ 
 -    /** The title of this book. */
 +    /**
 +     * The title of this book.
 +     *
 +     * @ORM\Column
 +     */
-    public string $title = '';
-
+     public string $title = '';
+ 
 -    /** The description of this book. */
 +    /**
 +     * The description of this book.
 +     *
 +     * @ORM\Column(type="text")
 +     */
-    public string $description = '';
-
+     public string $description = '';
+ 
 -    /** The author of this book. */
 +    /**
 +     * The author of this book.
 +     *
 +     * @ORM\Column
 +     */
-    public string $author = '';
-
+     public string $author = '';
+ 
 -    /** The publication date of this book. */
 +    /**
 +     * The publication date of this book.
 +     *
 +     * @ORM\Column(type="datetime_immutable")
 +     */
-    public ?\DateTimeInterface $publicationDate = null;
-
+     public ?\DateTimeInterface $publicationDate = null;
+ 
 -    /** @var Review[] Available reviews for this book. */
 +    /**
 +     * @var Review[] Available reviews for this book.
 +     *
 +     * @ORM\OneToMany(targetEntity="Review", mappedBy="book", cascade={"persist", "remove"})
 +     */
-    public iterable $reviews;
+     public iterable $reviews;
+ 
+     public function __construct()
 ```
 
 ```patch
-<?php
-// api/src/Entity/Review.php
-
-use ApiPlatform\Core\Annotation\ApiResource;
+--- a/api/src/Entity/Review.php
++++ b/api/src/Entity/Review.php
+@@ -4,27 +4,58 @@
+ namespace App\Entity;
+ 
+ use ApiPlatform\Core\Annotation\ApiResource;
 +use Doctrine\ORM\Mapping as ORM;
-
+ 
 -/** A review of a book. */
 +/**
 + * A review of a book.
 + *
 + * @ORM\Entity
 + */
-#[ApiResource]
-class Review
-{
+ #[ApiResource]
+ class Review
+ {
 -    /** The id of this review. */
 +    /**
 +     * The id of this review.
@@ -425,47 +438,49 @@ class Review
 +     * @ORM\GeneratedValue
 +     * @ORM\Column(type="integer")
 +     */
-    private ?int $id = null;
-
+     private ?int $id = null;
+ 
 -    /** The rating of this review (between 0 and 5). */
 +    /**
 +     * The rating of this review (between 0 and 5).
 +     *
 +     * @ORM\Column(type="smallint")
 +     */
-    public int $rating = 0;
-
+     public int $rating = 0;
+ 
 -    /** The body of the review. */
 +    /**
 +     * The body of the review.
 +     *
 +     * @ORM\Column(type="text")
 +     */
-    public string $body = '';
-
+     public string $body = '';
+ 
 -    /** The author of the review. */
 +    /**
 +     * The author of the review.
 +     *
 +     * @ORM\Column
 +     */
-    public string $author = '';
-
+     public string $author = '';
+ 
 -    /** The date of publication of this review.*/
 +    /**
 +     * The date of publication of this review.
 +     *
 +     * @ORM\Column(type="datetime_immutable")
 +     */
-    public ?\DateTimeInterface $publicationDate = null;
-
+     public ?\DateTimeInterface $publicationDate = null;
+ 
 -    /** The book this review is about. */
 +    /**
 +     * The book this review is about.
 +     *
 +     * @ORM\ManyToOne(targetEntity="Book", inversedBy="reviews")
 +     */
-    public Book $book;
+     public ?Book $book = null;
+ 
+     public function getId(): ?int
 ```
 
 **Tip**: you can also use Symfony [MakerBundle](https://symfonycasts.com/screencast/symfony-fundamentals/maker-command?cid=apip) thanks to the `--api-resource` option:
@@ -482,25 +497,17 @@ Learn more about how to map entities with the Doctrine ORM in [the project's off
 or in Kévin's book "[Persistence in PHP with the Doctrine ORM](https://www.amazon.fr/gp/product/B00HEGSKYQ/ref=as_li_tl?ie=UTF8&camp=1642&creative=6746&creativeASIN=B00HEGSKYQ&linkCode=as2&tag=kevidung-21)".
 
 Now, delete the file `api/src/Entity/Greeting.php`. This demo entity isn't useful anymore.
-Finally, tell Doctrine to sync the database tables structure with our new data model:
+Finally, generate a new database migration using [Doctrine Migrations](https://symfony.com/doc/current/doctrine.html#migrations-creating-the-database-tables-schema) and apply it:
 
-    $ docker-compose exec php bin/console doctrine:schema:update --force
+    $ docker-compose exec php bin/console doctrine:migrations:diff
+    $ docker-compose exec php bin/console doctrine:migrations:migrate
 
 The `php` container is where your API app stands. Prefixing a command by `docker-compose exec php` allows executing the
 given command in this container. You may want [to create an alias](http://www.linfo.org/alias.html) to make your life easier.
 
-Later, you'll want to use [Doctrine Migrations](https://symfony.com/doc/current/doctrine.html#migrations-creating-the-database-tables-schema)
-when changing the database's structure.
-
 **We now have a working API with read and write capabilities!**
 
-Browse `https://localhost/docs/` to load the development environment (including the awesome [Symfony profiler](https://symfonycasts.com/screencast/symfony/profiler?cid=apip)).
-
-![The bookshop API](images/api-platform-2.5-bookshop-api.png)
-
-Operations available for our 2 resource types appear in the UI.
-
-Click on the `POST` operation of the `Book` resource type, click on "Try it out" and send the following JSON document as request body:
+In Swagger UI, click on the `POST` operation of the `Book` resource type, click on "Try it out" and send the following JSON document as request body:
 
 ```json
 {
@@ -567,7 +574,7 @@ including `September 21, 2016` can be used.
 
 To summarize, if you want to expose any entity you just have to:
 
-1. Put it in the `Entity` directory of a bundle
+1. Put it under the `App\Entity\` namespace
 2. Write your data providers and persisters, or if you use Doctrine, map it with the database
 3. Mark it with the `#[ApiPlatform\Core\Annotation\ApiResource]` attribute
 
@@ -601,64 +608,101 @@ Adding some of [its numerous validation constraints](https://symfony.com/doc/cur
 to validate user-submitted data. Let's add some validation rules to our data model:
 
 ```patch
-<?php
-// api/src/Entity/Book.php
-
-use Doctrine\ORM\Mapping as ORM;
-+use Symfony\Component\Validator\Constraints as Assert
-
+--- a/api/src/Entity/Book.php
++++ b/api/src/Entity/Book.php
+@@ -6,6 +6,7 @@ namespace App\Entity;
+ use ApiPlatform\Core\Annotation\ApiResource;
+ use Doctrine\Common\Collections\ArrayCollection;
+ use Doctrine\ORM\Mapping as ORM;
++use Symfony\Component\Validator\Constraints as Assert;
+ 
+ /**
+  * A book.
+@@ -29,6 +30,7 @@ class Book
+      *
+      * @ORM\Column(nullable=true)
+      */
 +    #[Assert\Isbn]
-    public ?string $isbn = null;
-
+     public ?string $isbn = null;
+ 
+     /**
+@@ -43,6 +45,7 @@ class Book
+      *
+      * @ORM\Column(type="text")
+      */
 +    #[Assert\NotBlank]
-    public string $title = '';
-
+     public string $description = '';
+ 
+     /**
+@@ -50,6 +53,7 @@ class Book
+      *
+      * @ORM\Column
+      */
 +    #[Assert\NotBlank]
-    public string $description = '';
-
-+    #[Assert\NotBlank]
-    public string $author = '';
-
+     public string $author = '';
+ 
+     /**
+@@ -57,6 +61,7 @@ class Book
+      *
+      * @ORM\Column(type="datetime_immutable")
+      */
 +    #[Assert\NotNull]
-    public ?\DateTimeInterface $publicationDate = null;
+     public ?\DateTimeInterface $publicationDate = null;
+ 
+     /**
 ```
 
 ```patch
-<?php
-// api/src/Entity/Review.php
-
-use Doctrine\ORM\Mapping as ORM;
-+use Symfony\Component\Validator\Constraints as Assert
-
--/** A review of a book. */
-+/**
-+ * A review of a book.
-+ *
-+ * @ORM\Entity
-+ */
-#[ApiResource]
-class Review
-{
+--- a/api/src/Entity/Review.php
++++ b/api/src/Entity/Review.php
+@@ -5,6 +5,7 @@ namespace App\Entity;
+ 
+ use ApiPlatform\Core\Annotation\ApiResource;
+ use Doctrine\ORM\Mapping as ORM;
++use Symfony\Component\Validator\Constraints as Assert;
+ 
+ /**
+  * A review of a book.
+@@ -28,6 +29,7 @@ class Review
+      *
+      * @ORM\Column(type="smallint")
+      */
 +    #[Assert\Range(min: 0, max: 5)]
-    public int $rating = 0;
-
+     public int $rating = 0;
+ 
+     /**
+@@ -35,6 +37,7 @@ class Review
+      *
+      * @ORM\Column(type="text")
+      */
 +    #[Assert\NotBlank]
-    public string $body = '';
-
+     public string $body = '';
+ 
+     /**
+@@ -42,6 +45,7 @@ class Review
+      *
+      * @ORM\Column
+      */
 +    #[Assert\NotBlank]
-    public string $author = '';
-
+     public string $author = '';
+ 
+     /**
+@@ -49,6 +53,7 @@ class Review
+      *
+      * @ORM\Column(type="datetime_immutable")
+      */
 +    #[Assert\NotNull]
-    public ?\DateTimeInterface $publicationDate = null;
-
+     public ?\DateTimeInterface $publicationDate = null;
+ 
+     /**
+@@ -56,6 +61,7 @@ class Review
+      *
+      * @ORM\ManyToOne(targetEntity="Book", inversedBy="reviews")
+      */
 +    #[Assert\NotNull]
-    public ?Book $book = null;
-
-    public function getId(): ?int
-    {
-        return $this->id;
-    }
-}
+     public ?Book $book = null;
+ 
+     public function getId(): ?int
 ```
 
 After updating the entities by adding those `#[Assert\*]` attributes (as with Doctrine, you can also use XML or YAML), try
@@ -691,14 +735,14 @@ ISBN isn't valid...
 ## Adding GraphQL Support
 
 Isn't API Platform a REST **and** GraphQL framework? That's true! GraphQL support isn't enabled by default. To add it we
-need to install the [graphql-php](https://webonyx.github.io/graphql-php/) library. Run the following command (the cache needs to be cleared twice):
+need to install the [graphql-php](https://webonyx.github.io/graphql-php/) library. Run the following command:
 
-    $ docker-compose exec php composer req webonyx/graphql-php && docker-compose exec php bin/console cache:clear
+    $ docker-compose exec php composer req webonyx/graphql-php
 
-You now have a GraphQL API! Open `https://localhost:8443/graphql` (or `https://localhost:8443/api/graphql` if you used Symfony Flex to install API Platform) to play with it using the nice [GraphiQL](https://github.com/graphql/graphiql)
+You now have a GraphQL API! Open `https://localhost/graphql` (or `https://localhost/api/graphql` if you used Symfony Flex to install API Platform) to play with it using the nice [GraphiQL](https://github.com/graphql/graphiql)
 UI that is shipped with API Platform:
 
-![GraphQL endpoint](images/api-platform-2.5-graphql.png)
+![GraphQL endpoint](images/api-platform-2.6-graphql.png)
 
 Try it out by creating a greeting:
 
@@ -724,6 +768,31 @@ And by reading out the greeting:
 }
 ```
 
+You can also try things a bit more complex:
+
+```graphql
+{
+  books {
+    totalCount
+    edges {
+      node {
+        id
+        title
+        reviews {
+          totalCount
+          edges {
+            node {
+              author
+              rating
+            }
+          }
+        }
+      }
+    }
+  }
+}
+```
+
 The GraphQL implementation supports [queries](https://graphql.org/learn/queries/), [mutations](https://graphql.org/learn/queries/#mutations),
 [100% of the Relay server specification](https://facebook.github.io/relay/docs/en/graphql-server-specification.html), pagination,
 [filters](../core/filters.md) and [access control rules](../core/security.md).
@@ -737,7 +806,7 @@ Wait... You already have one!
 
 Open `https://localhost/admin/` in your browser:
 
-![The admin](images/api-platform-2.5-admin.png)
+![The admin](images/api-platform-2.6-admin.png)
 
 This [Material Design](https://material.io/guidelines/) admin is a [Progressive Web App](https://developers.google.com/web/progressive-web-apps/)
 built with [API Platform Admin](../admin/index.md) ([React Admin](https://marmelab.com/react-admin/) inside!). It is powerful and fully customizable.
@@ -756,7 +825,7 @@ The distribution comes with a skeleton ready to welcome the [Next.js](https://ne
 
 Open `https://localhost/greetings/` in your browser:
 
-![The Next.js Progressive Web App](images/api-platform-2.5-pwa-react.png)
+![The Next.js Progressive Web App](images/api-platform-2.6-pwa-react.png)
 
 You can also choose to generate the code for a specific resource with the `--resource` argument (example:
 `generate-api-platform-client --resource books`).
