@@ -22,7 +22,7 @@ Enable TypeScript in your next project
 
 Install required dependencies:
 
-    $ yarn add lodash.get lodash.has @types/lodash isomorphic-unfetch
+    $ yarn add lodash.get lodash.has @types/lodash isomorphic-unfetch formik
 
 ## Generating Routes
 
