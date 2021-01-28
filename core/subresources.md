@@ -21,8 +21,8 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity
- * @ApiResource
  */
+#[ApiResource]
 class Answer
 {
     /**
@@ -60,8 +60,8 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity
- * @ApiResource
  */
+#[ApiResource]
 class Question
 {
     /**
@@ -79,8 +79,8 @@ class Question
     /**
      * @ORM\OneToOne(targetEntity="Answer", inversedBy="question")
      * @ORM\JoinColumn(referencedColumnName="id", unique=true)
-     * @ApiSubresource
      */
+    #[ApiSubresource]
     public $answer;
 
     public function getId(): ?int
@@ -104,7 +104,7 @@ App\Entity\Question:
 ```
 [/codeSelector]
 
-Note that all we had to do is to set up `@ApiSubresource` on the `Question::answer` relation. Because the `answer` is a to-one relation, we know that this subresource is an item. Therefore the response will look like this:
+Note that all we had to do is to set up `#[ApiSubresource]` on the `Question::answer` relation. Because the `answer` is a to-one relation, we know that this subresource is an item. Therefore the response will look like this:
 
 ```json
 {
@@ -136,14 +136,16 @@ namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
 
-/**
- * @ApiResource(subresourceOperations={
- *     "api_questions_answer_get_subresource"={
- *         "method"="GET",
- *         "normalization_context"={"groups"={"foobar"}}
- *     }
- * })
- */
+ #[ApiResource(
+    subresourceOperations: [
+        'api_questions_answer_get_subresource': [
+            'method' => 'GET',
+            'normalization_context': [
+                'groups': ['foobar'],
+            ],
+        ],
+    ],
+)]
 class Answer
 {
     // ...
@@ -198,17 +200,14 @@ You can control the path of subresources with the `path` option of the `subresou
 <?php
 // api/src/Entity/Question.php
 
-/**
- * ...
- * @ApiResource(
- *      subresourceOperations={
- *          "api_questions_answer_get_subresource"={
- *              "method"="GET",
- *              "path"="/questions/{id}/all-answers"
- *          },
- *      },
- * )
- */
+#[ApiResource(
+    subresourceOperations: [
+        'api_questions_answer_get_subresource': [
+            'method' => 'GET',
+            'path' => '/questions/{id}/all-answers',
+        ],
+    ],
+)]
 class Question
 {
 }
@@ -222,16 +221,13 @@ The `subresourceOperations` attribute also allows you to add an access control o
 <?php
 // api/src/Entity/Answer.php
 
-/**
- * ...
- * @ApiResource(
- *     subresourceOperations={
- *          "api_questions_answer_get_subresource"= {
- *              "security"="has_role('ROLE_AUTHENTICATED')"
- *          }
- *      }
- * )
- */
+ #[ApiResource(
+    subresourceOperations: [
+        'api_questions_answer_get_subresource': [
+            'security' => "has_role('ROLE_AUTHENTICATED')",
+        ],
+    ],
+ )]
  class Answer
  {
  }
@@ -250,16 +246,12 @@ use ApiPlatform\Core\Annotation\ApiProperty;
 use ApiPlatform\Core\Annotation\ApiResource;
 use ApiPlatform\Core\Annotation\ApiSubresource;
 
-/**
- * ...
- * @ApiResource
- */
+#[ApiResource]
 class Question
 {
-    /**
-     * ...
-     * @ApiSubresource(maxDepth=1)
-     */
+    #[ApiSubresource(
+        maxDepth: 1,
+    )]
     public $answer;
 
     // ...
