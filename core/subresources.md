@@ -10,6 +10,7 @@ For example, let's create two entities (Question, Answer) and set up a subresour
 the answer to the question 42:
 
 [codeSelector]
+
 ```php
 <?php
 // api/src/Entity/Answer.php
@@ -102,6 +103,7 @@ App\Entity\Question:
                 resourceClass: 'App\Entity\Answer'
                 collection: false
 ```
+
 [/codeSelector]
 
 Note that all we had to do is to set up `#[ApiSubresource]` on the `Question::answer` relation. Because the `answer` is a to-one relation, we know that this subresource is an item. Therefore the response will look like this:
@@ -128,6 +130,7 @@ Note: only for `GET` operations are supported at the moment
 You may want custom groups on subresources, you can set `normalization_context` or `denormalization_context` on that operation. To do so, add a `subresourceOperations` node. For example:
 
 [codeSelector]
+
 ```php
 <?php
 // api/src/Entity/Answer.php
@@ -183,6 +186,7 @@ App\Entity\Answer:
     </resource>
 </resources>
 ```
+
 [/codeSelector]
 
 In the previous examples, the `method` attribute is mandatory, because the operation name doesn't match a supported HTTP

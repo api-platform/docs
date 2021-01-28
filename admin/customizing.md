@@ -185,4 +185,4 @@ For instance, using an autocomplete input is straightforward, [checkout the dedi
 API Platform is built on top of [React Admin](https://marmelab.com/react-admin/).
 You can use all the features provided by the underlying library with API Platform Admin, including support for [file upload](https://marmelab.com/react-admin/DataProviders.html#decorating-your-data-provider-example-of-file-upload), [authentication](https://marmelab.com/react-admin/Authentication.html), [authorization](https://marmelab.com/react-admin/Authorization.html) and deeper customization.
 
-To learn more about these capabilities, refer to [the React Admin documentation](https://marmelab.com/react-admin/). 
+To learn more about these capabilities, refer to [the React Admin documentation](https://marmelab.com/react-admin/).

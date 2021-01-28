@@ -24,7 +24,10 @@ Before creating your functional tests, you will need a dataset to pre-populate y
 
 First, install [Alice](https://github.com/nelmio/alice):
 
-    $ docker-compose exec php composer require --dev alice
+```console
+docker-compose exec php \
+    composer require --dev alice
+```
 
 Thanks to Symfony Flex, Alice (and [AliceBundle](https://github.com/hautelook/AliceBundle)) are ready to use!
 Place your data fixtures files in a directory named `fixtures/`.
@@ -55,7 +58,10 @@ App\Entity\Review:
 
 You can now load your fixtures in the database with the following command:
 
-    $ docker-compose exec php bin/console hautelook:fixtures:load
+```console
+docker-compose exec php \
+    bin/console hautelook:fixtures:load
+```
 
 To learn more about fixtures, take a look at the documentation of [Alice](https://github.com/nelmio/alice)
 and [AliceBundle](https://github.com/hautelook/AliceBundle).
@@ -65,9 +71,13 @@ The list of available generators as well as a cookbook explaining how to create 
 
 Now that you have some data fixtures for your API, you are ready to write functional tests with [PHPUnit](https://phpunit.de/index.html).
 
-Install the Symfony test pack (which includes PHPUnit and [PHPUnit Bridge](https://symfony.com/doc/current/components/phpunit_bridge.html)), [Symfony HttpClient](https://symfony.com/doc/current/components/http_client.html) (the API Platform test client is built on top of Symfony HttpClient, and allows to leverage all its features) and [JSON Schema for PHP](https://github.com/justinrainbow/json-schema) (used by API Platform to provide [JSON Schema](https://json-schema.org/) test assertions):
+Install the Symfony test pack (which includes PHPUnit and [PHPUnit Bridge](https://symfony.com/doc/current/components/phpunit_bridge.html)), [Symfony HttpClient](https://symfony.com/doc/current/components/http_client.html)
+(the API Platform test client is built on top of Symfony HttpClient, and allows to leverage all its features) and [JSON Schema for PHP](https://github.com/justinrainbow/json-schema) (used by API Platform to provide [JSON Schema](https://json-schema.org/) test assertions):
 
-    $ docker-compose exec php composer require --dev test-pack http-client justinrainbow/json-schema
+```console
+    docker-compose exec php \
+        composer require --dev symfony/test-pack symfony/http-client justinrainbow/json-schema
+```
 
 Your API is ready to be functionally tested. Create your test classes under the `tests/` directory.
 
@@ -220,7 +230,10 @@ transaction previously begun. Because of this, you can run your tests without wo
 
 All you have to do now is to run your tests:
 
-    $ docker-compose exec php bin/phpunit
+```console
+docker-compose exec php \
+    bin/phpunit
+```
 
 If everything is working properly, you should see `OK (5 tests, 17 assertions)`.
 Your REST API is now properly tested!

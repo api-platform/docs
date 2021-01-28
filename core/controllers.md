@@ -80,6 +80,7 @@ the client.
 The routing has not been configured yet because we will add it at the resource configuration level:
 
 [codeSelector]
+
 ```php
 <?php
 // api/src/Entity/Book.php
@@ -116,10 +117,11 @@ App\Entity\Book:
 <?xml version="1.0" encoding="UTF-8" ?>
 <!-- api/config/api_platform/resources.xml -->
 
-<resources xmlns="https://api-platform.com/schema/metadata"
-           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-           xsi:schemaLocation="https://api-platform.com/schema/metadata
-           https://api-platform.com/schema/metadata/metadata-2.0.xsd">
+<resources
+        xmlns="https://api-platform.com/schema/metadata"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="https://api-platform.com/schema/metadata
+        https://api-platform.com/schema/metadata/metadata-2.0.xsd">
     <resource class="App\Entity\Book">
         <itemOperations>
             <itemOperation name="get" />
@@ -132,6 +134,7 @@ App\Entity\Book:
     </resource>
 </resources>
 ```
+
 [/codeSelector]
 
 It is mandatory to set the `method`, `path` and `controller` attributes. They allow API Platform to configure the routing path and
@@ -142,6 +145,7 @@ the associated controller respectively.
 You may want different serialization groups for your custom operations. Just configure the proper `normalization_context` and/or `denormalization_context` in your operation:
 
 [codeSelector]
+
 ```php
 <?php
 // api/src/Entity/Book.php
@@ -192,9 +196,9 @@ App\Entity\Book:
 <!-- api/config/api_platform/resources.xml -->
 
 <resources xmlns="https://api-platform.com/schema/metadata"
-           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-           xsi:schemaLocation="https://api-platform.com/schema/metadata
-           https://api-platform.com/schema/metadata/metadata-2.0.xsd">
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="https://api-platform.com/schema/metadata
+        https://api-platform.com/schema/metadata/metadata-2.0.xsd">
     <resource class="App\Entity\Book">
         <itemOperations>
             <itemOperation name="get" />
@@ -203,15 +207,16 @@ App\Entity\Book:
                 <attribute name="path">/books/{id}/publication</attribute>
                 <attribute name="controller">App\Controller\CreateBookPublication</attribute>
                 <attribute name="normalization_context">
-                  <attribute name="groups">
-                    <attribute>publication</attribute>
-                  </attribute>
+                    <attribute name="groups">
+                        <attribute>publication</attribute>
+                    </attribute>
                 </attribute>
             </itemOperation>
         </itemOperations>
     </resource>
 </resources>
 ```
+
 [/codeSelector]
 
 ## Retrieving the Entity
@@ -220,6 +225,7 @@ If you want to bypass the automatic retrieval of the entity in your custom opera
 operation attribute:
 
 [codeSelector]
+
 ```php
 <?php
 // api/src/Entity/Book.php
@@ -261,9 +267,9 @@ App\Entity\Book:
 <!-- api/config/api_platform/resources.xml -->
 
 <resources xmlns="https://api-platform.com/schema/metadata"
-           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-           xsi:schemaLocation="https://api-platform.com/schema/metadata
-           https://api-platform.com/schema/metadata/metadata-2.0.xsd">
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="https://api-platform.com/schema/metadata
+        https://api-platform.com/schema/metadata/metadata-2.0.xsd">
     <resource class="App\Entity\Book">
         <itemOperations>
             <itemOperation name="get" />
@@ -277,6 +283,7 @@ App\Entity\Book:
     </resource>
 </resources>
 ```
+
 [/codeSelector]
 
 This way, it will skip the `ReadListener`. You can do the same for some other built-in listeners. See [Built-in Event Listeners](events.md#built-in-event-listeners)
@@ -295,6 +302,7 @@ for `book_post_discontinuation` when neither `method` nor `route_name` attribute
 First, let's create your resource configuration:
 
 [codeSelector]
+
 ```php
 <?php
 // api/src/Entity/Book.php
@@ -329,9 +337,9 @@ App\Entity\Book:
 <!-- api/config/api_platform/resources.xml -->
 
 <resources xmlns="https://api-platform.com/schema/metadata"
-           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-           xsi:schemaLocation="https://api-platform.com/schema/metadata
-           https://api-platform.com/schema/metadata/metadata-2.0.xsd">
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="https://api-platform.com/schema/metadata
+        https://api-platform.com/schema/metadata/metadata-2.0.xsd">
     <resource class="App\Entity\Book">
         <itemOperations>
             <itemOperation name="get" />
@@ -343,6 +351,7 @@ App\Entity\Book:
     </resource>
 </resources>
 ```
+
 [/codeSelector]
 
 API Platform will automatically map this `post_publication` operation to the route `book_post_publication`. Let's create a custom action

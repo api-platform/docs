@@ -161,7 +161,7 @@ them unless you know what you are doing.
 Thanks to the mapping done previously, API Platform Core will automatically register the following REST [operations](operations.md)
 for resources of the product type:
 
-*Product*
+### Product
 
 Method | URL            | Description
 -------|----------------|--------------------------------
@@ -179,6 +179,7 @@ It is also possible to override the naming convention using [operation path nami
 As an alternative to annotations, you can map entity classes using YAML or XML:
 
 [codeSelector]
+
 ```yaml
 # api/config/api_platform/resources.yaml
 resources:
@@ -196,9 +197,9 @@ resources:
 <!-- api/config/api_platform/resources.xml -->
 
 <resources xmlns="https://api-platform.com/schema/metadata"
-           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-           xsi:schemaLocation="https://api-platform.com/schema/metadata
-           https://api-platform.com/schema/metadata/metadata-2.0.xsd">
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="https://api-platform.com/schema/metadata
+        https://api-platform.com/schema/metadata/metadata-2.0.xsd">
     <resource class="App\Entity\Product" />
     <resource
         class="App\Entity\Offer"
@@ -208,6 +209,7 @@ resources:
     />
 </resources>
 ```
+
 [/codeSelector]
 
 If you prefer to use YAML or XML files instead of annotations, you must configure API Platform to load the appropriate files:

@@ -531,8 +531,7 @@ API Platform generates specification property restrictions based on Symfony’s 
 For example, from [`Regex`](https://symfony.com/doc/4.4/reference/constraints/Regex.html) constraint API
  Platform builds [`pattern`](https://swagger.io/docs/specification/data-models/data-types/#pattern) restriction.
 
-
-For building custom property schema based on custom validation constraints you can create a custom class 
+For building custom property schema based on custom validation constraints you can create a custom class
 for generating property scheme restriction.
 
 To create property schema, you have to implement the [`PropertySchemaRestrictionMetadataInterface`](https://github.com/api-platform/core/blob/caca7f26b7f22a0abf84390463a1ea47c47d7757/src/Bridge/Symfony/Validator/Metadata/Property/Restriction/PropertySchemaRestrictionMetadataInterface.php).

@@ -1,6 +1,6 @@
 # FOSUserBundle Integration
 
-**Deprecated: this integration is deprecated and will be removed in API Platform 3**
+## ⚠️ Deprecated: this integration is deprecated and will be removed in API Platform 3
 
 FOSUserBundle is not well suited for APIs. We strongly encourage you to use the [Doctrine user provider](https://symfony.com/doc/current/security/user_provider.html#entity-user-provider)
 shipped with Symfony or to [create a custom user provider](https://symfony.com/doc/current/security/user_provider.html#creating-a-custom-user-provider)

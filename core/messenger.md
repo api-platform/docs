@@ -11,16 +11,19 @@ Many transports are supported to dispatch messages to async consumers, including
 
 To enable the support of Messenger, install the library:
 
-     $ docker-compose exec php composer require messenger
+```console
+docker-compose exec php \
+    composer require messenger
+```
 
 ## Dispatching a Resource through the Message Bus
 
 Set the `messenger` attribute to `true`, and API Platform will automatically dispatch the API Resource instance as a message using the message bus provided by the Messenger Component:
 
 [codeSelector]
+
 ```php
 <?php
-
 // api/src/Entity/ResetPasswordRequest.php
 
 namespace App\Entity;
@@ -61,6 +64,7 @@ resources:
         messenger: true
         output: false
 ```
+
 [/codeSelector]
 
 Because the `messenger` attribute is `true`, when a `POST` is handled by API Platform, the corresponding instance of the `ResetPasswordRequest` will be dispatched.
@@ -75,6 +79,7 @@ Finally, the `output` attribute is set to `false`, so the HTTP response that wil
 **Note:** when using `messenger="input"` ApiResource attribute in a Doctrine entity, the Doctrine DataPersister is not called. You must use an array containing `persist` and `input` if you want it to be called, for example:
 
 [codeSelector]
+
 ```php
 /**
  * @ApiResource(messenger={"persist", "input"})
@@ -87,6 +92,7 @@ resources:
     attributes:
         messenger: ['persist', 'input']
 ```
+
 [/codeSelector]
 
 ## Registering a Message Handler
@@ -95,7 +101,6 @@ To process the message that will be dispatched, [a handler](https://symfony.com/
 
 ```php
 <?php
-
 // api/src/Handler/ResetPasswordRequestHandler.php
 
 namespace App\Handler;
@@ -136,7 +141,6 @@ Set the `messenger` attribute to `input`, and API Platform will automatically di
 
 ```php
 <?php
-
 // api/src/Entity/User.php
 
 namespace App\Entity;
@@ -164,7 +168,6 @@ Where `ResetPasswordRequest` would be:
 
 ```php
 <?php
-
 // api/src/Dto/ResetPasswordRequest.php
 
 namespace App\Dto;
@@ -189,7 +192,6 @@ In this case, when a `POST` request is issued on `/users` the message handler wi
 
 ```php
 <?php
-
 // api/src/Handler/ResetPasswordRequestHandler.php
 
 namespace App\Handler;

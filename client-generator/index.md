@@ -4,7 +4,7 @@ Client Generator is the fastest way to scaffold fully featured webapps and nativ
 
 ![Screencast](images/client-generator-demo.gif)
 
-*Generated React and React Native apps, updated in real time* 
+## Generated React and React Native Apps, Updated in Real Time
 
 It is able to generate apps using the following frontend stacks:
 

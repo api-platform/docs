@@ -17,7 +17,7 @@ NOTE: If you are not sure what the entrypoint is, see [Troubleshooting](troubles
 
 Assuming you have 2 resources in your application, `Foo` and `Bar`, when you run
 
-    $ npx @api-platform/client-generator --generator typescript https://demo.api-platform.com src/
+    npx @api-platform/client-generator --generator typescript https://demo.api-platform.com src/
 
 you will obtain 2 `.ts` files arranged as following:
 
