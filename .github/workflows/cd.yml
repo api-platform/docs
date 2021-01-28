@@ -37,6 +37,8 @@ jobs:
       run: bin/retrieve-documentation
 
     - name: Build website
+      env:
+        GITHUB_KEY: ${{ secrets.CONTRIBUTORS_GITHUB_TOKEN }}
       run: yarn gatsby build
 
     - name: Deploy
