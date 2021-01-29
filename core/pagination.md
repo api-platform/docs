@@ -57,7 +57,7 @@ Paginating collections is generally accepted as a good practice. It allows brows
 overhead as well as preventing [DOS attacks](https://en.wikipedia.org/wiki/Denial-of-service_attack).
 However, for small collections, it can be convenient to fully disable the pagination.
 
-### Globally
+### Disabling the Pagination Globally
 
 The pagination can be disabled for all resources using this configuration:
 
@@ -69,7 +69,7 @@ api_platform:
             enabled: false
 ```
 
-### For a Specific Resource
+### Disabling the Pagination For a Specific Resource
 
 It can also be disabled for a specific resource:
 
@@ -88,9 +88,9 @@ class Book
 }
 ```
 
-### Client-side
+### Disabling the Pagination Client-side
 
-#### Globally
+#### Disabling the Pagination Client-side Globally
 
 You can configure API Platform Core to let the client enable or disable the pagination. To activate this feature globally,
 use the following configuration:
@@ -112,7 +112,7 @@ The pagination can now be enabled or disabled by adding a query parameter named 
 Any value accepted by the [`FILTER_VALIDATE_BOOLEAN`](https://www.php.net/manual/en/filter.filters.validate.php) filter can be
 used as the value.
 
-#### For a specific resource
+#### Disabling the Pagination Client-side For a Specific Resource
 
 The client ability to disable the pagination can also be set in the resource configuration:
 
@@ -135,7 +135,7 @@ class Book
 
 In the same manner, the number of items per page is configurable and can be set client-side.
 
-### Globally
+### Changing the Number of Items per Page Globally
 
 The number of items per page can be configured for all resources:
 
@@ -147,7 +147,7 @@ api_platform:
             items_per_page: 30 # Default value
 ```
 
-### For a Specific Resource
+### Changing the Number of Items per Page For a Specific Resource
 
 ```php
 <?php
@@ -164,9 +164,9 @@ class Book
 }
 ```
 
-### Client-side
+### Changing the Number of Items per Page Client-side
 
-#### Globally
+#### Changing the Number of Items per Page Client-side Globally
 
 ```yaml
 # api/config/packages/api_platform.yaml
@@ -179,7 +179,7 @@ api_platform:
 
 The number of items per page can now be changed adding a query parameter named `itemsPerPage`: `GET /books?itemsPerPage=20`.
 
-#### For a Specific Resource
+#### Changing the Number of Items per Page Client-side For a Specific Resource
 
 Changing the number of items per page can be enabled (or disabled) for a specific resource:
 
@@ -198,9 +198,9 @@ class Book
 }
 ```
 
-## Changing Maximum items per page
+## Changing Maximum Items Per Page
 
-### Globally
+### Changing Maximum Items Per Page Globally
 
 The number of maximum items per page can be configured for all resources:
 
@@ -212,7 +212,7 @@ api_platform:
             maximum_items_per_page: 50
 ```
 
-### For a Specific Resource
+### Changing Maximum Items Per Page For a Specific Resource
 
 ```php
 <?php
@@ -231,7 +231,7 @@ class Book
 }
 ```
 
-### For a Specific Resource Collection Operation
+### Changing Maximum Items Per Page For a Specific Resource Collection Operation
 
 ```php
 <?php
@@ -257,7 +257,7 @@ class Book
 When using the default pagination, a `COUNT` query will be issued against the current requested collection. This may have a
 performance impact on really big collections. The downside is that the information about the last page is lost (ie: `hydra:last`).
 
-### Globally
+### Partial Pagination Globally
 
 The partial pagination retrieval can be configured for all resources:
 
@@ -270,7 +270,7 @@ api_platform:
             partial: true # Disabled by default
 ```
 
-### For a Specific Resource
+### Partial Pagination For a Specific Resource
 
 ```php
 <?php
@@ -288,9 +288,9 @@ class Book
 }
 ```
 
-### Client-side
+### Partial Pagination Client-side
 
-#### Globally
+#### Partial Pagination Client-side Globally
 
 ```yaml
 # api/config/packages/api_platform.yaml
@@ -304,7 +304,7 @@ api_platform:
 
 The partial pagination retrieval can now be changed by toggling a query parameter named `partial`: `GET /books?partial=true`.
 
-#### For a Specific Resource
+#### Partial Pagination Client-side For a Specific Resource
 
 ```php
 <?php
@@ -322,7 +322,7 @@ class Book
 }
 ```
 
-## Cursor based pagination
+## Cursor-Based Pagination
 
 To configure your resource to use the cursor-based pagination, select your unique sorted field as well as the direction you’ll like the pagination to go via filters and enable the `pagination_via_cursor` option.
 Note that for now you have to declare a `RangeFilter` and an `OrderFilter` on the property used for the cursor-based pagination.
@@ -357,11 +357,11 @@ class Book
 
 To know more about cursor-based pagination take a look at [this blog post on medium (draft)](https://medium.com/@sroze/74fd1d324723).
 
-## Controlling the behavior of the Doctrine ORM Paginator
+## Controlling The Behavior of The Doctrine ORM Paginator
 
 The [PaginationExtension](https://github.com/api-platform/core/blob/main/src/Bridge/Doctrine/Orm/Extension/PaginationExtension.php) of API Platform performs some checks on the `QueryBuilder` to guess, in most common cases, the correct values to use when configuring the Doctrine ORM Paginator:
 
--   `$fetchJoinCollection` argument: Whether there is a join to a collection-valued association. When set to `true`, the Doctrine ORM Paginator will perform an additional query, in order to get the correct number of results.
+* `$fetchJoinCollection` argument: Whether there is a join to a collection-valued association. When set to `true`, the Doctrine ORM Paginator will perform an additional query, in order to get the correct number of results.
 
     You can configure this using the `pagination_fetch_join_collection` attribute on a resource or on a per-operation basis:
 
@@ -389,7 +389,7 @@ The [PaginationExtension](https://github.com/api-platform/core/blob/main/src/Bri
     }
     ```
 
--   `setUseOutputWalkers` setter: Whether to use output walkers. When set to `true`, the Doctrine ORM Paginator will use output walkers, which are compulsory for some types of queries.
+* `setUseOutputWalkers` setter: Whether to use output walkers. When set to `true`, the Doctrine ORM Paginator will use output walkers, which are compulsory for some types of queries.
 
     You can configure this using the `pagination_use_output_walkers` attribute on a resource or on a per-operation basis:
 
@@ -421,7 +421,8 @@ For more information, please see the [Pagination](https://www.doctrine-project.o
 
 ## Custom Controller Action
 
-In case you're using a custom controller action, make sure you return the `Paginator` object to get the full hydra response with `hydra:view` (which contains information about first, last, next and previous page). The following examples show how to handle it within a repository method. The controller needs to pass through the page number. You will need to use the Doctrine Paginator and pass it to the API Platform Paginator.
+In case you're using a custom controller action, make sure you return the `Paginator` object to get the full hydra response with `hydra:view` (which contains information about first, last, next and previous page). The following examples show how to handle it within a repository method.
+The controller needs to pass through the page number. You will need to use the Doctrine Paginator and pass it to the API Platform Paginator.
 
 First example:
 
@@ -450,8 +451,9 @@ class BookRepository extends ServiceEntityRepository
         ManagerRegistry $registry,
         TokenStorageInterface $tokenStorage
     ) {
-        $this->tokenStorage = $tokenStorage;
         parent::__construct($registry, Book::class);
+
+        $this->tokenStorage = $tokenStorage;
     }
 
     public function getBooksByFavoriteAuthor(int $page = 1): Paginator
@@ -478,6 +480,7 @@ class BookRepository extends ServiceEntityRepository
     }
 }
 ```
+
 The Controller would look like this:
 
 ```php
@@ -508,7 +511,6 @@ You can also use the Query object inside the repository method and pass it to th
 
 ```php
 <?php
-
 // api/src/Repository/BookRepository.php
 
 namespace App\Repository;

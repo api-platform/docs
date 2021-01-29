@@ -7,6 +7,7 @@ API Platform also provides convenient [access control expressions](https://symfo
 <p align="center" class="symfonycasts"><a href="https://symfonycasts.com/screencast/api-platform-security/?cid=apip"><img src="../distribution/images/symfonycasts-player.png" alt="Security screencast"><br>Watch the Security screencast</a>
 
 [codeSelector]
+
 ```php
 <?php
 // api/src/Entity/Book.php
@@ -75,6 +76,7 @@ App\Entity\Book:
         put:
             security: 'is_granted("ROLE_ADMIN") or object.owner == user'
 ```
+
 [/codeSelector]
 
 Resource signature can be modified at the property level as well:
@@ -115,6 +117,7 @@ In some cases, it might be useful to execute a security after the denormalizatio
 To do so, use the `security_post_denormalize` attribute:
 
 [codeSelector]
+
 ```php
 <?php
 // src/Entity/Book.php
@@ -146,6 +149,7 @@ App\Entity\Book:
             security_post_denormalize: "is_granted('ROLE_ADMIN') or (object.owner == user and previous_object.owner == user)"
     # ...
 ```
+
 [/codeSelector]
 
 This time, the `object` variable contains data that have been extracted from the HTTP request body during the denormalization process.
@@ -194,7 +198,8 @@ class Book
 }
 ```
 
-Please note that if you use both `attributes={"security"="..` and then `"post" = { "security_post_denormalize" = "...`, the `security` on top level is called first, and after `security_post_denormalize`. This could lead to unwanted behaviour, so avoid using both of them simultaneously. If you need to use `security_post_denormalize`, consider adding `security` for the other operations instead of the global one.
+Please note that if you use both `attributes={"security"="..` and then `"post" = { "security_post_denormalize" = "...`, the `security` on top level is called first, and after `security_post_denormalize`. This could lead to unwanted behaviour, so avoid using both of them simultaneously.
+If you need to use `security_post_denormalize`, consider adding `security` for the other operations instead of the global one.
 
 Create a *BookVoter* with the `bin/console make:voter` command:
 
@@ -262,6 +267,7 @@ You can change it by configuring the `security_message` attribute or the `securi
 For example:
 
 [codeSelector]
+
 ```php
 <?php
 // api/src/Entity/Book.php
@@ -310,12 +316,14 @@ App\Entity\Book:
             security_post_denormalize_message: 'Sorry, but you are not the actual book owner.'
     # ...
 ```
+
 [/codeSelector]
 
 ## Filtering Collection According to the Current User Permissions
 
 Filtering collections according to the role or permissions of the current user must be done directly at [the data provider](data-providers.md) level. For instance, when using the built-in adapters for Doctrine ORM, MongoDB and ElasticSearch, removing entries from a collection should be done using [extensions](extensions.md).
-Extensions allow to customize the generated DQL/Mongo/Elastic/... query used to retrieve the collection (e.g. add `WHERE` clauses depending of the currently connected user) instead of using access control expressions. As extensions are services, you can [inject the Symfony `Security` class](https://symfony.com/doc/current/security.html#b-fetching-the-user-from-a-service) into them to access to current user's roles and permissions.
+Extensions allow to customize the generated DQL/Mongo/Elastic/... query used to retrieve the collection (e.g. add `WHERE` clauses depending of the currently connected user) instead of using access control expressions.
+As extensions are services, you can [inject the Symfony `Security` class](https://symfony.com/doc/current/security.html#b-fetching-the-user-from-a-service) into them to access to current user's roles and permissions.
 
 If you use [custom data providers](data-providers.md), you'll have to implement the filtering logic according to the persistence layer you rely on.
 

@@ -27,7 +27,7 @@ The following tables summarizes which extension point to use depending on what y
 | [Extensions](extensions.md)                                | Access to the query builder to change the DQL query                                                |
 | [Filters](filters.md#doctrine-orm-and-mongodb-odm-filters) | Add filters documentations (OpenAPI, GraphQL, Hydra) and automatically apply them to the DQL query |
 
-## Leveraging the Built-in Infrastructure Using Composition 
+## Leveraging the Built-in Infrastructure Using Composition
 
 While most API Platform classes are marked as `final`, built-in services are straightforward to reuse and customize [using composition](https://en.wikipedia.org/wiki/Composition_over_inheritance).
 

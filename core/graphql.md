@@ -12,7 +12,12 @@ Once enabled, you have nothing to do: your schema describing your API is automat
 
 To enable GraphQL and its IDE (GraphiQL and GraphQL Playground) in your API, simply require the [graphql-php](https://webonyx.github.io/graphql-php/) package using Composer and clear the cache one more time:
 
-    $ docker-compose exec php composer req webonyx/graphql-php && docker-compose exec php bin/console cache:clear
+```console
+docker-compose exec php sh -c '
+    composer require webonyx/graphql-php
+    bin/console cache:clear
+'
+```
 
 You can now use GraphQL at the endpoint: `https://localhost:8443/graphql`.
 
@@ -23,7 +28,7 @@ the GraphQL endpoint will be: `https://localhost:8443/api/graphql`.
 
 Sometimes you may want to have the GraphQL endpoint at a different location. This can be done by manually configuring the GraphQL controller.
 
-```yaml    
+```yaml
 # api/config/routes.yaml
 api_graphql_entrypoint:
     path: /api/graphql
@@ -125,7 +130,6 @@ api_platform:
         graphql: ['application/graphql']
 ```
 
-
 ## Operations
 
 To understand what an operation is, please refer to the [operations documentation](operations.md).
@@ -134,13 +138,15 @@ For GraphQL, the operations are defined under the `graphql` attribute.
 By default, all operations are enabled.
 
 For the queries, the operations are:
-- `item_query`
-- `collection_query`
+
+* `item_query`
+* `collection_query`
 
 For the mutations, the operations are:
-- `create`
-- `update`
-- `delete`
+
+* `create`
+* `update`
+* `delete`
 
 You can of course disable or configure these operations.
 
@@ -326,8 +332,9 @@ This is the case for `notRetrievedQuery` (empty args).
 Conversely, if you need to add custom arguments, make sure `id` is added among the arguments if you need the item to be retrieved automatically.
 
 Note also that:
-- If you have added your [own custom types](#custom-types), you can use them directly for your arguments types (it's the case here for `DateTime`).
-- You can also add a custom description for your custom arguments. You can see the [field arguments documentation](https://webonyx.github.io/graphql-php/type-system/object-types/#field-arguments) for more options.
+
+* If you have added your [own custom types](#custom-types), you can use them directly for your arguments types (it's the case here for `DateTime`).
+* You can also add a custom description for your custom arguments. You can see the [field arguments documentation](https://webonyx.github.io/graphql-php/type-system/object-types/#field-arguments) for more options.
 
 The arguments you have defined or the default ones and their value will be in `$context['args']` of your resolvers.
 
@@ -509,9 +516,10 @@ In API Platform, the built-in subscription support is handled by using [Mercure]
 ### Enable Update Subscriptions for a Resource
 
 To enable update subscriptions for a resource, three conditions have to be met:
-- the [Mercure hub and bundle need to be installed and configured](mercure.md#installing-mercure-support).
-- Mercure needs to be enabled for the resource.
-- the `update` mutation needs to be enabled for the resource.
+
+* the [Mercure hub and bundle need to be installed and configured](mercure.md#installing-mercure-support).
+* Mercure needs to be enabled for the resource.
+* the `update` mutation needs to be enabled for the resource.
 
 For instance, your resource should look like this:
 
@@ -858,9 +866,11 @@ Or order your results like:
   }
 }
 ```
+
 Another difference with the REST API filters is that the keyword `_list` must be used instead of the traditional `[]` to filter over multiple values.
 
 For example, if you want to search the offers with a green or a red product you can use the following syntax:
+
 ```graphql
 {
   offers(product_color_list: ["red", "green"]) {
@@ -1001,9 +1011,10 @@ class Offer
 Once enabled, a `page` filter will be available in the collection query (its name [can be changed in the configuration](pagination.md)) and an `itemsPerPage` filter will be available too if [client-side-pagination](pagination.md#client-side) is enabled.
 
 A `paginationInfo` field can be queried to obtain the following information:
-- `itemsPerPage`: the number of items per page. To change it, follow the [pagination documentation](pagination.md#changing-the-number-of-items-per-page).
-- `lastPage`: the last page of the collection.
-- `totalCount`: the total number of items in the collection.
+
+* `itemsPerPage`: the number of items per page. To change it, follow the [pagination documentation](pagination.md#changing-the-number-of-items-per-page).
+* `lastPage`: the last page of the collection.
+* `totalCount`: the total number of items in the collection.
 
 The collection items data are available in the `collection` field.
 
@@ -1191,8 +1202,9 @@ When you use different serialization groups, it will create different types in y
 Make sure you understand the implications when doing this: having different types means breaking the cache features in some GraphQL clients (in [Apollo Client](https://www.apollographql.com/docs/react/caching/cache-configuration/#automatic-cache-updates) for example).
 
 For instance:
-- If you use a different `normalization_context` for a mutation, a `MyResourcePayloadData` type with the restricted fields will be generated and used instead of `MyResource` (the query type).
-- If you use a different `normalization_context` for the query of an item (`item_query` operation) and for the query of a collection (`collection_query` operation), two types `MyResourceItem` and `MyResourceCollection` with the restricted fields will be generated and used instead of `MyResource` (the query type).
+
+* If you use a different `normalization_context` for a mutation, a `MyResourcePayloadData` type with the restricted fields will be generated and used instead of `MyResource` (the query type).
+* If you use a different `normalization_context` for the query of an item (`item_query` operation) and for the query of a collection (`collection_query` operation), two types `MyResourceItem` and `MyResourceCollection` with the restricted fields will be generated and used instead of `MyResource` (the query type).
 
 ## Exception and Error
 
@@ -1237,6 +1249,7 @@ final class ErrorHandler implements ErrorHandlerInterface
 Then register the service:
 
 [codeSelector]
+
 ```yaml
 # api/config/services.yaml
 services:
@@ -1276,6 +1289,7 @@ return function(ContainerConfigurator $configurator) {
         ->decorate('api_platform.graphql.error_handler');
 };
 ```
+
 [/codeSelector]
 
 ### Formatting Exceptions and Errors
@@ -1721,13 +1735,15 @@ You may need to export your schema in SDL (Schema Definition Language) to import
 The `api:graphql:export` command is provided to do so:
 
 ```shell-session
-$ docker-compose exec php bin/console api:graphql:export -o path/to/your/volume/schema.graphql
+docker-compose exec php \
+    bin/console api:graphql:export -o path/to/your/volume/schema.graphql
 ```
 
 Since the command prints the schema to the output if you don't use the `-o` option, you can also use this command:
 
 ```shell-session
-$ docker-compose exec php bin/console api:graphql:export > path/in/host/schema.graphql
+docker-compose exec php \
+    bin/console api:graphql:export > path/in/host/schema.graphql
 ```
 
 ## Handling File Upload

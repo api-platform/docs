@@ -2,7 +2,7 @@
 
 > An open-source reverse proxy and load balancer for HTTP and TCP-based applications that is easy, dynamic, automatic, fast, full-featured, production proven, provides metrics and integrates with every major cluster technology.
 >
-> —https://traefik.io
+> —<https://traefik.io>
 
 ## Basic Implementation
 
@@ -12,6 +12,7 @@ Use this custom API Platform `docker-compose.yml` file which implements ready-to
 ports and add labels to tell Træfik to listen on the routes mentioned and redirect routes to a specified container.
 
 A few points to note:
+
 * `--api.insecure=true` Tells Træfik to generate a browser view to watch containers and IP/DNS associated easier  
 * `--providers.docker` Tells Træfik to listen on Docker Api  
 * `labels:` Key for Træfik configuration into Docker integration
@@ -22,7 +23,7 @@ A few points to note:
     api:
       labels:
         - traefik.http.routers.api.rule=Host(`api.localhost`)
-  ``` 
+  ```
 
   The API DNS will be specified with ``traefik.http.routers.api.rule=Host(`your.host`)`` (here api.localhost)
 * `--traefik.routers.clientloadbalancer.server.port=3000` The port specified to Træfik will be exposed by the container (here the React app exposes the 3000 port), but if your container exposes only one port, it can be ignored
@@ -36,7 +37,6 @@ Then you edited your `admin/Dockerfile` and `client/Dockerfile` like this:
 ```
 
 After that, don't forget to re-build your containers
-
 
 ```yaml
 # docker-compose.yml
@@ -172,10 +172,10 @@ volumes:
 
 Don't forget the db-data, or the database won't work in this dockerized solution.
 
-`localhost` is a reserved domain referred to in your `/etc/hosts`. 
-If you want to implement custom DNS such as production DNS in local, just add them at the end of your `/etc/host` file like that: 
+`localhost` is a reserved domain referred to in your `/etc/hosts`.
+If you want to implement custom DNS such as production DNS in local, just add them at the end of your `/etc/host` file like that:
 
-```
+```csv
 # /etc/hosts
 # ...
 
@@ -403,7 +403,8 @@ volumes:
 +    external: true
 ```
 
-Finally, some environment variables must be defined, here is an example of a `.env` file to set them: 
+Finally, some environment variables must be defined, here is an example of a `.env` file to set them:
+
 ```dotenv
 CONTAINER_REGISTRY_BASE=quay.io/api-platform
 DOMAIN_NAME=localhost
@@ -421,11 +422,13 @@ This way, you can configure your main variables into one single file.
 
 If you want to run multiple API Platform instances on the same server and behind only one Træfik instance, you'll have to define different service names for each service to avoid named conflicts error since Træfik v2.0.  
 To achieve that, by setting only one more environment variable, you'll be able to make each instance unique. Here is a working example below:
+
 ```dotenv
 # /anywhere/first/api-platform/.env
 #...
 RANDOM_UNIQUE_KEY=yourUniqueKeyForYourFirstInstance
 ```
+
 ```dotenv
 # /anywhere/second/api-platform/.env
 #...
@@ -433,6 +436,7 @@ RANDOM_UNIQUE_KEY=yourUniqueKeyForYourSecondInstance
 ```
 
 Then update each traefik http routers names and services following this sample for admin
+
 ```yaml
 # /anywhere/first/api-plaform/docker-compose.yml
 # ...
@@ -442,10 +446,12 @@ Then update each traefik http routers names and services following this sample f
 ```
 
 ## More Generic Approach
+
 Here is a fully working sample for Træfik generic config with a little script using docker-compose override approach.  
 We assume that you've set `EXPOSE 3000` in your client and admin Dockerfile.
 
 Create a new `init-dc.sh` which contains the generation code that will be written in `docker-compose.override.yaml` file.
+
 ```bash
 #!/bin/sh
 # /anywhere/api-platform/init-dc.sh
@@ -473,6 +479,7 @@ echo "$text" > ./docker-compose.override.yml
 ```
 
 Write this minimal configuration into your `traefik.toml` file:
+
 ```toml
 # /anywhere/traefik/traefik.toml
 [providers.docker]
@@ -496,6 +503,7 @@ Write this minimal configuration into your `traefik.toml` file:
 ```
 
 Then after that update respectively your API Platform and Træfik `docker-compose.yml` following these examples below.
+
 ```yaml
 # /anywhere/api-platform/docker-compose.yml
 version: '3.4'

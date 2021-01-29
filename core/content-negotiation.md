@@ -91,7 +91,7 @@ api_platform:
         jsonapi:                       ['application/vnd.api+json']
 ```
 
-## Configuring Formats For a Specific Resource or Operation 
+## Configuring Formats For a Specific Resource or Operation
 
 Support for specific formats can also be configured at resource and operation level using the `input_formats` and `output_formats` attributes.
 `input_formats` controls the formats accepted in request bodies while `output_formats` controls formats available for responses.
@@ -122,6 +122,7 @@ this configuration might disable the `json` or the `html` on this resource for e
 You can specify different accepted formats at operation level too, it's especially convenient for to configure formats available for the `PATCH` method:
 
 [codeSelector]
+
 ```php
 <?php
 // api/src/Entity/Book.php
@@ -183,6 +184,7 @@ resources:
     </resource>
 </resources>
 ```
+
 [/codeSelector]
 
 ## Supporting Custom Formats

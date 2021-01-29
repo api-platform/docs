@@ -22,21 +22,23 @@ If you are using the [API Platform Distribution](../distribution/index.md), modi
 
 ```diff
 # api/Dockerfile
- 	pecl install \
- 		apcu-${APCU_VERSION} \
-+		mongodb \
- 	; \
- 	pecl clear-cache; \
- 	docker-php-ext-enable \
- 		apcu \
-+		mongodb \
- 		opcache \
- 	; \
+  pecl install \
+   apcu-${APCU_VERSION} \
++  mongodb \
+  ; \
+  pecl clear-cache; \
+  docker-php-ext-enable \
+   apcu \
++  mongodb \
+   opcache \
+  ; \
 ```
 
 Then rebuild the `php` image:
 
-    $ docker-compose build php
+```console
+docker-compose build php
+```
 
 Add a MongoDB image to the docker-compose file:
 
@@ -63,13 +65,16 @@ Add a MongoDB image to the docker-compose file:
 Once the extension is installed, to enable the MongoDB support, require the [Doctrine MongoDB ODM bundle](https://github.com/doctrine/DoctrineMongoDBBundle)
 package using Composer:
 
-    $ docker-compose exec php composer req doctrine/mongodb-odm-bundle
+```console
+docker-compose exec php \
+    composer require doctrine/mongodb-odm-bundle
+```
 
 Execute the contrib recipe to have it already configured.
 
 Change the MongoDB environment variables to match your Docker image:
 
-```
+```shell
 # api/.env
 MONGODB_URL=mongodb://api-platform:!ChangeMe!@db-mongodb
 MONGODB_DB=api

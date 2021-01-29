@@ -5,11 +5,16 @@
 If you use [the API Platform distribution](../distribution/index.md), the Schema Generator is already installed as a development
 dependency of your project and can be invoked through Docker:
 
-    $ docker-compose exec php vendor/bin/schema
+```console
+docker-compose exec php \
+    vendor/bin/schema
+```
 
 The Schema Generator can also [be downloaded independently as a PHAR](https://github.com/api-platform/schema-generator/releases) or installed in an existing project using [Composer](https://getcomposer.org):
 
-    $ composer require --dev api-platform/schema-generator
+```console
+composer require --dev api-platform/schema-generator
+```
 
 ## Model Scaffolding
 
@@ -21,8 +26,8 @@ Then, write a simple YAML config file similar to the following.
 
 Here we will generate a data model for an address book with the following data:
 
-- a [`Person`](http://schema.org/Person) which inherits from [`Thing`](http://schema.org/Thing)
-- a [`PostalAddress`](http://schema.org/PostalAddress) which inherits from [`ContactPoint`](http://schema.org/ContactPoint), which itself inherits from [`StructuredValue`](http://schema.org/StructuredValue), etc.
+* a [`Person`](http://schema.org/Person) which inherits from [`Thing`](http://schema.org/Thing)
+* a [`PostalAddress`](http://schema.org/PostalAddress) which inherits from [`ContactPoint`](http://schema.org/ContactPoint), which itself inherits from [`StructuredValue`](http://schema.org/StructuredValue), etc.
 
 ```yaml
 # api/config/schema.yaml
@@ -53,11 +58,16 @@ types:
 
 Run the generator with this config file as parameter:
 
-    $ vendor/bin/schema generate api/src/ api/config/schema.yaml
+```console
+vendor/bin/schema generate api/src/ api/config/schema.yaml
+```
 
 Using [the API Platform Distribution](../distribution/index.md):
 
-    $ docker-compose exec php vendor/bin/schema generate src/ config/schema.yaml
+```console
+docker-compose exec php \
+    vendor/bin/schema generate src/ config/schema.yaml
+```
 
 The corresponding PHP classes will be automatically generated in the `src/` directory!
 Note that the generator takes care of creating directories corresponding to the namespace structure.
@@ -89,4 +99,6 @@ It extracts cardinality described with the [Web Ontology Language (OWL)](https:/
 
 Usage:
 
-    $ vendor/bin/schema extract-cardinalities
+```console
+vendor/bin/schema extract-cardinalities
+```

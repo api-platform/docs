@@ -12,7 +12,10 @@ before proceeding. It will help you get a grasp on how the bundle works, and why
 
 Install the bundle with the help of Composer:
 
-    $ docker-compose exec php composer require vich/uploader-bundle
+```console
+docker-compose exec php \
+    composer require vich/uploader-bundle
+```
 
 This will create a new configuration file that you will need to slightly change
 to make it look like this.
@@ -41,7 +44,6 @@ The `MediaObject` resource is implemented like this:
 ```php
 <?php
 // api/src/Entity/MediaObject.php
-
 namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiProperty;
@@ -133,7 +135,7 @@ class MediaObject
 }
 ```
 
-## Handling File Upload
+## The Controller
 
 At this point, the entity is configured, but we still need to write the action
 that handles the file upload.
@@ -258,7 +260,6 @@ We first need to edit our Book resource, and add a new property called `image`.
 ```php
 <?php
 // api/src/Entity/Book.php
-
 namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;

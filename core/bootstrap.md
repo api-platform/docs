@@ -3,22 +3,19 @@
 You may want to run a minimal version of API Platform. This one file runs API Platform (without graphql, doctrine and mongodb).
 It requires the following composer packages:
 
-```
-"symfony/http-kernel": "^5.1",
-"symfony/routing": "^5.1",
-"symfony/event-dispatcher": "^5.1",
-"api-platform/core": "^v2.6.0-alpha.1",
-"doctrine/annotations": "^1.11",
-"doctrine/common": "^3.0",
-"symfony/property-info": "^5.1",
-"phpdocumentor/reflection-docblock": "^5.2",
-"symfony/validator": "^5.1",
-"willdurand/negotiation": "^3.0.0"
+```console
+composer require \
+    api-platform/core \
+    doctrine/annotations \
+    doctrine/common \
+    phpdocumentor/reflection-docblock \
+    symfony/property-info \
+    symfony/routing
 ```
 
 The minimal version of API Platform:
 
-```
+```php
 <?php
 
 require './vendor/autoload.php';
