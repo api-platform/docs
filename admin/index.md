@@ -14,7 +14,7 @@ according to the API-first paradigm.
 API Platform Admin parses the API documentation then uses the awesome [React Admin](https://marmelab.com/react-admin/)
 library to expose a nice, responsive, management interface (Create-Retrieve-Update-Delete) for all documented resource types.
 
-You can  **customize everything** by using provided React Admin and [Material UI](https://material-ui.com/) components, or by writing your custom [React](https://reactjs.org/) components.
+You can **customize everything** by using provided React Admin and [Material UI](https://material-ui.com/) components, or by writing your custom [React](https://reactjs.org/) components.
 
 ## Features
 
