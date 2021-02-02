@@ -176,7 +176,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
     itemOperations: [
         'get',
         'put' => [
-            'normalization_context' => ['groups' => ['put']]
+            'normalization_context' => ['groups' => ['put']],
         ],
     ],
 )]
@@ -342,10 +342,10 @@ use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ApiResource(
     normalizationContext: [
-        'groups' => ['person']
+        'groups' => ['person'],
     ],
     denormalizationContext: [
-        'groups' => ['person']
+        'groups' => ['person'],
     ],
 )]
 class Person
@@ -382,10 +382,10 @@ use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ApiResource(
     normalizationContext: [
-        'groups' => ['person']
+        'groups' => ['person'],
     ],
     denormalizationContext: [
-        'groups' => ['person']
+        'groups' => ['person'],
     ],
 )]
 class Person
@@ -428,7 +428,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
  */
 #[ApiResource(
     collectionOperations: [
-        'get' => ['normalization_context' => ['groups' => 'greeting:collection:get']]
+        'get' => ['normalization_context' => ['groups' => 'greeting:collection:get']],
     ],
 )]
 class Greeting
