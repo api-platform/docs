@@ -238,6 +238,7 @@ App\Entity\Book:
     </resource>
 </resources>
 ```
+
 [/codeSelector]
 
 ## Configuring Operations
