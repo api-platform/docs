@@ -85,12 +85,10 @@ namespace App\Entity;
 use ApiPlatform\Core\Annotation\ApiResource;
 use Symfony\Component\Serializer\Annotation\Groups;
 
-/**
- * @ApiResource(
- *     normalizationContext={"groups"={"read"}},
- *     denormalizationContext={"groups"={"write"}}
- * )
- */
+#[ApiResource(
+    normalizationContext: ['groups' => ['read']],
+    denormalizationContext: ['groups' => ['write']],
+)]
 class Book
 {
     /**
@@ -134,12 +132,10 @@ Alternatively, you can use the more verbose syntax:
 <?php
 // ...
 
-/**
- * @ApiResource(attributes={
- *     "normalization_context"={"groups"={"read"}},
- *     "denormalization_context"={"groups"={"write"}}
- * })
- */
+#[ApiResource(attributes: [
+    'normalization_context' => ['groups' => ['read']],
+    'denormalization_context' => ['groups' => ['write']],
+])]
 ```
 
 In the previous example, the `name` property will be visible when reading (`GET`) the object, and it will also be available
@@ -175,17 +171,15 @@ namespace App\Entity;
 use ApiPlatform\Core\Annotation\ApiResource;
 use Symfony\Component\Serializer\Annotation\Groups;
 
-/**
- * @ApiResource(
- *     normalizationContext={"groups"={"get"}},
- *     itemOperations={
- *         "get",
- *         "put"={
- *             "normalization_context"={"groups"={"put"}}
- *         }
- *     }
- * )
- */
+#[ApiResource(
+    normalizationContext: ['groups' => ['get']],
+    itemOperations: [
+        'get',
+        'put' => [
+            'normalization_context' => ['groups' => ['put']]
+        ],
+    ],
+)]
 class Book
 {
     /**
@@ -244,9 +238,7 @@ namespace App\Entity;
 use ApiPlatform\Core\Annotation\ApiResource;
 use Symfony\Component\Serializer\Annotation\Groups;
 
-/**
- * @ApiResource(normalizationContext={"groups"={"book"}})
- */
+#[ApiResource(normalizationContext: ['groups' => ['book']])]
 class Book
 {
     /**
@@ -272,9 +264,7 @@ namespace App\Entity;
 use ApiPlatform\Core\Annotation\ApiResource;
 use Symfony\Component\Serializer\Annotation\Groups;
 
-/**
- * @ApiResource
- */
+#[ApiResource]
 class Person
 {
     /**
@@ -322,9 +312,7 @@ namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
 
-/**
- * @ApiResource(denormalizationContext={"groups"={"book"}})
- */
+#[ApiResource(denormalizationContext: ['groups' => ['book']])]
 class Book
 {
     // ...
@@ -352,16 +340,14 @@ namespace App\Entity;
 use ApiPlatform\Core\Annotation\ApiResource;
 use Symfony\Component\Serializer\Annotation\Groups;
 
-/**
- * @ApiResource(
- *   normalizationContext = {
- *      "groups" = {"person"}
- *   },
- *   denormalizationContext = {
- *      "groups" = {"person"}
- *   }
- * )
- */
+#[ApiResource(
+    normalizationContext: [
+        'groups' => ['person']
+    ],
+    denormalizationContext: [
+        'groups' => ['person']
+    ],
+)]
 class Person
 {
     /**
@@ -383,7 +369,7 @@ class Person
 
 The problem here is that the **$parent** property become automatically an embedded object. Besides, the property won't be shown on the OpenAPI view.
 
-To force the **$parent** property to be used as an IRI, add an **@ApiProperty(readableLink=false, writableLink=false)** annotation:
+To force the **$parent** property to be used as an IRI, add an **#[ApiProperty(readableLink: false, writableLink: false)]** annotation:
 
 ```php
 <?php
@@ -394,16 +380,14 @@ namespace App\Entity;
 use ApiPlatform\Core\Annotation\ApiResource;
 use Symfony\Component\Serializer\Annotation\Groups;
 
-/**
- * @ApiResource(
- *   normalizationContext = {
- *      "groups" = {"person"}
- *   },
- *   denormalizationContext = {
- *      "groups" = {"person"}
- *   }
- * )
- */
+#[ApiResource(
+    normalizationContext: [
+        'groups' => ['person']
+    ],
+    denormalizationContext: [
+        'groups' => ['person']
+    ],
+)]
 class Person
 {
     /**
@@ -415,8 +399,8 @@ class Person
    /**
     * @var Person
     * @Groups("person")
-    * @ApiProperty(readableLink=false, writableLink=false)
     */
+   #[ApiProperty(readableLink: false, writableLink: false)]
    public $parent;  // This property is now serialized/deserialized as an IRI.
  
     // ...
@@ -440,13 +424,13 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
- * @ApiResource(
- *     collectionOperations={
- *          "get"={"normalization_context"={"groups"="greeting:collection:get"}},
- *     }
- * )
  * @ORM\Entity
  */
+#[ApiResource(
+    collectionOperations: [
+        'get' => ['normalization_context' => ['groups' => 'greeting:collection:get']]
+    ],
+)]
 class Greeting
 {
     /**
@@ -501,12 +485,10 @@ namespace App\Entity;
 use ApiPlatform\Core\Annotation\ApiResource;
 use Symfony\Component\Serializer\Annotation\Groups;
 
-/**
- * @ApiResource(
- *     normalizationContext={"groups"={"book:output"}},
- *     denormalizationContext={"groups"={"book:input"}}
- * )
- */
+#[ApiResource(
+    normalizationContext: ['groups' => ['book:output']],
+    denormalizationContext: ['groups' => ['book:input']],
+)]
 class Book
 {
     // ...
@@ -783,16 +765,12 @@ If you are not using the Doctrine ORM or MongoDB ODM Provider, you must explicit
 the `ApiPlatform\Core\Annotation\ApiProperty` annotation. For example:
 
 ```php
-/**
- * @ApiResource()
- */
+#[ApiResource]
 class Book
 {
     // ...
 
-    /**
-     * @ApiProperty(identifier=true)
-     */
+    #[ApiProperty(identifier: true)]
     private $id;
 
     /**
@@ -848,7 +826,7 @@ an IRI. A client that uses JSON-LD must send a second HTTP request to retrieve i
 ```
 
 You can configure API Platform to embed the JSON-LD context in the root document by adding the `jsonld_embed_context`
-attribute to the `@ApiResource` annotation:
+attribute to the `#[ApiResource]` annotation:
 
 ```php
 <?php
@@ -858,9 +836,7 @@ namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
 
-/**
- * @ApiResource(normalizationContext={"jsonld_embed_context"=true})
- */
+#[ApiResource(normalizationContext: ['jsonld_embed_context' => true])]
 class Book
 {
     // ...
@@ -899,9 +875,9 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ApiResource
  * @ORM\Entity
  */
+#[ApiResource]
 final class Brand
 {
     /**
