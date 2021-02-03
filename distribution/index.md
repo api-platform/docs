@@ -65,7 +65,13 @@ You will add your own code and configuration inside this skeleton.
 **Note**: Avoid downloading the `.zip` archive, as it may cause potential [permission](https://github.com/api-platform/api-platform/issues/319#issuecomment-307037562) [issues](https://github.com/api-platform/api-platform/issues/777#issuecomment-412515342), prefer the `.tar.gz` archive.
 
 API Platform is shipped with a [Docker](https://docker.com) definition that makes it easy to get a containerized development
-environment up and running. If you do not already have Docker on your computer, it's the right time to [install it](https://docs.docker.com/get-docker/).
+environment up and running. If you do not already have Docker on your computer, it's the right time to [install it](https:/
+
+
+
+
+
+.docker.com/get-docker/).
 
 **Note**: On Mac, only [Docker for Mac](https://docs.docker.com/docker-for-mac/) is supported.
 Similarly, on Windows, only [Docker for Windows](https://docs.docker.com/docker-for-windows/) is supported. Docker Machine **is not** supported out of the box.
@@ -100,7 +106,7 @@ The following components are available:
 
 | URL                        | Path               | Language   | Description             |
 |----------------------------|--------------------|------------|-------------------------|
-| `https://localhost/docs/`  | `api/`             | PHP        | The API                 |
+| `https://localhost/api/`  | `api/`             | PHP        | The API                 |
 | `https://localhost/`       | `pwa/`             | JavaScript | The Next.js application |
 | `https://localhost/admin/` | `pwa/pages/admin/` | JavaScript | The Admin               |
 
@@ -205,7 +211,7 @@ Later you will probably replace this welcome screen by the homepage of your Next
 a Progressive Web App, you can remove the `pwa/` directory and the related lines in `docker-compose*.yaml` (don't do it
 now, we'll use this container later in this tutorial).
 
-Click on the "API" button, or go to `https://localhost/docs/`:
+Click on the "API" button, or go to `https://localhost/api/`:
 
 ![The API](images/api-platform-2.6-api.png)
 
@@ -325,7 +331,7 @@ class Review
 
 We created two typical PHP objects with the corresponding PHPDoc, both marked with the `#[ApiResource]` attribute. For convenience, we also used the Doctrine Collection library (that is independent from Doctrine ORM), but it's not mandatory.
 
-Reload `https://localhost/docs/`: API Platform used these classes to generate an OpenAPI documentation (a Hydra documentation is also exposed), and registered for us [the typical REST routes](../core/operations.md).
+Reload `https://localhost/api/`: API Platform used these classes to generate an OpenAPI documentation (a Hydra documentation is also exposed), and registered for us [the typical REST routes](../core/operations.md).
 
 ![The bookshop API](images/api-platform-2.6-bookshop-api.png)
 
