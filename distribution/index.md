@@ -65,13 +65,7 @@ You will add your own code and configuration inside this skeleton.
 **Note**: Avoid downloading the `.zip` archive, as it may cause potential [permission](https://github.com/api-platform/api-platform/issues/319#issuecomment-307037562) [issues](https://github.com/api-platform/api-platform/issues/777#issuecomment-412515342), prefer the `.tar.gz` archive.
 
 API Platform is shipped with a [Docker](https://docker.com) definition that makes it easy to get a containerized development
-environment up and running. If you do not already have Docker on your computer, it's the right time to [install it](https:/
-
-
-
-
-
-.docker.com/get-docker/).
+environment up and running. If you do not already have Docker on your computer, it's the right time to [install it](https://docs.docker.com/get-docker/).
 
 **Note**: On Mac, only [Docker for Mac](https://docs.docker.com/docker-for-mac/) is supported.
 Similarly, on Windows, only [Docker for Windows](https://docs.docker.com/docker-for-windows/) is supported. Docker Machine **is not** supported out of the box.
