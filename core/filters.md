@@ -52,9 +52,7 @@ to a Resource in two ways:
 
     use ApiPlatform\Core\Annotation\ApiResource;
 
-    /**
-    * @ApiResource(attributes={"filters"={"offer.date_filter"}})
-    */
+    #[ApiResource(attributes: ['filters' => ['offer.date_filter']])]
     class Offer
     {
         // ...
@@ -93,7 +91,7 @@ to a Resource in two ways:
 
     [/codeSelector]
 
-2. By using the `@ApiFilter` annotation.
+2. By using the `#[ApiFilter]` annotation.
 
     This annotation automatically declares the service, and you just have to use the filter class you want:
 
@@ -107,10 +105,8 @@ to a Resource in two ways:
     use ApiPlatform\Core\Annotation\ApiResource;
     use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\DateFilter;
 
-    /**
-    * @ApiResource
-    * @ApiFilter(DateFilter::class, properties={"dateProperty"})
-    */
+    #[ApiResource]
+    #[ApiFilter(DateFilter::class, properties: ['dateProperty'])]
     class Offer
     {
         // ...
@@ -159,10 +155,8 @@ use ApiPlatform\Core\Annotation\ApiResource;
 use ApiPlatform\Core\Annotation\ApiFilter;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
 
-/**
- * @ApiResource()
- * @ApiFilter(SearchFilter::class, properties={"id": "exact", "price": "exact", "description": "partial"})
- */
+#[ApiResource]
+#[ApiFilter(SearchFilter::class, properties: ['id' => 'exact', 'price' => 'exact', 'description' => 'partial'])]
 class Offer
 {
     // ...
@@ -186,10 +180,8 @@ use ApiPlatform\Core\Annotation\ApiResource;
 use ApiPlatform\Core\Annotation\ApiFilter;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
 
-/**
- * @ApiResource()
- * @ApiFilter(SearchFilter::class, properties={"product": "exact"})
- */
+#[ApiResource]
+#[ApiFilter(SearchFilter::class, properties: ['product' => 'exact'])]
 class Offer
 {
     // ...
@@ -224,10 +216,8 @@ use ApiPlatform\Core\Annotation\ApiFilter;
 use ApiPlatform\Core\Annotation\ApiResource;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\DateFilter;
 
-/**
- * @ApiResource
- * @ApiFilter(DateFilter::class, properties={"createdAt"})
- */
+#[ApiResource]
+#[ApiFilter(DateFilter::class, properties: ['createdAt'])]
 class Offer
 {
     // ...
@@ -263,10 +253,8 @@ use ApiPlatform\Core\Annotation\ApiFilter;
 use ApiPlatform\Core\Annotation\ApiResource;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\DateFilter;
 
-/**
- * @ApiResource
- * @ApiFilter(DateFilter::class, properties={"dateProperty": DateFilter::EXCLUDE_NULL})
- */
+#[ApiResource]
+#[ApiFilter(DateFilter::class, properties: ['dateProperty' => DateFilter::EXCLUDE_NULL])]
 class Offer
 {
     // ...
@@ -291,10 +279,8 @@ use ApiPlatform\Core\Annotation\ApiFilter;
 use ApiPlatform\Core\Annotation\ApiResource;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\BooleanFilter;
 
-/**
- * @ApiResource
- * @ApiFilter(BooleanFilter::class, properties={"isAvailableGenericallyInMyCountry"})
- */
+#[ApiResource]
+#[ApiFilter(BooleanFilter::class, properties: ['isAvailableGenericallyInMyCountry']]
 class Offer
 {
     // ...
@@ -323,10 +309,8 @@ use ApiPlatform\Core\Annotation\ApiFilter;
 use ApiPlatform\Core\Annotation\ApiResource;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\NumericFilter;
 
-/**
- * @ApiResource
- * @ApiFilter(NumericFilter::class, properties={"sold"})
- */
+#[ApiResource]
+#[ApiFilter(NumericFilter::class, properties: ['sold']]
 class Offer
 {
     // ...
@@ -355,10 +339,8 @@ use ApiPlatform\Core\Annotation\ApiFilter;
 use ApiPlatform\Core\Annotation\ApiResource;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\RangeFilter;
 
-/**
- * @ApiResource
- * @ApiFilter(RangeFilter::class, properties={"price"})
- */
+#[ApiResource]
+#[ApiFilter(RangeFilter::class, properties: ['price']]
 class Offer
 {
     // ...
@@ -392,10 +374,8 @@ use ApiPlatform\Core\Annotation\ApiFilter;
 use ApiPlatform\Core\Annotation\ApiResource;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\ExistsFilter;
 
-/**
- * @ApiResource
- * @ApiFilter(ExistsFilter::class, properties={"transportFees"})
- */
+#[ApiResource]
+#[ApiFilter(ExistsFilter::class, properties: ['transportFees']]
 class Offer
 {
     // ...
@@ -436,10 +416,8 @@ use ApiPlatform\Core\Annotation\ApiFilter;
 use ApiPlatform\Core\Annotation\ApiResource;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\OrderFilter;
 
-/**
- * @ApiResource
- * @ApiFilter(OrderFilter::class, properties={"id", "name"}, arguments={"orderParameterName"="order"})
- */
+#[ApiResource]
+#[ApiFilter(OrderFilter::class, properties: ['id', 'name'], arguments: ['orderParameterName' => 'order']]
 class Offer
 {
     // ...
@@ -462,10 +440,8 @@ use ApiPlatform\Core\Annotation\ApiFilter;
 use ApiPlatform\Core\Annotation\ApiResource;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\OrderFilter;
 
-/**
- * @ApiResource
- * @ApiFilter(OrderFilter::class, properties={"id": "ASC", "name": "DESC"})
- */
+#[ApiResource]
+#[ApiFilter(OrderFilter::class, properties: ['id' => 'ASC', 'name' => 'DESC']]
 class Offer
 {
     // ...
@@ -495,10 +471,8 @@ use ApiPlatform\Core\Annotation\ApiFilter;
 use ApiPlatform\Core\Annotation\ApiResource;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\OrderFilter;
 
-/**
- * @ApiResource
- * @ApiFilter(OrderFilter::class, properties={"validFrom": { "nulls_comparison": OrderFilter::NULLS_SMALLEST, "default_direction": "DESC" }})
- */
+#[ApiResource]
+#[ApiFilter(OrderFilter::class, properties: ['validFrom' => ['nulls_comparison' => OrderFilter::NULLS_SMALLEST, 'default_direction' => 'DESC']]]
 class Offer
 {
     // ...
@@ -533,11 +507,9 @@ use ApiPlatform\Core\Annotation\ApiResource;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\OrderFilter;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
 
-/**
- * @ApiResource
- * @ApiFilter(OrderFilter::class, properties={"product.releaseDate"})
- * @ApiFilter(SearchFilter::class, properties={"product.color": "exact"})
- */
+#[ApiResource]
+#[ApiFilter(OrderFilter::class, properties: ['product.releaseDate']]
+#[ApiFilter(SearchFilter::class, properties: ['product.color' => 'exact']]
 class Offer
 {
     // ...
@@ -563,10 +535,8 @@ use ApiPlatform\Core\Annotation\ApiFilter;
 use ApiPlatform\Core\Annotation\ApiResource;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\OrderFilter;
 
-/**
- * @ApiResource
- * @ApiFilter(OrderFilter::class)
- */
+#[ApiResource]
+#[ApiFilter(OrderFilter::class)]
 class Offer
 {
     // ...
@@ -607,10 +577,8 @@ use ApiPlatform\Core\Annotation\ApiFilter;
 use ApiPlatform\Core\Annotation\ApiResource;
 use ApiPlatform\Core\Bridge\Elasticsearch\DataProvider\Filter\OrderFilter;
 
-/**
- * @ApiResource
- * @ApiFilter(OrderFilter::class, properties={"id", "date"}, arguments={"orderParameterName"="order"})
- */
+#[ApiResource]
+#[ApiFilter(OrderFilter::class, properties: ['id', 'date'], arguments: ['orderParameterName' => 'order']]
 class Tweet
 {
     // ...
@@ -633,10 +601,8 @@ use ApiPlatform\Core\Annotation\ApiFilter;
 use ApiPlatform\Core\Annotation\ApiResource;
 use ApiPlatform\Core\Bridge\Elasticsearch\DataProvider\Filter\OrderFilter;
 
-/**
- * @ApiResource
- * @ApiFilter(OrderFilter::class, properties={"id"="asc", "date"="desc"})
- */
+#[ApiResource]
+#[ApiFilter(OrderFilter::class, properties: ['id' => 'asc', 'date' => 'desc']]
 class Tweet
 {
     // ...
@@ -674,10 +640,8 @@ use ApiPlatform\Core\Annotation\ApiFilter;
 use ApiPlatform\Core\Annotation\ApiResource;
 use ApiPlatform\Core\Bridge\Elasticsearch\DataProvider\Filter\MatchFilter;
 
-/**
- * @ApiResource
- * @ApiFilter(MatchFilter::class, properties={"message"})
- */
+#[ApiResource]
+#[ApiFilter(MatchFilter::class, properties: ['message']]
 class Tweet
 {
     // ...
@@ -707,10 +671,8 @@ use ApiPlatform\Core\Annotation\ApiFilter;
 use ApiPlatform\Core\Annotation\ApiResource;
 use ApiPlatform\Core\Bridge\Elasticsearch\DataProvider\Filter\TermFilter;
 
-/**
- * @ApiResource
- * @ApiFilter(TermFilter::class, properties={"gender", "age"})
- */
+#[ApiResource]
+#[ApiFilter(TermFilter::class, properties: ['gender', 'age']]
 class User
 {
     // ...
@@ -740,11 +702,9 @@ use ApiPlatform\Core\Annotation\ApiResource;
 use ApiPlatform\Core\Bridge\Elasticsearch\DataProvider\Filter\OrderFilter;
 use ApiPlatform\Core\Bridge\Elasticsearch\DataProvider\Filter\TermFilter;
 
-/**
- * @ApiResource
- * @ApiFilter(OrderFilter::class, properties={"author.firstName"})
- * @ApiFilter(TermFilter::class, properties={"author.gender"})
- */
+#[ApiResource]
+#[ApiFilter(OrderFilter::class, properties: ['author.firstName']]
+#[ApiFilter(TermFilter::class, properties: ['author.gender']]
 class Tweet
 {
     // ...
@@ -776,10 +736,8 @@ use ApiPlatform\Core\Annotation\ApiFilter;
 use ApiPlatform\Core\Annotation\ApiResource;
 use ApiPlatform\Core\Serializer\Filter\GroupFilter;
 
-/**
- * @ApiResource
- * @ApiFilter(GroupFilter::class, arguments={"parameterName": "groups", "overrideDefaultGroups": false, "whitelist": {"allowed_group"}})
- */
+#[ApiResource]
+#[ApiFilter(GroupFilter::class, arguments: ['parameterName' => 'groups', 'overrideDefaultGroups' => false, 'whitelist' => ['allowed_group']])]
 class Book
 {
     // ...
@@ -817,10 +775,8 @@ use ApiPlatform\Core\Annotation\ApiFilter;
 use ApiPlatform\Core\Annotation\ApiResource;
 use ApiPlatform\Core\Serializer\Filter\PropertyFilter;
 
-/**
- * @ApiResource
- * @ApiFilter(PropertyFilter::class, arguments={"parameterName": "properties", "overrideDefaultProperties": false, "whitelist": {"allowed_property"}})
- */
+#[ApiResource]
+#[ApiFilter(PropertyFilter::class, arguments: ['parameterName' => 'properties', 'overrideDefaultProperties' => false, 'whitelist' => ['allowed_property']]]
 class Book
 {
     // ...
@@ -925,10 +881,8 @@ use ApiPlatform\Core\Annotation\ApiFilter;
 use ApiPlatform\Core\Annotation\ApiResource;
 use App\Filter\RegexpFilter;
 
-/**
- * @ApiResource
- * @ApiFilter(RegexpFilter::class)
- */
+#[ApiResource]
+#[ApiFilter(RegexpFilter::class)]
 class Offer
 {
     // ...
@@ -950,16 +904,12 @@ use ApiPlatform\Core\Annotation\ApiFilter;
 use ApiPlatform\Core\Annotation\ApiResource;
 use App\Filter\RegexpFilter;
 
-/**
- * @ApiResource
- */
+#[ApiResource]
 class Offer
 {
     // ...
 
-    /**
-     * @ApiFilter(RegexpFilter::class)
-     */
+    #[ApiFilter(RegexpFilter::class)]
     public string $name;
 }
 ```
@@ -992,7 +942,7 @@ services:
         tags: [ 'api_platform.filter' ]
 ```
 
-Finally, if you don't want to use the `@ApiFilter` annotation, you can register the filter on an API resource class using the `filters` attribute:
+Finally, if you don't want to use the `#[ApiFilter]` annotation, you can register the filter on an API resource class using the `filters` attribute:
 
 ```php
 <?php
@@ -1003,13 +953,11 @@ namespace App\Entity;
 use ApiPlatform\Core\Annotation\ApiResource;
 use App\Filter\RegexpFilter;
 
-/**
- * @ApiResource(
- *   attributes={
- *     "filters"={RegexpFilter::class}
- *   }
- * )
- */
+#[ApiResource(
+    attributes => [
+        'filters' => [RegexpFilter::class],
+    ],
+)]
 class Offer
 {
     // ...
@@ -1080,9 +1028,7 @@ namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
 
-/**
- * @ApiResource
- */
+#[ApiResource]
 class User
 {
     // ...
@@ -1098,9 +1044,7 @@ namespace App\Entity;
 use ApiPlatform\Core\Annotation\ApiResource;
 use Doctrine\ORM\Mapping as ORM;
 
-/**
- * @ApiResource
- */
+#[ApiResource]
 class Order
 {
     // ...
@@ -1299,9 +1243,7 @@ use ApiPlatform\Core\Annotation\ApiResource;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
 use Doctrine\ORM\Mapping as ORM;
 
-/**
- * @ApiResource
- */
+#[ApiResource]
 class DummyCar
 {
     /**
@@ -1313,14 +1255,14 @@ class DummyCar
 
     /**
      * @ORM\Column(type="string")
-     * @ApiFilter(SearchFilter::class, strategy="partial")
      */
+    #[ApiFilter(SearchFilter::class, strategy => 'partial')]
     public $name;
 
     /**
      * @ORM\OneToMany(targetEntity="DummyCarColor", mappedBy="car")
-     * @ApiFilter(SearchFilter::class, properties={"colors.prop": "ipartial"})
      */
+    #[ApiFilter(SearchFilter::class, properties: {'colors.prop' => 'ipartial'])]
     public $colors;
 
     // ...
@@ -1330,14 +1272,14 @@ class DummyCar
 On the first property, `name`, it's straightforward. The first annotation argument is the filter class, the second specifies options, here, the strategy:
 
 ```php
-@ApiFilter(SearchFilter::class, strategy="partial")
+#[ApiFilter(SearchFilter::class, strategy => 'partial')]
 ```
 
 In the second annotation, we specify `properties` on which the filter should apply. It's necessary here because we don't want to filter `colors` but the `prop` property of the `colors` association.
 Note that for each given property we specify the strategy:
 
 ```php
-@ApiFilter(SearchFilter::class, properties={"colors.prop": "ipartial"})
+#[ApiFilter(SearchFilter::class, properties: ['colors.prop' => 'ipartial'])]
 ```
 
 The `ApiFilter` annotation can be set on the class as well. If you don't specify any properties, it'll act on every property of the class.
@@ -1359,15 +1301,12 @@ use ApiPlatform\Core\Serializer\Filter\GroupFilter;
 use ApiPlatform\Core\Serializer\Filter\PropertyFilter;
 use Doctrine\ORM\Mapping as ORM;
 
-/**
- * @ApiResource
- * @ORM\Entity
- * @ApiFilter(BooleanFilter::class)
- * @ApiFilter(DateFilter::class, strategy=DateFilter::EXCLUDE_NULL)
- * @ApiFilter(SearchFilter::class, properties={"colors.prop": "ipartial", "name": "partial"})
- * @ApiFilter(PropertyFilter::class, arguments={"parameterName": "foobar"})
- * @ApiFilter(GroupFilter::class, arguments={"parameterName": "foobargroups"})
- */
+#[ApiResource]
+#[ApiFilter(BooleanFilter::class)]
+#[ApiFilter(DateFilter::class, strategy => DateFilter::EXCLUDE_NULL)]
+#[ApiFilter(SearchFilter::class, properties: ['colors.prop' => 'ipartial', 'name' => 'partial'])]
+#[ApiFilter(PropertyFilter::class, arguments: ['parameterName' => 'foobar'])]
+#[ApiFilter(GroupFilter::class, arguments: ['parameterName' => 'foobargroups'])]
 class DummyCar
 {
     // ...
@@ -1378,19 +1317,19 @@ class DummyCar
 The `BooleanFilter` is applied to every `Boolean` property of the class. Indeed, in each core filter we check the Doctrine type. It's written only by using the filter class:
 
 ```php
-@ApiFilter(BooleanFilter::class)
+#[ApiFilter(BooleanFilter::class)]
 ```
 
 The `DateFilter` given here will be applied to every `Date` property of the `DummyCar` class with the `DateFilter::EXCLUDE_NULL` strategy:
 
 ```php
-@ApiFilter(DateFilter::class, strategy=DateFilter::EXCLUDE_NULL)
+#[ApiFilter(DateFilter::class, strategy => DateFilter::EXCLUDE_NULL)]
 ```
 
 The `SearchFilter` here adds properties. The result is the exact same as the example with annotations on properties:
 
 ```php
-@ApiFilter(SearchFilter::class, properties={"colors.prop": "ipartial", "name": "partial"})
+#[ApiFilter(SearchFilter::class, properties: ['colors.prop' => 'ipartial', 'name' => 'partial'])]
 ```
 
 Note that you can specify the `properties` argument on every filter.
@@ -1398,6 +1337,6 @@ Note that you can specify the `properties` argument on every filter.
 The next filters are not related to how the data is fetched but rather to how the serialization is done on those. We can give an `arguments` option ([see here for the available arguments](#serializer-filters)):
 
 ```php
-@ApiFilter(PropertyFilter::class, arguments={"parameterName": "foobar"})
-@ApiFilter(GroupFilter::class, arguments={"parameterName": "foobargroups"})
+#[ApiFilter(PropertyFilter::class, arguments: ['parameterName' => 'foobar'])]
+#[ApiFilter(GroupFilter::class, arguments: ['parameterName' => 'foobargroups'])]
 ```
