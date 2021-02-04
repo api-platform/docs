@@ -92,7 +92,7 @@ use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 
 final class PersonHandler implements MessageHandlerInterface
 {
-    public function __invoke(PersonHandler $person)
+    public function __invoke(Person $person)
     {
         // do something with the resource
     }
