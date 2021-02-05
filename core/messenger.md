@@ -131,8 +131,8 @@ use ApiPlatform\Core\Annotation\ApiResource;
 use App\Dto\ResetPasswordRequest;
 
 #[ApiResource(collectionOperations: [
-        "post", "get", "delete"
-        "reset_password" => ["status" => 202, "messenger" => "input", "input" => SomeInput::class, "output" => false, "method" => "POST", "path" => "/users/reset_password"]
+        "post", "get", "delete",
+        "reset_password" => ["status" => 202, "messenger" => "input", "input" => ResetPasswordRequest::class, "output" => false, "method" => "POST", "path" => "/users/reset_password"]
     ]
 )]
 final class User
