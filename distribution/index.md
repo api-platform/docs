@@ -441,7 +441,7 @@ Modify these files as described in these patches:
 
 `api/src/Entity/Review.php`
 
-```patch
+```diff
  namespace App\Entity;
  
  use ApiPlatform\Core\Annotation\ApiResource;
@@ -644,7 +644,7 @@ Modify the following files as described in these patches:
 
 `api/src/Entity/Book.php`
 
-```patch
+```diff
  use ApiPlatform\Core\Annotation\ApiResource;
  use Doctrine\Common\Collections\ArrayCollection;
  use Doctrine\ORM\Mapping as ORM;
@@ -673,7 +673,7 @@ Modify the following files as described in these patches:
 
 `api/src/Entity/Review.php`
 
-```patch
+```diff
  use ApiPlatform\Core\Annotation\ApiResource;
  use Doctrine\ORM\Mapping as ORM;
 +use Symfony\Component\Validator\Constraints as Assert;
