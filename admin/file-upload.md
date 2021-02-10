@@ -13,7 +13,6 @@ import {
   HydraAdmin,
   ResourceGuesser,
   CreateGuesser,
-  InputGuesser
 } from "@api-platform/admin";
 import { FileField, FileInput } from "react-admin";
 
