@@ -833,7 +833,7 @@ docker-compose exec pwa \
     generate-api-platform-client
 ```
 
-Open `https://localhost/greetings/` in your browser:
+Open `https://localhost/books/` in your browser:
 
 ![The Next.js Progressive Web App](images/api-platform-2.6-pwa-react.png)
 
