@@ -173,8 +173,9 @@ class Book
 api_platform:
     collection:
         pagination:
-            client_items_per_page: true # Disabled by default
             items_per_page_parameter_name: itemsPerPage # Default value
+    defaults:
+        pagination_client_items_per_page: true
 ```
 
 The number of items per page can now be changed adding a query parameter named `itemsPerPage`: `GET /books?itemsPerPage=20`.
