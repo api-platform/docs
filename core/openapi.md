@@ -311,6 +311,9 @@ You also have full control over both built-in and custom operations documentatio
 [codeSelector]
 
 ```php
+<?php
+// api/src/Entity/Rabbit.php
+
 use ApiPlatform\Core\Annotation\ApiProperty;
 use ApiPlatform\Core\Annotation\ApiResource;
 use App\Controller\RandomRabbit;
