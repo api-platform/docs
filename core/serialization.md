@@ -231,8 +231,9 @@ In the following JSON document, the relation from a book to an author is by defa
 ```
 
 It is possible to embed related objects (in their entirety, or only some of their properties) directly in the parent
-response through the use of serialization groups. By using the following serialization groups annotations (`@Groups`),
-a JSON representation of the author is embedded in the book response:
+response through the use of serialization groups. By using the serialization groups annotations (`@Groups`) and the 
+`readableLink` attribute of the `ApiPlatform\Core\Annotation\ApiProperty` annotation, a JSON representation of the 
+author is embedded in the book response:
 
 ```php
 <?php
@@ -241,6 +242,7 @@ a JSON representation of the author is embedded in the book response:
 namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Core\Annotation\ApiProperty;
 use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
@@ -255,6 +257,7 @@ class Book
 
     /**
      * @Groups({"book"})
+     * @ApiProperty(readableLink=true)
      */
     public $author;
 
