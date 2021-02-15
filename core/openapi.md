@@ -383,9 +383,9 @@ resources:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" ?>
-<resources 
-        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xsi:schemaLocation="https://api-platform.com/schema/metadata
+<resources xmlns="https://api-platform.com/schema/metadata"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="https://api-platform.com/schema/metadata
         https://api-platform.com/schema/metadata/metadata-2.0.xsd">
     <resource class="App\Entity\Rabbit">
         <collectionOperations>
