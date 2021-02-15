@@ -189,9 +189,8 @@ resources:
 ```xml
 <?xml version="1.0" encoding="UTF-8" ?>
 <resources xmlns="https://api-platform.com/schema/metadata"
-        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xsi:schemaLocation="https://api-platform.com/schema/metadata
-        https://api-platform.com/schema/metadata/metadata-2.0.xsd">
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="https://api-platform.com/schema/metadata https://api-platform.com/schema/metadata/metadata-2.0.xsd">
     <resource class="App\Entity\Product">
         <property name="name">
             <attribute name="openapi_context">
@@ -311,15 +310,56 @@ You also have full control over both built-in and custom operations documentatio
 
 [codeSelector]
 
+```php
+<?php
+// api/src/Entity/Rabbit.php
+
+use ApiPlatform\Core\Annotation\ApiProperty;
+use ApiPlatform\Core\Annotation\ApiResource;
+use App\Controller\RandomRabbit;
+
+#[ApiResource(collectionOperations: [
+        'create_rabbit' => [
+            'method'          => 'post',
+            'path'            => '/rabbit/create',
+            'controller'      => RandomRabbit::class,
+            'openapi_context' => [
+                'summary'     => 'Create a rabbit picture',
+                'description' => "# Pop a great rabbit picture by color!\n\n![A great rabbit](https://rabbit.org/graphics/fun/netbunnies/jellybean1-brennan1.jpg)",
+                'requestBody' => [
+                    'content' => [
+                        'application/json' => [
+                            'schema'  => [
+                                'type'       => 'object',
+                                'properties' =>
+                                    [
+                                        'name'        => ['type' => 'string'],
+                                        'description' => ['type' => 'string'],
+                                    ],
+                            ],
+                            'example' => [
+                                'name'        => 'Mr. Rabbit',
+                                'description' => 'Pink Rabbit',
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+        ],
+    ]
+)]
+class Rabbit
+{}
+```
+
 ```yaml
 resources:
   App\Entity\Rabbit:
     collectionOperations:
-      create_user:
-        method: get
-        path: '/rabbit/rand'
+      create_rabbit:
+        method: post
+        path: '/rabbit/create'
         controller: App\Controller\RandomRabbit
-        # if you are using OpenApi V2 (Swagger) use 'swagger_context' instead of 'openapi_context'
         openapi_context:
           summary: Random rabbit picture
           description: >
@@ -327,42 +367,39 @@ resources:
 
             ![A great rabbit](https://rabbit.org/graphics/fun/netbunnies/jellybean1-brennan1.jpg)
 
-          parameters:
-            -
-               in: body
-               schema:
-                   type: object
-                   properties:
-                       name: {type: string}
-                       description: {type: string}
-               example:
-                   name: Rabbit
-                   description: Pink rabbit
+          requestBody:
+            content:
+              application/json:
+                schema:
+                  type: object
+                  properties:
+                    name: { type: string }
+                    description: { type: string }
+                example:
+                  name: Mr. Rabbit
+                  description: Pink rabbit
+
 ```
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" ?>
 <resources xmlns="https://api-platform.com/schema/metadata"
-        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xsi:schemaLocation="https://api-platform.com/schema/metadata
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="https://api-platform.com/schema/metadata
         https://api-platform.com/schema/metadata/metadata-2.0.xsd">
     <resource class="App\Entity\Rabbit">
         <collectionOperations>
-            <collectionOperation name="create_user">
-                <attribute name="method">get</attribute>
-                <attribute name="path">/rabbit/rand</attribute>
+            <collectionOperation name="create_rabbit">
+                <attribute name="path">/rabbit/create</attribute>
+                <attribute name="method">post</attribute>
                 <attribute name="controller">App\Controller\RandomRabbit</attribute>
-                <!-- if you are using OpenApi V2 (Swagger) use 'swagger_context' instead of 'openapi_context' -->
                 <attribute name="openapi_context">
-                    <attribute name="summary">Random rabbit picture</attribute>
-                    <attribute name="description">
-                        # Pop a great rabbit picture by color!
+                    <attribute name="summary">Create a rabbit picture </attribute>
+                    <attribute name="description"># Pop a great rabbit picture by color!!
 
-                        ![A great rabbit](https://rabbit.org/graphics/fun/netbunnies/jellybean1-brennan1.jpg)
-                    </attribute>
-                    <attribute name="parameters">
-                        <attribute>
-                            <attribute name="in">body</attribute>
+![A great rabbit](https://rabbit.org/graphics/fun/netbunnies/jellybean1-brennan1.jpg)</attribute>
+                    <attribute name="content">
+                        <attribute name="application/json">
                             <attribute name="schema">
                                 <attribute name="type">object</attribute>
                                 <attribute name="properties">
@@ -373,10 +410,6 @@ resources:
                                         <attribute name="type">string</attribute>
                                     </attribute>
                                 </attribute>
-                            </attribute>
-                            <attribute name="example">
-                                <attribute name="name">Rabbit</attribute>
-                                <attribute name="description">Pink rabbit</attribute>
                             </attribute>
                         </attribute>
                     </attribute>
