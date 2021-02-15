@@ -418,7 +418,6 @@ resources:
         </collectionOperations>
     </resource>
 </resources>
-
 ```
 
 [/codeSelector]
