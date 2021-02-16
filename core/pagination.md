@@ -64,9 +64,8 @@ The pagination can be disabled for all resources using this configuration:
 ```yaml
 # api/config/packages/api_platform.yaml
 api_platform:
-    collection:
-        pagination:
-            enabled: false
+    defaults:
+        pagination_enabled: false
 ```
 
 ### Disabling the Pagination For a Specific Resource
@@ -98,9 +97,10 @@ use the following configuration:
 ```yaml
 # api/config/packages/api_platform.yaml
 api_platform:
+    defaults:
+        pagination_client_enabled: true
     collection:
         pagination:
-            client_enabled: true
             enabled_parameter_name: pagination # optional
 ```
 
@@ -142,9 +142,8 @@ The number of items per page can be configured for all resources:
 ```yaml
 # api/config/packages/api_platform.yaml
 api_platform:
-    collection:
-        pagination:
-            items_per_page: 30 # Default value
+    defaults:
+        pagination_items_per_page: 30 # Default value
 ```
 
 ### Changing the Number of Items per Page For a Specific Resource
@@ -171,11 +170,11 @@ class Book
 ```yaml
 # api/config/packages/api_platform.yaml
 api_platform:
+    defaults:
+        pagination_client_items_per_page: true
     collection:
         pagination:
             items_per_page_parameter_name: itemsPerPage # Default value
-    defaults:
-        pagination_client_items_per_page: true
 ```
 
 The number of items per page can now be changed adding a query parameter named `itemsPerPage`: `GET /books?itemsPerPage=20`.
@@ -208,9 +207,8 @@ The number of maximum items per page can be configured for all resources:
 ```yaml
 # api/config/packages/api_platform.yaml
 api_platform:
-    collection:
-        pagination:
-            maximum_items_per_page: 50
+    defaults:
+        pagination_maximum_items_per_page: 50
 ```
 
 ### Changing Maximum Items Per Page For a Specific Resource
@@ -266,9 +264,8 @@ The partial pagination retrieval can be configured for all resources:
 # api/config/packages/api_platform.yaml
 
 api_platform:
-    collection:
-        pagination:
-            partial: true # Disabled by default
+    defaults:
+        pagination_partial: true # Disabled by default
 ```
 
 ### Partial Pagination For a Specific Resource
@@ -297,9 +294,10 @@ class Book
 # api/config/packages/api_platform.yaml
 
 api_platform:
+    defaults:
+        pagination_client_partial: true # Disabled by default
     collection:
         pagination:
-            client_partial: true # Disabled by default
             partial_parameter_name: 'partial' # Default value
 ```
 

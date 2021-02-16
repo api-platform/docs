@@ -15,8 +15,8 @@ api_platform:
     # The version of the API.
     version: '0.0.0'
 
-    # Return IRIs as Absolute Urls.
-    # ex. http://example.com/authors/1
+    # Return IRIs as Absolute URLs.
+    # ex: http://example.com/authors/1
     absolute_url: false
 
     # Set this to false if you want Webby to disappear.
@@ -31,12 +31,12 @@ api_platform:
     # Specify a path name generator to use.
     path_segment_name_generator: 'api_platform.path_segment_name_generator.underscore'
 
-    # Allow using plain IDs for JSON format
+    # Allow using plain IDs for JSON format.
     allow_plain_identifiers: false
 
     validator:
-        # Enable the serialization of payload fields when a validation error is thrown
-        # If you want to serialize only some payload fields, define them like this [ severity, anotherPayloadField ]
+        # Enable the serialization of payload fields when a validation error is thrown.
+        # If you want to serialize only some payload fields, define them like this: [ severity, anotherPayloadField ]
         serialize_payload_fields: []
 
     eager_loading:
@@ -54,17 +54,18 @@ api_platform:
         # If disabled, it will only join relations having the EAGER fetch mode.
         force_eager: true
 
+    # Enabling the FOSUserBundle integration has been deprecated in 2.5 and will be removed in 3.0.
     # Enable the FOSUserBundle integration.
     enable_fos_user: false
 
     # Enabling the NelmioApiDocBundle integration has been deprecated in 2.2 and will be removed in 3.0.
-    # NelmioApiDocBundle 3 has native support for API Platform
+    # NelmioApiDocBundle 3 has native support for API Platform.
     enable_nelmio_api_doc: false
 
     # Enable the Swagger documentation and export.
     enable_swagger: true
 
-    # Enable Swagger ui.
+    # Enable Swagger UI.
     enable_swagger_ui: true
 
     # Enable ReDoc.
@@ -90,28 +91,6 @@ api_platform:
         order_parameter_name: 'order'
 
         pagination:
-            # To enable or disable pagination for all resource collections by default.
-            enabled: true
-
-            # To allow partial pagination for all resource collections.
-            # This improves performances by skipping the `COUNT` query.
-            partial: false
-
-            # To allow the client to enable or disable the pagination.
-            client_enabled: false
-
-            # To allow the client to set the number of items per page.
-            client_items_per_page: false
-
-            # To allow the client to enable or disable the partial pagination.
-            client_partial: false
-
-            # The default number of items per page.
-            items_per_page: 30
-
-            # The maximum number of items per page.
-            maximum_items_per_page: ~
-
             # The default name of the parameter handling the page number.
             page_parameter_name: 'page'
 
@@ -123,6 +102,35 @@ api_platform:
 
             # The name of the query parameter to enable or disable the partial pagination.
             partial_parameter_name: 'partial'
+
+            # To enable or disable pagination for all resource collections by default.
+            # Deprecated since 2.6 and will be removed in 3.0, use defaults.pagination_enabled instead.
+            enabled: true
+
+            # To allow partial pagination for all resource collections.
+            # This improves performances by skipping the `COUNT` query.
+            # Deprecated since 2.6 and will be removed in 3.0, use defaults.pagination_partial instead.
+            partial: false
+
+            # To allow the client to enable or disable the pagination.
+            # Deprecated since 2.6 and will be removed in 3.0, use defaults.pagination_client_enabled instead.
+            client_enabled: false
+
+            # To allow the client to set the number of items per page.
+            # Deprecated since 2.6 and will be removed in 3.0, use defaults.pagination_client_items_per_page instead.
+            client_items_per_page: false
+
+            # To allow the client to enable or disable the partial pagination.
+            # Deprecated since 2.6 and will be removed in 3.0, use defaults.pagination_client_partial instead.
+            client_partial: false
+
+            # The default number of items per page.
+            # Deprecated since 2.6 and will be removed in 3.0, use defaults.pagination_items_per_page instead.
+            items_per_page: 30
+
+            # The maximum number of items per page.
+            # Deprecated since 2.6 and will be removed in 3.0, use defaults.pagination_maximum_items_per_page instead.
+            maximum_items_per_page: ~
 
     mapping:
         # The list of paths with files or directories where the bundle will look for additional resource files.
@@ -141,43 +149,43 @@ api_platform:
         enabled: false
 
     oauth:
-        # To enable or disable oauth.
+        # To enable or disable OAuth.
         enabled: false
 
-        # The oauth client id.
+        # The OAuth client ID.
         clientId: ''
 
-        # The oauth client secret.
+        # The OAuth client secret.
         clientSecret: ''
 
-        # The oauth type.
+        # The OAuth type.
         type: 'oauth2'
 
-        # The oauth flow grant type.
+        # The OAuth flow grant type.
         flow: 'application'
 
-        # The oauth token url.
+        # The OAuth token URL.
         tokenUrl: '/oauth/v2/token'
 
-        # The oauth authentication url.
+        # The OAuth authentication URL.
         authorizationUrl: '/oauth/v2/auth'
 
-        # The oauth scopes.
+        # The OAuth scopes.
         scopes: []
 
     graphql:
-        # Enabled by default with installed GraphQL
+        # Enabled by default with installed webonyx/graphql-php.
         enabled: false
 
         # The default IDE (graphiql or graphql-playground) used when going to the GraphQL endpoint. False to disable.
         default_ide: 'graphiql'
 
         graphiql:
-            # Enabled by default with installed GraphQL and Twig
+            # Enabled by default with installed webonyx/graphql-php and Twig.
             enabled: false
 
         graphql_playground:
-            # Enabled by default with installed GraphQL and Twig
+            # Enabled by default with installed webonyx/graphql-php and Twig.
             enabled: false
 
         # The nesting separator used in the filter names.
@@ -191,12 +199,12 @@ api_platform:
         # The active versions of OpenAPI to be exported or used in the swagger_ui. The first value is the default.
         versions: [2, 3]
                 
-        # The swagger api keys.
+        # The swagger API keys.
         api_keys: []
-            # The name of the header or query parameter containing the api key.
+            # The name of the header or query parameter containing the API key.
             # name: ''
 
-            # Whether the api key should be a query parameter or a header.
+            # Whether the API key should be a query parameter or a header.
             # type: 'query' or 'header'
 
     openapi:
@@ -218,40 +226,44 @@ api_platform:
             url:       
         
     http_cache:
-        # Automatically generate etags for API responses.
-        etag: true
-
-        # Default value for the response max age.
-        max_age: 3600
-
-        # Default value for the response shared (proxy) max age.
-        shared_max_age: 3600
-
-        # Default values of the "Vary" HTTP header.
-        vary: ['Accept']
-
         # To make all responses public by default.
         public: ~
 
         invalidation:
-          # To enable the tags-based cache invalidation system.
-          enabled: false
+            # To enable the tags-based cache invalidation system.
+            enabled: false
 
-          # URLs of the Varnish servers to purge using cache tags when a resource is updated.
-          varnish_urls: []
+            # URLs of the Varnish servers to purge using cache tags when a resource is updated.
+            varnish_urls: []
 
-          # To pass options to the client charged with the request.
-          request_options: []
+            # To pass options to the client charged with the request.
+            request_options: []
+
+        # Automatically generate etags for API responses.
+        # Deprecated since 2.6 and will be removed in 3.0, use defaults.cache_headers.etag instead.
+        etag: true
+
+        # Default value for the response max age.
+        # Deprecated since 2.6 and will be removed in 3.0, use defaults.cache_headers.max_age instead.
+        max_age: 3600
+
+        # Default value for the response shared (proxy) max age.
+        # Deprecated since 2.6 and will be removed in 3.0, use defaults.cache_headers.shared_max_age instead.
+        shared_max_age: 3600
+
+        # Default values of the "Vary" HTTP header.
+        # Deprecated since 2.6 and will be removed in 3.0, use defaults.cache_headers.vary instead.
+        vary: ['Accept']
 
     mercure:
-        # Enabled by default with installed symfony/mercure-bundle
+        # Enabled by default with installed symfony/mercure-bundle.
         enabled: false
 
         # The URL sent in the Link HTTP header. If not set, will default to MercureBundle's default hub URL.
         hub_url: null
 
     messenger:
-        # Enabled by default with installed symfony/messenger and not installed symfony/symfony
+        # Enabled by default with installed symfony/messenger and not installed symfony/symfony.
         enabled: false
 
     elasticsearch:
@@ -301,6 +313,102 @@ api_platform:
 
         jsonld:
             mime_types: ['application/ld+json']
+
+        # ...
+
+    # Global resources defaults, see in the next section.
+    defaults:
+        # ...
+```
+
+## Global Resources Defaults
+
+If you need to globally configure all the resources instead of adding configuration in each one, it's possible to do so with the `defaults` key:
+
+```yaml
+# api/config/packages/api_platform.yaml
+api_platform:
+
+    defaults:
+        description: ~
+        iri: ~
+        short_name: ~
+        item_operations: ~
+        collection_operations: ~
+
+        graphql: ~
+
+        elasticsearch: ~
+
+        security: ~
+        security_message: ~
+        security_post_denormalize: ~
+        security_post_denormalize_message: ~
+
+        cache_headers:
+            # Automatically generate etags for API responses.
+            etag: true
+
+            # Default value for the response max age.
+            max_age: 3600
+
+            # Default value for the response shared (proxy) max age.
+            shared_max_age: 3600
+
+            # Default values of the "Vary" HTTP header.
+            vary: ['Accept']
+
+        normalization_context: ~
+        denormalization_context: ~
+        swagger_context: ~
+        openapi_context: ~
+        deprecation_reason: ~
+        fetch_partial: ~
+        force_eager: ~
+        formats: ~
+        filters: ~
+        hydra_context: ~
+        mercure: ~
+        messenger: ~
+        order: ~
+
+        # To enable or disable pagination for all resource collections.
+        pagination_enabled: true
+
+        # To allow the client to enable or disable the pagination.
+        pagination_client_enabled: false
+
+        # To allow the client to set the number of items per page.
+        pagination_client_items_per_page: false
+
+        # To allow the client to enable or disable the partial pagination.
+        pagination_client_partial: false
+
+        # The default number of items per page.
+        pagination_items_per_page: 30
+
+        # The maximum number of items per page.
+        pagination_maximum_items_per_page: ~
+
+        # To allow partial pagination for all resource collections.
+        # This improves performances by skipping the `COUNT` query.
+        pagination_partial: false
+
+        # To use cursor-based pagination.
+        pagination_via_cursor: ~
+
+        pagination_fetch_join_collection: ~
+
+        route_prefix: ~
+        validation_groups: ~
+        sunset: ~
+        input: ~
+        output: ~
+        stateless: ~
+
+        # The URL generation strategy to use for IRIs
+        # Use values from UrlGeneratorInterface
+        url_generation_strategy: ~
 
         # ...
 ```
