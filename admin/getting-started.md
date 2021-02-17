@@ -8,15 +8,21 @@ Otherwise, all you need to install API Platform Admin is a JavaScript package ma
 
 If you don't have an existing React Application, create one using [Create React App](https://create-react-app.dev/):
 
-    $ yarn create react-app my-admin
+```console
+yarn create react-app my-admin
+```
 
 Go to the directory of your project:
 
-    $ cd my-admin
+```console
+cd my-admin
+```
 
 Finally, install the `@api-platform/admin` library:
 
-    $ yarn add @api-platform/admin
+```console
+yarn add @api-platform/admin
+```
 
 ## Creating the Admin
 
@@ -59,7 +65,10 @@ nelmio_cors:
 
 Clear the cache to apply this change:
 
-    $ docker-compose exec php bin/console cache:clear --env=prod
+```console
+docker-compose exec php \
+    bin/console cache:clear --env=prod
+```
 
 Your new administration interface is ready! Type `yarn start` to try it!
 

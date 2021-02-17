@@ -11,12 +11,15 @@ API Platform provides its own implementation of the [Symfony HttpClient](https:/
 
 While all the convenient features of Symfony HttpClient are available and usable directly, under the hood the API Platform implementation manipulates [the Symfony HttpKernel](https://symfony.com/doc/current/components/http_kernel.html) directly to simulate HTTP requests and responses.
 This approach results in a huge performance boost compared to triggering real network requests.
-It also allows access to the [Symfony HttpKernel](https://symfony.com/doc/current/components/http_kernel.html) and to all your services via the [Dependency Injection Container](https://symfony.com/doc/current/testing.html#accessing-the-container). 
+It also allows access to the [Symfony HttpKernel](https://symfony.com/doc/current/components/http_kernel.html) and to all your services via the [Dependency Injection Container](https://symfony.com/doc/current/testing.html#accessing-the-container).
 Reuse them to run, for instance, SQL queries or requests to external APIs directly from your tests.
 
 Install the `symfony/http-client` and `symfony/browser-kit` packages to enabled the API Platform test client:
 
-    $ docker-compose exec php composer require symfony/http-client symfony/browser-kit
+```console
+docker-compose exec php \
+    composer require symfony/browser-kit symfony/http-client
+```
 
 To use the testing client, your test class must extend the `ApiTestCase` class:
 

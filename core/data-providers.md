@@ -171,6 +171,7 @@ Note that there are a few kinds of extensions which are detailed in [their own c
 Because extensions are tagged services, you can use the [injection of tagged services](https://symfony.com/blog/new-in-symfony-3-4-simpler-injection-of-tagged-services):
 
 [codeSelector]
+
 ```yaml
 services:
     'App\DataProvider\BlogPostItemDataProvider':
@@ -185,6 +186,7 @@ services:
     </service>
 </services>
 ```
+
 [/codeSelector]
 
 Your data provider will now have access to the core extensions, here is an example on how to use them:
@@ -289,4 +291,5 @@ final class CustomCollectionDataProvider implements CollectionDataProviderInterf
 ## Community Data Providers
 
 If you don't want to use the built-in Doctrine system, alternative approaches which offer an integration with API Platform exist.
+
 * [Pomm Data Provider](https://github.com/pomm-project/pomm-api-platform): ([Pomm](http://www.pomm-project.org/) is a database access framework dedicated to PostgreSQL database.

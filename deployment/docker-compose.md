@@ -12,7 +12,7 @@ e.g. [Docker Hub](https://hub.docker.com/), [Google Container Registry](https://
 would pull the pre-built images from the container registry. This maintains a separation of concerns between the build
 environment and the production environment.
 
-##  Installing the Docker Compose Setup for Production
+## Installing the Docker Compose Setup for Production
 
 If you are using the [API Platform Distribution](../distribution/index.md), we provide a [ready-to-deploy Docker Compose
 setup for production](https://github.com/api-platform/docker-compose-prod), with (optional) [Let's Encrypt](https://letsencrypt.org/)
@@ -21,12 +21,14 @@ integration.
 It is designed to be used as a companion to the distribution, and as such it needs to be placed inside a subdirectory at
 the top level of the distribution project:
 
-    $ wget -O - https://github.com/api-platform/docker-compose-prod/archive/master.tar.gz | tar -xzf - && mv docker-compose-prod-master docker-compose-prod
-    $ git add docker-compose-prod
+```console
+wget -O - https://github.com/api-platform/docker-compose-prod/archive/master.tar.gz | tar -xzf - && mv docker-compose-prod-master docker-compose-prod
+git add docker-compose-prod
+```
 
 Then commit the changes to your git repository. The `docker-compose-prod` directory should be checked in.
 
-##  Building and Pushing the Docker Images
+## Building and Pushing the Docker Images
 
 These steps should be performed in a CI job (recommended) or on your development machine.
 
@@ -38,7 +40,7 @@ These steps should be performed in a CI job (recommended) or on your development
     top level of the distribution project (not to be confused with `api/.env` which is used by the Symfony application).
     For example:
 
-    ```
+    ```shell
     ADMIN_IMAGE=registry.example.com/api-platform/admin
     CLIENT_IMAGE=registry.example.com/api-platform/client
     NGINX_IMAGE=registry.example.com/api-platform/nginx
@@ -54,14 +56,18 @@ These steps should be performed in a CI job (recommended) or on your development
 
 2. Build the Docker images:
 
-        $ docker-compose -f docker-compose-prod/docker-compose.build.yml pull --ignore-pull-failures
-        $ docker-compose -f docker-compose-prod/docker-compose.build.yml build --pull
+    ```shell
+    docker-compose -f docker-compose-prod/docker-compose.build.yml pull --ignore-pull-failures
+    docker-compose -f docker-compose-prod/docker-compose.build.yml build --pull
+    ```
 
 3. Push the built images to the container registry:
 
-        $ docker-compose -f docker-compose-prod/docker-compose.build.yml push
+    ```shell
+    docker-compose -f docker-compose-prod/docker-compose.build.yml push
+    ```
 
-##  Pulling the Docker Images and Running the Services
+## Pulling the Docker Images and Running the Services
 
 These steps should be performed on the production server.
 
@@ -70,7 +76,7 @@ These steps should be performed on the production server.
     You could set the environment variables in the `.env` file at the top level of the distribution project (not to be
     confused with `api/.env` which is used by the Symfony application). For example:
 
-    ```
+    ```shell
     ADMIN_HOST=admin.example.com
     ADMIN_IMAGE=registry.example.com/api-platform/admin
     API_HOST=api.example.com
@@ -97,8 +103,10 @@ These steps should be performed on the production server.
 
 2. Set up a redirect from e.g. `www.example.com` to `example.com`:
 
-        $ mkdir -p docker-compose-prod/docker/nginx-proxy/vhost.d
-        $ echo 'return 301 https://example.com$request_uri;' > docker-compose-prod/docker/nginx-proxy/vhost.d/www.example.com
+    ```shell
+    mkdir -p docker-compose-prod/docker/nginx-proxy/vhost.d
+    echo 'return 301 https://example.com$request_uri;' > docker-compose-prod/docker/nginx-proxy/vhost.d/www.example.com
+    ```
 
     **Note**: If you do not want such a redirect, or you want it to be the other way round, please adapt to suit your needs.
 
@@ -112,7 +120,7 @@ These steps should be performed on the production server.
     You could set the environment variables in the `.env` file at the top level of the distribution project (not to be
     confused with `api/.env` which is used by the Symfony application). For example:
 
-    ```
+    ```shell
     LETSENCRYPT_USER_MAIL=user@example.com
     LEXICON_CLOUDFLARE_AUTH_TOKEN=9e06358f74cbce70602c22fc3279f0aee3077
     LEXICON_CLOUDFLARE_AUTH_USERNAME=user@example.com
@@ -124,7 +132,7 @@ These steps should be performed on the production server.
     Configure the (sub)domains for which you want certificate(s) to be issued for in `docker-compose-prod/docker/letsencrypt/domains.conf`.
     For example, to request a wildcard certificate for `*.example.com` and `example.com`:
 
-    ```
+    ```shell
     *.example.com example.com autorestart-containers=api-platform_nginx-proxy_1
     ```
 
@@ -135,23 +143,31 @@ These steps should be performed on the production server.
 
     If you are **not** using the (optional) Let's Encrypt integration:
 
-        $ docker-compose -f docker-compose-prod/docker-compose.yml pull
+    ```console
+    docker-compose -f docker-compose-prod/docker-compose.yml pull
+    ```
 
     If you are using the (optional) Let's Encrypt integration:
 
-        $ docker-compose -f docker-compose-prod/docker-compose.yml -f docker-compose-prod/docker-compose.letsencrypt.yml pull
+    ```console
+    docker-compose -f docker-compose-prod/docker-compose.yml -f docker-compose-prod/docker-compose.letsencrypt.yml pull
+    ```
 
 5. Bring up the services.
 
     If you are **not** using the (optional) Let's Encrypt integration:
 
-        $ docker-compose -f docker-compose-prod/docker-compose.yml up -d
+    ```console
+    docker-compose -f docker-compose-prod/docker-compose.yml up -d
+    ```
 
     If you are using the (optional) Let's Encrypt integration:
 
-        $ docker-compose -f docker-compose-prod/docker-compose.yml -f docker-compose-prod/docker-compose.letsencrypt.yml up -d
+    ```console
+    docker-compose -f docker-compose-prod/docker-compose.yml -f docker-compose-prod/docker-compose.letsencrypt.yml up -d
+    ```
 
-##  Running the Docker Compose Setup for Production Locally
+## Running the Docker Compose Setup for Production Locally
 
 Sometimes, you may need to run a production-like setup locally; for example, for [end-to-end testing](../distribution/testing.md#using-the-api-platform-distribution-for-end-to-end-testing)
 or to troubleshoot problems which can only be reproduced with a production setup (e.g. Varnish errors or cache misses).

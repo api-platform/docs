@@ -147,3 +147,41 @@ services:
         #arguments: ['@App\DataPersister\UserDataPersister.inner']
         #tags: [ 'api_platform.data_persister' ]
 ```
+
+## Calling multiple DataPersisters
+
+Our DataPersisters are called in chain, once a data persister is supported the chain breaks and API Platform assumes your data is persisted. You can call mutliple data persisters by implementing the `ResumableDataPersisterInterface`:
+
+```php
+namespace App\DataPersister;
+
+use ApiPlatform\Core\DataPersister\ContextAwareDataPersisterInterface;
+use App\Entity\BlogPost;
+
+final class BlogPostDataPersister implements ContextAwareDataPersisterInterface, ResumableDataPersisterInterface 
+{
+    public function supports($data, array $context = []): bool
+    {
+        return $data instanceof BlogPost;
+    }
+
+    public function persist($data, array $context = [])
+    {
+      // call your persistence layer to save $data
+      return $data;
+    }
+
+    public function remove($data, array $context = [])
+    {
+      // call your persistence layer to delete $data
+    }
+
+    // Once called this data persister will resume to the next one
+    public function resumable(array $context = []): bool 
+    {
+        return true;
+    }
+}
+```
+
+This is very useful when using [`Messenger` with API Platform](messenger.md) as you may want to do something asynchronously with the data but still call the default Doctrine data persister.

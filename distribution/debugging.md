@@ -19,15 +19,15 @@ FROM api_platform_php as api_platform_php_dev
 
 ARG XDEBUG_VERSION=3.0.2
 RUN set -eux; \
-	apk add --no-cache --virtual .build-deps $PHPIZE_DEPS; \
-	pecl install xdebug-$XDEBUG_VERSION; \
-	docker-php-ext-enable xdebug; \
-	apk del .build-deps
+ apk add --no-cache --virtual .build-deps $PHPIZE_DEPS; \
+ pecl install xdebug-$XDEBUG_VERSION; \
+ docker-php-ext-enable xdebug; \
+ apk del .build-deps
 ```
 
 ## Configure Xdebug with Docker Compose Override
 
-Using an [override](https://docs.docker.com/compose/reference/overview/#specifying-multiple-compose-files) file named 
+Using an [override](https://docs.docker.com/compose/reference/overview/#specifying-multiple-compose-files) file named
 `docker-compose.override.yml` ensures that the production configuration remains untouched.
 
 As an example, an override could look like this:
@@ -73,8 +73,9 @@ Note for Mac environments use the following:
 Inspect the installation with the following command. The requested Xdebug
 version should be displayed in the output.
 
-```shell-session
-$ docker-compose exec php php --version
+```console
+$ docker-compose exec php \
+    php --version
 
 PHP …
     with Xdebug v3.0.2, Copyright (c) 2002-2021, by Derick Rethans
