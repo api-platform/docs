@@ -42,6 +42,8 @@ Method   | Mandatory | Description
 
 Note: the `PATCH` method must be enabled explicitly in the configuration, refer to the [Content Negotiation](content-negotiation.md) section for more information.
 
+Note: with JSON Merge Patch, the [null values will be skipped](https://symfony.com/doc/current/components/serializer.html#skipping-null-values) in the response.
+
 ## Enabling and Disabling Operations
 
 If no operation is specified, all default CRUD operations are automatically registered. It is also possible - and recommended
