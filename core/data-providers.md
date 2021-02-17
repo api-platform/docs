@@ -238,6 +238,54 @@ final class BlogPostItemDataProvider implements ItemDataProviderInterface, Restr
 }
 ```
 
+## Use Pagination in Custom Collection Data Provider
+
+If you are implementing your own collection data provider, you might also want to support pagination. You can do
+this by returning a `ApiPlatform\Core\DataProvider\PaginatorInterface` instance.
+
+API Platform provides a few paginators, e.g. `ApiPlatform\Core\DataProvider\ArrayPaginator` and
+`ApiPlatform\Core\DataProvider\TraversablePaginator`.
+See the [Pagination page](pagination.md) for more information on pagination.
+
+You can access the paging information by injecting the `ApiPlatform\Core\DataProvider\Pagination` service, and
+using it within your data provider.
+
+```php
+<?php
+// api/src/DataProvider/CustomCollectionDataProvider.php
+
+declare(strict_types=1);
+
+namespace App\DataProvider;
+
+use ApiPlatform\Core\DataProvider\CollectionDataProviderInterface;
+use ApiPlatform\Core\DataProvider\Pagination;
+use ApiPlatform\Core\DataProvider\PaginatorInterface;
+use ApiPlatform\Core\DataProvider\TraversablePaginator;
+
+final class CustomCollectionDataProvider implements CollectionDataProviderInterface
+{
+    private Pagination $pagination;
+
+    public function __construct(Pagination $pagination)
+    {
+        $this->pagination = $pagination;
+    }
+
+    public function getCollection(string $resourceClass, string $operationName = null, array $context = []): PaginatorInterface
+    {
+        $page = $this->pagination->getPage($context);
+        $itemsPerPage = $this->pagination->getLimit($resourceClass, $operationName, $context);
+
+        $data = [/* results */];
+        $results = new \ArrayIterator($data);
+        $totalItems = count($data);
+
+        return new TraversablePaginator($results, $page, $itemsPerPage, $totalItems);
+    }
+}
+```
+
 ## Community Data Providers
 
 If you don't want to use the built-in Doctrine system, alternative approaches which offer an integration with API Platform exist.
