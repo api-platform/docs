@@ -15,24 +15,34 @@ API documentation in a user friendly way.
 
 ## Using the OpenAPI Command
 
-You can also dump an OpenAPI specification for your API by using the following command:
+You can also dump an OpenAPI specification for your API.
 
-```
-$ docker-compose exec php bin/console api:openapi:export
-# OpenAPI, JSON format
+OpenAPI, JSON format:
 
-$ docker-compose exec php bin/console api:openapi:export --yaml
-# OpenAPI, YAML format
-
-$ docker-compose exec php bin/console api:openapi:export --output=swagger_docs.json
-# Create a file containing the specification
+```console
+docker-compose exec php \
+    bin/console api:openapi:export
 ```
 
-If you want to use the old OpenAPI v2 (swagger) format, use:
+OpenAPI, YAML format:
 
+```console
+docker-compose exec php \
+    bin/console api:openapi:export --yaml
 ```
-$ docker-compose exec php bin/console api:swagger:export
-# OpenAPI v2, JSON format
+
+Create a file containing the specification:
+
+```console
+docker-compose exec php \
+    bin/console api:openapi:export --output=swagger_docs.json
+```
+
+If you want to use the old OpenAPI v2 (Swagger) JSON format, use:
+
+```console
+docker-compose exec php \
+    bin/console api:swagger:export
 ```
 
 ## Overriding the OpenAPI Specification
@@ -91,7 +101,7 @@ class OpenApiFactory implements OpenApiFactoryInterface {
 
 The impact on the swagger-ui is the following:
 
-![](core/images/swagger-ui-modified.png)
+![Swagger UI](core/images/swagger-ui-modified.png)
 
 ## Using the OpenAPI and Swagger Contexts
 
@@ -99,6 +109,7 @@ Sometimes you may want to change the information included in your OpenAPI docume
 The following configuration will give you total control over your OpenAPI definitions:
 
 [codeSelector]
+
 ```php
 <?php
 // api/src/Entity/Product.php
@@ -179,8 +190,7 @@ resources:
 <?xml version="1.0" encoding="UTF-8" ?>
 <resources xmlns="https://api-platform.com/schema/metadata"
            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-           xsi:schemaLocation="https://api-platform.com/schema/metadata
-           https://api-platform.com/schema/metadata/metadata-2.0.xsd">
+           xsi:schemaLocation="https://api-platform.com/schema/metadata https://api-platform.com/schema/metadata/metadata-2.0.xsd">
     <resource class="App\Entity\Product">
         <property name="name">
             <attribute name="openapi_context">
@@ -201,6 +211,7 @@ resources:
     </resource>
 </resources>
 ```
+
 [/codeSelector]
 
 This will produce the following Swagger documentation:
@@ -298,15 +309,57 @@ class User
 You also have full control over both built-in and custom operations documentation.
 
 [codeSelector]
+
+```php
+<?php
+// api/src/Entity/Rabbit.php
+
+use ApiPlatform\Core\Annotation\ApiProperty;
+use ApiPlatform\Core\Annotation\ApiResource;
+use App\Controller\RandomRabbit;
+
+#[ApiResource(collectionOperations: [
+        'create_rabbit' => [
+            'method'          => 'post',
+            'path'            => '/rabbit/create',
+            'controller'      => RandomRabbit::class,
+            'openapi_context' => [
+                'summary'     => 'Create a rabbit picture',
+                'description' => "# Pop a great rabbit picture by color!\n\n![A great rabbit](https://rabbit.org/graphics/fun/netbunnies/jellybean1-brennan1.jpg)",
+                'requestBody' => [
+                    'content' => [
+                        'application/json' => [
+                            'schema'  => [
+                                'type'       => 'object',
+                                'properties' =>
+                                    [
+                                        'name'        => ['type' => 'string'],
+                                        'description' => ['type' => 'string'],
+                                    ],
+                            ],
+                            'example' => [
+                                'name'        => 'Mr. Rabbit',
+                                'description' => 'Pink Rabbit',
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+        ],
+    ]
+)]
+class Rabbit
+{}
+```
+
 ```yaml
 resources:
   App\Entity\Rabbit:
     collectionOperations:
-      create_user:
-        method: get
-        path: '/rabbit/rand'
+      create_rabbit:
+        method: post
+        path: '/rabbit/create'
         controller: App\Controller\RandomRabbit
-        # if you are using OpenApi V2 (Swagger) use 'swagger_context' instead of 'openapi_context'
         openapi_context:
           summary: Random rabbit picture
           description: >
@@ -314,17 +367,18 @@ resources:
 
             ![A great rabbit](https://rabbit.org/graphics/fun/netbunnies/jellybean1-brennan1.jpg)
 
-          parameters:
-            -
-               in: body
-               schema:
-                   type: object
-                   properties:
-                       name: {type: string}
-                       description: {type: string}
-               example:
-                   name: Rabbit
-                   description: Pink rabbit
+          requestBody:
+            content:
+              application/json:
+                schema:
+                  type: object
+                  properties:
+                    name: { type: string }
+                    description: { type: string }
+                example:
+                  name: Mr. Rabbit
+                  description: Pink rabbit
+
 ```
 
 ```xml
@@ -332,24 +386,20 @@ resources:
 <resources xmlns="https://api-platform.com/schema/metadata"
            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
            xsi:schemaLocation="https://api-platform.com/schema/metadata
-           https://api-platform.com/schema/metadata/metadata-2.0.xsd">
+        https://api-platform.com/schema/metadata/metadata-2.0.xsd">
     <resource class="App\Entity\Rabbit">
         <collectionOperations>
-            <collectionOperation name="create_user">
-                <attribute name="method">get</attribute>
-                <attribute name="path">/rabbit/rand</attribute>
+            <collectionOperation name="create_rabbit">
+                <attribute name="path">/rabbit/create</attribute>
+                <attribute name="method">post</attribute>
                 <attribute name="controller">App\Controller\RandomRabbit</attribute>
-                <!-- if you are using OpenApi V2 (Swagger) use 'swagger_context' instead of 'openapi_context' -->
                 <attribute name="openapi_context">
-                    <attribute name="summary">Random rabbit picture</attribute>
-                    <attribute name="description">
-                        # Pop a great rabbit picture by color!
+                    <attribute name="summary">Create a rabbit picture </attribute>
+                    <attribute name="description"># Pop a great rabbit picture by color!!
 
-                        ![A great rabbit](https://rabbit.org/graphics/fun/netbunnies/jellybean1-brennan1.jpg)
-                    </attribute>
-                    <attribute name="parameters">
-                        <attribute>
-                            <attribute name="in">body</attribute>
+![A great rabbit](https://rabbit.org/graphics/fun/netbunnies/jellybean1-brennan1.jpg)</attribute>
+                    <attribute name="content">
+                        <attribute name="application/json">
                             <attribute name="schema">
                                 <attribute name="type">object</attribute>
                                 <attribute name="properties">
@@ -361,10 +411,6 @@ resources:
                                     </attribute>
                                 </attribute>
                             </attribute>
-                            <attribute name="example">
-                                <attribute name="name">Rabbit</attribute>
-                                <attribute name="description">Pink rabbit</attribute>
-                            </attribute>
                         </attribute>
                     </attribute>
                 </attribute>
@@ -373,6 +419,7 @@ resources:
     </resource>
 </resources>
 ```
+
 [/codeSelector]
 
 ![Impact on Swagger UI](../distribution/images/swagger-ui-2.png)
@@ -449,14 +496,14 @@ You may want to copy the [one shipped with API Platform](https://github.com/api-
 [AWS API Gateway](https://aws.amazon.com/api-gateway/) supports OpenAPI partially, but it [requires some changes](https://docs.aws.amazon.com/apigateway/latest/developerguide/api-gateway-known-issues.html).
 API Platform provides a way to be compatible with Amazon API Gateway.
 
-To enable API Gateway compatibility on your OpenAPI docs, add `api_gateway=true` as query parameter: `http://www.example.com/docs.json?api_gateway=true`. 
+To enable API Gateway compatibility on your OpenAPI docs, add `api_gateway=true` as query parameter: `http://www.example.com/docs.json?api_gateway=true`.
 The flag `--api-gateway` is also available through the command line.
 
 ## OAuth
 
 If you implemented OAuth on your API, you should configure OpenApi's authorization using API Platform's configuration:
 
-```
+```yaml
 api_platform:
     oauth:
         # To enable or disable oauth.
@@ -485,11 +532,12 @@ api_platform:
 ```
 
 Note that `clientId` and `clientSecret` are being used by the SwaggerUI if enabled.
+
 ## Info Object
 
 The [info object](https://swagger.io/specification/#info-object) provides metadata about the API like licensing information or a contact. You can specify this information using API Platform's configuration:
 
-```
+```yaml
 api_platform:
     
     # The title of the API.

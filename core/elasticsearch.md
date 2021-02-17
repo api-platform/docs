@@ -14,7 +14,9 @@ Be careful, API Platform only supports Elasticsearch >= 6.5.0.
 
 To enable the reading support for Elasticsearch, simply require the Elasticsearch-PHP package using Composer:
 
-    $ composer require elasticsearch/elasticsearch:^6.0
+```console
+composer require elasticsearch/elasticsearch:^6.0
+```
 
 Then, enable it inside the API Platform configuration:
 
@@ -50,8 +52,9 @@ This involves having mappings and models which absolutely match each other.
 
 Here is an example of mappings for 2 resources, `User` and `Tweet`, and their models:
 
+`PUT user`
+
 ```json
-PUT user
 {
   "mappings": {
     "_doc": {
@@ -94,8 +97,9 @@ PUT user
 }
 ```
 
+`PUT tweet`
+
 ```json
-PUT tweet
 {
   "mappings": {
     "_doc": {
@@ -140,7 +144,6 @@ PUT tweet
 ```php
 <?php
 // api/src/Model/User.php
-
 namespace App\Model;
 
 use ApiPlatform\Core\Annotation\ApiProperty;
@@ -170,7 +173,6 @@ class User
 ```php
 <?php
 // api/src/Model/Tweet.php
-
 namespace App\Model;
 
 use ApiPlatform\Core\Annotation\ApiProperty;

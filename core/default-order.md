@@ -8,7 +8,6 @@ customize this order, you must add an `order` attribute on your ApiResource anno
 ```php
 <?php
 // api/src/Entity/Book.php
-
 namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
@@ -35,7 +34,6 @@ If you only specify the key, `ASC` direction will be used as default. For exampl
 ```php
 <?php
 // api/src/Entity/Book.php
-
 namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
@@ -66,7 +64,6 @@ It's also possible to configure the default order on an association property:
 ```php
 <?php
 // api/src/Entity/Book.php
-
 namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
@@ -89,7 +86,7 @@ class Book
 
 Another possibility is to apply the default order for a specific collection operation, which will override the global default order configuration.
 
-```
+```php
 /**
  *     collectionOperations={
  *         "get",

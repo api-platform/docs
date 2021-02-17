@@ -18,11 +18,11 @@ Create a [Next.js application with express server](https://github.com/zeit/next.
 
 Enable TypeScript in your next project
 
-    $ yarn add --dev typescript @types/react @types/node
+    yarn add --dev typescript @types/react @types/node
 
 Install required dependencies:
 
-    $ yarn add lodash.get lodash.has @types/lodash isomorphic-unfetch
+    yarn add lodash.get lodash.has @types/lodash isomorphic-unfetch formik
 
 ## Generating Routes
 
@@ -35,7 +35,7 @@ Install required dependencies:
 
 You can launch the server with
 
-    $ yarn dev
+    yarn dev
 
 Go to `http://localhost:3000/books/` to start using your app.
 

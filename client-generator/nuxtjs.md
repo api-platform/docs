@@ -8,13 +8,19 @@ The Nuxt.js Client Generator generates components for Server Side Rendered appli
 
 Create a [Nuxt.js application](https://nuxtjs.org/guides/get-started/installation#using-create-nuxt-app). The easiest way is to execute:  
 
-    $ npx create-nuxt-app your-app-name
-    # or
-    $ yarn create nuxt-app your-app-name
+```console
+npx create-nuxt-app your-app-name
+```
+
+or:
+
+```console
+yarn create nuxt-app your-app-name
+```
 
 It will ask you some questions you can use these answers :
 
-```
+```console
 Project name: your-app-name
 Programming language: JavaScript
 Package manager: Yarn
@@ -30,8 +36,10 @@ Deployment target: Static (Static/JAMStack hosting)
 
 Install required dependencies:
 
-    $ yarn add moment lodash vue-i18n vuelidate vuex-map-fields nuxt-i18n
-    # yarn add --dev @nuxtjs/vuetify @nuxtjs/fontawesome
+```console
+yarn add moment lodash vue-i18n vuelidate vuex-map-fields nuxt-i18n
+yarn add --dev @nuxtjs/vuetify @nuxtjs/fontawesome
+```
 
 ## Updating nuxtjs config
 
@@ -48,19 +56,22 @@ Update your `nuxt.config.js` with following:
   // to avoid name conflicts in generators
   components: false,  
 ```
+
 ## Generating Routes
 
-    $ npx @api-platform/client-generator https://demo.api-platform.com . --generator nuxt
-    # Replace the URL by the entrypoint of your Hydra-enabled API
+```console
+npx @api-platform/client-generator https://demo.api-platform.com . --generator nuxt
+```
 
-> Note: Omit the resource flag to generate files for all resource types exposed by the API.
+Replace the URL by the entrypoint of your Hydra-enabled API
+
+**Note:** Omit the resource flag to generate files for all resource types exposed by the API.
 
 ## Updating default layout
 
-
 Update your `layouts/default.vue` with following:
 
-```javascript
+```vue
 <template>
   <v-app>
     <alert />
@@ -132,9 +143,11 @@ export default {
 
 ## Starting the Project
 
-You can launch the server with 
+You can launch the server with:
 
-    $ yarn dev
+```console
+yarn dev
+````
 
 Go to `https://localhost:3000/books/` to start using your app.
 

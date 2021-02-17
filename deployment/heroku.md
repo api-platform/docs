@@ -58,7 +58,9 @@ web: vendor/bin/heroku-php-apache2 public/
 
 Be sure to add the Apache Pack to your dependencies:
 
-    composer require symfony/apache-pack
+```console
+composer require symfony/apache-pack
+```
 
 As Heroku doesn't support Varnish out of the box, let's disable its integration:
 

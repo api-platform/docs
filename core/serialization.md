@@ -75,6 +75,7 @@ It is simple to specify what groups to use in the API system:
 2. Apply the groups to properties in the object.
 
 [codeSelector]
+
 ```php
 <?php
 // api/src/Entity/Book.php
@@ -84,12 +85,10 @@ namespace App\Entity;
 use ApiPlatform\Core\Annotation\ApiResource;
 use Symfony\Component\Serializer\Annotation\Groups;
 
-/**
- * @ApiResource(
- *     normalizationContext={"groups"={"read"}},
- *     denormalizationContext={"groups"={"write"}}
- * )
- */
+#[ApiResource(
+    normalizationContext: ['groups' => ['read']],
+    denormalizationContext: ['groups' => ['write']],
+)]
 class Book
 {
     /**
@@ -124,6 +123,7 @@ App\Entity\Book:
         author:
             groups: ['write']
 ```
+
 [/codeSelector]
 
 Alternatively, you can use the more verbose syntax:
@@ -132,12 +132,10 @@ Alternatively, you can use the more verbose syntax:
 <?php
 // ...
 
-/**
- * @ApiResource(attributes={
- *     "normalization_context"={"groups"={"read"}},
- *     "denormalization_context"={"groups"={"write"}}
- * })
- */
+#[ApiResource(attributes: [
+    'normalization_context' => ['groups' => ['read']],
+    'denormalization_context' => ['groups' => ['write']],
+])]
 ```
 
 In the previous example, the `name` property will be visible when reading (`GET`) the object, and it will also be available
@@ -148,7 +146,6 @@ Internally, API Platform passes the value of the `normalization_context` as the 
 process. `denormalization_context` is passed as the 4th argument of [the `Serializer::deserialize()` method](https://api.symfony.com/master/Symfony/Component/Serializer/SerializerInterface.html#method_deserialize) during denormalization (writing).
 
 To configure the serialization groups of classes's properties, you must use directly [the Symfony Serializer's configuration files or annotations](https://symfony.com/doc/current/components/serializer.html#attributes-groups).
-
 
 In addition to the `groups` key, you can configure any Symfony Serializer option through the `$context` parameter
 (e.g. the `enable_max_depth`key when using [the `@MaxDepth` annotation](https://symfony.com/doc/current/components/serializer.html#handling-serialization-depth)).
@@ -174,17 +171,15 @@ namespace App\Entity;
 use ApiPlatform\Core\Annotation\ApiResource;
 use Symfony\Component\Serializer\Annotation\Groups;
 
-/**
- * @ApiResource(
- *     normalizationContext={"groups"={"get"}},
- *     itemOperations={
- *         "get",
- *         "put"={
- *             "normalization_context"={"groups"={"put"}}
- *         }
- *     }
- * )
- */
+#[ApiResource(
+    normalizationContext: ['groups' => ['get']],
+    itemOperations: [
+        'get',
+        'put' => [
+            'normalization_context' => ['groups' => ['put']],
+        ],
+    ],
+)]
 class Book
 {
     /**
@@ -243,9 +238,7 @@ namespace App\Entity;
 use ApiPlatform\Core\Annotation\ApiResource;
 use Symfony\Component\Serializer\Annotation\Groups;
 
-/**
- * @ApiResource(normalizationContext={"groups"={"book"}})
- */
+#[ApiResource(normalizationContext: ['groups' => ['book']])]
 class Book
 {
     /**
@@ -271,9 +264,7 @@ namespace App\Entity;
 use ApiPlatform\Core\Annotation\ApiResource;
 use Symfony\Component\Serializer\Annotation\Groups;
 
-/**
- * @ApiResource
- */
+#[ApiResource]
 class Person
 {
     /**
@@ -321,9 +312,7 @@ namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
 
-/**
- * @ApiResource(denormalizationContext={"groups"={"book"}})
- */
+#[ApiResource(denormalizationContext: ['groups' => ['book']])]
 class Book
 {
     // ...
@@ -341,6 +330,7 @@ You can specify as many embedded relation levels as you want.
 ### Force IRI with relations of the same type (parent/childs relations)
 
 It is a common problem to have entities that reference other entities of the same type:
+
 ```php
 <?php
 // api/src/Entity/Person.php
@@ -350,16 +340,14 @@ namespace App\Entity;
 use ApiPlatform\Core\Annotation\ApiResource;
 use Symfony\Component\Serializer\Annotation\Groups;
 
-/**
- * @ApiResource(
- *   normalizationContext = {
- *      "groups" = {"person"}
- *   },
- *   denormalizationContext = {
- *      "groups" = {"person"}
- *   }
- * )
- */
+#[ApiResource(
+    normalizationContext: [
+        'groups' => ['person'],
+    ],
+    denormalizationContext: [
+        'groups' => ['person'],
+    ],
+)]
 class Person
 {
     /**
@@ -373,7 +361,7 @@ class Person
     * @Groups("person")
     */
    public $parent;  // Note that a Person instance has a relation with another Person.
-	
+ 
     // ...
 }
 
@@ -381,7 +369,8 @@ class Person
 
 The problem here is that the **$parent** property become automatically an embedded object. Besides, the property won't be shown on the OpenAPI view.
 
-To force the **$parent** property to be used as an IRI, add an **@ApiProperty(readableLink=false, writableLink=false)** annotation:
+To force the **$parent** property to be used as an IRI, add an **#[ApiProperty(readableLink: false, writableLink: false)]** annotation:
+
 ```php
 <?php
 // api/src/Entity/Person.php
@@ -391,16 +380,14 @@ namespace App\Entity;
 use ApiPlatform\Core\Annotation\ApiResource;
 use Symfony\Component\Serializer\Annotation\Groups;
 
-/**
- * @ApiResource(
- *   normalizationContext = {
- *      "groups" = {"person"}
- *   },
- *   denormalizationContext = {
- *      "groups" = {"person"}
- *   }
- * )
- */
+#[ApiResource(
+    normalizationContext: [
+        'groups' => ['person'],
+    ],
+    denormalizationContext: [
+        'groups' => ['person'],
+    ],
+)]
 class Person
 {
     /**
@@ -412,10 +399,10 @@ class Person
    /**
     * @var Person
     * @Groups("person")
-    * @ApiProperty(readableLink=false, writableLink=false)
     */
+   #[ApiProperty(readableLink: false, writableLink: false)]
    public $parent;  // This property is now serialized/deserialized as an IRI.
-	
+ 
     // ...
 }
 
@@ -437,13 +424,13 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
- * @ApiResource(
- *     collectionOperations={
- *          "get"={"normalization_context"={"groups"="greeting:collection:get"}},
- *     }
- * )
  * @ORM\Entity
  */
+#[ApiResource(
+    collectionOperations: [
+        'get' => ['normalization_context' => ['groups' => 'greeting:collection:get']],
+    ],
+)]
 class Greeting
 {
     /**
@@ -498,12 +485,10 @@ namespace App\Entity;
 use ApiPlatform\Core\Annotation\ApiResource;
 use Symfony\Component\Serializer\Annotation\Groups;
 
-/**
- * @ApiResource(
- *     normalizationContext={"groups"={"book:output"}},
- *     denormalizationContext={"groups"={"book:input"}}
- * )
- */
+#[ApiResource(
+    normalizationContext: ['groups' => ['book:output']],
+    denormalizationContext: ['groups' => ['book:input']],
+)]
 class Book
 {
     // ...
@@ -779,18 +764,13 @@ For ORM, it also supports [composite identifiers](https://www.doctrine-project.o
 If you are not using the Doctrine ORM or MongoDB ODM Provider, you must explicitly mark the identifier using the `identifier` attribute of
 the `ApiPlatform\Core\Annotation\ApiProperty` annotation. For example:
 
-
 ```php
-/**
- * @ApiResource()
- */
+#[ApiResource]
 class Book
 {
     // ...
 
-    /**
-     * @ApiProperty(identifier=true)
-     */
+    #[ApiProperty(identifier: true)]
     private $id;
 
     /**
@@ -846,7 +826,7 @@ an IRI. A client that uses JSON-LD must send a second HTTP request to retrieve i
 ```
 
 You can configure API Platform to embed the JSON-LD context in the root document by adding the `jsonld_embed_context`
-attribute to the `@ApiResource` annotation:
+attribute to the `#[ApiResource]` annotation:
 
 ```php
 <?php
@@ -856,9 +836,7 @@ namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
 
-/**
- * @ApiResource(normalizationContext={"jsonld_embed_context"=true})
- */
+#[ApiResource(normalizationContext: ['jsonld_embed_context' => true])]
 class Book
 {
     // ...
@@ -897,9 +875,9 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ApiResource
  * @ORM\Entity
  */
+#[ApiResource]
 final class Brand
 {
     /**

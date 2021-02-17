@@ -3,18 +3,24 @@
 Create a Quasar Framework application using
 [quasar-cli](https://quasar.dev/quasar-cli/installation):
 
-    $ quasar create my-app
-    $ cd my-app
+```console
+quasar create my-app
+cd my-app
+```
 
 In the app directory, generate the files for the resource you want:
 
-    $ npx @api-platform/client-generator https://demo.api-platform.com src/ --generator quasar --resource foo
-    # Replace the URL by the entrypoint of your Hydra-enabled API
-    # Omit the resource flag to generate files for all resource types exposed by the API
+```console
+npx @api-platform/client-generator https://demo.api-platform.com src/ --generator quasar --resource foo
+```
 
-The code is ready to be executed! Register the generated routes in `src/router/routes.js`
+Replace the URL by the entrypoint of your Hydra-enabled API.
+Omit the resource flag to generate files for all resource types exposed by the API.
+
+The code is ready to be executed! Register the generated routes:
 
 ```javascript
+// src/router/routes.js
 import fooRoutes from '../generated/router/foo';
 
 const routes = [
@@ -24,12 +30,12 @@ const routes = [
     children: [
       ...fooRoutes
     ],
-
 ```
 
-and store modules in the `src/store/index.js` file.
+And add the modules to the store:
 
 ```javascript
+// src/store/index.js
 // Replace "foo" with the name of the resource type
 import foo from '../generated/store/modules/foo/';
 
@@ -38,12 +44,12 @@ export default function(/* { ssrContext } */) {
     modules: {
       foo,
     },
-
 ```
 
-Make sure to update the `quasar.conf.js` file with the following:
+Finally, make sure to update the config:
 
 ```javascript
+// quasar.conf.js
 framework: {
   components: [
     'QTable',
@@ -63,12 +69,12 @@ framework: {
     'QCheckbox',
     'QPopupProxy'
 
-    ...
+    // ...
   ],
   directives: [..., 'ClosePopup'],
   plugins: ['Notify'],
   config: {
-    ...
+    // ...
     notify: {
       position: 'top',
       multiLine: true,

@@ -10,6 +10,7 @@ To help with your development experience, we introduced an identifier normalizat
 Let's say you have the following class, which is identified by a `UUID` type. In this example, `UUID` is not a simple string but an object with many attributes.
 
 [codeSelector]
+
 ```php
 <?php
 namespace App\Entity;
@@ -40,6 +41,7 @@ final class Person
     </resource>
 </resources>
 ```
+
 [/codeSelector]
 
 Once registered as an `ApiResource`, having an existing person, it will be accessible through the following URL: `/people/110e8400-e29b-11d4-a716-446655440000`.
@@ -116,6 +118,7 @@ final class UuidNormalizer implements DenormalizerInterface
 Tag this service as an `api_platform.identifier.denormalizer`:
 
 [codeSelector]
+
 ```yaml
 services:
     App\Identifier\UuidNormalizer:
@@ -128,6 +131,7 @@ services:
       <tag name="api_platform.identifier.denormalizer" />
   </service>
 ```
+
 [/codeSelector]
 
 Your `PersonDataProvider` will now work as expected!
@@ -176,6 +180,6 @@ final class Person
 
 API Platform supports the following identifier types:
 
-  - `scalar` (string, integer)
-  - `\DateTime` (uses the symfony `DateTimeNormalizer` internally, see [DateTimeIdentifierNormalizer](https://github.com/api-platform/core/blob/main/src/Identifier/Normalizer/DateTimeIdentifierDenormalizer.php))
-  - `\Ramsey\Uuid\Uuid` (see [UuidNormalizer](https://github.com/api-platform/core/blob/main/src/Bridge/RamseyUuid/Identifier/Normalizer/UuidNormalizer.php))
+- `scalar` (string, integer)
+- `\DateTime` (uses the symfony `DateTimeNormalizer` internally, see [DateTimeIdentifierNormalizer](https://github.com/api-platform/core/blob/main/src/Identifier/Normalizer/DateTimeIdentifierDenormalizer.php))
+- `\Ramsey\Uuid\Uuid` (see [UuidNormalizer](https://github.com/api-platform/core/blob/main/src/Bridge/RamseyUuid/Identifier/Normalizer/UuidNormalizer.php))

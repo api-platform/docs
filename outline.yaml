@@ -64,6 +64,7 @@ chapters:
       - getting-started
       - handling-relations
       - schema.org
+      - validation
       - authentication-support
       - file-upload
       - performance

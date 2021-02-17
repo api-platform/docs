@@ -24,14 +24,14 @@ when [using the JSON:API format](content-negotiation.md), as required by the spe
 When the `ApiPlatform\Core\Annotation\ApiResource` annotation is applied to an entity class, the following built-in CRUD
 operations are automatically enabled:
 
-*Collection operations*
+Collection operations:
 
 Method | Mandatory | Description
 -------|-----------|------------------------------------------
 `GET`  | yes       | Retrieve the (paginated) list of elements
 `POST` | no        | Create a new element
 
-*Item operations*
+Item operations:
 
 Method   | Mandatory | Description
 ---------|-----------|-------------------------------------------
@@ -41,6 +41,8 @@ Method   | Mandatory | Description
 `DELETE` | no        | Delete an element
 
 Note: the `PATCH` method must be enabled explicitly in the configuration, refer to the [Content Negotiation](content-negotiation.md) section for more information.
+
+Note: with JSON Merge Patch, the [null values will be skipped](https://symfony.com/doc/current/components/serializer.html#skipping-null-values) in the response.
 
 ## Enabling and Disabling Operations
 
@@ -62,6 +64,7 @@ If the operation's name matches a supported HTTP methods (`GET`, `POST`, `PUT`, 
 will be automatically added.
 
 [codeSelector]
+
 ```php
 <?php
 // api/src/Entity/Book.php
@@ -94,9 +97,9 @@ App\Entity\Book:
 <!-- api/config/api_platform/resources.xml -->
 
 <resources xmlns="https://api-platform.com/schema/metadata"
-           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-           xsi:schemaLocation="https://api-platform.com/schema/metadata
-           https://api-platform.com/schema/metadata/metadata-2.0.xsd">
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="https://api-platform.com/schema/metadata
+        https://api-platform.com/schema/metadata/metadata-2.0.xsd">
     <resource class="App\Entity\Book">
         <itemOperations>
             <itemOperation name="get" />
@@ -107,11 +110,13 @@ App\Entity\Book:
     </resource>
 </resources>
 ```
+
 [/codeSelector]
 
 The previous example can also be written with an explicit method definition:
 
 [codeSelector]
+
 ```php
 <?php
 // api/src/Entity/Book.php
@@ -150,9 +155,9 @@ App\Entity\Book:
 <!-- api/config/api_platform/resources.xml -->
 
 <resources xmlns="https://api-platform.com/schema/metadata"
-           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-           xsi:schemaLocation="https://api-platform.com/schema/metadata
-           https://api-platform.com/schema/metadata/metadata-2.0.xsd">
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="https://api-platform.com/schema/metadata
+        https://api-platform.com/schema/metadata/metadata-2.0.xsd">
     <resource class="App\Entity\Book">
         <collectionOperations>
             <collectionOperation name="get" />
@@ -165,56 +170,7 @@ App\Entity\Book:
     </resource>
 </resources>
 ```
-[/codeSelector]
 
-You can also disable all operations for an item or a collection. This example disables every item-related routes (PUT, GET, DELETE): 
-
-[codeSelector]
-```php
-<?php
-// api/src/Entity/Book.php
-
-namespace App\Entity;
-
-use ApiPlatform\Core\Annotation\ApiResource;
-
-/**
- * ...
- * @ApiResource(
- *     collectionOperations={"get"},
- *     itemOperations={}
- * )
- */
-class Book
-{
-    // ...
-}
-```
-
-```yaml
-# api/config/api_platform/resources.yaml
-App\Entity\Book:
-    collectionOperations:
-        get: ~ # nothing more to add if we want to keep the default controller
-    itemOperations: []
-```
-
-```xml
-<?xml version="1.0" encoding="UTF-8" ?>
-<!-- api/config/api_platform/resources.xml -->
-
-<resources xmlns="https://api-platform.com/schema/metadata"
-           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-           xsi:schemaLocation="https://api-platform.com/schema/metadata
-           https://api-platform.com/schema/metadata/metadata-2.0.xsd">
-    <resource class="App\Entity\Book">
-        <collectionOperations>
-            <collectionOperation name="get" />
-        </collectionOperations>
-        <itemOperations />
-    </resource>
-</resources>
-```
 [/codeSelector]
 
 API Platform Core is smart enough to automatically register the applicable Symfony route referencing a built-in CRUD action
@@ -223,6 +179,7 @@ just by specifying the method name as key, or by checking the explicitly configu
 If you do not want to allow access to the resource item (i.e. you don't want a `GET` item operation), instead of omitting it altogether, you should instead declare a `GET` item operation which returns HTTP 404 (Not Found), so that the resource item can still be identified by an IRI. For example:
 
 [codeSelector]
+
 ```php
 <?php
 // api/src/Entity/Book.php
@@ -266,9 +223,9 @@ App\Entity\Book:
 <!-- api/config/api_platform/resources.xml -->
 
 <resources xmlns="https://api-platform.com/schema/metadata"
-           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-           xsi:schemaLocation="https://api-platform.com/schema/metadata
-           https://api-platform.com/schema/metadata/metadata-2.0.xsd">
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="https://api-platform.com/schema/metadata
+        https://api-platform.com/schema/metadata/metadata-2.0.xsd">
     <resource class="App\Entity\Book">
         <collectionOperations>
             <collectionOperation name="get" />
@@ -283,6 +240,7 @@ App\Entity\Book:
     </resource>
 </resources>
 ```
+
 [/codeSelector]
 
 ## Configuring Operations
@@ -293,6 +251,7 @@ In the next example, both `GET` and `POST` operations are registered with custom
 In addition to that, we require the `id` parameter in the URL of the `GET` operation to be an integer, and we configure the status code generated after successful `POST` request to be `301`:
 
 [codeSelector]
+
 ```php
 <?php
 // api/src/Entity/Book.php
@@ -351,9 +310,9 @@ App\Entity\Book:
 <!-- api/config/api_platform/resources.xml -->
 
 <resources xmlns="https://api-platform.com/schema/metadata"
-           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-           xsi:schemaLocation="https://api-platform.com/schema/metadata
-           https://api-platform.com/schema/metadata/metadata-2.0.xsd">
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="https://api-platform.com/schema/metadata
+        https://api-platform.com/schema/metadata/metadata-2.0.xsd">
     <resource class="App\Entity\Book">
         <collectionOperations>
             <collectionOperation name="post">
@@ -382,6 +341,7 @@ App\Entity\Book:
     </resource>
 </resources>
 ```
+
 [/codeSelector]
 
 In all these examples, the `method` attribute is omitted because it matches the operation name.
@@ -393,6 +353,7 @@ put everything that's related to a `Book` into the `library` so that URIs become
 you don't need to override all the operations to set the path but configure the `route_prefix` attribute for the whole entity instead:
 
 [codeSelector]
+
 ```php
 <?php
 // api/src/Entity/Book.php
@@ -425,9 +386,9 @@ App\Entity\Book:
 <!-- api/config/api_platform/resources.xml -->
 
 <resources xmlns="https://api-platform.com/schema/metadata"
-           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-           xsi:schemaLocation="https://api-platform.com/schema/metadata
-           https://api-platform.com/schema/metadata/metadata-2.0.xsd">
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="https://api-platform.com/schema/metadata
+        https://api-platform.com/schema/metadata/metadata-2.0.xsd">
     <resource class="App\Entity\Book">
         <itemOperations>
             <itemOperation name="get" />
@@ -439,6 +400,7 @@ App\Entity\Book:
     </resource>
 </resources>
 ```
+
 [/codeSelector]
 
 Alternatively, the more verbose attribute syntax can be used: `@ApiResource(attributes={"route_prefix"="/library"})`.
@@ -580,7 +542,6 @@ class Weather
 We don't save the `Weather` entity in the database, since we want to return the weather in real time when it is queried.
 Because we want to get the weather for a known place, it is more reasonable to query it through a subresource of the `Place` entity, so let's do this:
 
-
 ```php
 <?php
 // src/Entity/Place.php
@@ -618,7 +579,6 @@ class Place
 The `GetWeather` controller fetches the weather for the given city and returns an instance of the `Weather` entity.
 This implies that API Platform has to know about this entity, so we will need to make it an API resource too:
 
-
 ```php
 <?php
 // src/Entity/Weather.php
@@ -635,7 +595,6 @@ class Weather
 
 This will expose the `Weather` model, but also all the default CRUD routes: `GET`, `PUT`, `DELETE` and `POST`, which is a non-sense in our context.
 Since we are required to expose at least one route, let's expose just one:
-
 
 ```php
 <?php
