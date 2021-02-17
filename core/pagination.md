@@ -543,14 +543,12 @@ class BookRepository extends ServiceEntityRepository
 }
 ```
 
-## Pagination for Customer Data Providers
+## Pagination for Custom Data Providers
 
-If you're using a customer Data Providers, and not the Doctrine ORM, ODM or
-ElasticSearch provides, then if you want your results to be paginated then
-you'll need to return an instance of a
-`\ApiPlatform\Core\DataProvider\PartialPaginatorInterface` or
-`\ApiPlatform\Core\DataProvider\PaginatorInterface`.  A few existing classes are
-provided to get you started with these…
-
-* `\ApiPlatform\Core\DataProvider\ArrayPaginator`
-* `\ApiPlatform\Core\DataProvider\TraversablePaginator`
+If you are using custom data providers (not the provided Doctrine ORM, ODM or ElasticSearch ones)
+and if you want your results to be paginated, you will need to return an instance of a
+`ApiPlatform\Core\DataProvider\PartialPaginatorInterface` or
+`ApiPlatform\Core\DataProvider\PaginatorInterface`.
+A few existing classes are provided to make it easier to paginate the results:
+* `ApiPlatform\Core\DataProvider\ArrayPaginator`
+* `ApiPlatform\Core\DataProvider\TraversablePaginator`
