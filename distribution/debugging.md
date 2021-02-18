@@ -93,7 +93,7 @@ PHP …
 
 ## Setting PhpShtorm
 
-## Add host to /etc/hosts
+### Add host to /etc/hosts
 
 ```/etc/hosts
 127.0.0.1 caddy 
