@@ -95,7 +95,7 @@ PHP …
 
 ## Add host to /etc/hosts
 
-```
+```/etc/hosts
 127.0.0.1 caddy 
 ```
 
@@ -129,12 +129,12 @@ Set **PHP interpreter path: php**
 
 ### Add PHP server
 
-1.  In the Settings/Preferences dialog Ctrl+Alt+S, selec **«Languages & Frameworks» — PHP — Servers**
-2.  Click + The Add button to add a PHP server configuration
-3.  Set name server **api-platform**(must match the **PHP_IDE_CONFIG** environment variable in docker-compose.yml)
-4.  Set host **caddy**
-5.  Set port **80**
-6.  Select **Use path mappings (select if the server is remote or systemlinks are used)
+1. In the Settings/Preferences dialog Ctrl+Alt+S, selec **«Languages & Frameworks» — PHP — Servers**
+2. Click + The Add button to add a PHP server configuration
+3. Set name server **api-platform**(must match the **PHP_IDE_CONFIG** environment variable in docker-compose.yml)
+4. Set host **caddy**
+5. Set port **80**
+6. Select **Use path mappings (select if the server is remote or systemlinks are used)
 7. Set Directory **api** Absolute path on the server **/srv/api**
 
 ![PHP server with mapping](../distribution/images/phpshtorm-php-server-with-mapping.png)
