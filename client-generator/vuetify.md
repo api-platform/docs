@@ -2,7 +2,7 @@
 
 ## Install with Docker
 
-If you use the API Platform distribution with docker, first you have to add the [Vue CLI](https://cli.vuejs.org/guide/) to the `yarn global add` command in `client/Dockerfile`:
+If you use the API Platform distribution with docker, first you have to add the [Vue CLI](https://cli.vuejs.org/guide/) to the `yarn global add` command in `pwa/Dockerfile`:
 
 ```dockerfile
 RUN yarn global add @api-platform/client-generator @vue/cli @vue/cli-service-global
