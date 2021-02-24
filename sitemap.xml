@@ -11,9 +11,9 @@
 <url> <loc>https://api-platform.com/docs/admin/</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 <url> <loc>https://api-platform.com/docs/admin/performance/</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 <url> <loc>https://api-platform.com/docs/admin/schema.org/</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
-<url> <loc>https://api-platform.com/docs/admin/validation/</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 <url> <loc>https://api-platform.com/docs/client-generator/</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 <url> <loc>https://api-platform.com/docs/client-generator/nextjs/</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
+<url> <loc>https://api-platform.com/docs/admin/validation/</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 <url> <loc>https://api-platform.com/docs/client-generator/nuxtjs/</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 <url> <loc>https://api-platform.com/docs/client-generator/quasar/</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 <url> <loc>https://api-platform.com/docs/client-generator/react-native/</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
@@ -231,8 +231,8 @@
 <url> <loc>https://api-platform.com/docs/v2.2/core/form-data/</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 <url> <loc>https://api-platform.com/docs/v2.2/core/fosuser-bundle/</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 <url> <loc>https://api-platform.com/docs/v2.2/core/getting-started/</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
-<url> <loc>https://api-platform.com/docs/v2.2/core/</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 <url> <loc>https://api-platform.com/docs/v2.2/core/graphql/</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
+<url> <loc>https://api-platform.com/docs/v2.2/core/</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 <url> <loc>https://api-platform.com/docs/v2.2/core/jwt/</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 <url> <loc>https://api-platform.com/docs/v2.2/core/nelmio-api-doc/</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 <url> <loc>https://api-platform.com/docs/v2.2/core/operation-path-naming/</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
@@ -639,6 +639,7 @@
 <url> <loc>https://api-platform.com/community/contributors/vitorluis</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 <url> <loc>https://api-platform.com/community/contributors/helios1101</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 <url> <loc>https://api-platform.com/community/contributors/alegout</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
+<url> <loc>https://api-platform.com/community/contributors/Oipnet</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 <url> <loc>https://api-platform.com/community/contributors/yivi</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 <url> <loc>https://api-platform.com/community/contributors/michizhou</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 <url> <loc>https://api-platform.com/community/contributors/Caligone</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
@@ -691,7 +692,6 @@
 <url> <loc>https://api-platform.com/community/contributors/aitboudad</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 <url> <loc>https://api-platform.com/community/contributors/alexfinnarn</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 <url> <loc>https://api-platform.com/community/contributors/AlexandreHagen</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
-<url> <loc>https://api-platform.com/community/contributors/Oipnet</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 <url> <loc>https://api-platform.com/community/contributors/texpert</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 <url> <loc>https://api-platform.com/community/contributors/Darkweak</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 <url> <loc>https://api-platform.com/community/contributors/djoos</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
@@ -775,8 +775,8 @@
 <url> <loc>https://api-platform.com/community/contributors/guillaumevoisin</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 <url> <loc>https://api-platform.com/community/contributors/Sesamestrong</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 <url> <loc>https://api-platform.com/community/contributors/braianj</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
-<url> <loc>https://api-platform.com/community/contributors/althaus</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 <url> <loc>https://api-platform.com/community/contributors/pfrenssen</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
+<url> <loc>https://api-platform.com/community/contributors/althaus</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 <url> <loc>https://api-platform.com/community/contributors/cve</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 <url> <loc>https://api-platform.com/community/contributors/dant89</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 <url> <loc>https://api-platform.com/community/contributors/Cruiser13</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
@@ -791,8 +791,8 @@
 <url> <loc>https://api-platform.com/community/contributors/mattpramschufer</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 <url> <loc>https://api-platform.com/community/contributors/Pierstoval</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 <url> <loc>https://api-platform.com/community/contributors/Guikingone</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
-<url> <loc>https://api-platform.com/community/contributors/snakegit1</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 <url> <loc>https://api-platform.com/community/contributors/pgrimaud</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
+<url> <loc>https://api-platform.com/community/contributors/snakegit1</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 <url> <loc>https://api-platform.com/community/contributors/B-Galati</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 <url> <loc>https://api-platform.com/community/contributors/electricBonfire</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 <url> <loc>https://api-platform.com/community/contributors/sebheitzmann</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
@@ -804,6 +804,7 @@
 <url> <loc>https://api-platform.com/community/contributors/silvia-odwyer</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 <url> <loc>https://api-platform.com/community/contributors/clairecoloma</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 <url> <loc>https://api-platform.com/community/contributors/mrkonovalov</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
+<url> <loc>https://api-platform.com/community/contributors/david-simplyphp</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 <url> <loc>https://api-platform.com/community/contributors/adrienbrault</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 <url> <loc>https://api-platform.com/community/contributors/pocky</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 <url> <loc>https://api-platform.com/community/contributors/corebreaker</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
@@ -817,7 +818,6 @@
 <url> <loc>https://api-platform.com/community/contributors/damosse31</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 <url> <loc>https://api-platform.com/community/contributors/jusquiame</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 <url> <loc>https://api-platform.com/community/contributors/lyderichti59</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
-<url> <loc>https://api-platform.com/community/contributors/david-simplyphp</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 <url> <loc>https://api-platform.com/community/contributors/ajardin</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 <url> <loc>https://api-platform.com/community/contributors/blazarecki</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 <url> <loc>https://api-platform.com/community/contributors/sh4ka</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
@@ -829,9 +829,9 @@
 <url> <loc>https://api-platform.com/community/contributors/azzra</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 <url> <loc>https://api-platform.com/community/contributors/florinceleapca</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 <url> <loc>https://api-platform.com/community/contributors/kayneth</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
+<url> <loc>https://api-platform.com/community/contributors/patrick-yi-82</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 <url> <loc>https://api-platform.com/community/contributors/mvanduijker</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 <url> <loc>https://api-platform.com/community/contributors/Richard87</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
-<url> <loc>https://api-platform.com/community/contributors/patrick-yi-82</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 <url> <loc>https://api-platform.com/community/contributors/glanchow</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 <url> <loc>https://api-platform.com/community/contributors/Siemienik</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 <url> <loc>https://api-platform.com/community/contributors/n1c01a5</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
@@ -896,6 +896,7 @@
 <url> <loc>https://api-platform.com/community/contributors/Gu3</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 <url> <loc>https://api-platform.com/community/contributors/hschaeidt</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 <url> <loc>https://api-platform.com/community/contributors/hugohenrique</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
+<url> <loc>https://api-platform.com/community/contributors/HugoFerrant</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 <url> <loc>https://api-platform.com/community/contributors/JDruery</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 <url> <loc>https://api-platform.com/community/contributors/jairoFernandez</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 <url> <loc>https://api-platform.com/community/contributors/jakesyl</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
