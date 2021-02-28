@@ -458,6 +458,8 @@ Description                          | Strategy to set
 Use the default behavior of the DBMS | `null`
 Consider items as smallest           | `ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\OrderFilter::NULLS_SMALLEST` (`nulls_smallest`)
 Consider items as largest            | `ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\OrderFilter::NULLS_LARGEST` (`nulls_largest`)
+Order items always first             | `ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\OrderFilter::NULLS_ALWAYS_FIRST` (`nulls_always_first`)
+Order items always last              | `ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\OrderFilter::NULLS_ALWAYS_LAST` (`nulls_always_last`)
 
 For instance, treat entries with a property value of `null` as the smallest, with the following service definition:
 
