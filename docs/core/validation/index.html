@@ -48,7 +48,7 @@
         }
       }
     })
-  </script><link rel="sitemap" type="application/xml" href="/sitemap.xml"/><link rel="manifest" href="/manifest.webmanifest" crossorigin="anonymous"/><meta name="theme-color" content="#38a9b4"/><link rel="apple-touch-icon" sizes="36x36" href="/android-icon-36x36.png"/><link rel="apple-touch-icon" sizes="48x48" href="/android-icon-48x48.png"/><link rel="apple-touch-icon" sizes="72x72" href="/android-icon-72x72.png"/><link rel="apple-touch-icon" sizes="96x96" href="/android-icon-96x96.png"/><link rel="apple-touch-icon" sizes="144x144" href="/android-icon-144x144.png"/><link rel="apple-touch-icon" sizes="192x192" href="/android-icon-192x192.png"/><link rel="preconnect" href="https://www.google-analytics.com"/><link rel="dns-prefetch" href="https://www.google-analytics.com"/><link as="script" rel="preload" href="/webpack-runtime-1d0411c93010b48ca569.js"/><link as="script" rel="preload" href="/framework-2d6b7d2e2be378715b78.js"/><link as="script" rel="preload" href="/app-7d3b0a1bd877ed5a0558.js"/><link as="script" rel="preload" href="/styles-e9d24b1846c7d6eb9685.js"/><link as="script" rel="preload" href="/commons-b07b72ccc147a02cf75a.js"/><link as="script" rel="preload" href="/8c9522e9ab04d805c32ce56d0725aa8a5b32377d-813cb5fc74583e4a0450.js"/><link as="script" rel="preload" href="/component---src-templates-doc-js-0ff70a10fb44e1d6e41c.js"/><link as="fetch" rel="preload" href="/page-data/docs/core/validation/page-data.json" crossorigin="anonymous"/><link as="fetch" rel="preload" href="/page-data/sq/d/1552981879.json" crossorigin="anonymous"/><link as="fetch" rel="preload" href="/page-data/app-data.json" crossorigin="anonymous"/></head><body><script>
+  </script><link rel="sitemap" type="application/xml" href="/sitemap.xml"/><link rel="manifest" href="/manifest.webmanifest" crossorigin="anonymous"/><meta name="theme-color" content="#38a9b4"/><link rel="apple-touch-icon" sizes="36x36" href="/android-icon-36x36.png"/><link rel="apple-touch-icon" sizes="48x48" href="/android-icon-48x48.png"/><link rel="apple-touch-icon" sizes="72x72" href="/android-icon-72x72.png"/><link rel="apple-touch-icon" sizes="96x96" href="/android-icon-96x96.png"/><link rel="apple-touch-icon" sizes="144x144" href="/android-icon-144x144.png"/><link rel="apple-touch-icon" sizes="192x192" href="/android-icon-192x192.png"/><link rel="preconnect" href="https://www.google-analytics.com"/><link rel="dns-prefetch" href="https://www.google-analytics.com"/><link as="script" rel="preload" href="/webpack-runtime-1d0411c93010b48ca569.js"/><link as="script" rel="preload" href="/framework-2d6b7d2e2be378715b78.js"/><link as="script" rel="preload" href="/app-e806750e4fa85a91da49.js"/><link as="script" rel="preload" href="/styles-e9d24b1846c7d6eb9685.js"/><link as="script" rel="preload" href="/commons-b07b72ccc147a02cf75a.js"/><link as="script" rel="preload" href="/8c9522e9ab04d805c32ce56d0725aa8a5b32377d-813cb5fc74583e4a0450.js"/><link as="script" rel="preload" href="/component---src-templates-doc-js-0ff70a10fb44e1d6e41c.js"/><link as="fetch" rel="preload" href="/page-data/docs/core/validation/page-data.json" crossorigin="anonymous"/><link as="fetch" rel="preload" href="/page-data/sq/d/1552981879.json" crossorigin="anonymous"/><link as="fetch" rel="preload" href="/page-data/app-data.json" crossorigin="anonymous"/></head><body><script>
 void function() {
   window.__onThemeChange = function() {}
 
@@ -109,9 +109,9 @@ the <code class="language-text">@ApiResource</code> annotation:</p>
 <span class="token comment">/**
  * A product.
  *
- * @ApiResource
  * @ORM\Entity
  */</span>
+<span class="token attribute"><span class="token delimiter punctuation">#[</span><span class="token attribute-content"><span class="token attribute-class-name class-name">ApiResource</span></span><span class="token delimiter punctuation">]</span></span>
 <span class="token keyword">class</span> <span class="token class-name">Product</span>
 <span class="token punctuation">{</span>
     <span class="token comment">/**
@@ -203,10 +203,7 @@ is able to leverage Symfony's <a href="https://symfony.com/doc/current/validatio
 <span class="token keyword">use</span> <span class="token package">ApiPlatform<span class="token punctuation">\</span>Core<span class="token punctuation">\</span>Annotation<span class="token punctuation">\</span>ApiResource</span><span class="token punctuation">;</span>
 <span class="token keyword">use</span> <span class="token package">Symfony<span class="token punctuation">\</span>Component<span class="token punctuation">\</span>Validator<span class="token punctuation">\</span>Constraints</span> <span class="token keyword">as</span> Assert<span class="token punctuation">;</span>
 
-<span class="token comment">/**
- * @ApiResource(attributes={"validation_groups"={"a", "b"}})
- * ...
- */</span>
+<span class="token attribute"><span class="token delimiter punctuation">#[</span><span class="token attribute-content"><span class="token attribute-class-name class-name">ApiResource</span><span class="token punctuation">(</span><span class="token attribute-class-name class-name">attributes</span><span class="token punctuation">:</span> <span class="token punctuation">[</span><span class="token string single-quoted-string">'validation_groups'</span> <span class="token operator">=></span> <span class="token punctuation">[</span><span class="token string single-quoted-string">'a'</span><span class="token punctuation">,</span> <span class="token string single-quoted-string">'b'</span><span class="token punctuation">]</span><span class="token punctuation">]</span><span class="token punctuation">)</span></span><span class="token delimiter punctuation">]</span></span>
 <span class="token keyword">class</span> <span class="token class-name">Book</span>
 <span class="token punctuation">{</span>
     <span class="token comment">/**
@@ -235,20 +232,17 @@ the array of group names.</p>
 <span class="token keyword">use</span> <span class="token package">ApiPlatform<span class="token punctuation">\</span>Core<span class="token punctuation">\</span>Annotation<span class="token punctuation">\</span>ApiResource</span><span class="token punctuation">;</span>
 <span class="token keyword">use</span> <span class="token package">Symfony<span class="token punctuation">\</span>Component<span class="token punctuation">\</span>Validator<span class="token punctuation">\</span>Constraints</span> <span class="token keyword">as</span> Assert<span class="token punctuation">;</span>
 
-<span class="token comment">/**
- * @ApiResource(
- *     collectionOperations={
- *         "get",
- *         "post"={"validation_groups"={"Default", "postValidation"}}
- *     },
- *     itemOperations={
- *         "delete",
- *         "get",
- *         "put"={"validation_groups"={"Default", "putValidation"}}
- *     }
- * )
- * ...
- */</span>
+<span class="token attribute"><span class="token delimiter punctuation">#[</span><span class="token attribute-content"><span class="token attribute-class-name class-name">ApiResource</span><span class="token punctuation">(</span>
+    <span class="token attribute-class-name class-name">collectionOperations</span><span class="token punctuation">:</span> <span class="token punctuation">[</span>
+        <span class="token string single-quoted-string">'get'</span><span class="token punctuation">,</span>
+        <span class="token string single-quoted-string">'post'</span> <span class="token operator">=></span> <span class="token punctuation">[</span><span class="token string single-quoted-string">'validation_groups'</span> <span class="token operator">=></span> <span class="token punctuation">[</span><span class="token string single-quoted-string">'Default'</span><span class="token punctuation">,</span> <span class="token string single-quoted-string">'postValidation'</span><span class="token punctuation">]</span><span class="token punctuation">]</span>
+    <span class="token punctuation">]</span><span class="token punctuation">,</span>
+    <span class="token attribute-class-name class-name">itemOperations</span><span class="token punctuation">:</span> <span class="token punctuation">[</span>
+        <span class="token string single-quoted-string">'delete'</span><span class="token punctuation">,</span>
+        <span class="token string single-quoted-string">'get'</span><span class="token punctuation">,</span>
+        <span class="token string single-quoted-string">'put'</span> <span class="token operator">=></span> <span class="token punctuation">[</span><span class="token string single-quoted-string">'validation_groups'</span> <span class="token operator">=></span> <span class="token punctuation">[</span><span class="token string single-quoted-string">'Default'</span><span class="token punctuation">,</span> <span class="token string single-quoted-string">'putValidation'</span><span class="token punctuation">]</span><span class="token punctuation">]</span>
+    <span class="token punctuation">]</span>
+<span class="token punctuation">)</span></span><span class="token delimiter punctuation">]</span></span>
 <span class="token keyword">class</span> <span class="token class-name">Book</span>
 <span class="token punctuation">{</span>
     <span class="token comment">/**
@@ -293,11 +287,9 @@ argument, and should return an array of group names or a <a href="http://symfony
 <span class="token keyword">use</span> <span class="token package">ApiPlatform<span class="token punctuation">\</span>Core<span class="token punctuation">\</span>Annotation<span class="token punctuation">\</span>ApiResource</span><span class="token punctuation">;</span>
 <span class="token keyword">use</span> <span class="token package">Symfony<span class="token punctuation">\</span>Component<span class="token punctuation">\</span>Validator<span class="token punctuation">\</span>Constraints</span> <span class="token keyword">as</span> Assert<span class="token punctuation">;</span>
 
-<span class="token comment">/**
- * @ApiResource(
- *     attributes={"validation_groups"={Book::class, "validationGroups"}}
- * )
- */</span>
+<span class="token attribute"><span class="token delimiter punctuation">#[</span><span class="token attribute-content"><span class="token attribute-class-name class-name">ApiResource</span><span class="token punctuation">(</span>
+    <span class="token attribute-class-name class-name">attributes</span><span class="token punctuation">:</span> <span class="token punctuation">[</span><span class="token string single-quoted-string">'validation_groups'</span> <span class="token operator">=></span> <span class="token punctuation">[</span><span class="token attribute-class-name class-name">Book</span><span class="token operator">::</span>class<span class="token punctuation">,</span> <span class="token string single-quoted-string">'validationGroups'</span><span class="token punctuation">]</span><span class="token punctuation">]</span>
+<span class="token punctuation">)</span></span><span class="token delimiter punctuation">]</span></span>
 <span class="token keyword">class</span> <span class="token class-name">Book</span>
 <span class="token punctuation">{</span>
     <span class="token comment">/**
@@ -365,9 +357,7 @@ argument, and should return an array of group names or a <a href="http://symfony
 <span class="token keyword">use</span> <span class="token package">App<span class="token punctuation">\</span>Validator<span class="token punctuation">\</span>AdminGroupsGenerator</span><span class="token punctuation">;</span>
 <span class="token keyword">use</span> <span class="token package">Symfony<span class="token punctuation">\</span>Component<span class="token punctuation">\</span>Validator<span class="token punctuation">\</span>Constraints</span> <span class="token keyword">as</span> Assert<span class="token punctuation">;</span>
 
-<span class="token comment">/**
- * @ApiResource(attributes={"validation_groups"=AdminGroupsGenerator::class})
- */</span>
+#<span class="token punctuation">[</span><span class="token function">ApiResource</span><span class="token punctuation">(</span><span class="token argument-name">attributes</span><span class="token punctuation">:</span> <span class="token punctuation">[</span><span class="token string single-quoted-string">'validation_groups'</span> <span class="token operator">=></span> <span class="token class-name static-context">AdminGroupsGenerator</span><span class="token operator">::</span><span class="token keyword">class</span><span class="token punctuation">]</span><span class="token punctuation">)</span>
 <span class="token keyword">class</span> <span class="token class-name">Book</span>
 <span class="token punctuation">{</span>
     <span class="token comment">/**
@@ -417,15 +407,15 @@ First, you need to create your sequenced group.</p>
 <span class="token keyword">use</span> <span class="token package">Doctrine<span class="token punctuation">\</span>ORM<span class="token punctuation">\</span>Mapping</span> <span class="token keyword">as</span> <span class="token constant">ORM</span><span class="token punctuation">;</span>
 
 <span class="token comment">/**
- * @ApiResource(
- *     collectionOperations={
- *          "post" = {
- *              "validation_groups" = MySequencedGroup::class
- *          }
- *     }
- * )
  * @ORM\Entity
  */</span>
+<span class="token attribute"><span class="token delimiter punctuation">#[</span><span class="token attribute-content"><span class="token attribute-class-name class-name">ApiResource</span><span class="token punctuation">(</span>
+    <span class="token attribute-class-name class-name">collectionOperations</span><span class="token punctuation">:</span> <span class="token punctuation">[</span>
+      <span class="token string single-quoted-string">'post'</span> <span class="token operator">=></span> <span class="token punctuation">[</span>
+        <span class="token string single-quoted-string">'validation_groups'</span> <span class="token operator">=></span> <span class="token attribute-class-name class-name">MySequencedGroup</span><span class="token operator">::</span>class
+      <span class="token punctuation">]</span>
+    <span class="token punctuation">]</span>
+<span class="token punctuation">)</span></span><span class="token delimiter punctuation">]</span></span>
 <span class="token keyword">class</span> <span class="token class-name">Greeting</span>
 <span class="token punctuation">{</span>
     <span class="token comment">/**
@@ -625,7 +615,7 @@ This interface defines only 2 methods:</p>
       
       
       
-      }</script><script id="gatsby-script-loader">/*<![CDATA[*/window.pagePath="/docs/core/validation/";/*]]>*/</script><script id="gatsby-chunk-mapping">/*<![CDATA[*/window.___chunkMapping={"polyfill":["/polyfill-ebaf86f669059dbb21f5.js"],"app":["/app-7d3b0a1bd877ed5a0558.js"],"component---src-pages-404-js":["/component---src-pages-404-js-75fc919dc426155177da.js"],"component---src-pages-community-contributors-js":["/component---src-pages-community-contributors-js-4fe8e6f61a02225a1cee.js"],"component---src-pages-community-events-js":["/component---src-pages-community-events-js-db9d65d2880e4cad4d76.js"],"component---src-pages-community-js":["/component---src-pages-community-js-daa5472422a242f16ddc.js"],"component---src-pages-docs-js":["/component---src-pages-docs-js-e52dfc22b89877ee0365.js"],"component---src-pages-forum-php-js":["/component---src-pages-forum-php-js-496cae2296e7f0533c24.js"],"component---src-pages-index-js":["/component---src-pages-index-js-7905c18163e9101ccbec.js"],"component---src-pages-resources-colouring-webby-js":["/component---src-pages-resources-colouring-webby-js-291af713f91c5bf0b194.js"],"component---src-pages-resources-logos-js":["/component---src-pages-resources-logos-js-5b5c9ceeef9ff11e4e09.js"],"component---src-pages-resources-news-js":["/component---src-pages-resources-news-js-ccb8801a9d3d5f5f535c.js"],"component---src-pages-resources-wallpapers-js":["/component---src-pages-resources-wallpapers-js-9996ba56dcf6c5682b73.js"],"component---src-pages-trademark-policy-js":["/component---src-pages-trademark-policy-js-981c3ec0a0419cf093f1.js"],"component---src-templates-contributor-js":["/component---src-templates-contributor-js-de4af64c6ef9a80aebbd.js"],"component---src-templates-doc-js":["/component---src-templates-doc-js-0ff70a10fb44e1d6e41c.js"]};/*]]>*/</script><script src="/polyfill-ebaf86f669059dbb21f5.js" nomodule=""></script><script src="/component---src-templates-doc-js-0ff70a10fb44e1d6e41c.js" async=""></script><script src="/8c9522e9ab04d805c32ce56d0725aa8a5b32377d-813cb5fc74583e4a0450.js" async=""></script><script src="/commons-b07b72ccc147a02cf75a.js" async=""></script><script src="/styles-e9d24b1846c7d6eb9685.js" async=""></script><script src="/app-7d3b0a1bd877ed5a0558.js" async=""></script><script src="/framework-2d6b7d2e2be378715b78.js" async=""></script><script src="/webpack-runtime-1d0411c93010b48ca569.js" async=""></script><script>window.twttr = (function(d, s, id) {
+      }</script><script id="gatsby-script-loader">/*<![CDATA[*/window.pagePath="/docs/core/validation/";/*]]>*/</script><script id="gatsby-chunk-mapping">/*<![CDATA[*/window.___chunkMapping={"polyfill":["/polyfill-ebaf86f669059dbb21f5.js"],"app":["/app-e806750e4fa85a91da49.js"],"component---src-pages-404-js":["/component---src-pages-404-js-75fc919dc426155177da.js"],"component---src-pages-community-contributors-js":["/component---src-pages-community-contributors-js-4fe8e6f61a02225a1cee.js"],"component---src-pages-community-events-js":["/component---src-pages-community-events-js-db9d65d2880e4cad4d76.js"],"component---src-pages-community-js":["/component---src-pages-community-js-daa5472422a242f16ddc.js"],"component---src-pages-docs-js":["/component---src-pages-docs-js-e52dfc22b89877ee0365.js"],"component---src-pages-forum-php-js":["/component---src-pages-forum-php-js-496cae2296e7f0533c24.js"],"component---src-pages-index-js":["/component---src-pages-index-js-7905c18163e9101ccbec.js"],"component---src-pages-resources-colouring-webby-js":["/component---src-pages-resources-colouring-webby-js-291af713f91c5bf0b194.js"],"component---src-pages-resources-logos-js":["/component---src-pages-resources-logos-js-5b5c9ceeef9ff11e4e09.js"],"component---src-pages-resources-news-js":["/component---src-pages-resources-news-js-ccb8801a9d3d5f5f535c.js"],"component---src-pages-resources-wallpapers-js":["/component---src-pages-resources-wallpapers-js-9996ba56dcf6c5682b73.js"],"component---src-pages-trademark-policy-js":["/component---src-pages-trademark-policy-js-981c3ec0a0419cf093f1.js"],"component---src-templates-contributor-js":["/component---src-templates-contributor-js-de4af64c6ef9a80aebbd.js"],"component---src-templates-doc-js":["/component---src-templates-doc-js-0ff70a10fb44e1d6e41c.js"]};/*]]>*/</script><script src="/polyfill-ebaf86f669059dbb21f5.js" nomodule=""></script><script src="/component---src-templates-doc-js-0ff70a10fb44e1d6e41c.js" async=""></script><script src="/8c9522e9ab04d805c32ce56d0725aa8a5b32377d-813cb5fc74583e4a0450.js" async=""></script><script src="/commons-b07b72ccc147a02cf75a.js" async=""></script><script src="/styles-e9d24b1846c7d6eb9685.js" async=""></script><script src="/app-e806750e4fa85a91da49.js" async=""></script><script src="/framework-2d6b7d2e2be378715b78.js" async=""></script><script src="/webpack-runtime-1d0411c93010b48ca569.js" async=""></script><script>window.twttr = (function(d, s, id) {
                 var js, fjs = d.getElementsByTagName(s)[0],
                   t = window.twttr || {};
                 if (d.getElementById(id)) return t;
