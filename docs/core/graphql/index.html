@@ -48,7 +48,7 @@
         }
       }
     })
-  </script><link rel="sitemap" type="application/xml" href="/sitemap.xml"/><link rel="manifest" href="/manifest.webmanifest" crossorigin="anonymous"/><meta name="theme-color" content="#38a9b4"/><link rel="apple-touch-icon" sizes="36x36" href="/android-icon-36x36.png"/><link rel="apple-touch-icon" sizes="48x48" href="/android-icon-48x48.png"/><link rel="apple-touch-icon" sizes="72x72" href="/android-icon-72x72.png"/><link rel="apple-touch-icon" sizes="96x96" href="/android-icon-96x96.png"/><link rel="apple-touch-icon" sizes="144x144" href="/android-icon-144x144.png"/><link rel="apple-touch-icon" sizes="192x192" href="/android-icon-192x192.png"/><link rel="preconnect" href="https://www.google-analytics.com"/><link rel="dns-prefetch" href="https://www.google-analytics.com"/><link as="script" rel="preload" href="/webpack-runtime-1d0411c93010b48ca569.js"/><link as="script" rel="preload" href="/framework-2d6b7d2e2be378715b78.js"/><link as="script" rel="preload" href="/app-e806750e4fa85a91da49.js"/><link as="script" rel="preload" href="/styles-e9d24b1846c7d6eb9685.js"/><link as="script" rel="preload" href="/commons-b07b72ccc147a02cf75a.js"/><link as="script" rel="preload" href="/8c9522e9ab04d805c32ce56d0725aa8a5b32377d-813cb5fc74583e4a0450.js"/><link as="script" rel="preload" href="/component---src-templates-doc-js-0ff70a10fb44e1d6e41c.js"/><link as="fetch" rel="preload" href="/page-data/docs/core/graphql/page-data.json" crossorigin="anonymous"/><link as="fetch" rel="preload" href="/page-data/sq/d/1552981879.json" crossorigin="anonymous"/><link as="fetch" rel="preload" href="/page-data/app-data.json" crossorigin="anonymous"/></head><body><script>
+  </script><link rel="sitemap" type="application/xml" href="/sitemap.xml"/><link rel="manifest" href="/manifest.webmanifest" crossorigin="anonymous"/><meta name="theme-color" content="#38a9b4"/><link rel="apple-touch-icon" sizes="36x36" href="/android-icon-36x36.png"/><link rel="apple-touch-icon" sizes="48x48" href="/android-icon-48x48.png"/><link rel="apple-touch-icon" sizes="72x72" href="/android-icon-72x72.png"/><link rel="apple-touch-icon" sizes="96x96" href="/android-icon-96x96.png"/><link rel="apple-touch-icon" sizes="144x144" href="/android-icon-144x144.png"/><link rel="apple-touch-icon" sizes="192x192" href="/android-icon-192x192.png"/><link rel="preconnect" href="https://www.google-analytics.com"/><link rel="dns-prefetch" href="https://www.google-analytics.com"/><link as="script" rel="preload" href="/webpack-runtime-1d0411c93010b48ca569.js"/><link as="script" rel="preload" href="/framework-2d6b7d2e2be378715b78.js"/><link as="script" rel="preload" href="/app-ee6cf52323ba3be4f435.js"/><link as="script" rel="preload" href="/styles-e9d24b1846c7d6eb9685.js"/><link as="script" rel="preload" href="/commons-b07b72ccc147a02cf75a.js"/><link as="script" rel="preload" href="/8c9522e9ab04d805c32ce56d0725aa8a5b32377d-813cb5fc74583e4a0450.js"/><link as="script" rel="preload" href="/component---src-templates-doc-js-0ff70a10fb44e1d6e41c.js"/><link as="fetch" rel="preload" href="/page-data/docs/core/graphql/page-data.json" crossorigin="anonymous"/><link as="fetch" rel="preload" href="/page-data/sq/d/1552981879.json" crossorigin="anonymous"/><link as="fetch" rel="preload" href="/page-data/app-data.json" crossorigin="anonymous"/></head><body><script>
 void function() {
   window.__onThemeChange = function() {}
 
@@ -181,11 +181,9 @@ By default, all operations are enabled.</p>
 
 <span class="token keyword">namespace</span> <span class="token package">App<span class="token punctuation">\</span>Entity</span><span class="token punctuation">;</span>
 
- <span class="token operator">*</span> @<span class="token function">ApiResource</span><span class="token punctuation">(</span>graphql<span class="token operator">=</span><span class="token punctuation">{</span>
- <span class="token operator">*</span>     <span class="token string double-quoted-string">"item_query"</span><span class="token punctuation">,</span>
- <span class="token operator">*</span>     <span class="token string double-quoted-string">"create"</span>
- <span class="token operator">*</span> <span class="token punctuation">}</span><span class="token punctuation">)</span>
- <span class="token operator">*</span><span class="token operator">/</span>
+<span class="token attribute"><span class="token delimiter punctuation">#[</span><span class="token attribute-content"><span class="token attribute-class-name class-name">ApiResource</span><span class="token punctuation">(</span>
+    <span class="token attribute-class-name class-name">graphql</span><span class="token punctuation">:</span> <span class="token punctuation">[</span><span class="token string single-quoted-string">'item_query'</span><span class="token punctuation">,</span> <span class="token string single-quoted-string">'create'</span><span class="token punctuation">]</span>
+<span class="token punctuation">)</span></span><span class="token delimiter punctuation">]</span></span>
 <span class="token keyword">class</span> <span class="token class-name">Book</span>
 <span class="token punctuation">{</span>
     <span class="token comment">// ...</span>
@@ -279,32 +277,32 @@ the identifier needs to be globally unique. In API Platform, this argument is re
 <span class="token keyword">use</span> <span class="token package">App<span class="token punctuation">\</span>Resolver<span class="token punctuation">\</span>BookCollectionResolver</span><span class="token punctuation">;</span>
 <span class="token keyword">use</span> <span class="token package">App<span class="token punctuation">\</span>Resolver<span class="token punctuation">\</span>BookResolver</span><span class="token punctuation">;</span>
 
-<span class="token comment">/**
- * @ApiResource(graphql={
- *     "retrievedQuery"={
- *         "item_query"=BookResolver::class
- *     },
- *     "notRetrievedQuery"={
- *         "item_query"=BookResolver::class,
- *         "args"={}
- *     },
- *     "withDefaultArgsNotRetrievedQuery"={
- *         "item_query"=BookResolver::class,
- *         "read"=false
- *     },
- *     "withCustomArgsQuery"={
- *         "item_query"=BookResolver::class,
- *         "args"={
- *             "id"={"type"="ID!"},
- *             "log"={"type"="Boolean!", "description"="Is logging activated?"},
- *             "logDate"={"type"="DateTime"}
- *         }
- *     },
- *     "collectionQuery"={
- *         "collection_query"=BookCollectionResolver::class
- *     }
- * })
- */</span>
+<span class="token attribute"><span class="token delimiter punctuation">#[</span><span class="token attribute-content"><span class="token attribute-class-name class-name">ApiResource</span><span class="token punctuation">(</span>
+    <span class="token attribute-class-name class-name">graphql</span><span class="token punctuation">:</span> <span class="token punctuation">[</span>
+      <span class="token string single-quoted-string">'retrievedQuery'</span> <span class="token operator">=></span> <span class="token punctuation">[</span>
+          <span class="token string single-quoted-string">'item_query'</span> <span class="token operator">=></span> <span class="token attribute-class-name class-name">BookResolver</span><span class="token operator">::</span>class
+      <span class="token punctuation">]</span><span class="token punctuation">,</span>
+      <span class="token string single-quoted-string">'notRetrievedQuery'</span> <span class="token operator">=></span> <span class="token punctuation">[</span>
+          <span class="token string single-quoted-string">'item_query'</span> <span class="token operator">=></span> <span class="token attribute-class-name class-name">BookResolver</span><span class="token operator">::</span>class<span class="token punctuation">,</span>
+          <span class="token string single-quoted-string">'args'</span> <span class="token operator">=></span> <span class="token punctuation">[</span><span class="token punctuation">]</span>
+      <span class="token punctuation">]</span><span class="token punctuation">,</span>
+      <span class="token string single-quoted-string">'withDefaultArgsNotRetrievedQuery'</span> <span class="token operator">=></span> <span class="token punctuation">[</span>
+          <span class="token string single-quoted-string">'item_query'</span> <span class="token operator">=></span> <span class="token attribute-class-name class-name">BookResolver</span><span class="token operator">::</span>class<span class="token punctuation">,</span>
+          <span class="token string single-quoted-string">'read'</span> <span class="token operator">=></span> <span class="token attribute-class-name class-name">false</span>
+      <span class="token punctuation">]</span><span class="token punctuation">,</span>
+      <span class="token string single-quoted-string">'withCustomArgsQuery'</span> <span class="token operator">=></span> <span class="token punctuation">[</span>
+          <span class="token string single-quoted-string">'item_query'</span> <span class="token operator">=></span> <span class="token attribute-class-name class-name">BookResolver</span><span class="token operator">::</span>class<span class="token punctuation">,</span>
+          <span class="token string single-quoted-string">'args'</span> <span class="token operator">=></span> <span class="token punctuation">[</span>
+              <span class="token string single-quoted-string">'id'</span> <span class="token operator">=></span> <span class="token punctuation">[</span><span class="token string single-quoted-string">'type'</span> <span class="token operator">=></span> <span class="token string single-quoted-string">'ID!'</span><span class="token punctuation">]</span><span class="token punctuation">,</span>
+              <span class="token string single-quoted-string">'log'</span> <span class="token operator">=></span> <span class="token punctuation">[</span><span class="token string single-quoted-string">'type'</span> <span class="token operator">=></span> <span class="token string single-quoted-string">'Boolean!'</span><span class="token punctuation">,</span> <span class="token string single-quoted-string">'description'</span> <span class="token operator">=></span> <span class="token string single-quoted-string">'Is logging activated?'</span><span class="token punctuation">]</span><span class="token punctuation">,</span>
+              <span class="token string single-quoted-string">'logDate'</span> <span class="token operator">=></span> <span class="token punctuation">[</span><span class="token string single-quoted-string">'type'</span> <span class="token operator">=></span> <span class="token string single-quoted-string">'DateTime'</span><span class="token punctuation">]</span>
+          <span class="token punctuation">]</span>
+      <span class="token punctuation">]</span><span class="token punctuation">,</span>
+      <span class="token string single-quoted-string">'collectionQuery'</span> <span class="token operator">=></span> <span class="token punctuation">[</span>
+          <span class="token string single-quoted-string">'collection_query'</span> <span class="token operator">=></span> <span class="token attribute-class-name class-name">BookCollectionResolver</span><span class="token operator">::</span>class
+      <span class="token punctuation">]</span>
+    <span class="token punctuation">]</span>
+<span class="token punctuation">)</span></span><span class="token delimiter punctuation">]</span></span>
 <span class="token keyword">class</span> <span class="token class-name">Book</span>
 <span class="token punctuation">{</span>
     <span class="token comment">// ...</span>
@@ -405,24 +403,24 @@ you can return <code class="language-text">null</code> instead of the mutated it
 <span class="token keyword">use</span> <span class="token package">ApiPlatform<span class="token punctuation">\</span>Core<span class="token punctuation">\</span>Annotation<span class="token punctuation">\</span>ApiResource</span><span class="token punctuation">;</span>
 <span class="token keyword">use</span> <span class="token package">App<span class="token punctuation">\</span>Resolver<span class="token punctuation">\</span>BookMutationResolver</span><span class="token punctuation">;</span>
 
-<span class="token comment">/**
- * @ApiResource(graphql={
- *     "mutation"={
- *         "mutation"=BookMutationResolver::class
- *     },
- *     "withCustomArgsMutation"={
- *         "mutation"=BookMutationResolver::class,
- *         "args"={
- *             "sendMail"={"type"="Boolean!", "description"="Send a mail?"}
- *         }
- *     },
- *     "disabledStagesMutation"={
- *         "mutation"=BookMutationResolver::class,
- *         "deserialize"=false,
- *         "write"=false
- *     }
- * })
- */</span>
+<span class="token attribute"><span class="token delimiter punctuation">#[</span><span class="token attribute-content"><span class="token attribute-class-name class-name">ApiResource</span><span class="token punctuation">(</span>
+    <span class="token attribute-class-name class-name">graphql</span><span class="token punctuation">:</span> <span class="token punctuation">[</span>
+        <span class="token string single-quoted-string">'mutation'</span> <span class="token operator">=></span> <span class="token punctuation">[</span>
+            <span class="token string single-quoted-string">'mutation'</span> <span class="token operator">=></span> <span class="token attribute-class-name class-name">BookMutationResolver</span><span class="token operator">::</span>class
+        <span class="token punctuation">]</span><span class="token punctuation">,</span>
+        <span class="token string single-quoted-string">'withCustomArgsMutation'</span> <span class="token operator">=></span> <span class="token punctuation">[</span>
+            <span class="token string single-quoted-string">'mutation'</span> <span class="token operator">=></span> <span class="token attribute-class-name class-name">BookMutationResolver</span><span class="token operator">::</span>class<span class="token punctuation">,</span>
+            <span class="token string single-quoted-string">'args'</span> <span class="token operator">=></span> <span class="token punctuation">[</span>
+                <span class="token string single-quoted-string">'sendMail'</span> <span class="token operator">=></span> <span class="token punctuation">[</span><span class="token string single-quoted-string">'type'</span> <span class="token operator">=></span> <span class="token string single-quoted-string">'Boolean!'</span><span class="token punctuation">,</span> <span class="token string single-quoted-string">'description'</span><span class="token operator">=></span> <span class="token string single-quoted-string">'Send a mail?'</span> <span class="token punctuation">]</span>
+            <span class="token punctuation">]</span>
+        <span class="token punctuation">]</span><span class="token punctuation">,</span>
+        <span class="token string single-quoted-string">'disabledStagesMutation'</span> <span class="token operator">=></span> <span class="token punctuation">[</span>
+            <span class="token string single-quoted-string">'mutation'</span> <span class="token operator">=></span> <span class="token attribute-class-name class-name">BookMutationResolver</span><span class="token operator">::</span>class<span class="token punctuation">,</span>
+            <span class="token string single-quoted-string">'deserialize'</span> <span class="token operator">=></span> <span class="token attribute-class-name class-name">false</span><span class="token punctuation">,</span>
+            <span class="token string single-quoted-string">'write'</span> <span class="token operator">=></span> <span class="token attribute-class-name class-name">false</span>
+        <span class="token punctuation">]</span>
+    <span class="token punctuation">]</span>
+<span class="token punctuation">)</span></span><span class="token delimiter punctuation">]</span></span>
 <span class="token keyword">class</span> <span class="token class-name">Book</span>
 <span class="token punctuation">{</span>
     <span class="token comment">// ...</span>
@@ -475,16 +473,14 @@ The only difference with them is that, even if you define your own arguments, th
 
 <span class="token keyword">use</span> <span class="token package">ApiPlatform<span class="token punctuation">\</span>Core<span class="token punctuation">\</span>Annotation<span class="token punctuation">\</span>ApiResource</span><span class="token punctuation">;</span>
 
-<span class="token comment">/**
- * @ApiResource(
- *     graphql={
- *         ...
- *         "update",
- *         ...
- *     },
- *     mercure=true
- * )
- */</span>
+ <span class="token attribute"><span class="token delimiter punctuation">#[</span><span class="token attribute-content"><span class="token attribute-class-name class-name">ApiResource</span><span class="token punctuation">(</span>
+      <span class="token attribute-class-name class-name">graphql</span><span class="token punctuation">:</span> <span class="token punctuation">[</span>
+          <span class="token operator">...</span>
+          <span class="token string single-quoted-string">'update'</span><span class="token punctuation">,</span>
+          <span class="token operator">...</span>
+      <span class="token punctuation">]</span><span class="token punctuation">,</span>
+      <span class="token attribute-class-name class-name">mercure</span><span class="token punctuation">:</span> <span class="token attribute-class-name class-name">true</span>
+<span class="token punctuation">)</span></span><span class="token delimiter punctuation">]</span></span>
 <span class="token keyword">class</span> <span class="token class-name">Book</span>
 <span class="token punctuation">{</span>
     <span class="token comment">// ...</span>
@@ -618,13 +614,13 @@ these resolvers will be used and yours will be called at the right time.</p>
 
 <span class="token keyword">use</span> <span class="token package">ApiPlatform<span class="token punctuation">\</span>Core<span class="token punctuation">\</span>Annotation<span class="token punctuation">\</span>ApiResource</span><span class="token punctuation">;</span>
 
-<span class="token comment">/**
- * @ApiResource(graphql={
- *     "mutation"={
- *         "write"=false
- *     }
- * })
- */</span>
+<span class="token attribute"><span class="token delimiter punctuation">#[</span><span class="token attribute-content"><span class="token attribute-class-name class-name">ApiResource</span><span class="token punctuation">(</span>
+    <span class="token attribute-class-name class-name">graphql</span><span class="token punctuation">:</span> <span class="token punctuation">[</span>
+        <span class="token string single-quoted-string">'mutation'</span> <span class="token operator">=></span> <span class="token punctuation">[</span>
+            <span class="token string single-quoted-string">'write'</span> <span class="token operator">=></span> <span class="token attribute-class-name class-name">false</span>
+        <span class="token punctuation">]</span>
+    <span class="token punctuation">]</span>
+<span class="token punctuation">)</span></span><span class="token delimiter punctuation">]</span></span>
 <span class="token keyword">class</span> <span class="token class-name">Book</span>
 <span class="token punctuation">{</span>
     <span class="token comment">// ...</span>
@@ -636,14 +632,12 @@ these resolvers will be used and yours will be called at the right time.</p>
 
 <span class="token keyword">use</span> <span class="token package">ApiPlatform<span class="token punctuation">\</span>Core<span class="token punctuation">\</span>Annotation<span class="token punctuation">\</span>ApiResource</span><span class="token punctuation">;</span>
 
-<span class="token comment">/**
- * @ApiResource(
- *     graphql={...},
- *     attributes={
- *         "write"=false
- *     }
- * })
- */</span>
+<span class="token attribute"><span class="token delimiter punctuation">#[</span><span class="token attribute-content"><span class="token attribute-class-name class-name">ApiResource</span><span class="token punctuation">(</span>
+    <span class="token attribute-class-name class-name">graphql</span><span class="token punctuation">:</span> <span class="token punctuation">[</span><span class="token operator">...</span><span class="token punctuation">]</span><span class="token punctuation">,</span>
+    <span class="token attribute-class-name class-name">attributes</span><span class="token punctuation">:</span> <span class="token punctuation">[</span>
+        <span class="token string single-quoted-string">'write'</span> <span class="token operator">=></span> <span class="token attribute-class-name class-name">false</span>
+    <span class="token punctuation">]</span>
+<span class="token punctuation">)</span></span><span class="token delimiter punctuation">]</span></span>
 <span class="token keyword">class</span> <span class="token class-name">Book</span>
 <span class="token punctuation">{</span>
     <span class="token comment">// ...</span>
@@ -665,22 +659,20 @@ In order to keep the default behavior (possibility to fetch, delete, update or c
 
 <span class="token keyword">use</span> <span class="token package">ApiPlatform<span class="token punctuation">\</span>Core<span class="token punctuation">\</span>Annotation<span class="token punctuation">\</span>ApiResource</span><span class="token punctuation">;</span>
 
-<span class="token comment">/**
- * @ApiResource(
- *     attributes={
- *         "filters"={"offer.search_filter"}
- *     },
- *     graphql={
- *         "item_query",
- *         "collection_query"={
- *              "filters"={"offer.date_filter"}
- *          },
- *          "delete",
- *          "update",
- *          "create"
- *     }
- * )
- */</span>
+<span class="token attribute"><span class="token delimiter punctuation">#[</span><span class="token attribute-content"><span class="token attribute-class-name class-name">ApiResource</span><span class="token punctuation">(</span>
+    <span class="token attribute-class-name class-name">attributes</span><span class="token punctuation">:</span> <span class="token punctuation">[</span>
+        <span class="token string single-quoted-string">'filters'</span> <span class="token operator">=></span> <span class="token punctuation">[</span><span class="token string single-quoted-string">'offer.search_filter'</span><span class="token punctuation">]</span>
+    <span class="token punctuation">]</span><span class="token punctuation">,</span>
+    <span class="token attribute-class-name class-name">graphql</span><span class="token punctuation">:</span> <span class="token punctuation">[</span>
+        <span class="token string single-quoted-string">'item_query'</span><span class="token punctuation">,</span>
+        <span class="token string single-quoted-string">'collection_query'</span> <span class="token operator">=></span> <span class="token punctuation">[</span>
+            <span class="token string single-quoted-string">'filters'</span> <span class="token operator">=></span> <span class="token punctuation">[</span><span class="token string single-quoted-string">'offer.date_filter'</span><span class="token punctuation">]</span>
+        <span class="token punctuation">]</span><span class="token punctuation">,</span>
+        <span class="token string single-quoted-string">'delete'</span><span class="token punctuation">,</span>
+        <span class="token string single-quoted-string">'update'</span><span class="token punctuation">,</span>
+        <span class="token string single-quoted-string">'create'</span>
+    <span class="token punctuation">]</span>
+<span class="token punctuation">)</span></span><span class="token delimiter punctuation">]</span></span>
 <span class="token keyword">class</span> <span class="token class-name">Offer</span>
 <span class="token punctuation">{</span>
     <span class="token comment">// ...</span>
@@ -724,11 +716,9 @@ These filters usually need a proper order to give results as expected.</p>
 <span class="token keyword">use</span> <span class="token package">ApiPlatform<span class="token punctuation">\</span>Core<span class="token punctuation">\</span>Bridge<span class="token punctuation">\</span>Doctrine<span class="token punctuation">\</span>Orm<span class="token punctuation">\</span>Filter<span class="token punctuation">\</span>OrderFilter</span><span class="token punctuation">;</span>
 <span class="token keyword">use</span> <span class="token package">ApiPlatform<span class="token punctuation">\</span>Core<span class="token punctuation">\</span>Bridge<span class="token punctuation">\</span>Doctrine<span class="token punctuation">\</span>Orm<span class="token punctuation">\</span>Filter<span class="token punctuation">\</span>SearchFilter</span><span class="token punctuation">;</span>
 
-<span class="token comment">/**
- * @ApiResource
- * @ApiFilter(OrderFilter::class, properties={"product.releaseDate"})
- * @ApiFilter(SearchFilter::class, properties={"product.color": "exact"})
- */</span>
+<span class="token attribute"><span class="token delimiter punctuation">#[</span><span class="token attribute-content"><span class="token attribute-class-name class-name">ApiResource</span></span><span class="token delimiter punctuation">]</span></span>
+<span class="token attribute"><span class="token delimiter punctuation">#[</span><span class="token attribute-content"><span class="token attribute-class-name class-name">ApiFilter</span><span class="token punctuation">(</span><span class="token attribute-class-name class-name">OrderFilter</span><span class="token operator">::</span>class<span class="token punctuation">,</span> <span class="token attribute-class-name class-name">properties</span><span class="token punctuation">:</span> <span class="token punctuation">[</span><span class="token string single-quoted-string">'product.releaseDate'</span><span class="token punctuation">]</span><span class="token punctuation">)</span></span><span class="token delimiter punctuation">]</span></span>
+<span class="token attribute"><span class="token delimiter punctuation">#[</span><span class="token attribute-content"><span class="token attribute-class-name class-name">ApiFilter</span><span class="token punctuation">(</span><span class="token attribute-class-name class-name">SearchFilter</span><span class="token operator">::</span>class<span class="token punctuation">,</span> <span class="token attribute-class-name class-name">properties</span><span class="token punctuation">:</span> <span class="token punctuation">[</span><span class="token string single-quoted-string">'product.color'</span> <span class="token operator">=></span> <span class="token string single-quoted-string">'exact'</span><span class="token punctuation">]</span><span class="token punctuation">)</span></span><span class="token delimiter punctuation">]</span></span>
 <span class="token keyword">class</span> <span class="token class-name">Offer</span>
 <span class="token punctuation">{</span>
     <span class="token comment">// ...</span>
@@ -833,19 +823,17 @@ When it is false, you know it is the last page and moving forward or backward wi
 
 <span class="token keyword">use</span> <span class="token package">ApiPlatform<span class="token punctuation">\</span>Core<span class="token punctuation">\</span>Annotation<span class="token punctuation">\</span>ApiResource</span><span class="token punctuation">;</span>
 
-<span class="token comment">/**
- * @ApiResource(
- *     graphql={
- *          "item_query",
- *          "collection_query"={
- *              "pagination_type"="page"
- *          },
- *          "delete",
- *          "update",
- *          "create"
- *     }
- * )
- */</span>
+<span class="token attribute"><span class="token delimiter punctuation">#[</span><span class="token attribute-content"><span class="token attribute-class-name class-name">ApiResource</span><span class="token punctuation">(</span>
+    <span class="token attribute-class-name class-name">graphql</span><span class="token punctuation">:</span> <span class="token punctuation">[</span>
+        <span class="token string single-quoted-string">'item_query'</span><span class="token punctuation">,</span>
+         <span class="token string single-quoted-string">'collection_query'</span> <span class="token operator">=></span> <span class="token punctuation">[</span>
+            <span class="token string single-quoted-string">'pagination_type'</span> <span class="token operator">=></span> <span class="token string single-quoted-string">'page'</span>
+         <span class="token punctuation">]</span><span class="token punctuation">,</span>
+         <span class="token string single-quoted-string">'delete'</span><span class="token punctuation">,</span>
+         <span class="token string single-quoted-string">'update'</span><span class="token punctuation">,</span>
+         <span class="token string single-quoted-string">'create'</span>
+    <span class="token punctuation">]</span>
+<span class="token punctuation">)</span></span><span class="token delimiter punctuation">]</span></span>
 <span class="token keyword">class</span> <span class="token class-name">Offer</span>
 <span class="token punctuation">{</span>
     <span class="token comment">// ...</span>
@@ -858,13 +846,11 @@ When it is false, you know it is the last page and moving forward or backward wi
 
 <span class="token keyword">use</span> <span class="token package">ApiPlatform<span class="token punctuation">\</span>Core<span class="token punctuation">\</span>Annotation<span class="token punctuation">\</span>ApiResource</span><span class="token punctuation">;</span>
 
-<span class="token comment">/**
- * @ApiResource(
- *     attributes={
- *          "pagination_type"="page"
- *     }
- * )
- */</span>
+<span class="token attribute"><span class="token delimiter punctuation">#[</span><span class="token attribute-content"><span class="token attribute-class-name class-name">ApiResource</span><span class="token punctuation">(</span>
+    <span class="token attribute-class-name class-name">attributes</span><span class="token punctuation">:</span> <span class="token punctuation">[</span>
+        <span class="token string single-quoted-string">'pagination_type'</span> <span class="token operator">=></span> <span class="token string single-quoted-string">'page'</span>
+    <span class="token punctuation">]</span>
+<span class="token punctuation">)</span></span><span class="token delimiter punctuation">]</span></span>
 <span class="token keyword">class</span> <span class="token class-name">Offer</span>
 <span class="token punctuation">{</span>
     <span class="token comment">// ...</span>
@@ -907,9 +893,7 @@ When it is false, you know it is the last page and moving forward or backward wi
 
 <span class="token keyword">use</span> <span class="token package">ApiPlatform<span class="token punctuation">\</span>Core<span class="token punctuation">\</span>Annotation<span class="token punctuation">\</span>ApiResource</span><span class="token punctuation">;</span>
 
-<span class="token comment">/**
- * @ApiResource(attributes={"pagination_enabled"=false})
- */</span>
+<span class="token attribute"><span class="token delimiter punctuation">#[</span><span class="token attribute-content"><span class="token attribute-class-name class-name">ApiResource</span><span class="token punctuation">(</span><span class="token attribute-class-name class-name">attributes</span><span class="token punctuation">:</span> <span class="token punctuation">[</span><span class="token string single-quoted-string">'pagination_enabled'</span> <span class="token operator">=></span> <span class="token attribute-class-name class-name">false</span><span class="token punctuation">]</span><span class="token punctuation">)</span></span><span class="token delimiter punctuation">]</span></span>
 <span class="token keyword">class</span> <span class="token class-name">Book</span>
 <span class="token punctuation">{</span>
     <span class="token comment">// ...</span>
@@ -921,9 +905,7 @@ When it is false, you know it is the last page and moving forward or backward wi
 
 <span class="token keyword">use</span> <span class="token package">ApiPlatform<span class="token punctuation">\</span>Core<span class="token punctuation">\</span>Annotation<span class="token punctuation">\</span>ApiResource</span><span class="token punctuation">;</span>
 
-<span class="token comment">/**
- * @ApiResource(graphql={"collection_query"={"pagination_enabled"=false}})
- */</span>
+<span class="token attribute"><span class="token delimiter punctuation">#[</span><span class="token attribute-content"><span class="token attribute-class-name class-name">ApiResource</span><span class="token punctuation">(</span><span class="token attribute-class-name class-name">graphql</span><span class="token punctuation">:</span> <span class="token punctuation">[</span><span class="token string single-quoted-string">'collection_query'</span> <span class="token operator">=></span> <span class="token punctuation">[</span><span class="token string single-quoted-string">'pagination_enabled'</span> <span class="token operator">=></span> <span class="token attribute-class-name class-name">false</span><span class="token punctuation">]</span><span class="token punctuation">]</span><span class="token punctuation">)</span></span><span class="token delimiter punctuation">]</span></span>
 <span class="token keyword">class</span> <span class="token class-name">Book</span>
 <span class="token punctuation">{</span>
     <span class="token comment">// ...</span>
@@ -941,23 +923,21 @@ Please note that, it's not possible to update a book in GraphQL because the <cod
 
 <span class="token keyword">use</span> <span class="token package">ApiPlatform<span class="token punctuation">\</span>Core<span class="token punctuation">\</span>Annotation<span class="token punctuation">\</span>ApiResource</span><span class="token punctuation">;</span>
 
-<span class="token comment">/**
- * @ApiResource(
- *     attributes={"security"="is_granted('ROLE_USER')"},
- *     collectionOperations={
- *         "post"={"security"="is_granted('ROLE_ADMIN')", "security_message"="Only admins can add books."}
- *     },
- *     itemOperations={
- *         "get"={"security"="is_granted('ROLE_USER') and object.owner == user", "security_message"="Sorry, but you are not the book owner."}
- *     },
- *     graphql={
- *         "item_query"={"security"="is_granted('ROLE_USER') and object.owner == user"},
- *         "collection_query"={"security"="is_granted('ROLE_ADMIN')"},
- *         "delete"={"security"="is_granted('ROLE_ADMIN')"},
- *         "create"={"security"="is_granted('ROLE_ADMIN')"}
- *     }
- * )
- */</span>
+<span class="token attribute"><span class="token delimiter punctuation">#[</span><span class="token attribute-content"><span class="token attribute-class-name class-name">ApiResource</span><span class="token punctuation">(</span>
+    <span class="token attribute-class-name class-name">attributes</span><span class="token punctuation">:</span> <span class="token punctuation">[</span><span class="token string single-quoted-string">'security'</span> <span class="token operator">=></span> <span class="token string double-quoted-string">"is_granted('ROLE_USER')"</span><span class="token punctuation">]</span><span class="token punctuation">,</span>
+    <span class="token attribute-class-name class-name">collectionOperations</span><span class="token punctuation">:</span> <span class="token punctuation">[</span>
+        <span class="token string single-quoted-string">'post'</span> <span class="token operator">=></span> <span class="token punctuation">[</span><span class="token string single-quoted-string">'security'</span> <span class="token operator">=></span> <span class="token string double-quoted-string">"is_granted('ROLE_ADMIN')"</span><span class="token punctuation">,</span> <span class="token string single-quoted-string">'security_message'</span> <span class="token operator">=></span> <span class="token string single-quoted-string">'Only admins can add books.'</span><span class="token punctuation">]</span>
+    <span class="token punctuation">]</span><span class="token punctuation">,</span>
+    <span class="token attribute-class-name class-name">itemOperations</span><span class="token punctuation">:</span> <span class="token punctuation">[</span>
+        <span class="token string single-quoted-string">'get'</span> <span class="token operator">=></span> <span class="token punctuation">[</span><span class="token string single-quoted-string">'security'</span> <span class="token operator">=></span> <span class="token string double-quoted-string">"is_granted('ROLE_USER') and object.owner == user"</span><span class="token punctuation">,</span> <span class="token string single-quoted-string">'security_message'</span> <span class="token operator">=></span> <span class="token string single-quoted-string">'Sorry, but you are not the book owner.'</span><span class="token punctuation">]</span>
+    <span class="token punctuation">]</span><span class="token punctuation">,</span>
+    <span class="token attribute-class-name class-name">graphql</span><span class="token punctuation">:</span> <span class="token punctuation">[</span>
+        <span class="token string single-quoted-string">'item_query'</span> <span class="token operator">=></span> <span class="token punctuation">[</span><span class="token string single-quoted-string">'security'</span> <span class="token operator">=></span> <span class="token string double-quoted-string">"is_granted('ROLE_USER') and object.owner == user"</span><span class="token punctuation">]</span><span class="token punctuation">,</span>
+        <span class="token string single-quoted-string">'collection_query'</span> <span class="token operator">=></span> <span class="token punctuation">[</span><span class="token string single-quoted-string">'security'</span> <span class="token operator">=></span> <span class="token string double-quoted-string">"is_granted('ROLE_ADMIN')"</span><span class="token punctuation">]</span><span class="token punctuation">,</span>
+        <span class="token string single-quoted-string">'delete'</span> <span class="token operator">=></span> <span class="token punctuation">[</span><span class="token string single-quoted-string">'security'</span> <span class="token operator">=></span> <span class="token string double-quoted-string">"is_granted('ROLE_ADMIN')"</span><span class="token punctuation">]</span><span class="token punctuation">,</span>
+        <span class="token string single-quoted-string">'create'</span> <span class="token operator">=></span> <span class="token punctuation">[</span><span class="token string single-quoted-string">'security'</span> <span class="token operator">=></span> <span class="token string double-quoted-string">"is_granted('ROLE_ADMIN')"</span><span class="token punctuation">]</span>
+    <span class="token punctuation">]</span>
+<span class="token punctuation">)</span></span><span class="token delimiter punctuation">]</span></span>
 <span class="token keyword">class</span> <span class="token class-name">Book</span>
 <span class="token punctuation">{</span>
     <span class="token comment">// ...</span>
@@ -980,20 +960,18 @@ Please note that, it's not possible to update a book in GraphQL because the <cod
 <span class="token keyword">use</span> <span class="token package">ApiPlatform<span class="token punctuation">\</span>Core<span class="token punctuation">\</span>Annotation<span class="token punctuation">\</span>ApiResource</span><span class="token punctuation">;</span>
 <span class="token keyword">use</span> <span class="token package">Symfony<span class="token punctuation">\</span>Component<span class="token punctuation">\</span>Serializer<span class="token punctuation">\</span>Annotation<span class="token punctuation">\</span>Groups</span><span class="token punctuation">;</span>
 
-<span class="token comment">/**
- * @ApiResource(
- *     normalizationContext={"groups"={"read"}},
- *     denormalizationContext={"groups"={"write"}},
- *     graphql={
- *         "item_query"={"normalization_context"={"groups"={"item_query"}}},
- *         "collection_query"={"normalization_context"={"groups"={"collection_query"}}},
- *         "create"={
- *             "normalization_context"={"groups"={"collection_query"}},
- *             "denormalization_context"={"groups"={"mutation"}}
- *         }
- *     }
- * )
- */</span>
+<span class="token attribute"><span class="token delimiter punctuation">#[</span><span class="token attribute-content"><span class="token attribute-class-name class-name">ApiResource</span><span class="token punctuation">(</span>
+    <span class="token attribute-class-name class-name">normalizationContext</span><span class="token punctuation">:</span> <span class="token punctuation">[</span><span class="token string single-quoted-string">'groups'</span> <span class="token operator">=></span> <span class="token punctuation">[</span><span class="token string single-quoted-string">'read'</span><span class="token punctuation">]</span><span class="token punctuation">]</span><span class="token punctuation">,</span>
+    <span class="token attribute-class-name class-name">denormalizationContext</span><span class="token punctuation">:</span> <span class="token punctuation">[</span><span class="token string single-quoted-string">'groups'</span> <span class="token operator">=></span> <span class="token punctuation">[</span><span class="token string single-quoted-string">'write'</span><span class="token punctuation">]</span><span class="token punctuation">]</span><span class="token punctuation">,</span>
+    <span class="token attribute-class-name class-name">graphql</span><span class="token punctuation">:</span> <span class="token punctuation">[</span>
+        <span class="token string single-quoted-string">'item_query'</span> <span class="token operator">=></span> <span class="token punctuation">[</span><span class="token string single-quoted-string">'normalization_context'</span> <span class="token operator">=></span> <span class="token punctuation">[</span><span class="token string single-quoted-string">'groups'</span> <span class="token operator">=></span> <span class="token punctuation">[</span><span class="token string single-quoted-string">'item_query'</span><span class="token punctuation">]</span><span class="token punctuation">]</span><span class="token punctuation">]</span><span class="token punctuation">,</span>
+        <span class="token string single-quoted-string">'collection_query'</span> <span class="token operator">=></span> <span class="token punctuation">[</span><span class="token string single-quoted-string">'normalization_context'</span> <span class="token operator">=></span> <span class="token punctuation">[</span><span class="token string single-quoted-string">'groups'</span> <span class="token operator">=></span> <span class="token punctuation">[</span><span class="token string single-quoted-string">'collection_query'</span><span class="token punctuation">]</span><span class="token punctuation">]</span><span class="token punctuation">]</span><span class="token punctuation">,</span>
+        <span class="token string single-quoted-string">'create'</span> <span class="token operator">=></span> <span class="token punctuation">[</span>
+            <span class="token string single-quoted-string">'normalization_context'</span> <span class="token operator">=></span> <span class="token punctuation">[</span><span class="token string single-quoted-string">'groups'</span> <span class="token operator">=></span> <span class="token punctuation">[</span><span class="token string single-quoted-string">'collection_query'</span><span class="token punctuation">]</span><span class="token punctuation">]</span><span class="token punctuation">,</span>
+            <span class="token string single-quoted-string">'denormalization_context'</span> <span class="token operator">=></span> <span class="token punctuation">[</span><span class="token string single-quoted-string">'groups'</span> <span class="token operator">=></span> <span class="token punctuation">[</span><span class="token string single-quoted-string">'mutation'</span><span class="token punctuation">]</span><span class="token punctuation">]</span>
+        <span class="token punctuation">]</span>
+    <span class="token punctuation">}</span>
+<span class="token punctuation">)</span></span><span class="token delimiter punctuation">]</span></span>
 <span class="token keyword">class</span> <span class="token class-name">Book</span>
 <span class="token punctuation">{</span>
     <span class="token comment">// ...</span>
@@ -1162,10 +1140,8 @@ For instance, you can register a custom normalizer like this:</p>
 <span class="token keyword">use</span> <span class="token package">ApiPlatform<span class="token punctuation">\</span>Core<span class="token punctuation">\</span>Annotation<span class="token punctuation">\</span>ApiFilter</span><span class="token punctuation">;</span>
 <span class="token keyword">use</span> <span class="token package">ApiPlatform<span class="token punctuation">\</span>Core<span class="token punctuation">\</span>Bridge<span class="token punctuation">\</span>Doctrine<span class="token punctuation">\</span>Orm<span class="token punctuation">\</span>Filter<span class="token punctuation">\</span>SearchFilter</span><span class="token punctuation">;</span>
 
-<span class="token comment">/**
- * @ApiResource
- * @ApiFilter(SearchFilter::class, properties={"publicationDate": "partial"})
- */</span>
+<span class="token attribute"><span class="token delimiter punctuation">#[</span><span class="token attribute-content"><span class="token attribute-class-name class-name">ApiResource</span></span><span class="token delimiter punctuation">]</span></span>
+<span class="token attribute"><span class="token delimiter punctuation">#[</span><span class="token attribute-content"><span class="token attribute-class-name class-name">ApiFilter</span><span class="token punctuation">(</span><span class="token attribute-class-name class-name">SearchFilter</span><span class="token operator">::</span>class<span class="token punctuation">,</span> <span class="token attribute-class-name class-name">properties</span><span class="token punctuation">:</span> <span class="token punctuation">[</span><span class="token string single-quoted-string">'publicationDate'</span> <span class="token operator">=></span> <span class="token string single-quoted-string">'partial'</span><span class="token punctuation">]</span><span class="token punctuation">)</span></span><span class="token delimiter punctuation">]</span></span>
 <span class="token keyword">class</span> <span class="token class-name">Book</span>
 <span class="token punctuation">{</span>
     <span class="token comment">// ...</span>
@@ -1206,10 +1182,8 @@ For instance, you can register a custom normalizer like this:</p>
 <span class="token keyword">use</span> <span class="token package">ApiPlatform<span class="token punctuation">\</span>Core<span class="token punctuation">\</span>Annotation<span class="token punctuation">\</span>ApiFilter</span><span class="token punctuation">;</span>
 <span class="token keyword">use</span> <span class="token package">ApiPlatform<span class="token punctuation">\</span>Core<span class="token punctuation">\</span>Bridge<span class="token punctuation">\</span>Doctrine<span class="token punctuation">\</span>Orm<span class="token punctuation">\</span>Filter<span class="token punctuation">\</span>SearchFilter</span><span class="token punctuation">;</span>
 
-<span class="token comment">/**
- * @ApiResource
- * @ApiFilter(SearchFilter::class, properties={"relatedBooks.name": "exact"})
- */</span>
+<span class="token attribute"><span class="token delimiter punctuation">#[</span><span class="token attribute-content"><span class="token attribute-class-name class-name">ApiResource</span></span><span class="token delimiter punctuation">]</span></span>
+<span class="token attribute"><span class="token delimiter punctuation">#[</span><span class="token attribute-content"><span class="token attribute-class-name class-name">ApiFilter</span><span class="token punctuation">(</span><span class="token attribute-class-name class-name">SearchFilter</span><span class="token operator">::</span>class<span class="token punctuation">,</span> <span class="token attribute-class-name class-name">properties</span><span class="token punctuation">:</span> <span class="token punctuation">[</span><span class="token string single-quoted-string">'relatedBooks.name'</span> <span class="token operator">=></span> <span class="token string single-quoted-string">'exact'</span><span class="token punctuation">]</span><span class="token punctuation">)</span></span><span class="token delimiter punctuation">]</span></span>
 <span class="token keyword">class</span> <span class="token class-name">Book</span>
 <span class="token punctuation">{</span>
     <span class="token comment">// ...</span>
@@ -1448,78 +1422,78 @@ In some cases, you would want to modify the extracted types for instance to use 
 <p>You can also upload multiple files at the same time.</p>
 <h3 id="configuring-the-entity-receiving-the-uploaded-file" style="position:relative;"><a href="#configuring-the-entity-receiving-the-uploaded-file" aria-label="configuring the entity receiving the uploaded file permalink" class="anchor before"><svg aria-hidden="true" focusable="false" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Configuring the Entity Receiving the Uploaded File</h3>
 <p>Configure the entity by adding a <a href="#custom-mutations">custom mutation resolver</a>:</p>
-<div class="gatsby-highlight" data-language="php"><pre class="language-php"><code class="language-php"><span class="token php language-php"><span class="token delimiter important">&lt;?php</span>
-<span class="token comment">// api/src/Entity/MediaObject.php</span>
+<div class="gatsby-highlight" data-language="php"><pre class="language-php"><code class="language-php">&lt;?php
+// api/src/Entity/MediaObject.php
 
-<span class="token keyword">namespace</span> <span class="token package">App<span class="token punctuation">\</span>Entity</span><span class="token punctuation">;</span>
+namespace App\Entity;
 
-<span class="token keyword">use</span> <span class="token package">ApiPlatform<span class="token punctuation">\</span>Core<span class="token punctuation">\</span>Annotation<span class="token punctuation">\</span>ApiProperty</span><span class="token punctuation">;</span>
-<span class="token keyword">use</span> <span class="token package">ApiPlatform<span class="token punctuation">\</span>Core<span class="token punctuation">\</span>Annotation<span class="token punctuation">\</span>ApiResource</span><span class="token punctuation">;</span>
-<span class="token keyword">use</span> <span class="token package">App<span class="token punctuation">\</span>Resolver<span class="token punctuation">\</span>CreateMediaObjectResolver</span><span class="token punctuation">;</span>
-<span class="token keyword">use</span> <span class="token package">Doctrine<span class="token punctuation">\</span>ORM<span class="token punctuation">\</span>Mapping</span> <span class="token keyword">as</span> <span class="token constant">ORM</span><span class="token punctuation">;</span>
-<span class="token keyword">use</span> <span class="token package">Symfony<span class="token punctuation">\</span>Component<span class="token punctuation">\</span>HttpFoundation<span class="token punctuation">\</span>File<span class="token punctuation">\</span>File</span><span class="token punctuation">;</span>
-<span class="token keyword">use</span> <span class="token package">Symfony<span class="token punctuation">\</span>Component<span class="token punctuation">\</span>Serializer<span class="token punctuation">\</span>Annotation<span class="token punctuation">\</span>Groups</span><span class="token punctuation">;</span>
-<span class="token keyword">use</span> <span class="token package">Symfony<span class="token punctuation">\</span>Component<span class="token punctuation">\</span>Validator<span class="token punctuation">\</span>Constraints</span> <span class="token keyword">as</span> Assert<span class="token punctuation">;</span>
-<span class="token keyword">use</span> <span class="token package">Vich<span class="token punctuation">\</span>UploaderBundle<span class="token punctuation">\</span>Mapping<span class="token punctuation">\</span>Annotation</span> <span class="token keyword">as</span> Vich<span class="token punctuation">;</span>
+use ApiPlatform\Core\Annotation\ApiProperty;
+use ApiPlatform\Core\Annotation\ApiResource;
+use App\Resolver\CreateMediaObjectResolver;
+use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\HttpFoundation\File\File;
+use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Validator\Constraints as Assert;
+use Vich\UploaderBundle\Mapping\Annotation as Vich;
 
-<span class="token comment">/**
+/**
  * @ORM\Entity
- * @ApiResource(
- *     iri="http://schema.org/MediaObject",
- *     normalizationContext={
- *         "groups"={"media_object_read"}
- *     },
- *     graphql={
- *         "upload"={
- *             "mutation"=CreateMediaObjectResolver::class,
- *             "deserialize"=false,
- *             "args"={
- *                 "file"={"type"="Upload!", "description"="The file to upload"}
- *             }
- *         }
- *     }
- * )
  * @Vich\Uploadable
- */</span>
-<span class="token keyword">class</span> <span class="token class-name">MediaObject</span>
-<span class="token punctuation">{</span>
-    <span class="token comment">/**
+ */
+#[ApiResource(
+    iri: 'http://schema.org/MediaObject',
+    normalizationContext: [
+        'groups' => ['media_object_read']
+    ],
+    graphql: [
+        'upload' => [
+            'mutation' => CreateMediaObjectResolver::class,
+            'deserialize' => false,
+            'args' => [
+                'file' => ['type' => 'Upload!', 'description' => 'The file to upload']
+            ]
+        ]
+    ]
+)]
+class MediaObject
+{
+    /**
      * @var int|null
      *
      * @ORM\Column(type="integer")
      * @ORM\GeneratedValue
      * @ORM\Id
-     */</span>
-    <span class="token keyword">protected</span> <span class="token variable">$id</span><span class="token punctuation">;</span>
+     */
+    protected $id;
 
-    <span class="token comment">/**
+    /**
      * @var string|null
      *
-     * @ApiProperty(iri="http://schema.org/contentUrl")
      * @Groups({"media_object_read"})
-     */</span>
-    <span class="token keyword">public</span> <span class="token variable">$contentUrl</span><span class="token punctuation">;</span>
+     */
+    #[ApiProperty(iri: 'http://schema.org/contentUrl)]
+    public $contentUrl;
 
-    <span class="token comment">/**
+    /**
      * @var File|null
      *
      * @Assert\NotNull(groups={"media_object_create"})
      * @Vich\UploadableField(mapping="media_object", fileNameProperty="filePath")
-     */</span>
-    <span class="token keyword">public</span> <span class="token variable">$file</span><span class="token punctuation">;</span>
+     */
+    public $file;
 
-    <span class="token comment">/**
+    /**
      * @var string|null
      *
      * @ORM\Column(nullable=true)
-     */</span>
-    <span class="token keyword">public</span> <span class="token variable">$filePath</span><span class="token punctuation">;</span>
+     */
+    public $filePath;
 
-    <span class="token keyword">public</span> <span class="token keyword">function</span> <span class="token function">getId</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">:</span> <span class="token operator">?</span><span class="token keyword return-type">int</span>
-    <span class="token punctuation">{</span>
-        <span class="token keyword">return</span> <span class="token variable">$this</span><span class="token operator">-></span><span class="token property">id</span><span class="token punctuation">;</span>
-    <span class="token punctuation">}</span>
-<span class="token punctuation">}</span></span></code></pre></div>
+    public function getId(): ?int
+    {
+        return $this->id;
+    }
+}</code></pre></div>
 <p>As you can see, a dedicated type <code class="language-text">Upload</code> is used in the argument of the <code class="language-text">upload</code> mutation.</p>
 <p>If you need to upload multiple files, replace <code class="language-text">&quot;file&quot;={&quot;type&quot;=&quot;Upload!&quot;, &quot;description&quot;=&quot;The file to upload&quot;}</code>
 with <code class="language-text">&quot;files&quot;={&quot;type&quot;=&quot;[Upload!]!&quot;, &quot;description&quot;=&quot;Files to upload&quot;}</code>.</p>
@@ -1579,13 +1553,13 @@ and for an example implementation for the Apollo client check out <a href="https
 
 <span class="token keyword">use</span> <span class="token package">ApiPlatform<span class="token punctuation">\</span>Core<span class="token punctuation">\</span>Annotation<span class="token punctuation">\</span>ApiResource</span><span class="token punctuation">;</span>
 
-<span class="token comment">/**
- * @ApiResource(graphql={
- *     "create"={
- *         "description"="My custom description."
- *     }
- * })
- */</span>
+<span class="token attribute"><span class="token delimiter punctuation">#[</span><span class="token attribute-content"><span class="token attribute-class-name class-name">ApiResource</span><span class="token punctuation">(</span>
+    <span class="token attribute-class-name class-name">graphql</span><span class="token punctuation">:</span> <span class="token punctuation">[</span>
+        <span class="token string single-quoted-string">'create'</span> <span class="token operator">=></span> <span class="token punctuation">[</span>
+            <span class="token string single-quoted-string">'description'</span> <span class="token operator">=></span> <span class="token string single-quoted-string">'My custom description.'</span>
+        <span class="token punctuation">]</span>
+    <span class="token punctuation">]</span>
+<span class="token punctuation">)</span></span><span class="token delimiter punctuation">]</span></span>
 <span class="token keyword">class</span> <span class="token class-name">Book</span>
 <span class="token punctuation">{</span>
     <span class="token comment">// ...</span>
@@ -1605,7 +1579,7 @@ and for an example implementation for the Apollo client check out <a href="https
       
       
       
-      }</script><script id="gatsby-script-loader">/*<![CDATA[*/window.pagePath="/docs/core/graphql/";/*]]>*/</script><script id="gatsby-chunk-mapping">/*<![CDATA[*/window.___chunkMapping={"polyfill":["/polyfill-ebaf86f669059dbb21f5.js"],"app":["/app-e806750e4fa85a91da49.js"],"component---src-pages-404-js":["/component---src-pages-404-js-75fc919dc426155177da.js"],"component---src-pages-community-contributors-js":["/component---src-pages-community-contributors-js-4fe8e6f61a02225a1cee.js"],"component---src-pages-community-events-js":["/component---src-pages-community-events-js-db9d65d2880e4cad4d76.js"],"component---src-pages-community-js":["/component---src-pages-community-js-daa5472422a242f16ddc.js"],"component---src-pages-docs-js":["/component---src-pages-docs-js-e52dfc22b89877ee0365.js"],"component---src-pages-forum-php-js":["/component---src-pages-forum-php-js-496cae2296e7f0533c24.js"],"component---src-pages-index-js":["/component---src-pages-index-js-7905c18163e9101ccbec.js"],"component---src-pages-resources-colouring-webby-js":["/component---src-pages-resources-colouring-webby-js-291af713f91c5bf0b194.js"],"component---src-pages-resources-logos-js":["/component---src-pages-resources-logos-js-5b5c9ceeef9ff11e4e09.js"],"component---src-pages-resources-news-js":["/component---src-pages-resources-news-js-ccb8801a9d3d5f5f535c.js"],"component---src-pages-resources-wallpapers-js":["/component---src-pages-resources-wallpapers-js-9996ba56dcf6c5682b73.js"],"component---src-pages-trademark-policy-js":["/component---src-pages-trademark-policy-js-981c3ec0a0419cf093f1.js"],"component---src-templates-contributor-js":["/component---src-templates-contributor-js-de4af64c6ef9a80aebbd.js"],"component---src-templates-doc-js":["/component---src-templates-doc-js-0ff70a10fb44e1d6e41c.js"]};/*]]>*/</script><script src="/polyfill-ebaf86f669059dbb21f5.js" nomodule=""></script><script src="/component---src-templates-doc-js-0ff70a10fb44e1d6e41c.js" async=""></script><script src="/8c9522e9ab04d805c32ce56d0725aa8a5b32377d-813cb5fc74583e4a0450.js" async=""></script><script src="/commons-b07b72ccc147a02cf75a.js" async=""></script><script src="/styles-e9d24b1846c7d6eb9685.js" async=""></script><script src="/app-e806750e4fa85a91da49.js" async=""></script><script src="/framework-2d6b7d2e2be378715b78.js" async=""></script><script src="/webpack-runtime-1d0411c93010b48ca569.js" async=""></script><script>window.twttr = (function(d, s, id) {
+      }</script><script id="gatsby-script-loader">/*<![CDATA[*/window.pagePath="/docs/core/graphql/";/*]]>*/</script><script id="gatsby-chunk-mapping">/*<![CDATA[*/window.___chunkMapping={"polyfill":["/polyfill-ebaf86f669059dbb21f5.js"],"app":["/app-ee6cf52323ba3be4f435.js"],"component---src-pages-404-js":["/component---src-pages-404-js-75fc919dc426155177da.js"],"component---src-pages-community-contributors-js":["/component---src-pages-community-contributors-js-4fe8e6f61a02225a1cee.js"],"component---src-pages-community-events-js":["/component---src-pages-community-events-js-db9d65d2880e4cad4d76.js"],"component---src-pages-community-js":["/component---src-pages-community-js-daa5472422a242f16ddc.js"],"component---src-pages-docs-js":["/component---src-pages-docs-js-e52dfc22b89877ee0365.js"],"component---src-pages-forum-php-js":["/component---src-pages-forum-php-js-496cae2296e7f0533c24.js"],"component---src-pages-index-js":["/component---src-pages-index-js-7905c18163e9101ccbec.js"],"component---src-pages-resources-colouring-webby-js":["/component---src-pages-resources-colouring-webby-js-291af713f91c5bf0b194.js"],"component---src-pages-resources-logos-js":["/component---src-pages-resources-logos-js-5b5c9ceeef9ff11e4e09.js"],"component---src-pages-resources-news-js":["/component---src-pages-resources-news-js-ccb8801a9d3d5f5f535c.js"],"component---src-pages-resources-wallpapers-js":["/component---src-pages-resources-wallpapers-js-9996ba56dcf6c5682b73.js"],"component---src-pages-trademark-policy-js":["/component---src-pages-trademark-policy-js-981c3ec0a0419cf093f1.js"],"component---src-templates-contributor-js":["/component---src-templates-contributor-js-de4af64c6ef9a80aebbd.js"],"component---src-templates-doc-js":["/component---src-templates-doc-js-0ff70a10fb44e1d6e41c.js"]};/*]]>*/</script><script src="/polyfill-ebaf86f669059dbb21f5.js" nomodule=""></script><script src="/component---src-templates-doc-js-0ff70a10fb44e1d6e41c.js" async=""></script><script src="/8c9522e9ab04d805c32ce56d0725aa8a5b32377d-813cb5fc74583e4a0450.js" async=""></script><script src="/commons-b07b72ccc147a02cf75a.js" async=""></script><script src="/styles-e9d24b1846c7d6eb9685.js" async=""></script><script src="/app-ee6cf52323ba3be4f435.js" async=""></script><script src="/framework-2d6b7d2e2be378715b78.js" async=""></script><script src="/webpack-runtime-1d0411c93010b48ca569.js" async=""></script><script>window.twttr = (function(d, s, id) {
                 var js, fjs = d.getElementsByTagName(s)[0],
                   t = window.twttr || {};
                 if (d.getElementById(id)) return t;
