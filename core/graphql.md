@@ -1094,10 +1094,10 @@ use ApiPlatform\Core\Annotation\ApiResource;
 #[ApiResource(
     attributes: ['security' => "is_granted('ROLE_USER')"],
     collectionOperations: [
-        'post' => ['security' => "is_granted('ROLE_ADMIN')", 'security_message' => "Only admins can add books."]
+        'post' => ['security' => "is_granted('ROLE_ADMIN')", 'security_message' => 'Only admins can add books.']
     ],
     itemOperations: [
-        'get' => ['security' => "is_granted('ROLE_USER') and object.owner == user", 'security_message' => "Sorry, but you are not the book owner."]
+        'get' => ['security' => "is_granted('ROLE_USER') and object.owner == user", 'security_message' => 'Sorry, but you are not the book owner.']
     ],
     graphql: [
         'item_query' => ['security' => "is_granted('ROLE_USER') and object.owner == user"],
