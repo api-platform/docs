@@ -26,9 +26,9 @@ use Symfony\Component\Validator\Constraints as Assert; // Symfony's built-in con
 /**
  * A product.
  *
- * @ApiResource
  * @ORM\Entity
  */
+#[ApiResource]
 class Product
 {
     /**
@@ -138,10 +138,7 @@ You can configure the groups you want to use when the validation occurs directly
 use ApiPlatform\Core\Annotation\ApiResource;
 use Symfony\Component\Validator\Constraints as Assert;
 
-/**
- * @ApiResource(attributes={"validation_groups"={"a", "b"}})
- * ...
- */
+#[ApiResource(attributes: ['validation_groups' => ['a', 'b']])]
 class Book
 {
     /**
@@ -179,20 +176,17 @@ You can have different validation for each [operation](operations.md) related to
 use ApiPlatform\Core\Annotation\ApiResource;
 use Symfony\Component\Validator\Constraints as Assert;
 
-/**
- * @ApiResource(
- *     collectionOperations={
- *         "get",
- *         "post"={"validation_groups"={"Default", "postValidation"}}
- *     },
- *     itemOperations={
- *         "delete",
- *         "get",
- *         "put"={"validation_groups"={"Default", "putValidation"}}
- *     }
- * )
- * ...
- */
+#[ApiResource(
+    collectionOperations: [
+        'get',
+        'post' => ['validation_groups' => ['Default', 'postValidation']]
+    ],
+    itemOperations: [
+        'delete',
+        'get',
+        'put' => ['validation_groups' => ['Default', 'putValidation']]
+    ]
+)]
 class Book
 {
     /**
@@ -247,11 +241,9 @@ In the following example, we use a static method to return the validation groups
 use ApiPlatform\Core\Annotation\ApiResource;
 use Symfony\Component\Validator\Constraints as Assert;
 
-/**
- * @ApiResource(
- *     attributes={"validation_groups"={Book::class, "validationGroups"}}
- * )
- */
+#[ApiResource(
+    attributes: ['validation_groups' => [Book::class, 'validationGroups']]
+)]
 class Book
 {
     /**
@@ -329,9 +321,7 @@ use ApiPlatform\Core\Annotation\ApiResource;
 use App\Validator\AdminGroupsGenerator;
 use Symfony\Component\Validator\Constraints as Assert;
 
-/**
- * @ApiResource(attributes={"validation_groups"=AdminGroupsGenerator::class})
- */
+#[ApiResource(attributes: ['validation_groups' => AdminGroupsGenerator::class])
 class Book
 {
     /**
@@ -394,15 +384,15 @@ use App\Validator\MySequencedGroup; // the sequence group to use
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ApiResource(
- *     collectionOperations={
- *          "post" = {
- *              "validation_groups" = MySequencedGroup::class
- *          }
- *     }
- * )
  * @ORM\Entity
  */
+#[ApiResource(
+    collectionOperations: [
+      'post' => [
+        'validation_groups' => MySequencedGroup::class
+      ]
+    ]
+)]
 class Greeting
 {
     /**
