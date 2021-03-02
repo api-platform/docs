@@ -91,7 +91,7 @@ PHP …
     …
 ```
 
-## Setting PhpShtorm
+## Setting PhpStorm
 
 ### Add host to /etc/hosts
 
