@@ -24,7 +24,7 @@ These built-in event listeners are registered for routes managed by API Platform
 
 Name                          | Event              | [Pre & Post hooks](#custom-event-listeners) | Priority | Description
 ------------------------------|--------------------|---------------------------------------------|----------|-------------
-`AddFormatListener`           | `kernel.request`   | None                                        | 7        | Guesses the best response format ([content negotiation](content-negotiation.md))
+`AddFormatListener`           | `kernel.request`   | None                                        | 28       | Guesses the best response format ([content negotiation](content-negotiation.md))
 `ReadListener`                | `kernel.request`   | `PRE_READ`, `POST_READ`                     | 4        | Retrieves data from the persistence system using the [data providers](data-providers.md) (`GET`, `PUT`, `DELETE`)
 `DeserializeListener`         | `kernel.request`   | `PRE_DESERIALIZE`, `POST_DESERIALIZE`       | 2        | Deserializes data into a PHP entity (`GET`, `POST`, `DELETE`); updates the entity retrieved using the data provider (`PUT`)
 `DenyAccessListener`          | `kernel.request`   | None                                        | 1        | Enforces [access control](security.md) using Security expressions
