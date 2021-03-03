@@ -524,7 +524,7 @@ $dispatcher->addListener('kernel.view', [$writeListener, 'onKernelView'], 32);
 $dispatcher->addListener('kernel.view', [$serializeListener, 'onKernelView'], 16);
 // TODO: ApiPlatform\Core\EventListener\QueryParameterValidateListener, prio 16   
 $dispatcher->addListener('kernel.view', [$respondListener, 'onKernelView'], 8);
-$dispatcher->addListener('kernel.request', [$formatListener, 'onKernelRequest'], 7);
+$dispatcher->addListener('kernel.request', [$formatListener, 'onKernelRequest'], 28);
 $dispatcher->addListener('kernel.request', [$readListener, 'onKernelRequest'], 4);
 $dispatcher->addListener('kernel.request', [$deserializeListener, 'onKernelRequest'], 2);
 $dispatcher->addListener('kernel.exception', [$validationExceptionListener, 'onKernelException'], 2);
