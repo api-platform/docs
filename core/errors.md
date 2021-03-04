@@ -100,3 +100,37 @@ the error will be returned in this format as well:
   "hydra:description": "The product \"1234\" does not exist."
 }
 ```
+
+## Fine-grained Configuration
+
+The `exception_to_status` configuration can be set on resources and operations:
+
+```php
+<?php
+// api/src/Entity/Book.php
+namespace App\Entity;
+
+use ApiPlatform\Core\Annotation\ApiResource;
+use App\Exception\ProductWasRemovedException;
+use App\Exception\ProductNotFoundException;
+
+#[ApiResource(
+    itemOperations: [
+        'get' => [
+            'exception_to_status' => [
+                ProductWasRemovedException::class => 410,
+            ],
+        ],
+    ],
+    exceptionToStatus: [
+        ProductNotFoundException::class => 404,
+    ]
+)]
+class Book
+{
+    // ...
+}
+```
+
+Exceptions mappings defined on operations take precedence over mappings defined on resources, which take precedence over
+the global config.
