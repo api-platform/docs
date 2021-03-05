@@ -164,11 +164,11 @@ api_platform:
         # The OAuth flow grant type.
         flow: 'application'
 
-        # The OAuth token URL.
-        tokenUrl: '/oauth/v2/token'
+        # The OAuth token URL. Make sure to check the specification tokenUrl is not needed for an implicit flow.
+        tokenUrl: ''
 
         # The OAuth authentication URL.
-        authorizationUrl: '/oauth/v2/auth'
+        authorizationUrl: ''
 
         # The OAuth scopes.
         scopes: []
