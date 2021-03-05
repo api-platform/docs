@@ -56,6 +56,6 @@ Check access to the specified URL, in this case `https://demo.api-platform.com/c
 access and the response `curl https://demo.api-platform.com/contexts/Entrypoint`. In the above case an "Access Denied"
 message in JSON format was being returned.  
 
-## Docker distribution on windows and hot-reloading
+## Docker distribution on Windows and hot-reloading
 
 Due to [a long-time know Docker for Windows issue](https://forums.docker.com/t/file-system-watch-does-not-work-with-mounted-volumes/12038), the files changes on the host are not notified on the pwa container. This cause the hot-reloading feature to not working for windows users.
