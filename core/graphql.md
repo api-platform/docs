@@ -1072,6 +1072,12 @@ class Book
 }
 ```
 
+### Partial Pagination
+
+[Partial pagination](pagination.md#partial-pagination) is possible with GraphQL.
+
+When enabled, backwards pagination will not be possible, and the `hasNextPage` information will be always `false`.
+
 ## Security
 
 To add a security layer to your queries and mutations, follow the [security](security.md) documentation.
