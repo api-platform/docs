@@ -481,6 +481,15 @@ class Offer
 }
 ```
 
+The strategy to use by default can be configured globally:
+
+```yaml
+# api/config/packages/api_platform.yaml
+api_platform:
+    collection:
+        order_nulls_comparison: 'nulls_smallest'
+```
+
 #### Using a Custom Order Query Parameter Name
 
 A conflict will occur if `order` is also the name of a property with the search filter enabled.
