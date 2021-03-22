@@ -150,7 +150,7 @@ services:
 
 ## Calling multiple DataPersisters
 
-Our DataPersisters are called in chain, once a data persister is supported the chain breaks and API Platform assumes your data is persisted. You can call mutliple data persisters by implementing the `ResumableDataPersisterInterface`:
+Our DataPersisters are called in chain, once a data persister is supported the chain breaks and API Platform assumes your data is persisted. You can call multiple data persisters by implementing the `ResumableDataPersisterInterface`:
 
 ```php
 namespace App\DataPersister;
