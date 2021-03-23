@@ -21,7 +21,7 @@ docker-compose exec php sh -c '
 
 You can now use GraphQL at the endpoint: `https://localhost:8443/graphql`.
 
-*Note:* If you used [Symfony Flex to install API Platform](../distribution/index.md#using-symfony-flex-and-composer-advanced-users), URLs will be prefixed with /api by default. The GraphQL endpoint for example will be: `https://localhost:8443/api/graphql`. 
+*Note:* If you used [Symfony Flex to install API Platform](../distribution/index.md#using-symfony-flex-and-composer-advanced-users), URLs will be prefixed with `/api` by default. For example, the GraphQL endpoint will be: `https://localhost:8443/api/graphql`.
 
 ## Changing Location of the GraphQL Endpoint
 
