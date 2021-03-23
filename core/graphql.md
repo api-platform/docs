@@ -21,8 +21,7 @@ docker-compose exec php sh -c '
 
 You can now use GraphQL at the endpoint: `https://localhost:8443/graphql`.
 
-*Note:* If you used [Symfony Flex to install API Platform](../distribution/index.md#using-symfony-flex-and-composer-advanced-users),
-the GraphQL endpoint will be: `https://localhost:8443/api/graphql`.
+*Note:* If you used [Symfony Flex to install API Platform](../distribution/index.md#using-symfony-flex-and-composer-advanced-users), URLs will be prefixed with `/api` by default. For example, the GraphQL endpoint will be: `https://localhost:8443/api/graphql`.
 
 ## Changing Location of the GraphQL Endpoint
 
@@ -174,7 +173,7 @@ If you don't know what queries are yet, please [read the documentation about the
 For each resource, two queries are available: one for retrieving an item and the other one for the collection.
 For example, if you have a `Book` resource, the queries `book` and `books` can be used.
 
-### Global Object Identifier
+### Global Object Identifier
 
 When querying an item, you need to pass an identifier as argument. Following the [GraphQL Global Object Identification Specification](https://relay.dev/graphql/objectidentification.htm),
 the identifier needs to be globally unique. In API Platform, this argument is represented as an [IRI (Internationalized Resource Identifier)](https://www.w3.org/TR/ld-glossary/#internationalized-resource-identifier).
