@@ -83,6 +83,9 @@ api_platform:
 # ...
 ```
 
+*Note:* If you used [Symfony Flex to install API Platform](../distribution/index.md#using-symfony-flex-and-composer-advanced-users),
+the GraphQL Playground URL will be: `https://localhost:8443/api/graphql/graphql_playground`.
+
 ### Add another Location for GraphQL Playground
 
 You can add a different location besides `/graphql/graphql_playground`:
