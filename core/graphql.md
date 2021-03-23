@@ -173,7 +173,7 @@ If you don't know what queries are yet, please [read the documentation about the
 For each resource, two queries are available: one for retrieving an item and the other one for the collection.
 For example, if you have a `Book` resource, the queries `book` and `books` can be used.
 
-### Global Object Identifier
+### Global Object Identifier
 
 When querying an item, you need to pass an identifier as argument. Following the [GraphQL Global Object Identification Specification](https://relay.dev/graphql/objectidentification.htm),
 the identifier needs to be globally unique. In API Platform, this argument is represented as an [IRI (Internationalized Resource Identifier)](https://www.w3.org/TR/ld-glossary/#internationalized-resource-identifier).
