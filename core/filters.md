@@ -1262,7 +1262,7 @@ class DummyCar
     /**
      * @ORM\OneToMany(targetEntity="DummyCarColor", mappedBy="car")
      */
-    #[ApiFilter(SearchFilter::class, properties: {'colors.prop' => 'ipartial'])]
+    #[ApiFilter(SearchFilter::class, properties: ['colors.prop' => 'ipartial'])]
     public $colors;
 
     // ...
