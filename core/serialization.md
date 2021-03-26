@@ -408,7 +408,7 @@ class Person
 
 ```
 
-### Plain identifiers
+### Plain Identifiers
 
 Instead of sending an iri to set a relation, you may want to send a plain identifier. To do so, you must create your own denormalizer:
 
@@ -450,7 +450,7 @@ final class PlainIdentifierNormalizer implements DenormalizerInterface
     public function denormalize($data, $class, $format = null, array $context = [])
     {
         if (null !== $data['relation']) {
-            $relation = $this->iriConverter->getItemIriFromResourceClass(Relation::class, [$data['relation']]);
+            $relation = $this->iriConverter->getItemIriFromResourceClass(Relation::class, ['id' => $data['relation']]);
             if (null === $relation) {
                 throw new ItemNotFoundException(sprintf('Item not found for resource "%s" with id "%s".', Relation::class, $data['relation']));
             }
