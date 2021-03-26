@@ -46,8 +46,10 @@ services:
       XDEBUG_MODE: debug
       XDEBUG_CONFIG: >-
         client_host=host.docker.internal
-        client_port=9003 # default port for Xdebug 3
-        idekey=PHPSTORM # or VSCODE if you are debugging with VSCode
+        # default port for Xdebug 3
+        client_port=9003 
+        # or VSCODE if you are debugging with VSCode
+        idekey=PHPSTORM 
       # This should correspond to the server declared in PHPStorm `Preferences | Languages & Frameworks | PHP | Servers`
       # Then PHPStorm will use the corresponding path mappings
       PHP_IDE_CONFIG: serverName=api-platform
@@ -100,9 +102,3 @@ PHP …
     with Xdebug v3.0.2, Copyright (c) 2002-2021, by Derick Rethans
     …
 ```
-
-
-
-
-
-
