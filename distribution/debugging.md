@@ -43,12 +43,13 @@ services:
       # See https://docs.docker.com/docker-for-mac/networking/#i-want-to-connect-from-a-container-to-a-service-on-the-host
       # See https://github.com/docker/for-linux/issues/264
       # The `remote_host` below may optionally be replaced with `remote_connect_back`
+      # XDEBUG_MODE required for step debugging
       XDEBUG_MODE: debug
+      # default port for Xdebug 3 is 9003
+      # idekey=VSCODE if you are debugging with VSCode
       XDEBUG_CONFIG: >-
         client_host=host.docker.internal
-        # default port for Xdebug 3
         client_port=9003 
-        # or VSCODE if you are debugging with VSCode
         idekey=PHPSTORM 
       # This should correspond to the server declared in PHPStorm `Preferences | Languages & Frameworks | PHP | Servers`
       # Then PHPStorm will use the corresponding path mappings
@@ -69,7 +70,7 @@ Note for Mac environments use the following:
         remote_handler=dbgp
 ```
 
-In VSCode, alongside the default php config in `launch.json`, you'll need path mappings.
+In VSCode, alongside the default php config in `launch.json`, you'll need path mappings for a docker image.
 ```
 {
     "version": "0.2.0",
