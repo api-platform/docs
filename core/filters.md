@@ -1161,6 +1161,7 @@ doctrine:
         filters:
             user_filter:
                 class: App\Filter\UserFilter
+                enabled: true
 ```
 
 Add a listener for every request that initializes the Doctrine filter with the current user in your bundle services declaration file.
@@ -1172,8 +1173,6 @@ services:
     'App\EventListener\UserFilterConfigurator':
         tags:
             - { name: kernel.event_listener, event: kernel.request, priority: 5 }
-        # Autoconfiguration must be disabled to set a custom priority
-        autoconfigure: false
 ```
 
 It's key to set the priority higher than the `ApiPlatform\Core\EventListener\ReadListener`'s priority, as flagged in [this issue](https://github.com/api-platform/core/issues/1185), as otherwise the `PaginatorExtension` will ignore the Doctrine filter and return incorrect `totalItems` and `page` (first/last/next) data.
