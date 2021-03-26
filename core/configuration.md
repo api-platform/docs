@@ -31,9 +31,6 @@ api_platform:
     # Specify a path name generator to use.
     path_segment_name_generator: 'api_platform.path_segment_name_generator.underscore'
 
-    # Allow using plain IDs for JSON format.
-    allow_plain_identifiers: false
-
     validator:
         # Enable the serialization of payload fields when a validation error is thrown.
         # If you want to serialize only some payload fields, define them like this: [ severity, anotherPayloadField ]

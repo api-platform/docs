@@ -139,7 +139,6 @@ use Symfony\Component\Serializer\Normalizer\ProblemNormalizer;
 use Symfony\Component\Serializer\Normalizer\UnwrappingDenormalizer;
 use Symfony\Component\Serializer\Serializer;
 
-$allowPlainIdentifiers = false;
 $debug = true;
 $defaultContext = [];
 $dataTransformers = [];
@@ -444,7 +443,7 @@ $hydraConstraintViolationNormalizer = new HydraConstraintViolationListNormalizer
 
 $problemErrorNormalizer = new ErrorNormalizer($debug, $defaultContext);
 
-$itemNormalizer = new ItemNormalizer($propertyNameCollectionFactory, $propertyMetadataFactory, $iriConverter, $resourceClassResolver, $propertyAccessor, $nameConverter, $classMetadataFactory, $dataProvider, $allowPlainIdentifiers, $logger, $dataTransformers, $resourceMetadataFactory, /** resourceAccessChecker **/ null);
+$itemNormalizer = new ItemNormalizer($propertyNameCollectionFactory, $propertyMetadataFactory, $iriConverter, $resourceClassResolver, $propertyAccessor, $nameConverter, $classMetadataFactory, $dataProvider, $logger, $dataTransformers, $resourceMetadataFactory, /** resourceAccessChecker **/ null);
 
 $arrayDenormalizer = new ArrayDenormalizer();
 $problemNormalizer = new ProblemNormalizer($debug, $defaultContext);
@@ -456,7 +455,7 @@ $dateTimeZoneNormalizer = new DateTimeZoneNormalizer();
 $constraintViolationListNormalizer = new ConstraintViolationListNormalizer($defaultContext, $nameConverter);
 $unwrappingDenormalizer = new UnwrappingDenormalizer($propertyAccessor);
 
-$halItemNormalizer = new HalItemNormalizer($propertyNameCollectionFactory, $propertyMetadataFactory, $iriConverter, $resourceClassResolver, $propertyAccessor, $nameConverter, $classMetadataFactory, $dataProvider, $allowPlainIdentifiers, $defaultContext, $dataTransformers, $resourceMetadataFactory, /** resourceAccessChecker **/ null);
+$halItemNormalizer = new HalItemNormalizer($propertyNameCollectionFactory, $propertyMetadataFactory, $iriConverter, $resourceClassResolver, $propertyAccessor, $nameConverter, $classMetadataFactory, $dataProvider, $defaultContext, $dataTransformers, $resourceMetadataFactory, /** resourceAccessChecker **/ null);
 
 $halEntrypointNormalizer = new HalEntrypointNormalizer($resourceMetadataFactory, $iriConverter, $apiUrlGenerator);
 $halCollectionNormalizer = new HalCollectionNormalizer($resourceClassResolver, $configuration['collection']['pagination']['page_parameter_name'], $resourceMetadataFactory);

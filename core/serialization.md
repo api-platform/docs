@@ -408,6 +408,59 @@ class Person
 
 ```
 
+### Plain identifiers
+
+Instead of sending an iri to set a relation, you may want to send a plain identifier. To do so, you must create your own denormalizer:
+
+```yaml
+# api/config/services.yaml
+services:
+    'App\Serializer\PlainIdentifierNormalizer':
+        # By default .inner is passed as argument
+        decorates: 'api_platform.jsonld.normalizer.item'
+```
+
+```php
+<?php
+// api/src/Serializer/PlainIdentifierNormalizer
+
+namespace App\Serializer;
+
+use ApiPlatform\Core\Api\IriConverterInterface;
+use ApiPlatform\Core\Exception\ItemNotFoundException;
+use App\Entity\Relation;
+use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
+
+final class PlainIdentifierNormalizer implements DenormalizerInterface
+{
+    private $decorated;
+    private $iriConverter;
+
+    public function __construct(DenormalizerInterface $decorated, IriConverterInterface $iriConverter)
+    {
+        $this->decorated = $decorated;
+        $this->iriConverter = $iriConverter;
+    }
+
+    public function supportsDenormalization($data, $type, $format = null)
+    {
+        return $this->decorated->supportsDenormalization($data, $type, $format);
+    }
+
+    public function denormalize($data, $class, $format = null, array $context = [])
+    {
+        if (null !== $data['relation']) {
+            $relation = $this->iriConverter->getItemIriFromResourceClass(Relation::class, [$data['relation']]);
+            if (null === $relation) {
+                throw new ItemNotFoundException(sprintf('Item not found for resource "%s" with id "%s".', Relation::class, $data['relation']));
+            }
+        }
+
+        return $this->decorated->denormalize($data, $class, $format, $context);
+    }
+}
+```
+
 ## Calculated Field
 
 Sometimes you need to expose calculated fields. This can be done by leveraging the groups. This time not on a property, but on a method.
