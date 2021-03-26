@@ -71,7 +71,7 @@ Note for Mac environments use the following:
 ```
 
 In VSCode, alongside the default php config in `launch.json`, you'll need path mappings for a docker image.
-```
+```json
 {
     "version": "0.2.0",
     "configurations": [
