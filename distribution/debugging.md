@@ -88,7 +88,7 @@ In VSCode, alongside the default php config in `launch.json`, you'll need path m
     ]
 }
 ```
-Note for Linux environments, the `client_host` setting of `host.docker.internal` will not work, you will need the actual local IP address of your computer
+Note for Linux environments, the `client_host` setting of `host.docker.internal` will not work, you will need the actual local IP address of your computer.
 
 ## Troubleshooting
 
