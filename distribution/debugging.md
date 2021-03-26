@@ -49,7 +49,6 @@ services:
       # idekey=VSCODE if you are debugging with VSCode
       XDEBUG_CONFIG: >-
         client_host=host.docker.internal
-        client_port=9003 
         idekey=PHPSTORM 
       # This should correspond to the server declared in PHPStorm `Preferences | Languages & Frameworks | PHP | Servers`
       # Then PHPStorm will use the corresponding path mappings
