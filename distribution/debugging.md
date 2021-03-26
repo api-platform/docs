@@ -70,7 +70,7 @@ Note for Mac environments use the following:
         remote_handler=dbgp
 ```
 
-In VSCode, alongside the default php config in `launch.json`, you'll need path mappings for a docker image.
+In VSCode, alongside the default PHP configuration in `launch.json`, you'll need path mappings for the Docker image.
 ```json
 {
     "version": "0.2.0",
