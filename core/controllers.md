@@ -95,7 +95,7 @@ use App\Controller\CreateBookPublication;
         'path' => '/books/{id}/publication',
         'controller' => CreateBookPublication::class,
     ],
-])
+])]
 class Book
 {
     //...
