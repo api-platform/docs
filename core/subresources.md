@@ -228,7 +228,7 @@ The `subresourceOperations` attribute also allows you to add an access control o
  #[ApiResource(
     subresourceOperations: [
         'api_questions_answer_get_subresource' => [
-            'security' => "has_role('ROLE_AUTHENTICATED')",
+            'security' => "is_granted('ROLE_AUTHENTICATED')",
         ],
     ],
  )]
