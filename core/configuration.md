@@ -39,6 +39,9 @@ api_platform:
         # If you want to serialize only some payload fields, define them like this: [ severity, anotherPayloadField ]
         serialize_payload_fields: []
 
+        # To enable or disable query parameters validation on collection GET requests
+        query_parameter_validation: true
+
     eager_loading:
         # To enable or disable eager loading.
         enabled: true
