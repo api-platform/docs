@@ -59,14 +59,8 @@ Note for Mac environments use the following:
 
 ```yml
       XDEBUG_CONFIG: >-
-        remote_enable=1
-        remote_host=docker.for.mac.localhost
-        remote_connect_back=0
-        remote_port=9003
         idekey=PHPSTORM
-        remote_autostart=1
-        remote_mode=req
-        remote_handler=dbgp
+        client_host=docker.for.mac.localhost
 ```
 
 In VSCode, alongside the default PHP configuration in `launch.json`, you'll need path mappings for the Docker image.
