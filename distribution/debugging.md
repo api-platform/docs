@@ -59,13 +59,8 @@ Note for Mac environments use the following:
 
 ```yml
       XDEBUG_CONFIG: >-
-        client_port=9003
         idekey=PHPSTORM
-        remote_handler=dbgp
-        discover_client_host=0
         client_host=docker.for.mac.localhost
-        mode=debug
-        start_with_request=trigger
 ```
 
 In VSCode, alongside the default PHP configuration in `launch.json`, you'll need path mappings for the Docker image.
