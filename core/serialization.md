@@ -410,12 +410,12 @@ class Person
 
 ### Plain Identifiers
 
-Instead of sending an iri to set a relation, you may want to send a plain identifier. To do so, you must create your own denormalizer:
+Instead of sending an IRI to set a relation, you may want to send a plain identifier. To do so, you must create your own denormalizer:
 
 ```yaml
 # api/config/services.yaml
 services:
-    'App\Serializer\PlainIdentifierNormalizer':
+    App\Serializer\PlainIdentifierNormalizer:
         # By default .inner is passed as argument
         decorates: 'api_platform.jsonld.normalizer.item'
 ```
@@ -433,8 +433,8 @@ use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 
 final class PlainIdentifierNormalizer implements DenormalizerInterface
 {
-    private $decorated;
-    private $iriConverter;
+    private DenormalizerInterface $decorated;
+    private IriConverterInterface $iriConverter;
 
     public function __construct(DenormalizerInterface $decorated, IriConverterInterface $iriConverter)
     {
@@ -442,21 +442,21 @@ final class PlainIdentifierNormalizer implements DenormalizerInterface
         $this->iriConverter = $iriConverter;
     }
 
-    public function supportsDenormalization($data, $type, $format = null)
+    public function supportsDenormalization($data, string $type, string $format = null): bool
     {
         return $this->decorated->supportsDenormalization($data, $type, $format);
     }
 
-    public function denormalize($data, $class, $format = null, array $context = [])
+    public function denormalize($data, string $type, string $format = null, array $context = [])
     {
-        if (null !== $data['relation']) {
+        if (null !== ($data['relation'] ?? null)) {
             $relation = $this->iriConverter->getItemIriFromResourceClass(Relation::class, ['id' => $data['relation']]);
             if (null === $relation) {
                 throw new ItemNotFoundException(sprintf('Item not found for resource "%s" with id "%s".', Relation::class, $data['relation']));
             }
         }
 
-        return $this->decorated->denormalize($data, $class, $format, $context);
+        return $this->decorated->denormalize($data, $type, $format, $context);
     }
 }
 ```
