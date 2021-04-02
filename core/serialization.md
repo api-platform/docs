@@ -412,51 +412,46 @@ class Person
 
 Instead of sending an IRI to set a relation, you may want to send a plain identifier. To do so, you must create your own denormalizer:
 
-```yaml
-# api/config/services.yaml
-services:
-    App\Serializer\PlainIdentifierNormalizer:
-        # By default .inner is passed as argument
-        decorates: 'api_platform.jsonld.normalizer.item'
-```
-
 ```php
 <?php
-// api/src/Serializer/PlainIdentifierNormalizer
+// api/src/Serializer/PlainIdentifierDenormalizer
 
 namespace App\Serializer;
 
 use ApiPlatform\Core\Api\IriConverterInterface;
-use ApiPlatform\Core\Exception\ItemNotFoundException;
-use App\Entity\Relation;
-use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
+use App\Entity\Dummy;
+use App\Entity\RelatedDummy;
+use Symfony\Component\Serializer\Normalizer\ContextAwareDenormalizerInterface;
+use Symfony\Component\Serializer\Normalizer\DenormalizerAwareInterface;
+use Symfony\Component\Serializer\Normalizer\DenormalizerAwareTrait;
 
-final class PlainIdentifierNormalizer implements DenormalizerInterface
+class PlainIdentifierDenormalizer implements ContextAwareDenormalizerInterface, DenormalizerAwareInterface
 {
-    private DenormalizerInterface $decorated;
-    private IriConverterInterface $iriConverter;
+    use DenormalizerAwareTrait;
 
-    public function __construct(DenormalizerInterface $decorated, IriConverterInterface $iriConverter)
+    private $iriConverter;
+
+    public function __construct(IriConverterInterface $iriConverter)
     {
-        $this->decorated = $decorated;
         $this->iriConverter = $iriConverter;
     }
 
-    public function supportsDenormalization($data, string $type, string $format = null): bool
+    /**
+     * {@inheritdoc}
+     */
+    public function denormalize($data, $class, $format = null, array $context = [])
     {
-        return $this->decorated->supportsDenormalization($data, $type, $format);
+        $data['relatedDummy'] = $this->iriConverter->getItemIriFromResourceClass(RelatedDummy::class, ['id' => $data['relatedDummy']]);
+
+        return $this->denormalizer->denormalize($data, $class, $format, $context + [__CLASS__ => true]);
     }
 
-    public function denormalize($data, string $type, string $format = null, array $context = [])
+    /**
+     * {@inheritdoc}
+     */
+    public function supportsDenormalization($data, $type, $format = null, array $context = []): bool
     {
-        if (null !== ($data['relation'] ?? null)) {
-            $relation = $this->iriConverter->getItemIriFromResourceClass(Relation::class, ['id' => $data['relation']]);
-            if (null === $relation) {
-                throw new ItemNotFoundException(sprintf('Item not found for resource "%s" with id "%s".', Relation::class, $data['relation']));
-            }
-        }
-
-        return $this->decorated->denormalize($data, $type, $format, $context);
+        return \in_array($format, ['json', 'jsonld'], true) && is_a($type, Dummy::class, true) && !empty($data['relatedDummy']) && !isset($context[__CLASS__]);
     }
 }
 ```
