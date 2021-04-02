@@ -109,6 +109,16 @@ authentication_token:
     methods: ['POST']
 ```
 
+If you want to provide the access to Swagger UI using other path, you must declare the route for that :
+
+```yaml
+#api/config/routes.yaml
+app_swagger_ui:
+    path: /docs
+    methods: GET
+    defaults: { _controller: api_platform.swagger.action.ui, area: default } 
+```
+
 If you want to avoid loading the `User` entity from database each time a JWT token needs to be authenticated, you may consider using
 the [database-less user provider](https://github.com/lexik/LexikJWTAuthenticationBundle/blob/master/Resources/doc/8-jwt-user-provider.md) provided by LexikJWTAuthenticationBundle. However, it means you will have to fetch the `User` entity from the database yourself as needed (probably through the Doctrine EntityManager).
 
