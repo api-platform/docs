@@ -260,7 +260,7 @@ class Book
     public ?string $isbn = null;
 
     /** The title of this book. */
-    public string $title = '';
+    public string $title;
 
     /** The description of this book. */
     public string $description = '';
@@ -402,7 +402,7 @@ Modify these files as described in these patches:
 +     *
 +     * @ORM\Column
 +     */
-     public string $title = '';
+     public string $title;
  
 -    /** The description of this book. */
 +    /**
@@ -654,7 +654,12 @@ Modify the following files as described in these patches:
       */
 +    #[Assert\Isbn]
      public ?string $isbn = null;
- 
+
+      * @ORM\Column
+      */
++    #[Assert\NotBlank]
+     public string $title;
+
       * @ORM\Column(type="text")
       */
 +    #[Assert\NotBlank]
