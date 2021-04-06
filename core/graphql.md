@@ -176,7 +176,7 @@ If you don't know what queries are yet, please [read the documentation about the
 For each resource, two queries are available: one for retrieving an item and the other one for the collection.
 For example, if you have a `Book` resource, the queries `book` and `books` can be used.
 
-### Global Object Identifier
+### Global Object Identifier
 
 When querying an item, you need to pass an identifier as argument. Following the [GraphQL Global Object Identification Specification](https://relay.dev/graphql/objectidentification.htm),
 the identifier needs to be globally unique. In API Platform, this argument is represented as an [IRI (Internationalized Resource Identifier)](https://www.w3.org/TR/ld-glossary/#internationalized-resource-identifier).
@@ -1151,7 +1151,7 @@ For example, a user may be denied using `Query.getUser` to get a user, but is ab
 
 The following example shows how associations can be secured:
 
-```
+```php
 <?php
 // api/src/Entity/User.php
 
@@ -1188,7 +1188,7 @@ class User
 }
 ```
 
-```
+```php
 <?php
 // api/src/Entity/Document.php
 
@@ -1231,7 +1231,7 @@ Users must be granted the `VIEW` attribute on a resource to be able to query it 
 Similar to `item_query`, all associations are secured, requiring `VIEW` access on the parent object (*not* on the association).
 This means that a user with `VIEW` access to a `Document` is able to see all users who are in the `viewers` collection, as well as the `createdBy` association.
 This may be a little too open, so you could instead do a role check here to only allow admins to access these fields, or check for a different attribute that could be implemented in the voter (e.g. `VIEW_CREATED_BY`.)
-Alternatively, you could still expose the users, but limit the visible fields by limiting access with `ApiProperty` `security` (such as the `User::$email` property above) or with [dynamic serializer groups](serialization.md#changing-the-serialization-context-dynamically) .
+Alternatively, you could still expose the users, but limit the visible fields by limiting access with `ApiProperty` `security` (such as the `User::$email` property above) or with [dynamic serializer groups](serialization.md#changing-the-serialization-context-dynamically).
 
 ## Serialization Groups
 
