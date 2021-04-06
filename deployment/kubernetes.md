@@ -1,87 +1,123 @@
 # Deploying to a Kubernetes Cluster
 
 [Kubernetes](https://kubernetes.io/) has become the most popular way to deploy, run and manage containers in production.
-Both [Google Cloud Platform](https://cloud.google.com/kubernetes-engine/), [Microsoft Azure](https://azure.microsoft.com/en-us/services/container-service/kubernetes/)
-and [Amazon Web Services](https://aws.amazon.com/eks/) provide managed Kubernetes environment.
+[Google Cloud Platform](https://cloud.google.com/kubernetes-engine/), [Microsoft Azure](https://azure.microsoft.com/en-us/services/container-service/kubernetes/)
+and [Amazon Web Services](https://aws.amazon.com/eks/) and many more companies provide managed Kubernetes environment.
 
 [The official API Platform distribution](../distribution/index.md) contains a built-in [Helm](https://helm.sh/) (the k8s
 package manager) chart to deploy in a wink on any of these platforms.
 
+This guide is based on Helm 3 and the caddy/php/pwa/postgres Stack introduced with API Platform 2.6
+
 ## Preparing Your Cluster and Your Local Machine
 
-1. Create a Kubernetes cluster on your preferred Cloud provider or install Kubernetes locally on your servers
-2. Install [Helm](https://helm.sh/) locally and on your cluster following their documentation
-3. Be sure to be connected to the right Kubernetes container e.g. running: `gcloud config get-value core/project`
-4. Update the Helm repo: `helm repo update`
+1. Create a Kubernetes cluster on your preferred Cloud provider or install Kubernetes locally on your servers by example with [kubeadm](https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/install-kubeadm/)
+2. Install [Helm](https://helm.sh/) (preferred version >= 3) `locally` and on your `cluster` following their [documentation](https://helm.sh/docs/intro/install/)
+3. Be sure to be connected to the right Kubernetes container
+   `kubectl config view` [Details](https://kubernetes.io/docs/concepts/configuration/organize-cluster-access-kubeconfig/)
+   e.g. for Google Cloud running: `gcloud config get-value core/project`
+4. Update the Helm repo on your local machine: `helm repo update` 
+   If you have a fresh installation of helm, you do not have any repositories yet.
+   
+
+Working-Dir: Your local installation of api-platform. Default /api-platform/
 
 ## Creating and Publishing the Docker Images
 
-1. Build the PHP and NGINX Docker images:
+### Example with the [Google Container Registry](https://cloud.google.com/container-registry/):
 
-        docker build -t gcr.io/test-api-platform/php -t gcr.io/test-api-platform/php:latest api --target api_platform_php
-        docker build -t gcr.io/test-api-platform/nginx -t gcr.io/test-api-platform/nginx:latest api --target api_platform_nginx
-        docker build -t gcr.io/test-api-platform/varnish -t gcr.io/test-api-platform/varnish:latest api --target api_platform_varnish
+#### 1. Build the PHP and Caddy Docker images and tag them:
 
-2. Push your images to your Docker registry, example with [Google Container Registry](https://cloud.google.com/container-registry/):
+    docker build -t gcr.io/test-api-platform/php -t gcr.io/test-api-platform/php:latest api --target api_platform_php
+    docker build -t gcr.io/test-api-platform/caddy -t gcr.io/test-api-platform/caddy:latest api --target api_platform_caddy
+    docker build -t gcr.io/test-api-platform/pwa -t gcr.io/test-api-platform/pwa:latest pwa --target api_platform_pwa_prod
 
-    Docker client versions <= 18.03:
+#### 2. Push your images to your Docker registry
+   
+    gcloud auth configure-docker
+    docker push gcr.io/test-api-platform/php
+    docker push gcr.io/test-api-platform/caddy
+    docker push gcr.io/test-api-platform/pwa
 
-        gcloud docker -- push gcr.io/test-api-platform/php
-        gcloud docker -- push gcr.io/test-api-platform/nginx
-        gcloud docker -- push gcr.io/test-api-platform/varnish
+#### Example with a local registry for develop
 
-    Docker client versions > 18.03:
+Run a local registry with the [official image from Docker](https://hub.docker.com/_/registry)
 
-        gcloud auth configure-docker
-        docker push gcr.io/test-api-platform/php
-        docker push gcr.io/test-api-platform/nginx
-        docker push gcr.io/test-api-platform/varnish
+    docker run -d -p 5000:5000 --restart always --name registry registry:latest
 
-## Deploying
+#### 1. Build the images and tag them:
 
-Firstly you need to update helm dependencies by running:
+    docker build -t localhost:5000/api-platform/php -t localhost:5000/api-platform/php:latest api --target api_platform_php
+    docker build -t localhost:5000/api-platform/caddy -t localhost:5000/api-platform/caddy:latest api --target api_platform_caddy
+    docker build -t localhost:5000/api-platform/pwa -t localhost:5000/api-platform/pwa:latest pwa --target api_platform_pwa_prod
 
-    helm dependency update ./api/helm/api
+#### 2. Push your images to your Docker registry
 
-You are now ready to deploy the API!
+    docker push localhost:5000/api-platform/php
+    docker push localhost:5000/api-platform/caddy
+    docker push localhost:5000/api-platform/pwa
 
-Deploy your API to the container:
+## Deploying with Helm 3
 
-    helm install ./api/helm/api --namespace=baz --name baz \
-        --set php.repository=gcr.io/test-api-platform/php \
-        --set nginx.repository=gcr.io/test-api-platform/nginx \
-        --set secret=MyAppSecretKey \
-        --set postgresql.postgresPassword=MyPgPassword \
+### 1. Check the Helm-Version. 
+
+    helm version
+
+If you are using version 2.x follow this [guid to migrating Helm to v3](https://helm.sh/docs/topics/v2_v3_migration/#helm)
+
+### 2. Firstly you need to update helm dependencies by running:
+
+    helm dependency update ./helm/api-platform
+
+The result should look similar to *Downloading postgresql from repo https://charts.bitnami.com/bitnami/*
+
+### 3. Optional: If you made changes to the Helm-chart check if format is correct
+
+    helm lint ./helm/api-platform
+
+### 4. Deploy your API to the container:
+
+    helm install api-platform ./helm/api-platform --namespace=default \
+        --set "php.image.repository=gcr.io/test-api-platform/php" \
+        --set php.image.tag=latest \
+        --set "caddy.image.repository=gcr.io/test-api-platform/caddy" \
+        --set caddy.image.tag=latest \
+        --set "pwa.image.repository=gcr.io/test-api-platform/pwa" \
+        --set pwa.image.tag=latest \
+        --set php.appSecret='!ChangeMe!' \
+        --set postgresql.postgresqlPassword='!ChangeMe!' \
         --set postgresql.persistence.enabled=true \
-        --set corsAllowOrigin='^https?://[a-z\]*\.mywebsite.com$'
+        --set corsAllowOrigin='^https?://[a-z\]*\.mywebsite.com$' \
+        --set serviceAccount.create=false
+
+You can add the parameter `--dry-run` to check upfront if anything is correct.
+Replace the values with the image-parameters from the stage above.
+The parameter `php.appSecret` is the `AppSecret` from ./.env
+Fill the rest of the values with the correct settings.
+For available options see /helm/api-platform/values.yaml.
 
 If you prefer to use a managed DBMS like [Heroku Postgres](https://www.heroku.com/postgres) or
 [Google Cloud SQL](https://cloud.google.com/sql/docs/postgres/) (recommended):
 
-    helm install --name api ./api/helm/api \
+    helm install api-platform ./helm/api-platform \
         # ...
         --set postgresql.enabled=false \
-        --set postgresql.url=pgsql://username:password@host/database?serverVersion=9.6
+        --set postgresql.url=pgsql://username:password@host/database?serverVersion=13
 
-If you want to use a managed Varnish such as [Fastly](https://www.fastly.com) for the invalidation cache mechanism
-provided by API Platform:
-
-    helm install --name api ./api/helm/api \
-        # ...
-        --set varnish.enabled=false \
-        --set varnish.url=https://myvarnish.com
-
-Finally, build the `client` and `admin` JavaScript apps and [deploy them on a static
+Finally, build the `pwa` (client and admin) JavaScript apps and [deploy them on a static
 website hosting service](https://create-react-app.dev/docs/deployment/).
 
 ## Initializing the Database
 
 Before running your application for the first time, be sure to create the database schema:
 
-    PHP_POD=$(kubectl --namespace=bar get pods -l app=php -o jsonpath="{.items[0].metadata.name}")
-    kubectl --namespace=bar exec -it $PHP_POD -- bin/console doctrine:schema:create
+    CADDY_PHP_POD=$(kubectl --namespace=default get pods -l app.kubernetes.io/name=api-platform -o jsonpath="{.items[0].metadata.name}")
+    kubectl --namespace=default exec -it $CADDY_PHP_POD -c api-platform-php -- bin/console doctrine:schema:create
 
-## Tiller RBAC Issue
+## Helm 2: Tiller RBAC Issue
+
+Tiller is the server component of Helm, which is removed in Helm 3.
+[Migrating Helm v2 to v3](https://helm.sh/docs/topics/v2_v3_migration/#helm)
 
 We noticed that some tiller RBAC trouble occurred. You can usually resolve it by running:
 
