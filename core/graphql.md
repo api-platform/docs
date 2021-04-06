@@ -1136,6 +1136,9 @@ class Book
 
 You may want to limit access to certain resource properties with a security expression. This can be done with the `ApiProperty` `security` attribute.
 
+Note: adding the `ApiProperty` `security` expression to a GraphQL property will automatically make the GraphQL property type nullable (if it wasn't already).
+This is because `null` is returned as the property value if access is denied via the `security` expression.
+
 In GraphQL, it's possible to expose associations - allowing nested querying.
 For example, associations can be made with Doctrine ORM's OneToMany, ManyToOne, ManyToMany, etc.
 
