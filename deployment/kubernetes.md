@@ -87,8 +87,7 @@ The result should look similar to *Downloading postgresql from repo https://char
         --set php.appSecret='!ChangeMe!' \
         --set postgresql.postgresqlPassword='!ChangeMe!' \
         --set postgresql.persistence.enabled=true \
-        --set corsAllowOrigin='^https?://[a-z\]*\.mywebsite.com$' \
-        --set serviceAccount.create=false
+        --set corsAllowOrigin='^https?://[a-z\]*\.mywebsite.com$'
 
 You can add the parameter `--dry-run` to check upfront if anything is correct.
 Replace the values with the image-parameters from the stage above.
