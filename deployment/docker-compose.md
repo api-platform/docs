@@ -21,6 +21,8 @@ integration.
 It is designed to be used as a companion to the distribution, and as such it needs to be placed inside a subdirectory at
 the top level of the distribution project:
 
+Please note: the current version of `docker-compose-prod` is not compatible with api-platform v2.6 and still contains images for `nginx` rather than Caddy. 
+
 ```console
 wget -O - https://github.com/api-platform/docker-compose-prod/archive/master.tar.gz | tar -xzf - && mv docker-compose-prod-master docker-compose-prod
 git add docker-compose-prod
