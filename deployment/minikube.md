@@ -8,7 +8,7 @@ When Minkube is installed, start the cluster:
 
     minikube start --addons registry --addons dashboard
 
-The previous command starts Minikube with a Docker registry (we'll use it in the next step) and wih the Kubernetes dashboard.
+The previous command starts Minikube with a Docker registry (we'll use it in the next step) and with the Kubernetes dashboard.
 
 If you use Mac or Windows, [refer to the documentation](https://minikube.sigs.k8s.io/docs/handbook/registry/#docker-on-macos) to learn how to expose the Docker registry installed as an addon on the port 5000 of the host.
 
