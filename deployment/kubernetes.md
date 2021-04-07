@@ -16,24 +16,23 @@ This guide is based on Helm 3 and the caddy/php/pwa/postgres Stack introduced wi
 3. Be sure to be connected to the right Kubernetes container
    `kubectl config view` [Details](https://kubernetes.io/docs/concepts/configuration/organize-cluster-access-kubeconfig/)
    e.g. for Google Cloud running: `gcloud config get-value core/project`
-4. Update the Helm repo on your local machine: `helm repo update` 
+4. Update the Helm repo on your local machine: `helm repo update`
    If you have a fresh installation of helm, you do not have any repositories yet.
-   
 
 Working-Dir: Your local installation of api-platform. Default /api-platform/
 
 ## Creating and Publishing the Docker Images
 
-### Example with the [Google Container Registry](https://cloud.google.com/container-registry/):
+### Example with the [Google Container Registry](https://cloud.google.com/container-registry/)
 
-#### 1. Build the PHP and Caddy Docker images and tag them:
+#### 1. Build the PHP and Caddy Docker images and tag them
 
     docker build -t gcr.io/test-api-platform/php -t gcr.io/test-api-platform/php:latest api --target api_platform_php
     docker build -t gcr.io/test-api-platform/caddy -t gcr.io/test-api-platform/caddy:latest api --target api_platform_caddy
     docker build -t gcr.io/test-api-platform/pwa -t gcr.io/test-api-platform/pwa:latest pwa --target api_platform_pwa_prod
 
 #### 2. Push your images to your Docker registry
-   
+
     gcloud auth configure-docker
     docker push gcr.io/test-api-platform/php
     docker push gcr.io/test-api-platform/caddy
@@ -41,23 +40,21 @@ Working-Dir: Your local installation of api-platform. Default /api-platform/
 
 ## Deploying with Helm 3
 
-### 1. Check the Helm-Version. 
+### 1. Check the Helm-Version
 
     helm version
 
 If you are using version 2.x follow this [guid to migrating Helm to v3](https://helm.sh/docs/topics/v2_v3_migration/#helm)
 
-### 2. Firstly you need to update helm dependencies by running:
+### 2. Firstly you need to update helm dependencies by running
 
     helm dependency update ./helm/api-platform
-
-The result should look similar to *Downloading postgresql from repo https://charts.bitnami.com/bitnami/*
 
 ### 3. Optional: If you made changes to the Helm-chart check if format is correct
 
     helm lint ./helm/api-platform
 
-### 4. Deploy your API to the container:
+### 4. Deploy your API to the container
 
     helm install api-platform ./helm/api-platform --namespace=default \
         --set "php.image.repository=gcr.io/test-api-platform/php" \
