@@ -172,67 +172,49 @@ final class CreateMediaObjectAction
 Returning the plain file path on the filesystem where the file is stored is not useful for the client, which needs a
 URL to work with.
 
-An [event subscriber](events.md#custom-event-listeners) could be used to set the `contentUrl` property:
+A [normalizer](serialization.md#normalization) could be used to set the `contentUrl` property:
 
 ```php
 <?php
-// api/src/EventSubscriber/ResolveMediaObjectContentUrlSubscriber.php
+// api/src/Serializer/MediaObjectNormalizer.php
 
-namespace App\EventSubscriber;
+namespace App\Serializer;
 
-use ApiPlatform\Core\EventListener\EventPriorities;
-use ApiPlatform\Core\Util\RequestAttributesExtractor;
 use App\Entity\MediaObject;
-use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpKernel\Event\ViewEvent;
-use Symfony\Component\HttpKernel\KernelEvents;
+use Symfony\Component\Serializer\Normalizer\ContextAwareNormalizerInterface;
+use Symfony\Component\Serializer\Normalizer\NormalizerAwareInterface;
+use Symfony\Component\Serializer\Normalizer\NormalizerAwareTrait;
 use Vich\UploaderBundle\Storage\StorageInterface;
 
-final class ResolveMediaObjectContentUrlSubscriber implements EventSubscriberInterface
+final class MediaObjectNormalizer implements ContextAwareNormalizerInterface, NormalizerAwareInterface
 {
-    private $storage;
+    use NormalizerAwareTrait;
 
-    public function __construct(StorageInterface $storage)
+    private const ALREADY_CALLED = 'MEDIA_OBJECT_NORMALIZER_ALREADY_CALLED';
+
+    public function __construct(private StorageInterface $storage)
     {
-        $this->storage = $storage;
     }
 
-    public static function getSubscribedEvents(): array
+    public function normalize($object, ?string $format = null, array $context = []): array|string|int|float|bool|\ArrayObject|null
     {
-        return [
-            KernelEvents::VIEW => ['onPreSerialize', EventPriorities::PRE_SERIALIZE],
-        ];
+        $context[self::ALREADY_CALLED] = true;
+
+        $object->contentUrl = $this->storage->resolveUri($object, 'file');
+
+        return $this->normalizer->normalize($object, $format, $context);
     }
 
-    public function onPreSerialize(ViewEvent $event): void
+    public function supportsNormalization($data, ?string $format = null, array $context = []): bool
     {
-        $controllerResult = $event->getControllerResult();
-        $request = $event->getRequest();
-
-        if ($controllerResult instanceof Response || !$request->attributes->getBoolean('_api_respond', true)) {
-            return;
+        if (isset($context[self::ALREADY_CALLED])) {
+            return false;
         }
 
-        if (!($attributes = RequestAttributesExtractor::extractAttributes($request)) || !\is_a($attributes['resource_class'], MediaObject::class, true)) {
-            return;
-        }
-
-        $mediaObjects = $controllerResult;
-
-        if (!is_iterable($mediaObjects)) {
-            $mediaObjects = [$mediaObjects];
-        }
-
-        foreach ($mediaObjects as $mediaObject) {
-            if (!$mediaObject instanceof MediaObject) {
-                continue;
-            }
-
-            $mediaObject->contentUrl = $this->storage->resolveUri($mediaObject, 'file');
-        }
+        return $data instanceof MediaObject;
     }
 }
+
 ```
 
 ## Making a Request to the `/media_objects` Endpoint
