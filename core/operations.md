@@ -422,7 +422,7 @@ class CreateBookPublication
     public function __construct(
         private BookPublishingHandler $bookPublishingHandler
     ) {}
-    
+
     #[Route(
         path: '/books/{id}/publication',
         name: 'book_post_publication',
@@ -620,34 +620,43 @@ class Weather
 This way, we expose a route that will do… nothing. Note that the controller does not even need to exist.
 
 It's almost done, we have just one final issue: our fake item operation is visible in the API docs.
-To remove it, we will need to [decorate the Swagger documentation](swagger.md#overriding-the-openapi-specification).
+To remove it, we will need to [decorate the Swagger documentation](openapi.md#overriding-the-openapi-specification).
 Then, remove the route from the decorator:
 
 ```php
-<?php
-// src/Swagger/SwaggerDecorator.php
+namespace App\OpenApi;
 
-namespace App\Swagger;
+use ApiPlatform\Core\OpenApi\Factory\OpenApiFactoryInterface;
+use ApiPlatform\Core\OpenApi\OpenApi;
+use ApiPlatform\Core\OpenApi\Model;
 
-use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
-
-final class SwaggerDecorator implements NormalizerInterface
+class OpenApiFactory implements OpenApiFactoryInterface
 {
-    public function __construct(
-        private NormalizerInterface $decorated
-    ) {}
+    private $decorated;
 
-    public function normalize($object, string $format = null, array $context = [])
+    public function __construct(OpenApiFactoryInterface $decorated)
     {
-        $docs = $this->decorated->normalize($object, $format, $context);
-
-        // If a prefix is configured on API Platform's routes, it must appear here.
-        unset($docs['paths']['/weathers/{id}']);
-
-        return $docs;
+        $this->decorated = $decorated;
     }
 
-    // ...
+    public function __invoke(array $context = []): OpenApi
+    {
+        $openApi = $this->decorated->__invoke($context);
+
+        $paths = $openApi->getPaths()->getPaths();
+
+        $filteredPaths = new Model\Paths();
+        foreach ($paths as $path => $pathItem) {
+            // If a prefix is configured on API Platform's routes, it must appear here.
+            if ($path === '/weathers/{id}') {
+                continue;
+            }
+            $filteredPaths->addPath($path, $pathItem);
+        }
+
+        return $openApi->withPaths($filteredPaths);
+    }
+}
 ```
 
 That's it: your route is gone!
