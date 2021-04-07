@@ -39,24 +39,6 @@ Working-Dir: Your local installation of api-platform. Default /api-platform/
     docker push gcr.io/test-api-platform/caddy
     docker push gcr.io/test-api-platform/pwa
 
-#### Example with a local registry for develop
-
-Run a local registry with the [official image from Docker](https://hub.docker.com/_/registry)
-
-    docker run -d -p 5000:5000 --restart always --name registry registry:latest
-
-#### 1. Build the images and tag them:
-
-    docker build -t localhost:5000/api-platform/php -t localhost:5000/api-platform/php:latest api --target api_platform_php
-    docker build -t localhost:5000/api-platform/caddy -t localhost:5000/api-platform/caddy:latest api --target api_platform_caddy
-    docker build -t localhost:5000/api-platform/pwa -t localhost:5000/api-platform/pwa:latest pwa --target api_platform_pwa_prod
-
-#### 2. Push your images to your Docker registry
-
-    docker push localhost:5000/api-platform/php
-    docker push localhost:5000/api-platform/caddy
-    docker push localhost:5000/api-platform/pwa
-
 ## Deploying with Helm 3
 
 ### 1. Check the Helm-Version. 
