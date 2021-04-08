@@ -1132,7 +1132,7 @@ class Book
 }
 ```
 
-### Securing properties (including associations)
+### Securing Properties (Including Associations)
 
 You may want to limit access to certain resource properties with a security expression. This can be done with the `ApiProperty` `security` attribute.
 
@@ -1140,9 +1140,9 @@ Note: adding the `ApiProperty` `security` expression to a GraphQL property will 
 This is because `null` is returned as the property value if access is denied via the `security` expression.
 
 In GraphQL, it's possible to expose associations - allowing nested querying.
-For example, associations can be made with Doctrine ORM's OneToMany, ManyToOne, ManyToMany, etc.
+For example, associations can be made with Doctrine ORM's `OneToMany`, `ManyToOne`, `ManyToMany`, etc.
 
-It's important to note that the security defined on resource operations applies only to the exposed query/mutation endpoints (e.g. `Query.users`, `Mutation.updateUser`, etc.)
+It's important to note that the security defined on resource operations applies only to the exposed query/mutation endpoints (e.g. `Query.users`, `Mutation.updateUser`, etc.).
 Resource operation security is defined via the `security` attribute for each operation defined in the `ApiResource` `graphql` attribute.
 This security is *not* applied to exposed associations.
 
@@ -1150,7 +1150,7 @@ Associations can instead be secured with the `ApiProperty` `security` attribute.
 
 To prevent traversal attacks, you should ensure that any exposed associations are secured appropriately.
 A traversal attack is where a user can gain unintended access to a resource by querying nested associations, gaining access to a resource that prevents direct access (via the query endpoint).
-For example, a user may be denied using `Query.getUser` to get a user, but is able to assess the user through an association on an object that they do have access to (e.g. `document.createdBy`.)
+For example, a user may be denied using `Query.getUser` to get a user, but is able to access the user through an association on an object that they do have access to (e.g. `document.createdBy`).
 
 The following example shows how associations can be secured:
 
@@ -1223,7 +1223,7 @@ class Document
     /**
      * @ORM\ManyToOne(targetEntity=User::class)
      */
-     #[ApiProperty(security: 'is_granted("VIEW", object)')]
+    #[ApiProperty(security: 'is_granted("VIEW", object)')]
     protected ?User $createdBy = null;
 }
 ```
