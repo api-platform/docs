@@ -50,7 +50,7 @@ If you are using version 2.x follow this [guid to migrating Helm to v3](https://
 
     helm dependency update ./helm/api-platform
 
-### 3. Optional: If you made changes to the Helm-chart check if format is correct
+### 3. Optional: If you made changes to the Helm chart, check if its format is correct
 
     helm lint ./helm/api-platform
 
