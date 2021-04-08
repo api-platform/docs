@@ -40,7 +40,7 @@ Working-Dir: Your local installation of api-platform. Default /api-platform/
 
 ## Deploying with Helm 3
 
-### 1. Check the Helm-Version
+### 1. Check the Helm version
 
     helm version
 
