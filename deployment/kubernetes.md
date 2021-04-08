@@ -69,7 +69,7 @@ If you are using version 2.x follow this [guid to migrating Helm to v3](https://
         --set corsAllowOrigin='^https?://[a-z\]*\.mywebsite.com$'
 
 You can add the parameter `--dry-run` to check upfront if anything is correct.
-Replace the values with the image-parameters from the stage above.
+Replace the values with the image parameters from the stage above.
 The parameter `php.appSecret` is the `AppSecret` from ./.env
 Fill the rest of the values with the correct settings.
 For available options see /helm/api-platform/values.yaml.
