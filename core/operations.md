@@ -624,13 +624,16 @@ To remove it, we will need to [decorate the Swagger documentation](openapi.md#ov
 Then, remove the route from the decorator:
 
 ```php
+<?php
+// src/OpenApi/OpenApiFactory.php
+
 namespace App\OpenApi;
 
 use ApiPlatform\Core\OpenApi\Factory\OpenApiFactoryInterface;
 use ApiPlatform\Core\OpenApi\OpenApi;
 use ApiPlatform\Core\OpenApi\Model;
 
-class OpenApiFactory implements OpenApiFactoryInterface
+final class OpenApiFactory implements OpenApiFactoryInterface
 {
     private $decorated;
 
