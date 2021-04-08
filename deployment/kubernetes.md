@@ -7,7 +7,7 @@ and [Amazon Web Services](https://aws.amazon.com/eks/) and many more companies p
 [The official API Platform distribution](../distribution/index.md) contains a built-in [Helm](https://helm.sh/) (the k8s
 package manager) chart to deploy in a wink on any of these platforms.
 
-This guide is based on Helm 3 and the caddy/php/pwa/postgres Stack introduced with API Platform 2.6
+This guide is based on Helm 3.
 
 ## Preparing Your Cluster and Your Local Machine
 
