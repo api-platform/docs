@@ -176,7 +176,7 @@ If you don't know what queries are yet, please [read the documentation about the
 For each resource, two queries are available: one for retrieving an item and the other one for the collection.
 For example, if you have a `Book` resource, the queries `book` and `books` can be used.
 
-### Global Object Identifier
+### Global Object Identifier
 
 When querying an item, you need to pass an identifier as argument. Following the [GraphQL Global Object Identification Specification](https://relay.dev/graphql/objectidentification.htm),
 the identifier needs to be globally unique. In API Platform, this argument is represented as an [IRI (Internationalized Resource Identifier)](https://www.w3.org/TR/ld-glossary/#internationalized-resource-identifier).
@@ -1131,6 +1131,110 @@ class Book
     // ...
 }
 ```
+
+### Securing Properties (Including Associations)
+
+You may want to limit access to certain resource properties with a security expression. This can be done with the `ApiProperty` `security` attribute.
+
+Note: adding the `ApiProperty` `security` expression to a GraphQL property will automatically make the GraphQL property type nullable (if it wasn't already).
+This is because `null` is returned as the property value if access is denied via the `security` expression.
+
+In GraphQL, it's possible to expose associations - allowing nested querying.
+For example, associations can be made with Doctrine ORM's `OneToMany`, `ManyToOne`, `ManyToMany`, etc.
+
+It's important to note that the security defined on resource operations applies only to the exposed query/mutation endpoints (e.g. `Query.users`, `Mutation.updateUser`, etc.).
+Resource operation security is defined via the `security` attribute for each operation defined in the `ApiResource` `graphql` attribute.
+This security is *not* applied to exposed associations.
+
+Associations can instead be secured with the `ApiProperty` `security` attribute. This provides the flexibility to have different security depending on where an association is exposed.
+
+To prevent traversal attacks, you should ensure that any exposed associations are secured appropriately.
+A traversal attack is where a user can gain unintended access to a resource by querying nested associations, gaining access to a resource that prevents direct access (via the query endpoint).
+For example, a user may be denied using `Query.getUser` to get a user, but is able to access the user through an association on an object that they do have access to (e.g. `document.createdBy`).
+
+The following example shows how associations can be secured:
+
+```php
+<?php
+// api/src/Entity/User.php
+
+namespace App\Entity;
+
+use ApiPlatform\Core\Annotation\ApiProperty;
+use ApiPlatform\Core\Annotation\ApiResource;
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * @ORM\Entity
+ */
+#[ApiResource(
+    graphql: [
+        'item_query' => ['security' => 'is_granted("VIEW", object)'],
+        'collection_query' => ['security' => 'is_granted("ROLE_ADMIN")'],
+    ],
+)]
+class User
+{
+    // ...
+
+    /**
+     * @ORM\ManyToMany(targetEntity=Document::class, mappedBy="viewers")
+     */
+    #[ApiProperty(security: 'is_granted("VIEW", object)')]
+    private Collection $viewableDocuments;
+    
+    /**
+     * @ORM\Column(type="string", length=180, unique=true)
+     */
+    #[ApiProperty(security: 'is_granted("ROLE_ADMIN")')]
+    private string $email;
+}
+```
+
+```php
+<?php
+// api/src/Entity/Document.php
+
+namespace App\Entity;
+
+use ApiPlatform\Core\Annotation\ApiProperty;
+use ApiPlatform\Core\Annotation\ApiResource;
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * @ORM\Entity
+ */
+#[ApiResource(
+    graphql: [
+        'item_query' => ['security' => 'is_granted("VIEW", object)'],
+        'collection_query' => ['security' => 'is_granted("ROLE_ADMIN")'],
+    ],
+)]
+class Document
+{
+    // ...
+
+    /**
+     * @ORM\ManyToMany(targetEntity=User::class, inversedBy="viewableDocuments")
+     */
+    #[ApiProperty(security: 'is_granted("VIEW", object)')]
+    private Collection $viewers;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=User::class)
+     */
+    #[ApiProperty(security: 'is_granted("VIEW", object)')]
+    protected ?User $createdBy = null;
+}
+```
+
+The above example only allows admins to see the full collection of each resource (`collection_query`).
+Users must be granted the `VIEW` attribute on a resource to be able to query it directly (`item_query`) - which would use a `Voter` to make this decision.
+
+Similar to `item_query`, all associations are secured, requiring `VIEW` access on the parent object (*not* on the association).
+This means that a user with `VIEW` access to a `Document` is able to see all users who are in the `viewers` collection, as well as the `createdBy` association.
+This may be a little too open, so you could instead do a role check here to only allow admins to access these fields, or check for a different attribute that could be implemented in the voter (e.g. `VIEW_CREATED_BY`.)
+Alternatively, you could still expose the users, but limit the visible fields by limiting access with `ApiProperty` `security` (such as the `User::$email` property above) or with [dynamic serializer groups](serialization.md#changing-the-serialization-context-dynamically).
 
 ## Serialization Groups
 
