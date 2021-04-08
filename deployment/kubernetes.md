@@ -27,9 +27,9 @@ Working-Dir: Your local installation of api-platform. Default /api-platform/
 
 #### 1. Build the PHP and Caddy Docker images and tag them
 
-    docker build -t gcr.io/test-api-platform/php -t gcr.io/test-api-platform/php:latest api --target api_platform_php
-    docker build -t gcr.io/test-api-platform/caddy -t gcr.io/test-api-platform/caddy:latest api --target api_platform_caddy
-    docker build -t gcr.io/test-api-platform/pwa -t gcr.io/test-api-platform/pwa:latest pwa --target api_platform_pwa_prod
+    docker build -t gcr.io/test-api-platform/php:latest api --target api_platform_php
+    docker build -t gcr.io/test-api-platform/caddy:latest api --target api_platform_caddy
+    docker build -t gcr.io/test-api-platform/pwa:latest pwa --target api_platform_pwa_prod
 
 #### 2. Push your images to your Docker registry
 
@@ -91,22 +91,3 @@ Before running your application for the first time, be sure to create the databa
 
     CADDY_PHP_POD=$(kubectl --namespace=default get pods -l app.kubernetes.io/name=api-platform -o jsonpath="{.items[0].metadata.name}")
     kubectl --namespace=default exec -it $CADDY_PHP_POD -c api-platform-php -- bin/console doctrine:schema:create
-
-## Helm 2: Tiller RBAC Issue
-
-Tiller is the server component of Helm, which is removed in Helm 3.
-[Migrating Helm v2 to v3](https://helm.sh/docs/topics/v2_v3_migration/#helm)
-
-We noticed that some tiller RBAC trouble occurred. You can usually resolve it by running:
-
-    kubectl create serviceaccount --namespace kube-system tiller
-      serviceaccount "tiller" created
-
-    kubectl create clusterrolebinding tiller-cluster-rule --clusterrole=cluster-admin --serviceaccount=kube-system:tiller
-      clusterrolebinding "tiller-cluster-rule" created
-
-    kubectl patch deploy --namespace kube-system tiller-deploy -p '{"spec":{"template":{"spec":{"serviceAccount":"tiller"}}}}'
-      deployment "tiller-deploy" patched
-
-Please, see the [related issue](https://github.com/kubernetes/helm/issues/3130) for further details / information.
-You can also take a look at the [related documentation](https://github.com/kubernetes/helm/blob/master/docs/rbac.md)
