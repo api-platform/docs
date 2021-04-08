@@ -44,7 +44,7 @@ Working-Dir: Your local installation of api-platform. Default /api-platform/
 
     helm version
 
-If you are using version 2.x follow this [guid to migrating Helm to v3](https://helm.sh/docs/topics/v2_v3_migration/#helm)
+If you are using version 2.x follow this [guide to migrate Helm to v3](https://helm.sh/docs/topics/v2_v3_migration/#helm)
 
 ### 2. Firstly you need to update helm dependencies by running
 
