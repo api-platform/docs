@@ -186,7 +186,7 @@ use Symfony\Component\Serializer\Normalizer\NormalizerAwareInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerAwareTrait;
 use Vich\UploaderBundle\Storage\StorageInterface;
 
-final class MediaObjectNormalizer implements ContextAwareNormalizerInterface, NormalizerAwareInterface
+final class MediaObjectNormalizer implements ContextAwareNormalizerInterface
 {
     use NormalizerAwareTrait;
 
@@ -214,7 +214,6 @@ final class MediaObjectNormalizer implements ContextAwareNormalizerInterface, No
         return $data instanceof MediaObject;
     }
 }
-
 ```
 
 ## Making a Request to the `/media_objects` Endpoint
