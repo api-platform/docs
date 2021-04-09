@@ -8,7 +8,8 @@ or in the format described in the [RFC 7807](https://tools.ietf.org/html/rfc7807
 
 ## Converting PHP Exceptions to HTTP Errors
 
-The framework also allows you configure the HTTP status code sent to the clients when custom exceptions are thrown.
+The framework also allows you to configure the HTTP status code sent to the clients when custom exceptions are thrown
+on an API Platform resource operation.
 
 In the following example, we throw a domain exception from the business layer of the application and
 configure API Platform to convert it to a `404 Not Found` error:
