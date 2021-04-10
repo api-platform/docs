@@ -230,6 +230,7 @@ your data, you will get a response looking like this:
   "contentUrl": "<url>"
 }
 ```
+
 ## Accessing Your Media Objects Directly 
 
 You will need to modify your Caddyfile to allow the above `contentUrl` to be accessed directly. If you followed the above configuration for VICH Uploader, that will be in `api/public/media`. Add your folder to the list of path matches, eg `|^/media/|`:
