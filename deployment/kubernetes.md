@@ -97,6 +97,10 @@ Fill the rest of the values with the correct settings.
 For available options see /helm/api-platform/values.yaml.
 If you want a test deploy you can set corsAllowOrigin='*'
 
+After a successful installation, there is a message at the end.
+You can copy these commands and execute them to set a port-forwarding and
+get access on your local machine to the deploy. See image below.
+
 ![Deploy Result](images/deploy-result.png)
 
 If you prefer to use a managed DBMS like [Heroku Postgres](https://www.heroku.com/postgres) or
