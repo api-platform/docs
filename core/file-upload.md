@@ -231,10 +231,10 @@ your data, you will get a response looking like this:
 }
 ```
 
-## Accessing Your Media Objects Directly 
+## Accessing Your Media Objects Directly
 
 You will need to modify your Caddyfile to allow the above `contentUrl` to be accessed directly. If you followed the above configuration for the VichUploaderBundle, that will be in `api/public/media`. Add your folder to the list of path matches, e.g. `|^/media/|`:
-```
+```caddyfile
 ...
 # Matches requests for HTML documents, for static files and for Next.js files,
 # except for known API paths and paths with extensions handled by API Platform
