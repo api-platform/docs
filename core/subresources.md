@@ -143,8 +143,8 @@ use ApiPlatform\Core\Annotation\ApiResource;
     subresourceOperations: [
         'api_questions_answer_get_subresource' => [
             'method' => 'GET',
-            'normalization_context': [
-                'groups': ['foobar'],
+            'normalization_context' => [
+                'groups' => ['foobar'],
             ],
         ],
     ],
