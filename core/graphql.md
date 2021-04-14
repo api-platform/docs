@@ -288,28 +288,35 @@ use App\Resolver\BookResolver;
 
 #[ApiResource(
     graphql: [
-      'retrievedQuery' => [
-          'item_query' => BookResolver::class
-      ],
-      'notRetrievedQuery' => [
-          'item_query' => BookResolver::class,
-          'args' => []
-      ],
-      'withDefaultArgsNotRetrievedQuery' => [
-          'item_query' => BookResolver::class,
-          'read' => false
-      ],
-      'withCustomArgsQuery' => [
-          'item_query' => BookResolver::class,
-          'args' => [
-              'id' => ['type' => 'ID!'],
-              'log' => ['type' => 'Boolean!', 'description' => 'Is logging activated?'],
-              'logDate' => ['type' => 'DateTime']
-          ]
-      ],
-      'collectionQuery' => [
-          'collection_query' => BookCollectionResolver::class
-      ]
+        // Auto-generated queries and mutations
+        'item_query',
+        'collection_query',
+        'create',
+        'update',
+        'delete',
+
+        'retrievedQuery' => [
+            'item_query' => BookResolver::class
+        ],
+        'notRetrievedQuery' => [
+            'item_query' => BookResolver::class,
+            'args' => []
+        ],
+        'withDefaultArgsNotRetrievedQuery' => [
+            'item_query' => BookResolver::class,
+            'read' => false
+        ],
+        'withCustomArgsQuery' => [
+            'item_query' => BookResolver::class,
+            'args' => [
+                'id' => ['type' => 'ID!'],
+                'log' => ['type' => 'Boolean!', 'description' => 'Is logging activated?'],
+                'logDate' => ['type' => 'DateTime']
+            ]
+        ],
+        'collectionQuery' => [
+            'collection_query' => BookCollectionResolver::class
+        ]
     ]
 )]
 class Book
@@ -317,6 +324,8 @@ class Book
     // ...
 }
 ```
+
+Note that you need to explicitly add the auto-generated queries and mutations if they are needed when configuring custom queries, like it's done for the [operations](#operations).
 
 As you can see, it's possible to define your own arguments for your custom queries.
 They are following the GraphQL type system.
@@ -445,6 +454,13 @@ use App\Resolver\BookMutationResolver;
 
 #[ApiResource(
     graphql: [
+        // Auto-generated queries and mutations
+        'item_query',
+        'collection_query',
+        'create',
+        'update',
+        'delete',
+
         'mutation' => [
             'mutation' => BookMutationResolver::class
         ],
@@ -466,6 +482,8 @@ class Book
     // ...
 }
 ```
+
+Note that you need to explicitly add the auto-generated queries and mutations if they are needed when configuring custom mutations, like it's done for the [operations](#operations).
 
 As the custom queries, you can define your own arguments if you don't want to use the default ones (extracted from your resource).
 The only difference with them is that, even if you define your own arguments, the `clientMutationId` will always be set.
