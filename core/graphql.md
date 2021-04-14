@@ -445,6 +445,11 @@ use App\Resolver\BookMutationResolver;
 
 #[ApiResource(
     graphql: [
+        'item_query', 
+        'collection_query',
+        'create',
+        'update',
+        'delete',
         'mutation' => [
             'mutation' => BookMutationResolver::class
         ],
@@ -466,6 +471,9 @@ class Book
     // ...
 }
 ```
+
+Please note that adding custom mutations will remove the auto-generated queries and mutations, and you will need to explicitly enable them as in the [operations section](#operations) section. 
+
 
 As the custom queries, you can define your own arguments if you don't want to use the default ones (extracted from your resource).
 The only difference with them is that, even if you define your own arguments, the `clientMutationId` will always be set.
