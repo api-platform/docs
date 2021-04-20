@@ -28,8 +28,10 @@ Install required dependencies:
 
     $ npx @api-platform/client-generator https://demo.api-platform.com . --generator next --resource book
     # Replace the URL by the entrypoint of your Hydra-enabled API
+    # Omit the resource flag to generate files for all resource types exposed by the API.
 
-> Note: Omit the resource flag to generate files for all resource types exposed by the API.
+> Note: On the [API Platform distribution](https://github.com/api-platform/api-platform), you can run
+> `generate-api-platform-client` instead of `npx @api-platform/client-generator`.
 
 ## Starting the Project
 
