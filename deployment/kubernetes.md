@@ -114,16 +114,17 @@ If you prefer to use a managed DBMS like [Heroku Postgres](https://www.heroku.co
 Finally, build the `pwa` (client and admin) JavaScript apps and [deploy them on a static
 website hosting service](https://create-react-app.dev/docs/deployment/).
 
-## Initializing the Database
+## Access the container
 
-Before running your application for the first time, be sure to create the database schema:
+You can access the php container of the pod with the following command.
+In this example the symfony console is called.
 
     CADDY_PHP_POD=$(kubectl --namespace=default get pods -l app.kubernetes.io/name=api-platform -o jsonpath="{.items[0].metadata.name}")
-    kubectl --namespace=default exec -it $CADDY_PHP_POD -c api-platform-php -- bin/console doctrine:schema:create
+    kubectl --namespace=default exec -it $CADDY_PHP_POD -c api-platform-php -- bin/console
 
 ## Caution for system architecture
 
-If the pods do not run and you get the following error from google kubernetes engine logs,
+If the pods do not run, and you get the following error from google kubernetes engine logs,
 there is probably a problem with the system architecture.
 `standard_init_linux.go:211: exec user process caused "exec format error`
 Build the images with the same system architecture as the cluster runs.
@@ -137,7 +138,7 @@ There are 2 main upgrade strategies.
 ### 1. Always version your images (recommended)
 
 Change the version in the attribut "appVersion" in Chart.yaml and tag the images.
-You can upgrade with the same command as the install and pass all parameters.
+You can upgrade with the same command from the installation and pass all parameters.
 Just replace `helm install ...` with `helm upgrade ...`
 
 ### 2. Use :latest tags
