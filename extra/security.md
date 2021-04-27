@@ -24,7 +24,7 @@ The resolution takes anywhere between a couple of days to some months depending 
 
 ## Security Updates With Tidelift
 
-API PLatform Core is part of [the Tidelift subscription](https://tidelift.com/subscription/pkg/packagist-api-platform-core?utm_source=packagist-api-platform-core&utm_medium=referral&utm_campaign=enterprise): verified updates for zero-day vulnerabilities, coordinated security responses, and immediate notifications of which of your applications are impacted, with the fix prepared for you!
+API Platform Core is part of [the Tidelift subscription](https://tidelift.com/subscription/pkg/packagist-api-platform-core?utm_source=packagist-api-platform-core&utm_medium=referral&utm_campaign=enterprise): verified updates for zero-day vulnerabilities, coordinated security responses, and immediate notifications of which of your applications are impacted, with the fix prepared for you!
 
 * [Learn more](https://tidelift.com/subscription/pkg/packagist-api-platform-core?utm_source=packagist-api-platform-core&utm_medium=referral&utm_campaign=enterprise)
 * [Request a demo](https://tidelift.com/subscription/request-a-demo?utm_source=packagist-api-platform-core&utm_medium=referral&utm_campaign=enterprise)
