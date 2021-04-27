@@ -472,7 +472,7 @@ to generate the PHP data model of your application.
 Example:
 
 ```yaml
-rdfa:
+vocabularies:
     - https://raw.githubusercontent.com/schemaorg/schemaorg/master/data/schema.rdfa # Experimental version of Schema.org
     - http://example.com/data/myschema.rfa # Additional types
 ```
@@ -482,7 +482,7 @@ You can also use any other vocabulary. Check the [Linked Open Vocabularies](http
 For instance, to generate a data model from the [Video Game Ontology](http://purl.org/net/VideoGameOntology), use the following config file:
 
 ```yaml
-rdfa:
+vocabularies:
   - http://vocab.linkeddata.es/vgo/GameOntologyv3.owl # The URL of the vocabulary definition
 
 types:
