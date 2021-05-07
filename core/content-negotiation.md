@@ -2,7 +2,7 @@
 
 The API system has built-in [content negotiation](https://en.wikipedia.org/wiki/Content_negotiation) capabilities.
 
-By default, only the [JSON-LD](https://json-ld.org) format is enabled. However API Platform Core supports many more formats and can be extended.
+By default, only the [JSON-LD](https://json-ld.org) and JSON formats are enabled. However API Platform Core supports many more formats and can be extended.
 
 The framework natively supports JSON-LD (and Hydra), GraphQL, JSON:API, HAL, YAML, CSV, HTML (API docs), raw JSON and raw XML.
 Using the raw JSON or raw XML formats is discouraged, prefer using JSON-LD instead, which provides more feature and is as easy to use.
@@ -52,6 +52,7 @@ api_platform:
         yaml:     ['application/x-yaml']
         csv:      ['text/csv']
         html:     ['text/html']
+        myformat: ['application/vnd.myformat']
 ```
 
 To enable GraphQL support, [read the dedicated chapter](graphql.md).
