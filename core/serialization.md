@@ -694,7 +694,9 @@ services:
 Note: this normalizer will work only for JSON-LD format, if you want to process JSON data too, you have to decorate another service:
 
 ```yaml
-    App\Serializer\ApiNormalizer:
+    # Need a different name to avoid duplicate YAML key
+    'app.serializer.normalizer.item.json':
+        class: 'App\Serializer\ApiNormalizer'
         decorates: 'api_platform.serializer.normalizer.item'
 ```
 
