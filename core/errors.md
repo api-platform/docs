@@ -101,3 +101,7 @@ the error will be returned in this format as well:
   "hydra:description": "The product \"1234\" does not exist."
 }
 ```
+### Message scope
+Depending on the status code you use, the message may be replaced with a generic one in production to avoid leaking unwanted informations.
+- If your status code is >= 500 and < 600, it will be only thrown in debug environments (dev and test). In production, a message matching the status code provided will be thrown. If you are using an unofficial HTTP code, a generic message will be thrown instead.
+- in any other cases, your exception message will be sent to end users
