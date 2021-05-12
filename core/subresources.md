@@ -141,10 +141,10 @@ use ApiPlatform\Core\Annotation\ApiResource;
 
  #[ApiResource(
     subresourceOperations: [
-        'api_questions_answer_get_subresource': [
+        'api_questions_answer_get_subresource' => [
             'method' => 'GET',
-            'normalization_context': [
-                'groups': ['foobar'],
+            'normalization_context' => [
+                'groups' => ['foobar'],
             ],
         ],
     ],
@@ -206,7 +206,7 @@ You can control the path of subresources with the `path` option of the `subresou
 
 #[ApiResource(
     subresourceOperations: [
-        'api_questions_answer_get_subresource': [
+        'api_questions_answer_get_subresource' => [
             'method' => 'GET',
             'path' => '/questions/{id}/all-answers',
         ],
@@ -227,8 +227,8 @@ The `subresourceOperations` attribute also allows you to add an access control o
 
  #[ApiResource(
     subresourceOperations: [
-        'api_questions_answer_get_subresource': [
-            'security' => "has_role('ROLE_AUTHENTICATED')",
+        'api_questions_answer_get_subresource' => [
+            'security' => "is_granted('ROLE_AUTHENTICATED')",
         ],
     ],
  )]

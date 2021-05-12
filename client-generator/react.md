@@ -61,7 +61,7 @@ Omit the resource flag to generate files for all resource types exposed by the A
 If you don't use the standalone installation, run the following command instead:
 
 ```console
-npx @api-platform/client-generator https://demo.api-platform.com src/ --resource book
+npx @api-platform/client-generator https://demo.api-platform.com src/ --resource book -g react
 ```
 
 Replace the URL with the entrypoint of your Hydra-enabled API.

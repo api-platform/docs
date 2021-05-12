@@ -72,10 +72,50 @@ services:
     volumes:
       - ./api/docker/php/conf.d/xdebug.ini:/usr/local/etc/php/conf.d/xdebug.ini
     environment:
+      # See https://docs.docker.com/docker-for-mac/networking/#i-want-to-connect-from-a-container-to-a-service-on-the-host
+      # See https://github.com/docker/for-linux/issues/264
+      # The `remote_host` below may optionally be replaced with `remote_connect_back`
+      # XDEBUG_MODE required for step debugging
+      XDEBUG_MODE: debug
+      # default port for Xdebug 3 is 9003
+      # idekey=VSCODE if you are debugging with VSCode
+      XDEBUG_CONFIG: >-
+        client_host=host.docker.internal
+        idekey=PHPSTORM
       # This should correspond to the server declared in PHPStorm `Preferences | Languages & Frameworks | PHP | Servers`
       # Then PHPStorm will use the corresponding path mappings
       PHP_IDE_CONFIG: serverName=api-platform
 ```
+
+
+Note for Mac environments use the following:
+
+```yml
+      XDEBUG_CONFIG: >-
+        idekey=PHPSTORM
+        client_host=docker.for.mac.localhost
+```
+
+In VSCode, alongside the default PHP configuration in `launch.json`, you'll need path mappings for the Docker image.
+```json
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Listen for Xdebug",
+            "type": "php",
+            "request": "launch",
+            "port": 9003,
+            "log": true,
+            "pathMappings": {
+                "/srv/api": "${workspaceFolder}/api"
+            },
+        },
+    ]
+}
+```
+
+Note: For Linux environments, the `client_host` setting of `host.docker.internal` will not work, you will need the actual local IP address of your computer.
 
 ## Troubleshooting
 
