@@ -302,7 +302,7 @@ in your app.
 
 To test your upload with `ApiTestCase`, you can write a method as below:
 
-```
+```php
 <?php
 // tests/MediaObjectTest.php
 
@@ -327,11 +327,11 @@ class MediaObjectTest extends ApiTestCase
             'extra' => [
                 // If you have additionnal fields in your MediaObject entity, use the parameters
                 'parameters' => [
-                    'title' => 'My file uploaded'
+                    'title' => 'My file uploaded',
                 ],
                 'files' => [
-                    'file' => $file
-                ]
+                    'file' => $file,
+                ],
             ]
         ]);
         $this->assertResponseIsSuccessful();
