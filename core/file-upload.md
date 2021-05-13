@@ -325,7 +325,7 @@ class MediaObjectTest extends ApiTestCase
         $client->request('POST', '/media_objects', [
             'headers' => ['Content-Type' => 'multipart/form-data'],
             'extra' => [
-                // If you have additionnal fields in your MediaObject entity, use the parameters
+                // If you have additional fields in your MediaObject entity, use the parameters.
                 'parameters' => [
                     'title' => 'My file uploaded',
                 ],
