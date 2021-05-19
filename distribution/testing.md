@@ -228,7 +228,7 @@ from [AliceBundle](https://github.com/hautelook/AliceBundle/blob/master/README.m
 test, purge the database, load fixtures, begin a transaction, and, at the end of each test, roll back the
 transaction previously begun. Because of this, you can run your tests without worrying about fixtures.
 
-There is one caveat though: In some tests, it is necessary to perform multiple requests in one test, for example when creating a user via the API and checking that a subsequent login using the same password works. However, the client will by default reboot the kernel, which will reset the database. You can prevent this by adding `$client->disableReboot();` to such tests.
+There is one caveat though: in some tests, it is necessary to perform multiple requests in one test, for example when creating a user via the API and checking that a subsequent login using the same password works. However, the client will by default reboot the kernel, which will reset the database. You can prevent this by adding `$client->disableReboot();` to such tests.
 
 All you have to do now is to run your tests:
 
