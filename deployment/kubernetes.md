@@ -87,9 +87,9 @@ Actual this is [bitnami/postgresql](https://bitnami.com/stack/postgresql/helm), 
         --set php.appSecret='!ChangeMe!' \
         --set postgresql.postgresqlPassword='!ChangeMe!' \
         --set postgresql.persistence.enabled=true \
-        --set corsAllowOrigin='^https?://[a-z\]*\.mywebsite.com$'
+        --set "corsAllowOrigin=^https?://[a-z\]*\.mywebsite.com$"
 
-The " are necessary for windows.
+The " are necessary for Windows. Use ^ on Windows instead of \ to split commands into multiple lines.
 You can add the parameter `--dry-run` to check upfront if anything is correct.
 Replace the values with the image parameters from the stage above.
 The parameter `php.appSecret` is the `AppSecret` from ./.env
@@ -144,7 +144,7 @@ Just replace `helm install ...` with `helm upgrade ...`
 ### 2. Use :latest tags
 
 Infos about [best practices for tagging images for kubernetes](https://kubernetes.io/docs/concepts/containers/images/)
-You have to use the imagePullPolicy=Always see the last 3 parameters.
+You have to use the *.image.pullPolicy=Always see the last 3 parameters.
 
     helm upgrade api-platform ./helm/api-platform --namespace=default \
     --set "php.image.repository=gcr.io/test-api-platform-310412/php" \
@@ -156,7 +156,11 @@ You have to use the imagePullPolicy=Always see the last 3 parameters.
     --set php.appSecret='!ChangeMe!' \
     --set postgresql.postgresqlPassword='!ChangeMe!' \
     --set postgresql.persistence.enabled=true \
-    --set corsAllowOrigin='^https?://[a-z\]*\.mywebsite.com$' \
-    --set php.imagePullPolicy=Always \
-    --set caddy.imagePullPolicy=Always \
-    --set pwa.imagePullPolicy=Always
+    --set "corsAllowOrigin=^https?://[a-z\]*\.mywebsite.com$"
+    --set php.image.pullPolicy=Always \
+    --set caddy.image.pullPolicy=Always \
+    --set pwa.image.pullPolicy=Always
+
+## GitHub Actions Example for deployment
+
+You can find a [complete deploy command for GKE](https://github.com/api-platform/demo/blob/main/.github/workflows/deploy.yml) on the [demo project](https://github.com/api-platform/demo/):
