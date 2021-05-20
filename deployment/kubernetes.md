@@ -144,7 +144,7 @@ Just replace `helm install ...` with `helm upgrade ...`
 ### 2. Use :latest tags
 
 Infos about [best practices for tagging images for kubernetes](https://kubernetes.io/docs/concepts/containers/images/)
-You habe to use the imagePullPolicy=Always see the last 3 parameters.
+You have to use the imagePullPolicy=Always see the last 3 parameters.
 
     helm upgrade api-platform ./helm/api-platform --namespace=default \
     --set "php.image.repository=gcr.io/test-api-platform-310412/php" \
