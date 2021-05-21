@@ -408,6 +408,54 @@ class Person
 
 ```
 
+### Plain Identifiers
+
+Instead of sending an IRI to set a relation, you may want to send a plain identifier. To do so, you must create your own denormalizer:
+
+```php
+<?php
+// api/src/Serializer/PlainIdentifierDenormalizer
+
+namespace App\Serializer;
+
+use ApiPlatform\Core\Api\IriConverterInterface;
+use App\Entity\Dummy;
+use App\Entity\RelatedDummy;
+use Symfony\Component\Serializer\Normalizer\ContextAwareDenormalizerInterface;
+use Symfony\Component\Serializer\Normalizer\DenormalizerAwareInterface;
+use Symfony\Component\Serializer\Normalizer\DenormalizerAwareTrait;
+
+class PlainIdentifierDenormalizer implements ContextAwareDenormalizerInterface, DenormalizerAwareInterface
+{
+    use DenormalizerAwareTrait;
+
+    private $iriConverter;
+
+    public function __construct(IriConverterInterface $iriConverter)
+    {
+        $this->iriConverter = $iriConverter;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function denormalize($data, $class, $format = null, array $context = [])
+    {
+        $data['relatedDummy'] = $this->iriConverter->getItemIriFromResourceClass(RelatedDummy::class, ['id' => $data['relatedDummy']]);
+
+        return $this->denormalizer->denormalize($data, $class, $format, $context + [__CLASS__ => true]);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function supportsDenormalization($data, $type, $format = null, array $context = []): bool
+    {
+        return \in_array($format, ['json', 'jsonld'], true) && is_a($type, Dummy::class, true) && !empty($data['relatedDummy']) && !isset($context[__CLASS__]);
+    }
+}
+```
+
 ## Calculated Field
 
 Sometimes you need to expose calculated fields. This can be done by leveraging the groups. This time not on a property, but on a method.

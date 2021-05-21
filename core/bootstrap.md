@@ -139,6 +139,7 @@ use Symfony\Component\Serializer\Normalizer\ProblemNormalizer;
 use Symfony\Component\Serializer\Normalizer\UnwrappingDenormalizer;
 use Symfony\Component\Serializer\Serializer;
 
+/** @deprecated since API Platform 2.7, will be removed in API Platform 3.0 */
 $allowPlainIdentifiers = false;
 $debug = true;
 $defaultContext = [];
