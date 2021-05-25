@@ -159,7 +159,7 @@ class Answer
 # api/config/api_platform/resources.yaml
 App\Entity\Answer:
     subresourceOperations:
-        api_questions_answer_get_subresource:
+        api_answer_get:
             method: 'GET'
             normalization_context: {groups: ['foobar']}
 ```
@@ -200,13 +200,15 @@ may use `bin/console debug:router`.
 
 You can control the path of subresources with the `path` option of the `subresourceOperations` parameter:
 
+[codeSelector]
+
 ```php
 <?php
 // api/src/Entity/Question.php
 
 #[ApiResource(
     subresourceOperations: [
-        'api_questions_answer_get_subresource' => [
+        'api_answer_get' => [
             'method' => 'GET',
             'path' => '/questions/{id}/all-answers',
         ],
@@ -217,9 +219,22 @@ class Question
 }
 ```
 
+```yaml
+# config/api/resources/Question.yaml
+App\Entity\Question:
+    subresourceOperations:
+        api_answer_get:
+            method: get
+            path: /questions/{id]/all-answers
+```
+
+[/codeSelector]
+
 ### Access Control of Subresources
 
 The `subresourceOperations` attribute also allows you to add an access control on each path with the attribute `security`.
+
+[codeSelector]
 
 ```php
 <?php
@@ -227,7 +242,7 @@ The `subresourceOperations` attribute also allows you to add an access control o
 
  #[ApiResource(
     subresourceOperations: [
-        'api_questions_answer_get_subresource' => [
+        'api_questions_get' => [
             'security' => "is_granted('ROLE_AUTHENTICATED')",
         ],
     ],
@@ -237,10 +252,24 @@ The `subresourceOperations` attribute also allows you to add an access control o
  }
 ```
 
+```yaml
+# config/api/resources/Answer.yaml
+App\Entity\Answer:
+    properties:
+        question:
+            subresource:
+                security: 'is_granted("ROLE_AUTHENTICATED")'
+
+```
+
+[/codeSelector]
+
 ### Limiting Depth
 
 You can control depth of subresources with the parameter `maxDepth`. For example, if the `Answer` entity also has a subresource
 such as `comments`and you don't want the route `api/questions/{id}/answers/{id}/comments` to be generated. You can do this by adding the parameter maxDepth in the ApiSubresource annotation or YAML/XML file configuration.
+
+[codeSelector]
 
 ```php
 <?php
@@ -261,3 +290,13 @@ class Question
     // ...
 }
 ```
+
+```yaml
+config/api/resources/Question.yaml
+App\Entity\Question:
+    properties:
+        answer:
+            maxDepth: 1
+```
+
+[/codeSelector]
