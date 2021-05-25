@@ -81,19 +81,31 @@ App\Entity\Book:
 
 Resource signature can be modified at the property level as well:
 
+[codeSelector]
+
 ```php
 class Book
 {
     //...
 
     /**
-     * @var string Property viewable and writtable only by users with ROLE_ADMIN
+     * @var string Property viewable and writable only by users with ROLE_ADMIN
      *
      * @ApiProperty(security="is_granted('ROLE_ADMIN')")
      */
     private $adminOnlyProperty;
 }
 ```
+
+```yaml
+# config/api/resources/Book.yaml
+App\Entity\Book:
+    properties:
+        adminOnlyProperty:
+            security: 'is_granted("ROLE_ADMIN")'
+```
+
+[/codeSelector]
 
 In this example:
 
@@ -169,6 +181,8 @@ In order to give the current `object` to your voter, use the expression `is_gran
 
 For example:
 
+[codeSelector]
+
 ```php
 <?php
 // api/src/Entity/Book.php
@@ -197,6 +211,26 @@ class Book
     // ...
 }
 ```
+
+```yaml
+# config/api/resources/Book.yaml
+App\Entity\Book:
+    attributes:
+        security: 'is_granted("ROLE_USER")'
+    collectionOperations:
+        get: ~
+        post:
+            security_post_denormalize: 'is_granted("BOOK_CREATE", object)'
+    itemOperations:
+        get:
+            security: 'is_granted("BOOK_READ", object)'
+        put:
+            security: 'is_granted("BOOK_EDIT", object)'
+        delete:
+            security: 'is_granted("BOOK_DELETE", object)'
+```
+
+[/codeSelector]
 
 Please note that if you use both `attributes={"security"="..` and then `"post" = { "security_post_denormalize" = "...`, the `security` on top level is called first, and after `security_post_denormalize`. This could lead to unwanted behaviour, so avoid using both of them simultaneously.
 If you need to use `security_post_denormalize`, consider adding `security` for the other operations instead of the global one.
