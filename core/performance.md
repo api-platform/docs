@@ -349,7 +349,7 @@ Blackfire.io allows you to monitor the performance of your applications. For mor
 
 To configure Blackfire.io follow these simple steps:
 
-1. Add the following to your `docker-compose.yml` file:
+1. Add the following to your `docker-compose.override.yml` file:
 
     ```yaml
         blackfire:
