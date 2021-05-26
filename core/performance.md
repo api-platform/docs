@@ -353,7 +353,7 @@ To configure Blackfire.io follow these simple steps:
 
     ```yaml
         blackfire:
-            image: blackfire/blackfire
+            image: blackfire/blackfire:2
             environment:
                 # Exposes the host BLACKFIRE_SERVER_ID and TOKEN environment variables.
                 - BLACKFIRE_SERVER_ID
@@ -382,7 +382,7 @@ To configure Blackfire.io follow these simple steps:
                 && mkdir -p /tmp/blackfire \
                 && tar zxpf /tmp/blackfire-probe.tar.gz -C /tmp/blackfire \                        
                 && mv /tmp/blackfire/blackfire-*.so $(php -r "echo ini_get('extension_dir');")/blackfire.so \
-                && printf "extension=blackfire.so\nblackfire.agent_socket=tcp://blackfire:8707\n" > $PHP_INI_DIR/conf.d/blackfire.ini
+                && printf "extension=blackfire.so\nblackfire.agent_socket=tcp://blackfire:8307\n" > $PHP_INI_DIR/conf.d/blackfire.ini
     ```
 
 4. Rebuild and restart all your containers
