@@ -358,6 +358,7 @@ To configure Blackfire.io follow these simple steps:
                 # Exposes the host BLACKFIRE_SERVER_ID and TOKEN environment variables.
                 - BLACKFIRE_SERVER_ID
                 - BLACKFIRE_SERVER_TOKEN
+                - BLACKFIRE_DISABLE_LEGACY_PORT=1
     ```
 
 2. Add your Blackfire.io id and server token to your `.env` file at the root of your project (be sure not to commit this to a public repository):
