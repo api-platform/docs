@@ -77,7 +77,8 @@ Actual this is [bitnami/postgresql](https://bitnami.com/stack/postgresql/helm), 
 
 ### 4. Deploy your API to the container
 
-    helm install api-platform ./helm/api-platform --namespace=default \
+    helm upgrade api-platform ./helm/api-platform --namespace=default \
+        --install \
         --set "php.image.repository=gcr.io/test-api-platform/php" \
         --set php.image.tag=latest \
         --set "caddy.image.repository=gcr.io/test-api-platform/caddy" \
@@ -106,7 +107,7 @@ get access on your local machine to the deploy. See image below.
 If you prefer to use a managed DBMS like [Heroku Postgres](https://www.heroku.com/postgres) or
 [Google Cloud SQL](https://cloud.google.com/sql/docs/postgres/) (recommended):
 
-    helm install api-platform ./helm/api-platform \
+    helm upgrade api-platform ./helm/api-platform \
         # ...
         --set postgresql.enabled=false \
         --set postgresql.url=pgsql://username:password@host/database?serverVersion=13
@@ -137,9 +138,8 @@ There are 2 main upgrade strategies.
 
 ### 1. Always version your images (recommended)
 
-Change the version in the attribut "appVersion" in Chart.yaml and tag the images.
+Change the version in the attribut "appVersion" in Chart.yaml and tag the images with this version.
 You can upgrade with the same command from the installation and pass all parameters.
-Just replace `helm install ...` with `helm upgrade ...`
 
 ### 2. Use :latest tags
 
@@ -147,16 +147,16 @@ Infos about [best practices for tagging images for kubernetes](https://kubernete
 You have to use the *.image.pullPolicy=Always see the last 3 parameters.
 
     helm upgrade api-platform ./helm/api-platform --namespace=default \
-    --set "php.image.repository=gcr.io/test-api-platform-310412/php" \
+    --set "php.image.repository=gcr.io/test-api-platform/php" \
     --set php.image.tag=latest \
-    --set "caddy.image.repository=gcr.io/test-api-platform-310412/caddy" \
+    --set "caddy.image.repository=gcr.io/test-api-platform/caddy" \
     --set caddy.image.tag=latest \
-    --set "pwa.image.repository=gcr.io/test-api-platform-310412/pwa" \
+    --set "pwa.image.repository=gcr.io/test-api-platform/pwa" \
     --set pwa.image.tag=latest \
     --set php.appSecret='!ChangeMe!' \
     --set postgresql.postgresqlPassword='!ChangeMe!' \
     --set postgresql.persistence.enabled=true \
-    --set "corsAllowOrigin=^https?://[a-z\]*\.mywebsite.com$"
+    --set "corsAllowOrigin=^https?://[a-z\]*\.mywebsite.com$" \
     --set php.image.pullPolicy=Always \
     --set caddy.image.pullPolicy=Always \
     --set pwa.image.pullPolicy=Always
