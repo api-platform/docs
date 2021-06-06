@@ -293,6 +293,83 @@ services:
         autoconfigure: false
 ```
 
+### Improve return values of the JWT-Token Endpoint
+
+Per Default, only the `Token` is in the Response from the `POST /authentication_token` endpoint.
+If you want to make an auto renewal, after the old token expires, you need to know how long the token is valid.
+This value is stored in the parameter `token_ttl` in the file `api/config/packages/lexik_jwt_authentication.yaml`
+(or overwritten in the Environment).
+
+Here is an example how to add this info and the roles of the user, into the response.
+See [Data-Customization with LexikJWTAuthenticationBundle](https://github.com/lexik/LexikJWTAuthenticationBundle/blob/master/Resources/doc/2-data-customization.md#eventsauthentication_success---adding-public-data-to-the-jwt-response) for details.
+All additional attributes are under the "data"-path in the response.
+
+Create a new File `api\EventListener\AuthenticationSuccessListener`
+
+```php
+<?php
+
+namespace App\EventListener;
+
+use Lexik\Bundle\JWTAuthenticationBundle\Event\AuthenticationSuccessEvent;
+use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\Security\Core\User\UserInterface;
+
+class AuthenticationSuccessListener
+{
+    private ContainerInterface $container;
+
+    public function __construct(ContainerInterface $container)
+    {
+        $this->container = $container;
+    }
+
+    /**
+     * Add User Role and Expiration-Infos of Token
+     * @param AuthenticationSuccessEvent $event
+     * @throws \Exception
+     */
+    public function onAuthenticationSuccessResponse(AuthenticationSuccessEvent $event): void
+    {
+        $data = $event->getData();
+        $user = $event->getUser();
+
+        if (!$user instanceof UserInterface) {
+            return;
+        }
+
+        $token_ttl = $this->container->getParameter('lexik_jwt_authentication.token_ttl');
+
+        $data['data'] = array(
+            'token_ttl' => $token_ttl,
+            'roles' => $user->getRoles(),
+        );
+
+        $event->setData($data);
+    }
+}
+```
+
+And register this service in `config/services.yaml`:
+
+```yaml
+# api/config/services.yaml
+services:
+    # ...   
+
+    acme_api.event.authentication_success_listener:
+        class: App\EventListener\AuthenticationSuccessListener
+        tags:
+            - { name: kernel.event_listener, event: lexik_jwt_authentication.on_authentication_success, method: onAuthenticationSuccessResponse }
+
+```
+
+With the help of `token_ttl` you can now automate the token renewal.
+[Example for a token renewal with Postman for easy testing](../core/testing-postman.md)
+
+This is just one of many solutions for this problem.
+See section [About token expiration](https://github.com/lexik/LexikJWTAuthenticationBundle/blob/master/Resources/doc/index.md#about-token-expiration) from LexikJWTAuthenticationBundle.
+
 ## Testing
 
 To test your authentication with `ApiTestCase`, you can write a method as below:
