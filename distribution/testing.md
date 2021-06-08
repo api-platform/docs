@@ -152,7 +152,7 @@ class BooksTest extends ApiTestCase
             'publicationDate' => '1985-07-31T00:00:00+00:00',
             'reviews' => [],
         ]);
-        $this->assertRegExp('~^/books/\d+$~', $response->toArray()['@id']);
+        $this->assertMatchesRegularExpression('~^/books/\d+$~', $response->toArray()['@id']);
         $this->assertMatchesResourceItemJsonSchema(Book::class);
     }
 
