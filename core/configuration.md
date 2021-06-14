@@ -407,8 +407,7 @@ api_platform:
         stateless: ~
 
         # The URL generation strategy to use for IRIs
-        # Use values from UrlGeneratorInterface
-        url_generation_strategy: ~
+        url_generation_strategy: !php/const ApiPlatform\Core\Api\UrlGeneratorInterface::ABS_PATH
 
         # ...
 ```

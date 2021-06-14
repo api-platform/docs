@@ -37,6 +37,7 @@ chapters:
       - errors
       - external-vocabularies
       - operation-path-naming
+      - url-generation-strategy
       - extending-jsonld-context
       - identifiers
       - mongodb
