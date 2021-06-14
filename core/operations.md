@@ -623,6 +623,14 @@ It's almost done, we have just one final issue: our fake item operation is visib
 To remove it, we will need to [decorate the Swagger documentation](openapi.md#overriding-the-openapi-specification).
 Then, remove the route from the decorator:
 
+```yaml
+# api/config/services.yaml
+    App\OpenApi\OpenApiFactory:
+        decorates: 'api_platform.openapi.factory'
+        arguments: [ '@App\OpenApi\OpenApiFactory.inner' ]
+        autoconfigure: false
+```
+
 ```php
 <?php
 // src/OpenApi/OpenApiFactory.php
