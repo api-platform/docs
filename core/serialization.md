@@ -408,6 +408,115 @@ class Person
 
 ```
 
+## Property Normalization Context
+
+If you want to change the (de)normalization context of a property, for instance if you want to change the format of the date time,
+you can do so by using the `#[Context]` attribute from the Symfony Serializer component.
+
+For instance:
+
+```php
+<?php
+// api/src/Entity/Book.php
+
+declare(strict_types=1);
+
+namespace App\Entity;
+
+use ApiPlatform\Core\Annotation\ApiResource;
+use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Context;
+use Symfony\Component\Serializer\Normalizer\DateTimeNormalizer;
+
+/**
+ * @ORM\Entity
+ */
+#[ApiResource]
+class Book
+{
+    /**
+     * @ORM\Column(type="date")
+     */
+    #[Context([DateTimeNormalizer::FORMAT_KEY => 'Y-m-d'])]
+    public ?\DateTimeInterface $publicationDate = null;
+}
+```
+
+In the above example, you will receive the book's data like this:
+
+```json
+{
+  "@context": "/contexts/Book",
+  "@id": "/books/3",
+  "@type": "http://schema.org/Book",
+  "publicationDate": "1989-06-16"
+}
+```
+
+It's also possible to only change the denormalization or normalization context:
+
+```php
+<?php
+// api/src/Entity/Book.php
+
+declare(strict_types=1);
+
+namespace App\Entity;
+
+use ApiPlatform\Core\Annotation\ApiResource;
+use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Context;
+use Symfony\Component\Serializer\Normalizer\DateTimeNormalizer;
+
+/**
+ * @ORM\Entity
+ */
+#[ApiResource]
+class Book
+{
+    /**
+     * @ORM\Column(type="date")
+     */
+    #[Context(normalizationContext: [DateTimeNormalizer::FORMAT_KEY => 'Y-m-d'])]
+    public ?\DateTimeInterface $publicationDate = null;
+}
+```
+
+Groups are also supported:
+
+```php
+<?php
+// api/src/Entity/Book.php
+
+declare(strict_types=1);
+
+namespace App\Entity;
+
+use ApiPlatform\Core\Annotation\ApiResource;
+use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Context;
+use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Serializer\Normalizer\DateTimeNormalizer;
+
+/**
+ * @ORM\Entity
+ */
+#[ApiResource]
+class Book
+{
+    /**
+     * @ORM\Column(type="date")
+     */
+    #[Groups(["extended"])]
+    #[Context([DateTimeNormalizer::FORMAT_KEY => \DateTime::RFC3339])]
+    #[Context(
+        context: [DateTimeNormalizer::FORMAT_KEY => \DateTime::RFC3339_EXTENDED],
+        groups: ['extended'],
+    )]
+    public ?\DateTimeInterface $publicationDate = null;
+}
+```
+
 ## Calculated Field
 
 Sometimes you need to expose calculated fields. This can be done by leveraging the groups. This time not on a property, but on a method.
