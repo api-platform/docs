@@ -35,7 +35,7 @@ final class Person
 ```
 
 ```yaml
-# config/api/resources/Person.yaml
+# api/config/api_platform/resources/Person.yaml
 App\Entity\Person:
     properties:
         code:

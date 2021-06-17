@@ -199,7 +199,7 @@ class Book
 ```
 
 ```yaml
-# config/api/resources/Book.yaml
+# api/config/api_platform/resources/Book.yaml
 App\Entity\Book:
     attributes:
         normalization_context:
@@ -210,7 +210,7 @@ App\Entity\Book:
             normalization_context:
                 groups: ['put']
 
-# config/serializer/Book.yaml
+# api/config/serializer/Book.yaml
 App\Entity\Book:
     attributes:
         name:
@@ -305,13 +305,13 @@ class Person
 ```
 
 ```yaml
-# config/api/resources/Book.yaml
+# api/config/api_platform/resources/Book.yaml
 App\Entity\Book:
     attributes:
         normalization_context:
             groups: ['book']
 
-# config/serializer/Book.yaml
+# api/config/serializer/Book.yaml
 App\Entity\Book:
     attributes:
         name:
@@ -319,7 +319,7 @@ App\Entity\Book:
         author:
             groups: ['book']
 
-# config/serializer/Person.yaml
+# api/config/serializer/Person.yaml
 App\Entity\Person:
     attributes:
         name:
@@ -373,7 +373,7 @@ class Book
 ```
 
 ```yaml
-# config/api/resources/Book.yaml
+# api/config/api_platform/resources/Book.yaml
 App\Entity\Book:
     attributes:
         denormalization_context:
@@ -432,7 +432,7 @@ class Person
 ```
 
 ```yaml
-# config/api/resources/Person.yaml
+# api/config/api_platform/resources/Person.yaml
 App\Entity\Person:
     attributes:
         normalization_context:
@@ -440,7 +440,7 @@ App\Entity\Person:
         denormalization_context:
             groups: ['person']
 
-# config/serializer/Person.yaml
+# api/config/serializer/Person.yaml
 App\Entity\Person:
     attributes:
         name:
@@ -495,7 +495,7 @@ class Person
 ```
 
 ```yaml
-# config/api/resources/Person.yaml
+# api/config/api_platform/resources/Person.yaml
 App\Entity\Person:
     attributes:
         normalization_context:
@@ -507,7 +507,7 @@ App\Entity\Person:
             readableLink: false
             writableLink: false
 
-# config/serializer/Person.yaml
+# api/config/serializer/Person.yaml
 App\Entity\Person:
     attributes:
         name:
@@ -692,14 +692,14 @@ class Greeting
 ```
 
 ```yaml
-# config/api/resources/Greeting.yaml
+# api/config/api_platform/resources/Greeting.yaml
 App\Entity\Greeting:
     collectionOperations:
         get:
             normalization_context:
                 groups: 'greeting:collection:get'
 
-# config/serializer/Greeting.yaml
+# api/config/serializer/Greeting.yaml
 App\Entity\Greeting:
     attributes:
         id:
@@ -760,7 +760,7 @@ class Book
 ```
 
 ```yaml
-# config/api/resources/Book.yaml
+# api/config/api_platform/resources/Book.yaml
 App\Entity\Book: 
     attributes:
         normalization_context:
@@ -768,7 +768,7 @@ App\Entity\Book:
         denormalization_context:
             groups: ['book:input']
 
-# config/serializer/Book.yaml
+# api/config/serializer/Book.yaml
 App\Entity\Book:
     attributes:
         active:
@@ -1112,7 +1112,7 @@ class Book
 ```
 
 ```yaml
-# config/api/resources/Book.yaml
+# api/config/api_platform/resources/Book.yaml
 App\Entity\Book:
     attributes:
         normalization_context:
