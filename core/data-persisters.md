@@ -22,6 +22,11 @@ persist data for a given resource will be used.
 
 ## Creating a Custom Data Persister
 
+If the [Symfony MakerBundle](https://symfony.com/doc/current/bundles/SymfonyMakerBundle) is installed in your project, you can use the following command to generate a custom data persister easily:
+```console
+bin/console make:data-persister
+```
+
 To create a data persister, you have to implement the [`ContextAwareDataPersisterInterface`](https://github.com/api-platform/core/blob/main/src/DataPersister/ContextAwareDataPersisterInterface.php).
 This interface defines only 3 methods:
 
