@@ -89,7 +89,7 @@ class Book
      */
     #[ApiProperty(
         security: "is_granted('ROLE_ADMIN')",
-        attributes: ["security_post_denormalize" => "is_granted('UPDATE', object)"]
+        securityPostDenormalize: "is_granted('UPDATE', object)"
     )]
     private string $adminOnlyProperty;
 }
