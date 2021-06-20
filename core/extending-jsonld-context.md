@@ -17,29 +17,22 @@ namespace App\Entity;
 use ApiPlatform\Core\Annotation\ApiProperty;
 use ApiPlatform\Core\Annotation\ApiResource;
 
-/**
- * @ApiResource(iri="http://schema.org/Book")
- */
+#[ApiResource(iri: "https://schema.org/Book")]
 class Book
 {
     // ...
 
-    /**
-     * ...
-     * @ApiProperty(
-     *     iri="http://schema.org/name",
-     *     attributes={
-     *         "jsonld_context"={
-     *             "@id"="http://yourcustomid.com",
-     *             "@type"="http://www.w3.org/2001/XMLSchema#string",
-     *             "someProperty"={
-     *                 "a"="textA",
-     *                 "b"="textB"
-     *             }
-     *         }
-     *     }
-     * )
-     */
+    #[ApiProperty(
+        iri: "https://schema.org/name",
+        jsonldContext: [
+            "@id" => "https://yourcustomid.com",
+            "@type" => "https://www.w3.org/2001/XMLSchema#string",
+            "someProperty" => [
+                "a" => "textA",
+                "b" => "textB"
+            ]
+        ]
+    )]
     public $name;
     
     // ...
@@ -53,11 +46,11 @@ The generated context will now have your custom attributes set:
 ```json
 {
   "@context": {
-    "@vocab": "http://example.com/apidoc#",
-    "hydra": "http://www.w3.org/ns/hydra/core#",
+    "@vocab": "https://example.com/docs.jsonld#",
+    "hydra": "https://www.w3.org/ns/hydra/core#",
     "name": {
-      "@id": "http://yourcustomid.com",
-      "@type": "http://www.w3.org/2001/XMLSchema#string",
+      "@id": "https://yourcustomid.com",
+      "@type": "https://www.w3.org/2001/XMLSchema#string",
       "someProperty": {
         "a": "textA",
         "b": "textB"
@@ -74,6 +67,7 @@ Note that you do not have to provide the `@id` attribute. If you do not provide 
 <p align="center" class="symfonycasts"><a href="https://symfonycasts.com/screencast/api-platform/hydra?cid=apip"><img src="../distribution/images/symfonycasts-player.png" alt="Hydra screencast"><br>Watch the Hydra screencast</a></p>
 
 It's also possible to replace the Hydra context used by the documentation generator:
+The data of this example could be found in /docs.jsonld in hydra:supportedClass/.../hydra:supportedOperation/.../
 
 [codeSelector]
 
@@ -83,12 +77,9 @@ It's also possible to replace the Hydra context used by the documentation genera
 
 use ApiPlatform\Core\Annotation\ApiResource;
 
-/**
- * ...
- * @ApiResource(itemOperations={
- *     "get"={"hydra_context"={"foo"="bar"}}
- * })
- */
+#[ApiResource(itemOperations:
+    ["get" => ["hydra_context" => ["foo" => "bar"]]])
+]
 class Book
 {
     //...
@@ -108,7 +99,7 @@ App\Entity\Book:
 <!-- api/config/api_platform/resources.xml -->
 
 <resources xmlns="https://api-platform.com/schema/metadata"
-           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xmlns:xsi="https://www.w3.org/2001/XMLSchema-instance"
            xsi:schemaLocation="https://api-platform.com/schema/metadata
            https://api-platform.com/schema/metadata/metadata-2.0.xsd">
     <resource class="App\Entity\Book">

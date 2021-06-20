@@ -4,7 +4,7 @@ Note: using custom controllers with API Platform is **discouraged**. Also, Graph
 [For most use cases, better extension points, working both with REST and GraphQL, are available](design.md).
 
 API Platform can leverage the Symfony routing system to register custom operations related to custom controllers. Such custom
-controllers can be any valid [Symfony controller](http://symfony.com/doc/current/book/controller.html), including standard
+controllers can be any valid [Symfony controller](https://symfony.com/doc/current/book/controller.html), including standard
 Symfony controllers extending the [`Symfony\Bundle\FrameworkBundle\Controller\AbstractController`](http://api.symfony.com/4.1/Symfony/Bundle/FrameworkBundle/Controller/AbstractController.html)
 helper class.
 
@@ -15,7 +15,7 @@ implements the [Action-Domain-Responder](https://github.com/pmjones/adr) pattern
 The distribution of API Platform also eases the implementation of the ADR pattern: it automatically registers action classes
 stored in `api/src/Controller` as autowired services.
 
-Thanks to the [autowiring](http://symfony.com/doc/current/components/dependency_injection/autowiring.html) feature of the
+Thanks to the [autowiring](https://symfony.com/doc/current/components/dependency_injection/autowiring.html) feature of the
 Symfony Dependency Injection container, services required by an action can be type-hinted in its constructor, it will be
 automatically instantiated and injected, without having to declare it explicitly.
 
@@ -154,25 +154,23 @@ use ApiPlatform\Core\Annotation\ApiResource;
 use App\Controller\CreateBookPublication;
 use Symfony\Component\Serializer\Annotation\Groups;
 
-/**
- * @ApiResource(itemOperations={
- *     "get",
- *     "post_publication"={
- *         "method"="POST",
- *         "path"="/books/{id}/publication",
- *         "controller"=CreateBookPublication::class,
- *         "normalization_context"={"groups"={"publication"}},
- *     }
- * })
- */
+#[ApiResource(itemOperations: 
+    [
+      "get",
+      "post_publication" => [
+          "method" => "POST",
+          "path" => "/books/{id}/publication",
+          "controller" => CreateBookPublication::class,
+          "normalization_context" => ["groups" => ["publication"]],
+      ]
+  ]
+ )]
 class Book
 {
     //...
 
-    /**
-     * @Groups("publication")
-     */
-    public $isbn;
+    #[Groups(["publication"])]
+    public string $isbn;
 
     // ...
 }
@@ -233,17 +231,17 @@ operation attribute:
 use ApiPlatform\Core\Annotation\ApiResource;
 use App\Controller\CreateBookPublication;
 
-/**
- * @ApiResource(itemOperations={
- *     "get",
- *     "post_publication"={
- *         "method"="POST",
- *         "path"="/books/{id}/publication",
- *         "controller"=CreateBookPublication::class,
- *         "read"=false,
- *     }
- * })
- */
+#[ApiResource(itemOperations: 
+    [
+      "get",
+      "post_publication" => [
+          "method" => "POST",
+          "path" => "/books/{id}/publication",
+          "controller" => CreateBookPublication::class,
+          "read" => false
+          ],
+    ]
+)]
 class Book
 {
     //...
@@ -309,13 +307,13 @@ First, let's create your resource configuration:
 
 use ApiPlatform\Core\Annotation\ApiResource;
 
-/**
- * @ApiResource(itemOperations={
- *     "get",
- *     "post_publication"={"route_name"="book_post_publication"},
-*      "book_post_discontinuation",
- * })
- */
+#[ApiResource(itemOperations: 
+    [
+      "get",
+      "post_publication" => ["route_name" => "book_post_publication"],
+      "book_post_discontinuation"
+    ]
+ )]
 class Book
 {
     //...
@@ -375,17 +373,13 @@ class CreateBookPublication
         $this->bookPublishingHandler = $bookPublishingHandler;
     }
 
-    /**
-     * @Route(
-     *     name="book_post_publication",
-     *     path="/books/{id}/publication",
-     *     methods={"POST"},
-     *     defaults={
-     *         "_api_resource_class"=Book::class,
-     *         "_api_item_operation_name"="post_publication"
-     *     }
-     * )
-     */
+    #[Route(name: "book_post_publication",
+     path: "/books/{id}/publication",
+     methods: ["POST"],
+     defaults: [
+            "_api_resource_class" => Book::class,
+            "_api_item_operation_name" => "post_publication"
+    ])]
     public function __invoke(Book $data): Book
     {
         $this->bookPublishingHandler->handle($data);

@@ -158,11 +158,10 @@ For instance, in the following example, only the query of an item and the create
 
 namespace App\Entity;
 
- * @ApiResource(graphql={
- *     "item_query",
- *     "create"
- * })
- */
+#[ApiResource(graphql: [
+    "item_query", 
+    "create"
+])]
 class Book
 {
     // ...
@@ -289,32 +288,32 @@ use ApiPlatform\Core\Annotation\ApiResource;
 use App\Resolver\BookCollectionResolver;
 use App\Resolver\BookResolver;
 
-/**
- * @ApiResource(graphql={
- *     "retrievedQuery"={
- *         "item_query"=BookResolver::class
- *     },
- *     "notRetrievedQuery"={
- *         "item_query"=BookResolver::class,
- *         "args"={}
- *     },
- *     "withDefaultArgsNotRetrievedQuery"={
- *         "item_query"=BookResolver::class,
- *         "read"=false
- *     },
- *     "withCustomArgsQuery"={
- *         "item_query"=BookResolver::class,
- *         "args"={
- *             "id"={"type"="ID!"},
- *             "log"={"type"="Boolean!", "description"="Is logging activated?"},
- *             "logDate"={"type"="DateTime"}
- *         }
- *     },
- *     "collectionQuery"={
- *         "collection_query"=BookCollectionResolver::class
- *     }
- * })
- */
+#[ApiResource(
+    graphql: [
+        "retrievedQuery" => [
+            "item_query" => BookResolver::class
+        ],
+        "notRetrievedQuery" => [
+            "item_query" => BookResolver::class,
+            "args" => []
+        ],
+        "withDefaultArgsNotRetrievedQuery" => [
+            "item_query" => BookResolver::class,
+            "read" => false
+        ],
+        "withCustomArgsQuery" => [
+            "item_query" => BookResolver::class,
+            "args" => [
+                "id" => ["type" => "ID!"],
+                "log" => ["type" => "Boolean!", "description" => "Is logging activated?"],
+                "logDate" => ["type" => "DateTime"]
+            ]
+        ],
+        "collectionQuery" => [
+            "collection_query" => BookCollectionResolver::class
+        ]
+    ]
+)]
 class Book
 {
     // ...
@@ -407,12 +406,7 @@ use App\Model\Book;
 
 final class BookMutationResolver implements MutationResolverInterface
 {
-    /**
-     * @param Book|null $item
-     *
-     * @return Book
-     */
-    public function __invoke($item, array $context)
+    public function __invoke(?Book $item, array $context): Book
     {
         // Mutation input arguments are in $context['args']['input'].
 
@@ -446,24 +440,24 @@ namespace App\Model;
 use ApiPlatform\Core\Annotation\ApiResource;
 use App\Resolver\BookMutationResolver;
 
-/**
- * @ApiResource(graphql={
- *     "mutation"={
- *         "mutation"=BookMutationResolver::class
- *     },
- *     "withCustomArgsMutation"={
- *         "mutation"=BookMutationResolver::class,
- *         "args"={
- *             "sendMail"={"type"="Boolean!", "description"="Send a mail?"}
- *         }
- *     },
- *     "disabledStagesMutation"={
- *         "mutation"=BookMutationResolver::class,
- *         "deserialize"=false,
- *         "write"=false
- *     }
- * })
- */
+#[ApiResource(
+    graphql: [
+        "mutation" => [
+            "mutation" => BookMutationResolver::class
+        ],
+        "withCustomArgsMutation" => [
+            "mutation" => BookMutationResolver::class,
+            "args" => [
+                "sendMail" => ["type" => "Boolean!", "description" => "Send a mail?"]
+            ]
+        ],
+        "disabledStagesMutation" => [
+            "mutation" => BookMutationResolver::class,
+            "deserialize" => false,
+            "write" => false
+        ]
+    ]
+)]
 class Book
 {
     // ...
@@ -530,16 +524,13 @@ namespace App\Model;
 
 use ApiPlatform\Core\Annotation\ApiResource;
 
-/**
- * @ApiResource(
- *     graphql={
- *         ...
- *         "update",
- *         ...
- *     },
- *     mercure=true
- * )
- */
+#[ApiResource(graphql: [
+    ...
+    "update",
+    ...
+    ],
+    mercure: true
+)]
 class Book
 {
     // ...
@@ -681,13 +672,12 @@ namespace App\Model;
 
 use ApiPlatform\Core\Annotation\ApiResource;
 
-/**
- * @ApiResource(graphql={
- *     "mutation"={
- *         "write"=false
- *     }
- * })
- */
+#[ApiResource(graphql: [
+    "mutation" => [
+          "write" => false
+      ]
+    ],
+)]
 class Book
 {
     // ...
@@ -703,14 +693,11 @@ namespace App\Model;
 
 use ApiPlatform\Core\Annotation\ApiResource;
 
-/**
- * @ApiResource(
- *     graphql={...},
- *     attributes={
- *         "write"=false
- *     }
- * })
- */
+#[ApiResource(graphql: [...],
+    attributes: [
+          "write" => false
+      ]
+)]
 class Book
 {
     // ...
@@ -743,22 +730,20 @@ namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
 
-/**
- * @ApiResource(
- *     attributes={
- *         "filters"={"offer.search_filter"}
- *     },
- *     graphql={
- *         "item_query",
- *         "collection_query"={
- *              "filters"={"offer.date_filter"}
- *          },
- *          "delete",
- *          "update",
- *          "create"
- *     }
- * )
- */
+#[ApiResource(
+    attributes: [
+          "filters" => ["offer.search_filter"]
+      ],
+    graphql: [
+          "item_query",
+          "collection_query" => [
+               "filters" => ["offer.date_filter"]
+           ],
+           "delete",
+           "update",
+           "create"
+    ]
+)]
 class Offer
 {
     // ...
@@ -819,11 +804,9 @@ use ApiPlatform\Core\Annotation\ApiResource;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\OrderFilter;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
 
-/**
- * @ApiResource
- * @ApiFilter(OrderFilter::class, properties={"product.releaseDate"})
- * @ApiFilter(SearchFilter::class, properties={"product.color": "exact"})
- */
+#[ApiResource]
+#[ApiFilter(OrderFilter::class, properties: ["product.releaseDate"])]
+#[ApiFilter(SearchFilter::class, properties: ["product.color" => "exact"])]
 class Offer
 {
     // ...
@@ -966,19 +949,16 @@ namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
 
-/**
- * @ApiResource(
- *     graphql={
- *          "item_query",
- *          "collection_query"={
- *              "pagination_type"="page"
- *          },
- *          "delete",
- *          "update",
- *          "create"
- *     }
- * )
- */
+#[ApiResource(graphql: [
+           "item_query",
+           "collection_query" => [
+               "pagination_type" => "page"
+           ],
+           "delete",
+           "update",
+           "create"
+      ]
+ )]
 class Offer
 {
     // ...
@@ -995,13 +975,7 @@ namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
 
-/**
- * @ApiResource(
- *     attributes={
- *          "pagination_type"="page"
- *     }
- * )
- */
+#[ApiResource(attributes: ["pagination_type" => "page"])]
 class Offer
 {
     // ...
@@ -1062,9 +1036,7 @@ It can also be disabled for a specific resource (REST and GraphQL):
 
 use ApiPlatform\Core\Annotation\ApiResource;
 
-/**
- * @ApiResource(attributes={"pagination_enabled"=false})
- */
+#[ApiResource(attributes: ["pagination_enabled" => false])]
 class Book
 {
     // ...
@@ -1081,9 +1053,7 @@ You can also disable the pagination for a specific collection operation:
 
 use ApiPlatform\Core\Annotation\ApiResource;
 
-/**
- * @ApiResource(graphql={"collection_query"={"pagination_enabled"=false}})
- */
+#[ApiResource(graphql: ["collection_query" => ["pagination_enabled" => false]])]
 class Book
 {
     // ...
@@ -1109,23 +1079,31 @@ namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
 
-/**
- * @ApiResource(
- *     attributes={"security"="is_granted('ROLE_USER')"},
- *     collectionOperations={
- *         "post"={"security"="is_granted('ROLE_ADMIN')", "security_message"="Only admins can add books."}
- *     },
- *     itemOperations={
- *         "get"={"security"="is_granted('ROLE_USER') and object.owner == user", "security_message"="Sorry, but you are not the book owner."}
- *     },
- *     graphql={
- *         "item_query"={"security"="is_granted('ROLE_USER') and object.owner == user"},
- *         "collection_query"={"security"="is_granted('ROLE_ADMIN')"},
- *         "delete"={"security"="is_granted('ROLE_ADMIN')"},
- *         "create"={"security"="is_granted('ROLE_ADMIN')"}
- *     }
- * )
- */
+#[ApiResource(
+    attributes: [
+        "security" => "is_granted('ROLE_USER')"
+    ],
+    collectionOperations: [
+        "post" => ["security" => "is_granted('ROLE_ADMIN')", "security_message" => "Only admins can add books."]
+    ],
+    itemOperations: [
+        "get" => ["security" => "is_granted('ROLE_USER') and object.owner == user", "security_message" => "Sorry, but you are not the book owner."]
+    ],
+    graphql: [
+        "item_query" => [
+            "security" => "is_granted('ROLE_USER') and object.owner == user"
+        ],
+        "collection_query" => [
+            "security" => "is_granted('ROLE_ADMIN')"
+        ],
+        "delete" => [
+            "security" => "is_granted('ROLE_ADMIN')"
+        ],
+        "create" => [
+            "security" => "is_granted('ROLE_ADMIN')"
+        ]
+    ]
+)]
 class Book
 {
     // ...
@@ -1156,32 +1134,26 @@ namespace App\Entity;
 use ApiPlatform\Core\Annotation\ApiResource;
 use Symfony\Component\Serializer\Annotation\Groups;
 
-/**
- * @ApiResource(
- *     normalizationContext={"groups"={"read"}},
- *     denormalizationContext={"groups"={"write"}},
- *     graphql={
- *         "item_query"={"normalization_context"={"groups"={"item_query"}}},
- *         "collection_query"={"normalization_context"={"groups"={"collection_query"}}},
- *         "create"={
- *             "normalization_context"={"groups"={"collection_query"}},
- *             "denormalization_context"={"groups"={"mutation"}}
- *         }
- *     }
- * )
- */
+#[ApiResource(
+    normalizationContext: ["groups" => ["read"]],
+    denormalizationContext: ["groups" => ["write"]],
+    graphql: [
+        "item_query" => ["normalization_context" => ["groups" => ["item_query"]]],
+        "collection_query" => ["normalization_context" => ["groups" => ["collection_query"]]],
+        "create" => [
+            ["normalization_context" => ["groups" => ["collection_query"]]],
+            ["denormalization_context" => ["groups" => ["mutation"]]]
+        ]
+    ]
+)]
 class Book
 {
     // ...
 
-    /**
-     * @Groups({"read", "write", "item_query", "collection_query"})
-     */
+    #[Groups(["read", "write", "item_query", "collection_query"])]
     public $name;
 
-    /**
-     * @Groups({"read", "mutation", "item_query"})
-     */
+    #[Groups(["read", "mutation", "item_query"])]
     public $author;
 
     // ...
@@ -1261,9 +1233,9 @@ services:
 ```xml
 <?xml version="1.0" encoding="UTF-8" ?>
 <!-- api/config/services.xml -->
-<container xmlns="http://symfony.com/schema/dic/services"
+<container xmlns="https://symfony.com/schema/dic/services"
     xmlns:xsd="http://www.w3.org/2001/XMLSchema-instance"
-    xsd:schemaLocation="http://symfony.com/schema/dic/services https://symfony.com/schema/dic/services/services-1.0.xsd">
+    xsd:schemaLocation="https://symfony.com/schema/dic/services https://symfony.com/schema/dic/services/services-1.0.xsd">
 
     <services>
         <service id="App\Error\ErrorHandler"
@@ -1386,10 +1358,8 @@ use ApiPlatform\Core\Annotation\ApiResource;
 use ApiPlatform\Core\Annotation\ApiFilter;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
 
-/**
- * @ApiResource
- * @ApiFilter(SearchFilter::class, properties={"publicationDate": "partial"})
- */
+#[ApiResource]
+#[ApiFilter(SearchFilter::class, properties: ["publicationDate" => "partial"])]
 class Book
 {
     // ...
@@ -1444,10 +1414,8 @@ use ApiPlatform\Core\Annotation\ApiResource;
 use ApiPlatform\Core\Annotation\ApiFilter;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
 
-/**
- * @ApiResource
- * @ApiFilter(SearchFilter::class, properties={"relatedBooks.name": "exact"})
- */
+#[ApiResource]
+#[ApiFilter(SearchFilter::class, properties: ["relatedBooks.name" => "exact"])]
 class Book
 {
     // ...
@@ -1775,56 +1743,45 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
 
 /**
  * @ORM\Entity
- * @ApiResource(
- *     iri="http://schema.org/MediaObject",
- *     normalizationContext={
- *         "groups"={"media_object_read"}
- *     },
- *     graphql={
- *         "upload"={
- *             "mutation"=CreateMediaObjectResolver::class,
- *             "deserialize"=false,
- *             "args"={
- *                 "file"={"type"="Upload!", "description"="The file to upload"}
- *             }
- *         }
- *     }
- * )
  * @Vich\Uploadable
  */
+#[ApiResource(
+    iri: "https://schema.org/MediaObject",
+    normalizationContext: ["groups" => ["media_object_read"]],
+    graphql: [
+        "upload" => [
+            ["mutation" => CreateMediaObjectResolver::class,
+                ["deserialize" => false],
+                ["args" => [
+                    "file" => ["type" => "Upload!", "description" => "The file to upload"]
+                ]]
+            ]
+        ]
+    ]
+)]
 class MediaObject
 {
     /**
-     * @var int|null
-     *
      * @ORM\Column(type="integer")
      * @ORM\GeneratedValue
      * @ORM\Id
      */
-    protected $id;
+    protected ?int $id;
+
+    #[ApiProperty(iri: "https://schema.org/contentUrl")]
+    #[Groups(["media_object_read"])]
+    public ?string $contentUrl;
 
     /**
-     * @var string|null
-     *
-     * @ApiProperty(iri="http://schema.org/contentUrl")
-     * @Groups({"media_object_read"})
-     */
-    public $contentUrl;
-
-    /**
-     * @var File|null
-     *
-     * @Assert\NotNull(groups={"media_object_create"})
      * @Vich\UploadableField(mapping="media_object", fileNameProperty="filePath")
      */
-    public $file;
+    #[Assert\NotNull(groups: ["media_object_create"])]
+    public ?File $file;
 
     /**
-     * @var string|null
-     *
      * @ORM\Column(nullable=true)
      */
-    public $filePath;
+    public ?string $filePath;
 
     public function getId(): ?int
     {
@@ -1916,13 +1873,11 @@ namespace App\Model;
 
 use ApiPlatform\Core\Annotation\ApiResource;
 
-/**
- * @ApiResource(graphql={
- *     "create"={
- *         "description"="My custom description."
- *     }
- * })
- */
+#[ApiResource(graphql: [
+    "create" => [
+          "description" => "My custom description."
+      ]
+])]
 class Book
 {
     // ...

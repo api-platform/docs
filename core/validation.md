@@ -1,16 +1,16 @@
 # Validation
 
 API Platform takes care of validating the data sent to the API by the client (usually user data entered through forms).
-By default, the framework relies on [the powerful Symfony Validator Component](http://symfony.com/doc/current/validation.html)
+By default, the framework relies on [the powerful Symfony Validator Component](https://symfony.com/doc/current/validation.html)
 for this task, but you can replace it with your preferred validation library such as [the PHP filter extension](https://www.php.net/manual/en/intro.filter.php) if you want to.
 
 <p align="center" class="symfonycasts"><a href="https://symfonycasts.com/screencast/api-platform/validation?cid=apip"><img src="../distribution/images/symfonycasts-player.png" alt="Validation screencast"><br>Watch the Validation screencast</a></p>
 
 ## Validating Submitted Data
 
-Validating submitted data is as simple as adding [Symfony's built-in constraints](http://symfony.com/doc/current/reference/constraints.html)
-or [custom constraints](http://symfony.com/doc/current/validation/custom_constraint.html) directly in classes marked with
-the `@ApiResource` annotation:
+Validating submitted data is as simple as adding [Symfony's built-in constraints](https://symfony.com/doc/current/reference/constraints.html)
+or [custom constraints](https://symfony.com/doc/current/validation/custom_constraint.html) directly in classes marked with
+the `#[ApiResource]` attribution:
 
 ```php
 <?php
@@ -26,9 +26,9 @@ use Symfony\Component\Validator\Constraints as Assert; // Symfony's built-in con
 /**
  * A product.
  *
- * @ApiResource
  * @ORM\Entity
  */
+#[ApiResource]
 class Product
 {
     /**
@@ -43,9 +43,9 @@ class Product
     /**
      * @var string The name of the product
      *
-     * @Assert\NotBlank
      * @ORM\Column
      */
+    #[Assert\NotBlank]
     public $name;
 
     /**
@@ -138,20 +138,13 @@ You can configure the groups you want to use when the validation occurs directly
 use ApiPlatform\Core\Annotation\ApiResource;
 use Symfony\Component\Validator\Constraints as Assert;
 
-/**
- * @ApiResource(attributes={"validation_groups"={"a", "b"}})
- * ...
- */
+#[ApiResource(attributes: ["validation_groups"=>["a", "b"]])]
 class Book
 {
-    /**
-     * @Assert\NotBlank(groups={"a"})
-     */
+    #[Assert\NotBlank(groups: ["a"])]
     public $name;
 
-    /**
-     * @Assert\NotNull(groups={"b"})
-     */
+    #[Assert\NotNull(groups: ["b"])]
     public $author;
 
     // ...
@@ -165,7 +158,7 @@ you can specify validation groups globally or on a per-operation basis.
 
 Of course, you can use XML or YAML configuration format instead of annotations if you prefer.
 
-You may also pass in a [group sequence](http://symfony.com/doc/current/validation/sequence_provider.html) in place of
+You may also pass in a [group sequence](https://symfony.com/doc/current/validation/sequence_provider.html) in place of
 the array of group names.
 
 ## Using Validation Groups on Operations
@@ -179,45 +172,29 @@ You can have different validation for each [operation](operations.md) related to
 use ApiPlatform\Core\Annotation\ApiResource;
 use Symfony\Component\Validator\Constraints as Assert;
 
-/**
- * @ApiResource(
- *     collectionOperations={
- *         "get",
- *         "post"={"validation_groups"={"Default", "postValidation"}}
- *     },
- *     itemOperations={
- *         "delete",
- *         "get",
- *         "put"={"validation_groups"={"Default", "putValidation"}}
- *     }
- * )
- * ...
- */
+#[ApiResource(collectionOperations: [
+    "get",
+    "post" => 
+        ["validation_groups" => ["Default", "postValidation"]]
+    ],
+    itemOperations: [
+    "delete",
+    "get",
+    "put" => 
+        ["validation_groups" => ["Default", "putValidation"]]
+    ]
+)]
 class Book
 {
-    /**
-     * @Assert\Uuid
-     */
+    #[Assert\Uuid]
     private $id;
 
-    /**
-     * @Assert\NotBlank(groups={"postValidation"})
-     */
+    #[Assert\NotBlank(groups: ["postValidation"])]
     public $name;
 
-    /**
-     * @Assert\NotNull
-     * @Assert\Length(
-     *     min = 2,
-     *     max = 50,
-     *     groups={"postValidation"}
-     * )
-     * @Assert\Length(
-     *     min = 2,
-     *     max = 70,
-     *     groups={"putValidation"}
-     * )
-     */
+    #[Assert\NotNull]
+    #[Assert\Length(min: 2, max: 50, groups: ["postValidation"])]
+    #[Assert\Length(min: 2, max: 70, groups: ["putValidation"])]
     public $author;
 
     // ...
@@ -236,7 +213,7 @@ With this configuration, there are three validation groups:
 
 If you need to dynamically determine which validation groups to use for an entity in different scenarios, just pass in a
 [callable](https://www.php.net/manual/en/language.types.callable.php). The callback will receive the entity object as its first
-argument, and should return an array of group names or a [group sequence](http://symfony.com/doc/current/validation/sequence_provider.html).
+argument, and should return an array of group names or a [group sequence](https://symfony.com/doc/current/validation/sequence_provider.html).
 
 In the following example, we use a static method to return the validation groups:
 
@@ -247,11 +224,7 @@ In the following example, we use a static method to return the validation groups
 use ApiPlatform\Core\Annotation\ApiResource;
 use Symfony\Component\Validator\Constraints as Assert;
 
-/**
- * @ApiResource(
- *     attributes={"validation_groups"={Book::class, "validationGroups"}}
- * )
- */
+#[ApiResource(attributes: ["validation_groups" => [Book::class, "validationGroups"]])]
 class Book
 {
     /**
@@ -266,14 +239,10 @@ class Book
         return ['a'];
     }
 
-    /**
-     * @Assert\NotBlank(groups={"a"})
-     */
+    #[Assert\NotBlank(groups: ["a"])]
     public $name;
 
-    /**
-     * @Assert\NotNull(groups={"b"})
-     */
+    #[Assert\NotNull(groups: ["b"])]
     public $author;
 
     // ...
@@ -329,19 +298,13 @@ use ApiPlatform\Core\Annotation\ApiResource;
 use App\Validator\AdminGroupsGenerator;
 use Symfony\Component\Validator\Constraints as Assert;
 
-/**
- * @ApiResource(attributes={"validation_groups"=AdminGroupsGenerator::class})
- */
+#[ApiResource(attributes: ["validation_groups" => AdminGroupsGenerator::class])]
 class Book
 {
-    /**
-     * @Assert\NotBlank(groups={"a"})
-     */
+    #[Assert\NotBlank(groups: ["a"])]
     public $name;
 
-    /**
-     * @Assert\NotNull(groups={"b"})
-     */
+    #[Assert\NotNull(groups: ["b"])]
     public $author;
 
     // ...
@@ -350,7 +313,7 @@ class Book
 
 ## Sequential Validation Groups
 
-If you need to specify the order in which your validation groups must be tested against, you can use a [group sequence](http://symfony.com/doc/current/validation/sequence_provider.html).
+If you need to specify the order in which your validation groups must be tested against, you can use a [group sequence](https://symfony.com/doc/current/validation/sequence_provider.html).
 First, you need to create your sequenced group.
 
 ```php
@@ -394,15 +357,12 @@ use App\Validator\MySequencedGroup; // the sequence group to use
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ApiResource(
- *     collectionOperations={
- *          "post" = {
- *              "validation_groups" = MySequencedGroup::class
- *          }
- *     }
- * )
  * @ORM\Entity
  */
+#[ApiResource(collectionOperations: [
+    "post" => 
+        ["validation_groups" => MySequencedGroup::class]]
+)]
 class Greeting
 {
     /**
@@ -491,9 +451,7 @@ final class Brand
         $this->cars = new ArrayCollection();
     }
 
-    /**
-     * @Assert\Valid
-     */
+    #[Assert\Valid]
     public function getCars()
     {
         return $this->cars->getValues();
@@ -509,20 +467,20 @@ The following validation constraints are covered:
 
 Constraints                                                                           | Vocabulary                        |
 --------------------------------------------------------------------------------------|-----------------------------------|
-[`Url`](https://symfony.com/doc/current/reference/constraints/Url.html)               | `http://schema.org/url`           |
-[`Email`](https://symfony.com/doc/current/reference/constraints/Email.html)           | `http://schema.org/email`         |
-[`Uuid`](https://symfony.com/doc/current/reference/constraints/Uuid.html)             | `http://schema.org/identifier`    |
-[`CardScheme`](https://symfony.com/doc/current/reference/constraints/CardScheme.html) | `http://schema.org/identifier`    |
-[`Bic`](https://symfony.com/doc/current/reference/constraints/Bic.html)               | `http://schema.org/identifier`    |
-[`Iban`](https://symfony.com/doc/current/reference/constraints/Iban.html)             | `http://schema.org/identifier`    |
-[`Date`](https://symfony.com/doc/current/reference/constraints/Date.html)             | `http://schema.org/Date`          |
-[`DateTime`](https://symfony.com/doc/current/reference/constraints/DateTime.html)     | `http://schema.org/DateTime`      |
-[`Time`](https://symfony.com/doc/current/reference/constraints/Time.html)             | `http://schema.org/Time`          |
-[`Image`](https://symfony.com/doc/current/reference/constraints/Image.html)           | `http://schema.org/image`         |
-[`File`](https://symfony.com/doc/current/reference/constraints/File.html)             | `http://schema.org/MediaObject`   |
-[`Currency`](https://symfony.com/doc/current/reference/constraints/Currency.html)     | `http://schema.org/priceCurrency` |
-[`Isbn`](https://symfony.com/doc/current/reference/constraints/Isbn.html)             | `http://schema.org/isbn`          |
-[`Issn`](https://symfony.com/doc/current/reference/constraints/Issn.html)             | `http://schema.org/issn`          |
+[`Url`](https://symfony.com/doc/current/reference/constraints/Url.html)               | `https://schema.org/url`           |
+[`Email`](https://symfony.com/doc/current/reference/constraints/Email.html)           | `https://schema.org/email`         |
+[`Uuid`](https://symfony.com/doc/current/reference/constraints/Uuid.html)             | `https://schema.org/identifier`    |
+[`CardScheme`](https://symfony.com/doc/current/reference/constraints/CardScheme.html) | `https://schema.org/identifier`    |
+[`Bic`](https://symfony.com/doc/current/reference/constraints/Bic.html)               | `https://schema.org/identifier`    |
+[`Iban`](https://symfony.com/doc/current/reference/constraints/Iban.html)             | `https://schema.org/identifier`    |
+[`Date`](https://symfony.com/doc/current/reference/constraints/Date.html)             | `https://schema.org/Date`          |
+[`DateTime`](https://symfony.com/doc/current/reference/constraints/DateTime.html)     | `https://schema.org/DateTime`      |
+[`Time`](https://symfony.com/doc/current/reference/constraints/Time.html)             | `https://schema.org/Time`          |
+[`Image`](https://symfony.com/doc/current/reference/constraints/Image.html)           | `https://schema.org/image`         |
+[`File`](https://symfony.com/doc/current/reference/constraints/File.html)             | `https://schema.org/MediaObject`   |
+[`Currency`](https://symfony.com/doc/current/reference/constraints/Currency.html)     | `https://schema.org/priceCurrency` |
+[`Isbn`](https://symfony.com/doc/current/reference/constraints/Isbn.html)             | `https://schema.org/isbn`          |
+[`Issn`](https://symfony.com/doc/current/reference/constraints/Issn.html)             | `https://schema.org/issn`          |
 
 ## Specification property restrictions
 

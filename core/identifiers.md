@@ -19,15 +19,13 @@ use ApiPlatform\Core\Annotation\ApiResource;
 use ApiPlatform\Core\Annotation\ApiProperty;
 use App\Uuid;
 
-/**
- * @ApiResource
- */
+#[ApiResource]
 final class Person
 {
     /**
      * @var Uuid
-     * @ApiProperty(identifier=true)
      */
+    #[ApiProperty(identifier: true)]
     public $code;
     
     // ...
@@ -151,25 +149,25 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity
- * @ApiResource
  */
+#[ApiResource]
 final class Person
 {
     /**
-     * @var int
-     * @ApiProperty(identifier=false)
+     * @var int
      *
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
      */
+    #[ApiProperty(identifier: false)]
     private $id;
     
     /**
      * @var Uuid
-     * @ApiProperty(identifier=true)
      * @ORM\Column(type="uuid", unique=true)
      */
+    #[ApiProperty(identifier: true)]
     public $code;
     
     // ...

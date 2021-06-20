@@ -21,7 +21,7 @@ You can **customize everything** by using provided React Admin and [Material UI]
 * Automatically generates an admin interface for all the resources of the API thanks to hypermedia features of Hydra
 * Generates 'list', 'create', 'show', and 'edit' screens, as well as a delete button
 * Generates suitable inputs and fields according to the API doc (e.g. number HTML input for numbers, checkbox for booleans, selectbox for relationships...)
-* Generates suitable inputs and fields according to Schema.org types if available (e.g. email field for `http://schema.org/email`)
+* Generates suitable inputs and fields according to Schema.org types if available (e.g. email field for `https://schema.org/email`)
 * Handles relationships
 * Supports pagination
 * Supports filters and ordering

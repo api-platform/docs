@@ -115,7 +115,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  *
  * @ORM\Entity
  */
-#[ApiResource(iri: 'http://schema.org/Offer')]
+#[ApiResource(iri: 'https://schema.org/Offer')]
 class Offer
 {
     /**
@@ -152,7 +152,7 @@ It is the minimal configuration required to expose `Product` and `Offer` entitie
 web API.
 
 If you are familiar with the Symfony ecosystem, you noticed that entity classes are also mapped with Doctrine ORM annotations
-and validation constraints from [the Symfony Validator Component](http://symfony.com/doc/current/book/validation.html).
+and validation constraints from [the Symfony Validator Component](https://symfony.com/doc/current/book/validation.html).
 This isn't mandatory. You can use [your preferred persistence](data-providers.md) and [validation](validation.md) systems.
 However, API Platform Core has built-in support for those libraries and is able to use them without requiring any specific
 code or configuration to automatically persist and validate your data. They are a good default option and we encourage you to use
@@ -187,7 +187,7 @@ resources:
     App\Entity\Offer:
         shortName: 'Offer'                   # optional
         description: 'An offer from my shop' # optional
-        iri: 'http://schema.org/Offer'       # optional
+        iri: 'https://schema.org/Offer'       # optional
         attributes:                          # optional
             pagination_items_per_page: 25    # optional
 ```
@@ -205,7 +205,7 @@ resources:
         class="App\Entity\Offer"
         shortName="Offer" <!-- optional -->
         description="An offer from my shop" <!-- optional -->
-        iri="http://schema.org/Offer" <!-- optional -->
+        iri="https://schema.org/Offer" <!-- optional -->
     />
 </resources>
 ```

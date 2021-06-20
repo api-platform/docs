@@ -12,14 +12,12 @@ The following examples will use [API Platform Core](../core/) to create such API
 By default, IRIs of related objects are displayed in lists and forms.
 However, it is often more user-friendly to display a string representation of the resource (such as its name) instead of its ID.
 
-To configure which property should be shown to represent your entity, map the property containing the name of the object with the `http://schema.org/name` type:
+To configure which property should be shown to represent your entity, map the property containing the name of the object with the `https://schema.org/name` type:
 
 ```php
 // api/src/Entity/Person.php
 
-/**
- * @ApiProperty(iri="http://schema.org/name")
- */
+#[ApiProperty(iri: "https://schema.org/name")]
 private $name;
 ```
 
@@ -29,8 +27,8 @@ Besides, it is also possible to use the documentation to customize some fields a
 
 The following Schema.org types are currently supported by API Platform Admin:
 
-* `http://schema.org/email`: the field will be rendered using the `<EmailField>` React Admin component
-* `http://schema.org/url`: the field will be rendered using the `<UrlField>` React Admin component
-* `http://schema.org/identifier`: the field will be formatted properly in inputs
+* `https://schema.org/email`: the field will be rendered using the `<EmailField>` React Admin component
+* `https://schema.org/url`: the field will be rendered using the `<UrlField>` React Admin component
+* `https://schema.org/identifier`: the field will be formatted properly in inputs
 
 Note: if you already use validation on your properties, the semantics are already configured correctly (see [the correspondence table](../core/validation.md#open-vocabulary-generated-from-validation-metadata))!

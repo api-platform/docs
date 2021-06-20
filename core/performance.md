@@ -95,9 +95,14 @@ The `cache_headers` attribute can be used to set custom HTTP cache headers:
 ```php
 use ApiPlatform\Core\Annotation\ApiResource;
 
-/**
- * @ApiResource(cacheHeaders={"max_age"=60, "shared_max_age"=120, "vary"={"Authorization", "Accept-Language"}})
- */
+#[ApiResource(cacheHeaders: [
+        "max_age" => 60,
+        "shared_max_age" => 120,
+        "vary" => [
+         ["Authorization", "Accept-Language"]
+        ]
+    ]
+)]
 class Book
 {
     // ...
@@ -116,13 +121,15 @@ It's also possible to set different cache headers per operation:
 ```php
 use ApiPlatform\Core\Annotation\ApiResource;
 
-/**
- * @ApiResource(
- *     itemOperations={
- *         "get"={"cache_headers"={"max_age"=60, "shared_max_age"=120}}
- *     }
- * )
- */
+#[ApiResource(itemOperations: [
+        "get" => [
+            "cache_headers" => [
+                "max_age" => 60,
+                "shared_max_age" => 120,
+            ]
+        ]
+    ]
+)]
 class Book
 {
     // ...
@@ -169,9 +176,7 @@ readable association according to the serialization context. If you want to fetc
 you have to bypass `readable` and `readableLink` by using the `fetchEager` attribute on the property declaration, for example:
 
 ```php
-/**
- * @ApiProperty(attributes={"fetchEager": true})
- */
+ #[ApiProperty(fetchEager: true)]
  public $foo;
 ```
 
@@ -232,9 +237,9 @@ use ApiPlatform\Core\Annotation\ApiResource;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ApiResource
  * @ORM\Entity
  */
+#[ApiResource]
 class Address
 {
     // ...
@@ -251,9 +256,9 @@ use ApiPlatform\Core\Annotation\ApiResource;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ApiResource(attributes={"force_eager"=false})
  * @ORM\Entity
  */
+#[ApiResource(forceEager: false)]
 class User
 {
     /**
@@ -285,19 +290,19 @@ use ApiPlatform\Core\Annotation\ApiResource;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ApiResource(
- *     attributes={"force_eager"=false},
- *     itemOperations={
- *         "get"={"force_eager"=true},
- *         "post"
- *     },
- *     collectionOperations={
- *         "get"={"force_eager"=true},
- *         "post"
- *     }
- * )
  * @ORM\Entity
  */
+#[ApiResource(
+    forceEager: false,
+    itemOperations: [
+        "get" => ["force_eager" => true],
+        "post"
+    ],
+    collectionOperations: [
+        "get" => ["force_eager" => true],
+        "post"
+    ]
+)]
 class Group
 {
     /**

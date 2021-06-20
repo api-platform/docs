@@ -27,9 +27,7 @@ namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
 
-/**
- * @ApiResource(deprecationReason="Create a Book instead")
- */
+#[ApiResource(deprecationReason: "Create a Book instead")]
 class Parchment
 {
     // ...
@@ -60,11 +58,7 @@ namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
 
-/**
- * @ApiResource(itemOperations={
- *     "get"={"deprecation_reason"="Retrieve a Book instead"}
- * })
- */
+#[ApiResource(itemOperations: ["get" => ["deprecation_reason" => "Retrieve a Book instead"]])]
 class Parchment
 {
     // ...
@@ -82,16 +76,12 @@ namespace App\Entity;
 use ApiPlatform\Core\Annotation\ApiProperty;
 use ApiPlatform\Core\Annotation\ApiResource;
 
-/**
- * @ApiResource
- */
+#[ApiResource]
 class Review
 {
     // ...
 
-    /**
-     * @ApiProperty(deprecationReason="Use the rating property instead")
-     */
+    #[ApiProperty(deprecationReason: "Use the rating property instead")]
     public $letter;
     
     // ...
@@ -117,12 +107,7 @@ namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
 
-/**
- * @ApiResource(
- *   deprecationReason="Create a Book instead",
- *   sunset="01/01/2020"
- * )
- */
+#[ApiResource(deprecationReason: "Create a Book instead", sunset: "01/01/2030")]
 class Parchment
 {
     // ...
@@ -142,14 +127,12 @@ namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
 
-/**
- * @ApiResource(itemOperations={
- *     "get"={
- *         "deprecation_reason"="Retrieve a Book instead",
- *         "sunset"="01/01/2020"
- *     }
- * })
- */
+#[ApiResource(itemOperations: ["get" =>
+    [
+        "deprecation_reason" => "Retrieve a Book instead",
+        "sunset" => "01/01/2030"
+    ]
+])]
 class Parchment
 {
     // ...

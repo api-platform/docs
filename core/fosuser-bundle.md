@@ -66,11 +66,11 @@ use Symfony\Component\Serializer\Annotation\Groups;
 /**
  * @ORM\Entity
  * @ORM\Table(name="fos_user")
- * @ApiResource(
- *     normalizationContext={"groups"={"user", "user:read"}},
- *     denormalizationContext={"groups"={"user", "user:write"}}
- * )
  */
+ #[ApiResource(
+    normalizationContext: ["groups"=>["user", "user:read"]], 
+    denormalizationContext: ["groups"=>["user", "user:write"]]
+ )]
 class User extends BaseUser
 {
     /**
@@ -80,25 +80,19 @@ class User extends BaseUser
      */
     protected $id;
 
-    /**
-     * @Groups({"user"})
-     */
+    #[Groups(["user"])]
     protected $email;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
-     * @Groups({"user"})
      */
+    #[Groups(["user"])]
     protected $fullname;
 
-    /**
-     * @Groups({"user:write"})
-     */
+    #[Groups(["user:write"])]
     protected $plainPassword;
 
-    /**
-     * @Groups({"user"})
-     */
+    #[Groups(["user"])]
     protected $username;
 
     public function setFullname(?string $fullname): void

@@ -91,14 +91,10 @@ use Symfony\Component\Serializer\Annotation\Groups;
 )]
 class Book
 {
-    /**
-     * @Groups({"read", "write"})
-     */
+    #[Groups(["read", "write"])]
     public $name;
 
-    /**
-     * @Groups("write")
-     */
+    #[Groups(["write"])]
     public $author;
 
     // ...
@@ -182,14 +178,10 @@ use Symfony\Component\Serializer\Annotation\Groups;
 )]
 class Book
 {
-    /**
-     * @Groups({"get", "put"})
-     */
+    #[Groups(["get", "put"])]
     public $name;
 
-    /**
-     * @Groups("get")
-     */
+    #[Groups(["get"])]
     public $author;
 
     // ...
@@ -226,7 +218,7 @@ In the following JSON document, the relation from a book to an author is by defa
 ```
 
 It is possible to embed related objects (in their entirety, or only some of their properties) directly in the parent
-response through the use of serialization groups. By using the following serialization groups annotations (`@Groups`),
+response through the use of serialization groups. By using the following serialization groups attribute (`#[Groups]`),
 a JSON representation of the author is embedded in the book response:
 
 ```php
@@ -241,14 +233,10 @@ use Symfony\Component\Serializer\Annotation\Groups;
 #[ApiResource(normalizationContext: ['groups' => ['book']])]
 class Book
 {
-    /**
-     * @Groups({"book"})
-     */
+    #[Groups(["book"])]
     public $name;
 
-    /**
-     * @Groups({"book"})
-     */
+    #[Groups(["book"])]
     public $author;
 
     // ...
@@ -267,10 +255,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
 #[ApiResource]
 class Person
 {
-    /**
-     * ...
-     * @Groups("book")
-     */
+    #[Groups(["book"])]
     public $name;
 
     // ...
@@ -350,16 +335,13 @@ use Symfony\Component\Serializer\Annotation\Groups;
 )]
 class Person
 {
-    /**
-     * ...
-     * @Groups("person")
-     */
+    #[Groups(["person"])]
     public $name;
 
    /**
     * @var Person
-    * @Groups("person")
     */
+   #[Groups(["person"])]
    public $parent;  // Note that a Person instance has a relation with another Person.
  
     // ...
@@ -390,17 +372,14 @@ use Symfony\Component\Serializer\Annotation\Groups;
 )]
 class Person
 {
-    /**
-     * ...
-     * @Groups("person")
-     */
+    #[Groups(["person"])]
     public $name;
 
    /**
     * @var Person
-    * @Groups("person")
     */
    #[ApiProperty(readableLink: false, writableLink: false)]
+   #[Groups(["person"])]
    public $parent;  // This property is now serialized/deserialized as an IRI.
  
     // ...
@@ -439,8 +418,8 @@ class Greeting
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
-     * @Groups("greeting:collection:get")
      */
+    #[Groups(["greeting:collection:get"])]
     private $id;
     
     private $a = 1;
@@ -451,8 +430,8 @@ class Greeting
      * @var string A nice person
      *
      * @ORM\Column
-     * @Groups("greeting:collection:get")
      */
+    #[Groups(["greeting:collection:get"])]
     public $name = '';
 
     public function getId(): int
@@ -461,8 +440,9 @@ class Greeting
     }
 
     /**
-     * @Groups("greeting:collection:get") <- MAGIC IS HERE, you can set a group on a method.
+     * MAGIC IS HERE, you can set a group on a method.
      */
+    #[Groups(["greeting:collection:get"])]
     public function getSum(): int
     {
         return $this->a + $this->b;
@@ -495,21 +475,15 @@ class Book
 
     /**
      * This field can be managed only by an admin
-     *
-     * @var bool
-     *
-     * @Groups({"book:output", "admin:input"})
      */
-    public $active = false;
+    #[Groups(["book:output", "admin:input"])]
+    public bool $active = false;
 
     /**
      * This field can be managed by any user
-     *
-     * @var string
-     *
-     * @Groups({"book:output", "book:input"})
      */
-    public $name;
+    #[Groups(["book:output", "book:input"])]
+    public string $name;
 
     // ...
 }
@@ -519,7 +493,7 @@ All entry points are the same for all users, so we should find a way to detect i
 dynamically add the `admin:input` value to deserialization groups in the `$context` array.
 
 API Platform implements a `ContextBuilder`, which prepares the context for serialization & deserialization. Let's
-[decorate this service](http://symfony.com/doc/current/service_container/service_decoration.html) to override the
+[decorate this service](https://symfony.com/doc/current/service_container/service_decoration.html) to override the
 `createFromRequest` method:
 
 ```yaml
@@ -659,7 +633,7 @@ provides many useful other services that might be better suited to your use case
 
 ## Name Conversion
 
-The Serializer Component provides a handy way to map PHP field names to serialized names. See the related [Symfony documentation](http://symfony.com/doc/master/components/serializer.html#converting-property-names-when-serializing-and-deserializing).
+The Serializer Component provides a handy way to map PHP field names to serialized names. See the related [Symfony documentation](https://symfony.com/doc/master/components/serializer.html#converting-property-names-when-serializing-and-deserializing).
 
 To use this feature, declare a new name converter service. For example, you can convert `CamelCase` to
 `snake_case` with the following configuration:
@@ -775,17 +749,13 @@ class Book
 
     /**
      * This field can be managed only by an admin
-     *
-     * @var bool
      */
-    public $active = false;
+    public bool $active = false;
 
     /**
      * This field can be managed by any user
-     *
-     * @var string
      */
-    public $name;
+    public string $name;
 
     // ...
 }
@@ -848,10 +818,10 @@ The JSON output will now include the embedded context:
 ```json
 {
   "@context": {
-    "@vocab": "http://localhost:8000/apidoc#",
-    "hydra": "http://www.w3.org/ns/hydra/core#",
-    "name": "http://schema.org/name",
-    "author": "http://schema.org/author"
+    "@vocab": "https://localhost:8000/docs.jsonld#",
+    "hydra": "https://www.w3.org/ns/hydra/core#",
+    "name": "https://schema.org/name",
+    "author": "https://schema.org/author"
   },
   "@id": "/books/62",
   "@type": "Book",

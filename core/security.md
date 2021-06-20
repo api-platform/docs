@@ -1,7 +1,7 @@
 # Security
 
-The API Platform security layer is built on top of the [Symfony Security component](http://symfony.com/doc/current/book/security.html).
-All its features, including [global access control directives](http://symfony.com/doc/current/book/security.html#securing-url-patterns-access-control) are supported.
+The API Platform security layer is built on top of the [Symfony Security component](https://symfony.com/doc/current/book/security.html).
+All its features, including [global access control directives](https://symfony.com/doc/current/book/security.html#securing-url-patterns-access-control) are supported.
 API Platform also provides convenient [access control expressions](https://symfony.com/doc/current/expressions.html#security-complex-access-controls-with-expressions) which you can apply at resource and operation level.
 
 <p align="center" class="symfonycasts"><a href="https://symfonycasts.com/screencast/api-platform-security/?cid=apip"><img src="../distribution/images/symfonycasts-player.png" alt="Security screencast"><br>Watch the Security screencast</a>
@@ -15,48 +15,46 @@ API Platform also provides convenient [access control expressions](https://symfo
 use ApiPlatform\Core\Annotation\ApiResource;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
+use App\Entity\User;
 
 /**
  * Secured resource.
  *
- * @ApiResource(
- *     attributes={"security"="is_granted('ROLE_USER')"},
- *     collectionOperations={
- *         "get",
- *         "post"={"security"="is_granted('ROLE_ADMIN')"}
- *     },
- *     itemOperations={
- *         "get",
- *         "put"={"security"="is_granted('ROLE_ADMIN') or object.owner == user"},
- *     }
- * )
  * @ORM\Entity
  */
+#[ApiResource(security: "is_granted('ROLE_USER')",
+    collectionOperations: [
+    "get",
+    "post" => ["security" => "is_granted('ROLE_ADMIN')"]
+    ],
+    itemOperations: [
+    "get",
+    "put" => [ "security" => "is_granted('ROLE_ADMIN') or object.owner == user" ]
+  ]
+)]
 class Book
 {
     /**
-     * @var int
-     *
      * @ORM\Column(type="integer")
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
      */
-    private $id;
+    private ?int $id;
 
     /**
-     * @var string The title
+     * The title
      *
      * @ORM\Column
-     * @Assert\NotBlank
      */
-    public $title;
+    #[Assert\NotBlank]
+    public string $title;
 
     /**
-     * @var User The owner
+     * The owner
      *
      * @ORM\ManyToOne(targetEntity=User::class)
      */
-    public $owner;
+    public User $owner;
 
     // ...
 }
@@ -87,11 +85,10 @@ class Book
     //...
 
     /**
-     * @var string Property viewable and writtable only by users with ROLE_ADMIN
-     *
-     * @ApiProperty(security="is_granted('ROLE_ADMIN')")
+     * Property viewable and writable only by users with ROLE_ADMIN
      */
-    private $adminOnlyProperty;
+    #[ApiProperty(security: "is_granted('ROLE_ADMIN')")]
+    private string $adminOnlyProperty;
 }
 ```
 
@@ -126,14 +123,13 @@ namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
 
-/**
- * @ApiResource(
- *     itemOperations={
- *         "get",
- *         "put"={"security_post_denormalize"="is_granted('ROLE_ADMIN') or (object.owner == user and previous_object.owner == user)"},
- *     }
- * )
- */
+#[ApiResource(itemOperations: [
+    "get",
+    "put" => [
+        "security_post_denormalize" => "is_granted('ROLE_ADMIN') or (object.owner == user and previous_object.owner == user)"
+        ]
+  ]
+)]
 class Book
 {
     // ...
@@ -177,28 +173,24 @@ namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
 
-/**
- * ...
- * @ApiResource(
- *     attributes={"security"="is_granted('ROLE_USER')"},
- *     collectionOperations={
- *          "get",
- *          "post" = { "security_post_denormalize" = "is_granted('BOOK_CREATE', object)" }
- *     },
- *     itemOperations={
- *          "get" = { "security" = "is_granted('BOOK_READ', object)" },
- *          "put" = { "security" = "is_granted('BOOK_EDIT', object)" },
- *          "delete" = { "security" = "is_granted('BOOK_DELETE', object)" }
- *     },
- * )
- */
+#[ApiResource(security: "is_granted('ROLE_USER')",
+    collectionOperations: [
+    "get",
+    "post" => ["security_post_denormalize" => "is_granted('BOOK_CREATE', object)"]
+    ],
+    itemOperations: [
+    "get" => [ "security" => "is_granted('BOOK_READ', object)" ],
+    "put" => [ "security" => "is_granted('BOOK_EDIT', object)" ],
+    "delete" => [ "security" => "is_granted('BOOK_DELETE', object)" ],
+  ]
+)]
 class Book
 {
     // ...
 }
 ```
 
-Please note that if you use both `attributes={"security"="..` and then `"post" = { "security_post_denormalize" = "...`, the `security` on top level is called first, and after `security_post_denormalize`. This could lead to unwanted behaviour, so avoid using both of them simultaneously.
+Please note that if you use both `security: "..."` and then `"post" = { "security_post_denormalize" = "...`, the `security` on top level is called first, and after `security_post_denormalize`. This could lead to unwanted behaviour, so avoid using both of them simultaneously.
 If you need to use `security_post_denormalize`, consider adding `security` for the other operations instead of the global one.
 
 Create a *BookVoter* with the `bin/console make:voter` command:
@@ -276,19 +268,17 @@ namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
 
-/**
- * ...
- * @ApiResource(
- *     attributes={"security"="is_granted('ROLE_USER')"},
- *     collectionOperations={
- *         "post"={"security"="is_granted('ROLE_ADMIN')", "security_message"="Only admins can add books."}
- *     },
- *     itemOperations={
- *         "get"={"security"="is_granted('ROLE_USER') and object.owner == user", "security_message"="Sorry, but you are not the book owner."}
- *         "put"={"security_post_denormalize"="is_granted('ROLE_ADMIN') or (object.owner == user and previous_object.owner == user)", "security_post_denormalize_message"="Sorry, but you are not the actual book owner."},
- *     }
- * )
- */
+#[ApiResource(security: "is_granted('ROLE_USER')",
+    collectionOperations: [
+    "post" => ["security" => "is_granted('ROLE_ADMIN')", "security_message" => "Only admins can add books."]
+    ],
+    itemOperations: [
+    "get" => [ "security" => "is_granted('ROLE_USER') and object.owner == user", "security_message" => "Sorry, but you are not the book owner." ],
+    "put" => [ 
+        "security_post_denormalize" => "is_granted('ROLE_ADMIN') or (object.owner == user and previous_object.owner == user)", 
+        "security_post_denormalize_message" => "Sorry, but you are not the actual book owner." ]
+  ]
+)]
 class Book
 {
     // ...

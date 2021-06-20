@@ -57,76 +57,65 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
 
 /**
  * @ORM\Entity
- * @ApiResource(
- *     iri="http://schema.org/MediaObject",
- *     normalizationContext={
- *         "groups"={"media_object_read"}
- *     },
- *     collectionOperations={
- *         "post"={
- *             "controller"=CreateMediaObjectAction::class,
- *             "deserialize"=false,
- *             "security"="is_granted('ROLE_USER')",
- *             "validation_groups"={"Default", "media_object_create"},
- *             "openapi_context"={
- *                 "requestBody"={
- *                     "content"={
- *                         "multipart/form-data"={
- *                             "schema"={
- *                                 "type"="object",
- *                                 "properties"={
- *                                     "file"={
- *                                         "type"="string",
- *                                         "format"="binary"
- *                                     }
- *                                 }
- *                             }
- *                         }
- *                     }
- *                 }
- *             }
- *         },
- *         "get"
- *     },
- *     itemOperations={
- *         "get"
- *     }
- * )
  * @Vich\Uploadable
  */
+#[ApiResource(iri: "https://schema.org/MediaObject",
+      normalizationContext: [
+          "groups" => ["media_object_read"]
+      ],
+      collectionOperations: [
+          "post" => [
+              "controller" => CreateMediaObjectAction::class,
+              "deserialize" => false,
+              "security" => "is_granted('ROLE_USER')",
+              "validation_groups" => ["Default", "media_object_create"],
+              "openapi_context" => [
+                  "requestBody" => [
+                      "content" => [
+                          "multipart/form-data" => [
+                              "schema" => [
+                                  "type" => "object",
+                                  "properties" => [
+                                      "file" => [
+                                          "type" => "string",
+                                          "format" => "binary"
+                                      ]
+                                  ]
+                              ]
+                          ]
+                      ]
+                  ]
+              ]
+          ],
+          "get"
+      ],
+      itemOperations: [
+          "get"
+      ]
+)]
 class MediaObject
 {
     /**
-     * @var int|null
-     *
      * @ORM\Column(type="integer")
      * @ORM\GeneratedValue
      * @ORM\Id
      */
-    protected $id;
+    protected ?int $id;
+
+    #[ApiProperty(iri: "https://schema.org/contentUrl")]
+    #[Groups(["media_object_read"])]
+    public ?string $contentUrl;
 
     /**
-     * @var string|null
-     *
-     * @ApiProperty(iri="http://schema.org/contentUrl")
-     * @Groups({"media_object_read"})
-     */
-    public $contentUrl;
-
-    /**
-     * @var File|null
-     *
-     * @Assert\NotNull(groups={"media_object_create"})
      * @Vich\UploadableField(mapping="media_object", fileNameProperty="filePath")
      */
-    public $file;
+    #[Assert\NotNull(groups: ["media_object_create"])]
+    public ?File $file;
 
     /**
-     * @var string|null
-     *
      * @ORM\Column(nullable=true)
      */
-    public $filePath;
+    public ?string $filePath;
 
     public function getId(): ?int
     {
@@ -244,7 +233,7 @@ your data, you will get a response looking like this:
 
 ```json
 {
-  "@type": "http://schema.org/MediaObject",
+  "@type": "https://schema.org/MediaObject",
   "@id": "/media_objects/<id>",
   "contentUrl": "<url>"
 }
@@ -270,20 +259,18 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
 
 /**
  * @ORM\Entity
- * @ApiResource(iri="http://schema.org/Book")
  */
+#[ApiResource(iri: "https://schema.org/Book")]
 class Book
 {
     // ...
 
     /**
-     * @var MediaObject|null
-     *
      * @ORM\ManyToOne(targetEntity=MediaObject::class)
      * @ORM\JoinColumn(nullable=true)
-     * @ApiProperty(iri="http://schema.org/image")
      */
-    public $image;
+    #[ApiResource(iri: "https://schema.org/image")]
+    public ?MediaObject $image;
     
     // ...
 }

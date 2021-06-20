@@ -49,9 +49,7 @@ namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
 
-/**
- * @ApiResource(mercure=true)
- */
+#[ApiResource(mercure: true)]
 class Book
 {
     // ...
@@ -87,9 +85,7 @@ namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
 
-/**
- * @ApiResource(mercure={"private": true})
- */
+#[ApiResource(mercure: ["private" => true])]
 class Book
 {
     // ...
@@ -106,9 +102,7 @@ namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
 
-/**
- * @ApiResource(mercure="object.mercureOptions")
- */
+#[ApiResource(mercure: "object.mercureOptions")]
 class Book
 {
     public $mercureOptions = ['private' => true];

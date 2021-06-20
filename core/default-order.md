@@ -12,9 +12,7 @@ namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
 
-/**
- * @ApiResource(attributes={"order"={"foo": "ASC"}})
- */
+#[ApiResource(order: ["foo" => "ASC"])]
 class Book
 {
     // ...
@@ -38,9 +36,7 @@ namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
 
-/**
- * @ApiResource(attributes={"order"={"foo", "bar"}})
- */
+#[ApiResource(order: ["foo", "bar"])]
 class Book
 {
     // ...
@@ -68,9 +64,7 @@ namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
 
-/**
- * @ApiResource(attributes={"order"={"author.username"}})
- */
+#[ApiResource(order: ["author.username"])]
 class Book
 {
     // ...
@@ -87,13 +81,18 @@ class Book
 Another possibility is to apply the default order for a specific collection operation, which will override the global default order configuration.
 
 ```php
-/**
- *     collectionOperations={
- *         "get",
- *         "get_desc_custom"={"method"="GET", "path"="custom_collection_desc_foos", "order"={"name"="DESC"}},
- *         "get_asc_custom"={"method"="GET", "path"="custom_collection_asc_foos", "order"={ "name"="ASC"}},
- *     }
- */
+#[ApiResource(collectionOperations: ["get",
+    "get_desc_custom" => [
+        "method" => "GET",
+        "path" => "custom_collection_desc_foos",
+        "order" => ["name" => "DESC"]
+    ],
+    "get_asc_custom" => [
+        "method" => "GET",
+        "path" => "custom_collection_asc_foos",
+        "order" => ["name" => "ASC"]
+    ]
+])]
 class Book
 {
     // ...

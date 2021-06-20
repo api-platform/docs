@@ -17,15 +17,13 @@ namespace App\Entity;
 use ApiPlatform\Core\Annotation\ApiProperty;
 use ApiPlatform\Core\Annotation\ApiResource;
 
-/**
- * @ApiResource
- */
+#[ApiResource]
 class Book
 {
     /**
      * @var Author
-     * @ApiProperty(push=true)
      */
+    #[ApiProperty(push: true)]
     public $author;
     
     // ...

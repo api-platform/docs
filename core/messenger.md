@@ -43,9 +43,7 @@ final class Person
     #[ApiProperty(identifier: true)]
     public string $id;
 
-    /**
-     * @Assert\NotBlank
-     */
+    #[Assert\NotBlank]
     public string $name;
 }
 ```

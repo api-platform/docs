@@ -128,7 +128,7 @@ Example:
             name: { nullable: false }
 ```
 
-The `@Assert\NotNull` constrain is automatically added.
+The `#[Assert\NotNull]` attribute is automatically added.
 
 ```php
 <?php
@@ -137,8 +137,8 @@ The `@Assert\NotNull` constrain is automatically added.
  * The name of the item.
  *
  * @ORM\Column
- * @Assert\NotNull
  */
+  #[Assert\NotNull]
   private string $name;
 ```
 
@@ -167,20 +167,20 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 /**
  * A person (alive, dead, undead, or fictional).
  *
- * @see http://schema.org/Person Documentation on Schema.org
+ * @see https://schema.org/Person Documentation on Schema.org
  *
  * @ORM\Entity
- * @UniqueEntity("email")
- * @Iri("http://schema.org/Person")
+ * @Iri("https://schema.org/Person")
  */
+#[UniqueEntity("email")]
 class Person
 {
     /**
      * Email address.
      *
      * @ORM\Column
-     * @Assert\Email
      */
+    #[Assert\Email]
     private string $email;
 ```
 
@@ -241,10 +241,10 @@ use Symfony\Component\Serializer\Annotation\Groups;
 /**
  * A person (alive, dead, undead, or fictional).
  *
- * @see http://schema.org/Person Documentation on Schema.org
+ * @see https://schema.org/Person Documentation on Schema.org
  *
  * @ORM\Entity
- * @Iri("http://schema.org/Person")
+ * @Iri("https://schema.org/Person")
  */
 class Person
 {
@@ -256,8 +256,8 @@ class Person
      * @ORM\Column(nullable=true)
      * @Assert\Type(type="string")
      * @Iri("https://schema.org/name")
-     * @Groups({"public"})
      */
+    #[Groups(["public"])]
     private string $name;
 
 ```
@@ -295,22 +295,22 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Any offered product or service.
  *
- * @see http://schema.org/Product Documentation on Schema.org
+ * @see https://schema.org/Product Documentation on Schema.org
  *
  * @ORM\Entity
- * @ApiResource(iri="http://schema.org/Product")
- * @UniqueEntity("gtin13s")
  */
+#[ApiResource(iri: "https://schema.org/Product")]
+#[UniqueEntity("gtin13s")]
 class Product
 {
     /**
      * the weight of the product or person
      *
-     * @see http://schema.org/weight
+     * @see https://schema.org/weight
      *
      * @ORM\Embedded(class="App\Entity\QuantitativeValue", columnPrefix="weight_")
-     * @ApiProperty(iri="http://schema.org/weight")
      */
+    #[ApiProperty(iri: "https://schema.org/weight")]
     private ?QuantitativeValue $weight = null;
 
 ```
@@ -535,7 +535,7 @@ config:
             format:               null # Example: rdfxml
 
     # Namespace of the vocabulary to import
-    vocabularyNamespace:  'http://schema.org/' # Example: 'http://www.w3.org/ns/activitystreams#'
+    vocabularyNamespace:  'https://schema.org/' # Example: 'http://www.w3.org/ns/activitystreams#'
 
     # OWL relation files containing cardinality information in the GoodRelations format
     relations:            # Example: 'https://purl.org/goodrelations/v1.owl'

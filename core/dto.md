@@ -1,6 +1,6 @@
 # Using Data Transfer Objects (DTOs)
 
- As stated in [the general design considerations](design.md), in most cases [the DTO pattern](https://en.wikipedia.org/wiki/Data_transfer_object) should be implemented using an API Resource class representing the public data model exposed through the API and [a custom data provider](data-providers.md). In such cases, the class marked with `@ApiResource` will act as a DTO.
+ As stated in [the general design considerations](design.md), in most cases [the DTO pattern](https://en.wikipedia.org/wiki/Data_transfer_object) should be implemented using an API Resource class representing the public data model exposed through the API and [a custom data provider](data-providers.md). In such cases, the class marked with `#[ApiResource]` will act as a DTO.
 
 However, it's sometimes useful to use a specific class to represent the input or output data structure related to an operation.
 
@@ -21,12 +21,7 @@ use ApiPlatform\Core\Annotation\ApiResource;
 use App\Dto\BookInput;
 use App\Dto\BookOutput;
 
-/**
- * @ApiResource(
- *   input=BookInput::class,
- *   output=BookOutput::class
- * )
- */
+#[ApiResource(input: BookInput::class, output: BookOutput::class)]
 final class Book
 {
     public $id;
@@ -47,7 +42,7 @@ resources:
 <!-- api/config/api_platform/resources.xml -->
 
 <resources xmlns="https://api-platform.com/schema/metadata"
-           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xmlns:xsi="https://www.w3.org/2001/XMLSchema-instance"
            xsi:schemaLocation="https://api-platform.com/schema/metadata
            https://api-platform.com/schema/metadata/metadata-2.0.xsd">
     <resource class="App\Entity\Book">
@@ -64,7 +59,7 @@ Similarly, the `output` attribute is used during [the serialization process](ser
 
 The `input` and `output` attributes are taken into account by all the documentation generators (GraphQL and OpenAPI, Hydra).
 
-Note that `Book` entity needs an id property. The simplest way is adding a public property called `$id`, as in the example. However, as in any other entity, you can use a private property, with getter and setter functions, and/or named it as you wish, provided you annotate it with `@ApiProperty(identifier=true)`. For instance, you could have a property called `$code`.
+Note that `Book` entity needs an id property. The simplest way is adding a public property called `$id`, as in the example. However, as in any other entity, you can use a private property, with getter and setter functions, and/or named it as you wish, provided you attribute it with `#[ApiProperty(identifier: true)]`. For instance, you could have a property called `$code`.
 So the `InputDataTransformer` actually transforms the isbn into a code. And then in the `OutputDataTransformer`, from this code into the name.
 
 To create a `Book`, we `POST` a data structure corresponding to the `BookInput` class and get back in the response a data structure corresponding to the `BookOutput` class:
@@ -82,10 +77,8 @@ We have the following `BookInput`:
 namespace App\Dto;
 
 final class BookInput {
-    /**
-     * @var string
-     */
-    public $isbn;
+
+    public string $isbn;
 }
 ```
 
@@ -149,10 +142,8 @@ To manage the output, it's exactly the same process. For example, we have the fo
 namespace App\Dto;
 
 final class BookOutput {
-    /**
-     * @var string
-     */
-    public $name;
+
+    public string $name;
 }
 ```
 
@@ -294,24 +285,21 @@ use App\Dto\BookOutput;
 use App\Dto\CreateBook;
 use App\Dto\UpdateBook;
 
-/**
- * @ApiResource(
- *     collectionOperations={
- *         "create"={
- *             "method"="POST",
- *             "input"=CreateBook::class,
- *             "output"=BookOutput::class
- *         }
- *     },
- *     itemOperations={
- *         "update"={
- *             "method"="PUT",
- *             "input"=UpdateBook::class,
- *             "output"=BookOutput::class
- *         }
- *     }
- * )
- */
+#[ApiResource(
+    collectionOperations: [
+        "create" => [
+            "method" => "POST",
+            "input" => CreateBook::class,
+            "output" => BookOutput::class
+        ]
+    ],
+    itemOperations: [
+        "update" => [
+        "method" => "PUT",
+        "input" => UpdateBook::class,
+        "output" => BookOutput::class
+    ]
+])]
 final class Book
 {
 }
@@ -338,7 +326,7 @@ resources:
 <!-- api/config/api_platform/resources.xml -->
 
 <resources xmlns="https://api-platform.com/schema/metadata"
-           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xmlns:xsi="https://www.w3.org/2001/XMLSchema-instance"
            xsi:schemaLocation="https://api-platform.com/schema/metadata
            https://api-platform.com/schema/metadata/metadata-2.0.xsd">
     <resource class="App\Entity\Book">
@@ -383,17 +371,12 @@ namespace App\Entity;
 use ApiPlatform\Core\Annotation\ApiResource;
 use App\Model\Attribute;
 
-/**
- * @ApiResource
- */
+#[ApiResource]
 final class Book
 {
-  /**
-   * @var Attribute
-   */
-  public $attribute;
+  public Attribute $attribute;
 
-  public $isbn;
+  public string $isbn;
 }
 ```
 

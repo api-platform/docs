@@ -403,7 +403,7 @@ App\Entity\Book:
 
 [/codeSelector]
 
-Alternatively, the more verbose attribute syntax can be used: `@ApiResource(attributes={"route_prefix"="/library"})`.
+Alternatively, the more verbose attribute syntax can be used: `#[ApiResource(attributes: ["route_prefix"=>"/library"])]`.
 
 API Platform will automatically map this `post_publication` operation to the route `book_post_publication`. Let's create a custom action
 and its related route using annotations:

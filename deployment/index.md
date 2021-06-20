@@ -4,7 +4,7 @@ API Platform apps are super easy to deploy in production on most cloud providers
 [Kubernetes](kubernetes.md).
 
 The server part of API Platform is basically a standard Symfony application, which you can also easily [deploy on your
-own servers](http://symfony.com/doc/current/deployment.html). Documentation for deploying on various container [orchestration](https://en.wikipedia.org/wiki/Orchestration_(computing))
+own servers](https://symfony.com/doc/current/deployment.html). Documentation for deploying on various container [orchestration](https://en.wikipedia.org/wiki/Orchestration_(computing))
 tools and PaaS (Platform as a Service) are also available:
 
 * [Deploying to a Kubernetes Cluster](kubernetes.md)

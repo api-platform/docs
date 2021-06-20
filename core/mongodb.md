@@ -109,10 +109,9 @@ use Doctrine\ODM\MongoDB\Mapping\Annotations as ODM;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * @ApiResource
- *
  * @ODM\Document
  */
+#[ApiResource]
 class Product
 {
     /**
@@ -122,8 +121,8 @@ class Product
 
     /**
      * @ODM\Field
-     * @Assert\NotBlank
      */
+    #[Assert\NotBlank]
     public $name;
 
     /**
@@ -168,10 +167,9 @@ use Doctrine\ODM\MongoDB\Mapping\Annotations as ODM;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * @ApiResource(iri="http://schema.org/Offer")
- *
  * @ODM\Document
  */
+#[ApiResource(iri: "https://schema.org/Offer")]
 class Offer
 {
     /**
@@ -186,10 +184,10 @@ class Offer
 
     /**
      * @ODM\Field(type="float")
-     * @Assert\NotBlank
-     * @Assert\Range(min=0, minMessage="The price must be superior to 0.")
      * @Assert\Type(type="float")
      */
+    #[Assert\NotBlank]
+    #[Assert\Range(min: 0, minMessage: "The price must be superior to 0.")]
     public $price;
 
     /**
@@ -234,20 +232,19 @@ use ApiPlatform\Core\Annotation\ApiResource;
 use Doctrine\ODM\MongoDB\Mapping\Annotations as ODM;
 
 /**
- * @ApiResource(attributes={
- *     collectionOperations={
- *         "get"={
- *             "method"="GET",
- *             "doctrine_mongodb"={
- *                 "execute_options"={
- *                     "allowDiskUse"=true
- *                 }
- *             }
- *         }
- *     }
- * })
  * @ODM\Document
  */
+#[ApiResource(collectionOperations: [
+          "get" => [
+              "method" => "GET",
+              "doctrine_mongodb" => [
+                  "execute_options" => [
+                      "allowDiskUse" => true
+                  ]
+              ]
+          ]
+      ]
+)]
 class Offer
 {
     // ...
@@ -266,15 +263,16 @@ use ApiPlatform\Core\Annotation\ApiResource;
 use Doctrine\ODM\MongoDB\Mapping\Annotations as ODM;
 
 /**
- * @ApiResource(attributes={
- *     "doctrine_mongodb"={
- *         "execute_options"={
- *             "allowDiskUse"=true
- *         }
- *     }
- * })
  * @ODM\Document
  */
+#[ApiResource(attributes: [
+              "doctrine_mongodb" => [
+                  "execute_options" => [
+                      "allowDiskUse" => true
+                  ]
+              ]
+          ]
+)]
 class Offer
 {
     // ...

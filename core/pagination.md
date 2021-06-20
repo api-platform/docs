@@ -20,7 +20,7 @@ is returned. It's a valid JSON(-LD) document containing items of the requested p
   "hydra:member": [
     {
       "@id": "/books/1",
-      "@type": "http://schema.org/Book",
+      "@type": "https://schema.org/Book",
       "name": "My awesome book"
     },
     {
@@ -78,9 +78,7 @@ It can also be disabled for a specific resource:
 
 use ApiPlatform\Core\Annotation\ApiResource;
 
-/**
- * @ApiResource(attributes={"pagination_enabled"=false})
- */
+#[ApiResource(attributes: ["pagination_enabled" => false])]
 class Book
 {
     // ...
@@ -122,9 +120,7 @@ The client ability to disable the pagination can also be set in the resource con
 
 use ApiPlatform\Core\Annotation\ApiResource;
 
-/**
- * @ApiResource(attributes={"pagination_client_enabled"=true})
- */
+#[ApiResource(attributes: ["pagination_client_enabled" => true])]
 class Book
 {
     // ...
@@ -154,9 +150,7 @@ api_platform:
 
 use ApiPlatform\Core\Annotation\ApiResource;
 
-/**
- * @ApiResource(attributes={"pagination_items_per_page"=30})
- */
+#[ApiResource(attributes: ["pagination_items_per_page" => 30])]
 class Book
 {
     // ...
@@ -189,9 +183,7 @@ Changing the number of items per page can be enabled (or disabled) for a specifi
 
 use ApiPlatform\Core\Annotation\ApiResource;
 
-/**
- * @ApiResource(attributes={"pagination_client_items_per_page"=true})
- */
+#[ApiResource(attributes: ["pagination_client_items_per_page" => true])]
 class Book
 {
     // ...
@@ -219,11 +211,7 @@ api_platform:
 
 use ApiPlatform\Core\Annotation\ApiResource;
 
-/**
- * @ApiResource(
- *     attributes={"maximum_items_per_page"=50}
- * )
- */
+#[ApiResource(attributes: ["maximum_items_per_page" => 50])]
 class Book
 {
     // ...
@@ -238,13 +226,10 @@ class Book
 
 use ApiPlatform\Core\Annotation\ApiResource;
 
-/**
- * @ApiResource(
- *     collectionOperations={
- *         "get"={"maximum_items_per_page"=50}
- *     }
- * )
- */
+#[ApiResource(collectionOperations: [
+        "get" => ["maximum_items_per_page" => 50]
+    ]
+)]
 class Book
 {
     // ...
@@ -277,9 +262,7 @@ api_platform:
 
 use ApiPlatform\Core\Annotation\ApiResource;
 
-/**
- * @ApiResource(attributes={"pagination_partial"=true})
- */
+#[ApiResource(attributes: ["pagination_partial" => true])]
 class Book
 {
     // ...
@@ -312,9 +295,7 @@ The partial pagination retrieval can now be changed by toggling a query paramete
 
 use ApiPlatform\Core\Annotation\ApiResource;
 
-/**
- * @ApiResource(attributes={"pagination_client_partial"=true})
- */
+#[ApiResource(attributes: ["pagination_client_partial" => true])]
 class Book
 {
     // ...
@@ -338,16 +319,15 @@ use ApiPlatform\Core\Annotation\ApiResource;
 use ApiPlatform\Core\Bridge\Doctrine\MongoDbOdm\Filter\OrderFilter;
 use ApiPlatform\Core\Bridge\Doctrine\MongoDbOdm\Filter\RangeFilter;
 
-/**
- * @ApiResource(attributes={
- *     "pagination_partial"=true,
- *     "pagination_via_cursor"={
- *         {"field"="id", "direction"="DESC"},
- *     },
- * )
- * @ApiFilter(RangeFilter::class, properties={"id"})
- * @ApiFilter(OrderFilter::class, properties={"id"="DESC"})
- */
+#[ApiResource(attributes: [
+        "pagination_partial" => true,
+        "pagination_via_cursor" => [
+         ["field" => "id", "direction" => "DESC"]
+        ]
+    ]
+)]
+#[ApiFilter(RangeFilter::class, properties: ["id"])]
+#[ApiFilter(OrderFilter::class, properties: ["id" => "DESC"])]
 class Book
 {
     // ...
@@ -370,18 +350,16 @@ The [PaginationExtension](https://github.com/api-platform/core/blob/main/src/Bri
 
     use ApiPlatform\Core\Annotation\ApiResource;
 
-    /**
-    * @ApiResource(
-    *     attributes={"pagination_fetch_join_collection"=false},
-    *     collectionOperations={
-    *         "get",
-    *         "get_custom"={
-    *             ...
-    *             "pagination_fetch_join_collection"=true,
-    *         },
-    *     },
-    * )
-    */
+    #[ApiResource(
+        attributes: ["pagination_fetch_join_collection" => false],
+        collectionOperations: [
+             "get",
+             "get_custom" => [
+                 ...
+                 "pagination_fetch_join_collection" => true,
+             ]
+         ]
+    )]
     class Book
     {
         // ...
@@ -398,18 +376,16 @@ The [PaginationExtension](https://github.com/api-platform/core/blob/main/src/Bri
 
     use ApiPlatform\Core\Annotation\ApiResource;
 
-    /**
-    * @ApiResource(
-    *     attributes={"pagination_use_output_walkers"=false},
-    *     collectionOperations={
-    *         "get",
-    *         "get_custom"={
-    *             ...
-    *             "pagination_use_output_walkers"=true,
-    *         },
-    *     },
-    * )
-    */
+    #[ApiResource(
+        attributes: ["pagination_use_output_walkers" => false],
+        collectionOperations: [
+             "get",
+             "get_custom" => [
+                 ...
+                 "pagination_use_output_walkers" => true,
+             ]
+         ]
+    )]
     class Book
     {
         // ...
