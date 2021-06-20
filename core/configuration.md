@@ -32,12 +32,16 @@ api_platform:
     path_segment_name_generator: 'api_platform.path_segment_name_generator.underscore'
 
     # Allow using plain IDs for JSON format.
+    # Deprecated since API Platform 2.7, will be removed in API Platform 3.0
     allow_plain_identifiers: false
 
     validator:
         # Enable the serialization of payload fields when a validation error is thrown.
         # If you want to serialize only some payload fields, define them like this: [ severity, anotherPayloadField ]
         serialize_payload_fields: []
+
+        # To enable or disable query parameters validation on collection GET requests
+        query_parameter_validation: true
 
     eager_loading:
         # To enable or disable eager loading.

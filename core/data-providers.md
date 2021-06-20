@@ -27,6 +27,11 @@ Note, that if your entity is not Doctrine-related, you need to flag the identifi
 
 ## Custom Collection Data Provider
 
+If the [Symfony MakerBundle](https://symfony.com/doc/current/bundles/SymfonyMakerBundle) is installed in your project, you can use the following command to generate a custom collection data provider easily:
+```console
+bin/console make:data-provider --collection-only
+```
+
 First, your `BlogPostCollectionDataProvider` has to implement the [`CollectionDataProviderInterface`](https://github.com/api-platform/core/blob/main/src/DataProvider/CollectionDataProviderInterface.php):
 
 The `getCollection` method must return an `array`, a `Traversable` or a [`ApiPlatform\Core\DataProvider\PaginatorInterface`](https://github.com/api-platform/core/blob/main/src/DataProvider/PaginatorInterface.php) instance.
@@ -78,6 +83,11 @@ data providers are called. Implementing the `ApiPlatform\Core\DataProvider\Restr
 You can find a full working example in the [API Platform's demo application](https://github.com/api-platform/demo/blob/main/api/src/DataProvider/TopBookCollectionDataProvider.php).
 
 ## Custom Item Data Provider
+
+If the [Symfony MakerBundle](https://symfony.com/doc/current/bundles/SymfonyMakerBundle) is installed in your project, you can use the following command to generate a custom item data provider easily:
+```console
+bin/console make:data-provider --item-only
+```
 
 The process is similar for item data providers. Create a `BlogPostItemDataProvider` implementing the [`ItemDataProviderInterface`](https://github.com/api-platform/core/blob/main/src/DataProvider/ItemDataProviderInterface.php)
 interface:

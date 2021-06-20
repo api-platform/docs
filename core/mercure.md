@@ -121,3 +121,103 @@ In addition to `private`, the following options are available:
 * `type`: the SSE type of this event, if not set this field is omitted
 * `retry`: the `retry` field of the SSE, if not set this field is omitted
 * `normalization_context`: the specific normalization context to use for the update.
+
+## Dispatching Restrictive Updates (Security Mode)
+
+Use `iri` (iriConverter) and `escape` (rawurlencode) functions to add an alternative topic, in order to restrict a subscriber with `topic_selector` to receive only publications that are authorized (partner match).
+
+> Let's say that a subscriber wants to receive updates concerning all book resources it has access to. The subscriber can use the topic selector <https://example.com/books/{id}> as value of the topic query parameter.
+> Adding this same URI template to the mercure.subscribe claim of the JWS presented by the subscriber to the hub would allow this subscriber to receive all updates for all book resources. It is not what we want here: this subscriber is only authorized to access some of these resources.
+>
+> To solve this problem, the mercure.subscribe claim could contain a topic selector such as: <https://example.com/users/foo/{?topic}>.
+>
+> The publisher could then take advantage of the previously described behavior by publishing a private update having <https://example.com/books/1> as canonical topic and <https://example.com/users/foo/?topic=https%3A%2F%2Fexample.com%2Fbooks%2F1> as alternate topic.
+>
+> —<https://mercure.rocks/spec#subscribers>
+
+Below is an example using the `topics` option:
+
+```php
+<?php
+// api/src/Entity/Book.php
+
+namespace App\Entity;
+
+use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Core\Api\UrlGeneratorInterface;
+use App\Entity\User;
+
+#[ApiResource(
+    mercure: [
+        'private' => true,
+        // the '@=' prefix is required when using expressions for arguments in topics
+        'topics' => [
+            '@=iri(object)',
+            '@=iri(object.getOwner()) ~ "/?topic=" ~ escape(iri(object))',
+            '@=iri(object, '.UrlGeneratorInterface::ABS_PATH.')', // you can also change the reference type
+            'https://example.com/books/1',
+        ],
+    ],
+)]
+class Book
+{
+    private ?User $owner;
+
+    public function getOwner(): ?User
+    {
+        return $this->owner;
+    }
+}
+```
+
+Using an *expression* function:
+
+```php
+<?php
+// api/src/Entity/Book.php
+
+namespace App\Entity;
+
+use ApiPlatform\Core\Annotation\ApiResource;
+use App\Entity\User;
+
+#[ApiResource(
+    mercure: 'object.getMercureOptions()',
+)]
+class Book
+{
+    private ?User $owner;
+
+    public function getMercureOptions(): array
+    {
+        // the '@=' prefix is required when using expressions for arguments in topics
+        $topic1 = '@=iri(object)';
+        $topic2 = '@=iri(object.getOwner()) ~ "/?topic=" ~ escape(iri(object))';
+        $topic3 = '@=iri(object, '.UrlGeneratorInterface::ABS_PATH.')'; // you can also change the reference type
+        $topic4 = 'https://example.com/books/1';
+
+        return [
+            'private' => true,
+            'topics' => [$topic1, $topic2, $topic3, $topic4],
+        ];
+    }
+
+    public function getOwner(): ?User
+    {
+        return $this->owner;
+    }
+}
+```
+
+In this case, the JWT Token for the subscriber should contain:
+
+```json
+{
+  "mercure": {
+    "subscribe": ["https://example.com/users/foo/{?topic}"]
+  }
+}
+```
+
+The subscribe topic should be:
+`https://example.com/books/{id}`

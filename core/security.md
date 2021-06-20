@@ -87,7 +87,10 @@ class Book
     /**
      * Property viewable and writable only by users with ROLE_ADMIN
      */
-    #[ApiProperty(security: "is_granted('ROLE_ADMIN')")]
+    #[ApiProperty(
+        security: "is_granted('ROLE_ADMIN')",
+        attributes: ["security_post_denormalize" => "is_granted('UPDATE', object)"]
+    )]
     private string $adminOnlyProperty;
 }
 ```
@@ -98,11 +101,13 @@ In this example:
 * Only users having [the role](https://symfony.com/doc/current/security.html#roles) `ROLE_ADMIN` can create a new resource (configured on the `post` operation)
 * Only users having the `ROLE_ADMIN` or owning the current object can replace an existing book (configured on the `put` operation)
 * Only users having the `ROLE_ADMIN` can view or modify the `adminOnlyProperty` property. Only users having the `ROLE_ADMIN` can create a new resource specifying `adminOnlyProperty` value.
+* Only users that are granted the `UPDATE` attribute on the book (via a voter) can write to the field
 
 Available variables are:
 
 * `user`: the current logged in object, if any
-* `object`: the current resource, or collection of resources for collection operations
+* `object`: the current resource, or collection of resources for collection operations (note: this is `null` for update/create operations)
+* `previous_object`: (`security_post_denormalize` only) a clone of `object`, before modifications were made - this is `null` for create operations
 * `request`: the current request
 
 Access control checks in the `security` attribute are always executed before the [denormalization step](serialization.md).
