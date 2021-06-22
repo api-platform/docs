@@ -65,7 +65,7 @@ docker-compose exec php \
 
 To learn more about fixtures, take a look at the documentation of [Alice](https://github.com/nelmio/alice)
 and [AliceBundle](https://github.com/hautelook/AliceBundle).
-The list of available generators as well as a cookbook explaining how to create custom generators can be found in the documentation of [Faker](https://github.com/fzaninotto/Faker), the library used by Alice under the hood.
+The list of available generators as well as a cookbook explaining how to create custom generators can be found in the documentation of [Faker](https://github.com/fakerphp/faker), the library used by Alice under the hood.
 
 ## Writing Functional Tests
 
