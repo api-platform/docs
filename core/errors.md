@@ -105,5 +105,6 @@ the error will be returned in this format as well:
 ## Message Scope
 
 Depending on the status code you use, the message may be replaced with a generic one in production to avoid leaking unwanted information.
-- If your status code is >= 500 and < 600, the exception message will only be displayed in debug mode (dev and test). In production, a generic message matching the status code provided will be shown instead. If you are using an unofficial HTTP code, a general message will be displayed.
-- in any other cases, your exception message will be sent to end users
+If your status code is >= 500 and < 600, the exception message will only be displayed in debug mode (dev and test). In production, a generic message matching the status code provided will be shown instead. If you are using an unofficial HTTP code, a general message will be displayed.
+
+In any other cases, your exception message will be sent to end users.
