@@ -260,13 +260,13 @@ class Book
     public ?string $isbn = null;
 
     /** The title of this book. */
-    public string $title;
+    public string $title = '';
 
     /** The description of this book. */
-    public string $description;
+    public string $description = '';
 
     /** The author of this book. */
-    public string $author;
+    public string $author = '';
 
     /** The publication date of this book. */
     public ?\DateTimeInterface $publicationDate = null;
@@ -305,10 +305,10 @@ class Review
     public int $rating = 0;
 
     /** The body of the review. */
-    public string $body;
+    public string $body = '';
 
     /** The author of the review. */
-    public string $author;
+    public string $author = '';
 
     /** The date of publication of this review.*/
     public ?\DateTimeInterface $publicationDate = null;
@@ -402,7 +402,7 @@ Modify these files as described in these patches:
 +     *
 +     * @ORM\Column
 +     */
-     public string $title;
+     public string $title = '';
  
 -    /** The description of this book. */
 +    /**
@@ -410,7 +410,7 @@ Modify these files as described in these patches:
 +     *
 +     * @ORM\Column(type="text")
 +     */
-     public string $description;
+     public string $description = '';
  
 -    /** The author of this book. */
 +    /**
@@ -418,7 +418,7 @@ Modify these files as described in these patches:
 +     *
 +     * @ORM\Column
 +     */
-     public string $author;
+     public string $author = '';
  
 -    /** The publication date of this book. */
 +    /**
@@ -480,7 +480,7 @@ Modify these files as described in these patches:
 +     *
 +     * @ORM\Column(type="text")
 +     */
-     public string $body;
+     public string $body = '';
  
 -    /** The author of the review. */
 +    /**
@@ -488,7 +488,7 @@ Modify these files as described in these patches:
 +     *
 +     * @ORM\Column
 +     */
-     public string $author;
+     public string $author = '';
  
 -    /** The date of publication of this review.*/
 +    /**
@@ -658,12 +658,12 @@ Modify the following files as described in these patches:
       * @ORM\Column(type="text")
       */
 +    #[Assert\NotBlank]
-     public string $description;
+     public string $description = '';
  
       * @ORM\Column
       */
 +    #[Assert\NotBlank]
-     public string $author;
+     public string $author = '';
  
       * @ORM\Column(type="datetime_immutable")
       */
@@ -686,12 +686,12 @@ Modify the following files as described in these patches:
       * @ORM\Column(type="text")
       */
 +    #[Assert\NotBlank]
-     public string $body;
+     public string $body = '';
  
       * @ORM\Column
       */
 +    #[Assert\NotBlank]
-     public string $author;
+     public string $author = '';
  
       * @ORM\Column(type="datetime_immutable")
       */
