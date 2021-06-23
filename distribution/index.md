@@ -647,6 +647,11 @@ Modify the following files as described in these patches:
       */
 +    #[Assert\Isbn]
      public ?string $isbn = null;
+     
+      * @ORM\Column
+      */
++    #[Assert\NotBlank]
+     public string $title = '';
  
       * @ORM\Column(type="text")
       */
