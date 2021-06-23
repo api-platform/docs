@@ -432,11 +432,11 @@ class CreateBookPublication
         ],
         methods: ['POST'],
     )]
-    public function __invoke(Book $data): Book
+    public function __invoke(Book $book): Book
     {
-        $this->bookPublishingHandler->handle($data);
+        $this->bookPublishingHandler->handle($book);
 
-        return $data;
+        return $book;
     }
 }
 ```
@@ -458,9 +458,9 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class BookController extends AbstractController
 {
-    public function createPublication(Book $data, BookPublishingHandler $bookPublishingHandler): Book
+    public function createPublication(Book $book, BookPublishingHandler $bookPublishingHandler): Book
     {
-        return $bookPublishingHandler->handle($data);
+        return $bookPublishingHandler->handle($book);
     }
 }
 ```
