@@ -155,7 +155,7 @@ services:
 
 ## Calling multiple DataPersisters
 
-Our DataPersisters are called in chain, once a data persister is supported the chain breaks and API Platform assumes your data is persisted. You can call mutliple data persisters by implementing the `ResumableDataPersisterInterface`:
+Our DataPersisters are called in chain, once a data persister is supported the chain breaks and API Platform assumes your data is persisted. You can call multiple data persisters by implementing the `ResumableDataPersisterInterface`:
 
 ```php
 namespace App\DataPersister;
@@ -189,4 +189,53 @@ final class BlogPostDataPersister implements ContextAwareDataPersisterInterface,
 }
 ```
 
-This is very useful when using [`Messenger` with API Platform](messenger.md) as you may want to do something asynchronously with the data but still call the default Doctrine data persister.
+This is very useful when using [`Messenger` with API Platform](messenger.md) as you may want to do something asynchronously with the data but still call the default Doctrine data persister, for example:
+```php
+namespace App\DataPersister;
+
+use ApiPlatform\Core\DataPersister\ContextAwareDataPersisterInterface;
+use Doctrine\ORM\EntityManagerInterface;
+use App\Entity\BlogPost;
+
+final class BlogPostDataPersister implements ContextAwareDataPersisterInterface, ResumableDataPersisterInterface 
+{
+    private $entityManager;
+    
+    public function __construct(EntityManagerInterface $entityManager)
+    {
+        $this->entityManager = $entityManager;
+    }
+    
+    public function supports($data, array $context = []): bool
+    {
+        return $data instanceof BlogPost;
+    }
+
+    public function persist($data, array $context = [])
+    {
+        $this->entityManager->persist($data);
+        $this->entityManager->flush();
+    }
+
+    public function remove($data, array $context = [])
+    {
+        $this->entityManager->remove($data);
+        $this->entityManager->flush();
+    }
+
+    // Once called this data persister will resume to the next one
+    public function resumable(array $context = []): bool 
+    {
+        return true;
+    }
+}
+```
+```yaml
+# api/config/services.yaml
+services:
+    # ...
+    App\DataPersister\BlogPostDataPersister: ~
+        # Uncomment only if autoconfiguration is disabled
+        #arguments: ['@App\DataPersister\BlogPostDataPersister.inner']
+        #tags: [ 'api_platform.data_persister' ]
+```

@@ -65,7 +65,7 @@ docker-compose exec php \
 
 To learn more about fixtures, take a look at the documentation of [Alice](https://github.com/nelmio/alice)
 and [AliceBundle](https://github.com/hautelook/AliceBundle).
-The list of available generators as well as a cookbook explaining how to create custom generators can be found in the documentation of [Faker](https://github.com/fzaninotto/Faker), the library used by Alice under the hood.
+The list of available generators as well as a cookbook explaining how to create custom generators can be found in the documentation of [Faker](https://github.com/fakerphp/faker), the library used by Alice under the hood.
 
 ## Writing Functional Tests
 
@@ -152,7 +152,7 @@ class BooksTest extends ApiTestCase
             'publicationDate' => '1985-07-31T00:00:00+00:00',
             'reviews' => [],
         ]);
-        $this->assertRegExp('~^/books/\d+$~', $response->toArray()['@id']);
+        $this->assertMatchesRegularExpression('~^/books/\d+$~', $response->toArray()['@id']);
         $this->assertMatchesResourceItemJsonSchema(Book::class);
     }
 
@@ -227,6 +227,8 @@ As you can see, the example uses the [trait `RefreshDatabaseTrait`](https://gith
 from [AliceBundle](https://github.com/hautelook/AliceBundle/blob/master/README.md) which will, at the beginning of each
 test, purge the database, load fixtures, begin a transaction, and, at the end of each test, roll back the
 transaction previously begun. Because of this, you can run your tests without worrying about fixtures.
+
+There is one caveat though: in some tests, it is necessary to perform multiple requests in one test, for example when creating a user via the API and checking that a subsequent login using the same password works. However, the client will by default reboot the kernel, which will reset the database. You can prevent this by adding `$client->disableReboot();` to such tests.
 
 All you have to do now is to run your tests:
 

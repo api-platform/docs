@@ -69,15 +69,16 @@ use ApiPlatform\Core\OpenApi\Factory\OpenApiFactoryInterface;
 use ApiPlatform\Core\OpenApi\OpenApi;
 use ApiPlatform\Core\OpenApi\Model;
 
-class OpenApiFactory implements OpenApiFactoryInterface {
+class OpenApiFactory implements OpenApiFactoryInterface
+{
     private $decorated;
 
-    public function __construct(OpenApiFactoryInterface $decorated) 
+    public function __construct(OpenApiFactoryInterface $decorated)
     {
         $this->decorated = $decorated;
     }
 
-    public function __invoke(array $context = []): OpenApi 
+    public function __invoke(array $context = []): OpenApi
     {
         $openApi = $this->decorated->__invoke($context);
         $pathItem = $openApi->getPaths()->getPath('/api/grumpy_pizzas/{id}');
@@ -163,7 +164,7 @@ class Product // The class name will be used to name exposed resources
      * )
      */
     public $timestamp;
-    
+
     // ...
 }
 ```
@@ -539,7 +540,7 @@ The [info object](https://swagger.io/specification/#info-object) provides metada
 
 ```yaml
 api_platform:
-    
+
     # The title of the API.
     title: 'API title'
 
@@ -548,7 +549,7 @@ api_platform:
 
     # The version of the API.
     version: '0.0.0'
-    
+
     openapi:
         # The contact information for the exposed API.
         contact:
@@ -565,5 +566,5 @@ api_platform:
             # The license name used for the API.
             name:
             # URL to the license used for the API. MUST be in the format of a URL.
-            url: 
+            url:
 ```
