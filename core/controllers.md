@@ -45,11 +45,11 @@ class CreateBookPublication
         $this->bookPublishingHandler = $bookPublishingHandler;
     }
 
-    public function __invoke(Book $data): Book
+    public function __invoke(Book $book): Book
     {
-        $this->bookPublishingHandler->handle($data);
+        $this->bookPublishingHandler->handle($book);
 
-        return $data;
+        return $book;
     }
 }
 ```
@@ -65,7 +65,10 @@ This action will be automatically registered as a service (the service name is t
 API Platform automatically retrieves the appropriate PHP entity using the data provider then deserializes user data in it,
 and for `POST` and `PUT` requests updates the entity with data provided by the user.
 
-**Warning: the `__invoke()` method parameter [MUST be called `$data`](https://symfony.com/doc/current/components/http_kernel.html#getting-the-controller-arguments)**, otherwise, it will not be filled correctly!
+The entity is retrieved in the `__invoke` method thanks to a dedicated argument resolver.
+
+When using `GET`, the `__invoke()` method parameter will receive the identifier and should be called the same as the resource identifier.
+So for the path `/user/{uuid}/bookmarks`, you must use `__invoke(string $uuid)`.
 
 Services (`$bookPublishingHandler` here) are automatically injected thanks to the autowiring feature. You can type-hint any service
 you need and it will be autowired too.
@@ -386,11 +389,11 @@ class CreateBookPublication
      *     }
      * )
      */
-    public function __invoke(Book $data): Book
+    public function __invoke(Book $book): Book
     {
-        $this->bookPublishingHandler->handle($data);
+        $this->bookPublishingHandler->handle($book);
 
-        return $data;
+        return $book;
     }
 }
 ```
@@ -412,9 +415,9 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class BookController extends AbstractController
 {
-    public function createPublication(Book $data, BookPublishingHandler $bookPublishingHandler): Book
+    public function createPublication(Book $book, BookPublishingHandler $bookPublishingHandler): Book
     {
-        return $bookPublishingHandler->handle($data);
+        return $bookPublishingHandler->handle($book);
     }
 }
 ```
