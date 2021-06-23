@@ -415,9 +415,12 @@ and its related route using annotations:
 namespace App\Controller;
 
 use App\Entity\Book;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpKernel\Attribute\AsController;
 use Symfony\Component\Routing\Annotation\Route;
 
-class CreateBookPublication
+#[AsController]
+class CreateBookPublication extends AbstractController
 {
     public function __construct(
         private BookPublishingHandler $bookPublishingHandler
@@ -455,7 +458,9 @@ namespace App\Controller;
 
 use App\Entity\Book;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpKernel\Attribute\AsController;
 
+#[AsController]
 class BookController extends AbstractController
 {
     public function createPublication(Book $data, BookPublishingHandler $bookPublishingHandler): Book

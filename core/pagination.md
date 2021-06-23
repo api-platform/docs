@@ -492,8 +492,10 @@ namespace App\Controller\Book;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Paginator;
 use App\Repository\BookRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpKernel\Attribute\AsController;
 use Symfony\Component\HttpFoundation\Request;
 
+#[AsController]
 class GetBooksByFavoriteAuthorAction extends AbstractController
 {
     public function __invoke(Request $request, BookRepository $bookRepository): Paginator
