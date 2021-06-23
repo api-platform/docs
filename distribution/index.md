@@ -402,7 +402,7 @@ Modify these files as described in these patches:
 +     *
 +     * @ORM\Column
 +     */
-     public string $title = '';
+     public string $title;
  
 -    /** The description of this book. */
 +    /**
@@ -410,7 +410,7 @@ Modify these files as described in these patches:
 +     *
 +     * @ORM\Column(type="text")
 +     */
-     public string $description = '';
+     public string $description;
  
 -    /** The author of this book. */
 +    /**
@@ -418,7 +418,7 @@ Modify these files as described in these patches:
 +     *
 +     * @ORM\Column
 +     */
-     public string $author = '';
+     public string $author;
  
 -    /** The publication date of this book. */
 +    /**
@@ -480,7 +480,7 @@ Modify these files as described in these patches:
 +     *
 +     * @ORM\Column(type="text")
 +     */
-     public string $body = '';
+     public string $body;
  
 -    /** The author of the review. */
 +    /**
@@ -488,7 +488,7 @@ Modify these files as described in these patches:
 +     *
 +     * @ORM\Column
 +     */
-     public string $author = '';
+     public string $author;
  
 -    /** The date of publication of this review.*/
 +    /**
