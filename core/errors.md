@@ -8,7 +8,8 @@ or in the format described in the [RFC 7807](https://tools.ietf.org/html/rfc7807
 
 ## Converting PHP Exceptions to HTTP Errors
 
-The framework also allows you configure the HTTP status code sent to the clients when custom exceptions are thrown.
+The framework also allows you to configure the HTTP status code sent to the clients when custom exceptions are thrown
+on an API Platform resource operation.
 
 In the following example, we throw a domain exception from the business layer of the application and
 configure API Platform to convert it to a `404 Not Found` error:
@@ -100,6 +101,13 @@ the error will be returned in this format as well:
   "hydra:description": "The product \"1234\" does not exist."
 }
 ```
+
+## Message Scope
+
+Depending on the status code you use, the message may be replaced with a generic one in production to avoid leaking unwanted information.
+If your status code is >= 500 and < 600, the exception message will only be displayed in debug mode (dev and test). In production, a generic message matching the status code provided will be shown instead. If you are using an unofficial HTTP code, a general message will be displayed.
+
+In any other cases, your exception message will be sent to end users.
 
 ## Fine-grained Configuration
 

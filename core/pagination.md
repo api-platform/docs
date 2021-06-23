@@ -221,7 +221,7 @@ use ApiPlatform\Core\Annotation\ApiResource;
 
 /**
  * @ApiResource(
- *     attributes={"maximum_items_per_page"=50}
+ *     attributes={"pagination_maximum_items_per_page"=50}
  * )
  */
 class Book
@@ -241,7 +241,7 @@ use ApiPlatform\Core\Annotation\ApiResource;
 /**
  * @ApiResource(
  *     collectionOperations={
- *         "get"={"maximum_items_per_page"=50}
+ *         "get"={"pagination_maximum_items_per_page"=50}
  *     }
  * )
  */
@@ -492,8 +492,10 @@ namespace App\Controller\Book;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Paginator;
 use App\Repository\BookRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpKernel\Attribute\AsController;
 use Symfony\Component\HttpFoundation\Request;
 
+#[AsController]
 class GetBooksByFavoriteAuthorAction extends AbstractController
 {
     public function __invoke(Request $request, BookRepository $bookRepository): Paginator

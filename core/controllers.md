@@ -35,8 +35,11 @@ First, let's create your custom operation:
 namespace App\Controller;
 
 use App\Entity\Book;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpKernel\Attribute\AsController;
 
-class CreateBookPublication
+#[AsController]
+class CreateBookPublication extends AbstractController
 {
     private $bookPublishingHandler;
 
@@ -98,10 +101,10 @@ use App\Controller\CreateBookPublication;
         'path' => '/books/{id}/publication',
         'controller' => CreateBookPublication::class,
     ],
-])
+])]
 class Book
 {
-    //...
+    // ...
 }
 ```
 
@@ -157,24 +160,20 @@ use ApiPlatform\Core\Annotation\ApiResource;
 use App\Controller\CreateBookPublication;
 use Symfony\Component\Serializer\Annotation\Groups;
 
-/**
- * @ApiResource(itemOperations={
- *     "get",
- *     "post_publication"={
- *         "method"="POST",
- *         "path"="/books/{id}/publication",
- *         "controller"=CreateBookPublication::class,
- *         "normalization_context"={"groups"={"publication"}},
- *     }
- * })
- */
+#[ApiResource(itemOperations: [
+    'get',
+    'post_publication' => [
+        'method' => 'POST',
+        'path' => '/books/{id}/publication',
+        'controller' => CreateBookPublication::class,
+        'normalization_context' => ['groups' => 'publication'],
+    ],
+])]
 class Book
 {
-    //...
+    // ...
 
-    /**
-     * @Groups("publication")
-     */
+    #[Groups(['publication'])]
     public $isbn;
 
     // ...
@@ -236,20 +235,18 @@ operation attribute:
 use ApiPlatform\Core\Annotation\ApiResource;
 use App\Controller\CreateBookPublication;
 
-/**
- * @ApiResource(itemOperations={
- *     "get",
- *     "post_publication"={
- *         "method"="POST",
- *         "path"="/books/{id}/publication",
- *         "controller"=CreateBookPublication::class,
- *         "read"=false,
- *     }
- * })
- */
+#[ApiResource(itemOperations: [
+    'get',
+    'post_publication' => [
+        'method' => 'POST',
+        'path' => '/books/{id}/publication',
+        'controller' => CreateBookPublication::class,
+        'read' => false,
+    ],
+])]
 class Book
 {
-    //...
+    // ...
 }
 ```
 
@@ -312,16 +309,14 @@ First, let's create your resource configuration:
 
 use ApiPlatform\Core\Annotation\ApiResource;
 
-/**
- * @ApiResource(itemOperations={
- *     "get",
- *     "post_publication"={"route_name"="book_post_publication"},
-*      "book_post_discontinuation",
- * })
- */
+#[ApiResource(itemOperations: [
+    'get',
+    'post_publication' => ['route_name' => 'book_post_publication'],
+    'book_post_discontinuation',
+])]
 class Book
 {
-    //...
+    // ...
 }
 ```
 
@@ -367,9 +362,12 @@ and its related route using annotations:
 namespace App\Controller;
 
 use App\Entity\Book;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpKernel\Attribute\AsController;
 use Symfony\Component\Routing\Annotation\Route;
 
-class CreateBookPublication
+#[AsController]
+class CreateBookPublication extends AbstractController
 {
     private $bookPublishingHandler;
 
@@ -378,17 +376,15 @@ class CreateBookPublication
         $this->bookPublishingHandler = $bookPublishingHandler;
     }
 
-    /**
-     * @Route(
-     *     name="book_post_publication",
-     *     path="/books/{id}/publication",
-     *     methods={"POST"},
-     *     defaults={
-     *         "_api_resource_class"=Book::class,
-     *         "_api_item_operation_name"="post_publication"
-     *     }
-     * )
-     */
+    #[Route(
+        name: 'book_post_publication',
+        path: '/books/{id}/publication',
+        methods: ['POST'],
+        defaults: [
+            '_api_resource_class' => Book::class,
+            '_api_item_operation_name' => 'post_publication',
+        ],
+    )]
     public function __invoke(Book $book): Book
     {
         $this->bookPublishingHandler->handle($book);
@@ -412,7 +408,9 @@ namespace App\Controller;
 
 use App\Entity\Book;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpKernel\Attribute\AsController;
 
+#[AsController]
 class BookController extends AbstractController
 {
     public function createPublication(Book $book, BookPublishingHandler $bookPublishingHandler): Book

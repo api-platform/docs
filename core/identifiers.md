@@ -34,6 +34,14 @@ final class Person
 }
 ```
 
+```yaml
+# api/config/api_platform/resources/Person.yaml
+App\Entity\Person:
+    properties:
+        code:
+            identifier: true
+```
+
 ```xml
 <resources xmlns="https://api-platform.com/schema/metadata">
     <resource class="App\EntityPerson">
@@ -156,7 +164,7 @@ use Doctrine\ORM\Mapping as ORM;
 final class Person
 {
     /**
-     * @var int
+     * @var int
      * @ApiProperty(identifier=false)
      *
      * @ORM\Id()
