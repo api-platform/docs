@@ -31,7 +31,7 @@ class Book
 ```
 
 ```yaml
-# config/api/resources/Book.yaml
+# api/config/api_platform/resources/Book.yaml
 App\Entity\Book:
     attributes:
         order:
@@ -74,7 +74,7 @@ class Book
 ```
 
 ```yaml
-# config/api/resources/Book.yaml
+# api/config/api_platform/resources/Book.yaml
 App\Entity\Book:
     attributes:
         order: ['foo', 'bar']
@@ -110,7 +110,7 @@ class Book
 ```
 
 ```yaml
-# config/api/resources/Book.yaml
+# api/config/api_platform/resources/Book.yaml
 App\Entity\Book:
     attributes:
         order: ['author.username']
@@ -144,7 +144,7 @@ class Book
 ```
 
 ```yaml
-# config/api/resources/Book.yaml
+# api/config/api_platform/resources/Book.yaml
 App\Entity\Book:
     get: ~
     get_desc_custom:
