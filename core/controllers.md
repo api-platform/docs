@@ -162,7 +162,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
         'method' => 'POST',
         'path' => '/books/{id}/publication',
         'controller' => CreateBookPublication::class,
-        'normalization_context' => ['groups' => ['publication']],
+        'normalization_context' => ['groups' => 'publication'],
     ],
 ])]
 class Book
