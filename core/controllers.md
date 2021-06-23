@@ -35,8 +35,11 @@ First, let's create your custom operation:
 namespace App\Controller;
 
 use App\Entity\Book;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpKernel\Attribute\AsController;
 
-class CreateBookPublication
+#[AsController]
+class CreateBookPublication extends AbstractController
 {
     private $bookPublishingHandler;
 
@@ -65,7 +68,8 @@ This action will be automatically registered as a service (the service name is t
 API Platform automatically retrieves the appropriate PHP entity using the data provider then deserializes user data in it,
 and for `POST` and `PUT` requests updates the entity with data provided by the user.
 
-**Warning: the `__invoke()` method parameter [MUST be called `$data`](https://symfony.com/doc/current/components/http_kernel.html#getting-the-controller-arguments)**, otherwise, it will not be filled correctly!
+**Warning: when using `POST` or `PUT`, the `__invoke()` method parameter [MUST be called `$data`](https://symfony.com/doc/current/components/http_kernel.html#getting-the-controller-arguments)**, otherwise, it will not be filled correctly!
+When using `GET`, the `__invoke()` method parameter should be called the same as the entity identifier. So for the path `/user/{uuid}/bookmarks`, you must use `__invoke($uuid)`.
 
 Services (`$bookPublishingHandler` here) are automatically injected thanks to the autowiring feature. You can type-hint any service
 you need and it will be autowired too.
@@ -98,7 +102,7 @@ use App\Controller\CreateBookPublication;
 ])]
 class Book
 {
-    //...
+    // ...
 }
 ```
 
@@ -154,24 +158,20 @@ use ApiPlatform\Core\Annotation\ApiResource;
 use App\Controller\CreateBookPublication;
 use Symfony\Component\Serializer\Annotation\Groups;
 
-/**
- * @ApiResource(itemOperations={
- *     "get",
- *     "post_publication"={
- *         "method"="POST",
- *         "path"="/books/{id}/publication",
- *         "controller"=CreateBookPublication::class,
- *         "normalization_context"={"groups"={"publication"}},
- *     }
- * })
- */
+#[ApiResource(itemOperations: [
+    'get',
+    'post_publication' => [
+        'method' => 'POST',
+        'path' => '/books/{id}/publication',
+        'controller' => CreateBookPublication::class,
+        'normalization_context' => ['groups' => 'publication'],
+    ],
+])]
 class Book
 {
-    //...
+    // ...
 
-    /**
-     * @Groups("publication")
-     */
+    #[Groups(['publication'])]
     public $isbn;
 
     // ...
@@ -233,20 +233,18 @@ operation attribute:
 use ApiPlatform\Core\Annotation\ApiResource;
 use App\Controller\CreateBookPublication;
 
-/**
- * @ApiResource(itemOperations={
- *     "get",
- *     "post_publication"={
- *         "method"="POST",
- *         "path"="/books/{id}/publication",
- *         "controller"=CreateBookPublication::class,
- *         "read"=false,
- *     }
- * })
- */
+#[ApiResource(itemOperations: [
+    'get',
+    'post_publication' => [
+        'method' => 'POST',
+        'path' => '/books/{id}/publication',
+        'controller' => CreateBookPublication::class,
+        'read' => false,
+    ],
+])]
 class Book
 {
-    //...
+    // ...
 }
 ```
 
@@ -309,16 +307,14 @@ First, let's create your resource configuration:
 
 use ApiPlatform\Core\Annotation\ApiResource;
 
-/**
- * @ApiResource(itemOperations={
- *     "get",
- *     "post_publication"={"route_name"="book_post_publication"},
-*      "book_post_discontinuation",
- * })
- */
+#[ApiResource(itemOperations: [
+    'get',
+    'post_publication' => ['route_name' => 'book_post_publication'],
+    'book_post_discontinuation',
+])]
 class Book
 {
-    //...
+    // ...
 }
 ```
 
@@ -364,9 +360,12 @@ and its related route using annotations:
 namespace App\Controller;
 
 use App\Entity\Book;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpKernel\Attribute\AsController;
 use Symfony\Component\Routing\Annotation\Route;
 
-class CreateBookPublication
+#[AsController]
+class CreateBookPublication extends AbstractController
 {
     private $bookPublishingHandler;
 
@@ -375,17 +374,15 @@ class CreateBookPublication
         $this->bookPublishingHandler = $bookPublishingHandler;
     }
 
-    /**
-     * @Route(
-     *     name="book_post_publication",
-     *     path="/books/{id}/publication",
-     *     methods={"POST"},
-     *     defaults={
-     *         "_api_resource_class"=Book::class,
-     *         "_api_item_operation_name"="post_publication"
-     *     }
-     * )
-     */
+    #[Route(
+        name: 'book_post_publication',
+        path: '/books/{id}/publication',
+        methods: ['POST'],
+        defaults: [
+            '_api_resource_class' => Book::class,
+            '_api_item_operation_name' => 'post_publication',
+        ],
+    )]
     public function __invoke(Book $data): Book
     {
         $this->bookPublishingHandler->handle($data);
@@ -409,7 +406,9 @@ namespace App\Controller;
 
 use App\Entity\Book;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpKernel\Attribute\AsController;
 
+#[AsController]
 class BookController extends AbstractController
 {
     public function createPublication(Book $data, BookPublishingHandler $bookPublishingHandler): Book

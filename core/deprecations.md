@@ -73,6 +73,8 @@ class Parchment
 
 It's also possible to deprecate a single property:
 
+[codeSelector]
+
 ```php
 <?php
 // api/src/Entity/Review.php
@@ -97,6 +99,20 @@ class Review
     // ...
 }
 ```
+
+```yaml
+# api/config/api_platform/resources/Review.yaml
+resources:
+    # ...
+    App\Entity\Review:
+        properties:
+            # ...
+            letter:
+                attributes:
+                    deprecation_reason: 'Use the rating property instead'
+```
+
+[/codeSelector]
 
 * With JSON-lD / Hydra, [an `owl:deprecated` annotation property](https://www.w3.org/TR/owl2-syntax/#Annotation_Properties) will be added to the appropriate data structure
 * With Swagger / OpenAPI, [a `deprecated` property](https://swagger.io/docs/specification/2-0/paths-and-operations/) will be added

@@ -98,7 +98,7 @@ class Book
 ```
 
 ```yaml
-# config/api/resources/Book.yaml
+# api/config/api_platform/resources/Book.yaml
 App\Entity\Book:
     properties:
         adminOnlyProperty:
@@ -213,7 +213,7 @@ class Book
 ```
 
 ```yaml
-# config/api/resources/Book.yaml
+# api/config/api_platform/resources/Book.yaml
 App\Entity\Book:
     attributes:
         security: 'is_granted("ROLE_USER")'
