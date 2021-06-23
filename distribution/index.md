@@ -658,12 +658,12 @@ Modify the following files as described in these patches:
       * @ORM\Column(type="text")
       */
 +    #[Assert\NotBlank]
-     public string $description = '';
+     public string $description;
  
       * @ORM\Column
       */
 +    #[Assert\NotBlank]
-     public string $author = '';
+     public string $author;
  
       * @ORM\Column(type="datetime_immutable")
       */
@@ -686,12 +686,12 @@ Modify the following files as described in these patches:
       * @ORM\Column(type="text")
       */
 +    #[Assert\NotBlank]
-     public string $body = '';
+     public string $body;
  
       * @ORM\Column
       */
 +    #[Assert\NotBlank]
-     public string $author = '';
+     public string $author;
  
       * @ORM\Column(type="datetime_immutable")
       */
