@@ -68,8 +68,7 @@ This action will be automatically registered as a service (the service name is t
 API Platform automatically retrieves the appropriate PHP entity using the data provider then deserializes user data in it,
 and for `POST` and `PUT` requests updates the entity with data provided by the user.
 
-**Warning: when using `POST` or `PUT`, the `__invoke()` method parameter [MUST be called `$data`](https://symfony.com/doc/current/components/http_kernel.html#getting-the-controller-arguments)**, otherwise, it will not be filled correctly!
-When using `GET`, the `__invoke()` method parameter should be called the same as the entity identifier. So for the path `/user/{uuid}/bookmarks`, you must use `__invoke($uuid)`.
+**Warning: the `__invoke()` method parameter [MUST be called `$data`](https://symfony.com/doc/current/components/http_kernel.html#getting-the-controller-arguments)**, otherwise, it will not be filled correctly!
 
 Services (`$bookPublishingHandler` here) are automatically injected thanks to the autowiring feature. You can type-hint any service
 you need and it will be autowired too.
@@ -286,6 +285,9 @@ App\Entity\Book:
 
 This way, it will skip the `ReadListener`. You can do the same for some other built-in listeners. See [Built-in Event Listeners](events.md#built-in-event-listeners)
 for more information.
+
+In your custom controller, the `__invoke()` method parameter should be called the same as the entity identifier.
+So for the path `/user/{uuid}/bookmarks`, you must use `__invoke(string $uuid)`.
 
 ## Alternative Method
 
