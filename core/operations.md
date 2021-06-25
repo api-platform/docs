@@ -598,7 +598,7 @@ class Weather
     // ...
 ```
 
-This will expose the `Weather` model, but also all the default CRUD routes: `GET`, `PUT`, `DELETE` and `POST`, which is a non-sense in our context.
+This will expose the `Weather` model, but also all the default CRUD routes: `GET`, `PUT`, `PATCH`, `DELETE` and `POST`, which is a non-sense in our context.
 Since we are required to expose at least one route, let's expose just one:
 
 ```php
