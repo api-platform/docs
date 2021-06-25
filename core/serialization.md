@@ -139,7 +139,7 @@ Alternatively, you can use the more verbose syntax:
 ```
 
 In the previous example, the `name` property will be visible when reading (`GET`) the object, and it will also be available
-to write (`PUT/POST`). The `author` property will be write-only; it will not be visible when serialized responses are
+to write (`PUT` / `PATCH` / `POST`). The `author` property will be write-only; it will not be visible when serialized responses are
 returned by the API.
 
 Internally, API Platform passes the value of the `normalization_context` as the 3rd argument of [the `Serializer::serialize()` method](https://api.symfony.com/master/Symfony/Component/Serializer/SerializerInterface.html#method_serialize) during the normalization
@@ -352,7 +352,7 @@ Instead of embedding relations in the main HTTP response, you may want [to "push
 
 ### Denormalization
 
-It is also possible to embed a relation in `PUT` and `POST` requests. To enable that feature, set the serialization groups
+It is also possible to embed a relation in `PUT`, `PATCH` and `POST` requests. To enable that feature, set the serialization groups
 the same way as normalization. For example:
 
 [codeSelector]
