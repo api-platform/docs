@@ -260,7 +260,7 @@ App\Entity\Book:
         get: ~
     itemOperations:
         get:
-            controller: App\Controller\NotFoundAction
+            controller: ApiPlatform\Core\Action\NotFoundAction
             read: false
             output: false
 ```
@@ -279,7 +279,7 @@ App\Entity\Book:
         </collectionOperations>
         <itemOperations>
             <itemOperation name="get">
-                <attribute name="controller">App\Controller\NotFoundAction</attribute>
+                <attribute name="controller">ApiPlatform\Core\Action\NotFoundAction</attribute>
                 <attribute name="read">false</attribute>
                 <attribute name="output">false</attribute>
             </itemOperation>
