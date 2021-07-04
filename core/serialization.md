@@ -100,6 +100,9 @@ class Book
      * @Groups("write")
      */
     public $author;
+    
+    // Not included in any request
+    public $isbn;
 
     // ...
 }
@@ -152,6 +155,19 @@ In addition to the `groups` key, you can configure any Symfony Serializer option
 
 Any serialization and deserialization group that you specify will also be leveraged by the built-in actions and the Hydra
 documentation generator.
+
+The `isbn` property in the above example will not appear in any collection or item requests. It will however appear in the `/api/contexts/Book` request.
+You can tell the serializer to completely ignore a property with the [@Ignore annotation](https://symfony.com/doc/current/components/serializer.html#ignoring-attributes).
+
+```php
+class Book
+{
+    /**
+     * @Ignore
+     */
+    public $isbn;
+}
+```
 
 ## Using Serialization Groups per Operation
 
