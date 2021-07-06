@@ -197,7 +197,7 @@ We can add a `POST /authentication_token` endpoint to SwaggerUI to conveniently 
 
 ![API Endpoint to retrieve JWT Token from SwaggerUI](images/jwt-token-swagger-ui.png)
 
-To do it, we need to create a decorator:
+To do it, we need to create a decorator for PHP 8:
 
 ```php
 <?php
@@ -274,6 +274,103 @@ final class JwtDecorator implements OpenApiFactoryInterface
                     ]),
                 ),
             ),
+        );
+        $openApi->getPaths()->addPath('/authentication_token', $pathItem);
+
+        return $openApi;
+    }
+}
+```
+
+To do it, we need to create a decorator for PHP 7:
+
+```php
+<?php
+// api/src/OpenApi/JwtDecorator.php
+
+declare(strict_types=1);
+
+namespace App\OpenApi;
+
+use ApiPlatform\Core\OpenApi\Factory\OpenApiFactoryInterface;
+use ApiPlatform\Core\OpenApi\OpenApi;
+use ApiPlatform\Core\OpenApi\Model;
+
+final class JwtDecorator implements OpenApiFactoryInterface
+{
+    /** @var OpenApiFactoryInterface */
+    private $decorated;
+    public function __construct(
+       OpenApiFactoryInterface $decorated
+    ) {
+        $this->decorated = $decorated;
+    }
+
+    public function __invoke(array $context = []): OpenApi
+    {
+        $openApi = ($this->decorated)($context);
+        $schemas = $openApi->getComponents()->getSchemas();
+
+        $schemas['Token'] = new \ArrayObject([
+            'type' => 'object',
+            'properties' => [
+                'token' => [
+                    'type' => 'string',
+                    'readOnly' => true,
+                ],
+            ],
+        ]);
+        $schemas['Credentials'] = new \ArrayObject([
+            'type' => 'object',
+            'properties' => [
+                'email' => [
+                    'type' => 'string',
+                    'example' => 'hasana.ali@gmail.com',
+                ],
+                'password' => [
+                    'type' => 'string',
+                    'example' => 'adminPassword',
+                ],
+            ],
+        ]);
+
+        $pathItem = new Model\PathItem(
+            'JWT Token' // tag,
+            null, // summary
+            null, // description
+            null, // Operation get
+            null, // Operation put
+            new Model\Operation(
+                'postCredentialsItem',
+                ['Token'],
+                [
+                    '200' => [
+                        'description' => 'Get JWT token',
+                        'content' => [
+                            'application/json' => [
+                                'schema' => [
+                                    '$ref' => '#/components/schemas/Token',
+                                ],
+                            ],
+                        ],
+                    ],
+                ],
+                '',
+                'Get JWT token to login.',
+                null,
+                [],
+                new Model\RequestBody(
+                    'Generate new JWT Token',
+                    new \ArrayObject([
+                        'application/json' => [
+                            'schema' => [
+                                '$ref' => '#/components/schemas/Credentials',
+                            ],
+                        ],
+                    ]),
+                ),
+            ),
+            
         );
         $openApi->getPaths()->addPath('/authentication_token', $pathItem);
 
