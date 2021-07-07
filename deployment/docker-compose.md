@@ -12,10 +12,9 @@ e.g. [Docker Hub](https://hub.docker.com/), [Google Container Registry](https://
 would pull the pre-built images from the container registry. This maintains a separation of concerns between the build
 environment and the production environment.
 
-## Deploying for production for ApiPlatorm 2.6
+## Deploying for Production
 
-Thanks to ApiPlatform 2.6, the deploiement process has never been so easy. The required docker-compose files are already there, and you just have to pass the docker-compose.prod.yml to docker-compose to build images for production.
-
+To build images for production, you have to use the `docker-compose.prod.yml` file with Docker Compose.
 
 ## Building and Pushing the Docker Images
 
@@ -65,6 +64,7 @@ These steps should be performed on the production server.
     confused with `api/.env` which is used by the Symfony application). For example:
 
     ```shell
+    SERVER_NAME=api.example.com
     MERCURE_PUBLISHER_JWT_KEY=someKey
     MERCURE_SUBSCRIBER_JWT_KEY=someKey
     ```
@@ -72,8 +72,6 @@ These steps should be performed on the production server.
     **Important**: Please make sure to change all the passwords, keys and secret values to your own.
 
 2. Pull the Docker images.
-
-    Let's Encrypt integration is now automatic, thanks to Caddy Server:
 
     ```console
     docker-compose -f docker-compose.yml -f docker-compose.prod.yml pull
