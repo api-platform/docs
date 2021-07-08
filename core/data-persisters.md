@@ -230,7 +230,10 @@ final class BlogPostDataPersister implements ContextAwareDataPersisterInterface,
 services:
     # ...
     App\DataPersister\BlogPostDataPersister: ~
-        # Uncomment only if autoconfiguration is disabled
-        #arguments: ['@App\DataPersister\BlogPostDataPersister.inner']
-        #tags: [ 'api_platform.data_persister' ]
+        arguments: ['@api_platform.doctrine.orm.data_persister']
+        tags: ['api_platform.data_persister']
+        
+    App\DataPersister\AnotherDataPersister: ~
+        arguments: ['@api_platform.doctrine.orm.data_persister']
+        tags: ['api_platform.data_persister']
 ```
