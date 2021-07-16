@@ -117,8 +117,8 @@ In this example:
 Available variables are:
 
 * `user`: the current logged in object, if any
-* `object`: the current resource, or collection of resources for collection operations
-* `request`: the current request
+* `object`: the current resource class during denormalization, the current resource during normalization, or collection of resources for collection operations
+
 
 Access control checks in the `security` attribute are always executed before the [denormalization step](serialization.md).
 It means than for `PUT` or `PATCH` requests, `object` doesn't contain the value submitted by the user, but values currently stored in [the persistence layer](data-persisters.md).
