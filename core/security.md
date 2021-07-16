@@ -102,7 +102,8 @@ class Book
 App\Entity\Book:
     properties:
         adminOnlyProperty:
-            security: 'is_granted("ROLE_ADMIN")'
+            attributes:
+                security: 'is_granted("ROLE_ADMIN")'
 ```
 
 [/codeSelector]
