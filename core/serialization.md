@@ -234,7 +234,7 @@ Refer to the [operations](operations.md) documentation to learn more.
 By default, the serializer provided with API Platform represents relations between objects using [dereferenceable IRIs](https://en.wikipedia.org/wiki/Internationalized_Resource_Identifier).
 They allow you to retrieve details for related objects by issuing extra HTTP requests. However, for performance reasons, it is sometimes preferable to avoid forcing the client to issue extra HTTP requests.
 
-**Note:** The serializer automatically creates the IRIs if it can determine that the target type is also an ApiResource. It does this based on the Doctrine configuration, the declared PHP type or the type annotation declared in the DocBlock. This means that if your ApiResource is also a Doctrine entity this will work automatically. However, **if your ApiResource is not a Doctrine entity, special care must be taken:** make sure to declare the type or add a type annotation in a DocBlock. For example:
+**Note:** The serializer automatically creates the IRIs if it can determine that the target type is also an ApiResource. It does this based on the Doctrine configuration, the declared PHP type or the type annotation declared in the PHPDoc. This means that if your ApiResource is also a Doctrine entity this will work automatically. However, if your ApiResource is not a Doctrine entity, special care must be taken: make sure to declare the type or add a type annotation in the PHPDoc. For example:
 
 ```php
 <?php
