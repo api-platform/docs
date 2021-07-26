@@ -257,8 +257,6 @@ class Foo {
 }
 ```
 
-
-
 **Note:** We strongly recommend using [Vulcain](https://vulcain.rocks) instead of this feature. Vulcain allows creating faster (better hit rate) and better designed APIs than relying on compound documents, and is supported out of the box in the API Platform distribution.
 
 ### Normalization
