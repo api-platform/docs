@@ -252,7 +252,8 @@ In the following JSON document, the relation from a book to an author is by defa
 
 It is possible to embed related objects (in their entirety, or only some of their properties) directly in the parent
 response through the use of serialization groups. By using the following serialization groups annotations (`@Groups`),
-a JSON representation of the author is embedded in the book response:
+a JSON representation of the author is embedded in the book response. As soon as any of the author's attributes is in
+the `book` group, the author will be embedded.
 
 [codeSelector]
 
@@ -282,6 +283,26 @@ class Book
 }
 ```
 
+```yaml
+# api/config/api_platform/resources/Book.yaml
+App\Entity\Book:
+    attributes:
+        normalization_context:
+            groups: ['book']
+
+# api/config/serializer/Book.yaml
+App\Entity\Book:
+    attributes:
+        name:
+            groups: ['book']
+        author:
+            groups: ['book']
+```
+
+[/codeSelector]
+
+[codeSelector]
+
 ```php
 <?php
 // api/src/Entity/Person.php
@@ -305,20 +326,6 @@ class Person
 ```
 
 ```yaml
-# api/config/api_platform/resources/Book.yaml
-App\Entity\Book:
-    attributes:
-        normalization_context:
-            groups: ['book']
-
-# api/config/serializer/Book.yaml
-App\Entity\Book:
-    attributes:
-        name:
-            groups: ['book']
-        author:
-            groups: ['book']
-
 # api/config/serializer/Person.yaml
 App\Entity\Person:
     attributes:
