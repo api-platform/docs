@@ -36,13 +36,15 @@ Item operations:
 Method   | Mandatory | Description
 ---------|-----------|-------------------------------------------
 `GET`    | yes       | Retrieve an element
-`PUT`    | no        | Replace an element
+`PUT`    | no        | Replace an element.  
 `PATCH`  | no        | Apply a partial modification to an element
 `DELETE` | no        | Delete an element
 
 Note: the `PATCH` method must be enabled explicitly in the configuration, refer to the [Content Negotiation](content-negotiation.md) section for more information.
 
 Note: with JSON Merge Patch, the [null values will be skipped](https://symfony.com/doc/current/components/serializer.html#skipping-null-values) in the response.
+
+Note: Current `PUT` implementation behaves more or less like a PATCH. The standard `PUT` behavior will be implemented API-Platfor 3.0. See [#4344] (https://github.com/api-platform/core/issues/4344) 
 
 ## Enabling and Disabling Operations
 
