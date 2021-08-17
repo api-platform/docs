@@ -150,7 +150,7 @@ The generator comes with a i18n feature to allow quick translations of some labe
 work, you need to create this file:
 
 ```javascript
-// src/plugins/vuetify.js
+// src/i18n.js
 import Vue from 'vue';
 import VueI18n from 'vue-i18n';
 import messages from './locales/en';
