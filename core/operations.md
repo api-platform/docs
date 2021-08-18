@@ -36,7 +36,7 @@ Item operations:
 Method   | Mandatory | Description
 ---------|-----------|-------------------------------------------
 `GET`    | yes       | Retrieve an element
-`PUT`    | no        | Replace an element.  
+`PUT`    | no        | Replace an element
 `PATCH`  | no        | Apply a partial modification to an element
 `DELETE` | no        | Delete an element
 
