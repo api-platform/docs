@@ -291,7 +291,7 @@ services:
 
     App\OpenApi\JwtDecorator:
         decorates: 'api_platform.openapi.factory'
-        autoconfigure: false
+        arguments: ['@.inner']
 ```
 
 ## Testing
