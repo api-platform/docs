@@ -44,6 +44,8 @@ Note: the `PATCH` method must be enabled explicitly in the configuration, refer 
 
 Note: with JSON Merge Patch, the [null values will be skipped](https://symfony.com/doc/current/components/serializer.html#skipping-null-values) in the response.
 
+Note: Current `PUT` implementation behaves more or less like the `PATCH` method. Existing properties not included in the payload are **not** removed, their current values are preserved. To remove an existing property, its value must be explicitly set to `null`. Implementing [the standard `PUT` behavior](https://httpwg.org/specs/rfc7231.html#PUT) is on the roadmap, follow [issue #4344] (https://github.com/api-platform/core/issues/4344) to track the progress.
+
 ## Enabling and Disabling Operations
 
 If no operation is specified, all default CRUD operations are automatically registered. It is also possible - and recommended
@@ -213,7 +215,7 @@ App\Entity\Book:
         get: ~
     itemOperations:
         get:
-            controller: App\Controller\NotFoundAction
+            controller: ApiPlatform\Core\Action\NotFoundAction
             read: false
             output: false
 ```
@@ -232,7 +234,7 @@ App\Entity\Book:
         </collectionOperations>
         <itemOperations>
             <itemOperation name="get">
-                <attribute name="controller">App\Controller\NotFoundAction</attribute>
+                <attribute name="controller">ApiPlatform\Core\Action\NotFoundAction</attribute>
                 <attribute name="read">false</attribute>
                 <attribute name="output">false</attribute>
             </itemOperation>
@@ -598,7 +600,7 @@ class Weather
     // ...
 ```
 
-This will expose the `Weather` model, but also all the default CRUD routes: `GET`, `PUT`, `DELETE` and `POST`, which is a non-sense in our context.
+This will expose the `Weather` model, but also all the default CRUD routes: `GET`, `PUT`, `PATCH`, `DELETE` and `POST`, which is a non-sense in our context.
 Since we are required to expose at least one route, let's expose just one:
 
 ```php

@@ -139,7 +139,7 @@ Alternatively, you can use the more verbose syntax:
 ```
 
 In the previous example, the `name` property will be visible when reading (`GET`) the object, and it will also be available
-to write (`PUT/POST`). The `author` property will be write-only; it will not be visible when serialized responses are
+to write (`PUT` / `PATCH` / `POST`). The `author` property will be write-only; it will not be visible when serialized responses are
 returned by the API.
 
 Internally, API Platform passes the value of the `normalization_context` as the 3rd argument of [the `Serializer::serialize()` method](https://api.symfony.com/master/Symfony/Component/Serializer/SerializerInterface.html#method_serialize) during the normalization
@@ -252,7 +252,8 @@ In the following JSON document, the relation from a book to an author is by defa
 
 It is possible to embed related objects (in their entirety, or only some of their properties) directly in the parent
 response through the use of serialization groups. By using the following serialization groups annotations (`@Groups`),
-a JSON representation of the author is embedded in the book response:
+a JSON representation of the author is embedded in the book response. As soon as any of the author's attributes is in
+the `book` group, the author will be embedded.
 
 [codeSelector]
 
@@ -282,6 +283,26 @@ class Book
 }
 ```
 
+```yaml
+# api/config/api_platform/resources/Book.yaml
+App\Entity\Book:
+    attributes:
+        normalization_context:
+            groups: ['book']
+
+# api/config/serializer/Book.yaml
+App\Entity\Book:
+    attributes:
+        name:
+            groups: ['book']
+        author:
+            groups: ['book']
+```
+
+[/codeSelector]
+
+[codeSelector]
+
 ```php
 <?php
 // api/src/Entity/Person.php
@@ -305,20 +326,6 @@ class Person
 ```
 
 ```yaml
-# api/config/api_platform/resources/Book.yaml
-App\Entity\Book:
-    attributes:
-        normalization_context:
-            groups: ['book']
-
-# api/config/serializer/Book.yaml
-App\Entity\Book:
-    attributes:
-        name:
-            groups: ['book']
-        author:
-            groups: ['book']
-
 # api/config/serializer/Person.yaml
 App\Entity\Person:
     attributes:
@@ -352,7 +359,7 @@ Instead of embedding relations in the main HTTP response, you may want [to "push
 
 ### Denormalization
 
-It is also possible to embed a relation in `PUT` and `POST` requests. To enable that feature, set the serialization groups
+It is also possible to embed a relation in `PUT`, `PATCH` and `POST` requests. To enable that feature, set the serialization groups
 the same way as normalization. For example:
 
 [codeSelector]

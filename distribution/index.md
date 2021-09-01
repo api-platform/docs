@@ -329,7 +329,7 @@ Reload `https://localhost/docs/`: API Platform used these classes to generate an
 
 ![The bookshop API](images/api-platform-2.6-bookshop-api.png)
 
-Operations available for our 2 resource types appear in the UI. We can also see the awesome [Web Debug Toolbar](https://symfonycasts.com/screencast/symfony/profiler?cid=apip)).
+Operations available for our 2 resource types appear in the UI. We can also see the awesome [Web Debug Toolbar](https://symfonycasts.com/screencast/symfony/profiler?cid=apip).
 
 Note that entities' and properties' descriptions in the API documentation, and that API Platform use PHP types to generate the appropriate JSON Schemas.
 

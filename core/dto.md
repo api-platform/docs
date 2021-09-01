@@ -203,7 +203,9 @@ services:
 
 ## Updating a Resource with a Custom Input
 
-When performing an update (e.g. `PUT` operation), the resource to be updated is read by ApiPlatform before the deserialization phase. To do so, it uses a [data provider](data-providers.md) with the `:id` parameter given in the URL. The *body* of the request is the JSON object sent by the client, it is deserialized and is used to update the previously found resource.
+When performing an update (e.g. `PUT` operation), the resource to be updated is read by API Platform before the deserialization phase.
+To do so, it uses a [data provider](data-providers.md) with the `:id` parameter given in the URL.
+The *body* of the request is the JSON object sent by the client, it is deserialized and is used to update the previously found resource.
 
 ![Diagram put input output](images/diagrams/api-platform-put-i-o.svg)
 
