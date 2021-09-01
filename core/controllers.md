@@ -66,7 +66,7 @@ This action will be automatically registered as a service (the service name is t
 `App\Controller\CreateBookPublication`).
 
 API Platform automatically retrieves the appropriate PHP entity using the data provider then deserializes user data in it,
-and for `POST` and `PUT` requests updates the entity with data provided by the user.
+and for `POST`, `PUT` and `PATCH` requests updates the entity with data provided by the user.
 
 The entity is retrieved in the `__invoke` method thanks to a dedicated argument resolver.
 
@@ -288,6 +288,9 @@ App\Entity\Book:
 
 This way, it will skip the `ReadListener`. You can do the same for some other built-in listeners. See [Built-in Event Listeners](events.md#built-in-event-listeners)
 for more information.
+
+In your custom controller, the `__invoke()` method parameter should be called the same as the entity identifier.
+So for the path `/user/{uuid}/bookmarks`, you must use `__invoke(string $uuid)`.
 
 ## Alternative Method
 

@@ -22,20 +22,20 @@ are also available if you want to hook into the persistence layer's object lifec
 
 These built-in event listeners are registered for routes managed by API Platform:
 
-Name                             | Event              | [Pre & Post hooks](#custom-event-listeners) | Priority | Description
----------------------------------|--------------------|---------------------------------------------|----------|-------------
-`AddFormatListener`              | `kernel.request`   | None                                        | 28       | Guesses the best response format ([content negotiation](content-negotiation.md))
+Name                          | Event              | [Pre & Post hooks](#custom-event-listeners) | Priority | Description
+------------------------------|--------------------|---------------------------------------------|----------|-------------
+`AddFormatListener`           | `kernel.request`   | None                                        | 7        | Guesses the best response format ([content negotiation](content-negotiation.md))
 `QueryParameterValidateListener` | `kernel.request`   | None                                        | 16       | Validates query parameters
-`ReadListener`                   | `kernel.request`   | `PRE_READ`, `POST_READ`                     | 4        | Retrieves data from the persistence system using the [data providers](data-providers.md) (`GET`, `PUT`, `DELETE`)
-`DeserializeListener`            | `kernel.request`   | `PRE_DESERIALIZE`, `POST_DESERIALIZE`       | 2        | Deserializes data into a PHP entity (`GET`, `POST`, `DELETE`); updates the entity retrieved using the data provider (`PUT`)
-`DenyAccessListener`             | `kernel.request`   | None                                        | 1        | Enforces [access control](security.md) using Security expressions
-`ValidateListener`               | `kernel.view`      | `PRE_VALIDATE`, `POST_VALIDATE`             | 64       | [Validates data](validation.md) (`POST`, `PUT`)
-`WriteListener`                  | `kernel.view`      | `PRE_WRITE`, `POST_WRITE`                   | 32       | Persists changes in the persistence system using the [data persisters](data-persisters.md) (`POST`, `PUT`, `DELETE`)
-`SerializeListener`              | `kernel.view`      | `PRE_SERIALIZE`, `POST_SERIALIZE`           | 16       | Serializes the PHP entity in string [according to the request format](content-negotiation.md)
-`RespondListener`                | `kernel.view`      | `PRE_RESPOND`, `POST_RESPOND`               | 8        | Transforms serialized to a `Symfony\Component\HttpFoundation\Response` instance
-`AddLinkHeaderListener`          | `kernel.response`  | None                                        | 0        | Adds a `Link` HTTP header pointing to the Hydra documentation
-`ValidationExceptionListener`    | `kernel.exception` | None                                        | 0        | Serializes validation exceptions in the Hydra format
-`ExceptionListener`              | `kernel.exception` | None                                        | -96      | Serializes PHP exceptions in the Hydra format (including the stack trace in debug mode)
+`ReadListener`                | `kernel.request`   | `PRE_READ`, `POST_READ`                     | 4        | Retrieves data from the persistence system using the [data providers](data-providers.md) (`GET`, `PUT`, `PATCH`, `DELETE`)
+`DeserializeListener`         | `kernel.request`   | `PRE_DESERIALIZE`, `POST_DESERIALIZE`       | 2        | Deserializes data into a PHP entity (`GET`, `POST`, `DELETE`); updates the entity retrieved using the data provider (`PUT`, `PATCH`)
+`DenyAccessListener`          | `kernel.request`   | None                                        | 1        | Enforces [access control](security.md) using Security expressions
+`ValidateListener`            | `kernel.view`      | `PRE_VALIDATE`, `POST_VALIDATE`             | 64       | [Validates data](validation.md) (`POST`, `PUT`, `PATCH`)
+`WriteListener`               | `kernel.view`      | `PRE_WRITE`, `POST_WRITE`                   | 32       | Persists changes in the persistence system using the [data persisters](data-persisters.md) (`POST`, `PUT`, `PATCH`, `DELETE`)
+`SerializeListener`           | `kernel.view`      | `PRE_SERIALIZE`, `POST_SERIALIZE`           | 16       | Serializes the PHP entity in string [according to the request format](content-negotiation.md)
+`RespondListener`             | `kernel.view`      | `PRE_RESPOND`, `POST_RESPOND`               | 8        | Transforms serialized to a `Symfony\Component\HttpFoundation\Response` instance
+`AddLinkHeaderListener`       | `kernel.response`  | None                                        | 0        | Adds a `Link` HTTP header pointing to the Hydra documentation
+`ValidationExceptionListener` | `kernel.exception` | None                                        | 0        | Serializes validation exceptions in the Hydra format
+`ExceptionListener`           | `kernel.exception` | None                                        | -96      | Serializes PHP exceptions in the Hydra format (including the stack trace in debug mode)
 
 Some of these built-in listeners can be enabled/disabled by setting operation attributes:
 

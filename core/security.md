@@ -102,7 +102,8 @@ class Book
 App\Entity\Book:
     properties:
         adminOnlyProperty:
-            security: 'is_granted("ROLE_ADMIN")'
+            attributes:
+                security: 'is_granted("ROLE_ADMIN")'
 ```
 
 [/codeSelector]
@@ -123,7 +124,7 @@ Available variables are:
 * `request`: the current request
 
 Access control checks in the `security` attribute are always executed before the [denormalization step](serialization.md).
-It means than for `PUT` requests, `object` doesn't contain the value submitted by the user, but values currently stored in [the persistence layer](data-persisters.md).
+It means than for `PUT` or `PATCH` requests, `object` doesn't contain the value submitted by the user, but values currently stored in [the persistence layer](data-persisters.md).
 
 ## Executing Access Control Rules After Denormalization
 

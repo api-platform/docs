@@ -1627,7 +1627,7 @@ class DummyCar
     /**
      * @ORM\Column(type="string")
      */
-    #[ApiFilter(SearchFilter::class, strategy => 'partial')]
+    #[ApiFilter(SearchFilter::class, strategy: 'partial')]
     public $name;
 
     /**
@@ -1643,7 +1643,7 @@ class DummyCar
 On the first property, `name`, it's straightforward. The first annotation argument is the filter class, the second specifies options, here, the strategy:
 
 ```php
-#[ApiFilter(SearchFilter::class, strategy => 'partial')]
+#[ApiFilter(SearchFilter::class, strategy: 'partial')]
 ```
 
 In the second annotation, we specify `properties` on which the filter should apply. It's necessary here because we don't want to filter `colors` but the `prop` property of the `colors` association.
@@ -1674,7 +1674,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 #[ApiResource]
 #[ApiFilter(BooleanFilter::class)]
-#[ApiFilter(DateFilter::class, strategy => DateFilter::EXCLUDE_NULL)]
+#[ApiFilter(DateFilter::class, strategy: DateFilter::EXCLUDE_NULL)]
 #[ApiFilter(SearchFilter::class, properties: ['colors.prop' => 'ipartial', 'name' => 'partial'])]
 #[ApiFilter(PropertyFilter::class, arguments: ['parameterName' => 'foobar'])]
 #[ApiFilter(GroupFilter::class, arguments: ['parameterName' => 'foobargroups'])]
@@ -1694,7 +1694,7 @@ The `BooleanFilter` is applied to every `Boolean` property of the class. Indeed,
 The `DateFilter` given here will be applied to every `Date` property of the `DummyCar` class with the `DateFilter::EXCLUDE_NULL` strategy:
 
 ```php
-#[ApiFilter(DateFilter::class, strategy => DateFilter::EXCLUDE_NULL)]
+#[ApiFilter(DateFilter::class, strategy: DateFilter::EXCLUDE_NULL)]
 ```
 
 The `SearchFilter` here adds properties. The result is the exact same as the example with annotations on properties:
