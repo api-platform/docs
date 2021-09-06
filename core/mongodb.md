@@ -236,7 +236,7 @@ use Doctrine\ODM\MongoDB\Mapping\Annotations as ODM;
  * @ODM\Document
  */
 #[ApiResource]
-#[GetCollection(doctrineMongodb: ['execute_options' => ['allowDiskUse' => true]])]
+#[GetCollection(extraProperties: ['doctrineMongodb' => ['execute_options' => ['allowDiskUse' => true]]])]
 class Offer
 {
     // ...
@@ -257,7 +257,7 @@ use Doctrine\ODM\MongoDB\Mapping\Annotations as ODM;
 /**
  * @ODM\Document
  */
-#[ApiResource(doctrineMongodb: ['execute_options' => ['allowDiskUse' => true]])]
+#[ApiResource(extraProperties: ['doctrineMongodb' => ['execute_options' => ['allowDiskUse' => true]]])]
 class Offer
 {
     // ...
