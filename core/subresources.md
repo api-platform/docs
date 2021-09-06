@@ -14,10 +14,9 @@ the answer to the question 42:
 ```php
 <?php
 // api/src/Entity/Answer.php
-
 namespace App\Entity;
 
-use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Metadata\ApiResource;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -52,10 +51,9 @@ class Answer
 }
 
 // api/src/Entity/Question.php
-
 namespace App\Entity;
 
-use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Core\Annotation\ApiSubresource;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -134,10 +132,9 @@ You may want custom groups on subresources, you can set `normalization_context` 
 ```php
 <?php
 // api/src/Entity/Answer.php
-
 namespace App\Entity;
 
-use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Metadata\ApiResource;
 
  #[ApiResource(
     subresourceOperations: [
@@ -203,6 +200,9 @@ You can control the path of subresources with the `path` option of the `subresou
 ```php
 <?php
 // api/src/Entity/Question.php
+namespace App\Entity;
+
+use ApiPlatform\Metadata\ApiResource
 
 #[ApiResource(
     subresourceOperations: [
@@ -214,6 +214,7 @@ You can control the path of subresources with the `path` option of the `subresou
 )]
 class Question
 {
+    // ...
 }
 ```
 
@@ -224,17 +225,21 @@ The `subresourceOperations` attribute also allows you to add an access control o
 ```php
 <?php
 // api/src/Entity/Answer.php
+namespace App\Entity;
 
- #[ApiResource(
+use ApiPlatform\Metadata\ApiResource
+
+#[ApiResource(
     subresourceOperations: [
         'api_questions_answer_get_subresource' => [
             'security' => "is_granted('ROLE_AUTHENTICATED')",
         ],
     ],
- )]
- class Answer
- {
- }
+)]
+class Answer
+{
+    // ...
+}
 ```
 
 ### Limiting Depth
@@ -245,9 +250,10 @@ such as `comments`and you don't want the route `api/questions/{id}/answers/{id}/
 ```php
 <?php
 // api/src/Entity/Question.php
+namespace App\Entity;
 
-use ApiPlatform\Core\Annotation\ApiProperty;
-use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Metadata\ApiProperty;
+use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Core\Annotation\ApiSubresource;
 
 #[ApiResource]

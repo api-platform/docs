@@ -11,35 +11,27 @@ within the following annotation will be passed to the context. This provides a g
 ```php
 <?php
 // api/src/Entity/Book.php
-
 namespace App\Entity;
 
-use ApiPlatform\Core\Annotation\ApiProperty;
-use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Metadata\ApiProperty;
+use ApiPlatform\Metadata\ApiResource;
 
-/**
- * @ApiResource(iri="http://schema.org/Book")
- */
+#[ApiResource(types: ["http://schema.org/Book"])]
 class Book
 {
     // ...
 
-    /**
-     * ...
-     * @ApiProperty(
-     *     iri="http://schema.org/name",
-     *     attributes={
-     *         "jsonld_context"={
-     *             "@id"="http://yourcustomid.com",
-     *             "@type"="http://www.w3.org/2001/XMLSchema#string",
-     *             "someProperty"={
-     *                 "a"="textA",
-     *                 "b"="textB"
-     *             }
-     *         }
-     *     }
-     * )
-     */
+    #[ApiProperty(
+        types: ['http://schema.org/name'],
+        jsonldContext: [
+            "@id" => "http://yourcustomid.com",
+            "@type" => "http://www.w3.org/2001/XMLSchema#string",
+            "someProperty" => [
+                "a" => "textA",
+                "b" => "textB"
+            ]
+        ]        
+    )]
     public $name;
     
     // ...
@@ -80,15 +72,12 @@ It's also possible to replace the Hydra context used by the documentation genera
 ```php
 <?php
 // api/src/Entity/Book.php
+namespace App\Entity;
 
-use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Metadata\ApiResource;
 
-/**
- * ...
- * @ApiResource(itemOperations={
- *     "get"={"hydra_context"={"foo"="bar"}}
- * })
- */
+#[ApiResource]
+#[Get(hydraContext: ['foo' => 'bar'])]
 class Book
 {
     //...

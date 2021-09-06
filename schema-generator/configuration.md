@@ -132,6 +132,7 @@ The `@Assert\NotNull` constrain is automatically added.
 
 ```php
 <?php
+...
 
 /**
  * The name of the item.
@@ -140,6 +141,8 @@ The `@Assert\NotNull` constrain is automatically added.
  * @Assert\NotNull
  */
   private string $name;
+
+...
 ```
 
 ## Forcing a Unique Property
@@ -160,8 +163,11 @@ Output:
 
 ```php
 <?php
+// api/src/Entity/Person.php
+namespace App\Entity;
 
-...
+use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
@@ -182,6 +188,9 @@ class Person
      * @Assert\Email
      */
     private string $email;
+
+    // ...
+}
 ```
 
 ## Making a Property Read-Only
@@ -234,9 +243,12 @@ Output:
 
 ```php
 <?php
+// api/src/Entity/Person.php
+namespace App\Entity;
 
-...
+use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * A person (alive, dead, undead, or fictional).
@@ -259,7 +271,9 @@ class Person
      * @Groups({"public"})
      */
     private string $name;
-
+    
+    // ...
+}
 ```
 
 ## Forcing an Embeddable Class to be Embedded
@@ -288,9 +302,13 @@ Output:
 
 ```php
 <?php
+// api/src/Entity/Product.php
+namespace App\Entity;
 
-...
+use ApiPlatform\Metadata\ApiProperty;
+use ApiPlatform\Metadata\ApiResource;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
  * Any offered product or service.
@@ -298,9 +316,9 @@ use Doctrine\ORM\Mapping as ORM;
  * @see http://schema.org/Product Documentation on Schema.org
  *
  * @ORM\Entity
- * @ApiResource(iri="http://schema.org/Product")
  * @UniqueEntity("gtin13s")
  */
+#[ApiResource(types: ["http://schema.org/Product"])]
 class Product
 {
     /**
@@ -309,10 +327,12 @@ class Product
      * @see http://schema.org/weight
      *
      * @ORM\Embedded(class="App\Entity\QuantitativeValue", columnPrefix="weight_")
-     * @ApiProperty(iri="http://schema.org/weight")
      */
+    #[ApiProperty(types: ['http://schema.org/weight'])]
     private ?QuantitativeValue $weight = null;
 
+    // ...
+}
 ```
 
 ## Author PHPDoc

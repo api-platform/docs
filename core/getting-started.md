@@ -35,10 +35,9 @@ Here is an example of entities mapped using annotations which will be exposed th
 ```php
 <?php
 // api/src/Entity/Product.php
-
 namespace App\Entity;
 
-use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Metadata\ApiResource;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -103,10 +102,9 @@ class Product // The class name will be used to name exposed resources
 ```php
 <?php
 // api/src/Entity/Offer.php
-
 namespace App\Entity;
 
-use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Metadata\ApiResource;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -115,7 +113,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  *
  * @ORM\Entity
  */
-#[ApiResource(iri: 'http://schema.org/Offer')]
+#[ApiResource(types: ['http://schema.org/Offer'])]
 class Offer
 {
     /**

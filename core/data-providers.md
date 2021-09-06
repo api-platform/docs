@@ -23,11 +23,12 @@ Both implementations can also implement a third, optional, interface called
 if you want to limit their effects to a single resource or operation.
 
 In the following examples we will create custom data providers for an entity class called `App\Entity\BlogPost`.
-Note, that if your entity is not Doctrine-related, you need to flag the identifier property by using `@ApiProperty(identifier=true)` for things to work properly (see also [Entity Identifier Case](serialization.md#entity-identifier-case)).
+Note, that if your entity is not Doctrine-related, you need to flag the identifier property by using `#[ApiProperty(identifier: true)]` for things to work properly (see also [Entity Identifier Case](serialization.md#entity-identifier-case)).
 
 ## Custom Collection Data Provider
 
 If the [Symfony MakerBundle](https://symfony.com/doc/current/bundles/SymfonyMakerBundle) is installed in your project, you can use the following command to generate a custom collection data provider easily:
+
 ```console
 bin/console make:data-provider --collection-only
 ```
@@ -85,6 +86,7 @@ You can find a full working example in the [API Platform's demo application](htt
 ## Custom Item Data Provider
 
 If the [Symfony MakerBundle](https://symfony.com/doc/current/bundles/SymfonyMakerBundle) is installed in your project, you can use the following command to generate a custom item data provider easily:
+
 ```console
 bin/console make:data-provider --item-only
 ```
@@ -265,8 +267,6 @@ using it within your data provider.
 ```php
 <?php
 // api/src/DataProvider/CustomCollectionDataProvider.php
-
-declare(strict_types=1);
 
 namespace App\DataProvider;
 

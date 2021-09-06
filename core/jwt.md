@@ -203,8 +203,6 @@ To do it, we need to create a decorator:
 <?php
 // api/src/OpenApi/JwtDecorator.php
 
-declare(strict_types=1);
-
 namespace App\OpenApi;
 
 use ApiPlatform\Core\OpenApi\Factory\OpenApiFactoryInterface;

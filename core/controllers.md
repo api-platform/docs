@@ -31,7 +31,6 @@ First, let's create your custom operation:
 ```php
 <?php
 // api/src/Controller/CreateBookPublication.php
-
 namespace App\Controller;
 
 use App\Entity\Book;
@@ -90,18 +89,20 @@ The routing has not been configured yet because we will add it at the resource c
 ```php
 <?php
 // api/src/Entity/Book.php
+namespace App\Entity;
 
-use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\Post;
 use App\Controller\CreateBookPublication;
 
-#[ApiResource(itemOperations: [
-    'get',
-    'post_publication' => [
-        'method' => 'POST',
-        'path' => '/books/{id}/publication',
-        'controller' => CreateBookPublication::class,
-    ],
-])]
+#[ApiResource]
+#[Get]
+#[Post(
+    name: 'publication', 
+    uriTemplate: '/books/{id}/publication', 
+    controller: CreateBookPublication::class
+)]
 class Book
 {
     // ...
@@ -155,20 +156,22 @@ You may want different serialization groups for your custom operations. Just con
 ```php
 <?php
 // api/src/Entity/Book.php
+namespace App\Entity;
 
-use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\Post;
 use App\Controller\CreateBookPublication;
 use Symfony\Component\Serializer\Annotation\Groups;
 
-#[ApiResource(itemOperations: [
-    'get',
-    'post_publication' => [
-        'method' => 'POST',
-        'path' => '/books/{id}/publication',
-        'controller' => CreateBookPublication::class,
-        'normalization_context' => ['groups' => 'publication'],
-    ],
-])]
+#[ApiResource]
+#[Get]
+#[Post(
+    name: 'publication', 
+    uriTemplate: '/books/{id}/publication', 
+    controller: CreateBookPublication::class, 
+    normalizationContext: ['groups' => 'publication']
+)]
 class Book
 {
     // ...
@@ -231,19 +234,21 @@ operation attribute:
 ```php
 <?php
 // api/src/Entity/Book.php
+namespace App\Entity;
 
-use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\Post;
 use App\Controller\CreateBookPublication;
 
-#[ApiResource(itemOperations: [
-    'get',
-    'post_publication' => [
-        'method' => 'POST',
-        'path' => '/books/{id}/publication',
-        'controller' => CreateBookPublication::class,
-        'read' => false,
-    ],
-])]
+#[ApiResource]
+#[Get]
+#[Post(
+    name: 'publication', 
+    uriTemplate: '/books/{id}/publication', 
+    controller: CreateBookPublication::class, 
+    read: false
+)]
 class Book
 {
     // ...
@@ -309,14 +314,16 @@ First, let's create your resource configuration:
 ```php
 <?php
 // api/src/Entity/Book.php
+namespace App\Entity;
 
-use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\Post;
 
-#[ApiResource(itemOperations: [
-    'get',
-    'post_publication' => ['route_name' => 'book_post_publication'],
-    'book_post_discontinuation',
-])]
+#[ApiResource]
+#[Get]
+#[Post(name: 'publication', routeName: 'book_post_publication')]
+#[Post(name: 'book_post_discontinuation')]
 class Book
 {
     // ...
@@ -361,7 +368,6 @@ and its related route using annotations:
 ```php
 <?php
 // api/src/Controller/CreateBookPublication.php
-
 namespace App\Controller;
 
 use App\Entity\Book;
@@ -406,7 +412,6 @@ the same thing as the previous example:
 ```php
 <?php
 // api/src/Controller/BookController.php
-
 namespace App\Controller;
 
 use App\Entity\Book;

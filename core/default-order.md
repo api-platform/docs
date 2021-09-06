@@ -12,11 +12,9 @@ customize this order, you must add an `order` attribute on your ApiResource anno
 // api/src/Entity/Book.php
 namespace App\Entity;
 
-use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Metadata\ApiResource;
 
-/**
- * @ApiResource(attributes={"order"={"foo": "ASC"}})
- */
+#[ApiResource(order: ['foo' => 'ASC'])]
 class Book
 {
     // ...
@@ -50,11 +48,9 @@ If you only specify the key, `ASC` direction will be used as default. For exampl
 // api/src/Entity/Book.php
 namespace App\Entity;
 
-use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Metadata\ApiResource;
 
-/**
- * @ApiResource(attributes={"order"={"foo", "bar"}})
- */
+#[ApiResource(order: ['foo' => 'bar'])]
 class Book
 {
     // ...
@@ -91,11 +87,9 @@ It's also possible to configure the default order on an association property:
 // api/src/Entity/Book.php
 namespace App\Entity;
 
-use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Metadata\ApiResource;
 
-/**
- * @ApiResource(attributes={"order"={"author.username"}})
- */
+#[ApiResource(order: ['author.username'])]
 class Book
 {
     // ...
@@ -123,13 +117,17 @@ Another possibility is to apply the default order for a specific collection oper
 [codeSelector]
 
 ```php
-/**
- *     collectionOperations={
- *         "get",
- *         "get_desc_custom"={"method"="GET", "path"="custom_collection_desc_foos", "order"={"name"="DESC"}},
- *         "get_asc_custom"={"method"="GET", "path"="custom_collection_asc_foos", "order"={ "name"="ASC"}},
- *     }
- */
+<?php
+// api/src/Entity/Book.php
+namespace App\Entity;
+
+use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\ApiResource;
+
+#[ApiResource]
+#[GetCollection]
+#[GetCollection(name: 'desc_custom', uriTemplate: 'custom_collection_desc_foos', order: ['name' => 'DESC'])]
+#[GetCollection(name: 'asc_custom', uriTemplate: 'custom_collection_asc_foos', order: ['name' => 'ASC'])]
 class Book
 {
     // ...

@@ -243,10 +243,9 @@ Let's describe this data model as a set of Plain Old PHP Objects (POPO):
 ```php
 <?php
 // api/src/Entity/Book.php
-
 namespace App\Entity;
 
-use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Metadata\ApiResource;
 use Doctrine\Common\Collections\ArrayCollection;
 
 /** A book. */
@@ -289,10 +288,9 @@ class Book
 ```php
 <?php
 // api/src/Entity/Review.php
-
 namespace App\Entity;
 
-use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Metadata\ApiResource;
 
 /** A review of a book. */
 #[ApiResource]
@@ -365,7 +363,7 @@ Modify these files as described in these patches:
 `api/src/Entity/Book.php`
 
 ```diff
- use ApiPlatform\Core\Annotation\ApiResource;
+ use ApiPlatform\Metadata\ApiResource;
  use Doctrine\Common\Collections\ArrayCollection;
 +use Doctrine\ORM\Mapping as ORM;
  
@@ -444,7 +442,7 @@ Modify these files as described in these patches:
 ```diff
  namespace App\Entity;
  
- use ApiPlatform\Core\Annotation\ApiResource;
+ use ApiPlatform\Metadata\ApiResource;
 +use Doctrine\ORM\Mapping as ORM;
  
 -/** A review of a book. */
@@ -609,7 +607,7 @@ To summarize, if you want to expose any entity you just have to:
 
 1. Put it under the `App\Entity\` namespace
 2. Write your data providers and persisters, or if you use Doctrine, map it with the database
-3. Mark it with the `#[ApiPlatform\Core\Annotation\ApiResource]` attribute
+3. Mark it with the `#[ApiPlatform\Metadata\ApiResourc]` attribute
 
 Could it be any easier?!
 
@@ -645,7 +643,7 @@ Modify the following files as described in these patches:
 `api/src/Entity/Book.php`
 
 ```diff
- use ApiPlatform\Core\Annotation\ApiResource;
+ use ApiPlatform\Metadata\ApiResource;
  use Doctrine\Common\Collections\ArrayCollection;
  use Doctrine\ORM\Mapping as ORM;
 +use Symfony\Component\Validator\Constraints as Assert;
@@ -674,7 +672,7 @@ Modify the following files as described in these patches:
 `api/src/Entity/Review.php`
 
 ```diff
- use ApiPlatform\Core\Annotation\ApiResource;
+ use ApiPlatform\Metadata\ApiResource;
  use Doctrine\ORM\Mapping as ORM;
 +use Symfony\Component\Validator\Constraints as Assert;
  

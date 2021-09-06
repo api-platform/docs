@@ -21,7 +21,7 @@ Collection operations act on a collection of resources. By default two routes ar
 operations act on an individual resource. Three default routes are defined: `GET`, `PUT` and `DELETE` (`PATCH` is also supported
 when [using the JSON:API format](content-negotiation.md), as required by the specification).
 
-When the `ApiPlatform\Core\Annotation\ApiResource` annotation is applied to an entity class, the following built-in CRUD
+When the `ApiPlatform\Metadata\ApiResource` annotation is applied to an entity class, the following built-in CRUD
 operations are automatically enabled:
 
 Collection operations:
@@ -44,7 +44,8 @@ Note: the `PATCH` method must be enabled explicitly in the configuration, refer 
 
 Note: with JSON Merge Patch, the [null values will be skipped](https://symfony.com/doc/current/components/serializer.html#skipping-null-values) in the response.
 
-Note: Current `PUT` implementation behaves more or less like the `PATCH` method. Existing properties not included in the payload are **not** removed, their current values are preserved. To remove an existing property, its value must be explicitly set to `null`. Implementing [the standard `PUT` behavior](https://httpwg.org/specs/rfc7231.html#PUT) is on the roadmap, follow [issue #4344] (https://github.com/api-platform/core/issues/4344) to track the progress.
+Note: Current `PUT` implementation behaves more or less like the `PATCH` method.
+Existing properties not included in the payload are **not** removed, their current values are preserved. To remove an existing property, its value must be explicitly set to `null`. Implementing [the standard `PUT` behavior](https://httpwg.org/specs/rfc7231.html#PUT) is on the roadmap, follow [issue #4344] (<https://github.com/api-platform/core/issues/4344>) to track the progress.
 
 ## Enabling and Disabling Operations
 
@@ -70,15 +71,15 @@ will be automatically added.
 ```php
 <?php
 // api/src/Entity/Book.php
-
 namespace App\Entity;
 
-use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\GetCollection;
 
-#[ApiResource(
-    collectionOperations: ['get'],
-    itemOperations: ['get'],
-)]
+#[ApiResource]
+#[Get]
+#[GetCollection]
 class Book
 {
     // ...
@@ -122,19 +123,15 @@ The previous example can also be written with an explicit method definition:
 ```php
 <?php
 // api/src/Entity/Book.php
-
 namespace App\Entity;
 
-use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\GetCollection;
 
-#[ApiResource(
-    collectionOperations: [
-        'get' => ['method' => 'get'],
-    ],
-    itemOperations: [
-        'get' => ['method' => 'get'],
-    ],
-)]
+#[ApiResource]
+#[Get]
+#[GetCollection]
 class Book
 {
     // ...
@@ -185,26 +182,23 @@ If you do not want to allow access to the resource item (i.e. you don't want a `
 ```php
 <?php
 // api/src/Entity/Book.php
-
 namespace App\Entity;
 
 use ApiPlatform\Core\Action\NotFoundAction;
-use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\ApiResource;
 
-#[ApiResource(
-    collectionOperations: [
-        'get' => ['method' => 'get'],
-    ],
-    itemOperations: [
-        'get' => [
-            'controller' => NotFoundAction::class,
-            'read' => false,
-            'output' => false,
-        ],
-    ],
+#[ApiResource]
+#[Get(
+    controller: NotFoundAction::class, 
+    read: false, 
+    output: false
 )]
+#[GetCollection]
 class Book
 {
+    // ...
 }
 ```
 
@@ -257,28 +251,24 @@ In addition to that, we require the `id` parameter in the URL of the `GET` opera
 ```php
 <?php
 // api/src/Entity/Book.php
-
 namespace App\Entity;
 
-use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\Post;
 
-#[ApiResource(
-    collectionOperations: [
-        'post' => [
-            'path' => '/grimoire',
-            'status' => 301,
-        ],
-    ],
-    itemOperations: [
-        'get' => [
-            'path' => '/grimoire/{id}',
-            'requirements' => ['id' => '\d+'],
-            'defaults' => ['color' => 'brown'],
-            'options' => ['my_option' => 'my_option_value'],
-            'schemes' => ['https'],
-            'host' => '{subdomain}.api-platform.com',
-        ],
-    ],
+#[ApiResource]
+#[Get(
+    uriTemplate: '/grimoire/{id}', 
+    requirements: ['id' => '\d+'], 
+    defaults: ['color' => 'brown'], 
+    options: ['my_option' => 'my_option_value'], 
+    schemes: ['https'], 
+    host: '{subdomain}.api-platform.com'
+)]
+#[Post(
+    uriTemplate: '/grimoire', 
+    status: 301
 )]
 class Book
 {
@@ -359,10 +349,9 @@ you don't need to override all the operations to set the path but configure the 
 ```php
 <?php
 // api/src/Entity/Book.php
-
 namespace App\Entity;
 
-use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Metadata\ApiResource;
 
 #[ApiResource(routePrefix: '/library')]
 class Book
@@ -405,7 +394,7 @@ App\Entity\Book:
 
 [/codeSelector]
 
-Alternatively, the more verbose attribute syntax can be used: `@ApiResource(attributes={"route_prefix"="/library"})`.
+Alternatively, the more verbose attribute syntax can be used: `#[ApiResource(routePrefix: "/library")]`.
 
 API Platform will automatically map this `post_publication` operation to the route `book_post_publication`. Let's create a custom action
 and its related route using annotations:
@@ -493,8 +482,7 @@ Let's say you have the following entities in your project:
 
 ```php
 <?php
-// src/Entity/Place.php
-
+// api/src/Entity/Place.php
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
@@ -532,8 +520,7 @@ class Place
 
 ```php
 <?php
-// src/Entity/Weather.php
-
+// api/src/Entity/Weather.php
 namespace App\Entity;
 
 class Weather
@@ -551,33 +538,28 @@ Because we want to get the weather for a known place, it is more reasonable to q
 
 ```php
 <?php
-// src/Entity/Place.php
-
+// api/src/Entity/Place.php
 namespace App\Entity;
 
-use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\Put;
+use ApiPlatform\Metadata\Delete;
+use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\Post;
+use ApiPlatform\Metadata\ApiResource;
 use App\Controller\GetWeather;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity
  */
-#[ApiResource(
-    collectionOperations: [
-        'get',
-        'post',
-    ],
-    itemOperations: [
-        'get',
-        'put',
-        'delete',
-        'get_weather' => [
-            'method' => 'GET',
-            'path' => '/places/{id}/weather',
-            'controller' => GetWeather::class,
-        ],
-    ],
-)]
+#[ApiResource]
+#[Get]
+#[Put]
+#[Delete]
+#[Get(name: 'weather', uriTemplate: '/places/{id}/weather', controller: GetWeather::class)]
+#[GetCollection]
+#[Post]
 class Place
 {
     // ...
@@ -588,11 +570,10 @@ This implies that API Platform has to know about this entity, so we will need to
 
 ```php
 <?php
-// src/Entity/Weather.php
-
+// api/src/Entity/Weather.php
 namespace App\Entity;
 
-use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Metadata\ApiResource;
 
 #[ApiResource]
 class Weather
@@ -605,23 +586,18 @@ Since we are required to expose at least one route, let's expose just one:
 
 ```php
 <?php
-// src/Entity/Weather.php
-
+// api/src/Entity/Weather.php
 namespace App\Entity;
 
-use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Get;
 
-#[ApiResource(
-    itemOperations: [
-        'get' => [
-            'method' => 'GET',
-            'controller' => SomeRandomController::class,
-        ],
-    ],
-)]
+#[ApiResource]
+#[Get(controller: SomeRandomController::class)]
 class Weather
 {
     // ...
+}
 ```
 
 This way, we expose a route that will do… nothing. Note that the controller does not even need to exist.

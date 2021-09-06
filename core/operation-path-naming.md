@@ -31,9 +31,7 @@ Make sure the custom segment generator implements [`ApiPlatform\Core\Operation\P
 
 ```php
 <?php
-
 // api/src/Operation/SingularPathSegmentNameGenerator.php
-
 namespace App\Operation;
 
 use ApiPlatform\Core\Operation\PathSegmentNameGeneratorInterface;

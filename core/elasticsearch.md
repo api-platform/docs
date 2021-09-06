@@ -146,8 +146,8 @@ Here is an example of mappings for 2 resources, `User` and `Tweet`, and their mo
 // api/src/Model/User.php
 namespace App\Model;
 
-use ApiPlatform\Core\Annotation\ApiProperty;
-use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Metadata\ApiProperty;
+use ApiPlatform\Metadata\ApiResource;
 
 #[ApiResource]
 class User
@@ -175,8 +175,8 @@ class User
 // api/src/Model/Tweet.php
 namespace App\Model;
 
-use ApiPlatform\Core\Annotation\ApiProperty;
-use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Metadata\ApiProperty;
+use ApiPlatform\Metadata\ApiResource;
 
  #[ApiResource]
 class Tweet

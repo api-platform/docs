@@ -114,18 +114,17 @@ The following configuration will give you total control over your OpenAPI defini
 ```php
 <?php
 // api/src/Entity/Product.php
-
 namespace App\Entity;
 
-use ApiPlatform\Core\Annotation\ApiResource;
-use ApiPlatform\Core\Annotation\ApiProperty;
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\ApiProperty;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * @ApiResource
  * @ORM\Entity
  */
+#[ApiResource]
 class Product // The class name will be used to name exposed resources
 {
     /**
@@ -140,29 +139,26 @@ class Product // The class name will be used to name exposed resources
      *
      * @ORM\Column
      * @Assert\NotBlank
-     *
-     * @ApiProperty(
-     *     attributes={
-     *         "openapi_context"={
-     *             "type"="string",
-     *             "enum"={"one", "two"},
-     *             "example"="one"
-     *         }
-     *     }
-     * )
      */
+    #[ApiProperty(
+        openapiContext: [
+            "type" => "string",
+            "enum" => ["one", "two"],
+            "example" => "one"
+        ]
+    )]
     public $name;
 
     /**
      * @ORM\Column
      * @Assert\DateTime
-     *
-     * @ApiProperty(
-     *     attributes={
-     *         "openapi_context"={"type"="string", "format"="date-time"}
-     *     }
-     * )
      */
+    #[ApiProperty(
+        openapiContext: [
+            "type" => "string", 
+            "format" => "date-time"
+        ]
+    )]
     public $timestamp;
 
     // ...
@@ -267,35 +263,25 @@ in the (`de`)`normalization_context`. It's possible to override the name
 thanks to the `swagger_definition_name` option:
 
 ```php
-/**
- * @ApiResource(
- *      collectionOperations={
- *          "post"={
- *              "denormalization_context"={
- *                  "groups"={"user:read"},
- *                  "swagger_definition_name": "Read",
- *              },
- *          },
- *      },
- * )
- */
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Post;
+
+#[ApiResource]
+#[Post(denormalizationContext: ['groups' => ['user:read'], 'swagger_definition_name' => 'Read'])]
 class User
 {
+    // ...
 }
 ```
 
-It's also possible to re-use the (`de`)`normalization_context`:
+It's also possible to re-use the (`de`)`normalizationContext`:
 
 ```php
-/**
- * @ApiResource(
- *      collectionOperations={
- *          "post"={
- *              "denormalization_context"=User::API_WRITE,
- *          },
- *      },
- * )
- */
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Post;
+
+#[ApiResource]
+#[Post(denormalizationContext: [User::API_WRITE])]
 class User
 {
     const API_WRITE = [
@@ -314,43 +300,43 @@ You also have full control over both built-in and custom operations documentatio
 ```php
 <?php
 // api/src/Entity/Rabbit.php
+namespace App\Entity;
 
-use ApiPlatform\Core\Annotation\ApiProperty;
-use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Post;
 use App\Controller\RandomRabbit;
 
-#[ApiResource(collectionOperations: [
-        'create_rabbit' => [
-            'method'          => 'post',
-            'path'            => '/rabbit/create',
-            'controller'      => RandomRabbit::class,
-            'openapi_context' => [
-                'summary'     => 'Create a rabbit picture',
-                'description' => "# Pop a great rabbit picture by color!\n\n![A great rabbit](https://rabbit.org/graphics/fun/netbunnies/jellybean1-brennan1.jpg)",
-                'requestBody' => [
-                    'content' => [
-                        'application/json' => [
-                            'schema'  => [
-                                'type'       => 'object',
-                                'properties' =>
-                                    [
-                                        'name'        => ['type' => 'string'],
-                                        'description' => ['type' => 'string'],
-                                    ],
-                            ],
-                            'example' => [
-                                'name'        => 'Mr. Rabbit',
-                                'description' => 'Pink Rabbit',
-                            ],
-                        ],
-                    ],
-                ],
-            ],
-        ],
+#[ApiResource]
+#[Post(
+    name: 'create_rabbit', 
+    uriTemplate: '/rabbit/create', 
+    controller: RandomRabbit::class, 
+    openapiContext: [
+        'summary' => 'Create a rabbit picture', 
+        'description' => '# Pop a great rabbit picture by color!\n\n![A great rabbit](https://rabbit.org/graphics/fun/netbunnies/jellybean1-brennan1.jpg)', 
+        'requestBody' => [
+            'content' => [
+                'application/json' => [
+                    'schema' => [
+                        'type' => 'object', 
+                        'properties' => [
+                            'name' => ['type' => 'string'], 
+                            'description' => ['type' => 'string']
+                        ]
+                    ], 
+                    'example' => [
+                        'name' => 'Mr. Rabbit', 
+                        'description' => 'Pink Rabbit'
+                    ]
+                ]
+            ]
+        ]
     ]
 )]
 class Rabbit
-{}
+{
+    // ...
+}
 ```
 
 ```yaml

@@ -11,27 +11,26 @@ API Platform also provides convenient [access control expressions](https://symfo
 ```php
 <?php
 // api/src/Entity/Book.php
+namespace App\Entity;
 
-use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\Post;
+use ApiPlatform\Metadata\Put;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * Secured resource.
  *
- * @ApiResource(
- *     attributes={"security"="is_granted('ROLE_USER')"},
- *     collectionOperations={
- *         "get",
- *         "post"={"security"="is_granted('ROLE_ADMIN')"}
- *     },
- *     itemOperations={
- *         "get",
- *         "put"={"security"="is_granted('ROLE_ADMIN') or object.owner == user"},
- *     }
- * )
  * @ORM\Entity
  */
+#[ApiResource(security: "is_granted('ROLE_USER')")]
+#[Get]
+#[Put(security: "is_granted('ROLE_ADMIN') or object.owner == user")]
+#[GetCollection]
+#[Post(security: "is_granted('ROLE_ADMIN')")]
 class Book
 {
     /**
@@ -84,15 +83,20 @@ Resource signature can be modified at the property level as well:
 [codeSelector]
 
 ```php
+<?php
+// api/src/Entity/Book.php
+namespace App\Entity;
+
+use ApiPlatform\Metadata\ApiProperty;
+
 class Book
 {
     //...
 
     /**
      * @var string Property viewable and writable only by users with ROLE_ADMIN
-     *
-     * @ApiProperty(security="is_granted('ROLE_ADMIN')", security_post_denormalize="is_granted('UPDATE', object)")
      */
+    #[ApiProperty(security: "is_granted('ROLE_ADMIN')", securityPostDenormalize: "is_granted('UPDATE', object)")]
     private $adminOnlyProperty;
 }
 ```
@@ -120,7 +124,7 @@ Available variables are:
 
 * `user`: the current logged in object, if any
 * `object`: the current resource, or collection of resources for collection operations (note: this is `null` for update/create operations)
-* `previous_object`: (`security_post_denormalize` only) a clone of `object`, before modifications were made - this is `null` for create operations
+* `previous_object`: (`securityPostDenormalize` only) a clone of `object`, before modifications were made - this is `null` for create operations
 * `request`: the current request
 
 Access control checks in the `security` attribute are always executed before the [denormalization step](serialization.md).
@@ -129,26 +133,22 @@ It means than for `PUT` or `PATCH` requests, `object` doesn't contain the value 
 ## Executing Access Control Rules After Denormalization
 
 In some cases, it might be useful to execute a security after the denormalization step.
-To do so, use the `security_post_denormalize` attribute:
+To do so, use the `securityPostDenormalize` attribute:
 
 [codeSelector]
 
 ```php
 <?php
-// src/Entity/Book.php
-
+// api/src/Entity/Book.php
 namespace App\Entity;
 
-use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\Put;
 
-/**
- * @ApiResource(
- *     itemOperations={
- *         "get",
- *         "put"={"security_post_denormalize"="is_granted('ROLE_ADMIN') or (object.owner == user and previous_object.owner == user)"},
- *     }
- * )
- */
+#[ApiResource]
+#[Get]
+#[Put(securityPostDenormalize: "is_granted('ROLE_ADMIN') or (object.owner == user and previous_object.owner == user)")]
 class Book
 {
     // ...
@@ -189,26 +189,21 @@ For example:
 ```php
 <?php
 // api/src/Entity/Book.php
-
 namespace App\Entity;
 
-use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Delete;
+use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\Post;
+use ApiPlatform\Metadata\Put;
 
-/**
- * ...
- * @ApiResource(
- *     attributes={"security"="is_granted('ROLE_USER')"},
- *     collectionOperations={
- *          "get",
- *          "post" = { "security_post_denormalize" = "is_granted('BOOK_CREATE', object)" }
- *     },
- *     itemOperations={
- *          "get" = { "security" = "is_granted('BOOK_READ', object)" },
- *          "put" = { "security" = "is_granted('BOOK_EDIT', object)" },
- *          "delete" = { "security" = "is_granted('BOOK_DELETE', object)" }
- *     },
- * )
- */
+#[ApiResource(security: "is_granted('ROLE_USER')")]
+#[Get(security: "is_granted('BOOK_READ', object)")]
+#[Put(security: "is_granted('BOOK_EDIT', object)")]
+#[Delete(security: "is_granted('BOOK_DELETE', object)")]
+#[GetCollection]
+#[Post(securityPostDenormalize: "is_granted('BOOK_CREATE', object)")]
 class Book
 {
     // ...
@@ -235,8 +230,8 @@ App\Entity\Book:
 
 [/codeSelector]
 
-Please note that if you use both `attributes={"security"="..` and then `"post" = { "security_post_denormalize" = "...`, the `security` on top level is called first, and after `security_post_denormalize`. This could lead to unwanted behaviour, so avoid using both of them simultaneously.
-If you need to use `security_post_denormalize`, consider adding `security` for the other operations instead of the global one.
+Please note that if you use both `security: "..."` and then `"post" => ["securityPostDenormalize" => "..."]`, the `security` on top level is called first, and after `securityPostDenormalize`. This could lead to unwanted behaviour, so avoid using both of them simultaneously.
+If you need to use `securityPostDenormalize`, consider adding `security` for the other operations instead of the global one.
 
 Create a *BookVoter* with the `bin/console make:voter` command:
 
@@ -308,24 +303,28 @@ For example:
 ```php
 <?php
 // api/src/Entity/Book.php
-
 namespace App\Entity;
 
-use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Metadata\ApiResource;
 
-/**
- * ...
- * @ApiResource(
- *     attributes={"security"="is_granted('ROLE_USER')"},
- *     collectionOperations={
- *         "post"={"security"="is_granted('ROLE_ADMIN')", "security_message"="Only admins can add books."}
- *     },
- *     itemOperations={
- *         "get"={"security"="is_granted('ROLE_USER') and object.owner == user", "security_message"="Sorry, but you are not the book owner."}
- *         "put"={"security_post_denormalize"="is_granted('ROLE_ADMIN') or (object.owner == user and previous_object.owner == user)", "security_post_denormalize_message"="Sorry, but you are not the actual book owner."},
- *     }
- * )
- */
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\Post;
+use ApiPlatform\Metadata\Put;
+
+#[ApiResource(security: "is_granted('ROLE_USER')")]
+#[Get(
+    security: "is_granted('ROLE_USER') and object.owner == user", 
+    securityMessage: 'Sorry, but you are not the book owner.'
+)]
+#[Put(
+    securityPostDenormalize: "is_granted('ROLE_ADMIN') or (object.owner == user and previous_object.owner == user)", 
+    securityPostDenormalizeMessage: 'Sorry, but you are not the actual book owner.'
+)]
+#[Post(
+    security: "is_granted('ROLE_ADMIN')", 
+    securityMessage: 'Only admins can add books.'
+)]
 class Book
 {
     // ...

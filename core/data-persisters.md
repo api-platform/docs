@@ -23,6 +23,7 @@ persist data for a given resource will be used.
 ## Creating a Custom Data Persister
 
 If the [Symfony MakerBundle](https://symfony.com/doc/current/bundles/SymfonyMakerBundle) is installed in your project, you can use the following command to generate a custom data persister easily:
+
 ```console
 bin/console make:data-persister
 ```
@@ -190,6 +191,7 @@ final class BlogPostDataPersister implements ContextAwareDataPersisterInterface,
 ```
 
 This is very useful when using [`Messenger` with API Platform](messenger.md) as you may want to do something asynchronously with the data but still call the default Doctrine data persister, for example:
+
 ```php
 namespace App\DataPersister;
 
@@ -230,6 +232,7 @@ final class BlogPostDataPersister implements ContextAwareDataPersisterInterface,
     }
 }
 ```
+
 ```yaml
 # api/config/services.yaml
 services:

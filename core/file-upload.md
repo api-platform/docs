@@ -51,8 +51,11 @@ The `MediaObject` resource is implemented like this:
 // api/src/Entity/MediaObject.php
 namespace App\Entity;
 
-use ApiPlatform\Core\Annotation\ApiProperty;
-use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Metadata\ApiProperty;
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\Post;
 use App\Controller\CreateMediaObjectAction;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\HttpFoundation\File\File;
@@ -65,33 +68,31 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
  * @Vich\Uploadable
  */
 #[ApiResource(
-    iri: 'http://schema.org/MediaObject',
-    normalizationContext: ['groups' => ['media_object:read']],
-    itemOperations: ['get'],
-    collectionOperations: [
-        'get',
-        'post' => [
-            'controller' => CreateMediaObjectAction::class,
-            'deserialize' => false,
-            'validation_groups' => ['Default', 'media_object_create'],
-            'openapi_context' => [
-                'requestBody' => [
-                    'content' => [
-                        'multipart/form-data' => [
-                            'schema' => [
-                                'type' => 'object',
-                                'properties' => [
-                                    'file' => [
-                                        'type' => 'string',
-                                        'format' => 'binary',
-                                    ],
-                                ],
-                            ],
-                        ],
-                    ],
-                ],
-            ],
-        ],
+    normalizationContext: ['groups' => ['media_object:read']], 
+    types: ['http://schema.org/MediaObject']
+)]
+#[Get]
+#[GetCollection]
+#[Post(
+    controller: CreateMediaObjectAction::class, 
+    deserialize: false, 
+    validationContext: ['groups' => ['Default', 'media_object_create']], 
+    openapiContext: [
+        'requestBody' => [
+            'content' => [
+                'multipart/form-data' => [
+                    'schema' => [
+                        'type' => 'object', 
+                        'properties' => [
+                            'file' => [
+                                'type' => 'string', 
+                                'format' => 'binary'
+                            ]
+                        ]
+                    ]
+                ]
+            ]
+        ]
     ]
 )]
 class MediaObject
@@ -103,7 +104,7 @@ class MediaObject
      */
     private ?int $id = null;
 
-    #[ApiProperty(iri: 'http://schema.org/contentUrl')]
+    #[ApiProperty(types: ['http://schema.org/contentUrl'])]
     #[Groups(['media_object:read'])]
     public ?string $contentUrl = null;
 
@@ -227,6 +228,7 @@ your data, you will get a response looking like this:
 ### Accessing Your Media Objects Directly
 
 You will need to modify your Caddyfile to allow the above `contentUrl` to be accessed directly. If you followed the above configuration for the VichUploaderBundle, that will be in `api/public/media`. Add your folder to the list of path matches, e.g. `|^/media/|`:
+
 ```caddyfile
 ...
 # Matches requests for HTML documents, for static files and for Next.js files,
@@ -249,8 +251,8 @@ We first need to edit our Book resource, and add a new property called `image`.
 // api/src/Entity/Book.php
 namespace App\Entity;
 
-use ApiPlatform\Core\Annotation\ApiResource;
-use ApiPlatform\Core\Annotation\ApiProperty;
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\ApiProperty;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\HttpFoundation\File\File;
 use Vich\UploaderBundle\Mapping\Annotation as Vich;
@@ -258,7 +260,7 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
 /**
  * @ORM\Entity
  */
-#[ApiResource(iri: 'http://schema.org/Book')]
+#[ApiResource(types: ['http://schema.org/Book'])]
 class Book
 {
     // ...
@@ -267,7 +269,7 @@ class Book
      * @ORM\ManyToOne(targetEntity=MediaObject::class)
      * @ORM\JoinColumn(nullable=true)
      */
-    #[ApiProperty(iri: 'http://schema.org/image')]
+    #[ApiProperty(types: ['http://schema.org/image'])]
     public ?MediaObject $image = null;
     
     // ...
@@ -350,8 +352,10 @@ The `Book` resource needs to be modified like this:
 // api/src/Entity/Book.php
 namespace App\Entity;
 
-use ApiPlatform\Core\Annotation\ApiProperty;
-use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Metadata\ApiProperty;
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\Post;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\Serializer\Annotation\Groups;
@@ -362,23 +366,17 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
  * @Vich\Uploadable
  */
 #[ApiResource(
-    iri: 'http://schema.org/Book',
-    normalizationContext: ['groups' => ['book:read']],
-    denormalizationContext: ['groups' => ['book:write']],
-    collectionOperations: [
-        'get',
-        'post' => [
-            'input_formats' => [
-                'multipart' => ['multipart/form-data'],
-            ],
-        ],
-    ],
+    normalizationContext: ['groups' => ['book:read']], 
+    denormalizationContext: ['groups' => ['book:write']], 
+    types: ['http://schema.org/Book']
 )]
+#[GetCollection]
+#[Post(inputFormats: ['multipart' => ['multipart/form-data']])]
 class Book
 {
     // ...
 
-    #[ApiProperty(iri: 'http://schema.org/contentUrl')]
+    #[ApiProperty(types: ['http://schema.org/contentUrl'])]
     #[Groups(['book:read'])]
     public ?string $contentUrl = null;
 
