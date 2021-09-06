@@ -519,5 +519,6 @@ and if you want your results to be paginated, you will need to return an instanc
 `ApiPlatform\Core\DataProvider\PartialPaginatorInterface` or
 `ApiPlatform\Core\DataProvider\PaginatorInterface`.
 A few existing classes are provided to make it easier to paginate the results:
+
 * `ApiPlatform\Core\DataProvider\ArrayPaginator`
 * `ApiPlatform\Core\DataProvider\TraversablePaginator`

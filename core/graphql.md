@@ -1902,11 +1902,12 @@ class MediaObject
     }
 }
 ```
+
 'file' => ['type' => 'Upload!','description' => 'The file to upload']
 'files' => ['type' => '[Upload!]!','description' => 'Files to upload']
 
 As you can see, a dedicated type `Upload` is used in the argument of the `upload` mutation.
-If you need to upload multiple files, replace   
+If you need to upload multiple files, replace
 `'file' => ['type' => 'Upload!','description' => 'The file to upload']`  
 with `'files' => ['type' => '[Upload!]!','description' => 'Files to upload']`.
 

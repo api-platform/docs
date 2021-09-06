@@ -28,6 +28,7 @@ Note, that if your entity is not Doctrine-related, you need to flag the identifi
 ## Custom Collection Data Provider
 
 If the [Symfony MakerBundle](https://symfony.com/doc/current/bundles/SymfonyMakerBundle) is installed in your project, you can use the following command to generate a custom collection data provider easily:
+
 ```console
 bin/console make:data-provider --collection-only
 ```
@@ -85,6 +86,7 @@ You can find a full working example in the [API Platform's demo application](htt
 ## Custom Item Data Provider
 
 If the [Symfony MakerBundle](https://symfony.com/doc/current/bundles/SymfonyMakerBundle) is installed in your project, you can use the following command to generate a custom item data provider easily:
+
 ```console
 bin/console make:data-provider --item-only
 ```

@@ -253,6 +253,7 @@ The `after` and `before` filters will filter including the value whereas `strict
 Like others filters, the date filter must be explicitly enabled:
 
 [codeSelector]
+
 ```php
 <?php
 // api/src/Entity/Offer.php
