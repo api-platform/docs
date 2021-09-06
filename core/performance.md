@@ -52,9 +52,7 @@ augmented with these resources. Here is an example of how this can be done:
 
 ```php
 <?php
-
-declare(strict_types=1);
-
+// api/src/EventSubscriber/UserResourcesSubscriber.php
 namespace App\EventSubscriber;
 
 use ApiPlatform\Core\EventListener\EventPriorities;
@@ -93,11 +91,15 @@ final class UserResourcesSubscriber implements EventSubscriberInterface
 The `cache_headers` attribute can be used to set custom HTTP cache headers:
 
 ```php
-use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Metadata\ApiResource;
 
-/**
- * @ApiResource(cacheHeaders={"max_age"=60, "shared_max_age"=120, "vary"={"Authorization", "Accept-Language"}})
- */
+#[ApiResource(
+    cacheHeaders: [
+        'max_age' => 60, 
+        'shared_max_age' => 120, 
+        'vary' => ['Authorization', 'Accept-Language']
+    ]
+)]
 class Book
 {
     // ...
@@ -114,15 +116,15 @@ Vary: Authorization, Accept-Language
 It's also possible to set different cache headers per operation:
 
 ```php
-use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Metadata\ApiResource;
 
-/**
- * @ApiResource(
- *     itemOperations={
- *         "get"={"cache_headers"={"max_age"=60, "shared_max_age"=120}}
- *     }
- * )
- */
+#[ApiResource]
+#[Get(
+    cacheHeaders: [
+        'max_age' => 60, 
+        'shared_max_age' => 120
+    ]
+)]
 class Book
 {
     // ...
@@ -169,10 +171,12 @@ readable association according to the serialization context. If you want to fetc
 you have to bypass `readable` and `readableLink` by using the `fetchEager` attribute on the property declaration, for example:
 
 ```php
-/**
- * @ApiProperty(attributes={"fetchEager": true})
- */
+...
+
+ #[ApiProperty(fetchEager: true)]
  public $foo;
+
+...
 ```
 
 #### Max Joins
@@ -225,16 +229,15 @@ from the configuration of each resource. You can do this at the resource level, 
 ```php
 <?php
 // api/src/Entity/Address.php
-
 namespace App\Entity;
 
-use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Metadata\ApiResource;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ApiResource
  * @ORM\Entity
  */
+#[ApiResource]
 class Address
 {
     // ...
@@ -244,16 +247,15 @@ class Address
 ```php
 <?php
 // api/src/Entity/User.php
-
 namespace App\Entity;
 
-use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Metadata\ApiResource;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ApiResource(attributes={"force_eager"=false})
  * @ORM\Entity
  */
+#[ApiResource(forceEager: false)]
 class User
 {
     /**
@@ -278,26 +280,21 @@ class User
 ```php
 <?php
 // api/src/Entity/Group.php
-
 namespace App\Entity;
 
-use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\Post;
+use ApiPlatform\Metadata\GetCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ApiResource(
- *     attributes={"force_eager"=false},
- *     itemOperations={
- *         "get"={"force_eager"=true},
- *         "post"
- *     },
- *     collectionOperations={
- *         "get"={"force_eager"=true},
- *         "post"
- *     }
- * )
  * @ORM\Entity
  */
+#[ApiResource(forceEager: false)]
+#[Get(forceEager: true)]
+#[Post]
+#[GetCollection(forceEager: true)]
 class Group
 {
     /**

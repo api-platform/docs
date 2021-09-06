@@ -103,16 +103,15 @@ Creating resources mapped to MongoDB documents is as simple as creating entities
 
 namespace App\Document;
 
-use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Metadata\ApiResource;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ODM\MongoDB\Mapping\Annotations as ODM;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * @ApiResource
- *
  * @ODM\Document
  */
+#[ApiResource]
 class Product
 {
     /**
@@ -163,15 +162,14 @@ class Product
 
 namespace App\Document;
 
-use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Metadata\ApiResource;
 use Doctrine\ODM\MongoDB\Mapping\Annotations as ODM;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * @ApiResource(iri="http://schema.org/Offer")
- *
  * @ODM\Document
  */
+#[ApiResource(types: ['http://schema.org/Offer'])]
 class Offer
 {
     /**
@@ -230,24 +228,15 @@ For instance at the operation level:
 
 namespace App\Document;
 
-use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\GetCollection;
 use Doctrine\ODM\MongoDB\Mapping\Annotations as ODM;
 
 /**
- * @ApiResource(attributes={
- *     collectionOperations={
- *         "get"={
- *             "method"="GET",
- *             "doctrine_mongodb"={
- *                 "execute_options"={
- *                     "allowDiskUse"=true
- *                 }
- *             }
- *         }
- *     }
- * })
  * @ODM\Document
  */
+#[ApiResource]
+#[GetCollection(doctrineMongodb: ['execute_options' => ['allowDiskUse' => true]])]
 class Offer
 {
     // ...
@@ -262,19 +251,13 @@ Or at the resource level:
 
 namespace App\Document;
 
-use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Metadata\ApiResource;
 use Doctrine\ODM\MongoDB\Mapping\Annotations as ODM;
 
 /**
- * @ApiResource(attributes={
- *     "doctrine_mongodb"={
- *         "execute_options"={
- *             "allowDiskUse"=true
- *         }
- *     }
- * })
  * @ODM\Document
  */
+#[ApiResource(doctrineMongodb: ['execute_options' => ['allowDiskUse' => true]])]
 class Offer
 {
     // ...

@@ -13,21 +13,20 @@ Let's say you have the following class, which is identified by a `UUID` type. In
 
 ```php
 <?php
+// api/src/Entity/Person.php
 namespace App\Entity;
 
-use ApiPlatform\Core\Annotation\ApiResource;
-use ApiPlatform\Core\Annotation\ApiProperty;
+use ApiPlatform\Metadata\ApiProperty;
+use ApiPlatform\Metadata\ApiResource;
 use App\Uuid;
 
-/**
- * @ApiResource
- */
+#[ApiResource]
 final class Person
 {
     /**
      * @var Uuid
-     * @ApiProperty(identifier=true)
      */
+    #[ApiProperty(identifier: true)]
     public $code;
     
     // ...
@@ -150,34 +149,35 @@ If your resource is also a Doctrine entity and you want to use another identifie
 
 ```php
 <?php
+// api/src/Entity/Person.php
 namespace App\Entity;
 
-use ApiPlatform\Core\Annotation\ApiResource;
-use ApiPlatform\Core\Annotation\ApiProperty;
+use ApiPlatform\Metadata\ApiProperty;
+use ApiPlatform\Metadata\ApiResource;
 use App\Uuid;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity
- * @ApiResource
  */
+#[ApiResource]
 final class Person
 {
     /**
      * @var int
-     * @ApiProperty(identifier=false)
      *
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
      */
+    #[ApiProperty(identifier: false)]
     private $id;
     
     /**
      * @var Uuid
-     * @ApiProperty(identifier=true)
      * @ORM\Column(type="uuid", unique=true)
-     */
+     */     
+    #[ApiProperty(identifier: true)]
     public $code;
     
     // ...

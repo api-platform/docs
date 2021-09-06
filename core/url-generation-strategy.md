@@ -39,7 +39,7 @@ It can also be configured only for a specific resource:
 <?php
 // api/src/Entity/Book.php
 
-use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Core\Api\UrlGeneratorInterface;
 
 #[ApiResource(urlGenerationStrategy: UrlGeneratorInterface::ABS_URL)]

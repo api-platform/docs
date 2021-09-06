@@ -1,6 +1,6 @@
 # Using Data Transfer Objects (DTOs)
 
- As stated in [the general design considerations](design.md), in most cases [the DTO pattern](https://en.wikipedia.org/wiki/Data_transfer_object) should be implemented using an API Resource class representing the public data model exposed through the API and [a custom data provider](data-providers.md). In such cases, the class marked with `@ApiResource` will act as a DTO.
+ As stated in [the general design considerations](design.md), in most cases [the DTO pattern](https://en.wikipedia.org/wiki/Data_transfer_object) should be implemented using an API Resource class representing the public data model exposed through the API and [a custom data provider](data-providers.md). In such cases, the class marked with `#[ApiResource]` will act as a DTO.
 
 However, it's sometimes useful to use a specific class to represent the input or output data structure related to an operation.
 
@@ -14,19 +14,13 @@ To do so, a resource can take an input and/or an output class:
 ```php
 <?php
 // api/src/Entity/Book.php
-
 namespace App\Entity;
 
-use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Metadata\ApiResource;
 use App\Dto\BookInput;
 use App\Dto\BookOutput;
 
-/**
- * @ApiResource(
- *   input=BookInput::class,
- *   output=BookOutput::class
- * )
- */
+#[ApiResource(input: BookInput::class, output: BookOutput::class)]
 final class Book
 {
     public $id;
@@ -64,7 +58,7 @@ Similarly, the `output` attribute is used during [the serialization process](ser
 
 The `input` and `output` attributes are taken into account by all the documentation generators (GraphQL and OpenAPI, Hydra).
 
-Note that `Book` entity needs an id property. The simplest way is adding a public property called `$id`, as in the example. However, as in any other entity, you can use a private property, with getter and setter functions, and/or named it as you wish, provided you annotate it with `@ApiProperty(identifier=true)`. For instance, you could have a property called `$code`.
+Note that `Book` entity needs an id property. The simplest way is adding a public property called `$id`, as in the example. However, as in any other entity, you can use a private property, with getter and setter functions, and/or named it as you wish, provided you annotate it with `#[ApiProperty(identifier: true)]`. For instance, you could have a property called `$code`.
 So the `InputDataTransformer` actually transforms the isbn into a code. And then in the `OutputDataTransformer`, from this code into the name.
 
 To create a `Book`, we `POST` a data structure corresponding to the `BookInput` class and get back in the response a data structure corresponding to the `BookOutput` class:
@@ -288,32 +282,16 @@ will be skipped. If `output` is `false`, the serialization process will be skipp
 ```php
 <?php
 // api/src/Entity/Book.php
-
 namespace App\Entity;
 
-use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Metadata\ApiResource;
 use App\Dto\BookOutput;
 use App\Dto\CreateBook;
 use App\Dto\UpdateBook;
 
-/**
- * @ApiResource(
- *     collectionOperations={
- *         "create"={
- *             "method"="POST",
- *             "input"=CreateBook::class,
- *             "output"=BookOutput::class
- *         }
- *     },
- *     itemOperations={
- *         "update"={
- *             "method"="PUT",
- *             "input"=UpdateBook::class,
- *             "output"=BookOutput::class
- *         }
- *     }
- * )
- */
+#[ApiResource]
+#[Put(name: 'update', input: UpdateBook::class, output: BookOutput::class)]
+#[Post(name: 'create', input: CreateBook::class, output: BookOutput::class)]
 final class Book
 {
 }
@@ -379,15 +357,12 @@ Because API Platform can (de)normalize anything in the supported formats (`jsonl
 ```php
 <?php
 // api/src/Entity/Book.php
-
 namespace App\Entity;
 
-use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Metadata\ApiResource;
 use App\Model\Attribute;
 
-/**
- * @ApiResource
- */
+#[ApiResource]
 final class Book
 {
   /**

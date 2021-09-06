@@ -12,13 +12,12 @@ For instance, with API Platform Core as backend, if you write the following:
 ```php
 <?php
 // api/src/Entity/Book.php
+namespace App\Entity;
 
-use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Metadata\ApiResource;
 use Symfony\Component\Validator\Constraints as Assert;
 
-/**
- * @ApiResource
- */
+#[ApiResource]
 class Book
 {
     /**
@@ -47,13 +46,12 @@ For example if you have this code:
 ```php
 <?php
 // api/src/Entity/Book.php
+namespace App\Entity;
 
-use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Metadata\ApiResource;
 use Symfony\Component\Validator\Constraints as Assert;
 
-/**
- * @ApiResource
- */
+#[ApiResource]
 class Book
 {
     /**

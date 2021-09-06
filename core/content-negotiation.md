@@ -102,12 +102,11 @@ The `format` attribute can be used as a shortcut, it sets both the `input_format
 ```php
 <?php
 // api/src/Entity/Book.php
-
 namespace App\Entity;
 
-use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Metadata\ApiResource;
 
- #[ApiResource(formats: ['xml', 'jsonld', 'csv' => ['text/csv']])]
+#[ApiResource(formats: ['xml', 'jsonld', 'csv' => ['text/csv']])]
 class Book
 {
     // ...
@@ -127,21 +126,17 @@ You can specify different accepted formats at operation level too, it's especial
 ```php
 <?php
 // api/src/Entity/Book.php
-
 namespace App\Entity;
 
-use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Patch;
+use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\Post;
 
-#[ApiResource(
-    formats: ['jsonld', 'csv' => ['text/csv']],
-    itemOperations: [
-        'patch' => [
-            'input_formats' => [
-                'json' => ['application/merge-patch+json'],
-            ],
-        ],
-    ],
-)]
+#[ApiResource(formats: ['jsonld', 'csv' => ['text/csv']])]
+#[Patch(inputFormats: ['json' => ['application/merge-patch+json']])]
+#[GetCollection]
+#[Post]
 class Book
 {
     // ...
@@ -227,7 +222,6 @@ services:
 ```php
 <?php
 // api/src/Serializer/CustomItemNormalizer.php
-
 namespace App\Serializer;
 
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
@@ -274,7 +268,6 @@ flatten or remove overly complex relations:
 ```php
 <?php
 // api/src/Serializer/CustomItemNormalizer.php
-
 namespace App\Serializer;
 
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;

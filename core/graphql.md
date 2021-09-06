@@ -133,13 +133,13 @@ api_platform:
 
 To understand what an operation is, please refer to the [operations documentation](operations.md).
 
-For GraphQL, the operations are defined under the `graphql` attribute.
+For GraphQL, the operations are defined under the `Query`, `QueryCollection` and `Mutation` attributes.
 By default, all operations are enabled.
 
 For the queries, the operations are:
 
-* `item_query`
-* `collection_query`
+* `Query`
+* `QueryCollection`
 
 For the mutations, the operations are:
 
@@ -154,12 +154,15 @@ For instance, in the following example, only the query of an item and the create
 ```php
 <?php
 // api/src/Entity/Book.php
-
 namespace App\Entity;
 
-#[ApiResource(
-    graphql: ['item_query', 'create']
-)]
+use ApiPlatform\Metadata\GraphQl\Query;
+use ApiPlatform\Metadata\GraphQl\Mutation;
+use ApiPlatform\Metadata\ApiResource;
+
+#[ApiResource]
+#[Query]
+#[Mutation(name: 'create')]
 class Book
 {
     // ...
@@ -199,11 +202,11 @@ If you want a custom query for a collection, create a class like this:
 
 ```php
 <?php
-
+// api/src/Resolver/BookCollectionResolver.php
 namespace App\Resolver;
 
 use ApiPlatform\Core\GraphQl\Resolver\QueryCollectionResolverInterface;
-use App\Model\Book;
+use App\Entity\Book;
 
 final class BookCollectionResolver implements QueryCollectionResolverInterface
 {
@@ -242,11 +245,11 @@ The resolver for an item is very similar:
 
 ```php
 <?php
-
+// api/src/Resolver/BookResolver.php
 namespace App\Resolver;
 
 use ApiPlatform\Core\GraphQl\Resolver\QueryItemResolverInterface;
-use App\Model\Book;
+use App\Entity\Book;
 
 final class BookResolver implements QueryItemResolverInterface
 {
@@ -279,46 +282,39 @@ In your resource, add the following:
 
 ```php
 <?php
+// api/src/Entity/Book.php
+namespace App\Entity;
 
-namespace App\Model;
-
-use ApiPlatform\Core\Annotation\ApiResource;
 use App\Resolver\BookCollectionResolver;
 use App\Resolver\BookResolver;
+use ApiPlatform\Metadata\GraphQl\Query;
+use ApiPlatform\Metadata\GraphQl\QueryCollection;
+use ApiPlatform\Metadata\GraphQl\Mutation;
+use ApiPlatform\Metadata\ApiResource;
 
-#[ApiResource(
-    graphql: [
-        // Auto-generated queries and mutations
-        'item_query',
-        'collection_query',
-        'create',
-        'update',
-        'delete',
-
-        'retrievedQuery' => [
-            'item_query' => BookResolver::class
-        ],
-        'notRetrievedQuery' => [
-            'item_query' => BookResolver::class,
-            'args' => []
-        ],
-        'withDefaultArgsNotRetrievedQuery' => [
-            'item_query' => BookResolver::class,
-            'read' => false
-        ],
-        'withCustomArgsQuery' => [
-            'item_query' => BookResolver::class,
-            'args' => [
-                'id' => ['type' => 'ID!'],
-                'log' => ['type' => 'Boolean!', 'description' => 'Is logging activated?'],
-                'logDate' => ['type' => 'DateTime']
-            ]
-        ],
-        'collectionQuery' => [
-            'collection_query' => BookCollectionResolver::class
-        ]
+#[ApiResource]
+/** Auto generated graphql operations and mutations */
+#[Query]
+#[QueryCollection]
+#[Mutation(name: 'create')]
+#[Mutation(name: 'update')]
+#[Mutation(name: 'delete')]
+/** Custom graphql operations */ 
+#[Query(name: 'retrievedQuery', resolver: BookResolver::class)]
+#[Query(name: 'notRetrievedQuery', resolver: BookResolver::class, 
+    args: []
+)]
+#[Query(name: 'withDefaultArgsNotRetrievedQuery', resolver: BookResolver::class, 
+    read: false
+)]
+#[Query(name: 'withCustomArgsQuery', resolver: BookResolver::class,
+    args: [
+        'id' => ['type' => 'ID!'], 
+        'log' => ['type' => 'Boolean!', 'description' => 'Is logging activated?'], 
+        'logDate' => ['type' => 'DateTime']
     ]
 )]
+#[QueryCollection(name: 'collectionQuery', resolver: BookCollectionResolver::class)]
 class Book
 {
     // ...
@@ -405,11 +401,11 @@ Create your resolver:
 
 ```php
 <?php
-
+// api/src/Resolver/BookMutationResolver.php
 namespace App\Resolver;
 
 use ApiPlatform\Core\GraphQl\Resolver\MutationResolverInterface;
-use App\Model\Book;
+use App\Entity\Book;
 
 final class BookMutationResolver implements MutationResolverInterface
 {
@@ -446,36 +442,35 @@ Now in your resource:
 
 ```php
 <?php
+// api/src/Entity/Book.php
+namespace App\Entity;
 
-namespace App\Model;
-
-use ApiPlatform\Core\Annotation\ApiResource;
 use App\Resolver\BookMutationResolver;
+use ApiPlatform\Metadata\GraphQl\Query;
+use ApiPlatform\Metadata\GraphQl\QueryCollection;
+use ApiPlatform\Metadata\GraphQl\Mutation;
+use ApiPlatform\Metadata\ApiResource;
 
-#[ApiResource(
-    graphql: [
-        // Auto-generated queries and mutations
-        'item_query',
-        'collection_query',
-        'create',
-        'update',
-        'delete',
-
-        'mutation' => [
-            'mutation' => BookMutationResolver::class
-        ],
-        'withCustomArgsMutation' => [
-            'mutation' => BookMutationResolver::class,
-            'args' => [
-                'sendMail' => ['type' => 'Boolean!', 'description'=> 'Send a mail?' ]
-            ]
-        ],
-        'disabledStagesMutation' => [
-            'mutation' => BookMutationResolver::class,
-            'deserialize' => false,
-            'write' => false
+#[ApiResource]
+/** Auto generated graphql operations and mutations */
+#[Query]
+#[QueryCollection]
+#[Mutation(name: 'create')]
+#[Mutation(name: 'update')]
+#[Mutation(name: 'delete')]
+/** Custom graphql operations */ 
+#[Mutation(name: 'mutation', resolver: BookMutationResolver::class)]
+#[Mutation(name: 'withCustomArgsMutation', resolver: BookMutationResolver::class, 
+    args: [
+        'sendMail' => [
+            'type' => 'Boolean!', 
+            'description' => 'Send a mail?'
         ]
     ]
+)]
+#[Mutation(name: 'disabledStagesMutation', resolver: BookMutationResolver::class, 
+    deserialize: false, 
+    write: false
 )]
 class Book
 {
@@ -540,19 +535,14 @@ For instance, your resource should look like this:
 
 ```php
 <?php
+// api/src/Entity/Book.php
+namespace App\Entity;
 
-namespace App\Model;
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\GraphQl\Mutation;
 
-use ApiPlatform\Core\Annotation\ApiResource;
-
- #[ApiResource(
-      graphql: [
-          ...
-          'update',
-          ...
-      ],
-      mercure: true
-)]
+#[ApiResource(mercure: true)]
+#[Mutation(name: 'update')]
 class Book
 {
     // ...
@@ -630,7 +620,6 @@ Create your *WriteStage*:
 
 ```php
 <?php
-
 namespace App\Stage;
 
 use ApiPlatform\Core\GraphQl\Resolver\Stage\WriteStageInterface;
@@ -689,18 +678,18 @@ A stage can be disabled at the operation level:
 
 ```php
 <?php
+// api/src/Entity/Book.php
+namespace App\Entity;
 
-namespace App\Model;
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\GraphQl\Mutation;
+use ApiPlatform\Metadata\GraphQl\Query;
+use ApiPlatform\Metadata\GraphQl\QueryCollection;
 
-use ApiPlatform\Core\Annotation\ApiResource;
-
-#[ApiResource(
-    graphql: [
-        'mutation' => [
-            'write' => false
-        ]
-    ]
-)]
+#[ApiResource]
+#[Query]
+#[QueryCollection]
+#[Mutation(write: false)]
 class Book
 {
     // ...
@@ -711,17 +700,18 @@ Or at the resource attributes level (will be also applied in REST and for all op
 
 ```php
 <?php
+// api/src/Entity/Book.php
+namespace App\Entity;
 
-namespace App\Model;
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\GraphQl\Mutation;
+use ApiPlatform\Metadata\GraphQl\Query;
+use ApiPlatform\Metadata\GraphQl\QueryCollection;
 
-use ApiPlatform\Core\Annotation\ApiResource;
-
-#[ApiResource(
-    graphql: [...],
-    attributes: [
-        'write' => false
-    ]
-)]
+#[ApiResource(write: false)]
+#[Query(...)]
+#[QueryCollection(...)]
+#[Mutation(...)]
 class Book
 {
     // ...
@@ -741,33 +731,27 @@ Filters are supported out-of-the-box. Follow the [filters](filters.md) documenta
 
 However you don't necessarily have the same needs for your GraphQL endpoint as for your REST one.
 
-In the `ApiResource` declaration, you can choose to decorrelate the GraphQL filters in `collection_query` of the `graphql` attribute.
-In order to keep the default behavior (possibility to fetch, delete, update or create), define all the operations (`item_query` ,`collection_query` , `delete`, `update` and `create`).
+In the `QueryCollection` declaration, you can choose to decorrelate the GraphQL filters.
+In order to keep the default behavior (possibility to fetch, delete, update or create), define all the operations and mutations (`Query` ,`QueryCollection` , `delete`, `update` and `create`).
 
 For example, this entity will have a search filter for REST and a date filter for GraphQL:
 
 ```php
 <?php
 // api/src/Entity/Offer.php
-
 namespace App\Entity;
 
-use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\GraphQl\Mutation;
+use ApiPlatform\Metadata\GraphQl\Query;
+use ApiPlatform\Metadata\GraphQl\QueryCollection;
 
-#[ApiResource(
-    attributes: [
-        'filters' => ['offer.search_filter']
-    ],
-    graphql: [
-        'item_query',
-        'collection_query' => [
-            'filters' => ['offer.date_filter']
-        ],
-        'delete',
-        'update',
-        'create'
-    ]
-)]
+#[ApiResource(filters: ['offer.search_filter'])]
+#[Query]
+#[QueryCollection(filters: ['offer.date_filter'])]
+#[Mutation(name: 'delete')]
+#[Mutation(name: 'update')]
+#[Mutation(name: 'create')]
 class Offer
 {
     // ...
@@ -820,11 +804,10 @@ Unlike for REST, all built-in filters support nested properties using the unders
 ```php
 <?php
 // api/src/Entity/Offer.php
-
 namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiFilter;
-use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\OrderFilter;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
 
@@ -968,22 +951,19 @@ For instance at the operation level:
 ```php
 <?php
 // api/src/Entity/Offer.php
-
 namespace App\Entity;
 
-use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\GraphQl\Mutation;
+use ApiPlatform\Metadata\GraphQl\Query;
+use ApiPlatform\Metadata\GraphQl\QueryCollection;
 
-#[ApiResource(
-    graphql: [
-        'item_query',
-         'collection_query' => [
-            'pagination_type' => 'page'
-         ],
-         'delete',
-         'update',
-         'create'
-    ]
-)]
+#[ApiResource]
+#[Query]
+#[QueryCollection(paginationType: 'page')]
+#[Mutation(name: 'delete')]
+#[Mutation(name: 'update')]
+#[Mutation(name: 'create')]
 class Offer
 {
     // ...
@@ -995,15 +975,12 @@ Or if you want to do it at the resource level:
 ```php
 <?php
 // api/src/Entity/Offer.php
-
 namespace App\Entity;
 
-use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Metadata\ApiResource;
 
 #[ApiResource(
-    attributes: [
-        'pagination_type' => 'page'
-    ]
+    paginationType: 'page'
 )]
 class Offer
 {
@@ -1062,10 +1039,11 @@ It can also be disabled for a specific resource (REST and GraphQL):
 ```php
 <?php
 // api/src/Entity/Book.php
+namespace App\Entity;
 
-use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Metadata\ApiResource;
 
-#[ApiResource(attributes: ['pagination_enabled' => false])]
+#[ApiResource(paginationEnabled: false)]
 class Book
 {
     // ...
@@ -1079,10 +1057,13 @@ You can also disable the pagination for a specific collection operation:
 ```php
 <?php
 // api/src/Entity/Book.php
+namespace App\Entity;
 
-use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\GraphQl\QueryCollection;
 
-#[ApiResource(graphql: ['collection_query' => ['pagination_enabled' => false]])]
+#[ApiResource]
+#[QueryCollection(paginationEnabled: false)]
 class Book
 {
     // ...
@@ -1109,26 +1090,22 @@ Please note that, it's not possible to update a book in GraphQL because the `upd
 ```php
 <?php
 // api/src/Entity/Book.php
-
 namespace App\Entity;
 
-use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\GraphQl\Mutation;
+use ApiPlatform\Metadata\GraphQl\Query;
+use ApiPlatform\Metadata\GraphQl\QueryCollection;
+use ApiPlatform\Metadata\Post;
 
-#[ApiResource(
-    attributes: ['security' => "is_granted('ROLE_USER')"],
-    collectionOperations: [
-        'post' => ['security' => "is_granted('ROLE_ADMIN')", 'security_message' => 'Only admins can add books.']
-    ],
-    itemOperations: [
-        'get' => ['security' => "is_granted('ROLE_USER') and object.owner == user", 'security_message' => 'Sorry, but you are not the book owner.']
-    ],
-    graphql: [
-        'item_query' => ['security' => "is_granted('ROLE_USER') and object.owner == user"],
-        'collection_query' => ['security' => "is_granted('ROLE_ADMIN')"],
-        'delete' => ['security' => "is_granted('ROLE_ADMIN')"],
-        'create' => ['security' => "is_granted('ROLE_ADMIN')"]
-    ]
-)]
+#[ApiResource(security: "is_granted('ROLE_USER')")]
+#[Get(security: "is_granted('ROLE_USER') and object.owner == user", securityMessage: 'Sorry, but you are not the book owner.')]
+#[Post(security: "is_granted('ROLE_ADMIN')", securityMessage: 'Only admins can add books.')]
+#[Query(security: "is_granted('ROLE_USER') and object.owner == user")]
+#[QueryCollection(security: "is_granted('ROLE_ADMIN')")]
+#[Mutation(name: 'delete', security: "is_granted('ROLE_ADMIN')")]
+#[Mutation(name: 'create', security: "is_granted('ROLE_ADMIN')")]
 class Book
 {
     // ...
@@ -1160,22 +1137,20 @@ The following example shows how associations can be secured:
 ```php
 <?php
 // api/src/Entity/User.php
-
 namespace App\Entity;
 
-use ApiPlatform\Core\Annotation\ApiProperty;
-use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Metadata\ApiProperty;
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\GraphQl\Query;
+use ApiPlatform\Metadata\GraphQl\QueryCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity
  */
-#[ApiResource(
-    graphql: [
-        'item_query' => ['security' => 'is_granted("VIEW", object)'],
-        'collection_query' => ['security' => 'is_granted("ROLE_ADMIN")'],
-    ],
-)]
+#[ApiResource]
+#[Query(security: 'is_granted("VIEW", object)')]
+#[QueryCollection(security: 'is_granted("ROLE_ADMIN")')]
 class User
 {
     // ...
@@ -1197,22 +1172,20 @@ class User
 ```php
 <?php
 // api/src/Entity/Document.php
-
 namespace App\Entity;
 
-use ApiPlatform\Core\Annotation\ApiProperty;
-use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Metadata\ApiProperty;
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\GraphQl\Query;
+use ApiPlatform\Metadata\GraphQl\QueryCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity
  */
-#[ApiResource(
-    graphql: [
-        'item_query' => ['security' => 'is_granted("VIEW", object)'],
-        'collection_query' => ['security' => 'is_granted("ROLE_ADMIN")'],
-    ],
-)]
+#[ApiResource]
+#[Query(security: 'is_granted("VIEW", object)')]
+#[QueryCollection(security: 'is_granted("ROLE_ADMIN")')]
 class Document
 {
     // ...
@@ -1231,10 +1204,10 @@ class Document
 }
 ```
 
-The above example only allows admins to see the full collection of each resource (`collection_query`).
-Users must be granted the `VIEW` attribute on a resource to be able to query it directly (`item_query`) - which would use a `Voter` to make this decision.
+The above example only allows admins to see the full collection of each resource (`QueryCollection`).
+Users must be granted the `VIEW` attribute on a resource to be able to query it directly (`Query`) - which would use a `Voter` to make this decision.
 
-Similar to `item_query`, all associations are secured, requiring `VIEW` access on the parent object (*not* on the association).
+Similar to `Query`, all associations are secured, requiring `VIEW` access on the parent object (*not* on the association).
 This means that a user with `VIEW` access to a `Document` is able to see all users who are in the `viewers` collection, as well as the `createdBy` association.
 This may be a little too open, so you could instead do a role check here to only allow admins to access these fields, or check for a different attribute that could be implemented in the voter (e.g. `VIEW_CREATED_BY`.)
 Alternatively, you could still expose the users, but limit the visible fields by limiting access with `ApiProperty` `security` (such as the `User::$email` property above) or with [dynamic serializer groups](serialization.md#changing-the-serialization-context-dynamically).
@@ -1257,35 +1230,40 @@ The following example shows you what can be done:
 ```php
 <?php
 // api/src/Entity/Book.php
-
 namespace App\Entity;
 
-use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\GraphQl\Mutation;
+use ApiPlatform\Metadata\GraphQl\Query;
+use ApiPlatform\Metadata\GraphQl\QueryCollection;
 use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ApiResource(
-    normalizationContext: ['groups' => ['read']],
-    denormalizationContext: ['groups' => ['write']],
-    graphql: [
-        'item_query' => ['normalization_context' => ['groups' => ['item_query']]],
-        'collection_query' => ['normalization_context' => ['groups' => ['collection_query']]],
-        'create' => [
-            'normalization_context' => ['groups' => ['collection_query']],
-            'denormalization_context' => ['groups' => ['mutation']]
-        ]
-    }
+    normalizationContext: ['groups' => ['read']], 
+    denormalizationContext: ['groups' => ['write']]
+)]
+#[Query(
+    normalizationContext: ['groups' => ['Query']]
+)]
+#[QueryCollection(
+    normalizationContext: ['groups' => ['QueryCollection']]
+)]
+#[Mutation(
+    name: 'create', 
+    normalizationContext: ['groups' => ['QueryCollection']], 
+    denormalizationContext: ['groups' => ['mutation']]
 )]
 class Book
 {
     // ...
 
     /**
-     * @Groups({"read", "write", "item_query", "collection_query"})
+     * @Groups({"read", "write", "Query", "QueryCollection"})
      */
     public $name;
 
     /**
-     * @Groups({"read", "mutation", "item_query"})
+     * @Groups({"read", "mutation", "Query"})
      */
     public $author;
 
@@ -1308,8 +1286,8 @@ Make sure you understand the implications when doing this: having different type
 
 For instance:
 
-* If you use a different `normalization_context` for a mutation, a `MyResourcePayloadData` type with the restricted fields will be generated and used instead of `MyResource` (the query type).
-* If you use a different `normalization_context` for the query of an item (`item_query` operation) and for the query of a collection (`collection_query` operation), two types `MyResourceItem` and `MyResourceCollection` with the restricted fields will be generated and used instead of `MyResource` (the query type).
+* If you use a different `normalizationContext` for a mutation, a `MyResourcePayloadData` type with the restricted fields will be generated and used instead of `MyResource` (the query type).
+* If you use a different `normalizationContext` for the query of an item (`Query` operation) and for the query of a collection (`QueryCollection` operation), two types `MyResourceItem` and `MyResourceCollection` with the restricted fields will be generated and used instead of `MyResource` (the query type).
 
 ## Exception and Error
 
@@ -1325,7 +1303,6 @@ For instance, create a class like this:
 ```php
 <?php
 // api/src/Error/ErrorHandler.php
-
 namespace App\Error;
 
 use ApiPlatform\Core\GraphQl\Error\ErrorHandlerInterface;
@@ -1381,7 +1358,6 @@ services:
 ```php
 <?php
 // api/config/services.php
-
 namespace Symfony\Component\DependencyInjection\Loader\Configurator;
 
 use App\Error\ErrorHandler;
@@ -1424,7 +1400,6 @@ The code should look like this:
 ```php
 <?php
 // api/src/Serializer/Exception/MyExceptionNormalizer.php
-
 namespace App\Serializer\Exception;
 
 use App\Exception\MyException;
@@ -1484,10 +1459,9 @@ For instance, your resource can have properties in camelCase:
 ```php
 <?php
 // api/src/Entity/Book.php
-
 namespace App\Entity;
 
-use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Core\Annotation\ApiFilter;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
 
@@ -1540,10 +1514,9 @@ For instance if you have this resource:
 ```php
 <?php
 // api/src/Entity/Book.php
-
 namespace App\Entity;
 
-use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Core\Annotation\ApiFilter;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
 
@@ -1616,7 +1589,6 @@ For instance, to create a custom `DateType`:
 
 ```php
 <?php
-
 namespace App\Type\Definition;
 
 use ApiPlatform\Core\GraphQl\Type\Definition\TypeInterface;
@@ -1730,11 +1702,10 @@ Your class needs to look like this:
 
 ```php
 <?php
-
 namespace App\Type;
 
 use ApiPlatform\Core\GraphQl\Type\TypeConverterInterface;
-use App\Model\Book;
+use App\Entity\Book;
 use GraphQL\Type\Definition\Type as GraphQLType;
 use Symfony\Component\PropertyInfo\Type;
 
@@ -1797,7 +1768,6 @@ The decorator could be like this:
 
 ```php
 <?php
-
 namespace App\Serializer;
 
 use ApiPlatform\Core\GraphQl\Serializer\SerializerContextBuilderInterface;
@@ -1862,12 +1832,11 @@ Configure the entity by adding a [custom mutation resolver](#custom-mutations):
 ```php
 <?php
 // api/src/Entity/MediaObject.php
-
 namespace App\Entity;
 
-use ApiPlatform\Core\Annotation\ApiProperty;
-use ApiPlatform\Core\Annotation\ApiResource;
-use App\Resolver\CreateMediaObjectResolver;
+use ApiPlatform\Metadata\ApiProperty;
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\GraphQl\Mutation;use App\Resolver\CreateMediaObjectResolver;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\Serializer\Annotation\Groups;
@@ -1879,17 +1848,17 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
  * @Vich\Uploadable
  */
 #[ApiResource(
-    iri: 'http://schema.org/MediaObject',
-    normalizationContext: [
-        'groups' => ['media_object_read']
-    ],
-    graphql: [
-        'upload' => [
-            'mutation' => CreateMediaObjectResolver::class,
-            'deserialize' => false,
-            'args' => [
-                'file' => ['type' => 'Upload!', 'description' => 'The file to upload']
-            ]
+    normalizationContext: ['groups' => ['media_object_read']], 
+    types: ['http://schema.org/MediaObject']
+)]
+#[Mutation(
+    name: 'upload', 
+    resolver: CreateMediaObjectResolver::class, 
+    deserialize: false, 
+    args: [
+        'file' => [
+            'type' => 'Upload!', 
+            'description' => 'The file to upload'
         ]
     ]
 )]
@@ -1909,7 +1878,7 @@ class MediaObject
      *
      * @Groups({"media_object_read"})
      */
-    #[ApiProperty(iri: 'http://schema.org/contentUrl)]
+    #[ApiProperty(types: ['http://schema.org/contentUrl'])]
     public $contentUrl;
 
     /**
@@ -1933,11 +1902,13 @@ class MediaObject
     }
 }
 ```
+'file' => ['type' => 'Upload!','description' => 'The file to upload']
+'files' => ['type' => '[Upload!]!','description' => 'Files to upload']
 
 As you can see, a dedicated type `Upload` is used in the argument of the `upload` mutation.
-
-If you need to upload multiple files, replace `"file"={"type"="Upload!", "description"="The file to upload"}`
-with `"files"={"type"="[Upload!]!", "description"="Files to upload"}`.
+If you need to upload multiple files, replace   
+`'file' => ['type' => 'Upload!','description' => 'The file to upload']`  
+with `'files' => ['type' => '[Upload!]!','description' => 'Files to upload']`.
 
 You don't need to create it, it's provided in API Platform.
 
@@ -1948,7 +1919,6 @@ The corresponding resolver you added in the resource configuration should be wri
 ```php
 <?php
 // api/src/Resolver/CreateMediaObjectResolver.php
-
 namespace App\Resolver;
 
 use ApiPlatform\Core\GraphQl\Resolver\MutationResolverInterface;
@@ -2012,18 +1982,14 @@ For instance, if you want to change the description of the `create` mutation:
 
 ```php
 <?php
+// api/src/Entity/Book.php
+namespace App\Entity;
 
-namespace App\Model;
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\GraphQl\Mutation;
 
-use ApiPlatform\Core\Annotation\ApiResource;
-
-#[ApiResource(
-    graphql: [
-        'create' => [
-            'description' => 'My custom description.'
-        ]
-    ]
-)]
+#[ApiResource]
+#[Mutation(name: 'create', description: 'My custom description.')]
 class Book
 {
     // ...

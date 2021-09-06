@@ -47,12 +47,11 @@ to a Resource in two ways:
     ```php
     <?php
     // api/src/Entity/Offer.php
-
     namespace App\Entity;
 
-    use ApiPlatform\Core\Annotation\ApiResource;
+    use ApiPlatform\Metadata\ApiResource;
 
-    #[ApiResource(attributes: ['filters' => ['offer.date_filter']])]
+    #[ApiResource(filters: ['offer.date_filter'])]
     class Offer
     {
         // ...
@@ -98,11 +97,10 @@ to a Resource in two ways:
     ```php
     <?php
     // api/src/Entity/Offer.php
-
     namespace App\Entity;
 
     use ApiPlatform\Core\Annotation\ApiFilter;
-    use ApiPlatform\Core\Annotation\ApiResource;
+    use ApiPlatform\Metadata\ApiResource;
     use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\DateFilter;
 
     #[ApiResource]
@@ -150,10 +148,9 @@ In the following example, we will see how to allow the filtering of a list of e-
 ```php
 <?php
 // api/src/Entity/Offer.php
-
 namespace App\Entity;
 
-use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Core\Annotation\ApiFilter;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
 
@@ -200,10 +197,9 @@ It is possible to filter on relations too, if `Offer` has a `Product` relation:
 ```php
 <?php
 // api/src/Entity/Offer.php
-
 namespace App\Entity;
 
-use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Core\Annotation\ApiFilter;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
 
@@ -260,11 +256,10 @@ Like others filters, the date filter must be explicitly enabled:
 ```php
 <?php
 // api/src/Entity/Offer.php
-
 namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiFilter;
-use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\DateFilter;
 
 #[ApiResource]
@@ -322,11 +317,10 @@ For instance, exclude entries with a property value of `null` with the following
 ```php
 <?php
 // api/src/Entity/Offer.php
-
 namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiFilter;
-use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\DateFilter;
 
 #[ApiResource]
@@ -373,11 +367,10 @@ Enable the filter:
 ```php
 <?php
 // api/src/Entity/Offer.php
-
 namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiFilter;
-use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\BooleanFilter;
 
 #[ApiResource]
@@ -428,11 +421,10 @@ Enable the filter:
 ```php
 <?php
 // api/src/Entity/Offer.php
-
 namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiFilter;
-use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\NumericFilter;
 
 #[ApiResource]
@@ -483,11 +475,10 @@ Enable the filter:
 ```php
 <?php
 // api/src/Entity/Offer.php
-
 namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiFilter;
-use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\RangeFilter;
 
 #[ApiResource]
@@ -543,11 +534,10 @@ Enable the filter:
 ```php
 <?php
 // api/src/Entity/Offer.php
-
 namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiFilter;
-use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\ExistsFilter;
 
 #[ApiResource]
@@ -610,11 +600,10 @@ Enable the filter:
 ```php
 <?php
 // api/src/Entity/Offer.php
-
 namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiFilter;
-use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\OrderFilter;
 
 #[ApiResource]
@@ -661,11 +650,10 @@ will not be applied unless you configure a default order direction to use:
 ```php
 <?php
 // api/src/Entity/Offer.php
-
 namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiFilter;
-use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\OrderFilter;
 
 #[ApiResource]
@@ -719,11 +707,10 @@ For instance, treat entries with a property value of `null` as the smallest, wit
 ```php
 <?php
 // api/src/Entity/Offer.php
-
 namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiFilter;
-use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\OrderFilter;
 
 #[ApiResource]
@@ -788,11 +775,10 @@ built-in filters support nested properties using the dot (`.`) syntax, e.g.:
 ```php
 <?php
 // api/src/Entity/Offer.php
-
 namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiFilter;
-use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\OrderFilter;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
 
@@ -851,11 +837,10 @@ for all properties:
 ```php
 <?php
 // api/src/Entity/Offer.php
-
 namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiFilter;
-use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\OrderFilter;
 
 #[ApiResource]
@@ -922,7 +907,7 @@ Enable the filter:
 namespace App\Model;
 
 use ApiPlatform\Core\Annotation\ApiFilter;
-use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Core\Bridge\Elasticsearch\DataProvider\Filter\OrderFilter;
 
 #[ApiResource]
@@ -969,7 +954,7 @@ will not be applied unless you configure a default order direction to use:
 namespace App\Model;
 
 use ApiPlatform\Core\Annotation\ApiFilter;
-use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Core\Bridge\Elasticsearch\DataProvider\Filter\OrderFilter;
 
 #[ApiResource]
@@ -1008,7 +993,7 @@ Enable the filter:
 namespace App\Model;
 
 use ApiPlatform\Core\Annotation\ApiFilter;
-use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Core\Bridge\Elasticsearch\DataProvider\Filter\MatchFilter;
 
 #[ApiResource]
@@ -1039,7 +1024,7 @@ Enable the filter:
 namespace App\Model;
 
 use ApiPlatform\Core\Annotation\ApiFilter;
-use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Core\Bridge\Elasticsearch\DataProvider\Filter\TermFilter;
 
 #[ApiResource]
@@ -1069,7 +1054,7 @@ All built-in filters support nested properties using the (`.`) syntax.
 namespace App\Model;
 
 use ApiPlatform\Core\Annotation\ApiFilter;
-use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Core\Bridge\Elasticsearch\DataProvider\Filter\OrderFilter;
 use ApiPlatform\Core\Bridge\Elasticsearch\DataProvider\Filter\TermFilter;
 
@@ -1100,11 +1085,10 @@ Enable the filter:
 ```php
 <?php
 // api/src/Entity/Book.php
-
 namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiFilter;
-use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Core\Serializer\Filter\GroupFilter;
 
 #[ApiResource]
@@ -1139,11 +1123,10 @@ Enable the filter:
 ```php
 <?php
 // api/src/Entity/Book.php
-
 namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiFilter;
-use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Core\Serializer\Filter\PropertyFilter;
 
 #[ApiResource]
@@ -1245,11 +1228,10 @@ Finally, add this filter to resources you want to be filtered by using the `ApiF
 ```php
 <?php
 // api/src/Entity/Offer.php
-
 namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiFilter;
-use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Metadata\ApiResource;
 use App\Filter\RegexpFilter;
 
 #[ApiResource]
@@ -1268,11 +1250,10 @@ In the previous example, the filter can be applied on any property. You can also
 ```php
 <?php
 // api/src/Entity/Offer.php
-
 namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiFilter;
-use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Metadata\ApiResource;
 use App\Filter\RegexpFilter;
 
 #[ApiResource]
@@ -1318,16 +1299,13 @@ Finally, if you don't want to use the `#[ApiFilter]` annotation, you can registe
 ```php
 <?php
 // api/src/Entity/Offer.php
-
 namespace App\Entity;
 
-use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Metadata\ApiResource;
 use App\Filter\RegexpFilter;
 
 #[ApiResource(
-    attributes => [
-        'filters' => [RegexpFilter::class],
-    ],
+    filters: [RegexpFilter::class]
 )]
 class Offer
 {
@@ -1394,10 +1372,9 @@ Suppose we have a `User` entity and an `Order` entity related to the `User` one.
 ```php
 <?php
 // api/src/Entity/User.php
-
 namespace App\Entity;
 
-use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Metadata\ApiResource;
 
 #[ApiResource]
 class User
@@ -1409,10 +1386,9 @@ class User
 ```php
 <?php
 // api/src/Entity/Order.php
-
 namespace App\Entity;
 
-use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Metadata\ApiResource;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ApiResource]
@@ -1457,7 +1433,6 @@ Then, let's mark the `Order` entity as a "user aware" entity.
 ```php
 <?php
 // api/src/Entity/Order.php
-
 namespace App\Entity;
 
 use App\Annotation\UserAware;
@@ -1608,9 +1583,11 @@ If the annotation is given over a property, the filter will be configured on the
 
 ```php
 <?php
+// api/src/Entity/DummyCar.php
+namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiFilter;
-use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -1660,11 +1637,10 @@ For example, let's define three data filters (`DateFilter`, `SearchFilter` and `
 ```php
 <?php
 // api/src/Entity/DummyCar.php
-
 namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiFilter;
-use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\BooleanFilter;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\DateFilter;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;

@@ -10,15 +10,14 @@ for this task, but you can replace it with your preferred validation library suc
 
 Validating submitted data is as simple as adding [Symfony's built-in constraints](http://symfony.com/doc/current/reference/constraints.html)
 or [custom constraints](http://symfony.com/doc/current/validation/custom_constraint.html) directly in classes marked with
-the `@ApiResource` annotation:
+the `#[ApiResource]` annotation:
 
 ```php
 <?php
 // api/src/Entity/Product.php
-
 namespace App\Entity;
 
-use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Metadata\ApiResource;
 use App\Validator\Constraints\MinimalProperties; // A custom constraint
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert; // Symfony's built-in constraints
@@ -135,10 +134,10 @@ You can configure the groups you want to use when the validation occurs directly
 <?php
 // api/src/Entity/Book.php
 
-use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Metadata\ApiResource;
 use Symfony\Component\Validator\Constraints as Assert;
 
-#[ApiResource(attributes: ['validation_groups' => ['a', 'b']])]
+#[ApiResource(validationContext: ['groups' => ['a', 'b']])]
 class Book
 {
     /**
@@ -173,20 +172,21 @@ You can have different validation for each [operation](operations.md) related to
 <?php
 // api/src/Entity/Book.php
 
-use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Delete;
+use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\Put;
+use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\Post;
+use ApiPlatform\Metadata\ApiResource;
 use Symfony\Component\Validator\Constraints as Assert;
 
-#[ApiResource(
-    collectionOperations: [
-        'get',
-        'post' => ['validation_groups' => ['Default', 'postValidation']]
-    ],
-    itemOperations: [
-        'delete',
-        'get',
-        'put' => ['validation_groups' => ['Default', 'putValidation']]
-    ]
-)]
+#[ApiResource]
+#[Delete]
+#[Get]
+#[Put(validationContext: ['groups' => ['Default', 'putValidation']])]
+#[GetCollection]
+#[Post(validationContext: ['groups' => ['Default', 'postValidation']])]
 class Book
 {
     /**
@@ -238,11 +238,11 @@ In the following example, we use a static method to return the validation groups
 <?php
 // api/src/Entity/Book.php
 
-use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Metadata\ApiResource;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ApiResource(
-    attributes: ['validation_groups' => [Book::class, 'validationGroups']]
+    validationContext: ['groups' => [Book::class, 'validationGroups']
 )]
 class Book
 {
@@ -314,14 +314,13 @@ Then, configure the entity class to use this service to retrieve validation grou
 ```php
 <?php
 // api/src/Entity/Book.php
-
 namespace App\Entity;
 
-use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Metadata\ApiResource;
 use App\Validator\AdminGroupsGenerator;
 use Symfony\Component\Validator\Constraints as Assert;
 
-#[ApiResource(attributes: ['validation_groups' => AdminGroupsGenerator::class])
+#[ApiResource(validationContext: ['groups' => [AdminGroupsGenerator::class]])
 class Book
 {
     /**
@@ -345,9 +344,6 @@ First, you need to create your sequenced group.
 
 ```php
 <?php
-
-declare(strict_types=1);
-
 namespace App\Validator;
 
 use Symfony\Component\Validator\Constraints\GroupSequence;
@@ -374,10 +370,11 @@ And then, you need to use your class as a validation group.
 
 ```php
 <?php
-
+// api/src/Entity/Greeting.php
 namespace App\Entity;
 
-use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Post;
 use App\Validator\One; // classic custom constraint
 use App\Validator\Two; // classic custom constraint
 use App\Validator\MySequencedGroup; // the sequence group to use
@@ -386,13 +383,8 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * @ORM\Entity
  */
-#[ApiResource(
-    collectionOperations: [
-      'post' => [
-        'validation_groups' => MySequencedGroup::class
-      ]
-    ]
-)]
+#[ApiResource]
+#[Post(validationContext: ['groups' => MySequencedGroup::class])]
 class Greeting
 {
     /**
@@ -466,7 +458,7 @@ For example:
 
 ```php
 <?php
-
+// api/src/Entity/Brand.php
 namespace App\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;

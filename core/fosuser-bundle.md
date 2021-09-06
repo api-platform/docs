@@ -54,10 +54,9 @@ Create your User entity with serialization groups:
 ```php
 <?php
 // api/src/Entity/User.php
-
 namespace App\Entity;
 
-use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Metadata\ApiResource;
 use Doctrine\ORM\Mapping as ORM;
 use FOS\UserBundle\Model\User as BaseUser;
 use FOS\UserBundle\Model\UserInterface;
@@ -66,11 +65,11 @@ use Symfony\Component\Serializer\Annotation\Groups;
 /**
  * @ORM\Entity
  * @ORM\Table(name="fos_user")
- * @ApiResource(
- *     normalizationContext={"groups"={"user", "user:read"}},
- *     denormalizationContext={"groups"={"user", "user:write"}}
- * )
  */
+ #[ApiResource(
+    normalizationContext: ['groups' => ['user', 'user:read']],
+    denormalizationContext: ['groups' => ['user', 'user:write']],
+ )]
 class User extends BaseUser
 {
     /**

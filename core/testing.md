@@ -47,7 +47,7 @@ Note that you can create your own test case class extending the ApiTestCase. For
 
 ```php
 <?php
-
+// api/tests/AbstractTest.php
 namespace App\Tests;
 
 use ApiPlatform\Core\Bridge\Symfony\Bundle\Test\ApiTestCase;

@@ -44,14 +44,11 @@ Use the `mercure` attribute to hint API Platform that it must dispatch the updat
 ```php
 <?php
 // api/src/Entity/Book.php
-
 namespace App\Entity;
 
-use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Metadata\ApiResource;
 
-/**
- * @ApiResource(mercure=true)
- */
+#[ApiResource(mercure: true)]
 class Book
 {
     // ...
@@ -82,14 +79,11 @@ Then, use options to mark the published updates as privates:
 ```php
 <?php
 // api/src/Entity/Book.php
-
 namespace App\Entity;
 
-use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Metadata\ApiResource;
 
-/**
- * @ApiResource(mercure={"private": true})
- */
+#[ApiResource(mercure: ['private' => true])]
 class Book
 {
     // ...
@@ -101,14 +95,11 @@ It's also possible to execute an *expression* (using the [Symfony Expression Lan
 ```php
 <?php
 // api/src/Entity/Book.php
-
 namespace App\Entity;
 
-use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Metadata\ApiResource;
 
-/**
- * @ApiResource(mercure="object.mercureOptions")
- */
+#[ApiResource(mercure: 'object.mercureOptions')]
 class Book
 {
     public $mercureOptions = ['private' => true];
@@ -146,10 +137,9 @@ Below is an example using the `topics` option:
 ```php
 <?php
 // api/src/Entity/Book.php
-
 namespace App\Entity;
 
-use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Core\Api\UrlGeneratorInterface;
 use App\Entity\User;
 
@@ -181,10 +171,9 @@ Using an *expression* function:
 ```php
 <?php
 // api/src/Entity/Book.php
-
 namespace App\Entity;
 
-use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Metadata\ApiResource;
 use App\Entity\User;
 
 #[ApiResource(

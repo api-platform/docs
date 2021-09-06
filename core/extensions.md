@@ -23,14 +23,11 @@ Given these two entities:
 ```php
 <?php
 // api/src/Entity/User.php
-
 namespace App\Entity;
 
-use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Metadata\ApiResource;
 
-/**
- * @ApiResource
- */
+#[ApiResource]
 class User
 {
     // ...
@@ -40,14 +37,11 @@ class User
 ```php
 <?php
 // api/src/Entity/Offer.php
-
 namespace App\Entity;
 
-use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Metadata\ApiResource;
 
-/**
- * @ApiResource
- */
+#[ApiResource]
 class Offer
 {
    /**

@@ -17,12 +17,11 @@ you can make sure the authors are retrieved in one go by writing:
 ```php
 <?php
 // api/src/Entity/Author.php
-
 namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiFilter;
-use ApiPlatform\Core\Annotation\ApiResource;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
+use ApiPlatform\Metadata\ApiResource;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -35,8 +34,8 @@ class Author
      * @ORM\Column(type="integer")
      * @ORM\GeneratedValue
      * @ORM\Id
-     * @ApiFilter(SearchFilter::class, strategy="exact")
      */
+    #[ApiFilter(SearchFilter::class, strategy: "exact")]
     public $id;
 
     /**

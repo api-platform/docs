@@ -17,18 +17,17 @@ configure API Platform to convert it to a `404 Not Found` error:
 ```php
 <?php
 // api/src/Exception/ProductNotFoundException.php
-
 namespace App\Exception;
 
 final class ProductNotFoundException extends \Exception
 {
+    // ...
 }
 ```
 
 ```php
 <?php
 // api/src/EventSubscriber/ProductManager.php
-
 namespace App\EventSubscriber;
 
 use ApiPlatform\Core\EventListener\EventPriorities;
@@ -118,22 +117,17 @@ The `exception_to_status` configuration can be set on resources and operations:
 // api/src/Entity/Book.php
 namespace App\Entity;
 
-use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\Post;
 use App\Exception\ProductWasRemovedException;
 use App\Exception\ProductNotFoundException;
 
-#[ApiResource(
-    itemOperations: [
-        'get' => [
-            'exception_to_status' => [
-                ProductWasRemovedException::class => 410,
-            ],
-        ],
-    ],
-    exceptionToStatus: [
-        ProductNotFoundException::class => 404,
-    ]
-)]
+#[ApiResource(exceptionToStatus: ['ProductNotFoundException::class' => 404])]
+#[Get(exceptionToStatus: ['ProductWasRemovedException::class' => 410])]
+#[GetCollection]
+#[Post]
 class Book
 {
     // ...

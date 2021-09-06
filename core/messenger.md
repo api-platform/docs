@@ -25,19 +25,18 @@ Set the `messenger` attribute to `true`, and API Platform will automatically dis
 ```php
 <?php
 // api/src/Entity/Person.php
-
 namespace App\Entity;
 
-use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\ApiProperty;
+use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\Post;
 use Symfony\Component\Validator\Constraints as Assert;
 use ApiPlatform\Core\Action\NotFoundAction;
 
-#[ApiResource(collectionOperations: [
-        "post" => ["messenger" => true, "output" => false, "status" => 202]
-    ], itemOperations: [
-        "get" => ["controller" => NotFoundAction::class, "read" => false, "status" => 404]
-    ]
-)]
+#[ApiResource]
+#[Get(controller: NotFoundAction::class, read: false, status: 404)]
+#[Post(messenger: true, output: false, status: 202)]
 final class Person
 {
     #[ApiProperty(identifier: true)]
@@ -124,19 +123,27 @@ Set the `messenger` attribute to `input`, and API Platform will automatically di
 ```php
 <?php
 // api/src/Entity/User.php
-
 namespace App\Entity;
 
-use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Post;
+use ApiPlatform\Metadata\GetCollection;
 use App\Dto\ResetPasswordRequest;
 
-#[ApiResource(collectionOperations: [
-        "post", "get",
-        "reset_password" => ["status" => 202, "messenger" => "input", "input" => ResetPasswordRequest::class, "output" => false, "method" => "POST", "path" => "/users/reset_password"]
-    ]
+#[ApiResource]
+#[GetCollection]
+#[Post]
+#[Post(
+    name: 'reset_password', 
+    status: 202, 
+    messenger: 'input', 
+    input: ResetPasswordRequest::class, 
+    output: false, 
+    uriTemplate: '/users/reset_password'
 )]
 final class User
 {
+    // ...
 }
 ```
 
