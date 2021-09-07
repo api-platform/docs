@@ -96,3 +96,33 @@ We noticed that some tiller RBAC trouble occurred. You can usually resolve it by
 
 Please, see the [related issue](https://github.com/kubernetes/helm/issues/3130) for further details / information.
 You can also take a look at the [related documentation](https://github.com/kubernetes/helm/blob/master/docs/rbac.md)
+
+## Symfony Messenger
+
+Running Pods with the Messenger Component to consume queues requires additions to the Helm chart.
+
+Start by creating a new template for the queue-worker-deployment. The `deployment.yaml` can be used as template, the caddy container and all unused ENV variables should be removed.
+
+Add the following lines under `containers` to overwrite the command.
+
+    command:
+    {{ range .Values.queue_worker.command }}
+        - {{ . | quote }}
+    {{ end }}
+    args:
+    {{ range .Values.queue_worker.commandArgs }}
+        - {{ . | quote }}
+    {{ end }}
+
+Here is an example on how to use it from your `values.yaml`:
+
+    command: ['bin/console']
+    commandArgs: ['messenger:consume', 'async', '--memory-limit=100M']
+
+The `readinessProbe` and the `livenessProble` can not use the default `docker-healthcheck` but should test if the command is running.
+
+    readinessProbe:
+        exec:
+            command: ["/bin/sh", "-c", "/bin/ps -ef | grep messenger:consume | grep -v grep"]
+            initialDelaySeconds: 120
+            periodSeconds: 3
