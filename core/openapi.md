@@ -254,12 +254,12 @@ This will produce the following Swagger documentation:
 }
 ```
 
-To pass a context to the OpenAPI **v2** generator, use the `swagger_context` attribute (notice the prefix: `swagger_` instead of `openapi_`).
+To pass a context to the OpenAPI **v2** generator, use the `swaggerContext` attribute (notice the prefix: `swagger` instead of `openapi`).
 
 ## Changing the Name of a Definition
 
 API Platform generates a definition name based on the serializer `groups` defined
-in the (`de`)`normalization_context`. It's possible to override the name
+in the (`de`)`normalizationContext`. It's possible to override the name
 thanks to the `swagger_definition_name` option:
 
 ```php

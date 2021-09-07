@@ -287,14 +287,14 @@ class BookVoter extends Voter
 }
 ```
 
-*Note 1: When using Voters on POST methods: The voter needs an `$attribute` and `$subject` as input parameter, so you have to use the `security_post_denormalize` (i.e. `"post" = { "security_post_denormalize" = "is_granted('BOOK_CREATE', object)" }` ) because the object does not exist before denormalization (it is not created, yet.)*
+*Note 1: When using Voters on POST methods: The voter needs an `$attribute` and `$subject` as input parameter, so you have to use the `securityPostDenormalize` (i.e. `"post" = { "securityPostDenormalize" = "is_granted('BOOK_CREATE', object)" }` ) because the object does not exist before denormalization (it is not created, yet.)*
 
 *Note 2: You can't use Voters on the collection GET method, use [Collection Filters](https://api-platform.com/docs/core/security/#filtering-collection-according-to-the-current-user-permissions) instead.*
 
 ## Configuring the Access Control Error Message
 
 By default when API requests are denied, you will get the "Access Denied" message.
-You can change it by configuring the `security_message` attribute or the `security_post_denormalize_message` attribute.
+You can change it by configuring the `securityMessage` attribute or the `securityPostDenormalizeMessage` attribute.
 
 For example:
 

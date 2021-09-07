@@ -21,7 +21,7 @@ automatically instantiated and injected, without having to declare it explicitly
 
 In the following examples, the built-in `GET` operation is registered as well as a custom operation called `post_publication`.
 
-By default, API Platform uses the first `GET` operation defined in `itemOperations` to generate the IRI of an item and the first `GET` operation defined in `collectionOperations` to generate the IRI of a collection.
+By default, API Platform uses the first `Get` operation defined to generate the IRI of an item and the first `GetCollection` operation to generate the IRI of a collection.
 
 If you create a custom operation, you will probably want to properly document it.
 See the [OpenAPI](swagger.md) part of the documentation to do so.
@@ -149,7 +149,7 @@ the associated controller respectively.
 
 ## Using Serialization Groups
 
-You may want different serialization groups for your custom operations. Just configure the proper `normalization_context` and/or `denormalization_context` in your operation:
+You may want different serialization groups for your custom operations. Just configure the proper `normalizationContext` and/or `denormalizationContext` in your operation:
 
 [codeSelector]
 
@@ -226,7 +226,7 @@ App\Entity\Book:
 
 ## Retrieving the Entity
 
-If you want to bypass the automatic retrieval of the entity in your custom operation, you can set `"read"=false` in the
+If you want to bypass the automatic retrieval of the entity in your custom operation, you can set `read: false` in the
 operation attribute:
 
 [codeSelector]
@@ -305,7 +305,7 @@ the configuration at the same time in the routing and the resource configuration
 The `post_publication` operation references the Symfony route named `book_post_publication`.
 
 Since version 2.3, you can also use the route name as operation name by convention, as shown in the following example
-for `book_post_discontinuation` when neither `method` nor `route_name` attributes are specified.
+for `book_post_discontinuation` when neither `method` nor `routeName` attributes are specified.
 
 First, let's create your resource configuration:
 
@@ -391,7 +391,7 @@ class CreateBookPublication extends AbstractController
         methods: ['POST'],
         defaults: [
             '_api_resource_class' => Book::class,
-            '_api_item_operation_name' => 'post_publication',
+            '_api_operation_name' => '_api_/books/{id}/publication_post',
         ],
     )]
     public function __invoke(Book $book): Book
@@ -403,8 +403,7 @@ class CreateBookPublication extends AbstractController
 }
 ```
 
-It is mandatory to set `_api_resource_class` and `_api_item_operation_name` (or `_api_collection_operation_name` for a collection
-operation) in the parameters of the route (`defaults` key). It allows API Platform to work with the Symfony routing system.
+It is mandatory to set `_api_resource_class` and `_api_operation_name` in the parameters of the route (`defaults` key). It allows API Platform to work with the Symfony routing system.
 
 Alternatively, you can also use a traditional Symfony controller and YAML or XML route declarations. The following example does
 the same thing as the previous example:

@@ -110,7 +110,7 @@ In any other cases, your exception message will be sent to end users.
 
 ## Fine-grained Configuration
 
-The `exception_to_status` configuration can be set on resources and operations:
+The `exceptionToStatus` configuration can be set on resources and operations:
 
 ```php
 <?php

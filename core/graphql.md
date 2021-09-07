@@ -1218,7 +1218,7 @@ You may want to restrict some resource's attributes to your GraphQL clients.
 
 As described in the [serialization process](serialization.md) documentation, you can use serialization groups to expose only the attributes you want in queries or in mutations.
 
-If the (de)normalization context between GraphQL and REST is different, use the `graphql` key to change it.
+If the (de)normalization context between GraphQL and REST is different, use the `(de)normalizationContext` key to change it in each query and mutations.
 
 Note that:
 

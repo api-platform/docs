@@ -94,10 +94,10 @@ api_platform:
 
 ## Configuring Formats For a Specific Resource or Operation
 
-Support for specific formats can also be configured at resource and operation level using the `input_formats` and `output_formats` attributes.
-`input_formats` controls the formats accepted in request bodies while `output_formats` controls formats available for responses.
+Support for specific formats can also be configured at resource and operation level using the `inputFormats` and `outputFormats` attributes.
+`inputFormats` controls the formats accepted in request bodies while `outputFormats` controls formats available for responses.
 
-The `format` attribute can be used as a shortcut, it sets both the `input_formats` and `output_formats` in one time.
+The `format` attribute can be used as a shortcut, it sets both the `inputFormats` and `outputFormats` in one time.
 
 ```php
 <?php

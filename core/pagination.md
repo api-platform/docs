@@ -309,7 +309,7 @@ class Book
 
 ## Cursor-Based Pagination
 
-To configure your resource to use the cursor-based pagination, select your unique sorted field as well as the direction you’ll like the pagination to go via filters and enable the `pagination_via_cursor` option.
+To configure your resource to use the cursor-based pagination, select your unique sorted field as well as the direction you’ll like the pagination to go via filters and enable the `paginationViaCursor` option.
 Note that for now you have to declare a `RangeFilter` and an `OrderFilter` on the property used for the cursor-based pagination.
 
 The following configuration also works on a specific operation:

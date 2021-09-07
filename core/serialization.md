@@ -434,7 +434,7 @@ App\Entity\Person:
 
 The problem here is that the **$parent** property become automatically an embedded object. Besides, the property won't be shown on the OpenAPI view.
 
-To force the **$parent** property to be used as an IRI, add an **#[ApiProperty(readableLink: false, writableLink: false)]** annotation:
+To force the **$parent** property to be used as an IRI, add an `#[ApiProperty(readableLink: false, writableLink: false)]` annotation:
 
 [codeSelector]
 

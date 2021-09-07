@@ -88,7 +88,7 @@ final class UserResourcesSubscriber implements EventSubscriberInterface
 
 ## Setting Custom HTTP Cache Headers
 
-The `cache_headers` attribute can be used to set custom HTTP cache headers:
+The `cacheHeaders` attribute can be used to set custom HTTP cache headers:
 
 ```php
 use ApiPlatform\Metadata\ApiResource;
