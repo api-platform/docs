@@ -1182,6 +1182,7 @@ namespace App\Filter;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\AbstractContextAwareFilter;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Util\QueryNameGeneratorInterface;
 use Doctrine\ORM\QueryBuilder;
+use Symfony\Component\PropertyInfo\Type;
 
 final class RegexpFilter extends AbstractContextAwareFilter
 {
@@ -1212,7 +1213,7 @@ final class RegexpFilter extends AbstractContextAwareFilter
         foreach ($this->properties as $property => $strategy) {
             $description["regexp_$property"] = [
                 'property' => $property,
-                'type' => 'string',
+                'type' => Type::BUILTIN_TYPE_STRING,
                 'required' => false,
                 'swagger' => [
                     'description' => 'Filter using a regex. This will appear in the Swagger documentation!',
