@@ -1,15 +1,32 @@
 # Upgrade guide
 
-## What changed?
+## What changed between 2.6 and 2.7?
 
-Note that you can find these changes in the [CHANGELOG](https://github.com/api-platform/core/blob/main/CHANGELOG.md).
+- New Resource metadata allowing to declare multiple Resources on a class: `ApiPlatform\Metadata\ApiResource`
+- Clarification of some properties within the ApiResource declaration
+- Removal of the item and collection difference on operation declaration
+- `ApiPlatform\Core\DataProvider\...DataProviderInterface` has a new
+interface `ApiPlatform\State\ProviderInterface`
+- `ApiPlatform\Core\DataPersister\...DataPersisterInterface` has a new
+interface `ApiPlatform\State\ProcessorInterface`
+- New ApiProperty metadata `ApiPlatform\Metadata\ApiProperty`
+- Configuration flag `metadata_backward_compatibility_layer` that allows
+the use of legacy metadata layers
 
-The definition of resource is no longer done with `ApiPlatform\Core\Annotation\ApiResource` but with `ApiPlatform\Metadata\ApiResource`.
+The detailed changes are present in the [CHANGELOG](https://github.com/api-platform/core/blob/main/CHANGELOG.md).
 
-For example:
+### ApiResource Metadata
 
-Before
+The `ApiResource` annotation has a new namespace:
+`ApiPlatform\Metadata\ApiResource` instead of `ApiPlatform\Core\Annotation\ApiResource`.
+
+For example, the Book resource in 2.6:
+
 ```php
+<?php
+// api/src/Entity/Book.php
+namespace App\Entity;
+
 use ApiPlatform\Core\Annotation\ApiResource;
 
 #[ApiResource(
@@ -24,47 +41,65 @@ use ApiPlatform\Core\Annotation\ApiResource;
 ]
 class Book
 {
+    // ...
+}
 ```
 
-After
+Becomes in 2.7:
+
 ```php
+<?php
+// api/src/Entity/Book.php
+namespace App\Entity;
+
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\Post;
 use App\Controller\CreateBookPublication;
 
-#[ApiResource(types: ['http://schema.org/Book'])]
-#[Get]
-#[Post(
-    name: 'publication', 
-    uriTemplate: '/books/{id}/publication',
-)]
+#[ApiResource(types: ['http://schema.org/Book'], operations: [
+    new Get(),
+    new Post(name: 'publication', uriTemplate: '/books/{id}/publication')
+])]
 class Book
 {
+    // ...
+}
 ```
-You can use Rector to upgrade your class automatically, [see instructions here](#upgrade-your-class-with-rector).
+
+You can use the `api:upgrade-resource` command to upgrade
+your resources automatically, [see instructions here](#the-upgrade-command).
 
 ### Removal of item/collection operations
 
-We removed the notion of item and collection and used instead http verbs matching the operation you want to declare. There is also a `collection` flag instructing wether the operation returns an array or an object.
+We removed the notion of item and collection. Instead, use
+http verbs matching the operation you want to declare.
+There is also a `collection` flag instructing wether the
+operation returns an array or an object.
 The default ApiResource attribute still declares a CRUD:
+
 ```php
 #[ApiResource]
-```
-is the same as
-```php
-#[ApiResource]
-#[Get]
-#[Put]
-#[Patch]
-#[Delete]
-#[GetCollection]
-#[Post]
 ```
 
-### Metadata changes
+is the same as
+
+```php
+#[ApiResource(operations=[
+    new Get(),
+    new Put(),
+    new Patch(),
+    new Delete(),
+    new GetCollection(),
+    new Post()
+])]
+```
+
+### Detailed metadata changes
 
 #### #[ApiResource]
+
+`ApiPlatform\Metadata\ApiResource` instead of `ApiPlatform\Core\Annotation\ApiResource`
 
 |Before|After|
 |---|---|
@@ -76,12 +111,14 @@ is the same as
 
 #### #[ApiProperty]
 
+`ApiPlatform\Metadata\ApiProperty` instead of `ApiPlatform\Core\Annotation\ApiProperty`
+
 |Before|After|
 |---|---|
 |`iri: 'http://schema.org/Book'`|`types: ['http://schema.org/Book']`|
 |`type: 'string'`|`builtinTypes: ['string']`|
 
-Note that builtinTypes are computed automatically from php types. 
+Note that builtinTypes are computed automatically from php types.
 
 For example:
 
@@ -94,25 +131,28 @@ class Book
 
 Will compute: `builtinTypes: ['string', Isbn::class]`
 
+## Versions 2.7 and 3.0
 
-### Upgrade your class with Rector
+In 2.7 the `metadata_backward_compatibility_layer` flag is set to `true`.
+This means that all the legacy services will still work just as they used
+to work in 2.6 (for example `PropertyMetadataFactoryInterface` or
+`ResourceMetadataFactoryInterface`). When updating we advise to first
+resolve the deprecations then to set this flag to `false` to use the
+new metadata system.
 
-#### Install Rector
-```console
-composer config minimum-stability dev
-composer require --dev -W rector/rector-src
+In 3.0 this flag will default to `false` and the legacy code will be removed.
+
+## The upgrade command
+
+The upgrade command will automatically upgrade the old `ApiPlatform\Core\Annotation\ApiResource` to `ApiPlatform\Metadata\ApiResource`.
+By default this does a dry run and shows a diff:
+
+```bash
+php bin/console api:upgrade-resource
 ```
 
-#### Run upgrade command
-`php bin/console api:rector:upgrade myfile.php`
+To write in-place use the `force` option:
 
-![Rector upgrade choices](images/rector-upgrade-choices.png)
-
-* `[0]` transform your ApiResource annotation to attribute
-* `[1]` transform your ApiResource annotation to ApiPlatform\Metadata\ApiResource and corresponding operation attributes.
-* `[2]` transform your ApiResource attribute to ApiPlatform\Metadata\ApiResource and corresponding operation attributes.
-* `[3]` transform your ApiSubresource annotation to ApiPlatform\Metadata\ApiResource and corresponding operation attributes.
-
-**If you have declared ApiSubresource, you must transform them before your ApiResource.**
-
-![Rector upgrade demo](images/rector-upgrade-demo.webm)
+```bash
+php bin/console api:upgrade-resource -f
+```
