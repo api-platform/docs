@@ -19,19 +19,19 @@ use Symfony\Component\Validator\Constraints as Assert;
 /**
  * Secured resource.
  *
- * @ApiResource(
- *     attributes={"security"="is_granted('ROLE_USER')"},
- *     collectionOperations={
- *         "get",
- *         "post"={"security"="is_granted('ROLE_ADMIN')"}
- *     },
- *     itemOperations={
- *         "get",
- *         "put"={"security"="is_granted('ROLE_ADMIN') or object.owner == user"},
- *     }
- * )
  * @ORM\Entity
  */
+ #[ApiResource(
+    attributes: ["security" => "is_granted('ROLE_USER')"],
+    collectionOperations: [
+        "get",
+        "post" => ["security" => "is_granted('ROLE_ADMIN')"],
+    ],
+    itemOperations: [
+        "get",
+        "put" => ["security" => "is_granted('ROLE_ADMIN') or object.owner == user"],
+    ],
+)]
 class Book
 {
     /**
@@ -47,8 +47,8 @@ class Book
      * @var string The title
      *
      * @ORM\Column
-     * @Assert\NotBlank
      */
+     #[Assert\NotBlank]
     public $title;
 
     /**
@@ -90,9 +90,8 @@ class Book
 
     /**
      * @var string Property viewable and writable only by users with ROLE_ADMIN
-     *
-     * @ApiProperty(security="is_granted('ROLE_ADMIN')")
      */
+    #[ApiProperty(security: "is_granted('ROLE_ADMIN')")]
     private $adminOnlyProperty;
 }
 ```
@@ -139,14 +138,12 @@ namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
 
-/**
- * @ApiResource(
- *     itemOperations={
- *         "get",
- *         "put"={"security_post_denormalize"="is_granted('ROLE_ADMIN') or (object.owner == user and previous_object.owner == user)"},
- *     }
- * )
- */
+#[ApiResource(
+    itemOperations: [
+        "get",
+        "put" => ["security_post_denormalize" => "is_granted('ROLE_ADMIN') or (object.owner == user and previous_object.owner == user)"],
+    ],
+)]
 class Book
 {
     // ...
@@ -192,21 +189,18 @@ namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
 
-/**
- * ...
- * @ApiResource(
- *     attributes={"security"="is_granted('ROLE_USER')"},
- *     collectionOperations={
- *          "get",
- *          "post" = { "security_post_denormalize" = "is_granted('BOOK_CREATE', object)" }
- *     },
- *     itemOperations={
- *          "get" = { "security" = "is_granted('BOOK_READ', object)" },
- *          "put" = { "security" = "is_granted('BOOK_EDIT', object)" },
- *          "delete" = { "security" = "is_granted('BOOK_DELETE', object)" }
- *     },
- * )
- */
+#[ApiResource(
+    attributes: ["security" => "is_granted('ROLE_USER')"],
+    collectionOperations: [
+        "get",
+        "post" => [ "security_post_denormalize" => "is_granted('BOOK_CREATE', object)" ],
+    ],
+    itemOperations: [
+        "get" => [ "security" => "is_granted('BOOK_READ', object)" ],
+        "put" => [ "security" => "is_granted('BOOK_EDIT', object)" ],
+        "delete" => [ "security" => "is_granted('BOOK_DELETE', object)" ],
+    ],
+)]
 class Book
 {
     // ...
@@ -311,19 +305,25 @@ namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
 
-/**
- * ...
- * @ApiResource(
- *     attributes={"security"="is_granted('ROLE_USER')"},
- *     collectionOperations={
- *         "post"={"security"="is_granted('ROLE_ADMIN')", "security_message"="Only admins can add books."}
- *     },
- *     itemOperations={
- *         "get"={"security"="is_granted('ROLE_USER') and object.owner == user", "security_message"="Sorry, but you are not the book owner."}
- *         "put"={"security_post_denormalize"="is_granted('ROLE_ADMIN') or (object.owner == user and previous_object.owner == user)", "security_post_denormalize_message"="Sorry, but you are not the actual book owner."},
- *     }
- * )
- */
+#[ApiResource(
+    attributes: ["security" => "is_granted('ROLE_USER')"],
+    collectionOperations: [
+        "post" => [
+            "security" => "is_granted('ROLE_ADMIN')",
+            "security_message" => "Only admins can add books.",
+        ],
+    ],
+    itemOperations: [
+        "get" => [
+            "security" => "is_granted('ROLE_USER') and object.owner == user",
+            "security_message" => "Sorry, but you are not the book owner.",
+        ],
+        "put" => [
+            "security_post_denormalize" => "is_granted('ROLE_ADMIN') or (object.owner == user and previous_object.owner == user)",
+            "security_post_denormalize_message" => "Sorry, but you are not the actual book owner.",
+        ],
+    ],
+)]
 class Book
 {
     // ...

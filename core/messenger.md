@@ -43,9 +43,7 @@ final class Person
     #[ApiProperty(identifier: true)]
     public string $id;
 
-    /**
-     * @Assert\NotBlank
-     */
+    #[Assert\NotBlank]
     public string $name;
 }
 ```
@@ -132,7 +130,14 @@ use App\Dto\ResetPasswordRequest;
 
 #[ApiResource(collectionOperations: [
         "post", "get",
-        "reset_password" => ["status" => 202, "messenger" => "input", "input" => ResetPasswordRequest::class, "output" => false, "method" => "POST", "path" => "/users/reset_password"]
+        "reset_password" => [
+          "status" => 202,
+          "messenger" => "input",
+          "input" => ResetPasswordRequest::class,
+          "output" => false,
+          "method" => "POST",
+          "path" => "/users/reset_password"
+        ]
     ]
 )]
 final class User

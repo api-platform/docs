@@ -397,7 +397,7 @@ App\Entity\Book:
 
 [/codeSelector]
 
-Alternatively, the more verbose attribute syntax can be used: `@ApiResource(attributes={"route_prefix"="/library"})`.
+Alternatively, the more verbose attribute syntax can be used: `#[ApiResource(attributes: ["route_prefix" => "/library"])]`.
 
 ## Expose a Model Without Any Routes
 

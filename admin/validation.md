@@ -16,14 +16,10 @@ For instance, with API Platform Core as backend, if you write the following:
 use ApiPlatform\Core\Annotation\ApiResource;
 use Symfony\Component\Validator\Constraints as Assert;
 
-/**
- * @ApiResource
- */
+#[ApiResource]
 class Book
 {
-    /**
-     * @Assert\NotBlank
-     */
+    #[Assert\NotBlank]
     public ?string $title = null;
 }
 ```
@@ -51,14 +47,10 @@ For example if you have this code:
 use ApiPlatform\Core\Annotation\ApiResource;
 use Symfony\Component\Validator\Constraints as Assert;
 
-/**
- * @ApiResource
- */
+#[ApiResource]
 class Book
 {
-    /**
-     * @Assert\Isbn
-     */
+    #[Assert\Isbn]
     public ?string $isbn = null;
 }
 ```
