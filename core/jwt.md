@@ -64,10 +64,12 @@ Then update the security configuration:
 ```yaml
 # api/config/packages/security.yaml
 security:
-    encoders:
+    password_hashers:
         App\Entity\User:
             algorithm: auto
 
+    https://symfony.com/doc/current/security/experimental_authenticators.html
+    enable_authenticator_manager: true
     # https://symfony.com/doc/current/security.html#where-do-users-come-from-user-providers
     providers:
         # used to reload user from session & other features (e.g. switch_user)
@@ -90,9 +92,7 @@ security:
                 password_path: password
                 success_handler: lexik_jwt_authentication.handler.authentication_success
                 failure_handler: lexik_jwt_authentication.handler.authentication_failure
-            guard:
-                authenticators:
-                    - lexik_jwt_authentication.jwt_token_authenticator
+            jwt: ~
 
     access_control:
         - { path: ^/docs, roles: IS_AUTHENTICATED_ANONYMOUSLY } # Allows accessing the Swagger UI
@@ -122,10 +122,12 @@ If your API uses a [path prefix](https://symfony.com/doc/current/routing/externa
 ```yaml
 # api/config/packages/security.yaml
 security:
-    encoders:
+    password_hashers:
         App\Entity\User:
             algorithm: auto
-
+    
+    https://symfony.com/doc/current/security/experimental_authenticators.html
+    enable_authenticator_manager: true
     # https://symfony.com/doc/current/security.html#where-do-users-come-from-user-providers
     providers:
         # used to reload user from session & other features (e.g. switch_user)
@@ -143,9 +145,7 @@ security:
             stateless: true
             anonymous: true
             provider: app_user_provider
-            guard:
-                authenticators:
-                    - lexik_jwt_authentication.jwt_token_authenticator
+            jwt: ~
         main:
             anonymous: true
             json_login:
@@ -307,6 +307,7 @@ namespace App\Tests;
 use ApiPlatform\Core\Bridge\Symfony\Bundle\Test\ApiTestCase;
 use App\Entity\User;
 use Hautelook\AliceBundle\PhpUnit\ReloadDatabaseTrait;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 class AuthenticationTest extends ApiTestCase
 {
@@ -319,7 +320,7 @@ class AuthenticationTest extends ApiTestCase
         $user = new User();
         $user->setEmail('test@example.com');
         $user->setPassword(
-            self::$container->get('security.password_encoder')->encodePassword($user, '$3CR3T')
+            self::$container->get('security.user_password_hasher')->hashPassword($user, '$3CR3T')
         );
 
         $manager = self::$container->get('doctrine')->getManager();
