@@ -33,4 +33,6 @@ export default () => (
 ```
 
 And that's it!
-You don't need to decorate the data provider if you are using the Hydra one: it detects that you have used a `FileInput` and uses a `multipart/form-data` request instead of a JSON-LD one.
+The guessers are able to detect that you have used a `FileInput` and are passing this information to the data provider, through a `hasFileField` field in the `extraInformation` object, itself in the data.
+If you are using the Hydra data provider, it uses a `multipart/form-data` request instead of a JSON-LD one.
+In the case of the `EditGuesser`, the HTTP method used also becomes a `POST` instead of a `PUT`, to prevent a [PHP bug](https://bugs.php.net/bug.php?id=55815).
