@@ -514,7 +514,9 @@ docker-compose exec php \
     bin/console make:entity --api-resource
 ```
 
-Doctrine's [annotations](https://www.doctrine-project.org/projects/doctrine-orm/en/latest/reference/annotations-reference.html) map these entities to tables in the database. Mapping through [attributes](https://www.doctrine-project.org/projects/doctrine-orm/en/latest/reference/attributes-reference.html) is also supported, if you prefer those. Both methods are convenient as they allow grouping the code and the configuration but, if you want to decouple classes from their metadata, you can switch to XML or YAML mappings.
+Doctrine's [annotations](https://www.doctrine-project.org/projects/doctrine-orm/en/latest/reference/annotations-reference.html) map these entities to tables in the database.
+Mapping through [attributes](https://www.doctrine-project.org/projects/doctrine-orm/en/latest/reference/attributes-reference.html) is also supported, if you prefer those.
+Both methods are convenient as they allow grouping the code and the configuration but, if you want to decouple classes from their metadata, you can switch to XML or YAML mappings.
 They are supported as well.
 
 Learn more about how to map entities with the Doctrine ORM in [the project's official documentation](https://docs.doctrine-project.org/projects/doctrine-orm/en/latest/reference/association-mapping.html)
