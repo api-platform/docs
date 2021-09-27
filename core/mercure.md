@@ -25,7 +25,7 @@ Then, install the Symfony bundle:
 composer require symfony/mercure-bundle
 ```
 
-Finally, 3 environment variables [must be set](https://symfony.com/doc/current/configuration/external_parameters.html):
+Finally, 3 environment variables [must be set](https://symfony.com/doc/current/configuration.html#configuration-based-on-environment-variables):
 
 * `MERCURE_PUBLISH_URL`: the URL that must be used by API Platform to publish updates to your Mercure hub (can be an internal or a public URL)
 * `MERCURE_SUBSCRIBE_URL`: the **public** URL of the Mercure hub that clients will use to subscribe to updates
