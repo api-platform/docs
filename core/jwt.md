@@ -68,7 +68,7 @@ security:
         App\Entity\User:
             algorithm: auto
 
-    https://symfony.com/doc/current/security/experimental_authenticators.html
+    # https://symfony.com/doc/current/security/authenticator_manager.html
     enable_authenticator_manager: true
     # https://symfony.com/doc/current/security.html#where-do-users-come-from-user-providers
     providers:
@@ -126,7 +126,7 @@ security:
         App\Entity\User:
             algorithm: auto
     
-    https://symfony.com/doc/current/security/experimental_authenticators.html
+    # https://symfony.com/doc/current/security/authenticator_manager.html
     enable_authenticator_manager: true
     # https://symfony.com/doc/current/security.html#where-do-users-come-from-user-providers
     providers:
@@ -307,7 +307,6 @@ namespace App\Tests;
 use ApiPlatform\Core\Bridge\Symfony\Bundle\Test\ApiTestCase;
 use App\Entity\User;
 use Hautelook\AliceBundle\PhpUnit\ReloadDatabaseTrait;
-use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 class AuthenticationTest extends ApiTestCase
 {
