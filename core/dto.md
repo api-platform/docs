@@ -1,6 +1,6 @@
 # Using Data Transfer Objects (DTOs)
 
- As stated in [the general design considerations](design.md), in most cases [the DTO pattern](https://en.wikipedia.org/wiki/Data_transfer_object) should be implemented using an API Resource class representing the public data model exposed through the API and [a custom data provider](data-providers.md). In such cases, the class marked with `@ApiResource` will act as a DTO.
+As stated in [the general design considerations](design.md), in most cases [the DTO pattern](https://en.wikipedia.org/wiki/Data_transfer_object) should be implemented using an API Resource class representing the public data model exposed through the API and [a custom data provider](data-providers.md). In such cases, the class marked with `@ApiResource` will act as a DTO.
 
 However, it's sometimes useful to use a specific class to represent the input or output data structure related to an operation.
 
@@ -81,7 +81,8 @@ We have the following `BookInput`:
 
 namespace App\Dto;
 
-final class BookInput {
+final class BookInput
+{
     /**
      * @var string
      */
@@ -110,6 +111,7 @@ final class BookInputDataTransformer implements DataTransformerInterface
     {
         $book = new Book();
         $book->isbn = $data->isbn;
+
         return $book;
     }
 
@@ -148,7 +150,8 @@ To manage the output, it's exactly the same process. For example, we have the fo
 
 namespace App\Dto;
 
-final class BookOutput {
+final class BookOutput
+{
     /**
      * @var string
      */
@@ -177,6 +180,7 @@ final class BookOutputDataTransformer implements DataTransformerInterface
     {
         $output = new BookOutput();
         $output->name = $data->name;
+
         return $output;
     }
 
@@ -219,7 +223,8 @@ With the following `BookInput`:
 
 namespace App\Dto;
 
-final class BookInput {
+final class BookInput
+{
   /**
    * @var \App\Entity\Author
    */
@@ -248,6 +253,7 @@ final class BookInputDataTransformer implements DataTransformerInterface
     {
         $existingBook = $context[AbstractItemNormalizer::OBJECT_TO_POPULATE];
         $existingBook->author = $data->author;
+
         return $existingBook;
     }
 
@@ -270,6 +276,79 @@ final class BookInputDataTransformer implements DataTransformerInterface
 services:
     # ...
     'App\DataTransformer\BookInputDataTransformer': ~
+        # Uncomment only if autoconfiguration is disabled
+        #tags: [ 'api_platform.data_transformer' ]
+```
+
+## Initialize the Input DTO For Partial Update
+
+In order to be able to do a partial update (`PATCH`), it is needed to initialize the input DTO with the existing data before the deserialization process.
+
+This way, the input DTO will be correctly validated with its old data and partial new data.
+
+Create a class implementing the `DataTransformerInitializerInterface` instead of the `DataTransformerInterface`:
+
+```php
+<?php
+// src/DataTransformer/BookInputDataTransformerInitializer.php
+
+namespace App\DataTransformer;
+
+use ApiPlatform\Core\DataTransformer\DataTransformerInitializerInterface;
+use ApiPlatform\Core\Serializer\AbstractItemNormalizer;
+use App\Entity\Book;
+use App\Dto\BookInput;
+
+final class BookInputDataTransformerInitializer implements DataTransformerInitializerInterface
+{
+    /**
+     * {@inheritdoc}
+     */
+    public function transform($data, string $to, array $context = [])
+    {
+        $existingBook = $context[AbstractItemNormalizer::OBJECT_TO_POPULATE];
+        $existingBook->author = $data->author;
+
+        return $existingBook;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function initialize(string $inputClass, array $context = [])
+    {
+        $existingBook = $context[AbstractItemNormalizer::OBJECT_TO_POPULATE] ?? null;
+        if (!$existingBook) {
+            return new BookInput();
+        }
+
+        $bookInput = new BookInput();
+        $bookInput->author = $existingBook->author;
+
+        return $bookInput;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function supportsTransformation($data, string $to, array $context = []): bool
+    {
+        if ($data instanceof Book) {
+          return false;
+        }
+
+        return Book::class === $to && null !== ($context['input']['class'] ?? null);
+    }
+}
+```
+
+Register it:
+
+```yaml
+# api/config/services.yaml
+services:
+    # ...
+    'App\DataTransformer\BookInputDataTransformerInitializer': ~
         # Uncomment only if autoconfiguration is disabled
         #tags: [ 'api_platform.data_transformer' ]
 ```
