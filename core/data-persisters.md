@@ -184,7 +184,8 @@ final class BlogPostDataPersister implements ContextAwareDataPersisterInterface,
 }
 ```
 
-This is very useful when using [`Messenger` with API Platform](messenger.md) as you may want to do something asynchronously with the data but still call the default Doctrine data persister, for example:
+This is useful when using [`Messenger` with API Platform](messenger.md) as you may want to do something asynchronously with the data but still call the default Doctrine data persister, for example:
+
 ```php
 namespace App\DataPersister;
 
@@ -225,6 +226,7 @@ final class BlogPostDataPersister implements ContextAwareDataPersisterInterface,
     }
 }
 ```
+
 ```yaml
 # api/config/services.yaml
 services:
