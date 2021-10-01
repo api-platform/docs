@@ -25,13 +25,11 @@ Then, install the Symfony bundle:
 composer require symfony/mercure-bundle
 ```
 
-Finally, 3 environment variables [must be set](See configuring Symfony with environment variables https://symfony.com/doc/current/configuration.html):
+Finally, 3 environment variables [must be set](https://symfony.com/doc/current/configuration.html#configuration-based-on-environment-variables):
 
 * `MERCURE_URL`: the URL that must be used by API Platform to publish updates to your Mercure hub (can be an internal or a public URL)
 * `MERCURE_PUBLIC_URL`: the **public** URL of the Mercure hub that clients will use to subscribe to updates
 * `MERCURE_JWT_SECRET`: a valid Mercure [JSON Web Token (JWT)](https://jwt.io/) allowing API Platform to publish updates to the hub
-
-Api Platform uses the Symfony Mercure component. For more information, see https://symfony.com/doc/current/mercure.html
 
 The JWT **must** contain a `mercure.publish` property containing an array of topic selectors.
 This array can be empty to allow publishing anonymous updates only. It can also be `["*"]` to allow publishing on every topics.
