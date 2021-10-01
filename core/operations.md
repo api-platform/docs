@@ -44,7 +44,10 @@ Note: the `PATCH` method must be enabled explicitly in the configuration, refer 
 
 Note: with JSON Merge Patch, the [null values will be skipped](https://symfony.com/doc/current/components/serializer.html#skipping-null-values) in the response.
 
-Note: Current `PUT` implementation behaves more or less like the `PATCH` method. Existing properties not included in the payload are **not** removed, their current values are preserved. To remove an existing property, its value must be explicitly set to `null`. Implementing [the standard `PUT` behavior](https://httpwg.org/specs/rfc7231.html#PUT) is on the roadmap, follow [issue #4344] (https://github.com/api-platform/core/issues/4344) to track the progress.
+Note: Current `PUT` implementation behaves more or less like the `PATCH` method.
+Existing properties not included in the payload are **not** removed, their current values are preserved.
+To remove an existing property, its value must be explicitly set to `null`.
+Implementing [the standard `PUT` behavior](https://httpwg.org/specs/rfc7231.html#PUT) is on the roadmap, follow [issue #4344](https://github.com/api-platform/core/issues/4344) to track the progress.
 
 ## Enabling and Disabling Operations
 
