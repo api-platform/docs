@@ -157,9 +157,7 @@ class Product // The class name will be used to name exposed resources
      */
     #[Assert\DateTime
     #[ApiProperty(
-        attributes: [
-            "openapi_context" => ["type" => "string", "format" => "date-time"]
-        ],
+        openapi_context: ["type" => "string", "format" => "date-time"]
     )]
     public $timestamp;
 
