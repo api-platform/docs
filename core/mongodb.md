@@ -241,7 +241,7 @@ use Doctrine\ODM\MongoDB\Mapping\Annotations as ODM;
             "method" => "GET",
             "doctrine_mongodb" => [
                 "execute_options" => [
-                    "allowDiskUse"=true
+                    "allowDiskUse" => true,
                 ]
             ]
         ]

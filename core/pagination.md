@@ -78,7 +78,7 @@ It can also be disabled for a specific resource:
 
 use ApiPlatform\Core\Annotation\ApiResource;
 
-#[ApiResource(attributes: ["pagination_enabled" => falser])]
+#[ApiResource(attributes: ["pagination_enabled" => false])]
 class Book
 {
     // ...
@@ -354,8 +354,8 @@ The [PaginationExtension](https://github.com/api-platform/core/blob/main/src/Bri
       collectionOperations: [
         "get",
         "get_custom" => [
-          ...
-          "pagination_fetch_join_collection"=true,
+          // ...
+          "pagination_fetch_join_collection" => true,
         ],
       ],
     )]
@@ -380,8 +380,8 @@ The [PaginationExtension](https://github.com/api-platform/core/blob/main/src/Bri
       collectionOperations: [
         "get",
         "get_custom" => [
-          ...
-          "pagination_use_output_walkers"=true,
+          // ...
+          "pagination_use_output_walkers" => true,
         ],
       ],
     )]
