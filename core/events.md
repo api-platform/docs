@@ -26,7 +26,7 @@ Name                          | Event              | [Pre & Post hooks](#custom-
 ------------------------------|--------------------|---------------------------------------------|----------|-------------
 `AddFormatListener`           | `kernel.request`   | None                                        | 7        | Guesses the best response format ([content negotiation](content-negotiation.md))
 `ReadListener`                | `kernel.request`   | `PRE_READ`, `POST_READ`                     | 4        | Retrieves data from the persistence system using the [data providers](data-providers.md) (`GET`, `PUT`, `PATCH`, `DELETE`)
-`DeserializeListener`         | `kernel.request`   | `PRE_DESERIALIZE`, `POST_DESERIALIZE`       | 2        | Deserializes data into a PHP entity (`GET`, `POST`, `DELETE`); updates the entity retrieved using the data provider (`PUT`, `PATCH`)
+`DeserializeListener`         | `kernel.request`   | `PRE_DESERIALIZE`, `POST_DESERIALIZE`       | 2        | Deserializes data into a PHP entity (`POST`); updates the entity retrieved using the data provider (`PUT`, `PATCH`)
 `DenyAccessListener`          | `kernel.request`   | None                                        | 1        | Enforces [access control](security.md) using Security expressions
 `ValidateListener`            | `kernel.view`      | `PRE_VALIDATE`, `POST_VALIDATE`             | 64       | [Validates data](validation.md) (`POST`, `PUT`, `PATCH`)
 `WriteListener`               | `kernel.view`      | `PRE_WRITE`, `POST_WRITE`                   | 32       | Persists changes in the persistence system using the [data persisters](data-persisters.md) (`POST`, `PUT`, `PATCH`, `DELETE`)

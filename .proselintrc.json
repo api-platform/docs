@@ -3,6 +3,7 @@
     "typography.symbols": false,
     "typography.exclamation": false,
     "hyperbole.misc": false,
-    "cliches.misc": false
+    "cliches.misc": false,
+    "lexical_illusions.misc": false
   }
 }
