@@ -1805,7 +1805,7 @@ class MediaObject
      *
      * @Groups({"media_object_read"})
      */
-    #[ApiProperty(iri: 'http://schema.org/contentUrli')]
+    #[ApiProperty(iri: 'http://schema.org/contentUrl')]
     public $contentUrl;
 
     /**

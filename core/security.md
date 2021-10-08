@@ -48,7 +48,7 @@ class Book
      *
      * @ORM\Column
      */
-     #[Assert\NotBlank]
+    #[Assert\NotBlank]
     public $title;
 
     /**

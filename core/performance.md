@@ -171,7 +171,7 @@ readable association according to the serialization context. If you want to fetc
 you have to bypass `readable` and `readableLink` by using the `fetchEager` attribute on the property declaration, for example:
 
 ```php
-#[ApiProperty(attributes: ["fetchEager" => true])]
+#[ApiProperty(fetchEager: true)]
  public $foo;
 ```
 
@@ -253,7 +253,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * @ORM\Entity
  */
-#[ApiResource(attributes: ["force_eager" => false])]
+#[ApiResource(forceEager: false)]
 class User
 {
     /**
@@ -288,7 +288,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Entity
  */
 #[ApiResource(
-    attributes: ["force_eager" => false],
+    forceEager: false,
     itemOperations: [
         "get" => ["force_eager" => true],
         "post",

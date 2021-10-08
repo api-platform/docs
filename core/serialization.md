@@ -261,10 +261,10 @@ use Symfony\Component\Serializer\Annotation\Groups;
 #[ApiResource(normalizationContext: ['groups' => ['book']])]
 class Book
 {
-    #[Groups(["book"])]
+    #[Groups("book")]
     public $name;
 
-    #[Groups(["book"])]
+    #[Groups("book")]
     public $author;
 
     // ...
@@ -303,7 +303,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
 #[ApiResource]
 class Person
 {
-    #[Groups(["book"])]
+    #[Groups("book")]
     public $name;
 
     // ...
@@ -407,13 +407,13 @@ use Symfony\Component\Serializer\Annotation\Groups;
 )]
 class Person
 {
-    #[Groups(["person"])
+    #[Groups("person")]
     public $name;
 
    /**
     * @var Person
     */
-    #[Groups(["person"])]
+    #[Groups("person")]
    public $parent;  // Note that a Person instance has a relation with another Person.
  
     // ...
@@ -465,13 +465,13 @@ use Symfony\Component\Serializer\Annotation\Groups;
 )]
 class Person
 {
-    #[Groups(["person"])]
+    #[Groups("person")]
     public $name;
 
    /**
     * @var Person
     */
-   #[Groups(["person"])]
+   #[Groups("person")]
    #[ApiProperty(readableLink: false, writableLink: false)]
    public $parent;  // This property is now serialized/deserialized as an IRI.
  
@@ -647,7 +647,7 @@ class Greeting
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
      */
-    #[Groups(["greeting:collection:get"])]
+    #[Groups("greeting:collection:get")]
     private $id;
     
     private $a = 1;
@@ -659,7 +659,7 @@ class Greeting
      *
      * @ORM\Column
      */
-    #[Groups(["greeting:collection:get"])]
+    #[Groups("greeting:collection:get")]
     public $name = '';
 
     public function getId(): int
@@ -667,7 +667,7 @@ class Greeting
         return $this->id;
     }
 
-    #[Groups(["greeting:collection:get"])] // <- MAGIC IS HERE, you can set a group on a method.
+    #[Groups("greeting:collection:get")] // <- MAGIC IS HERE, you can set a group on a method.
     public function getSum(): int
     {
         return $this->a + $this->b;

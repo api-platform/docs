@@ -121,7 +121,7 @@ Another possibility is to apply the default order for a specific collection oper
 #[ApiResource(
     collectionOperations: [
         "get",
-        "get_desc_custom" =>[
+        "get_desc_custom" => [
             "method" => "GET",
             "path" => "custom_collection_desc_foos",
             "order" => ["name" => "DESC"]
