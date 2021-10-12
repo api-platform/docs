@@ -14,17 +14,12 @@ namespace App\Entity;
 use ApiPlatform\Core\Annotation\ApiProperty;
 use ApiPlatform\Core\Annotation\ApiResource;
 
-/**
- * @ApiResource(iri="http://schema.org/Book")
- */
+#[ApiResource(iri: "http://schema.org/Book")]
 class Book
 {
     // ...
 
-    /**
-     * ...
-     * @ApiProperty(iri="http://schema.org/name")
-     */
+    #[ApiProperty(iri: "http://schema.org/name")]
     public $name;
     
     // ...

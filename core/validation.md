@@ -10,7 +10,7 @@ for this task, but you can replace it with your preferred validation library suc
 
 Validating submitted data is as simple as adding [Symfony's built-in constraints](http://symfony.com/doc/current/reference/constraints.html)
 or [custom constraints](http://symfony.com/doc/current/validation/custom_constraint.html) directly in classes marked with
-the `@ApiResource` annotation:
+the `#[ApiResource]` annotation:
 
 ```php
 <?php

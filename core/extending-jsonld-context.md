@@ -17,29 +17,24 @@ namespace App\Entity;
 use ApiPlatform\Core\Annotation\ApiProperty;
 use ApiPlatform\Core\Annotation\ApiResource;
 
-/**
- * @ApiResource(iri="http://schema.org/Book")
- */
+#[ApiResource(iri: "http://schema.org/Book")]
 class Book
 {
     // ...
 
-    /**
-     * ...
-     * @ApiProperty(
-     *     iri="http://schema.org/name",
-     *     attributes={
-     *         "jsonld_context"={
-     *             "@id"="http://yourcustomid.com",
-     *             "@type"="http://www.w3.org/2001/XMLSchema#string",
-     *             "someProperty"={
-     *                 "a"="textA",
-     *                 "b"="textB"
-     *             }
-     *         }
-     *     }
-     * )
-     */
+    #[ApiProperty(
+      iri: "http://schema.org/name",
+      attributes: [
+        "jsonld_context" => [
+          "@id" => "http://yourcustomid.com",
+          "@type" => "http://www.w3.org/2001/XMLSchema#string",
+          "someProperty" => [
+            "a" => "textA",
+            "b" => "textB"
+          ]
+        ]
+      ]
+    )]
     public $name;
     
     // ...
@@ -83,12 +78,9 @@ It's also possible to replace the Hydra context used by the documentation genera
 
 use ApiPlatform\Core\Annotation\ApiResource;
 
-/**
- * ...
- * @ApiResource(itemOperations={
- *     "get"={"hydra_context"={"foo"="bar"}}
- * })
- */
+#[ApiResource(itemOperations: [
+  "get" => ["hydra_context" => ["foo" => "bar"]]
+])]
 class Book
 {
     //...

@@ -123,9 +123,9 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * @ApiResource
  * @ORM\Entity
  */
+#[ApiResource]
 class Product // The class name will be used to name exposed resources
 {
     /**
@@ -139,30 +139,26 @@ class Product // The class name will be used to name exposed resources
      * @param string $name A name property - this description will be available in the API documentation too.
      *
      * @ORM\Column
-     * @Assert\NotBlank
-     *
-     * @ApiProperty(
-     *     attributes={
-     *         "openapi_context"={
-     *             "type"="string",
-     *             "enum"={"one", "two"},
-     *             "example"="one"
-     *         }
-     *     }
-     * )
      */
+    #[Assert\NotBlank]
+    #[ApiProperty(
+        attributes: [
+            "openapi_context" => [
+                "type" => "string",
+                "enum" => ["one", "two"],
+                "example" => "one",
+            ],
+        ],
+    )]
     public $name;
 
     /**
      * @ORM\Column
-     * @Assert\DateTime
-     *
-     * @ApiProperty(
-     *     attributes={
-     *         "openapi_context"={"type"="string", "format"="date-time"}
-     *     }
-     * )
      */
+    #[Assert\DateTime
+    #[ApiProperty(
+        openapi_context: ["type" => "string", "format" => "date-time"]
+    )]
     public $timestamp;
 
     // ...
@@ -251,7 +247,7 @@ This will produce the following Swagger documentation:
                         "two"
                     ],
                     "example": "one"
-                },
+                }
             }
         }
     }
@@ -267,18 +263,16 @@ in the (`de`)`normalization_context`. It's possible to override the name
 thanks to the `swagger_definition_name` option:
 
 ```php
-/**
- * @ApiResource(
- *      collectionOperations={
- *          "post"={
- *              "denormalization_context"={
- *                  "groups"={"user:read"},
- *                  "swagger_definition_name": "Read",
- *              },
- *          },
- *      },
- * )
- */
+#[ApiResource(
+    collectionOperations: [
+        "post" => [
+            "denormalization_context" => [
+                "groups" => ["user:read"],
+                "swagger_definition_name" => "Read",
+            ],
+        ],
+    ],
+)]
 class User
 {
 }
@@ -287,15 +281,13 @@ class User
 It's also possible to re-use the (`de`)`normalization_context`:
 
 ```php
-/**
- * @ApiResource(
- *      collectionOperations={
- *          "post"={
- *              "denormalization_context"=User::API_WRITE,
- *          },
- *      },
- * )
- */
+#[ApiResource(
+    collectionOperations: [
+        "post" => [
+            "denormalization_context" => User::API_WRITE,
+        ],
+    ],
+)]
 class User
 {
     const API_WRITE = [
