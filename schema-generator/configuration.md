@@ -456,11 +456,18 @@ mappings.
 If you set the option `useInterface` to true, the generator will generate an interface corresponding to each generated
 entity and will use them in relation mappings.
 
-To let PHP Schema generate the XML mapping file usable with Symfony, add the following to your config file:
+To let PHP Schema generate the mapping file usable with Symfony, add the following to your config file:
 
 ```yaml
 doctrine:
     resolveTargetEntityConfigPath: path/to/doctrine.xml
+```
+
+The default mapping file format is XML, but you can change it to YAML with the following option:
+```yaml
+doctrine:
+    resolveTargetEntityConfigPath: path/to/doctrine.yaml
+    resolveTargetEntityConfigType: YAML # Supports XML & YAML
 ```
 
 ## Custom Schemas
