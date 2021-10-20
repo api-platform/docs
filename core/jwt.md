@@ -84,7 +84,6 @@ security:
             security: false
         main:
             stateless: true
-            anonymous: true
             provider: app_user_provider
             json_login:
                 check_path: /authentication_token
