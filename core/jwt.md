@@ -24,10 +24,7 @@ Then we need to generate the public and private keys used for signing JWT tokens
 docker-compose exec php sh -c '
     set -e
     apk add openssl
-    mkdir -p config/jwt
-    jwt_passphrase=${JWT_PASSPHRASE:-$(grep ''^JWT_PASSPHRASE='' .env | cut -f 2 -d ''='')}
-    echo "$jwt_passphrase" | openssl genpkey -out config/jwt/private.pem -pass stdin -aes256 -algorithm rsa -pkeyopt rsa_keygen_bits:4096
-    echo "$jwt_passphrase" | openssl pkey -in config/jwt/private.pem -passin stdin -out config/jwt/public.pem -pubout
+    php bin/console lexik:jwt:generate-keypair
     setfacl -R -m u:www-data:rX -m u:"$(whoami)":rwX config/jwt
     setfacl -dR -m u:www-data:rX -m u:"$(whoami)":rwX config/jwt
 '
@@ -35,8 +32,7 @@ docker-compose exec php sh -c '
 
 Note that the `setfacl` command relies on the `acl` package. This is installed by default when using the API Platform docker distribution but may need be installed in your working environment in order to execute the `setfacl` command.
 
-This takes care of using the correct passphrase to encrypt the private key, and setting the correct permissions on the
-keys allowing the web server to read them.
+This takes care of keypair creation (including using the correct passphrase to encrypt the private key), and setting the correct permissions on the keys allowing the web server to read them.
 
 Since these keys are created by the `root` user from a container, your host user will not be able to read them during the `docker-compose build caddy` process. Add the `config/jwt/` folder to the `api/.dockerignore` file so that they are skipped from the result image.
 
