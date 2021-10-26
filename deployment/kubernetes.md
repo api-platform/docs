@@ -7,6 +7,8 @@ and [Amazon Web Services](https://aws.amazon.com/eks/) provide managed Kubernete
 [The official API Platform distribution](../distribution/index.md) contains a built-in [Helm](https://helm.sh/) (the k8s
 package manager) chart to deploy in a wink on any of these platforms.
 
+If you want to deploy API Platform on a local Kubernetes cluster, check out [our Minikube tutorial](minikube.md)!
+
 ## Preparing Your Cluster and Your Local Machine
 
 1. Create a Kubernetes cluster on your preferred Cloud provider or install Kubernetes locally on your servers
