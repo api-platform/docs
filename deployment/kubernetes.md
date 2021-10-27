@@ -88,7 +88,7 @@ Actual this is [bitnami/postgresql](https://bitnami.com/stack/postgresql/helm), 
         --set php.appSecret='!ChangeMe!' \
         --set postgresql.postgresqlPassword='!ChangeMe!' \
         --set postgresql.persistence.enabled=true \
-        --set "corsAllowOrigin=^https?://[a-z\]*\.mywebsite.com$"
+        --set "corsAllowOrigin=^https?:\/\/[a-z]*\.mywebsite.com$"
 
 The `"` are necessary for Windows. Use ^ on Windows instead of \ to split commands into multiple lines.
 You can add the parameter `--dry-run` to check upfront if anything is correct.
