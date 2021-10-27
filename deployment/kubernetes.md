@@ -77,7 +77,7 @@ Actual this is [bitnami/postgresql](https://bitnami.com/stack/postgresql/helm), 
 
 ### 4. Deploy your API to the container
 
-    helm upgrade api-platform ./helm/api-platform --namespace=default \
+    helm upgrade main ./helm/api-platform --namespace=default --create-namespace --wait \
         --install \
         --set "php.image.repository=gcr.io/test-api-platform/php" \
         --set php.image.tag=latest \
