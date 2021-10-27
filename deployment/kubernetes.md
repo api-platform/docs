@@ -45,7 +45,7 @@ Infos for [Google Container pulling and pushing](https://cloud.google.com/contai
     docker push gcr.io/test-api-platform/caddy
     docker push gcr.io/test-api-platform/pwa
 
-Optional push the version images
+Optional push the version images:
 
     docker push gcr.io/test-api-platform/php:0.1.0 
     docker push gcr.io/test-api-platform/caddy:0.1.0 
