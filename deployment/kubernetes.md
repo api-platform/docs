@@ -31,7 +31,7 @@ If you do not have gcloud yet, install it with these command.
 
 #### 1. Build the PHP and Caddy Docker images and tag them
 
-Versioning: The 0.1.0 is the version. These value should be same as the attribut "appVersion" in Chart.yaml
+Versioning: The 0.1.0 is the version. This value should be the same as the attribute `appVersion` in `Chart.yaml`.
 Infos for [Google Container pulling and pushing](https://cloud.google.com/container-registry/docs/pushing-and-pulling)
 
     docker build -t gcr.io/test-api-platform/php:0.1.0 -t gcr.io/test-api-platform/php:latest api --target api_platform_php
