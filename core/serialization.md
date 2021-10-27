@@ -91,14 +91,10 @@ use Symfony\Component\Serializer\Annotation\Groups;
 )]
 class Book
 {
-    /**
-     * @Groups({"read", "write"})
-     */
+    #[Groups(["read", "write"])]
     public $name;
 
-    /**
-     * @Groups("write")
-     */
+    #[Groups("write")]
     public $author;
 
     // ...
@@ -139,7 +135,7 @@ Alternatively, you can use the more verbose syntax:
 ```
 
 In the previous example, the `name` property will be visible when reading (`GET`) the object, and it will also be available
-to write (`PUT/POST`). The `author` property will be write-only; it will not be visible when serialized responses are
+to write (`PUT` / `PATCH` / `POST`). The `author` property will be write-only; it will not be visible when serialized responses are
 returned by the API.
 
 Internally, API Platform passes the value of the `normalization_context` as the 3rd argument of [the `Serializer::serialize()` method](https://api.symfony.com/master/Symfony/Component/Serializer/SerializerInterface.html#method_serialize) during the normalization
@@ -162,6 +158,8 @@ level ignored.
 
 In the following example we use different serialization groups for the `GET` and `PUT` operations:
 
+[codeSelector]
+
 ```php
 <?php
 // api/src/Entity/Book.php
@@ -182,19 +180,38 @@ use Symfony\Component\Serializer\Annotation\Groups;
 )]
 class Book
 {
-    /**
-     * @Groups({"get", "put"})
-     */
+    #[Groups(["get", "put"])
     public $name;
 
-    /**
-     * @Groups("get")
-     */
+    #[Groups("get")]
     public $author;
 
     // ...
 }
 ```
+
+```yaml
+# api/config/api_platform/resources/Book.yaml
+App\Entity\Book:
+    attributes:
+        normalization_context:
+            groups: ['get']
+    itemOperations:
+        get: ~
+        put:
+            normalization_context:
+                groups: ['put']
+
+# api/config/serializer/Book.yaml
+App\Entity\Book:
+    attributes:
+        name:
+            groups: ['get', 'put']
+        author:
+            groups: ['get']
+```
+
+[/codeSelector]
 
 The `name` and `author` properties will be included in the document generated during a `GET` operation because the configuration
 defined at the resource level is inherited. However the document generated when a `PUT` request will be received will only
@@ -226,8 +243,11 @@ In the following JSON document, the relation from a book to an author is by defa
 ```
 
 It is possible to embed related objects (in their entirety, or only some of their properties) directly in the parent
-response through the use of serialization groups. By using the following serialization groups annotations (`@Groups`),
-a JSON representation of the author is embedded in the book response:
+response through the use of serialization groups. By using the following serialization groups annotations (`#[Groups]`),
+a JSON representation of the author is embedded in the book response. As soon as any of the author's attributes is in
+the `book` group, the author will be embedded.
+
+[codeSelector]
 
 ```php
 <?php
@@ -241,19 +261,35 @@ use Symfony\Component\Serializer\Annotation\Groups;
 #[ApiResource(normalizationContext: ['groups' => ['book']])]
 class Book
 {
-    /**
-     * @Groups({"book"})
-     */
+    #[Groups("book")]
     public $name;
 
-    /**
-     * @Groups({"book"})
-     */
+    #[Groups("book")]
     public $author;
 
     // ...
 }
 ```
+
+```yaml
+# api/config/api_platform/resources/Book.yaml
+App\Entity\Book:
+    attributes:
+        normalization_context:
+            groups: ['book']
+
+# api/config/serializer/Book.yaml
+App\Entity\Book:
+    attributes:
+        name:
+            groups: ['book']
+        author:
+            groups: ['book']
+```
+
+[/codeSelector]
+
+[codeSelector]
 
 ```php
 <?php
@@ -267,15 +303,22 @@ use Symfony\Component\Serializer\Annotation\Groups;
 #[ApiResource]
 class Person
 {
-    /**
-     * ...
-     * @Groups("book")
-     */
+    #[Groups("book")]
     public $name;
 
     // ...
 }
 ```
+
+```yaml
+# api/config/serializer/Person.yaml
+App\Entity\Person:
+    attributes:
+        name:
+            groups: ['book']
+```
+
+[/codeSelector]
 
 The generated JSON using previous settings is below:
 
@@ -301,8 +344,10 @@ Instead of embedding relations in the main HTTP response, you may want [to "push
 
 ### Denormalization
 
-It is also possible to embed a relation in `PUT` and `POST` requests. To enable that feature, set the serialization groups
+It is also possible to embed a relation in `PUT`, `PATCH` and `POST` requests. To enable that feature, set the serialization groups
 the same way as normalization. For example:
+
+[codeSelector]
 
 ```php
 <?php
@@ -319,6 +364,16 @@ class Book
 }
 ```
 
+```yaml
+# api/config/api_platform/resources/Book.yaml
+App\Entity\Book:
+    attributes:
+        denormalization_context:
+            groups: ['book']
+```
+
+[/codeSelector]
+
 The following rules apply when denormalizing embedded relations:
 
 * If an `@id` key is present in the embedded resource, then the object corresponding to the given URI will be retrieved through
@@ -331,6 +386,8 @@ You can specify as many embedded relation levels as you want.
 
 It is a common problem to have entities that reference other entities of the same type:
 
+[codeSelector]
+
 ```php
 <?php
 // api/src/Entity/Person.php
@@ -350,27 +407,45 @@ use Symfony\Component\Serializer\Annotation\Groups;
 )]
 class Person
 {
-    /**
-     * ...
-     * @Groups("person")
-     */
+    #[Groups("person")]
     public $name;
 
    /**
     * @var Person
-    * @Groups("person")
     */
+    #[Groups("person")]
    public $parent;  // Note that a Person instance has a relation with another Person.
  
     // ...
 }
-
 ```
+
+```yaml
+# api/config/api_platform/resources/Person.yaml
+App\Entity\Person:
+    attributes:
+        normalization_context:
+            groups: ['person']
+        denormalization_context:
+            groups: ['person']
+
+# api/config/serializer/Person.yaml
+App\Entity\Person:
+    attributes:
+        name:
+            groups: ['person']
+        parent:
+            groups: ['person']
+```
+
+[/codeSelector]
 
 The problem here is that the **$parent** property become automatically an embedded object. Besides, the property won't be shown on the OpenAPI view.
 
 To force the **$parent** property to be used as an IRI, add an **#[ApiProperty(readableLink: false, writableLink: false)]** annotation:
 
+[codeSelector]
+
 ```php
 <?php
 // api/src/Entity/Person.php
@@ -390,16 +465,13 @@ use Symfony\Component\Serializer\Annotation\Groups;
 )]
 class Person
 {
-    /**
-     * ...
-     * @Groups("person")
-     */
+    #[Groups("person")]
     public $name;
 
    /**
     * @var Person
-    * @Groups("person")
     */
+   #[Groups("person")]
    #[ApiProperty(readableLink: false, writableLink: false)]
    public $parent;  // This property is now serialized/deserialized as an IRI.
  
@@ -408,9 +480,144 @@ class Person
 
 ```
 
+```yaml
+# api/config/api_platform/resources/Person.yaml
+App\Entity\Person:
+    attributes:
+        normalization_context:
+            groups: ['person']
+        denormalization_context:
+            groups: ['person']
+    properties:
+        parent:
+            readableLink: false
+            writableLink: false
+
+# api/config/serializer/Person.yaml
+App\Entity\Person:
+    attributes:
+        name:
+            groups: ['person']
+        parent:
+            groups: ['person']
+```
+
+[/codeSelector]
+
+## Property Normalization Context
+
+If you want to change the (de)normalization context of a property, for instance if you want to change the format of the date time,
+you can do so by using the `#[Context]` attribute from the Symfony Serializer component.
+
+For instance:
+
+```php
+<?php
+// api/src/Entity/Book.php
+
+declare(strict_types=1);
+
+namespace App\Entity;
+
+use ApiPlatform\Core\Annotation\ApiResource;
+use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Context;
+use Symfony\Component\Serializer\Normalizer\DateTimeNormalizer;
+
+/**
+ * @ORM\Entity
+ */
+#[ApiResource]
+class Book
+{
+    /**
+     * @ORM\Column(type="date")
+     */
+    #[Context([DateTimeNormalizer::FORMAT_KEY => 'Y-m-d'])]
+    public ?\DateTimeInterface $publicationDate = null;
+}
+```
+
+In the above example, you will receive the book's data like this:
+
+```json
+{
+  "@context": "/contexts/Book",
+  "@id": "/books/3",
+  "@type": "http://schema.org/Book",
+  "publicationDate": "1989-06-16"
+}
+```
+
+It's also possible to only change the denormalization or normalization context:
+
+```php
+<?php
+// api/src/Entity/Book.php
+
+declare(strict_types=1);
+
+namespace App\Entity;
+
+use ApiPlatform\Core\Annotation\ApiResource;
+use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Context;
+use Symfony\Component\Serializer\Normalizer\DateTimeNormalizer;
+
+/**
+ * @ORM\Entity
+ */
+#[ApiResource]
+class Book
+{
+    /**
+     * @ORM\Column(type="date")
+     */
+    #[Context(normalizationContext: [DateTimeNormalizer::FORMAT_KEY => 'Y-m-d'])]
+    public ?\DateTimeInterface $publicationDate = null;
+}
+```
+
+Groups are also supported:
+
+```php
+<?php
+// api/src/Entity/Book.php
+
+declare(strict_types=1);
+
+namespace App\Entity;
+
+use ApiPlatform\Core\Annotation\ApiResource;
+use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Context;
+use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Serializer\Normalizer\DateTimeNormalizer;
+
+/**
+ * @ORM\Entity
+ */
+#[ApiResource]
+class Book
+{
+    /**
+     * @ORM\Column(type="date")
+     */
+    #[Groups(["extended"])]
+    #[Context([DateTimeNormalizer::FORMAT_KEY => \DateTime::RFC3339])]
+    #[Context(
+        context: [DateTimeNormalizer::FORMAT_KEY => \DateTime::RFC3339_EXTENDED],
+        groups: ['extended'],
+    )]
+    public ?\DateTimeInterface $publicationDate = null;
+}
+```
+
 ## Calculated Field
 
 Sometimes you need to expose calculated fields. This can be done by leveraging the groups. This time not on a property, but on a method.
+
+[codeSelector]
 
 ```php
 <?php
@@ -439,8 +646,8 @@ class Greeting
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
-     * @Groups("greeting:collection:get")
      */
+    #[Groups("greeting:collection:get")]
     private $id;
     
     private $a = 1;
@@ -451,8 +658,8 @@ class Greeting
      * @var string A nice person
      *
      * @ORM\Column
-     * @Groups("greeting:collection:get")
      */
+    #[Groups("greeting:collection:get")]
     public $name = '';
 
     public function getId(): int
@@ -460,9 +667,7 @@ class Greeting
         return $this->id;
     }
 
-    /**
-     * @Groups("greeting:collection:get") <- MAGIC IS HERE, you can set a group on a method.
-     */
+    #[Groups("greeting:collection:get")] // <- MAGIC IS HERE, you can set a group on a method.
     public function getSum(): int
     {
         return $this->a + $this->b;
@@ -470,11 +675,34 @@ class Greeting
 }
 ```
 
+```yaml
+# api/config/api_platform/resources/Greeting.yaml
+App\Entity\Greeting:
+    collectionOperations:
+        get:
+            normalization_context:
+                groups: 'greeting:collection:get'
+
+# api/config/serializer/Greeting.yaml
+App\Entity\Greeting:
+    attributes:
+        id:
+            groups: 'greeting:collection:get'
+        name:
+            groups: 'greeting:collection:get'
+        getSum:
+            groups: 'greeting:collection:get'
+```
+
+[/codeSelector]
+
 ## Changing the Serialization Context Dynamically
 
 <p align="center" class="symfonycasts"><a href="https://symfonycasts.com/screencast/api-platform-security/service-decoration?cid=apip"><img src="../distribution/images/symfonycasts-player.png" alt="Context Builder & Service Decoration screencast"><br>Watch the Context Builder & Service Decoration screencast</a></p>
 
 Let's imagine a resource where most fields can be managed by any user, but some can be managed only by admin users:
+
+[codeSelector]
 
 ```php
 <?php
@@ -497,23 +725,41 @@ class Book
      * This field can be managed only by an admin
      *
      * @var bool
-     *
-     * @Groups({"book:output", "admin:input"})
      */
+    #[Groups(["book:output", "admin:input"}])]
     public $active = false;
 
     /**
      * This field can be managed by any user
      *
      * @var string
-     *
-     * @Groups({"book:output", "book:input"})
      */
+    #[Groups(["book:output", "book:input"])]
     public $name;
 
     // ...
 }
 ```
+
+```yaml
+# api/config/api_platform/resources/Book.yaml
+App\Entity\Book: 
+    attributes:
+        normalization_context:
+            groups: ['book:output']
+        denormalization_context:
+            groups: ['book:input']
+
+# api/config/serializer/Book.yaml
+App\Entity\Book:
+    attributes:
+        active:
+            groups: ['book:output', 'admin:input']
+        name:
+            groups: ['book:output', 'book:input']
+```
+
+[/codeSelector]
 
 All entry points are the same for all users, so we should find a way to detect if the authenticated user is an admin, and if so
 dynamically add the `admin:input` value to deserialization groups in the `$context` array.
@@ -606,7 +852,6 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
 use Symfony\Component\Serializer\Normalizer\ContextAwareNormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerAwareInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerAwareTrait;
-use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
 class BookAttributeNormalizer implements ContextAwareNormalizerInterface, NormalizerAwareInterface
 {
@@ -694,7 +939,9 @@ services:
 Note: this normalizer will work only for JSON-LD format, if you want to process JSON data too, you have to decorate another service:
 
 ```yaml
-    App\Serializer\ApiNormalizer:
+    # Need a different name to avoid duplicate YAML key
+    'app.serializer.normalizer.item.json':
+        class: 'App\Serializer\ApiNormalizer'
         decorates: 'api_platform.serializer.normalizer.item'
 ```
 
@@ -828,6 +1075,8 @@ an IRI. A client that uses JSON-LD must send a second HTTP request to retrieve i
 You can configure API Platform to embed the JSON-LD context in the root document by adding the `jsonld_embed_context`
 attribute to the `#[ApiResource]` annotation:
 
+[codeSelector]
+
 ```php
 <?php
 // api/src/Entity/Book.php
@@ -842,6 +1091,16 @@ class Book
     // ...
 }
 ```
+
+```yaml
+# api/config/api_platform/resources/Book.yaml
+App\Entity\Book:
+    attributes:
+        normalization_context:
+            jsonld_embed_context: true
+```
+
+[/codeSelector]
 
 The JSON output will now include the embedded context:
 

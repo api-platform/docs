@@ -19,19 +19,19 @@ use Symfony\Component\Validator\Constraints as Assert;
 /**
  * Secured resource.
  *
- * @ApiResource(
- *     attributes={"security"="is_granted('ROLE_USER')"},
- *     collectionOperations={
- *         "get",
- *         "post"={"security"="is_granted('ROLE_ADMIN')"}
- *     },
- *     itemOperations={
- *         "get",
- *         "put"={"security"="is_granted('ROLE_ADMIN') or object.owner == user"},
- *     }
- * )
  * @ORM\Entity
  */
+ #[ApiResource(
+    attributes: ["security" => "is_granted('ROLE_USER')"],
+    collectionOperations: [
+        "get",
+        "post" => ["security" => "is_granted('ROLE_ADMIN')"],
+    ],
+    itemOperations: [
+        "get",
+        "put" => ["security" => "is_granted('ROLE_ADMIN') or object.owner == user"],
+    ],
+)]
 class Book
 {
     /**
@@ -47,8 +47,8 @@ class Book
      * @var string The title
      *
      * @ORM\Column
-     * @Assert\NotBlank
      */
+    #[Assert\NotBlank]
     public $title;
 
     /**
@@ -81,19 +81,31 @@ App\Entity\Book:
 
 Resource signature can be modified at the property level as well:
 
+[codeSelector]
+
 ```php
 class Book
 {
     //...
 
     /**
-     * @var string Property viewable and writtable only by users with ROLE_ADMIN
-     *
-     * @ApiProperty(security="is_granted('ROLE_ADMIN')")
+     * @var string Property viewable and writable only by users with ROLE_ADMIN
      */
+    #[ApiProperty(security: "is_granted('ROLE_ADMIN')")]
     private $adminOnlyProperty;
 }
 ```
+
+```yaml
+# api/config/api_platform/resources/Book.yaml
+App\Entity\Book:
+    properties:
+        adminOnlyProperty:
+            attributes:
+                security: 'is_granted("ROLE_ADMIN")'
+```
+
+[/codeSelector]
 
 In this example:
 
@@ -109,7 +121,7 @@ Available variables are:
 * `request`: the current request
 
 Access control checks in the `security` attribute are always executed before the [denormalization step](serialization.md).
-It means than for `PUT` requests, `object` doesn't contain the value submitted by the user, but values currently stored in [the persistence layer](data-persisters.md).
+It means than for `PUT` or `PATCH` requests, `object` doesn't contain the value submitted by the user, but values currently stored in [the persistence layer](data-persisters.md).
 
 ## Executing Access Control Rules After Denormalization
 
@@ -126,14 +138,12 @@ namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
 
-/**
- * @ApiResource(
- *     itemOperations={
- *         "get",
- *         "put"={"security_post_denormalize"="is_granted('ROLE_ADMIN') or (object.owner == user and previous_object.owner == user)"},
- *     }
- * )
- */
+#[ApiResource(
+    itemOperations: [
+        "get",
+        "put" => ["security_post_denormalize" => "is_granted('ROLE_ADMIN') or (object.owner == user and previous_object.owner == user)"],
+    ],
+)]
 class Book
 {
     // ...
@@ -169,6 +179,8 @@ In order to give the current `object` to your voter, use the expression `is_gran
 
 For example:
 
+[codeSelector]
+
 ```php
 <?php
 // api/src/Entity/Book.php
@@ -177,26 +189,43 @@ namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
 
-/**
- * ...
- * @ApiResource(
- *     attributes={"security"="is_granted('ROLE_USER')"},
- *     collectionOperations={
- *          "get",
- *          "post" = { "security_post_denormalize" = "is_granted('BOOK_CREATE', object)" }
- *     },
- *     itemOperations={
- *          "get" = { "security" = "is_granted('BOOK_READ', object)" },
- *          "put" = { "security" = "is_granted('BOOK_EDIT', object)" },
- *          "delete" = { "security" = "is_granted('BOOK_DELETE', object)" }
- *     },
- * )
- */
+#[ApiResource(
+    attributes: ["security" => "is_granted('ROLE_USER')"],
+    collectionOperations: [
+        "get",
+        "post" => [ "security_post_denormalize" => "is_granted('BOOK_CREATE', object)" ],
+    ],
+    itemOperations: [
+        "get" => [ "security" => "is_granted('BOOK_READ', object)" ],
+        "put" => [ "security" => "is_granted('BOOK_EDIT', object)" ],
+        "delete" => [ "security" => "is_granted('BOOK_DELETE', object)" ],
+    ],
+)]
 class Book
 {
     // ...
 }
 ```
+
+```yaml
+# api/config/api_platform/resources/Book.yaml
+App\Entity\Book:
+    attributes:
+        security: 'is_granted("ROLE_USER")'
+    collectionOperations:
+        get: ~
+        post:
+            security_post_denormalize: 'is_granted("BOOK_CREATE", object)'
+    itemOperations:
+        get:
+            security: 'is_granted("BOOK_READ", object)'
+        put:
+            security: 'is_granted("BOOK_EDIT", object)'
+        delete:
+            security: 'is_granted("BOOK_DELETE", object)'
+```
+
+[/codeSelector]
 
 Please note that if you use both `attributes={"security"="..` and then `"post" = { "security_post_denormalize" = "...`, the `security` on top level is called first, and after `security_post_denormalize`. This could lead to unwanted behaviour, so avoid using both of them simultaneously.
 If you need to use `security_post_denormalize`, consider adding `security` for the other operations instead of the global one.
@@ -276,19 +305,25 @@ namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
 
-/**
- * ...
- * @ApiResource(
- *     attributes={"security"="is_granted('ROLE_USER')"},
- *     collectionOperations={
- *         "post"={"security"="is_granted('ROLE_ADMIN')", "security_message"="Only admins can add books."}
- *     },
- *     itemOperations={
- *         "get"={"security"="is_granted('ROLE_USER') and object.owner == user", "security_message"="Sorry, but you are not the book owner."}
- *         "put"={"security_post_denormalize"="is_granted('ROLE_ADMIN') or (object.owner == user and previous_object.owner == user)", "security_post_denormalize_message"="Sorry, but you are not the actual book owner."},
- *     }
- * )
- */
+#[ApiResource(
+    attributes: ["security" => "is_granted('ROLE_USER')"],
+    collectionOperations: [
+        "post" => [
+            "security" => "is_granted('ROLE_ADMIN')",
+            "security_message" => "Only admins can add books.",
+        ],
+    ],
+    itemOperations: [
+        "get" => [
+            "security" => "is_granted('ROLE_USER') and object.owner == user",
+            "security_message" => "Sorry, but you are not the book owner.",
+        ],
+        "put" => [
+            "security_post_denormalize" => "is_granted('ROLE_ADMIN') or (object.owner == user and previous_object.owner == user)",
+            "security_post_denormalize_message" => "Sorry, but you are not the actual book owner.",
+        ],
+    ],
+)]
 class Book
 {
     // ...

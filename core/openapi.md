@@ -69,15 +69,16 @@ use ApiPlatform\Core\OpenApi\Factory\OpenApiFactoryInterface;
 use ApiPlatform\Core\OpenApi\OpenApi;
 use ApiPlatform\Core\OpenApi\Model;
 
-class OpenApiFactory implements OpenApiFactoryInterface {
+class OpenApiFactory implements OpenApiFactoryInterface
+{
     private $decorated;
 
-    public function __construct(OpenApiFactoryInterface $decorated) 
+    public function __construct(OpenApiFactoryInterface $decorated)
     {
         $this->decorated = $decorated;
     }
 
-    public function __invoke(array $context = []): OpenApi 
+    public function __invoke(array $context = []): OpenApi
     {
         $openApi = $this->decorated->__invoke($context);
         $pathItem = $openApi->getPaths()->getPath('/api/grumpy_pizzas/{id}');
@@ -122,9 +123,9 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * @ApiResource
  * @ORM\Entity
  */
+#[ApiResource]
 class Product // The class name will be used to name exposed resources
 {
     /**
@@ -138,32 +139,28 @@ class Product // The class name will be used to name exposed resources
      * @param string $name A name property - this description will be available in the API documentation too.
      *
      * @ORM\Column
-     * @Assert\NotBlank
-     *
-     * @ApiProperty(
-     *     attributes={
-     *         "openapi_context"={
-     *             "type"="string",
-     *             "enum"={"one", "two"},
-     *             "example"="one"
-     *         }
-     *     }
-     * )
      */
+    #[Assert\NotBlank]
+    #[ApiProperty(
+        attributes: [
+            "openapi_context" => [
+                "type" => "string",
+                "enum" => ["one", "two"],
+                "example" => "one",
+            ],
+        ],
+    )]
     public $name;
 
     /**
      * @ORM\Column
-     * @Assert\DateTime
-     *
-     * @ApiProperty(
-     *     attributes={
-     *         "openapi_context"={"type"="string", "format"="date-time"}
-     *     }
-     * )
      */
+    #[Assert\DateTime]
+    #[ApiProperty(
+        openapi_context: ["type" => "string", "format" => "date-time"]
+    )]
     public $timestamp;
-    
+
     // ...
 }
 ```
@@ -250,7 +247,7 @@ This will produce the following Swagger documentation:
                         "two"
                     ],
                     "example": "one"
-                },
+                }
             }
         }
     }
@@ -266,18 +263,16 @@ in the (`de`)`normalization_context`. It's possible to override the name
 thanks to the `swagger_definition_name` option:
 
 ```php
-/**
- * @ApiResource(
- *      collectionOperations={
- *          "post"={
- *              "denormalization_context"={
- *                  "groups"={"user:read"},
- *                  "swagger_definition_name": "Read",
- *              },
- *          },
- *      },
- * )
- */
+#[ApiResource(
+    collectionOperations: [
+        "post" => [
+            "denormalization_context" => [
+                "groups" => ["user:read"],
+                "swagger_definition_name" => "Read",
+            ],
+        ],
+    ],
+)]
 class User
 {
 }
@@ -286,15 +281,13 @@ class User
 It's also possible to re-use the (`de`)`normalization_context`:
 
 ```php
-/**
- * @ApiResource(
- *      collectionOperations={
- *          "post"={
- *              "denormalization_context"=User::API_WRITE,
- *          },
- *      },
- * )
- */
+#[ApiResource(
+    collectionOperations: [
+        "post" => [
+            "denormalization_context" => User::API_WRITE,
+        ],
+    ],
+)]
 class User
 {
     const API_WRITE = [
@@ -539,7 +532,7 @@ The [info object](https://swagger.io/specification/#info-object) provides metada
 
 ```yaml
 api_platform:
-    
+
     # The title of the API.
     title: 'API title'
 
@@ -548,7 +541,7 @@ api_platform:
 
     # The version of the API.
     version: '0.0.0'
-    
+
     openapi:
         # The contact information for the exposed API.
         contact:
@@ -565,5 +558,5 @@ api_platform:
             # The license name used for the API.
             name:
             # URL to the license used for the API. MUST be in the format of a URL.
-            url: 
+            url:
 ```

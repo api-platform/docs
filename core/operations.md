@@ -44,6 +44,11 @@ Note: the `PATCH` method must be enabled explicitly in the configuration, refer 
 
 Note: with JSON Merge Patch, the [null values will be skipped](https://symfony.com/doc/current/components/serializer.html#skipping-null-values) in the response.
 
+Note: Current `PUT` implementation behaves more or less like the `PATCH` method.
+Existing properties not included in the payload are **not** removed, their current values are preserved.
+To remove an existing property, its value must be explicitly set to `null`.
+Implementing [the standard `PUT` behavior](https://httpwg.org/specs/rfc7231.html#PUT) is on the roadmap, follow [issue #4344](https://github.com/api-platform/core/issues/4344) to track the progress.
+
 ## Enabling and Disabling Operations
 
 If no operation is specified, all default CRUD operations are automatically registered. It is also possible - and recommended
@@ -213,7 +218,7 @@ App\Entity\Book:
         get: ~
     itemOperations:
         get:
-            controller: App\Controller\NotFoundAction
+            controller: ApiPlatform\Core\Action\NotFoundAction
             read: false
             output: false
 ```
@@ -232,7 +237,7 @@ App\Entity\Book:
         </collectionOperations>
         <itemOperations>
             <itemOperation name="get">
-                <attribute name="controller">App\Controller\NotFoundAction</attribute>
+                <attribute name="controller">ApiPlatform\Core\Action\NotFoundAction</attribute>
                 <attribute name="read">false</attribute>
                 <attribute name="output">false</attribute>
             </itemOperation>
@@ -374,11 +379,6 @@ class Book
 App\Entity\Book:
     attributes:
         route_prefix: /library
-    itemOperations:
-        get: ~
-        post_publication:
-            route_name: book_post_publication
-        book_post_discontinuation: ~
 ```
 
 ```xml
@@ -390,93 +390,16 @@ App\Entity\Book:
         xsi:schemaLocation="https://api-platform.com/schema/metadata
         https://api-platform.com/schema/metadata/metadata-2.0.xsd">
     <resource class="App\Entity\Book">
-        <itemOperations>
-            <itemOperation name="get" />
-            <itemOperation name="post_publication">
-                <attribute name="route_name">book_post_publication</attribute>
-            </itemOperation>
-            <itemOperation name="book_post_discontinuation" />
-        </itemOperations>
+        <attribute name="route_prefix">/library</attribute>
     </resource>
 </resources>
 ```
 
 [/codeSelector]
 
-Alternatively, the more verbose attribute syntax can be used: `@ApiResource(attributes={"route_prefix"="/library"})`.
+Alternatively, the more verbose attribute syntax can be used: `#[ApiResource(attributes: ["route_prefix" => "/library"])]`.
 
-API Platform will automatically map this `post_publication` operation to the route `book_post_publication`. Let's create a custom action
-and its related route using annotations:
-
-```php
-<?php
-// api/src/Controller/CreateBookPublication.php
-
-namespace App\Controller;
-
-use App\Entity\Book;
-use Symfony\Component\Routing\Annotation\Route;
-
-class CreateBookPublication
-{
-    public function __construct(
-        private BookPublishingHandler $bookPublishingHandler
-    ) {}
-    
-    #[Route(
-        path: '/books/{id}/publication',
-        name: 'book_post_publication',
-        defaults: [
-            '_api_resource_class' => Book::class,
-            '_api_item_operation_name' => 'post_publication',
-        ],
-        methods: ['POST'],
-    )]
-    public function __invoke(Book $data): Book
-    {
-        $this->bookPublishingHandler->handle($data);
-
-        return $data;
-    }
-}
-```
-
-It is mandatory to set `_api_resource_class` and `_api_item_operation_name` (or `_api_collection_operation_name` for a collection
-operation) in the parameters of the route (`defaults` key). It allows API Platform to work with the Symfony routing system.
-
-Alternatively, you can also use a traditional Symfony controller and YAML or XML route declarations. The following example does
-the exact same thing as the previous example:
-
-```php
-<?php
-// api/src/Controller/BookController.php
-
-namespace App\Controller;
-
-use App\Entity\Book;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-
-class BookController extends AbstractController
-{
-    public function createPublication(Book $data, BookPublishingHandler $bookPublishingHandler): Book
-    {
-        return $bookPublishingHandler->handle($data);
-    }
-}
-```
-
-```yaml
-# api/config/routes.yaml
-book_post_publication:
-    path: /books/{id}/publication
-    methods: ['POST']
-    defaults:
-        _controller: App\Controller\BookController::createPublication
-        _api_resource_class: App\Entity\Book
-        _api_item_operation_name: post_publication
-```
-
-## Expose a model without any routes
+## Expose a Model Without Any Routes
 
 Sometimes, you may want to expose a model, but want it to be used through subrequests only, and never through item or collection operations.
 Because the OpenAPI standard requires at least one route to be exposed to make your models consumable, let's see how you can manage this kind
@@ -593,7 +516,7 @@ class Weather
     // ...
 ```
 
-This will expose the `Weather` model, but also all the default CRUD routes: `GET`, `PUT`, `DELETE` and `POST`, which is a non-sense in our context.
+This will expose the `Weather` model, but also all the default CRUD routes: `GET`, `PUT`, `PATCH`, `DELETE` and `POST`, which is a non-sense in our context.
 Since we are required to expose at least one route, let's expose just one:
 
 ```php
@@ -620,34 +543,46 @@ class Weather
 This way, we expose a route that will do… nothing. Note that the controller does not even need to exist.
 
 It's almost done, we have just one final issue: our fake item operation is visible in the API docs.
-To remove it, we will need to [decorate the Swagger documentation](swagger.md#overriding-the-openapi-specification).
+To remove it, we will need to [decorate the Swagger documentation](openapi.md#overriding-the-openapi-specification).
 Then, remove the route from the decorator:
 
 ```php
 <?php
-// src/Swagger/SwaggerDecorator.php
+// src/OpenApi/OpenApiFactory.php
 
-namespace App\Swagger;
+namespace App\OpenApi;
 
-use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
+use ApiPlatform\Core\OpenApi\Factory\OpenApiFactoryInterface;
+use ApiPlatform\Core\OpenApi\OpenApi;
+use ApiPlatform\Core\OpenApi\Model;
 
-final class SwaggerDecorator implements NormalizerInterface
+final class OpenApiFactory implements OpenApiFactoryInterface
 {
-    public function __construct(
-        private NormalizerInterface $decorated
-    ) {}
+    private $decorated;
 
-    public function normalize($object, string $format = null, array $context = [])
+    public function __construct(OpenApiFactoryInterface $decorated)
     {
-        $docs = $this->decorated->normalize($object, $format, $context);
-
-        // If a prefix is configured on API Platform's routes, it must appear here.
-        unset($docs['paths']['/weathers/{id}']);
-
-        return $docs;
+        $this->decorated = $decorated;
     }
 
-    // ...
+    public function __invoke(array $context = []): OpenApi
+    {
+        $openApi = $this->decorated->__invoke($context);
+
+        $paths = $openApi->getPaths()->getPaths();
+
+        $filteredPaths = new Model\Paths();
+        foreach ($paths as $path => $pathItem) {
+            // If a prefix is configured on API Platform's routes, it must appear here.
+            if ($path === '/weathers/{id}') {
+                continue;
+            }
+            $filteredPaths->addPath($path, $pathItem);
+        }
+
+        return $openApi->withPaths($filteredPaths);
+    }
+}
 ```
 
 That's it: your route is gone!

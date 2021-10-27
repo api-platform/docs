@@ -1,20 +1,20 @@
 # Deploying API Platform Applications
 
-API Platform apps are super easy to deploy in production on most cloud providers thanks to the native integration with
-[Kubernetes](kubernetes.md).
+API Platform apps are super easy to deploy in production thanks to the [Docker Compose definetion](docker-compose.md) and to the [Kubernetes chart](kubernetes.md) we provide.
 
-The server part of API Platform is basically a standard Symfony application, which you can also easily [deploy on your
-own servers](http://symfony.com/doc/current/deployment.html). Documentation for deploying on various container [orchestration](https://en.wikipedia.org/wiki/Orchestration_(computing))
-tools and PaaS (Platform as a Service) are also available:
+We strongly recommend using Kubernetes or Docker Compose to deploy your apps.
 
-* [Deploying to a Kubernetes Cluster](kubernetes.md)
-* [Deploying with Docker Compose](docker-compose.md)
-* [Deploying on Heroku](heroku.md)
-* [Deploying on Platform.sh](https://platform.sh/blog/deploy-api-platform-on-platformsh)
+If you want to play with a local Kubernetes cluster, read [how to deploy an API Platform project on Minikube](minikube.md).
 
-The clients are [Create React App](https://create-react-app.dev/) skeletons. You can deploy them in a wink
-on any static website hosting service (including [Netlify](https://www.netlify.com/), [Firebase Hosting](https://firebase.google.com/docs/hosting/),
-[GitHub Pages](https://pages.github.com/), or [Amazon S3](https://docs.aws.amazon.com/en_us/AmazonS3/latest/dev/WebsiteHosting.html)
-by following [the relevant documentation](https://create-react-app.dev/docs/deployment/).
+If you don't want to use Docker, keep in mind that the server application of API Platform is a standard Symfony project,
+while the Progressive Web Application is a standard Next.js project:
 
 <p align="center" class="symfonycasts"><a href="https://symfonycasts.com/screencast/ansistrano?cid=apip"><img src="../distribution/images/symfonycasts-player.png" alt="JWT screencast"><br>Watch the Animated Deployment with Ansistrano screencast</a></p>
+
+* [Deploying the Symfony application](https://symfony.com/doc/current/deployment.html)
+* [Deployin the Next.js application](https://nextjs.org/docs/deployment)
+
+Alternatively, you may want to deploy API Platform on a PaaS (Platform as a Service):
+
+* [Deploying the server application of API Platform on Heroku](heroku.md)
+* [Deploying API Platform on Platform.sh (outdated)](https://platform.sh/blog/deploy-api-platform-on-platformsh)

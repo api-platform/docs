@@ -15,10 +15,6 @@ api_platform:
     # The version of the API.
     version: '0.0.0'
 
-    # Return IRIs as Absolute URLs.
-    # ex: http://example.com/authors/1
-    absolute_url: false
-
     # Set this to false if you want Webby to disappear.
     show_webby: true
 
@@ -407,8 +403,7 @@ api_platform:
         stateless: ~
 
         # The URL generation strategy to use for IRIs
-        # Use values from UrlGeneratorInterface
-        url_generation_strategy: ~
+        url_generation_strategy: !php/const ApiPlatform\Core\Api\UrlGeneratorInterface::ABS_PATH
 
         # ...
 ```

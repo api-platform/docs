@@ -25,11 +25,11 @@ These built-in event listeners are registered for routes managed by API Platform
 Name                          | Event              | [Pre & Post hooks](#custom-event-listeners) | Priority | Description
 ------------------------------|--------------------|---------------------------------------------|----------|-------------
 `AddFormatListener`           | `kernel.request`   | None                                        | 7        | Guesses the best response format ([content negotiation](content-negotiation.md))
-`ReadListener`                | `kernel.request`   | `PRE_READ`, `POST_READ`                     | 4        | Retrieves data from the persistence system using the [data providers](data-providers.md) (`GET`, `PUT`, `DELETE`)
-`DeserializeListener`         | `kernel.request`   | `PRE_DESERIALIZE`, `POST_DESERIALIZE`       | 2        | Deserializes data into a PHP entity (`GET`, `POST`, `DELETE`); updates the entity retrieved using the data provider (`PUT`)
+`ReadListener`                | `kernel.request`   | `PRE_READ`, `POST_READ`                     | 4        | Retrieves data from the persistence system using the [data providers](data-providers.md) (`GET`, `PUT`, `PATCH`, `DELETE`)
+`DeserializeListener`         | `kernel.request`   | `PRE_DESERIALIZE`, `POST_DESERIALIZE`       | 2        | Deserializes data into a PHP entity (`POST`); updates the entity retrieved using the data provider (`PUT`, `PATCH`)
 `DenyAccessListener`          | `kernel.request`   | None                                        | 1        | Enforces [access control](security.md) using Security expressions
-`ValidateListener`            | `kernel.view`      | `PRE_VALIDATE`, `POST_VALIDATE`             | 64       | [Validates data](validation.md) (`POST`, `PUT`)
-`WriteListener`               | `kernel.view`      | `PRE_WRITE`, `POST_WRITE`                   | 32       | Persists changes in the persistence system using the [data persisters](data-persisters.md) (`POST`, `PUT`, `DELETE`)
+`ValidateListener`            | `kernel.view`      | `PRE_VALIDATE`, `POST_VALIDATE`             | 64       | [Validates data](validation.md) (`POST`, `PUT`, `PATCH`)
+`WriteListener`               | `kernel.view`      | `PRE_WRITE`, `POST_WRITE`                   | 32       | Persists changes in the persistence system using the [data persisters](data-persisters.md) (`POST`, `PUT`, `PATCH`, `DELETE`)
 `SerializeListener`           | `kernel.view`      | `PRE_SERIALIZE`, `POST_SERIALIZE`           | 16       | Serializes the PHP entity in string [according to the request format](content-negotiation.md)
 `RespondListener`             | `kernel.view`      | `PRE_RESPOND`, `POST_RESPOND`               | 8        | Transforms serialized to a `Symfony\Component\HttpFoundation\Response` instance
 `AddLinkHeaderListener`       | `kernel.response`  | None                                        | 0        | Adds a `Link` HTTP header pointing to the Hydra documentation
@@ -59,7 +59,7 @@ Attribute      | Type   | Default | Description
 
 Registering your own event listeners to add extra logic is convenient.
 
-The [`ApiPlatform\Core\EventListener\EventPriorities`](https://github.com/api-platform/core/blob/main/src/EventListener/EventPriorities.php) class comes with a convenient set of class constants corresponding to commonly used priorities:
+The [`ApiPlatform\Core\EventListener\EventPriorities`](https://github.com/api-platform/core/blob/main/src/Core/EventListener/EventPriorities.php) class comes with a convenient set of class constants corresponding to commonly used priorities:
 
 Constant           | Event             | Priority |
 -------------------|-------------------|----------|
