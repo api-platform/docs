@@ -12,7 +12,7 @@ This guide is based on Helm 3.
 ## Preparing Your Cluster and Your Local Machine
 
 1. Create a Kubernetes cluster on your preferred Cloud provider or install Kubernetes locally on your server, for example with [kubeadm](https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/install-kubeadm/)
-2. Install [Helm 3](https://helm.sh/) `locally` and on your `cluster` following their [documentation](https://helm.sh/docs/intro/install/)
+2. Install [Helm 3](https://helm.sh/) `locally` following their [documentation](https://helm.sh/docs/intro/install/)
 3. Be sure to be connected to the right Kubernetes container
    `kubectl config view` [Details](https://kubernetes.io/docs/concepts/configuration/organize-cluster-access-kubeconfig/)
    e.g. for Google Cloud running: `gcloud config get-value core/project`
