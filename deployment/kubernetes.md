@@ -68,7 +68,7 @@ If you are using version 2.x follow this [guide to migrate Helm to v3](https://h
 
     helm dependency update ./helm/api-platform
 
-This will create a folder /charts/ and add all dependencies there.
+This will create a folder helm/api-platform/charts/ and add all dependencies there.
 Actual this is [bitnami/postgresql](https://bitnami.com/stack/postgresql/helm), a file postgresql-[VERSION].tgz is created.
 
 ### 3. Optional: If you made changes to the Helm chart, check if its format is correct
