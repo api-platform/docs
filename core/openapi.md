@@ -155,7 +155,7 @@ class Product // The class name will be used to name exposed resources
     /**
      * @ORM\Column
      */
-    #[Assert\DateTime
+    #[Assert\DateTime]
     #[ApiProperty(
         openapi_context: ["type" => "string", "format" => "date-time"]
     )]
