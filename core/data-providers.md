@@ -17,6 +17,8 @@ For a given resource, you can implement two kinds of interface:
   is used when fetching a collection.
 * the [`ItemDataProviderInterface`](https://github.com/api-platform/core/blob/main/src/Core/DataProvider/ItemDataProviderInterface.php)
   is used when fetching items.
+* the [`SubresourceDataProviderInterface`](https://github.com/api-platform/core/blob/main/src/Core/DataProvider/SubresourceDataProviderInterface.php)
+  is used when fetching items.
 
 Both implementations can also implement a third, optional, interface called
 ['RestrictedDataProviderInterface'](https://github.com/api-platform/core/blob/main/src/Core/DataProvider/RestrictedDataProviderInterface.php)
