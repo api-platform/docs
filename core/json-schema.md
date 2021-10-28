@@ -31,7 +31,7 @@ Usually the fact that API Platform use a different schema version for unit testi
 
 So there is a way to override JSON Schema specification for a specific property in the JSON Schema used by the unit testing process.
 
-You will need to add the `json_schema_context` property in the [`ApiProperty`](openapi.md#using-the-openapi-and-swagger-contexts) attribute do this, example :
+You will need to add the `json_schema_context` property in the [`ApiProperty`](openapi.md#using-the-openapi-and-swagger-contexts) attribute to do this, example :
 
 ```php
 <?php
