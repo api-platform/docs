@@ -92,6 +92,8 @@ Carefull : the `json_schema_context` property not alway has the same properties 
 
 Example : A `"type" => "json"` in `openapi_context` is a `"type" => "array"` in `json_schema_context`.
 
+You can obtain more informations about the available [JSON Schema Types and format here](http://json-schema.org/understanding-json-schema/reference/type.html).
+
 ## Generating a JSON Schema Programmatically
 
 To generate JSON Schemas programmatically, use the `api_platform.json_schema.schema_factory` [service](https://symfony.com/doc/current/service_container.html#fetching-and-using-services).
