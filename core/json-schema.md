@@ -64,17 +64,7 @@ class Greeting
     #[Groups("greeting:collection:get")]
     private $id;
     
-    private $a = 1;
-    
-    private $b = 2;
-
-    /**
-     * @var string A nice person
-     *
-     * @ORM\Column
-     */
-    #[Groups("greeting:collection:get")]
-    public $name = '';
+    // [...]
 
     public function getId(): int
     {
