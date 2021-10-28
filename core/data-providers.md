@@ -126,6 +126,50 @@ services:
 
 You can find a full working example in the [API Platform's demo application](https://github.com/api-platform/demo/blob/main/api/src/DataProvider/TopBookItemDataProvider.php).
 
+## Custom Subresources Data Provider
+
+You can add custom logic or update subresources data provider with the SubresourceDataProviderInterface .
+
+```php
+<?php
+// api/src/DataProvider/BlogPostCollectionDataProvider.php
+
+namespace App\DataProvider;
+
+use ApiPlatform\Core\DataProvider\SubresourceDataProviderInterface;
+use ApiPlatform\Core\DataProvider\RestrictedDataProviderInterface;
+use App\Entity\BlogPost;
+
+final class BlogPostSubresourceDataProvider implements SubresourceDataProviderInterface, RestrictedDataProviderInterface
+{
+    public function supports(string $resourceClass, string $operationName = null, array $context = []): bool
+    {
+        return BlogPost::class === $resourceClass;
+    }
+
+    public function getSubresource(string $resourceClass, array $identifiers, array $context, string $operationName = null): iterable
+    {
+        // Retrieve the blog post collection from somewhere
+        $blogPosts = $this->subresourceDataProvider->getSubresource($resourceClass, $identifiers, $context, $operationName);
+		
+        // write your own logic
+		
+		return blogPosts;
+    }
+}
+```
+
+Declare the service in your services configuration:
+
+```yaml
+# api/config/services.yaml
+services:
+    # ...
+    'App\DataProvider\BlogPostSubresourceDataProvider':
+        arguments:
+            - '@api_platform.doctrine.orm.default.subresource_data_provider'
+```
+
 ## Injecting the Serializer in an `ItemDataProvider`
 
 In some cases, you may need to inject the `Serializer` in your `DataProvider`. There are no issues with the
@@ -238,49 +282,6 @@ final class BlogPostItemDataProvider implements ItemDataProviderInterface, Restr
         return $queryBuilder->getQuery()->getOneOrNullResult();
     }
 }
-```
-## Custom Subresources Data Provider
-
-You can add custom logic or update subresources data provider with the SubresourceDataProviderInterface .
-
-```php
-<?php
-// api/src/DataProvider/BlogPostCollectionDataProvider.php
-
-namespace App\DataProvider;
-
-use ApiPlatform\Core\DataProvider\SubresourceDataProviderInterface;
-use ApiPlatform\Core\DataProvider\RestrictedDataProviderInterface;
-use App\Entity\BlogPost;
-
-final class BlogPostCollectionDataProvider implements SubresourceDataProviderInterface, RestrictedDataProviderInterface
-{
-    public function supports(string $resourceClass, string $operationName = null, array $context = []): bool
-    {
-        return BlogPost::class === $resourceClass;
-    }
-
-    public function getSubresource(string $resourceClass, array $identifiers, array $context, string $operationName = null): iterable
-    {
-        // Retrieve the blog post collection from somewhere
-        $blogPosts = $this->subresourceDataProvider->getSubresource($resourceClass, $identifiers, $context, $operationName);
-		
-		// write your own logic
-		
-		return blogPosts;
-    }
-}
-```
-
-Declare the service in your service.
-
-```yaml
-# api/config/services.yaml
-services:
-    # ...
-    'App\DataProvider\BlogPostCollectionDataProvider':
-        bind:
-            $subresourceDataProvider: '@api_platform.doctrine.orm.default.subresource_data_provider'
 ```
 
 ## Community Data Providers
