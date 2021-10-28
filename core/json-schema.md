@@ -23,11 +23,11 @@ docker-compose exec php \
 
 ## Specifications concerning unit testing functions based on the JSON Schema
 
-When [Testing the API](testing.md), schemas are usefull to generate and automate unit testing. API Platform provide specific unit testing functionnalities like [`assertMatchesResourceCollectionJsonSchema`](testing.md) or [`assertMatchesResourceItemJsonSchema`](testing.md) functions. These functions generate a JSON Schema then do unit testing based on the generated schema automatically.
+When [Testing the API](testing.md), schemas are usefull to generate and automate unit testing. API Platform provide specific unit testing functionnalities like [`assertMatchesResourceCollectionJsonSchema`](testing.md#writing-functional-tests) or [`assertMatchesResourceItemJsonSchema`](testing.md#writing-functional-tests) functions. These functions generate a JSON Schema then do unit testing based on the generated schema automatically.
 
 In a unit testing context, API Platform does not use the same schema version than the schema used when generating the API documentation. The version used by the documentation is the OpenAPI Schema version and the version used by unit testing is the JSON Schema version.
 
-Usually, this is not a problem, but sometime you may need to use the [`ApiProperty`](openapi.md#using-the-openapi-and-swagger-contexts) attribute to specify a [calculated field](serialization.md#calculated-field) type by overriding the OpenAPI Schema for the calculated field to be correctly documented. But when you will use [`assertMatchesResourceCollectionJsonSchema`](testing.md) or [`assertMatchesResourceItemJsonSchema`](testing.md) functions the unit test will fail on this [calculated field](serialization.md#calculated-field) as the unit test process doesn't use the `openapi_context` you specified. There is a way to specify properties in the JSON Schema used bu the unit testing process :
+Usually, this is not a problem, but sometime you may need to use the [`ApiProperty`](openapi.md#using-the-openapi-and-swagger-contexts) attribute to specify a [calculated field](serialization.md#calculated-field) type by overriding the OpenAPI Schema for the calculated field to be correctly documented. But when you will use [`assertMatchesResourceCollectionJsonSchema`](testing.md#writing-functional-tests) or [`assertMatchesResourceItemJsonSchema`](testing.md#writing-functional-tests) functions the unit test will fail on this [calculated field](serialization.md#calculated-field) as the unit test process doesn't use the `openapi_context` you specified. There is a way to specify properties in the JSON Schema used bu the unit testing process :
 
 You will need to add the `json_schema_context` property to do this, example :
 
