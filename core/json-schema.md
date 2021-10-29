@@ -37,14 +37,13 @@ You will need to add the `json_schema_context` property in the [`ApiProperty`](o
 ```php
 <?php
 
-
 namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 
- #[ORM\Entity]
+#[ORM\Entity]
 #[ApiResource(
     collectionOperations: [
         'get' => ['normalization_context' => ['groups' => 'greeting:collection:get']],
@@ -52,19 +51,15 @@ use Symfony\Component\Serializer\Annotation\Groups;
 )]
 class Greeting
 {
-    /**
-     * @var int The entity Id
-     *
-     * @ORM\Id
-     * @ORM\GeneratedValue
-     * @ORM\Column(type="integer")
-     */
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column(type: "integer")]
     #[Groups("greeting:collection:get")]
-    private $id;
+    private ?int $id = null;
     
     // [...]
 
-    public function getId(): int
+    public function getId(): ?int
     {
         return $this->id;
     }
