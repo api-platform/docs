@@ -81,7 +81,7 @@ class Greeting
 }
 ```
 
-Carefull : the `json_schema_context` property not alway has the same properties than the `openapi_context` property.
+Be careful: the `json_schema_context` property does not always have the same properties as the `openapi_context` property.
 
 Example : A `"type" => "json"` in `openapi_context` is a `"type" => "array"` in `json_schema_context`.
 
