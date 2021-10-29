@@ -23,7 +23,7 @@ docker-compose exec php \
 
 ## Overriding the JSON Schema Specification
 
-In a unit testing context, API Platform does not use the same schema version than the schema used when generating the API documentation. The version used by the documentation is the OpenAPI Schema version and the version used by unit testing is the JSON Schema version.
+In a unit testing context, API Platform does not use the same schema version as the schema used when generating the API documentation. The version used by the documentation is the OpenAPI Schema version and the version used by unit testing is the JSON Schema version.
 
 When [Testing the API](testing.md), JSON Schemas are useful to generate and automate unit testing. API Platform provides specific unit testing functionalities like [`assertMatchesResourceCollectionJsonSchema()`](testing.md#writing-functional-tests) or [`assertMatchesResourceItemJsonSchema()`](testing.md#writing-functional-tests) methods. These methods generate a JSON Schema then do unit testing based on the generated schema automatically.
 
