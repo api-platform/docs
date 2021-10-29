@@ -83,7 +83,7 @@ class Greeting
 
 Be careful: the `json_schema_context` property does not always have the same properties as the `openapi_context` property.
 
-Example : A `"type" => "json"` in `openapi_context` is a `"type" => "array"` in `json_schema_context`.
+Example: a `"type" => "json"` in `openapi_context` is a `"type" => "array"` in `json_schema_context`.
 
 You can obtain more informations about the available [JSON Schema Types and format here](http://json-schema.org/understanding-json-schema/reference/type.html).
 
