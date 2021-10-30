@@ -1521,7 +1521,7 @@ doctrine:
 
 Done: Doctrine will automatically filter all "UserAware" entities!
 
-Using PHP8 attributes, there is no need to add a listener for every request that initializes the Doctrine filter with the current user in your bundle services declaration file.
+Using PHP attributes, there is no need to add a listener for every request that initializes the Doctrine filter with the current user in your bundle services declaration file.
 
 If you are using annotations instead of attributes, you can do as follows to pass a doctrine annotation `Reader` instance to your Doctrine Filter :
 
