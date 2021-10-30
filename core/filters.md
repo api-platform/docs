@@ -1428,7 +1428,6 @@ Start by creating a custom attribute to mark restricted entities:
 
 namespace App\Attribute;
 
-use Doctrine\Common\Annotations\Annotation;
 use Attribute;
 
 #[Attribute(Attribute::TARGET_CLASS)]
