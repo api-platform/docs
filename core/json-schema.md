@@ -29,7 +29,8 @@ When [Testing the API](testing.md), JSON Schemas are useful to generate and auto
 These methods generate a JSON Schema then do unit testing based on the generated schema automatically.
 
 Usually, the fact that API Platform uses a different schema version for unit testing is not a problem, but sometimes you may need to use the [`ApiProperty`](openapi.md#using-the-openapi-and-swagger-contexts) attribute to specify a [calculated field](serialization.md#calculated-field) type by overriding the OpenAPI Schema for the calculated field to be correctly documented.
-But when you will use [`assertMatchesResourceCollectionJsonSchema()`](testing.md#writing-functional-tests) or [`assertMatchesResourceItemJsonSchema()`](testing.md#writing-functional-tests) functions the unit test will fail on this [calculated field](serialization.md#calculated-field) as the unit testing process doesn't use the `openapi_context` you specified
+
+When you will use [`assertMatchesResourceCollectionJsonSchema()`](testing.md#writing-functional-tests) or [`assertMatchesResourceItemJsonSchema()`](testing.md#writing-functional-tests) functions the unit test will fail on this [calculated field](serialization.md#calculated-field) as the unit testing process doesn't use the `openapi_context` you specified
 because API Platform is using the JSON Schema version instead at this moment.
 
 So there is a way to override JSON Schema specification for a specific property in the JSON Schema used by the unit testing process.
