@@ -113,7 +113,7 @@ to a Resource in two ways:
     }
     ```
 
-   Learn more on how the [ApiFilter attribute](filters.md#apifilter-annotation) works.
+   Learn more on how the [ApiFilter attribute](filters.md#apifilter-attribute) works.
 
    For the sake of consistency, we're using the attribute in the below documentation.
 
