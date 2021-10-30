@@ -1616,7 +1616,7 @@ class DummyCar
 
     #[ORM\Column(type: 'string')]
     #[ApiFilter(SearchFilter::class, strategy: 'partial')]
-    public ?string $name;
+    public ?string $name = null;
 
     #[ORM\OneToMany(mappedBy: "car", targetEntity: DummyCarColor::class)]
     #[ApiFilter(SearchFilter::class, properties: ['colors.prop' => 'ipartial'])]
