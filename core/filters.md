@@ -91,9 +91,9 @@ to a Resource in two ways:
 
    [/codeSelector]
 
-2. By using the `#[ApiFilter]` annotation.
+2. By using the `#[ApiFilter]` attribute.
 
-   This annotation automatically declares the service, and you just have to use the filter class you want:
+   This attribute automatically declares the service, and you just have to use the filter class you want:
 
     ```php
     <?php
@@ -113,9 +113,9 @@ to a Resource in two ways:
     }
     ```
 
-   Learn more on how the [ApiFilter annotation](filters.md#apifilter-annotation) works.
+   Learn more on how the [ApiFilter attribute](filters.md#apifilter-annotation) works.
 
-   For the sake of consistency, we're using the annotation in the below documentation.
+   For the sake of consistency, we're using the attribute in the below documentation.
 
    For MongoDB ODM, all the filters are in the namespace `ApiPlatform\Core\Bridge\Doctrine\MongoDbOdm\Filter`. The filter
    services all begin with `api_platform.doctrine_mongodb.odm`.
@@ -1230,7 +1230,7 @@ final class RegexpFilter extends AbstractContextAwareFilter
 
 Thanks to [Symfony's automatic service loading](https://symfony.com/doc/current/service_container.html#service-container-services-load-example), which is enabled by default in the API Platform distribution, the filter is automatically registered as a service!
 
-Finally, add this filter to resources you want to be filtered by using the `ApiFilter` annotation:
+Finally, add this filter to resources you want to be filtered by using the `ApiFilter` attribute:
 
 ```php
 <?php
@@ -1303,7 +1303,7 @@ services:
         tags: [ 'api_platform.filter' ]
 ```
 
-Finally, if you don't want to use the `#[ApiFilter]` annotation, you can register the filter on an API resource class using the `filters` attribute:
+Finally, if you don't want to use the `#[ApiFilter]` attribute, you can register the filter on an API resource class using the `filters` attribute:
 
 ```php
 <?php
@@ -1420,7 +1420,7 @@ class Order
 
 The whole idea is that any query on the order table should add a `WHERE user_id = :user_id` condition.
 
-Start by creating a custom annotation to mark restricted entities:
+Start by creating a custom attribute to mark restricted entities:
 
 ```php
 <?php
@@ -1477,7 +1477,7 @@ final class UserFilter extends SQLFilter
     public function addFilterConstraint(ClassMetadata $targetEntity, $targetTableAlias): string
     {
         // The Doctrine filter is called for any query on any entity
-        // Check if the current entity is "user aware" (marked with an annotation)
+        // Check if the current entity is "user aware" (marked with an attribute)
         $attributes = $targetEntity->getReflectionClass()->getAttributes();
         $userAware = null;
         foreach($attributes as $attribute) {
@@ -1586,11 +1586,11 @@ final class UserFilterConfigurator
 
 Done: Doctrine will automatically filter all "UserAware" entities!
 
-## ApiFilter Annotation
+## ApiFilter Attribute
 
-The annotation can be used on a `property` or on a `class`.
+The attribute can be used on a `property` or on a `class`.
 
-If the annotation is given over a property, the filter will be configured on the property. For example, let's add a search filter on `name` and on the `prop` property of the `colors` relation:
+If the attribute is given over a property, the filter will be configured on the property. For example, let's add a search filter on `name` and on the `prop` property of the `colors` relation:
 
 ```php
 <?php
@@ -1628,20 +1628,20 @@ class DummyCar
 }
 ```
 
-On the first property, `name`, it's straightforward. The first annotation argument is the filter class, the second specifies options, here, the strategy:
+On the first property, `name`, it's straightforward. The first attribute argument is the filter class, the second specifies options, here, the strategy:
 
 ```php
 #[ApiFilter(SearchFilter::class, strategy: 'partial')]
 ```
 
-In the second annotation, we specify `properties` on which the filter should apply. It's necessary here because we don't want to filter `colors` but the `prop` property of the `colors` association.
+In the second attribute, we specify `properties` on which the filter should apply. It's necessary here because we don't want to filter `colors` but the `prop` property of the `colors` association.
 Note that for each given property we specify the strategy:
 
 ```php
 #[ApiFilter(SearchFilter::class, properties: ['colors.prop' => 'ipartial'])]
 ```
 
-The `ApiFilter` annotation can be set on the class as well. If you don't specify any properties, it'll act on every property of the class.
+The `ApiFilter` attribute can be set on the class as well. If you don't specify any properties, it'll act on every property of the class.
 
 For example, let's define three data filters (`DateFilter`, `SearchFilter` and `BooleanFilter`) and two serialization filters (`PropertyFilter` and `GroupFilter`) on our `DummyCar` class:
 
@@ -1685,7 +1685,7 @@ The `DateFilter` given here will be applied to every `Date` property of the `Dum
 #[ApiFilter(DateFilter::class, strategy: DateFilter::EXCLUDE_NULL)]
 ```
 
-The `SearchFilter` here adds properties. The result is the exact same as the example with annotations on properties:
+The `SearchFilter` here adds properties. The result is the exact same as the example with attributes on properties:
 
 ```php
 #[ApiFilter(SearchFilter::class, properties: ['colors.prop' => 'ipartial', 'name' => 'partial'])]
