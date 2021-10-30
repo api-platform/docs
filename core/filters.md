@@ -1469,7 +1469,6 @@ namespace App\Filter;
 use App\Attribute\UserAware;
 use Doctrine\ORM\Mapping\ClassMetadata;
 use Doctrine\ORM\Query\Filter\SQLFilter;
-use InvalidArgumentException;
 
 final class UserFilter extends SQLFilter
 {
@@ -1487,7 +1486,7 @@ final class UserFilter extends SQLFilter
         try {
             // Don't worry, getParameter automatically escapes parameters
             $userId = $this->getParameter('id');
-        } catch (InvalidArgumentException $e) {
+        } catch (\InvalidArgumentException $e) {
             // No user id has been defined
             return '';
         }
@@ -1513,74 +1512,6 @@ doctrine:
 ```
 
 Done: Doctrine will automatically filter all `UserAware`entities!
-
-Using PHP attributes, there is no need to add a listener for every request that initializes the Doctrine filter with the current user in your bundle services declaration file.
-
-If you are using annotations instead of attributes, you can do as follows to pass a doctrine annotation `Reader` instance to your Doctrine Filter :
-
-```yaml
-# api/config/services.yaml
-services:
-    # ...
-    'App\EventListener\UserFilterConfigurator':
-        tags:
-            - { name: kernel.event_listener, event: kernel.request, priority: 5 }
-        # Autoconfiguration must be disabled to set a custom priority
-        autoconfigure: false
-```
-
-It's key to set the priority higher than the `ApiPlatform\Core\EventListener\ReadListener`'s priority, as flagged in [this issue](https://github.com/api-platform/core/issues/1185), as otherwise the `PaginatorExtension` will ignore the Doctrine filter and return incorrect `totalItems` and `page` (first/last/next) data.
-
-Lastly, implement the configurator class:
-
-```php
-<?php
-// api/EventListener/UserFilterConfigurator.php
-
-namespace App\EventListener;
-
-use Symfony\Component\Security\Core\User\UserInterface;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
-use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\Common\Annotations\Reader;
-
-final class UserFilterConfigurator
-{
-    private $em;
-    private $tokenStorage;
-    private $reader;
-
-    public function __construct(EntityManagerInterface $em, TokenStorageInterface $tokenStorage, Reader $reader)
-    {
-        $this->em = $em;
-        $this->tokenStorage = $tokenStorage;
-        $this->reader = $reader;
-    }
-
-    public function onKernelRequest(): void
-    {
-        if (!$user = $this->getUser()) {
-            throw new \RuntimeException('There is no authenticated user.');
-        }
-
-        $filter = $this->em->getFilters()->enable('user_filter');
-        $filter->setParameter('id', $user->getId());
-        $filter->setAnnotationReader($this->reader);
-    }
-
-    private function getUser(): ?UserInterface
-    {
-        if (!$token = $this->tokenStorage->getToken()) {
-            return null;
-        }
-
-        $user = $token->getUser();
-        return $user instanceof UserInterface ? $user : null;
-    }
-}
-```
-
-Done: Doctrine will automatically filter all "UserAware" entities!
 
 ## ApiFilter Attribute
 
