@@ -85,7 +85,7 @@ Be careful: the `json_schema_context` property does not always have the same pro
 
 Example: a `"type" => "json"` in `openapi_context` is a `"type" => "array"` in `json_schema_context`.
 
-You can obtain more informations about the available [JSON Schema Types and format here](http://json-schema.org/understanding-json-schema/reference/type.html).
+You can obtain more information about the available [JSON Schema Types and format here](http://json-schema.org/understanding-json-schema/reference/type.html).
 
 ## Generating a JSON Schema Programmatically
 
