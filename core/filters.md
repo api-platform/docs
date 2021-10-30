@@ -1620,7 +1620,7 @@ class DummyCar
 
     #[ORM\OneToMany(mappedBy: "car", targetEntity: DummyCarColor::class)]
     #[ApiFilter(SearchFilter::class, properties: ['colors.prop' => 'ipartial'])]
-    public ?Collection $colors;
+    public Collection $colors;
 
     public function __construct()
     {
