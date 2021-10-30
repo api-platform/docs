@@ -1512,7 +1512,7 @@ doctrine:
                 class: App\Filter\UserFilter
 ```
 
-Done: Doctrine will automatically filter all "UserAware" entities!
+Done: Doctrine will automatically filter all `UserAware`entities!
 
 Using PHP attributes, there is no need to add a listener for every request that initializes the Doctrine filter with the current user in your bundle services declaration file.
 
