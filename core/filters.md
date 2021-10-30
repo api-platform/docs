@@ -1434,11 +1434,6 @@ use Attribute;
 final class UserAware
 {
     public $userFieldName;
-    
-    public function __construct(string $userFieldName)
-    {
-        $this->userFieldName = $userFieldName;
-    }
 }
 ```
 
