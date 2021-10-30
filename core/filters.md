@@ -1411,7 +1411,7 @@ class Order
 {
     // ...
 
-    #[ORM\ManyToOne("User")]
+    #[ORM\ManyToOne(User::class)]
     #[ORM\JoinColumn(name: "user_id", referencedColumnName: "id")]
     public ?User $user = null;
     
