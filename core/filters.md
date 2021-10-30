@@ -23,7 +23,7 @@ to a Resource in two ways:
 
 1. Through the resource declaration, as the `filters` attribute.
 
-    For example having a filter service declaration:
+   For example having a filter service declaration:
 
     ```yaml
     # api/config/services.yaml
@@ -40,9 +40,9 @@ to a Resource in two ways:
             public: false
     ```
 
-    We're linking the filter `offer.date_filter` with the resource like this:
+   We're linking the filter `offer.date_filter` with the resource like this:
 
-    [codeSelector]
+   [codeSelector]
 
     ```php
     <?php
@@ -89,11 +89,11 @@ to a Resource in two ways:
     </resources>
     ```
 
-    [/codeSelector]
+   [/codeSelector]
 
 2. By using the `#[ApiFilter]` annotation.
 
-    This annotation automatically declares the service, and you just have to use the filter class you want:
+   This annotation automatically declares the service, and you just have to use the filter class you want:
 
     ```php
     <?php
@@ -113,12 +113,12 @@ to a Resource in two ways:
     }
     ```
 
-    Learn more on how the [ApiFilter annotation](filters.md#apifilter-annotation) works.
+   Learn more on how the [ApiFilter annotation](filters.md#apifilter-annotation) works.
 
-    For the sake of consistency, we're using the annotation in the below documentation.
+   For the sake of consistency, we're using the annotation in the below documentation.
 
-    For MongoDB ODM, all the filters are in the namespace `ApiPlatform\Core\Bridge\Doctrine\MongoDbOdm\Filter`. The filter
-    services all begin with `api_platform.doctrine_mongodb.odm`.
+   For MongoDB ODM, all the filters are in the namespace `ApiPlatform\Core\Bridge\Doctrine\MongoDbOdm\Filter`. The filter
+   services all begin with `api_platform.doctrine_mongodb.odm`.
 
 ### Search Filter
 
@@ -815,7 +815,7 @@ services:
         autowire: false
         autoconfigure: false
         public: false
-        
+
 # config/api/Offer.yaml
 App\Entity\Offer:
     # ...
@@ -927,7 +927,7 @@ class Tweet
 services:
     tweet.order_filter:
         parent: 'api_platform.doctrine.orm.order_filter'
-        arguments: 
+        arguments:
             $properties: { id: ~, date: ~ }
             $orderParameterName: 'order'
         tags:  [ 'api_platform.filter' ]
@@ -1410,10 +1410,8 @@ class Order
 {
     // ...
 
-    /**
-     * @ORM\ManyToOne(targetEntity="User")
-     * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
-     */
+    #[ORM\ManyToOne(targetEntity: User::class)]
+    #[ORM\JoinColumn(name: "user_id", referencedColumnName: "id")]
     public $user;
     
     // ...
@@ -1428,17 +1426,20 @@ Start by creating a custom annotation to mark restricted entities:
 <?php
 // api/Annotation/UserAware.php
 
-namespace App\Annotation;
+namespace App\Attribute;
 
 use Doctrine\Common\Annotations\Annotation;
+use Attribute;
 
-/**
- * @Annotation
- * @Target("CLASS")
- */
+#[Attribute(Attribute::TARGET_CLASS)]
 final class UserAware
 {
     public $userFieldName;
+    
+    public function __construct(string $userFieldName)
+    {
+        $this->userFieldName = $userFieldName;
+    }
 }
 ```
 
@@ -1450,11 +1451,9 @@ Then, let's mark the `Order` entity as a "user aware" entity.
 
 namespace App\Entity;
 
-use App\Annotation\UserAware;
+use App\Attribute\UserAware;
 
-/**
- * @UserAware(userFieldName="user_id")
- */
+#[UserAware(userFieldName: "user_id")]
 class Order {
     // ...
 }
@@ -1468,33 +1467,35 @@ Now, create a Doctrine filter class:
 
 namespace App\Filter;
 
-use App\Annotation\UserAware;
+use App\Attribute\UserAware;
 use Doctrine\ORM\Mapping\ClassMetadata;
 use Doctrine\ORM\Query\Filter\SQLFilter;
-use Doctrine\Common\Annotations\Reader;
+use InvalidArgumentException;
 
 final class UserFilter extends SQLFilter
 {
-    private $reader;
-
-    public function addFilterConstraint(ClassMetadata $targetEntity, string $targetTableAlias): string
+    public function addFilterConstraint(ClassMetadata $targetEntity, $targetTableAlias): string
     {
-        if (null === $this->reader) {
-            throw new \RuntimeException(sprintf('An annotation reader must be provided. Be sure to call "%s::setAnnotationReader()".', __CLASS__));
-        }
-
         // The Doctrine filter is called for any query on any entity
         // Check if the current entity is "user aware" (marked with an annotation)
-        $userAware = $this->reader->getClassAnnotation($targetEntity->getReflectionClass(), UserAware::class);
-        if (!$userAware) {
+        $attributes = $targetEntity->getReflectionClass()->getAttributes();
+        $userAware = null;
+        foreach($attributes as $attribute) {
+            if ($attribute->getName() === UserAware::class) {
+                $userAware = $attribute;
+                break;
+            }
+        }
+
+        $fieldName = $userAware?->getArguments()['userFieldName'] ?? null;
+        if ($fieldName === '' || is_null($fieldName)) {
             return '';
         }
 
-        $fieldName = $userAware->userFieldName;
         try {
             // Don't worry, getParameter automatically escapes parameters
             $userId = $this->getParameter('id');
-        } catch (\InvalidArgumentException $e) {
+        } catch (InvalidArgumentException $e) {
             // No user id has been defined
             return '';
         }
@@ -1504,11 +1505,6 @@ final class UserFilter extends SQLFilter
         }
 
         return sprintf('%s.%s = %s', $targetTableAlias, $fieldName, $userId);
-    }
-
-    public function setAnnotationReader(Reader $reader): void
-    {
-        $this->reader = $reader;
     }
 }
 ```
@@ -1602,29 +1598,31 @@ If the annotation is given over a property, the filter will be configured on the
 use ApiPlatform\Core\Annotation\ApiFilter;
 use ApiPlatform\Core\Annotation\ApiResource;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use App\Entity\DummyCarColor;
 
 #[ApiResource]
 class DummyCar
 {
-    /**
-     * @ORM\Id
-     * @ORM\GeneratedValue
-     * @ORM\Column(type="integer")
-     */
-    private $id;
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column(type: 'integer')]
+    private ?int $id = null;
 
-    /**
-     * @ORM\Column(type="string")
-     */
+    #[ORM\Column(type: 'string')]
     #[ApiFilter(SearchFilter::class, strategy: 'partial')]
-    public $name;
+    public ?string $name;
 
-    /**
-     * @ORM\OneToMany(targetEntity="DummyCarColor", mappedBy="car")
-     */
+    #[ORM\OneToMany(mappedBy: "car", targetEntity: DummyCarColor::class)]
     #[ApiFilter(SearchFilter::class, properties: ['colors.prop' => 'ipartial'])]
-    public $colors;
+    public ?Collection $colors;
+
+    public function __construct()
+    {
+        $this->colors = new ArrayCollection();
+    }
 
     // ...
 }
