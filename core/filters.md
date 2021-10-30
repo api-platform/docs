@@ -1402,6 +1402,7 @@ class User
 
 namespace App\Entity;
 
+use App\Entity\User;
 use ApiPlatform\Core\Annotation\ApiResource;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -1412,7 +1413,7 @@ class Order
 
     #[ORM\ManyToOne("User")]
     #[ORM\JoinColumn(name: "user_id", referencedColumnName: "id")]
-    public $user;
+    public ?User $user = null;
     
     // ...
 }
