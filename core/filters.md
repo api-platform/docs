@@ -1410,7 +1410,7 @@ class Order
 {
     // ...
 
-    #[ORM\ManyToOne(targetEntity: User::class)]
+    #[ORM\ManyToOne("User")]
     #[ORM\JoinColumn(name: "user_id", referencedColumnName: "id")]
     public $user;
     
