@@ -1520,7 +1520,11 @@ doctrine:
                 class: App\Filter\UserFilter
 ```
 
-Add a listener for every request that initializes the Doctrine filter with the current user in your bundle services declaration file.
+Done: Doctrine will automatically filter all "UserAware" entities!
+
+By using PHP8 attributes, there is no need to add a listener for every request that initializes the Doctrine filter with the current user in your bundle services declaration file.
+
+But if you are using annotations instead of attributes, you can do as follow :
 
 ```yaml
 # api/config/services.yaml
