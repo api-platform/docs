@@ -1477,14 +1477,7 @@ final class UserFilter extends SQLFilter
     {
         // The Doctrine filter is called for any query on any entity
         // Check if the current entity is "user aware" (marked with an attribute)
-        $attributes = $targetEntity->getReflectionClass()->getAttributes();
-        $userAware = null;
-        foreach($attributes as $attribute) {
-            if ($attribute->getName() === UserAware::class) {
-                $userAware = $attribute;
-                break;
-            }
-        }
+        $userAware = $targetEntity->getReflectionClass()->getAttributes(UserAware::class)[0] ?? null;
 
         $fieldName = $userAware?->getArguments()['userFieldName'] ?? null;
         if ($fieldName === '' || is_null($fieldName)) {
