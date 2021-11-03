@@ -10,6 +10,7 @@ chapters:
     items:
       - index
       - getting-started
+      - migration-guides
       - design
       - extending
       - testing
