@@ -47,11 +47,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity]
-#[ApiResource(
-    collectionOperations: [
-        'get' => ['normalization_context' => ['groups' => 'greeting:collection:get']],
-    ],
-)]
+#[ApiResource]
 class Greeting
 {
     #[ORM\Id]
@@ -83,10 +79,6 @@ class Greeting
     }
 }
 ```
-
-Be careful: the `json_schema_context` property does not always have the same properties as the `openapi_context` property.
-
-Example: a `"type" => "json"` in `openapi_context` is a `"type" => "array"` in `json_schema_context`.
 
 You can obtain more information about the available [JSON Schema Types and format here](http://json-schema.org/understanding-json-schema/reference/type.html).
 
