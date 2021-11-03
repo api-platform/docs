@@ -63,7 +63,6 @@ class Greeting
         return $this->id;
     }
 
-    #[Groups("greeting:collection:get")]
     #[ApiProperty(attributes: [
         "openapi_context" => [
             "type" => "array",
