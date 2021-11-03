@@ -23,7 +23,7 @@ to a Resource in two ways:
 
 1. Through the resource declaration, as the `filters` attribute.
 
-    For example having a filter service declaration:
+   For example having a filter service declaration:
 
     ```yaml
     # api/config/services.yaml
@@ -40,9 +40,9 @@ to a Resource in two ways:
             public: false
     ```
 
-    We're linking the filter `offer.date_filter` with the resource like this:
+   We're linking the filter `offer.date_filter` with the resource like this:
 
-    [codeSelector]
+   [codeSelector]
 
     ```php
     <?php
@@ -89,11 +89,11 @@ to a Resource in two ways:
     </resources>
     ```
 
-    [/codeSelector]
+   [/codeSelector]
 
-2. By using the `#[ApiFilter]` annotation.
+2. By using the `#[ApiFilter]` attribute.
 
-    This annotation automatically declares the service, and you just have to use the filter class you want:
+   This attribute automatically declares the service, and you just have to use the filter class you want:
 
     ```php
     <?php
@@ -113,12 +113,12 @@ to a Resource in two ways:
     }
     ```
 
-    Learn more on how the [ApiFilter annotation](filters.md#apifilter-annotation) works.
+   Learn more on how the [ApiFilter attribute](filters.md#apifilter-attribute) works.
 
-    For the sake of consistency, we're using the annotation in the below documentation.
+   For the sake of consistency, we're using the attribute in the below documentation.
 
-    For MongoDB ODM, all the filters are in the namespace `ApiPlatform\Core\Bridge\Doctrine\MongoDbOdm\Filter`. The filter
-    services all begin with `api_platform.doctrine_mongodb.odm`.
+   For MongoDB ODM, all the filters are in the namespace `ApiPlatform\Core\Bridge\Doctrine\MongoDbOdm\Filter`. The filter
+   services all begin with `api_platform.doctrine_mongodb.odm`.
 
 ### Search Filter
 
@@ -815,7 +815,7 @@ services:
         autowire: false
         autoconfigure: false
         public: false
-        
+
 # config/api/Offer.yaml
 App\Entity\Offer:
     # ...
@@ -927,7 +927,7 @@ class Tweet
 services:
     tweet.order_filter:
         parent: 'api_platform.doctrine.orm.order_filter'
-        arguments: 
+        arguments:
             $properties: { id: ~, date: ~ }
             $orderParameterName: 'order'
         tags:  [ 'api_platform.filter' ]
@@ -1230,7 +1230,7 @@ final class RegexpFilter extends AbstractContextAwareFilter
 
 Thanks to [Symfony's automatic service loading](https://symfony.com/doc/current/service_container.html#service-container-services-load-example), which is enabled by default in the API Platform distribution, the filter is automatically registered as a service!
 
-Finally, add this filter to resources you want to be filtered by using the `ApiFilter` annotation:
+Finally, add this filter to resources you want to be filtered by using the `ApiFilter` attribute:
 
 ```php
 <?php
@@ -1303,7 +1303,7 @@ services:
         tags: [ 'api_platform.filter' ]
 ```
 
-Finally, if you don't want to use the `#[ApiFilter]` annotation, you can register the filter on an API resource class using the `filters` attribute:
+Finally, if you don't want to use the `#[ApiFilter]` attribute, you can register the filter on an API resource class using the `filters` attribute:
 
 ```php
 <?php
@@ -1402,6 +1402,7 @@ class User
 
 namespace App\Entity;
 
+use App\Entity\User;
 use ApiPlatform\Core\Annotation\ApiResource;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -1410,11 +1411,9 @@ class Order
 {
     // ...
 
-    /**
-     * @ORM\ManyToOne(targetEntity="User")
-     * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
-     */
-    public $user;
+    #[ORM\ManyToOne(User::class)]
+    #[ORM\JoinColumn(name: "user_id", referencedColumnName: "id")]
+    public User $user;
     
     // ...
 }
@@ -1422,20 +1421,17 @@ class Order
 
 The whole idea is that any query on the order table should add a `WHERE user_id = :user_id` condition.
 
-Start by creating a custom annotation to mark restricted entities:
+Start by creating a custom attribute to mark restricted entities:
 
 ```php
 <?php
 // api/Annotation/UserAware.php
 
-namespace App\Annotation;
+namespace App\Attribute;
 
-use Doctrine\Common\Annotations\Annotation;
+use Attribute;
 
-/**
- * @Annotation
- * @Target("CLASS")
- */
+#[Attribute(Attribute::TARGET_CLASS)]
 final class UserAware
 {
     public $userFieldName;
@@ -1450,11 +1446,9 @@ Then, let's mark the `Order` entity as a "user aware" entity.
 
 namespace App\Entity;
 
-use App\Annotation\UserAware;
+use App\Attribute\UserAware;
 
-/**
- * @UserAware(userFieldName="user_id")
- */
+#[UserAware(userFieldName: "user_id")]
 class Order {
     // ...
 }
@@ -1468,29 +1462,23 @@ Now, create a Doctrine filter class:
 
 namespace App\Filter;
 
-use App\Annotation\UserAware;
+use App\Attribute\UserAware;
 use Doctrine\ORM\Mapping\ClassMetadata;
 use Doctrine\ORM\Query\Filter\SQLFilter;
-use Doctrine\Common\Annotations\Reader;
 
 final class UserFilter extends SQLFilter
 {
-    private $reader;
-
-    public function addFilterConstraint(ClassMetadata $targetEntity, string $targetTableAlias): string
+    public function addFilterConstraint(ClassMetadata $targetEntity, $targetTableAlias): string
     {
-        if (null === $this->reader) {
-            throw new \RuntimeException(sprintf('An annotation reader must be provided. Be sure to call "%s::setAnnotationReader()".', __CLASS__));
-        }
-
         // The Doctrine filter is called for any query on any entity
-        // Check if the current entity is "user aware" (marked with an annotation)
-        $userAware = $this->reader->getClassAnnotation($targetEntity->getReflectionClass(), UserAware::class);
-        if (!$userAware) {
+        // Check if the current entity is "user aware" (marked with an attribute)
+        $userAware = $targetEntity->getReflectionClass()->getAttributes(UserAware::class)[0] ?? null;
+
+        $fieldName = $userAware?->getArguments()['userFieldName'] ?? null;
+        if ($fieldName === '' || is_null($fieldName)) {
             return '';
         }
 
-        $fieldName = $userAware->userFieldName;
         try {
             // Don't worry, getParameter automatically escapes parameters
             $userId = $this->getParameter('id');
@@ -1504,11 +1492,6 @@ final class UserFilter extends SQLFilter
         }
 
         return sprintf('%s.%s = %s', $targetTableAlias, $fieldName, $userId);
-    }
-
-    public function setAnnotationReader(Reader $reader): void
-    {
-        $this->reader = $reader;
     }
 }
 ```
@@ -1524,77 +1507,13 @@ doctrine:
                 class: App\Filter\UserFilter
 ```
 
-Add a listener for every request that initializes the Doctrine filter with the current user in your bundle services declaration file.
+Done: Doctrine will automatically filter all `UserAware`entities!
 
-```yaml
-# api/config/services.yaml
-services:
-    # ...
-    'App\EventListener\UserFilterConfigurator':
-        tags:
-            - { name: kernel.event_listener, event: kernel.request, priority: 5 }
-        # Autoconfiguration must be disabled to set a custom priority
-        autoconfigure: false
-```
+## ApiFilter Attribute
 
-It's key to set the priority higher than the `ApiPlatform\Core\EventListener\ReadListener`'s priority, as flagged in [this issue](https://github.com/api-platform/core/issues/1185), as otherwise the `PaginatorExtension` will ignore the Doctrine filter and return incorrect `totalItems` and `page` (first/last/next) data.
+The attribute can be used on a `property` or on a `class`.
 
-Lastly, implement the configurator class:
-
-```php
-<?php
-// api/EventListener/UserFilterConfigurator.php
-
-namespace App\EventListener;
-
-use Symfony\Component\Security\Core\User\UserInterface;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
-use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\Common\Annotations\Reader;
-
-final class UserFilterConfigurator
-{
-    private $em;
-    private $tokenStorage;
-    private $reader;
-
-    public function __construct(EntityManagerInterface $em, TokenStorageInterface $tokenStorage, Reader $reader)
-    {
-        $this->em = $em;
-        $this->tokenStorage = $tokenStorage;
-        $this->reader = $reader;
-    }
-
-    public function onKernelRequest(): void
-    {
-        if (!$user = $this->getUser()) {
-            throw new \RuntimeException('There is no authenticated user.');
-        }
-
-        $filter = $this->em->getFilters()->enable('user_filter');
-        $filter->setParameter('id', $user->getId());
-        $filter->setAnnotationReader($this->reader);
-    }
-
-    private function getUser(): ?UserInterface
-    {
-        if (!$token = $this->tokenStorage->getToken()) {
-            return null;
-        }
-
-        $user = $token->getUser();
-        return $user instanceof UserInterface ? $user : null;
-    }
-}
-```
-
-Done: Doctrine will automatically filter all "UserAware" entities!
-
-## ApiFilter Annotation
-
-The annotation can be used on a `property` or on a `class`.
-
-If the annotation is given over a property, the filter will be configured on the property. For example, let's add a search filter on `name` and on the `prop` property of the `colors` relation:
+If the attribute is given over a property, the filter will be configured on the property. For example, let's add a search filter on `name` and on the `prop` property of the `colors` relation:
 
 ```php
 <?php
@@ -1602,48 +1521,50 @@ If the annotation is given over a property, the filter will be configured on the
 use ApiPlatform\Core\Annotation\ApiFilter;
 use ApiPlatform\Core\Annotation\ApiResource;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use App\Entity\DummyCarColor;
 
 #[ApiResource]
 class DummyCar
 {
-    /**
-     * @ORM\Id
-     * @ORM\GeneratedValue
-     * @ORM\Column(type="integer")
-     */
-    private $id;
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column(type: 'integer')]
+    private ?int $id = null;
 
-    /**
-     * @ORM\Column(type="string")
-     */
+    #[ORM\Column(type: 'string')]
     #[ApiFilter(SearchFilter::class, strategy: 'partial')]
-    public $name;
+    public ?string $name = null;
 
-    /**
-     * @ORM\OneToMany(targetEntity="DummyCarColor", mappedBy="car")
-     */
+    #[ORM\OneToMany(mappedBy: "car", targetEntity: DummyCarColor::class)]
     #[ApiFilter(SearchFilter::class, properties: ['colors.prop' => 'ipartial'])]
-    public $colors;
+    public Collection $colors;
+
+    public function __construct()
+    {
+        $this->colors = new ArrayCollection();
+    }
 
     // ...
 }
 ```
 
-On the first property, `name`, it's straightforward. The first annotation argument is the filter class, the second specifies options, here, the strategy:
+On the first property, `name`, it's straightforward. The first attribute argument is the filter class, the second specifies options, here, the strategy:
 
 ```php
 #[ApiFilter(SearchFilter::class, strategy: 'partial')]
 ```
 
-In the second annotation, we specify `properties` on which the filter should apply. It's necessary here because we don't want to filter `colors` but the `prop` property of the `colors` association.
+In the second attribute, we specify `properties` on which the filter should apply. It's necessary here because we don't want to filter `colors` but the `prop` property of the `colors` association.
 Note that for each given property we specify the strategy:
 
 ```php
 #[ApiFilter(SearchFilter::class, properties: ['colors.prop' => 'ipartial'])]
 ```
 
-The `ApiFilter` annotation can be set on the class as well. If you don't specify any properties, it'll act on every property of the class.
+The `ApiFilter` attribute can be set on the class as well. If you don't specify any properties, it'll act on every property of the class.
 
 For example, let's define three data filters (`DateFilter`, `SearchFilter` and `BooleanFilter`) and two serialization filters (`PropertyFilter` and `GroupFilter`) on our `DummyCar` class:
 
@@ -1687,7 +1608,7 @@ The `DateFilter` given here will be applied to every `Date` property of the `Dum
 #[ApiFilter(DateFilter::class, strategy: DateFilter::EXCLUDE_NULL)]
 ```
 
-The `SearchFilter` here adds properties. The result is the exact same as the example with annotations on properties:
+The `SearchFilter` here adds properties. The result is the exact same as the example with attributes on properties:
 
 ```php
 #[ApiFilter(SearchFilter::class, properties: ['colors.prop' => 'ipartial', 'name' => 'partial'])]
