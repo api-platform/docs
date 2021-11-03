@@ -10,7 +10,7 @@ chapters:
     items:
       - index
       - getting-started
-      - migration-guides
+      - migrate-from-fosrestbundle
       - design
       - extending
       - testing
