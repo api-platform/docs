@@ -1,8 +1,7 @@
 # Migrate From FOSRestBundle
 
 [FOSRestBundle](https://github.com/FriendsOfSymfony/FOSRestBundle) is a popular bundle to rapidly develop RESTful APIs with Symfony.
-
-In September 2021, [it has been announced to be deprecated](https://twitter.com/lsmith/status/1440216817876627459) and its maintainers recommended to use API Platform instead. This page provides a guide to help developers migrating from FOSRestBundle to API Platform.
+This page provides a guide to help developers migrating from FOSRestBundle to API Platform.
 
 ## Features Comparison
 
