@@ -1,5 +1,9 @@
 # Getting started
 
+## Migrating from FOSRestBundle
+
+If you plan to migrate from FOSRestBundle, you might want to read [this guide](migrate-from-fosrestbundle.md) to get started with API Platform.
+
 ## Installing API Platform Core
 
 If you are starting a new project, the easiest way to get API Platform up is to install the [API Platform Distribution](../distribution/index.md).
