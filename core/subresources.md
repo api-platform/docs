@@ -20,27 +20,19 @@ namespace App\Entity;
 use ApiPlatform\Core\Annotation\ApiResource;
 use Doctrine\ORM\Mapping as ORM;
 
-/**
- * @ORM\Entity
- */
+#[ORM\Entity()]
 #[ApiResource]
 class Answer
 {
-    /**
-     * @ORM\Column(type="integer")
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="AUTO")
-     */
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column(type: 'integer']
     private $id;
 
-    /**
-     * @ORM\Column
-     */
+    #[ORM\Column(type: 'text')]
     public $content;
 
-    /**
-     * @ORM\OneToOne(targetEntity="Question", mappedBy="answer")
-     */
+    #[ORM\OneToOne(targetEntity: Question::class, mappedBy: 'answer')]
     public $question;
 
     public function getId(): ?int
@@ -59,28 +51,20 @@ use ApiPlatform\Core\Annotation\ApiResource;
 use ApiPlatform\Core\Annotation\ApiSubresource;
 use Doctrine\ORM\Mapping as ORM;
 
-/**
- * @ORM\Entity
- */
+#[ORM\Entity()]
 #[ApiResource]
 class Question
 {
-    /**
-     * @ORM\Column(type="integer")
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="AUTO")
-     */
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column(type: 'integer']
     private $id;
 
-    /**
-     * @ORM\Column
-     */
+    #[ORM\Column(type: 'text')]
     public $content;
 
-    /**
-     * @ORM\OneToOne(targetEntity="Answer", inversedBy="question")
-     * @ORM\JoinColumn(referencedColumnName="id", unique=true)
-     */
+    #[ORM\OneToOne(targetEntity: Answer::class, insersedBy: 'question')]
+    #[ORM\JoinColumn(referencedColumnName: 'id', unique: true)]
     #[ApiSubresource]
     public $answer;
 
