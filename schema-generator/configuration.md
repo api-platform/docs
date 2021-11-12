@@ -139,6 +139,7 @@ The `@Assert\NotNull` constrain is automatically added.
  * @Assert\NotNull
  */
   #[ORM\Column(type: 'string')]
+  #[Assert\NotNull]
   private string $name;
 ```
 
@@ -163,6 +164,7 @@ Output:
 
 ...
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Doctrine\ORM\Mapping as ORM;
 
 /**
  * A person (alive, dead, undead, or fictional).
@@ -178,9 +180,9 @@ class Person
     /**
      * Email address.
      *
-     * @ORM\Column
      * @Assert\Email
      */
+    #[ORM\Column]
     private string $email;
 ```
 
