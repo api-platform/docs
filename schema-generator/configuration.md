@@ -138,7 +138,7 @@ The `@Assert\NotNull` constrain is automatically added.
  *
  * @Assert\NotNull
  */
-  #[ORM\Entity] 
+  #[ORM\Column(type: 'string')]
   private string $name;
 ```
 
