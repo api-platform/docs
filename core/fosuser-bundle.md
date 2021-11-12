@@ -63,29 +63,23 @@ use FOS\UserBundle\Model\User as BaseUser;
 use FOS\UserBundle\Model\UserInterface;
 use Symfony\Component\Serializer\Annotation\Groups;
 
-/**
- * @ORM\Entity
- * @ORM\Table(name="fos_user")
- */
+#[ORM\Entity]
+#[ORM\Table(name: 'fos_user')]
 #[ApiResource(
     normalizationContext: ["groups" => ["user", "user:read"]],
     denormalizationContext: ["groups" => ["user", "user:write"]]
 )]
 class User extends BaseUser
 {
-    /**
-     * @ORM\Id
-     * @ORM\Column(type="integer")
-     * @ORM\GeneratedValue(strategy="AUTO")
-     */
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column(type: 'integer')]
     protected $id;
 
     #[Groups("user")]
     protected $email;
 
-    /**
-     * @ORM\Column(type="string", length=255, nullable=true)
-     */
+    #[ORM\Column(type: 'string', length: 255, nullable: true)] 
     #[Groups("user")]
     protected $fullname;
 

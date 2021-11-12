@@ -61,9 +61,9 @@ use Symfony\Component\Validator\Constraints as Assert;
 use Vich\UploaderBundle\Mapping\Annotation as Vich;
 
 /**
- * @ORM\Entity
  * @Vich\Uploadable
  */
+#[ORM\Entity]
 #[ApiResource(
     iri: 'http://schema.org/MediaObject',
     normalizationContext: ['groups' => ['media_object:read']],
@@ -96,11 +96,9 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
 )]
 class MediaObject
 {
-    /**
-     * @ORM\Column(type="integer")
-     * @ORM\GeneratedValue
-     * @ORM\Id
-     */
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column(type: 'integer')]
     private ?int $id = null;
 
     #[ApiProperty(iri: 'http://schema.org/contentUrl')]
@@ -113,9 +111,7 @@ class MediaObject
     #[Assert\NotNull(groups: ['media_object_create'])]
     public ?File $file = null;
 
-    /**
-     * @ORM\Column(nullable=true)
-     */
+    #[ORM\Column(nullable: true)] 
     public ?string $filePath = null;
 
     public function getId(): ?int
@@ -255,18 +251,14 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\HttpFoundation\File\File;
 use Vich\UploaderBundle\Mapping\Annotation as Vich;
 
-/**
- * @ORM\Entity
- */
+#[ORM\Entity]
 #[ApiResource(iri: 'http://schema.org/Book')]
 class Book
 {
     // ...
 
-    /**
-     * @ORM\ManyToOne(targetEntity=MediaObject::class)
-     * @ORM\JoinColumn(nullable=true)
-     */
+    #[ORM\ManyToOne(targetEntity: MediaObject::class)]
+    #[ORM\JoinColumn(nullable: true)]
     #[ApiProperty(iri: 'http://schema.org/image')]
     public ?MediaObject $image = null;
     
@@ -358,9 +350,9 @@ use Symfony\Component\Serializer\Annotation\Groups;
 use Vich\UploaderBundle\Mapping\Annotation as Vich;
 
 /**
- * @ORM\Entity
  * @Vich\Uploadable
  */
+#[ORM\Entity]
 #[ApiResource(
     iri: 'http://schema.org/Book',
     normalizationContext: ['groups' => ['book:read']],
@@ -388,9 +380,7 @@ class Book
     #[Groups(['book:write'])]
     public ?File $file = null;
 
-    /**
-     * @ORM\Column(nullable=true)
-     */
+    #[ORM\Column(nullable: true)] 
     public ?string $filePath = null;
     
     // ...

@@ -156,22 +156,16 @@ namespace App\Entity;
 use ApiPlatform\Core\Annotation\ApiResource;
 use Doctrine\ORM\Mapping as ORM;
 
-/**
- * @ORM\Entity
- */
+
 #[ApiResource]
 class Review
 {
-    /**
-     * @ORM\Column(type="integer")
-     * @ORM\GeneratedValue
-     * @ORM\Id
-     */
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column(type: 'integer')]
     public $id;
 
-    /**
-     * @ORM\ManyToOne(targetEntity=Book::class, inversedBy="reviews")
-     */
+    #[ORM\ManyToOne(targetEntity: Book::class, inversedBy: 'reviews')] 
     public $book;
 }
 ```
@@ -188,28 +182,20 @@ use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
-/**
- * @ORM\Entity
- */
+#[ORM\Entity]
 #[ApiResource]
 class Book
 {
-    /**
-     * @ORM\Column(type="integer")
-     * @ORM\GeneratedValue
-     * @ORM\Id
-     */
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column(type: 'integer')]
     public $id;
 
-    /**
-     * @ORM\Column
-     * @ApiFilter(SearchFilter::class, strategy="ipartial")
-     */
+    #[ORM\Column] 
+    #[ApiFilter(SearchFilter::class, strategy: 'ipartial')]
     public $title;
 
-    /**
-     * @ORM\OneToMany(targetEntity=Review::class, mappedBy="book")
-     */
+    #[ORM\OneToMany(targetEntity: Review::class, mappedBy: 'book')] 
     public $reviews;
 
     public function __construct()

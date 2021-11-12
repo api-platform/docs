@@ -26,34 +26,32 @@ use Symfony\Component\Validator\Constraints as Assert; // Symfony's built-in con
 /**
  * A product.
  *
- * @ORM\Entity
  */
+#[ORM\Entity] 
 #[ApiResource]
 class Product
 {
     /**
      * @var int The id of this product.
-     *
-     * @ORM\Id
-     * @ORM\GeneratedValue
-     * @ORM\Column(type="integer")
      */
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column(type: 'integer')] 
     private $id;
 
     /**
      * @var string The name of the product
-     *
-     * @Assert\NotBlank
-     * @ORM\Column
      */
+    #[ORM\Column]
+    #[Assert\NotBlank]
     public $name;
 
     /**
      * @var string[] Describe the product
      *
      * @MinimalProperties
-     * @ORM\Column(type="json")
      */
+    #[ORM\Column(type: 'json')] 
     public $properties;
 
     // Getters and setters...
@@ -383,9 +381,7 @@ use App\Validator\Two; // classic custom constraint
 use App\Validator\MySequencedGroup; // the sequence group to use
 use Doctrine\ORM\Mapping as ORM;
 
-/**
- * @ORM\Entity
- */
+#[ORM\Entity]
 #[ApiResource(
     collectionOperations: [
       'post' => [
@@ -397,22 +393,20 @@ class Greeting
 {
     /**
      * @var int The entity Id
-     *
-     * @ORM\Id
-     * @ORM\GeneratedValue
-     * @ORM\Column(type="integer")
      */
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column(type: 'integer')] 
     private $id;
 
     /**
      * @var string A nice person
-     *
-     * @ORM\Column
      * 
      * I want this "second" validation to be executed after the "first" one even though I wrote them in this order.
      * @One(groups={"second"})
      * @Two(groups={"first"})
      */
+    #[ORM\Column]
     public $name = '';
 
     public function getId(): int

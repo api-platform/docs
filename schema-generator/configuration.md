@@ -136,9 +136,9 @@ The `@Assert\NotNull` constrain is automatically added.
 /**
  * The name of the item.
  *
- * @ORM\Column
  * @Assert\NotNull
  */
+  #[ORM\Entity] 
   private string $name;
 ```
 
@@ -169,10 +169,10 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
  *
  * @see http://schema.org/Person Documentation on Schema.org
  *
- * @ORM\Entity
  * @UniqueEntity("email")
  * @Iri("http://schema.org/Person")
  */
+#[ORM\Entity]
 class Person
 {
     /**
@@ -237,15 +237,16 @@ Output:
 
 ...
 use Symfony\Component\Serializer\Annotation\Groups;
+use Doctrine\ORM\Mapping as ORM;
 
 /**
  * A person (alive, dead, undead, or fictional).
  *
  * @see http://schema.org/Person Documentation on Schema.org
  *
- * @ORM\Entity
  * @Iri("http://schema.org/Person")
  */
+#[ORM\Entity]
 class Person
 {
     /**
@@ -253,11 +254,11 @@ class Person
      *
      * @see https://schema.org/name
      *
-     * @ORM\Column(nullable=true)
      * @Assert\Type(type="string")
      * @Iri("https://schema.org/name")
      * @Groups({"public"})
      */
+    #[ORM\Column(nullable: true) 
     private string $name;
 
 ```
@@ -297,10 +298,10 @@ use Doctrine\ORM\Mapping as ORM;
  *
  * @see http://schema.org/Product Documentation on Schema.org
  *
- * @ORM\Entity
  * @ApiResource(iri="http://schema.org/Product")
  * @UniqueEntity("gtin13s")
  */
+#[ORM\Entity]
 class Product
 {
     /**
@@ -308,9 +309,9 @@ class Product
      *
      * @see http://schema.org/weight
      *
-     * @ORM\Embedded(class="App\Entity\QuantitativeValue", columnPrefix="weight_")
      * @ApiProperty(iri="http://schema.org/weight")
      */
+    #[ORM\Embedded(class: QuantitativeValue::class, columnPrefix: 'weight_')] 
     private ?QuantitativeValue $weight = null;
 
 ```
