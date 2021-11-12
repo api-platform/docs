@@ -171,18 +171,18 @@ use Doctrine\ORM\Mapping as ORM;
  *
  * @see http://schema.org/Person Documentation on Schema.org
  *
- * @UniqueEntity("email")
  * @Iri("http://schema.org/Person")
  */
 #[ORM\Entity]
+#[UniqueEntity('email')]
 class Person
 {
     /**
      * Email address.
      *
-     * @Assert\Email
      */
     #[ORM\Column]
+    #[Assert\Email]
     private string $email;
 ```
 
@@ -240,15 +240,17 @@ Output:
 ...
 use Symfony\Component\Serializer\Annotation\Groups;
 use Doctrine\ORM\Mapping as ORM;
+use ApiPlatform\Core\Annotation\ApiProperty;
+use ApiPlatform\Core\Annotation\ApiResource;
 
 /**
  * A person (alive, dead, undead, or fictional).
  *
- * @see http://schema.org/Person Documentation on Schema.org
+ * @see https://schema.org/Person Documentation on Schema.org
  *
- * @Iri("http://schema.org/Person")
  */
 #[ORM\Entity]
+#[ApiResource(iri: "https://schema.org/Person")]
 class Person
 {
     /**
@@ -256,11 +258,11 @@ class Person
      *
      * @see https://schema.org/name
      *
-     * @Assert\Type(type="string")
-     * @Iri("https://schema.org/name")
-     * @Groups({"public"})
      */
-    #[ORM\Column(nullable: true) 
+    #[ORM\Column(nullable: true)
+    #[Assert\Type(type: 'string')]
+    #[Groups(['public'])]
+    #[ApiProperty(iri: 'https://schema.org/name')]
     private string $name;
 
 ```
@@ -294,16 +296,18 @@ Output:
 
 ...
 use Doctrine\ORM\Mapping as ORM;
+use ApiPlatform\Core\Annotation\ApiProperty;
+use ApiPlatform\Core\Annotation\ApiResource;
 
 /**
  * Any offered product or service.
  *
- * @see http://schema.org/Product Documentation on Schema.org
+ * @see https://schema.org/Product Documentation on Schema.org
  *
- * @ApiResource(iri="http://schema.org/Product")
- * @UniqueEntity("gtin13s")
  */
 #[ORM\Entity]
+#[ApiResource(iri: 'https://schema.org/Product')]
+#[UniqueEntity('gtin13s')]
 class Product
 {
     /**
@@ -311,9 +315,9 @@ class Product
      *
      * @see http://schema.org/weight
      *
-     * @ApiProperty(iri="http://schema.org/weight")
      */
-    #[ORM\Embedded(class: QuantitativeValue::class, columnPrefix: 'weight_')] 
+    #[ORM\Embedded(class: QuantitativeValue::class, columnPrefix: 'weight_')]
+    #[ApiProperty(iri: 'https://schema.org/weight')]
     private ?QuantitativeValue $weight = null;
 
 ```

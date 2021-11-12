@@ -139,14 +139,10 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[ApiResource(attributes: ['validation_groups' => ['a', 'b']])]
 class Book
 {
-    /**
-     * @Assert\NotBlank(groups={"a"})
-     */
+    #[Assert\NotBlank(groups: ['a'])]  
     public $name;
 
-    /**
-     * @Assert\NotNull(groups={"b"})
-     */
+    #[Assert\NotNull(groups: ['b'])] 
     public $author;
 
     // ...
@@ -187,29 +183,15 @@ use Symfony\Component\Validator\Constraints as Assert;
 )]
 class Book
 {
-    /**
-     * @Assert\Uuid
-     */
+    #[Assert\Uuid] 
     private $id;
 
-    /**
-     * @Assert\NotBlank(groups={"postValidation"})
-     */
+    #[Assert\NotBlank(groups: ['postValidation'])] 
     public $name;
 
-    /**
-     * @Assert\NotNull
-     * @Assert\Length(
-     *     min = 2,
-     *     max = 50,
-     *     groups={"postValidation"}
-     * )
-     * @Assert\Length(
-     *     min = 2,
-     *     max = 70,
-     *     groups={"putValidation"}
-     * )
-     */
+    #[Assert\NotNull]
+    #[Assert\Length(min: 2, max: 50, groups: ['postValidation'])]
+    #[Assert\Length(min: 2, max: 70, groups: ['putValidation'])] 
     public $author;
 
     // ...
@@ -256,14 +238,10 @@ class Book
         return ['a'];
     }
 
-    /**
-     * @Assert\NotBlank(groups={"a"})
-     */
+    #[Assert\NotBlank(groups: ['a'])] 
     public $name;
 
-    /**
-     * @Assert\NotNull(groups={"b"})
-     */
+    #[Assert\NotNull(groups: ['b'])] 
     public $author;
 
     // ...
@@ -322,14 +300,10 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[ApiResource(attributes: ['validation_groups' => AdminGroupsGenerator::class])
 class Book
 {
-    /**
-     * @Assert\NotBlank(groups={"a"})
-     */
+    #[Assert\NotBlank(groups: ['a'])] 
     public $name;
 
-    /**
-     * @Assert\NotNull(groups={"b"})
-     */
+    #[Assert\NotNull(groups: ['b'])] 
     public $author;
 
     // ...
@@ -475,9 +449,7 @@ final class Brand
         $this->cars = new ArrayCollection();
     }
 
-    /**
-     * @Assert\Valid
-     */
+    #[Assert\Valid]
     public function getCars()
     {
         return $this->cars->getValues();
