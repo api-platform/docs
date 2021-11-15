@@ -57,7 +57,7 @@ class Question
     private ?int $id = null;
 
     #[ORM\Column(type: 'text')]
-    public $content;
+    public string $content;
 
     #[ORM\OneToOne(targetEntity: Answer::class, inversedBy: 'question')]
     #[ORM\JoinColumn(referencedColumnName: 'id', unique: true)]
