@@ -96,9 +96,7 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
 )]
 class MediaObject
 {
-    #[ORM\Id]
-    #[ORM\GeneratedValue]
-    #[ORM\Column(type: 'integer')]
+    #[ORM\Id, ORM\Column, ORM\GeneratedValue]
     private ?int $id = null;
 
     #[ApiProperty(iri: 'http://schema.org/contentUrl')]

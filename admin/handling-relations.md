@@ -160,13 +160,11 @@ use Doctrine\ORM\Mapping as ORM;
 #[ApiResource]
 class Review
 {
-    #[ORM\Id]
-    #[ORM\GeneratedValue]
-    #[ORM\Column(type: 'integer')]
-    public $id;
+    #[ORM\Id, ORM\Column, ORM\GeneratedValue]
+    public ?int $id = null;
 
-    #[ORM\ManyToOne(targetEntity: Book::class, inversedBy: 'reviews')] 
-    public $book;
+    #[ORM\ManyToOne]
+    public Book $book;
 }
 ```
 
@@ -186,14 +184,12 @@ use Doctrine\ORM\Mapping as ORM;
 #[ApiResource]
 class Book
 {
-    #[ORM\Id]
-    #[ORM\GeneratedValue]
-    #[ORM\Column(type: 'integer')]
-    public $id;
+    #[ORM\Id, ORM\Column, ORM\GeneratedValue]
+    public ?int $id = null;
 
     #[ORM\Column] 
     #[ApiFilter(SearchFilter::class, strategy: 'ipartial')]
-    public $title;
+    public string $title;
 
     #[ORM\OneToMany(targetEntity: Review::class, mappedBy: 'book')] 
     public $reviews;

@@ -159,14 +159,9 @@ use Doctrine\ORM\Mapping as ORM;
 #[ApiResource]
 final class Person
 {
-    /**
-     * @var int
-     */
-    #[ORM\Id]
-    #[ORM\GeneratedValue]
-    #[ORM\Column(type: 'integer')] 
+    #[ORM\Id, ORM\Column, ORM\GeneratedValue]
     #[ApiProperty(identifier: false)]
-    private $id;
+    private ?int $id = null;
     
     /**
      * @var Uuid

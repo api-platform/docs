@@ -32,19 +32,17 @@ use Symfony\Component\Validator\Constraints as Assert; // Symfony's built-in con
 class Product
 {
     /**
-     * @var int The id of this product.
+     * @var The id of this product.
      */
-    #[ORM\Id]
-    #[ORM\GeneratedValue]
-    #[ORM\Column(type: 'integer')] 
-    private $id;
+    #[ORM\Id, ORM\Column, ORM\GeneratedValue]
+    private ?int $id = null;
 
     /**
-     * @var string The name of the product
+     * @var The name of the product
      */
     #[ORM\Column]
     #[Assert\NotBlank]
-    public $name;
+    public string $name;
 
     /**
      * @var string[] Describe the product
@@ -140,10 +138,10 @@ use Symfony\Component\Validator\Constraints as Assert;
 class Book
 {
     #[Assert\NotBlank(groups: ['a'])]  
-    public $name;
+    public string $name;
 
     #[Assert\NotNull(groups: ['b'])] 
-    public $author;
+    public string $author;
 
     // ...
 }
@@ -365,23 +363,18 @@ use Doctrine\ORM\Mapping as ORM;
 )]
 class Greeting
 {
-    /**
-     * @var int The entity Id
-     */
-    #[ORM\Id]
-    #[ORM\GeneratedValue]
-    #[ORM\Column(type: 'integer')] 
-    private $id;
+    #[ORM\Id, ORM\Column, ORM\GeneratedValue]
+    private ?int $id = null;
 
     /**
-     * @var string A nice person
+     * @var A nice person
      * 
      * I want this "second" validation to be executed after the "first" one even though I wrote them in this order.
      * @One(groups={"second"})
      * @Two(groups={"first"})
      */
     #[ORM\Column]
-    public $name = '';
+    public string $name = '';
 
     public function getId(): int
     {

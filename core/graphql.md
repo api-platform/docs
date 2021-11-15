@@ -1789,37 +1789,21 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
 )]
 class MediaObject
 {
-    /**
-     * @var int|null
-     *
-     */
-    #[ORM\Id]
-    #[ORM\GeneratedValue]
-    #[ORM\Column(type: 'integer')] 
-    protected $id;
+    #[ORM\Id, ORM\Column, ORM\GeneratedValue]
+    protected ?int $id = null;
 
-    /**
-     * @var string|null
-     *
-     */
     #[ApiProperty(iri: 'http://schema.org/contentUrl')]
     #[Groups(['media_object_read'])]
-    public $contentUrl;
+    public ?string $contentUrl = null;
 
     /**
-     * @var File|null
-     *
      * @Vich\UploadableField(mapping="media_object", fileNameProperty="filePath")
      */
     #[Assert\NotNull(groups: ['media_object_create'])] 
-    public $file;
+    public ?File $file = null;
 
-    /**
-     * @var string|null
-     *
-     */
     #[ORM\Column(nullable: true)]
-    public $filePath;
+    public ?string $filePath = null;
 
     public function getId(): ?int
     {

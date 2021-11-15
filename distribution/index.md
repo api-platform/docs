@@ -373,7 +373,7 @@ Modify these files as described in these patches:
 +/**
 + * A book.
 + *
-+ * @ORM\Entity
++ * #[ORM\Entity]
 + */
  #[ApiResource]
  class Book
@@ -382,9 +382,7 @@ Modify these files as described in these patches:
 +    /**
 +     * The id of this book.
 +     *
-+     * @ORM\Id
-+     * @ORM\GeneratedValue
-+     * @ORM\Column(type="integer")
++     * #[ORM\Id, ORM\Column, ORM\GeneratedValue]
 +     */
      private ?int $id = null;
  
@@ -392,7 +390,7 @@ Modify these files as described in these patches:
 +    /**
 +     * The ISBN of this book (or null if doesn't have one).
 +     *
-+     * @ORM\Column(nullable=true)
++     * #[ORM\Column(nullable: true)]
 +     */
      public ?string $isbn = null;
  
@@ -400,7 +398,7 @@ Modify these files as described in these patches:
 +    /**
 +     * The title of this book.
 +     *
-+     * @ORM\Column
++     * #[ORM\Column]
 +     */
      public string $title = '';
  
@@ -408,7 +406,7 @@ Modify these files as described in these patches:
 +    /**
 +     * The description of this book.
 +     *
-+     * @ORM\Column(type="text")
++     * #[ORM\Column(type="text")]
 +     */
      public string $description = '';
  
@@ -416,7 +414,7 @@ Modify these files as described in these patches:
 +    /**
 +     * The author of this book.
 +     *
-+     * @ORM\Column
++     * #[ORM\Column]
 +     */
      public string $author = '';
  
@@ -424,7 +422,7 @@ Modify these files as described in these patches:
 +    /**
 +     * The publication date of this book.
 +     *
-+     * @ORM\Column(type="datetime_immutable")
++     * #[ORM\Column]
 +     */
      public ?\DateTimeInterface $publicationDate = null;
  
@@ -432,7 +430,7 @@ Modify these files as described in these patches:
 +    /**
 +     * @var Review[] Available reviews for this book.
 +     *
-+     * @ORM\OneToMany(targetEntity="Review", mappedBy="book", cascade={"persist", "remove"})
++     * #[ORM\OneToMany(mappedBy: 'book', targetEntity: 'Review', cascade: ['persist', 'remove'])]
 +     */
      public iterable $reviews;
  
@@ -451,7 +449,7 @@ Modify these files as described in these patches:
 +/**
 + * A review of a book.
 + *
-+ * @ORM\Entity
++ * #[ORM\Entity]
 + */
  #[ApiResource]
  class Review
@@ -460,9 +458,7 @@ Modify these files as described in these patches:
 +    /**
 +     * The id of this review.
 +     *
-+     * @ORM\Id
-+     * @ORM\GeneratedValue
-+     * @ORM\Column(type="integer")
++     * #[ORM\Id, ORM\Column, ORM\GeneratedValue]
 +     */
      private ?int $id = null;
  
@@ -470,7 +466,7 @@ Modify these files as described in these patches:
 +    /**
 +     * The rating of this review (between 0 and 5).
 +     *
-+     * @ORM\Column(type="smallint")
++     * #[ORM\Column(type: "smallint")]
 +     */
      public int $rating = 0;
  
@@ -478,7 +474,7 @@ Modify these files as described in these patches:
 +    /**
 +     * The body of the review.
 +     *
-+     * @ORM\Column(type="text")
++     * #[ORM\Column(type: "text")]
 +     */
      public string $body = '';
  
@@ -486,7 +482,7 @@ Modify these files as described in these patches:
 +    /**
 +     * The author of the review.
 +     *
-+     * @ORM\Column
++     * #[ORM\Column]
 +     */
      public string $author = '';
  
@@ -494,7 +490,7 @@ Modify these files as described in these patches:
 +    /**
 +     * The date of publication of this review.
 +     *
-+     * @ORM\Column(type="datetime_immutable")
++     * #[ORM\Column]
 +     */
      public ?\DateTimeInterface $publicationDate = null;
  
@@ -502,7 +498,7 @@ Modify these files as described in these patches:
 +    /**
 +     * The book this review is about.
 +     *
-+     * @ORM\ManyToOne(targetEntity="Book", inversedBy="reviews")
++     * #[ORM\ManyToOne(targetEntity: "Book", inversedBy: "reviews")]
 +     */
      public ?Book $book = null;
  
@@ -642,29 +638,24 @@ Modify the following files as described in these patches:
  use Doctrine\Common\Collections\ArrayCollection;
  use Doctrine\ORM\Mapping as ORM;
 +use Symfony\Component\Validator\Constraints as Assert;
- 
-      * @ORM\Column(nullable=true)
-      */
+
+     #[ORM\Column(nullable: true)] 
 +    #[Assert\Isbn]
-     public ?string $isbn = null;
-     
-      * @ORM\Column
-      */
+     public ?string $isbn = null;     
+ 
+     #[ORM\Column]
 +    #[Assert\NotBlank]
      public string $title = '';
  
-      * @ORM\Column(type="text")
-      */
+     #[ORM\Column]
 +    #[Assert\NotBlank]
      public string $description = '';
  
-      * @ORM\Column
-      */
+     #[ORM\Column] 
 +    #[Assert\NotBlank]
      public string $author = '';
  
-      * @ORM\Column(type="datetime_immutable")
-      */
+     #[ORM\Column]  
 +    #[Assert\NotNull]
      public ?\DateTimeInterface $publicationDate = null;
 ```
@@ -675,29 +666,24 @@ Modify the following files as described in these patches:
  use ApiPlatform\Core\Annotation\ApiResource;
  use Doctrine\ORM\Mapping as ORM;
 +use Symfony\Component\Validator\Constraints as Assert;
- 
-      * @ORM\Column(type="smallint")
-      */
+
+     #[ORM\Column(type: 'smallint')]   
 +    #[Assert\Range(min: 0, max: 5)]
      public int $rating = 0;
  
-      * @ORM\Column(type="text")
-      */
+     #[ORM\Column(type: 'text')]
 +    #[Assert\NotBlank]
      public string $body = '';
  
-      * @ORM\Column
-      */
+     #[ORM\Column]
 +    #[Assert\NotBlank]
      public string $author = '';
  
-      * @ORM\Column(type="datetime_immutable")
-      */
+     #[ORM\Column] 
 +    #[Assert\NotNull]
      public ?\DateTimeInterface $publicationDate = null;
  
-      * @ORM\ManyToOne(targetEntity="Book", inversedBy="reviews")
-      */
+     #[ORM\ManyToOne(inverdedBy: 'reviews')] 
 +    #[Assert\NotNull]
      public ?Book $book = null;
  

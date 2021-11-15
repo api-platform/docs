@@ -29,11 +29,9 @@ use Doctrine\ORM\Mapping as ORM;
 #[ApiResource]
 class Author
 {
-    #[ORM\Id]
-    #[ORM\GeneratedValue]
-    #[ORM\Column(type: 'integer')]
+    #[ORM\Id, ORM\Column, ORM\GeneratedValue]
     #[ApiFilter(SearchFilter::class, strategy: "exact")]
-    public $id;
+    public ?int $id = null;
 
     #[ORM\Column]
     public string $name;

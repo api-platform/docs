@@ -34,29 +34,15 @@ use Symfony\Component\Validator\Constraints as Assert;
 )]
 class Book
 {
-    /**
-     * @var int
-     *
-     */
-    #[ORM\Id]
-    #[ORM\GeneratedValue]
-    #[ORM\Column(type: 'integer')]
-    private $id;
+    #[ORM\Id, ORM\Column, ORM\GeneratedValue]
+    private ?int $id = null;
 
-    /**
-     * @var string The title
-     *
-     */
     #[ORM\Column]
     #[Assert\NotBlank]
-    public $title;
+    public string $title;
 
-    /**
-     * @var User The owner
-     *
-     */
-    #[ORM\ManyToOne(targetEntity: User::class)] 
-    public $owner;
+    #[ORM\ManyToOne]
+    public User $owner;
 
     // ...
 }

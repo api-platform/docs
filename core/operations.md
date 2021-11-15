@@ -418,9 +418,7 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\Entity]
 class Place
 {
-    #[ORM\Id]
-    #[ORM\GeneratedValue]
-    #[ORM\Column(type: 'integer')]
+    #[ORM\Id, ORM\Column, ORM\GeneratedValue]
     private ?int $id = null;
 
     #[ORM\Column] 

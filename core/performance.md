@@ -163,7 +163,7 @@ database driver.
 By default Doctrine comes with [lazy loading](https://www.doctrine-project.org/projects/doctrine-orm/en/latest/reference/working-with-objects.html#by-lazy-loading) - usually a killer time-saving feature but also a performance killer with large applications.
 
 Fortunately, Doctrine offers another approach to solve this problem: [eager loading](https://www.doctrine-project.org/projects/doctrine-orm/en/current/reference/working-with-objects.html#by-eager-loading).
-This can easily be enabled for a relation: `@ORM\ManyToOne(fetch="EAGER")`.
+This can easily be enabled for a relation: `#[ORM\ManyToOne(fetch: "EAGER")]`.
 
 By default in API Platform, we made the choice to force eager loading for all relations, with or without the Doctrine
 `fetch` attribute. Thanks to the eager loading [extension](extensions.md). The `EagerLoadingExtension` will join every
@@ -231,9 +231,7 @@ namespace App\Entity;
 use ApiPlatform\Core\Annotation\ApiResource;
 use Doctrine\ORM\Mapping as ORM;
 
-/**
- * @ORM\Entity
- */
+#[ORM\Entity]
 #[ApiResource]
 class Address
 {
@@ -250,25 +248,18 @@ namespace App\Entity;
 use ApiPlatform\Core\Annotation\ApiResource;
 use Doctrine\ORM\Mapping as ORM;
 
-/**
- * @ORM\Entity
- */
+#[ORM\Entity]
 #[ApiResource(forceEager: false)]
 class User
 {
-    /**
-     * @var Address
-     *
-     * @ORM\ManyToOne(targetEntity="Address", fetch="EAGER")
-     */
-    public $address;
+    #[ORM\ManyToOne(fetch: 'EAGER')]
+    public Address $address;
 
     /**
      * @var Group[]
-     *
-     * @ORM\ManyToMany(targetEntity="Group", inversedBy="users")
-     * @ORM\JoinTable(name="users_groups")
      */
+    #[ORM\ManyToMany(targetEntity: 'Group', inversedBy: 'users')]
+    #[ORM\JoinTable(name: 'users_groups')]
     public $groups;
 
     // ...
@@ -284,9 +275,7 @@ namespace App\Entity;
 use ApiPlatform\Core\Annotation\ApiResource;
 use Doctrine\ORM\Mapping as ORM;
 
-/**
- * @ORM\Entity
- */
+#[ORM\Entity]
 #[ApiResource(
     forceEager: false,
     itemOperations: [
@@ -302,9 +291,8 @@ class Group
 {
     /**
      * @var User[]
-     *
-     * @ManyToMany(targetEntity="User", mappedBy="groups")
      */
+    #[ORM\ManyToMany(targetEntity: 'User', mappedBy: 'groups')] 
     public $users;
 
     // ...

@@ -71,23 +71,21 @@ use Symfony\Component\Serializer\Annotation\Groups;
 )]
 class User extends BaseUser
 {
-    #[ORM\Id]
-    #[ORM\GeneratedValue]
-    #[ORM\Column(type: 'integer')]
-    protected $id;
+    #[ORM\Id, ORM\Column, ORM\GeneratedValue]
+    protected ?int $id = null;
 
     #[Groups("user")]
-    protected $email;
+    protected string $email;
 
-    #[ORM\Column(type: 'string', length: 255, nullable: true)] 
+    #[ORM\Column(nullable: true)] 
     #[Groups("user")]
-    protected $fullname;
+    protected string $fullname;
 
     #[Groups("user:write")]
-    protected $plainPassword;
+    protected string $plainPassword;
 
     #[Groups("user")]
-    protected $username;
+    protected string $username;
 
     public function setFullname(?string $fullname): void
     {

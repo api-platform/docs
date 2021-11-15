@@ -24,13 +24,11 @@ use Doctrine\ORM\Mapping as ORM;
 #[ApiResource]
 class Answer
 {
-    #[ORM\Id]
-    #[ORM\GeneratedValue]
-    #[ORM\Column(type: 'integer')]
-    private $id;
+    #[ORM\Id, ORM\Column, ORM\GeneratedValue]
+    private ?int $id = null;
 
     #[ORM\Column(type: 'text')]
-    public $content;
+    public string $content;
 
     #[ORM\OneToOne(targetEntity: Question::class, mappedBy: 'answer')]
     public $question;
@@ -55,10 +53,8 @@ use Doctrine\ORM\Mapping as ORM;
 #[ApiResource]
 class Question
 {
-    #[ORM\Id]
-    #[ORM\GeneratedValue]
-    #[ORM\Column(type: 'integer']
-    private $id;
+    #[ORM\Id, ORM\Column, ORM\GeneratedValue]
+    private ?int $id = null;
 
     #[ORM\Column(type: 'text')]
     public $content;

@@ -126,10 +126,8 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[ApiResource]
 class Product // The class name will be used to name exposed resources
 {
-    #[ORM\Id]
-    #[ORM\GeneratedValue]
-    #[ORM\Column(type: 'integer')]
-    private $id;
+    #[ORM\Id, ORM\Column, ORM\GeneratedValue]
+    private ?int $id = null;
 
     /**
      * @param string $name A name property - this description will be available in the API documentation too.
@@ -146,14 +144,14 @@ class Product // The class name will be used to name exposed resources
             ],
         ],
     )]
-    public $name;
+    public string $name;
 
     #[ORM\Column] 
     #[Assert\DateTime]
     #[ApiProperty(
         openapi_context: ["type" => "string", "format" => "date-time"]
     )]
-    public $timestamp;
+    public \DateTimeInterface $timestamp;
 
     // ...
 }
