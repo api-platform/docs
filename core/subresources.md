@@ -59,7 +59,7 @@ class Question
     #[ORM\Column(type: 'text')]
     public $content;
 
-    #[ORM\OneToOne(targetEntity: Answer::class, insersedBy: 'question')]
+    #[ORM\OneToOne(targetEntity: Answer::class, inversedBy: 'question')]
     #[ORM\JoinColumn(referencedColumnName: 'id', unique: true)]
     #[ApiSubresource]
     public $answer;
