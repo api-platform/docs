@@ -31,15 +31,9 @@ use Symfony\Component\Validator\Constraints as Assert; // Symfony's built-in con
 #[ApiResource]
 class Product
 {
-    /**
-     * @var The id of this product.
-     */
     #[ORM\Id, ORM\Column, ORM\GeneratedValue]
     private ?int $id = null;
 
-    /**
-     * @var The name of the product
-     */
     #[ORM\Column]
     #[Assert\NotBlank]
     public string $name;
