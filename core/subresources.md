@@ -62,7 +62,7 @@ class Question
     #[ORM\OneToOne(targetEntity: Answer::class, inversedBy: 'question')]
     #[ORM\JoinColumn(referencedColumnName: 'id', unique: true)]
     #[ApiSubresource]
-    public $answer;
+    public Answer $answer;
 
     public function getId(): ?int
     {
