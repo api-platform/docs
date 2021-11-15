@@ -122,7 +122,7 @@ class Offer
     #[ORM\Column(type: 'text')]
     public string $description = '';
 
-    #[ORM\Column(type: 'float')]
+    #[ORM\Column]
     #[Assert\Range(minMessage: 'The price must be superior to 0.', min: 0)]
     public float $price = -1.0;
 
