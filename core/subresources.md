@@ -31,7 +31,7 @@ class Answer
     public string $content;
 
     #[ORM\OneToOne(targetEntity: Question::class, mappedBy: 'answer')]
-    public $question;
+    public Question $question;
 
     public function getId(): ?int
     {
