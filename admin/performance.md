@@ -35,7 +35,7 @@ class Author
     #[ApiFilter(SearchFilter::class, strategy: "exact")]
     public $id;
 
-    #[ORM\Column(type: 'string')]
-    public $name;
+    #[ORM\Column]
+    public string $name;
 }
 ```

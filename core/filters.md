@@ -1534,7 +1534,7 @@ class DummyCar
     #[ORM\Column(type: 'integer')]
     private ?int $id = null;
 
-    #[ORM\Column(type: 'string')]
+    #[ORM\Column]
     #[ApiFilter(SearchFilter::class, strategy: 'partial')]
     public ?string $name = null;
 

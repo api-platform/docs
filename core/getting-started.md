@@ -60,7 +60,7 @@ class Product // The class name will be used to name exposed resources
      * A name property - this description will be available in the API documentation too.
      *
      */
-    #[ORM\Column(type: 'string')] 
+    #[ORM\Column] 
     #[Assert\NotBlank]
     public string $name = '';
 

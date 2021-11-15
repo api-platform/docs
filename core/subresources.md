@@ -20,13 +20,13 @@ namespace App\Entity;
 use ApiPlatform\Core\Annotation\ApiResource;
 use Doctrine\ORM\Mapping as ORM;
 
-#[ORM\Entity()]
+#[ORM\Entity]
 #[ApiResource]
 class Answer
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
-    #[ORM\Column(type: 'integer']
+    #[ORM\Column(type: 'integer')]
     private $id;
 
     #[ORM\Column(type: 'text')]
