@@ -1105,7 +1105,7 @@ final class Brand
     #[ORM\Id, ORM\Column, ORM\GeneratedValue]
     private ?int $id = null;
 
-    #[ORM\ManyToMany(targetEntity: 'App\Entity\Car', inversedBy: 'brands')]
+    #[ORM\ManyToMany(targetEntity: Car::class, inversedBy: 'brands')]
     #[ORM\JoinTable(name: 'CarToBrand')]
     #[ORM\JoinColumn(name: 'brand_id', referencedColumnName: 'id', nullable: false)]
     #[ORM\InverseJoinColumn(name: 'car_id', referencedColumnName: 'id', nullable: false)]
