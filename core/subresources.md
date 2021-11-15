@@ -30,7 +30,7 @@ class Answer
     #[ORM\Column(type: 'text')]
     public string $content;
 
-    #[ORM\OneToOne(targetEntity: Question::class, mappedBy: 'answer')]
+    #[ORM\OneToOne]
     public Question $question;
 
     public function getId(): ?int
@@ -59,7 +59,7 @@ class Question
     #[ORM\Column(type: 'text')]
     public string $content;
 
-    #[ORM\OneToOne(targetEntity: Answer::class, inversedBy: 'question')]
+    #[ORM\OneToOne]
     #[ORM\JoinColumn(referencedColumnName: 'id', unique: true)]
     #[ApiSubresource]
     public Answer $answer;
