@@ -1,6 +1,8 @@
 # Custom Generator
 
-You will probably want to extend or, at least, take a look at [BaseGenerator.js](https://github.com/api-platform/client-generator/blob/main/src/generators/BaseGenerator.js), since the library expects some methods to be available, as well as one of the included generator to make your own.
+Client Generator provides support for many of the popular JS frameworks, but you may be using another framework or language and may need a solution adapted to your specific needs. For this cenario, you can write your own generator and pass it to the CLI using a path as the `-g` argument.
+
+You will probably want to extend or, at least, take a look at [BaseGenerator.js](https://github.com/api-platform/client-generator/blob/main/src/generators/BaseGenerator.js), since the library expects some methods to be available, as well as one of the [included generators](https://github.com/api-platform/client-generator/blob/main/src/generators/BaseGenerator.j) to make your own.
 
 ## Usage
 
@@ -12,7 +14,7 @@ The `-g` argument can point to any resolvable node module which means it can be 
 
 ## Example
 
-Let's create a basic react generator with Create form as an example:
+Client Generator makes use of the [Handlebars](https://handlebarsjs.com/) template engine. You can use any programming language or file type. Your generator can also pass data to your templates in any shape you want.
 
 ### Generator
 
@@ -24,253 +26,66 @@ export default class extends BaseGenerator {
     constructor(params) {
         super(params);
 
-        this.registerTemplates("", [
-            "utils/dataAccess.js",
-            "components/foo/Create.js",
-            "routes/foo.js",
-        ]);
+        this.registerTemplates("", ["main.rs"]);
     }
 
-    help(resource) {
-        const titleLc = resource.title.toLowerCase();
-
-        console.log(
-            'Code for the "%s" resource type has been generated!',
-            resource.title
-        );
-        console.log(`
-//import routes
-import ${titleLc}Routes from './routes/${titleLc}';
-
-// Add routes to <Switch>
-{ ${titleLc}Routes }
-`);
-    }
+    help() {}
 
     generate(api, resource, dir) {
-        const lc = resource.title.toLowerCase();
-        const titleUcFirst =
-            resource.title.charAt(0).toUpperCase() + resource.title.slice(1);
-
         const context = {
-            title: resource.title,
-            name: resource.name,
-            lc,
-            uc: resource.title.toUpperCase(),
-            fields: resource.readableFields,
-            formFields: this.buildFields(resource.writableFields),
-            hydraPrefix: this.hydraPrefix,
-            titleUcFirst,
+            type: "Tilia",
+            structure: [
+                { name: "name", type: "String" },
+                { name: "min_size", type: "u8" },
+                { name: "max_size", type: "u8" },
+            ],
+            list: [
+                {
+                    name: "Tilia cordata",
+                    minSize: 50,
+                    maxSize: 80,
+                },
+                {
+                    name: "Tilia platyphyllos",
+                    minSize: 50,
+                    maxSize: 70,
+                },
+                {
+                    name: "Tilia tomentosa",
+                    minSize: 50,
+                    maxSize: 70,
+                },
+                {
+                    name: "Tilia intermedia",
+                    minSize: 50,
+                    maxSize: 165,
+                },
+            ],
         };
 
-        // Create directories
-        // These directories may already exist
-        [`${dir}/utils`, `${dir}/config`, `${dir}/routes`].forEach((dir) =>
-            this.createDir(dir, false)
-        );
+        this.createDir(dir);
 
-        [`${dir}/components/${lc}`].forEach((dir) => this.createDir(dir));
-
-        ["components/%s/Create.js", "routes/%s.js"].forEach((pattern) =>
-            this.createFileFromPattern(pattern, dir, lc, context)
-        );
-
-        // utils
-        this.createFile(
-            "utils/dataAccess.js",
-            `${dir}/utils/dataAccess.js`,
-            context,
-            false
-        );
-
-        this.createEntrypoint(api.entrypoint, `${dir}/config/entrypoint.js`);
+        this.createFile("main.rs", `${dir}/main.rs`, context, false);
     }
 }
 ```
 
-### `Create` component
+### Template
 
-```js
-// template/components/Create.js
-import React from 'react';
-import { Redirect } from 'react-router-dom';
-import fetch from '../utils/dataAccess';
-
-export default function Create() {
-  const [isLoading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
-  const [created, setCreated] = useState(null);
-
-  const create = useCallback(async (e) => {
-    setLoading(true)
-    try {
-      const values = Array.from(e.target.elements).reduce((vals, e) => {
-        vals[e.id] = e.value;
-        return vals
-      }, {})
-      const response = await fetch('{{{name}}}', { method: 'POST', body: JSON.stringify(values) });
-      const retrieved = await response.json();
-      setCreated(retrieved);
-    } catch (err) {
-      setError(err);
-    } finally {
-      setLoading(false);
-    }
-  }, [setLoading, setError])
-
-  if (created) {
-    return <Redirect to={`edit/${encodeURIComponent(created['@id'])}`} />;
-  }
-
-  return (
-    <div>
-      <h1>New {{{title}}}</h1>
-
-      {isLoading && (
-        <div className="alert alert-info" role="status">
-          Loading...
-        </div>
-      )}
-      {error && (
-        <div className="alert alert-danger" role="alert">
-          <span className="fa fa-exclamation-triangle" aria-hidden="true" />{' '}
-          {error}
-        </div>
-      )}
-
-      <form onSubmit={create}>
-{{#each formFields}}
-        <div className={`form-group`}>
-          <label
-            htmlFor={`{{{lc}}}_{{{name}}}`}
-            className="form-control-label"
-          >
-            {data.input.name}
-          </label>
-          <input
-            name="{{{name}}}"
-            type="{{{type}}}"{{#if step}}
-            step="{{{step}}}"{{/if}}
-            placeholder="{{{description}}}"{{#if required}}
-            required={true}{{/if}}
-            id={`{{{lc}}}_{{{name}}}`}
-          />
-        </div>
-
-        <button type="submit" className="btn btn-success">
-          Submit
-        </button>
-      </form>
-    </div>
-  );
-}
-```
-
-### Utilities
-
-```js
-// template/entrypoint.js
-export const ENTRYPOINT = "{{{entrypoint}}}";
-```
-
-```js
-// template/routes/foo.js
-import React from "react";
-import { Route } from "react-router-dom";
-import { Create } from "../components/{{{lc}}}/";
-
-export default [
-    <Route path="/{{{name}}}/create" component={Create} exact key="create" />,
-];
-```
-
-```js
-// template/utils/dataAccess.js
-import { ENTRYPOINT } from "../config/entrypoint";
-import { SubmissionError } from "redux-form";
-import get from "lodash/get";
-import has from "lodash/has";
-import mapValues from "lodash/mapValues";
-
-const MIME_TYPE = "application/ld+json";
-
-export function fetch(id, options = {}) {
-    if ("undefined" === typeof options.headers) options.headers = new Headers();
-    if (null === options.headers.get("Accept"))
-        options.headers.set("Accept", MIME_TYPE);
-
-    if (
-        "undefined" !== options.body &&
-        !(options.body instanceof FormData) &&
-        null === options.headers.get("Content-Type")
-    )
-        options.headers.set("Content-Type", MIME_TYPE);
-
-    return global.fetch(new URL(id, ENTRYPOINT), options).then((response) => {
-        if (response.ok) return response;
-
-        return response.json().then(
-            (json) => {
-                const error =
-                    json["hydra:description"] ||
-                    json["hydra:title"] ||
-                    "An error occurred.";
-                if (!json.violations) throw Error(error);
-
-                let errors = { _error: error };
-                json.violations.forEach((violation) =>
-                    errors[violation.propertyPath]
-                        ? (errors[violation.propertyPath] +=
-                              "\n" + errors[violation.propertyPath])
-                        : (errors[violation.propertyPath] = violation.message)
-                );
-
-                throw new SubmissionError(errors);
-            },
-            () => {
-                throw new Error(response.statusText || "An error occurred.");
-            }
-        );
-    });
+```rs
+// template/main.rs
+struct {{{type}}} {
+  {{#each structure}}
+  {{{name}}}: {{{type}}}
+  {{/each}}
 }
 
-export function mercureSubscribe(url, topics) {
-    topics.forEach((topic) =>
-        url.searchParams.append("topic", new URL(topic, ENTRYPOINT))
-    );
-
-    return new EventSource(url.toString());
-}
-
-export function normalize(data) {
-    if (has(data, "hydra:member")) {
-        // Normalize items in collections
-        data["hydra:member"] = data["hydra:member"].map((item) =>
-            normalize(item)
-        );
-
-        return data;
-    }
-
-    // Flatten nested documents
-    return mapValues(data, (value) =>
-        Array.isArray(value)
-            ? value.map((v) => normalize(v))
-            : value instanceof Object
-            ? normalize(value)
-            : get(value, "@id", value)
-    );
-}
-
-export function extractHubURL(response) {
-    const linkHeader = response.headers.get("Link");
-    if (!linkHeader) return null;
-
-    const matches = linkHeader.match(
-        /<([^>]+)>;\s+rel=(?:mercure|"[^"]*mercure[^"]*")/
-    );
-
-    return matches && matches[1] ? new URL(matches[1], ENTRYPOINT) : null;
+fn main() {
+  let tilias = [
+  {{#each list}}
+    Tilia { name: "{{{name}}}", min_size: {{{minSize}}}, max_size: {{{maxSize}}}, },
+  {{/each}}
+  ];
 }
 ```
 
@@ -278,4 +93,23 @@ Then we can use our generator:
 
 ```shell
 generate-api-platform-client https://demo.api-platform.com out/ -g "$(pwd)/Generator.js" -t "$(pwd)/template"
+```
+
+which will produces:
+
+```ts
+struct Tilia {
+  name: String
+  min_size: u8
+  max_size: u8
+}
+
+fn main() {
+  let tilias = [
+    Tilia { name: "Tilia cordata", min_size: 50, max_size: 80, },
+    Tilia { name: "Tilia platyphyllos", min_size: 50, max_size: 70, },
+    Tilia { name: "Tilia tomentosa", min_size: 50, max_size: 70, },
+    Tilia { name: "Tilia intermedia", min_size: 50, max_size: 165, },
+  ];
+}
 ```

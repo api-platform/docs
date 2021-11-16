@@ -1,5 +1,5 @@
 chapters:
-  - title: 'The Distribution: Create Powerful APIs with Ease'
+  - title: "The Distribution: Create Powerful APIs with Ease"
     path: distribution
     items:
       - index
@@ -83,6 +83,7 @@ chapters:
       - react-native
       - vuejs
       - typescript
+      - custom
       - troubleshooting
   - title: Deployment
     path: deployment
