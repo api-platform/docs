@@ -16,6 +16,8 @@ The `-g` argument can point to any resolvable node module which means it can be 
 
 Client Generator makes use of the [Handlebars](https://handlebarsjs.com/) template engine. You can use any programming language or file type. Your generator can also pass data to your templates in any shape you want.
 
+In this example, we'll create a simple [Rust](https://www.rust-lang.org) file defining a new `struct` and creating some instances of this `struct`.
+
 ### Generator
 
 ```js
