@@ -18,6 +18,7 @@ import { AdminGuesser, ResourceGuesser } from "@api-platform/admin";
 const App = () => (
   <AdminGuesser
     entrypoint={entrypoint}
+    mercure={mercure}
     dataProvider={dataProvider}
     authProvider={authProvider}>
     <ResourceGuesser
@@ -39,6 +40,7 @@ export default App;
 |-------------------|--------------------|----------------|----------|----------------------------------------------------------------------------------|
 | dataProvider      | object or function | -              | yes      | communicates with your API                                                       |
 | schemaAnalyzer    | object             | schemaAnalyzer | yes      | retrieves resource type according to [Schema.org](https://schema.org) vocabulary |
+| mercure           | object             | `hub`: the URL to your mercure hub. `jwt`: a subscriber JWT to access your mercure hub. `topicUrl`: the topic URL of your resources. | no       | configuration to communicates with a mercure endpoint  |
 | children          | node or function   | -              | no       | -                                                                                |
 | theme             | object             | theme          | no       | theme of your Admin App                                                          |
 | includeDeprecated | boolean            | true or false  | no       | displays or not deprecated resources                                             |
