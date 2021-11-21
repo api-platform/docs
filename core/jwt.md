@@ -344,3 +344,26 @@ class AuthenticationTest extends ApiTestCase
 ```
 
 Refer to [Testing the API](../distribution/testing.md) for more information about testing API Platform.
+
+### Improving tests suite speed
+
+Since now we have a `JWT` authentication, functional tests require us to log in each time we want to test an API endpoint. This is where [Password Hashers](https://symfony.com/doc/current/security/passwords.html) come into play.
+
+Hashers are used for 2 reasons:
+
+1. To generate a hash for a raw password (`self::$container->get('security.user_password_hasher')->hashPassword($user, '$3CR3T')`)
+2. To verify a password during authentication
+
+While hashing and verifying 1 password is quite a fast operation, doing it hundreds or even thousands of times in a tests suite becomes a bottleneck, because reliable hashing algorithms are slow by their nature.
+
+To significantly improve the test suite speed, we can use more simple password hasher specifically for the `test` environment.
+
+```yaml
+# override in api/config/packages/test/security.yaml for test env
+security:
+    password_hashers:
+        App\Entity\User:
+            algorithm: md5
+            encode_as_base64: false
+            iterations: 0
+```
