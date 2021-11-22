@@ -345,7 +345,7 @@ class AuthenticationTest extends ApiTestCase
 
 Refer to [Testing the API](../distribution/testing.md) for more information about testing API Platform.
 
-### Improving tests suite speed
+### Improving Tests Suite Speed
 
 Since now we have a `JWT` authentication, functional tests require us to log in each time we want to test an API endpoint. This is where [Password Hashers](https://symfony.com/doc/current/security/passwords.html) come into play.
 
