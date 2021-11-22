@@ -51,7 +51,6 @@ namespace App\Entity;
 use ApiPlatform\Core\Annotation\ApiResource;
 
 #[ApiResource(order: ["foo", "bar"])]
- */
 class Book
 {
     // ...
