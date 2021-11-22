@@ -31,9 +31,8 @@ class Book
 ```yaml
 # api/config/api_platform/resources/Book.yaml
 App\Entity\Book:
-    attributes:
-        order:
-            foo: ASC
+    order:
+        foo: ASC
 ```
 
 [/codeSelector]
@@ -72,8 +71,7 @@ class Book
 ```yaml
 # api/config/api_platform/resources/Book.yaml
 App\Entity\Book:
-    attributes:
-        order: ['foo', 'bar']
+    order: ['foo', 'bar']
 ```
 
 [/codeSelector]
@@ -106,8 +104,7 @@ class Book
 ```yaml
 # api/config/api_platform/resources/Book.yaml
 App\Entity\Book:
-    attributes:
-        order: ['author.username']
+    order: ['author.username']
 ```
 
 [/codeSelector]
@@ -144,15 +141,15 @@ class Book
 ```yaml
 # api/config/api_platform/resources/Book.yaml
 App\Entity\Book:
-    get: ~
+    ApiPlatform\Metadata\GetCollection: ~
     get_desc_custom:
-        method: get
-        path: custom_collection_desc_foos
+        class: ApiPlatform\Metadata\GetCollection
+        uriTemplate: custom_collection_desc_foos
         order:
             name: DESC
     get_asc_custom:
-        method: get
-        path: custom_collection_asc_foos
+        class: ApiPlatform\Metadata\GetCollection
+        uriTemplate: custom_collection_asc_foos
         order:
             name: ASC
 ```

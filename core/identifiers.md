@@ -35,18 +35,16 @@ final class Person
 
 ```yaml
 # api/config/api_platform/resources/Person.yaml
-App\Entity\Person:
-    properties:
+properties:
+    App\Entity\Person:
         code:
             identifier: true
 ```
 
 ```xml
-<resources xmlns="https://api-platform.com/schema/metadata">
-    <resource class="App\EntityPerson">
-        <property name="code" identifier="true"/>
-    </resource>
-</resources>
+<properties xmlns="https://api-platform.com/schema/metadata/properties">
+    <property resource="App\EntityPerson" name="code" identifier="true"/>
+</properties>
 ```
 
 [/codeSelector]

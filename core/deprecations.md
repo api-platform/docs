@@ -91,14 +91,12 @@ class Review
 
 ```yaml
 # api/config/api_platform/resources/Review.yaml
-resources:
+properties:
     # ...
     App\Entity\Review:
-        properties:
-            # ...
-            letter:
-                attributes:
-                    deprecation_reason: 'Use the rating property instead'
+        # ...
+        letter:
+            deprecationReason: 'Use the rating property instead'
 ```
 
 [/codeSelector]

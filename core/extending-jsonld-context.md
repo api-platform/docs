@@ -88,27 +88,29 @@ class Book
 ```yaml
 # api/config/api_platform/resources.yaml
 App\Entity\Book:
-    itemOperations:
-        get:
-            hydra_context: { foo: 'bar' }
+    operations:
+        ApiPlatform\Metadata\Get:
+            hydraContext: { foo: 'bar' }
 ```
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" ?>
 <!-- api/config/api_platform/resources.xml -->
 
-<resources xmlns="https://api-platform.com/schema/metadata"
+<resources xmlns="https://api-platform.com/schema/metadata/resources"
            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-           xsi:schemaLocation="https://api-platform.com/schema/metadata
-           https://api-platform.com/schema/metadata/metadata-2.0.xsd">
+           xsi:schemaLocation="https://api-platform.com/schema/metadata/resources
+           https://api-platform.com/schema/metadata/resources.xsd">
     <resource class="App\Entity\Book">
-        <itemOperations>
-            <itemOperation name="get">              
-                <attribute name="hydra_context">
-                    <attribute name="foo">bar</attribute>
-                </attribute>
-            </itemOperation>
-        </itemOperations>
+        <operations>
+            <operation class="ApiPlatform\Metadata\Get">              
+                <hydraContext>
+                    <values>
+                        <value name="foo">bar</value>
+                    </values>
+                </hydraContext>
+            </operation>
+        </operations>
     </resource>
 </resources>
 ```

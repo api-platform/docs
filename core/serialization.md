@@ -104,11 +104,10 @@ class Book
 # api/config/api_platform/resources.yaml
 resources:
     App\Entity\Book:
-        attributes:
-            normalization_context:
-                groups: ['read']
-            denormalization_context:
-                groups: ['write']
+        normalizationContext:
+            groups: ['read']
+        denormalizationContext:
+            groups: ['write']
 
 # api/config/serialization/Book.yaml
 App\Entity\Book:
@@ -175,13 +174,12 @@ class Book
 ```yaml
 # api/config/api_platform/resources/Book.yaml
 App\Entity\Book:
-    attributes:
-        normalization_context:
-            groups: ['get']
-    itemOperations:
-        get: ~
-        put:
-            normalization_context:
+    normalizationContext:
+        groups: ['get']
+    operations:
+        ApiPlatform\Metadata\Get: ~
+        ApiPlatform\Metadata\Put:
+            normalizationContext:
                 groups: ['put']
 
 # api/config/serializer/Book.yaml
@@ -255,9 +253,8 @@ class Book
 ```yaml
 # api/config/api_platform/resources/Book.yaml
 App\Entity\Book:
-    attributes:
-        normalization_context:
-            groups: ['book']
+    normalizationContext:
+        groups: ['book']
 
 # api/config/serializer/Book.yaml
 App\Entity\Book:
@@ -346,9 +343,8 @@ class Book
 ```yaml
 # api/config/api_platform/resources/Book.yaml
 App\Entity\Book:
-    attributes:
-        denormalization_context:
-            groups: ['book']
+    denormalizationContext:
+        groups: ['book']
 ```
 
 [/codeSelector]
@@ -397,11 +393,10 @@ class Person
 ```yaml
 # api/config/api_platform/resources/Person.yaml
 App\Entity\Person:
-    attributes:
-        normalization_context:
-            groups: ['person']
-        denormalization_context:
-            groups: ['person']
+    normalizationContext:
+        groups: ['person']
+    denormalizationContext:
+        groups: ['person']
 
 # api/config/serializer/Person.yaml
 App\Entity\Person:
@@ -452,13 +447,14 @@ class Person
 
 ```yaml
 # api/config/api_platform/resources/Person.yaml
-App\Entity\Person:
-    attributes:
-        normalization_context:
-            groups: ['person']
-        denormalization_context:
-            groups: ['person']
-    properties:
+resources:
+    App\Entity\Person:
+        normalizationContext:
+          groups: ['person']
+        denormalizationContext:
+          groups: ['person']
+properties:
+    App\Entity\Person:
         parent:
             readableLink: false
             writableLink: false
@@ -683,9 +679,9 @@ class Greeting
 ```yaml
 # api/config/api_platform/resources/Greeting.yaml
 App\Entity\Greeting:
-    collectionOperations:
-        get:
-            normalization_context:
+    operations:
+        ApiPlatform\Metadata\GetCollection:
+            normalizationContext:
                 groups: 'greeting:collection:get'
 
 # api/config/serializer/Greeting.yaml
@@ -748,11 +744,10 @@ class Book
 ```yaml
 # api/config/api_platform/resources/Book.yaml
 App\Entity\Book: 
-    attributes:
-        normalization_context:
-            groups: ['book:output']
-        denormalization_context:
-            groups: ['book:input']
+    normalizationContext:
+        groups: ['book:output']
+    denormalizationContext:
+        groups: ['book:input']
 
 # api/config/serializer/Book.yaml
 App\Entity\Book:
@@ -1050,8 +1045,8 @@ You can also use the YAML configuration format:
 
 ```yaml
 # api/config/api_platform/resources.yaml
-App\Entity\Book:
-    properties:
+properties:
+    App\Entity\Book:
         id:
             identifier: true
 ```
@@ -1102,9 +1097,8 @@ class Book
 ```yaml
 # api/config/api_platform/resources/Book.yaml
 App\Entity\Book:
-    attributes:
-        normalization_context:
-            jsonld_embed_context: true
+    normalizationContext:
+        jsonldEmbedContext: true
 ```
 
 [/codeSelector]

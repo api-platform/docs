@@ -31,23 +31,19 @@ final class Book
 # api/config/api_platform/resources.yaml
 resources:
     App\Entity\Book:
-        attributes:
-            input: App\Dto\BookInput
-            output: App\Dto\BookOutput
+        input: App\Dto\BookInput
+        output: App\Dto\BookOutput
 ```
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" ?>
 <!-- api/config/api_platform/resources.xml -->
 
-<resources xmlns="https://api-platform.com/schema/metadata"
+<resources xmlns="https://api-platform.com/schema/metadata/resources"
            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-           xsi:schemaLocation="https://api-platform.com/schema/metadata
-           https://api-platform.com/schema/metadata/metadata-2.0.xsd">
-    <resource class="App\Entity\Book">
-      <attribute name="input">App\Dto\BookInput</attribute>
-      <attribute name="output">App\Dto\BookOutput</attribute>
-    </resource>
+           xsi:schemaLocation="https://api-platform.com/schema/metadata/resources
+           https://api-platform.com/schema/metadata/resources.xsd">
+    <resource class="App\Entity\Book" input="App\Dto\BookInput" output="App\Dto\BookOutput" />
 </resources>
 ```
 
@@ -382,14 +378,13 @@ final class Book
 # api/config/api_platform/resources.yaml
 resources:
     App\Entity\Book:
-        collectionOperations:
+        operations:
             create:
-                method: POST
+                ApiPlatform\Metadata\Post
                 input: App\Dto\CreateBook
                 output: App\Dto\BookOutput
-        itemOperations:
             update:
-                method: PUT
+                ApiPlatform\Metadata\Put
                 input: App\Dto\UpdateBook
                 output: App\Dto\BookOutput
 ```
@@ -398,25 +393,15 @@ resources:
 <?xml version="1.0" encoding="UTF-8" ?>
 <!-- api/config/api_platform/resources.xml -->
 
-<resources xmlns="https://api-platform.com/schema/metadata"
+<resources xmlns="https://api-platform.com/schema/metadata/resources"
            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-           xsi:schemaLocation="https://api-platform.com/schema/metadata
-           https://api-platform.com/schema/metadata/metadata-2.0.xsd">
+           xsi:schemaLocation="https://api-platform.com/schema/metadata/resources
+           https://api-platform.com/schema/metadata/resources.xsd">
     <resource class="App\Entity\Book">
-      <collectionOperations>
-        <collectionOperation name="create">
-          <attribute name="method">POST</attribute>
-          <attribute name="input">App\Dto\CreateBook</attribute>
-          <attribute name="output">App\Dto\BookOutput</attribute>
-        </collectionOperation>
-      </collectionOperations>
-      <itemOperations>
-        <itemOperation name="update">
-          <attribute name="method">PUT</attribute>
-          <attribute name="input">App\Dto\UpdateBook</attribute>
-          <attribute name="output">App\Dto\BookOutput</attribute>
-        </itemOperation>
-      </itemOperations>
+      <operations>
+        <operation class="ApiPlatform\Metadata\Post" name="create" input="App\Dto\CreateBook" output="App\Dto\BookOutput" />
+        <itemOperation class="ApiPlatform\Metadata\Put" name="update" input="App\Dto\UpdateBook" output="App\Dto\BookOutput" />
+      </operations>
     </resource>
 </resources>
 ```
