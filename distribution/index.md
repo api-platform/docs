@@ -520,8 +520,6 @@ Doctrine's annotations map these entities to tables in the database. Annotations
 the code and the configuration but, if you want to decouple classes from their metadata, you can switch to XML or YAML mappings.
 They are supported as well.
 
-**Note:** Doctrine ORM doesn't support PHP 8 attributes at this time, but support should be added soon ([a Pull Request already exists](https://github.com/doctrine/orm/pull/8266)).
-
 Learn more about how to map entities with the Doctrine ORM in [the project's official documentation](https://docs.doctrine-project.org/projects/doctrine-orm/en/latest/reference/association-mapping.html)
 or in Kévin's book "[Persistence in PHP with the Doctrine ORM](https://www.amazon.fr/gp/product/B00HEGSKYQ/ref=as_li_tl?ie=UTF8&camp=1642&creative=6746&creativeASIN=B00HEGSKYQ&linkCode=as2&tag=kevidung-21)".
 
