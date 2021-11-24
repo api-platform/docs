@@ -11,12 +11,12 @@ fully featured PHP data model including:
 hierarchy provided by the vocabulary will be translated to a PHP class hierarchy with parents as `abstract` classes. The generated
 code complies with [PSR](http://www.php-fig.org/) coding standards ;
 * Full, high-quality PHPDoc for classes, properties, constants and methods extracted from the vocabulary ;
-* Doctrine ORM annotation mapping including database columns with type guessing, relations with cardinality guessing, class
-inheritance (through the `@AbstractSuperclass` annotation) ;
-* Data validation through [Symfony Validator](https://symfony.com/doc/current/book/validation.html) annotations including
+* Doctrine ORM or MongoDB ODM attributes mapping including database columns / fields with type guessing, relations with cardinality guessing, class
+inheritance (through the `#[MappedSuperclass]` attribute) ;
+* Data validation through [Symfony Validator](https://symfony.com/doc/current/book/validation.html) attributes including
 data type validation, enum support (choices) and check for required properties ;
-* API Platform Core annotations ;
-* Interfaces and [Doctrine `ResolveTargetEntityListener`](https://doctrine-orm.readthedocs.org/en/latest/cookbook/resolve-target-entity-listener.html)
+* API Platform attributes ;
+* Interfaces and [Doctrine `ResolveTargetEntityListener`](https://www.doctrine-project.org/projects/doctrine-orm/en/current/cookbook/resolve-target-entity-listener.html)
 support ;
 * Custom PHP namespace support ;
 * List of values provided the vocabulary with [PHP Enum](https://github.com/myclabs/php-enum) classes.
@@ -25,13 +25,14 @@ Bonus:
 
 * The code generator is fully configurable and extendable. All features can be deactivated (e.g., the Doctrine mapping generator)
 and a custom generator can be added (e.g., a Doctrine ODM mapping generator) ;
+* The code generator can load previously generated files and add new changes while keeping the user-added ones.
 * The generated code can be used as is in a [Symfony](https://symfony.com) app (but it will work too in a raw PHP project
 or any other framework including [Laravel](https://laravel.com) and [Zend Framework](http://framework.zend.com/)).
 
 ## What Is Schema.org?
 
 Schema.org is a vocabulary representing common data structures and their relations. Schema.org can be exposed as [JSON-LD](https://en.wikipedia.org/wiki/JSON-LD),
-[microdata](https://en.wikipedia.org/wiki/Microdata_(HTML)) and [RDFa](https://en.wikipedia.org/wiki/RDFa).
+[microdata](https://en.wikipedia.org/wiki/Microdata_(HTML)) and [RDF](https://en.wikipedia.org/wiki/Resource_Description_Framework).
 Extracting semantical data exposed in the Schema.org vocabulary is supported by a growing number of companies including
 Google (Search, Gmail), Yahoo!, Bing and Yandex.
 
