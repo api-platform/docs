@@ -83,6 +83,7 @@ This is useful when you need two entities to have more than one relation.
 Example:
 
 ```yaml
+types:
     Organization:
         properties:
             contactPoint: { range: Person, relationTableName: organization_contactPoint }
@@ -96,6 +97,7 @@ Override the guessed class hierarchy of a given type with this option.
 Example:
 
 ```yaml
+types:
     ImageObject:
         parent: Thing # Force the parent to be Thing instead of CreativeWork > MediaObject
         properties: ~
@@ -110,8 +112,25 @@ Force a class to be (or to not be) `abstract`.
 Example:
 
 ```yaml
+types:
     Person:
         abstract: true
+```
+
+## Define Operations
+
+API Platform operations can be added this way:
+
+```yaml
+types:
+    Person:
+        operations:
+            item:
+                get:
+                    method: GET
+            collection:
+                get:
+                    route_name: get_person_collection
 ```
 
 ## Forcing a Nullable Property
@@ -128,7 +147,7 @@ Example:
             name: { nullable: false }
 ```
 
-The `@Assert\NotNull` constrain is automatically added.
+The `@Assert\NotNull` constraint is automatically added.
 
 ```php
 <?php
@@ -658,6 +677,9 @@ config:
 
             # If declaring a custom class, this will be the class from which properties type will be guessed
             guessFrom:            Thing
+
+            # Operations for the class
+            operations:           []
 
             # Import all existing properties
             allProperties:        false
