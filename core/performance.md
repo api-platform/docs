@@ -117,6 +117,7 @@ It's also possible to set different cache headers per operation:
 
 ```php
 use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Get;
 
 #[ApiResource]
 #[Get(
@@ -173,8 +174,8 @@ you have to bypass `readable` and `readableLink` by using the `fetchEager` attri
 ```php
 ...
 
- #[ApiProperty(fetchEager: true)]
- public $foo;
+#[ApiProperty(fetchEager: true)]
+public $foo;
 
 ...
 ```

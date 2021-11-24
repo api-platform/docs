@@ -378,12 +378,9 @@ use Symfony\Component\Routing\Annotation\Route;
 #[AsController]
 class CreateBookPublication extends AbstractController
 {
-    private $bookPublishingHandler;
-
-    public function __construct(BookPublishingHandler $bookPublishingHandler)
-    {
-        $this->bookPublishingHandler = $bookPublishingHandler;
-    }
+    public function __construct(
+        private BookPublishingHandler $bookPublishingHandler
+    ) {}
 
     #[Route(
         name: 'book_post_publication',

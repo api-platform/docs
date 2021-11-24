@@ -138,25 +138,25 @@ class Product // The class name will be used to name exposed resources
      * @param string $name A name property - this description will be available in the API documentation too.
      *
      * @ORM\Column
-     * @Assert\NotBlank
      */
+    #[Assert\NotBlank]
     #[ApiProperty(
         openapiContext: [
-            "type" => "string",
-            "enum" => ["one", "two"],
-            "example" => "one"
+            'type' => 'string',
+            'enum' => ['one', 'two'],
+            'example' => 'one'
         ]
     )]
     public $name;
 
     /**
      * @ORM\Column
-     * @Assert\DateTime
      */
+    #[Assert\DateTime]
     #[ApiProperty(
         openapiContext: [
-            "type" => "string", 
-            "format" => "date-time"
+            'type' => 'string',
+            'format' => 'date-time'
         ]
     )]
     public $timestamp;
@@ -247,7 +247,7 @@ This will produce the following Swagger documentation:
                         "two"
                     ],
                     "example": "one"
-                },
+                }
             }
         }
     }

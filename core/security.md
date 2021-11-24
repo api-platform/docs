@@ -46,8 +46,8 @@ class Book
      * @var string The title
      *
      * @ORM\Column
-     * @Assert\NotBlank
      */
+    #[Assert\NotBlank]
     public $title;
 
     /**
@@ -125,7 +125,7 @@ Available variables are:
 * `user`: the current logged in object, if any
 * `object`: the current resource, or collection of resources for collection operations (note: this is `null` for update/create operations)
 * `previous_object`: (`securityPostDenormalize` only) a clone of `object`, before modifications were made - this is `null` for create operations
-* `request`: the current request
+* `request` (only at the resource level): the current request
 
 Access control checks in the `security` attribute are always executed before the [denormalization step](serialization.md).
 It means than for `PUT` or `PATCH` requests, `object` doesn't contain the value submitted by the user, but values currently stored in [the persistence layer](data-persisters.md).
@@ -304,8 +304,6 @@ For example:
 <?php
 // api/src/Entity/Book.php
 namespace App\Entity;
-
-use ApiPlatform\Metadata\ApiResource;
 
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Get;

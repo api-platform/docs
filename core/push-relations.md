@@ -17,7 +17,7 @@ namespace App\Entity;
 use ApiPlatform\Metadata\ApiProperty;
 use ApiPlatform\Metadata\ApiResource;
 
-#[ApiResource] 
+#[ApiResource]
 class Book
 {
     /**

@@ -42,6 +42,8 @@ jms_serializer:
 
 The JMS Serializer service is available as `jms_serializer`.
 
+**Note:** if you are using JMSSerializerBundle along with FOSRestBundle and considering migrating to API Platform, you might want to take a look at [this guide](migrate-from-fosrestbundle.md) too.
+
 ## "upstream sent too big header while reading response header from upstream" NGINX 502 Error
 
 Some of your API calls fail with a 502 error and the logs for the api container shows the following error message `upstream sent too big header while reading response header from upstream`.

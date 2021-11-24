@@ -13,12 +13,12 @@ namespace App\Entity;
 use ApiPlatform\Metadata\ApiProperty;
 use ApiPlatform\Metadata\ApiResource;
 
-#[ApiResource(types: ["http://schema.org/Book"])]
+#[ApiResource(types: ['http://schema.org/Book'])]
 class Book
 {
     // ...
 
-    #[ApiProperty(types: ["http://schema.org/name"])]
+    #[ApiProperty(types: ['http://schema.org/name'])]
     public $name;
     
     // ...

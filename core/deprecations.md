@@ -121,7 +121,10 @@ namespace App\Entity;
 
 use ApiPlatform\Metadata\ApiResource;
 
-#[ApiResource(deprecationReason:"Create a Book instead", sunset: "01/01/2020")]
+#[ApiResource(
+    deprecationReason: 'Create a Book instead',
+    sunset: '01/01/2020'
+)]
 class Parchment
 {
     // ...
@@ -142,7 +145,10 @@ use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Get;
 
 #[ApiResource]
-#[Get(sunset: '01/01/2020', deprecationReason: 'Retrieve a Book instead')]
+#[Get(
+    deprecationReason: 'Retrieve a Book instead',
+    sunset: '01/01/2020'
+)]
 class Parchment
 {
     // ...

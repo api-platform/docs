@@ -42,9 +42,7 @@ final class Person
     #[ApiProperty(identifier: true)]
     public string $id;
 
-    /**
-     * @Assert\NotBlank
-     */
+    #[Assert\NotBlank]
     public string $name;
 }
 ```
@@ -126,8 +124,8 @@ Set the `messenger` attribute to `input`, and API Platform will automatically di
 namespace App\Entity;
 
 use ApiPlatform\Metadata\ApiResource;
-use ApiPlatform\Metadata\Post;
 use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\Post;
 use App\Dto\ResetPasswordRequest;
 
 #[ApiResource]

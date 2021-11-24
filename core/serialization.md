@@ -90,14 +90,10 @@ use Symfony\Component\Serializer\Annotation\Groups;
 )]
 class Book
 {
-    /**
-     * @Groups({"read", "write"})
-     */
+    #[Groups(['read', 'write'])]
     public $name;
 
-    /**
-     * @Groups("write")
-     */
+    #[Groups('write')]
     public $author;
 
     // ...
@@ -166,14 +162,10 @@ use Symfony\Component\Serializer\Annotation\Groups;
 #[Put(normalizationContext: ['groups' => ['put']])]
 class Book
 {
-    /**
-     * @Groups({"get", "put"})
-     */
+    #[Groups(['get', 'put'])
     public $name;
 
-    /**
-     * @Groups("get")
-     */
+    #[Groups('get')]
     public $author;
 
     // ...
@@ -233,7 +225,7 @@ In the following JSON document, the relation from a book to an author is by defa
 ```
 
 It is possible to embed related objects (in their entirety, or only some of their properties) directly in the parent
-response through the use of serialization groups. By using the following serialization groups annotations (`@Groups`),
+response through the use of serialization groups. By using the following serialization groups annotations (`#[Groups]`),
 a JSON representation of the author is embedded in the book response. As soon as any of the author's attributes is in
 the `book` group, the author will be embedded.
 
@@ -250,14 +242,10 @@ use Symfony\Component\Serializer\Annotation\Groups;
 #[ApiResource(normalizationContext: ['groups' => ['book']])]
 class Book
 {
-    /**
-     * @Groups({"book"})
-     */
+    #[Groups('book')]
     public $name;
 
-    /**
-     * @Groups({"book"})
-     */
+    #[Groups('book')]
     public $author;
 
     // ...
@@ -295,10 +283,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
 #[ApiResource]
 class Person
 {
-    /**
-     * ...
-     * @Groups("book")
-     */
+    #[Groups('book')]
     public $name;
 
     // ...
@@ -396,16 +381,13 @@ use Symfony\Component\Serializer\Annotation\Groups;
 )]
 class Person
 {
-    /**
-     * ...
-     * @Groups("person")
-     */
+    #[Groups('person')]
     public $name;
 
    /**
     * @var Person
-    * @Groups("person")
     */
+    #[Groups('person')]
    public $parent;  // Note that a Person instance has a relation with another Person.
  
     // ...
@@ -453,16 +435,13 @@ use Symfony\Component\Serializer\Annotation\Groups;
 )]
 class Person
 {
-    /**
-     * ...
-     * @Groups("person")
-     */
+    #[Groups('person')]
     public $name;
 
    /**
     * @var Person
-    * @Groups("person")
     */
+   #[Groups('person')]
    #[ApiProperty(readableLink: false, writableLink: false)]
    public $parent;  // This property is now serialized/deserialized as an IRI.
  
@@ -672,8 +651,8 @@ class Greeting
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
-     * @Groups("greeting:collection:get")
      */
+    #[Groups('greeting:collection:get')]
     private $id;
     
     private $a = 1;
@@ -684,8 +663,8 @@ class Greeting
      * @var string A nice person
      *
      * @ORM\Column
-     * @Groups("greeting:collection:get")
      */
+    #[Groups('greeting:collection:get')]
     public $name = '';
 
     public function getId(): int
@@ -693,9 +672,7 @@ class Greeting
         return $this->id;
     }
 
-    /**
-     * @Groups("greeting:collection:get") <- MAGIC IS HERE, you can set a group on a method.
-     */
+    #[Groups('greeting:collection:get')] // <- MAGIC IS HERE, you can set a group on a method.
     public function getSum(): int
     {
         return $this->a + $this->b;
@@ -752,18 +729,16 @@ class Book
      * This field can be managed only by an admin
      *
      * @var bool
-     *
-     * @Groups({"book:output", "admin:input"})
      */
+    #[Groups(['book:output', 'admin:input'}])]
     public $active = false;
 
     /**
      * This field can be managed by any user
      *
      * @var string
-     *
-     * @Groups({"book:output", "book:input"})
      */
+    #[Groups(['book:output', 'book:input'])]
     public $name;
 
     // ...
@@ -879,7 +854,6 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
 use Symfony\Component\Serializer\Normalizer\ContextAwareNormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerAwareInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerAwareTrait;
-use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
 class BookAttributeNormalizer implements ContextAwareNormalizerInterface, NormalizerAwareInterface
 {

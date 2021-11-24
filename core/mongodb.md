@@ -121,8 +121,8 @@ class Product
 
     /**
      * @ODM\Field
-     * @Assert\NotBlank
      */
+    #[Assert\NotBlank]
     public $name;
 
     /**
