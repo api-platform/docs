@@ -87,10 +87,10 @@ types:
     Organization:
         properties:
             contactPoint: { range: Person, relationTableName: organization_contactPoint }
-                member: { range: Person, cardinality: (1..*) } ## Will be default value : organization_person
+            member: { range: Person, cardinality: (1..*) } # Will be the default value: organization_person
 ```
 
-## Forcing (or Disabling) a Class Parent
+## Forcing (or Enabling) a Class Parent
 
 Override the guessed class hierarchy of a given type with this option.
 
@@ -102,7 +102,7 @@ types:
         parent: Thing # Force the parent to be Thing instead of CreativeWork > MediaObject
         properties: ~
     Drug:
-        parent: false # No parent
+        parent: ~ # Enable the class hierarchy for this type
 ```
 
 ## Forcing a Class to be Abstract
@@ -133,6 +133,25 @@ types:
                     route_name: get_person_collection
 ```
 
+## Define Security
+
+API Platform security directives can be added to a generated file, at the class level:
+
+```yaml
+types:
+    Person:
+        security: "is_granted('ROLE_USER')"
+```
+
+Or at a property level:
+
+```yaml
+types:
+    Person:
+        properties:
+            email: { security: "is_granted('ROLE_ADMIN')" }
+```
+
 ## Forcing a Nullable Property
 
 Force a property to be (or to not be) `nullable`.
@@ -147,7 +166,7 @@ Example:
             name: { nullable: false }
 ```
 
-The `@Assert\NotNull` constraint is automatically added.
+The `#[Assert\NotNull]` constraint is automatically added.
 
 ```php
 <?php
@@ -155,11 +174,10 @@ The `@Assert\NotNull` constraint is automatically added.
 
 /**
  * The name of the item.
- *
- * @ORM\Column
- * @Assert\NotNull
  */
-  private string $name;
+#[ORM\Column]
+#[Assert\NotNull]
+private string $name;
 
 ...
 ```
@@ -192,20 +210,20 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 /**
  * A person (alive, dead, undead, or fictional).
  *
- * @see http://schema.org/Person Documentation on Schema.org
- *
- * @ORM\Entity
- * @UniqueEntity("email")
- * @Iri("http://schema.org/Person")
+ * @see https://schema.org/Person
  */
+#[ORM\Entity]
+#[ApiResource(iri: 'https://schema.org/Person')]
+#[UniqueEntity('email')]
 class Person
 {
     /**
      * Email address.
      *
-     * @ORM\Column
-     * @Assert\Email
+     * @see https://schema.org/email
      */
+    #[ORM\Column]
+    #[Assert\Email]
     private string $email;
 
     // ...
@@ -236,15 +254,15 @@ A property can be marked write-only with the following configuration:
 
 In this case, no getter method will be generated.
 
-## Forcing a Property to be in a Serialization Group
+## Forcing a Property to Be in a Serialization Group
 
 Force a property to be in a `groups`.
 
-Enabling the `SerializerGroupsAnnotationGenerator` generator:
+Enabling the `SerializerGroupsAttributeGenerator` generator (enabled by default):
 
 ```yaml
-annotationGenerators:
-    - ApiPlatform\SchemaGenerator\AnnotationGenerator\SerializerGroupsAnnotationGenerator
+attributeGenerators:
+    - ApiPlatform\SchemaGenerator\AttributeGenerator\SerializerGroupsAttributeGenerator
   ...
 ```
 
@@ -267,28 +285,24 @@ namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
-use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * A person (alive, dead, undead, or fictional).
  *
- * @see http://schema.org/Person Documentation on Schema.org
- *
- * @ORM\Entity
- * @Iri("http://schema.org/Person")
+ * @see https://schema.org/Person
  */
+#[ORM\Entity]
+#[ApiResource(iri: 'https://schema.org/Person')]
 class Person
 {
     /**
      * The name of the item.
      *
      * @see https://schema.org/name
-     *
-     * @ORM\Column(nullable=true)
-     * @Assert\Type(type="string")
-     * @Iri("https://schema.org/name")
-     * @Groups({"public"})
      */
+    #[ORM\Column(nullable: true)]
+    #[ApiProperty(iri: 'https://schema.org/name')]
+    #[Groups(['public'])]
     private string $name;
     
     // ...
@@ -305,7 +319,8 @@ Example:
     GeoCoordinates:
         embeddable: true
     Place:
-        coordinates: { range: "GeoCoordinates", embedded: true, columnPrefix: false }
+        properties:
+            coordinates: { range: "GeoCoordinates", embedded: true, columnPrefix: false }
 ```
 
 or
@@ -314,7 +329,8 @@ or
     QuantitativeValue:
         embeddable: true
     Product:
-        weight: { range: "QuantitativeValue", embedded: true, columnPrefix: "weight_" }
+        properties:
+            weight: { range: "QuantitativeValue", embedded: true, columnPrefix: "weight_" }
 ```
 
 Output:
@@ -327,27 +343,23 @@ namespace App\Entity;
 use ApiPlatform\Metadata\ApiProperty;
 use ApiPlatform\Metadata\ApiResource;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
  * Any offered product or service.
  *
- * @see http://schema.org/Product Documentation on Schema.org
- *
- * @ORM\Entity
- * @UniqueEntity("gtin13s")
+ * @see https://schema.org/Product
  */
-#[ApiResource(types: ["http://schema.org/Product"])]
+#[ORM\Entity]
+#[ApiResource(iri: 'https://schema.org/Product')]
 class Product
 {
     /**
-     * the weight of the product or person
+     * The weight of the product or person.
      *
-     * @see http://schema.org/weight
-     *
-     * @ORM\Embedded(class="App\Entity\QuantitativeValue", columnPrefix="weight_")
+     * @see https://schema.org/weight
      */
-    #[ApiProperty(types: ['http://schema.org/weight'])]
+    #[ORM\Embedded(class: 'App\Entity\QuantitativeValue', columnPrefix: 'weight_')]
+    #[ApiProperty(iri: 'https://schema.org/weight')]
     private ?QuantitativeValue $weight = null;
 
     // ...
@@ -356,7 +368,7 @@ class Product
 
 ## Author PHPDoc
 
-Add a `@author` PHPDoc annotation to class' DocBlock.
+Add a `@author` PHPDoc annotation to class DocBlock.
 
 Example:
 
@@ -366,25 +378,27 @@ author: "Kévin Dunglas <kevin@les-tilleuls.coop>"
 
 ## Disabling Generators and Creating Custom Ones
 
-By default, all generators except `DunglasJsonLdApi` (API Platform v1) and `SerializerGroups` are enabled.
-You can specify the list of generators to use with the `annotationGenerators` option.
+By default, all generators except `DoctrineMongoDBAttributeGenerator` are enabled.
+You can specify the list of generators to use with the `annotationGenerators` and `attributeGenerators` option.
 
 Example (enabling only the PHPDoc generator):
 
 ```yaml
 annotationGenerators:
     - ApiPlatform\SchemaGenerator\AnnotationGenerator\PhpDocAnnotationGenerator
+attributeGenerators: []
 ```
 
-You can write your generators by implementing the `AnnotationGeneratorInterface`.
-The `AbstractAnnotationGenerator` provides helper methods
+You can write your own generators by implementing the `AnnotationGeneratorInterface` or `AttributeGeneratorInterface`.
+The `AbstractAnnotationGenerator` or `AbstractAttributeGenerator` provides helper methods
 useful when creating your own generators.
 
-Enabling a custom generator and the PHPDoc generator:
+Enabling a custom attribute generator and the PHPDoc generator:
 
 ```yaml
 annotationGenerators:
     - ApiPlatform\SchemaGenerator\AnnotationGenerator\PhpDocAnnotationGenerator
+attributeGenerators
     - Acme\Generators\MyGenerator
 ```
 
@@ -407,7 +421,7 @@ This behavior can be disabled with the following setting:
 
 ```yaml
 id:
-  generate: false
+    generate: false
 ```
 
 ## Generating UUIDs
@@ -416,17 +430,17 @@ It's also possible to let the DBMS generate [UUIDs](https://en.wikipedia.org/wik
 
 ```yaml
 id:
-  generationStrategy: uuid
+    generationStrategy: uuid
 ```
 
-## User submitted UUIDs
+## User-submitted UUIDs
 
 To manually set a UUID instead of letting the DBMS generate it, use the following config:
 
 ```yaml
 id:
-  generationStrategy: uuid
-  writable: true
+    generationStrategy: uuid
+    writable: true
 ```
 
 ## Generating Custom IDs
@@ -436,13 +450,13 @@ generated, but the DBMS will not generate anything. The ID must be set manually.
 
 ```yaml
 id:
-  generationStrategy: none
+    generationStrategy: none
 ```
 
 ## Disabling Usage of Doctrine Collections
 
 By default, the generator uses classes provided by the [Doctrine Collections](https://github.com/doctrine/collections) library
-to store collections of entities. This is useful (and required) when using Doctrine ORM or Doctrine ODM.
+to store collections of entities. This is useful (and required) when using Doctrine ORM or Doctrine MongoDB ODM.
 This behavior can be disabled (to fallback to standard arrays) with the following setting:
 
 ```yaml
@@ -461,30 +475,27 @@ Example:
 fieldVisibility: "protected"
 ```
 
-## Generating `@Assert\Type` Annotations
+## Generating `Assert\Type` Attributes
 
-It's possible to automatically generate Symfony validator's `@Assert\Type` annotations using the following config:
+It's possible to automatically generate Symfony validator's `#[Assert\Type]` attributes using the following config:
 
 ```yaml
 validator:
-  assertType: true
+    assertType: true
 ```
 
-## Forcing Doctrine Inheritance Mapping Annotation
+## Forcing Doctrine Inheritance Mapping Attribute
 
-The standard behavior of the generator is to use the `@MappedSuperclass` Doctrine annotation for classes with children and
-`@Entity` for classes with no child.
+The standard behavior of the generator is to use the `#[MappedSuperclass]` Doctrine attribute for classes with children and
+`#[Entity]` for classes with no child.
 
-The inheritance annotation can be forced for a given type in the following way:
+The inheritance attribute can be forced in the following way:
 
 ```yaml
-types:
-    Product:
-        doctrine:
-            inheritanceMapping: "@MappedSuperclass"
+doctrine:
+    inheritanceAttributes:
+        CustomInheritanceAttribute: []
 ```
-
-*This setting is only relevant when using the Doctrine ORM generator.*
 
 ## Interfaces and Doctrine Resolve Target Entity Listener
 
@@ -495,28 +506,38 @@ mappings.
 If you set the option `useInterface` to true, the generator will generate an interface corresponding to each generated
 entity and will use them in relation mappings.
 
-To let PHP Schema generate the XML mapping file usable with Symfony, add the following to your config file:
+To let the schema generator generate the XML mapping file usable with Symfony, add the following to your config file:
 
 ```yaml
 doctrine:
     resolveTargetEntityConfigPath: path/to/doctrine.xml
 ```
 
+### Doctrine Resolve Target Entity Config Type
+
+By default the mapping file is in XML. If you want to have a yaml file, add the following:
+
+```yaml
+doctrine:
+    resolveTargetEntityConfigPath: path/to/doctrine.yaml
+    resolveTargetEntityConfigType: yaml
+```
+
 ## Custom Schemas
 
-The generator can use your own schema definitions. They must be written in RDFa and follow the format of the [Schema.org's
-definition](https://schema.org/docs/schema_org_rdfa.html). This is useful to document your [Schema.org extensions](https://schema.org/docs/extension.html) and use them
+The generator can use your own schema definitions. They must be written in RDF/XML and follow the format of the [Schema.org's
+definition](https://schema.org/version/latest/schemaorg-current-https.rdf). This is useful to document your [Schema.org extensions](https://schema.org/docs/extension.html) and use them
 to generate the PHP data model of your application.
 
 Example:
 
 ```yaml
 vocabularies:
-    - https://raw.githubusercontent.com/schemaorg/schemaorg/master/data/schema.rdfa # Experimental version of Schema.org
-    - http://example.com/data/myschema.rfa # Additional types
+    - https://github.com/schemaorg/schemaorg/raw/main/data/releases/13.0/schemaorg-current-https.rdf
+    - http://example.com/data/myschema.rdf # Additional types
 ```
 
-You can also use any other vocabulary. Check the [Linked Open Vocabularies](https://lov.okfn.org/dataset/lov/) to find one fitting your needs.
+You can also use any other vocabulary. Check the [Linked Open Vocabularies](https://lov.linkeddata.es/dataset/lov/) to find one fitting your needs.
 
 For instance, to generate a data model from the [Video Game Ontology](http://purl.org/net/VideoGameOntology), use the following config file:
 
@@ -568,19 +589,19 @@ config:
         -
 
             # RDF vocabulary to use
-            uri:                  'https://schema.org/version/latest/schemaorg-current-http.rdf' # Example: 'https://schema.org/version/latest/schemaorg-current-http.rdf'
+            uri:                  'https://schema.org/version/latest/schemaorg-current-https.rdf' # Example: 'https://schema.org/version/latest/schemaorg-current-https.rdf'
 
             # RDF vocabulary format
             format:               null # Example: rdfxml
 
     # Namespace of the vocabulary to import
-    vocabularyNamespace:  'http://schema.org/' # Example: 'http://www.w3.org/ns/activitystreams#'
+    vocabularyNamespace:  'https://schema.org/' # Example: 'http://www.w3.org/ns/activitystreams#'
 
     # OWL relation files containing cardinality information in the GoodRelations format
-    relations:            # Example: 'https://purl.org/goodrelations/v1.owl'
+    relations:            # Example: 'https://archive.org/services/purl/goodrelations/v1.owl'
 
         # Default:
-        - https://purl.org/goodrelations/v1.owl
+        - https://archive.org/services/purl/goodrelations/v1.owl
 
     # Debug mode
     debug:                false
@@ -607,7 +628,7 @@ config:
     checkIsGoodRelations: false
 
     # A license or any text to use as header of generated files
-    header:               false # Example: '// (c) Kévin Dunglas <dunglas@gmail.com>'
+    header:               null # Example: '// (c) Kévin Dunglas <dunglas@gmail.com>'
 
     # PHP namespaces
     namespaces:
@@ -630,11 +651,14 @@ config:
         # Use Doctrine's ArrayCollection instead of standard arrays
         useCollection:        true
 
-        # The Resolve Target Entity Listener config file pass
+        # The Resolve Target Entity Listener config file path
         resolveTargetEntityConfigPath: null
 
-        # Doctrine inheritance annotations (if set, no other annotations are generated)
-        inheritanceAnnotations: []
+        # The Resolve Target Entity Listener config file type
+        resolveTargetEntityConfigType: XML # One of "XML"; "yaml"
+
+        # Doctrine inheritance attributes (if set, no other attributes are generated)
+        inheritanceAttributes: []
 
     # Symfony Validator Component
     validator:
@@ -689,8 +713,8 @@ config:
                 interface:            null
             doctrine:
 
-                # Doctrine annotations (if set, no other annotations are generated)
-                annotations:          []
+                # Doctrine attributes (if set, no other attributes are generated)
+                attributes:           []
 
             # The parent class, set to false for a top level class
             parent:               false
@@ -700,6 +724,9 @@ config:
 
             # Operations for the class
             operations:           []
+
+            # Security directive for the class
+            security:             null
 
             # Import all existing properties
             allProperties:        false
@@ -720,8 +747,11 @@ config:
                     relationTableName:    null # Example: organization_member
                     cardinality:          unknown # One of "(0..1)"; "(0..*)"; "(1..1)"; "(1..*)"; "(*..0)"; "(*..1)"; "(*..*)"; "unknown"
 
-                    # The doctrine column annotation content
-                    ormColumn:            null # Example: 'type="decimal", precision=5, scale=1, options={"comment" = "my comment"}'
+                    # The doctrine column attribute content
+                    ormColumn:            [] # Example: '{type: "decimal", precision: 5, scale: 1, options: {comment: "my comment"}}'
+
+                    # Security directive for the property
+                    security:             null
 
                     # Symfony Serialization Groups
                     groups:               []
@@ -753,12 +783,17 @@ config:
     # Annotation generators to use
     annotationGenerators:
 
-        # Defaults:
+        # Default:
         - ApiPlatform\SchemaGenerator\AnnotationGenerator\PhpDocAnnotationGenerator
-        - ApiPlatform\SchemaGenerator\AnnotationGenerator\DoctrineOrmAnnotationGenerator
-        - ApiPlatform\SchemaGenerator\AnnotationGenerator\ApiPlatformCoreAnnotationGenerator
-        - ApiPlatform\SchemaGenerator\AnnotationGenerator\ConstraintAnnotationGenerator
-        - ApiPlatform\SchemaGenerator\AnnotationGenerator\SerializerGroupsAnnotationGenerator
+
+    # Attribute generators to use
+    attributeGenerators:
+
+        # Defaults:
+        - ApiPlatform\SchemaGenerator\AttributeGenerator\DoctrineOrmAttributeGenerator
+        - ApiPlatform\SchemaGenerator\AttributeGenerator\ApiPlatformCoreAttributeGenerator
+        - ApiPlatform\SchemaGenerator\AttributeGenerator\ConstraintAttributeGenerator
+        - ApiPlatform\SchemaGenerator\AttributeGenerator\SerializerGroupsAttributeGenerator
 
     # Directories for custom generator twig templates
     generatorTemplates:   []

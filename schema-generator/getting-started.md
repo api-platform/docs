@@ -26,8 +26,8 @@ Then, write a simple YAML config file similar to the following.
 
 Here we will generate a data model for an address book with the following data:
 
-* a [`Person`](http://schema.org/Person) which inherits from [`Thing`](http://schema.org/Thing)
-* a [`PostalAddress`](http://schema.org/PostalAddress) which inherits from [`ContactPoint`](http://schema.org/ContactPoint), which itself inherits from [`StructuredValue`](http://schema.org/StructuredValue), etc.
+* a [`Person`](https://schema.org/Person) which inherits from [`Thing`](https://schema.org/Thing)
+* a [`PostalAddress`](https://schema.org/PostalAddress) (without its class hierarchy)
 
 ```yaml
 # api/config/schema.yaml
@@ -38,14 +38,14 @@ types:
         properties:
             name: ~
     Person:
+        # Enable the generation of the class hierarchy (not enabled by default)
+        parent: ~
         properties:
             familyName: ~
             givenName: ~
             additionalName: ~
             address: ~
     PostalAddress:
-        # Disable the generation of the class hierarchy for this type
-        parent: false
         properties:
             # Force the type of the addressCountry property to text
             addressCountry: { range: "Text" }
@@ -59,14 +59,14 @@ types:
 Run the generator with this config file as parameter:
 
 ```console
-vendor/bin/schema generate api/src/ api/config/schema.yaml
+vendor/bin/schema generate api/src/ api/config/schema.yaml -vv
 ```
 
 Using [the API Platform Distribution](../distribution/index.md):
 
 ```console
 docker-compose exec php \
-    vendor/bin/schema generate src/ config/schema.yaml
+    vendor/bin/schema generate src/ config/schema.yaml -vv
 ```
 
 The corresponding PHP classes will be automatically generated in the `src/` directory!
@@ -85,8 +85,16 @@ A config file generating an enum class:
 ```yaml
 types:
     OfferItemCondition: # The generator will automatically guess that OfferItemCondition is subclass of Enum
-      properties: {} # Remove all properties of the parent class
+        properties: {} # Remove all properties of the parent class
 ```
+
+### Load Previously Generated Files
+
+If you launch the schema generator again, the previously generated files will be loaded.
+
+It will try to keep as much user-added changes as possible while adding the new changes from the configuration file.
+
+You can also choose to overwrite the file instead.
 
 ### Going Further
 
