@@ -20,9 +20,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[ApiResource]
 class Book
 {
-    /**
-     * @Assert\NotBlank
-     */
+    #[Assert\NotBlank]
     public ?string $title = null;
 }
 ```
@@ -54,9 +52,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[ApiResource]
 class Book
 {
-    /**
-     * @Assert\Isbn
-     */
+    #[Assert\Isbn]
     public ?string $isbn = null;
 }
 ```

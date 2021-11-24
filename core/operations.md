@@ -45,7 +45,9 @@ Note: the `PATCH` method must be enabled explicitly in the configuration, refer 
 Note: with JSON Merge Patch, the [null values will be skipped](https://symfony.com/doc/current/components/serializer.html#skipping-null-values) in the response.
 
 Note: Current `PUT` implementation behaves more or less like the `PATCH` method.
-Existing properties not included in the payload are **not** removed, their current values are preserved. To remove an existing property, its value must be explicitly set to `null`. Implementing [the standard `PUT` behavior](https://httpwg.org/specs/rfc7231.html#PUT) is on the roadmap, follow [issue #4344] (<https://github.com/api-platform/core/issues/4344>) to track the progress.
+Existing properties not included in the payload are **not** removed, their current values are preserved.
+To remove an existing property, its value must be explicitly set to `null`.
+Implementing [the standard `PUT` behavior](https://httpwg.org/specs/rfc7231.html#PUT) is on the roadmap, follow [issue #4344](https://github.com/api-platform/core/issues/4344) to track the progress.
 
 ## Enabling and Disabling Operations
 
@@ -365,11 +367,6 @@ class Book
 App\Entity\Book:
     attributes:
         route_prefix: /library
-    itemOperations:
-        get: ~
-        post_publication:
-            route_name: book_post_publication
-        book_post_discontinuation: ~
 ```
 
 ```xml
@@ -381,98 +378,16 @@ App\Entity\Book:
         xsi:schemaLocation="https://api-platform.com/schema/metadata
         https://api-platform.com/schema/metadata/metadata-2.0.xsd">
     <resource class="App\Entity\Book">
-        <itemOperations>
-            <itemOperation name="get" />
-            <itemOperation name="post_publication">
-                <attribute name="route_name">book_post_publication</attribute>
-            </itemOperation>
-            <itemOperation name="book_post_discontinuation" />
-        </itemOperations>
+        <attribute name="route_prefix">/library</attribute>
     </resource>
 </resources>
 ```
 
 [/codeSelector]
 
-Alternatively, the more verbose attribute syntax can be used: `#[ApiResource(routePrefix: "/library")]`.
+Alternatively, the more verbose attribute syntax can be used: `#[ApiResource(routePrefix: '/library')]`.
 
-API Platform will automatically map this `post_publication` operation to the route `book_post_publication`. Let's create a custom action
-and its related route using annotations:
-
-```php
-<?php
-// api/src/Controller/CreateBookPublication.php
-
-namespace App\Controller;
-
-use App\Entity\Book;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpKernel\Attribute\AsController;
-use Symfony\Component\Routing\Annotation\Route;
-
-#[AsController]
-class CreateBookPublication extends AbstractController
-{
-    public function __construct(
-        private BookPublishingHandler $bookPublishingHandler
-    ) {}
-
-    #[Route(
-        path: '/books/{id}/publication',
-        name: 'book_post_publication',
-        defaults: [
-            '_api_resource_class' => Book::class,
-            '_api_item_operation_name' => 'post_publication',
-        ],
-        methods: ['POST'],
-    )]
-    public function __invoke(Book $book): Book
-    {
-        $this->bookPublishingHandler->handle($book);
-
-        return $book;
-    }
-}
-```
-
-It is mandatory to set `_api_resource_class` and `_api_item_operation_name` (or `_api_collection_operation_name` for a collection
-operation) in the parameters of the route (`defaults` key). It allows API Platform to work with the Symfony routing system.
-
-Alternatively, you can also use a traditional Symfony controller and YAML or XML route declarations. The following example does
-the exact same thing as the previous example:
-
-```php
-<?php
-// api/src/Controller/BookController.php
-
-namespace App\Controller;
-
-use App\Entity\Book;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpKernel\Attribute\AsController;
-
-#[AsController]
-class BookController extends AbstractController
-{
-    public function createPublication(Book $book, BookPublishingHandler $bookPublishingHandler): Book
-    {
-        return $bookPublishingHandler->handle($book);
-    }
-}
-```
-
-```yaml
-# api/config/routes.yaml
-book_post_publication:
-    path: /books/{id}/publication
-    methods: ['POST']
-    defaults:
-        _controller: App\Controller\BookController::createPublication
-        _api_resource_class: App\Entity\Book
-        _api_item_operation_name: post_publication
-```
-
-## Expose a model without any routes
+## Expose a Model Without Any Routes
 
 Sometimes, you may want to expose a model, but want it to be used through subrequests only, and never through item or collection operations.
 Because the OpenAPI standard requires at least one route to be exposed to make your models consumable, let's see how you can manage this kind

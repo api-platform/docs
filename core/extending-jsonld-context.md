@@ -16,7 +16,7 @@ namespace App\Entity;
 use ApiPlatform\Metadata\ApiProperty;
 use ApiPlatform\Metadata\ApiResource;
 
-#[ApiResource(types: ["http://schema.org/Book"])]
+#[ApiResource(types: ['http://schema.org/Book'])]
 class Book
 {
     // ...
@@ -24,13 +24,13 @@ class Book
     #[ApiProperty(
         types: ['http://schema.org/name'],
         jsonldContext: [
-            "@id" => "http://yourcustomid.com",
-            "@type" => "http://www.w3.org/2001/XMLSchema#string",
-            "someProperty" => [
-                "a" => "textA",
-                "b" => "textB"
+            '@id' => 'http://yourcustomid.com',
+            '@type' => 'http://www.w3.org/2001/XMLSchema#string',
+            'someProperty' => [
+                'a' => 'textA',
+                'b' => 'textB'
             ]
-        ]        
+        ]
     )]
     public $name;
     
@@ -75,6 +75,7 @@ It's also possible to replace the Hydra context used by the documentation genera
 namespace App\Entity;
 
 use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Get;
 
 #[ApiResource]
 #[Get(hydraContext: ['foo' => 'bar'])]

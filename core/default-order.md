@@ -50,7 +50,7 @@ namespace App\Entity;
 
 use ApiPlatform\Metadata\ApiResource;
 
-#[ApiResource(order: ['foo' => 'bar'])]
+#[ApiResource(order: ['foo', 'bar'])]
 class Book
 {
     // ...
@@ -126,8 +126,8 @@ use ApiPlatform\Metadata\ApiResource;
 
 #[ApiResource]
 #[GetCollection]
-#[GetCollection(name: 'desc_custom', uriTemplate: 'custom_collection_desc_foos', order: ['name' => 'DESC'])]
-#[GetCollection(name: 'asc_custom', uriTemplate: 'custom_collection_asc_foos', order: ['name' => 'ASC'])]
+#[GetCollection(name: 'get_desc_custom', uriTemplate: 'custom_collection_desc_foos', order: ['name' => 'DESC'])]
+#[GetCollection(name: 'get_asc_custom', uriTemplate: 'custom_collection_asc_foos', order: ['name' => 'ASC'])]
 class Book
 {
     // ...
