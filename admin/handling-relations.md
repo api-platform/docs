@@ -16,23 +16,23 @@ you can keep the embedded data by setting the `useEmbedded` parameter of the Hyd
 ```javascript
 // admin/src/App.js
 
-import React from "react";
 import { HydraAdmin, fetchHydra, hydraDataProvider } from "@api-platform/admin";
 import { parseHydraDocumentation } from "@api-platform/api-doc-parser";
 
 const entrypoint = process.env.REACT_APP_API_ENTRYPOINT;
 
-const dataProvider = hydraDataProvider(
+const dataProvider = hydraDataProvider({
     entrypoint,
-    fetchHydra,
-    parseHydraDocumentation,
-    true // useEmbedded parameter
-);
+    httpClient: fetchHydra,
+    apiDocumentationParser: parseHydraDocumentation,
+    mercure: true,
+    useEmbedded: true,
+});
 
 export default () => (
     <HydraAdmin
-        dataProvider={ dataProvider }
-        entrypoint={ entrypoint }
+        dataProvider={dataProvider}
+        entrypoint={entrypoint}
     />
 );
 ```
@@ -79,7 +79,6 @@ For instance, if your API returns:
 If you want to display the author first name in the list, you need to write the following code:
 
 ```javascript
-import React from "react";
 import {
   HydraAdmin,
   FieldGuesser,
@@ -99,7 +98,7 @@ const BooksList = (props) => (
 );
 
 export default () => (
-  <HydraAdmin entrypoint={process.env.REACT_APP_API_ENTRYPOINT}>
+  <HydraAdmin entrypoint={process.env.REACT_APP_API_ENTRYPOINT} mercure={true}>
     <ResourceGuesser
       name="books"
       list={BooksList}
@@ -112,7 +111,6 @@ export default () => (
 If the `useEmbedded` parameter is set to `true` (will be the default behavior in 3.0), you need to use the dot notation to display a field:
 
 ```javascript
-import React from "react";
 import {
   HydraAdmin,
   FieldGuesser,
@@ -130,7 +128,7 @@ const BooksList = (props) => (
 );
 
 export default () => (
-  <HydraAdmin entrypoint={process.env.REACT_APP_API_ENTRYPOINT}>
+  <HydraAdmin entrypoint={process.env.REACT_APP_API_ENTRYPOINT} mercure={true}>
     <ResourceGuesser
       name="books"
       list={BooksList}
@@ -156,23 +154,17 @@ namespace App\Entity;
 use ApiPlatform\Core\Annotation\ApiResource;
 use Doctrine\ORM\Mapping as ORM;
 
-/**
- * @ORM\Entity
- */
+#[ORM\Entity]
 #[ApiResource]
 class Review
 {
-    /**
-     * @ORM\Column(type="integer")
-     * @ORM\GeneratedValue
-     * @ORM\Id
-     */
-    public $id;
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column(type: 'integer')]
+    public ?int $id = null;
 
-    /**
-     * @ORM\ManyToOne(targetEntity=Book::class, inversedBy="reviews")
-     */
-    public $book;
+    #[ORM\ManyToOne]
+    public Book $book;
 }
 ```
 
@@ -186,31 +178,24 @@ use ApiPlatform\Core\Annotation\ApiFilter;
 use ApiPlatform\Core\Annotation\ApiResource;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
-/**
- * @ORM\Entity
- */
+#[ORM\Entity]
 #[ApiResource]
 class Book
 {
-    /**
-     * @ORM\Column(type="integer")
-     * @ORM\GeneratedValue
-     * @ORM\Id
-     */
-    public $id;
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column(type: 'integer')]
+    public ?int $id = null;
 
-    /**
-     * @ORM\Column
-     * @ApiFilter(SearchFilter::class, strategy="ipartial")
-     */
-    public $title;
+    #[ORM\Column]
+    #[ApiFilter(SearchFilter::class, strategy: 'ipartial')]
+    public string $title;
 
-    /**
-     * @ORM\OneToMany(targetEntity=Review::class, mappedBy="book")
-     */
-    public $reviews;
+    #[ORM\OneToMany(targetEntity: Review::class)]
+    public Collection $reviews;
 
     public function __construct()
     {
@@ -224,7 +209,6 @@ Notice the "partial search" [filter](../core/filters.md) on the `title` property
 Now, let's configure API Platform Admin to enable autocompletion for the relation selector:
 
 ```javascript
-import React from "react";
 import {
   HydraAdmin,
   ResourceGuesser,
@@ -272,7 +256,7 @@ const ReviewsEdit = props => (
 );
 
 export default () => (
-  <HydraAdmin entrypoint={process.env.REACT_APP_API_ENTRYPOINT}>
+  <HydraAdmin entrypoint={process.env.REACT_APP_API_ENTRYPOINT} mercure={true}>
     <ResourceGuesser
       name="reviews"
       create={ReviewsCreate}
@@ -286,7 +270,6 @@ If the book is embedded into a review and if the `useEmbedded` parameter is set 
 you need to change the `ReferenceInput` for the edit component:
 
 ```javascript
-import React from "react";
 import {
   HydraAdmin,
   ResourceGuesser,
@@ -335,7 +318,7 @@ const ReviewsEdit = props => (
 );
 
 export default () => (
-  <HydraAdmin entrypoint={process.env.REACT_APP_API_ENTRYPOINT}>
+  <HydraAdmin entrypoint={process.env.REACT_APP_API_ENTRYPOINT} mercure={true}>
     <ResourceGuesser
       name="reviews"
       create={ReviewsCreate}

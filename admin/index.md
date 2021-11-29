@@ -28,4 +28,5 @@ You can **customize everything** by using provided React Admin and [Material UI]
 * Automatically validates whether a field is mandatory client-side according to the API description
 * Sends proper HTTP requests to the API and decodes them using Hydra and JSON-LD formats
 * Nicely displays server-side errors (e.g. advanced validation)
+* Supports real-time updates with [Mercure](https://mercure.rocks)
 * **100% customizable**

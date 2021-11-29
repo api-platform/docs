@@ -25,7 +25,7 @@ const MediaObjectsCreate = props => (
 );
 
 export default () => (
-  <HydraAdmin entrypoint="https://demo.api-platform.com">
+  <HydraAdmin entrypoint="https://demo.api-platform.com" mercure={true}>
     <ResourceGuesser name="media_objects" create={MediaObjectsCreate} />
     {/* ... */}
   </HydraAdmin>
