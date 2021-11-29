@@ -4,12 +4,11 @@ API Platform Admin delegates the authentication support to React Admin.
 Refer to [the chapter dedicated to authentication in the React Admin documentation](https://marmelab.com/react-admin/Authentication.html)
 for more information.
 
-In short, you have to tweak data provider and api documentation parser, like this:
+In short, you have to tweak the data provider and the api documentation parser like this:
 
 ```javascript
 // admin/src/App.js
 
-import React from "react";
 import { Redirect, Route } from "react-router-dom";
 import { HydraAdmin, hydraDataProvider as baseHydraDataProvider, fetchHydra as baseFetchHydra, useIntrospection } from "@api-platform/admin";
 import parseHydraDocumentation from "@api-platform/api-doc-parser/lib/hydra/parseHydraDocumentation";
@@ -53,7 +52,12 @@ const apiDocumentationParser = async (entrypoint) => {
     throw result;
   }
 };
-const dataProvider = baseHydraDataProvider(entrypoint, fetchHydra, apiDocumentationParser);
+const dataProvider = baseHydraDataProvider({
+  entrypoint,
+  httpClient: fetchHydra,
+  apiDocumentationParser,
+  mercure: true, // or false if you don't use Mercure
+});
 
 export default () => (
   <HydraAdmin
@@ -64,4 +68,4 @@ export default () => (
 );
 ```
 
-For the implementation of the auth provider, you can find a working example in the [API Platform's demo application](https://github.com/api-platform/demo/blob/master/admin/src/authProvider.js).
+For the implementation of the auth provider, you can find a working example in the [API Platform's demo application](https://github.com/api-platform/demo/blob/main/pwa/utils/authProvider.tsx).

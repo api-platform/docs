@@ -67,6 +67,7 @@ chapters:
       - handling-relations
       - schema.org
       - validation
+      - real-time-mercure
       - authentication-support
       - file-upload
       - performance
