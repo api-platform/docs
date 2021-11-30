@@ -219,7 +219,6 @@ const App = () => (
     entrypoint={entrypoint}
     dataProvider={dataProvider}
     authProvider={authProvider}
-    mercure={true}
    >
      <ResourceGuesser name="books" />
      { /* ... */ }

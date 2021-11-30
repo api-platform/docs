@@ -98,7 +98,7 @@ const BooksList = (props) => (
 );
 
 export default () => (
-  <HydraAdmin entrypoint={process.env.REACT_APP_API_ENTRYPOINT} mercure={true}>
+  <HydraAdmin entrypoint={process.env.REACT_APP_API_ENTRYPOINT}>
     <ResourceGuesser
       name="books"
       list={BooksList}
@@ -128,7 +128,7 @@ const BooksList = (props) => (
 );
 
 export default () => (
-  <HydraAdmin entrypoint={process.env.REACT_APP_API_ENTRYPOINT} mercure={true}>
+  <HydraAdmin entrypoint={process.env.REACT_APP_API_ENTRYPOINT}>
     <ResourceGuesser
       name="books"
       list={BooksList}
@@ -256,7 +256,7 @@ const ReviewsEdit = props => (
 );
 
 export default () => (
-  <HydraAdmin entrypoint={process.env.REACT_APP_API_ENTRYPOINT} mercure={true}>
+  <HydraAdmin entrypoint={process.env.REACT_APP_API_ENTRYPOINT}>
     <ResourceGuesser
       name="reviews"
       create={ReviewsCreate}
@@ -318,7 +318,7 @@ const ReviewsEdit = props => (
 );
 
 export default () => (
-  <HydraAdmin entrypoint={process.env.REACT_APP_API_ENTRYPOINT} mercure={true}>
+  <HydraAdmin entrypoint={process.env.REACT_APP_API_ENTRYPOINT}>
     <ResourceGuesser
       name="reviews"
       create={ReviewsCreate}
