@@ -6,14 +6,20 @@ Updates are received by using the `useMercureSubscription` hook in the `ListGues
 
 To enable Mercure server-side, see the [related documentation](../core/mercure.md).
 
-To receive API updates from the hub, you need to explicitly enable Mercure in the Hydra data provider.
-To do so, you can either do it with a prop in the `<HydraAdmin>` component:
+Once enabled, API Platform Admin will automatically detect that Mercure is enabled and will discover the Mercure hub URL by itself.
+
+## Advanced Configuration
+
+If you want to customize the default Mercure configuration, you can either do it with a prop in the `<HydraAdmin>` component:
 
 ```javascript
 import { HydraAdmin } from "@api-platform/admin";
 
 export default () => (
-  <HydraAdmin entrypoint="https://demo.api-platform.com" mercure={true} />
+  <HydraAdmin
+    entrypoint="https://demo.api-platform.com"
+    mercure={{ hub: "https://mercure.rocks/hub" }}
+  />
 );
 ```
 
@@ -27,17 +33,11 @@ const dataProvider = baseHydraDataProvider({
   entrypoint,
   httpClient: fetchHydra,
   apiDocumentationParser: parseHydraDocumentation,
-  mercure: true,
+  mercure: { hub: "https://mercure.rocks/hub" },
 });
 ```
 
-If you want to disable Mercure, use `false` for the `mercure` value instead.
-
-## Advanced Configuration
-
-The `mercure` value can also takes an object to customize the default configuration.
-
-The object has the following properties:
-- `hub`: the URL to your Mercure hub (default value: entrypoint/.well-known/mercure)
+The `mercure` object can take the following properties:
+- `hub`: the URL to your Mercure hub (default value: null ; when null it will be discovered by using API responses)
 - `jwt`: a subscriber JWT to access your Mercure hub (default value: null)
 - `topicUrl`: the topic URL of your resources (default value: entrypoint)

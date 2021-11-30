@@ -17,7 +17,7 @@ To cherry-pick the resources to make available through the admin, pass a list of
 import { HydraAdmin, ResourceGuesser } from "@api-platform/admin";
 
 export default () => (
-  <HydraAdmin entrypoint="https://demo.api-platform.com" mercure={true}>
+  <HydraAdmin entrypoint="https://demo.api-platform.com">
     <ResourceGuesser name="books" />
     <ResourceGuesser name="reviews" />
 
@@ -52,7 +52,7 @@ const ReviewsList = props => (
 );
 
 export default () => (
-  <HydraAdmin entrypoint="https://demo.api-platform.com" mercure={true}>
+  <HydraAdmin entrypoint="https://demo.api-platform.com">
     <ResourceGuesser name="reviews" list={ReviewsList} />
     {/* ... */}
   </HydraAdmin>
@@ -90,7 +90,7 @@ const ReviewsShow = props => (
 );
 
 export default () => (
-  <HydraAdmin entrypoint="https://demo.api-platform.com" mercure={true}>
+  <HydraAdmin entrypoint="https://demo.api-platform.com">
     <ResourceGuesser name="reviews" show={ReviewsShow} />
     {/* ... */}
   </HydraAdmin>
@@ -126,7 +126,7 @@ const ReviewsCreate = props => (
 );
 
 export default () => (
-  <HydraAdmin entrypoint="https://demo.api-platform.com" mercure={true}>
+  <HydraAdmin entrypoint="https://demo.api-platform.com">
     <ResourceGuesser name="reviews" create={ReviewsCreate} />
     {/* ... */}
   </HydraAdmin>
@@ -164,7 +164,7 @@ const ReviewsEdit = props => (
 );
 
 export default () => (
-  <HydraAdmin entrypoint="https://demo.api-platform.com" mercure={true}>
+  <HydraAdmin entrypoint="https://demo.api-platform.com">
     <ResourceGuesser edit={ReviewsEdit}/>
     {/* ... */}
   </HydraAdmin>
