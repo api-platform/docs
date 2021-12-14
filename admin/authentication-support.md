@@ -10,7 +10,6 @@ In short, you have to tweak the data provider and the api documentation parser l
 // pwa/pages/admin/index.tsx
 
 import Head from "next/head";
-import React from "react";
 import { Redirect, Route } from "react-router-dom";
 import { hydraDataProvider as baseHydraDataProvider, fetchHydra as baseFetchHydra, useIntrospection } from "@api-platform/admin";
 import parseHydraDocumentation from "@api-platform/api-doc-parser/lib/hydra/parseHydraDocumentation";
