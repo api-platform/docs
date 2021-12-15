@@ -15,7 +15,6 @@ import { hydraDataProvider as baseHydraDataProvider, fetchHydra as baseFetchHydr
 import parseHydraDocumentation from "@api-platform/api-doc-parser/lib/hydra/parseHydraDocumentation";
 import authProvider from "utils/authProvider";
 import { ENTRYPOINT } from "config/entrypoint";
-import Login from "components/admin/Login";
 
 const getHeaders = () => localStorage.getItem("token") ? {
   Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -63,7 +62,7 @@ const dataProvider = baseHydraDataProvider({
 const AdminLoader = () => {
   if (typeof window !== "undefined") {
     const { HydraAdmin } = require("@api-platform/admin");
-    return <HydraAdmin dataProvider={dataProvider} authProvider={authProvider} entrypoint={window.origin} loginPage={Login} />;
+    return <HydraAdmin dataProvider={dataProvider} authProvider={authProvider} entrypoint={window.origin} />;
   }
 
   return <></>;
