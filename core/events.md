@@ -90,12 +90,14 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\ViewEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
+use Symfony\Component\Mime\Email;
+use Symfony\Component\Mailer\MailerInterface;
 
 final class BookMailSubscriber implements EventSubscriberInterface
 {
     private $mailer;
 
-    public function __construct(\Swift_Mailer $mailer)
+    public function __construct(MailerInterface $mailer)
     {
         $this->mailer = $mailer;
     }
@@ -116,10 +118,11 @@ final class BookMailSubscriber implements EventSubscriberInterface
             return;
         }
 
-        $message = (new \Swift_Message('A new book has been added'))
-            ->setFrom('system@example.com')
-            ->setTo('contact@les-tilleuls.coop')
-            ->setBody(sprintf('The book #%d has been added.', $book->getId()));
+        $message = (new Email())
+            ->from('system@example.com')
+            ->to('contact@les-tilleuls.coop')
+            ->subject('A new book has been added')
+            ->text(sprintf('The book #%d has been added.', $book->getId()));
 
         $this->mailer->send($message);
     }
