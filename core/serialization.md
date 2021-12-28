@@ -41,6 +41,28 @@ feature of the Symfony Serializer component.
 In addition to groups, you can use any option supported by the Symfony Serializer. For example, you can use [`enable_max_depth`](https://symfony.com/doc/current/components/serializer.html#handling-serialization-depth)
 to limit the serialization depth.
 
+```yaml
+# api/config/api_platform/resources.yaml
+resources:
+    App\Entity\Book:
+        attributes:
+            normalization_context:
+                groups: ['read']
+                enable_max_depth: true
+            denormalization_context:
+                groups: ['write']
+                enable_max_depth: true
+
+# api/config/serialization/Book.yaml
+App\Entity\Book:
+    attributes:
+        name:
+            groups: ['read', 'write']
+        author:
+            groups: ['write']
+            max_depth: 1
+```
+
 ### Configuration
 
 Just like other Symfony and API Platform components, the Serializer component can be configured using annotations, XML
