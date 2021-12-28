@@ -59,7 +59,8 @@ class Book
     #[Groups(["read", "write"])]
     public $name;
 
-    #[Groups("write"), MaxDepth(1)]
+    #[Groups("write")]
+    #[MaxDepth(1)]
     public $author;
 
     // ...
