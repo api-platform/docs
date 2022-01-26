@@ -321,7 +321,7 @@ use ApiPlatform\Core\Annotation\ApiResource;
 use App\Validator\AdminGroupsGenerator;
 use Symfony\Component\Validator\Constraints as Assert;
 
-#[ApiResource(attributes: ['validation_groups' => AdminGroupsGenerator::class])
+#[ApiResource(validationGroups: AdminGroupsGenerator::class)
 class Book
 {
     /**
