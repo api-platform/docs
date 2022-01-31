@@ -115,7 +115,7 @@ If you prefer to use a managed DBMS like [Heroku Postgres](https://www.heroku.co
         --set postgresql.url=pgsql://username:password@host/database?serverVersion=13
 
 Finally, build the `pwa` (client and admin) JavaScript apps and [deploy them on a static
-website hosting service](https://create-react-app.dev/docs/deployment/).
+site hosting service](https://create-react-app.dev/docs/deployment/).
 
 ## Access the container
 
