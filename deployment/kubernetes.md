@@ -165,7 +165,7 @@ You have to use the *.image.pullPolicy=Always see the last 3 parameters.
 
 ## GitHub Actions Example for deployment
 
-You can find a [complete deploy command for GKE](https://github.com/api-platform/demo/blob/main/.github/workflows/deploy.yml) on the [demo project](https://github.com/api-platform/demo/):
+You can find a [complete deploy command for GKE](https://github.com/api-platform/demo/blob/main/.github/workflows/cd.yml) on the [demo project](https://github.com/api-platform/demo/):
 
 ## Symfony Messenger
 
