@@ -115,7 +115,7 @@ If you prefer to use a managed DBMS like [Heroku Postgres](https://www.heroku.co
         --set postgresql.url=pgsql://username:password@host/database?serverVersion=13
 
 Finally, build the `pwa` (client and admin) JavaScript apps and [deploy them on a static
-website hosting service](https://create-react-app.dev/docs/deployment/).
+site hosting service](https://create-react-app.dev/docs/deployment/).
 
 ## Access the container
 
@@ -165,7 +165,7 @@ You have to use the *.image.pullPolicy=Always see the last 3 parameters.
 
 ## GitHub Actions Example for deployment
 
-You can find a [complete deploy command for GKE](https://github.com/api-platform/demo/blob/main/.github/workflows/deploy.yml) on the [demo project](https://github.com/api-platform/demo/):
+You can find a [complete deploy command for GKE](https://github.com/api-platform/demo/blob/main/.github/workflows/cd.yml) on the [demo project](https://github.com/api-platform/demo/):
 
 ## Symfony Messenger
 
