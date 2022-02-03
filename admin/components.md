@@ -21,12 +21,12 @@ const App = () => (
     dataProvider={dataProvider}
     authProvider={authProvider}>
     <ResourceGuesser
-      name"books"
+      name="books"
       list={BooksList}
       show={BooksShow}
       edit={BooksEdit}
       create={BooksCreate} />
-    <ResourceGuesser name"authors" />
+    <ResourceGuesser name="authors" />
   </AdminGuesser>
 )
 
