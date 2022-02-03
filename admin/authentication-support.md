@@ -4,15 +4,19 @@ API Platform Admin delegates the authentication support to React Admin.
 Refer to [the chapter dedicated to authentication in the React Admin documentation](https://marmelab.com/react-admin/Authentication.html)
 for more information.
 
-In short, you have to tweak the data provider and the api documentation parser like this:
+In short, you have to tweak the data provider and the API documentation parser like this:
 
 ```typescript
 // pwa/pages/admin/index.tsx
 
 import Head from "next/head";
 import { Redirect, Route } from "react-router-dom";
-import { hydraDataProvider as baseHydraDataProvider, fetchHydra as baseFetchHydra, useIntrospection } from "@api-platform/admin";
-import parseHydraDocumentation from "@api-platform/api-doc-parser/lib/hydra/parseHydraDocumentation";
+import {
+  fetchHydra as baseFetchHydra,
+  hydraDataProvider as baseHydraDataProvider,
+  useIntrospection,
+} from "@api-platform/admin";
+import { parseHydraDocumentation } from "@api-platform/api-doc-parser";
 import authProvider from "utils/authProvider";
 import { ENTRYPOINT } from "config/entrypoint";
 
@@ -35,10 +39,10 @@ const RedirectToLogin = () => {
 };
 const apiDocumentationParser = async () => {
   try {
-    const { api } = await parseHydraDocumentation(ENTRYPOINT, { headers: getHeaders });
-    return { api };
+    return await parseHydraDocumentation(ENTRYPOINT, { headers: getHeaders });
   } catch (result) {
-    if (result.status !== 401) {
+    const { api, response, status } = result;
+    if (status !== 401 || !response) {
       throw result;
     }
 
@@ -46,7 +50,9 @@ const apiDocumentationParser = async () => {
     localStorage.removeItem("token");
 
     return {
-      api: result.api,
+      api,
+      response,
+      status,
       customRoutes: [
         <Route key="/" path="/" component={RedirectToLogin} />
       ],
