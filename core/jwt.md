@@ -45,6 +45,22 @@ environment, where you don't want to accidentally invalidate all your clients' t
 For more information, refer to [the bundle's documentation](https://github.com/lexik/LexikJWTAuthenticationBundle/blob/master/Resources/doc/index.md)
 or read a [general introduction to JWT here](https://jwt.io/introduction/).
 
+## Configuring LexikJWTAuthenticationBundle
+
+Once the bundle has been installed, a new file is created: `config/packages/lexik_jwt_authentication.yaml`. Adjust it as follows:
+
+```yaml
+lexik_jwt_authentication:
+    secret_key: '%env(resolve:JWT_SECRET_KEY)%'
+    public_key: '%env(resolve:JWT_PUBLIC_KEY)%'
+    pass_phrase: '%env(JWT_PASSPHRASE)%'
+    user_identity_field: email # key under which the user identity will be stored in the token payload
+```
+
+This configures the JWT to use the user's `email` as the identity field.
+
+The [full default configuration](https://github.com/lexik/LexikJWTAuthenticationBundle/blob/2.x/Resources/doc/1-configuration-reference.md#full-default-configuration) may be of interest.
+
 We're not done yet! Let's move on to configuring the Symfony SecurityBundle for JWT authentication.
 
 ## Configuring the Symfony SecurityBundle
