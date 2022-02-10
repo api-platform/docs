@@ -170,6 +170,38 @@ security:
         - { path: ^/, roles: IS_AUTHENTICATED_FULLY }
 ```
 
+## Getting a JWT token
+
+To get a JWT token, post the following to `/authentication_token`:
+
+```json
+{
+    "email": "me@example.com",
+    "password": "my-secret-password"
+}
+```
+
+Assuming this user exists in the database and the password is correct, you will get a response as follows:
+
+```json
+{
+    "token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJpYXQiOjE2NDQ0ODc0MzAsImV4cCI6MTY0NDQ5MTAzMCwicm9sZXMiOlsiUk9MRV9VU0VSIl0sImVtYWlsIjoibWVAZXhhbXBsZS5jb20ifQ.ZHobfJ6Mq5RGbeLR2thnsXHq7B9-IkPuQ2gwQj3XViAHmmUt8tIIuWpsViZF0RldAmVZyzGzlG1vaqIjdaD2FDj9dD7z1CAXPkQ24iDjeOby-rOme2MewrtwIcgtbNXHRwzog679W8rWv6m89EVhayXWSwlCTqvltornh9lOBkUSmMnbhRf_cWIexCJutwvthB_OjzFoCFpDt4K0egMkAuQBLDyJSJaNDkDvIsil5R0F6I3XynUlxUgU1eCIjp4YaaaS2XKrKn4coqY5fO-B0pu0UvijzAE9O0pVbsLK2DbXQ5wljg264WrfQOFBvqHXlVpKwd4OWbZWesvXbpCl4Q"
+}
+```
+
+Take the value of the `token` - the JWT token - and paste it into [https://jwt.io/](https://jwt.io/). You should be able to see the decoded payload as follows:
+
+```json
+{
+  "iat": 1644487430,
+  "exp": 1644491030,
+  "roles": [
+    "ROLE_USER"
+  ],
+  "email": "me@example.com"
+}
+```
+
 ## Documenting the Authentication Mechanism with Swagger/Open API
 
 Want to test the routes of your JWT-authentication-protected API?
