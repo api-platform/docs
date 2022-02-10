@@ -726,7 +726,7 @@ class Book
      *
      * @var bool
      */
-    #[Groups(["book:output", "admin:input"}])]
+    #[Groups(["book:output", "admin:input"])]
     public $active = false;
 
     /**
