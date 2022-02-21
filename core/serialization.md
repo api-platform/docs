@@ -690,7 +690,7 @@ App\Entity\Greeting:
             groups: 'greeting:collection:get'
         name:
             groups: 'greeting:collection:get'
-        getSum:
+        sum:
             groups: 'greeting:collection:get'
 ```
 
