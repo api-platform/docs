@@ -180,7 +180,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
 )]
 class Book
 {
-    #[Groups(["get", "put"])
+    #[Groups(["get", "put"])]
     public $name;
 
     #[Groups("get")]
