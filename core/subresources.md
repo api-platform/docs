@@ -223,7 +223,7 @@ The `subresourceOperations` attribute also allows you to add an access control o
 
 ```php
 <?php
-// api/src/Entity/Answer.php
+// api/src/Entity/Question.php
 
  #[ApiResource(
     subresourceOperations: [
@@ -232,7 +232,7 @@ The `subresourceOperations` attribute also allows you to add an access control o
         ],
     ],
  )]
- class Answer
+ class Question
  {
  }
 ```
