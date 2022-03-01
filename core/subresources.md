@@ -133,7 +133,7 @@ You may want custom groups on subresources, you can set `normalization_context` 
 
 ```php
 <?php
-// api/src/Entity/Answer.php
+// api/src/Entity/Question.php
 
 namespace App\Entity;
 
@@ -149,7 +149,7 @@ use ApiPlatform\Core\Annotation\ApiResource;
         ],
     ],
 )]
-class Answer
+class Question
 {
     // ...
 }
