@@ -1451,9 +1451,7 @@ class Book
 
     public $name;
 
-    /**
-     * @ORM\OneToMany(targetEntity="Book")
-     */
+    #[ORM\OneToMany(targetEntity: Book::class)]
     public $relatedBooks;
 
     // ...
@@ -1771,9 +1769,9 @@ use Symfony\Component\Validator\Constraints as Assert;
 use Vich\UploaderBundle\Mapping\Annotation as Vich;
 
 /**
- * @ORM\Entity
  * @Vich\Uploadable
  */
+#[ORM\Entity]
 #[ApiResource(
     iri: 'http://schema.org/MediaObject',
     normalizationContext: [
@@ -1791,37 +1789,21 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
 )]
 class MediaObject
 {
-    /**
-     * @var int|null
-     *
-     * @ORM\Column(type="integer")
-     * @ORM\GeneratedValue
-     * @ORM\Id
-     */
-    protected $id;
+    #[ORM\Id, ORM\Column, ORM\GeneratedValue]
+    protected ?int $id = null;
 
-    /**
-     * @var string|null
-     *
-     * @Groups({"media_object_read"})
-     */
     #[ApiProperty(iri: 'http://schema.org/contentUrl')]
-    public $contentUrl;
+    #[Groups(['media_object_read'])]
+    public ?string $contentUrl = null;
 
     /**
-     * @var File|null
-     *
-     * @Assert\NotNull(groups={"media_object_create"})
      * @Vich\UploadableField(mapping="media_object", fileNameProperty="filePath")
      */
-    public $file;
+    #[Assert\NotNull(groups: ['media_object_create'])] 
+    public ?File $file = null;
 
-    /**
-     * @var string|null
-     *
-     * @ORM\Column(nullable=true)
-     */
-    public $filePath;
+    #[ORM\Column(nullable: true)]
+    public ?string $filePath = null;
 
     public function getId(): ?int
     {

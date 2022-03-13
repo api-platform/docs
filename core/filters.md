@@ -1530,12 +1530,10 @@ use App\Entity\DummyCarColor;
 #[ApiResource]
 class DummyCar
 {
-    #[ORM\Id]
-    #[ORM\GeneratedValue]
-    #[ORM\Column(type: 'integer')]
+    #[ORM\Id, ORM\Column, ORM\GeneratedValue]
     private ?int $id = null;
 
-    #[ORM\Column(type: 'string')]
+    #[ORM\Column]
     #[ApiFilter(SearchFilter::class, strategy: 'partial')]
     public ?string $name = null;
 

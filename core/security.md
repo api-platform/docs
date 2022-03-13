@@ -19,8 +19,8 @@ use Symfony\Component\Validator\Constraints as Assert;
 /**
  * Secured resource.
  *
- * @ORM\Entity
  */
+ #[ORM\Entity]
  #[ApiResource(
     attributes: ["security" => "is_granted('ROLE_USER')"],
     collectionOperations: [
@@ -34,29 +34,15 @@ use Symfony\Component\Validator\Constraints as Assert;
 )]
 class Book
 {
-    /**
-     * @var int
-     *
-     * @ORM\Column(type="integer")
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="AUTO")
-     */
-    private $id;
+    #[ORM\Id, ORM\Column, ORM\GeneratedValue]
+    private ?int $id = null;
 
-    /**
-     * @var string The title
-     *
-     * @ORM\Column
-     */
+    #[ORM\Column]
     #[Assert\NotBlank]
-    public $title;
+    public string $title;
 
-    /**
-     * @var User The owner
-     *
-     * @ORM\ManyToOne(targetEntity=User::class)
-     */
-    public $owner;
+    #[ORM\ManyToOne]
+    public User $owner;
 
     // ...
 }

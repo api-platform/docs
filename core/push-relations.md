@@ -20,11 +20,8 @@ use ApiPlatform\Core\Annotation\ApiResource;
 #[ApiResource]
 class Book
 {
-    /**
-     * @var Author
-     */
      #[ApiProperty(push: true)]
-    public $author;
+    public Author $author;
     
     // ...
 }

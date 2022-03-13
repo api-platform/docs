@@ -158,9 +158,7 @@ use Doctrine\ORM\Mapping as ORM;
 #[ApiResource]
 class Review
 {
-    #[ORM\Id]
-    #[ORM\GeneratedValue]
-    #[ORM\Column(type: 'integer')]
+    #[ORM\Id, ORM\Column, ORM\GeneratedValue]
     public ?int $id = null;
 
     #[ORM\ManyToOne]
@@ -185,17 +183,15 @@ use Doctrine\ORM\Mapping as ORM;
 #[ApiResource]
 class Book
 {
-    #[ORM\Id]
-    #[ORM\GeneratedValue]
-    #[ORM\Column(type: 'integer')]
+    #[ORM\Id, ORM\Column, ORM\GeneratedValue]
     public ?int $id = null;
 
-    #[ORM\Column]
+    #[ORM\Column] 
     #[ApiFilter(SearchFilter::class, strategy: 'ipartial')]
     public string $title;
 
-    #[ORM\OneToMany(targetEntity: Review::class)]
-    public Collection $reviews;
+    #[ORM\OneToMany(targetEntity: Review::class, mappedBy: 'book')] 
+    public $reviews;
 
     public function __construct()
     {
