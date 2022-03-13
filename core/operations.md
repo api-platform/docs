@@ -54,19 +54,16 @@ Implementing [the standard `PUT` behavior](https://httpwg.org/specs/rfc7231.html
 If no operation is specified, all default CRUD operations are automatically registered. It is also possible - and recommended
 for large projects - to define operations explicitly.
 
-Keep in mind that `collectionOperations` and `itemOperations` behave independently. For instance, if you don't explicitly
-configure operations for `collectionOperations`, `GET` and `POST` operations will be automatically registered, even if you
-explicitly configure `itemOperations`. The reverse is also true.
+Keep in mind that once you explicitly set up an operation, the automatically registered CRUD will no longer be.
+If you declare even one operation manually, such as `#[GET]`, you must declare the others manually as well if you need them.
 
 Operations can be configured using annotations, XML or YAML. In the following examples, we enable only the built-in operation
-for the `GET` method for both `collectionOperations` and `itemOperations` to create a readonly endpoint.
-
-`itemOperations` and `collectionOperations` are arrays containing a list of operations. Each operation is defined by a key
-corresponding to the name of the operation that can be anything you want and an array of properties as value. If an
-empty list of operations is provided, all operations are disabled.
+for the `GET` method for both `collection` and `item` to create a readonly endpoint.
 
 If the operation's name matches a supported HTTP methods (`GET`, `POST`, `PUT`, `PATCH` or `DELETE`), the corresponding `method` property
 will be automatically added.
+
+Note: The `#[GetCollection]` attribute is an alias for `#[Get(collection: true)]`
 
 [codeSelector]
 
@@ -114,6 +111,7 @@ App\Entity\Book:
 ```
 
 [/codeSelector]
+
 
 The previous example can also be written with an explicit method definition:
 
@@ -189,7 +187,7 @@ use ApiPlatform\Metadata\ApiResource;
     read: false, 
     output: false
 )]
-#[GetCollection]
+#[GetCollection] 
 class Book
 {
     // ...
@@ -319,13 +317,11 @@ App\Entity\Book:
 
 [/codeSelector]
 
-In all these examples, the `method` attribute is omitted because it matches the operation name.
-
 ## Prefixing All Routes of All Operations
 
 Sometimes it's also useful to put a whole resource into its own "namespace" regarding the URI. Let's say you want to
 put everything that's related to a `Book` into the `library` so that URIs become `library/book/{id}`. In that case
-you don't need to override all the operations to set the path but configure the `route_prefix` attribute for the whole entity instead:
+you don't need to override all the operations to set the path but configure the `routePrefix` attribute for the whole entity instead:
 
 [codeSelector]
 
@@ -363,7 +359,80 @@ App\Entity\Book:
 
 [/codeSelector]
 
-Alternatively, the more verbose attribute syntax can be used: `#[ApiResource(routePrefix: '/library')]`.
+API Platform will automatically map this `post_publication` operation to the route `book_post_publication`. Let's create a custom action
+and its related route using annotations:
+
+```php
+<?php
+// api/src/Controller/CreateBookPublication.php
+
+namespace App\Controller;
+
+use App\Entity\Book;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpKernel\Attribute\AsController;
+use Symfony\Component\Routing\Annotation\Route;
+
+#[AsController]
+class CreateBookPublication extends AbstractController
+{
+    public function __construct(
+        private BookPublishingHandler $bookPublishingHandler
+    ) {}
+
+    #[Route(
+        path: '/books/{id}/publication',
+        name: 'book_post_publication',
+        defaults: [
+            '_api_resource_class' => Book::class,
+            '_api_operation_name' => '_api_/books/{id}/publication_post',
+        ],
+        methods: ['POST'],
+    )]
+    public function __invoke(Book $book): Book
+    {
+        $this->bookPublishingHandler->handle($book);
+
+        return $book;
+    }
+}
+```
+
+It is mandatory to set `_api_resource_class` and `_api_operation_name`in the parameters of the route (`defaults` key). It allows API Platform to work with the Symfony routing system.
+
+Alternatively, you can also use a traditional Symfony controller and YAML or XML route declarations. The following example does
+the exact same thing as the previous example:
+
+```php
+<?php
+// api/src/Controller/BookController.php
+
+namespace App\Controller;
+
+use App\Entity\Book;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpKernel\Attribute\AsController;
+
+#[AsController]
+class BookController extends AbstractController
+{
+    public function createPublication(Book $book, BookPublishingHandler $bookPublishingHandler): Book
+    {
+        return $bookPublishingHandler->handle($book);
+    }
+}
+```
+
+```yaml
+# api/config/routes.yaml
+book_post_publication:
+    path: /books/{id}/publication
+    methods: ['POST']
+    defaults:
+        _controller: App\Controller\BookController::createPublication
+        _api_resource_class: App\Entity\Book
+        _api_operation_name: post_publication
+```
 
 ## Expose a Model Without Any Routes
 
@@ -502,7 +571,6 @@ Then, remove the route from the decorator:
 ```php
 <?php
 // src/OpenApi/OpenApiFactory.php
-
 namespace App\OpenApi;
 
 use ApiPlatform\Core\OpenApi\Factory\OpenApiFactoryInterface;
