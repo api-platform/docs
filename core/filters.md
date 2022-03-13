@@ -1505,6 +1505,7 @@ doctrine:
         filters:
             user_filter:
                 class: App\Filter\UserFilter
+                enabled: true
 ```
 
 Done: Doctrine will automatically filter all `UserAware`entities!

@@ -138,11 +138,9 @@ security:
         api:
             pattern: ^/api/
             stateless: true
-            anonymous: true
             provider: app_user_provider
             jwt: ~
         main:
-            anonymous: true
             json_login:
                 check_path: /authentication_token
                 username_path: email

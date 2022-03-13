@@ -220,7 +220,7 @@ The `subresourceOperations` attribute also allows you to add an access control o
 ### Limiting Depth
 
 You can control depth of subresources with the parameter `maxDepth`. For example, if the `Answer` entity also has a subresource
-such as `comments`and you don't want the route `api/questions/{id}/answers/{id}/comments` to be generated. You can do this by adding the parameter maxDepth in the ApiSubresource annotation or YAML/XML file configuration.
+such as `comments` and you don't want the route `api/questions/{id}/answers/{id}/comments` to be generated. You can do this by adding the parameter maxDepth in the ApiSubresource annotation or YAML/XML file configuration.
 
 ```php
 <?php

@@ -142,7 +142,8 @@ Even with service autowiring and autoconfiguration enabled, you must still confi
 services:
     # ...
     App\DataPersister\UserDataPersister:
-        decorates: 'api_platform.doctrine.orm.data_persister'
+        bind:
+            $decorated: '@api_platform.doctrine.orm.data_persister'
         # Uncomment only if autoconfiguration is disabled
         #arguments: ['@App\DataPersister\UserDataPersister.inner']
         #tags: [ 'api_platform.data_persister' ]

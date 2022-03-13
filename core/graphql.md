@@ -382,7 +382,7 @@ For each resource, three mutations are available: one for creating it (`create`)
 
 When updating or deleting a resource, you need to pass the **IRI** of the resource as argument. See [Global Object Identifier](#global-object-identifier) for more information.
 
-### Client Mutation Id
+### Client Mutation ID
 
 Following the [Relay Input Object Mutations Specification](https://github.com/facebook/relay/blob/v7.1.0/website/spec/Mutations.md#relay-input-object-mutations-specification),
 you can pass a `clientMutationId` as argument and can ask its value as a field.
@@ -584,7 +584,7 @@ You can also pass `clientSubscriptionId` as argument and can ask its value as a 
 
 In the payload of the subscription, the given fields of the resource will be the fields you subscribe to: if any of these fields is updated, you will be pushed their updated values.
 
-The `mercureUrl` field is the Mercure URL you need to use to [subscribe to the updates](https://mercure.rocks/docs/getting-started#subscribing) on the client side.
+The `mercureUrl` field is the Mercure URL you need to use to [subscribe to the updates](https://mercure.rocks/docs/getting-started#subscribing) on the client-side.
 
 ### Receiving an Update
 
@@ -1169,7 +1169,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
             'normalization_context' => ['groups' => ['collection_query']],
             'denormalization_context' => ['groups' => ['mutation']]
         ]
-    }
+    ]
 )]
 class Book
 {

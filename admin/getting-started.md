@@ -30,7 +30,6 @@ To initialize API Platform Admin, register it in your application.
 For instance, if you used Create React App, replace the content of `src/App.js` by:
 
 ```javascript
-import React from "react";
 import { HydraAdmin } from "@api-platform/admin";
 
 // Replace with your own API entrypoint
