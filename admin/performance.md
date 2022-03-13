@@ -27,7 +27,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * @ORM\Entity
  */
- #[ApiResource]
+#[ApiResource]
 class Author
 {
     /**

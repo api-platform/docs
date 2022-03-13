@@ -52,13 +52,13 @@ final class BlogPostDataPersister implements ContextAwareDataPersisterInterface
 
     public function persist($data, array $context = [])
     {
-      // call your persistence layer to save $data
-      return $data;
+        // call your persistence layer to save $data
+        return $data;
     }
 
     public function remove($data, array $context = [])
     {
-      // call your persistence layer to delete $data
+        // call your persistence layer to delete $data
     }
 }
 ```
@@ -173,13 +173,13 @@ final class BlogPostDataPersister implements ContextAwareDataPersisterInterface,
 
     public function persist($data, array $context = [])
     {
-      // call your persistence layer to save $data
-      return $data;
+        // call your persistence layer to save $data
+        return $data;
     }
 
     public function remove($data, array $context = [])
     {
-      // call your persistence layer to delete $data
+        // call your persistence layer to delete $data
     }
 
     // Once called this data persister will resume to the next one
@@ -190,7 +190,7 @@ final class BlogPostDataPersister implements ContextAwareDataPersisterInterface,
 }
 ```
 
-This is very useful when using [`Messenger` with API Platform](messenger.md) as you may want to do something asynchronously with the data but still call the default Doctrine data persister, for example:
+This is useful when using [`Messenger` with API Platform](messenger.md) as you may want to do something asynchronously with the data but still call the default Doctrine data persister, for example:
 
 ```php
 namespace App\DataPersister;

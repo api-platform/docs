@@ -35,18 +35,16 @@ final class Person
 
 ```yaml
 # api/config/api_platform/resources/Person.yaml
-App\Entity\Person:
-    properties:
+properties:
+    App\Entity\Person:
         code:
             identifier: true
 ```
 
 ```xml
-<resources xmlns="https://api-platform.com/schema/metadata">
-    <resource class="App\EntityPerson">
-        <property name="code" identifier="true"/>
-    </resource>
-</resources>
+<properties xmlns="https://api-platform.com/schema/metadata/properties">
+    <property resource="App\EntityPerson" name="code" identifier="true"/>
+</properties>
 ```
 
 [/codeSelector]
@@ -176,7 +174,7 @@ final class Person
     /**
      * @var Uuid
      * @ORM\Column(type="uuid", unique=true)
-     */     
+     */
     #[ApiProperty(identifier: true)]
     public $code;
     
@@ -189,5 +187,7 @@ final class Person
 API Platform supports the following identifier types:
 
 - `scalar` (string, integer)
-- `\DateTime` (uses the symfony `DateTimeNormalizer` internally, see [DateTimeIdentifierNormalizer](https://github.com/api-platform/core/blob/main/src/Identifier/Normalizer/DateTimeIdentifierDenormalizer.php))
-- `\Ramsey\Uuid\Uuid` (see [UuidNormalizer](https://github.com/api-platform/core/blob/main/src/Bridge/RamseyUuid/Identifier/Normalizer/UuidNormalizer.php))
+- `\DateTime` (uses the symfony `DateTimeNormalizer` internally, see [DateTimeIdentifierNormalizer](https://github.com/api-platform/core/blob/2.6/src/Identifier/Normalizer/DateTimeIdentifierDenormalizer.php))
+- `\Ramsey\Uuid\Uuid` (see [UuidNormalizer](https://github.com/api-platform/core/blob/2.6/src/Bridge/RamseyUuid/Identifier/Normalizer/UuidNormalizer.php))
+- `\Symfony\Component\Uid\Ulid` (see [UlidNormalizer](https://github.com/api-platform/core/blob/2.6/src/Bridge/Symfony/Identifier/Normalizer/UlidNormalizer.php))
+- `\Symfony\Component\Uid\Uuid` (see [UuidNormalizer](https://github.com/api-platform/core/blob/2.6/src/Bridge/Symfony/Identifier/Normalizer/UuidNormalizer.php))

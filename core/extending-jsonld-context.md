@@ -16,7 +16,7 @@ namespace App\Entity;
 use ApiPlatform\Metadata\ApiProperty;
 use ApiPlatform\Metadata\ApiResource;
 
-#[ApiResource(types: ["http://schema.org/Book"])]
+#[ApiResource(types: ['http://schema.org/Book'])]
 class Book
 {
     // ...
@@ -24,13 +24,13 @@ class Book
     #[ApiProperty(
         types: ['http://schema.org/name'],
         jsonldContext: [
-            "@id" => "http://yourcustomid.com",
-            "@type" => "http://www.w3.org/2001/XMLSchema#string",
-            "someProperty" => [
-                "a" => "textA",
-                "b" => "textB"
+            '@id' => 'http://yourcustomid.com',
+            '@type' => 'http://www.w3.org/2001/XMLSchema#string',
+            'someProperty' => [
+                'a' => 'textA',
+                'b' => 'textB'
             ]
-        ]        
+        ]
     )]
     public $name;
     
@@ -75,6 +75,7 @@ It's also possible to replace the Hydra context used by the documentation genera
 namespace App\Entity;
 
 use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Get;
 
 #[ApiResource]
 #[Get(hydraContext: ['foo' => 'bar'])]
@@ -87,27 +88,29 @@ class Book
 ```yaml
 # api/config/api_platform/resources.yaml
 App\Entity\Book:
-    itemOperations:
-        get:
-            hydra_context: { foo: 'bar' }
+    operations:
+        ApiPlatform\Metadata\Get:
+            hydraContext: { foo: 'bar' }
 ```
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" ?>
 <!-- api/config/api_platform/resources.xml -->
 
-<resources xmlns="https://api-platform.com/schema/metadata"
+<resources xmlns="https://api-platform.com/schema/metadata/resources"
            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-           xsi:schemaLocation="https://api-platform.com/schema/metadata
-           https://api-platform.com/schema/metadata/metadata-2.0.xsd">
+           xsi:schemaLocation="https://api-platform.com/schema/metadata/resources
+           https://api-platform.com/schema/metadata/resources.xsd">
     <resource class="App\Entity\Book">
-        <itemOperations>
-            <itemOperation name="get">              
-                <attribute name="hydra_context">
-                    <attribute name="foo">bar</attribute>
-                </attribute>
-            </itemOperation>
-        </itemOperations>
+        <operations>
+            <operation class="ApiPlatform\Metadata\Get">              
+                <hydraContext>
+                    <values>
+                        <value name="foo">bar</value>
+                    </values>
+                </hydraContext>
+            </operation>
+        </operations>
     </resource>
 </resources>
 ```

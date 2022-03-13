@@ -52,6 +52,7 @@ chapters:
       - nelmio-api-doc
       - bootstrap
       - configuration
+      - migrate-from-fosrestbundle
   - title: The Schema Generator Component
     path: schema-generator
     items:

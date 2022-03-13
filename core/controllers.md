@@ -112,11 +112,12 @@ class Book
 ```yaml
 # api/config/api_platform/resources.yaml
 App\Entity\Book:
-    itemOperations:
-        get: ~
+    operations:
+        ApiPlatform\Metadata\Get: ~
         post_publication:
+            class: ApiPlatform\Metadata\Post
             method: POST
-            path: /books/{id}/publication
+            uriTemplate: /books/{id}/publication
             controller: App\Controller\CreateBookPublication
 ```
 
@@ -125,19 +126,16 @@ App\Entity\Book:
 <!-- api/config/api_platform/resources.xml -->
 
 <resources
-        xmlns="https://api-platform.com/schema/metadata"
+        xmlns="https://api-platform.com/schema/metadata/resources"
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xsi:schemaLocation="https://api-platform.com/schema/metadata
-        https://api-platform.com/schema/metadata/metadata-2.0.xsd">
+        xsi:schemaLocation="https://api-platform.com/schema/metadata/resources
+        https://api-platform.com/schema/metadata/resources.xsd">
     <resource class="App\Entity\Book">
-        <itemOperations>
-            <itemOperation name="get" />
-            <itemOperation name="post_publication">
-                <attribute name="method">POST</attribute>
-                <attribute name="path">/books/{id}/publication</attribute>
-                <attribute name="controller">App\Controller\CreateBookPublication</attribute>
-            </itemOperation>
-        </itemOperations>
+        <operations>
+            <operation class="ApiPlatform\Metadata\Get" />
+            <operation class="ApiPlatform\Metadata\Post" name="post_publication" uriTemplate="/books/{id}/publication"
+                       controller="App\Controller\CreateBookPublication" />
+        </operations>
     </resource>
 </resources>
 ```
@@ -186,13 +184,13 @@ class Book
 ```yaml
 # api/config/api_platform/resources.yaml
 App\Entity\Book:
-    itemOperations:
-        get: ~
+    operations:
+        ApiPlatform\Metadata\Get: ~
         post_publication:
-            method: POST
-            path: /books/{id}/publication
+            class: ApiPlatform\Metadata\Get
+            uriTemplate: /books/{id}/publication
             controller: App\Controller\CreateBookPublication
-            normalization_context:
+            normalizationContext:
                 groups: ['publication']
 ```
 
@@ -200,24 +198,22 @@ App\Entity\Book:
 <?xml version="1.0" encoding="UTF-8" ?>
 <!-- api/config/api_platform/resources.xml -->
 
-<resources xmlns="https://api-platform.com/schema/metadata"
+<resources xmlns="https://api-platform.com/schema/metadata/resources"
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xsi:schemaLocation="https://api-platform.com/schema/metadata
-        https://api-platform.com/schema/metadata/metadata-2.0.xsd">
+        xsi:schemaLocation="https://api-platform.com/schema/metadata/resources
+        https://api-platform.com/schema/metadata/resources.xsd">
     <resource class="App\Entity\Book">
-        <itemOperations>
-            <itemOperation name="get" />
-            <itemOperation name="post_publication">
-                <attribute name="method">POST</attribute>
-                <attribute name="path">/books/{id}/publication</attribute>
-                <attribute name="controller">App\Controller\CreateBookPublication</attribute>
-                <attribute name="normalization_context">
-                    <attribute name="groups">
-                        <attribute>publication</attribute>
-                    </attribute>
-                </attribute>
-            </itemOperation>
-        </itemOperations>
+        <operations>
+            <operation class="ApiPlatform\Metadata\Get" />
+            <operation class="ApiPlatform\Metadata\Post" name="post_publication" uriTemplate="/books/{id}/publication"
+                controller="App\Controller\CreateBookPublication">
+                <normalizationContext>
+                    <values>
+                        <value name="groups">publication</value>
+                    </values>
+                </normalizationContext>
+            </operation>
+        </operations>
     </resource>
 </resources>
 ```
@@ -258,11 +254,11 @@ class Book
 ```yaml
 # api/config/api_platform/resources.yaml
 App\Entity\Book:
-    itemOperations:
-        get: ~
+    operations:
+        ApiPlatform\Metadata\Get: ~
         post_publication:
-            method: POST
-            path: /books/{id}/publication
+            class: ApiPlatform\Metadata\Post
+            uriTemplate: /books/{id}/publication
             controller: App\Controller\CreateBookPublication
             read: false
 ```
@@ -271,20 +267,16 @@ App\Entity\Book:
 <?xml version="1.0" encoding="UTF-8" ?>
 <!-- api/config/api_platform/resources.xml -->
 
-<resources xmlns="https://api-platform.com/schema/metadata"
+<resources xmlns="https://api-platform.com/schema/metadata/resources"
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xsi:schemaLocation="https://api-platform.com/schema/metadata
-        https://api-platform.com/schema/metadata/metadata-2.0.xsd">
+        xsi:schemaLocation="https://api-platform.com/schema/metadata/resources
+        https://api-platform.com/schema/metadata/resources.xsd">
     <resource class="App\Entity\Book">
-        <itemOperations>
-            <itemOperation name="get" />
-            <itemOperation name="post_publication">
-                <attribute name="method">POST</attribute>
-                <attribute name="path">/books/{id}/publication</attribute>
-                <attribute name="controller">App\Controller\CreateBookPublication</attribute>
-                <attribute name="read">false</attribute>
-            </itemOperation>
-        </itemOperations>
+        <operations>
+            <operation class="ApiPlatform\Metadata\Get" />
+            <operation class="ApiPlatform\Metadata\Post" name="post_publication" uriTemplate="/books/{id}/publication"
+                controller="App\Controller\CreateBookPublication" read="false" />
+        </operations>
     </resource>
 </resources>
 ```
@@ -333,29 +325,29 @@ class Book
 ```yaml
 # api/config/api_platform/resources.yaml
 App\Entity\Book:
-    itemOperations:
-        get: ~
+    operations:
+        ApiPlatform\Metadata\Get: ~
         post_publication:
-            route_name: book_post_publication
-        book_post_discontinuation: ~
+            class: ApiPlatform\Metadata\Post
+            routeName: book_post_publication
+        book_post_discontinuation:
+          class: ApiPlatform\Metadata\Post
 ```
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" ?>
 <!-- api/config/api_platform/resources.xml -->
 
-<resources xmlns="https://api-platform.com/schema/metadata"
+<resources xmlns="https://api-platform.com/schema/metadata/resources"
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xsi:schemaLocation="https://api-platform.com/schema/metadata
-        https://api-platform.com/schema/metadata/metadata-2.0.xsd">
+        xsi:schemaLocation="https://api-platform.com/schema/metadata/resources
+        https://api-platform.com/schema/metadata/resources.xsd">
     <resource class="App\Entity\Book">
-        <itemOperations>
-            <itemOperation name="get" />
-            <itemOperation name="post_publication">
-                <attribute name="route_name">book_post_publication</attribute>
-            </itemOperation>
-            <itemOperation name="book_post_discontinuation" />
-        </itemOperations>
+        <operations>
+            <operation class="ApiPlatform\Metadata\Get" />
+            <operation class="ApiPlatform\Metadata\Post" name="post_publication" routeName="book_post_publication" />
+            <operation class="ApiPlatform\Metadata\Post" name="book_post_discontinuation" />
+        </operations>
     </resource>
 </resources>
 ```
@@ -378,12 +370,9 @@ use Symfony\Component\Routing\Annotation\Route;
 #[AsController]
 class CreateBookPublication extends AbstractController
 {
-    private $bookPublishingHandler;
-
-    public function __construct(BookPublishingHandler $bookPublishingHandler)
-    {
-        $this->bookPublishingHandler = $bookPublishingHandler;
-    }
+    public function __construct(
+        private BookPublishingHandler $bookPublishingHandler
+    ) {}
 
     #[Route(
         name: 'book_post_publication',

@@ -13,17 +13,17 @@ retrieve data for a given resource will be used.
 
 For a given resource, you can implement two kinds of interface:
 
-* the [`CollectionDataProviderInterface`](https://github.com/api-platform/core/blob/main/src/DataProvider/CollectionDataProviderInterface.php)
+* the [`CollectionDataProviderInterface`](https://github.com/api-platform/core/blob/main/src/Core/DataProvider/CollectionDataProviderInterface.php)
   is used when fetching a collection.
-* the [`ItemDataProviderInterface`](https://github.com/api-platform/core/blob/main/src/DataProvider/ItemDataProviderInterface.php)
+* the [`ItemDataProviderInterface`](https://github.com/api-platform/core/blob/main/src/Core/DataProvider/ItemDataProviderInterface.php)
   is used when fetching items.
 
 Both implementations can also implement a third, optional, interface called
-['RestrictedDataProviderInterface'](https://github.com/api-platform/core/blob/main/src/DataProvider/RestrictedDataProviderInterface.php)
+['RestrictedDataProviderInterface'](https://github.com/api-platform/core/blob/main/src/Core/DataProvider/RestrictedDataProviderInterface.php)
 if you want to limit their effects to a single resource or operation.
 
 In the following examples we will create custom data providers for an entity class called `App\Entity\BlogPost`.
-Note, that if your entity is not Doctrine-related, you need to flag the identifier property by using `#[ApiProperty(identifier: true)]` for things to work properly (see also [Entity Identifier Case](serialization.md#entity-identifier-case)).
+Note, that if your entity is not Doctrine-related, you need to flag the identifier property by using `#[ApiProperty(identifier: true)` for things to work properly (see also [Entity Identifier Case](serialization.md#entity-identifier-case)).
 
 ## Custom Collection Data Provider
 
@@ -33,9 +33,9 @@ If the [Symfony MakerBundle](https://symfony.com/doc/current/bundles/SymfonyMake
 bin/console make:data-provider --collection-only
 ```
 
-First, your `BlogPostCollectionDataProvider` has to implement the [`CollectionDataProviderInterface`](https://github.com/api-platform/core/blob/main/src/DataProvider/CollectionDataProviderInterface.php):
+First, your `BlogPostCollectionDataProvider` has to implement the [`CollectionDataProviderInterface`](https://github.com/api-platform/core/blob/main/src/Core/DataProvider/CollectionDataProviderInterface.php):
 
-The `getCollection` method must return an `array`, a `Traversable` or a [`ApiPlatform\Core\DataProvider\PaginatorInterface`](https://github.com/api-platform/core/blob/main/src/DataProvider/PaginatorInterface.php) instance.
+The `getCollection` method must return an `array`, a `Traversable` or a [`ApiPlatform\Core\DataProvider\PaginatorInterface`](https://github.com/api-platform/core/blob/main/src/Core/DataProvider/PaginatorInterface.php) instance.
 If no data is available, you should return an empty array.
 
 ```php
@@ -91,7 +91,7 @@ If the [Symfony MakerBundle](https://symfony.com/doc/current/bundles/SymfonyMake
 bin/console make:data-provider --item-only
 ```
 
-The process is similar for item data providers. Create a `BlogPostItemDataProvider` implementing the [`ItemDataProviderInterface`](https://github.com/api-platform/core/blob/main/src/DataProvider/ItemDataProviderInterface.php)
+The process is similar for item data providers. Create a `BlogPostItemDataProvider` implementing the [`ItemDataProviderInterface`](https://github.com/api-platform/core/blob/main/src/Core/DataProvider/ItemDataProviderInterface.php)
 interface:
 
 The `getItem` method can return `null` if no result has been found.

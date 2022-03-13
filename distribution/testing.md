@@ -14,7 +14,7 @@ In this article you'll learn how to use:
 * [PHPUnit](https://phpunit.de/index.html), a testing framework to cover your classes with unit tests and to write
 API-oriented functional tests thanks to its API Platform and [Symfony](https://symfony.com/doc/current/testing.html) integrations.
 * [Alice](https://github.com/nelmio/alice) and [its Symfony
-integration](https://github.com/hautelook/AliceBundle#database-testing), an expressive fixtures generator to write data fixtures.
+integration](https://github.com/theofidry/AliceBundle#database-testing), an expressive fixtures generator to write data fixtures.
 
 Official [Symfony recipes](https://flex.symfony.com/) are provided for both tools.
 
@@ -29,7 +29,7 @@ docker-compose exec php \
     composer require --dev alice
 ```
 
-Thanks to Symfony Flex, Alice (and [AliceBundle](https://github.com/hautelook/AliceBundle)) are ready to use!
+Thanks to Symfony Flex, Alice (and [AliceBundle](https://github.com/theofidry/AliceBundle)) are ready to use!
 Place your data fixtures files in a directory named `fixtures/`.
 
 Then, create some fixtures for [the bookstore API you created in the tutorial](index.md):
@@ -64,7 +64,7 @@ docker-compose exec php \
 ```
 
 To learn more about fixtures, take a look at the documentation of [Alice](https://github.com/nelmio/alice)
-and [AliceBundle](https://github.com/hautelook/AliceBundle).
+and [AliceBundle](https://github.com/theofidry/AliceBundle).
 The list of available generators as well as a cookbook explaining how to create custom generators can be found in the documentation of [Faker](https://github.com/fakerphp/faker), the library used by Alice under the hood.
 
 ## Writing Functional Tests
@@ -95,7 +95,7 @@ use Hautelook\AliceBundle\PhpUnit\RefreshDatabaseTrait;
 
 class BooksTest extends ApiTestCase
 {
-    // This trait provided by HautelookAliceBundle will take care of refreshing the database content to a known state before each test
+    // This trait provided by AliceBundle will take care of refreshing the database content to a known state before each test
     use RefreshDatabaseTrait;
 
     public function testGetCollection(): void
@@ -223,8 +223,8 @@ publicationDate: This value should not be null.',
 }
 ```
 
-As you can see, the example uses the [trait `RefreshDatabaseTrait`](https://github.com/hautelook/AliceBundle#database-testing)
-from [AliceBundle](https://github.com/hautelook/AliceBundle/blob/master/README.md) which will, at the beginning of each
+As you can see, the example uses the [trait `RefreshDatabaseTrait`](https://github.com/theofidry/AliceBundle#database-testing)
+from [AliceBundle](https://github.com/theofidry/AliceBundle) which will, at the beginning of each
 test, purge the database, load fixtures, begin a transaction, and, at the end of each test, roll back the
 transaction previously begun. Because of this, you can run your tests without worrying about fixtures.
 

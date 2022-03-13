@@ -45,7 +45,9 @@ Note: the `PATCH` method must be enabled explicitly in the configuration, refer 
 Note: with JSON Merge Patch, the [null values will be skipped](https://symfony.com/doc/current/components/serializer.html#skipping-null-values) in the response.
 
 Note: Current `PUT` implementation behaves more or less like the `PATCH` method.
-Existing properties not included in the payload are **not** removed, their current values are preserved. To remove an existing property, its value must be explicitly set to `null`. Implementing [the standard `PUT` behavior](https://httpwg.org/specs/rfc7231.html#PUT) is on the roadmap, follow [issue #4344] (<https://github.com/api-platform/core/issues/4344>) to track the progress.
+Existing properties not included in the payload are **not** removed, their current values are preserved.
+To remove an existing property, its value must be explicitly set to `null`.
+Implementing [the standard `PUT` behavior](https://httpwg.org/specs/rfc7231.html#PUT) is on the roadmap, follow [issue #4344](https://github.com/api-platform/core/issues/4344) to track the progress.
 
 ## Enabling and Disabling Operations
 
@@ -86,27 +88,76 @@ class Book
 ```yaml
 # api/config/api_platform/resources.yaml
 App\Entity\Book:
-    collectionOperations:
-        get: ~ # nothing more to add if we want to keep the default controller
-    itemOperations:
-        get: ~
+    operations:
+        ApiPlatform\Metadata\GetCollection: ~ # nothing more to add if we want to keep the default controller
+        ApiPlatform\Metadata\Get: ~
 ```
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" ?>
 <!-- api/config/api_platform/resources.xml -->
 
-<resources xmlns="https://api-platform.com/schema/metadata"
+<resources xmlns="https://api-platform.com/schema/metadata/resources"
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xsi:schemaLocation="https://api-platform.com/schema/metadata
-        https://api-platform.com/schema/metadata/metadata-2.0.xsd">
+        xsi:schemaLocation="https://api-platform.com/schema/metadata/resources
+        https://api-platform.com/schema/metadata/resources.xsd">
     <resource class="App\Entity\Book">
-        <itemOperations>
-            <itemOperation name="get" />
-        </itemOperations>
-        <collectionOperations>
-            <collectionOperation name="get" />
-        </collectionOperations>
+        <operations>
+            <operation class="ApiPlatform\Metadata\Get" />
+            <operation class="ApiPlatform\Metadata\GetCollection" />
+        </operations>
+    </resource>
+</resources>
+```
+
+[/codeSelector]
+
+
+The previous example can also be written with an explicit method definition:
+
+[codeSelector]
+
+```php
+<?php
+// api/src/Entity/Book.php
+namespace App\Entity;
+
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\GetCollection;
+
+#[ApiResource]
+#[Get]
+#[GetCollection]
+class Book
+{
+    // ...
+}
+```
+
+```yaml
+# api/config/api_platform/resources.yaml
+App\Entity\Book:
+    operations:
+        ApiPlatform\Metadata\GetCollection:
+            method: GET
+        ApiPlatform\Metadata\Get:
+            method: GET
+```
+
+```xml
+<?xml version="1.0" encoding="UTF-8" ?>
+<!-- api/config/api_platform/resources.xml -->
+
+<resources xmlns="https://api-platform.com/schema/metadata/resources"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="https://api-platform.com/schema/metadata/resources
+        https://api-platform.com/schema/metadata/resources.xsd">
+    <resource class="App\Entity\Book">
+        <operations>
+            <operation class="ApiPlatform\Metadata\GetCollection" />
+            <operation class="ApiPlatform\Metadata\Get" method="GET" />
+        </operations>
     </resource>
 </resources>
 ```
@@ -146,10 +197,9 @@ class Book
 ```yaml
 # api/config/api_platform/resources.yaml
 App\Entity\Book:
-    collectionOperations:
-        get: ~
-    itemOperations:
-        get:
+    operations:
+        ApiPlatform\Metadata\GetCollection: ~
+        ApiPlatform\Metadata\Get:
             controller: ApiPlatform\Core\Action\NotFoundAction
             read: false
             output: false
@@ -159,21 +209,16 @@ App\Entity\Book:
 <?xml version="1.0" encoding="UTF-8" ?>
 <!-- api/config/api_platform/resources.xml -->
 
-<resources xmlns="https://api-platform.com/schema/metadata"
+<resources xmlns="https://api-platform.com/schema/metadata/resources"
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xsi:schemaLocation="https://api-platform.com/schema/metadata
-        https://api-platform.com/schema/metadata/metadata-2.0.xsd">
+        xsi:schemaLocation="https://api-platform.com/schema/metadata/resources
+        https://api-platform.com/schema/metadata/resources.xsd">
     <resource class="App\Entity\Book">
-        <collectionOperations>
-            <collectionOperation name="get" />
-        </collectionOperations>
-        <itemOperations>
-            <itemOperation name="get">
-                <attribute name="controller">ApiPlatform\Core\Action\NotFoundAction</attribute>
-                <attribute name="read">false</attribute>
-                <attribute name="output">false</attribute>
-            </itemOperation>
-        </itemOperations>
+        <operations>
+            <operation class="ApiPlatform\Metadata\GetCollection" />
+            <operation class="ApiPlatform\Metadata\Get" controller="ApiPlatform\Core\Action\NotFoundAction"
+                       read="false" output="false" />
+        </operations>
     </resource>
 </resources>
 ```
@@ -220,14 +265,12 @@ class Book
 ```yaml
 # api/config/api_platform/resources.yaml
 App\Entity\Book:
-    collectionOperations:
-        post:
-            path: '/grimoire'
+    operations:
+        ApiPlatform\Metadata\Post:
+            uriTemplate: '/grimoire'
             status: 301
-    itemOperations:
-        get:
-            method: 'GET'
-            path: '/grimoire/{id}'
+        ApiPlatform\Metadata\Get:
+            uriTemplate: '/grimoire/{id}'
             requirements:
                 id: '\d+'
             defaults:
@@ -242,35 +285,32 @@ App\Entity\Book:
 <?xml version="1.0" encoding="UTF-8" ?>
 <!-- api/config/api_platform/resources.xml -->
 
-<resources xmlns="https://api-platform.com/schema/metadata"
+<resources xmlns="https://api-platform.com/schema/metadata/resources"
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xsi:schemaLocation="https://api-platform.com/schema/metadata
-        https://api-platform.com/schema/metadata/metadata-2.0.xsd">
+        xsi:schemaLocation="https://api-platform.com/schema/metadata/resources
+        https://api-platform.com/schema/metadata/resources.xsd">
     <resource class="App\Entity\Book">
-        <collectionOperations>
-            <collectionOperation name="post">
-                <attribute name="path">/grimoire</attribute>
-                <attribute name="status">301</attribute>
-            </collectionOperation>
-        </collectionOperations>
-        <itemOperations>
-            <itemOperation name="get">
-                <attribute name="path">/grimoire/{id}</attribute>
-                <attribute name="requirements">
-                    <attribute name="id">\d+</attribute>
-                </attribute>
-                <attribute name="defaults">
-                    <attribute name="color">brown</attribute>
-                </attribute>
-                <attribute name="host">{subdomain}.api-platform.com</attribute>
-                <attribute name="schemes">
-                    <attribute>https</attribute>
-                </attribute>
-                <attribute name="options">
-                    <attribute name="color">brown</attribute>
-                </attribute>
-            </itemOperation>
-        </itemOperations>
+        <operations>
+            <operation class="ApiPlatform\Metadata\Post" uriTemplate="/grimoire" status="301" />
+            <operation class="ApiPlatform\Metadata\Get" uriTemplate="/grimoire/{id}" host="{subdomain}.api-platform.com">
+                <requirements>
+                    <requirement property="id">\d+</requirement>
+                </requirements>
+                <defaults>
+                    <values>
+                        <value name="color">brown</value>
+                    </values>
+                </defaults>
+                <schemes>
+                    <scheme>https</scheme>
+                </schemes>
+                <options>
+                    <values>
+                        <value name="color">brown</value>
+                    </values>
+                </options>
+            </operation>
+        </operations>
     </resource>
 </resources>
 ```
@@ -302,32 +342,18 @@ class Book
 ```yaml
 # api/config/api_platform/resources.yaml
 App\Entity\Book:
-    attributes:
-        route_prefix: /library
-    itemOperations:
-        get: ~
-        post_publication:
-            route_name: book_post_publication
-        book_post_discontinuation: ~
+    routePrefix: /library
 ```
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" ?>
 <!-- api/config/api_platform/resources.xml -->
 
-<resources xmlns="https://api-platform.com/schema/metadata"
+<resources xmlns="https://api-platform.com/schema/metadata/resources"
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xsi:schemaLocation="https://api-platform.com/schema/metadata
-        https://api-platform.com/schema/metadata/metadata-2.0.xsd">
-    <resource class="App\Entity\Book">
-        <itemOperations>
-            <itemOperation name="get" />
-            <itemOperation name="post_publication">
-                <attribute name="route_name">book_post_publication</attribute>
-            </itemOperation>
-            <itemOperation name="book_post_discontinuation" />
-        </itemOperations>
-    </resource>
+        xsi:schemaLocation="https://api-platform.com/schema/metadata/resources
+        https://api-platform.com/schema/metadata/resources.xsd">
+    <resource class="App\Entity\Book" routePrefix="/library" />
 </resources>
 ```
 
@@ -405,10 +431,10 @@ book_post_publication:
     defaults:
         _controller: App\Controller\BookController::createPublication
         _api_resource_class: App\Entity\Book
-        _api_item_operation_name: post_publication
+        _api_operation_name: post_publication
 ```
 
-## Expose a model without any routes
+## Expose a Model Without Any Routes
 
 Sometimes, you may want to expose a model, but want it to be used through subrequests only, and never through item or collection operations.
 Because the OpenAPI standard requires at least one route to be exposed to make your models consumable, let's see how you can manage this kind

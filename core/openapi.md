@@ -138,25 +138,25 @@ class Product // The class name will be used to name exposed resources
      * @param string $name A name property - this description will be available in the API documentation too.
      *
      * @ORM\Column
-     * @Assert\NotBlank
      */
+    #[Assert\NotBlank]
     #[ApiProperty(
         openapiContext: [
-            "type" => "string",
-            "enum" => ["one", "two"],
-            "example" => "one"
+            'type' => 'string',
+            'enum' => ['one', 'two'],
+            'example' => 'one'
         ]
     )]
     public $name;
 
     /**
      * @ORM\Column
-     * @Assert\DateTime
      */
+    #[Assert\DateTime]
     #[ApiProperty(
         openapiContext: [
-            "type" => "string", 
-            "format" => "date-time"
+            'type' => 'string',
+            'format' => 'date-time'
         ]
     )]
     public $timestamp;
@@ -185,28 +185,33 @@ resources:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" ?>
-<resources xmlns="https://api-platform.com/schema/metadata"
+<properties xmlns="https://api-platform.com/schema/metadata/properties"
            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-           xsi:schemaLocation="https://api-platform.com/schema/metadata https://api-platform.com/schema/metadata/metadata-2.0.xsd">
-    <resource class="App\Entity\Product">
-        <property name="name">
-            <attribute name="openapi_context">
-                <attribute name="type">type</attribute>
-                <attribute name="enum">
-                    <attribute>one</attribute>
-                    <attribute>two</attribute>
-                </attribute>
-                <attribute name="example">one</attribute>
-            </attribute>
-        </property>
-        <property name="timestamp">
-            <attribute name="openapi_context">
-                <attribute name="type">string</attribute>
-                <attribute name="format">date-time</attribute>
-            </attribute>
-        </property>
-    </resource>
-</resources>
+           xsi:schemaLocation="https://api-platform.com/schema/metadata/properties
+           https://api-platform.com/schema/metadata/properties.xsd">
+    <property resource="App\Entity\Product" name="name">
+        <openapiContext>
+            <values>
+                <value name="type">type</value>
+                <value name="enum">
+                    <values>
+                        <value>one</value>
+                        <value>two</value>
+                    </values>
+                </value>
+                <value name="example">one</value>
+            </values>
+        </openapiContext>
+    </property>
+    <property resource="App\Entity\Product" name="timestamp">
+        <openapiContext>
+            <values>
+                <value name="type">string</value>
+                <value name="format">date-time</value>
+            </values>
+        </attribute>
+    </property>
+</properties>
 ```
 
 [/codeSelector]
@@ -247,7 +252,7 @@ This will produce the following Swagger documentation:
                         "two"
                     ],
                     "example": "one"
-                },
+                }
             }
         }
     }
@@ -342,12 +347,12 @@ class Rabbit
 ```yaml
 resources:
   App\Entity\Rabbit:
-    collectionOperations:
+    operations:
       create_rabbit:
-        method: post
+        class: ApiPlatform\Metadata\Post
         path: '/rabbit/create'
         controller: App\Controller\RandomRabbit
-        openapi_context:
+        openapiContext:
           summary: Random rabbit picture
           description: >
             # Pop a great rabbit picture by color!
@@ -370,39 +375,51 @@ resources:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" ?>
-<resources xmlns="https://api-platform.com/schema/metadata"
+<resources xmlns="https://api-platform.com/schema/metadata/resources"
            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-           xsi:schemaLocation="https://api-platform.com/schema/metadata
-        https://api-platform.com/schema/metadata/metadata-2.0.xsd">
+           xsi:schemaLocation="https://api-platform.com/schema/metadata/resources
+        https://api-platform.com/schema/metadata/resources.xsd">
     <resource class="App\Entity\Rabbit">
-        <collectionOperations>
-            <collectionOperation name="create_rabbit">
-                <attribute name="path">/rabbit/create</attribute>
-                <attribute name="method">post</attribute>
-                <attribute name="controller">App\Controller\RandomRabbit</attribute>
-                <attribute name="openapi_context">
-                    <attribute name="summary">Create a rabbit picture </attribute>
-                    <attribute name="description"># Pop a great rabbit picture by color!!
-
-![A great rabbit](https://rabbit.org/graphics/fun/netbunnies/jellybean1-brennan1.jpg)</attribute>
-                    <attribute name="content">
-                        <attribute name="application/json">
-                            <attribute name="schema">
-                                <attribute name="type">object</attribute>
-                                <attribute name="properties">
-                                    <attribute name="name">
-                                        <attribute name="type">string</attribute>
-                                    </attribute>
-                                    <attribute name="description">
-                                        <attribute name="type">string</attribute>
-                                    </attribute>
-                                </attribute>
-                            </attribute>
-                        </attribute>
-                    </attribute>
-                </attribute>
-            </collectionOperation>
-        </collectionOperations>
+        <operations>
+            <operation class="ApiPlatform\Metadata\Post" name="create_rabbit" uriTemplate="/rabbit/create"
+                       controller="App\Controller\RandomRabbit">
+                <openapiContext>
+                    <values>
+                        <value name="summary">Create a rabbit picture </value>
+                        <value name="description"># Pop a great rabbit picture by color!!
+    
+    ![A great rabbit](https://rabbit.org/graphics/fun/netbunnies/jellybean1-brennan1.jpg)</value>
+                        <value name="content">
+                            <values>
+                                <value name="application/json">
+                                    <values>
+                                        <value name="schema">
+                                            <values>
+                                                <value name="type">object</value>
+                                                <value name="properties">
+                                                    <values>
+                                                        <value name="name">
+                                                            <values>
+                                                                <value name="type">string</value>
+                                                            </values>
+                                                        </value>
+                                                        <value name="description">
+                                                            <values>
+                                                                <value name="type">string</value>
+                                                            </values>
+                                                        </value>
+                                                    </values>
+                                                </value>
+                                            </values>
+                                        </value>
+                                    </values>
+                                </value>
+                            </values>
+                        </value>
+                    </values>
+                </openapiContext>
+            </operation>
+        </operations>
     </resource>
 </resources>
 ```

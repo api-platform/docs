@@ -19,7 +19,7 @@ Finally, [install Helm](https://helm.sh/docs/intro/install/). We'll use it to de
 First, build the images:
 
     docker build -t localhost:5000/php api --target api_platform_php
-    docker build -t localhost:5000/caddy caddy --target api_platform_caddy
+    docker build -t localhost:5000/caddy api --target api_platform_caddy
     docker build -t localhost:5000/pwa pwa --target api_platform_pwa_prod
 
 Then push the images in the registry installed in Minikube:

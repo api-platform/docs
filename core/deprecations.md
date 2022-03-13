@@ -91,14 +91,12 @@ class Review
 
 ```yaml
 # api/config/api_platform/resources/Review.yaml
-resources:
+properties:
     # ...
     App\Entity\Review:
-        properties:
-            # ...
-            letter:
-                attributes:
-                    deprecation_reason: 'Use the rating property instead'
+        # ...
+        letter:
+            deprecationReason: 'Use the rating property instead'
 ```
 
 [/codeSelector]
@@ -121,7 +119,10 @@ namespace App\Entity;
 
 use ApiPlatform\Metadata\ApiResource;
 
-#[ApiResource(deprecationReason:"Create a Book instead", sunset: "01/01/2020")]
+#[ApiResource(
+    deprecationReason: 'Create a Book instead',
+    sunset: '01/01/2020'
+)]
 class Parchment
 {
     // ...
@@ -142,7 +143,10 @@ use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Get;
 
 #[ApiResource]
-#[Get(sunset: '01/01/2020', deprecationReason: 'Retrieve a Book instead')]
+#[Get(
+    deprecationReason: 'Retrieve a Book instead',
+    sunset: '01/01/2020'
+)]
 class Parchment
 {
     // ...

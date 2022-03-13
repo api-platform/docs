@@ -146,37 +146,33 @@ class Book
 ```yaml
 resources:
     App\Entity\Book:
-        attributes:
-            formats:
-               0: 'jsonld' # format already defined in the config
-               csv: 'text/csv'
-        itemOperations:
-            get:
+        formats:
+           0: 'jsonld' # format already defined in the config
+           csv: 'text/csv'
+        operations:
+            ApiPlatform\Metadata\Get:
                 formats:
                     json: ['application/merge-patch+json'] # works also with "application/merge-patch+json"
 ```
 
 ```xml
-<resources xmlns="https://api-platform.com/schema/metadata"
+<resources xmlns="https://api-platform.com/schema/metadata/resources"
            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-           xsi:schemaLocation="https://api-platform.com/schema/metadata
-           https://api-platform.com/schema/metadata/metadata-2.0.xsd">
+           xsi:schemaLocation="https://api-platform.com/schema/metadata/resources
+           https://api-platform.com/schema/metadata/resources.xsd">
     <resource class="App\Entity\Greeting">
-        <attribute name="formats">
-            <attribute>jsonld</attribute> <!-- format already defined in the config -->
-            <attribute name="csv">text/csv</attribute>
-        </attribute>
+        <formats>
+            <format>jsonld</format> <!-- format already defined in the config -->
+            <format name="csv">text/csv</format>
+        </formats>
 
-        <itemOperations>
-            <itemOperation name="get">
-                <attribute name="input_formats">
-                    <attribute name="json">
-                        <attribute>application/merge-patch+json</attribute>
-                    </attribute>
-                    <!-- works also with <attribute name="json">application/merge-patch+json</attribute> -->
-                </attribute>
-            </itemOperation>
-        </itemOperations>
+        <operations>
+            <operation class="ApiPlatform\Metadata\Get">
+                <inputFormats>
+                    <format name="json">application/merge-patch+json</format>
+                </inputFormats>
+            </operation>
+        </operations>
     </resource>
 </resources>
 ```

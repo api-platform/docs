@@ -46,8 +46,8 @@ class Book
      * @var string The title
      *
      * @ORM\Column
-     * @Assert\NotBlank
      */
+    #[Assert\NotBlank]
     public $title;
 
     /**
@@ -64,15 +64,13 @@ class Book
 ```yaml
 # api/config/api_platform/resources.yaml
 App\Entity\Book:
-    attributes:
-        security: 'is_granted("ROLE_USER")'
-    collectionOperations:
-        get: ~
-        post:
+    security: 'is_granted("ROLE_USER")'
+    operations:
+        ApiPlatform\Metadata\GetCollection: ~
+        ApiPlatform\Metadata\Post:
             security: 'is_granted("ROLE_ADMIN")'
-    itemOperations:
-        get: ~
-        put:
+        ApiPlatform\Metadata\Get: ~
+        ApiPlatform\Metadata\Put:
             security: 'is_granted("ROLE_ADMIN") or object.owner == user'
 ```
 
@@ -103,11 +101,10 @@ class Book
 
 ```yaml
 # api/config/api_platform/resources/Book.yaml
-App\Entity\Book:
-    properties:
+properties:
+    App\Entity\Book:
         adminOnlyProperty:
-            attributes:
-                security: 'is_granted("ROLE_ADMIN")'
+            security: 'is_granted("ROLE_ADMIN")'
 ```
 
 [/codeSelector]
@@ -125,7 +122,7 @@ Available variables are:
 * `user`: the current logged in object, if any
 * `object`: the current resource, or collection of resources for collection operations (note: this is `null` for update/create operations)
 * `previous_object`: (`securityPostDenormalize` only) a clone of `object`, before modifications were made - this is `null` for create operations
-* `request`: the current request
+* `request` (only at the resource level): the current request
 
 Access control checks in the `security` attribute are always executed before the [denormalization step](serialization.md).
 It means than for `PUT` or `PATCH` requests, `object` doesn't contain the value submitted by the user, but values currently stored in [the persistence layer](data-persisters.md).
@@ -158,10 +155,10 @@ class Book
 ```yaml
 # api/config/api_platform/resources.yaml
 App\Entity\Book:
-    itemOperations:
-        get: ~
-        put:
-            security_post_denormalize: "is_granted('ROLE_ADMIN') or (object.owner == user and previous_object.owner == user)"
+    operations:
+        ApiPlatform\Metadata\Get: ~
+        ApiPlatform\Metadata\GetCollectionPut:
+            securityPostDenormalize: "is_granted('ROLE_ADMIN') or (object.owner == user and previous_object.owner == user)"
     # ...
 ```
 
@@ -213,18 +210,16 @@ class Book
 ```yaml
 # api/config/api_platform/resources/Book.yaml
 App\Entity\Book:
-    attributes:
-        security: 'is_granted("ROLE_USER")'
-    collectionOperations:
-        get: ~
-        post:
-            security_post_denormalize: 'is_granted("BOOK_CREATE", object)'
-    itemOperations:
-        get:
+    security: 'is_granted("ROLE_USER")'
+    operations:
+        ApiPlatform\Metadata\GetCollection: ~
+        ApiPlatform\Metadata\Post:
+            securityPostDenormalize: 'is_granted("BOOK_CREATE", object)'
+        ApiPlatform\Metadata\Get:
             security: 'is_granted("BOOK_READ", object)'
-        put:
+        ApiPlatform\Metadata\Put:
             security: 'is_granted("BOOK_EDIT", object)'
-        delete:
+        ApiPlatform\Metadata\Delete:
             security: 'is_granted("BOOK_DELETE", object)'
 ```
 
@@ -306,8 +301,6 @@ For example:
 namespace App\Entity;
 
 use ApiPlatform\Metadata\ApiResource;
-
-use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\Post;
 use ApiPlatform\Metadata\Put;
@@ -334,22 +327,17 @@ class Book
 ```yaml
 # api/config/api_platform/resources.yaml
 App\Entity\Book:
-    attributes:
-        security: 'is_granted("ROLE_USER")'
-    collectionOperations:
-        post:
-            method: 'POST'
+    security: 'is_granted("ROLE_USER")'
+    operations:
+        ApiPlatform\Metadata\Post:
             security: 'is_granted("ROLE_ADMIN")'
-            security_message: 'Only admins can add books.'
-    itemOperations:
-        get:
-            method: 'GET'
+            securityMessage: 'Only admins can add books.'
+        ApiPlatform\Metadata\Get:
             security: 'is_granted("ROLE_USER") and object.owner == user'
-            security_message: 'Sorry, but you are not the book owner.'
-        put:
-            method: 'PUT'
-            security_post_denormalize: "is_granted('ROLE_ADMIN') or (object.owner == user and previous_object.owner == user)"
-            security_post_denormalize_message: 'Sorry, but you are not the actual book owner.'
+            securityMessage: 'Sorry, but you are not the book owner.'
+        ApiPlatform\Metadata\Put:
+            securityPostDenormalize: "is_granted('ROLE_ADMIN') or (object.owner == user and previous_object.owner == user)"
+            securityPostDenormalizeMessage: 'Sorry, but you are not the actual book owner.'
     # ...
 ```
 

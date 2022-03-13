@@ -24,10 +24,7 @@ Then we need to generate the public and private keys used for signing JWT tokens
 docker-compose exec php sh -c '
     set -e
     apk add openssl
-    mkdir -p config/jwt
-    jwt_passphrase=${JWT_PASSPHRASE:-$(grep ''^JWT_PASSPHRASE='' .env | cut -f 2 -d ''='')}
-    echo "$jwt_passphrase" | openssl genpkey -out config/jwt/private.pem -pass stdin -aes256 -algorithm rsa -pkeyopt rsa_keygen_bits:4096
-    echo "$jwt_passphrase" | openssl pkey -in config/jwt/private.pem -passin stdin -out config/jwt/public.pem -pubout
+    php bin/console lexik:jwt:generate-keypair
     setfacl -R -m u:www-data:rX -m u:"$(whoami)":rwX config/jwt
     setfacl -dR -m u:www-data:rX -m u:"$(whoami)":rwX config/jwt
 '
@@ -35,8 +32,7 @@ docker-compose exec php sh -c '
 
 Note that the `setfacl` command relies on the `acl` package. This is installed by default when using the API Platform docker distribution but may need be installed in your working environment in order to execute the `setfacl` command.
 
-This takes care of using the correct passphrase to encrypt the private key, and setting the correct permissions on the
-keys allowing the web server to read them.
+This takes care of keypair creation (including using the correct passphrase to encrypt the private key), and setting the correct permissions on the keys allowing the web server to read them.
 
 Since these keys are created by the `root` user from a container, your host user will not be able to read them during the `docker-compose build caddy` process. Add the `config/jwt/` folder to the `api/.dockerignore` file so that they are skipped from the result image.
 
@@ -64,10 +60,12 @@ Then update the security configuration:
 ```yaml
 # api/config/packages/security.yaml
 security:
-    encoders:
-        App\Entity\User:
-            algorithm: auto
+    # https://symfony.com/doc/current/security.html#c-hashing-passwords
+    password_hashers:
+        App\Entity\User: 'auto'
 
+    # https://symfony.com/doc/current/security/authenticator_manager.html
+    enable_authenticator_manager: true
     # https://symfony.com/doc/current/security.html#where-do-users-come-from-user-providers
     providers:
         # used to reload user from session & other features (e.g. switch_user)
@@ -82,7 +80,6 @@ security:
             security: false
         main:
             stateless: true
-            anonymous: true
             provider: app_user_provider
             json_login:
                 check_path: /authentication_token
@@ -90,13 +87,11 @@ security:
                 password_path: password
                 success_handler: lexik_jwt_authentication.handler.authentication_success
                 failure_handler: lexik_jwt_authentication.handler.authentication_failure
-            guard:
-                authenticators:
-                    - lexik_jwt_authentication.jwt_token_authenticator
+            jwt: ~
 
     access_control:
-        - { path: ^/docs, roles: IS_AUTHENTICATED_ANONYMOUSLY } # Allows accessing the Swagger UI
-        - { path: ^/authentication_token, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/docs, roles: PUBLIC_ACCESS } # Allows accessing the Swagger UI
+        - { path: ^/authentication_token, roles: PUBLIC_ACCESS }
         - { path: ^/, roles: IS_AUTHENTICATED_FULLY }
 ```
 
@@ -122,10 +117,12 @@ If your API uses a [path prefix](https://symfony.com/doc/current/routing/externa
 ```yaml
 # api/config/packages/security.yaml
 security:
-    encoders:
-        App\Entity\User:
-            algorithm: auto
-
+    # https://symfony.com/doc/current/security.html#c-hashing-passwords
+    password_hashers:
+        App\Entity\User: 'auto'
+    
+    # https://symfony.com/doc/current/security/authenticator_manager.html
+    enable_authenticator_manager: true
     # https://symfony.com/doc/current/security.html#where-do-users-come-from-user-providers
     providers:
         # used to reload user from session & other features (e.g. switch_user)
@@ -141,13 +138,9 @@ security:
         api:
             pattern: ^/api/
             stateless: true
-            anonymous: true
             provider: app_user_provider
-            guard:
-                authenticators:
-                    - lexik_jwt_authentication.jwt_token_authenticator
+            jwt: ~
         main:
-            anonymous: true
             json_login:
                 check_path: /authentication_token
                 username_path: email
@@ -156,8 +149,8 @@ security:
                 failure_handler: lexik_jwt_authentication.handler.authentication_failure
 
     access_control:
-        - { path: ^/docs, roles: IS_AUTHENTICATED_ANONYMOUSLY } # Allows accessing API documentations and Swagger UI
-        - { path: ^/authentication_token, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/docs, roles: PUBLIC_ACCESS } # Allows accessing API documentations and Swagger UI
+        - { path: ^/authentication_token, roles: PUBLIC_ACCESS }
         - { path: ^/, roles: IS_AUTHENTICATED_FULLY }
 ```
 
@@ -289,7 +282,7 @@ services:
 
     App\OpenApi\JwtDecorator:
         decorates: 'api_platform.openapi.factory'
-        autoconfigure: false
+        arguments: ['@.inner'] 
 ```
 
 ## Testing
@@ -317,7 +310,7 @@ class AuthenticationTest extends ApiTestCase
         $user = new User();
         $user->setEmail('test@example.com');
         $user->setPassword(
-            self::$container->get('security.password_encoder')->encodePassword($user, '$3CR3T')
+            self::$container->get('security.user_password_hasher')->hashPassword($user, '$3CR3T')
         );
 
         $manager = self::$container->get('doctrine')->getManager();

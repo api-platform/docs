@@ -90,14 +90,10 @@ use Symfony\Component\Serializer\Annotation\Groups;
 )]
 class Book
 {
-    /**
-     * @Groups({"read", "write"})
-     */
+    #[Groups(['read', 'write'])]
     public $name;
 
-    /**
-     * @Groups("write")
-     */
+    #[Groups('write')]
     public $author;
 
     // ...
@@ -108,11 +104,10 @@ class Book
 # api/config/api_platform/resources.yaml
 resources:
     App\Entity\Book:
-        attributes:
-            normalization_context:
-                groups: ['read']
-            denormalization_context:
-                groups: ['write']
+        normalizationContext:
+            groups: ['read']
+        denormalizationContext:
+            groups: ['write']
 
 # api/config/serialization/Book.yaml
 App\Entity\Book:
@@ -166,14 +161,10 @@ use Symfony\Component\Serializer\Annotation\Groups;
 #[Put(normalizationContext: ['groups' => ['put']])]
 class Book
 {
-    /**
-     * @Groups({"get", "put"})
-     */
+    #[Groups(['get', 'put'])
     public $name;
 
-    /**
-     * @Groups("get")
-     */
+    #[Groups('get')]
     public $author;
 
     // ...
@@ -183,13 +174,12 @@ class Book
 ```yaml
 # api/config/api_platform/resources/Book.yaml
 App\Entity\Book:
-    attributes:
-        normalization_context:
-            groups: ['get']
-    itemOperations:
-        get: ~
-        put:
-            normalization_context:
+    normalizationContext:
+        groups: ['get']
+    operations:
+        ApiPlatform\Metadata\Get: ~
+        ApiPlatform\Metadata\Put:
+            normalizationContext:
                 groups: ['put']
 
 # api/config/serializer/Book.yaml
@@ -233,7 +223,7 @@ In the following JSON document, the relation from a book to an author is by defa
 ```
 
 It is possible to embed related objects (in their entirety, or only some of their properties) directly in the parent
-response through the use of serialization groups. By using the following serialization groups annotations (`@Groups`),
+response through the use of serialization groups. By using the following serialization groups annotations (`#[Groups]`),
 a JSON representation of the author is embedded in the book response. As soon as any of the author's attributes is in
 the `book` group, the author will be embedded.
 
@@ -250,14 +240,10 @@ use Symfony\Component\Serializer\Annotation\Groups;
 #[ApiResource(normalizationContext: ['groups' => ['book']])]
 class Book
 {
-    /**
-     * @Groups({"book"})
-     */
+    #[Groups('book')]
     public $name;
 
-    /**
-     * @Groups({"book"})
-     */
+    #[Groups('book')]
     public $author;
 
     // ...
@@ -267,9 +253,8 @@ class Book
 ```yaml
 # api/config/api_platform/resources/Book.yaml
 App\Entity\Book:
-    attributes:
-        normalization_context:
-            groups: ['book']
+    normalizationContext:
+        groups: ['book']
 
 # api/config/serializer/Book.yaml
 App\Entity\Book:
@@ -295,10 +280,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
 #[ApiResource]
 class Person
 {
-    /**
-     * ...
-     * @Groups("book")
-     */
+    #[Groups('book')]
     public $name;
 
     // ...
@@ -361,9 +343,8 @@ class Book
 ```yaml
 # api/config/api_platform/resources/Book.yaml
 App\Entity\Book:
-    attributes:
-        denormalization_context:
-            groups: ['book']
+    denormalizationContext:
+        groups: ['book']
 ```
 
 [/codeSelector]
@@ -396,16 +377,13 @@ use Symfony\Component\Serializer\Annotation\Groups;
 )]
 class Person
 {
-    /**
-     * ...
-     * @Groups("person")
-     */
+    #[Groups('person')]
     public $name;
 
    /**
     * @var Person
-    * @Groups("person")
     */
+    #[Groups('person')]
    public $parent;  // Note that a Person instance has a relation with another Person.
  
     // ...
@@ -415,11 +393,10 @@ class Person
 ```yaml
 # api/config/api_platform/resources/Person.yaml
 App\Entity\Person:
-    attributes:
-        normalization_context:
-            groups: ['person']
-        denormalization_context:
-            groups: ['person']
+    normalizationContext:
+        groups: ['person']
+    denormalizationContext:
+        groups: ['person']
 
 # api/config/serializer/Person.yaml
 App\Entity\Person:
@@ -453,16 +430,13 @@ use Symfony\Component\Serializer\Annotation\Groups;
 )]
 class Person
 {
-    /**
-     * ...
-     * @Groups("person")
-     */
+    #[Groups('person')]
     public $name;
 
    /**
     * @var Person
-    * @Groups("person")
     */
+   #[Groups('person')]
    #[ApiProperty(readableLink: false, writableLink: false)]
    public $parent;  // This property is now serialized/deserialized as an IRI.
  
@@ -473,13 +447,14 @@ class Person
 
 ```yaml
 # api/config/api_platform/resources/Person.yaml
-App\Entity\Person:
-    attributes:
-        normalization_context:
-            groups: ['person']
-        denormalization_context:
-            groups: ['person']
-    properties:
+resources:
+    App\Entity\Person:
+        normalizationContext:
+          groups: ['person']
+        denormalizationContext:
+          groups: ['person']
+properties:
+    App\Entity\Person:
         parent:
             readableLink: false
             writableLink: false
@@ -672,8 +647,8 @@ class Greeting
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
-     * @Groups("greeting:collection:get")
      */
+    #[Groups('greeting:collection:get')]
     private $id;
     
     private $a = 1;
@@ -684,8 +659,8 @@ class Greeting
      * @var string A nice person
      *
      * @ORM\Column
-     * @Groups("greeting:collection:get")
      */
+    #[Groups('greeting:collection:get')]
     public $name = '';
 
     public function getId(): int
@@ -693,9 +668,7 @@ class Greeting
         return $this->id;
     }
 
-    /**
-     * @Groups("greeting:collection:get") <- MAGIC IS HERE, you can set a group on a method.
-     */
+    #[Groups('greeting:collection:get')] // <- MAGIC IS HERE, you can set a group on a method.
     public function getSum(): int
     {
         return $this->a + $this->b;
@@ -706,9 +679,9 @@ class Greeting
 ```yaml
 # api/config/api_platform/resources/Greeting.yaml
 App\Entity\Greeting:
-    collectionOperations:
-        get:
-            normalization_context:
+    operations:
+        ApiPlatform\Metadata\GetCollection:
+            normalizationContext:
                 groups: 'greeting:collection:get'
 
 # api/config/serializer/Greeting.yaml
@@ -752,18 +725,16 @@ class Book
      * This field can be managed only by an admin
      *
      * @var bool
-     *
-     * @Groups({"book:output", "admin:input"})
      */
+    #[Groups(['book:output', 'admin:input'}])]
     public $active = false;
 
     /**
      * This field can be managed by any user
      *
      * @var string
-     *
-     * @Groups({"book:output", "book:input"})
      */
+    #[Groups(['book:output', 'book:input'])]
     public $name;
 
     // ...
@@ -773,11 +744,10 @@ class Book
 ```yaml
 # api/config/api_platform/resources/Book.yaml
 App\Entity\Book: 
-    attributes:
-        normalization_context:
-            groups: ['book:output']
-        denormalization_context:
-            groups: ['book:input']
+    normalizationContext:
+        groups: ['book:output']
+    denormalizationContext:
+        groups: ['book:input']
 
 # api/config/serializer/Book.yaml
 App\Entity\Book:
@@ -879,7 +849,6 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
 use Symfony\Component\Serializer\Normalizer\ContextAwareNormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerAwareInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerAwareTrait;
-use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
 class BookAttributeNormalizer implements ContextAwareNormalizerInterface, NormalizerAwareInterface
 {
@@ -1076,8 +1045,8 @@ You can also use the YAML configuration format:
 
 ```yaml
 # api/config/api_platform/resources.yaml
-App\Entity\Book:
-    properties:
+properties:
+    App\Entity\Book:
         id:
             identifier: true
 ```
@@ -1128,9 +1097,8 @@ class Book
 ```yaml
 # api/config/api_platform/resources/Book.yaml
 App\Entity\Book:
-    attributes:
-        normalization_context:
-            jsonld_embed_context: true
+    normalizationContext:
+        jsonldEmbedContext: true
 ```
 
 [/codeSelector]

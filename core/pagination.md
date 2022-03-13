@@ -358,7 +358,7 @@ The [PaginationExtension](https://github.com/api-platform/core/blob/main/src/Bri
 
     #[ApiResource(paginationFetchJoinCollection: false)]
     #[GetCollection]
-    #[GetCollection(name: 'custom', paginationFetchJoinCollection: true)]
+    #[GetCollection(name: 'get_custom', paginationFetchJoinCollection: true)]
     class Book
     {
         // ...
@@ -379,7 +379,7 @@ The [PaginationExtension](https://github.com/api-platform/core/blob/main/src/Bri
 
     #[ApiResource(paginationUseOutputWalkers: false)]
     #[GetCollection]
-    #[GetCollection(name: 'custom', paginationUseOutputWalkers: true)]
+    #[GetCollection(name: 'get_custom', paginationUseOutputWalkers: true)]
     class Book
     {
         // ...

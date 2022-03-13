@@ -1,84 +1,88 @@
 # Deploying with Docker Compose
 
-While [Docker Compose](https://docs.docker.com/compose/) is mainly known and used in a development environment, it [can
-actually be used in production too](https://docs.docker.com/compose/production/). This is especially suitable for prototyping
+While [Docker Compose](https://docs.docker.com/compose/) is mainly known and used in a development environment, it [can be used in production too](https://docs.docker.com/compose/production/). This is especially suitable for prototyping
 or small-scale deployments, where the robustness (and the associated complexity) of [Kubernetes](kubernetes.md) is not
 required.
 
-It is recommended that you build the Docker images in a [CI (continuous integration)](https://en.wikipedia.org/wiki/Continuous_integration)
-job, or failing which, on your development machine. The built images should then be pushed to a [container registry](https://docs.docker.com/registry/introduction/),
-e.g. [Docker Hub](https://hub.docker.com/), [Google Container Registry](https://cloud.google.com/container-registry/),
-[GitLab Container Registry](https://docs.gitlab.com/ee/user/packages/container_registry/). On the production server, you
-would pull the pre-built images from the container registry. This maintains a separation of concerns between the build
-environment and the production environment.
+API Platform provides Docker images and a Docker Compose definition optimized for production usage.
+In this tutorial, we will learn how to deploy our Symfony application on a single server using Docker Compose.
 
-## Deploying for Production
+Note: this tutorial has been adapted from [the Symfony Docker documentation](https://github.com/dunglas/symfony-docker/blob/main/docs/production.md).
 
-To build images for production, you have to use the `docker-compose.prod.yml` file with Docker Compose.
+## Preparing a Server
 
-## Building and Pushing the Docker Images
+To deploy your application in production, you need a server.
+In this tutorial, we will use a virtual machine provided by DigitalOcean, but any Linux server can work.
+If you already have a Linux server with Docker Compose installed, you can skip straight to [the next section](#configuring-a-domain-name).
 
-These steps should be performed in a CI job (recommended) or on your development machine.
+Otherwise, use [this affiliate link](https://m.do.co/c/5d8aabe3ab80) to get $100 of free credit, create an account, then click on "Create a Droplet".
+Then, click on the "Marketplace" tab under the "Choose an image" section and search for the app named "Docker".
+This will provision an Ubuntu server with the latest versions of Docker and Docker Compose already installed!
 
-1. Make sure the environment variables required for the build are set.
+For test purposes, the cheapest plan will be enough. For real production usage, you'll probably want to pick a plan in the "general purpose" section that will fit your needs.
 
-    If you are building the images in a CI job, these environment variables should be set as part of your CI job's environment.
+![Deploying a Symfony app on DigitalOcean with Docker Compose](digitalocean-droplet.png)
 
-    If you are building on your development machine, you could set the environment variables in the `.env` file at the
-    top level of the distribution project (not to be confused with `api/.env` which is used by the Symfony application).
-    For example:
+You can keep the defaults for other settings or tweak them according to your needs.
+Don't forget to add your SSH key or to create a password, then press the "Finalize and create" button.
 
-    ```shell
-    ADMIN_IMAGE=registry.example.com/api-platform/admin
-    CLIENT_IMAGE=registry.example.com/api-platform/client
-    NGINX_IMAGE=registry.example.com/api-platform/nginx
-    PHP_IMAGE=registry.example.com/api-platform/php
-    REACT_APP_API_ENTRYPOINT=https://api.example.com
-    VARNISH_IMAGE=registry.example.com/api-platform/varnish
-    ```
+Then, wait a few seconds while your Droplet is provisioning.
+When your Droplet is ready, use SSH to connect:
 
-    **Note**: `REACT_APP_API_ENTRYPOINT` must be an exact match of the target domain name where your API will be accessed
-    from, since its value is [embedded during build time](https://create-react-app.dev/docs/adding-custom-environment-variables).
-    See [this discussion for possible workarounds](https://github.com/facebook/create-react-app/issues/2353) if this limitation
-    is unacceptable for your project.
+```console
+ssh root@<droplet-ip>
+```
 
-2. Build the Docker images:
+## Configuring a Domain Name
 
-    ```shell
-    docker-compose -f docker-compose.yml -f docker-compose.prod.yml build --pull
-    ```
+In most cases, you'll want to associate a domain name with your website.
+If you don't own a domain name yet, you'll have to buy one through a registrar.
+Use [this affiliate link](https://gandi.link/f/93650337) to redeem a 20% discount at Gandi.net.
 
-3. Push the built images to the container registry:
+Then create a DNS record of type `A` for your domain name pointing to the IP address of your server.
 
-    ```shell
-    docker-compose -f docker-compose.yml -f docker-compose.prod.yml push
-    ```
+Example:
 
-## Pulling the Docker Images and Running the Services
+```dns
+your-domain-name.example.com.  IN  A     207.154.233.113
+````
 
-These steps should be performed on the production server.
+Example in Gandi's UI:
 
-1. Make sure the environment variables required are set.
+![Creating a DNS record at Gandi.net](gandi-dns.png)
 
-    You could set the environment variables in the `.env` file at the top level of the distribution project (not to be
-    confused with `api/.env` which is used by the Symfony application). For example:
+Note: Let's Encrypt, the service used by default by API Platform to automatically generate a TLS certificate, doesn't support using bare IP addresses.
+Using a domain name is mandatory to use Let's Encrypt.
 
-    ```shell
-    SERVER_NAME=api.example.com
-    MERCURE_PUBLISHER_JWT_KEY=someKey
-    MERCURE_SUBSCRIBER_JWT_KEY=someKey
-    ```
+## Deploying
 
-    **Important**: Please make sure to change all the passwords, keys and secret values to your own.
+Copy your project on the server using `git clone`, `scp` or any other tool that may fit your needs.
+If you use GitHub, you may want to use [a deploy key](https://docs.github.com/en/developers/overview/managing-deploy-keys#deploy-keys).
+Deploy keys are also [supported by GitLab](https://docs.gitlab.com/ee/user/project/deploy_keys/).
 
-2. Pull the Docker images.
+Example with Git:
 
-    ```console
-    docker-compose -f docker-compose.yml -f docker-compose.prod.yml pull
-    ```
+```console
+git clone git@github.com:<username>/<project-name>.git
+```
 
-3. Bring up the services.
+Go into the directory containing your project (`<project-name>`), and start the app in production mode:
 
-    ```console
-    docker-compose -f docker-compose.yml -f docker-compose.prod.yml up -d
-    ```
+```console
+SERVER_NAME=your-domain-name.example.com \
+APP_SECRET=ChangeMe \
+POSTGRES_PASSWORD=ChangeMe \
+CADDY_MERCURE_JWT_SECRET=ChangeMe \
+docker-compose -f docker-compose.yml -f docker-compose.prod.yml up -d
+```
+
+Be sure to replace `your-domain-name.example.com` with your actual domain name and to set the values of `APP_SECRET`, `CADDY_MERCURE_JWT_SECRET` to cryptographically secure random values.
+
+Your server is up and running, and a Let's Encrypt HTTPS certificate has been automatically generated for you.
+Go to `https://your-domain-name.example.com` and enjoy!
+
+## Deploying on Multiple Nodes
+
+If you want to deploy your app on a cluster of machines, we recommend using [Kubernetes](kubernetes.md).
+You can use [Docker Swarm](https://docs.docker.com/engine/swarm/stack-deploy/),
+which is compatible with the provided Compose files.

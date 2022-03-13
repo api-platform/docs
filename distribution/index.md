@@ -514,7 +514,9 @@ docker-compose exec php \
     bin/console make:entity --api-resource
 ```
 
-Doctrine's [annotations](https://www.doctrine-project.org/projects/doctrine-orm/en/latest/reference/annotations-reference.html) map these entities to tables in the database. Mapping through [attributes](https://www.doctrine-project.org/projects/doctrine-orm/en/latest/reference/attributes-reference.html) is also supported, if you prefer those. Both methods are convenient as they allow grouping the code and the configuration but, if you want to decouple classes from their metadata, you can switch to XML or YAML mappings.
+Doctrine's [annotations](https://www.doctrine-project.org/projects/doctrine-orm/en/latest/reference/annotations-reference.html) map these entities to tables in the database.
+Mapping through [attributes](https://www.doctrine-project.org/projects/doctrine-orm/en/latest/reference/attributes-reference.html) is also supported, if you prefer those.
+Both methods are convenient as they allow grouping the code and the configuration but, if you want to decouple classes from their metadata, you can switch to XML or YAML mappings.
 They are supported as well.
 
 Learn more about how to map entities with the Doctrine ORM in [the project's official documentation](https://docs.doctrine-project.org/projects/doctrine-orm/en/latest/reference/association-mapping.html)
@@ -621,14 +623,7 @@ Now try to add another book by issuing a `POST` request to `/books` with the fol
 }
 ```
 
-Oops, we forgot to add the title. Submit the request anyway, you should get a 500 error with the following message:
-
-> An exception occurred while executing 'INSERT INTO book [...] VALUES [...]' with params [...]:
-> SQLSTATE[23000]: Integrity constraint violation: 1048 Column 'title' cannot be null
-
-Did you notice that the error was automatically serialized in JSON-LD and respects the Hydra Core vocabulary for errors?
-It allows the client to easily extract useful information from the error. Anyway, it's bad to get a SQL error when submitting
-a request. It means that we didn't use a valid input, and [it's a bad and dangerous practice](https://cheatsheetseries.owasp.org/cheatsheets/Input_Validation_Cheat_Sheet.html).
+The book is successfully created but there is a problem; we did not give it a title. It makes no sense to create a book record without a title so we really should have some validation measures in place to prevent this from being possible.
 
 API Platform comes with a bridge with [the Symfony Validator Component](https://symfony.com/doc/current/validation.html).
 Adding some of [its numerous validation constraints](https://symfony.com/doc/current/validation.html#supported-constraints)
@@ -649,6 +644,11 @@ Modify the following files as described in these patches:
       */
 +    #[Assert\Isbn]
      public ?string $isbn = null;
+     
+      * @ORM\Column
+      */
++    #[Assert\NotBlank]
+     public string $title = '';
  
       * @ORM\Column(type="text")
       */
