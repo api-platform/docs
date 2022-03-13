@@ -52,8 +52,7 @@ class Book
 ```yaml
 # api/config/api_platform/resources.yaml
 App\Entity\Book:
-    attributes:
-        url_generation_strategy: !php/const ApiPlatform\Core\Api\UrlGeneratorInterface::ABS_URL
+    urlGenerationStrategy: !php/const ApiPlatform\Core\Api\UrlGeneratorInterface::ABS_URL
 ```
 
 ```xml
@@ -61,13 +60,11 @@ App\Entity\Book:
 <!-- api/config/api_platform/resources.xml -->
 
 <resources
-        xmlns="https://api-platform.com/schema/metadata"
+        xmlns="https://api-platform.com/schema/metadata/resources"
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xsi:schemaLocation="https://api-platform.com/schema/metadata
-        https://api-platform.com/schema/metadata/metadata-2.0.xsd">
-    <resource class="App\Entity\Book">
-        <attribute name="url_generation_strategy" type="constant">ApiPlatform\Core\Api\UrlGeneratorInterface::ABS_URL</attribute>
-    </resource>
+        xsi:schemaLocation="https://api-platform.com/schema/metadata/resources
+        https://api-platform.com/schema/metadata/resources.xsd">
+    <resource class="App\Entity\Book" urlGenerationStrategy="0" />
 </resources>
 ```
 

@@ -61,8 +61,8 @@ to a Resource in two ways:
     ```yaml
     # api/config/api_platform/resources.yaml
     App\Entity\Offer:
-        collectionOperations:
-            get:
+        operations:
+            ApiPlatform\Metadata\GetCollection:
                 filters: ['offer.date_filter']
         # ...
     ```
@@ -71,19 +71,19 @@ to a Resource in two ways:
     <?xml version="1.0" encoding="UTF-8" ?>
     <!-- api/config/api_platform/resources.xml -->
 
-    <resources xmlns="https://api-platform.com/schema/metadata"
+    <resources xmlns="https://api-platform.com/schema/metadata/resources"
             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-            xsi:schemaLocation="https://api-platform.com/schema/metadata
-            https://api-platform.com/schema/metadata/metadata-2.0.xsd">
+            xsi:schemaLocation="https://api-platform.com/schema/metadata/resources
+            https://api-platform.com/schema/metadata/resources.xsd">
         <resource class="App\Entity\Offer">
-            <collectionOperations>
-                <collectionOperation name="get">
-                    <attribute name="filters">
-                        <attribute>offer.date_filter</attribute>
-                    </attribute>
-                </collectionOperation>
+            <operations>
+                <operation class="ApiPlatform\Metadata\GetCollection">
+                    <filters>
+                        <filter>offer.date_filter</filter>
+                    </filters>
+                </operation>
                 <!-- ... -->
-            </collectionOperations>
+            </operations>
         </resource>
     </resources>
     ```
@@ -178,8 +178,8 @@ services:
 # config/api/Offer.yaml
 App\Entity\Offer:
     # ...
-    collectionOperations:
-        get:
+    operations:
+        ApiPlatform\Metadata\GetCollection:
             filters: ['offer.search_filter']
 ```
 
@@ -227,8 +227,8 @@ services:
 # config/api/Offer.yaml
 App\Entity\Offer:
     # ...
-    collectionOperations:
-        get:
+    operations:
+        ApiPlatform\Metadata\GetCollection:
             filters: ['offer.search_filter']
 ```
 
@@ -287,8 +287,8 @@ services:
 # config/api/Offer.yaml
 App\Entity\Offer:
     # ...
-    collectionOperations:
-        get:
+    operations:
+        ApiPlatform\Metadata\GetCollection:
             filters: ['offer.date_filter']
 ```
 
@@ -348,8 +348,8 @@ services:
 # config/api/Offer.yaml
 App\Entity\Offer:
     # ...
-    collectionOperations:
-        get:
+    operations:
+        ApiPlatform\Metadata\GetCollection:
             filters: ['offer.date_filter']
 ```
 
@@ -398,8 +398,8 @@ services:
 # config/api/Offer.yaml
 App\Entity\Offer:
     # ...
-    collectionOperations:
-        get:
+    operations:
+        ApiPlatform\Metadata\GetCollection:
             filters: ['offer.boolean_filter']
 ```
 
@@ -452,8 +452,8 @@ services:
 # config/api/Offer.yaml
 App\Entity\Offer:
     # ...
-    collectionOperations:
-        get:
+    operations:
+        ApiPlatform\Metadata\GetCollection:
             filters: ['offer.numeric_filter']
 ```
 
@@ -506,8 +506,8 @@ services:
 # config/api/Offer.yaml
 App\Entity\Offer:
     # ...
-    collectionOperations:
-        get:
+    operations:
+        ApiPlatform\Metadata\GetCollection:
             filters: ['offer.range_filter']
 ```
 
@@ -565,8 +565,8 @@ services:
 # config/api/Offer.yaml
 App\Entity\Offer:
     # ...
-    collectionOperations:
-        get:
+    operations:
+        ApiPlatform\Metadata\GetCollection:
             filters: ['offer.exists_filter']
 ```
 
@@ -633,8 +633,8 @@ services:
 # config/api/Offer.yaml
 App\Entity\Offer:
     # ...
-    collectionOperations:
-        get:
+    operations:
+        ApiPlatform\Metadata\GetCollection:
             filters: ['offer.order_filter']
 ```
 
@@ -681,8 +681,8 @@ services:
 # config/api/Offer.yaml
 App\Entity\Offer:
     # ...
-    collectionOperations:
-        get:
+    operations:
+        ApiPlatform\Metadata\GetCollection:
             filters: ['offer.order_filter']
 ```
 
@@ -738,8 +738,8 @@ services:
 # config/api/Offer.yaml
 App\Entity\Offer:
     # ...
-    collectionOperations:
-        get:
+    operations:
+        ApiPlatform\Metadata\GetCollection:
             filters: ['offer.order_filter']
 ```
 
@@ -817,8 +817,8 @@ services:
 # config/api/Offer.yaml
 App\Entity\Offer:
     # ...
-    collectionOperations:
-        get:
+    operations:
+        ApiPlatform\Metadata\GetCollection:
             filters: ['offer.order_filter', 'offer.search_filter']
 ```
 
@@ -868,8 +868,8 @@ services:
 # config/api/Offer.yaml
 App\Entity\Offer:
     # ...
-    collectionOperations:
-        get:
+    operations:
+        ApiPlatform\Metadata\GetCollection:
             filters: ['offer.order_filter']
 ```
 

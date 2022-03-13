@@ -91,27 +91,24 @@ class Book
 ```yaml
 # api/config/api_platform/resources.yaml
 App\Entity\Book:
-    collectionOperations:
-        get: ~ # nothing more to add if we want to keep the default controller
-    itemOperations:
-        get: ~
+    operations:
+        ApiPlatform\Metadata\GetCollection: ~ # nothing more to add if we want to keep the default controller
+        ApiPlatform\Metadata\Get: ~
 ```
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" ?>
 <!-- api/config/api_platform/resources.xml -->
 
-<resources xmlns="https://api-platform.com/schema/metadata"
+<resources xmlns="https://api-platform.com/schema/metadata/resources"
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xsi:schemaLocation="https://api-platform.com/schema/metadata
-        https://api-platform.com/schema/metadata/metadata-2.0.xsd">
+        xsi:schemaLocation="https://api-platform.com/schema/metadata/resources
+        https://api-platform.com/schema/metadata/resources.xsd">
     <resource class="App\Entity\Book">
-        <itemOperations>
-            <itemOperation name="get" />
-        </itemOperations>
-        <collectionOperations>
-            <collectionOperation name="get" />
-        </collectionOperations>
+        <operations>
+            <operation class="ApiPlatform\Metadata\Get" />
+            <operation class="ApiPlatform\Metadata\GetCollection" />
+        </operations>
     </resource>
 </resources>
 ```
@@ -143,11 +140,10 @@ class Book
 ```yaml
 # api/config/api_platform/resources.yaml
 App\Entity\Book:
-    collectionOperations:
-        get:
+    operations:
+        ApiPlatform\Metadata\GetCollection:
             method: GET
-    itemOperations:
-        get:
+        ApiPlatform\Metadata\Get:
             method: GET
 ```
 
@@ -155,19 +151,15 @@ App\Entity\Book:
 <?xml version="1.0" encoding="UTF-8" ?>
 <!-- api/config/api_platform/resources.xml -->
 
-<resources xmlns="https://api-platform.com/schema/metadata"
+<resources xmlns="https://api-platform.com/schema/metadata/resources"
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xsi:schemaLocation="https://api-platform.com/schema/metadata
-        https://api-platform.com/schema/metadata/metadata-2.0.xsd">
+        xsi:schemaLocation="https://api-platform.com/schema/metadata/resources
+        https://api-platform.com/schema/metadata/resources.xsd">
     <resource class="App\Entity\Book">
-        <collectionOperations>
-            <collectionOperation name="get" />
-        </collectionOperations>
-        <itemOperations>
-            <itemOperation name="get">
-                <attribute name="method">GET</attribute>
-            </itemOperation>
-        </itemOperations>
+        <operations>
+            <operation class="ApiPlatform\Metadata\GetCollection" />
+            <operation class="ApiPlatform\Metadata\Get" method="GET" />
+        </operations>
     </resource>
 </resources>
 ```
@@ -207,10 +199,9 @@ class Book
 ```yaml
 # api/config/api_platform/resources.yaml
 App\Entity\Book:
-    collectionOperations:
-        get: ~
-    itemOperations:
-        get:
+    operations:
+        ApiPlatform\Metadata\GetCollection: ~
+        ApiPlatform\Metadata\Get:
             controller: ApiPlatform\Core\Action\NotFoundAction
             read: false
             output: false
@@ -220,21 +211,16 @@ App\Entity\Book:
 <?xml version="1.0" encoding="UTF-8" ?>
 <!-- api/config/api_platform/resources.xml -->
 
-<resources xmlns="https://api-platform.com/schema/metadata"
+<resources xmlns="https://api-platform.com/schema/metadata/resources"
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xsi:schemaLocation="https://api-platform.com/schema/metadata
-        https://api-platform.com/schema/metadata/metadata-2.0.xsd">
+        xsi:schemaLocation="https://api-platform.com/schema/metadata/resources
+        https://api-platform.com/schema/metadata/resources.xsd">
     <resource class="App\Entity\Book">
-        <collectionOperations>
-            <collectionOperation name="get" />
-        </collectionOperations>
-        <itemOperations>
-            <itemOperation name="get">
-                <attribute name="controller">ApiPlatform\Core\Action\NotFoundAction</attribute>
-                <attribute name="read">false</attribute>
-                <attribute name="output">false</attribute>
-            </itemOperation>
-        </itemOperations>
+        <operations>
+            <operation class="ApiPlatform\Metadata\GetCollection" />
+            <operation class="ApiPlatform\Metadata\Get" controller="ApiPlatform\Core\Action\NotFoundAction"
+                       read="false" output="false" />
+        </operations>
     </resource>
 </resources>
 ```
@@ -281,14 +267,12 @@ class Book
 ```yaml
 # api/config/api_platform/resources.yaml
 App\Entity\Book:
-    collectionOperations:
-        post:
-            path: '/grimoire'
+    operations:
+        ApiPlatform\Metadata\Post:
+            uriTemplate: '/grimoire'
             status: 301
-    itemOperations:
-        get:
-            method: 'GET'
-            path: '/grimoire/{id}'
+        ApiPlatform\Metadata\Get:
+            uriTemplate: '/grimoire/{id}'
             requirements:
                 id: '\d+'
             defaults:
@@ -303,35 +287,32 @@ App\Entity\Book:
 <?xml version="1.0" encoding="UTF-8" ?>
 <!-- api/config/api_platform/resources.xml -->
 
-<resources xmlns="https://api-platform.com/schema/metadata"
+<resources xmlns="https://api-platform.com/schema/metadata/resources"
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xsi:schemaLocation="https://api-platform.com/schema/metadata
-        https://api-platform.com/schema/metadata/metadata-2.0.xsd">
+        xsi:schemaLocation="https://api-platform.com/schema/metadata/resources
+        https://api-platform.com/schema/metadata/resources.xsd">
     <resource class="App\Entity\Book">
-        <collectionOperations>
-            <collectionOperation name="post">
-                <attribute name="path">/grimoire</attribute>
-                <attribute name="status">301</attribute>
-            </collectionOperation>
-        </collectionOperations>
-        <itemOperations>
-            <itemOperation name="get">
-                <attribute name="path">/grimoire/{id}</attribute>
-                <attribute name="requirements">
-                    <attribute name="id">\d+</attribute>
-                </attribute>
-                <attribute name="defaults">
-                    <attribute name="color">brown</attribute>
-                </attribute>
-                <attribute name="host">{subdomain}.api-platform.com</attribute>
-                <attribute name="schemes">
-                    <attribute>https</attribute>
-                </attribute>
-                <attribute name="options">
-                    <attribute name="color">brown</attribute>
-                </attribute>
-            </itemOperation>
-        </itemOperations>
+        <operations>
+            <operation class="ApiPlatform\Metadata\Post" uriTemplate="/grimoire" status="301" />
+            <operation class="ApiPlatform\Metadata\Get" uriTemplate="/grimoire/{id}" host="{subdomain}.api-platform.com">
+                <requirements>
+                    <requirement property="id">\d+</requirement>
+                </requirements>
+                <defaults>
+                    <values>
+                        <value name="color">brown</value>
+                    </values>
+                </defaults>
+                <schemes>
+                    <scheme>https</scheme>
+                </schemes>
+                <options>
+                    <values>
+                        <value name="color">brown</value>
+                    </values>
+                </options>
+            </operation>
+        </operations>
     </resource>
 </resources>
 ```
@@ -365,21 +346,18 @@ class Book
 ```yaml
 # api/config/api_platform/resources.yaml
 App\Entity\Book:
-    attributes:
-        route_prefix: /library
+    routePrefix: /library
 ```
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" ?>
 <!-- api/config/api_platform/resources.xml -->
 
-<resources xmlns="https://api-platform.com/schema/metadata"
+<resources xmlns="https://api-platform.com/schema/metadata/resources"
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xsi:schemaLocation="https://api-platform.com/schema/metadata
-        https://api-platform.com/schema/metadata/metadata-2.0.xsd">
-    <resource class="App\Entity\Book">
-        <attribute name="route_prefix">/library</attribute>
-    </resource>
+        xsi:schemaLocation="https://api-platform.com/schema/metadata/resources
+        https://api-platform.com/schema/metadata/resources.xsd">
+    <resource class="App\Entity\Book" routePrefix="/library" />
 </resources>
 ```
 

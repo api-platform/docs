@@ -189,26 +189,28 @@ resources:
     App\Entity\Offer:
         shortName: 'Offer'                   # optional
         description: 'An offer from my shop' # optional
-        iri: 'http://schema.org/Offer'       # optional
-        attributes:                          # optional
-            pagination_items_per_page: 25    # optional
+        types: ['http://schema.org/Offer']   # optional
+        paginationItemsPerPage: 25           # optional
 ```
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" ?>
 <!-- api/config/api_platform/resources.xml -->
 
-<resources xmlns="https://api-platform.com/schema/metadata"
+<resource xmlns="https://api-platform.com/schema/metadata/resources"
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xsi:schemaLocation="https://api-platform.com/schema/metadata
-        https://api-platform.com/schema/metadata/metadata-2.0.xsd">
+        xsi:schemaLocation="https://api-platform.com/schema/metadata/resources
+        https://api-platform.com/schema/metadata/resources.xsd">
     <resource class="App\Entity\Product" />
     <resource
         class="App\Entity\Offer"
         shortName="Offer" <!-- optional -->
         description="An offer from my shop" <!-- optional -->
-        iri="http://schema.org/Offer" <!-- optional -->
-    />
+    >
+        <types>
+            <type>http://schema.org/Offer</type> <!-- optional -->
+        </types>
+    </resource>
 </resources>
 ```
 

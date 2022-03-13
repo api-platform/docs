@@ -51,13 +51,12 @@ final class Person
 # api/config/api_platform/resources.yaml
 resources:
   App\Entity\Person:
-    collectionOperations:
-      post:
+    operations:
+      ApiPlatform\Metadata\Post:
         status: 202
         messenger: true
         output: false
-    itemOperations:
-      get:
+      ApiPlatform\Metadata\Get:
         status: 404
         controller: ApiPlatform\Core\Action\NotFoundAction
         read: false
