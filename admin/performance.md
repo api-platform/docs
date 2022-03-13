@@ -25,23 +25,15 @@ use ApiPlatform\Core\Annotation\ApiResource;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
 use Doctrine\ORM\Mapping as ORM;
 
-/**
- * @ORM\Entity
- */
- #[ApiResource]
+#[ORM\Entity]
+#[ApiResource]
 class Author
 {
-    /**
-     * @ORM\Column(type="integer")
-     * @ORM\GeneratedValue
-     * @ORM\Id
-     * @ApiFilter(SearchFilter::class, strategy="exact")
-     */
-    public $id;
+    #[ORM\Id, ORM\Column, ORM\GeneratedValue]
+    #[ApiFilter(SearchFilter::class, strategy: "exact")]
+    public ?int $id = null;
 
-    /**
-     * @ORM\Column
-     */
-    public $name;
+    #[ORM\Column]
+    public string $name;
 }
 ```

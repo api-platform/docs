@@ -63,43 +63,29 @@ use FOS\UserBundle\Model\User as BaseUser;
 use FOS\UserBundle\Model\UserInterface;
 use Symfony\Component\Serializer\Annotation\Groups;
 
-/**
- * @ORM\Entity
- * @ORM\Table(name="fos_user")
- * @ApiResource(
- *     normalizationContext={"groups"={"user", "user:read"}},
- *     denormalizationContext={"groups"={"user", "user:write"}}
- * )
- */
+#[ORM\Entity]
+#[ORM\Table(name: 'fos_user')]
+#[ApiResource(
+    normalizationContext: ["groups" => ["user", "user:read"]],
+    denormalizationContext: ["groups" => ["user", "user:write"]]
+)]
 class User extends BaseUser
 {
-    /**
-     * @ORM\Id
-     * @ORM\Column(type="integer")
-     * @ORM\GeneratedValue(strategy="AUTO")
-     */
-    protected $id;
+    #[ORM\Id, ORM\Column, ORM\GeneratedValue]
+    protected ?int $id = null;
 
-    /**
-     * @Groups({"user"})
-     */
-    protected $email;
+    #[Groups("user")]
+    protected string $email;
 
-    /**
-     * @ORM\Column(type="string", length=255, nullable=true)
-     * @Groups({"user"})
-     */
-    protected $fullname;
+    #[ORM\Column(nullable: true)] 
+    #[Groups("user")]
+    protected string $fullname;
 
-    /**
-     * @Groups({"user:write"})
-     */
-    protected $plainPassword;
+    #[Groups("user:write")]
+    protected string $plainPassword;
 
-    /**
-     * @Groups({"user"})
-     */
-    protected $username;
+    #[Groups("user")]
+    protected string $username;
 
     public function setFullname(?string $fullname): void
     {

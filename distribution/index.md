@@ -73,10 +73,10 @@ Similarly, on Windows, only [Docker for Windows](https://docs.docker.com/docker-
 Open a terminal, and navigate to the directory containing your project skeleton. Run the following command to start all
 services using [Docker Compose](https://docs.docker.com/compose/):
 
-Download the latest versions of the pre-built images:
+Download and build the latest versions of the images:
 
 ```console
-docker-compose pull
+docker-compose build --pull --no-cache
 ```
 
 Start Docker Compose in detached mode:
@@ -329,7 +329,7 @@ Reload `https://localhost/docs/`: API Platform used these classes to generate an
 
 ![The bookshop API](images/api-platform-2.6-bookshop-api.png)
 
-Operations available for our 2 resource types appear in the UI. We can also see the awesome [Web Debug Toolbar](https://symfonycasts.com/screencast/symfony/profiler?cid=apip)).
+Operations available for our 2 resource types appear in the UI. We can also see the awesome [Web Debug Toolbar](https://symfonycasts.com/screencast/symfony/profiler?cid=apip).
 
 Note that entities' and properties' descriptions in the API documentation, and that API Platform use PHP types to generate the appropriate JSON Schemas.
 
@@ -373,67 +373,58 @@ Modify these files as described in these patches:
 +/**
 + * A book.
 + *
-+ * @ORM\Entity
 + */
+ #[ORM\Entity]
  #[ApiResource]
  class Book
  {
 -    /** The id of this book. */
 +    /**
 +     * The id of this book.
-+     *
-+     * @ORM\Id
-+     * @ORM\GeneratedValue
-+     * @ORM\Column(type="integer")
 +     */
+     #[ORM\Id, ORM\Column, ORM\GeneratedValue]
      private ?int $id = null;
  
 -    /** The ISBN of this book (or null if doesn't have one). */
 +    /**
 +     * The ISBN of this book (or null if doesn't have one).
-+     *
-+     * @ORM\Column(nullable=true)
 +     */
+     #[ORM\Column(nullable: true)]
      public ?string $isbn = null;
  
 -    /** The title of this book. */
 +    /**
 +     * The title of this book.
-+     *
-+     * @ORM\Column
 +     */
+     #[ORM\Column]
      public string $title = '';
  
 -    /** The description of this book. */
 +    /**
 +     * The description of this book.
-+     *
-+     * @ORM\Column(type="text")
 +     */
+     #[ORM\Column(type="text")]
      public string $description = '';
  
 -    /** The author of this book. */
 +    /**
 +     * The author of this book.
-+     *
-+     * @ORM\Column
 +     */
+     #[ORM\Column]
      public string $author = '';
  
 -    /** The publication date of this book. */
 +    /**
 +     * The publication date of this book.
-+     *
-+     * @ORM\Column(type="datetime_immutable")
 +     */
+     #[ORM\Column]
      public ?\DateTimeInterface $publicationDate = null;
  
 -    /** @var Review[] Available reviews for this book. */
 +    /**
 +     * @var Review[] Available reviews for this book.
-+     *
-+     * @ORM\OneToMany(targetEntity="Review", mappedBy="book", cascade={"persist", "remove"})
 +     */
+     #[ORM\OneToMany(mappedBy: 'book', targetEntity: 'Review', cascade: ['persist', 'remove'])]
      public iterable $reviews;
  
      public function __construct()
@@ -450,60 +441,51 @@ Modify these files as described in these patches:
 -/** A review of a book. */
 +/**
 + * A review of a book.
-+ *
-+ * @ORM\Entity
 + */
+ #[ORM\Entity]
  #[ApiResource]
  class Review
  {
 -    /** The id of this review. */
 +    /**
 +     * The id of this review.
-+     *
-+     * @ORM\Id
-+     * @ORM\GeneratedValue
-+     * @ORM\Column(type="integer")
 +     */
+     #[ORM\Id, ORM\Column, ORM\GeneratedValue]
      private ?int $id = null;
  
 -    /** The rating of this review (between 0 and 5). */
 +    /**
 +     * The rating of this review (between 0 and 5).
-+     *
-+     * @ORM\Column(type="smallint")
 +     */
+     #[ORM\Column(type: "smallint")]
      public int $rating = 0;
  
 -    /** The body of the review. */
 +    /**
 +     * The body of the review.
-+     *
-+     * @ORM\Column(type="text")
 +     */
+     #[ORM\Column(type: "text")]
      public string $body = '';
  
 -    /** The author of the review. */
 +    /**
 +     * The author of the review.
-+     *
-+     * @ORM\Column
 +     */
+     #[ORM\Column]
      public string $author = '';
  
 -    /** The date of publication of this review.*/
 +    /**
 +     * The date of publication of this review.
-+     *
-+     * @ORM\Column(type="datetime_immutable")
 +     */
+     #[ORM\Column]
      public ?\DateTimeInterface $publicationDate = null;
  
 -    /** The book this review is about. */
 +    /**
 +     * The book this review is about.
-+     *
-+     * @ORM\ManyToOne(targetEntity="Book", inversedBy="reviews")
 +     */
+     #[ORM\ManyToOne(targetEntity: "Book", inversedBy: "reviews")]
      public ?Book $book = null;
  
      public function getId(): ?int
@@ -519,8 +501,6 @@ docker-compose exec php \
 Doctrine's annotations map these entities to tables in the database. Annotations are convenient as they allow grouping
 the code and the configuration but, if you want to decouple classes from their metadata, you can switch to XML or YAML mappings.
 They are supported as well.
-
-**Note:** Doctrine ORM doesn't support PHP 8 attributes at this time, but support should be added soon ([a Pull Request already exists](https://github.com/doctrine/orm/pull/8266)).
 
 Learn more about how to map entities with the Doctrine ORM in [the project's official documentation](https://docs.doctrine-project.org/projects/doctrine-orm/en/latest/reference/association-mapping.html)
 or in Kévin's book "[Persistence in PHP with the Doctrine ORM](https://www.amazon.fr/gp/product/B00HEGSKYQ/ref=as_li_tl?ie=UTF8&camp=1642&creative=6746&creativeASIN=B00HEGSKYQ&linkCode=as2&tag=kevidung-21)".
@@ -626,14 +606,7 @@ Now try to add another book by issuing a `POST` request to `/books` with the fol
 }
 ```
 
-Oops, we forgot to add the title. Submit the request anyway, you should get a 500 error with the following message:
-
-> An exception occurred while executing 'INSERT INTO book [...] VALUES [...]' with params [...]:
-> SQLSTATE[23000]: Integrity constraint violation: 1048 Column 'title' cannot be null
-
-Did you notice that the error was automatically serialized in JSON-LD and respects the Hydra Core vocabulary for errors?
-It allows the client to easily extract useful information from the error. Anyway, it's bad to get a SQL error when submitting
-a request. It means that we didn't use a valid input, and [it's a bad and dangerous practice](https://cheatsheetseries.owasp.org/cheatsheets/Input_Validation_Cheat_Sheet.html).
+The book is successfully created but there is a problem; we did not give it a title. It makes no sense to create a book record without a title so we really should have some validation measures in place to prevent this from being possible.
 
 API Platform comes with a bridge with [the Symfony Validator Component](https://symfony.com/doc/current/validation.html).
 Adding some of [its numerous validation constraints](https://symfony.com/doc/current/validation.html#supported-constraints)
@@ -649,24 +622,24 @@ Modify the following files as described in these patches:
  use Doctrine\Common\Collections\ArrayCollection;
  use Doctrine\ORM\Mapping as ORM;
 +use Symfony\Component\Validator\Constraints as Assert;
- 
-      * @ORM\Column(nullable=true)
-      */
+
+     #[ORM\Column(nullable: true)] 
 +    #[Assert\Isbn]
-     public ?string $isbn = null;
+     public ?string $isbn = null;     
  
-      * @ORM\Column(type="text")
-      */
+     #[ORM\Column]
++    #[Assert\NotBlank]
+     public string $title = '';
+ 
+     #[ORM\Column]
 +    #[Assert\NotBlank]
      public string $description = '';
  
-      * @ORM\Column
-      */
+     #[ORM\Column] 
 +    #[Assert\NotBlank]
      public string $author = '';
  
-      * @ORM\Column(type="datetime_immutable")
-      */
+     #[ORM\Column]  
 +    #[Assert\NotNull]
      public ?\DateTimeInterface $publicationDate = null;
 ```
@@ -677,29 +650,24 @@ Modify the following files as described in these patches:
  use ApiPlatform\Core\Annotation\ApiResource;
  use Doctrine\ORM\Mapping as ORM;
 +use Symfony\Component\Validator\Constraints as Assert;
- 
-      * @ORM\Column(type="smallint")
-      */
+
+     #[ORM\Column(type: 'smallint')]   
 +    #[Assert\Range(min: 0, max: 5)]
      public int $rating = 0;
  
-      * @ORM\Column(type="text")
-      */
+     #[ORM\Column(type: 'text')]
 +    #[Assert\NotBlank]
      public string $body = '';
  
-      * @ORM\Column
-      */
+     #[ORM\Column]
 +    #[Assert\NotBlank]
      public string $author = '';
  
-      * @ORM\Column(type="datetime_immutable")
-      */
+     #[ORM\Column] 
 +    #[Assert\NotNull]
      public ?\DateTimeInterface $publicationDate = null;
  
-      * @ORM\ManyToOne(targetEntity="Book", inversedBy="reviews")
-      */
+     #[ORM\ManyToOne(inverdedBy: 'reviews')] 
 +    #[Assert\NotNull]
      public ?Book $book = null;
  

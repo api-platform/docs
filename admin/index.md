@@ -8,7 +8,7 @@ for any API supporting [the Hydra Core Vocabulary](http://www.hydra-cg.com/) or 
 API Platform Admin is the perfect companion of APIs created
 using [the API Platform framework](https://api-platform.com), but also supports APIs written with any other programming language or framework as long as they expose a standard Hydra API documentation.
 
-API Platform Admin is a 100% standalone Single-Page-Application with no coupling to the server part,
+API Platform Admin is a 100% standalone Single-Page-Application written in TypeScript with no coupling to the server part,
 according to the API-first paradigm.
 
 API Platform Admin parses the API documentation then uses the awesome [React Admin](https://marmelab.com/react-admin/)
@@ -28,4 +28,5 @@ You can **customize everything** by using provided React Admin and [Material UI]
 * Automatically validates whether a field is mandatory client-side according to the API description
 * Sends proper HTTP requests to the API and decodes them using Hydra and JSON-LD formats
 * Nicely displays server-side errors (e.g. advanced validation)
+* Supports real-time updates with [Mercure](https://mercure.rocks)
 * **100% customizable**

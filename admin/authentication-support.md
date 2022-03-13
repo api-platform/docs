@@ -4,18 +4,22 @@ API Platform Admin delegates the authentication support to React Admin.
 Refer to [the chapter dedicated to authentication in the React Admin documentation](https://marmelab.com/react-admin/Authentication.html)
 for more information.
 
-In short, you have to tweak data provider and api documentation parser, like this:
+In short, you have to tweak the data provider and the API documentation parser like this:
 
-```javascript
-// admin/src/App.js
+```typescript
+// pwa/pages/admin/index.tsx
 
-import React from "react";
+import Head from "next/head";
 import { Redirect, Route } from "react-router-dom";
-import { HydraAdmin, hydraDataProvider as baseHydraDataProvider, fetchHydra as baseFetchHydra, useIntrospection } from "@api-platform/admin";
-import parseHydraDocumentation from "@api-platform/api-doc-parser/lib/hydra/parseHydraDocumentation";
-import authProvider from "./authProvider";
+import {
+  fetchHydra as baseFetchHydra,
+  hydraDataProvider as baseHydraDataProvider,
+  useIntrospection,
+} from "@api-platform/admin";
+import { parseHydraDocumentation } from "@api-platform/api-doc-parser";
+import authProvider from "utils/authProvider";
+import { ENTRYPOINT } from "config/entrypoint";
 
-const entrypoint = process.env.REACT_APP_API_ENTRYPOINT;
 const getHeaders = () => localStorage.getItem("token") ? {
   Authorization: `Bearer ${localStorage.getItem("token")}`,
 } : {};
@@ -33,35 +37,53 @@ const RedirectToLogin = () => {
   }
   return <Redirect to="/login" />;
 };
-const apiDocumentationParser = async (entrypoint) => {
+const apiDocumentationParser = async () => {
   try {
-    const { api } = await parseHydraDocumentation(entrypoint, { headers: getHeaders });
-    return { api };
+    return await parseHydraDocumentation(ENTRYPOINT, { headers: getHeaders });
   } catch (result) {
-    if (result.status === 401) {
-      // Prevent infinite loop if the token is expired
-      localStorage.removeItem("token");
-
-      return {
-        api: result.api,
-        customRoutes: [
-          <Route path="/" component={RedirectToLogin} />
-        ],
-      };
+    const { api, response, status } = result;
+    if (status !== 401 || !response) {
+      throw result;
     }
 
-    throw result;
+    // Prevent infinite loop if the token is expired
+    localStorage.removeItem("token");
+
+    return {
+      api,
+      response,
+      status,
+      customRoutes: [
+        <Route key="/" path="/" component={RedirectToLogin} />
+      ],
+    };
   }
 };
-const dataProvider = baseHydraDataProvider(entrypoint, fetchHydra, apiDocumentationParser);
+const dataProvider = baseHydraDataProvider({
+  entrypoint: ENTRYPOINT,
+  httpClient: fetchHydra,
+  apiDocumentationParser,
+});
 
-export default () => (
-  <HydraAdmin
-    dataProvider={ dataProvider }
-    authProvider={ authProvider }
-    entrypoint={ entrypoint }
-  />
+const AdminLoader = () => {
+  if (typeof window !== "undefined") {
+    const { HydraAdmin } = require("@api-platform/admin");
+    return <HydraAdmin dataProvider={dataProvider} authProvider={authProvider} entrypoint={window.origin} />;
+  }
+
+  return <></>;
+};
+
+const Admin = () => (
+  <>
+    <Head>
+      <title>API Platform Admin</title>
+    </Head>
+
+    <AdminLoader />
+  </>
 );
+export default Admin;
 ```
 
-For the implementation of the auth provider, you can find a working example in the [API Platform's demo application](https://github.com/api-platform/demo/blob/master/admin/src/authProvider.js).
+For the implementation of the auth provider, you can find a working example in the [API Platform's demo application](https://github.com/api-platform/demo/blob/main/pwa/utils/authProvider.tsx).

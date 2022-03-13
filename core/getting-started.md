@@ -1,5 +1,9 @@
 # Getting started
 
+## Migrating from FOSRestBundle
+
+If you plan to migrate from FOSRestBundle, you might want to read [this guide](migrate-from-fosrestbundle.md) to get started with API Platform.
+
 ## Installing API Platform Core
 
 If you are starting a new project, the easiest way to get API Platform up is to install the [API Platform Distribution](../distribution/index.md).
@@ -43,24 +47,18 @@ use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Validator\Constraints as Assert;
 
-/**
- * @ORM\Entity
- */
+#[ORM\Entity]
 #[ApiResource]
 class Product // The class name will be used to name exposed resources
 {
-    /**
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="AUTO")
-     * @ORM\Column(type="integer")
-     */
+    #[ORM\Id, ORM\Column, ORM\GeneratedValue]
     private ?int $id = null;
 
     /**
      * A name property - this description will be available in the API documentation too.
      *
-     * @ORM\Column
      */
+    #[ORM\Column] 
     #[Assert\NotBlank]
     public string $name = '';
 
@@ -68,8 +66,8 @@ class Product // The class name will be used to name exposed resources
     /**
      * @var Offer[]|ArrayCollection
      *
-     * @ORM\OneToMany(targetEntity="Offer", mappedBy="product", cascade={"persist"})
      */
+    #[ORM\OneToMany(targetEntity: Offer::class, mappedBy: 'product', cascade: ['persist'])] 
     public iterable $offers;
 
     public function __construct()
@@ -113,32 +111,22 @@ use Symfony\Component\Validator\Constraints as Assert;
 /**
  * An offer from my shop - this description will be automatically extracted from the PHPDoc to document the API.
  *
- * @ORM\Entity
  */
+#[ORM\Entity]
 #[ApiResource(iri: 'http://schema.org/Offer')]
 class Offer
 {
-    /**
-     * @ORM\Column(type="integer")
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="AUTO")
-     */
+    #[ORM\Id, ORM\Column, ORM\GeneratedValue]
     private ?int $id = null;
 
-    /**
-     * @ORM\Column(type="text")
-     */
+    #[ORM\Column(type: 'text')]
     public string $description = '';
 
-    /**
-     * @ORM\Column(type="float")
-     */
+    #[ORM\Column]
     #[Assert\Range(minMessage: 'The price must be superior to 0.', min: 0)]
     public float $price = -1.0;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="Product", inversedBy="offers")
-     */
+    #[ORM\ManyToOne(targetEntity: Product::class, inversedBy: 'offers')]
     public ?Product $product = null;
 
     public function getId(): ?int

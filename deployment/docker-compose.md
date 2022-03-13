@@ -1,176 +1,88 @@
 # Deploying with Docker Compose
 
-While [Docker Compose](https://docs.docker.com/compose/) is mainly known and used in a development environment, it [can
-actually be used in production too](https://docs.docker.com/compose/production/). This is especially suitable for prototyping
+While [Docker Compose](https://docs.docker.com/compose/) is mainly known and used in a development environment, it [can be used in production too](https://docs.docker.com/compose/production/). This is especially suitable for prototyping
 or small-scale deployments, where the robustness (and the associated complexity) of [Kubernetes](kubernetes.md) is not
 required.
 
-It is recommended that you build the Docker images in a [CI (continuous integration)](https://en.wikipedia.org/wiki/Continuous_integration)
-job, or failing which, on your development machine. The built images should then be pushed to a [container registry](https://docs.docker.com/registry/introduction/),
-e.g. [Docker Hub](https://hub.docker.com/), [Google Container Registry](https://cloud.google.com/container-registry/),
-[GitLab Container Registry](https://docs.gitlab.com/ee/user/packages/container_registry/). On the production server, you
-would pull the pre-built images from the container registry. This maintains a separation of concerns between the build
-environment and the production environment.
+API Platform provides Docker images and a Docker Compose definition optimized for production usage.
+In this tutorial, we will learn how to deploy our Symfony application on a single server using Docker Compose.
 
-## Installing the Docker Compose Setup for Production
+Note: this tutorial has been adapted from [the Symfony Docker documentation](https://github.com/dunglas/symfony-docker/blob/main/docs/production.md).
 
-If you are using the [API Platform Distribution](../distribution/index.md), we provide a [ready-to-deploy Docker Compose
-setup for production](https://github.com/api-platform/docker-compose-prod), with (optional) [Let's Encrypt](https://letsencrypt.org/)
-integration.
+## Preparing a Server
 
-It is designed to be used as a companion to the distribution, and as such it needs to be placed inside a subdirectory at
-the top level of the distribution project:
+To deploy your application in production, you need a server.
+In this tutorial, we will use a virtual machine provided by DigitalOcean, but any Linux server can work.
+If you already have a Linux server with Docker Compose installed, you can skip straight to [the next section](#configuring-a-domain-name).
+
+Otherwise, use [this affiliate link](https://m.do.co/c/5d8aabe3ab80) to get $100 of free credit, create an account, then click on "Create a Droplet".
+Then, click on the "Marketplace" tab under the "Choose an image" section and search for the app named "Docker".
+This will provision an Ubuntu server with the latest versions of Docker and Docker Compose already installed!
+
+For test purposes, the cheapest plan will be enough. For real production usage, you'll probably want to pick a plan in the "general purpose" section that will fit your needs.
+
+![Deploying a Symfony app on DigitalOcean with Docker Compose](digitalocean-droplet.png)
+
+You can keep the defaults for other settings or tweak them according to your needs.
+Don't forget to add your SSH key or to create a password, then press the "Finalize and create" button.
+
+Then, wait a few seconds while your Droplet is provisioning.
+When your Droplet is ready, use SSH to connect:
 
 ```console
-wget -O - https://github.com/api-platform/docker-compose-prod/archive/master.tar.gz | tar -xzf - && mv docker-compose-prod-master docker-compose-prod
-git add docker-compose-prod
+ssh root@<droplet-ip>
 ```
 
-Then commit the changes to your git repository. The `docker-compose-prod` directory should be checked in.
+## Configuring a Domain Name
 
-## Building and Pushing the Docker Images
+In most cases, you'll want to associate a domain name with your website.
+If you don't own a domain name yet, you'll have to buy one through a registrar.
+Use [this affiliate link](https://gandi.link/f/93650337) to redeem a 20% discount at Gandi.net.
 
-These steps should be performed in a CI job (recommended) or on your development machine.
+Then create a DNS record of type `A` for your domain name pointing to the IP address of your server.
 
-1. Make sure the environment variables required for the build are set.
+Example:
 
-    If you are building the images in a CI job, these environment variables should be set as part of your CI job's environment.
+```dns
+your-domain-name.example.com.  IN  A     207.154.233.113
+````
 
-    If you are building on your development machine, you could set the environment variables in the `.env` file at the
-    top level of the distribution project (not to be confused with `api/.env` which is used by the Symfony application).
-    For example:
+Example in Gandi's UI:
 
-    ```shell
-    ADMIN_IMAGE=registry.example.com/api-platform/admin
-    CLIENT_IMAGE=registry.example.com/api-platform/client
-    NGINX_IMAGE=registry.example.com/api-platform/nginx
-    PHP_IMAGE=registry.example.com/api-platform/php
-    REACT_APP_API_ENTRYPOINT=https://api.example.com
-    VARNISH_IMAGE=registry.example.com/api-platform/varnish
-    ```
+![Creating a DNS record at Gandi.net](gandi-dns.png)
 
-    **Note**: `REACT_APP_API_ENTRYPOINT` must be an exact match of the target domain name where your API will be accessed
-    from, since its value is [embedded during build time](https://create-react-app.dev/docs/adding-custom-environment-variables).
-    See [this discussion for possible workarounds](https://github.com/facebook/create-react-app/issues/2353) if this limitation
-    is unacceptable for your project.
+Note: Let's Encrypt, the service used by default by API Platform to automatically generate a TLS certificate, doesn't support using bare IP addresses.
+Using a domain name is mandatory to use Let's Encrypt.
 
-2. Build the Docker images:
+## Deploying
 
-    ```shell
-    docker-compose -f docker-compose-prod/docker-compose.build.yml pull --ignore-pull-failures
-    docker-compose -f docker-compose-prod/docker-compose.build.yml build --pull
-    ```
+Copy your project on the server using `git clone`, `scp` or any other tool that may fit your needs.
+If you use GitHub, you may want to use [a deploy key](https://docs.github.com/en/developers/overview/managing-deploy-keys#deploy-keys).
+Deploy keys are also [supported by GitLab](https://docs.gitlab.com/ee/user/project/deploy_keys/).
 
-3. Push the built images to the container registry:
+Example with Git:
 
-    ```shell
-    docker-compose -f docker-compose-prod/docker-compose.build.yml push
-    ```
+```console
+git clone git@github.com:<username>/<project-name>.git
+```
 
-## Pulling the Docker Images and Running the Services
+Go into the directory containing your project (`<project-name>`), and start the app in production mode:
 
-These steps should be performed on the production server.
+```console
+SERVER_NAME=your-domain-name.example.com \
+APP_SECRET=ChangeMe \
+POSTGRES_PASSWORD=ChangeMe \
+CADDY_MERCURE_JWT_SECRET=ChangeMe \
+docker-compose -f docker-compose.yml -f docker-compose.prod.yml up -d
+```
 
-1. Make sure the environment variables required are set.
+Be sure to replace `your-domain-name.example.com` with your actual domain name and to set the values of `APP_SECRET`, `CADDY_MERCURE_JWT_SECRET` to cryptographically secure random values.
 
-    You could set the environment variables in the `.env` file at the top level of the distribution project (not to be
-    confused with `api/.env` which is used by the Symfony application). For example:
+Your server is up and running, and a Let's Encrypt HTTPS certificate has been automatically generated for you.
+Go to `https://your-domain-name.example.com` and enjoy!
 
-    ```shell
-    ADMIN_HOST=admin.example.com
-    ADMIN_IMAGE=registry.example.com/api-platform/admin
-    API_HOST=api.example.com
-    APP_SECRET=3c857494cfcc42c700dfb7a6
-    CLIENT_HOST=example.com,www.example.com
-    CLIENT_IMAGE=registry.example.com/api-platform/client
-    CORS_ALLOW_ORIGIN=^https://(?:\w+\.)?example\.com$
-    DATABASE_URL=postgres://api-platform:4e3bc2766fe81df300d56481@db/api
-    MERCURE_ALLOW_ANONYMOUS=0
-    MERCURE_CORS_ALLOWED_ORIGINS=https://example.com,https://admin.example.com
-    MERCURE_HOST=mercure.example.com
-    MERCURE_JWT_KEY=4121344212538417de3e2118
-    MERCURE_JWT_SECRET=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJtZXJjdXJlIjp7InN1YnNjcmliZSI6WyJmb28iLCJiYXIiXSwicHVibGlzaCI6WyJmb28iXX19.B0MuTRMPLrut4Nt3wxVvLtfWB_y189VEpWMlSmIQABQ
-    MERCURE_SUBSCRIBE_URL=https://mercure.example.com/hub
-    NGINX_IMAGE=registry.example.com/api-platform/nginx
-    PHP_IMAGE=registry.example.com/api-platform/php
-    POSTGRES_PASSWORD=4e3bc2766fe81df300d56481
-    REACT_APP_API_ENTRYPOINT=https://api.example.com
-    TRUSTED_HOSTS=^(?:localhost|api|api\.example\.com)$
-    VARNISH_IMAGE=registry.example.com/api-platform/varnish
-    ```
+## Deploying on Multiple Nodes
 
-    **Important**: Please make sure to change all the passwords, keys and secret values to your own.
-
-2. Set up a redirect from e.g. `www.example.com` to `example.com`:
-
-    ```shell
-    mkdir -p docker-compose-prod/docker/nginx-proxy/vhost.d
-    echo 'return 301 https://example.com$request_uri;' > docker-compose-prod/docker/nginx-proxy/vhost.d/www.example.com
-    ```
-
-    **Note**: If you do not want such a redirect, or you want it to be the other way round, please adapt to suit your needs.
-
-3. *(optional)* Set up the Let's Encrypt integration.
-
-    **Note**: If you are using Cloudflare, you might consider using their [free SSL/TLS encryption](https://www.cloudflare.com/ssl/)
-    setup as a simpler alternative. But if you would prefer to have full control, read on.
-
-    Make sure the environment variables required for the Let's Encrypt integration are set.
-
-    You could set the environment variables in the `.env` file at the top level of the distribution project (not to be
-    confused with `api/.env` which is used by the Symfony application). For example:
-
-    ```shell
-    LETSENCRYPT_USER_MAIL=user@example.com
-    LEXICON_CLOUDFLARE_AUTH_TOKEN=9e06358f74cbce70602c22fc3279f0aee3077
-    LEXICON_CLOUDFLARE_AUTH_USERNAME=user@example.com
-    ```
-
-    **Note**: If you are not using [Cloudflare DNS](https://www.cloudflare.com/dns/), please see [the documentation on
-    how to pass the correct environment variables to Lexicon](https://github.com/adferrand/docker-letsencrypt-dns#configuring-dns-provider-and-authentication-to-dns-api).
-
-    Configure the (sub)domains for which you want certificate(s) to be issued for in `docker-compose-prod/docker/letsencrypt/domains.conf`.
-    For example, to request a wildcard certificate for `*.example.com` and `example.com`:
-
-    ```shell
-    *.example.com example.com autorestart-containers=api-platform_nginx-proxy_1
-    ```
-
-    **Note**: Replace the `api-platform` prefix in `api-platform_nginx-proxy_1` with your [Docker Compose project name
-    (it defaults to the project directory name)](https://docs.docker.com/compose/reference/envvars/#compose_project_name).
-
-4. Pull the Docker images.
-
-    If you are **not** using the (optional) Let's Encrypt integration:
-
-    ```console
-    docker-compose -f docker-compose-prod/docker-compose.yml pull
-    ```
-
-    If you are using the (optional) Let's Encrypt integration:
-
-    ```console
-    docker-compose -f docker-compose-prod/docker-compose.yml -f docker-compose-prod/docker-compose.letsencrypt.yml pull
-    ```
-
-5. Bring up the services.
-
-    If you are **not** using the (optional) Let's Encrypt integration:
-
-    ```console
-    docker-compose -f docker-compose-prod/docker-compose.yml up -d
-    ```
-
-    If you are using the (optional) Let's Encrypt integration:
-
-    ```console
-    docker-compose -f docker-compose-prod/docker-compose.yml -f docker-compose-prod/docker-compose.letsencrypt.yml up -d
-    ```
-
-## Running the Docker Compose Setup for Production Locally
-
-Sometimes, you may need to run a production-like setup locally; for example, for [end-to-end testing](../distribution/testing.md#using-the-api-platform-distribution-for-end-to-end-testing)
-or to troubleshoot problems which can only be reproduced with a production setup (e.g. Varnish errors or cache misses).
-
-You may (re)use the same [Docker Compose setup for production](https://github.com/api-platform/docker-compose-prod) we
-have [installed above](#installing-the-docker-compose-setup-for-production).
+If you want to deploy your app on a cluster of machines, we recommend using [Kubernetes](kubernetes.md).
+You can use [Docker Swarm](https://docs.docker.com/engine/swarm/stack-deploy/),
+which is compatible with the provided Compose files.

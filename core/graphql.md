@@ -382,7 +382,7 @@ For each resource, three mutations are available: one for creating it (`create`)
 
 When updating or deleting a resource, you need to pass the **IRI** of the resource as argument. See [Global Object Identifier](#global-object-identifier) for more information.
 
-### Client Mutation Id
+### Client Mutation ID
 
 Following the [Relay Input Object Mutations Specification](https://github.com/facebook/relay/blob/v7.1.0/website/spec/Mutations.md#relay-input-object-mutations-specification),
 you can pass a `clientMutationId` as argument and can ask its value as a field.
@@ -584,7 +584,7 @@ You can also pass `clientSubscriptionId` as argument and can ask its value as a 
 
 In the payload of the subscription, the given fields of the resource will be the fields you subscribe to: if any of these fields is updated, you will be pushed their updated values.
 
-The `mercureUrl` field is the Mercure URL you need to use to [subscribe to the updates](https://mercure.rocks/docs/getting-started#subscribing) on the client side.
+The `mercureUrl` field is the Mercure URL you need to use to [subscribe to the updates](https://mercure.rocks/docs/getting-started#subscribing) on the client-side.
 
 ### Receiving an Update
 
@@ -1169,7 +1169,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
             'normalization_context' => ['groups' => ['collection_query']],
             'denormalization_context' => ['groups' => ['mutation']]
         ]
-    }
+    ]
 )]
 class Book
 {
@@ -1451,9 +1451,7 @@ class Book
 
     public $name;
 
-    /**
-     * @ORM\OneToMany(targetEntity="Book")
-     */
+    #[ORM\OneToMany(targetEntity: Book::class)]
     public $relatedBooks;
 
     // ...
@@ -1771,9 +1769,9 @@ use Symfony\Component\Validator\Constraints as Assert;
 use Vich\UploaderBundle\Mapping\Annotation as Vich;
 
 /**
- * @ORM\Entity
  * @Vich\Uploadable
  */
+#[ORM\Entity]
 #[ApiResource(
     iri: 'http://schema.org/MediaObject',
     normalizationContext: [
@@ -1791,37 +1789,21 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
 )]
 class MediaObject
 {
-    /**
-     * @var int|null
-     *
-     * @ORM\Column(type="integer")
-     * @ORM\GeneratedValue
-     * @ORM\Id
-     */
-    protected $id;
+    #[ORM\Id, ORM\Column, ORM\GeneratedValue]
+    protected ?int $id = null;
+
+    #[ApiProperty(iri: 'http://schema.org/contentUrl')]
+    #[Groups(['media_object_read'])]
+    public ?string $contentUrl = null;
 
     /**
-     * @var string|null
-     *
-     * @Groups({"media_object_read"})
-     */
-    #[ApiProperty(iri: 'http://schema.org/contentUrl)]
-    public $contentUrl;
-
-    /**
-     * @var File|null
-     *
-     * @Assert\NotNull(groups={"media_object_create"})
      * @Vich\UploadableField(mapping="media_object", fileNameProperty="filePath")
      */
-    public $file;
+    #[Assert\NotNull(groups: ['media_object_create'])] 
+    public ?File $file = null;
 
-    /**
-     * @var string|null
-     *
-     * @ORM\Column(nullable=true)
-     */
-    public $filePath;
+    #[ORM\Column(nullable: true)]
+    public ?string $filePath = null;
 
     public function getId(): ?int
     {

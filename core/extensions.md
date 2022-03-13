@@ -28,9 +28,7 @@ namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
 
-/**
- * @ApiResource
- */
+#[ApiResource]
 class User
 {
     // ...
@@ -45,16 +43,11 @@ namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
 
-/**
- * @ApiResource
- */
+#[ApiResource]
 class Offer
 {
-   /**
-     * @var User
-     * @ORM\ManyToOne(targetEntity="User")
-     */
-    public $user;
+    #[ORM\ManyToOne] 
+    public User $user;
 
     //...
 }

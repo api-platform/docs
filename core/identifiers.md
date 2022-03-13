@@ -19,19 +19,25 @@ use ApiPlatform\Core\Annotation\ApiResource;
 use ApiPlatform\Core\Annotation\ApiProperty;
 use App\Uuid;
 
-/**
- * @ApiResource
- */
+#[ApiResource]
 final class Person
 {
     /**
      * @var Uuid
-     * @ApiProperty(identifier=true)
      */
+     #[ApiProperty(identifier: true)]
     public $code;
     
     // ...
 }
+```
+
+```yaml
+# api/config/api_platform/resources/Person.yaml
+App\Entity\Person:
+    properties:
+        code:
+            identifier: true
 ```
 
 ```xml
@@ -149,27 +155,19 @@ use ApiPlatform\Core\Annotation\ApiProperty;
 use App\Uuid;
 use Doctrine\ORM\Mapping as ORM;
 
-/**
- * @ORM\Entity
- * @ApiResource
- */
+#[ORM\Entity]
+#[ApiResource]
 final class Person
 {
-    /**
-     * @var int
-     * @ApiProperty(identifier=false)
-     *
-     * @ORM\Id()
-     * @ORM\GeneratedValue()
-     * @ORM\Column(type="integer")
-     */
-    private $id;
+    #[ORM\Id, ORM\Column, ORM\GeneratedValue]
+    #[ApiProperty(identifier: false)]
+    private ?int $id = null;
     
     /**
      * @var Uuid
-     * @ApiProperty(identifier=true)
-     * @ORM\Column(type="uuid", unique=true)
      */
+    #[ORM\Column(type: 'uuid', unique: true)]
+    #[ApiProperty(identifier: true)]
     public $code;
     
     // ...
@@ -181,5 +179,7 @@ final class Person
 API Platform supports the following identifier types:
 
 - `scalar` (string, integer)
-- `\DateTime` (uses the symfony `DateTimeNormalizer` internally, see [DateTimeIdentifierNormalizer](https://github.com/api-platform/core/blob/main/src/Identifier/Normalizer/DateTimeIdentifierDenormalizer.php))
-- `\Ramsey\Uuid\Uuid` (see [UuidNormalizer](https://github.com/api-platform/core/blob/main/src/Bridge/RamseyUuid/Identifier/Normalizer/UuidNormalizer.php))
+- `\DateTime` (uses the symfony `DateTimeNormalizer` internally, see [DateTimeIdentifierNormalizer](https://github.com/api-platform/core/blob/2.6/src/Identifier/Normalizer/DateTimeIdentifierDenormalizer.php))
+- `\Ramsey\Uuid\Uuid` (see [UuidNormalizer](https://github.com/api-platform/core/blob/2.6/src/Bridge/RamseyUuid/Identifier/Normalizer/UuidNormalizer.php))
+- `\Symfony\Component\Uid\Ulid` (see [UlidNormalizer](https://github.com/api-platform/core/blob/2.6/src/Bridge/Symfony/Identifier/Normalizer/UlidNormalizer.php))
+- `\Symfony\Component\Uid\Uuid` (see [UuidNormalizer](https://github.com/api-platform/core/blob/2.6/src/Bridge/Symfony/Identifier/Normalizer/UuidNormalizer.php))

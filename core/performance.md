@@ -95,9 +95,11 @@ The `cache_headers` attribute can be used to set custom HTTP cache headers:
 ```php
 use ApiPlatform\Core\Annotation\ApiResource;
 
-/**
- * @ApiResource(cacheHeaders={"max_age"=60, "shared_max_age"=120, "vary"={"Authorization", "Accept-Language"}})
- */
+#[ApiResource(cacheHeaders: [
+    "max_age" => 60,
+    "shared_max_age" => 120,
+    "vary" => ["Authorization", "Accept-Language"]
+])]
 class Book
 {
     // ...
@@ -116,13 +118,13 @@ It's also possible to set different cache headers per operation:
 ```php
 use ApiPlatform\Core\Annotation\ApiResource;
 
-/**
- * @ApiResource(
- *     itemOperations={
- *         "get"={"cache_headers"={"max_age"=60, "shared_max_age"=120}}
- *     }
- * )
- */
+#[ApiResource(
+    itemOperations: [
+        "get" => [
+            "cache_headers" => ["max_age" => 60, "shared_max_age" => 120],
+        ]
+    ]
+  )
 class Book
 {
     // ...
@@ -161,7 +163,7 @@ database driver.
 By default Doctrine comes with [lazy loading](https://www.doctrine-project.org/projects/doctrine-orm/en/latest/reference/working-with-objects.html#by-lazy-loading) - usually a killer time-saving feature but also a performance killer with large applications.
 
 Fortunately, Doctrine offers another approach to solve this problem: [eager loading](https://www.doctrine-project.org/projects/doctrine-orm/en/current/reference/working-with-objects.html#by-eager-loading).
-This can easily be enabled for a relation: `@ORM\ManyToOne(fetch="EAGER")`.
+This can easily be enabled for a relation: `#[ORM\ManyToOne(fetch: "EAGER")]`.
 
 By default in API Platform, we made the choice to force eager loading for all relations, with or without the Doctrine
 `fetch` attribute. Thanks to the eager loading [extension](extensions.md). The `EagerLoadingExtension` will join every
@@ -169,9 +171,7 @@ readable association according to the serialization context. If you want to fetc
 you have to bypass `readable` and `readableLink` by using the `fetchEager` attribute on the property declaration, for example:
 
 ```php
-/**
- * @ApiProperty(attributes={"fetchEager": true})
- */
+#[ApiProperty(fetchEager: true)]
  public $foo;
 ```
 
@@ -231,10 +231,8 @@ namespace App\Entity;
 use ApiPlatform\Core\Annotation\ApiResource;
 use Doctrine\ORM\Mapping as ORM;
 
-/**
- * @ApiResource
- * @ORM\Entity
- */
+#[ORM\Entity]
+#[ApiResource]
 class Address
 {
     // ...
@@ -250,25 +248,18 @@ namespace App\Entity;
 use ApiPlatform\Core\Annotation\ApiResource;
 use Doctrine\ORM\Mapping as ORM;
 
-/**
- * @ApiResource(attributes={"force_eager"=false})
- * @ORM\Entity
- */
+#[ORM\Entity]
+#[ApiResource(forceEager: false)]
 class User
 {
-    /**
-     * @var Address
-     *
-     * @ORM\ManyToOne(targetEntity="Address", fetch="EAGER")
-     */
-    public $address;
+    #[ORM\ManyToOne(fetch: 'EAGER')]
+    public Address $address;
 
     /**
      * @var Group[]
-     *
-     * @ORM\ManyToMany(targetEntity="Group", inversedBy="users")
-     * @ORM\JoinTable(name="users_groups")
      */
+    #[ORM\ManyToMany(targetEntity: 'Group', inversedBy: 'users')]
+    #[ORM\JoinTable(name: 'users_groups')]
     public $groups;
 
     // ...
@@ -284,27 +275,24 @@ namespace App\Entity;
 use ApiPlatform\Core\Annotation\ApiResource;
 use Doctrine\ORM\Mapping as ORM;
 
-/**
- * @ApiResource(
- *     attributes={"force_eager"=false},
- *     itemOperations={
- *         "get"={"force_eager"=true},
- *         "post"
- *     },
- *     collectionOperations={
- *         "get"={"force_eager"=true},
- *         "post"
- *     }
- * )
- * @ORM\Entity
- */
+#[ORM\Entity]
+#[ApiResource(
+    forceEager: false,
+    itemOperations: [
+        "get" => ["force_eager" => true],
+        "post",
+    ],
+    collectionOperations; [
+        "get" => ["force_eager" => true],
+        "post",
+    ]
+)]
 class Group
 {
     /**
      * @var User[]
-     *
-     * @ManyToMany(targetEntity="User", mappedBy="groups")
      */
+    #[ORM\ManyToMany(targetEntity: 'User', mappedBy: 'groups')] 
     public $users;
 
     // ...
@@ -349,15 +337,16 @@ Blackfire.io allows you to monitor the performance of your applications. For mor
 
 To configure Blackfire.io follow these simple steps:
 
-1. Add the following to your `docker-compose.yml` file:
+1. Add the following to your `docker-compose.override.yml` file:
 
     ```yaml
         blackfire:
-            image: blackfire/blackfire
+            image: blackfire/blackfire:2
             environment:
                 # Exposes the host BLACKFIRE_SERVER_ID and TOKEN environment variables.
                 - BLACKFIRE_SERVER_ID
                 - BLACKFIRE_SERVER_TOKEN
+                - BLACKFIRE_DISABLE_LEGACY_PORT=1
     ```
 
 2. Add your Blackfire.io id and server token to your `.env` file at the root of your project (be sure not to commit this to a public repository):
@@ -382,7 +371,7 @@ To configure Blackfire.io follow these simple steps:
                 && mkdir -p /tmp/blackfire \
                 && tar zxpf /tmp/blackfire-probe.tar.gz -C /tmp/blackfire \                        
                 && mv /tmp/blackfire/blackfire-*.so $(php -r "echo ini_get('extension_dir');")/blackfire.so \
-                && printf "extension=blackfire.so\nblackfire.agent_socket=tcp://blackfire:8707\n" > $PHP_INI_DIR/conf.d/blackfire.ini
+                && printf "extension=blackfire.so\nblackfire.agent_socket=tcp://blackfire:8307\n" > $PHP_INI_DIR/conf.d/blackfire.ini
     ```
 
 4. Rebuild and restart all your containers

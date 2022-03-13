@@ -119,7 +119,7 @@ final class UsersTest extends AbstractTest
 
         $response = $this->createClientWithCredentials($token)->request('GET', '/users');
         $this->assertJsonContains(['hydra:description' => 'Access Denied.']);
-        $this->assertResponseStatusCodeSame('403');
+        $this->assertResponseStatusCodeSame(403);
     }
 }
 ```
@@ -163,7 +163,7 @@ class MyTest extends ApiTestCase
 }
 ```
 
-There is a also a method to find the IRI matching a given resource and some criterias:
+There is also a method to find the IRI matching a given resource and some criterias:
 
 ```php
 <?php

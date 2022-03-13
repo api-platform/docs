@@ -83,6 +83,7 @@ This is useful when you need two entities to have more than one relation.
 Example:
 
 ```yaml
+types:
     Organization:
         properties:
             contactPoint: { range: Person, relationTableName: organization_contactPoint }
@@ -96,6 +97,7 @@ Override the guessed class hierarchy of a given type with this option.
 Example:
 
 ```yaml
+types:
     ImageObject:
         parent: Thing # Force the parent to be Thing instead of CreativeWork > MediaObject
         properties: ~
@@ -110,8 +112,25 @@ Force a class to be (or to not be) `abstract`.
 Example:
 
 ```yaml
+types:
     Person:
         abstract: true
+```
+
+## Define Operations
+
+API Platform operations can be added this way:
+
+```yaml
+types:
+    Person:
+        operations:
+            item:
+                get:
+                    method: GET
+            collection:
+                get:
+                    route_name: get_person_collection
 ```
 
 ## Forcing a Nullable Property
@@ -128,7 +147,7 @@ Example:
             name: { nullable: false }
 ```
 
-The `@Assert\NotNull` constrain is automatically added.
+The `@Assert\NotNull` constraint is automatically added.
 
 ```php
 <?php
@@ -136,9 +155,9 @@ The `@Assert\NotNull` constrain is automatically added.
 /**
  * The name of the item.
  *
- * @ORM\Column
- * @Assert\NotNull
  */
+  #[ORM\Column]
+  #[Assert\NotNull]
   private string $name;
 ```
 
@@ -163,24 +182,25 @@ Output:
 
 ...
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Doctrine\ORM\Mapping as ORM;
 
 /**
  * A person (alive, dead, undead, or fictional).
  *
  * @see http://schema.org/Person Documentation on Schema.org
  *
- * @ORM\Entity
- * @UniqueEntity("email")
  * @Iri("http://schema.org/Person")
  */
+#[ORM\Entity]
+#[UniqueEntity('email')]
 class Person
 {
     /**
      * Email address.
      *
-     * @ORM\Column
-     * @Assert\Email
      */
+    #[ORM\Column]
+    #[Assert\Email]
     private string $email;
 ```
 
@@ -237,15 +257,18 @@ Output:
 
 ...
 use Symfony\Component\Serializer\Annotation\Groups;
+use Doctrine\ORM\Mapping as ORM;
+use ApiPlatform\Core\Annotation\ApiProperty;
+use ApiPlatform\Core\Annotation\ApiResource;
 
 /**
  * A person (alive, dead, undead, or fictional).
  *
- * @see http://schema.org/Person Documentation on Schema.org
+ * @see https://schema.org/Person Documentation on Schema.org
  *
- * @ORM\Entity
- * @Iri("http://schema.org/Person")
  */
+#[ORM\Entity]
+#[ApiResource(iri: "https://schema.org/Person")]
 class Person
 {
     /**
@@ -253,11 +276,11 @@ class Person
      *
      * @see https://schema.org/name
      *
-     * @ORM\Column(nullable=true)
-     * @Assert\Type(type="string")
-     * @Iri("https://schema.org/name")
-     * @Groups({"public"})
      */
+    #[ORM\Column(nullable: true)
+    #[Assert\Type(type: 'string')]
+    #[Groups(['public'])]
+    #[ApiProperty(iri: 'https://schema.org/name')]
     private string $name;
 
 ```
@@ -291,16 +314,18 @@ Output:
 
 ...
 use Doctrine\ORM\Mapping as ORM;
+use ApiPlatform\Core\Annotation\ApiProperty;
+use ApiPlatform\Core\Annotation\ApiResource;
 
 /**
  * Any offered product or service.
  *
- * @see http://schema.org/Product Documentation on Schema.org
+ * @see https://schema.org/Product Documentation on Schema.org
  *
- * @ORM\Entity
- * @ApiResource(iri="http://schema.org/Product")
- * @UniqueEntity("gtin13s")
  */
+#[ORM\Entity]
+#[ApiResource(iri: 'https://schema.org/Product')]
+#[UniqueEntity('gtin13s')]
 class Product
 {
     /**
@@ -308,9 +333,9 @@ class Product
      *
      * @see http://schema.org/weight
      *
-     * @ORM\Embedded(class="App\Entity\QuantitativeValue", columnPrefix="weight_")
-     * @ApiProperty(iri="http://schema.org/weight")
      */
+    #[ORM\Embedded(class: QuantitativeValue::class, columnPrefix: 'weight_')]
+    #[ApiProperty(iri: 'https://schema.org/weight')]
     private ?QuantitativeValue $weight = null;
 
 ```
@@ -472,7 +497,7 @@ to generate the PHP data model of your application.
 Example:
 
 ```yaml
-rdfa:
+vocabularies:
     - https://raw.githubusercontent.com/schemaorg/schemaorg/master/data/schema.rdfa # Experimental version of Schema.org
     - http://example.com/data/myschema.rfa # Additional types
 ```
@@ -482,7 +507,7 @@ You can also use any other vocabulary. Check the [Linked Open Vocabularies](http
 For instance, to generate a data model from the [Video Game Ontology](http://purl.org/net/VideoGameOntology), use the following config file:
 
 ```yaml
-rdfa:
+vocabularies:
   - http://vocab.linkeddata.es/vgo/GameOntologyv3.owl # The URL of the vocabulary definition
 
 types:
@@ -658,6 +683,9 @@ config:
 
             # If declaring a custom class, this will be the class from which properties type will be guessed
             guessFrom:            Thing
+
+            # Operations for the class
+            operations:           []
 
             # Import all existing properties
             allProperties:        false

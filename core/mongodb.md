@@ -122,8 +122,8 @@ class Product
 
     /**
      * @ODM\Field
-     * @Assert\NotBlank
      */
+    #[Assert\NotBlank]
     public $name;
 
     /**
@@ -168,10 +168,9 @@ use Doctrine\ODM\MongoDB\Mapping\Annotations as ODM;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * @ApiResource(iri="http://schema.org/Offer")
- *
  * @ODM\Document
  */
+#[ApiResource(iri: "http://schema.org/Offer")]
 class Offer
 {
     /**
@@ -234,20 +233,20 @@ use ApiPlatform\Core\Annotation\ApiResource;
 use Doctrine\ODM\MongoDB\Mapping\Annotations as ODM;
 
 /**
- * @ApiResource(attributes={
- *     collectionOperations={
- *         "get"={
- *             "method"="GET",
- *             "doctrine_mongodb"={
- *                 "execute_options"={
- *                     "allowDiskUse"=true
- *                 }
- *             }
- *         }
- *     }
- * })
  * @ODM\Document
  */
+#[ApiResource(attributes: [
+    collectionOperations => [
+        "get" => [
+            "method" => "GET",
+            "doctrine_mongodb" => [
+                "execute_options" => [
+                    "allowDiskUse" => true,
+                ]
+            ]
+        ]
+    ]
+])]
 class Offer
 {
     // ...
@@ -266,15 +265,15 @@ use ApiPlatform\Core\Annotation\ApiResource;
 use Doctrine\ODM\MongoDB\Mapping\Annotations as ODM;
 
 /**
- * @ApiResource(attributes={
- *     "doctrine_mongodb"={
- *         "execute_options"={
- *             "allowDiskUse"=true
- *         }
- *     }
- * })
  * @ODM\Document
  */
+#[ApiResource(attributes: [
+    "doctrine_mongodb" => [
+        "execute_options" => [
+            "allowDiskUse" => true
+        ]
+    ]
+])]
 class Offer
 {
     // ...

@@ -150,7 +150,7 @@ The generator comes with a i18n feature to allow quick translations of some labe
 work, you need to create this file:
 
 ```javascript
-// src/plugins/vuetify.js
+// src/i18n.js
 import Vue from 'vue';
 import VueI18n from 'vue-i18n';
 import messages from './locales/en';
@@ -210,10 +210,10 @@ Update your App.vue:
       <v-toolbar-title>Application</v-toolbar-title>
     </v-app-bar>
 
-    <v-content>
+    <v-main>
       <Breadcrumb layout-class="pl-3 py-3" />
       <router-view></router-view>
-    </v-content>
+    </v-main>
     <v-footer color="indigo" app>
       <span class="white--text">&copy; 2019</span>
     </v-footer>
