@@ -42,6 +42,9 @@ resource (in our case: `Book`).
 This example will use a custom controller to receive the file.
 The second example will use a custom `multipart/form-data` decoder to deserialize the resource instead.
 
+**Note**: Uploading files won't work in `PUT` or `PATCH` requests, you must use `POST` method to upload files.
+See [the related issue on Symfony](https://github.com/symfony/symfony/issues/9226) and [the related bug in PHP](https://bugs.php.net/bug.php?id=55815) talking about this behavior.
+
 ### Configuring the Resource Receiving the Uploaded File
 
 The `MediaObject` resource is implemented like this:
@@ -64,9 +67,9 @@ use Symfony\Component\Validator\Constraints as Assert;
 use Vich\UploaderBundle\Mapping\Annotation as Vich;
 
 /**
- * @ORM\Entity
  * @Vich\Uploadable
  */
+#[ORM\Entity]
 #[ApiResource(
     normalizationContext: ['groups' => ['media_object:read']], 
     types: ['http://schema.org/MediaObject']
@@ -97,11 +100,7 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
 )]
 class MediaObject
 {
-    /**
-     * @ORM\Column(type="integer")
-     * @ORM\GeneratedValue
-     * @ORM\Id
-     */
+    #[ORM\Id, ORM\Column, ORM\GeneratedValue]
     private ?int $id = null;
 
     #[ApiProperty(types: ['http://schema.org/contentUrl'])]
@@ -114,9 +113,7 @@ class MediaObject
     #[Assert\NotNull(groups: ['media_object_create'])]
     public ?File $file = null;
 
-    /**
-     * @ORM\Column(nullable=true)
-     */
+    #[ORM\Column(nullable: true)] 
     public ?string $filePath = null;
 
     public function getId(): ?int
@@ -257,18 +254,14 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\HttpFoundation\File\File;
 use Vich\UploaderBundle\Mapping\Annotation as Vich;
 
-/**
- * @ORM\Entity
- */
+#[ORM\Entity]
 #[ApiResource(types: ['http://schema.org/Book'])]
 class Book
 {
     // ...
 
-    /**
-     * @ORM\ManyToOne(targetEntity=MediaObject::class)
-     * @ORM\JoinColumn(nullable=true)
-     */
+    #[ORM\ManyToOne(targetEntity: MediaObject::class)]
+    #[ORM\JoinColumn(nullable: true)]
     #[ApiProperty(types: ['http://schema.org/image'])]
     public ?MediaObject $image = null;
     
@@ -362,9 +355,9 @@ use Symfony\Component\Serializer\Annotation\Groups;
 use Vich\UploaderBundle\Mapping\Annotation as Vich;
 
 /**
- * @ORM\Entity
  * @Vich\Uploadable
  */
+#[ORM\Entity]
 #[ApiResource(
     normalizationContext: ['groups' => ['book:read']], 
     denormalizationContext: ['groups' => ['book:write']], 
@@ -386,9 +379,7 @@ class Book
     #[Groups(['book:write'])]
     public ?File $file = null;
 
-    /**
-     * @ORM\Column(nullable=true)
-     */
+    #[ORM\Column(nullable: true)] 
     public ?string $filePath = null;
     
     // ...

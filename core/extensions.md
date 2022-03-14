@@ -44,11 +44,8 @@ use ApiPlatform\Metadata\ApiResource;
 #[ApiResource]
 class Offer
 {
-   /**
-     * @var User
-     * @ORM\ManyToOne(targetEntity="User")
-     */
-    public $user;
+    #[ORM\ManyToOne] 
+    public User $user;
 
     //...
 }

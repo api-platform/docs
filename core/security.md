@@ -23,39 +23,24 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * Secured resource.
- *
- * @ORM\Entity
  */
 #[ApiResource(security: "is_granted('ROLE_USER')")]
 #[Get]
 #[Put(security: "is_granted('ROLE_ADMIN') or object.owner == user")]
 #[GetCollection]
 #[Post(security: "is_granted('ROLE_ADMIN')")]
+#[ORM\Entity]
 class Book
 {
-    /**
-     * @var int
-     *
-     * @ORM\Column(type="integer")
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="AUTO")
-     */
-    private $id;
+    #[ORM\Id, ORM\Column, ORM\GeneratedValue]
+    private ?int $id = null;
 
-    /**
-     * @var string The title
-     *
-     * @ORM\Column
-     */
+    #[ORM\Column]
     #[Assert\NotBlank]
-    public $title;
+    public string $title;
 
-    /**
-     * @var User The owner
-     *
-     * @ORM\ManyToOne(targetEntity=User::class)
-     */
-    public $owner;
+    #[ORM\ManyToOne]
+    public User $owner;
 
     // ...
 }
@@ -120,7 +105,7 @@ In this example:
 Available variables are:
 
 * `user`: the current logged in object, if any
-* `object`: the current resource, or collection of resources for collection operations (note: this is `null` for update/create operations)
+* `object`: the current resource class during denormalization, the current resource during normalization, or collection of resources for collection operations
 * `previous_object`: (`securityPostDenormalize` only) a clone of `object`, before modifications were made - this is `null` for create operations
 * `request` (only at the resource level): the current request
 

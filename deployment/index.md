@@ -1,6 +1,6 @@
 # Deploying API Platform Applications
 
-API Platform apps are super easy to deploy in production thanks to the [Docker Compose definetion](docker-compose.md) and to the [Kubernetes chart](kubernetes.md) we provide.
+API Platform apps are super easy to deploy in production thanks to the [Docker Compose definition](docker-compose.md) and to the [Kubernetes chart](kubernetes.md) we provide.
 
 We strongly recommend using Kubernetes or Docker Compose to deploy your apps.
 
@@ -12,7 +12,7 @@ while the Progressive Web Application is a standard Next.js project:
 <p align="center" class="symfonycasts"><a href="https://symfonycasts.com/screencast/ansistrano?cid=apip"><img src="../distribution/images/symfonycasts-player.png" alt="JWT screencast"><br>Watch the Animated Deployment with Ansistrano screencast</a></p>
 
 * [Deploying the Symfony application](https://symfony.com/doc/current/deployment.html)
-* [Deployin the Next.js application](https://nextjs.org/docs/deployment)
+* [Deploying the Next.js application](https://nextjs.org/docs/deployment)
 
 Alternatively, you may want to deploy API Platform on a PaaS (Platform as a Service):
 

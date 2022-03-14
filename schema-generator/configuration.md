@@ -175,11 +175,9 @@ The `#[Assert\NotNull]` constraint is automatically added.
 /**
  * The name of the item.
  */
-#[ORM\Column]
-#[Assert\NotNull]
-private string $name;
-
-...
+  #[ORM\Column]
+  #[Assert\NotNull]
+  private string $name;
 ```
 
 ## Forcing a Unique Property
@@ -206,6 +204,7 @@ namespace App\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Doctrine\ORM\Mapping as ORM;
 
 /**
  * A person (alive, dead, undead, or fictional).
@@ -213,7 +212,7 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
  * @see https://schema.org/Person
  */
 #[ORM\Entity]
-#[ApiResource(iri: 'https://schema.org/Person')]
+#[ApiResource(types: ['https://schema.org/Person'])]
 #[UniqueEntity('email')]
 class Person
 {
@@ -285,14 +284,17 @@ namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
+use Doctrine\ORM\Mapping as ORM;
+use ApiPlatform\Core\Annotation\ApiProperty;
+use ApiPlatform\Core\Annotation\ApiResource;
 
 /**
  * A person (alive, dead, undead, or fictional).
  *
- * @see https://schema.org/Person
+ * @see https://schema.org/Person Documentation on Schema.org
  */
 #[ORM\Entity]
-#[ApiResource(iri: 'https://schema.org/Person')]
+#[ApiResource(types: ['https://schema.org/Person'])]
 class Person
 {
     /**
@@ -300,9 +302,10 @@ class Person
      *
      * @see https://schema.org/name
      */
-    #[ORM\Column(nullable: true)]
-    #[ApiProperty(iri: 'https://schema.org/name')]
+    #[ORM\Column(nullable: true)
+    #[Assert\Type(type: 'string')]
     #[Groups(['public'])]
+    #[ApiProperty(types: ['https://schema.org/name'])]
     private string $name;
     
     // ...
@@ -343,22 +346,25 @@ namespace App\Entity;
 use ApiPlatform\Metadata\ApiProperty;
 use ApiPlatform\Metadata\ApiResource;
 use Doctrine\ORM\Mapping as ORM;
+use ApiPlatform\Core\Annotation\ApiProperty;
+use ApiPlatform\Core\Annotation\ApiResource;
 
 /**
  * Any offered product or service.
  *
- * @see https://schema.org/Product
+ * @see https://schema.org/Product Documentation on Schema.org
  */
 #[ORM\Entity]
-#[ApiResource(iri: 'https://schema.org/Product')]
+#[ApiResource(types: ['https://schema.org/Product'])]
+#[UniqueEntity('gtin13s')]
 class Product
 {
     /**
      * The weight of the product or person.
      *
-     * @see https://schema.org/weight
+     * @see http://schema.org/weight
      */
-    #[ORM\Embedded(class: 'App\Entity\QuantitativeValue', columnPrefix: 'weight_')]
+    #[ORM\Embedded(class: QuantitativeValue::class, columnPrefix: 'weight_')]
     #[ApiProperty(iri: 'https://schema.org/weight')]
     private ?QuantitativeValue $weight = null;
 
