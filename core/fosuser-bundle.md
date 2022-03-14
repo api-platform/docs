@@ -62,37 +62,29 @@ use FOS\UserBundle\Model\User as BaseUser;
 use FOS\UserBundle\Model\UserInterface;
 use Symfony\Component\Serializer\Annotation\Groups;
 
-/**
- * @ORM\Entity
- * @ORM\Table(name="fos_user")
- */
- #[ApiResource(
+#[ORM\Entity]
+#[ORM\Table(name: 'fos_user')]
+#[ApiResource(
     normalizationContext: ['groups' => ['user', 'user:read']],
     denormalizationContext: ['groups' => ['user', 'user:write']],
- )]
+)]
 class User extends BaseUser
 {
-    /**
-     * @ORM\Id
-     * @ORM\Column(type="integer")
-     * @ORM\GeneratedValue(strategy="AUTO")
-     */
-    protected $id;
+    #[ORM\Id, ORM\Column, ORM\GeneratedValue]
+    protected ?int $id = null;
 
     #[Groups("user")]
-    protected $email;
+    protected string $email;
 
-    /**
-     * @ORM\Column(type="string", length=255, nullable=true)
-     */
+    #[ORM\Column(nullable: true)] 
     #[Groups("user")]
-    protected $fullname;
+    protected string $fullname;
 
     #[Groups("user:write")]
-    protected $plainPassword;
+    protected string $plainPassword;
 
     #[Groups("user")]
-    protected $username;
+    protected string $username;
 
     public function setFullname(?string $fullname): void
     {

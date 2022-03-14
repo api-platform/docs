@@ -6,7 +6,7 @@ To do so, you can use the React components provided by API Platform Admin itself
 
 ## Customizing the Admin's Main Page and the Resource List
 
-By default, API Platform Admin automatically builds a tailored [`<Resource>` component](https://marmelab.com/react-admin/Resource.html) (and all its appropriate children) for each resource type exposed by a web API.
+By default, API Platform Admin automatically builds a tailored [Resource component](https://marmelab.com/react-admin/Resource.html) (and all its appropriate children) for each resource type exposed by a web API.
 Under the hood it uses the `@api-platform/api-doc-parser` library to parse the API documentation. The API documentation can use Hydra, OpenAPI and any other format supported by the library.
 Resources are listed in the order they appear in the machine-readable documentation.
 
@@ -14,7 +14,6 @@ However, it's also possible to display only specific resources, and to order the
 To cherry-pick the resources to make available through the admin, pass a list of `<ResourceGuesser>` components as children of the root component:
 
 ```javascript
-import React from "react";
 import { HydraAdmin, ResourceGuesser } from "@api-platform/admin";
 
 export default () => (
@@ -28,14 +27,13 @@ export default () => (
 );
 ```
 
-Instead of using the `<ResourceGuesser>` component provided by API Platform Admin, you can also pass custom React Admin's [`<Resource>` components](https://marmelab.com/react-admin/Resource.html), or any other React components that are supported by React Admin's [`<Admin>`](https://marmelab.com/react-admin/Admin.html).
+Instead of using the `<ResourceGuesser>` component provided by API Platform Admin, you can also pass custom React Admin's [Resource components](https://marmelab.com/react-admin/Resource.html), or any other React components that are supported by React Admin's [Admin](https://marmelab.com/react-admin/Admin.html).
 
 ## Customizing the List View
 
 The list view can be customized following the same pattern:
 
 ```javascript
-import React from "react";
 import {
   HydraAdmin,
   ResourceGuesser,
@@ -70,7 +68,6 @@ In addition to the `<FieldGuesser>` component, [all React Admin Fields component
 For the show view:
 
 ```javascript
-import React from "react";
 import {
   HydraAdmin,
   ResourceGuesser,
@@ -107,7 +104,6 @@ In addition to the `<FieldGuesser>` component, [all React Admin Fields component
 Again, the same logic applies to forms. Here is how to customize the create form:
 
 ```javascript
-import React from "react";
 import {
   HydraAdmin,
   ResourceGuesser,
@@ -146,7 +142,6 @@ For instance, using an autocomplete input is straightforward, [check out the ded
 Finally, you can customize the edit form the same way:
 
 ```javascript
-import React from "react";
 import {
   HydraAdmin,
   ResourceGuesser,
@@ -183,6 +178,6 @@ For instance, using an autocomplete input is straightforward, [checkout the dedi
 ## Going Further
 
 API Platform is built on top of [React Admin](https://marmelab.com/react-admin/).
-You can use all the features provided by the underlying library with API Platform Admin, including support for [file upload](https://marmelab.com/react-admin/DataProviders.html#decorating-your-data-provider-example-of-file-upload), [authentication](https://marmelab.com/react-admin/Authentication.html), [authorization](https://marmelab.com/react-admin/Authorization.html) and deeper customization.
+You can use all the features provided by the underlying library with API Platform Admin, including support for [authentication](https://marmelab.com/react-admin/Authentication.html), [authorization](https://marmelab.com/react-admin/Authorization.html) and deeper customization.
 
 To learn more about these capabilities, refer to [the React Admin documentation](https://marmelab.com/react-admin/).

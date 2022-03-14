@@ -121,24 +121,18 @@ use ApiPlatform\Metadata\ApiProperty;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
-/**
- * @ORM\Entity
- */
+#[ORM\Entity]
 #[ApiResource]
 class Product // The class name will be used to name exposed resources
 {
-    /**
-     * @ORM\Column(type="integer")
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="AUTO")
-     */
-    private $id;
+    #[ORM\Id, ORM\Column, ORM\GeneratedValue]
+    private ?int $id = null;
 
     /**
      * @param string $name A name property - this description will be available in the API documentation too.
      *
-     * @ORM\Column
      */
+    #[ORM\Column]
     #[Assert\NotBlank]
     #[ApiProperty(
         openapiContext: [
@@ -147,11 +141,9 @@ class Product // The class name will be used to name exposed resources
             'example' => 'one'
         ]
     )]
-    public $name;
+    public string $name;
 
-    /**
-     * @ORM\Column
-     */
+    #[ORM\Column(type: "datetime")] 
     #[Assert\DateTime]
     #[ApiProperty(
         openapiContext: [

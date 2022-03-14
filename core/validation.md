@@ -25,34 +25,24 @@ use Symfony\Component\Validator\Constraints as Assert; // Symfony's built-in con
 /**
  * A product.
  *
- * @ORM\Entity
  */
+#[ORM\Entity] 
 #[ApiResource]
 class Product
 {
-    /**
-     * @var int The id of this product.
-     *
-     * @ORM\Id
-     * @ORM\GeneratedValue
-     * @ORM\Column(type="integer")
-     */
-    private $id;
+    #[ORM\Id, ORM\Column, ORM\GeneratedValue]
+    private ?int $id = null;
 
-    /**
-     * @var string The name of the product
-     *
-     * @Assert\NotBlank
-     * @ORM\Column
-     */
-    public $name;
+    #[ORM\Column]
+    #[Assert\NotBlank]
+    public string $name;
 
     /**
      * @var string[] Describe the product
      *
      * @MinimalProperties
-     * @ORM\Column(type="json")
      */
+    #[ORM\Column(type: 'json')] 
     public $properties;
 
     // Getters and setters...
@@ -140,15 +130,11 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[ApiResource(validationContext: ['groups' => ['a', 'b']])]
 class Book
 {
-    /**
-     * @Assert\NotBlank(groups={"a"})
-     */
-    public $name;
+    #[Assert\NotBlank(groups: ['a'])]  
+    public string $name;
 
-    /**
-     * @Assert\NotNull(groups={"b"})
-     */
-    public $author;
+    #[Assert\NotNull(groups: ['b'])] 
+    public string $author;
 
     // ...
 }
@@ -189,29 +175,15 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[Post(validationContext: ['groups' => ['Default', 'postValidation']])]
 class Book
 {
-    /**
-     * @Assert\Uuid
-     */
+    #[Assert\Uuid] 
     private $id;
 
-    /**
-     * @Assert\NotBlank(groups={"postValidation"})
-     */
+    #[Assert\NotBlank(groups: ['postValidation'])] 
     public $name;
 
-    /**
-     * @Assert\NotNull
-     * @Assert\Length(
-     *     min = 2,
-     *     max = 50,
-     *     groups={"postValidation"}
-     * )
-     * @Assert\Length(
-     *     min = 2,
-     *     max = 70,
-     *     groups={"putValidation"}
-     * )
-     */
+    #[Assert\NotNull]
+    #[Assert\Length(min: 2, max: 50, groups: ['postValidation'])]
+    #[Assert\Length(min: 2, max: 70, groups: ['putValidation'])] 
     public $author;
 
     // ...
@@ -258,14 +230,10 @@ class Book
         return ['a'];
     }
 
-    /**
-     * @Assert\NotBlank(groups={"a"})
-     */
+    #[Assert\NotBlank(groups: ['a'])] 
     public $name;
 
-    /**
-     * @Assert\NotNull(groups={"b"})
-     */
+    #[Assert\NotNull(groups: ['b'])] 
     public $author;
 
     // ...
@@ -323,14 +291,10 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[ApiResource(validationContext: ['groups' => [AdminGroupsGenerator::class]])
 class Book
 {
-    /**
-     * @Assert\NotBlank(groups={"a"})
-     */
+    #[Assert\NotBlank(groups: ['a'])] 
     public $name;
 
-    /**
-     * @Assert\NotNull(groups={"b"})
-     */
+    #[Assert\NotNull(groups: ['b'])] 
     public $author;
 
     // ...
@@ -380,32 +344,23 @@ use App\Validator\Two; // classic custom constraint
 use App\Validator\MySequencedGroup; // the sequence group to use
 use Doctrine\ORM\Mapping as ORM;
 
-/**
- * @ORM\Entity
- */
+#[ORM\Entity]
 #[ApiResource]
 #[Post(validationContext: ['groups' => MySequencedGroup::class])]
 class Greeting
 {
-    /**
-     * @var int The entity Id
-     *
-     * @ORM\Id
-     * @ORM\GeneratedValue
-     * @ORM\Column(type="integer")
-     */
-    private $id;
+    #[ORM\Id, ORM\Column, ORM\GeneratedValue]
+    private ?int $id = null;
 
     /**
-     * @var string A nice person
-     *
-     * @ORM\Column
+     * @var A nice person
      * 
      * I want this "second" validation to be executed after the "first" one even though I wrote them in this order.
      * @One(groups={"second"})
      * @Two(groups={"first"})
      */
-    public $name = '';
+    #[ORM\Column]
+    public string $name = '';
 
     public function getId(): int
     {
@@ -473,9 +428,7 @@ final class Brand
         $this->cars = new ArrayCollection();
     }
 
-    /**
-     * @Assert\Valid
-     */
+    #[Assert\Valid]
     public function getCars()
     {
         return $this->cars->getValues();
