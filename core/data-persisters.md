@@ -1,5 +1,7 @@
 # Data Persisters
 
+> :warning: Data Persisters are deprecated since API Platform 2.7 use [state processors](./state-processors.md) instead.
+
 To mutate the application states during `POST`, `PUT`, `PATCH` or `DELETE` [operations](operations.md), API Platform uses
 classes called **data persisters**. Data persisters receive an instance of the class marked as an API resource (usually using
 the `#[ApiResource]` attribute). This instance contains data submitted by the client during [the deserialization

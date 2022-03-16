@@ -97,13 +97,14 @@ use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\Post;
 use App\Controller\CreateBookPublication;
 
-#[ApiResource]
-#[Get]
-#[Post(
-    name: 'publication', 
-    uriTemplate: '/books/{id}/publication', 
-    controller: CreateBookPublication::class
-)]
+#[ApiResource(operations: [
+    new Get(),
+    new Post(
+        name: 'publication', 
+        uriTemplate: '/books/{id}/publication', 
+        controller: CreateBookPublication::class
+    )
+])]
 class Book
 {
     // ...
@@ -163,14 +164,15 @@ use ApiPlatform\Metadata\Post;
 use App\Controller\CreateBookPublication;
 use Symfony\Component\Serializer\Annotation\Groups;
 
-#[ApiResource]
-#[Get]
-#[Post(
-    name: 'publication', 
-    uriTemplate: '/books/{id}/publication', 
-    controller: CreateBookPublication::class, 
-    normalizationContext: ['groups' => 'publication']
-)]
+#[ApiResource(operations: [
+    new Get(),
+    new Post(
+        name: 'publication', 
+        uriTemplate: '/books/{id}/publication', 
+        controller: CreateBookPublication::class, 
+        normalizationContext: ['groups' => 'publication']
+    )
+])]
 class Book
 {
     // ...
@@ -238,14 +240,15 @@ use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\Post;
 use App\Controller\CreateBookPublication;
 
-#[ApiResource]
-#[Get]
-#[Post(
-    name: 'publication', 
-    uriTemplate: '/books/{id}/publication', 
-    controller: CreateBookPublication::class, 
-    read: false
-)]
+#[ApiResource(operations: [
+    new Get(),
+    new Post(
+        name: 'publication', 
+        uriTemplate: '/books/{id}/publication', 
+        controller: CreateBookPublication::class, 
+        read: false
+    )
+])]
 class Book
 {
     // ...
@@ -313,10 +316,11 @@ use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\Post;
 
-#[ApiResource]
-#[Get]
-#[Post(name: 'publication', routeName: 'book_post_publication')]
-#[Post(name: 'book_post_discontinuation')]
+#[ApiResource(operations: [
+    new Get(),
+    new Post(name: 'publication', routeName: 'book_post_publication'),
+    new Post(name: 'book_post_discontinuation')
+])]
 class Book
 {
     // ...

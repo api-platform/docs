@@ -290,18 +290,22 @@ use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\Post;
 use ApiPlatform\Metadata\Put;
 
-#[ApiResource(security: "is_granted('ROLE_USER')")]
-#[Get(
-    security: "is_granted('ROLE_USER') and object.owner == user", 
-    securityMessage: 'Sorry, but you are not the book owner.'
-)]
-#[Put(
-    securityPostDenormalize: "is_granted('ROLE_ADMIN') or (object.owner == user and previous_object.owner == user)", 
-    securityPostDenormalizeMessage: 'Sorry, but you are not the actual book owner.'
-)]
-#[Post(
-    security: "is_granted('ROLE_ADMIN')", 
-    securityMessage: 'Only admins can add books.'
+#[ApiResource(
+    security: "is_granted('ROLE_USER')",
+    operations: [
+        new Get(
+            security: "is_granted('ROLE_USER') and object.owner == user", 
+            securityMessage: 'Sorry, but you are not the book owner.'
+        )
+        new Put(
+            securityPostDenormalize: "is_granted('ROLE_ADMIN') or (object.owner == user and previous_object.owner == user)", 
+            securityPostDenormalizeMessage: 'Sorry, but you are not the actual book owner.'
+        )
+        new Post(
+            security: "is_granted('ROLE_ADMIN')", 
+            securityMessage: 'Only admins can add books.'
+        )
+    ]
 )]
 class Book
 {

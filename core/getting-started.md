@@ -4,10 +4,10 @@
 
 If you plan to migrate from FOSRestBundle, you might want to read [this guide](migrate-from-fosrestbundle.md) to get started with API Platform.
 
-## Installing API Platform Core
+## Installing API Platform
 
 If you are starting a new project, the easiest way to get API Platform up is to install the [API Platform Distribution](../distribution/index.md).
-It comes with the API Platform Core library integrated with [the Symfony framework](https://symfony.com), [the schema generator](../schema-generator/),
+It comes with the API Platform core library integrated with [the Symfony framework](https://symfony.com), [the schema generator](../schema-generator/),
 [Doctrine ORM](https://www.doctrine-project.org), [Elasticsearch-PHP](https://www.elastic.co/guide/en/elasticsearch/client/php-api/current/index.html),
 [NelmioCorsBundle](https://github.com/nelmio/NelmioCorsBundle) and [Behat](http://behat.org).
 [Doctrine MongoDB ODM](https://www.doctrine-project.org/projects/mongodb-odm.html) can also be enabled by following the [MongoDB documentation](mongodb.md).
@@ -30,7 +30,7 @@ and what [JSON-LD](http://json-ld.org/) and [Hydra](http://www.hydra-cg.com/) fo
 
 <p align="center" class="symfonycasts"><a href="https://symfonycasts.com/screencast/api-platform/api-resource?cid=apip"><img src="../distribution/images/symfonycasts-player.png" alt="Create an API Resource screencast"><br>Watch the Create an API Resource screencast</a></p>
 
-API Platform Core is able to automatically expose entities mapped as "API resources" through a REST API supporting CRUD
+API Platform is able to automatically expose entities mapped as "API resources" through a REST API supporting CRUD
 operations.
 To expose your entities, you can use Docblock annotations, XML and YAML configuration files.
 
@@ -140,11 +140,11 @@ web API.
 If you are familiar with the Symfony ecosystem, you noticed that entity classes are also mapped with Doctrine ORM annotations
 and validation constraints from [the Symfony Validator Component](http://symfony.com/doc/current/book/validation.html).
 This isn't mandatory. You can use [your preferred persistence](data-providers.md) and [validation](validation.md) systems.
-However, API Platform Core has built-in support for those libraries and is able to use them without requiring any specific
+However, API Platform has built-in support for those libraries and is able to use them without requiring any specific
 code or configuration to automatically persist and validate your data. They are a good default option and we encourage you to use
 them unless you know what you are doing.
 
-Thanks to the mapping done previously, API Platform Core will automatically register the following REST [operations](operations.md)
+Thanks to the mapping done previously, API Platform will automatically register the following REST [operations](operations.md)
 for resources of the product type:
 
 ### Product

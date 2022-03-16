@@ -1,6 +1,6 @@
 # Overriding Default Order
 
-API Platform Core provides an easy way to override the default order of items in your collection.
+API Platform provides an easy way to override the default order of items in your collection.
 
 By default, items in the collection are ordered in ascending (ASC) order by their resource identifier(s). If you want to
 customize this order, you must add an `order` attribute on your ApiResource annotation:
@@ -121,10 +121,11 @@ namespace App\Entity;
 use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\ApiResource;
 
-#[ApiResource]
-#[GetCollection]
-#[GetCollection(name: 'get_desc_custom', uriTemplate: 'custom_collection_desc_foos', order: ['name' => 'DESC'])]
-#[GetCollection(name: 'get_asc_custom', uriTemplate: 'custom_collection_asc_foos', order: ['name' => 'ASC'])]
+#[ApiResource(operations: [
+    new GetCollection(),
+    new GetCollection(name: 'get_desc_custom', uriTemplate: 'custom_collection_desc_foos', order: ['name' => 'DESC'])],
+    new GetCollection(name: 'get_asc_custom', uriTemplate: 'custom_collection_asc_foos', order: ['name' => 'ASC'])]
+])]
 class Book
 {
     // ...

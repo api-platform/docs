@@ -32,11 +32,12 @@ use ApiPlatform\Metadata\ApiProperty;
 use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\Post;
 use Symfony\Component\Validator\Constraints as Assert;
-use ApiPlatform\Core\Action\NotFoundAction;
+use ApiPlatform\Action\NotFoundAction;
 
-#[ApiResource]
-#[Get(controller: NotFoundAction::class, read: false, status: 404)]
-#[Post(messenger: true, output: false, status: 202)]
+#[ApiResource(operations: [
+  new Get(controller: NotFoundAction::class, read: false, status: 404),
+  new Post(messenger: true, output: false, status: 202)
+])]
 final class Person
 {
     #[ApiProperty(identifier: true)]
@@ -58,7 +59,7 @@ resources:
         output: false
       ApiPlatform\Metadata\Get:
         status: 404
-        controller: ApiPlatform\Core\Action\NotFoundAction
+        controller: ApiPlatform\Action\NotFoundAction
         read: false
 ```
 
@@ -110,7 +111,7 @@ Handler ordering can be configured [using messenger priority tag](https://symfon
 
 ## Detecting Removals
 
-When a `DELETE` operation occurs, API Platform automatically adds a `ApiPlatform\Core\Bridge\Symfony\Messenger\RemoveStamp` ["stamp"](https://symfony.com/doc/current/components/messenger.html#adding-metadata-to-messages-envelopes) instance to the "envelope".
+When a `DELETE` operation occurs, API Platform automatically adds a `ApiPlatform\Symfony\Messenger\RemoveStamp` ["stamp"](https://symfony.com/doc/current/components/messenger.html#adding-metadata-to-messages-envelopes) instance to the "envelope".
 To differentiate typical persists calls (create and update) and removal calls, check for the presence of this stamp using [a custom "middleware"](https://symfony.com/doc/current/components/messenger.html#adding-metadata-to-messages-envelopes).
 
 ## Using Messenger with an Input Object
@@ -127,17 +128,18 @@ use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Post;
 use App\Dto\ResetPasswordRequest;
 
-#[ApiResource]
-#[GetCollection]
-#[Post]
-#[Post(
-    name: 'reset_password', 
-    status: 202, 
-    messenger: 'input', 
-    input: ResetPasswordRequest::class, 
-    output: false, 
-    uriTemplate: '/users/reset_password'
-)]
+#[ApiResource(operations: [
+  new GetCollection(),
+  new Post(),
+  new Post(
+      name: 'reset_password', 
+      status: 202, 
+      messenger: 'input', 
+      input: ResetPasswordRequest::class, 
+      output: false, 
+      uriTemplate: '/users/reset_password'
+  )
+])]
 final class User
 {
     // ...

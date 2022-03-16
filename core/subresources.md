@@ -1,13 +1,25 @@
 # Subresources
 
-A subresource is a collection or an item that belongs to another resource.
-API Platform makes it easy to create such operations.
+A Subresource is another way of declaring a resource that usually involves a more complex URI.
+In API Platform you can declare as many `ApiResource` as you want on a PHP class 
+creating Subresources.
 
-<p align="center" class="symfonycasts"><a href="https://symfonycasts.com/screencast/api-platform/subresources?cid=apip"><img src="../distribution/images/symfonycasts-player.png" alt="Subresources screencast"><br>Watch the Subresources screencast</a></p>
+Subresources work very well by implementing your own state [providers](./state-providers.md) 
+or [processors](./state-processors.md). In API Platform we provide a working Doctrine layer for
+subresources providing you add the correct configuration for URI Variables.
 
-The starting point of a subresource must be a relation on an existing resource.
-For example, let's create two entities (Question, Answer) and set up a subresource so that `/question/42/answer` gives us
-the answer to the question 42:
+## URI Variables Configuration
+
+URI Variables are configured via the `uriVariables` node on an `ApiResource`. It's an array indexed by the variables present in your URI, `/companies/{companyId}/employees/{id}` has two uri variables `companyId` and `id`. For each of these, we need to create a `Link` between the previous and the next node, in this example the link between a Company and an Employee.
+
+If you're using the Doctrine implementation, queries are automatically built using the provided links.
+
+### Answer to a Question
+
+For this example we have two classes, a Question and an Answer. We want to find the Answer to 
+the Question about the Universe using the following URI: `/question/42/answer`.
+
+Let's start by defining the resources:
 
 [codeSelector]
 
@@ -44,7 +56,6 @@ class Answer
 namespace App\Entity;
 
 use ApiPlatform\Metadata\ApiResource;
-use ApiPlatform\Core\Annotation\ApiSubresource;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity]
@@ -59,7 +70,6 @@ class Question
 
     #[ORM\OneToOne]
     #[ORM\JoinColumn(referencedColumnName: 'id', unique: true)]
-    #[ApiSubresource]
     public Answer $answer;
 
     public function getId(): ?int
@@ -71,179 +81,164 @@ class Question
 }
 ```
 
-```yaml
-# api/config/api_platform/resources.yaml
-App\Entity\Answer: ~
-App\Entity\Question:
-    properties:
-        answer:
-            subresource:
-                resourceClass: 'App\Entity\Answer'
-                collection: false
-```
-
 [/codeSelector]
 
-Note that all we had to do is to set up `#[ApiSubresource]` on the `Question::answer` relation. Because the `answer` is a to-one relation, we know that this subresource is an item. Therefore the response will look like this:
-
-```json
-{
-  "@context": "/contexts/Answer",
-  "@id": "/answers/42",
-  "@type": "Answer",
-  "id": 42,
-  "content": "Life, the Universe, and Everything",
-  "question": "/questions/42"
-}
-```
-
-If you put the subresource on a relation that is to-many, you will retrieve a collection.
-
-Last but not least, subresources can be nested, such that `/questions/42/answer/comments` will get the collection of comments for the answer to question 42.
-
-Note: only for `GET` operations are supported at the moment
-
-## Using Serialization Groups
-
-You may want custom groups on subresources, you can set `normalization_context` or `denormalization_context` on that operation. To do so, add a `subresourceOperations` node. For example:
+Now to create a new way of retrieving an Answer we will declare another resource on the `Answer` class.
+To make things work, API Platform needs informations about how to retrieve the `Answer` belonging to 
+the `Question`, this is done by configuring the `uriVariables`:
 
 [codeSelector]
-
 ```php
 <?php
 // api/src/Entity/Answer.php
 namespace App\Entity;
 
 use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Link;
+use Doctrine\ORM\Mapping as ORM;
 
- #[ApiResource(
-    subresourceOperations: [
-        'api_questions_answer_get_subresource' => [
-            'method' => 'GET',
-            'normalization_context' => [
-                'groups' => ['foobar'],
-            ],
-        ],
-    ],
+#[ORM\Entity]
+#[ApiResource]
+#[ApiResource(
+    uriTemplate: '/questions/{id}/answer', 
+    uriVariables: [
+        'id' => new Link(
+            fromClass: Question::class,
+            fromProperty: 'answer'
+        )
+    ], 
+    operations: [new Get()]
 )]
 class Answer
 {
     // ...
 }
-```
-
-```yaml
-# api/config/api_platform/resources.yaml
-App\Entity\Answer:
-    subresourceOperations:
-        api_questions_answer_get_subresource:
-            method: 'GET'
-            normalization_context: {groups: ['foobar']}
-```
-
-```xml
-<?xml version="1.0" encoding="UTF-8" ?>
-<!-- api/config/api_platform/resources.xml -->
-
-<resources xmlns="https://api-platform.com/schema/metadata"
-           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-           xsi:schemaLocation="https://api-platform.com/schema/metadata
-           https://api-platform.com/schema/metadata/metadata-2.0.xsd">
-    <resource class="App\Entity\Answer">
-        <subresourceOperations>
-            <subresourceOperation name="api_questions_answer_get_subresource">
-                <attribute name="method">GET</attribute>
-                <attribute name="normalization_context">
-                  <attribute name="groups">
-                    <attribute>foobar</attribute>
-                  </attribute>
-                </attribute>
-            </subresourceOperation>
-        </subresourceOperations>
-    </resource>
-</resources>
 ```
 
 [/codeSelector]
 
-In the previous examples, the `method` attribute is mandatory, because the operation name doesn't match a supported HTTP
-method.
+In this example, we instructed API Platform that the `Answer` we retrieve comes **from** the **class** `Question` 
+**from** the **property** `answer` of that class.
 
-Note that the operation name, here `api_questions_answer_get_subresource`, is the important keyword.
-It'll be automatically set to `$resources_$subresource(s)_get_subresource`. To find the correct operation name you
-may use `bin/console debug:router`.
+URI Variables are defined using Links (`ApiPlatform\Metadata\Link`). A `Link` can be binded either from or to a class and a property.
 
-## Using Custom Paths
-
-You can control the path of subresources with the `path` option of the `subresourceOperations` parameter:
+If we had a `relatedQuestions` property on the `Answer` we could retrieve the collection of related questions via the following definition:
 
 ```php
-<?php
-// api/src/Entity/Question.php
-namespace App\Entity;
-
-use ApiPlatform\Metadata\ApiResource
-
 #[ApiResource(
-    subresourceOperations: [
-        'api_questions_answer_get_subresource' => [
-            'method' => 'GET',
-            'path' => '/questions/{id}/all-answers',
-        ],
-    ],
+    uriTemplate: '/answers/{id}/related_questions.{_format}',
+    uriVariables: [
+        'id' => new Link(fromClass: Answer::class, fromProperty: 'relatedQuestions')
+    ], 
+    operations: [new GetCollection()]
 )]
-class Question
-{
-    // ...
-}
 ```
 
-### Access Control of Subresources
+### Company Employee's
 
-The `subresourceOperations` attribute also allows you to add an access control on each path with the attribute `security`.
+Note that in this example, we declared an association using Doctrine only between Employee and Company using a ManyToOne. There is no inverse association hence the use of `toProperty` in the URI Variables definition.
 
-```php
-<?php
-// api/src/Entity/Answer.php
-namespace App\Entity;
-
-use ApiPlatform\Metadata\ApiResource
-
-#[ApiResource(
-    subresourceOperations: [
-        'api_questions_answer_get_subresource' => [
-            'security' => "is_granted('ROLE_AUTHENTICATED')",
-        ],
-    ],
-)]
-class Answer
-{
-    // ...
-}
-```
-
-### Limiting Depth
-
-You can control depth of subresources with the parameter `maxDepth`. For example, if the `Answer` entity also has a subresource
-such as `comments` and you don't want the route `api/questions/{id}/answers/{id}/comments` to be generated. You can do this by adding the parameter maxDepth in the ApiSubresource annotation or YAML/XML file configuration.
+The following declares a few subresources:
+    - `/companies/{companyId}/employees/{id}` - get an employee belonging to a company
+    - `/companies/{companyId}/employees` - get the company employee's
 
 ```php
 <?php
-// api/src/Entity/Question.php
+// api/src/Entity/Employee.php
 namespace App\Entity;
 
-use ApiPlatform\Metadata\ApiProperty;
 use ApiPlatform\Metadata\ApiResource;
-use ApiPlatform\Core\Annotation\ApiSubresource;
+use ApiPlatform\Metadata\Link;
+use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\Post;
+use ApiPlatform\Metadata\GetCollection;
+use Doctrine\ORM\Mapping as ORM;
 
-#[ApiResource]
-class Question
+#[ORM\Entity]
+#[ApiResource(
+    operations: [ new Post() ]
+)]
+#[ApiResource(
+    uriTemplate: '/companies/{companyId}/employees/{id}',
+    uriVariables: [
+        'companyId' => new Link(fromClass: Company::class, toProperty: 'company'),
+        'id' => new Link(fromClass: Employee::class),
+    ],
+    operations: [ new Get() ]
+)]
+#[ApiResource(
+    uriTemplate: '/companies/{companyId}/employees',
+    uriVariables: [
+        'companyId' => new Link(fromClass: Company::class, toProperty: 'company'),
+    ],
+    operations: [ new GetCollection() ]
+)]
+class Employee
 {
-    #[ApiSubresource(
-        maxDepth: 1,
-    )]
-    public $answer;
+    #[ORM\Id, ORM\Column, ORM\GeneratedValue]
+    public ?int $id;
 
+    #[ORM\Column]
+    public string $name;
+
+    #[ORM\ManyToOne(targetEntity: Company::class)]
+    public ?Company $company;
+
+    public function getId()
+    {
+        return $this->id;
+    }
+}
+```
+
+Now let's add the Company class:
+
+```php
+<?php
+// api/src/Entity/Employee.php
+namespace App\Entity;
+
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\Link;
+use ApiPlatform\Metadata\Post;
+use Doctrine\ORM\Mapping as ORM;
+
+#[ORM\Entity]
+#[ApiResource]
+class Company
+{
+    #[ORM\Id, ORM\Column, ORM\GeneratedValue]
+    public ?int $id;
+
+    #[ORM\Column]
+    public string $name;
+
+    /** @var Employee[] */
+    #[Link(toProperty: 'company')]
+    public $employees = []; // only used to set metadata as GraphQl always needs to work from both sides of the association
+}
+```
+
+We did not define any Doctrine annotation here and if we want thinks to work properly with GraphQL, we need to map the `employees` field as a Link to the class `Employee` using the property `company`.
+
+As a general rule, if the property we want to create a link from is in the `fromClass`, use `fromProperty`, if not, use `toProperty`.
+
+For example, we could add a subresource fetching an employee's company. The `company` property belongs to the `Employee` class we can use fromProperty:
+
+```php
+<?php 
+#[ApiResource(
+    uriTemplate: '/employees/{employeeId}/company',
+    uriVariables: [
+        'employeeId' => new Link(fromClass: Employee::class, fromProperty: 'company'),
+    ],
+    operations: [
+        new Get()
+    ]
+)]
+
+class Company {
     // ...
 }
 ```

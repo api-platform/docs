@@ -477,7 +477,7 @@ Instead of sending an IRI to set a relation, you may want to send a plain identi
 
 namespace App\Serializer;
 
-use ApiPlatform\Core\Api\IriConverterInterface;
+use ApiPlatform\Api\IriConverterInterface;
 use App\Entity\Dummy;
 use App\Entity\RelatedDummy;
 use Symfony\Component\Serializer\Normalizer\ContextAwareDenormalizerInterface;
@@ -750,7 +750,7 @@ services:
 // api/src/Serializer/BookContextBuilder.php
 namespace App\Serializer;
 
-use ApiPlatform\Core\Serializer\SerializerContextBuilderInterface;
+use ApiPlatform\Serializer\SerializerContextBuilderInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use App\Entity\Book;

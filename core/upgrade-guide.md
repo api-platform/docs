@@ -1,6 +1,6 @@
-# Upgrade guide
+# Upgrade Guide
 
-## What changed between 2.6 and 2.7?
+## What Has Changed Between 2.6 And 2.7?
 
 - New Resource metadata allowing to declare multiple Resources on a class: `ApiPlatform\Metadata\ApiResource`
 - Clarification of some properties within the ApiResource declaration
@@ -12,6 +12,7 @@ interface `ApiPlatform\State\ProcessorInterface`
 - New ApiProperty metadata `ApiPlatform\Metadata\ApiProperty`
 - Configuration flag `metadata_backward_compatibility_layer` that allows
 the use of legacy metadata layers
+- Subresources are now additional resources marked with an `#[ApiResource]` attribute (see (the new subresource documentation)[./subresources.md])
 
 The detailed changes are present in the [CHANGELOG](https://github.com/api-platform/core/blob/main/CHANGELOG.md).
 
@@ -70,7 +71,7 @@ class Book
 You can use the `api:upgrade-resource` command to upgrade
 your resources automatically, [see instructions here](#the-upgrade-command).
 
-### Removal of item/collection operations
+### Removal of Item/Collection operations
 
 We removed the notion of item and collection. Instead, use
 http verbs matching the operation you want to declare.

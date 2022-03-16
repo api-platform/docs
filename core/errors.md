@@ -30,7 +30,7 @@ final class ProductNotFoundException extends \Exception
 // api/src/EventSubscriber/ProductManager.php
 namespace App\EventSubscriber;
 
-use ApiPlatform\Core\EventListener\EventPriorities;
+use ApiPlatform\EventListener\EventPriorities;
 use App\Entity\Product;
 use App\Exception\ProductNotFoundException;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -75,12 +75,12 @@ api_platform:
     exception_to_status:
         # The 4 following handlers are registered by default, keep those lines to prevent unexpected side effects
         Symfony\Component\Serializer\Exception\ExceptionInterface: 400 # Use a raw status code (recommended)
-        ApiPlatform\Core\Exception\InvalidArgumentException: !php/const Symfony\Component\HttpFoundation\Response::HTTP_BAD_REQUEST
-        ApiPlatform\Core\Exception\FilterValidationException: 400
+        ApiPlatform\Exception\InvalidArgumentException: !php/const Symfony\Component\HttpFoundation\Response::HTTP_BAD_REQUEST
+        ApiPlatform\Exception\FilterValidationException: 400
         Doctrine\ORM\OptimisticLockException: 409
 
         # Validation exception
-        ApiPlatform\Core\Bridge\Symfony\Validator\Exception\ValidationException: !php/const Symfony\Component\HttpFoundation\Response::HTTP_UNPROCESSABLE_ENTITY
+        ApiPlatform\Validator\Exception\ValidationException: !php/const Symfony\Component\HttpFoundation\Response::HTTP_UNPROCESSABLE_ENTITY
 
         # Custom mapping
         App\Exception\ProductNotFoundException: 404 # Here is the handler for our custom exception
@@ -124,10 +124,14 @@ use ApiPlatform\Metadata\Post;
 use App\Exception\ProductWasRemovedException;
 use App\Exception\ProductNotFoundException;
 
-#[ApiResource(exceptionToStatus: ['ProductNotFoundException::class' => 404])]
-#[Get(exceptionToStatus: ['ProductWasRemovedException::class' => 410])]
-#[GetCollection]
-#[Post]
+#[ApiResource(
+    exceptionToStatus: ['ProductNotFoundException::class' => 404]
+    operations: [
+        new Get(exceptionToStatus: ['ProductWasRemovedException::class' => 410]),
+        new GetCollection(),
+        new Post()
+    ]
+)]
 class Book
 {
     // ...

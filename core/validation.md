@@ -248,7 +248,7 @@ Alternatively, you can use a service to retrieve the groups to use:
 
 namespace App\Validator;
 
-use ApiPlatform\Core\Bridge\Symfony\Validator\ValidationGroupsGeneratorInterface;
+use ApiPlatform\Symfony\Validator\ValidationGroupsGeneratorInterface;
 use App\Entity\Book;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
@@ -480,18 +480,18 @@ Here is an implementation example:
 ```php
 namespace App\PropertySchemaRestriction;
 
-use ApiPlatform\Core\Metadata\Property\PropertyMetadata;
+use ApiPlatform\Metadata\ApiProperty;
 use Symfony\Component\Validator\Constraint;
 use App\Validator\CustomConstraint;
 
 final class CustomPropertySchemaRestriction implements PropertySchemaRestrictionMetadataInterface
 {
-    public function supports(Constraint $constraint, PropertyMetadata $propertyMetadata): bool
+    public function supports(Constraint $constraint, ApiProperty $propertyMetadata): bool
     {
         return $constraint instanceof CustomConstraint;
     }
 
-    public function create(Constraint $constraint, PropertyMetadata $propertyMetadata): array 
+    public function create(Constraint $constraint, ApiProperty $propertyMetadata): array 
     {
       // your logic to create property schema restriction based on constraint
       return $restriction;

@@ -123,7 +123,7 @@ Below is an example using the `topics` option:
 namespace App\Entity;
 
 use ApiPlatform\Metadata\ApiResource;
-use ApiPlatform\Core\Api\UrlGeneratorInterface;
+use ApiPlatform\Api\UrlGeneratorInterface;
 use App\Entity\User;
 
 #[ApiResource(

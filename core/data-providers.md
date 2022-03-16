@@ -1,5 +1,7 @@
 # Data Providers
 
+> :warning: Data Providers are deprecated since API Platform 2.7 use [state providers](./state-providers.md) instead.
+
 To retrieve data exposed by the API, API Platform uses classes called **data providers**. A data provider using [Doctrine
 ORM](https://www.doctrine-project.org/projects/orm.html) to retrieve data from a database, a data provider using
 [Doctrine MongoDB ODM](https://www.doctrine-project.org/projects/mongodb-odm.html) to retrieve data from a document
