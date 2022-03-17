@@ -1,10 +1,10 @@
 # Subresources
 
 A Subresource is another way of declaring a resource that usually involves a more complex URI.
-In API Platform you can declare as many `ApiResource` as you want on a PHP class 
+In API Platform you can declare as many `ApiResource` as you want on a PHP class
 creating Subresources.
 
-Subresources work very well by implementing your own state [providers](./state-providers.md) 
+Subresources work very well by implementing your own state [providers](./state-providers.md)
 or [processors](./state-processors.md). In API Platform we provide a working Doctrine layer for
 subresources providing you add the correct configuration for URI Variables.
 
@@ -16,7 +16,7 @@ If you're using the Doctrine implementation, queries are automatically built usi
 
 ### Answer to a Question
 
-For this example we have two classes, a Question and an Answer. We want to find the Answer to 
+For this example we have two classes, a Question and an Answer. We want to find the Answer to
 the Question about the Universe using the following URI: `/question/42/answer`.
 
 Let's start by defining the resources:
@@ -84,7 +84,7 @@ class Question
 [/codeSelector]
 
 Now to create a new way of retrieving an Answer we will declare another resource on the `Answer` class.
-To make things work, API Platform needs informations about how to retrieve the `Answer` belonging to 
+To make things work, API Platform needs informations about how to retrieve the `Answer` belonging to
 the `Question`, this is done by configuring the `uriVariables`:
 
 [codeSelector]
@@ -117,7 +117,7 @@ class Answer
 
 [/codeSelector]
 
-In this example, we instructed API Platform that the `Answer` we retrieve comes **from** the **class** `Question` 
+In this example, we instructed API Platform that the `Answer` we retrieve comes **from** the **class** `Question`
 **from** the **property** `answer` of that class.
 
 URI Variables are defined using Links (`ApiPlatform\Metadata\Link`). A `Link` can be binded either from or to a class and a property.

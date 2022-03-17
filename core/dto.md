@@ -33,7 +33,7 @@ use App\Dto\UserResetPasswordDto;
 final class User {}
 ```
 
-And the processor: 
+And the processor:
 
 ```php
 <?php
@@ -85,7 +85,7 @@ final class BookRepresentationProvider implements ProviderInterface
 
     public function supports(string $resourceClass, array $identifiers = [], ?string $operationName = null, array $context = []): bool
     {
-        return $data instanceof Book;
+        return Book::class === $resourceClass;
     }
 }
 ```

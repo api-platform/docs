@@ -67,18 +67,18 @@ final class PersonProvider implements ProviderInterface
     /**
      * {@inheritdoc}
      */
-    public function provide(string $resourceClass, array $identifiers = [], ?string $operationName = null, array $context = [])
+    public function provide(string $resourceClass, array $uriVariables = [], ?string $operationName = null, array $context = [])
     {
         // Our identifier is:
-        // $identifiers['code']
+        // $uriVariables['code']
         // although it's a string, it's not an instance of Uuid and we wanted to retrieve the timestamp of our time-based uuid:
-        // $identifiers['code']->getTimestamp()
+        // $uriVariable['code']->getTimestamp()
     }
 
     /**
      * {@inheritdoc}
      */
-    public function supports(string $resourceClass, array $identifiers = [], ?string $operationName = null, array $context = []): bool
+    public function supports(string $resourceClass, array $uriVariables = [], ?string $operationName = null, array $context = []): bool
     {
         return $resourceClass === Person::class;
     }
