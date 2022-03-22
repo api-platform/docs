@@ -519,6 +519,28 @@ It will return all offers with `price` between 12.99 and 15.99.
 
 You can filter offers by joining two values, for example: `/offers?price[gt]=12.99&price[lt]=19.99`.
 
+### Uuid Range Filter
+
+In case you want to filter based on UUIDs (V1 and V6) you'll need to use the `UuidRangeFilter` instead of the `RangeFilter`.
+The syntax and behaviour is the same as the normal `RangeFilter`:
+
+```php
+<?php
+// api/src/Entity/Offer.php
+namespace App\Entity;
+
+use ApiPlatform\Core\Annotation\ApiFilter;
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\UuidRangeFilter;
+
+#[ApiResource]
+#[ApiFilter(UuidRangeFilter::class, properties: ['price'])]
+class Offer
+{
+    // ...
+}
+```
+
 ### Exists Filter
 
 The exists filter allows you to select items based on a nullable field value.

@@ -312,12 +312,14 @@ class Book
 To configure your resource to use the cursor-based pagination, select your unique sorted field as well as the direction you’ll like the pagination to go via filters and enable the `paginationViaCursor` option.
 Note that for now you have to declare a `RangeFilter` and an `OrderFilter` on the property used for the cursor-based pagination.
 
+Please also keep in mind that the order is not applied by default, so you'll have to apply it yourself in order for the pagination to work correctly.
+
 The following configuration also works on a specific operation:
 
 ```php
 <?php
+
 // api/src/Entity/Book.php
-namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiFilter;
 use ApiPlatform\Metadata\ApiResource;
@@ -331,6 +333,32 @@ use ApiPlatform\Core\Bridge\Doctrine\MongoDbOdm\Filter\RangeFilter;
     ]
 )]
 #[ApiFilter(RangeFilter::class, properties: ["id"])]
+#[ApiFilter(OrderFilter::class, properties: ["id" => "DESC"])]
+class Book
+{
+    // ...
+}
+```
+
+If you are using a UUID as primary key (Uuid V1 or V6) you'll have to use the `UuidRangeFilter` instead:
+
+```php
+<?php
+
+// api/src/Entity/Book.php
+
+use ApiPlatform\Core\Annotation\ApiFilter;
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Core\Bridge\Doctrine\MongoDbOdm\Filter\OrderFilter;
+use ApiPlatform\Core\Bridge\Doctrine\MongoDbOdm\Filter\UuidRangeFilter;
+
+#[ApiResource(attributes: [
+    paginationPartial: true, 
+    paginationViaCursor: [
+        ['field' => 'id', 'direction' => 'DESC']
+    ]
+)]
+#[ApiFilter(UuidRangeFilter::class, properties: ["id"])]
 #[ApiFilter(OrderFilter::class, properties: ["id" => "DESC"])]
 class Book
 {
