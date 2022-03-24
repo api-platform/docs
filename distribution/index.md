@@ -417,7 +417,7 @@ Modify these files as described in these patches:
 +    /**
 +     * The publication date of this book.
 +     */
-+    #[ORM\Column]
++    #[ORM\Column(type: "datetime")]
      public ?\DateTimeInterface $publicationDate = null;
  
 -    /** @var Review[] Available reviews for this book. */
@@ -478,7 +478,7 @@ Modify these files as described in these patches:
 +    /**
 +     * The date of publication of this review.
 +     */
-+    #[ORM\Column]
++    #[ORM\Column(type: "datetime")]
      public ?\DateTimeInterface $publicationDate = null;
  
 -    /** The book this review is about. */
