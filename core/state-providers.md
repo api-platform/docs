@@ -30,7 +30,7 @@ Let's start with a State Provider for the URI: `/blog_posts/{id}`, which operati
 You can find this information either with the `debug:router` command (the route name and the operation name are the same),
 or by using the `debug:api` command.
 
-First, your `BlogPostStateProvider` has to implement the 
+First, your `BlogPostStateProvider` has to implement the
 [`StateProviderInterface`](https://github.com/api-platform/core/blob/main/src/State/StateProviderInterface.php):
 
 ```php
