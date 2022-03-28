@@ -12,7 +12,7 @@ interface `ApiPlatform\State\ProcessorInterface`
 - New ApiProperty metadata `ApiPlatform\Metadata\ApiProperty`
 - Configuration flag `metadata_backward_compatibility_layer` that allows
 the use of legacy metadata layers
-- Subresources are now additional resources marked with an `#[ApiResource]` attribute (see (the new subresource documentation)[./subresources.md])
+- Subresources are now additional resources marked with an `#[ApiResource]` attribute (see [the new subresource documentation](./subresources.md))
 
 The detailed changes are present in the [CHANGELOG](https://github.com/api-platform/core/blob/main/CHANGELOG.md).
 
@@ -140,6 +140,14 @@ to work in 2.6 (for example `PropertyMetadataFactoryInterface` or
 `ResourceMetadataFactoryInterface`). When updating we advise to first
 resolve the deprecations then to set this flag to `false` to use the
 new metadata system.
+
+### SearchFilter
+
+If you want to use the new namespaces for the search filter 
+(`ApiPlatform\Doctrine\Orm\Filter\SearchFilter` instead of`ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter` or
+`ApiPlatform\Doctrine\Odm\Filter\SearchFilter` instead of`ApiPlatform\Core\Bridge\Doctrine\Odm\Filter\SearchFilter`) you
+need to use the `metadata_backward_compatibility_layer` to false as this filter relies on the implementation
+of the new `ApiPlatform\Api\IriConverterInterface`. 
 
 In 3.0 this flag will default to `false` and the legacy code will be removed.
 
