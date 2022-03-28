@@ -64,11 +64,11 @@ class BlogPostProcessor implements ProcessorInterface
 ```
 
 You can find the operation name information either with the `debug:router` command (the route name and the operation name are
-the same), or by using the `debug:api` command. 
+the same), or by using the `debug:api` command.
 If service autowiring and autoconfiguration are enabled (they are by default), you are done!
 
 Otherwise, if you use a custom dependency injection configuration, you need to register the corresponding service and add the
-`api_platform.state_processor` tag. The `priority` attribute can be used to order persisters.
+`api_platform.state_processor` tag. The `priority` attribute can be used to order processors.
 
 ```yaml
 # api/config/services.yaml
@@ -79,13 +79,13 @@ services:
         #tags: [ 'api_platform.state_processor' ]
 ```
 
-## Decorating the Built-In Data Persisters
+## Decorating the Built-In State Processors
 
-If you want to execute custom business logic before or after persistence, this can be achieved by [decorating](https://symfony.com/doc/current/service_container/service_decoration.html) the built-in data persisters.
+If you want to execute custom business logic before or after persistence, this can be achieved by [decorating](https://symfony.com/doc/current/service_container/service_decoration.html) the built-in state processors.
 
 The next example uses [Symfony Mailer](https://symfony.com/doc/current/mailer.html). Read its documentation if you want to use it.
 
-Here is an implementation example which sends new users a welcome email after a REST `POST` or GraphQL `create` operation, in a project using the native Doctrine ORM data persister:
+Here is an implementation example which sends new users a welcome email after a REST `POST` or GraphQL `create` operation, in a project using the native Doctrine ORM state processor:
 
 ```php
 <?php

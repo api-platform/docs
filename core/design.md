@@ -12,12 +12,12 @@ just a data structure with no or minimal behaviors) and will be automatically co
 between this class and those docs).
 
 Then, it's up to the developer to feed API Platform with an hydrated instance of this API resource object by implementing
-the [`DataProviderInterface`](data-providers.md). Basically, the data provider will query the persistence system (RDBMS,
+the [`ProviderInterface`](state-providers.md). Basically, the state provider will query the persistence system (RDBMS,
 document or graph DB, external API...), and must hydrate and return the POPO that has been designed as mentioned above.
 
 When updating a state (`POST`, `PUT`, `PATCH`, `DELETE` HTTP methods), it's up to the developer to properly persist the
 data provided by API Platform's resource object [hydrated by the serializer](serialization.md).
-To do so, there is another interface to implement: [`DataPersisterInterface`](data-persisters.md).
+To do so, there is another interface to implement: [`ProcessorInterface`](state-processors.md).
 
 This class will read the API resource object (the one marked with `#[ApiResource]`) and:
 
@@ -26,26 +26,26 @@ This class will read the API resource object (the one marked with `#[ApiResource
 * or populate an event store;
 * or persist the data in any other useful way.
 
-The logic of data persisters is the responsibility of application developers, and is **out of the API Platform's scope**.
+The logic of state processors is the responsibility of application developers, and is **out of the API Platform's scope**.
 
 For [Rapid Application Development](https://en.wikipedia.org/wiki/Rapid_application_development), convenience and prototyping,
 **if and only if the class marked with `#[ApiResource]` is also a Doctrine entity**, the developer can use the Doctrine
-ORM's data provider and persister implementations shipped with API Platform.
+ORM's state provider and processor implementations shipped with API Platform.
 
 In this case, the public (`#[ApiResource]`) and internal (Doctrine entity) data models are shared. Then, API Platform will
 be able to query, filter, paginate and persist data automatically.
 This approach is super-convenient and efficient, but is probably **not a good idea** for non-[CRUD](https://en.wikipedia.org/wiki/Create,_read,_update_and_delete)
 and/or large systems.
-Again, it's up to the developers to use, or to not use these built-in data providers/persisters depending on the business logic
+Again, it's up to the developers to use, or to not use these built-in state providers/processors depending on the business logic
 they are dealing with.
-API Platform makes it easy to create custom data providers and persisters.
+API Platform makes it easy to create custom state providers and processors.
 It also makes it easy to implement patterns such as [CQS](https://www.martinfowler.com/bliki/CommandQuerySeparation.html)
 or [CQRS](https://martinfowler.com/bliki/CQRS.html) thanks to [the Messenger Component integration](messenger.md) and the [DTO support](dto.md).
 
 Last but not least, to create [Event Sourcing](https://martinfowler.com/eaaDev/EventSourcing.html)-based systems, a convenient
 approach is:
 
-* to persist data in an event store using a Messenger handler or a custom [data persister](data-persisters.md)
+* to persist data in an event store using a Messenger handler or a custom [state processor](state-processors.md)
 * to create projections in standard RDBMS (PostgreSQL, MariaDB...) tables or views
 * to map those projections with read-only Doctrine entity classes **and** to mark those classes with `#[ApiResource]`
 

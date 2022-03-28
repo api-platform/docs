@@ -64,8 +64,8 @@ controller classes (the default when using the API Platform distribution).
 This action will be automatically registered as a service (the service name is the same as the class name:
 `App\Controller\CreateBookPublication`).
 
-API Platform automatically retrieves the appropriate PHP entity using the data provider then deserializes user data in it,
-and for `POST`, `PUT` and `PATCH` requests updates the entity with data provided by the user.
+API Platform automatically retrieves the appropriate PHP entity using the state provider then deserializes user data in it,
+and for `POST`, `PUT` and `PATCH` requests updates the entity with state provided by the user.
 
 The entity is retrieved in the `__invoke` method thanks to a dedicated argument resolver.
 

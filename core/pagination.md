@@ -514,7 +514,7 @@ class BookRepository extends ServiceEntityRepository
 
 ## Pagination for Custom State Providers
 
-If you are using custom data providers (not the provided Doctrine ORM, ODM or ElasticSearch ones)
+If you are using custom state providers (not the provided Doctrine ORM, ODM or ElasticSearch ones)
 and if you want your results to be paginated, you will need to return an instance of a
 `ApiPlatform\State\Pagination\PartialPaginatorInterface` or
 `ApiPlatform\State\Pagination\PaginatorInterface`.

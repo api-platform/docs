@@ -4,7 +4,7 @@ API Platform provides a generic system to apply filters and sort criteria on col
 Useful filters for Doctrine ORM, MongoDB ODM and ElasticSearch are provided with the library.
 
 You can also create custom filters that fit your specific needs.
-You can also add filtering support to your custom [data providers](data-providers.md) by implementing interfaces provided
+You can also add filtering support to your custom [state providers](state-providers.md) by implementing interfaces provided
 by the library.
 
 By default, all filters are disabled. They must be enabled explicitly.
@@ -1151,7 +1151,7 @@ If you want to include some properties of the nested "author" document, use: `/b
 
 Custom filters can be written by implementing the `ApiPlatform\Api\FilterInterface` interface.
 
-API Platform provides a convenient way to create Doctrine ORM and MongoDB ODM filters. If you use [custom data providers](data-providers.md),
+API Platform provides a convenient way to create Doctrine ORM and MongoDB ODM filters. If you use [custom state providers](state-providers.md),
 you can still create filters by implementing the previously mentioned interface, but - as API Platform isn't aware of your
 persistence system's internals - you have to create the filtering logic by yourself.
 

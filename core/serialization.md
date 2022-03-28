@@ -13,7 +13,7 @@ The main serialization process has two stages:
 > As you can see in the picture above, an array is used as a man-in-the-middle. This way, Encoders will only deal with turning specific formats into arrays and vice versa. The same way, Normalizers will deal with turning specific objects into arrays and vice versa.
 -- [The Symfony documentation](https://symfony.com/doc/current/components/serializer.html)
 
-Unlike Symfony itself, API Platform leverages custom normalizers, its router and the [data provider](data-providers.md) system to perform an advanced transformation. Metadata are added to the generated document including links, type information, pagination data or available filters.
+Unlike Symfony itself, API Platform leverages custom normalizers, its router and the [state provider](state-providers.md) system to perform an advanced transformation. Metadata are added to the generated document including links, type information, pagination data or available filters.
 
 The API Platform Serializer is extendable. You can register custom normalizers and encoders in order to support other formats. You can also decorate existing normalizers to customize their behaviors.
 
@@ -313,7 +313,7 @@ The generated JSON using previous settings is below:
 }
 ```
 
-In order to optimize such embedded relations, the default Doctrine data provider will automatically join entities on relations
+In order to optimize such embedded relations, the default Doctrine state provider will automatically join entities on relations
 marked as [`EAGER`](https://www.doctrine-project.org/projects/doctrine-orm/en/current/reference/annotations-reference.html#manytoone).
 This avoids the need for extra queries to be executed when serializing the related objects.
 
@@ -352,8 +352,8 @@ App\Entity\Book:
 The following rules apply when denormalizing embedded relations:
 
 * If an `@id` key is present in the embedded resource, then the object corresponding to the given URI will be retrieved through
-the data provider. Any changes in the embedded relation will also be applied to that object.
-* If no `@id` key exists, a new object will be created containing data provided in the embedded JSON document.
+the state provider. Any changes in the embedded relation will also be applied to that object.
+* If no `@id` key exists, a new object will be created containing state provided in the embedded JSON document.
 
 You can specify as many embedded relation levels as you want.
 

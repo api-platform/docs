@@ -12,7 +12,7 @@ You can find a working example of a custom data provider using a pagination exte
 
 Custom extensions must implement the `ApiPlatform\Doctrine\Orm\Extension\QueryCollectionExtensionInterface` and / or the `ApiPlatform\Doctrine\Orm\Extension\QueryItemExtensionInterface` interfaces, to be run when querying for a collection of items and when querying for an item respectively.
 
-If you use [custom data providers](data-providers.md), they must support extensions and be aware of active extensions to work properly.
+If you use [custom state providers](state-providers.md), they must support extensions and be aware of active extensions to work properly.
 
 ### Example
 

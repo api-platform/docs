@@ -143,11 +143,11 @@ new metadata system.
 
 ### SearchFilter
 
-If you want to use the new namespaces for the search filter 
+If you want to use the new namespaces for the search filter
 (`ApiPlatform\Doctrine\Orm\Filter\SearchFilter` instead of`ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter` or
 `ApiPlatform\Doctrine\Odm\Filter\SearchFilter` instead of`ApiPlatform\Core\Bridge\Doctrine\Odm\Filter\SearchFilter`) you
 need to use the `metadata_backward_compatibility_layer` to false as this filter relies on the implementation
-of the new `ApiPlatform\Api\IriConverterInterface`. 
+of the new `ApiPlatform\Api\IriConverterInterface`.
 
 In 3.0 this flag will default to `false` and the legacy code will be removed.
 
