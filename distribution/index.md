@@ -369,61 +369,36 @@ Modify these files as described in these patches:
  use Doctrine\Common\Collections\ArrayCollection;
 +use Doctrine\ORM\Mapping as ORM;
  
--/** A book. */
-+/**
-+ * A book.
-+ *
-+ */
+ /** A book. */
 +#[ORM\Entity]
  #[ApiResource]
  class Book
  {
--    /** The id of this book. */
-+    /**
-+     * The id of this book.
-+     */
+     /** The id of this book. */
 +    #[ORM\Id, ORM\Column, ORM\GeneratedValue]
      private ?int $id = null;
  
--    /** The ISBN of this book (or null if doesn't have one). */
-+    /**
-+     * The ISBN of this book (or null if doesn't have one).
-+     */
+     /** The ISBN of this book (or null if doesn't have one). */
 +    #[ORM\Column(nullable: true)]
      public ?string $isbn = null;
  
--    /** The title of this book. */
-+    /**
-+     * The title of this book.
-+     */
+     /** The title of this book. */
 +    #[ORM\Column]
      public string $title = '';
  
--    /** The description of this book. */
-+    /**
-+     * The description of this book.
-+     */
+     /** The description of this book. */
 +    #[ORM\Column(type: "text")]
      public string $description = '';
  
--    /** The author of this book. */
-+    /**
-+     * The author of this book.
-+     */
+     /** The author of this book. */
 +    #[ORM\Column]
      public string $author = '';
  
--    /** The publication date of this book. */
-+    /**
-+     * The publication date of this book.
-+     */
+     /** The publication date of this book. */
 +    #[ORM\Column(type: "datetime")]
      public ?\DateTimeInterface $publicationDate = null;
  
--    /** @var Review[] Available reviews for this book. */
-+    /**
-+     * @var Review[] Available reviews for this book.
-+     */
+     /** @var Review[] Available reviews for this book. */
 +    #[ORM\OneToMany(mappedBy: 'book', targetEntity: 'Review', cascade: ['persist', 'remove'])]
      public iterable $reviews;
  
@@ -438,53 +413,32 @@ Modify these files as described in these patches:
  use ApiPlatform\Core\Annotation\ApiResource;
 +use Doctrine\ORM\Mapping as ORM;
  
--/** A review of a book. */
-+/**
-+ * A review of a book.
-+ */
+ /** A review of a book. */
 +#[ORM\Entity]
  #[ApiResource]
  class Review
  {
--    /** The id of this review. */
-+    /**
-+     * The id of this review.
-+     */
+     /** The id of this review. */
      #[ORM\Id, ORM\Column, ORM\GeneratedValue]
      private ?int $id = null;
  
--    /** The rating of this review (between 0 and 5). */
-+    /**
-+     * The rating of this review (between 0 and 5).
-+     */
+     /** The rating of this review (between 0 and 5). */
 +    #[ORM\Column(type: "smallint")]
      public int $rating = 0;
  
--    /** The body of the review. */
-+    /**
-+     * The body of the review.
-+     */
+     /** The body of the review. */
 +    #[ORM\Column(type: "text")]
      public string $body = '';
  
--    /** The author of the review. */
-+    /**
-+     * The author of the review.
-+     */
+     /** The author of the review. */
 +    #[ORM\Column]
      public string $author = '';
  
--    /** The date of publication of this review.*/
-+    /**
-+     * The date of publication of this review.
-+     */
+     /** The date of publication of this review.*/
 +    #[ORM\Column(type: "datetime")]
      public ?\DateTimeInterface $publicationDate = null;
  
--    /** The book this review is about. */
-+    /**
-+     * The book this review is about.
-+     */
+     /** The book this review is about. */
 +    #[ORM\ManyToOne(targetEntity: "Book", inversedBy: "reviews")]
      public ?Book $book = null;
  
