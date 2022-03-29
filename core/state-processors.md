@@ -1,4 +1,4 @@
-# State processors
+# State Processors
 
 To mutate the application states during `POST`, `PUT`, `PATCH` or `DELETE` [operations](operations.md), API Platform uses
 classes called **state processors**. State processors receive an instance of the class marked as an API resource (usually using
@@ -27,7 +27,7 @@ bin/console make:state-processor
 ```
 
 To create a state processor, you have to implement the [`ProcessorInterface`](https://github.com/api-platform/core/blob/main/src/State/ProcessorInterface.php).
-This interface defines only 3 methods:
+This interface defines only two methods:
 
 * `process`: to create, delete, update, or process the given data in any ways
 * `supports`: to check whether the given data is supported by this state processor

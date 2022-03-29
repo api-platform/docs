@@ -224,7 +224,7 @@ We did not define any Doctrine annotation here and if we want thinks to work pro
 
 As a general rule, if the property we want to create a link from is in the `fromClass`, use `fromProperty`, if not, use `toProperty`.
 
-For example, we could add a subresource fetching an employee's company. The `company` property belongs to the `Employee` class we can use fromProperty:
+For example, we could add a subresource fetching an employee's company. The `company` property belongs to the `Employee` class we can use `fromProperty`:
 
 ```php
 <?php 

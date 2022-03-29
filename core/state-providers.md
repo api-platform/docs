@@ -1,4 +1,4 @@
-# State providers
+# State Providers
 
 To retrieve data exposed by the API, API Platform uses classes called **state providers**. A state provider using [Doctrine
 ORM](https://www.doctrine-project.org/projects/orm.html) to retrieve data from a database, a state provider using
@@ -63,7 +63,7 @@ final class BlogPostStateProvider implements ProviderInterface
 }
 ```
 
-In the supports method, we declare that this State Provider only works for the given operation. As this operation expects a
+In the `supports` method, we declare that this State Provider only works for the given operation. As this operation expects a
 BlogPost we return an instance of the BlogPost in the `provide` method.
 The `uriVariables` parameter is an array with the values of the URI variables.
 
