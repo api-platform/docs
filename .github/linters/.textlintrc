@@ -2,7 +2,8 @@
   "rules": {
     "terminology": {
       "exclude": [
-        "Node(?:js)?"
+        "Node(?:js)?",
+        "web[- ]?site(s)?"
       ]
     }
   }
