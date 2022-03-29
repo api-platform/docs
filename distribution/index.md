@@ -337,8 +337,8 @@ The framework also use these metadata to serialize and deserialize data from JSO
 
 For the sake of simplicity, in this example we used public properties (except for the id, see below). API Platform (as well
 as Symfony and Doctrine) also supports accessor methods (getters/setters), use them if you want to.
-We used a private property and a getter for the id to enforce the fact that it is read only (we will let the DBMS generating it). API Platform also has first-grade support for UUIDs. [You should
-probably use them instead of auto-incremented ids](https://www.clever-cloud.com/blog/engineering/2015/05/20/why-auto-increment-is-a-terrible-idea/).
+We used a private property and a getter for the ID to enforce the fact that it is read only (we will let the DBMS generating it). API Platform also has first-grade support for UUIDs. [You should
+probably use them instead of auto-incremented IDs](https://www.clever-cloud.com/blog/engineering/2015/05/20/why-auto-increment-is-a-terrible-idea/).
 
 Because API Platform provides all the infrastructure for us, our API is almost ready!
 
@@ -367,62 +367,37 @@ Modify these files as described in these patches:
  use Doctrine\Common\Collections\ArrayCollection;
 +use Doctrine\ORM\Mapping as ORM;
  
--/** A book. */
-+/**
-+ * A book.
-+ *
-+ */
- #[ORM\Entity]
+ /** A book. */
++#[ORM\Entity]
  #[ApiResource]
  class Book
  {
--    /** The id of this book. */
-+    /**
-+     * The id of this book.
-+     */
-     #[ORM\Id, ORM\Column, ORM\GeneratedValue]
+     /** The id of this book. */
++    #[ORM\Id, ORM\Column, ORM\GeneratedValue]
      private ?int $id = null;
  
--    /** The ISBN of this book (or null if doesn't have one). */
-+    /**
-+     * The ISBN of this book (or null if doesn't have one).
-+     */
-     #[ORM\Column(nullable: true)]
+     /** The ISBN of this book (or null if doesn't have one). */
++    #[ORM\Column(nullable: true)]
      public ?string $isbn = null;
  
--    /** The title of this book. */
-+    /**
-+     * The title of this book.
-+     */
-     #[ORM\Column]
+     /** The title of this book. */
++    #[ORM\Column]
      public string $title = '';
  
--    /** The description of this book. */
-+    /**
-+     * The description of this book.
-+     */
-     #[ORM\Column(type="text")]
+     /** The description of this book. */
++    #[ORM\Column(type: "text")]
      public string $description = '';
  
--    /** The author of this book. */
-+    /**
-+     * The author of this book.
-+     */
-     #[ORM\Column]
+     /** The author of this book. */
++    #[ORM\Column]
      public string $author = '';
  
--    /** The publication date of this book. */
-+    /**
-+     * The publication date of this book.
-+     */
-     #[ORM\Column]
+     /** The publication date of this book. */
++    #[ORM\Column(type: "datetime")]
      public ?\DateTimeInterface $publicationDate = null;
  
--    /** @var Review[] Available reviews for this book. */
-+    /**
-+     * @var Review[] Available reviews for this book.
-+     */
-     #[ORM\OneToMany(mappedBy: 'book', targetEntity: 'Review', cascade: ['persist', 'remove'])]
+     /** @var Review[] Available reviews for this book. */
++    #[ORM\OneToMany(mappedBy: 'book', targetEntity: 'Review', cascade: ['persist', 'remove'])]
      public iterable $reviews;
  
      public function __construct()
@@ -436,54 +411,33 @@ Modify these files as described in these patches:
  use ApiPlatform\Metadata\ApiResource;
 +use Doctrine\ORM\Mapping as ORM;
  
--/** A review of a book. */
-+/**
-+ * A review of a book.
-+ */
- #[ORM\Entity]
+ /** A review of a book. */
++#[ORM\Entity]
  #[ApiResource]
  class Review
  {
--    /** The id of this review. */
-+    /**
-+     * The id of this review.
-+     */
+     /** The id of this review. */
      #[ORM\Id, ORM\Column, ORM\GeneratedValue]
      private ?int $id = null;
  
--    /** The rating of this review (between 0 and 5). */
-+    /**
-+     * The rating of this review (between 0 and 5).
-+     */
-     #[ORM\Column(type: "smallint")]
+     /** The rating of this review (between 0 and 5). */
++    #[ORM\Column(type: "smallint")]
      public int $rating = 0;
  
--    /** The body of the review. */
-+    /**
-+     * The body of the review.
-+     */
-     #[ORM\Column(type: "text")]
+     /** The body of the review. */
++    #[ORM\Column(type: "text")]
      public string $body = '';
  
--    /** The author of the review. */
-+    /**
-+     * The author of the review.
-+     */
-     #[ORM\Column]
+     /** The author of the review. */
++    #[ORM\Column]
      public string $author = '';
  
--    /** The date of publication of this review.*/
-+    /**
-+     * The date of publication of this review.
-+     */
-     #[ORM\Column]
+     /** The date of publication of this review.*/
++    #[ORM\Column(type: "datetime")]
      public ?\DateTimeInterface $publicationDate = null;
  
--    /** The book this review is about. */
-+    /**
-+     * The book this review is about.
-+     */
-     #[ORM\ManyToOne(targetEntity: "Book", inversedBy: "reviews")]
+     /** The book this review is about. */
++    #[ORM\ManyToOne(targetEntity: "Book", inversedBy: "reviews")]
      public ?Book $book = null;
  
      public function getId(): ?int
