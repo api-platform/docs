@@ -30,7 +30,7 @@ Let's start with a State Provider for the URI: `/blog_posts/{id}`, which operati
 You can find this information either with the `debug:router` command (the route name and the operation name are the same),
 or by using the `debug:api` command.
 
-First, your `BlogPostStateProvider` has to implement the
+First, your `BlogPostProvider` has to implement the
 [`StateProviderInterface`](https://github.com/api-platform/core/blob/main/src/State/StateProviderInterface.php):
 
 ```php
@@ -41,12 +41,10 @@ namespace App\State;
 use App\Entity\BlogPost;
 use ApiPlatform\State\ProviderInterface;
 
-final class BlogPostStateProvider implements ProviderInterface
+final class BlogPostProvider implements ProviderInterface
 {
     /**
-     * Provides data.
-     *
-     * @return object|array|null
+     * {@inheritDoc}
      */
     public function provide(string $resourceClass, array $uriVariables = [], ?string $operationName = null, array $context = [])
     {
@@ -54,7 +52,7 @@ final class BlogPostStateProvider implements ProviderInterface
     }
 
     /**
-     * Whether this state provider supports the class/identifier tuple.
+     * {@inheritDoc}
      */
     public function supports(string $resourceClass, array $uriVariables = [], ?string $operationName = null, array $context = []): bool
     {
@@ -79,7 +77,7 @@ use App\Entity\BlogPost;
 use ApiPlatform\State\ProviderInterface;
 use ApiPlatform\Metadata\GetCollection;
 
-final class BlogPostStateProvider implements ProviderInterface
+final class BlogPostProvider implements ProviderInterface
 {
     /**
      * Provides data.
@@ -113,10 +111,9 @@ To declare the service explicitly, or to set a custom priority, you can use the 
 # api/config/services.yaml
 services:
     # ...
-    'App\DataProvider\BlogPostStateProvider':
-        tags: [ { name: 'api_platform.state_provider', priority: 2 } ]
-        # Autoconfiguration must be disabled to set a custom priority
-        autoconfigure: false
+    App\State\BlogPostProvider: ~
+        # Uncomment only if autoconfiguration is disabled
+        #tags: [ 'api_platform.state_provider', priority: 2 ]
 ```
 
 Tagging the service with the tag `api_platform.state_provider` will enable API Platform Core to automatically

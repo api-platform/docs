@@ -76,7 +76,7 @@ services:
     # ...
     App\State\BlogPostProcessor: ~
         # Uncomment only if autoconfiguration is disabled
-        #tags: [ 'api_platform.state_processor' ]
+        #tags: [ 'api_platform.state_processor', priority: 2 ]
 ```
 
 ## Decorating the Built-In State Processors
@@ -107,9 +107,9 @@ final class UserProcessor implements ProcessorInterface
         $this->mailer = $mailer;
     }
 
-    public function process($data, array $identifiers = [], ?string $operationName = null, array $context = [])
+    public function process($data, array $uriVariables = [], ?string $operationName = null, array $context = [])
     {
-        $result = $this->decorated->persist($data, $context);
+        $result = $this->decorated->process($data, $uriVariables, $operationName, $context);
 
         if ($data instanceof User && '_api_/blog_posts_post' === $operationName) {
             $this->sendWelcomeEmail($data);
@@ -118,9 +118,9 @@ final class UserProcessor implements ProcessorInterface
         return $result;
     }
 
-    public function supports($data, array $identifiers = [], ?string $operationName = null, array $context = []): bool
+    public function supports($data, array $uriVariables = [], ?string $operationName = null, array $context = []): bool
     {
-        return $this->decorated->supports($data, $identifeirs, $operationName, $context);
+        return $this->decorated->supports($data, $uriVariables, $operationName, $context);
     }
 
     private function sendWelcomeEmail(User $user)
