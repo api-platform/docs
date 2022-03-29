@@ -1,6 +1,6 @@
 # Extensions
 
-API Platform Core provides a system to extend queries on items and collections.
+API Platform provides a system to extend queries on items and collections.
 
 Extensions are specific to Doctrine and Elasticsearch-PHP, and therefore, the Doctrine ORM / MongoDB ODM support or the Elasticsearch
 reading support must be enabled to use this feature. If you use custom providers it's up to you to implement your own
@@ -10,9 +10,9 @@ You can find a working example of a custom data provider using a pagination exte
 
 ## Custom Doctrine ORM Extension
 
-Custom extensions must implement the `ApiPlatform\Core\Bridge\Doctrine\Orm\Extension\QueryCollectionExtensionInterface` and / or the `ApiPlatform\Core\Bridge\Doctrine\Orm\Extension\QueryItemExtensionInterface` interfaces, to be run when querying for a collection of items and when querying for an item respectively.
+Custom extensions must implement the `ApiPlatform\Doctrine\Orm\Extension\QueryCollectionExtensionInterface` and / or the `ApiPlatform\Doctrine\Orm\Extension\QueryItemExtensionInterface` interfaces, to be run when querying for a collection of items and when querying for an item respectively.
 
-If you use [custom data providers](data-providers.md), they must support extensions and be aware of active extensions to work properly.
+If you use [custom state providers](state-providers.md), they must support extensions and be aware of active extensions to work properly.
 
 ### Example
 
@@ -57,9 +57,9 @@ class Offer
 
 namespace App\Doctrine;
 
-use ApiPlatform\Core\Bridge\Doctrine\Orm\Extension\QueryCollectionExtensionInterface;
-use ApiPlatform\Core\Bridge\Doctrine\Orm\Extension\QueryItemExtensionInterface;
-use ApiPlatform\Core\Bridge\Doctrine\Orm\Util\QueryNameGeneratorInterface;
+use ApiPlatform\Doctrine\Orm\Extension\QueryCollectionExtensionInterface;
+use ApiPlatform\Doctrine\Orm\Extension\QueryItemExtensionInterface;
+use ApiPlatform\Doctrine\Orm\Util\QueryNameGeneratorInterface;
 use App\Entity\Offer;
 use Doctrine\ORM\QueryBuilder;
 use Symfony\Component\Security\Core\Security;
@@ -118,12 +118,12 @@ Note that your extensions should have a positive priority if defined. Internal e
 
 | Service name                                               | Priority | Class                                              |
 |------------------------------------------------------------|------|---------------------------------------------------------|
-| `api_platform.doctrine.orm.query_extension.eager_loading` (collection) | -8 | ApiPlatform\Core\Bridge\Doctrine\Orm\Extension\EagerLoadingExtension |
-| `api_platform.doctrine.orm.query_extension.eager_loading` (item) | -8 | ApiPlatform\Core\Bridge\Doctrine\Orm\Extension\EagerLoadingExtension |
-| `api_platform.doctrine.orm.query_extension.filter` | -16 | ApiPlatform\Core\Bridge\Doctrine\Orm\Extension\FilterExtension |
-| `api_platform.doctrine.orm.query_extension.filter_eager_loading` | -17 | ApiPlatform\Core\Bridge\Doctrine\Orm\Extension\FilterEagerLoadingExtension |
-| `api_platform.doctrine.orm.query_extension.order` | -32 | ApiPlatform\Core\Bridge\Doctrine\Orm\Extension\OrderExtension |
-| `api_platform.doctrine.orm.query_extension.pagination` | -64 | ApiPlatform\Core\Bridge\Doctrine\Orm\Extension\PaginationExtension |
+| `api_platform.doctrine.orm.query_extension.eager_loading` (collection) | -8 | ApiPlatform\Doctrine\Orm\Extension\EagerLoadingExtension |
+| `api_platform.doctrine.orm.query_extension.eager_loading` (item) | -8 | ApiPlatform\Doctrine\Orm\Extension\EagerLoadingExtension |
+| `api_platform.doctrine.orm.query_extension.filter` | -16 | ApiPlatform\Doctrine\Orm\Extension\FilterExtension |
+| `api_platform.doctrine.orm.query_extension.filter_eager_loading` | -17 | ApiPlatform\Doctrine\Orm\Extension\FilterEagerLoadingExtension |
+| `api_platform.doctrine.orm.query_extension.order` | -32 | ApiPlatform\Doctrine\Orm\Extension\OrderExtension |
+| `api_platform.doctrine.orm.query_extension.pagination` | -64 | ApiPlatform\Doctrine\Orm\Extension\PaginationExtension |
 
 #### Blocking Anonymous Users
 
@@ -147,8 +147,8 @@ Creating custom extensions is the same as with Doctrine ORM.
 
 The interfaces are:
 
-* `ApiPlatform\Core\Bridge\Doctrine\MongoDbOdm\Extension\AggregationItemExtensionInterface` and `ApiPlatform\Core\Bridge\Doctrine\MongoDbOdm\Extension\AggregationCollectionExtensionInterface` to add stages to the [aggregation builder](https://www.doctrine-project.org/projects/doctrine-mongodb-odm/en/latest/reference/aggregation-builder.html).
-* `ApiPlatform\Core\Bridge\Doctrine\MongoDbOdm\Extension\AggregationResultItemExtensionInterface` and `ApiPlatform\Core\Bridge\Doctrine\MongoDbOdm\Extension\AggregationResultCollectionExtensionInterface` to return a result.
+* `ApiPlatform\Doctrine\Odm\Extension\AggregationItemExtensionInterface` and `ApiPlatform\Doctrine\Odm\Extension\AggregationCollectionExtensionInterface` to add stages to the [aggregation builder](https://www.doctrine-project.org/projects/doctrine-mongodb-odm/en/latest/reference/aggregation-builder.html).
+* `ApiPlatform\Doctrine\Odm\Extension\AggregationResultItemExtensionInterface` and `ApiPlatform\Doctrine\Odm\Extension\AggregationResultCollectionExtensionInterface` to return a result.
 
 The tags are `api_platform.doctrine_mongodb.odm.aggregation_extension.item` and `api_platform.doctrine_mongodb.odm.aggregation_extension.collection`.
 

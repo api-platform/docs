@@ -2,7 +2,7 @@
 
 <p align="center" class="symfonycasts"><a href="https://symfonycasts.com/screencast/api-platform/pagination?cid=apip"><img src="../distribution/images/symfonycasts-player.png" alt="Pagination screencast"><br>Watch the Pagination screencast</a></p>
 
-API Platform Core has native support for paged collections. Pagination is enabled by default for all collections. Each collection
+API Platform has native support for paged collections. Pagination is enabled by default for all collections. Each collection
 contains 30 items per page.
 The activation of the pagination and the number of elements per page can be configured from:
 
@@ -90,7 +90,7 @@ class Book
 
 #### Disabling the Pagination Client-side Globally
 
-You can configure API Platform Core to let the client enable or disable the pagination. To activate this feature globally,
+You can configure API Platform to let the client enable or disable the pagination. To activate this feature globally,
 use the following configuration:
 
 ```yaml
@@ -319,10 +319,10 @@ The following configuration also works on a specific operation:
 // api/src/Entity/Book.php
 namespace App\Entity;
 
-use ApiPlatform\Core\Annotation\ApiFilter;
+use ApiPlatform\Metadata\ApiFilter;
 use ApiPlatform\Metadata\ApiResource;
-use ApiPlatform\Core\Bridge\Doctrine\MongoDbOdm\Filter\OrderFilter;
-use ApiPlatform\Core\Bridge\Doctrine\MongoDbOdm\Filter\RangeFilter;
+use ApiPlatform\Doctrine\Odm\Filter\OrderFilter;
+use ApiPlatform\Doctrine\Odm\Filter\RangeFilter;
 
 #[ApiResource(
     paginationPartial: true, 
@@ -405,7 +405,7 @@ use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Doctrine\ORM\Tools\Pagination\Paginator as DoctrinePaginator;
-use ApiPlatform\Core\Bridge\Doctrine\Orm\Paginator;
+use ApiPlatform\Doctrine\Orm\Paginator;
 use Doctrine\Common\Collections\Criteria;
 
 class BookRepository extends ServiceEntityRepository
@@ -455,7 +455,7 @@ The Controller would look like this:
 // api/src/Controller/Book/GetBooksByFavoriteAuthorAction.php
 namespace App\Controller\Book;
 
-use ApiPlatform\Core\Bridge\Doctrine\Orm\Paginator;
+use ApiPlatform\Doctrine\Orm\Paginator;
 use App\Repository\BookRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpKernel\Attribute\AsController;
@@ -512,13 +512,13 @@ class BookRepository extends ServiceEntityRepository
 }
 ```
 
-## Pagination for Custom Data Providers
+## Pagination for Custom State Providers
 
-If you are using custom data providers (not the provided Doctrine ORM, ODM or ElasticSearch ones)
+If you are using custom state providers (not the provided Doctrine ORM, ODM or ElasticSearch ones)
 and if you want your results to be paginated, you will need to return an instance of a
-`ApiPlatform\Core\DataProvider\PartialPaginatorInterface` or
-`ApiPlatform\Core\DataProvider\PaginatorInterface`.
+`ApiPlatform\State\Pagination\PartialPaginatorInterface` or
+`ApiPlatform\State\Pagination\PaginatorInterface`.
 A few existing classes are provided to make it easier to paginate the results:
 
-* `ApiPlatform\Core\DataProvider\ArrayPaginator`
-* `ApiPlatform\Core\DataProvider\TraversablePaginator`
+* `ApiPlatform\State\Pagination\ArrayPaginator`
+* `ApiPlatform\State\Pagination\TraversablePaginator`

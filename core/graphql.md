@@ -156,9 +156,10 @@ use ApiPlatform\Metadata\GraphQl\Mutation;
 use ApiPlatform\Metadata\GraphQl\Query;
 use ApiPlatform\Metadata\ApiResource;
 
-#[ApiResource]
-#[Query]
-#[Mutation(name: 'create')]
+#[ApiResource(graphQlOperations: [
+    new Query(),
+    new Mutation(name: 'create')
+])]
 class Book
 {
     // ...
@@ -288,35 +289,35 @@ use ApiPlatform\Metadata\GraphQl\QueryCollection;
 use App\Resolver\BookCollectionResolver;
 use App\Resolver\BookResolver;
 
-#[ApiResource]
-/** Auto-generated queries and mutations */
-#[Query]
-#[QueryCollection]
-#[Mutation(name: 'create')]
-#[Mutation(name: 'update')]
-#[Mutation(name: 'delete')]
-/** Custom queries */
-#[Query(name: 'retrievedQuery', resolver: BookResolver::class)]
-#[Query(
-    name: 'notRetrievedQuery',
-    resolver: BookResolver::class,
-    args: []
-)]
-#[Query(
-    name: 'withDefaultArgsNotRetrievedQuery',
-    resolver: BookResolver::class,
-    read: false
-)]
-#[Query(
-    name: 'withCustomArgsQuery',
-    resolver: BookResolver::class,
-    args: [
-        'id' => ['type' => 'ID!'], 
-        'log' => ['type' => 'Boolean!', 'description' => 'Is logging activated?'], 
-        'logDate' => ['type' => 'DateTime']
-    ]
-)]
-#[QueryCollection(name: 'collectionQuery', resolver: BookCollectionResolver::class)]
+#[ApiResource(graphQlOperations: [
+    new Query(),
+    new QueryCollection(),
+    new Mutation(name: 'create'),
+    new Mutation(name: 'update'),
+    new Mutation(name: 'delete'),
+
+    new Query(name: 'retrievedQuery', resolver: BookResolver::class),
+    new Query(
+        name: 'notRetrievedQuery',
+        resolver: BookResolver::class,
+        args: []
+    ),
+    new Query(
+        name: 'withDefaultArgsNotRetrievedQuery',
+        resolver: BookResolver::class,
+        read: false
+    ),
+    new Query(
+        name: 'withCustomArgsQuery',
+        resolver: BookResolver::class,
+        args: [
+            'id' => ['type' => 'ID!'], 
+            'log' => ['type' => 'Boolean!', 'description' => 'Is logging activated?'], 
+            'logDate' => ['type' => 'DateTime']
+        ]
+    ),
+    new QueryCollection(name: 'collectionQuery', resolver: BookCollectionResolver::class),
+])]
 class Book
 {
     // ...
@@ -453,30 +454,32 @@ use ApiPlatform\Metadata\GraphQl\Query;
 use ApiPlatform\Metadata\GraphQl\QueryCollection;
 use App\Resolver\BookMutationResolver;
 
-#[ApiResource]
-/** Auto-generated queries and mutations */
-#[Query]
-#[QueryCollection]
-#[Mutation(name: 'create')]
-#[Mutation(name: 'update')]
-#[Mutation(name: 'delete')]
-/** Custom mutations */
-#[Mutation(name: 'mutation', resolver: BookMutationResolver::class)]
-#[Mutation(
-    name: 'withCustomArgsMutation',
-    resolver: BookMutationResolver::class,
-    args: [
-        'sendMail' => [
-            'type' => 'Boolean!', 
-            'description' => 'Send a mail?'
-        ]
+#[ApiResource(
+    graphQlOperations: [
+        new Query(),
+        new QueryCollection(),
+        new Mutation(name: 'create'),
+        new Mutation(name: 'update'),
+        new Mutation(name: 'delete'),
+
+        new Mutation(name: 'mutation', resolver: BookMutationResolver::class),
+        new Mutation(
+            name: 'withCustomArgsMutation',
+            resolver: BookMutationResolver::class,
+            args: [
+                'sendMail' => [
+                    'type' => 'Boolean!', 
+                    'description' => 'Send a mail?'
+                ]
+            ]
+        ),
+        new Mutation(
+            name: 'disabledStagesMutation',
+            resolver: BookMutationResolver::class,
+            deserialize: false, 
+            write: false
+        )
     ]
-)]
-#[Mutation(
-    name: 'disabledStagesMutation',
-    resolver: BookMutationResolver::class,
-    deserialize: false, 
-    write: false
 )]
 class Book
 {
@@ -549,9 +552,10 @@ use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\GraphQl\Mutation;
 use ApiPlatform\Metadata\GraphQl\Subscription;
 
-#[ApiResource(mercure: true)]
-#[Mutation(name: 'update')]
-#[Subscription]
+#[ApiResource(mercure: true, graphQlOperations: [
+    new Mutation(name: 'update'),
+    new Subscription()
+])]
 class Book
 {
     // ...
@@ -695,10 +699,11 @@ use ApiPlatform\Metadata\GraphQl\Mutation;
 use ApiPlatform\Metadata\GraphQl\Query;
 use ApiPlatform\Metadata\GraphQl\QueryCollection;
 
-#[ApiResource]
-#[Query]
-#[QueryCollection]
-#[Mutation(name: 'create', write: false)]
+#[ApiResource(graphQlOperations: [
+    new Query(),
+    new QueryCollection(),
+    new Mutation(name: 'create', write: false)
+])]
 class Book
 {
     // ...
@@ -717,10 +722,11 @@ use ApiPlatform\Metadata\GraphQl\Mutation;
 use ApiPlatform\Metadata\GraphQl\Query;
 use ApiPlatform\Metadata\GraphQl\QueryCollection;
 
-#[ApiResource(write: false)]
-#[Query]
-#[QueryCollection]
-#[Mutation(name: 'create')]
+#[ApiResource(write: false, graphQlOperations: [
+    new Query(),
+    new QueryCollection(),
+    new Mutation(name: 'create')
+])]
 class Book
 {
     // ...
@@ -755,12 +761,13 @@ use ApiPlatform\Metadata\GraphQl\Mutation;
 use ApiPlatform\Metadata\GraphQl\Query;
 use ApiPlatform\Metadata\GraphQl\QueryCollection;
 
-#[ApiResource(filters: ['offer.search_filter'])]
-#[Query]
-#[QueryCollection(filters: ['offer.date_filter'])]
-#[Mutation(name: 'create')]
-#[Mutation(name: 'update')]
-#[Mutation(name: 'delete')]
+#[ApiResource(filters: ['offer.search_filter'], graphQlOperations: [
+    new Query(),
+    new QueryCollection(filters: ['offer.date_filter']),
+    new Mutation(name: 'create'),
+    new Mutation(name: 'update'),
+    new Mutation(name: 'delete')
+])]
 class Offer
 {
     // ...
@@ -815,10 +822,10 @@ Unlike for REST, all built-in filters support nested properties using the unders
 // api/src/Entity/Offer.php
 namespace App\Entity;
 
-use ApiPlatform\Core\Annotation\ApiFilter;
+use ApiPlatform\Metadata\ApiFilter;
 use ApiPlatform\Metadata\ApiResource;
-use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\OrderFilter;
-use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
+use ApiPlatform\Doctrine\Orm\Filter\OrderFilter;
+use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
 
 #[ApiResource]
 #[ApiFilter(OrderFilter::class, properties: ['product.releaseDate'])]
@@ -967,12 +974,13 @@ use ApiPlatform\Metadata\GraphQl\Mutation;
 use ApiPlatform\Metadata\GraphQl\Query;
 use ApiPlatform\Metadata\GraphQl\QueryCollection;
 
-#[ApiResource]
-#[Query]
-#[QueryCollection(paginationType: 'page')]
-#[Mutation(name: 'create')]
-#[Mutation(name: 'update')]
-#[Mutation(name: 'delete')]
+#[ApiResource(graphQlOperations: [
+    new Query(),
+    new QueryCollection(paginationType: 'page'),
+    new Mutation(name: 'create'),
+    new Mutation(name: 'update'),
+    new Mutation(name: 'delete')
+])]
 class Offer
 {
     // ...
@@ -1069,8 +1077,7 @@ namespace App\Entity;
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\GraphQl\QueryCollection;
 
-#[ApiResource]
-#[QueryCollection(paginationEnabled: false)]
+#[ApiResource(graphQlOperations: [new QueryCollection(paginationEnabled: false)])]
 class Book
 {
     // ...
@@ -1106,13 +1113,19 @@ use ApiPlatform\Metadata\GraphQl\Query;
 use ApiPlatform\Metadata\GraphQl\QueryCollection;
 use ApiPlatform\Metadata\Post;
 
-#[ApiResource(security: "is_granted('ROLE_USER')")]
-#[Get(security: "is_granted('ROLE_USER') and object.owner == user", securityMessage: 'Sorry, but you are not the book owner.')]
-#[Post(security: "is_granted('ROLE_ADMIN')", securityMessage: 'Only admins can add books.')]
-#[Query(security: "is_granted('ROLE_USER') and object.owner == user")]
-#[QueryCollection(security: "is_granted('ROLE_ADMIN')")]
-#[Mutation(name: 'delete', security: "is_granted('ROLE_ADMIN')")]
-#[Mutation(name: 'create', security: "is_granted('ROLE_ADMIN')")]
+#[ApiResource(
+    security: "is_granted('ROLE_USER')", 
+    operations: [
+        new Get(security: "is_granted('ROLE_USER') and object.owner == user", securityMessage: 'Sorry, but you are not the book owner.'),
+        new Post(security: "is_granted('ROLE_ADMIN')", securityMessage: 'Only admins can add books.')
+    ],
+    graphQlOperations: [
+        new Query(security: "is_granted('ROLE_USER') and object.owner == user"),
+        new QueryCollection(security: "is_granted('ROLE_ADMIN')"),
+        new Mutation(name: 'delete', security: "is_granted('ROLE_ADMIN')"),
+        new Mutation(name: 'create', security: "is_granted('ROLE_ADMIN')")
+    ]
+)]
 class Book
 {
     // ...
@@ -1155,9 +1168,10 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * @ORM\Entity
  */
-#[ApiResource]
-#[Query(security: 'is_granted("VIEW", object)')]
-#[QueryCollection(security: 'is_granted("ROLE_ADMIN")')]
+ #[ApiResource(graphQlOperations: [
+    new Query(security: 'is_granted("VIEW", object)'),
+    new QueryCollection(security: 'is_granted("ROLE_ADMIN")')
+ ])]
 class User
 {
     // ...
@@ -1190,9 +1204,10 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * @ORM\Entity
  */
-#[ApiResource]
-#[Query(security: 'is_granted("VIEW", object)')]
-#[QueryCollection(security: 'is_granted("ROLE_ADMIN")')]
+ #[ApiResource(graphQlOperations: [
+    new Query(security: 'is_granted("VIEW", object)'),
+    new QueryCollection(security: 'is_granted("ROLE_ADMIN")')
+ ])]
 class Document
 {
     // ...
@@ -1247,14 +1262,16 @@ use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ApiResource(
     normalizationContext: ['groups' => ['read']], 
-    denormalizationContext: ['groups' => ['write']]
-)]
-#[Query(normalizationContext: ['groups' => ['query']])]
-#[QueryCollection(normalizationContext: ['groups' => ['query_collection']])]
-#[Mutation(
-    name: 'create',
-    normalizationContext: ['groups' => ['query_collection']],
-    denormalizationContext: ['groups' => ['mutation']]
+    denormalizationContext: ['groups' => ['write']],
+    graphQlOperations: [
+        new Query(normalizationContext: ['groups' => ['query']]),
+        new QueryCollection(normalizationContext: ['groups' => ['query_collection']])
+        new Mutation(
+            name: 'create',
+            normalizationContext: ['groups' => ['query_collection']],
+            denormalizationContext: ['groups' => ['mutation']]
+        )
+    ]
 )]
 class Book
 {
@@ -1304,8 +1321,7 @@ namespace App\Entity;
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\GraphQl\Mutation;
 
-#[ApiResource]
-#[Mutation(name: 'create')]
+#[ApiResource(graphQlOperations: [new Mutation(name: 'create')])]
 class Book
 {
     // ...
@@ -1348,8 +1364,7 @@ use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\GraphQl\Mutation;
 use Symfony\Component\Serializer\Annotation\Groups;
 
-#[ApiResource]
-#[Mutation(name: 'create', denormalizationContext: ['groups' => ['book:create']])]
+#[ApiResource(graphQlOperations: [new Mutation(name: 'create', denormalizationContext: ['groups' => ['book:create']])])]
 class Book
 {
     // ...
@@ -1576,8 +1591,8 @@ For instance, your resource can have properties in camelCase:
 namespace App\Entity;
 
 use ApiPlatform\Metadata\ApiResource;
-use ApiPlatform\Core\Annotation\ApiFilter;
-use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
+use ApiPlatform\Metadata\ApiFilter;
+use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
 
 #[ApiResource]
 #[ApiFilter(SearchFilter::class, properties: ['publicationDate' => 'partial'])]
@@ -1631,8 +1646,8 @@ For instance if you have this resource:
 namespace App\Entity;
 
 use ApiPlatform\Metadata\ApiResource;
-use ApiPlatform\Core\Annotation\ApiFilter;
-use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
+use ApiPlatform\Metadata\ApiFilter;
+use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
 
 #[ApiResource]
 #[ApiFilter(SearchFilter::class, properties: ['relatedBooks.title' => 'exact'])]
@@ -1962,17 +1977,19 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
 #[ORM\Entity]
 #[ApiResource(
     normalizationContext: ['groups' => ['media_object_read']], 
-    types: ['http://schema.org/MediaObject']
-)]
-#[Mutation(
-    name: 'upload', 
-    resolver: CreateMediaObjectResolver::class, 
-    deserialize: false, 
-    args: [
-        'file' => [
-            'type' => 'Upload!', 
-            'description' => 'The file to upload'
-        ]
+    types: ['http://schema.org/MediaObject'],
+    graphQlOperations: [
+        new Mutation(
+            name: 'upload', 
+            resolver: CreateMediaObjectResolver::class, 
+            deserialize: false, 
+            args: [
+                'file' => [
+                    'type' => 'Upload!', 
+                    'description' => 'The file to upload'
+                ]
+            ]
+        )
     ]
 )]
 class MediaObject
@@ -2082,8 +2099,9 @@ namespace App\Entity;
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\GraphQl\Mutation;
 
-#[ApiResource]
-#[Mutation(name: 'create', description: 'My custom description.')]
+#[ApiResource(graphQlOperations: [
+    new Mutation(name: 'create', description: 'My custom description.')
+])]
 class Book
 {
     // ...

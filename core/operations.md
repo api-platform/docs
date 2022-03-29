@@ -1,6 +1,6 @@
 # Operations
 
-API Platform Core relies on the concept of operations. Operations can be applied to a resource exposed by the API. From
+API Platform relies on the concept of operations. Operations can be applied to a resource exposed by the API. From
 an implementation point of view, an operation is a link between a resource, a route and its related controller.
 
 <p align="center" class="symfonycasts"><a href="https://symfonycasts.com/screencast/api-platform/operations?cid=apip"><img src="../distribution/images/symfonycasts-player.png" alt="Operations screencast"><br>Watch the Operations screencast</a></p>
@@ -76,9 +76,10 @@ use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
 
-#[ApiResource]
-#[Get]
-#[GetCollection]
+#[ApiResource(operations=[
+    new Get(),
+    new GetCollection()
+])]
 class Book
 {
     // ...
@@ -126,9 +127,12 @@ use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
 
-#[ApiResource]
-#[Get]
-#[GetCollection]
+#[ApiResource(
+    operations: [
+        new Get(),
+        new GetCollection()
+    ]
+)]
 class Book
 {
     // ...
@@ -164,7 +168,7 @@ App\Entity\Book:
 
 [/codeSelector]
 
-API Platform Core is smart enough to automatically register the applicable Symfony route referencing a built-in CRUD action
+API Platform is smart enough to automatically register the applicable Symfony route referencing a built-in CRUD action
 just by specifying the method name as key, or by checking the explicitly configured HTTP method.
 
 If you do not want to allow access to the resource item (i.e. you don't want a `GET` item operation), instead of omitting it altogether, you should instead declare a `GET` item operation which returns HTTP 404 (Not Found), so that the resource item can still be identified by an IRI. For example:
@@ -176,18 +180,19 @@ If you do not want to allow access to the resource item (i.e. you don't want a `
 // api/src/Entity/Book.php
 namespace App\Entity;
 
-use ApiPlatform\Core\Action\NotFoundAction;
+use ApiPlatform\Action\NotFoundAction;
 use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\ApiResource;
 
-#[ApiResource]
-#[Get(
-    controller: NotFoundAction::class, 
-    read: false, 
-    output: false
-)]
-#[GetCollection] 
+#[ApiResource(operations: [
+    new Get(
+        controller: NotFoundAction::class, 
+        read: false, 
+        output: false
+    ),
+    new GetCollection()
+])]
 class Book
 {
     // ...
@@ -200,7 +205,7 @@ App\Entity\Book:
     operations:
         ApiPlatform\Metadata\GetCollection: ~
         ApiPlatform\Metadata\Get:
-            controller: ApiPlatform\Core\Action\NotFoundAction
+            controller: ApiPlatform\Action\NotFoundAction
             read: false
             output: false
 ```
@@ -216,7 +221,7 @@ App\Entity\Book:
     <resource class="App\Entity\Book">
         <operations>
             <operation class="ApiPlatform\Metadata\GetCollection" />
-            <operation class="ApiPlatform\Metadata\Get" controller="ApiPlatform\Core\Action\NotFoundAction"
+            <operation class="ApiPlatform\Metadata\Get" controller="ApiPlatform\Action\NotFoundAction"
                        read="false" output="false" />
         </operations>
     </resource>
@@ -243,19 +248,20 @@ use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\Post;
 
-#[ApiResource]
-#[Get(
-    uriTemplate: '/grimoire/{id}', 
-    requirements: ['id' => '\d+'], 
-    defaults: ['color' => 'brown'], 
-    options: ['my_option' => 'my_option_value'], 
-    schemes: ['https'], 
-    host: '{subdomain}.api-platform.com'
-)]
-#[Post(
-    uriTemplate: '/grimoire', 
-    status: 301
-)]
+#[ApiResource(operations: [
+    new Get(
+        uriTemplate: '/grimoire/{id}', 
+        requirements: ['id' => '\d+'], 
+        defaults: ['color' => 'brown'], 
+        options: ['my_option' => 'my_option_value'], 
+        schemes: ['https'], 
+        host: '{subdomain}.api-platform.com'
+    ),
+    new Post(
+        uriTemplate: '/grimoire', 
+        status: 301
+    )
+])]
 class Book
 {
     //...
@@ -500,13 +506,16 @@ use ApiPlatform\Metadata\ApiResource;
 use App\Controller\GetWeather;
 use Doctrine\ORM\Mapping as ORM;
 
-#[ApiResource]
-#[Get]
-#[Put]
-#[Delete]
-#[Get(name: 'weather', uriTemplate: '/places/{id}/weather', controller: GetWeather::class)]
-#[GetCollection]
-#[Post]
+#[ApiResource(
+    operations: [
+        new Get(),
+        new Put(),
+        new Delete(),
+        new Get(name: 'weather', uriTemplate: '/places/{id}/weather', controller: GetWeather::class),
+        new GetCollection(),
+        new Post(),
+    ]
+)]
 #[ORM\Entity]
 class Place
 {
@@ -540,8 +549,9 @@ namespace App\Entity;
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Get;
 
-#[ApiResource]
-#[Get(controller: SomeRandomController::class)]
+#[ApiResource(operations: [
+    new Get(controller: SomeRandomController::class)
+])]
 class Weather
 {
     // ...
@@ -559,9 +569,9 @@ Then, remove the route from the decorator:
 // src/OpenApi/OpenApiFactory.php
 namespace App\OpenApi;
 
-use ApiPlatform\Core\OpenApi\Factory\OpenApiFactoryInterface;
-use ApiPlatform\Core\OpenApi\OpenApi;
-use ApiPlatform\Core\OpenApi\Model;
+use ApiPlatform\OpenApi\Factory\OpenApiFactoryInterface;
+use ApiPlatform\OpenApi\OpenApi;
+use ApiPlatform\OpenApi\Model;
 
 final class OpenApiFactory implements OpenApiFactoryInterface
 {

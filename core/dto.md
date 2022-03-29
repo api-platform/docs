@@ -1,10 +1,98 @@
 # Using Data Transfer Objects (DTOs)
 
-As stated in [the general design considerations](design.md), in most cases [the DTO pattern](https://en.wikipedia.org/wiki/Data_transfer_object) should be implemented using an API Resource class representing the public data model exposed through the API and [a custom data provider](data-providers.md). In such cases, the class marked with `#[ApiResource]` will act as a DTO.
+As stated in [the general design considerations](design.md), in most cases [the DTO pattern](https://en.wikipedia.org/wiki/Data_transfer_object) should be implemented using an API Resource class representing the public data model exposed through the API and [a custom state provider](state-providers.md). In such cases, the class marked with `#[ApiResource]` will act as a DTO.
 
 However, it's sometimes useful to use a specific class to represent the input or output data structure related to an operation.
 
-## Specifying an Input or an Output Data Representation
+## Implementing a Write Operation With an Input Different From the Resource
+
+Using an input, the request body will be denormalized to the input instead of your resource class. You can then use it as-is in a state Processor:
+
+```php
+<?php
+// api/src/Dto/UserResetPasswordDto.php
+namespace App\Dto;
+
+use Symfony\Component\Validator\Constraints as Assert;
+
+final class UserResetPasswordDto
+{
+    #[Assert\Email]
+    public $email;
+}
+```
+
+```php
+<?php
+// api/src/Model/User.php
+namespace App\Model;
+
+use App\Dto\UserResetPasswordDto;
+
+#[ApiResource(input: UserResetPasswordDto::class)]
+final class User {}
+```
+
+And the processor:
+
+```php
+<?php
+
+namespace App\State;
+
+use App\Dto\UserResetPasswordDto;
+use ApiPlatform\State\ProcessorInterface;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+
+final class UserResetPasswordProcessor implements ProcessorInterface
+{
+    public function process($data, array $identifiers = [], ?string $operationName = null, array $context = [])
+    {
+        if ('user@example.com' === $data->email) {
+            return $data;
+        }
+
+        throw new NotFoundHttpException();
+    }
+
+    public function supports($data, array $identifiers = [], ?string $operationName = null, array $context = []): bool
+    {
+        return $data instanceof UserResetPasswordDto;
+    }
+}
+```
+
+## Implementing a Read Operation With an Output Different From the Resource
+
+Just returning another representation of your data in a state Provider is supported without changing the ApiResource:
+
+```php
+<?php
+
+namespace App\State;
+
+use App\Dto\AnotherRepresentation;
+use App\Model\Book;
+use ApiPlatform\State\ProviderInterface;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+
+final class BookRepresentationProvider implements ProviderInterface
+{
+    public function provide(string $resourceClass, array $identifiers = [], ?string $operationName = null, array $context = [])
+    {
+        return new AnotherRepresentation();
+    }
+
+    public function supports(string $resourceClass, array $identifiers = [], ?string $operationName = null, array $context = []): bool
+    {
+        return Book::class === $resourceClass;
+    }
+}
+```
+
+For more complex use cases, see below where we use a Data Transformer to transform the input to a resource or a resource to an output. This allows to keep the same persistence layer.
+
+## Using an Input or an Output class with a DataTransformer
 
 For a given resource class, you may want to have a different representation of this class as input (write) or output (read).
 To do so, a resource can take an input and/or an output class:
@@ -89,7 +177,7 @@ We can transform the `BookInput` to a `Book` resource instance:
 
 namespace App\DataTransformer;
 
-use ApiPlatform\Core\DataTransformer\DataTransformerInterface;
+use ApiPlatform\DataTransformer\DataTransformerInterface;
 use App\Entity\Book;
 
 final class BookInputDataTransformer implements DataTransformerInterface
@@ -157,7 +245,7 @@ We can transform the `Book` to a `BookOutput` object:
 
 namespace App\DataTransformer;
 
-use ApiPlatform\Core\DataTransformer\DataTransformerInterface;
+use ApiPlatform\DataTransformer\DataTransformerInterface;
 use App\Dto\BookOutput;
 use App\Entity\Book;
 
@@ -198,7 +286,7 @@ services:
 ## Updating a Resource with a Custom Input
 
 When performing an update (e.g. `PUT` operation), the resource to be updated is read by API Platform before the deserialization phase.
-To do so, it uses a [data provider](data-providers.md) with the `:id` parameter given in the URL.
+To do so, it uses a [state provider](state-providers.md) with the `:id` parameter given in the URL.
 The *body* of the request is the JSON object sent by the client, it is deserialized and is used to update the previously found resource.
 
 ![Diagram put input output](images/diagrams/api-platform-put-i-o.svg)
@@ -230,8 +318,8 @@ We will implement a `BookInputDataTransformer` that transforms the `BookInput` t
 
 namespace App\DataTransformer;
 
-use ApiPlatform\Core\DataTransformer\DataTransformerInterface;
-use ApiPlatform\Core\Serializer\AbstractItemNormalizer;
+use ApiPlatform\DataTransformer\DataTransformerInterface;
+use ApiPlatform\Serializer\AbstractItemNormalizer;
 use App\Entity\Book;
 
 final class BookInputDataTransformer implements DataTransformerInterface
@@ -284,8 +372,8 @@ Create a class implementing the `DataTransformerInitializerInterface` instead of
 
 namespace App\DataTransformer;
 
-use ApiPlatform\Core\DataTransformer\DataTransformerInitializerInterface;
-use ApiPlatform\Core\Serializer\AbstractItemNormalizer;
+use ApiPlatform\DataTransformer\DataTransformerInitializerInterface;
+use ApiPlatform\Serializer\AbstractItemNormalizer;
 use App\Entity\Book;
 use App\Dto\BookInput;
 
@@ -454,8 +542,8 @@ and validate it.
 
 namespace App\DataTransformer;
 
-use ApiPlatform\Core\DataTransformer\DataTransformerInterface;
-use ApiPlatform\Core\Validator\ValidatorInterface;
+use ApiPlatform\DataTransformer\DataTransformerInterface;
+use ApiPlatform\Validator\ValidatorInterface;
 use App\Entity\Book;
 
 final class BookInputDataTransformer implements DataTransformerInterface

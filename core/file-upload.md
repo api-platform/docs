@@ -72,30 +72,32 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
 #[ORM\Entity]
 #[ApiResource(
     normalizationContext: ['groups' => ['media_object:read']], 
-    types: ['http://schema.org/MediaObject']
-)]
-#[Get]
-#[GetCollection]
-#[Post(
-    controller: CreateMediaObjectAction::class, 
-    deserialize: false, 
-    validationContext: ['groups' => ['Default', 'media_object_create']], 
-    openapiContext: [
-        'requestBody' => [
-            'content' => [
-                'multipart/form-data' => [
-                    'schema' => [
-                        'type' => 'object', 
-                        'properties' => [
-                            'file' => [
-                                'type' => 'string', 
-                                'format' => 'binary'
+    types: ['http://schema.org/MediaObject'],
+    operations: [
+        new Get(),
+        new GetCollection(),
+        new Post(
+            controller: CreateMediaObjectAction::class, 
+            deserialize: false, 
+            validationContext: ['groups' => ['Default', 'media_object_create']], 
+            openapiContext: [
+                'requestBody' => [
+                    'content' => [
+                        'multipart/form-data' => [
+                            'schema' => [
+                                'type' => 'object', 
+                                'properties' => [
+                                    'file' => [
+                                        'type' => 'string', 
+                                        'format' => 'binary'
+                                    ]
+                                ]
                             ]
                         ]
                     ]
                 ]
             ]
-        ]
+        )
     ]
 )]
 class MediaObject
@@ -294,7 +296,7 @@ To test your upload with `ApiTestCase`, you can write a method as below:
 
 namespace App\Tests;
 
-use ApiPlatform\Core\Bridge\Symfony\Bundle\Test\ApiTestCase;
+use ApiPlatform\Symfony\Bundle\Test\ApiTestCase;
 use App\Entity\MediaObject;
 use Hautelook\AliceBundle\PhpUnit\RefreshDatabaseTrait;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
@@ -361,10 +363,12 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
 #[ApiResource(
     normalizationContext: ['groups' => ['book:read']], 
     denormalizationContext: ['groups' => ['book:write']], 
-    types: ['http://schema.org/Book']
+    types: ['http://schema.org/Book'],
+    operations: [
+        new GetCollection(),
+        new Post(inputFormats: ['multipart' => ['multipart/form-data']])
+    ]
 )]
-#[GetCollection]
-#[Post(inputFormats: ['multipart' => ['multipart/form-data']])]
 class Book
 {
     // ...

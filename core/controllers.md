@@ -64,8 +64,8 @@ controller classes (the default when using the API Platform distribution).
 This action will be automatically registered as a service (the service name is the same as the class name:
 `App\Controller\CreateBookPublication`).
 
-API Platform automatically retrieves the appropriate PHP entity using the data provider then deserializes user data in it,
-and for `POST`, `PUT` and `PATCH` requests updates the entity with data provided by the user.
+API Platform automatically retrieves the appropriate PHP entity using the state provider then deserializes user data in it,
+and for `POST`, `PUT` and `PATCH` requests updates the entity with state provided by the user.
 
 The entity is retrieved in the `__invoke` method thanks to a dedicated argument resolver.
 
@@ -97,13 +97,14 @@ use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\Post;
 use App\Controller\CreateBookPublication;
 
-#[ApiResource]
-#[Get]
-#[Post(
-    name: 'publication', 
-    uriTemplate: '/books/{id}/publication', 
-    controller: CreateBookPublication::class
-)]
+#[ApiResource(operations: [
+    new Get(),
+    new Post(
+        name: 'publication', 
+        uriTemplate: '/books/{id}/publication', 
+        controller: CreateBookPublication::class
+    )
+])]
 class Book
 {
     // ...
@@ -163,14 +164,15 @@ use ApiPlatform\Metadata\Post;
 use App\Controller\CreateBookPublication;
 use Symfony\Component\Serializer\Annotation\Groups;
 
-#[ApiResource]
-#[Get]
-#[Post(
-    name: 'publication', 
-    uriTemplate: '/books/{id}/publication', 
-    controller: CreateBookPublication::class, 
-    normalizationContext: ['groups' => 'publication']
-)]
+#[ApiResource(operations: [
+    new Get(),
+    new Post(
+        name: 'publication', 
+        uriTemplate: '/books/{id}/publication', 
+        controller: CreateBookPublication::class, 
+        normalizationContext: ['groups' => 'publication']
+    )
+])]
 class Book
 {
     // ...
@@ -238,14 +240,15 @@ use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\Post;
 use App\Controller\CreateBookPublication;
 
-#[ApiResource]
-#[Get]
-#[Post(
-    name: 'publication', 
-    uriTemplate: '/books/{id}/publication', 
-    controller: CreateBookPublication::class, 
-    read: false
-)]
+#[ApiResource(operations: [
+    new Get(),
+    new Post(
+        name: 'publication', 
+        uriTemplate: '/books/{id}/publication', 
+        controller: CreateBookPublication::class, 
+        read: false
+    )
+])]
 class Book
 {
     // ...
@@ -313,10 +316,11 @@ use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\Post;
 
-#[ApiResource]
-#[Get]
-#[Post(name: 'publication', routeName: 'book_post_publication')]
-#[Post(name: 'book_post_discontinuation')]
+#[ApiResource(operations: [
+    new Get(),
+    new Post(name: 'publication', routeName: 'book_post_publication'),
+    new Post(name: 'book_post_discontinuation')
+])]
 class Book
 {
     // ...

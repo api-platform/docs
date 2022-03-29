@@ -588,7 +588,7 @@ To summarize, if you want to expose any entity you just have to:
 
 1. Put it under the `App\Entity\` namespace
 2. Write your data providers and persisters, or if you use Doctrine, map it with the database
-3. Mark it with the `#[ApiPlatform\Metadata\ApiResourc]` attribute
+3. Mark it with the `#[ApiPlatform\Metadata\ApiResource]` attribute
 
 Could it be any easier?!
 

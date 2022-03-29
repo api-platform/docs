@@ -2,7 +2,7 @@
 
 The API system has built-in [content negotiation](https://en.wikipedia.org/wiki/Content_negotiation) capabilities.
 
-By default, only the [JSON-LD](https://json-ld.org) and JSON formats are enabled. However API Platform Core supports many more formats and can be extended.
+By default, only the [JSON-LD](https://json-ld.org) and JSON formats are enabled. However API Platform supports many more formats and can be extended.
 
 The framework natively supports JSON-LD (and Hydra), GraphQL, JSON:API, HAL, YAML, CSV, HTML (API docs), raw JSON and raw XML.
 Using the raw JSON or raw XML formats is discouraged, prefer using JSON-LD instead, which provides more feature and is as easy to use.
@@ -11,7 +11,7 @@ API Platform also supports [JSON Merge Patch (RFC 7396)](https://tools.ietf.org/
 
 <p align="center" class="symfonycasts"><a href="https://symfonycasts.com/screencast/api-platform/formats?cid=apip"><img src="../distribution/images/symfonycasts-player.png" alt="Formats screencast"><br>Watch the Formats screencast</a></p>
 
-API Platform Core will automatically detect the best resolving format depending on:
+API Platform will automatically detect the best resolving format depending on:
 
 * enabled formats (see below)
 * the requested format, specified in either [the `Accept` HTTP header](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Accept) or as an extension appended to the URL
@@ -133,10 +133,11 @@ use ApiPlatform\Metadata\Patch;
 use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Post;
 
-#[ApiResource(formats: ['jsonld', 'csv' => ['text/csv']])]
-#[Patch(inputFormats: ['json' => ['application/merge-patch+json']])]
-#[GetCollection]
-#[Post]
+#[ApiResource(formats: ['jsonld', 'csv' => ['text/csv']], operations: [
+    new Patch(inputFormats: ['json' => ['application/merge-patch+json']]),
+    new GetCollection(),
+    new Post(),
+])]
 class Book
 {
     // ...
@@ -195,7 +196,7 @@ api_platform:
         myformat: ['application/vnd.myformat']
 ```
 
-API Platform Core will automatically call the serializer with your defined format name as `format` parameter during the deserialization process (`myformat` in the example).
+API Platform will automatically call the serializer with your defined format name as `format` parameter during the deserialization process (`myformat` in the example).
 It will then return the result to the client with the requested MIME type using its built-in responder.
 For non-standard formats, [a vendor, vanity or unregistered MIME type should be used](https://en.wikipedia.org/wiki/Media_type#Vendor_tree).
 
@@ -297,4 +298,4 @@ class CustomItemNormalizer implements NormalizerInterface, DenormalizerInterface
 ### Contributing Support for New Formats
 
 Adding support for **standard** formats upstream is welcome!
-We'll be glad to merge new encoders and normalizers in API Platform Core.
+We'll be glad to merge new encoders and normalizers in API Platform.

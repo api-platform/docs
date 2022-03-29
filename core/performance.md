@@ -40,7 +40,7 @@ api_platform:
             vary: ['Content-Type', 'Authorization', 'Origin']
 ```
 
-Support for reverse proxies other than Varnish can easily be added by implementing the `ApiPlatform\Core\HttpCache\PurgerInterface`.
+Support for reverse proxies other than Varnish can easily be added by implementing the `ApiPlatform\HttpCache\PurgerInterface`.
 
 In addition to the cache invalidation mechanism, you may want to [use HTTP/2 Server Push to pre-emptively send relations
 to the client](push-relations.md).
@@ -55,7 +55,7 @@ augmented with these resources. Here is an example of how this can be done:
 // api/src/EventSubscriber/UserResourcesSubscriber.php
 namespace App\EventSubscriber;
 
-use ApiPlatform\Core\EventListener\EventPriorities;
+use ApiPlatform\Symfony\EventListener\EventPriorities;
 use App\Entity\User;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
@@ -183,7 +183,7 @@ public $foo;
 #### Max Joins
 
 There is a default restriction with this feature. We allow up to 30 joins per query. Beyond that, an
-`ApiPlatform\Core\Exception\RuntimeException` exception will be thrown but this value can easily be increased with a
+`ApiPlatform\Exception\RuntimeException` exception will be thrown but this value can easily be increased with a
 bit of configuration:
 
 ```yaml

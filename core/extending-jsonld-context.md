@@ -4,7 +4,7 @@
 
 <p align="center" class="symfonycasts"><a href="https://symfonycasts.com/screencast/api-platform/json-ld?cid=apip"><img src="../distribution/images/symfonycasts-player.png" alt="JSON-LD screencast"><br>Watch the JSON-LD screencast</a>
 
-API Platform Core provides the possibility to extend the JSON-LD context of properties. This allows you to describe JSON-LD-typed
+API Platform provides the possibility to extend the JSON-LD context of properties. This allows you to describe JSON-LD-typed
 values, inverse properties using the `@reverse` keyword and you can even overwrite the `@id` property this way. Everything you define
 within the following annotation will be passed to the context. This provides a generic way to extend the context.
 
@@ -77,8 +77,9 @@ namespace App\Entity;
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Get;
 
-#[ApiResource]
-#[Get(hydraContext: ['foo' => 'bar'])]
+#[ApiResource(operations: [
+  new Get(hydraContext: ['foo' => 'bar'])
+])]
 class Book
 {
     //...

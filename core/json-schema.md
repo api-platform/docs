@@ -42,7 +42,7 @@ You will need to add the `json_schema_context` property in the [`ApiProperty`](o
 
 namespace App\Entity;
 
-use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Metadata\ApiResource;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity]
