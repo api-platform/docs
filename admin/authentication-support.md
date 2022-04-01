@@ -7,12 +7,15 @@ for more information.
 In short, you have to tweak the data provider and the API documentation parser like this:
 
 ```typescript
-// pwa/pages/admin/index.tsx
+// components/admin/Admin.tsx
 
 import Head from "next/head";
-import { Redirect, Route } from "react-router-dom";
+import { useState } from "react";
+import { Navigate, Route } from "react-router-dom";
+import { CustomRoutes } from "react-admin";
 import {
   fetchHydra as baseFetchHydra,
+  HydraAdmin,
   hydraDataProvider as baseHydraDataProvider,
   useIntrospection,
 } from "@api-platform/admin";
@@ -35,10 +38,12 @@ const RedirectToLogin = () => {
     introspect();
     return <></>;
   }
-  return <Redirect to="/login" />;
+  return <Navigate to="/login" />;
 };
-const apiDocumentationParser = async () => {
+const apiDocumentationParser = (setRedirectToLogin) => async () => {
   try {
+    setRedirectToLogin(false);
+
     return await parseHydraDocumentation(ENTRYPOINT, { headers: getHeaders });
   } catch (result) {
     const { api, response, status } = result;
@@ -49,40 +54,38 @@ const apiDocumentationParser = async () => {
     // Prevent infinite loop if the token is expired
     localStorage.removeItem("token");
 
+    setRedirectToLogin(true);
+
     return {
       api,
       response,
       status,
-      customRoutes: [
-        <Route key="/" path="/" component={RedirectToLogin} />
-      ],
     };
   }
 };
-const dataProvider = baseHydraDataProvider({
+const dataProvider = (setRedirectToLogin) => baseHydraDataProvider({
   entrypoint: ENTRYPOINT,
   httpClient: fetchHydra,
-  apiDocumentationParser,
+  apiDocumentationParser: apiDocumentationParser(setRedirectToLogin),
 });
 
-const AdminLoader = () => {
-  if (typeof window !== "undefined") {
-    const { HydraAdmin } = require("@api-platform/admin");
-    return <HydraAdmin dataProvider={dataProvider} authProvider={authProvider} entrypoint={window.origin} />;
-  }
+const Admin = () => {
+  const [redirectToLogin, setRedirectToLogin] = useState(false);
 
-  return <></>;
-};
+  return (
+    <>
+      <Head>
+        <title>API Platform Admin</title>
+      </Head>
 
-const Admin = () => (
-  <>
-    <Head>
-      <title>API Platform Admin</title>
-    </Head>
-
-    <AdminLoader />
-  </>
-);
+      <HydraAdmin dataProvider={dataProvider(setRedirectToLogin)} authProvider={authProvider} entrypoint={window.origin}>
+        <CustomRoutes>
+          {redirectToLogin ? <Route path="/" element={<RedirectToLogin />} /> : null}
+        </CustomRoutes>
+      </HydraAdmin>
+    </>
+  );
+}
 export default Admin;
 ```
 

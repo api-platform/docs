@@ -252,13 +252,6 @@ Analyses your resources and retrieves their types according to the [Schema.org](
 
 ## Other Components
 
-### Pagination
-
-Set by default in the [ListGuesser component](components.md#listguesser), the `Pagination` component uses React Admin [Pagination component](https://marmelab.com/react-admin/List.html#pagination).
-By default, it renders 30 items per page and displays a navigation UI.
-If you want to change the number of items per page or disable the pagination, see the [Pagination documentation](../core/pagination.md).
-It is also capable to handle partial pagination.
-
 ### FieldGuesser
 
 Renders fields according to their types, using the [schema analyzer](components.md#schemaanalyzer).

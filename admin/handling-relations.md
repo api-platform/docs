@@ -6,12 +6,14 @@ Thanks to [the Schema.org support](schema.org.md), you can easily display the na
 
 ## Embedded Relations
 
-If a relation is an array of [embeddeds or an embedded](../core/serialization.md#embedding-relations) resource,
-by default, the admin automatically replaces the embedded resources' data by their IRI.
-However, the embedded data is inserted to a local cache: it will not be necessary to make more requests if you reference some fields of the embedded resource later on.
+If a relation is an array of [embeddeds or an embedded](../core/serialization.md#embedding-relations) resource, the admin will keep them by default.
 
-If you need to edit the embedded data or if you want to display some of the nested fields by using the dot notation for complex structures,
-you can keep the embedded data by setting the `useEmbedded` parameter of the Hydra data provider to `true`.
+The embedded data will be displayed as text field and editable as text input: the admin cannot determine the fields present in it.
+To display the fields you want, see [this section](handling-relations.md#display-a-field-of-an-embedded-relation).
+
+You can also ask the admin to automatically replace the embedded resources' data by their IRI,
+by setting the `useEmbedded` parameter of the Hydra data provider to `false`.
+Embedded data is inserted to a local cache: it will not be necessary to make more requests if you reference some fields of the embedded resource later on.
 
 ```javascript
 // admin/src/App.js
@@ -26,7 +28,7 @@ const dataProvider = hydraDataProvider({
     httpClient: fetchHydra,
     apiDocumentationParser: parseHydraDocumentation,
     mercure: true,
-    useEmbedded: true,
+    useEmbedded: false,
 });
 
 export default () => (
@@ -37,16 +39,40 @@ export default () => (
 );
 ```
 
-The embedded data will be displayed as text field and editable as text input: the admin cannot determine the fields present in it.
-To display the fields you want, see [this section](handling-relations.md#display-a-field-of-an-embedded-relation).
-
-This behavior will be the default one in 3.0.
-
 ## Display a Field of an Embedded Relation
 
 If you have an [embedded relation](../core/serialization.md#embedding-relations) and need to display a nested field, the code you need to write depends of the value of `useEmbedded` of the Hydra data provider.
 
-If `false` (default behavior), make sure you write the code as if the relation needs to be fetched as a reference.
+If `true` (default behavior), you need to use the dot notation to display a field:
+
+```javascript
+import {
+  HydraAdmin,
+  FieldGuesser,
+  ListGuesser,
+  ResourceGuesser
+} from "@api-platform/admin";
+import { TextField } from "react-admin";
+
+const BooksList = (props) => (
+  <ListGuesser {...props}>
+    <FieldGuesser source="title" />
+    {/* Use react-admin components directly when you want complex fields. */}
+    <TextField label="Author first name" source="author.firstName" />
+  </ListGuesser>
+);
+
+export default () => (
+  <HydraAdmin entrypoint={process.env.REACT_APP_API_ENTRYPOINT}>
+    <ResourceGuesser
+      name="books"
+      list={BooksList}
+    />
+  </HydraAdmin>
+);
+```
+
+If `useEmbedded` is explicitly set to `false`, make sure you write the code as if the relation needs to be fetched as a reference.
 
 In this case, you *cannot* use the dot separator to do so.
 
@@ -104,35 +130,6 @@ export default () => (
       list={BooksList}
     />
     <ResourceGuesser name="authors" />
-  </HydraAdmin>
-);
-```
-
-If the `useEmbedded` parameter is set to `true` (will be the default behavior in 3.0), you need to use the dot notation to display a field:
-
-```javascript
-import {
-  HydraAdmin,
-  FieldGuesser,
-  ListGuesser,
-  ResourceGuesser
-} from "@api-platform/admin";
-import { TextField } from "react-admin";
-
-const BooksList = (props) => (
-  <ListGuesser {...props}>
-    <FieldGuesser source="title" />
-    {/* Use react-admin components directly when you want complex fields. */}
-    <TextField label="Author first name" source="author.firstName" />
-  </ListGuesser>
-);
-
-export default () => (
-  <HydraAdmin entrypoint={process.env.REACT_APP_API_ENTRYPOINT}>
-    <ResourceGuesser
-      name="books"
-      list={BooksList}
-    />
   </HydraAdmin>
 );
 ```
@@ -218,10 +215,12 @@ const ReviewsCreate = props => (
     <ReferenceInput
       source="book"
       reference="books"
-      label="Books"
-      filterToQuery={searchText => ({ title: searchText })}
     >
-      <AutocompleteInput optionText="title" />
+      <AutocompleteInput
+        filterToQuery={searchText => ({ title: searchText })}
+        optionText="title"
+        label="Books"
+      />
     </ReferenceInput>
 
     <InputGuesser source="rating" />
@@ -237,10 +236,12 @@ const ReviewsEdit = props => (
     <ReferenceInput
       source="book"
       reference="books"
-      label="Books"
-      filterToQuery={searchText => ({ title: searchText })}
     >
-      <AutocompleteInput optionText="title" />
+      <AutocompleteInput
+        filterToQuery={searchText => ({ title: searchText })}
+        optionText="title"
+        label="Books"
+      />
     </ReferenceInput>
 
     <InputGuesser source="rating" />
@@ -260,7 +261,7 @@ export default () => (
 );
 ```
 
-If the book is embedded into a review and if the `useEmbedded` parameter is set to `true` (will be the default behavior in 3.0),
+If the book is embedded into a review and if the `useEmbedded` parameter is `true` (default behavior),
 you need to change the `ReferenceInput` for the edit component:
 
 ```javascript
@@ -279,10 +280,12 @@ const ReviewsCreate = props => (
     <ReferenceInput
       source="book"
       reference="books"
-      label="Books"
-      filterToQuery={searchText => ({ title: searchText })}
     >
-      <AutocompleteInput optionText="title" />
+      <AutocompleteInput
+        filterToQuery={searchText => ({ title: searchText })}
+        optionText="title"
+        label="Books"
+      />
     </ReferenceInput>
 
     <InputGuesser source="rating" />
@@ -298,11 +301,13 @@ const ReviewsEdit = props => (
     <ReferenceInput
       source="book"
       reference="books"
-      label="Books"
-      filterToQuery={searchText => ({ title: searchText })}
-      format={v => v['@id'] || v}
     >
-      <AutocompleteInput optionText="title" />
+      <AutocompleteInput
+        filterToQuery={searchText => ({ title: searchText })}
+        format={v => v['@id'] || v}
+        optionText="title"
+        label="Books"
+      />
     </ReferenceInput>
 
     <InputGuesser source="rating" />
