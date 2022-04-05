@@ -377,6 +377,89 @@ class Greeting
 }
 ```
 
+## Validating Delete Operations
+
+By default, validation rules that are specified on the API resource are not evaluated during DELETE operations. You need to trigger the validation in your code, if needed.
+
+Assume that you have the following entity that uses a custom delete validator:
+
+```php
+<?php
+// api/src/Entity/MyEntity.php
+
+namespace App\Entity;
+
+use ApiPlatform\Core\Annotation\ApiResource;
+use App\Validator\AssertCanDelete;
+use Doctrine\ORM\Mapping as ORM;
+
+#[ORM\Entity]
+#[ApiResource(
+    itemOperations: [
+      'delete' => [
+        'validation_groups' => ['deleteValidation']
+      ]
+    ]
+)]
+#[AssertCanDelete(groups: ['deleteValidation'])]
+class MyEntity
+{
+    #[ORM\Id, ORM\Column, ORM\GeneratedValue]
+    private ?int $id = null;
+
+    #[ORM\Column]
+    public string $name = '';
+}
+```
+
+Create a data persister, which decorates the default data persister, where you will trigger the validation:
+
+```php
+<?php
+// api/src/DataPersister/MyEntityDataPersister.php
+
+namespace App\DataPersister;
+
+use ApiPlatform\Core\DataPersister\DataPersisterInterface;
+use ApiPlatform\Core\Validator\ValidatorInterface;
+use App\Entity\MyEntity;
+
+class MyEntityDataPersister implements DataPersisterInterface
+{
+    public function __construct(
+        private DataPersisterInterface $decoratedDoctrineDataPersister,
+        private ValidatorInterface $validator,
+    ) {
+    }
+
+    public function persist($data): void {
+        $this->decoratedDoctrineDataPersister->persist($data);
+    }
+
+    public function remove($data): void {
+        $this->validator->validate(
+            $data,
+            ['groups' => ['deleteValidation']]
+        );
+        $this->decoratedDoctrineDataPersister->remove($data);
+    }
+
+    public function supports($data): bool {
+        return $data instanceof MyEntity;
+    }
+}
+```
+
+Activate the service decoration in `services.yaml`:
+
+```yaml
+# api/config/services.yaml
+services:
+    _defaults:
+        bind:
+            $decoratedDoctrineDataPersister: '@api_platform.doctrine.orm.data_persister'
+```
+
 ## Error Levels and Payload Serialization
 
 As stated in the [Symfony documentation](https://symfony.com/doc/current/validation/severity.html), you can use the payload field to define error levels.
