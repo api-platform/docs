@@ -1,6 +1,29 @@
 # Upgrade Guide
 
-## What Has Changed Between 2.6 And 2.7?
+## API Platform 2.7/3.0
+
+### I want to try the new metadata system
+
+Note that if you want to use the **new metadata system**, you need to set:
+
+```yaml
+api_platform:
+    metadata_backward_compatibility_layer: false
+```
+
+This will be the default value in 3.0, in 2.7 it's left to `true` so that nothing breaks by updating.
+By doing so you won't get access to legacy services and this will probably break things on code using `api-platform/core:2.6`.
+
+### I'm migrating from 2.6 and want to prepare for 3.0
+
+1. Update the code to 2.7: `composer require api-platform/core:^2.7`
+2. Take care of the deprecations and update your code to the new interfaces, documented on this page.
+4. Use the [`api:upgrade-resource` command](#the-upgrade-command)
+3. Switch the `metadata_backward_compatibility_layer` flag to `false`
+
+## Changes
+
+### Summary of the changes between 2.6 And 2.7/3.0
 
 - New Resource metadata allowing to declare multiple Resources on a class: `ApiPlatform\Metadata\ApiResource`
 - Clarification of some properties within the ApiResource declaration
@@ -96,7 +119,7 @@ is the same as
 ])]
 ```
 
-### Detailed metadata changes
+### Metadata changes
 
 #### #[ApiResource]
 
@@ -132,7 +155,7 @@ class Book
 
 Will compute: `builtinTypes: ['string', Isbn::class]`
 
-## Versions 2.7 and 3.0
+### The `metadata_backward_compatibility_layer` flag
 
 In 2.7 the `metadata_backward_compatibility_layer` flag is set to `true`.
 This means that all the legacy services will still work just as they used
