@@ -450,7 +450,7 @@ class MyEntityDataPersister implements DataPersisterInterface
 }
 ```
 
-Activate the service decoration in `services.yaml`:
+Register the new data persister in `api/config/services.yaml`:
 
 ```yaml
 # api/config/services.yaml
