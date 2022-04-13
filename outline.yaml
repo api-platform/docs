@@ -5,6 +5,7 @@ chapters:
       - index
       - testing
       - debugging
+      - caddy
   - title: The API Component
     path: core
     items:
