@@ -396,7 +396,7 @@ Modify these files as described in these patches:
  
      /** The publication date of this book. */
 +    #[ORM\Column]
-     public ?\DateTimeInterface $publicationDate = null;
+     public ?\DateTimeImmutable $publicationDate = null;
  
      /** @var Review[] Available reviews for this book. */
 +    #[ORM\OneToMany(targetEntity: Review::class, mappedBy: 'book', cascade: ['persist', 'remove'])]
