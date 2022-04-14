@@ -14,7 +14,7 @@ By default, requests having an `Accept` request header containing the `text/html
 except for some paths known to be resources served by the API (e.g. the Swagger UI documentation, static files provided by bundles...).
 Other requests are routed to the API.
 
-Sometimes, you may want to let the API generate some HTML responses.
+Sometimes, you may want to let the PHP application generate HTML responses.
 For instance, when you create your own Symfony controllers serving HTML pages,
 or when using bundles such as EasyAdmin or SonataAdmin.
 
