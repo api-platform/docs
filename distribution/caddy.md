@@ -31,5 +31,5 @@ For instance, if you want to route all requests to a path starting with `/admin`
         {header.Accept}.matches("\\btext/html\\b")
 -        && !{path}.matches("(?i)(?:^/docs|^/graphql|^/bundles/|^/_profiler|^/_wdt|\\.(?:json|html$|csv$|ya?ml$|xml$))")
 +        && !{path}.matches("(?i)(?:^/admin|^/docs|^/graphql|^/bundles/|^/_profiler|^/_wdt|\\.(?:json|html$|csv$|ya?ml$|xml$))")
-    )
+    )`
 ```
