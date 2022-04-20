@@ -18,9 +18,10 @@ namespace App\Entity;
 
 use ApiPlatform\Metadata\ApiProperty;
 use ApiPlatform\Metadata\ApiResource;
+use App\State\PersonProvider;
 use App\Uuid;
 
-#[ApiResource]
+#[ApiResource(provider: PersonProvider::class)]
 final class Person
 {
     /**
@@ -39,12 +40,18 @@ properties:
     App\Entity\Person:
         code:
             identifier: true
+resource:
+    App\Entity\Person:
+        provider: App\State\PersonProvider
 ```
 
 ```xml
 <properties xmlns="https://api-platform.com/schema/metadata/properties">
-    <property resource="App\EntityPerson" name="code" identifier="true"/>
+    <property resource="App\Entity\Person" name="code" identifier="true"/>
 </properties>
+<resources xmlns="https://api-platform.com/schema/metadata/resources">
+    <resource class="App\Entity\Person" provider="App\State\PersonProvider" />
+</resources>
 ```
 
 [/codeSelector]
@@ -65,22 +72,14 @@ use App\Uuid;
 final class PersonProvider implements ProviderInterface
 {
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
-    public function provide(string $resourceClass, array $uriVariables = [], ?string $operationName = null, array $context = [])
+    public function provide(Operation $operation, array $uriVariables = [], array $context = [])
     {
         // Our identifier is:
         // $uriVariables['code']
         // although it's a string, it's not an instance of Uuid and we wanted to retrieve the timestamp of our time-based uuid:
         // $uriVariable['code']->getTimestamp()
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function supports(string $resourceClass, array $uriVariables = [], ?string $operationName = null, array $context = []): bool
-    {
-        return $resourceClass === Person::class;
     }
 }
 ```

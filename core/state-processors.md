@@ -13,7 +13,7 @@ However, you may want to:
 
 * store data to other persistence layers (Elasticsearch, external web services...)
 * not publicly expose the internal model mapped with the database through the API
-* use a separate model for [read operations](data-providers.md) and for updates by implementing patterns such as [CQRS](https://martinfowler.com/bliki/CQRS.html)
+* use a separate model for [read operations](state-providers.md) and for updates by implementing patterns such as [CQRS](https://martinfowler.com/bliki/CQRS.html)
 
 Custom state processors can be used to do so. A project can include as many state processors as needed. The first able to
 process the data for a given resource will be used.
@@ -27,10 +27,7 @@ bin/console make:state-processor
 ```
 
 To create a state processor, you have to implement the [`ProcessorInterface`](https://github.com/api-platform/core/blob/main/src/State/ProcessorInterface.php).
-This interface defines only two methods:
-
-* `process`: to create, delete, update, or process the given data in any ways
-* `supports`: to check whether the given data is supported by this state processor
+This interface defines a method `process`: to create, delete, update, or alter the given data in any ways.
 
 Here is an implementation example:
 
@@ -47,28 +44,32 @@ class BlogPostProcessor implements ProcessorInterface
     /**
      * {@inheritDoc}
      */
-    public function process($data, array $identifiers = [], ?string $operationName = null, array $context = [])
+    public function process($data, Operation $operation, array $uriVariables = [], array $context = [])
     {
         // call your persistence layer to save $data
         return $data;
     }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function supports($data, array $identifiers = [], ?string $operationName = null, array $context = []): bool
-    {
-        return $data instanceof BlogPost && '_api_/blog_posts_post' === $operationName;
-    }
 }
 ```
 
-You can find the operation name information either with the `debug:router` command (the route name and the operation name are
-the same), or by using the `debug:api` command.
+We then configure our operation to use this processor:
+
+```php
+<?php
+
+namespace App\Entity;
+
+use ApiPlatform\Metadata\Post;
+use App\State\BlogPostProcessor;
+
+#[Post(processor: BlogPostProcessor::class)]
+class BlogPost {}
+```
+
 If service autowiring and autoconfiguration are enabled (they are by default), you are done!
 
 Otherwise, if you use a custom dependency injection configuration, you need to register the corresponding service and add the
-`api_platform.state_processor` tag. The `priority` attribute can be used to order processors.
+`api_platform.state_processor` tag.
 
 ```yaml
 # api/config/services.yaml
@@ -76,7 +77,7 @@ services:
     # ...
     App\State\BlogPostProcessor: ~
         # Uncomment only if autoconfiguration is disabled
-        #tags: [ 'api_platform.state_processor', priority: 2 ]
+        #tags: [ 'api_platform.state_processor' ]
 ```
 
 ## Decorating the Built-In State Processors
@@ -107,20 +108,11 @@ final class UserProcessor implements ProcessorInterface
         $this->mailer = $mailer;
     }
 
-    public function process($data, array $uriVariables = [], ?string $operationName = null, array $context = [])
+    public function process($data, Operation $operation, array $uriVariables = [], array $context = [])
     {
         $result = $this->decorated->process($data, $uriVariables, $operationName, $context);
-
-        if ($data instanceof User && '_api_/blog_posts_post' === $operationName) {
-            $this->sendWelcomeEmail($data);
-        }
-
+        $this->sendWelcomeEmail($data);
         return $result;
-    }
-
-    public function supports($data, array $uriVariables = [], ?string $operationName = null, array $context = []): bool
-    {
-        return $this->decorated->supports($data, $uriVariables, $operationName, $context);
     }
 
     private function sendWelcomeEmail(User $user)
@@ -143,4 +135,18 @@ services:
         # Uncomment only if autoconfiguration is disabled
         #arguments: ['@App\State\UserProcessor.inner']
         #tags: [ 'api_platform.state_processor' ]
+```
+
+And configure that you want to use this processor on the User resource:
+
+```php
+<?php
+
+namespace App\Entity;
+
+use ApiPlatform\Metadata\ApiResource;
+use App\State\UserProcessor;
+
+#[ApiResource(processor: UserProcessor::class)]
+class User {}
 ```
