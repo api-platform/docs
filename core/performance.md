@@ -41,6 +41,27 @@ api_platform:
 ```
 
 Support for reverse proxies other than Varnish can easily be added by implementing the `ApiPlatform\HttpCache\PurgerInterface`.
+Two purgers are available, the http tags (`api_platform.http_cache.purger.varnish.ban`) or the surrogate key implementation
+(`api_platform.http_cache.purger.varnish.xkey`). You can specify the implementation using the `purger` configuration node,
+for example to use the xkey implementation:
+
+```yaml
+api_platform:
+    http_cache:
+        invalidation:
+            enabled: true
+            varnish_urls: ['%env(VARNISH_URL)%']
+            purger: 'api_platform.http_cache.purger.varnish.xkey'
+        public: true
+    defaults:
+        cache_headers:
+            max_age: 0
+            shared_max_age: 3600
+            vary: ['Content-Type', 'Authorization', 'Origin']
+            invalidation:
+                xkey:
+                    glue: ', '
+```
 
 In addition to the cache invalidation mechanism, you may want to [use HTTP/2 Server Push to pre-emptively send relations
 to the client](push-relations.md).

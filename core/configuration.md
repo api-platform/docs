@@ -253,6 +253,9 @@ api_platform:
             # To pass options to the client charged with the request.
             request_options: []
 
+            # Use another service as the purger for example "api_platform.http_cache.purger.varnish.xkey"
+            purger: 'api_platform.http_cache.purger.varnish.ban'
+
         # Automatically generate etags for API responses.
         # Deprecated since 2.6 and will be removed in 3.0, use defaults.cache_headers.etag instead.
         etag: true
@@ -371,6 +374,10 @@ api_platform:
 
             # Default values of the "Vary" HTTP header.
             vary: ['Accept']
+
+            invalidation:
+                xkey:
+                    glue: ' '
 
         normalization_context: ~
         denormalization_context: ~
