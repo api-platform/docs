@@ -26,9 +26,7 @@ you can use the following command to generate a custom state provider easily:
 bin/console make:state-provider
 ```
 
-Let's start with a State Provider for the URI: `/blog_posts/{id}`, which operation name is `_api_/blog_posts/{id}_get`.
-You can find this information either with the `debug:router` command (the route name and the operation name are the same),
-or by using the `debug:api` command.
+Let's start with a State Provider for the URI: `/blog_posts/{id}`.
 
 First, your `BlogPostProvider` has to implement the
 [`StateProviderInterface`](https://github.com/api-platform/core/blob/main/src/State/StateProviderInterface.php):
@@ -46,27 +44,45 @@ final class BlogPostProvider implements ProviderInterface
     /**
      * {@inheritDoc}
      */
-    public function provide(string $resourceClass, array $uriVariables = [], ?string $operationName = null, array $context = [])
+    public function provide(Operation $operation, array $uriVariables = [], array $context = [])
     {
         return new BlogPost($uriVariables['id']);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function supports(string $resourceClass, array $uriVariables = [], ?string $operationName = null, array $context = []): bool
-    {
-        return BlogPost::class === $resourceClass && '_api_/blog_posts/{id}_get' === $operationName;
     }
 }
 ```
 
-In the `supports` method, we declare that this State Provider only works for the given operation. As this operation expects a
-BlogPost we return an instance of the BlogPost in the `provide` method.
+As this operation expects a BlogPost we return an instance of the BlogPost in the `provide` method.
 The `uriVariables` parameter is an array with the values of the URI variables.
 
+To use this provider we need to configure the provider on the operation:
+
+```php
+<?php
+
+namespace App\Entity;
+
+use ApiPlatform\Metadata\Get;
+use App\State\BlogPostProvider;
+
+#[Get(provider: BlogPostProvider::class)]
+class BlogPost {}
+```
+
+If you use the default configuration, the corresponding service will be automatically registered thanks to
+[autowiring](https://symfony.com/doc/current/service_container/autowiring.html).
+To declare the service explicitly, you can use the following snippet:
+
+```yaml
+# api/config/services.yaml
+services:
+    # ...
+    App\State\BlogPostProvider: ~
+        # Uncomment only if autoconfiguration is disabled
+        #tags: [ 'api_platform.state_provider' ]
+```
+
 Now let's say that we also want to handle the `/blog_posts` URI which returns a collection. We can change the Provider into
-supporting a wider range of operations. Then we can provide a collection of blog posts when the operation is a `GetCollection`:
+supporting a wider range of operations. Then we can provide a collection of blog posts when the operation is a `CollectionOperationInterface`:
 
 ```php
 <?php
@@ -75,47 +91,34 @@ namespace App\State;
 
 use App\Entity\BlogPost;
 use ApiPlatform\State\ProviderInterface;
-use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\CollectionOperationInterface;
 
 final class BlogPostProvider implements ProviderInterface
 {
     /**
-     * Provides data.
-     *
-     * @return object|array|null
+     * {@inheritDoc}
      */
-    public function provide(string $resourceClass, array $uriVariables = [], ?string $operationName = null, array $context = [])
+    public function provide(Operation $operation, array $uriVariables = [], array $context = [])
     {
-        if ($context['operation'] instanceof GetCollection) {
+        if ($operation instanceof CollectionOperationInterface) {
             return [new BlogPost(), new BlogPost()];
         }
 
         return new BlogPost($uriVariables['id']);
     }
-
-    /**
-     * Whether this state provider supports the class/identifier tuple.
-     */
-    public function supports(string $resourceClass, array $uriVariables = [], ?string $operationName = null, array $context = []): bool
-    {
-        return $data instanceof BlogPost;
-    }
 }
 ```
 
-If you use the default configuration, the corresponding service will be automatically registered thanks to
-[autowiring](https://symfony.com/doc/current/service_container/autowiring.html).
-To declare the service explicitly, or to set a custom priority, you can use the following snippet:
+We then need to configure this same provider on the BlogPost `GetCollection` operation, or for every operations via the `ApiResource` attribute:
 
-```yaml
-# api/config/services.yaml
-services:
-    # ...
-    App\State\BlogPostProvider: ~
-        # Uncomment only if autoconfiguration is disabled
-        #tags: [ 'api_platform.state_provider', priority: 2 ]
+```php
+<?php
+
+namespace App\Entity;
+
+use ApiPlatform\Metadata\ApiResource;
+use App\State\BlogPostProvider;
+
+#[ApiResource(provider: BlogPostProvider::class)]
+class BlogPost {}
 ```
-
-Tagging the service with the tag `api_platform.state_provider` will enable API Platform Core to automatically
-register and use this state provider. The optional attribute `priority` allows you to define the order in which the
-data providers are called.

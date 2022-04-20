@@ -28,8 +28,9 @@ final class UserResetPasswordDto
 namespace App\Model;
 
 use App\Dto\UserResetPasswordDto;
+use App\State\UserResetPasswordProcessor;
 
-#[ApiResource(input: UserResetPasswordDto::class)]
+#[ApiResource(input: UserResetPasswordDto::class, processor: UserResetPasswordProcessor::class)]
 final class User {}
 ```
 
@@ -46,18 +47,13 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 final class UserResetPasswordProcessor implements ProcessorInterface
 {
-    public function process($data, array $identifiers = [], ?string $operationName = null, array $context = [])
+    public function process($data, Operation $operation, array $uriVariables = [], array $context = [])
     {
         if ('user@example.com' === $data->email) {
             return $data;
         }
 
         throw new NotFoundHttpException();
-    }
-
-    public function supports($data, array $identifiers = [], ?string $operationName = null, array $context = []): bool
-    {
-        return $data instanceof UserResetPasswordDto;
     }
 }
 ```
@@ -78,14 +74,12 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 final class BookRepresentationProvider implements ProviderInterface
 {
-    public function provide(string $resourceClass, array $identifiers = [], ?string $operationName = null, array $context = [])
+    /**
+     * {@inheritDoc}
+     */
+    public function provide(Operation $operation, array $uriVariables = [], array $context = [])
     {
         return new AnotherRepresentation();
-    }
-
-    public function supports(string $resourceClass, array $identifiers = [], ?string $operationName = null, array $context = []): bool
-    {
-        return Book::class === $resourceClass;
     }
 }
 ```
