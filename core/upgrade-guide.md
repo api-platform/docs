@@ -34,6 +34,7 @@ interface `ApiPlatform\State\ProviderInterface`
 interface `ApiPlatform\State\ProcessorInterface`
 - New ApiProperty metadata `ApiPlatform\Metadata\ApiProperty`
 - Configuration flag `metadata_backward_compatibility_layer` that allows
+- `ApiPlatform\Core\DataTransformer\DataTransformerInterface` is deprecated and will be removed in 3.0.
 the use of legacy metadata layers
 - Subresources are now additional resources marked with an `#[ApiResource]` attribute (see [the new subresource documentation](./subresources.md))
 
@@ -188,3 +189,35 @@ To write in-place use the `force` option:
 ```bash
 php bin/console api:upgrade-resource -f
 ```
+
+## Providers/Processors
+
+Providers and Processors are replacing DataProviders and DataPersisters. We reduced their interface to only one method and the class used by your operation can be specified directly within the metadata. Using doctrine, a default resource would use these:
+
+```php
+
+<?php
+
+use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\Delete;
+use ApiPlatform\Metadata\Post;
+use ApiPlatform\Metadata\Put;
+
+#[Put(processor: ApiPlatform\Doctrine\Common\State\PersistProcessor::class, provider: ApiPlatform\Doctrine\Orm\State\ItemProvider::class)]
+#[Post(processor: ApiPlatform\Doctrine\Common\State\PersistProcessor::class)]
+#[Delete(processor: ApiPlatform\Doctrine\Common\State\RemoveProcessor::class)]
+#[Get(provider: ApiPlatform\Doctrine\Orm\State\ItemProvider::class)]
+#[GetCollection(provider: ApiPlatform\Doctrine\Orm\State\CollectionProvider::class)]
+class Book {}
+```
+
+See also the respective documentation:
+    - [State Processor](./state-processors.md)
+    - [State Provider](./state-providers.md)
+
+## DataTransformers and DTO support
+
+Data transformers have been deprecated, instead you can still document the `output` or the `input` DTO. Then, just handle the `input` in a custom [State Processor](./state-processors.md) or return another `output` in a custom [State Provider](./state-providers.md).
+
+The [dto documentation](./dto.md) has been adapted accordingly.
