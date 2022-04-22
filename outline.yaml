@@ -25,6 +25,7 @@ chapters:
       - security
       - content-negotiation
       - pagination
+      - static-code-tables
       - deprecations
       - default-order
       - performance
