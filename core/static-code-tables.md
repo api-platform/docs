@@ -10,6 +10,8 @@ code database tables.
 There is an elegant way to expose codes, in three easy steps, as if they were stored in the database, and as if there were
 database relations between the data tables and the virtual "code tables".
 
+## Using Static Arrays
+
 Step 1 is to create an API resource for the virtual "code table":
 
 ```php
@@ -188,3 +190,99 @@ Voila! It will now appear as if the codes are stored in standard database tables
 
 This solution is optimal for codes that rarely or never change. Code sets that are frequently modified are better served using
 standard database tables and maintenance functions in the application codebase.
+
+## Using PHP Enumerations
+
+If you want to use the PHP `enum` type, do the following:
+
+Replace the `ItemType` class from above with a new backed `enum` class:
+
+```php
+<?php
+// api/src/Entity/ItemType.php
+
+namespace App\Entity;
+
+use ApiPlatform\Core\Annotation\ApiProperty;
+use ApiPlatform\Core\Annotation\ApiResource;
+use Symfony\Component\Serializer\Annotation\Groups;
+
+#[ApiResource(
+    collectionOperations: ['get'],
+    itemOperations      : ['get'],
+    normalizationContext: [
+        'groups' => [self::ITEM_TYPE_READ]
+    ],
+)]
+enum ItemType:string
+{
+    case Foo = 'foo';
+    case Bar = 'bar';
+
+    public const ITEM_TYPE_READ = 'item_type:read';
+
+    public static function createInstance(string $id): ?self
+    {
+        $id = self::extractIdFromIri($id);
+        try {
+            return self::from($id);
+        } catch (\ValueError) {
+            return null;
+        }
+    }
+
+    /**
+     * @return ItemType[]
+     */
+    public static function getCollection(): array
+    {
+        $collection = [];
+        foreach (self::cases() as $case) {
+            $collection[] = self::createInstance(
+                $case->value,
+            );
+        }
+
+        return $collection;
+    }
+
+    public static function getItem(string $id): ?self
+    {
+        return self::createInstance($id);
+    }
+
+    #[Groups([self::ITEM_TYPE_READ])]
+    public function getDescription(): string
+    {
+        return $this->label();
+    }
+
+    #[Groups([self::ITEM_TYPE_READ])]
+    #[ApiProperty(identifier: true)]
+    public function getId(): string
+    {
+        return $this->value;
+    }
+
+    public function label(): string
+    {
+        return match ($this) {
+            self::Foo => 'A foo type of item',
+            self::Bar => 'A bar type of item',
+        };
+    }
+
+    private static function extractIdFromIri(string $iri): ?string
+    {
+        if (str_ends_with($iri, '/')) {
+            $iri = substr($iri, 0, -1);
+        }
+        $iriParts = explode('/', $iri);
+
+        return array_pop($iriParts);
+    }
+
+}
+```
+
+The `Item` and `ItemTypeDataProvider` classes remain exactly the same as above.
