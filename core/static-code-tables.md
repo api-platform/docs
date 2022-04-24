@@ -53,7 +53,7 @@ class ItemType
         $this->description = $description;
     }
 
-    public static function createInstance(string $id): ?self
+    public static function createInstance(?string $id): ?self
     {
         $id = self::extractIdFromIri($id);
         if (!isset(self::$data[$id])) {
@@ -76,13 +76,14 @@ class ItemType
         return $collection;
     }
 
-    public static function getItem(string $id): ?self
+    public static function getItem(?string $id): ?self
     {
         return self::createInstance($id);
     }
 
     private static function extractIdFromIri(string $iri): ?string
     {
+        $iri = (string) $iri; 
         if (str_ends_with($iri, '/')) {
             $iri = substr($iri, 0, -1);
         }
@@ -147,6 +148,7 @@ namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity]
 #[ApiResource(
@@ -170,7 +172,8 @@ class Item
     // All the methods of the entity
 
     #[Groups([self::ITEM_READ])]
-    public function getItemType(): ItemType
+    #[Assert\NotBlank]
+    public function getItemType(): ?ItemType
     {
         return ItemType::getItem($this->itemTypeId);
     }
@@ -221,7 +224,7 @@ enum ItemType:string
 
     public const ITEM_TYPE_READ = 'item_type:read';
 
-    public static function createInstance(string $id): ?self
+    public static function createInstance(?string $id): ?self
     {
         $id = self::extractIdFromIri($id);
         try {
@@ -246,7 +249,7 @@ enum ItemType:string
         return $collection;
     }
 
-    public static function getItem(string $id): ?self
+    public static function getItem(?string $id): ?self
     {
         return self::createInstance($id);
     }
@@ -272,8 +275,9 @@ enum ItemType:string
         };
     }
 
-    private static function extractIdFromIri(string $iri): ?string
+    private static function extractIdFromIri(?string $iri): ?string
     {
+        $iri = (string) $iri;
         if (str_ends_with($iri, '/')) {
             $iri = substr($iri, 0, -1);
         }
