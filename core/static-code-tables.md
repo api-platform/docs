@@ -227,11 +227,7 @@ enum ItemType:string
     public static function createInstance(?string $id): ?self
     {
         $id = self::extractIdFromIri($id);
-        try {
-            return self::from($id);
-        } catch (\ValueError) {
-            return null;
-        }
+        return self::tryFrom($id);
     }
 
     /**
