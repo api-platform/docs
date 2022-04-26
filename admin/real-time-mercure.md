@@ -6,18 +6,19 @@ Updates are received by using the `useMercureSubscription` hook in the `ListGues
 
 To enable Mercure server-side, see the [related documentation](../core/mercure.md).
 
-Once enabled, API Platform Admin will automatically detect that Mercure is enabled and will discover the Mercure hub URL by itself.
+Once enabled, API Platform Admin for Hydra will automatically detect that Mercure is enabled and will discover the Mercure hub URL by itself.
 
 ## Advanced Configuration
 
-If you want to customize the default Mercure configuration, you can either do it with a prop in the `<HydraAdmin>` component:
+If you want to customize the default Mercure configuration, you can either do it with a prop in the `<HydraAdmin>` or `<OpenApiAdmin>` component:
 
 ```javascript
-import { HydraAdmin } from "@api-platform/admin";
+import { OpenApiAdmin } from "@api-platform/admin";
 
 export default () => (
-  <HydraAdmin
+  <OpenApiAdmin
     entrypoint="https://demo.api-platform.com"
+    docEntrypoint="https://demo.api-platform.com/docs.json"
     mercure={{ hub: "https://mercure.rocks/hub" }}
   />
 );

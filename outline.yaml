@@ -66,6 +66,7 @@ chapters:
       - index
       - getting-started
       - handling-relations
+      - openapi
       - schema.org
       - validation
       - real-time-mercure
