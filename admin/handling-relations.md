@@ -32,10 +32,10 @@ const dataProvider = hydraDataProvider({
 });
 
 export default () => (
-    <HydraAdmin
-        dataProvider={dataProvider}
-        entrypoint={entrypoint}
-    />
+  <HydraAdmin
+      dataProvider={dataProvider}
+      entrypoint={entrypoint}
+  />
 );
 ```
 
