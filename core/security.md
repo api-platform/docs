@@ -158,6 +158,50 @@ The value in the `previous_object` variable is cloned from the original object.
 Note that, by default, this clone is not a deep one (it doesn't clone relationships, relationships are references).
 To make a deep clone, [implement `__clone` method](https://www.php.net/manual/en/language.oop5.cloning.php) in the concerned resource class.
 
+
+## Executing Access Control Rules Before Deserialization
+
+In some cases, it might be useful to execute a security before the deserialization step.
+
+To do so, use the `security_pre_read` attribute:
+
+[codeSelector]
+
+```php
+<?php
+// src/Entity/Book.php
+
+namespace App\Entity;
+
+use ApiPlatform\Core\Annotation\ApiResource;
+
+#[ApiResource(
+    collectionOperations: [
+        "get" => ["security_pre_read" => "is_granted('ROLE_READER')"],
+    ],
+)]
+class Book
+{
+    // ...
+}
+```
+
+```yaml
+# api/config/api_platform/resources.yaml
+App\Entity\Book:
+    collectionOperations:
+        get:        
+            security_pre_read: "is_granted('ROLE_READER')"
+    # ...
+```
+
+[/codeSelector]
+
+This time, the `subject` variable of the voter is null.
+
+The voter is called before the request is read and processed.
+
+
 ## Hooking Custom Permission Checks Using Voters
 
 The easiest and recommended way to hook custom access control logic is [to write Symfony Voter classes](https://symfony.com/doc/current/security/voters.html). Your custom voters will automatically be used in security expressions through the `is_granted()` function.
