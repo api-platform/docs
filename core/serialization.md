@@ -500,7 +500,7 @@ class PlainIdentifierDenormalizer implements ContextAwareDenormalizerInterface, 
      */
     public function denormalize($data, $class, $format = null, array $context = [])
     {
-        $data['relatedDummy'] = $this->iriConverter->getItemIriFromResourceClass(RelatedDummy::class, ['id' => $data['relatedDummy']]);
+        $data['relatedDummy'] = $this->iriConverter->getIriFromResource(resource: RelatedDummy::class, context: ['uri_variables' => ['id' => $data['relatedDummy']]]);
 
         return $this->denormalizer->denormalize($data, $class, $format, $context + [__CLASS__ => true]);
     }

@@ -167,7 +167,7 @@ to work in 2.6 (for example `PropertyMetadataFactoryInterface` or
 resolve the deprecations then to set this flag to `false` to use the new metadata system.
 
 When `metadata_backward_compatibility_layer` is set to `false`:
-- there's still a bridge with the legacy `ApiPlatform\Core\Annotation\ApiResource` and old metadata will still work 
+- there's still a bridge with the legacy `ApiPlatform\Core\Annotation\ApiResource` and old metadata will still work
 - the deprecated symfony services will have their interface changed (for example `ApiPlatform\Core\Api\IriConverterInterface` will be `ApiPlatform\Api\IriConverterInterface`) and it may break your dependency injection.
 - the new metadata system is available `ApiPlatform\Metadata\ApiResource`
 
