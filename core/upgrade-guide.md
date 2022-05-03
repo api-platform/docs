@@ -18,8 +18,10 @@ By doing so you won't get access to legacy services and this will probably break
 
 1. Update the code to 2.7: `composer require api-platform/core:^2.7`
 2. Take care of the deprecations and update your code to the new interfaces, documented on this page.
-4. Use the [`api:upgrade-resource` command](#the-upgrade-command)
 3. Switch the `metadata_backward_compatibility_layer` flag to `false`
+4. Use the [`api:upgrade-resource` command](#the-upgrade-command)
+
+Read more about the `metadata_backward_compatibility_layer` flag [here](#the-metadata_backward_compatibility_layer-flag).
 
 ## Changes
 
@@ -162,8 +164,13 @@ In 2.7 the `metadata_backward_compatibility_layer` flag is set to `true`.
 This means that all the legacy services will still work just as they used
 to work in 2.6 (for example `PropertyMetadataFactoryInterface` or
 `ResourceMetadataFactoryInterface`). When updating we advise to first
-resolve the deprecations then to set this flag to `false` to use the
-new metadata system.
+resolve the deprecations then to set this flag to `false` to use the new metadata system.
+
+When `metadata_backward_compatibility_layer` is set to `false`:
+- there's still a bridge with the legacy `ApiPlatform\Core\Annotation\ApiResource` and old metadata will still work 
+- the deprecated symfony services will have their interface changed (for example `ApiPlatform\Core\Api\IriConverterInterface` will be `ApiPlatform\Api\IriConverterInterface`) and it may break your dependency injection.
+- the new metadata system is available `ApiPlatform\Metadata\ApiResource`
+
 
 ### SearchFilter
 
@@ -213,8 +220,9 @@ class Book {}
 ```
 
 See also the respective documentation:
-    - [State Processor](./state-processors.md)
-    - [State Provider](./state-providers.md)
+
+- [State Processor](./state-processors.md)
+- [State Provider](./state-providers.md)
 
 ## DataTransformers and DTO support
 
