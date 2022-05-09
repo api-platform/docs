@@ -1496,7 +1496,51 @@ final class UserFilter extends SQLFilter
 }
 ```
 
-Now, we must configure the Doctrine filter.
+Create a service to pass the User id to the UserFilter.
+
+```php
+<?php
+// api/src/Filter/Configurator.php
+
+namespace App\Filter;
+
+use App\Entity\User;
+use Doctrine\ORM\EntityManager;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+
+class Configurator {
+    protected $em;
+    protected $tokenStorage;
+
+    public function __construct(EntityManager $em, TokenStorageInterface $tokenStorage) {
+        $this->em = $em;
+        $this->tokenStorage = $tokenStorage;
+    }
+
+    public function onKernelRequest() {
+        if ($user = $this->getUser()) {
+            $filter = $this->em->getFilters()->enable("user_filter");
+            $filter->setParameter('id', $user->getId());
+        }
+    }
+
+    private function getUser() {
+        $token = $this->tokenStorage->getToken();
+
+        if (!$token) {
+            return null;
+        }
+
+        $user = $token->getUser();
+
+        if (!($user instanceof UserInterface)) {
+            return null;
+        }
+        return $user;
+    }
+}
+```
+Now, we have to configure the Doctrine filter and service.
 
 ```yaml
 # api/config/packages/api_platform.yaml
@@ -1506,6 +1550,18 @@ doctrine:
             user_filter:
                 class: App\Filter\UserFilter
                 enabled: true
+```
+
+```yaml
+# api/config/services.yaml
+services:
+    acme_api.doctrine.filter.configurator:
+        class: App\Filter\Configurator
+        arguments:
+            - "@doctrine.orm.entity_manager"
+            - "@security.token_storage"
+        tags:
+            - { name: kernel.event_listener, event: kernel.request }
 ```
 
 Done: Doctrine will automatically filter all `UserAware`entities!
