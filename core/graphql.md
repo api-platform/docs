@@ -1652,7 +1652,7 @@ final class TypeConverter implements TypeConverterInterface
             return 'DateTime';
         }
 
-        return $this->defaultTypeConverter->convertType($type, $input, $queryName, $mutationName, $resourceClass, $rootResource, $property, $depth);
+        return $this->defaultTypeConverter->convertType($type, $input, $queryName, $mutationName, $subscriptionName, $resourceClass, $rootResource, $property, $depth);
     }
 
     /**
