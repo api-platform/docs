@@ -188,36 +188,37 @@ final class BlogPostDataPersister implements ContextAwareDataPersisterInterface,
 This is useful when using [`Messenger` with API Platform](messenger.md) as you may want to do something asynchronously with the data but still call the default Doctrine data persister, for example:
 
 ```php
+
+declare(strict_types=1);
+
 namespace App\DataPersister;
 
 use ApiPlatform\Core\DataPersister\ContextAwareDataPersisterInterface;
-use Doctrine\ORM\EntityManagerInterface;
-use App\Entity\BlogPost;
+use ApiPlatform\Core\DataPersister\DataPersisterInterface;
+use ApiPlatform\Core\DataPersister\ResumableDataPersisterInterface;
 
-final class BlogPostDataPersister implements ContextAwareDataPersisterInterface, ResumableDataPersisterInterface 
+final class ResumeableDataPersister implements ContextAwareDataPersisterInterface, ResumableDataPersisterInterface
 {
-    private $entityManager;
-    
-    public function __construct(EntityManagerInterface $entityManager)
+    private DataPersisterInterface $decoaratedDataPersister;
+
+    public function __construct(DataPersisterInterface $decoratedDataPersister)
     {
-        $this->entityManager = $entityManager;
+        $this->decoaratedDataPersister = $decoratedDataPersister;
     }
-    
+
     public function supports($data, array $context = []): bool
     {
-        return $data instanceof BlogPost;
+        return $this->decoaratedDataPersister->supports($data, $context);
     }
 
     public function persist($data, array $context = [])
     {
-        $this->entityManager->persist($data);
-        $this->entityManager->flush();
+        return $this->decoaratedDataPersister->persist($data, $context);
     }
 
     public function remove($data, array $context = [])
     {
-        $this->entityManager->remove($data);
-        $this->entityManager->flush();
+        return $this->decoaratedDataPersister->persist($data, $context);
     }
 
     // Once called this data persister will resume to the next one
