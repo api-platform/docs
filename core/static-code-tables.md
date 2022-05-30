@@ -285,7 +285,57 @@ enum ItemType:string
 }
 ```
 
-The `Item` and `ItemTypeDataProvider` classes remain exactly the same as above.
+Create the `Item` class:
+
+```php
+<?php
+// api/src/Entity/Item.php
+
+namespace App\Entity;
+
+use ApiPlatform\Core\Annotation\ApiResource;
+use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
+
+#[ORM\Entity]
+#[ApiResource(
+    denormalizationContext: [
+        'groups' => [self::ITEM_WRITE]
+    ],
+     normalizationContext  : [
+        'groups' => [self::ITEM_READ]
+    ]
+)]
+class Item
+{
+    public const ITEM_READ = 'item:read';
+    public const ITEM_WRITE = 'item:write';
+
+    // All the properties of the entity
+
+    #[Groups([self::ITEM_READ, self::ITEM_WRITE])]
+    #[Assert\NotBlank]
+    #[ORM\Column(type: 'string', enumType: ItemType::class)]
+    private ?ItemType $itemType = null;
+
+    // All the methods of the entity
+
+    public function getItemType(): ?ItemType
+    {
+        return $this->itemType;
+    }
+
+    public function setItemType(ItemType $itemType): self
+    {
+        $this->itemType = $itemType;
+
+        return $this;
+    }
+
+}
+```
+
+The `ItemTypeDataProvider` class remains exactly the same as above.
 
 ## Simulating a Many-To-Many Code Data Relationship
 
