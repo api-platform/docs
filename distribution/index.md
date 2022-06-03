@@ -311,7 +311,7 @@ class Review
     public string $author = '';
 
     /** The date of publication of this review.*/
-    public ?\DateTimeImmutable $publicationDate = null;
+    public ?\DateTime $publicationDate = null;
 
     /** The book this review is about. */
     public ?Book $book = null;
@@ -396,7 +396,7 @@ Modify these files as described in these patches:
  
      /** The publication date of this book. */
 +    #[ORM\Column]
-     public ?\DateTimeImmutable $publicationDate = null;
+     public ?\DateTime $publicationDate = null;
  
      /** @var Review[] Available reviews for this book. */
 +    #[ORM\OneToMany(targetEntity: Review::class, mappedBy: 'book', cascade: ['persist', 'remove'])]
@@ -436,13 +436,16 @@ Modify these files as described in these patches:
  
      /** The date of publication of this review.*/
 +    #[ORM\Column]
-     public ?\DateTimeImmutable $publicationDate = null;
+     public ?\DateTime $publicationDate = null;
  
      /** The book this review is about. */
 +    #[ORM\ManyToOne(inversedBy: 'reviews')]
      public ?Book $book = null;
  
-     public function getId(): ?int
+    public function getId(): ?int
+    {
+        return $this->id;
+    }
 ```
 
 **Tip**: you can also use Symfony [MakerBundle](https://symfonycasts.com/screencast/symfony-fundamentals/maker-command?cid=apip) thanks to the `--api-resource` option:
@@ -595,7 +598,7 @@ Modify the following files as described in these patches:
  
      #[ORM\Column]
 +    #[Assert\NotNull]
-     public ?\DateTimeImmutable $publicationDate = null;
+     public ?\DateTime $publicationDate = null;
 ```
 
 `api/src/Entity/Review.php`
@@ -619,13 +622,13 @@ Modify the following files as described in these patches:
  
      #[ORM\Column] 
 +    #[Assert\NotNull]
-     public ?\DateTimeImmutable $publicationDate = null;
+     public ?\DateTime $publicationDate = null;
  
      #[ORM\ManyToOne(inversedBy: 'reviews')] 
 +    #[Assert\NotNull]
      public ?Book $book = null;
  
-     public function getId(): ?int
+    public function getId(): ?int
 ```
 
 After updating the entities by adding those `#[Assert\*]` attributes (as with Doctrine, you can also use XML or YAML), try
