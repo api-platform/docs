@@ -628,7 +628,7 @@ Modify the following files as described in these patches:
 +    #[Assert\NotNull]
      public ?Book $book = null;
  
-    public function getId(): ?int
+     public function getId(): ?int
 ```
 
 After updating the entities by adding those `#[Assert\*]` attributes (as with Doctrine, you can also use XML or YAML), try
