@@ -76,7 +76,7 @@ services using [Docker Compose](https://docs.docker.com/compose/):
 Download and build the latest versions of the images:
 
 ```console
-docker-compose build --pull --no-cache
+docker-compose build --pull
 ```
 
 Start Docker Compose in detached mode:
