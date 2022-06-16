@@ -103,7 +103,7 @@ to a Resource in two ways:
 
     use ApiPlatform\Core\Annotation\ApiFilter;
     use ApiPlatform\Core\Annotation\ApiResource;
-    use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\DateFilter;
+    use ApiPlatform\Core\Doctrine\Orm\Filter\DateFilter;
 
     #[ApiResource]
     #[ApiFilter(DateFilter::class, properties: ['dateProperty'])]
@@ -117,7 +117,7 @@ to a Resource in two ways:
 
    For the sake of consistency, we're using the attribute in the below documentation.
 
-   For MongoDB ODM, all the filters are in the namespace `ApiPlatform\Core\Bridge\Doctrine\MongoDbOdm\Filter`. The filter
+   For MongoDB ODM, all the filters are in the namespace `ApiPlatform\Core\Doctrine\MongoDbOdm\Filter`. The filter
    services all begin with `api_platform.doctrine_mongodb.odm`.
 
 ### Search Filter
@@ -155,7 +155,7 @@ namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
 use ApiPlatform\Core\Annotation\ApiFilter;
-use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
+use ApiPlatform\Core\Doctrine\Orm\Filter\SearchFilter;
 
 #[ApiResource]
 #[ApiFilter(SearchFilter::class, properties: ['id' => 'exact', 'price' => 'exact', 'description' => 'partial'])]
@@ -205,7 +205,7 @@ namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
 use ApiPlatform\Core\Annotation\ApiFilter;
-use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
+use ApiPlatform\Core\Doctrine\Orm\Filter\SearchFilter;
 
 #[ApiResource]
 #[ApiFilter(SearchFilter::class, properties: ['product' => 'exact'])]
@@ -265,7 +265,7 @@ namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiFilter;
 use ApiPlatform\Core\Annotation\ApiResource;
-use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\DateFilter;
+use ApiPlatform\Core\Doctrine\Orm\Filter\DateFilter;
 
 #[ApiResource]
 #[ApiFilter(DateFilter::class, properties: ['createdAt'])]
@@ -310,10 +310,10 @@ Four behaviors are available at the property level of the filter:
 Description                          | Strategy to set
 -------------------------------------|------------------------------------------------------------------------------------
 Use the default behavior of the DBMS | `null`
-Exclude items                        | `ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\DateFilter::EXCLUDE_NULL` (`exclude_null`)
-Consider items as oldest             | `ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\DateFilter::INCLUDE_NULL_BEFORE` (`include_null_before`)
-Consider items as youngest           | `ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\DateFilter::INCLUDE_NULL_AFTER` (`include_null_after`)
-Always include items                 | `ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\DateFilter::INCLUDE_NULL_BEFORE_AND_AFTER` (`include_null_before_and_after`)
+Exclude items                        | `ApiPlatform\Core\Doctrine\Orm\Filter\DateFilter::EXCLUDE_NULL` (`exclude_null`)
+Consider items as oldest             | `ApiPlatform\Core\Doctrine\Orm\Filter\DateFilter::INCLUDE_NULL_BEFORE` (`include_null_before`)
+Consider items as youngest           | `ApiPlatform\Core\Doctrine\Orm\Filter\DateFilter::INCLUDE_NULL_AFTER` (`include_null_after`)
+Always include items                 | `ApiPlatform\Core\Doctrine\Orm\Filter\DateFilter::INCLUDE_NULL_BEFORE_AND_AFTER` (`include_null_before_and_after`)
 
 For instance, exclude entries with a property value of `null` with the following service definition:
 
@@ -327,7 +327,7 @@ namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiFilter;
 use ApiPlatform\Core\Annotation\ApiResource;
-use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\DateFilter;
+use ApiPlatform\Core\Doctrine\Orm\Filter\DateFilter;
 
 #[ApiResource]
 #[ApiFilter(DateFilter::class, properties: ['dateProperty' => DateFilter::EXCLUDE_NULL])]
@@ -378,7 +378,7 @@ namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiFilter;
 use ApiPlatform\Core\Annotation\ApiResource;
-use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\BooleanFilter;
+use ApiPlatform\Core\Doctrine\Orm\Filter\BooleanFilter;
 
 #[ApiResource]
 #[ApiFilter(BooleanFilter::class, properties: ['isAvailableGenericallyInMyCountry'])]
@@ -433,7 +433,7 @@ namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiFilter;
 use ApiPlatform\Core\Annotation\ApiResource;
-use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\NumericFilter;
+use ApiPlatform\Core\Doctrine\Orm\Filter\NumericFilter;
 
 #[ApiResource]
 #[ApiFilter(NumericFilter::class, properties: ['sold'])]
@@ -488,7 +488,7 @@ namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiFilter;
 use ApiPlatform\Core\Annotation\ApiResource;
-use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\RangeFilter;
+use ApiPlatform\Core\Doctrine\Orm\Filter\RangeFilter;
 
 #[ApiResource]
 #[ApiFilter(RangeFilter::class, properties: ['price'])]
@@ -548,7 +548,7 @@ namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiFilter;
 use ApiPlatform\Core\Annotation\ApiResource;
-use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\ExistsFilter;
+use ApiPlatform\Core\Doctrine\Orm\Filter\ExistsFilter;
 
 #[ApiResource]
 #[ApiFilter(ExistsFilter::class, properties: ['transportFees'])]
@@ -615,7 +615,7 @@ namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiFilter;
 use ApiPlatform\Core\Annotation\ApiResource;
-use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\OrderFilter;
+use ApiPlatform\Core\Doctrine\Orm\Filter\OrderFilter;
 
 #[ApiResource]
 #[ApiFilter(OrderFilter::class, properties: ['id', 'name'], arguments: ['orderParameterName' => 'order'])]
@@ -666,7 +666,7 @@ namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiFilter;
 use ApiPlatform\Core\Annotation\ApiResource;
-use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\OrderFilter;
+use ApiPlatform\Core\Doctrine\Orm\Filter\OrderFilter;
 
 #[ApiResource]
 #[ApiFilter(OrderFilter::class, properties: ['id' => 'ASC', 'name' => 'DESC'])]
@@ -707,8 +707,8 @@ the comparison:
 Description                          | Strategy to set
 -------------------------------------|---------------------------------------------------------------------------------------------
 Use the default behavior of the DBMS | `null`
-Consider items as smallest           | `ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\OrderFilter::NULLS_SMALLEST` (`nulls_smallest`)
-Consider items as largest            | `ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\OrderFilter::NULLS_LARGEST` (`nulls_largest`)
+Consider items as smallest           | `ApiPlatform\Core\Doctrine\Orm\Filter\OrderFilter::NULLS_SMALLEST` (`nulls_smallest`)
+Consider items as largest            | `ApiPlatform\Core\Doctrine\Orm\Filter\OrderFilter::NULLS_LARGEST` (`nulls_largest`)
 
 For instance, treat entries with a property value of `null` as the smallest, with the following service definition:
 
@@ -722,7 +722,7 @@ namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiFilter;
 use ApiPlatform\Core\Annotation\ApiResource;
-use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\OrderFilter;
+use ApiPlatform\Core\Doctrine\Orm\Filter\OrderFilter;
 
 #[ApiResource]
 #[ApiFilter(OrderFilter::class, properties: ['validFrom' => ['nulls_comparison' => OrderFilter::NULLS_SMALLEST, 'default_direction' => 'DESC']])]
@@ -782,8 +782,8 @@ namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiFilter;
 use ApiPlatform\Core\Annotation\ApiResource;
-use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\OrderFilter;
-use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
+use ApiPlatform\Core\Doctrine\Orm\Filter\OrderFilter;
+use ApiPlatform\Core\Doctrine\Orm\Filter\SearchFilter;
 
 #[ApiResource]
 #[ApiFilter(OrderFilter::class, properties: ['product.releaseDate'])]
@@ -845,7 +845,7 @@ namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiFilter;
 use ApiPlatform\Core\Annotation\ApiResource;
-use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\OrderFilter;
+use ApiPlatform\Core\Doctrine\Orm\Filter\OrderFilter;
 
 #[ApiResource]
 #[ApiFilter(OrderFilter::class)]
@@ -1166,8 +1166,8 @@ Doctrine ORM filters have access to the context created from the HTTP request an
 retrieve data from the database. They are only applied to collections. If you want to deal with the DQL query generated
 to retrieve items, [extensions](extensions.md) are the way to go.
 
-A Doctrine ORM filter is basically a class implementing the `ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\FilterInterface`.
-API Platform includes a convenient abstract class implementing this interface and providing utility methods: `ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\AbstractFilter`.
+A Doctrine ORM filter is basically a class implementing the `ApiPlatform\Core\Doctrine\Orm\Filter\FilterInterface`.
+API Platform includes a convenient abstract class implementing this interface and providing utility methods: `ApiPlatform\Core\Doctrine\Orm\Filter\AbstractFilter`.
 
 In the following example, we create a class to filter a collection by applying a regexp to a property. The `REGEXP` DQL
 function used in this example can be found in the [`DoctrineExtensions`](https://github.com/beberlei/DoctrineExtensions)
@@ -1179,8 +1179,8 @@ library. This library must be properly installed and registered to use this exam
 
 namespace App\Filter;
 
-use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\AbstractContextAwareFilter;
-use ApiPlatform\Core\Bridge\Doctrine\Orm\Util\QueryNameGeneratorInterface;
+use ApiPlatform\Core\Doctrine\Orm\Filter\AbstractContextAwareFilter;
+use ApiPlatform\Core\Doctrine\Orm\Util\QueryNameGeneratorInterface;
 use Doctrine\ORM\QueryBuilder;
 use Symfony\Component\PropertyInfo\Type;
 
@@ -1279,7 +1279,6 @@ class Offer
     public string $name;
 }
 ```
-
 #### Manual Service and Attribute Registration
 
 If you don't use Symfony's automatic service loading, you have to register the filter as a service by yourself.
@@ -1336,8 +1335,8 @@ Doctrine MongoDB ODM filters have access to the context created from the HTTP re
 instance used to retrieve data from the database and to execute [complex operations on data](https://docs.mongodb.com/manual/aggregation/).
 They are only applied to collections. If you want to deal with the aggregation pipeline generated to retrieve items, [extensions](extensions.md) are the way to go.
 
-A Doctrine MongoDB ODM filter is basically a class implementing the `ApiPlatform\Core\Bridge\Doctrine\MongoDbOdm\Filter\FilterInterface`.
-API Platform includes a convenient abstract class implementing this interface and providing utility methods: `ApiPlatform\Core\Bridge\Doctrine\MongoDbOdm\Filter\AbstractFilter`.
+A Doctrine MongoDB ODM filter is basically a class implementing the `ApiPlatform\Core\Doctrine\MongoDbOdm\Filter\FilterInterface`.
+API Platform includes a convenient abstract class implementing this interface and providing utility methods: `ApiPlatform\Core\Doctrine\MongoDbOdm\Filter\AbstractFilter`.
 
 ### Creating Custom Elasticsearch Filters
 
@@ -1526,7 +1525,7 @@ If the attribute is given over a property, the filter will be configured on the 
 
 use ApiPlatform\Core\Annotation\ApiFilter;
 use ApiPlatform\Core\Annotation\ApiResource;
-use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
+use ApiPlatform\Core\Doctrine\Orm\Filter\SearchFilter;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -1580,9 +1579,9 @@ namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiFilter;
 use ApiPlatform\Core\Annotation\ApiResource;
-use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\BooleanFilter;
-use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\DateFilter;
-use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
+use ApiPlatform\Core\Doctrine\Orm\Filter\BooleanFilter;
+use ApiPlatform\Core\Doctrine\Orm\Filter\DateFilter;
+use ApiPlatform\Core\Doctrine\Orm\Filter\SearchFilter;
 use ApiPlatform\Core\Serializer\Filter\GroupFilter;
 use ApiPlatform\Core\Serializer\Filter\PropertyFilter;
 use Doctrine\ORM\Mapping as ORM;
