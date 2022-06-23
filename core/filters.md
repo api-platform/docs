@@ -1361,10 +1361,11 @@ Suppose you want to use the [match filter](#match-filter) on a property named `$
 namespace App\ElasticSearch;
 
 use ApiPlatform\Core\Bridge\Elasticsearch\DataProvider\Extension\RequestBodySearchCollectionExtensionInterface;
+use ApiPlatform\MetaData\Operation;
 
 class AndOperatorFilterExtension implements RequestBodySearchCollectionExtensionInterface
 {
-    public function applyToCollection(array $requestBody, string $resourceClass, ?string $operationName = null, array $context = []): array
+    public function applyToCollection(array $requestBody, string $resourceClass, Operation $operation = null, array $context = []): array
     {
         $requestBody['query'] = $requestBody['query'] ?? [];
         $andQuery = [
