@@ -1179,8 +1179,8 @@ library. This library must be properly installed and registered to use this exam
 
 namespace App\Filter;
 
-use ApiPlatform\Core\Doctrine\Orm\Filter\AbstractContextAwareFilter;
-use ApiPlatform\Core\Doctrine\Orm\Util\QueryNameGeneratorInterface;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\AbstractContextAwareFilter;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\QueryNameGeneratorInterface;
 use Doctrine\ORM\QueryBuilder;
 use Symfony\Component\PropertyInfo\Type;
 
@@ -1279,6 +1279,9 @@ class Offer
     public string $name;
 }
 ```
+
+### Doctrine Filters and Registrations
+
 #### Manual Service and Attribute Registration
 
 If you don't use Symfony's automatic service loading, you have to register the filter as a service by yourself.
