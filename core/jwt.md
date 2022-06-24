@@ -352,7 +352,7 @@ Since now we have a `JWT` authentication, functional tests require us to log in 
 
 Hashers are used for 2 reasons:
 
-1. To generate a hash for a raw password (`self::$container->get('security.user_password_hasher')->hashPassword($user, '$3CR3T')`)
+1. To generate a hash for a raw password (`$container->get('security.user_password_hasher')->hashPassword($user, '$3CR3T')`)
 2. To verify a password during authentication
 
 While hashing and verifying 1 password is quite a fast operation, doing it hundreds or even thousands of times in a tests suite becomes a bottleneck, because reliable hashing algorithms are slow by their nature.
