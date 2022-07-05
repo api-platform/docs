@@ -436,7 +436,9 @@ Change `/docs` to the URI you wish Swagger to be accessible on.
 
 ## Using a custom Asset Package in Swagger UI
 
-Sometimes you may want to use a different [Asset Package](https://symfony.com/doc/current/reference/configuration/framework.html#packages) for the Swagger UI. In this way you'll have more fine-grained control over the asset url generations. This is useful i.e. if you want to use different base path, base url or asset versioning strategy.
+Sometimes you may want to use a different [Asset Package](https://symfony.com/doc/current/reference/configuration/framework.html#packages) for the Swagger UI.
+In this way you'll have more fine-grained control over the asset URL generations.
+This is useful i.e. if you want to use different base path, base URL or asset versioning strategy.
 
 Specify a custom asset package name:
 
@@ -482,7 +484,7 @@ You may want to copy the [one shipped with API Platform](https://github.com/api-
 API Platform provides a way to be compatible with Amazon API Gateway.
 
 To enable API Gateway compatibility on your OpenAPI docs, add `api_gateway=true` as query parameter: `http://www.example.com/docs.json?api_gateway=true`.
-The flag `--api-gateway` is also available through the command line.
+The flag `--api-gateway` is also available through the command-line.
 
 ## OAuth
 
