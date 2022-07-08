@@ -16,18 +16,25 @@ The Schema Generator can also [be downloaded independently as a PHAR](https://gi
 composer require --dev api-platform/schema-generator
 ```
 
-## Model Scaffolding
+## Configuration
 
-Start by browsing [Schema.org](https://schema.org) (or any other RDF vocabulary) and pick types applicable to your application. Schema.org provides
-tons of schemas including (but not limited to) representations of people, organizations, events, postal addresses, creative
-work and e-commerce structures. Many other open vocabularies can be found on [the LOV website](https://lov.linkeddata.es/).
+The Schema Generator can either be used with Schema.org types (see [model scaffolding](#model-scaffolding)) or with an OpenAPI documentation (see [OpenAPI generation](#openapi-generation)).
+
+Choose your preferred way of designing your API, and [run the generator](#usage)!
+
+### Model Scaffolding
+
+Start by browsing [Schema.org](https://schema.org) (or any other RDF vocabulary) and pick types applicable to your application.
+Schema.org provides tons of schemas including (but not limited to) representations of people, organizations, events, postal addresses,
+creative work and e-commerce structures.
+Many other open vocabularies can be found on [the LOV website](https://lov.linkeddata.es/).
 
 Then, write a simple YAML config file similar to the following.
 
 Here we will generate a data model for an address book with the following data:
 
-* a [`Person`](https://schema.org/Person) which inherits from [`Thing`](https://schema.org/Thing)
-* a [`PostalAddress`](https://schema.org/PostalAddress) (without its class hierarchy)
+* a [`Person`](https://schema.org/Person) which inherits from [`Thing`](https://schema.org/Thing);
+* a [`PostalAddress`](https://schema.org/PostalAddress) (without its class hierarchy).
 
 ```yaml
 # api/config/schema.yaml
@@ -56,7 +63,39 @@ types:
             streetAddress: ~
 ```
 
-Run the generator with this config file as parameter:
+**Note:** If no properties are specified for a given type, all its properties will be generated.
+
+The generator also supports enumeration generation. For subclasses of [`Enumeration`](https://schema.org/Enumeration), the
+generator will automatically create a class extending the Enum type provided by [myclabs/php-enum](https://github.com/myclabs/php-enum).
+Don't forget to install this library in your project. Refer you to PHP Enum documentation to see how to use it.
+The Symfony validation annotation generator automatically takes care of enumerations to validate choices values.
+
+A config file generating an enum class:
+
+```yaml
+types:
+    OfferItemCondition: # The generator will automatically guess that OfferItemCondition is subclass of Enum
+        properties: {} # Remove all properties of the parent class
+```
+
+### OpenAPI Generation
+
+Design your API with tools like [Stoplight](https://stoplight.io/).
+
+Export your OpenAPI documentation to a JSON or to a YAML file and place it somewhere in your project
+(for instance in `api/openapi.yaml`).
+
+Write the following config file:
+
+```yaml
+# api/config/schema.yaml
+openApi:
+    file: '../openapi.yaml'
+```
+
+## Usage
+
+Run the generator with the config file as parameter:
 
 ```console
 vendor/bin/schema generate api/src/ api/config/schema.yaml -vv
@@ -72,23 +111,9 @@ docker-compose exec php \
 The corresponding PHP classes will be automatically generated in the `src/` directory!
 Note that the generator takes care of creating directories corresponding to the namespace structure.
 
-Without configuration file, the tool will build the entire Schema.org vocabulary. If no properties are specified for a given
-type, all its properties will be generated.
+Without configuration file, the tool will build the entire Schema.org vocabulary.
 
-The generator also supports enumeration generation. For subclasses of [`Enumeration`](https://schema.org/Enumeration), the
-generator will automatically create a class extending the Enum type provided by [myclabs/php-enum](https://github.com/myclabs/php-enum).
-Don't forget to install this library in your project. Refer you to PHP Enum documentation to see how to use it. The Symfony
-validation annotation generator automatically takes care of enumerations to validate choices values.
-
-A config file generating an enum class:
-
-```yaml
-types:
-    OfferItemCondition: # The generator will automatically guess that OfferItemCondition is subclass of Enum
-        properties: {} # Remove all properties of the parent class
-```
-
-### Load Previously Generated Files
+## Load Previously Generated Files
 
 If you launch the schema generator again, the previously generated files will be loaded.
 
@@ -96,14 +121,16 @@ It will try to keep as much user-added changes as possible while adding the new 
 
 You can also choose to overwrite the file instead.
 
-### Going Further
+## Going Further
 
-Browse [the configuration documentation](configuration.md)
+Browse [the configuration documentation](configuration.md).
 
-## Cardinality Extraction
+### Cardinality Extraction
 
 The Cardinality Extractor is a standalone tool (also used internally by the generator) extracting a property's cardinality.
-It extracts cardinality described with the [Web Ontology Language (OWL)](https://en.wikipedia.org/wiki/Web_Ontology_Language) vocabulary or in [GoodRelations](http://www.heppnetz.de/projects/goodrelations/). When cardinality cannot be automatically extracted, its value is set to `unknown`.
+It extracts cardinality described with the [Web Ontology Language (OWL)](https://en.wikipedia.org/wiki/Web_Ontology_Language) vocabulary
+or in [GoodRelations](http://www.heppnetz.de/projects/goodrelations/).
+When cardinality cannot be automatically extracted, its value is set to `unknown`.
 
 Usage:
 
