@@ -10,7 +10,7 @@ You can find a working example of a custom data provider using a pagination exte
 
 ## Custom Doctrine ORM Extension
 
-Custom extensions must implement the `ApiPlatform\Doctrine\Orm\Extension\QueryCollectionExtensionInterface` and / or the `ApiPlatform\Doctrine\Orm\Extension\QueryItemExtensionInterface` interfaces, to be run when querying for a collection of items and when querying for an item respectively.
+Custom extensions must implement the `ApiPlatform\Core\Bridge\Doctrine\Orm\Extension\QueryCollectionExtensionInterface` and / or the `ApiPlatform\Core\Bridge\Doctrine\Orm\Extension\QueryItemExtensionInterface` interfaces, to be run when querying for a collection of items and when querying for an item respectively.
 
 If you use [custom state providers](state-providers.md), they must support extensions and be aware of active extensions to work properly.
 
@@ -57,9 +57,10 @@ class Offer
 
 namespace App\Doctrine;
 
-use ApiPlatform\Doctrine\Orm\Extension\QueryCollectionExtensionInterface;
-use ApiPlatform\Doctrine\Orm\Extension\QueryItemExtensionInterface;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Extension\QueryCollectionExtensionInterface;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Extension\QueryItemExtensionInterface;
 use ApiPlatform\Doctrine\Orm\Util\QueryNameGeneratorInterface;
+use ApiPlatform\Metadata\Operation;
 use App\Entity\Offer;
 use Doctrine\ORM\QueryBuilder;
 use Symfony\Component\Security\Core\Security;
@@ -73,12 +74,12 @@ final class CurrentUserExtension implements QueryCollectionExtensionInterface, Q
         $this->security = $security;
     }
 
-    public function applyToCollection(QueryBuilder $queryBuilder, QueryNameGeneratorInterface $queryNameGenerator, string $resourceClass, string $operationName = null): void
+    public function applyToCollection(QueryBuilder $queryBuilder, QueryNameGeneratorInterface $queryNameGenerator, string $resourceClass, Operation $operation = null): void
     {
         $this->addWhere($queryBuilder, $resourceClass);
     }
 
-    public function applyToItem(QueryBuilder $queryBuilder, QueryNameGeneratorInterface $queryNameGenerator, string $resourceClass, array $identifiers, string $operationName = null, array $context = []): void
+    public function applyToItem(QueryBuilder $queryBuilder, QueryNameGeneratorInterface $queryNameGenerator, string $resourceClass, array $identifiers, Operation $operation = null, array $context = []): void
     {
         $this->addWhere($queryBuilder, $resourceClass);
     }
@@ -118,12 +119,12 @@ Note that your extensions should have a positive priority if defined. Internal e
 
 | Service name                                               | Priority | Class                                              |
 |------------------------------------------------------------|------|---------------------------------------------------------|
-| `api_platform.doctrine.orm.query_extension.eager_loading` (collection) | -8 | ApiPlatform\Doctrine\Orm\Extension\EagerLoadingExtension |
-| `api_platform.doctrine.orm.query_extension.eager_loading` (item) | -8 | ApiPlatform\Doctrine\Orm\Extension\EagerLoadingExtension |
-| `api_platform.doctrine.orm.query_extension.filter` | -16 | ApiPlatform\Doctrine\Orm\Extension\FilterExtension |
-| `api_platform.doctrine.orm.query_extension.filter_eager_loading` | -17 | ApiPlatform\Doctrine\Orm\Extension\FilterEagerLoadingExtension |
-| `api_platform.doctrine.orm.query_extension.order` | -32 | ApiPlatform\Doctrine\Orm\Extension\OrderExtension |
-| `api_platform.doctrine.orm.query_extension.pagination` | -64 | ApiPlatform\Doctrine\Orm\Extension\PaginationExtension |
+| `api_platform.doctrine.orm.query_extension.eager_loading` (collection) | -8 | ApiPlatform\Core\Bridge\Doctrine\Orm\Extension\EagerLoadingExtension |
+| `api_platform.doctrine.orm.query_extension.eager_loading` (item) | -8 | ApiPlatform\Core\Bridge\Doctrine\Orm\Extension\EagerLoadingExtension |
+| `api_platform.doctrine.orm.query_extension.filter` | -16 | ApiPlatform\Core\Bridge\Doctrine\Orm\Extension\FilterExtension |
+| `api_platform.doctrine.orm.query_extension.filter_eager_loading` | -17 | ApiPlatform\Core\Bridge\Doctrine\Orm\Extension\FilterEagerLoadingExtension |
+| `api_platform.doctrine.orm.query_extension.order` | -32 | ApiPlatform\Core\Bridge\Doctrine\Orm\Extension\OrderExtension |
+| `api_platform.doctrine.orm.query_extension.pagination` | -64 | ApiPlatform\Core\Bridge\Doctrine\Orm\Extension\PaginationExtension |
 
 #### Blocking Anonymous Users
 

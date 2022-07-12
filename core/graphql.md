@@ -636,6 +636,7 @@ Create your *WriteStage*:
 namespace App\Stage;
 
 use ApiPlatform\GraphQl\Resolver\Stage\WriteStageInterface;
+use ApiPlatform\Metadata\Operation;
 
 final class WriteStage implements WriteStageInterface
 {
@@ -649,12 +650,12 @@ final class WriteStage implements WriteStageInterface
     /**
      * {@inheritdoc}
      */
-    public function __invoke($data, string $resourceClass, string $operationName, array $context)
+    public function __invoke($data, string $resourceClass, Operation $operation, array $context)
     {
         // You can add pre-write code here.
 
         // Call the decorated write stage (this syntax calls the __invoke method).
-        $writtenObject = ($this->writeStage)($data, $resourceClass, $operationName, $context);
+        $writtenObject = ($this->writeStage)($data, $resourceClass, $operation, $context);
 
         // You can add post-write code here.
 
@@ -1898,6 +1899,7 @@ The decorator could be like this:
 namespace App\Serializer;
 
 use ApiPlatform\GraphQl\Serializer\SerializerContextBuilderInterface;
+use ApiPlatform\Metadata\Operation;
 use App\Entity\Book;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
@@ -1912,9 +1914,9 @@ final class BookContextBuilder implements SerializerContextBuilderInterface
         $this->authorizationChecker = $authorizationChecker;
     }
 
-    public function create(?string $resourceClass, string $operationName, array $resolverContext, bool $normalization): array
+    public function create(?string $resourceClass, Operation $operation, array $resolverContext, bool $normalization): array
     {
-        $context = $this->decorated->create($resourceClass, $operationName, $resolverContext, $normalization);
+        $context = $this->decorated->create($resourceClass, $operation, $resolverContext, $normalization);
         $resourceClass = $context['resource_class'] ?? null;
 
         if ($resourceClass === Book::class && isset($context['groups']) && $this->authorizationChecker->isGranted('ROLE_ADMIN') && false === $normalization) {

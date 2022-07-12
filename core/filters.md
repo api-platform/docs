@@ -1,10 +1,10 @@
 # Filters
 
-API Platform provides a generic system to apply filters and sort criteria on collections.
+API Platform Core provides a generic system to apply filters and sort criteria on collections.
 Useful filters for Doctrine ORM, MongoDB ODM and ElasticSearch are provided with the library.
 
 You can also create custom filters that fit your specific needs.
-You can also add filtering support to your custom [state providers](state-providers.md) by implementing interfaces provided
+You can also add filtering support to your custom [data providers](data-providers.md) by implementing interfaces provided
 by the library.
 
 By default, all filters are disabled. They must be enabled explicitly.
@@ -47,11 +47,12 @@ to a Resource in two ways:
     ```php
     <?php
     // api/src/Entity/Offer.php
+
     namespace App\Entity;
 
-    use ApiPlatform\Metadata\ApiResource;
+    use ApiPlatform\Core\Annotation\ApiResource;
 
-    #[ApiResource(filters: ['offer.date_filter'])]
+    #[ApiResource(attributes: ['filters' => ['offer.date_filter']])]
     class Offer
     {
         // ...
@@ -61,8 +62,8 @@ to a Resource in two ways:
     ```yaml
     # api/config/api_platform/resources.yaml
     App\Entity\Offer:
-        operations:
-            ApiPlatform\Metadata\GetCollection:
+        collectionOperations:
+            get:
                 filters: ['offer.date_filter']
         # ...
     ```
@@ -71,19 +72,19 @@ to a Resource in two ways:
     <?xml version="1.0" encoding="UTF-8" ?>
     <!-- api/config/api_platform/resources.xml -->
 
-    <resources xmlns="https://api-platform.com/schema/metadata/resources"
+    <resources xmlns="https://api-platform.com/schema/metadata"
             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-            xsi:schemaLocation="https://api-platform.com/schema/metadata/resources
-            https://api-platform.com/schema/metadata/resources.xsd">
+            xsi:schemaLocation="https://api-platform.com/schema/metadata
+            https://api-platform.com/schema/metadata/metadata-2.0.xsd">
         <resource class="App\Entity\Offer">
-            <operations>
-                <operation class="ApiPlatform\Metadata\GetCollection">
-                    <filters>
-                        <filter>offer.date_filter</filter>
-                    </filters>
-                </operation>
+            <collectionOperations>
+                <collectionOperation name="get">
+                    <attribute name="filters">
+                        <attribute>offer.date_filter</attribute>
+                    </attribute>
+                </collectionOperation>
                 <!-- ... -->
-            </operations>
+            </collectionOperations>
         </resource>
     </resources>
     ```
@@ -97,11 +98,12 @@ to a Resource in two ways:
     ```php
     <?php
     // api/src/Entity/Offer.php
+
     namespace App\Entity;
 
-    use ApiPlatform\Metadata\ApiFilter;
-    use ApiPlatform\Metadata\ApiResource;
-    use ApiPlatform\Doctrine\Orm\Filter\DateFilter;
+    use ApiPlatform\Core\Annotation\ApiFilter;
+    use ApiPlatform\Core\Annotation\ApiResource;
+    use ApiPlatform\Core\Doctrine\Orm\Filter\DateFilter;
 
     #[ApiResource]
     #[ApiFilter(DateFilter::class, properties: ['dateProperty'])]
@@ -115,7 +117,7 @@ to a Resource in two ways:
 
    For the sake of consistency, we're using the attribute in the below documentation.
 
-   For MongoDB ODM, all the filters are in the namespace `ApiPlatform\Doctrine\Odm\Filter`. The filter
+   For MongoDB ODM, all the filters are in the namespace `ApiPlatform\Core\Doctrine\MongoDbOdm\Filter`. The filter
    services all begin with `api_platform.doctrine_mongodb.odm`.
 
 ### Search Filter
@@ -148,11 +150,12 @@ In the following example, we will see how to allow the filtering of a list of e-
 ```php
 <?php
 // api/src/Entity/Offer.php
+
 namespace App\Entity;
 
-use ApiPlatform\Metadata\ApiResource;
-use ApiPlatform\Metadata\ApiFilter;
-use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
+use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Core\Annotation\ApiFilter;
+use ApiPlatform\Core\Doctrine\Orm\Filter\SearchFilter;
 
 #[ApiResource]
 #[ApiFilter(SearchFilter::class, properties: ['id' => 'exact', 'price' => 'exact', 'description' => 'partial'])]
@@ -178,8 +181,8 @@ services:
 # config/api/Offer.yaml
 App\Entity\Offer:
     # ...
-    operations:
-        ApiPlatform\Metadata\GetCollection:
+    collectionOperations:
+        get:
             filters: ['offer.search_filter']
 ```
 
@@ -197,11 +200,12 @@ It is possible to filter on relations too, if `Offer` has a `Product` relation:
 ```php
 <?php
 // api/src/Entity/Offer.php
+
 namespace App\Entity;
 
-use ApiPlatform\Metadata\ApiResource;
-use ApiPlatform\Metadata\ApiFilter;
-use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
+use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Core\Annotation\ApiFilter;
+use ApiPlatform\Core\Doctrine\Orm\Filter\SearchFilter;
 
 #[ApiResource]
 #[ApiFilter(SearchFilter::class, properties: ['product' => 'exact'])]
@@ -227,8 +231,8 @@ services:
 # config/api/Offer.yaml
 App\Entity\Offer:
     # ...
-    operations:
-        ApiPlatform\Metadata\GetCollection:
+    collectionOperations:
+        get:
             filters: ['offer.search_filter']
 ```
 
@@ -253,15 +257,15 @@ The `after` and `before` filters will filter including the value whereas `strict
 Like others filters, the date filter must be explicitly enabled:
 
 [codeSelector]
-
 ```php
 <?php
 // api/src/Entity/Offer.php
+
 namespace App\Entity;
 
-use ApiPlatform\Metadata\ApiFilter;
-use ApiPlatform\Metadata\ApiResource;
-use ApiPlatform\Doctrine\Orm\Filter\DateFilter;
+use ApiPlatform\Core\Annotation\ApiFilter;
+use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Core\Doctrine\Orm\Filter\DateFilter;
 
 #[ApiResource]
 #[ApiFilter(DateFilter::class, properties: ['createdAt'])]
@@ -287,8 +291,8 @@ services:
 # config/api/Offer.yaml
 App\Entity\Offer:
     # ...
-    operations:
-        ApiPlatform\Metadata\GetCollection:
+    collectionOperations:
+        get:
             filters: ['offer.date_filter']
 ```
 
@@ -306,10 +310,10 @@ Four behaviors are available at the property level of the filter:
 Description                          | Strategy to set
 -------------------------------------|------------------------------------------------------------------------------------
 Use the default behavior of the DBMS | `null`
-Exclude items                        | `ApiPlatform\Doctrine\Orm\Filter\DateFilter::EXCLUDE_NULL` (`exclude_null`)
-Consider items as oldest             | `ApiPlatform\Doctrine\Orm\Filter\DateFilter::INCLUDE_NULL_BEFORE` (`include_null_before`)
-Consider items as youngest           | `ApiPlatform\Doctrine\Orm\Filter\DateFilter::INCLUDE_NULL_AFTER` (`include_null_after`)
-Always include items                 | `ApiPlatform\Doctrine\Orm\Filter\DateFilter::INCLUDE_NULL_BEFORE_AND_AFTER` (`include_null_before_and_after`)
+Exclude items                        | `ApiPlatform\Core\Doctrine\Orm\Filter\DateFilter::EXCLUDE_NULL` (`exclude_null`)
+Consider items as oldest             | `ApiPlatform\Core\Doctrine\Orm\Filter\DateFilter::INCLUDE_NULL_BEFORE` (`include_null_before`)
+Consider items as youngest           | `ApiPlatform\Core\Doctrine\Orm\Filter\DateFilter::INCLUDE_NULL_AFTER` (`include_null_after`)
+Always include items                 | `ApiPlatform\Core\Doctrine\Orm\Filter\DateFilter::INCLUDE_NULL_BEFORE_AND_AFTER` (`include_null_before_and_after`)
 
 For instance, exclude entries with a property value of `null` with the following service definition:
 
@@ -318,11 +322,12 @@ For instance, exclude entries with a property value of `null` with the following
 ```php
 <?php
 // api/src/Entity/Offer.php
+
 namespace App\Entity;
 
-use ApiPlatform\Metadata\ApiFilter;
-use ApiPlatform\Metadata\ApiResource;
-use ApiPlatform\Doctrine\Orm\Filter\DateFilter;
+use ApiPlatform\Core\Annotation\ApiFilter;
+use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Core\Doctrine\Orm\Filter\DateFilter;
 
 #[ApiResource]
 #[ApiFilter(DateFilter::class, properties: ['dateProperty' => DateFilter::EXCLUDE_NULL])]
@@ -348,8 +353,8 @@ services:
 # config/api/Offer.yaml
 App\Entity\Offer:
     # ...
-    operations:
-        ApiPlatform\Metadata\GetCollection:
+    collectionOperations:
+        get:
             filters: ['offer.date_filter']
 ```
 
@@ -368,11 +373,12 @@ Enable the filter:
 ```php
 <?php
 // api/src/Entity/Offer.php
+
 namespace App\Entity;
 
-use ApiPlatform\Metadata\ApiFilter;
-use ApiPlatform\Metadata\ApiResource;
-use ApiPlatform\Doctrine\Orm\Filter\BooleanFilter;
+use ApiPlatform\Core\Annotation\ApiFilter;
+use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Core\Doctrine\Orm\Filter\BooleanFilter;
 
 #[ApiResource]
 #[ApiFilter(BooleanFilter::class, properties: ['isAvailableGenericallyInMyCountry'])]
@@ -398,8 +404,8 @@ services:
 # config/api/Offer.yaml
 App\Entity\Offer:
     # ...
-    operations:
-        ApiPlatform\Metadata\GetCollection:
+    collectionOperations:
+        get:
             filters: ['offer.boolean_filter']
 ```
 
@@ -422,11 +428,12 @@ Enable the filter:
 ```php
 <?php
 // api/src/Entity/Offer.php
+
 namespace App\Entity;
 
-use ApiPlatform\Metadata\ApiFilter;
-use ApiPlatform\Metadata\ApiResource;
-use ApiPlatform\Doctrine\Orm\Filter\NumericFilter;
+use ApiPlatform\Core\Annotation\ApiFilter;
+use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Core\Doctrine\Orm\Filter\NumericFilter;
 
 #[ApiResource]
 #[ApiFilter(NumericFilter::class, properties: ['sold'])]
@@ -452,8 +459,8 @@ services:
 # config/api/Offer.yaml
 App\Entity\Offer:
     # ...
-    operations:
-        ApiPlatform\Metadata\GetCollection:
+    collectionOperations:
+        get:
             filters: ['offer.numeric_filter']
 ```
 
@@ -476,11 +483,12 @@ Enable the filter:
 ```php
 <?php
 // api/src/Entity/Offer.php
+
 namespace App\Entity;
 
-use ApiPlatform\Metadata\ApiFilter;
-use ApiPlatform\Metadata\ApiResource;
-use ApiPlatform\Doctrine\Orm\Filter\RangeFilter;
+use ApiPlatform\Core\Annotation\ApiFilter;
+use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Core\Doctrine\Orm\Filter\RangeFilter;
 
 #[ApiResource]
 #[ApiFilter(RangeFilter::class, properties: ['price'])]
@@ -506,8 +514,8 @@ services:
 # config/api/Offer.yaml
 App\Entity\Offer:
     # ...
-    operations:
-        ApiPlatform\Metadata\GetCollection:
+    collectionOperations:
+        get:
             filters: ['offer.range_filter']
 ```
 
@@ -535,11 +543,12 @@ Enable the filter:
 ```php
 <?php
 // api/src/Entity/Offer.php
+
 namespace App\Entity;
 
-use ApiPlatform\Metadata\ApiFilter;
-use ApiPlatform\Metadata\ApiResource;
-use ApiPlatform\Doctrine\Orm\Filter\ExistsFilter;
+use ApiPlatform\Core\Annotation\ApiFilter;
+use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Core\Doctrine\Orm\Filter\ExistsFilter;
 
 #[ApiResource]
 #[ApiFilter(ExistsFilter::class, properties: ['transportFees'])]
@@ -565,8 +574,8 @@ services:
 # config/api/Offer.yaml
 App\Entity\Offer:
     # ...
-    operations:
-        ApiPlatform\Metadata\GetCollection:
+    collectionOperations:
+        get:
             filters: ['offer.exists_filter']
 ```
 
@@ -601,11 +610,12 @@ Enable the filter:
 ```php
 <?php
 // api/src/Entity/Offer.php
+
 namespace App\Entity;
 
-use ApiPlatform\Metadata\ApiFilter;
-use ApiPlatform\Metadata\ApiResource;
-use ApiPlatform\Doctrine\Orm\Filter\OrderFilter;
+use ApiPlatform\Core\Annotation\ApiFilter;
+use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Core\Doctrine\Orm\Filter\OrderFilter;
 
 #[ApiResource]
 #[ApiFilter(OrderFilter::class, properties: ['id', 'name'], arguments: ['orderParameterName' => 'order'])]
@@ -633,8 +643,8 @@ services:
 # config/api/Offer.yaml
 App\Entity\Offer:
     # ...
-    operations:
-        ApiPlatform\Metadata\GetCollection:
+    collectionOperations:
+        get:
             filters: ['offer.order_filter']
 ```
 
@@ -651,11 +661,12 @@ will not be applied unless you configure a default order direction to use:
 ```php
 <?php
 // api/src/Entity/Offer.php
+
 namespace App\Entity;
 
-use ApiPlatform\Metadata\ApiFilter;
-use ApiPlatform\Metadata\ApiResource;
-use ApiPlatform\Doctrine\Orm\Filter\OrderFilter;
+use ApiPlatform\Core\Annotation\ApiFilter;
+use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Core\Doctrine\Orm\Filter\OrderFilter;
 
 #[ApiResource]
 #[ApiFilter(OrderFilter::class, properties: ['id' => 'ASC', 'name' => 'DESC'])]
@@ -681,8 +692,8 @@ services:
 # config/api/Offer.yaml
 App\Entity\Offer:
     # ...
-    operations:
-        ApiPlatform\Metadata\GetCollection:
+    collectionOperations:
+        get:
             filters: ['offer.order_filter']
 ```
 
@@ -696,10 +707,8 @@ the comparison:
 Description                          | Strategy to set
 -------------------------------------|---------------------------------------------------------------------------------------------
 Use the default behavior of the DBMS | `null`
-Consider items as smallest           | `ApiPlatform\Doctrine\Orm\Filter\OrderFilter::NULLS_SMALLEST` (`nulls_smallest`)
-Consider items as largest            | `ApiPlatform\Doctrine\Orm\Filter\OrderFilter::NULLS_LARGEST` (`nulls_largest`)
-Order items always first             | `ApiPlatform\Doctrine\Orm\Filter\OrderFilter::NULLS_ALWAYS_FIRST` (`nulls_always_first`)
-Order items always last              | `ApiPlatform\Doctrine\Orm\Filter\OrderFilter::NULLS_ALWAYS_LAST` (`nulls_always_last`)
+Consider items as smallest           | `ApiPlatform\Core\Doctrine\Orm\Filter\OrderFilter::NULLS_SMALLEST` (`nulls_smallest`)
+Consider items as largest            | `ApiPlatform\Core\Doctrine\Orm\Filter\OrderFilter::NULLS_LARGEST` (`nulls_largest`)
 
 For instance, treat entries with a property value of `null` as the smallest, with the following service definition:
 
@@ -708,11 +717,12 @@ For instance, treat entries with a property value of `null` as the smallest, wit
 ```php
 <?php
 // api/src/Entity/Offer.php
+
 namespace App\Entity;
 
-use ApiPlatform\Metadata\ApiFilter;
-use ApiPlatform\Metadata\ApiResource;
-use ApiPlatform\Doctrine\Orm\Filter\OrderFilter;
+use ApiPlatform\Core\Annotation\ApiFilter;
+use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Core\Doctrine\Orm\Filter\OrderFilter;
 
 #[ApiResource]
 #[ApiFilter(OrderFilter::class, properties: ['validFrom' => ['nulls_comparison' => OrderFilter::NULLS_SMALLEST, 'default_direction' => 'DESC']])]
@@ -738,21 +748,12 @@ services:
 # config/api/Offer.yaml
 App\Entity\Offer:
     # ...
-    operations:
-        ApiPlatform\Metadata\GetCollection:
+    collectionOperations:
+        get:
             filters: ['offer.order_filter']
 ```
 
 [/codeSelector]
-
-The strategy to use by default can be configured globally:
-
-```yaml
-# api/config/packages/api_platform.yaml
-api_platform:
-    collection:
-        order_nulls_comparison: 'nulls_smallest'
-```
 
 #### Using a Custom Order Query Parameter Name
 
@@ -776,12 +777,13 @@ built-in filters support nested properties using the dot (`.`) syntax, e.g.:
 ```php
 <?php
 // api/src/Entity/Offer.php
+
 namespace App\Entity;
 
-use ApiPlatform\Metadata\ApiFilter;
-use ApiPlatform\Metadata\ApiResource;
-use ApiPlatform\Doctrine\Orm\Filter\OrderFilter;
-use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
+use ApiPlatform\Core\Annotation\ApiFilter;
+use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Core\Doctrine\Orm\Filter\OrderFilter;
+use ApiPlatform\Core\Doctrine\Orm\Filter\SearchFilter;
 
 #[ApiResource]
 #[ApiFilter(OrderFilter::class, properties: ['product.releaseDate'])]
@@ -817,8 +819,8 @@ services:
 # config/api/Offer.yaml
 App\Entity\Offer:
     # ...
-    operations:
-        ApiPlatform\Metadata\GetCollection:
+    collectionOperations:
+        get:
             filters: ['offer.order_filter', 'offer.search_filter']
 ```
 
@@ -838,11 +840,12 @@ for all properties:
 ```php
 <?php
 // api/src/Entity/Offer.php
+
 namespace App\Entity;
 
-use ApiPlatform\Metadata\ApiFilter;
-use ApiPlatform\Metadata\ApiResource;
-use ApiPlatform\Doctrine\Orm\Filter\OrderFilter;
+use ApiPlatform\Core\Annotation\ApiFilter;
+use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Core\Doctrine\Orm\Filter\OrderFilter;
 
 #[ApiResource]
 #[ApiFilter(OrderFilter::class)]
@@ -868,8 +871,8 @@ services:
 # config/api/Offer.yaml
 App\Entity\Offer:
     # ...
-    operations:
-        ApiPlatform\Metadata\GetCollection:
+    collectionOperations:
+        get:
             filters: ['offer.order_filter']
 ```
 
@@ -907,9 +910,9 @@ Enable the filter:
 
 namespace App\Model;
 
-use ApiPlatform\Metadata\ApiFilter;
-use ApiPlatform\Metadata\ApiResource;
-use ApiPlatform\Elasticsearch\Filter\OrderFilter;
+use ApiPlatform\Core\Annotation\ApiFilter;
+use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Core\Bridge\Elasticsearch\DataProvider\Filter\OrderFilter;
 
 #[ApiResource]
 #[ApiFilter(OrderFilter::class, properties: ['id', 'date'], arguments: ['orderParameterName' => 'order'])]
@@ -954,9 +957,9 @@ will not be applied unless you configure a default order direction to use:
 
 namespace App\Model;
 
-use ApiPlatform\Metadata\ApiFilter;
-use ApiPlatform\Metadata\ApiResource;
-use ApiPlatform\Elasticsearch\Filter\OrderFilter;
+use ApiPlatform\Core\Annotation\ApiFilter;
+use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Core\Bridge\Elasticsearch\DataProvider\Filter\OrderFilter;
 
 #[ApiResource]
 #[ApiFilter(OrderFilter::class, properties: ['id' => 'asc', 'date' => 'desc'])]
@@ -993,9 +996,9 @@ Enable the filter:
 
 namespace App\Model;
 
-use ApiPlatform\Metadata\ApiFilter;
-use ApiPlatform\Metadata\ApiResource;
-use ApiPlatform\Elasticsearch\Filter\MatchFilter;
+use ApiPlatform\Core\Annotation\ApiFilter;
+use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Core\Bridge\Elasticsearch\DataProvider\Filter\MatchFilter;
 
 #[ApiResource]
 #[ApiFilter(MatchFilter::class, properties: ['message'])]
@@ -1024,9 +1027,9 @@ Enable the filter:
 
 namespace App\Model;
 
-use ApiPlatform\Metadata\ApiFilter;
-use ApiPlatform\Metadata\ApiResource;
-use ApiPlatform\Elasticsearch\Filter\TermFilter;
+use ApiPlatform\Core\Annotation\ApiFilter;
+use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Core\Bridge\Elasticsearch\DataProvider\Filter\TermFilter;
 
 #[ApiResource]
 #[ApiFilter(TermFilter::class, properties: ['gender', 'age'])]
@@ -1054,10 +1057,10 @@ All built-in filters support nested properties using the (`.`) syntax.
 
 namespace App\Model;
 
-use ApiPlatform\Metadata\ApiFilter;
-use ApiPlatform\Metadata\ApiResource;
-use ApiPlatform\Elasticsearch\Filter\OrderFilter;
-use ApiPlatform\Elasticsearch\Filter\TermFilter;
+use ApiPlatform\Core\Annotation\ApiFilter;
+use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Core\Bridge\Elasticsearch\DataProvider\Filter\OrderFilter;
+use ApiPlatform\Core\Bridge\Elasticsearch\DataProvider\Filter\TermFilter;
 
 #[ApiResource]
 #[ApiFilter(OrderFilter::class, properties: ['author.firstName'])]
@@ -1086,11 +1089,12 @@ Enable the filter:
 ```php
 <?php
 // api/src/Entity/Book.php
+
 namespace App\Entity;
 
-use ApiPlatform\Metadata\ApiFilter;
-use ApiPlatform\Metadata\ApiResource;
-use ApiPlatform\Serializer\Filter\GroupFilter;
+use ApiPlatform\Core\Annotation\ApiFilter;
+use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Core\Serializer\Filter\GroupFilter;
 
 #[ApiResource]
 #[ApiFilter(GroupFilter::class, arguments: ['parameterName' => 'groups', 'overrideDefaultGroups' => false, 'whitelist' => ['allowed_group']])]
@@ -1124,11 +1128,12 @@ Enable the filter:
 ```php
 <?php
 // api/src/Entity/Book.php
+
 namespace App\Entity;
 
-use ApiPlatform\Metadata\ApiFilter;
-use ApiPlatform\Metadata\ApiResource;
-use ApiPlatform\Serializer\Filter\PropertyFilter;
+use ApiPlatform\Core\Annotation\ApiFilter;
+use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Core\Serializer\Filter\PropertyFilter;
 
 #[ApiResource]
 #[ApiFilter(PropertyFilter::class, arguments: ['parameterName' => 'properties', 'overrideDefaultProperties' => false, 'whitelist' => ['allowed_property']])]
@@ -1149,9 +1154,9 @@ If you want to include some properties of the nested "author" document, use: `/b
 
 ## Creating Custom Filters
 
-Custom filters can be written by implementing the `ApiPlatform\Api\FilterInterface` interface.
+Custom filters can be written by implementing the `ApiPlatform\Core\Api\FilterInterface` interface.
 
-API Platform provides a convenient way to create Doctrine ORM and MongoDB ODM filters. If you use [custom state providers](state-providers.md),
+API Platform provides a convenient way to create Doctrine ORM and MongoDB ODM filters. If you use [custom data providers](data-providers.md),
 you can still create filters by implementing the previously mentioned interface, but - as API Platform isn't aware of your
 persistence system's internals - you have to create the filtering logic by yourself.
 
@@ -1161,8 +1166,8 @@ Doctrine ORM filters have access to the context created from the HTTP request an
 retrieve data from the database. They are only applied to collections. If you want to deal with the DQL query generated
 to retrieve items, [extensions](extensions.md) are the way to go.
 
-A Doctrine ORM filter is basically a class implementing the `ApiPlatform\Doctrine\Orm\Filter\FilterInterface`.
-API Platform includes a convenient abstract class implementing this interface and providing utility methods: `ApiPlatform\Doctrine\Orm\Filter\AbstractFilter`.
+A Doctrine ORM filter is basically a class implementing the `ApiPlatform\Core\Doctrine\Orm\Filter\FilterInterface`.
+API Platform includes a convenient abstract class implementing this interface and providing utility methods: `ApiPlatform\Core\Doctrine\Orm\Filter\AbstractFilter`.
 
 In the following example, we create a class to filter a collection by applying a regexp to a property. The `REGEXP` DQL
 function used in this example can be found in the [`DoctrineExtensions`](https://github.com/beberlei/DoctrineExtensions)
@@ -1174,25 +1179,30 @@ library. This library must be properly installed and registered to use this exam
 
 namespace App\Filter;
 
-use ApiPlatform\Doctrine\Orm\Filter\AbstractContextAwareFilter;
-use ApiPlatform\Doctrine\Orm\Util\QueryNameGeneratorInterface;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\AbstractContextAwareFilter;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\QueryNameGeneratorInterface;
 use Doctrine\ORM\QueryBuilder;
 use Symfony\Component\PropertyInfo\Type;
 
-final class RegexpFilter extends AbstractContextAwareFilter
+final class RegexpFilter extends AbstractFilter 
 {
-    protected function filterProperty(string $property, $value, QueryBuilder $queryBuilder, QueryNameGeneratorInterface $queryNameGenerator, string $resourceClass, string $operationName = null)
+    /**
+     * Applies the filter.
+     */
+    public function apply(QueryBuilder $queryBuilder, QueryNameGeneratorInterface $queryNameGenerator, string $property, string $resourceClass, Operation $operation = null, array $context = []) 
     {
         // otherwise filter is applied to order and page as well
         if (
             !$this->isPropertyEnabled($property, $resourceClass) ||
             !$this->isPropertyMapped($property, $resourceClass)
         ) {
-            return;
+            return
         }
 
-        $parameterName = $queryNameGenerator->generateParameterName($property); // Generate a unique parameter name to avoid collisions with other filters
-        $queryBuilder
+        // Generates a unique parameter name to avoid collisions with other filters
+        $parameterName = $queryNameGenerator->generateParameterName($property); 
+
+        $queryBuilder 
             ->andWhere(sprintf('REGEXP(o.%s, :%s) = 1', $property, $parameterName))
             ->setParameter($parameterName, $value);
     }
@@ -1230,10 +1240,11 @@ Finally, add this filter to resources you want to be filtered by using the `ApiF
 ```php
 <?php
 // api/src/Entity/Offer.php
+
 namespace App\Entity;
 
-use ApiPlatform\Metadata\ApiFilter;
-use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Core\Annotation\ApiFilter;
+use ApiPlatform\Core\Annotation\ApiResource;
 use App\Filter\RegexpFilter;
 
 #[ApiResource]
@@ -1252,10 +1263,11 @@ In the previous example, the filter can be applied on any property. You can also
 ```php
 <?php
 // api/src/Entity/Offer.php
+
 namespace App\Entity;
 
-use ApiPlatform\Metadata\ApiFilter;
-use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Core\Annotation\ApiFilter;
+use ApiPlatform\Core\Annotation\ApiResource;
 use App\Filter\RegexpFilter;
 
 #[ApiResource]
@@ -1267,6 +1279,8 @@ class Offer
     public string $name;
 }
 ```
+
+### Doctrine Filters and Registrations
 
 #### Manual Service and Attribute Registration
 
@@ -1301,13 +1315,16 @@ Finally, if you don't want to use the `#[ApiFilter]` attribute, you can register
 ```php
 <?php
 // api/src/Entity/Offer.php
+
 namespace App\Entity;
 
-use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Core\Annotation\ApiResource;
 use App\Filter\RegexpFilter;
 
 #[ApiResource(
-    filters: [RegexpFilter::class]
+    attributes => [
+        'filters' => [RegexpFilter::class],
+    ],
 )]
 class Offer
 {
@@ -1321,8 +1338,8 @@ Doctrine MongoDB ODM filters have access to the context created from the HTTP re
 instance used to retrieve data from the database and to execute [complex operations on data](https://docs.mongodb.com/manual/aggregation/).
 They are only applied to collections. If you want to deal with the aggregation pipeline generated to retrieve items, [extensions](extensions.md) are the way to go.
 
-A Doctrine MongoDB ODM filter is basically a class implementing the `ApiPlatform\Doctrine\Odm\Filter\FilterInterface`.
-API Platform includes a convenient abstract class implementing this interface and providing utility methods: `ApiPlatform\Doctrine\Odm\Filter\AbstractFilter`.
+A Doctrine MongoDB ODM filter is basically a class implementing the `ApiPlatform\Core\Doctrine\MongoDbOdm\Filter\FilterInterface`.
+API Platform includes a convenient abstract class implementing this interface and providing utility methods: `ApiPlatform\Core\Doctrine\MongoDbOdm\Filter\AbstractFilter`.
 
 ### Creating Custom Elasticsearch Filters
 
@@ -1331,9 +1348,9 @@ They are only applied to collections. If you want to deal with the query DSL thr
 are the way to go.
 
 Existing Elasticsearch filters are applied through a [constant score query](https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl-constant-score-query.html).
-A constant score query filter is basically a class implementing the `ApiPlatform\Elasticsearch\Filter\ConstantScoreFilterInterface`
-and the `ApiPlatform\Elasticsearch\Filter\FilterInterface`. API Platform includes a convenient
-abstract class implementing this last interface and providing utility methods: `ApiPlatform\Elasticsearch\Filter\AbstractFilter`.
+A constant score query filter is basically a class implementing the `ApiPlatform\Core\Bridge\Elasticsearch\DataProvider\Filter\ConstantScoreFilterInterface`
+and the `ApiPlatform\Core\Bridge\Elasticsearch\DataProvider\Filter\FilterInterface`. API Platform includes a convenient
+abstract class implementing this last interface and providing utility methods: `ApiPlatform\Core\Bridge\Elasticsearch\DataProvider\Filter\AbstractFilter`.
 
 Suppose you want to use the [match filter](#match-filter) on a property named `$fullName` and you want to add the [and operator](https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl-match-query.html#query-dsl-match-query-boolean) to your query:
 
@@ -1343,11 +1360,12 @@ Suppose you want to use the [match filter](#match-filter) on a property named `$
 
 namespace App\ElasticSearch;
 
-use ApiPlatform\Elasticsearch\Extension\RequestBodySearchCollectionExtensionInterface;
+use ApiPlatform\Core\Bridge\Elasticsearch\DataProvider\Extension\RequestBodySearchCollectionExtensionInterface;
+use ApiPlatform\MetaData\Operation;
 
 class AndOperatorFilterExtension implements RequestBodySearchCollectionExtensionInterface
 {
-    public function applyToCollection(array $requestBody, string $resourceClass, ?string $operationName = null, array $context = []): array
+    public function applyToCollection(array $requestBody, string $resourceClass, Operation $operation = null, array $context = []): array
     {
         $requestBody['query'] = $requestBody['query'] ?? [];
         $andQuery = [
@@ -1374,9 +1392,10 @@ Suppose we have a `User` entity and an `Order` entity related to the `User` one.
 ```php
 <?php
 // api/src/Entity/User.php
+
 namespace App\Entity;
 
-use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Core\Annotation\ApiResource;
 
 #[ApiResource]
 class User
@@ -1388,9 +1407,11 @@ class User
 ```php
 <?php
 // api/src/Entity/Order.php
+
 namespace App\Entity;
 
-use ApiPlatform\Metadata\ApiResource;
+use App\Entity\User;
+use ApiPlatform\Core\Annotation\ApiResource;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ApiResource]
@@ -1399,7 +1420,7 @@ class Order
     // ...
 
     #[ORM\ManyToOne(User::class)]
-    #[ORM\JoinColumn(name: 'user_id', referencedColumnName: 'id')]
+    #[ORM\JoinColumn(name: "user_id", referencedColumnName: "id")]
     public User $user;
     
     // ...
@@ -1430,6 +1451,7 @@ Then, let's mark the `Order` entity as a "user aware" entity.
 ```php
 <?php
 // api/src/Entity/Order.php
+
 namespace App\Entity;
 
 use App\Attribute\UserAware;
@@ -1504,12 +1526,10 @@ If the attribute is given over a property, the filter will be configured on the 
 
 ```php
 <?php
-// api/src/Entity/DummyCar.php
-namespace App\Entity;
 
-use ApiPlatform\Metadata\ApiFilter;
-use ApiPlatform\Metadata\ApiResource;
-use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
+use ApiPlatform\Core\Annotation\ApiFilter;
+use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Core\Doctrine\Orm\Filter\SearchFilter;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -1558,15 +1578,16 @@ For example, let's define three data filters (`DateFilter`, `SearchFilter` and `
 ```php
 <?php
 // api/src/Entity/DummyCar.php
+
 namespace App\Entity;
 
-use ApiPlatform\Metadata\ApiFilter;
-use ApiPlatform\Metadata\ApiResource;
-use ApiPlatform\Doctrine\Orm\Filter\BooleanFilter;
-use ApiPlatform\Doctrine\Orm\Filter\DateFilter;
-use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
-use ApiPlatform\Serializer\Filter\GroupFilter;
-use ApiPlatform\Serializer\Filter\PropertyFilter;
+use ApiPlatform\Core\Annotation\ApiFilter;
+use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Core\Doctrine\Orm\Filter\BooleanFilter;
+use ApiPlatform\Core\Doctrine\Orm\Filter\DateFilter;
+use ApiPlatform\Core\Doctrine\Orm\Filter\SearchFilter;
+use ApiPlatform\Core\Serializer\Filter\GroupFilter;
+use ApiPlatform\Core\Serializer\Filter\PropertyFilter;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ApiResource]
