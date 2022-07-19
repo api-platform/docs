@@ -24,7 +24,7 @@ In the following examples, the built-in `GET` operation is registered as well as
 By default, API Platform uses the first `Get` operation defined to generate the IRI of an item and the first `GetCollection` operation to generate the IRI of a collection.
 
 If you create a custom operation, you will probably want to properly document it.
-See the [OpenAPI](swagger.md) part of the documentation to do so.
+See the [OpenAPI](openapi.md) part of the documentation to do so.
 
 First, let's create your custom operation:
 
