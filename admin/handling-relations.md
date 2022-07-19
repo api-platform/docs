@@ -88,11 +88,11 @@ For instance, if your API returns:
   "hydra:member": [
     {
       "@id": "/books/07b90597-542e-480b-a6bf-5db223c761aa",
-      "@type": "http://schema.org/Book",
+      "@type": "https://schema.org/Book",
       "title": "War and Peace",
       "author": {
         "@id": "/authors/d7a133c1-689f-4083-8cfc-afa6d867f37d",
-        "@type": "http://schema.org/Author",
+        "@type": "https://schema.org/Author",
         "firstName": "Leo",
         "lastName": "Tolstoi"
       }

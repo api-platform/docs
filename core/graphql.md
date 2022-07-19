@@ -1977,7 +1977,7 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
 #[ORM\Entity]
 #[ApiResource(
     normalizationContext: ['groups' => ['media_object_read']], 
-    types: ['http://schema.org/MediaObject'],
+    types: ['https://schema.org/MediaObject'],
     graphQlOperations: [
         new Mutation(
             name: 'upload', 
@@ -1997,7 +1997,7 @@ class MediaObject
     #[ORM\Id, ORM\Column, ORM\GeneratedValue]
     protected ?int $id = null;
 
-    #[ApiProperty(types: ['http://schema.org/contentUrl'])]
+    #[ApiProperty(types: ['https://schema.org/contentUrl'])]
     #[Groups(['media_object_read'])]
     public ?string $contentUrl = null;
 

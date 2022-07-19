@@ -20,7 +20,7 @@ is returned. It's a valid JSON(-LD) document containing items of the requested p
   "hydra:member": [
     {
       "@id": "/books/1",
-      "@type": "http://schema.org/Book",
+      "@type": "https://schema.org/Book",
       "name": "My awesome book"
     },
     {

@@ -61,7 +61,7 @@ Attribute      | Type   | Default | Description
 
 Registering your own event listeners to add extra logic is convenient.
 
-The [`ApiPlatform\Core\EventListener\EventPriorities`](https://github.com/api-platform/core/blob/main/src/Symfony/EventListener/EventPriorities.php) class comes with a convenient set of class constants corresponding to commonly used priorities:
+The [`ApiPlatform\Symfony\EventListener\EventPriorities`](https://github.com/api-platform/core/blob/main/src/Symfony/EventListener/EventPriorities.php) class comes with a convenient set of class constants corresponding to commonly used priorities:
 
 Constant           | Event             | Priority |
 -------------------|-------------------|----------|
@@ -86,7 +86,7 @@ In the following example, we will send a mail each time a new book is created us
 
 namespace App\EventSubscriber;
 
-use ApiPlatform\Core\EventListener\EventPriorities;
+use ApiPlatform\Symfony\EventListener\EventPriorities;
 use App\Entity\Book;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\Request;

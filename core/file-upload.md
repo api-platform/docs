@@ -72,7 +72,7 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
 #[ORM\Entity]
 #[ApiResource(
     normalizationContext: ['groups' => ['media_object:read']], 
-    types: ['http://schema.org/MediaObject'],
+    types: ['https://schema.org/MediaObject'],
     operations: [
         new Get(),
         new GetCollection(),
@@ -105,7 +105,7 @@ class MediaObject
     #[ORM\Id, ORM\Column, ORM\GeneratedValue]
     private ?int $id = null;
 
-    #[ApiProperty(types: ['http://schema.org/contentUrl'])]
+    #[ApiProperty(types: ['https://schema.org/contentUrl'])]
     #[Groups(['media_object:read'])]
     public ?string $contentUrl = null;
 
@@ -218,7 +218,7 @@ your data, you will get a response looking like this:
 
 ```json
 {
-  "@type": "http://schema.org/MediaObject",
+  "@type": "https://schema.org/MediaObject",
   "@id": "/media_objects/<id>",
   "contentUrl": "<url>"
 }
@@ -257,14 +257,14 @@ use Symfony\Component\HttpFoundation\File\File;
 use Vich\UploaderBundle\Mapping\Annotation as Vich;
 
 #[ORM\Entity]
-#[ApiResource(types: ['http://schema.org/Book'])]
+#[ApiResource(types: ['https://schema.org/Book'])]
 class Book
 {
     // ...
 
     #[ORM\ManyToOne(targetEntity: MediaObject::class)]
     #[ORM\JoinColumn(nullable: true)]
-    #[ApiProperty(types: ['http://schema.org/image'])]
+    #[ApiProperty(types: ['https://schema.org/image'])]
     public ?MediaObject $image = null;
     
     // ...
@@ -363,7 +363,7 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
 #[ApiResource(
     normalizationContext: ['groups' => ['book:read']], 
     denormalizationContext: ['groups' => ['book:write']], 
-    types: ['http://schema.org/Book'],
+    types: ['https://schema.org/Book'],
     operations: [
         new GetCollection(),
         new Post(inputFormats: ['multipart' => ['multipart/form-data']])
@@ -373,7 +373,7 @@ class Book
 {
     // ...
 
-    #[ApiProperty(types: ['http://schema.org/contentUrl'])]
+    #[ApiProperty(types: ['https://schema.org/contentUrl'])]
     #[Groups(['book:read'])]
     public ?string $contentUrl = null;
 

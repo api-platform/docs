@@ -17,12 +17,12 @@ This decorator is able to denormalize posted form data to the target object. In 
 
 namespace App\EventListener;
 
-use ApiPlatform\Core\Util\RequestAttributesExtractor;
+use ApiPlatform\Serializer\SerializerContextBuilderInterface;
+use ApiPlatform\Symfony\EventListener\DeserializeListener as DecoratedListener;
+use ApiPlatform\Util\RequestAttributesExtractor;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
-use ApiPlatform\Core\EventListener\DeserializeListener as DecoratedListener;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
-use ApiPlatform\Core\Serializer\SerializerContextBuilderInterface;
 
 final class DeserializeListener
 {

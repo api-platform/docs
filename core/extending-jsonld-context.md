@@ -16,13 +16,13 @@ namespace App\Entity;
 use ApiPlatform\Metadata\ApiProperty;
 use ApiPlatform\Metadata\ApiResource;
 
-#[ApiResource(types: ['http://schema.org/Book'])]
+#[ApiResource(types: ['https://schema.org/Book'])]
 class Book
 {
     // ...
 
     #[ApiProperty(
-        types: ['http://schema.org/name'],
+        types: ['https://schema.org/name'],
         jsonldContext: [
             '@id' => 'http://yourcustomid.com',
             '@type' => 'http://www.w3.org/2001/XMLSchema#string',

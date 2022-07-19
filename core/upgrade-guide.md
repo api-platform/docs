@@ -57,7 +57,7 @@ namespace App\Entity;
 use ApiPlatform\Core\Annotation\ApiResource;
 
 #[ApiResource(
-    iri: 'http://schema.org/Book',
+    iri: 'https://schema.org/Book',
     itemOperations: [
         'get',
         'post_publication' => [
@@ -84,7 +84,7 @@ use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\Post;
 use App\Controller\CreateBookPublication;
 
-#[ApiResource(types: ['http://schema.org/Book'], operations: [
+#[ApiResource(types: ['https://schema.org/Book'], operations: [
     new Get(),
     new Post(name: 'publication', uriTemplate: '/books/{id}/publication')
 ])]
@@ -130,7 +130,7 @@ is the same as
 
 |Before|After|
 |---|---|
-|`iri: 'http://schema.org/Book'`|`types: ['http://schema.org/Book']`|
+|`iri: 'https://schema.org/Book'`|`types: ['https://schema.org/Book']`|
 |`path: '/books/{id}/publication'`|`uriTemplate: '/books/{id}/publication'`|
 |`identifiers: []`|`uriVariables: []`|
 |`attributes: []`|`extraProperties: []`|
@@ -142,7 +142,7 @@ is the same as
 
 |Before|After|
 |---|---|
-|`iri: 'http://schema.org/Book'`|`types: ['http://schema.org/Book']`|
+|`iri: 'https://schema.org/Book'`|`types: ['https://schema.org/Book']`|
 |`type: 'string'`|`builtinTypes: ['string']`|
 
 Note that builtinTypes are computed automatically from php types.
