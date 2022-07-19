@@ -14,14 +14,14 @@ API Platform allows to easily add a JWT-based authentication to your API using [
 We begin by installing the bundle:
 
 ```console
-docker-compose exec php \
+docker compose exec php \
     composer require jwt-auth
 ```
 
 Then we need to generate the public and private keys used for signing JWT tokens. If you're using the [API Platform distribution](../distribution/index.md), you may run this from the project's root directory:
 
 ```console
-docker-compose exec php sh -c '
+docker compose exec php sh -c '
     set -e
     apk add openssl
     php bin/console lexik:jwt:generate-keypair
@@ -34,7 +34,7 @@ Note that the `setfacl` command relies on the `acl` package. This is installed b
 
 This takes care of keypair creation (including using the correct passphrase to encrypt the private key), and setting the correct permissions on the keys allowing the web server to read them.
 
-Since these keys are created by the `root` user from a container, your host user will not be able to read them during the `docker-compose build caddy` process. Add the `config/jwt/` folder to the `api/.dockerignore` file so that they are skipped from the result image.
+Since these keys are created by the `root` user from a container, your host user will not be able to read them during the `docker compose build caddy` process. Add the `config/jwt/` folder to the `api/.dockerignore` file so that they are skipped from the result image.
 
 If you want the keys to be auto generated in `dev` environment, see an example in the [docker-entrypoint script of api-platform/demo](https://github.com/api-platform/demo/blob/master/api/docker/php/docker-entrypoint.sh).
 

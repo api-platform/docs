@@ -13,7 +13,7 @@ before proceeding. It will help you get a grasp on how the bundle works, and why
 Install the bundle with the help of Composer:
 
 ```console
-docker-compose exec php \
+docker compose exec php \
     composer require vich/uploader-bundle
 ```
 

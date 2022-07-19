@@ -25,7 +25,7 @@ Before creating your functional tests, you will need a dataset to pre-populate y
 First, install [Alice](https://github.com/nelmio/alice):
 
 ```console
-docker-compose exec php \
+docker compose exec php \
     composer require --dev alice
 ```
 
@@ -59,7 +59,7 @@ App\Entity\Review:
 You can now load your fixtures in the database with the following command:
 
 ```console
-docker-compose exec php \
+docker compose exec php \
     bin/console hautelook:fixtures:load
 ```
 
@@ -75,8 +75,8 @@ Install the Symfony test pack (which includes PHPUnit and [PHPUnit Bridge](https
 (the API Platform test client is built on top of Symfony HttpClient, and allows to leverage all its features) and [JSON Schema for PHP](https://github.com/justinrainbow/json-schema) (used by API Platform to provide [JSON Schema](https://json-schema.org/) test assertions):
 
 ```console
-    docker-compose exec php \
-        composer require --dev symfony/test-pack symfony/http-client justinrainbow/json-schema
+docker compose exec php \
+    composer require --dev symfony/test-pack symfony/http-client justinrainbow/json-schema
 ```
 
 Your API is ready to be functionally tested. Create your test classes under the `tests/` directory.
@@ -233,7 +233,7 @@ There is one caveat though: in some tests, it is necessary to perform multiple r
 All you have to do now is to run your tests:
 
 ```console
-docker-compose exec php \
+docker compose exec php \
     bin/phpunit
 ```
 

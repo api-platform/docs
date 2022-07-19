@@ -396,8 +396,8 @@ To configure Blackfire.io follow these simple steps:
 4. Rebuild and restart all your containers
 
     ```console
-    docker-compose build
-    docker-compose up -d
+    docker compose build
+    docker compose up -d
     ```
 
 For details on how to perform profiling, see [the Blackfire.io documentation](https://blackfire.io/docs/integrations/docker#using-the-client-for-http-profiling).
