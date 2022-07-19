@@ -487,7 +487,7 @@ As described [in the Symfony documentation](https://symfony.com/doc/current/temp
 </html>
 ```
 
-You may want to copy the [one shipped with API Platform](https://github.com/api-platform/core/blob/2.6/src/Bridge/Symfony/Bundle/Resources/views/SwaggerUi/index.html.twig) and customize it.
+You may want to copy the [one shipped with API Platform](https://github.com/api-platform/core/blob/main/src/Symfony/Bundle/Resources/views/SwaggerUi/index.html.twig) and customize it.
 
 ## Compatibility Layer with Amazon API Gateway
 

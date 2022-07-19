@@ -27,10 +27,6 @@ api_platform:
     # Specify a path name generator to use.
     path_segment_name_generator: 'api_platform.path_segment_name_generator.underscore'
 
-    # Allow using plain IDs for JSON format.
-    # Deprecated since API Platform 2.7, will be removed in API Platform 3.0
-    allow_plain_identifiers: false
-
     validator:
         # Enable the serialization of payload fields when a validation error is thrown.
         # If you want to serialize only some payload fields, define them like this: [ severity, anotherPayloadField ]
@@ -53,14 +49,6 @@ api_platform:
         # Force join on every relation.
         # If disabled, it will only join relations having the EAGER fetch mode.
         force_eager: true
-
-    # Enabling the FOSUserBundle integration has been deprecated in 2.5 and will be removed in 3.0.
-    # Enable the FOSUserBundle integration.
-    enable_fos_user: false
-
-    # Enabling the NelmioApiDocBundle integration has been deprecated in 2.2 and will be removed in 3.0.
-    # NelmioApiDocBundle 3 has native support for API Platform.
-    enable_nelmio_api_doc: false
 
     # Enable the Swagger documentation and export.
     enable_swagger: true
@@ -102,35 +90,6 @@ api_platform:
 
             # The name of the query parameter to enable or disable the partial pagination.
             partial_parameter_name: 'partial'
-
-            # To enable or disable pagination for all resource collections by default.
-            # Deprecated since 2.6 and will be removed in 3.0, use defaults.pagination_enabled instead.
-            enabled: true
-
-            # To allow partial pagination for all resource collections.
-            # This improves performances by skipping the `COUNT` query.
-            # Deprecated since 2.6 and will be removed in 3.0, use defaults.pagination_partial instead.
-            partial: false
-
-            # To allow the client to enable or disable the pagination.
-            # Deprecated since 2.6 and will be removed in 3.0, use defaults.pagination_client_enabled instead.
-            client_enabled: false
-
-            # To allow the client to set the number of items per page.
-            # Deprecated since 2.6 and will be removed in 3.0, use defaults.pagination_client_items_per_page instead.
-            client_items_per_page: false
-
-            # To allow the client to enable or disable the partial pagination.
-            # Deprecated since 2.6 and will be removed in 3.0, use defaults.pagination_client_partial instead.
-            client_partial: false
-
-            # The default number of items per page.
-            # Deprecated since 2.6 and will be removed in 3.0, use defaults.pagination_items_per_page instead.
-            items_per_page: 30
-
-            # The maximum number of items per page.
-            # Deprecated since 2.6 and will be removed in 3.0, use defaults.pagination_maximum_items_per_page instead.
-            maximum_items_per_page: ~
 
     mapping:
         # The list of paths with files or directories where the bundle will look for additional resource files.
@@ -255,22 +214,6 @@ api_platform:
 
             # Use another service as the purger for example "api_platform.http_cache.purger.varnish.xkey"
             purger: 'api_platform.http_cache.purger.varnish.ban'
-
-        # Automatically generate etags for API responses.
-        # Deprecated since 2.6 and will be removed in 3.0, use defaults.cache_headers.etag instead.
-        etag: true
-
-        # Default value for the response max age.
-        # Deprecated since 2.6 and will be removed in 3.0, use defaults.cache_headers.max_age instead.
-        max_age: 3600
-
-        # Default value for the response shared (proxy) max age.
-        # Deprecated since 2.6 and will be removed in 3.0, use defaults.cache_headers.shared_max_age instead.
-        shared_max_age: 3600
-
-        # Default values of the "Vary" HTTP header.
-        # Deprecated since 2.6 and will be removed in 3.0, use defaults.cache_headers.vary instead.
-        vary: ['Accept']
 
     mercure:
         # Enabled by default with installed symfony/mercure-bundle.

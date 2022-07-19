@@ -526,8 +526,6 @@ It will also check the emptiness of a collection association.
 
 Syntax: `?exists[property]=<true|false|1|0>`
 
-Previous syntax (deprecated): `?property[exists]=<true|false|1|0>`
-
 Enable the filter:
 
 [codeSelector]
