@@ -20,82 +20,78 @@ The minimal version of API Platform:
 
 require './vendor/autoload.php';
 
-use ApiPlatform\Core\Action\EntrypointAction;
-use ApiPlatform\Core\Action\ExceptionAction;
-use ApiPlatform\Core\Action\PlaceholderAction;
-use ApiPlatform\Core\Api\IdentifiersExtractor;
-use ApiPlatform\Core\Api\IdentifiersExtractorInterface;
-use ApiPlatform\Core\Api\OperationType;
-use ApiPlatform\Core\Api\ResourceClassResolver;
-use ApiPlatform\Core\Api\UrlGeneratorInterface as ApiUrlGeneratorInterface;
-use ApiPlatform\Core\Bridge\Symfony\Routing\RouteNameGenerator;
-use ApiPlatform\Core\Bridge\Symfony\Validator\EventListener\ValidationExceptionListener;
-use ApiPlatform\Core\Documentation\DocumentationInterface;
-use ApiPlatform\Core\EventListener\AddFormatListener;
-use ApiPlatform\Core\EventListener\DeserializeListener;
-use ApiPlatform\Core\EventListener\ExceptionListener;
-use ApiPlatform\Core\EventListener\ReadListener;
-use ApiPlatform\Core\EventListener\WriteListener;
-use ApiPlatform\Core\Bridge\Symfony\PropertyInfo\Metadata\Property\PropertyInfoPropertyMetadataFactory;
-use ApiPlatform\Core\Bridge\Symfony\PropertyInfo\Metadata\Property\PropertyInfoPropertyNameCollectionFactory;
-use ApiPlatform\Core\Bridge\Symfony\Routing\IriConverter;
-use ApiPlatform\Core\Bridge\Symfony\Routing\RouteNameResolver;
-use ApiPlatform\Core\DataPersister\DataPersisterInterface;
-use ApiPlatform\Core\DataProvider\ContextAwareCollectionDataProviderInterface;
-use ApiPlatform\Core\DataProvider\DenormalizedIdentifiersAwareItemDataProviderInterface;
-use ApiPlatform\Core\DataProvider\PaginationOptions;
-use ApiPlatform\Core\DataProvider\RestrictedDataProviderInterface;
-use ApiPlatform\Core\EventListener\RespondListener;
-use ApiPlatform\Core\EventListener\SerializeListener;
-use ApiPlatform\Core\Hal\Serializer\CollectionNormalizer as HalCollectionNormalizer;
-use ApiPlatform\Core\Hal\Serializer\EntrypointNormalizer as HalEntrypointNormalizer;
-use ApiPlatform\Core\Hal\Serializer\ItemNormalizer as HalItemNormalizer;
-use ApiPlatform\Core\Hal\Serializer\ObjectNormalizer as HalObjectNormalizer;
-use ApiPlatform\Core\Hydra\EventListener\AddLinkHeaderListener;
-use ApiPlatform\Core\Hydra\Serializer\CollectionFiltersNormalizer;
-use ApiPlatform\Core\Hydra\Serializer\CollectionNormalizer as HydraCollectionNormalizer;
-use ApiPlatform\Core\Hydra\Serializer\ConstraintViolationListNormalizer as HydraConstraintViolationListNormalizer;
-use ApiPlatform\Core\Hydra\Serializer\DocumentationNormalizer as HydraDocumentationNormalizer;
-use ApiPlatform\Core\Hydra\Serializer\EntrypointNormalizer as HydraEntrypointNormalizer;
-use ApiPlatform\Core\Hydra\Serializer\ErrorNormalizer as HydraErrorNormalizer;
-use ApiPlatform\Core\Hydra\Serializer\PartialCollectionViewNormalizer;
-use ApiPlatform\Core\Identifier\IdentifierConverter;
-use ApiPlatform\Core\Identifier\Normalizer\IntegerDenormalizer;
-use ApiPlatform\Core\JsonLd\Action\ContextAction;
-use ApiPlatform\Core\JsonLd\Serializer\ItemNormalizer as JsonLdItemNormalizer;
-use ApiPlatform\Core\JsonLd\Serializer\ObjectNormalizer as JsonLdObjectNormalizer;
-use ApiPlatform\Core\JsonLd\ContextBuilder as JsonLdContextBuilder;
-use ApiPlatform\Core\JsonSchema\SchemaFactory;
-use ApiPlatform\Core\JsonSchema\TypeFactory;
-use ApiPlatform\Core\Metadata\Property\Factory\AnnotationPropertyMetadataFactory;
-use ApiPlatform\Core\Metadata\Property\Factory\InheritedPropertyMetadataFactory;
-use ApiPlatform\Core\Metadata\Property\Factory\InheritedPropertyNameCollectionFactory;
-use ApiPlatform\Core\Metadata\Property\Factory\SerializerPropertyMetadataFactory;
-use ApiPlatform\Core\Metadata\Resource\Factory\AnnotationResourceFilterMetadataFactory;
-use ApiPlatform\Core\Metadata\Resource\Factory\AnnotationResourceMetadataFactory;
-use ApiPlatform\Core\Metadata\Resource\Factory\AnnotationResourceNameCollectionFactory;
-use ApiPlatform\Core\Metadata\Resource\Factory\FormatsResourceMetadataFactory;
-use ApiPlatform\Core\Metadata\Resource\Factory\InputOutputResourceMetadataFactory;
-use ApiPlatform\Core\Metadata\Resource\Factory\OperationResourceMetadataFactory;
-use ApiPlatform\Core\Metadata\Resource\Factory\ResourceMetadataFactoryInterface;
-use ApiPlatform\Core\Metadata\Resource\Factory\ResourceNameCollectionFactoryInterface;
-use ApiPlatform\Core\Metadata\Resource\Factory\ShortNameResourceMetadataFactory;
-use ApiPlatform\Core\Metadata\Resource\ResourceMetadata;
-use ApiPlatform\Core\OpenApi\Factory\OpenApiFactory;
-use ApiPlatform\Core\OpenApi\Factory\OpenApiFactoryInterface;
-use ApiPlatform\Core\OpenApi\Options as OpenApiOptions;
-use ApiPlatform\Core\OpenApi\Serializer\OpenApiNormalizer;
-use ApiPlatform\Core\Operation\Factory\SubresourceOperationFactory;
-use ApiPlatform\Core\Operation\UnderscorePathSegmentNameGenerator;
-use ApiPlatform\Core\PathResolver\OperationPathResolver;
-use ApiPlatform\Core\PathResolver\OperationPathResolverInterface;
-use ApiPlatform\Core\Problem\Serializer\ConstraintViolationListNormalizer as ProblemConstraintViolationListNormalizer;
-use ApiPlatform\Core\Problem\Serializer\ErrorNormalizer;
-use ApiPlatform\Core\Serializer\ItemNormalizer;
-use ApiPlatform\Core\Serializer\JsonEncoder as JsonLdEncoder;
-use ApiPlatform\Core\Serializer\SerializerContextBuilder;
-use ApiPlatform\Core\Validator\EventListener\ValidateListener;
-use ApiPlatform\Core\Validator\ValidatorInterface;
+use ApiPlatform\Action\EntrypointAction;
+use ApiPlatform\Action\ExceptionAction;
+use ApiPlatform\Action\PlaceholderAction;
+use ApiPlatform\Api\IdentifiersExtractor;
+use ApiPlatform\Api\IdentifiersExtractorInterface;
+//use ApiPlatform\Api\OperationType;
+use ApiPlatform\Api\ResourceClassResolver;
+use ApiPlatform\Api\UrlGeneratorInterface as ApiUrlGeneratorInterface;
+use ApiPlatform\Documentation\DocumentationInterface;
+//use ApiPlatform\DataPersister\DataPersisterInterface;
+use ApiPlatform\Hal\Serializer\CollectionNormalizer as HalCollectionNormalizer;
+use ApiPlatform\Hal\Serializer\EntrypointNormalizer as HalEntrypointNormalizer;
+use ApiPlatform\Hal\Serializer\ItemNormalizer as HalItemNormalizer;
+use ApiPlatform\Hal\Serializer\ObjectNormalizer as HalObjectNormalizer;
+use ApiPlatform\Hydra\EventListener\AddLinkHeaderListener;
+use ApiPlatform\Hydra\Serializer\CollectionFiltersNormalizer;
+use ApiPlatform\Hydra\Serializer\CollectionNormalizer as HydraCollectionNormalizer;
+use ApiPlatform\Hydra\Serializer\ConstraintViolationListNormalizer as HydraConstraintViolationListNormalizer;
+use ApiPlatform\Hydra\Serializer\DocumentationNormalizer as HydraDocumentationNormalizer;
+use ApiPlatform\Hydra\Serializer\EntrypointNormalizer as HydraEntrypointNormalizer;
+use ApiPlatform\Hydra\Serializer\ErrorNormalizer as HydraErrorNormalizer;
+use ApiPlatform\Hydra\Serializer\PartialCollectionViewNormalizer;
+//use ApiPlatform\Identifier\IdentifierConverter;
+//use ApiPlatform\Identifier\Normalizer\IntegerDenormalizer;
+use ApiPlatform\JsonLd\Action\ContextAction;
+use ApiPlatform\JsonLd\Serializer\ItemNormalizer as JsonLdItemNormalizer;
+use ApiPlatform\JsonLd\Serializer\ObjectNormalizer as JsonLdObjectNormalizer;
+use ApiPlatform\JsonLd\ContextBuilder as JsonLdContextBuilder;
+use ApiPlatform\JsonSchema\SchemaFactory;
+use ApiPlatform\JsonSchema\TypeFactory;
+//use ApiPlatform\Metadata\Property\Factory\AnnotationPropertyMetadataFactory;
+//use ApiPlatform\Metadata\Property\Factory\InheritedPropertyMetadataFactory;
+//use ApiPlatform\Metadata\Property\Factory\InheritedPropertyNameCollectionFactory;
+use ApiPlatform\Metadata\Property\Factory\SerializerPropertyMetadataFactory;
+//use ApiPlatform\Metadata\Resource\Factory\AnnotationResourceFilterMetadataFactory;
+//use ApiPlatform\Metadata\Resource\Factory\AnnotationResourceMetadataFactory;
+//use ApiPlatform\Metadata\Resource\Factory\AnnotationResourceNameCollectionFactory;
+//use ApiPlatform\Metadata\Resource\Factory\FormatsResourceMetadataFactory;
+//use ApiPlatform\Metadata\Resource\Factory\InputOutputResourceMetadataFactory;
+//use ApiPlatform\Metadata\Resource\Factory\OperationResourceMetadataFactory;
+//use ApiPlatform\Metadata\Resource\Factory\ResourceMetadataFactoryInterface;
+use ApiPlatform\Metadata\Resource\Factory\ResourceNameCollectionFactoryInterface;
+//use ApiPlatform\Metadata\Resource\Factory\ShortNameResourceMetadataFactory;
+//use ApiPlatform\Metadata\Resource\ResourceMetadata;
+use ApiPlatform\OpenApi\Factory\OpenApiFactory;
+use ApiPlatform\OpenApi\Factory\OpenApiFactoryInterface;
+use ApiPlatform\OpenApi\Options as OpenApiOptions;
+use ApiPlatform\OpenApi\Serializer\OpenApiNormalizer;
+//use ApiPlatform\Operation\Factory\SubresourceOperationFactory;
+use ApiPlatform\Operation\UnderscorePathSegmentNameGenerator;
+//use ApiPlatform\PathResolver\OperationPathResolver;
+//use ApiPlatform\PathResolver\OperationPathResolverInterface;
+use ApiPlatform\Problem\Serializer\ConstraintViolationListNormalizer as ProblemConstraintViolationListNormalizer;
+use ApiPlatform\Problem\Serializer\ErrorNormalizer;
+use ApiPlatform\Serializer\ItemNormalizer;
+use ApiPlatform\Serializer\JsonEncoder as JsonLdEncoder;
+use ApiPlatform\Serializer\SerializerContextBuilder;
+use ApiPlatform\Symfony\EventListener\AddFormatListener;
+use ApiPlatform\Symfony\EventListener\DeserializeListener;
+use ApiPlatform\Symfony\EventListener\ExceptionListener;
+use ApiPlatform\Symfony\EventListener\ReadListener;
+use ApiPlatform\Symfony\EventListener\RespondListener;
+use ApiPlatform\Symfony\EventListener\SerializeListener;
+use ApiPlatform\Symfony\EventListener\ValidateListener;
+use ApiPlatform\Symfony\EventListener\WriteListener;
+use ApiPlatform\Metadata\Property\Factory\PropertyInfoPropertyMetadataFactory;
+use ApiPlatform\Metadata\Property\Factory\PropertyInfoPropertyNameCollectionFactory;
+use ApiPlatform\Symfony\Routing\IriConverter;
+//use ApiPlatform\Symfony\Routing\RouteNameResolver;
+//use ApiPlatform\Symfony\Routing\RouteNameGenerator;
+use ApiPlatform\Symfony\Validator\EventListener\ValidationExceptionListener;
+use ApiPlatform\Validator\ValidatorInterface;
 use Doctrine\Common\Annotations\AnnotationReader;
 use Negotiation\Negotiator;
 use Psr\Container\ContainerInterface;
@@ -139,8 +135,6 @@ use Symfony\Component\Serializer\Normalizer\ProblemNormalizer;
 use Symfony\Component\Serializer\Normalizer\UnwrappingDenormalizer;
 use Symfony\Component\Serializer\Serializer;
 
-/** @deprecated since API Platform 2.7, will be removed in API Platform 3.0 */
-$allowPlainIdentifiers = false;
 $debug = true;
 $defaultContext = [];
 $dataTransformers = [];
@@ -164,8 +158,8 @@ $configuration = [
 $exceptionToStatus = [
     # The 4 following handlers are registered by default, keep those lines to prevent unexpected side effects
     \Symfony\Component\Serializer\Exception\ExceptionInterface::class => 400,
-    \ApiPlatform\Core\Exception\InvalidArgumentException::class => 400,
-    \ApiPlatform\Core\Exception\FilterValidationException::class => 400,
+    \ApiPlatform\Exception\InvalidArgumentException::class => 400,
+    \ApiPlatform\Exception\FilterValidationException::class => 400,
     \Doctrine\ORM\OptimisticLockException::class => 409,
 ];
 
@@ -445,7 +439,7 @@ $hydraConstraintViolationNormalizer = new HydraConstraintViolationListNormalizer
 
 $problemErrorNormalizer = new ErrorNormalizer($debug, $defaultContext);
 
-$itemNormalizer = new ItemNormalizer($propertyNameCollectionFactory, $propertyMetadataFactory, $iriConverter, $resourceClassResolver, $propertyAccessor, $nameConverter, $classMetadataFactory, $dataProvider, $allowPlainIdentifiers, $logger, $dataTransformers, $resourceMetadataFactory, /** resourceAccessChecker **/ null);
+$itemNormalizer = new ItemNormalizer($propertyNameCollectionFactory, $propertyMetadataFactory, $iriConverter, $resourceClassResolver, $propertyAccessor, $nameConverter, $classMetadataFactory, $logger, $dataTransformers, $resourceMetadataFactory, /** resourceAccessChecker **/ null);
 
 $arrayDenormalizer = new ArrayDenormalizer();
 $problemNormalizer = new ProblemNormalizer($debug, $defaultContext);
@@ -457,7 +451,7 @@ $dateTimeZoneNormalizer = new DateTimeZoneNormalizer();
 $constraintViolationListNormalizer = new ConstraintViolationListNormalizer($defaultContext, $nameConverter);
 $unwrappingDenormalizer = new UnwrappingDenormalizer($propertyAccessor);
 
-$halItemNormalizer = new HalItemNormalizer($propertyNameCollectionFactory, $propertyMetadataFactory, $iriConverter, $resourceClassResolver, $propertyAccessor, $nameConverter, $classMetadataFactory, $dataProvider, $allowPlainIdentifiers, $defaultContext, $dataTransformers, $resourceMetadataFactory, /** resourceAccessChecker **/ null);
+$halItemNormalizer = new HalItemNormalizer($propertyNameCollectionFactory, $propertyMetadataFactory, $iriConverter, $resourceClassResolver, $propertyAccessor, $nameConverter, $classMetadataFactory, $defaultContext, $dataTransformers, $resourceMetadataFactory, /** resourceAccessChecker **/ null);
 
 $halEntrypointNormalizer = new HalEntrypointNormalizer($resourceMetadataFactory, $iriConverter, $apiUrlGenerator);
 $halCollectionNormalizer = new HalCollectionNormalizer($resourceClassResolver, $configuration['collection']['pagination']['page_parameter_name'], $resourceMetadataFactory);
@@ -494,13 +488,13 @@ $list->insert($openApiNormalizer, -780);
 
 // TODO: JSON-API support
 /**
- * api_platform.jsonapi.normalizer.error                       -790       ApiPlatform\Core\JsonApi\Serializer\ErrorNormalizer
- * api_platform.jsonapi.normalizer.constraint_violation_list   -780       ApiPlatform\Core\JsonApi\Serializer\ConstraintViolationListNormalizer
- * api_platform.openapi.normalizer.api_gateway                 -780       ApiPlatform\Core\Swagger\Serializer\ApiGatewayNormalizer
- * api_platform.jsonapi.normalizer.entrypoint                  -800       ApiPlatform\Core\JsonApi\Serializer\EntrypointNormalizer
- * api_platform.jsonapi.normalizer.collection                  -985       ApiPlatform\Core\JsonApi\Serializer\CollectionNormalizer
- * api_platform.jsonapi.normalizer.item                        -890       ApiPlatform\Core\JsonApi\Serializer\ItemNormalizer
- * api_platform.jsonapi.normalizer.object                      -995       ApiPlatform\Core\JsonApi\Serializer\ObjectNormalizer
+ * api_platform.jsonapi.normalizer.error                       -790       ApiPlatform\JsonApi\Serializer\ErrorNormalizer
+ * api_platform.jsonapi.normalizer.constraint_violation_list   -780       ApiPlatform\JsonApi\Serializer\ConstraintViolationListNormalizer
+ * api_platform.openapi.normalizer.api_gateway                 -780       ApiPlatform\Swagger\Serializer\ApiGatewayNormalizer
+ * api_platform.jsonapi.normalizer.entrypoint                  -800       ApiPlatform\JsonApi\Serializer\EntrypointNormalizer
+ * api_platform.jsonapi.normalizer.collection                  -985       ApiPlatform\JsonApi\Serializer\CollectionNormalizer
+ * api_platform.jsonapi.normalizer.item                        -890       ApiPlatform\JsonApi\Serializer\ItemNormalizer
+ * api_platform.jsonapi.normalizer.object                      -995       ApiPlatform\JsonApi\Serializer\ObjectNormalizer
  */
 
 $encoders = [new JsonEncoder(), $jsonLdEncoder];
@@ -523,7 +517,7 @@ $dispatcher->addSubscriber(new RouterListener($matcher, new RequestStack()));
 $dispatcher->addListener('kernel.view', [$validateListener, 'onKernelView'], 64);
 $dispatcher->addListener('kernel.view', [$writeListener, 'onKernelView'], 32);
 $dispatcher->addListener('kernel.view', [$serializeListener, 'onKernelView'], 16);
-// TODO: ApiPlatform\Core\EventListener\QueryParameterValidateListener, prio 16   
+// TODO: ApiPlatform\EventListener\QueryParameterValidateListener, prio 16   
 $dispatcher->addListener('kernel.view', [$respondListener, 'onKernelView'], 8);
 $dispatcher->addListener('kernel.request', [$formatListener, 'onKernelRequest'], 28);
 $dispatcher->addListener('kernel.request', [$readListener, 'onKernelRequest'], 4);
@@ -534,10 +528,10 @@ $dispatcher->addListener('kernel.response', [$addLinkHeaderListener, 'onKernelRe
 
 /*
  * TODO: 
- * api_platform.security.listener.request.deny_access     kernel.request      onSecurity                  3          ApiPlatform\Core\Security\EventListener\DenyAccessListener
+ * api_platform.security.listener.request.deny_access     kernel.request      onSecurity                  3          ApiPlatform\Security\EventListener\DenyAccessListener
  *   "                                                    kernel.request      onSecurityPostDenormalize   1                                                                   
- * api_platform.swagger.listener.ui                       kernel.request      onKernelRequest                        ApiPlatform\Core\Bridge\Symfony\Bundle\EventListener\SwaggerUiListener
- * api_platform.http_cache.listener.response.configure    kernel.response     onKernelResponse            -1         ApiPlatform\Core\HttpCache\EventListener\AddHeadersListener
+ * api_platform.swagger.listener.ui                       kernel.request      onKernelRequest                        ApiPlatform\Symfony\Bundle\EventListener\SwaggerUiListener
+ * api_platform.http_cache.listener.response.configure    kernel.response     onKernelResponse            -1         ApiPlatform\HttpCache\EventListener\AddHeadersListener
 */
 
 final class DocumentationAction 
