@@ -29,7 +29,7 @@ bin/console make:state-provider
 Let's start with a State Provider for the URI: `/blog_posts/{id}`.
 
 First, your `BlogPostProvider` has to implement the
-[`StateProviderInterface`](https://github.com/api-platform/core/blob/main/src/State/StateProviderInterface.php):
+[`ProviderInterface`](https://github.com/api-platform/core/blob/main/src/State/ProviderInterface.php):
 
 ```php
 <?php

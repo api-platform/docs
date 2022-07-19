@@ -552,7 +552,7 @@ For example, from [`Regex`](https://symfony.com/doc/4.4/reference/constraints/Re
 For building custom property schema based on custom validation constraints you can create a custom class
 for generating property scheme restriction.
 
-To create property schema, you have to implement the [`PropertySchemaRestrictionMetadataInterface`](https://github.com/api-platform/core/blob/caca7f26b7f22a0abf84390463a1ea47c47d7757/src/Bridge/Symfony/Validator/Metadata/Property/Restriction/PropertySchemaRestrictionMetadataInterface.php).
+To create property schema, you have to implement the [`PropertySchemaRestrictionMetadataInterface`](https://github.com/api-platform/core/blob/main/src/Symfony/Validator/Metadata/Property/Restriction/PropertySchemaRestrictionMetadataInterface.php).
 This interface defines only 2 methods:
 
 * `create`: to create property schema
