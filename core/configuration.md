@@ -242,9 +242,9 @@ api_platform:
         Symfony\Component\Serializer\Exception\ExceptionInterface: 400
 
         # Or with a constant defined in the 'Symfony\Component\HttpFoundation\Response' class.
-        ApiPlatform\Core\Exception\InvalidArgumentException: !php/const Symfony\Component\HttpFoundation\Response::HTTP_BAD_REQUEST
+        ApiPlatform\Exception\InvalidArgumentException: !php/const Symfony\Component\HttpFoundation\Response::HTTP_BAD_REQUEST
 
-        ApiPlatform\Core\Exception\FilterValidationException: 400
+        ApiPlatform\Exception\FilterValidationException: 400
 
         Doctrine\ORM\OptimisticLockException: 409
 
@@ -371,7 +371,7 @@ api_platform:
         stateless: ~
 
         # The URL generation strategy to use for IRIs
-        url_generation_strategy: !php/const ApiPlatform\Core\Api\UrlGeneratorInterface::ABS_PATH
+        url_generation_strategy: !php/const ApiPlatform\Api\UrlGeneratorInterface::ABS_PATH
 
         # ...
 ```

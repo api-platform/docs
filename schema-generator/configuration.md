@@ -296,7 +296,7 @@ class Product
     /**
      * The weight of the product or person.
      *
-     * @see http://schema.org/weight
+     * @see https://schema.org/weight
      */
     #[ORM\Embedded(class: QuantitativeValue::class)]
     #[ApiProperty(iri: 'https://schema.org/weight')]

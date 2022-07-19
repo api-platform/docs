@@ -169,7 +169,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 /**
  * @ODM\Document
  */
-#[ApiResource(types: ['http://schema.org/Offer'])]
+#[ApiResource(types: ['https://schema.org/Offer'])]
 class Offer
 {
     /**
