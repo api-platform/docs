@@ -1174,14 +1174,15 @@ library. This library must be properly installed and registered to use this exam
 
 namespace App\Filter;
 
-use ApiPlatform\Doctrine\Orm\Filter\AbstractContextAwareFilter;
+use ApiPlatform\Doctrine\Orm\Filter\AbstractFilter;
 use ApiPlatform\Doctrine\Orm\Util\QueryNameGeneratorInterface;
+use ApiPlatform\Metadata\Operation;
 use Doctrine\ORM\QueryBuilder;
 use Symfony\Component\PropertyInfo\Type;
 
-final class RegexpFilter extends AbstractContextAwareFilter
+final class RegexpFilter extends AbstractFilter
 {
-    protected function filterProperty(string $property, $value, QueryBuilder $queryBuilder, QueryNameGeneratorInterface $queryNameGenerator, string $resourceClass, string $operationName = null)
+    protected function filterProperty(string $property, $value, QueryBuilder $queryBuilder, QueryNameGeneratorInterface $queryNameGenerator, string $resourceClass, Operation $operation = null, array $context = [])
     {
         // otherwise filter is applied to order and page as well
         if (
