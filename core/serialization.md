@@ -696,7 +696,7 @@ class Book
     /**
      * This field can be managed only by an admin
      */
-    #[Groups(['book:output', 'admin:input'}])]
+    #[Groups(['book:output', 'admin:input'])]
     public bool $active = false;
 
     /**

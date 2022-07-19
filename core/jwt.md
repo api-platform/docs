@@ -120,7 +120,7 @@ security:
     # https://symfony.com/doc/current/security.html#c-hashing-passwords
     password_hashers:
         App\Entity\User: 'auto'
-    
+
     # https://symfony.com/doc/current/security/authenticator_manager.html
     enable_authenticator_manager: true
     # https://symfony.com/doc/current/security.html#where-do-users-come-from-user-providers
@@ -165,7 +165,7 @@ Want to test the routes of your JWT-authentication-protected API?
 api_platform:
     swagger:
          api_keys:
-             apiKey:
+             JWT:
                 name: Authorization
                 type: header
 ```
@@ -236,6 +236,13 @@ final class JwtDecorator implements OpenApiFactoryInterface
             ],
         ]);
 
+        $schemas = $openApi->getComponents()->getSecuritySchemes() ?? [];
+        $schemas['JWT'] = new ArrayObject([
+            'type' => 'http',
+            'scheme' => 'bearer',
+            'bearerFormat' => 'JWT',
+        ]);
+        
         $pathItem = new Model\PathItem(
             ref: 'JWT Token',
             post: new Model\Operation(
@@ -278,11 +285,11 @@ And register this service in `config/services.yaml`:
 ```yaml
 # api/config/services.yaml
 services:
-    # ...   
+    # ...
 
     App\OpenApi\JwtDecorator:
         decorates: 'api_platform.openapi.factory'
-        arguments: ['@.inner'] 
+        arguments: ['@.inner']
 ```
 
 ## Testing
@@ -306,14 +313,15 @@ class AuthenticationTest extends ApiTestCase
     public function testLogin(): void
     {
         $client = self::createClient();
+        $container = self::getContainer();
 
         $user = new User();
         $user->setEmail('test@example.com');
         $user->setPassword(
-            self::$container->get('security.user_password_hasher')->hashPassword($user, '$3CR3T')
+            $container->get('security.user_password_hasher')->hashPassword($user, '$3CR3T')
         );
 
-        $manager = self::$container->get('doctrine')->getManager();
+        $manager = $container->get('doctrine')->getManager();
         $manager->persist($user);
         $manager->flush();
 
@@ -349,7 +357,7 @@ Since now we have a `JWT` authentication, functional tests require us to log in 
 
 Hashers are used for 2 reasons:
 
-1. To generate a hash for a raw password (`self::$container->get('security.user_password_hasher')->hashPassword($user, '$3CR3T')`)
+1. To generate a hash for a raw password (`$container->get('security.user_password_hasher')->hashPassword($user, '$3CR3T')`)
 2. To verify a password during authentication
 
 While hashing and verifying 1 password is quite a fast operation, doing it hundreds or even thousands of times in a tests suite becomes a bottleneck, because reliable hashing algorithms are slow by their nature.

@@ -207,7 +207,7 @@ publicationDate: This value should not be null.',
         $this->assertResponseStatusCodeSame(204);
         $this->assertNull(
             // Through the container, you can access all your services from the tests, including the ORM, the mailer, remote API clients...
-            static::$container->get('doctrine')->getRepository(Book::class)->findOneBy(['isbn' => '9781344037075'])
+            static::getContainer()->get('doctrine')->getRepository(Book::class)->findOneBy(['isbn' => '9781344037075'])
         );
     }
 
