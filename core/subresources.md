@@ -178,7 +178,7 @@ may use `bin/console debug:router`.
 
 ## Using Custom Paths
 
-You can control the path of subresources with the `path` option of the `subresourceOperations` parameter:
+You can control the path of subresources with the `path` option of the `subresourceOperations` parameter.
 
 ```php
 <?php
@@ -186,7 +186,7 @@ You can control the path of subresources with the `path` option of the `subresou
 
 #[ApiResource(
     subresourceOperations: [
-        'api_questions_answer_get_subresource' => [
+        'answer_get_subresource' => [
             'method' => 'GET',
             'path' => '/questions/{id}/all-answers',
         ],
