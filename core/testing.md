@@ -17,7 +17,7 @@ Reuse them to run, for instance, SQL queries or requests to external APIs direct
 Install the `symfony/http-client` and `symfony/browser-kit` packages to enabled the API Platform test client:
 
 ```console
-docker-compose exec php \
+docker compose exec php \
     composer require symfony/browser-kit symfony/http-client
 ```
 

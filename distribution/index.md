@@ -76,16 +76,16 @@ services using [Docker Compose](https://docs.docker.com/compose/):
 Download and build the latest versions of the images:
 
 ```console
-docker-compose build --pull --no-cache
+docker compose build --pull --no-cache
 ```
 
 Start Docker Compose in detached mode:
 
 ```console
-docker-compose up -d 
+docker compose up -d 
 ```
 
-**Tip:** be sure that the ports `80`, `443` and `5432` of the host are not already in use. The usual offenders are Apache, NGINX and Postgres. If they are running, stop them and run `docker-compose up -d` again.
+**Tip:** be sure that the ports `80`, `443` and `5432` of the host are not already in use. The usual offenders are Apache, NGINX and Postgres. If they are running, stop them and run `docker compose up -d` again.
 
 This starts the following services:
 
@@ -107,7 +107,7 @@ The following components are available:
 To see the container's logs, run:
 
 ```console
-docker-compose logs -f
+docker compose logs -f
 ```
 
 The `-f` option is to follow the logs.
@@ -446,7 +446,7 @@ Modify these files as described in these patches:
 **Tip**: you can also use Symfony [MakerBundle](https://symfonycasts.com/screencast/symfony-fundamentals/maker-command?cid=apip) thanks to the `--api-resource` option:
 
 ```console
-docker-compose exec php \
+docker compose exec php \
     bin/console make:entity --api-resource
 ```
 
@@ -462,13 +462,13 @@ Now, delete the file `api/src/Entity/Greeting.php`. This demo entity isn't usefu
 Finally, generate a new database migration using [Doctrine Migrations](https://symfony.com/doc/current/doctrine.html#migrations-creating-the-database-tables-schema) and apply it:
 
 ```console
-docker-compose exec php \
+docker compose exec php \
     bin/console doctrine:migrations:diff
-docker-compose exec php \
+docker compose exec php \
     bin/console doctrine:migrations:migrate
 ```
 
-The `php` container is where your API app stands. Prefixing a command by `docker-compose exec php` allows executing the
+The `php` container is where your API app stands. Prefixing a command by `docker compose exec php` allows executing the
 given command in this container. You may want [to create an alias](http://www.linfo.org/alias.html) to make your life easier.
 
 **We now have a working API with read and write capabilities!**
@@ -660,7 +660,7 @@ Isn't API Platform a REST **and** GraphQL framework? That's true! GraphQL suppor
 need to install the [graphql-php](https://webonyx.github.io/graphql-php/) library. Run the following command:
 
 ```console
-docker-compose exec php sh -c '
+docker compose exec php sh -c '
     composer require webonyx/graphql-php
     bin/console cache:clear
 '
@@ -750,7 +750,7 @@ API Platform also has an awesome [client generator](../client-generator/index.md
 The distribution comes with a skeleton ready to welcome the [Next.js](https://nextjs.org/) flavor of the generated code. To bootstrap your app, run:
 
 ```console
-docker-compose exec pwa \
+docker compose exec pwa \
     generate-api-platform-client
 ```
 

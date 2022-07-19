@@ -37,7 +37,7 @@ If you are using the [API Platform Distribution](../distribution/index.md), modi
 Then rebuild the `php` image:
 
 ```console
-docker-compose build php
+docker compose build php
 ```
 
 Add a MongoDB image to the docker-compose file:
@@ -66,7 +66,7 @@ Once the extension is installed, to enable the MongoDB support, require the [Doc
 package using Composer:
 
 ```console
-docker-compose exec php \
+docker compose exec php \
     composer require doctrine/mongodb-odm-bundle
 ```
 

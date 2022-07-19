@@ -65,7 +65,7 @@ nelmio_cors:
 Clear the cache to apply this change:
 
 ```console
-docker-compose exec php \
+docker compose exec php \
     bin/console cache:clear --env=prod
 ```
 

@@ -13,7 +13,7 @@ Once enabled, you have nothing to do: your schema describing your API is automat
 To enable GraphQL and its IDE (GraphiQL and GraphQL Playground) in your API, simply require the [graphql-php](https://webonyx.github.io/graphql-php/) package using Composer and clear the cache one more time:
 
 ```console
-docker-compose exec php sh -c '
+docker compose exec php sh -c '
     composer require webonyx/graphql-php
     bin/console cache:clear
 '
@@ -1933,14 +1933,14 @@ You may need to export your schema in SDL (Schema Definition Language) to import
 The `api:graphql:export` command is provided to do so:
 
 ```shell-session
-docker-compose exec php \
+docker compose exec php \
     bin/console api:graphql:export -o path/to/your/volume/schema.graphql
 ```
 
 Since the command prints the schema to the output if you don't use the `-o` option, you can also use this command:
 
 ```shell-session
-docker-compose exec php \
+docker compose exec php \
     bin/console api:graphql:export > path/in/host/schema.graphql
 ```
 

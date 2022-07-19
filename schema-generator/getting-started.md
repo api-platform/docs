@@ -6,7 +6,7 @@ If you use [the API Platform distribution](../distribution/index.md), the Schema
 dependency of your project and can be invoked through Docker:
 
 ```console
-docker-compose exec php \
+docker compose exec php \
     vendor/bin/schema
 ```
 
@@ -104,7 +104,7 @@ vendor/bin/schema generate api/src/ api/config/schema.yaml -vv
 Using [the API Platform Distribution](../distribution/index.md):
 
 ```console
-docker-compose exec php \
+docker compose exec php \
     vendor/bin/schema generate src/ config/schema.yaml -vv
 ```
 

@@ -15,11 +15,11 @@ Remove the directories `client\src\` and `client\public\` and the files `client\
 Create a new Vue App and install vuetify and other vue packages:
 
 ```console
-docker-compose exec client \
+docker compose exec client \
     vue create -d .
-docker-compose exec client \
+docker compose exec client \
     vue add vuetify
-docker-compose exec client \
+docker compose exec client \
     yarn add router lodash moment vue-i18n vue-router vuelidate vuex vuex-map-fields
 ```
 
@@ -45,7 +45,7 @@ Rebuild the docker containers again to install the Vue App and start the vue ser
 Generate the vuetify components with the client generator:
 
 ```console
-docker-compose exec client \
+docker compose exec client \
     generate-api-platform-client -g vuetify --resource book
 ```
 

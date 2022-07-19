@@ -52,7 +52,7 @@ yarn start
 If you use the API Platform distribution, generating all the code you need for a given resource is as simple as running the following command:
 
 ```console
-docker-compose exec client \
+docker compose exec client \
     generate-api-platform-client --resource book -g react
 ```
 
