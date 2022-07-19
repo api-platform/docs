@@ -165,7 +165,7 @@ Want to test the routes of your JWT-authentication-protected API?
 api_platform:
     swagger:
          api_keys:
-             apiKey:
+             JWT:
                 name: Authorization
                 type: header
 ```
@@ -238,6 +238,13 @@ final class JwtDecorator implements OpenApiFactoryInterface
             ],
         ]);
 
+        $schemas = $openApi->getComponents()->getSecuritySchemes() ?? [];
+        $schemas['JWT'] = new ArrayObject([
+            'type' => 'http',
+            'scheme' => 'bearer',
+            'bearerFormat' => 'JWT',
+        ]);
+        
         $pathItem = new Model\PathItem(
             ref: 'JWT Token',
             post: new Model\Operation(
