@@ -154,6 +154,18 @@ security:
         - { path: ^/, roles: IS_AUTHENTICATED_FULLY }
 ```
 
+### Be sure to have lexik_jwt_authentication configured on your user_identity_field
+
+```yaml
+# api/config/packages/lexik_jwt_authentication.yaml
+lexik_jwt_authentication:
+    secret_key: '%env(resolve:JWT_SECRET_KEY)%'
+    public_key: '%env(resolve:JWT_PUBLIC_KEY)%'
+    pass_phrase: '%env(JWT_PASSPHRASE)%'
+
+    user_identity_field: email # Or the field you have setted using make:user
+```
+
 ## Documenting the Authentication Mechanism with Swagger/Open API
 
 Want to test the routes of your JWT-authentication-protected API?
