@@ -367,9 +367,10 @@ use ApiPlatform\Core\Annotation\ApiResource;
     itemOperations: [
             'get',
             'put' => [
-            'denormalization_context' => [
-                'groups' => ['item:put'],
-                'swagger_definition_name' => 'put',
+                'denormalization_context' => [
+                    'groups' => ['item:put'],
+                    'swagger_definition_name' => 'put',
+                ],
             ],
             'delete',
         ],
