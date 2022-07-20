@@ -68,7 +68,7 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
  */
 #[ORM\Entity]
 #[ApiResource(
-    iri: 'http://schema.org/MediaObject',
+    iri: 'https://schema.org/MediaObject',
     normalizationContext: ['groups' => ['media_object:read']],
     itemOperations: ['get'],
     collectionOperations: [
@@ -102,7 +102,7 @@ class MediaObject
     #[ORM\Id, ORM\Column, ORM\GeneratedValue]
     private ?int $id = null;
 
-    #[ApiProperty(iri: 'http://schema.org/contentUrl')]
+    #[ApiProperty(iri: 'https://schema.org/contentUrl')]
     #[Groups(['media_object:read'])]
     public ?string $contentUrl = null;
 
@@ -215,7 +215,7 @@ your data, you will get a response looking like this:
 
 ```json
 {
-  "@type": "http://schema.org/MediaObject",
+  "@type": "https://schema.org/MediaObject",
   "@id": "/media_objects/<id>",
   "contentUrl": "<url>"
 }
@@ -253,14 +253,14 @@ use Symfony\Component\HttpFoundation\File\File;
 use Vich\UploaderBundle\Mapping\Annotation as Vich;
 
 #[ORM\Entity]
-#[ApiResource(iri: 'http://schema.org/Book')]
+#[ApiResource(iri: 'https://schema.org/Book')]
 class Book
 {
     // ...
 
     #[ORM\ManyToOne(targetEntity: MediaObject::class)]
     #[ORM\JoinColumn(nullable: true)]
-    #[ApiProperty(iri: 'http://schema.org/image')]
+    #[ApiProperty(iri: 'https://schema.org/image')]
     public ?MediaObject $image = null;
     
     // ...
@@ -355,7 +355,7 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
  */
 #[ORM\Entity]
 #[ApiResource(
-    iri: 'http://schema.org/Book',
+    iri: 'https://schema.org/Book',
     normalizationContext: ['groups' => ['book:read']],
     denormalizationContext: ['groups' => ['book:write']],
     collectionOperations: [
@@ -371,7 +371,7 @@ class Book
 {
     // ...
 
-    #[ApiProperty(iri: 'http://schema.org/contentUrl')]
+    #[ApiProperty(iri: 'https://schema.org/contentUrl')]
     #[Groups(['book:read'])]
     public ?string $contentUrl = null;
 

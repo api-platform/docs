@@ -113,7 +113,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  *
  */
 #[ORM\Entity]
-#[ApiResource(iri: 'http://schema.org/Offer')]
+#[ApiResource(iri: 'https://schema.org/Offer')]
 class Offer
 {
     #[ORM\Id, ORM\Column, ORM\GeneratedValue]
@@ -175,7 +175,7 @@ resources:
     App\Entity\Offer:
         shortName: 'Offer'                   # optional
         description: 'An offer from my shop' # optional
-        iri: 'http://schema.org/Offer'       # optional
+        iri: 'https://schema.org/Offer'       # optional
         attributes:                          # optional
             pagination_items_per_page: 25    # optional
 ```
@@ -193,7 +193,7 @@ resources:
         class="App\Entity\Offer"
         shortName="Offer" <!-- optional -->
         description="An offer from my shop" <!-- optional -->
-        iri="http://schema.org/Offer" <!-- optional -->
+        iri="https://schema.org/Offer" <!-- optional -->
     />
 </resources>
 ```
