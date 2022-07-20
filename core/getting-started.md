@@ -181,10 +181,10 @@ resources:
 <?xml version="1.0" encoding="UTF-8" ?>
 <!-- api/config/api_platform/resources.xml -->
 
-<resource xmlns="https://api-platform.com/schema/metadata/resources"
+<resource xmlns="https://api-platform.com/schema/metadata/resources-3.0"
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xsi:schemaLocation="https://api-platform.com/schema/metadata/resources
-        https://api-platform.com/schema/metadata/resources.xsd">
+        xsi:schemaLocation="https://api-platform.com/schema/metadata/resources-3.0
+        https://api-platform.com/schema/metadata/resources-3.0.xsd">
     <resource class="App\Entity\Product" />
     <resource
         class="App\Entity\Offer"

@@ -49,7 +49,7 @@ resource:
 <properties xmlns="https://api-platform.com/schema/metadata/properties">
     <property resource="App\Entity\Person" name="code" identifier="true"/>
 </properties>
-<resources xmlns="https://api-platform.com/schema/metadata/resources">
+<resources xmlns="https://api-platform.com/schema/metadata/resources-3.0">
     <resource class="App\Entity\Person" provider="App\State\PersonProvider" />
 </resources>
 ```

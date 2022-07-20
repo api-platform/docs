@@ -128,10 +128,10 @@ App\Entity\Book:
 <!-- api/config/api_platform/resources.xml -->
 
 <resources
-        xmlns="https://api-platform.com/schema/metadata/resources"
+        xmlns="https://api-platform.com/schema/metadata/resources-3.0"
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xsi:schemaLocation="https://api-platform.com/schema/metadata/resources
-        https://api-platform.com/schema/metadata/resources.xsd">
+        xsi:schemaLocation="https://api-platform.com/schema/metadata/resources-3.0
+        https://api-platform.com/schema/metadata/resources-3.0.xsd">
     <resource class="App\Entity\Book">
         <operations>
             <operation class="ApiPlatform\Metadata\Get" />
@@ -201,10 +201,10 @@ App\Entity\Book:
 <?xml version="1.0" encoding="UTF-8" ?>
 <!-- api/config/api_platform/resources.xml -->
 
-<resources xmlns="https://api-platform.com/schema/metadata/resources"
+<resources xmlns="https://api-platform.com/schema/metadata/resources-3.0"
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xsi:schemaLocation="https://api-platform.com/schema/metadata/resources
-        https://api-platform.com/schema/metadata/resources.xsd">
+        xsi:schemaLocation="https://api-platform.com/schema/metadata/resources-3.0
+        https://api-platform.com/schema/metadata/resources-3.0.xsd">
     <resource class="App\Entity\Book">
         <operations>
             <operation class="ApiPlatform\Metadata\Get" />
@@ -271,10 +271,10 @@ App\Entity\Book:
 <?xml version="1.0" encoding="UTF-8" ?>
 <!-- api/config/api_platform/resources.xml -->
 
-<resources xmlns="https://api-platform.com/schema/metadata/resources"
+<resources xmlns="https://api-platform.com/schema/metadata/resources-3.0"
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xsi:schemaLocation="https://api-platform.com/schema/metadata/resources
-        https://api-platform.com/schema/metadata/resources.xsd">
+        xsi:schemaLocation="https://api-platform.com/schema/metadata/resources-3.0
+        https://api-platform.com/schema/metadata/resources-3.0.xsd">
     <resource class="App\Entity\Book">
         <operations>
             <operation class="ApiPlatform\Metadata\Get" />
@@ -343,10 +343,10 @@ App\Entity\Book:
 <?xml version="1.0" encoding="UTF-8" ?>
 <!-- api/config/api_platform/resources.xml -->
 
-<resources xmlns="https://api-platform.com/schema/metadata/resources"
+<resources xmlns="https://api-platform.com/schema/metadata/resources-3.0"
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xsi:schemaLocation="https://api-platform.com/schema/metadata/resources
-        https://api-platform.com/schema/metadata/resources.xsd">
+        xsi:schemaLocation="https://api-platform.com/schema/metadata/resources-3.0
+        https://api-platform.com/schema/metadata/resources-3.0.xsd">
     <resource class="App\Entity\Book">
         <operations>
             <operation class="ApiPlatform\Metadata\Get" />
