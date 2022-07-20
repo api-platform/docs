@@ -157,10 +157,10 @@ resources:
 ```
 
 ```xml
-<resources xmlns="https://api-platform.com/schema/metadata/resources"
+<resources xmlns="https://api-platform.com/schema/metadata/resources-3.0"
            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-           xsi:schemaLocation="https://api-platform.com/schema/metadata/resources
-           https://api-platform.com/schema/metadata/resources.xsd">
+           xsi:schemaLocation="https://api-platform.com/schema/metadata/resources-3.0
+           https://api-platform.com/schema/metadata/resources-3.0.xsd">
     <resource class="App\Entity\Greeting">
         <formats>
             <format>jsonld</format> <!-- format already defined in the config -->
