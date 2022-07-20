@@ -156,7 +156,7 @@ final class BlogPostSubresourceDataProvider implements SubresourceDataProviderIn
 		
         // write your own logic
 		
-		return blogPosts;
+            return blogPosts;
     }
 }
 ```
