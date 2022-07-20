@@ -154,6 +154,7 @@ final class BlogPostSubresourceDataProvider implements SubresourceDataProviderIn
         // Retrieve the blog post collection from somewhere
         $blogPosts = $this->subresourceDataProvider->getSubresource($resourceClass, $identifiers, $context, $operationName);
         // write your own logic
+
         return blogPosts;
     }
 }
