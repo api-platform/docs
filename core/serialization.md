@@ -118,6 +118,53 @@ App\Entity\Book:
             groups: ['write']
 ```
 
+```xml
+<!-- api/config/api_platform/resources.xml -->
+<?xml version="1.0" encoding="UTF-8" ?>
+<resources xmlns="https://api-platform.com/schema/metadata/resources-3.0"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="https://api-platform.com/schema/metadata/resources-3.0
+                               https://api-platform.com/schema/metadata/resources-3.0.xsd">
+    <resource class="App\Entity\Book">
+        <normalizationContext>
+            <values>
+                <value name="groups">
+                    <values>
+                        <value>read</value>
+                    </values>
+                </value>
+            </values>
+        </normalizationContext>
+        <denormalizationContext>
+            <values>
+                <value name="groups">
+                    <values>
+                        <value>write</value>
+                    </values>
+                </value>
+            </values>
+        </denormalizationContext>
+    </resource>
+</resources>
+
+<!-- api/config/serialization/Book.xml -->
+<?xml version="1.0" encoding="UTF-8" ?>
+<serializer xmlns="http://symfony.com/schema/dic/serializer-mapping"
+            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+            xsi:schemaLocation="http://symfony.com/schema/dic/serializer-mapping
+                                http://symfony.com/schema/dic/serializer-mapping/serializer-mapping-1.0.xsd">
+    <class name="App\Entity\Book">
+        <attribute name="name">
+            <group>read</group>
+            <group>write</group>
+        </attribute>
+        <attribute name="author">
+            <group>write</group>
+        </attribute>
+    </class>
+</serializer>
+```
+
 [/codeSelector]
 
 In the previous example, the `name` property will be visible when reading (`GET`) the object, and it will also be available
@@ -189,6 +236,58 @@ App\Entity\Book:
             groups: ['get', 'put']
         author:
             groups: ['get']
+```
+
+```xml
+<!-- api/config/api_platform/resources.xml -->
+<?xml version="1.0" encoding="UTF-8" ?>
+<resources xmlns="https://api-platform.com/schema/metadata/resources-3.0"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="https://api-platform.com/schema/metadata/resources-3.0
+                               https://api-platform.com/schema/metadata/resources-3.0.xsd">
+    <resource class="App\Entity\Book">
+        <normalizationContext>
+            <values>
+                <value name="groups">
+                    <values>
+                        <value>get</value>
+                    </values>
+                </value>
+            </values>
+        </normalizationContext>
+        <operations>
+            <operation class="ApiPlatform\Metadata\Get" />
+            <operation class="ApiPlatform\Metadata\Put">
+                <normalizationContext>
+            <values>
+                <value name="groups">
+                    <values>
+                        <value>put</value>
+                    </values>
+                </value>
+            </values>
+        </normalizationContext>
+            </operation>
+        </operations>
+    </resource>
+</resources>
+
+<!-- api/config/serialization/Book.xml -->
+<?xml version="1.0" encoding="UTF-8" ?>
+<serializer xmlns="http://symfony.com/schema/dic/serializer-mapping"
+            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+            xsi:schemaLocation="http://symfony.com/schema/dic/serializer-mapping
+                                http://symfony.com/schema/dic/serializer-mapping/serializer-mapping-1.0.xsd">
+    <class name="App\Entity\Book">
+        <attribute name="name">
+            <group>get</group>
+            <group>put</group>
+        </attribute>
+        <attribute name="author">
+            <group>get</group>
+        </attribute>
+    </class>
+</serializer>
 ```
 
 [/codeSelector]
