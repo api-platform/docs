@@ -202,7 +202,7 @@ class Offer
 }
 ```
 
-When defining references, always use the id for storing them instead of the native [DBRef](https://docs.mongodb.com/manual/reference/database-references/#dbrefs).
+When defining references, always use the ID for storing them instead of the native [DBRef](https://docs.mongodb.com/manual/reference/database-references/#dbrefs).
 It allows API Platform to manage [filtering on nested properties](filters.md#apifilter-annotation) by using [lookups](https://docs.mongodb.com/manual/reference/operator/aggregation/lookup/).
 
 ## Filtering

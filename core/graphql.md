@@ -1832,6 +1832,7 @@ Your class needs to look like this:
 namespace App\Type;
 
 use ApiPlatform\GraphQl\Type\TypeConverterInterface;
+use ApiPlatform\Metadata\GraphQl\Operation;
 use App\Entity\Book;
 use GraphQL\Type\Definition\Type as GraphQLType;
 use Symfony\Component\PropertyInfo\Type;
@@ -1848,7 +1849,7 @@ final class TypeConverter implements TypeConverterInterface
     /**
      * {@inheritdoc}
      */
-    public function convertType(Type $type, bool $input, ?string $queryName, ?string $mutationName, string $resourceClass, string $rootResource, ?string $property, int $depth)
+    public function convertType(Type $type, bool $input, Operation $rootOperation, string $resourceClass, string $rootResource, ?string $property, int $depth)
     {
         if ('publicationDate' === $property
             && Book::class === $resourceClass
@@ -1856,7 +1857,7 @@ final class TypeConverter implements TypeConverterInterface
             return 'DateTime';
         }
 
-        return $this->defaultTypeConverter->convertType($type, $input, $queryName, $mutationName, $resourceClass, $rootResource, $property, $depth);
+        return $this->defaultTypeConverter->convertType($type, $input, $rootOperation, $resourceClass, $rootResource, $property, $depth);
     }
 
     /**
