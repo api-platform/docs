@@ -41,6 +41,8 @@ feature of the Symfony Serializer component.
 In addition to groups, you can use any option supported by the Symfony Serializer. For example, you can use [`enable_max_depth`](https://symfony.com/doc/current/components/serializer.html#handling-serialization-depth)
 to limit the serialization depth.
 
+[codeSelector]
+
 ```php
 <?php
 // api/src/Entity/Book.php
@@ -87,6 +89,8 @@ App\Entity\Book:
             groups: ['write']
             max_depth: 1
 ```
+
+[/codeSelector]
 
 
 ### Configuration
