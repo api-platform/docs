@@ -537,7 +537,7 @@ In the above example, you will receive the book's data like this:
 {
   "@context": "/contexts/Book",
   "@id": "/books/3",
-  "@type": "http://schema.org/Book",
+  "@type": "https://schema.org/Book",
   "publicationDate": "1989-06-16"
 }
 ```
@@ -1074,8 +1074,8 @@ The JSON output will now include the embedded context:
   "@context": {
     "@vocab": "http://localhost:8000/apidoc#",
     "hydra": "http://www.w3.org/ns/hydra/core#",
-    "name": "http://schema.org/name",
-    "author": "http://schema.org/author"
+    "name": "https://schema.org/name",
+    "author": "https://schema.org/author"
   },
   "@id": "/books/62",
   "@type": "Book",

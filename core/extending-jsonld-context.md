@@ -17,13 +17,13 @@ namespace App\Entity;
 use ApiPlatform\Core\Annotation\ApiProperty;
 use ApiPlatform\Core\Annotation\ApiResource;
 
-#[ApiResource(iri: "http://schema.org/Book")]
+#[ApiResource(iri: "https://schema.org/Book")]
 class Book
 {
     // ...
 
     #[ApiProperty(
-      iri: "http://schema.org/name",
+      iri: "https://schema.org/name",
       attributes: [
         "jsonld_context" => [
           "@id" => "http://yourcustomid.com",

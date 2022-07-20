@@ -26,8 +26,8 @@ Then, write a simple YAML config file similar to the following.
 
 Here we will generate a data model for an address book with the following data:
 
-* a [`Person`](http://schema.org/Person) which inherits from [`Thing`](http://schema.org/Thing)
-* a [`PostalAddress`](http://schema.org/PostalAddress) which inherits from [`ContactPoint`](http://schema.org/ContactPoint), which itself inherits from [`StructuredValue`](http://schema.org/StructuredValue), etc.
+* a [`Person`](https://schema.org/Person) which inherits from [`Thing`](https://schema.org/Thing)
+* a [`PostalAddress`](https://schema.org/PostalAddress) which inherits from [`ContactPoint`](https://schema.org/ContactPoint), which itself inherits from [`StructuredValue`](https://schema.org/StructuredValue), etc.
 
 ```yaml
 # api/config/schema.yaml

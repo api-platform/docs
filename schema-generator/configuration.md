@@ -187,9 +187,9 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * A person (alive, dead, undead, or fictional).
  *
- * @see http://schema.org/Person Documentation on Schema.org
+ * @see https://schema.org/Person Documentation on Schema.org
  *
- * @Iri("http://schema.org/Person")
+ * @Iri("https://schema.org/Person")
  */
 #[ORM\Entity]
 #[UniqueEntity('email')]
@@ -331,7 +331,7 @@ class Product
     /**
      * the weight of the product or person
      *
-     * @see http://schema.org/weight
+     * @see https://schema.org/weight
      *
      */
     #[ORM\Embedded(class: QuantitativeValue::class, columnPrefix: 'weight_')]
@@ -560,7 +560,7 @@ config:
             format:               null # Example: rdfxml
 
     # Namespace of the vocabulary to import
-    vocabularyNamespace:  'http://schema.org/' # Example: 'http://www.w3.org/ns/activitystreams#'
+    vocabularyNamespace:  'https://schema.org/' # Example: 'http://www.w3.org/ns/activitystreams#'
 
     # OWL relation files containing cardinality information in the GoodRelations format
     relations:            # Example: 'https://purl.org/goodrelations/v1.owl'

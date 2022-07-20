@@ -12,7 +12,7 @@ For instance, in JSON-LD, you will get a collection like this:
   "hydra:member": [
     {
       "@id": "/books/1",
-      "@type": "http://schema.org/Book",
+      "@type": "https://schema.org/Book",
       "name": "My awesome book"
     }
   ],
@@ -83,7 +83,7 @@ For the above configuration, the collection will be like this:
   "hydra:member": [
     {
       "@id": "http://example.com/books/1",
-      "@type": "http://schema.org/Book",
+      "@type": "https://schema.org/Book",
       "name": "My awesome book"
     }
   ],

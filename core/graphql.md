@@ -1773,7 +1773,7 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
  */
 #[ORM\Entity]
 #[ApiResource(
-    iri: 'http://schema.org/MediaObject',
+    iri: 'https://schema.org/MediaObject',
     normalizationContext: [
         'groups' => ['media_object_read']
     ],
@@ -1792,7 +1792,7 @@ class MediaObject
     #[ORM\Id, ORM\Column, ORM\GeneratedValue]
     protected ?int $id = null;
 
-    #[ApiProperty(iri: 'http://schema.org/contentUrl')]
+    #[ApiProperty(iri: 'https://schema.org/contentUrl')]
     #[Groups(['media_object_read'])]
     public ?string $contentUrl = null;
 
