@@ -251,7 +251,7 @@ final class JwtDecorator implements OpenApiFactoryInterface
         ]);
 
         $schemas = $openApi->getComponents()->getSecuritySchemes() ?? [];
-        $schemas['JWT'] = new ArrayObject([
+        $schemas['JWT'] = new \ArrayObject([
             'type' => 'http',
             'scheme' => 'bearer',
             'bearerFormat' => 'JWT',
