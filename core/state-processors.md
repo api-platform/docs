@@ -93,6 +93,7 @@ Here is an implementation example which sends new users a welcome email after a 
 
 namespace App\State;
 
+use ApiPlatform\Metadata\Operation;
 use ApiPlatform\State\ProcessorInterface;
 use App\Entity\User;
 use Symfony\Component\Mailer\MailerInterface;
@@ -110,7 +111,7 @@ final class UserProcessor implements ProcessorInterface
 
     public function process($data, Operation $operation, array $uriVariables = [], array $context = [])
     {
-        $result = $this->decorated->process($data, $uriVariables, $operationName, $context);
+        $result = $this->decorated->process($data, $operation, $uriVariables, $context);
         $this->sendWelcomeEmail($data);
         return $result;
     }
