@@ -42,7 +42,7 @@ The keys should not be checked in to the repository (i.e. it's in `api/.gitignor
 only pass signature validation against the same pair of keys it was signed with. This is especially relevant in a production
 environment, where you don't want to accidentally invalidate all your clients' tokens at every deployment.
 
-For more information, refer to [the bundle's documentation](https://github.com/lexik/LexikJWTAuthenticationBundle/blob/master/Resources/doc/index.md)
+For more information, refer to [the bundle's documentation](https://github.com/lexik/LexikJWTAuthenticationBundle/blob/2.x/Resources/doc/index.rst)
 or read a [general introduction to JWT here](https://jwt.io/introduction/).
 
 We're not done yet! Let's move on to configuring the Symfony SecurityBundle for JWT authentication.
@@ -105,7 +105,7 @@ authentication_token:
 ```
 
 If you want to avoid loading the `User` entity from database each time a JWT token needs to be authenticated, you may consider using
-the [database-less user provider](https://github.com/lexik/LexikJWTAuthenticationBundle/blob/master/Resources/doc/8-jwt-user-provider.md) provided by LexikJWTAuthenticationBundle. However, it means you will have to fetch the `User` entity from the database yourself as needed (probably through the Doctrine EntityManager).
+the [database-less user provider](https://github.com/lexik/LexikJWTAuthenticationBundle/blob/2.x/Resources/doc/8-jwt-user-provider.rst) provided by LexikJWTAuthenticationBundle. However, it means you will have to fetch the `User` entity from the database yourself as needed (probably through the Doctrine EntityManager).
 
 Refer to the section on [Security](security.md) to learn how to control access to API resources and operations. You may
 also want to [configure Swagger UI for JWT authentication](#documenting-the-authentication-mechanism-with-swaggeropen-api).
@@ -189,8 +189,8 @@ The "Authorize" button will automatically appear in Swagger UI.
 ### Adding a New API Key
 
 All you have to do is configure the API key in the `value` field.
-By default, [only the authorization header mode is enabled](https://github.com/lexik/LexikJWTAuthenticationBundle/blob/master/Resources/doc/index.md#2-use-the-token) in LexikJWTAuthenticationBundle.
-You must set the [JWT token](https://github.com/lexik/LexikJWTAuthenticationBundle/blob/master/Resources/doc/index.md#1-obtain-the-token) as below and click on the "Authorize" button.
+By default, [only the authorization header mode is enabled](https://github.com/lexik/LexikJWTAuthenticationBundle/blob/2.x/Resources/doc/index.rst#2-use-the-token) in LexikJWTAuthenticationBundle.
+You must set the [JWT token](https://github.com/lexik/LexikJWTAuthenticationBundle/blob/2.x/Resources/doc/index.rst#1-obtain-the-token) as below and click on the "Authorize" button.
 
 `Bearer MY_NEW_TOKEN`
 
