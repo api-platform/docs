@@ -132,7 +132,7 @@ services:
     # ...
     App\State\UserProcessor:
         bind:
-            $decorated: '@api_platform.doctrine.orm.state_processor'
+            $decorated: '@api_platform.doctrine.orm.state.persist_processor'
         # Uncomment only if autoconfiguration is disabled
         #arguments: ['@App\State\UserProcessor.inner']
         #tags: [ 'api_platform.state_processor' ]
