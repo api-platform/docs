@@ -20,6 +20,8 @@ project:
 
 There are no mandatory configuration options although [many settings are available](configuration.md).
 
+**Warning**: If you are migrating from an older version of API Platform than 2.7, make sure you read the [Upgrade Guide](upgrade-guide.md).
+
 ## Before Reading this Documentation
 
 If you haven't read it already, take a look at [the Getting Started guide](../distribution/index.md).
