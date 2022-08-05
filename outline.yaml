@@ -11,6 +11,7 @@ chapters:
     items:
       - index
       - getting-started
+      - upgrade-guide
       - design
       - extending
       - testing
@@ -54,7 +55,6 @@ chapters:
       - bootstrap
       - configuration
       - migrate-from-fosrestbundle
-      - upgrade-guide
   - title: The Schema Generator Component
     path: schema-generator
     items:
