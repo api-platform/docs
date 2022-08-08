@@ -23,6 +23,10 @@ In the following examples, the built-in `GET` operation is registered as well as
 
 By default, API Platform uses the first `Get` operation defined to generate the IRI of an item and the first `GetCollection` operation to generate the IRI of a collection.
 
+If your resource does not have any `Get` operation, API Platform automatically adds an operation to help generating this IRI.
+If your resource has any identifier, this operation will look like `/books/{id}`. But if your resource doesn't have any identifier, API Platform will use the Skolem format `/.well-known/genid/{id}`.
+Those routes are not exposed from any documentation (for instance OpenAPI), but are anyway declared on the Symfony routing and always return a HTTP 404.
+
 If you create a custom operation, you will probably want to properly document it.
 See the [OpenAPI](openapi.md) part of the documentation to do so.
 
