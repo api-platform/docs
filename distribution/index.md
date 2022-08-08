@@ -246,7 +246,7 @@ Let's describe this data model as a set of Plain Old PHP Objects (POPO):
 
 namespace App\Entity;
 
-use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Metadata\ApiResource;
 use Doctrine\Common\Collections\ArrayCollection;
 
 /** A book. */
@@ -292,7 +292,7 @@ class Book
 
 namespace App\Entity;
 
-use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Metadata\ApiResource;
 
 /** A review of a book. */
 #[ApiResource]
