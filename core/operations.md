@@ -440,12 +440,12 @@ book_post_publication:
         _api_operation_name: post_publication
 ```
 
-## Defining Which Operation to Use to Generate the Iri
+## Defining Which Operation to Use to Generate the IRI
 
 Using multiple operations on your resource, you may want to specify which operation to use to generate the IRI, instead
 of letting API Platform use the first one it finds.
 
-Let's say you have 2 resources in relationship: Company and User, where a company has multiple users. You can declare
+Let's say you have 2 resources in relationship: `Company` and `User`, where a company has multiple users. You can declare
 the following routes:
 
 - `/users`
@@ -454,10 +454,10 @@ the following routes:
 - `/companies/{companyId}/users/{id}`
 
 The first routes (`/users...`) are only accessible by the admin, and the others by regular users. Calling
-`/companies/{companyId}/users` should return IRIs matching `/companies/{companyId}/users/{id}` to don't expose an admin
+`/companies/{companyId}/users` should return IRIs matching `/companies/{companyId}/users/{id}` to not expose an admin
 route to regular users.
 
-To do so, use the `itemUriTemplate` option only available on GetCollection and Post operations:
+To do so, use the `itemUriTemplate` option only available on `GetCollection` and `Post` operations:
 
 [codeSelector]
 
@@ -532,7 +532,7 @@ resources:
 
 API Platform will find the operation matching this `itemUriTemplate` and use it to generate the IRI.
 
-If this option is not set, the first Get operation is used to generate the IRI.
+If this option is not set, the first `Get` operation is used to generate the IRI.
 
 ## Expose a Model Without Any Routes
 
