@@ -16,7 +16,11 @@ Finally, [install Helm](https://helm.sh/docs/intro/install/). We'll use it to de
 
 ## Building and Pushing Docker Images
 
-First, build the images:
+First, you need point your docker client to the VM's docker daemon(after minikube start) by running:
+
+    eval $(minikube docker-env)
+
+And now you can build the images:
 
     docker build -t localhost:5000/php api --target api_platform_php
     docker build -t localhost:5000/caddy api --target api_platform_caddy
