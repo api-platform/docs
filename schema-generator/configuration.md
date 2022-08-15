@@ -155,9 +155,9 @@ The `@Assert\NotNull` constraint is automatically added.
 /**
  * The name of the item.
  *
- * @ORM\Column
- * @Assert\NotNull
  */
+  #[ORM\Column]
+  #[Assert\NotNull]
   private string $name;
 ```
 
@@ -182,24 +182,25 @@ Output:
 
 ...
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Doctrine\ORM\Mapping as ORM;
 
 /**
  * A person (alive, dead, undead, or fictional).
  *
- * @see http://schema.org/Person Documentation on Schema.org
+ * @see https://schema.org/Person Documentation on Schema.org
  *
- * @ORM\Entity
- * @UniqueEntity("email")
- * @Iri("http://schema.org/Person")
+ * @Iri("https://schema.org/Person")
  */
+#[ORM\Entity]
+#[UniqueEntity('email')]
 class Person
 {
     /**
      * Email address.
      *
-     * @ORM\Column
-     * @Assert\Email
      */
+    #[ORM\Column]
+    #[Assert\Email]
     private string $email;
 ```
 
@@ -256,15 +257,18 @@ Output:
 
 ...
 use Symfony\Component\Serializer\Annotation\Groups;
+use Doctrine\ORM\Mapping as ORM;
+use ApiPlatform\Core\Annotation\ApiProperty;
+use ApiPlatform\Core\Annotation\ApiResource;
 
 /**
  * A person (alive, dead, undead, or fictional).
  *
- * @see http://schema.org/Person Documentation on Schema.org
+ * @see https://schema.org/Person Documentation on Schema.org
  *
- * @ORM\Entity
- * @Iri("http://schema.org/Person")
  */
+#[ORM\Entity]
+#[ApiResource(iri: "https://schema.org/Person")]
 class Person
 {
     /**
@@ -272,11 +276,11 @@ class Person
      *
      * @see https://schema.org/name
      *
-     * @ORM\Column(nullable=true)
-     * @Assert\Type(type="string")
-     * @Iri("https://schema.org/name")
-     * @Groups({"public"})
      */
+    #[ORM\Column(nullable: true)
+    #[Assert\Type(type: 'string')]
+    #[Groups(['public'])]
+    #[ApiProperty(iri: 'https://schema.org/name')]
     private string $name;
 
 ```
@@ -310,26 +314,28 @@ Output:
 
 ...
 use Doctrine\ORM\Mapping as ORM;
+use ApiPlatform\Core\Annotation\ApiProperty;
+use ApiPlatform\Core\Annotation\ApiResource;
 
 /**
  * Any offered product or service.
  *
- * @see http://schema.org/Product Documentation on Schema.org
+ * @see https://schema.org/Product Documentation on Schema.org
  *
- * @ORM\Entity
- * @ApiResource(iri="http://schema.org/Product")
- * @UniqueEntity("gtin13s")
  */
+#[ORM\Entity]
+#[ApiResource(iri: 'https://schema.org/Product')]
+#[UniqueEntity('gtin13s')]
 class Product
 {
     /**
      * the weight of the product or person
      *
-     * @see http://schema.org/weight
+     * @see https://schema.org/weight
      *
-     * @ORM\Embedded(class="App\Entity\QuantitativeValue", columnPrefix="weight_")
-     * @ApiProperty(iri="http://schema.org/weight")
      */
+    #[ORM\Embedded(class: QuantitativeValue::class, columnPrefix: 'weight_')]
+    #[ApiProperty(iri: 'https://schema.org/weight')]
     private ?QuantitativeValue $weight = null;
 
 ```
@@ -475,11 +481,18 @@ mappings.
 If you set the option `useInterface` to true, the generator will generate an interface corresponding to each generated
 entity and will use them in relation mappings.
 
-To let PHP Schema generate the XML mapping file usable with Symfony, add the following to your config file:
+To let PHP Schema generate the mapping file usable with Symfony, add the following to your config file:
 
 ```yaml
 doctrine:
     resolveTargetEntityConfigPath: path/to/doctrine.xml
+```
+
+The default mapping file format is XML, but you can change it to YAML with the following option:
+```yaml
+doctrine:
+    resolveTargetEntityConfigPath: path/to/doctrine.yaml
+    resolveTargetEntityConfigType: YAML # Supports XML & YAML
 ```
 
 ## Custom Schemas
@@ -554,7 +567,7 @@ config:
             format:               null # Example: rdfxml
 
     # Namespace of the vocabulary to import
-    vocabularyNamespace:  'http://schema.org/' # Example: 'http://www.w3.org/ns/activitystreams#'
+    vocabularyNamespace:  'https://schema.org/' # Example: 'http://www.w3.org/ns/activitystreams#'
 
     # OWL relation files containing cardinality information in the GoodRelations format
     relations:            # Example: 'https://purl.org/goodrelations/v1.owl'

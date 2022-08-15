@@ -19,8 +19,8 @@ use Symfony\Component\Validator\Constraints as Assert;
 /**
  * Secured resource.
  *
- * @ORM\Entity
  */
+ #[ORM\Entity]
  #[ApiResource(
     attributes: ["security" => "is_granted('ROLE_USER')"],
     collectionOperations: [
@@ -34,29 +34,15 @@ use Symfony\Component\Validator\Constraints as Assert;
 )]
 class Book
 {
-    /**
-     * @var int
-     *
-     * @ORM\Column(type="integer")
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="AUTO")
-     */
-    private $id;
+    #[ORM\Id, ORM\Column, ORM\GeneratedValue]
+    private ?int $id = null;
 
-    /**
-     * @var string The title
-     *
-     * @ORM\Column
-     */
+    #[ORM\Column]
     #[Assert\NotBlank]
-    public $title;
+    public string $title;
 
-    /**
-     * @var User The owner
-     *
-     * @ORM\ManyToOne(targetEntity=User::class)
-     */
-    public $owner;
+    #[ORM\ManyToOne]
+    public User $owner;
 
     // ...
 }
@@ -117,8 +103,7 @@ In this example:
 Available variables are:
 
 * `user`: the current logged in object, if any
-* `object`: the current resource, or collection of resources for collection operations
-* `request` (only at the resource level): the current request
+* `object`: the current resource class during denormalization, the current resource during normalization, or collection of resources for collection operations
 
 Access control checks in the `security` attribute are always executed before the [denormalization step](serialization.md).
 It means than for `PUT` or `PATCH` requests, `object` doesn't contain the value submitted by the user, but values currently stored in [the persistence layer](data-persisters.md).

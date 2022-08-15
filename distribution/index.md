@@ -10,7 +10,7 @@
 
 ## Introduction
 
-API Platform contains [a **PHP** library (Core)](../core/index.md) to create fully featured hypermedia (or [GraphQL](../core/graphql.md)) web APIs supporting industry-leading standards: [JSON-LD](https://json-ld.org/) with [Hydra](https://www.hydra-cg.com/), [OpenAPI](../core/swagger.md)...
+API Platform contains [a **PHP** library (Core)](../core/index.md) to create fully featured hypermedia (or [GraphQL](../core/graphql.md)) web APIs supporting industry-leading standards: [JSON-LD](https://json-ld.org) with [Hydra](https://www.hydra-cg.com), [OpenAPI](../core/swagger.md)...
 
 API Platform also provides ambitious **JavaScript** tools to create web and mobile applications based on the most popular frontend technologies in a snap. These tools parse the documentation of the API (or of any other API supporting Hydra or OpenAPI).
 
@@ -43,7 +43,7 @@ API Platform uses these model classes to expose and document a web API having a 
 * hypermedia/[HATEOAS](https://en.wikipedia.org/wiki/HATEOAS) and content negotiation support ([JSON-LD](https://json-ld.org) and [Hydra](https://www.hydra-cg.com/), [JSON:API](https://jsonapi.org/), [HAL](https://tools.ietf.org/html/draft-kelly-json-hal-08)...)
 * [GraphQL support](../core/graphql.md)
 * Nice UI and machine-readable documentations ([Swagger UI/OpenAPI](https://swagger.io), [GraphiQL](https://github.com/graphql/graphiql)...)
-* authentication ([Basic HTTP](https://en.wikipedia.org/wiki/Basic_access_authentication), cookies as well as [JWT](https://jwt.io/) and [OAuth](https://oauth.net/) through extensions)
+* authentication ([Basic HTTP](https://en.wikipedia.org/wiki/Basic_access_authentication), cookies as well as [JWT](../core/jwt.md) and [OAuth](https://oauth.net) through extensions)
 * [CORS headers](https://developer.mozilla.org/en-US/docs/Web/HTTP/Access_control_CORS)
 * security checks and headers (tested against [OWASP recommendations](https://www.owasp.org/index.php/REST_Security_Cheat_Sheet))
 * [invalidation-based HTTP caching](../core/performance.md)
@@ -91,7 +91,7 @@ This starts the following services:
 
 | Name     | Description                                                                                                                                                                  |
 |----------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| caddy    | [Caddy web server](https://caddyserver.com) with the [Mercure](../core/mercure.md) (real-time and async) and [Vulcain](https://vulcain.rocks) (relations preloading) modules |
+| caddy    | [Caddy web server](caddy.md) with the [Mercure](../core/mercure.md) (real-time and async) and [Vulcain](https://vulcain.rocks) (relations preloading) modules |
 | php      | The API with PHP 8, Composer and sensitive configs                                                                                                                           |
 | pwa      | Next.js webapp with API Platform Admin and Client Generator preinstalled                                                                                                     |
 | database | PostgreSQL database server                                                                                                                                                   |
@@ -141,7 +141,7 @@ That being said, keep in mind that API Platform is 100% independent of the persi
 best suit(s) your needs (including NoSQL databases or remote web services) by implementing the [right interfaces](../core/data-providers.md). API Platform even supports using several persistence
 systems together in the same project.
 
-### Using Symfony and Composer
+### Using Symfony CLI
 
 Alternatively, the API Platform server component can also be installed directly on a local machine.
 **This method is recommended only for users who want full control over the directory structure and the installed
@@ -153,12 +153,12 @@ The rest of this tutorial assumes that you have installed API Platform using the
 next section if it's your case.
 
 API Platform has an official Symfony Flex recipe. It means that you can easily install it from any Symfony
-application using [Composer](https://getcomposer.org/):
+application using [the Symfony binary](https://symfony.com/download):
 
 Create a new Symfony project:
 
 ```console
-composer create-project symfony/skeleton bookshop-api
+symfony new bookshop-api
 ```
 
 Enter the project directory:
@@ -170,20 +170,20 @@ cd bookshop-api
 Install the API Platform's server component in this skeleton:
 
 ```console
-composer require api
+symfony composer require api
 ```
 
 Then, create the database and its schema:
 
 ```console
-bin/console doctrine:database:create
-bin/console doctrine:schema:create
+symfony console doctrine:database:create
+symfony console doctrine:schema:create
 ```
 
 And start the built-in PHP server:
 
 ```console
-php -S 127.0.0.1:8000 -t public
+symfony serve
 ```
 
 All JavaScript components are also [available as standalone libraries](https://github.com/api-platform?language=javascript)
@@ -202,7 +202,7 @@ You'll need to add a security exception in your browser to accept the self-signe
 for this container when installing the framework.
 
 Later you will probably replace this welcome screen by the homepage of your Next.js application. If you don't plan to create
-a Progressive Web App, you can remove the `pwa/` directory and the related lines in `docker-compose*.yaml` (don't do it
+a Progressive Web App, you can remove the `pwa/` directory as well as the related lines in `docker-compose*.yml` and in `api/docker/caddy/Caddyfile` (don't do it
 now, we'll use this container later in this tutorial).
 
 Click on the "API" button, or go to `https://localhost/docs/`:
@@ -269,7 +269,7 @@ class Book
     public string $author = '';
 
     /** The publication date of this book. */
-    public ?\DateTimeInterface $publicationDate = null;
+    public ?\DateTimeImmutable $publicationDate = null;
 
     /** @var Review[] Available reviews for this book. */
     public iterable $reviews;
@@ -311,7 +311,7 @@ class Review
     public string $author = '';
 
     /** The date of publication of this review.*/
-    public ?\DateTimeInterface $publicationDate = null;
+    public ?\DateTimeImmutable $publicationDate = null;
 
     /** The book this review is about. */
     public ?Book $book = null;
@@ -339,8 +339,8 @@ The framework also use these metadata to serialize and deserialize data from JSO
 
 For the sake of simplicity, in this example we used public properties (except for the id, see below). API Platform (as well
 as Symfony and Doctrine) also supports accessor methods (getters/setters), use them if you want to.
-We used a private property and a getter for the id to enforce the fact that it is read only (we will let the DBMS generating it). API Platform also has first-grade support for UUIDs. [You should
-probably use them instead of auto-incremented ids](https://www.clever-cloud.com/blog/engineering/2015/05/20/why-auto-increment-is-a-terrible-idea/).
+We used a private property and a getter for the ID to enforce the fact that it is read only (we will let the DBMS generating it). API Platform also has first-grade support for UUIDs. [You should
+probably use them instead of auto-incremented IDs](https://www.clever-cloud.com/blog/engineering/2015/05/20/why-auto-increment-is-a-terrible-idea/).
 
 Because API Platform provides all the infrastructure for us, our API is almost ready!
 
@@ -369,71 +369,37 @@ Modify these files as described in these patches:
  use Doctrine\Common\Collections\ArrayCollection;
 +use Doctrine\ORM\Mapping as ORM;
  
--/** A book. */
-+/**
-+ * A book.
-+ *
-+ * @ORM\Entity
-+ */
+ /** A book. */
++#[ORM\Entity]
  #[ApiResource]
  class Book
  {
--    /** The id of this book. */
-+    /**
-+     * The id of this book.
-+     *
-+     * @ORM\Id
-+     * @ORM\GeneratedValue
-+     * @ORM\Column(type="integer")
-+     */
+     /** The id of this book. */
++    #[ORM\Id, ORM\Column, ORM\GeneratedValue]
      private ?int $id = null;
  
--    /** The ISBN of this book (or null if doesn't have one). */
-+    /**
-+     * The ISBN of this book (or null if doesn't have one).
-+     *
-+     * @ORM\Column(nullable=true)
-+     */
+     /** The ISBN of this book (or null if doesn't have one). */
++    #[ORM\Column(nullable: true)]
      public ?string $isbn = null;
  
--    /** The title of this book. */
-+    /**
-+     * The title of this book.
-+     *
-+     * @ORM\Column
-+     */
+     /** The title of this book. */
++    #[ORM\Column]
      public string $title = '';
  
--    /** The description of this book. */
-+    /**
-+     * The description of this book.
-+     *
-+     * @ORM\Column(type="text")
-+     */
+     /** The description of this book. */
++    #[ORM\Column(type: 'text')]
      public string $description = '';
  
--    /** The author of this book. */
-+    /**
-+     * The author of this book.
-+     *
-+     * @ORM\Column
-+     */
+     /** The author of this book. */
++    #[ORM\Column]
      public string $author = '';
  
--    /** The publication date of this book. */
-+    /**
-+     * The publication date of this book.
-+     *
-+     * @ORM\Column(type="datetime_immutable")
-+     */
-     public ?\DateTimeInterface $publicationDate = null;
+     /** The publication date of this book. */
++    #[ORM\Column]
+     public ?\DateTimeImmutable $publicationDate = null;
  
--    /** @var Review[] Available reviews for this book. */
-+    /**
-+     * @var Review[] Available reviews for this book.
-+     *
-+     * @ORM\OneToMany(targetEntity="Review", mappedBy="book", cascade={"persist", "remove"})
-+     */
+     /** @var Review[] Available reviews for this book. */
++    #[ORM\OneToMany(targetEntity: Review::class, mappedBy: 'book', cascade: ['persist', 'remove'])]
      public iterable $reviews;
  
      public function __construct()
@@ -447,63 +413,33 @@ Modify these files as described in these patches:
  use ApiPlatform\Core\Annotation\ApiResource;
 +use Doctrine\ORM\Mapping as ORM;
  
--/** A review of a book. */
-+/**
-+ * A review of a book.
-+ *
-+ * @ORM\Entity
-+ */
+ /** A review of a book. */
++#[ORM\Entity]
  #[ApiResource]
  class Review
  {
--    /** The id of this review. */
-+    /**
-+     * The id of this review.
-+     *
-+     * @ORM\Id
-+     * @ORM\GeneratedValue
-+     * @ORM\Column(type="integer")
-+     */
+     /** The id of this review. */
++    #[ORM\Id, ORM\Column, ORM\GeneratedValue]
      private ?int $id = null;
  
--    /** The rating of this review (between 0 and 5). */
-+    /**
-+     * The rating of this review (between 0 and 5).
-+     *
-+     * @ORM\Column(type="smallint")
-+     */
+     /** The rating of this review (between 0 and 5). */
++    #[ORM\Column(type: 'smallint')]
      public int $rating = 0;
  
--    /** The body of the review. */
-+    /**
-+     * The body of the review.
-+     *
-+     * @ORM\Column(type="text")
-+     */
+     /** The body of the review. */
++    #[ORM\Column(type: 'text')]
      public string $body = '';
  
--    /** The author of the review. */
-+    /**
-+     * The author of the review.
-+     *
-+     * @ORM\Column
-+     */
+     /** The author of the review. */
++    #[ORM\Column]
      public string $author = '';
  
--    /** The date of publication of this review.*/
-+    /**
-+     * The date of publication of this review.
-+     *
-+     * @ORM\Column(type="datetime_immutable")
-+     */
-     public ?\DateTimeInterface $publicationDate = null;
+     /** The date of publication of this review.*/
++    #[ORM\Column]
+     public ?\DateTimeImmutable $publicationDate = null;
  
--    /** The book this review is about. */
-+    /**
-+     * The book this review is about.
-+     *
-+     * @ORM\ManyToOne(targetEntity="Book", inversedBy="reviews")
-+     */
+     /** The book this review is about. */
++    #[ORM\ManyToOne(inversedBy: 'reviews')]
      public ?Book $book = null;
  
      public function getId(): ?int
@@ -640,31 +576,26 @@ Modify the following files as described in these patches:
  use Doctrine\Common\Collections\ArrayCollection;
  use Doctrine\ORM\Mapping as ORM;
 +use Symfony\Component\Validator\Constraints as Assert;
- 
-      * @ORM\Column(nullable=true)
-      */
+
+     #[ORM\Column(nullable: true)] 
 +    #[Assert\Isbn]
-     public ?string $isbn = null;
-     
-      * @ORM\Column
-      */
+     public ?string $isbn = null;     
+ 
+     #[ORM\Column]
 +    #[Assert\NotBlank]
      public string $title = '';
  
-      * @ORM\Column(type="text")
-      */
+     #[ORM\Column(type: 'text')]
 +    #[Assert\NotBlank]
      public string $description = '';
  
-      * @ORM\Column
-      */
+     #[ORM\Column] 
 +    #[Assert\NotBlank]
      public string $author = '';
  
-      * @ORM\Column(type="datetime_immutable")
-      */
+     #[ORM\Column]
 +    #[Assert\NotNull]
-     public ?\DateTimeInterface $publicationDate = null;
+     public ?\DateTimeImmutable $publicationDate = null;
 ```
 
 `api/src/Entity/Review.php`
@@ -673,29 +604,24 @@ Modify the following files as described in these patches:
  use ApiPlatform\Core\Annotation\ApiResource;
  use Doctrine\ORM\Mapping as ORM;
 +use Symfony\Component\Validator\Constraints as Assert;
- 
-      * @ORM\Column(type="smallint")
-      */
+
+     #[ORM\Column(type: 'smallint')]   
 +    #[Assert\Range(min: 0, max: 5)]
      public int $rating = 0;
  
-      * @ORM\Column(type="text")
-      */
+     #[ORM\Column(type: 'text')]
 +    #[Assert\NotBlank]
      public string $body = '';
  
-      * @ORM\Column
-      */
+     #[ORM\Column]
 +    #[Assert\NotBlank]
      public string $author = '';
  
-      * @ORM\Column(type="datetime_immutable")
-      */
+     #[ORM\Column] 
 +    #[Assert\NotNull]
-     public ?\DateTimeInterface $publicationDate = null;
+     public ?\DateTimeImmutable $publicationDate = null;
  
-      * @ORM\ManyToOne(targetEntity="Book", inversedBy="reviews")
-      */
+     #[ORM\ManyToOne(inversedBy: 'reviews')] 
 +    #[Assert\NotNull]
      public ?Book $book = null;
  

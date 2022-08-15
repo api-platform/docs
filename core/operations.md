@@ -351,6 +351,89 @@ App\Entity\Book:
 
 In all these examples, the `method` attribute is omitted because it matches the operation name.
 
+When specifying sub options, you must always use snake case as demonstrated below with the `denormalization_context` option on the `put` operation:
+
+[codeSelector]
+
+```php
+<?php
+// api/src/Entity/Book.php
+
+namespace App\Entity;
+
+use ApiPlatform\Core\Annotation\ApiResource;
+
+#[ApiResource(
+    itemOperations: [
+            'get',
+            'put' => [
+                'denormalization_context' => [
+                    'groups' => ['item:put'],
+                    'swagger_definition_name' => 'put',
+                ],
+            ],
+            'delete',
+        ],
+    ],
+    denormalizationContext: [
+        'groups' => ['item:post'],
+        'swagger_definition_name' => 'post',
+    ],
+)]
+class Book
+{
+    //...
+}
+```
+
+```yaml
+# api/config/api_platform/resources.yaml
+App\Entity\Book:
+    itemOperations:
+        get: ~
+        put:
+            denormalization_context:
+                groups: ['item:put']
+                swagger_definition_name: 'put',
+        delete: ~
+    denormalizationContext:
+        groups: ['item:post']
+        swagger_definition_name: 'post'
+```
+
+```xml
+<?xml version="1.0" encoding="UTF-8" ?>
+<!-- api/config/api_platform/resources.xml -->
+
+<resources xmlns="https://api-platform.com/schema/metadata"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="https://api-platform.com/schema/metadata
+        https://api-platform.com/schema/metadata/metadata-2.0.xsd">
+    <resource class="App\Entity\Book">
+        <itemOperations>
+            <itemOperation name="get" />
+            <itemOperation name="put">
+                <attribute name="denormalization_context">
+                    <attribute name="groups">
+                        <attribute>item:put</attribute>
+                    </attribute>
+                    <attribute name="swagger_definition_name">put</attribute>
+                </attribute>
+            </itemOperation>
+            <itemOperation name="delete" />
+        </itemOperations>
+        <denormalizationContext>
+            <attribute name="groups">
+                <attribute>item:post</attribute>
+            </attribute>
+            <attribute name="swagger_definition_name">post</attribute>
+        </denormalizationContext>
+    </resource>
+</resources>
+```
+
+[/codeSelector]
+
 ## Prefixing All Routes of All Operations
 
 Sometimes it's also useful to put a whole resource into its own "namespace" regarding the URI. Let's say you want to
@@ -415,31 +498,19 @@ namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 
-/**
- * @ORM\Entity
- */
+#[ORM\Entity]
 class Place
 {
-    /**
-     * @ORM\Id
-     * @ORM\GeneratedValue
-     * @ORM\Column(type="integer")
-     */
+    #[ORM\Id, ORM\Column, ORM\GeneratedValue]
     private ?int $id = null;
 
-    /**
-     * @ORM\Column
-     */
+    #[ORM\Column] 
     private string $name = '';
 
-    /**
-     * @ORM\Column(type="float")
-     */
+    #[ORM\Column(type: 'float')]
     private float $latitude = 0;
 
-    /**
-     * @ORM\Column(type="float")
-     */
+    #[ORM\Column(type: 'float')] 
     private float $longitude = 0;
 
     // ...
@@ -475,9 +546,7 @@ use ApiPlatform\Core\Annotation\ApiResource;
 use App\Controller\GetWeather;
 use Doctrine\ORM\Mapping as ORM;
 
-/**
- * @ORM\Entity
- */
+#[ORM\Entity]
 #[ApiResource(
     collectionOperations: [
         'get',

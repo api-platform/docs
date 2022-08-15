@@ -42,7 +42,7 @@ The keys should not be checked in to the repository (i.e. it's in `api/.gitignor
 only pass signature validation against the same pair of keys it was signed with. This is especially relevant in a production
 environment, where you don't want to accidentally invalidate all your clients' tokens at every deployment.
 
-For more information, refer to [the bundle's documentation](https://github.com/lexik/LexikJWTAuthenticationBundle/blob/master/Resources/doc/index.md)
+For more information, refer to [the bundle's documentation](https://github.com/lexik/LexikJWTAuthenticationBundle/blob/2.x/Resources/doc/index.rst)
 or read a [general introduction to JWT here](https://jwt.io/introduction/).
 
 We're not done yet! Let's move on to configuring the Symfony SecurityBundle for JWT authentication.
@@ -105,7 +105,7 @@ authentication_token:
 ```
 
 If you want to avoid loading the `User` entity from database each time a JWT token needs to be authenticated, you may consider using
-the [database-less user provider](https://github.com/lexik/LexikJWTAuthenticationBundle/blob/master/Resources/doc/8-jwt-user-provider.md) provided by LexikJWTAuthenticationBundle. However, it means you will have to fetch the `User` entity from the database yourself as needed (probably through the Doctrine EntityManager).
+the [database-less user provider](https://github.com/lexik/LexikJWTAuthenticationBundle/blob/2.x/Resources/doc/8-jwt-user-provider.rst) provided by LexikJWTAuthenticationBundle. However, it means you will have to fetch the `User` entity from the database yourself as needed (probably through the Doctrine EntityManager).
 
 Refer to the section on [Security](security.md) to learn how to control access to API resources and operations. You may
 also want to [configure Swagger UI for JWT authentication](#documenting-the-authentication-mechanism-with-swaggeropen-api).
@@ -120,7 +120,7 @@ security:
     # https://symfony.com/doc/current/security.html#c-hashing-passwords
     password_hashers:
         App\Entity\User: 'auto'
-    
+
     # https://symfony.com/doc/current/security/authenticator_manager.html
     enable_authenticator_manager: true
     # https://symfony.com/doc/current/security.html#where-do-users-come-from-user-providers
@@ -154,6 +154,18 @@ security:
         - { path: ^/, roles: IS_AUTHENTICATED_FULLY }
 ```
 
+### Be sure to have lexik_jwt_authentication configured on your user_identity_field
+
+```yaml
+# api/config/packages/lexik_jwt_authentication.yaml
+lexik_jwt_authentication:
+    secret_key: '%env(resolve:JWT_SECRET_KEY)%'
+    public_key: '%env(resolve:JWT_PUBLIC_KEY)%'
+    pass_phrase: '%env(JWT_PASSPHRASE)%'
+
+    user_identity_field: email # Or the field you have setted using make:user
+```
+
 ## Documenting the Authentication Mechanism with Swagger/Open API
 
 Want to test the routes of your JWT-authentication-protected API?
@@ -165,7 +177,7 @@ Want to test the routes of your JWT-authentication-protected API?
 api_platform:
     swagger:
          api_keys:
-             apiKey:
+             JWT:
                 name: Authorization
                 type: header
 ```
@@ -177,8 +189,8 @@ The "Authorize" button will automatically appear in Swagger UI.
 ### Adding a New API Key
 
 All you have to do is configure the API key in the `value` field.
-By default, [only the authorization header mode is enabled](https://github.com/lexik/LexikJWTAuthenticationBundle/blob/master/Resources/doc/index.md#2-use-the-token) in LexikJWTAuthenticationBundle.
-You must set the [JWT token](https://github.com/lexik/LexikJWTAuthenticationBundle/blob/master/Resources/doc/index.md#1-obtain-the-token) as below and click on the "Authorize" button.
+By default, [only the authorization header mode is enabled](https://github.com/lexik/LexikJWTAuthenticationBundle/blob/2.x/Resources/doc/index.rst#2-use-the-token) in LexikJWTAuthenticationBundle.
+You must set the [JWT token](https://github.com/lexik/LexikJWTAuthenticationBundle/blob/2.x/Resources/doc/index.rst#1-obtain-the-token) as below and click on the "Authorize" button.
 
 `Bearer MY_NEW_TOKEN`
 
@@ -238,6 +250,13 @@ final class JwtDecorator implements OpenApiFactoryInterface
             ],
         ]);
 
+        $schemas = $openApi->getComponents()->getSecuritySchemes() ?? [];
+        $schemas['JWT'] = new \ArrayObject([
+            'type' => 'http',
+            'scheme' => 'bearer',
+            'bearerFormat' => 'JWT',
+        ]);
+        
         $pathItem = new Model\PathItem(
             ref: 'JWT Token',
             post: new Model\Operation(
@@ -266,6 +285,7 @@ final class JwtDecorator implements OpenApiFactoryInterface
                         ],
                     ]),
                 ),
+                security: [],
             ),
         );
         $openApi->getPaths()->addPath('/authentication_token', $pathItem);
@@ -280,11 +300,11 @@ And register this service in `config/services.yaml`:
 ```yaml
 # api/config/services.yaml
 services:
-    # ...   
+    # ...
 
     App\OpenApi\JwtDecorator:
         decorates: 'api_platform.openapi.factory'
-        arguments: ['@.inner'] 
+        arguments: ['@.inner']
 ```
 
 ## Testing
@@ -308,14 +328,15 @@ class AuthenticationTest extends ApiTestCase
     public function testLogin(): void
     {
         $client = self::createClient();
+        $container = self::getContainer();
 
         $user = new User();
         $user->setEmail('test@example.com');
         $user->setPassword(
-            self::$container->get('security.user_password_hasher')->hashPassword($user, '$3CR3T')
+            $container->get('security.user_password_hasher')->hashPassword($user, '$3CR3T')
         );
 
-        $manager = self::$container->get('doctrine')->getManager();
+        $manager = $container->get('doctrine')->getManager();
         $manager->persist($user);
         $manager->flush();
 
@@ -344,3 +365,26 @@ class AuthenticationTest extends ApiTestCase
 ```
 
 Refer to [Testing the API](../distribution/testing.md) for more information about testing API Platform.
+
+### Improving Tests Suite Speed
+
+Since now we have a `JWT` authentication, functional tests require us to log in each time we want to test an API endpoint. This is where [Password Hashers](https://symfony.com/doc/current/security/passwords.html) come into play.
+
+Hashers are used for 2 reasons:
+
+1. To generate a hash for a raw password (`$container->get('security.user_password_hasher')->hashPassword($user, '$3CR3T')`)
+2. To verify a password during authentication
+
+While hashing and verifying 1 password is quite a fast operation, doing it hundreds or even thousands of times in a tests suite becomes a bottleneck, because reliable hashing algorithms are slow by their nature.
+
+To significantly improve the test suite speed, we can use more simple password hasher specifically for the `test` environment.
+
+```yaml
+# override in api/config/packages/test/security.yaml for test env
+security:
+    password_hashers:
+        App\Entity\User:
+            algorithm: md5
+            encode_as_base64: false
+            iterations: 0
+```

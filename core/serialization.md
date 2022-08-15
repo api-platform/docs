@@ -232,7 +232,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
 )]
 class Book
 {
-    #[Groups(["get", "put"])
+    #[Groups(["get", "put"])]
     public $name;
 
     #[Groups("get")]
@@ -518,14 +518,11 @@ use Symfony\Component\Serializer\Annotation\Groups;
 class Person
 {
     #[Groups("person")]
-    public $name;
+    public string $name;
 
-   /**
-    * @var Person
-    */
    #[Groups("person")]
    #[ApiProperty(readableLink: false, writableLink: false)]
-   public $parent;  // This property is now serialized/deserialized as an IRI.
+   public Person $parent;  // This property is now serialized/deserialized as an IRI.
  
     // ...
 }
@@ -576,15 +573,11 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Context;
 use Symfony\Component\Serializer\Normalizer\DateTimeNormalizer;
 
-/**
- * @ORM\Entity
- */
+#[ORM\Entity]
 #[ApiResource]
 class Book
 {
-    /**
-     * @ORM\Column(type="date")
-     */
+    #[ORM\Column] 
     #[Context([DateTimeNormalizer::FORMAT_KEY => 'Y-m-d'])]
     public ?\DateTimeInterface $publicationDate = null;
 }
@@ -596,7 +589,7 @@ In the above example, you will receive the book's data like this:
 {
   "@context": "/contexts/Book",
   "@id": "/books/3",
-  "@type": "http://schema.org/Book",
+  "@type": "https://schema.org/Book",
   "publicationDate": "1989-06-16"
 }
 ```
@@ -616,15 +609,11 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Context;
 use Symfony\Component\Serializer\Normalizer\DateTimeNormalizer;
 
-/**
- * @ORM\Entity
- */
+#[ORM\Entity]
 #[ApiResource]
 class Book
 {
-    /**
-     * @ORM\Column(type="date")
-     */
+    #[ORM\Column]
     #[Context(normalizationContext: [DateTimeNormalizer::FORMAT_KEY => 'Y-m-d'])]
     public ?\DateTimeInterface $publicationDate = null;
 }
@@ -646,15 +635,11 @@ use Symfony\Component\Serializer\Annotation\Context;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Serializer\Normalizer\DateTimeNormalizer;
 
-/**
- * @ORM\Entity
- */
+#[ORM\Entity]
 #[ApiResource]
 class Book
 {
-    /**
-     * @ORM\Column(type="date")
-     */
+    #[ORM\Column]
     #[Groups(["extended"])]
     #[Context([DateTimeNormalizer::FORMAT_KEY => \DateTime::RFC3339])]
     #[Context(
@@ -682,9 +667,7 @@ use ApiPlatform\Core\Annotation\ApiResource;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 
-/**
- * @ORM\Entity
- */
+#[ORM\Entity]
 #[ApiResource(
     collectionOperations: [
         'get' => ['normalization_context' => ['groups' => 'greeting:collection:get']],
@@ -692,27 +675,17 @@ use Symfony\Component\Serializer\Annotation\Groups;
 )]
 class Greeting
 {
-    /**
-     * @var int The entity Id
-     *
-     * @ORM\Id
-     * @ORM\GeneratedValue
-     * @ORM\Column(type="integer")
-     */
+    #[ORM\Id, ORM\Column, ORM\GeneratedValue]
     #[Groups("greeting:collection:get")]
-    private $id;
+    private ?int $id = null;
     
     private $a = 1;
     
     private $b = 2;
 
-    /**
-     * @var string A nice person
-     *
-     * @ORM\Column
-     */
+    #[ORM\Column]
     #[Groups("greeting:collection:get")]
-    public $name = '';
+    public string $name = '';
 
     public function getId(): int
     {
@@ -742,7 +715,7 @@ App\Entity\Greeting:
             groups: 'greeting:collection:get'
         name:
             groups: 'greeting:collection:get'
-        getSum:
+        sum:
             groups: 'greeting:collection:get'
 ```
 
@@ -775,19 +748,15 @@ class Book
 
     /**
      * This field can be managed only by an admin
-     *
-     * @var bool
      */
-    #[Groups(["book:output", "admin:input"}])]
-    public $active = false;
+    #[Groups(["book:output", "admin:input"])]
+    public bool $active = false;
 
     /**
      * This field can be managed by any user
-     *
-     * @var string
      */
     #[Groups(["book:output", "book:input"])]
-    public $name;
+    public string $name;
 
     // ...
 }
@@ -1041,9 +1010,9 @@ final class ApiNormalizer implements NormalizerInterface, DenormalizerInterface,
         return $this->decorated->supportsDenormalization($data, $type, $format);
     }
 
-    public function denormalize($data, $class, $format = null, array $context = [])
+    public function denormalize($data, string $type, string $format = null, array $context = [])
     {
-        return $this->decorated->denormalize($data, $class, $format, $context);
+        return $this->decorated->denormalize($data, $type, $format, $context);
     }
 
     public function setSerializer(SerializerInterface $serializer)
@@ -1074,17 +1043,13 @@ class Book
 
     /**
      * This field can be managed only by an admin
-     *
-     * @var bool
      */
-    public $active = false;
+    public bool $active = false;
 
     /**
      * This field can be managed by any user
-     *
-     * @var string
      */
-    public $name;
+    public string $name;
 
     // ...
 }
@@ -1161,8 +1126,8 @@ The JSON output will now include the embedded context:
   "@context": {
     "@vocab": "http://localhost:8000/apidoc#",
     "hydra": "http://www.w3.org/ns/hydra/core#",
-    "name": "http://schema.org/name",
-    "author": "http://schema.org/author"
+    "name": "https://schema.org/name",
+    "author": "https://schema.org/author"
   },
   "@id": "/books/62",
   "@type": "Book",
@@ -1185,27 +1150,17 @@ use ApiPlatform\Core\Annotation\ApiResource;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
-/**
- * @ORM\Entity
- */
+#[ORM\Entity]
 #[ApiResource]
 final class Brand
 {
-    /**
-     * @ORM\Id
-     * @ORM\Column(type="integer")
-     * @ORM\GeneratedValue(strategy="AUTO")
-     */
-    private $id;
+    #[ORM\Id, ORM\Column, ORM\GeneratedValue]
+    private ?int $id = null;
 
-    /**
-     * @ORM\ManyToMany(targetEntity="App\Entity\Car", inversedBy="brands")
-     * @ORM\JoinTable(
-     *     name="CarToBrand",
-     *     joinColumns={@ORM\JoinColumn(name="brand_id", referencedColumnName="id", nullable=false)},
-     *     inverseJoinColumns={@ORM\JoinColumn(name="car_id", referencedColumnName="id", nullable=false)}
-     * )
-     */
+    #[ORM\ManyToMany(targetEntity: Car::class, inversedBy: 'brands')]
+    #[ORM\JoinTable(name: 'CarToBrand')]
+    #[ORM\JoinColumn(name: 'brand_id', referencedColumnName: 'id', nullable: false)]
+    #[ORM\InverseJoinColumn(name: 'car_id', referencedColumnName: 'id', nullable: false)]
     private $cars;
 
     public function __construct()

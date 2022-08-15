@@ -13,13 +13,15 @@ retrieve data for a given resource will be used.
 
 For a given resource, you can implement two kinds of interface:
 
-* the [`CollectionDataProviderInterface`](https://github.com/api-platform/core/blob/main/src/Core/DataProvider/CollectionDataProviderInterface.php)
+* the [`CollectionDataProviderInterface`](https://github.com/api-platform/core/blob/2.6/src/DataProvider/CollectionDataProviderInterface.php)
   is used when fetching a collection.
-* the [`ItemDataProviderInterface`](https://github.com/api-platform/core/blob/main/src/Core/DataProvider/ItemDataProviderInterface.php)
+* the [`ItemDataProviderInterface`](https://github.com/api-platform/core/blob/2.6/src/DataProvider/ItemDataProviderInterface.php)
+  is used when fetching items.
+* the [`SubresourceDataProviderInterface`](https://github.com/api-platform/core/blob/2.6/src/DataProvider/SubresourceDataProviderInterface.php)
   is used when fetching items.
 
 Both implementations can also implement a third, optional, interface called
-['RestrictedDataProviderInterface'](https://github.com/api-platform/core/blob/main/src/Core/DataProvider/RestrictedDataProviderInterface.php)
+['RestrictedDataProviderInterface'](https://github.com/api-platform/core/blob/2.6/src/DataProvider/RestrictedDataProviderInterface.php)
 if you want to limit their effects to a single resource or operation.
 
 In the following examples we will create custom data providers for an entity class called `App\Entity\BlogPost`.
@@ -27,9 +29,9 @@ Note, that if your entity is not Doctrine-related, you need to flag the identifi
 
 ## Custom Collection Data Provider
 
-First, your `BlogPostCollectionDataProvider` has to implement the [`CollectionDataProviderInterface`](https://github.com/api-platform/core/blob/main/src/Core/DataProvider/CollectionDataProviderInterface.php):
+First, your `BlogPostCollectionDataProvider` has to implement the [`CollectionDataProviderInterface`](https://github.com/api-platform/core/blob/2.6/src/DataProvider/CollectionDataProviderInterface.php):
 
-The `getCollection` method must return an `array`, a `Traversable` or a [`ApiPlatform\Core\DataProvider\PaginatorInterface`](https://github.com/api-platform/core/blob/main/src/Core/DataProvider/PaginatorInterface.php) instance.
+The `getCollection` method must return an `array`, a `Traversable` or a [`ApiPlatform\Core\DataProvider\PaginatorInterface`](https://github.com/api-platform/core/blob/2.6/src/DataProvider/PaginatorInterface.php) instance.
 If no data is available, you should return an empty array.
 
 ```php
@@ -79,7 +81,7 @@ You can find a full working example in the [API Platform's demo application](htt
 
 ## Custom Item Data Provider
 
-The process is similar for item data providers. Create a `BlogPostItemDataProvider` implementing the [`ItemDataProviderInterface`](https://github.com/api-platform/core/blob/main/src/Core/DataProvider/ItemDataProviderInterface.php)
+The process is similar for item data providers. Create a `BlogPostItemDataProvider` implementing the [`ItemDataProviderInterface`](https://github.com/api-platform/core/blob/2.6/src/DataProvider/ItemDataProviderInterface.php)
 interface:
 
 The `getItem` method can return `null` if no result has been found.
@@ -125,6 +127,49 @@ services:
 ```
 
 You can find a full working example in the [API Platform's demo application](https://github.com/api-platform/demo/blob/main/api/src/DataProvider/TopBookItemDataProvider.php).
+
+## Custom Subresources Data Provider
+
+You can add custom logic or update subresources data provider with the SubresourceDataProviderInterface .
+
+```php
+<?php
+// api/src/DataProvider/BlogPostCollectionDataProvider.php
+
+namespace App\DataProvider;
+
+use ApiPlatform\Core\DataProvider\SubresourceDataProviderInterface;
+use ApiPlatform\Core\DataProvider\RestrictedDataProviderInterface;
+use App\Entity\BlogPost;
+
+final class BlogPostSubresourceDataProvider implements SubresourceDataProviderInterface, RestrictedDataProviderInterface
+{
+    public function supports(string $resourceClass, string $operationName = null, array $context = []): bool
+    {
+        return BlogPost::class === $resourceClass;
+    }
+
+    public function getSubresource(string $resourceClass, array $identifiers, array $context, string $operationName = null): iterable
+    {
+        // Retrieve the blog post collection from somewhere
+        $blogPosts = $this->subresourceDataProvider->getSubresource($resourceClass, $identifiers, $context, $operationName);
+        // write your own logic
+
+        return blogPosts;
+    }
+}
+```
+
+Declare the service in your services configuration:
+
+```yaml
+# api/config/services.yaml
+services:
+    # ...
+    'App\DataProvider\BlogPostSubresourceDataProvider':
+        arguments:
+            - '@api_platform.doctrine.orm.default.subresource_data_provider'
+```
 
 ## Injecting the Serializer in an `ItemDataProvider`
 

@@ -26,34 +26,24 @@ use Symfony\Component\Validator\Constraints as Assert; // Symfony's built-in con
 /**
  * A product.
  *
- * @ORM\Entity
  */
+#[ORM\Entity] 
 #[ApiResource]
 class Product
 {
-    /**
-     * @var int The id of this product.
-     *
-     * @ORM\Id
-     * @ORM\GeneratedValue
-     * @ORM\Column(type="integer")
-     */
-    private $id;
+    #[ORM\Id, ORM\Column, ORM\GeneratedValue]
+    private ?int $id = null;
 
-    /**
-     * @var string The name of the product
-     *
-     * @Assert\NotBlank
-     * @ORM\Column
-     */
-    public $name;
+    #[ORM\Column]
+    #[Assert\NotBlank]
+    public string $name;
 
     /**
      * @var string[] Describe the product
      *
      * @MinimalProperties
-     * @ORM\Column(type="json")
      */
+    #[ORM\Column(type: 'json')] 
     public $properties;
 
     // Getters and setters...
@@ -141,15 +131,11 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[ApiResource(attributes: ['validation_groups' => ['a', 'b']])]
 class Book
 {
-    /**
-     * @Assert\NotBlank(groups={"a"})
-     */
-    public $name;
+    #[Assert\NotBlank(groups: ['a'])]  
+    public string $name;
 
-    /**
-     * @Assert\NotNull(groups={"b"})
-     */
-    public $author;
+    #[Assert\NotNull(groups: ['b'])] 
+    public string $author;
 
     // ...
 }
@@ -189,29 +175,15 @@ use Symfony\Component\Validator\Constraints as Assert;
 )]
 class Book
 {
-    /**
-     * @Assert\Uuid
-     */
+    #[Assert\Uuid] 
     private $id;
 
-    /**
-     * @Assert\NotBlank(groups={"postValidation"})
-     */
+    #[Assert\NotBlank(groups: ['postValidation'])] 
     public $name;
 
-    /**
-     * @Assert\NotNull
-     * @Assert\Length(
-     *     min = 2,
-     *     max = 50,
-     *     groups={"postValidation"}
-     * )
-     * @Assert\Length(
-     *     min = 2,
-     *     max = 70,
-     *     groups={"putValidation"}
-     * )
-     */
+    #[Assert\NotNull]
+    #[Assert\Length(min: 2, max: 50, groups: ['postValidation'])]
+    #[Assert\Length(min: 2, max: 70, groups: ['putValidation'])] 
     public $author;
 
     // ...
@@ -258,14 +230,10 @@ class Book
         return ['a'];
     }
 
-    /**
-     * @Assert\NotBlank(groups={"a"})
-     */
+    #[Assert\NotBlank(groups: ['a'])] 
     public $name;
 
-    /**
-     * @Assert\NotNull(groups={"b"})
-     */
+    #[Assert\NotNull(groups: ['b'])] 
     public $author;
 
     // ...
@@ -324,14 +292,10 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[ApiResource(attributes: ['validation_groups' => AdminGroupsGenerator::class])
 class Book
 {
-    /**
-     * @Assert\NotBlank(groups={"a"})
-     */
+    #[Assert\NotBlank(groups: ['a'])] 
     public $name;
 
-    /**
-     * @Assert\NotNull(groups={"b"})
-     */
+    #[Assert\NotNull(groups: ['b'])] 
     public $author;
 
     // ...
@@ -383,9 +347,7 @@ use App\Validator\Two; // classic custom constraint
 use App\Validator\MySequencedGroup; // the sequence group to use
 use Doctrine\ORM\Mapping as ORM;
 
-/**
- * @ORM\Entity
- */
+#[ORM\Entity]
 #[ApiResource(
     collectionOperations: [
       'post' => [
@@ -395,31 +357,107 @@ use Doctrine\ORM\Mapping as ORM;
 )]
 class Greeting
 {
-    /**
-     * @var int The entity Id
-     *
-     * @ORM\Id
-     * @ORM\GeneratedValue
-     * @ORM\Column(type="integer")
-     */
-    private $id;
+    #[ORM\Id, ORM\Column, ORM\GeneratedValue]
+    private ?int $id = null;
 
     /**
-     * @var string A nice person
-     *
-     * @ORM\Column
+     * @var A nice person
      * 
      * I want this "second" validation to be executed after the "first" one even though I wrote them in this order.
      * @One(groups={"second"})
      * @Two(groups={"first"})
      */
-    public $name = '';
+    #[ORM\Column]
+    public string $name = '';
 
     public function getId(): int
     {
         return $this->id;
     }
 }
+```
+
+## Validating Delete Operations
+
+By default, validation rules that are specified on the API resource are not evaluated during DELETE operations. You need to trigger the validation in your code, if needed.
+
+Assume that you have the following entity that uses a custom delete validator:
+
+```php
+<?php
+// api/src/Entity/MyEntity.php
+
+namespace App\Entity;
+
+use ApiPlatform\Core\Annotation\ApiResource;
+use App\Validator\AssertCanDelete;
+use Doctrine\ORM\Mapping as ORM;
+
+#[ORM\Entity]
+#[ApiResource(
+    itemOperations: [
+      'delete' => [
+        'validation_groups' => ['deleteValidation']
+      ]
+    ]
+)]
+#[AssertCanDelete(groups: ['deleteValidation'])]
+class MyEntity
+{
+    #[ORM\Id, ORM\Column, ORM\GeneratedValue]
+    private ?int $id = null;
+
+    #[ORM\Column]
+    public string $name = '';
+}
+```
+
+Create a data persister, which decorates the default data persister, where you will trigger the validation:
+
+```php
+<?php
+// api/src/DataPersister/MyEntityDataPersister.php
+
+namespace App\DataPersister;
+
+use ApiPlatform\Core\DataPersister\DataPersisterInterface;
+use ApiPlatform\Core\Validator\ValidatorInterface;
+use App\Entity\MyEntity;
+
+class MyEntityDataPersister implements DataPersisterInterface
+{
+    public function __construct(
+        private DataPersisterInterface $decoratedDoctrineDataPersister,
+        private ValidatorInterface $validator,
+    ) {
+    }
+
+    public function persist($data): void {
+        $this->decoratedDoctrineDataPersister->persist($data);
+    }
+
+    public function remove($data): void {
+        $this->validator->validate(
+            $data,
+            ['groups' => ['deleteValidation']]
+        );
+        $this->decoratedDoctrineDataPersister->remove($data);
+    }
+
+    public function supports($data): bool {
+        return $data instanceof MyEntity;
+    }
+}
+```
+
+Register the new data persister in `api/config/services.yaml`:
+
+```yaml
+# api/config/services.yaml
+services:
+    _defaults:
+        bind:
+            $decoratedDoctrineDataPersister: '@api_platform.doctrine.orm.data_persister'
 ```
 
 ## Error Levels and Payload Serialization
@@ -481,9 +519,7 @@ final class Brand
         $this->cars = new ArrayCollection();
     }
 
-    /**
-     * @Assert\Valid
-     */
+    #[Assert\Valid]
     public function getCars()
     {
         return $this->cars->getValues();
@@ -499,20 +535,20 @@ The following validation constraints are covered:
 
 Constraints                                                                           | Vocabulary                        |
 --------------------------------------------------------------------------------------|-----------------------------------|
-[`Url`](https://symfony.com/doc/current/reference/constraints/Url.html)               | `http://schema.org/url`           |
-[`Email`](https://symfony.com/doc/current/reference/constraints/Email.html)           | `http://schema.org/email`         |
-[`Uuid`](https://symfony.com/doc/current/reference/constraints/Uuid.html)             | `http://schema.org/identifier`    |
-[`CardScheme`](https://symfony.com/doc/current/reference/constraints/CardScheme.html) | `http://schema.org/identifier`    |
-[`Bic`](https://symfony.com/doc/current/reference/constraints/Bic.html)               | `http://schema.org/identifier`    |
-[`Iban`](https://symfony.com/doc/current/reference/constraints/Iban.html)             | `http://schema.org/identifier`    |
-[`Date`](https://symfony.com/doc/current/reference/constraints/Date.html)             | `http://schema.org/Date`          |
-[`DateTime`](https://symfony.com/doc/current/reference/constraints/DateTime.html)     | `http://schema.org/DateTime`      |
-[`Time`](https://symfony.com/doc/current/reference/constraints/Time.html)             | `http://schema.org/Time`          |
-[`Image`](https://symfony.com/doc/current/reference/constraints/Image.html)           | `http://schema.org/image`         |
-[`File`](https://symfony.com/doc/current/reference/constraints/File.html)             | `http://schema.org/MediaObject`   |
-[`Currency`](https://symfony.com/doc/current/reference/constraints/Currency.html)     | `http://schema.org/priceCurrency` |
-[`Isbn`](https://symfony.com/doc/current/reference/constraints/Isbn.html)             | `http://schema.org/isbn`          |
-[`Issn`](https://symfony.com/doc/current/reference/constraints/Issn.html)             | `http://schema.org/issn`          |
+[`Url`](https://symfony.com/doc/current/reference/constraints/Url.html)               | `https://schema.org/url`           |
+[`Email`](https://symfony.com/doc/current/reference/constraints/Email.html)           | `https://schema.org/email`         |
+[`Uuid`](https://symfony.com/doc/current/reference/constraints/Uuid.html)             | `https://schema.org/identifier`    |
+[`CardScheme`](https://symfony.com/doc/current/reference/constraints/CardScheme.html) | `https://schema.org/identifier`    |
+[`Bic`](https://symfony.com/doc/current/reference/constraints/Bic.html)               | `https://schema.org/identifier`    |
+[`Iban`](https://symfony.com/doc/current/reference/constraints/Iban.html)             | `https://schema.org/identifier`    |
+[`Date`](https://symfony.com/doc/current/reference/constraints/Date.html)             | `https://schema.org/Date`          |
+[`DateTime`](https://symfony.com/doc/current/reference/constraints/DateTime.html)     | `https://schema.org/DateTime`      |
+[`Time`](https://symfony.com/doc/current/reference/constraints/Time.html)             | `https://schema.org/Time`          |
+[`Image`](https://symfony.com/doc/current/reference/constraints/Image.html)           | `https://schema.org/image`         |
+[`File`](https://symfony.com/doc/current/reference/constraints/File.html)             | `https://schema.org/MediaObject`   |
+[`Currency`](https://symfony.com/doc/current/reference/constraints/Currency.html)     | `https://schema.org/priceCurrency` |
+[`Isbn`](https://symfony.com/doc/current/reference/constraints/Isbn.html)             | `https://schema.org/isbn`          |
+[`Issn`](https://symfony.com/doc/current/reference/constraints/Issn.html)             | `https://schema.org/issn`          |
 
 ## Specification property restrictions
 

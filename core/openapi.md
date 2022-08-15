@@ -122,24 +122,18 @@ use ApiPlatform\Core\Annotation\ApiProperty;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
-/**
- * @ORM\Entity
- */
+#[ORM\Entity]
 #[ApiResource]
 class Product // The class name will be used to name exposed resources
 {
-    /**
-     * @ORM\Column(type="integer")
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="AUTO")
-     */
-    private $id;
+    #[ORM\Id, ORM\Column, ORM\GeneratedValue]
+    private ?int $id = null;
 
     /**
      * @param string $name A name property - this description will be available in the API documentation too.
      *
-     * @ORM\Column
      */
+    #[ORM\Column]
     #[Assert\NotBlank]
     #[ApiProperty(
         attributes: [
@@ -150,11 +144,9 @@ class Product // The class name will be used to name exposed resources
             ],
         ],
     )]
-    public $name;
+    public string $name;
 
-    /**
-     * @ORM\Column
-     */
+    #[ORM\Column(type: "datetime")] 
     #[Assert\DateTime]
     #[ApiProperty(
         openapi_context: ["type" => "string", "format" => "date-time"]
@@ -444,7 +436,9 @@ Change `/docs` to the URI you wish Swagger to be accessible on.
 
 ## Using a custom Asset Package in Swagger UI
 
-Sometimes you may want to use a different [Asset Package](https://symfony.com/doc/current/reference/configuration/framework.html#packages) for the Swagger UI. In this way you'll have more fine-grained control over the asset url generations. This is useful i.e. if you want to use different base path, base url or asset versioning strategy.
+Sometimes you may want to use a different [Asset Package](https://symfony.com/doc/current/reference/configuration/framework.html#packages) for the Swagger UI.
+In this way you'll have more fine-grained control over the asset URL generations.
+This is useful i.e. if you want to use different base path, base URL or asset versioning strategy.
 
 Specify a custom asset package name:
 
@@ -482,7 +476,7 @@ As described [in the Symfony documentation](https://symfony.com/doc/current/temp
 </html>
 ```
 
-You may want to copy the [one shipped with API Platform](https://github.com/api-platform/core/blob/main/src/Bridge/Symfony/Bundle/Resources/views/SwaggerUi/index.html.twig) and customize it.
+You may want to copy the [one shipped with API Platform](https://github.com/api-platform/core/blob/2.6/src/Bridge/Symfony/Bundle/Resources/views/SwaggerUi/index.html.twig) and customize it.
 
 ## Compatibility Layer with Amazon API Gateway
 
@@ -490,7 +484,7 @@ You may want to copy the [one shipped with API Platform](https://github.com/api-
 API Platform provides a way to be compatible with Amazon API Gateway.
 
 To enable API Gateway compatibility on your OpenAPI docs, add `api_gateway=true` as query parameter: `http://www.example.com/docs.json?api_gateway=true`.
-The flag `--api-gateway` is also available through the command line.
+The flag `--api-gateway` is also available through the command-line.
 
 ## OAuth
 

@@ -1215,10 +1215,12 @@ final class RegexpFilter extends AbstractContextAwareFilter
                 'property' => $property,
                 'type' => Type::BUILTIN_TYPE_STRING,
                 'required' => false,
-                'swagger' => [
-                    'description' => 'Filter using a regex. This will appear in the Swagger documentation!',
-                    'name' => 'Custom name to use in the Swagger documentation',
-                    'type' => 'Will appear below the name in the Swagger documentation',
+                'description' => 'Filter using a regex. This will appear in the OpenApi documentation!',
+                'openapi' => [
+                    'example' => 'Custom example that will be in the documentation and be the default value of the sandbox',
+                    'allowReserved' => false,// if true, query parameters will be not percent-encoded
+                    'allowEmptyValue' => true,
+                    'explode' => false, // to be true, the type must be Type::BUILTIN_TYPE_ARRAY, ?product=blue,green will be ?product=blue&product=green
                 ],
             ];
         }
@@ -1530,12 +1532,10 @@ use App\Entity\DummyCarColor;
 #[ApiResource]
 class DummyCar
 {
-    #[ORM\Id]
-    #[ORM\GeneratedValue]
-    #[ORM\Column(type: 'integer')]
+    #[ORM\Id, ORM\Column, ORM\GeneratedValue]
     private ?int $id = null;
 
-    #[ORM\Column(type: 'string')]
+    #[ORM\Column]
     #[ApiFilter(SearchFilter::class, strategy: 'partial')]
     public ?string $name = null;
 
