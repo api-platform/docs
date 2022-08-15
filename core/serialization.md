@@ -11,7 +11,7 @@ The main serialization process has two stages:
 ![Serializer workflow](images/SerializerWorkflow.png)
 
 > As you can see in the picture above, an array is used as a man-in-the-middle. This way, Encoders will only deal with turning specific formats into arrays and vice versa. The same way, Normalizers will deal with turning specific objects into arrays and vice versa.
--- [The Symfony documentation](https://symfony.com/doc/current/components/serializer.html)
+> -- [The Symfony documentation](https://symfony.com/doc/current/components/serializer.html)
 
 Unlike Symfony itself, API Platform leverages custom normalizers, its router and the [data provider](data-providers.md) system to perform an advanced transformation. Metadata are added to the generated document including links, type information, pagination data or available filters.
 
@@ -62,8 +62,7 @@ class Book
     #[Groups(["read", "write"])]
     public $name;
 
-    #[Groups("write")]
-    #[MaxDepth(1)]
+    #[Groups("write"), MaxDepth(1)]
     public $author;
 
     // ...
@@ -82,12 +81,61 @@ resources:
                 groups: ['write']
 
 # api/config/serialization/Book.yaml
-
 App\Entity\Book:
     properties:
         author:
             groups: ['write']
             max_depth: 1
+```
+
+```xml
+<!-- api/config/api_platform/resources.xml -->
+<?xml version="1.0" encoding="UTF-8" ?>
+<resources xmlns="https://api-platform.com/schema/metadata/resources-3.0"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="https://api-platform.com/schema/metadata/resources-3.0
+                                          https://api-platform.com/schema/metadata/resources-3.0.xsd">
+    <resource class="App\Entity\Book">
+        <normalizationContext>
+            <values>
+                <value name="groups">
+                    <values>
+                        <value>read</value>
+                    </values>
+                </value>
+                <value name="enable_max_depth">
+                    <values>
+                        <value>true</value>
+                    </values>
+                </value>
+            </values>
+        </normalizationContext>
+        <denormalizationContext>
+            <values>
+                <value name="groups">
+                    <values>
+                        <value>write</value>
+                    </values>
+                </value>
+            </values>
+        </denormalizationContext>
+    </resource>
+</resources>
+
+
+<!-- api/config/serialization/Book.xml -->
+<?xml version="1.0" encoding="UTF-8" ?>
+<serializer xmlns="http://symfony.com/schema/dic/serializer-mapping"
+            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+            xsi:schemaLocation="http://symfony.com/schema/dic/serializer-mapping
+                                http://symfony.com/schema/dic/serializer-mapping/serializer-mapping-1.0.xsd">
+    <class name="App\Entity\Book">
+        <attribute name="author">
+            <group>write</group>
+            <max_depth>1</max_depth>
+        </attribute>
+    </class>
+</serializer>
 ```
 
 [/codeSelector]
