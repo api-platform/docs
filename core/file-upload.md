@@ -25,7 +25,7 @@ to make it look like this.
 vich_uploader:
     db_driver: orm
     metadata:
-        type: attribute ## Here we want to use the PHP 8.0 attributes
+        type: attribute
     mappings:
         media_object:
             uri_prefix: /media
@@ -108,7 +108,6 @@ class MediaObject
     #[Groups(['media_object:read'])]
     public ?string $contentUrl = null;
 
-    
     #[Vich\UploadableField(mapping: "media_object", fileNameProperty: "filePath")]
     #[Assert\NotNull(groups: ['media_object_create'])]
     public ?File $file = null;
