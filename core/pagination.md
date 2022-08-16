@@ -337,6 +337,7 @@ class Book
     // ...
 }
 ```
+Note : The cursor-based pagination is only available if you are using numeric based ids. `uuid` support does not exist yet.
 
 To know more about cursor-based pagination take a look at [this blog post on medium (draft)](https://medium.com/@sroze/74fd1d324723).
 
