@@ -503,7 +503,7 @@ Your custom mutations will be available like this:
   }
 
   mutation {
-    withCustomArgsMutationBook(input: {sendMail: true, clientMutationId: "myId}) {
+    withCustomArgsMutationBook(input: {sendMail: true, clientMutationId: "myId"}) {
       book {
         title
       }
