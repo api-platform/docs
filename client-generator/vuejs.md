@@ -1,16 +1,16 @@
 # Vue.js Generator
 
-Bootstrap a Vue.js application using [vue-cli](https://github.com/vuejs/vue-cli):
+Bootstrap a Vue.js application using create-vue:
 
 ```console
-vue init webpack-simple my-app
+npm init vue@2 -- --router my-app
 cd my-app
 ```
 
 Install the required dependencies:
 
 ```console
-yarn add vue-router vuex vuex-map-fields babel-plugin-transform-builtin-extend babel-preset-es2015 babel-preset-stage-2 lodash
+yarn add vuex@3 vuex-map-fields lodash
 ```
 
 Optionally, install Bootstrap and Font Awesome to get an app that looks good:
@@ -23,6 +23,7 @@ To generate all the code you need for a given resource run the following command
 
 ```console
 npx @api-platform/client-generator https://demo.api-platform.com src/ --generator vue --resource book
+# You can also use an OpenAPI documentation with `-f openapi3`.
 ```
 
 Replace the URL with the entrypoint of your Hydra-enabled API. Omit the resource flag to generate files for all resource types exposed by the API.
@@ -65,22 +66,4 @@ new Vue({
 }).$mount('#app');
 ```
 
-Make sure to update the Babel configuration:
-
-```javascript
-// .babelrc
-{
-  "presets": [
-    ["es2015", { "modules": false }],
-    ["stage-2"]
-  ],
-  "plugins": [
-    ["babel-plugin-transform-builtin-extend", {
-      globals: ["Error", "Array"]
-    }]
-  ]
-}
-```
-
 Go to `https://localhost/books/` to start using your app.
-That's all!

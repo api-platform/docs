@@ -7,7 +7,7 @@
 To use this generator you need [Node.js](https://nodejs.org/) and [Yarn](https://yarnpkg.com/) (or [npm](https://www.npmjs.com/)) installed.
 To run the command line tool, we also recommend using [npx](https://www.npmjs.com/package/npx).
 
-Create a React Native application using [Expo CLI](https://docs.expo.io/workflow/expo-cli/).
+Create a React Native application using [Expo CLI](https://docs.expo.io/workflow/expo-cli/):
 
 ```console
 yarn global add expo-cli
@@ -32,6 +32,7 @@ In the app directory, generate the files for the resource you want:
 
 ```console
 npx @api-platform/client-generator https://demo.api-platform.com . --generator react-native --resource book
+# You can also use an OpenAPI documentation with `-f openapi3`.
 ```
 
 Replace the URL with the entrypoint of your Hydra-enabled API.
@@ -46,15 +47,13 @@ import { Router, Stack } from 'react-native-router-flux';
 // Replace "book" with the name of the resource type
 import BookRoutes from './routes/book';
 
-const RouterComponent = () => {
-  return (
-      <Router>
-        <Stack key="root">
-          {BookRoutes}
-        </Stack>
-      </Router>
-  );
-};
+const RouterComponent = () => (
+  <Router>
+    <Stack key="root">
+      {BookRoutes}
+    </Stack>
+  </Router>
+);
 
 export default RouterComponent;
 ```
@@ -94,11 +93,11 @@ export default class App extends Component {
       form
     }), {}, applyMiddleware(thunk));
     return (
-        <Provider store={store}>
-          <View style={{flex: 1}}>
-            <Router/>
-          </View>
-        </Provider>
+      <Provider store={store}>
+        <View style={{flex: 1}}>
+          <Router/>
+        </View>
+      </Provider>
     );
   }
 }

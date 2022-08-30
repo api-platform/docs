@@ -6,7 +6,8 @@ The Nuxt.js Client Generator generates components for Server Side Rendered appli
 
 ### Nuxt
 
-Create a [Nuxt.js application](https://nuxtjs.org/guides/get-started/installation#using-create-nuxt-app). The easiest way is to execute:  
+Create a [Nuxt.js application](https://nuxtjs.org/guides/get-started/installation#using-create-nuxt-app).
+The easiest way is to execute:
 
 ```console
 npx create-nuxt-app your-app-name
@@ -18,7 +19,7 @@ or:
 yarn create nuxt-app your-app-name
 ```
 
-It will ask you some questions you can use these answers :
+It will ask you some questions, you can use these answers:
 
 ```console
 Project name: your-app-name
@@ -41,7 +42,7 @@ yarn add moment lodash vue-i18n vuelidate vuex-map-fields nuxt-i18n
 yarn add --dev @nuxtjs/vuetify @nuxtjs/fontawesome
 ```
 
-## Updating nuxtjs config
+## Updating Nuxt Config
 
 Update your `nuxt.config.js` with following:
 
@@ -54,20 +55,21 @@ Update your `nuxt.config.js` with following:
   ],
   // ...
   // to avoid name conflicts in generators
-  components: false,  
+  components: false,
 ```
 
 ## Generating Routes
 
 ```console
 npx @api-platform/client-generator https://demo.api-platform.com . --generator nuxt
+# You can also use an OpenAPI documentation with `-f openapi3`.
 ```
 
-Replace the URL by the entrypoint of your Hydra-enabled API
+Replace the URL by the entrypoint of your Hydra-enabled API.
 
 **Note:** Omit the resource flag to generate files for all resource types exposed by the API.
 
-## Updating default layout
+## Updating Default Layout
 
 Update your `layouts/default.vue` with following:
 
