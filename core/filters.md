@@ -23,16 +23,16 @@ to a Resource in two ways:
 
 1. Through the resource declaration, as the `filters` attribute.
 
-   For example having a filter service declaration:
+    For example having a filter service declaration:
 
     ```yaml
     # api/config/services.yaml
     services:
         # ...
         offer.date_filter:
-            parent: 'api_platform.doctrine.orm.date_filter'
-            arguments: [ { dateProperty: ~ } ]
-            tags:  [ 'api_platform.filter' ]
+            parent: "api_platform.doctrine.orm.date_filter"
+            arguments: [{ dateProperty: ~ }]
+            tags: ["api_platform.filter"]
             # The following are mandatory only if a _defaults section is defined with inverted values.
             # You may want to isolate filters in a dedicated file to avoid adding the following lines (by adding them in the defaults section)
             autowire: false
@@ -40,9 +40,9 @@ to a Resource in two ways:
             public: false
     ```
 
-   We're linking the filter `offer.date_filter` with the resource like this:
+    We're linking the filter `offer.date_filter` with the resource like this:
 
-   [codeSelector]
+    [codeSelector]
 
     ```php
     <?php
@@ -64,7 +64,7 @@ to a Resource in two ways:
     App\Entity\Offer:
         collectionOperations:
             get:
-                filters: ['offer.date_filter']
+                filters: ["offer.date_filter"]
         # ...
     ```
 
@@ -89,11 +89,11 @@ to a Resource in two ways:
     </resources>
     ```
 
-   [/codeSelector]
+    [/codeSelector]
 
 2. By using the `#[ApiFilter]` attribute.
 
-   This attribute automatically declares the service, and you just have to use the filter class you want:
+    This attribute automatically declares the service, and you just have to use the filter class you want:
 
     ```php
     <?php
@@ -113,12 +113,12 @@ to a Resource in two ways:
     }
     ```
 
-   Learn more on how the [ApiFilter attribute](filters.md#apifilter-attribute) works.
+    Learn more on how the [ApiFilter attribute](filters.md#apifilter-attribute) works.
 
-   For the sake of consistency, we're using the attribute in the below documentation.
+    For the sake of consistency, we're using the attribute in the below documentation.
 
-   For MongoDB ODM, all the filters are in the namespace `ApiPlatform\Core\Bridge\Doctrine\MongoDbOdm\Filter`. The filter
-   services all begin with `api_platform.doctrine_mongodb.odm`.
+    For MongoDB ODM, all the filters are in the namespace `ApiPlatform\Core\Bridge\Doctrine\MongoDbOdm\Filter`. The filter
+    services all begin with `api_platform.doctrine_mongodb.odm`.
 
 ### Search Filter
 
@@ -127,10 +127,10 @@ If Doctrine ORM or MongoDB ODM support is enabled, adding filters is as easy as 
 
 The search filter supports `exact`, `partial`, `start`, `end`, and `word_start` matching strategies:
 
-* `partial` strategy uses `LIKE %text%` to search for fields that contain `text`.
-* `start` strategy uses `LIKE text%` to search for fields that start with `text`.
-* `end` strategy uses `LIKE %text` to search for fields that end with `text`.
-* `word_start` strategy uses `LIKE text% OR LIKE % text%` to search for fields that contain words starting with `text`.
+-   `partial` strategy uses `LIKE %text%` to search for fields that contain `text`.
+-   `start` strategy uses `LIKE text%` to search for fields that start with `text`.
+-   `end` strategy uses `LIKE %text` to search for fields that end with `text`.
+-   `word_start` strategy uses `LIKE text% OR LIKE % text%` to search for fields that contain words starting with `text`.
 
 Prepend the letter `i` to the filter if you want it to be case insensitive. For example `ipartial` or `iexact`. Note that
 this will use the `LOWER` function and **will** impact performance [if there is no proper index](performance.md#search-filter).
@@ -169,9 +169,9 @@ class Offer
 # config/services.yaml
 services:
     offer.search_filter:
-        parent: 'api_platform.doctrine.orm.search_filter'
-        arguments: [ { id: 'exact', price: 'exact', description: 'partial' } ]
-        tags:  [ 'api_platform.filter' ]
+        parent: "api_platform.doctrine.orm.search_filter"
+        arguments: [{ id: "exact", price: "exact", description: "partial" }]
+        tags: ["api_platform.filter"]
         # The following are mandatory only if a _defaults section is defined with inverted values.
         # You may want to isolate filters in a dedicated file to avoid adding the following lines (by adding them in the defaults section)
         autowire: false
@@ -183,7 +183,7 @@ App\Entity\Offer:
     # ...
     collectionOperations:
         get:
-            filters: ['offer.search_filter']
+            filters: ["offer.search_filter"]
 ```
 
 [/codeSelector]
@@ -219,9 +219,9 @@ class Offer
 # config/services.yaml
 services:
     offer.search_filter:
-        parent: 'api_platform.doctrine.orm.search_filter'
-        arguments: [ { product: 'exact' } ]
-        tags:  [ 'api_platform.filter' ]
+        parent: "api_platform.doctrine.orm.search_filter"
+        arguments: [{ product: "exact" }]
+        tags: ["api_platform.filter"]
         # The following are mandatory only if a _defaults section is defined with inverted values.
         # You may want to isolate filters in a dedicated file to avoid adding the following lines (by adding them in the defaults section)
         autowire: false
@@ -233,7 +233,7 @@ App\Entity\Offer:
     # ...
     collectionOperations:
         get:
-            filters: ['offer.search_filter']
+            filters: ["offer.search_filter"]
 ```
 
 [/codeSelector]
@@ -257,6 +257,7 @@ The `after` and `before` filters will filter including the value whereas `strict
 Like others filters, the date filter must be explicitly enabled:
 
 [codeSelector]
+
 ```php
 <?php
 // api/src/Entity/Offer.php
@@ -279,9 +280,9 @@ class Offer
 # config/services.yaml
 services:
     offer.date_filter:
-        parent: 'api_platform.doctrine.orm.date_filter'
-        arguments: [ { createdAt: ~ } ]
-        tags:  [ 'api_platform.filter' ]
+        parent: "api_platform.doctrine.orm.date_filter"
+        arguments: [{ createdAt: ~ }]
+        tags: ["api_platform.filter"]
         # The following are mandatory only if a _defaults section is defined with inverted values.
         # You may want to isolate filters in a dedicated file to avoid adding the following lines (by adding them in the defaults section)
         autowire: false
@@ -293,7 +294,7 @@ App\Entity\Offer:
     # ...
     collectionOperations:
         get:
-            filters: ['offer.date_filter']
+            filters: ["offer.date_filter"]
 ```
 
 [/codeSelector]
@@ -307,13 +308,13 @@ It will return all offers where `createdAt` is superior or equal to `2018-03-19`
 The date filter is able to deal with date properties having `null` values.
 Four behaviors are available at the property level of the filter:
 
-Description                          | Strategy to set
--------------------------------------|------------------------------------------------------------------------------------
-Use the default behavior of the DBMS | `null`
-Exclude items                        | `ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\DateFilter::EXCLUDE_NULL` (`exclude_null`)
-Consider items as oldest             | `ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\DateFilter::INCLUDE_NULL_BEFORE` (`include_null_before`)
-Consider items as youngest           | `ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\DateFilter::INCLUDE_NULL_AFTER` (`include_null_after`)
-Always include items                 | `ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\DateFilter::INCLUDE_NULL_BEFORE_AND_AFTER` (`include_null_before_and_after`)
+| Description                          | Strategy to set                                                                                                           |
+| ------------------------------------ | ------------------------------------------------------------------------------------------------------------------------- |
+| Use the default behavior of the DBMS | `null`                                                                                                                    |
+| Exclude items                        | `ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\DateFilter::EXCLUDE_NULL` (`exclude_null`)                                   |
+| Consider items as oldest             | `ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\DateFilter::INCLUDE_NULL_BEFORE` (`include_null_before`)                     |
+| Consider items as youngest           | `ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\DateFilter::INCLUDE_NULL_AFTER` (`include_null_after`)                       |
+| Always include items                 | `ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\DateFilter::INCLUDE_NULL_BEFORE_AND_AFTER` (`include_null_before_and_after`) |
 
 For instance, exclude entries with a property value of `null` with the following service definition:
 
@@ -341,9 +342,9 @@ class Offer
 # config/services.yaml
 services:
     offer.date_filter:
-        parent: 'api_platform.doctrine.orm.date_filter'
-        arguments: [ { dateProperty: exclude_null } ]
-        tags:  [ 'api_platform.filter' ]
+        parent: "api_platform.doctrine.orm.date_filter"
+        arguments: [{ dateProperty: exclude_null }]
+        tags: ["api_platform.filter"]
         # The following are mandatory only if a _defaults section is defined with inverted values.
         # You may want to isolate filters in a dedicated file to avoid adding the following lines (by adding them in the defaults section)
         autowire: false
@@ -355,7 +356,7 @@ App\Entity\Offer:
     # ...
     collectionOperations:
         get:
-            filters: ['offer.date_filter']
+            filters: ["offer.date_filter"]
 ```
 
 [/codeSelector]
@@ -392,9 +393,9 @@ class Offer
 # config/services.yaml
 services:
     offer.boolean_filter:
-        parent: 'api_platform.doctrine.orm.boolean_filter'
-        arguments: [ { isAvailableGenericallyInMyCountry: ~ } ]
-        tags:  [ 'api_platform.filter' ]
+        parent: "api_platform.doctrine.orm.boolean_filter"
+        arguments: [{ isAvailableGenericallyInMyCountry: ~ }]
+        tags: ["api_platform.filter"]
         # The following are mandatory only if a _defaults section is defined with inverted values.
         # You may want to isolate filters in a dedicated file to avoid adding the following lines (by adding them in the defaults section)
         autowire: false
@@ -406,7 +407,7 @@ App\Entity\Offer:
     # ...
     collectionOperations:
         get:
-            filters: ['offer.boolean_filter']
+            filters: ["offer.boolean_filter"]
 ```
 
 [/codeSelector]
@@ -447,9 +448,9 @@ class Offer
 # config/services.yaml
 services:
     offer.numeric_filter:
-        parent: 'api_platform.doctrine.orm.numeric_filter'
-        arguments: [ { sold: ~ } ]
-        tags:  [ 'api_platform.filter' ]
+        parent: "api_platform.doctrine.orm.numeric_filter"
+        arguments: [{ sold: ~ }]
+        tags: ["api_platform.filter"]
         # The following are mandatory only if a _defaults section is defined with inverted values.
         # You may want to isolate filters in a dedicated file to avoid adding the following lines (by adding them in the defaults section)
         autowire: false
@@ -461,7 +462,7 @@ App\Entity\Offer:
     # ...
     collectionOperations:
         get:
-            filters: ['offer.numeric_filter']
+            filters: ["offer.numeric_filter"]
 ```
 
 [/codeSelector]
@@ -502,9 +503,9 @@ class Offer
 # config/services.yaml
 services:
     offer.range_filter:
-        parent: 'api_platform.doctrine.orm.range_filter'
-        arguments: [ { price: ~ } ]
-        tags:  [ 'api_platform.filter' ]
+        parent: "api_platform.doctrine.orm.range_filter"
+        arguments: [{ price: ~ }]
+        tags: ["api_platform.filter"]
         # The following are mandatory only if a _defaults section is defined with inverted values.
         # You may want to isolate filters in a dedicated file to avoid adding the following lines (by adding them in the defaults section)
         autowire: false
@@ -516,7 +517,7 @@ App\Entity\Offer:
     # ...
     collectionOperations:
         get:
-            filters: ['offer.range_filter']
+            filters: ["offer.range_filter"]
 ```
 
 [/codeSelector]
@@ -562,9 +563,9 @@ class Offer
 # config/services.yaml
 services:
     offer.exists_filter:
-        parent: 'api_platform.doctrine.orm.exists_filter'
-        arguments: [ { transportFees: ~ } ]
-        tags:  [ 'api_platform.filter' ]
+        parent: "api_platform.doctrine.orm.exists_filter"
+        arguments: [{ transportFees: ~ }]
+        tags: ["api_platform.filter"]
         # The following are mandatory only if a _defaults section is defined with inverted values.
         # You may want to isolate filters in a dedicated file to avoid adding the following lines (by adding them in the defaults section)
         autowire: false
@@ -576,7 +577,7 @@ App\Entity\Offer:
     # ...
     collectionOperations:
         get:
-            filters: ['offer.exists_filter']
+            filters: ["offer.exists_filter"]
 ```
 
 [/codeSelector]
@@ -594,7 +595,7 @@ Luckily, the query parameter name to use is configurable:
 # api/config/packages/api_platform.yaml
 api_platform:
     collection:
-        exists_parameter_name: 'not_null' # the URL query parameter to use is now "not_null"
+        exists_parameter_name: "not_null" # the URL query parameter to use is now "not_null"
 ```
 
 ### Order Filter (Sorting)
@@ -629,11 +630,11 @@ class Offer
 # config/services.yaml
 services:
     offer.order_filter:
-        parent: 'api_platform.doctrine.orm.order_filter'
+        parent: "api_platform.doctrine.orm.order_filter"
         arguments:
             $properties: { id: ~, name: ~ }
             $orderParameterName: order
-        tags:  [ 'api_platform.filter' ]
+        tags: ["api_platform.filter"]
         # The following are mandatory only if a _defaults section is defined with inverted values.
         # You may want to isolate filters in a dedicated file to avoid adding the following lines (by adding them in the defaults section)
         autowire: false
@@ -645,7 +646,7 @@ App\Entity\Offer:
     # ...
     collectionOperations:
         get:
-            filters: ['offer.order_filter']
+            filters: ["offer.order_filter"]
 ```
 
 [/codeSelector]
@@ -680,9 +681,9 @@ class Offer
 # config/services.yaml
 services:
     offer.order_filter:
-        parent: 'api_platform.doctrine.orm.order_filter'
-        arguments: [ { id: 'ASC', name: 'DESC' } ]
-        tags:  [ 'api_platform.filter' ]
+        parent: "api_platform.doctrine.orm.order_filter"
+        arguments: [{ id: "ASC", name: "DESC" }]
+        tags: ["api_platform.filter"]
         # The following are mandatory only if a _defaults section is defined with inverted values.
         # You may want to isolate filters in a dedicated file to avoid adding the following lines (by adding them in the defaults section)
         autowire: false
@@ -694,7 +695,7 @@ App\Entity\Offer:
     # ...
     collectionOperations:
         get:
-            filters: ['offer.order_filter']
+            filters: ["offer.order_filter"]
 ```
 
 [/codeSelector]
@@ -704,11 +705,11 @@ App\Entity\Offer:
 When the property used for ordering can contain `null` values, you may want to specify how `null` values are treated in
 the comparison:
 
-Description                          | Strategy to set
--------------------------------------|---------------------------------------------------------------------------------------------
-Use the default behavior of the DBMS | `null`
-Consider items as smallest           | `ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\OrderFilter::NULLS_SMALLEST` (`nulls_smallest`)
-Consider items as largest            | `ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\OrderFilter::NULLS_LARGEST` (`nulls_largest`)
+| Description                          | Strategy to set                                                                              |
+| ------------------------------------ | -------------------------------------------------------------------------------------------- |
+| Use the default behavior of the DBMS | `null`                                                                                       |
+| Consider items as smallest           | `ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\OrderFilter::NULLS_SMALLEST` (`nulls_smallest`) |
+| Consider items as largest            | `ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\OrderFilter::NULLS_LARGEST` (`nulls_largest`)   |
 
 For instance, treat entries with a property value of `null` as the smallest, with the following service definition:
 
@@ -736,9 +737,18 @@ class Offer
 # config/services.yaml
 services:
     offer.order_filter:
-        parent: 'api_platform.doctrine.orm.order_filter'
-        arguments: [ { validFrom: { nulls_comparison: 'nulls_smallest', default_direction: 'DESC' } } ]
-        tags:  [ 'api_platform.filter' ]
+        parent: "api_platform.doctrine.orm.order_filter"
+        arguments:
+            [
+                {
+                    validFrom:
+                        {
+                            nulls_comparison: "nulls_smallest",
+                            default_direction: "DESC",
+                        },
+                },
+            ]
+        tags: ["api_platform.filter"]
         # The following are mandatory only if a _defaults section is defined with inverted values.
         # You may want to isolate filters in a dedicated file to avoid adding the following lines (by adding them in the defaults section)
         autowire: false
@@ -750,7 +760,7 @@ App\Entity\Offer:
     # ...
     collectionOperations:
         get:
-            filters: ['offer.order_filter']
+            filters: ["offer.order_filter"]
 ```
 
 [/codeSelector]
@@ -764,7 +774,7 @@ Luckily, the query parameter name to use is configurable:
 # api/config/packages/api_platform.yaml
 api_platform:
     collection:
-        order_parameter_name: '_order' # the URL query parameter to use is now "_order"
+        order_parameter_name: "_order" # the URL query parameter to use is now "_order"
 ```
 
 ### Filtering on Nested Properties
@@ -798,18 +808,18 @@ class Offer
 # config/services.yaml
 services:
     offer.order_filter:
-        parent: 'api_platform.doctrine.orm.order_filter'
-        arguments: [ { product.releaseDate: ~ } ]
-        tags:  [ 'api_platform.filter' ]
+        parent: "api_platform.doctrine.orm.order_filter"
+        arguments: [{ product.releaseDate: ~ }]
+        tags: ["api_platform.filter"]
         # The following are mandatory only if a _defaults section is defined with inverted values.
         # You may want to isolate filters in a dedicated file to avoid adding the following lines (by adding them in the defaults section)
         autowire: false
         autoconfigure: false
         public: false
     offer.search_filter:
-        parent: 'api_platform.doctrine.orm.search_filter'
-        arguments: [ { product.color: 'exact' } ]
-        tags:  [ 'api_platform.filter' ]
+        parent: "api_platform.doctrine.orm.search_filter"
+        arguments: [{ product.color: "exact" }]
+        tags: ["api_platform.filter"]
         # The following are mandatory only if a _defaults section is defined with inverted values.
         # You may want to isolate filters in a dedicated file to avoid adding the following lines (by adding them in the defaults section)
         autowire: false
@@ -821,7 +831,7 @@ App\Entity\Offer:
     # ...
     collectionOperations:
         get:
-            filters: ['offer.order_filter', 'offer.search_filter']
+            filters: ["offer.order_filter", "offer.search_filter"]
 ```
 
 [/codeSelector]
@@ -859,9 +869,9 @@ class Offer
 # config/services.yaml
 services:
     offer.order_filter:
-        parent: 'api_platform.doctrine.orm.order_filter'
-        arguments: [ ~ ] # Pass null to enable the filter for all properties
-        tags:  [ 'api_platform.filter' ]
+        parent: "api_platform.doctrine.orm.order_filter"
+        arguments: [~] # Pass null to enable the filter for all properties
+        tags: ["api_platform.filter"]
         # The following are mandatory only if a _defaults section is defined with inverted values.
         # You may want to isolate filters in a dedicated file to avoid adding the following lines (by adding them in the defaults section)
         autowire: false
@@ -873,7 +883,7 @@ App\Entity\Offer:
     # ...
     collectionOperations:
         get:
-            filters: ['offer.order_filter']
+            filters: ["offer.order_filter"]
 ```
 
 [/codeSelector]
@@ -882,14 +892,14 @@ App\Entity\Offer:
 
 Regardless of this option, filters can be applied on a property only if:
 
-* the property exists
-* the value is supported (ex: `asc` or `desc` for the order filters).
+-   the property exists
+-   the value is supported (ex: `asc` or `desc` for the order filters).
 
 It means that the filter will be **silently** ignored if the property:
 
-* does not exist
-* is not enabled
-* has an invalid value
+-   does not exist
+-   is not enabled
+-   has an invalid value
 
 ## Elasticsearch Filters
 
@@ -926,11 +936,11 @@ class Tweet
 # config/services.yaml
 services:
     tweet.order_filter:
-        parent: 'api_platform.doctrine.orm.order_filter'
+        parent: "api_platform.doctrine.orm.order_filter"
         arguments:
             $properties: { id: ~, date: ~ }
-            $orderParameterName: 'order'
-        tags:  [ 'api_platform.filter' ]
+            $orderParameterName: "order"
+        tags: ["api_platform.filter"]
         # The following are mandatory only if a _defaults section is defined with inverted values.
         # You may want to isolate filters in a dedicated file to avoid adding the following lines (by adding them in the defaults section)
         autowire: false
@@ -940,7 +950,7 @@ services:
 # config/api/Tweet.yaml
 App\Entity\Tweet:
     # ...
-    filters: ['tweet.order_filter']
+    filters: ["tweet.order_filter"]
 ```
 
 [/codeSelector]
@@ -978,7 +988,7 @@ parameter name to use is configurable:
 # api/config/packages/api_platform.yaml
 api_platform:
     collection:
-        order_parameter_name: '_order' # the URL query parameter to use is now "_order"
+        order_parameter_name: "_order" # the URL query parameter to use is now "_order"
 ```
 
 ### Match Filter
@@ -1106,9 +1116,9 @@ class Book
 
 Three arguments are available to configure the filter:
 
-* `parameterName` is the query parameter name (default `groups`)
-* `overrideDefaultGroups` allows to override the default serialization groups (default `false`)
-* `whitelist` groups whitelist to avoid uncontrolled data exposure (default `null` to allow all groups)
+-   `parameterName` is the query parameter name (default `groups`)
+-   `overrideDefaultGroups` allows to override the default serialization groups (default `false`)
+-   `whitelist` groups whitelist to avoid uncontrolled data exposure (default `null` to allow all groups)
 
 Given that the collection endpoint is `/books`, you can filter by serialization groups with the following query: `/books?groups[]=read&groups[]=write`.
 
@@ -1145,9 +1155,9 @@ class Book
 
 Three arguments are available to configure the filter:
 
-* `parameterName` is the query parameter name (default `properties`)
-* `overrideDefaultProperties` allows to override the default serialization properties (default `false`)
-* `whitelist` properties whitelist to avoid uncontrolled data exposure (default `null` to allow all properties)
+-   `parameterName` is the query parameter name (default `properties`)
+-   `overrideDefaultProperties` allows to override the default serialization properties (default `false`)
+-   `whitelist` properties whitelist to avoid uncontrolled data exposure (default `null` to allow all properties)
 
 Given that the collection endpoint is `/books`, you can filter the serialization properties with the following query: `/books?properties[]=title&properties[]=author`.
 If you want to include some properties of the nested "author" document, use: `/books?properties[]=title&properties[author][]=name`.
@@ -1278,6 +1288,7 @@ class Offer
 ```
 
 When creating a custom filter you can specify multiple properties of a resource using the usual filter syntax:
+
 ```php
 <?php
 // api/src/Entity/Offer.php
@@ -1297,20 +1308,22 @@ class Offer
     public int $cost;
 }
 ```
+
 These properties can then be accessed in the custom filter like this:
+
 ```php
 //App/Filter/CustomAndFilter.php
-protected function filterProperty(string $property, $value, QueryBuilder $queryBuilder, QueryNameGeneratorInterface $queryNameGenerator, string $resourceClass, string $operationName = null) {  
-  $rootAlias = $queryBuilder->getRootAliases()[0];  
-  foreach ($this->getProperties() as $prop => $ignore) { //NOTE: we put ignore because we want the key name, not the value inside which will be null 
-      if (!$this->isPropertyEnabled($prop, $resourceClass) || !$this->isPropertyMapped($prop, $resourceClass)) {  
-          return;  
-      }  
-      $parameterName = $queryNameGenerator->generateParameterName($prop);  
-      $queryBuilder  
-          ->andWhere(sprintf('%s.%s LIKE :%s', $rootAlias, $prop, $parameterName))  
-          ->setParameter($parameterName, "%" . $value . "%");  
-  }  
+protected function filterProperty(string $property, $value, QueryBuilder $queryBuilder, QueryNameGeneratorInterface $queryNameGenerator, string $resourceClass, string $operationName = null) {
+  $rootAlias = $queryBuilder->getRootAliases()[0];
+  foreach (array_keys($this->getProperties()) as $prop) { //NOTE: we use array_keys because getProperties() returns a map of property => strategy
+      if (!$this->isPropertyEnabled($prop, $resourceClass) || !$this->isPropertyMapped($prop, $resourceClass)) {
+          return;
+      }
+      $parameterName = $queryNameGenerator->generateParameterName($prop);
+      $queryBuilder
+          ->andWhere(sprintf('%s.%s LIKE :%s', $rootAlias, $prop, $parameterName))
+          ->setParameter($parameterName, "%" . $value . "%");
+  }
 }
 ```
 
@@ -1326,9 +1339,9 @@ services:
     # This whole definition can be omitted if automatic service loading is enabled
     'App\Filter\RegexpFilter':
         # The "arguments" key can be omitted if the autowiring is enabled
-        arguments: [ '@doctrine', ~, '@?logger' ]
+        arguments: ["@doctrine", ~, "@?logger"]
         # The "tags" key can be omitted if the autoconfiguration is enabled
-        tags: [ 'api_platform.filter' ]
+        tags: ["api_platform.filter"]
 ```
 
 In the previous example, the filter can be applied on any property. However, thanks to the `AbstractFilter` class,
@@ -1338,8 +1351,9 @@ it can also be enabled for some properties:
 # api/config/services.yaml
 services:
     'App\Filter\RegexpFilter':
-        arguments: [ '@doctrine', ~, '@?logger', { email: ~, anOtherProperty: ~ } ]
-        tags: [ 'api_platform.filter' ]
+        arguments:
+            ["@doctrine", ~, "@?logger", { email: ~, anOtherProperty: ~ }]
+        tags: ["api_platform.filter"]
 ```
 
 Finally, if you don't want to use the `#[ApiFilter]` attribute, you can register the filter on an API resource class using the `filters` attribute:
@@ -1403,9 +1417,9 @@ class AndOperatorFilterExtension implements RequestBodySearchCollectionExtension
             'query' => $context['filters']['fullName'],
             'operator' => 'and',
         ];
-        
+
         $requestBody['query']['constant_score']['filter']['bool']['must'][0]['match']['full_name'] = $andQuery;
-        
+
         return $requestBody;
     }
 }
@@ -1453,7 +1467,7 @@ class Order
     #[ORM\ManyToOne(User::class)]
     #[ORM\JoinColumn(name: "user_id", referencedColumnName: "id")]
     public User $user;
-    
+
     // ...
 }
 ```
