@@ -1269,6 +1269,43 @@ class Offer
 }
 ```
 
+When creating a custom filter you can specify multiple properties of a resource using the usual filter syntax:
+```php
+<?php
+// api/src/Entity/Offer.php
+
+namespace App\Entity;
+
+use ApiPlatform\Core\Annotation\ApiFilter;
+use ApiPlatform\Core\Annotation\ApiResource;
+use App\Filter\CustomAndFilter;
+
+#[ApiResource]
+#[ApiFilter(CustomAndFilter::class, properties={"name", "cost"})]
+class Offer
+{
+    // ...
+    public string $name;
+    public int $cost;
+}
+```
+These properties can then be accessed in the custom filter like this:
+```php
+//App/Filter/CustomAndFilter.php
+protected function filterProperty(string $property, $value, QueryBuilder $queryBuilder, QueryNameGeneratorInterface $queryNameGenerator, string $resourceClass, Operation $operation = null, array $context = []) {  
+  $rootAlias = $queryBuilder->getRootAliases()[0];  
+  foreach (array_keys($this->getProperties()) as $prop) { //NOTE: we use array_keys because getProperties() returns a map of property => strategy
+      if (!$this->isPropertyEnabled($prop, $resourceClass) || !$this->isPropertyMapped($prop, $resourceClass)) {  
+          return;  
+      }  
+      $parameterName = $queryNameGenerator->generateParameterName($prop);  
+      $queryBuilder  
+          ->andWhere(sprintf('%s.%s LIKE :%s', $rootAlias, $prop, $parameterName))  
+          ->setParameter($parameterName, "%" . $value . "%");  
+  }  
+}
+```
+
 #### Manual Service and Attribute Registration
 
 If you don't use Symfony's automatic service loading, you have to register the filter as a service by yourself.
