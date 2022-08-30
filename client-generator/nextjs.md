@@ -2,42 +2,59 @@
 
 ![List screenshot](images/nextjs/client-generator-nextjs-list.png)
 
-The Next.js Client Generator generates components for Server Side Rendered applications using [Next.js](https://zeit.co/blog/next)
+The Next.js Client Generator generates components for Server Side Rendered applications using [Next.js](https://nextjs.org/).
 
 ## Install
 
-### Next + Express Server
+The easiest way to get started is to install [the API Platform distribution](../distribution/index.md).
+It contains the Client Generator, all dependencies it needs, a Next.js skeleton generated with Create Next App,
+a development Docker container to serve the webapp, and all the API Platform components you may need, including an API server
+supporting Hydra.
 
-Create a [Next.js application with express server](https://github.com/zeit/next.js/tree/canary/examples/custom-server-express). The easiest way is to execute:
+If you use API Platform, jump to the next section!
 
-    $ npx create-next-app your-app-name
-    # or
-    $ yarn create next-app your-app-name
+Alternatively, create a Next.js application by executing:
 
-### Installing the Generator Dependencies
+```console
+npx create-next-app --typescript your-app-name
+# or
+yarn create next-app --typescript your-app-name
+```
 
-Enable TypeScript in your next project
+Install the required dependencies:
 
-    yarn add --dev typescript @types/react @types/node
-
-Install required dependencies:
-
-    yarn add lodash.get lodash.has @types/lodash isomorphic-unfetch formik
+```console
+yarn add isomorphic-unfetch formik react-query
+```
 
 ## Generating Routes
 
-    $ npx @api-platform/client-generator https://demo.api-platform.com . --generator next --resource book
-    # Replace the URL by the entrypoint of your Hydra-enabled API
-    # Omit the resource flag to generate files for all resource types exposed by the API.
+If you use the API Platform distribution, generating all the code you need for a given resource is as simple as running the following command:
 
-> Note: On the [API Platform distribution](https://github.com/api-platform/api-platform), you can run
-> `generate-api-platform-client` instead of `npx @api-platform/client-generator`.
+```console
+docker compose exec client \
+    generate-api-platform-client --resource book -g next
+```
+
+Omit the resource flag to generate files for all resource types exposed by the API.
+
+If you don't use the standalone installation, run the following command instead:
+
+```console
+npx @api-platform/client-generator https://demo.api-platform.com . --generator next --resource book
+# Replace the URL by the entrypoint of your Hydra-enabled API.
+# You can also use an OpenAPI documentation with `-f openapi3`.
+```
+
+The code has been generated, and is ready to be executed!
 
 ## Starting the Project
 
 You can launch the server with
 
-    yarn dev
+```console
+yarn dev
+```
 
 Go to `http://localhost:3000/books/` to start using your app.
 

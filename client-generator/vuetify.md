@@ -1,8 +1,8 @@
 # Vuetify Generator
 
-## Install with Docker
+## Install With Docker
 
-If you use the API Platform distribution with docker, first you have to add the [Vue CLI](https://cli.vuejs.org/guide/) to the `yarn global add` command in `pwa/Dockerfile`:
+If you use the API Platform distribution with Docker, first you have to add the [Vue CLI](https://cli.vuejs.org/guide/) to the `yarn global add` command in `pwa/Dockerfile`:
 
 ```dockerfile
 RUN yarn global add @api-platform/client-generator @vue/cli @vue/cli-service-global
@@ -10,7 +10,7 @@ RUN yarn global add @api-platform/client-generator @vue/cli @vue/cli-service-glo
 
 Rebuild your containers to install the Vue CLI in docker client container.
 
-Remove the directories `client\src\` and `client\public\` and the files `client\package.json\` and `client\yarn.lock\`  (because the distribution comes with a prebuilt react app.)
+Remove the directories `client\src\` and `client\public\` and the files `client\package.json\` and `client\yarn.lock\` (because the distribution comes with a prebuilt Next.js app.)
 
 Create a new Vue App and install vuetify and other vue packages:
 
@@ -51,9 +51,9 @@ docker compose exec client \
 
 Omit the resource flag to generate files for all resource types exposed by the API.
 
-Continue by [generating the VueJS Web App](#generating-the-vuejs-web-app)
+Continue by [generating the VueJS Web App](#generating-the-vuejs-web-app).
 
-## Install without Docker
+## Install Without Docker
 
 Create a Vuetify application using
 [Vue CLI 3](https://cli.vuejs.org/guide/):
@@ -76,6 +76,7 @@ In the app directory, generate the files for the resource you want:
 
 ```console
 npx @api-platform/client-generator -g vuetify https://demo.api-platform.com src/
+# You can also use an OpenAPI documentation with `-f openapi3`.
 ```
 
 Replace the URL with the entrypoint of your Hydra-enabled API. Omit the resource flag to generate files for all resource types exposed by the API.
@@ -146,7 +147,7 @@ const opts = {
 export default new Vuetify(opts);
 ```
 
-The generator comes with a i18n feature to allow quick translations of some labels in the generated code, to make it
+The generator comes with an i18n feature to allow quick translations of some labels in the generated code, to make it
 work, you need to create this file:
 
 ```javascript
@@ -264,4 +265,3 @@ new Vue({
 ```
 
 Go to `https://localhost:8000/books/` to start using your app.
-That's all!

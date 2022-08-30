@@ -12,6 +12,7 @@ In the app directory, generate the files for the resource you want:
 
 ```console
 npx @api-platform/client-generator https://demo.api-platform.com src/ --generator quasar --resource foo
+# You can also use an OpenAPI documentation with `-f openapi3`.
 ```
 
 Replace the URL by the entrypoint of your Hydra-enabled API.
