@@ -9,13 +9,13 @@ and native mobile apps from APIs supporting the [Hydra](http://www.hydra-cg.com/
 
 It is able to generate apps using the following frontend stacks:
 
-- [React](react.md)
 - [Next.js](nextjs.md)
+- [Nuxt.js](nuxtjs.md)
+- [Quasar](quasar.md)
+- [Vuetify](vuetify.md)
+- [React](react.md)
 - [React Native](react-native.md)
 - [Vue.js](vuejs.md)
-- [Nuxt.js](nuxtjs.md)
-- [Quasar Framework](quasar.md)
-- [Vuetify](vuetify.md)
 - [Or bring your custom generator](custom.md)
 
 Client Generator works especially well with APIs built with the [API Platform](https://api-platform.com) framework.
