@@ -19,7 +19,7 @@ API Platform also provides ambitious **JavaScript** tools to create web and mobi
 The easiest and most powerful way to get started is [to download the API Platform distribution](https://github.com/api-platform/api-platform/releases). It contains:
 
 * the API skeleton, including [the Core library](../core/index.md), [the Symfony framework](https://symfony.com/) ([optional](../core/bootstrap.md)) and [the Doctrine ORM](https://www.doctrine-project.org/projects/orm.html) ([optional](../core/extending.md))
-* [the client scaffolding tool](../client-generator/) to generate [Next.js](../client-generator/
+* [the client scaffolding tool](../create-client/) to generate [Next.js](../create-client/
 ) web applications from the API documentation ([Nuxt.js](https://nuxtjs.org/), [Vue](https://vuejs.org/), [Create React App](https://reactjs.org), [React Native](https://facebook.github.io/react-native/), [Quasar](https://quasar.dev/) and [Vuetify](https://vuetifyjs.com/) are also supported)
 * [a beautiful admin interface](../admin/), built on top of React Admin, dynamically created by parsing the API documentation
 * all you need to [create real-time and async APIs using the Mercure protocol](../core/mercure.md)
@@ -93,7 +93,7 @@ This starts the following services:
 |----------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | caddy    | [Caddy web server](caddy.md) with the [Mercure](../core/mercure.md) (real-time and async) and [Vulcain](https://vulcain.rocks) (relations preloading) modules |
 | php      | The API with PHP 8, Composer and sensitive configs                                                                                                                           |
-| pwa      | Next.js webapp with API Platform Admin and Client Generator preinstalled                                                                                                     |
+| pwa      | Next.js project compatible with Create Client and having Admin preinstalled                                                                                                     |
 | database | PostgreSQL database server                                                                                                                                                   |
 
 The following components are available:
@@ -187,7 +187,7 @@ symfony serve
 ```
 
 All JavaScript components are also [available as standalone libraries](https://github.com/api-platform?language=javascript)
-installable with npm or Yarn.  
+installable with npm (or any other package manager).  
 
 **Note:** when installing API Platform this way, the API will be exposed as the `/api/` path. You need to open `http://localhost:8000/api/` to see the API documentation.
 If you are deploying API Platform directly on an Apache or NGINX webserver and getting a 404 error on opening this link, you will need to enable the [rewriting rules](https://symfony.com/doc/current/setup/web_server_configuration.html) for your specific webserver software.
@@ -744,14 +744,14 @@ occurs**.
 
 ## A Next.js Web App
 
-API Platform also has an awesome [client generator](../client-generator/index.md) able to scaffold fully working Next.js, Nuxt.js, React/Redux, Vue.js, Quasar and Vuetify Progressive Web Apps that you can easily tune and customize. The generator also supports
+API Platform also has an awesome [client generator](../create-client/index.md) able to scaffold fully working Next.js, Nuxt.js, React/Redux, Vue.js, Quasar and Vuetify Progressive Web Apps that you can easily tune and customize. The generator also supports
 [React Native](https://facebook.github.io/react-native/) if you prefer to leverage all capabilities of mobile devices.
 
 The distribution comes with a skeleton ready to welcome the [Next.js](https://nextjs.org/) flavor of the generated code. To bootstrap your app, run:
 
 ```console
 docker compose exec pwa \
-    generate-api-platform-client
+    pnpm create @api-platform/client
 ```
 
 Open `https://localhost/books/` in your browser:
@@ -759,13 +759,13 @@ Open `https://localhost/books/` in your browser:
 ![The Next.js Progressive Web App](images/api-platform-2.6-pwa-react.png)
 
 You can also choose to generate the code for a specific resource with the `--resource` argument (example:
-`generate-api-platform-client --resource books`).
+`pnpm create @api-platform/client --resource books`).
 
 The generated code contains a list (including pagination), a delete button, a creation and an edition form. It also includes
 [Bootstrap](https://getbootstrap.com) markup and [ARIA roles](https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA)
 to make the app usable by people with disabilities.
 
-If you prefer to generate a PWA built on top of another frontend stack, read [the dedicated documentation](../client-generator/index.md).
+If you prefer to generate a PWA built on top of another frontend stack, read [the dedicated documentation](../create-client/index.md).
 
 ## Hooking Your Own Business Logic
 

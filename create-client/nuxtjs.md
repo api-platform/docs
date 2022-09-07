@@ -1,22 +1,15 @@
 # Nuxt.js Generator
 
-The Nuxt.js Client Generator generates components for Server Side Rendered applications using [Nuxt.js](https://nuxtjs.org/) and [Vuetify](https://vuetifyjs.com/).
+The Nuxt.js generator scaffolds components for Server Side Rendered applications using [Nuxt.js](https://nuxtjs.org/) and [Vuetify](https://vuetifyjs.com/).
 
 ## Install
 
 ### Nuxt
 
 Create a [Nuxt.js application](https://nuxtjs.org/guides/get-started/installation#using-create-nuxt-app).
-The easiest way is to execute:
 
 ```console
-npx create-nuxt-app your-app-name
-```
-
-or:
-
-```console
-yarn create nuxt-app your-app-name
+npm init nuxt-app your-app-name
 ```
 
 It will ask you some questions, you can use these answers:
@@ -24,7 +17,7 @@ It will ask you some questions, you can use these answers:
 ```console
 Project name: your-app-name
 Programming language: JavaScript
-Package manager: Yarn
+Package manager: NPM
 UI framework: Vuetify.js
 Nuxt.js modules: None
 Linting tools: Prettier, Lint staged files
@@ -38,8 +31,8 @@ Deployment target: Static (Static/JAMStack hosting)
 Install required dependencies:
 
 ```console
-yarn add moment lodash vue-i18n vuelidate vuex-map-fields nuxt-i18n
-yarn add --dev @nuxtjs/vuetify @nuxtjs/fontawesome
+npm install moment lodash vue-i18n vuelidate vuex-map-fields nuxt-i18n
+npm install --dev @nuxtjs/vuetify @nuxtjs/fontawesome
 ```
 
 ## Updating Nuxt Config
@@ -61,11 +54,11 @@ Update your `nuxt.config.js` with following:
 ## Generating Routes
 
 ```console
-npx @api-platform/client-generator https://demo.api-platform.com . --generator nuxt
-# You can also use an OpenAPI documentation with `-f openapi3`.
+npm init @api-platform/client https://demo.api-platform.com . --generator nuxt
 ```
 
 Replace the URL by the entrypoint of your Hydra-enabled API.
+You can also use an OpenAPI documentation with `-f openapi3`.
 
 **Note:** Omit the resource flag to generate files for all resource types exposed by the API.
 
@@ -148,12 +141,12 @@ export default {
 You can launch the server with:
 
 ```console
-yarn dev
+npm run dev
 ````
 
 Go to `https://localhost:3000/books/` to start using your app.
 
 ## Screenshots
 
-![List](images/nuxtjs/client-generator-nuxtjs-list.png)  
-![Edit](images/nuxtjs/client-generator-nuxtjs-edit.png)
+![List](images/nuxtjs/create-client-nuxtjs-list.png)  
+![Edit](images/nuxtjs/create-client-nuxtjs-edit.png)

@@ -3,10 +3,10 @@
 ## Self-Signed TLS Certificate
 
 If you are running API Platform on development machine which does not have valid TLS certificate,
-add `NODE_TLS_REJECT_UNAUTHORIZED=0` before running client-generator:
+add `NODE_TLS_REJECT_UNAUTHORIZED=0` before running create-client:
 
 ```console
-NODE_TLS_REJECT_UNAUTHORIZED=0 npx @api-platform/client-generator --generator typescript https://127.0.0.1:8000/api src/
+NODE_TLS_REJECT_UNAUTHORIZED=0 npm init @api-platform/client --generator typescript https://127.0.0.1:8000/api src/
 ```
 
 ## Authenticated API

@@ -46,9 +46,9 @@ This header allows smart clients to automatically discover the Mercure hub.
 
 ![Mercure subscriptions](images/mercure-discovery.png)
 
-Clients generated using [the API Platform Client Generator](../client-generator/index.md) will use this capability to automatically subscribe to Mercure updates when available:
+Clients generated using [Create Client](../create-client/index.md) will use this capability to automatically subscribe to Mercure updates when available:
 
-![Screencast](../client-generator/images/client-generator-demo.gif)
+![Screencast](../create-client/images/create-client-demo.gif)
 
 [Learn how to use the discovery capabilities of Mercure in your own clients](https://mercure.rocks/docs/ecosystem/awesome).
 

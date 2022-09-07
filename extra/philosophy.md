@@ -28,7 +28,7 @@ API Platform makes modern development easy and fun again:
 * [Start by **creating a web API**](../distribution/index.md) exposing structured data that can
   be understood by any compliant client such as your apps but also search engines (JSON-LD with Schema.org vocabulary).
   This API is the central and unique entry point to access and modify data. It also encapsulates the whole business logic.
-* [Then **create as many clients as you want using frontend technologies you love**](../client-generator/index.md): a JavaScript
+* [Then **create as many clients as you want using frontend technologies you love**](../create-client/index.md): a JavaScript
   webapp built with React or with Vue querying the API but also a native iOS or Android app, or even a desktop application. Clients
   only display data and forms.
 

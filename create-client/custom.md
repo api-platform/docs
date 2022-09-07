@@ -1,20 +1,20 @@
 # Custom Generator
 
-Client Generator provides support for many of the popular JS frameworks, but you may be using another framework or language and may need a solution adapted to your specific needs. For this cenario, you can write your own generator and pass it to the CLI using a path as the `-g` argument.
+Create Client provides support for many of the popular JS frameworks, but you may be using another framework or language and may need a solution adapted to your specific needs. For this cenario, you can write your own generator and pass it to the CLI using a path as the `-g` argument.
 
-You will probably want to extend or, at least, take a look at [BaseGenerator.js](https://github.com/api-platform/client-generator/blob/main/src/generators/BaseGenerator.js), since the library expects some methods to be available, as well as one of the [included generators](https://github.com/api-platform/client-generator/blob/main/src/generators/BaseGenerator.j) to make your own.
+You will probably want to extend or, at least, take a look at [BaseGenerator.js](https://github.com/api-platform/create-client/blob/main/src/generators/BaseGenerator.js), since the library expects some methods to be available, as well as one of the [included generators](https://github.com/api-platform/create-client/blob/main/src/generators/BaseGenerator.j) to make your own.
 
 ## Usage
 
 ```shell
-generate-api-platform-client -g "$(pwd)/path/to/custom/generator.js" -t "$(pwd)/path/to/templates"
+npm init @api-platform/client -g "$(pwd)/path/to/custom/generator.js" -t "$(pwd)/path/to/templates"
 ```
 
 The `-g` argument can point to any resolvable node module which means it can be a package dependency of the current project as well as any js file.
 
 ## Example
 
-Client Generator makes use of the [Handlebars](https://handlebarsjs.com/) template engine. You can use any programming language or file type. Your generator can also pass data to your templates in any shape you want.
+Create Client makes use of the [Handlebars](https://handlebarsjs.com/) template engine. You can use any programming language or file type. Your generator can also pass data to your templates in any shape you want.
 
 In this example, we'll create a simple [Rust](https://www.rust-lang.org) file defining a new `struct` and creating some instances of this `struct`.
 
@@ -22,7 +22,7 @@ In this example, we'll create a simple [Rust](https://www.rust-lang.org) file de
 
 ```js
 // ./Generator.js
-import BaseGenerator from "@api-platform/client-generator/lib/generators/BaseGenerator";
+import BaseGenerator from "@api-platform/create-client/lib/generators/BaseGenerator";
 
 export default class extends BaseGenerator {
     constructor(params) {
@@ -94,7 +94,7 @@ fn main() {
 Then we can use our generator:
 
 ```shell
-generate-api-platform-client https://demo.api-platform.com out/ -g "$(pwd)/Generator.js" -t "$(pwd)/template"
+npm init @api-platform/client https://demo.api-platform.com out/ -g "$(pwd)/Generator.js" -t "$(pwd)/template"
 ```
 
 which will produces:
