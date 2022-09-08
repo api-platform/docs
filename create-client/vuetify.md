@@ -22,7 +22,7 @@ docker compose exec pwa \
 docker compose exec pwa \
     vue add vuetify
 docker compose exec pwa \
-    pnpm adinstalld router lodash moment vue-i18n vue-router vuelidate vuex vuex-map-fields
+    pnpm install router lodash moment vue-i18n vue-router vuelidate vuex vuex-map-fields
 ```
 
 Update the entrypoint:
