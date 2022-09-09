@@ -1,9 +1,9 @@
-# The API Platform Client Generator
+# API Platform Create Client
 
-Client Generator is the fastest way to scaffold fully featured webapps
+Create Client is the fastest way to scaffold fully featured webapps
 and native mobile apps from APIs supporting the [Hydra](http://www.hydra-cg.com/) or [OpenAPI](https://www.openapis.org/) format.
 
-![Screencast](images/client-generator-demo.gif)
+![Screencast](images/create-client-demo.gif)
 
 ## Generated React and React Native Apps, Updated in Real Time
 
@@ -18,7 +18,7 @@ It is able to generate apps using the following frontend stacks:
 - [Vue.js](vuejs.md)
 - [Or bring your custom generator](custom.md)
 
-Client Generator works especially well with APIs built with the [API Platform](https://api-platform.com) framework.
+Create Client works especially well with APIs built with the [API Platform](https://api-platform.com) framework.
 
 ## Features
 

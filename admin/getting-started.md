@@ -4,24 +4,19 @@
 
 If you use the [API Platform Distribution](../distribution/), API Platform Admin is already installed, you can skip this installation guide.
 
-Otherwise, all you need to install API Platform Admin is a JavaScript package manager. We recommend [Yarn](https://yarnpkg.com/) ([npm](https://www.npmjs.com/) is also supported).
+Otherwise, follow this guide.
 
 If you don't have an existing React Application, create one using [Create React App](https://create-react-app.dev/):
 
 ```console
-yarn create react-app my-admin
-```
-
-Go to the directory of your project:
-
-```console
+npm init react-app my-admin
 cd my-admin
 ```
 
-Finally, install the `@api-platform/admin` library:
+Then, install the `@api-platform/admin` library:
 
 ```console
-yarn add @api-platform/admin
+npm install @api-platform/admin
 ```
 
 ## Creating the Admin
@@ -69,6 +64,6 @@ docker compose exec php \
     bin/console cache:clear --env=prod
 ```
 
-Your new administration interface is ready! Type `yarn start` to try it!
+Your new administration interface is ready! Type `npm start` to try it!
 
 Note: if you don't want to hardcode the API URL, you can [use an environment variable](https://create-react-app.dev/docs/adding-custom-environment-variables).

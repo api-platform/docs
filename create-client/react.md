@@ -1,8 +1,8 @@
 # React Generator
 
-![List screenshot](images/react/client-generator-react-list.png)
+![List screenshot](images/react/create-client-react-list.png)
 
-The React Client Generator generates a Single Page Application or a Progressive Web App built with battle-tested libraries
+The React generator scaffolds a Single Page Application or a Progressive Web App built with battle-tested libraries
 from the ecosystem:
 
 * [React](https://reactjs.org/)
@@ -16,39 +16,38 @@ It is designed to generate code that works seamlessly with [Facebook's Create Re
 Bootstrap a React application:
 
 ```console
-npx create-react-app --template typescript client
-cd client
+npm init react-app --template typescript my-app
+cd my-app
 ```
 
 Install the required dependencies:
 
 ```console
-yarn add react-router-dom react-hook-form
+npm install react-router-dom react-hook-form
 ```
 
 Optionally, install Bootstrap and Font Awesome to get an app that looks good:
 
 ```console
-yarn add bootstrap font-awesome
+npm install bootstrap font-awesome
 ```
 
 Finally, start the integrated web server:
 
 ```console
-yarn start
+npm run start
 ```
 
 ## Generating a Web App
 
 ```console
-npx @api-platform/client-generator https://demo.api-platform.com src/ --generator next --resource book
-# Replace the URL by the entrypoint of your Hydra-enabled API
-# Omit the resource flag to generate files for all resource types exposed by the API.
-# You can also use an OpenAPI documentation with `-f openapi3`.
+npm init @api-platform/client https://demo.api-platform.com src/ --generator next --resource book
 ```
 
-> Note: On the [API Platform distribution](https://github.com/api-platform/api-platform), you can run
-> `generate-api-platform-client` instead of `npx @api-platform/client-generator`.
+Replace the URL by the entrypoint of your Hydra-enabled API.
+You can also use an OpenAPI documentation with `-f openapi3`.
+
+Omit the resource flag to generate files for all resource types exposed by the API.
 
 The code has been generated, and is ready to be executed!
 
@@ -88,8 +87,8 @@ Go to `https://localhost/books/` to start using your app.
 
 ## Screenshots
 
-![List](images/react/client-generator-react-list.png)
-![Pagination](images/react/client-generator-react-list-pagination.png)
-![Show](images/react/client-generator-react-show.png)
-![Edit](images/react/client-generator-react-edit.png)
-![Delete](images/react/client-generator-react-delete.png)
+![List](images/react/create-client-react-list.png)
+![Pagination](images/react/create-client-react-list-pagination.png)
+![Show](images/react/create-client-react-show.png)
+![Edit](images/react/create-client-react-edit.png)
+![Delete](images/react/create-client-react-delete.png)

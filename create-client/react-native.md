@@ -1,17 +1,16 @@
 # React Native generator
 
-![List](images/react-native/client-generator-react-native-list.png)
+![List](images/react-native/create-client-react-native-list.png)
 
 ## Install
 
-To use this generator you need [Node.js](https://nodejs.org/) and [Yarn](https://yarnpkg.com/) (or [npm](https://www.npmjs.com/)) installed.
-To run the command line tool, we also recommend using [npx](https://www.npmjs.com/package/npx).
+To use this generator you need [Node.js](https://nodejs.org/).
 
 Create a React Native application using [Expo CLI](https://docs.expo.io/workflow/expo-cli/):
 
 ```console
-yarn global add expo-cli
-expo init my-app
+npm install -g expo-cli
+npm init expo-app my-app
 ```
 
 When asked, choose to use the blank template, then move to the created directory:
@@ -23,7 +22,7 @@ cd my-app
 Install the required dependencies:
 
 ```console
-yarn add redux react-redux redux-thunk redux-form react-native-elements react-native-router-flux react-native-vector-icons prop-types whatwg-url buffer react-native-event-source react-native-gesture-handler react-native-reanimated react-native-screens
+npm install redux react-redux redux-thunk redux-form react-native-elements react-native-router-flux react-native-vector-icons prop-types whatwg-url buffer react-native-event-source react-native-gesture-handler react-native-reanimated react-native-screens
 ````
 
 ## Generating a Native App
@@ -31,11 +30,12 @@ yarn add redux react-redux redux-thunk redux-form react-native-elements react-na
 In the app directory, generate the files for the resource you want:
 
 ```console
-npx @api-platform/client-generator https://demo.api-platform.com . --generator react-native --resource book
-# You can also use an OpenAPI documentation with `-f openapi3`.
+npm init @api-platform/client https://demo.api-platform.com . --generator react-native --resource book
 ```
 
 Replace the URL with the entrypoint of your Hydra-enabled API.
+You can also use an OpenAPI documentation with `-f openapi3`.
+
 Omit the resource flag to generate files for all resource types exposed by the API.
 
 Create a `Router.js` file to import all routes:
@@ -111,5 +111,5 @@ expo start
 
 ## Screenshots in iOS Simulator
 
-![List](images/react-native/client-generator-react-native-list.png) ![Show](images/react-native/client-generator-react-native-show.png)
-![Add](images/react-native/client-generator-react-native-add.png) ![Delete](images/react-native/client-generator-react-native-delete.png)
+![List](images/react-native/create-client-react-native-list.png) ![Show](images/react-native/create-client-react-native-show.png)
+![Add](images/react-native/create-client-react-native-add.png) ![Delete](images/react-native/create-client-react-native-delete.png)

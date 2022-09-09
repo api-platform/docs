@@ -2,25 +2,27 @@
 
 ## Install With Docker
 
-If you use the API Platform distribution with Docker, first you have to add the [Vue CLI](https://cli.vuejs.org/guide/) to the `yarn global add` command in `pwa/Dockerfile`:
+If you use the API Platform distribution with Docker, first you have to add the [Vue CLI](https://cli.vuejs.org/guide/) to the Docker image.
+
+In the `dev` stage of `pwa/Dockerfile`, add this line:
 
 ```dockerfile
-RUN yarn global add @api-platform/client-generator @vue/cli @vue/cli-service-global
+RUN pnpm install -g @vue/cli @vue/cli-service-global
 ```
 
-Rebuild your containers to install the Vue CLI in docker client container.
+Then, rebuild your containers.
 
-Remove the directories `client\src\` and `client\public\` and the files `client\package.json\` and `client\yarn.lock\` (because the distribution comes with a prebuilt Next.js app.)
+Delete the content of the `pwa\` directory (the distribution comes with a prebuilt Next.js app).
 
 Create a new Vue App and install vuetify and other vue packages:
 
 ```console
-docker compose exec client \
+docker compose exec pwa \
     vue create -d .
-docker compose exec client \
+docker compose exec pwa \
     vue add vuetify
-docker compose exec client \
-    yarn add router lodash moment vue-i18n vue-router vuelidate vuex vuex-map-fields
+docker compose exec pwa \
+    pnpm install router lodash moment vue-i18n vue-router vuelidate vuex vuex-map-fields
 ```
 
 Update the entrypoint:
@@ -42,11 +44,11 @@ Update the scripts part of the new `package.json`:
 
 Rebuild the docker containers again to install the Vue App and start the vue server.
 
-Generate the vuetify components with the client generator:
+Generate the vuetify components with the following command:
 
 ```console
-docker compose exec client \
-    generate-api-platform-client -g vuetify --resource book
+docker compose exec pwa \
+    pnpm create @api-platform/client -g vuetify --resource book
 ```
 
 Omit the resource flag to generate files for all resource types exposed by the API.
@@ -67,19 +69,19 @@ vue add vuetify
 Install the required dependencies:
 
 ```console
-yarn add router lodash moment vue-i18n vue-router vuelidate vuex vuex-map-fields
-
-yarn global add @api-platform/client-generator
+npm install router lodash moment vue-i18n vue-router vuelidate vuex vuex-map-fields
 ```
 
 In the app directory, generate the files for the resource you want:
 
 ```console
-npx @api-platform/client-generator -g vuetify https://demo.api-platform.com src/
-# You can also use an OpenAPI documentation with `-f openapi3`.
+npm init @api-platform/client -g vuetify https://demo.api-platform.com src/
 ```
 
-Replace the URL with the entrypoint of your Hydra-enabled API. Omit the resource flag to generate files for all resource types exposed by the API.
+Replace the URL with the entrypoint of your Hydra-enabled API.
+You can also use an OpenAPI documentation with `-f openapi3`.
+
+Omit the resource flag to generate files for all resource types exposed by the API.
 
 ## Generating the VueJS Web App
 
@@ -167,7 +169,7 @@ export default new VueI18n({
 });
 ```
 
-Update your App.vue:
+Update your `App.vue`:
 
 ```vue
 <!-- App.vue -->

@@ -36,8 +36,8 @@ class Parchment
 As you can see, to deprecate a resource, we just have to explain what the client should do to upgrade in the dedicated attribute.
 
 The deprecation will automatically be taken into account by clients supporting the previously mentioned format, including
-[API Platform Admin](../admin/index.md), [API Platform Client Generator](../client-generator/index.md) and the lower level
-[api-doc-parser library](https://github.com/api-platform/api-doc-parser).
+[Admin](../admin/index.md), clients created with [Create Client](../create-client/index.md) and the lower level
+[api-doc-parser](https://github.com/api-platform/api-doc-parser) library.
 
 Here is how it renders for OpenAPI in the built-in Swagger UI shipped with the framework:
 
