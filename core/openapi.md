@@ -420,11 +420,48 @@ resources:
 
 ![Impact on Swagger UI](../distribution/images/swagger-ui-2.png)
 
+## Disabling Swagger UI or ReDoc
+
+To disable Swagger UI (ReDoc will be shown by default):
+
+```yaml
+# api/config/packages/api_platform.yaml
+api_platform:
+    # ...
+    enable_swagger_ui: false
+```
+
+To disable ReDoc:
+
+```yaml
+# api/config/packages/api_platform.yaml
+api_platform:
+    # ...
+    enable_re_doc: false
+```
+
 ## Changing the Location of Swagger UI
 
-Sometimes you may want to have the API at one location, and the Swagger UI at a different location. This can be done by disabling the Swagger UI from the API Platform configuration file and manually adding the Swagger UI controller.
+By default, the Swagger UI is available at the API location (when the HTML format is asked) and at the route `/docs`.
 
-### Disabling Swagger UI or ReDoc
+You may want to change its route and/or disable it at the API location.
+
+### Changing the Route
+
+Manually register the Swagger UI controller:
+
+```yaml
+# app/config/routes.yaml
+api_doc:
+    path: /api_documentation
+    controller: api_platform.swagger.action.ui
+```
+
+Change `/api_documentation` to the URI you wish Swagger UI to be accessible on.
+
+### Disabling Swagger UI at the API Location
+
+To disable the Swagger UI at the API location, disable both Swagger UI and ReDoc:
 
 ```yaml
 # api/config/packages/api_platform.yaml
@@ -434,16 +471,7 @@ api_platform:
     enable_re_doc: false
 ```
 
-### Manually Registering the Swagger UI Controller
-
-```yaml
-# app/config/routes.yaml
-swagger_ui:
-    path: /docs
-    controller: api_platform.swagger.action.ui
-```
-
-Change `/docs` to the URI you wish Swagger to be accessible on.
+If you have manually registered the Swagger UI controller, the Swagger UI will still be accessible at the route you have chosen.
 
 ## Using a custom Asset Package in Swagger UI
 
