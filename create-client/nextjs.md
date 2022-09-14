@@ -62,6 +62,23 @@ You can also use an OpenAPI documentation with `-f openapi3`.
 
 The code has been generated, and is ready to be executed!
 
+Add the layout to the app:
+
+```typescript
+import type { AppProps } from "next/app";
+import type { DehydratedState } from "react-query";
+
+import Layout from "../components/common/Layout";
+
+const App = ({ Component, pageProps }: AppProps<{dehydratedState: DehydratedState}>) => (
+  <Layout dehydratedState={pageProps.dehydratedState}>
+    <Component {...pageProps} />
+  </Layout>
+);
+
+export default App;
+```
+
 ## Starting the Project
 
 You can launch the server with
