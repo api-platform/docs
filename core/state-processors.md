@@ -37,6 +37,7 @@ Here is an implementation example:
 namespace App\State;
 
 use App\Entity\BlogPost;
+use ApiPlatform\Metadata\Operation;
 use ApiPlatform\State\ProcessorInterface;
 
 class BlogPostProcessor implements ProcessorInterface

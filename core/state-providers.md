@@ -37,6 +37,7 @@ First, your `BlogPostProvider` has to implement the
 namespace App\State;
 
 use App\Entity\BlogPost;
+use ApiPlatform\Metadata\Operation;
 use ApiPlatform\State\ProviderInterface;
 
 final class BlogPostProvider implements ProviderInterface
@@ -90,6 +91,7 @@ supporting a wider range of operations. Then we can provide a collection of blog
 namespace App\State;
 
 use App\Entity\BlogPost;
+use ApiPlatform\Metadata\Operation;
 use ApiPlatform\State\ProviderInterface;
 use ApiPlatform\Metadata\CollectionOperationInterface;
 
