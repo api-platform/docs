@@ -486,19 +486,23 @@ class User
 # api/config/api_platform/resources.yaml
 resources:
     App\Entity\Book:
-        - operations:
-            ApiPlatform\Metadata\GetCollection: ~
-            ApiPlatform\Metadata\Get: ~
-        - operations:
-            ApiPlatform\Metadata\GetCollection:
+        operations:
+            - ApiPlatform\Metadata\GetCollection:
+                class: ApiPlatform\Metadata\GetCollection
+            - ApiPlatform\Metadata\Get:
+                class: ApiPlatform\Metadata\Get
+            - ApiPlatform\Metadata\GetCollection:
+                class: ApiPlatform\Metadata\GetCollection
                 uriTemplate: /companies/{companyId}/users
                 itemUriTemplate: /companies/{companyId}/users/{id}
                 # ...
-            ApiPlatform\Metadata\Post:
+            - ApiPlatform\Metadata\Post:
+                class: ApiPlatform\Metadata\Post
                 uriTemplate: /companies/{companyId}/users
                 itemUriTemplate: /companies/{companyId}/users/{id}
                 # ...
-            ApiPlatform\Metadata\Get:
+            - ApiPlatform\Metadata\Get:
+                class: ApiPlatform\Metadata\Get
                 uriTemplate: /companies/{companyId}/users/{id}
                 # ...
 ```
