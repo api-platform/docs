@@ -322,7 +322,9 @@ api_platform:
                 xkey:
                     glue: ' '
 
-        normalization_context: ~
+        normalization_context:
+            # To include or exclude null values when serializing.
+            skip_null_values: true
         denormalization_context: ~
         swagger_context: ~
         openapi_context: ~
