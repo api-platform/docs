@@ -65,8 +65,6 @@ will be automatically added.
 
 Note: The `#[GetCollection]` attribute is an alias for `#[Get(collection: true)]`
 
-Note: Default value of the `skip_null_values` property is `true`, which means that null values will be omitted when serializing.
-
 [codeSelector]
 
 ```php

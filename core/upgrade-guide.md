@@ -15,7 +15,7 @@ api_platform:
 This will be the default value in 3.0, in 2.7 it's left to `true` so that nothing breaks by updating.
 By doing so you won't get access to legacy services and this will probably break things on code using `api-platform/core:2.6`.
 
-In 3.0 the default value of the `skip_null_values` property will be `true`, which means that from now on null values will be omitted when serializing.
+In 3.0, in conformance with the JSON Merge Patch RFC, the default value of the `skip_null_values` property is `true` which means that from now on `null` values are omitted during serialization.
 ```yaml
 api_platform:
   defaults:

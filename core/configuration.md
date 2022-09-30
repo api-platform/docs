@@ -323,7 +323,7 @@ api_platform:
                     glue: ' '
 
         normalization_context:
-            # To include or exclude null values when serializing.
+            # Default value to omit null values in conformance with the JSON Merge Patch RFC.
             skip_null_values: true
         denormalization_context: ~
         swagger_context: ~
