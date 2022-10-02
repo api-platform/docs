@@ -17,6 +17,8 @@ In the following examples we will create custom state providers for an entity cl
 Note, that if your entity is not Doctrine-related, you need to flag the identifier property by using
 `#[ApiProperty(identifier: true)` for things to work properly (see also [Entity Identifier Case](serialization.md#entity-identifier-case)).
 
+Also note that state providers only apply `Get` and `GetCollection` operations.
+
 ## State Provider
 
 If the [Symfony MakerBundle](https://symfony.com/doc/current/bundles/SymfonyMakerBundle) is installed in your project,
