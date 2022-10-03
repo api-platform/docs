@@ -43,6 +43,7 @@ And the processor:
 namespace App\State;
 
 use App\Dto\UserResetPasswordDto;
+use ApiPlatform\Metadata\Operation;
 use ApiPlatform\State\ProcessorInterface;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
@@ -107,6 +108,7 @@ namespace App\State;
 
 use App\Dto\AnotherRepresentation;
 use App\Model\Book;
+use ApiPlatform\Metadata\Operation;
 use ApiPlatform\State\ProviderInterface;
 
 final class BookRepresentationProvider implements ProviderInterface

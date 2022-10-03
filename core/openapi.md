@@ -253,6 +253,61 @@ This will produce the following Swagger documentation:
 
 To pass a context to the OpenAPI **v2** generator, use the `swaggerContext` attribute (notice the prefix: `swagger` instead of `openapi`).
 
+## Disabling an Operation From OpenAPI Documentation
+
+Sometimes you may want to disable an operation from the OpenAPI documentation, for example to not exposing it.
+Using the `openapi` boolean option disables this operation from the OpenAPI documentation:
+
+[codeSelector]
+
+```php
+<?php
+// api/src/Entity/Product.php
+namespace App\Entity;
+
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\GetCollection;
+
+#[ApiResource(
+    operations: [
+        new GetCollection(openapi: false)
+    ]
+)]
+class Product
+{
+    // ...
+}
+```
+
+```yaml
+# api/config/api_platform/resources.yaml
+resources:
+    App\Entity\Product:
+        operations:
+            ApiPlatform\Metadata\GetCollection:
+                openapi: false
+```
+
+```xml
+<?xml version="1.0" encoding="UTF-8" ?>
+<!-- api/config/api_platform/resources.xml -->
+
+<resources xmlns="https://api-platform.com/schema/metadata/resources-3.0"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="https://api-platform.com/schema/metadata/resources-3.0
+           https://api-platform.com/schema/metadata/resources-3.0.xsd">
+    <resource class="App\Entity\Product">
+        <operations>
+            <operation class="ApiPlatform\Metadata\GetCollection" openapi="false" />
+        </operations>
+    </resource>
+</resources>
+```
+
+[/codeSelector]
+
+Note: as your route is not exposed, you may want to return a HTTP 404 if it's called. Prefer using the `NotExposedAction` controller instead.
+
 ## Changing the Name of a Definition
 
 API Platform generates a definition name based on the serializer `groups` defined
@@ -454,7 +509,7 @@ Manually register the Swagger UI controller:
 # app/config/routes.yaml
 api_doc:
     path: /api_documentation
-    controller: api_platform.swagger.action.ui
+    controller: api_platform.swagger_ui.action
 ```
 
 Change `/api_documentation` to the URI you wish Swagger UI to be accessible on.

@@ -76,7 +76,7 @@ use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
 
-#[ApiResource(operations=[
+#[ApiResource(operations: [
     new Get(),
     new GetCollection()
 ])]
@@ -439,6 +439,100 @@ book_post_publication:
         _api_resource_class: App\Entity\Book
         _api_operation_name: post_publication
 ```
+
+## Defining Which Operation to Use to Generate the IRI
+
+Using multiple operations on your resource, you may want to specify which operation to use to generate the IRI, instead
+of letting API Platform use the first one it finds.
+
+Let's say you have 2 resources in relationship: `Company` and `User`, where a company has multiple users. You can declare
+the following routes:
+
+- `/users`
+- `/users/{id}`
+- `/companies/{companyId}/users`
+- `/companies/{companyId}/users/{id}`
+
+The first routes (`/users...`) are only accessible by the admin, and the others by regular users. Calling
+`/companies/{companyId}/users` should return IRIs matching `/companies/{companyId}/users/{id}` to not expose an admin
+route to regular users.
+
+To do so, use the `itemUriTemplate` option only available on `GetCollection` and `Post` operations:
+
+[codeSelector]
+
+```php
+<?php
+// api/src/Entity/Book.php
+namespace App\Entity;
+
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\Post;
+
+#[GetCollection] // auto-generated path will be /users
+#[Get] // auto-generated path will be /users/{id}
+#[GetCollection(uriTemplate: '/companies/{companyId}/users', itemUriTemplate: '/companies/{companyId}/users/{id}'/*, ... */)]
+#[Post(uriTemplate: '/companies/{companyId}/users', itemUriTemplate: '/companies/{companyId}/users/{id}'/*, ... */)]
+#[Get(uriTemplate: '/companies/{companyId}/users/{id}'/*, ... */)]
+class User
+{
+    //...
+}
+```
+
+```yaml
+# api/config/api_platform/resources.yaml
+resources:
+    App\Entity\Book:
+        - operations:
+            ApiPlatform\Metadata\GetCollection: ~
+            ApiPlatform\Metadata\Get: ~
+        - operations:
+            ApiPlatform\Metadata\GetCollection:
+                uriTemplate: /companies/{companyId}/users
+                itemUriTemplate: /companies/{companyId}/users/{id}
+                # ...
+            ApiPlatform\Metadata\Post:
+                uriTemplate: /companies/{companyId}/users
+                itemUriTemplate: /companies/{companyId}/users/{id}
+                # ...
+            ApiPlatform\Metadata\Get:
+                uriTemplate: /companies/{companyId}/users/{id}
+                # ...
+```
+
+```xml
+<?xml version="1.0" encoding="UTF-8" ?>
+<!-- api/config/api_platform/resources.xml -->
+
+<resources xmlns="https://api-platform.com/schema/metadata/resources-3.0"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="https://api-platform.com/schema/metadata/resources-3.0
+        https://api-platform.com/schema/metadata/resources-3.0.xsd">
+    <resource class="App\Entity\Book">
+        <operations>
+            <operation class="ApiPlatform\Metadata\GetCollection" />
+            <operation class="ApiPlatform\Metadata\Get" />
+        </operations>
+    </resource>
+
+    <resource class="App\Entity\Book">
+        <operations>
+            <operation class="ApiPlatform\Metadata\GetCollection" uriTemplate="/companies/{companyId}/users" itemUriTemplate="/companies/{companyId}/users/{id}" />
+            <operation class="ApiPlatform\Metadata\Post" uriTemplate="/companies/{companyId}/users" itemUriTemplate="/companies/{companyId}/users/{id}" />
+            <operation class="ApiPlatform\Metadata\Get" uriTemplate="/companies/{companyId}/users/{id}" />
+        </operations>
+    </resource>
+</resources>
+```
+
+[/codeSelector]
+
+API Platform will find the operation matching this `itemUriTemplate` and use it to generate the IRI.
+
+If this option is not set, the first `Get` operation is used to generate the IRI.
 
 ## Expose a Model Without Any Routes
 
