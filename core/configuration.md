@@ -322,7 +322,9 @@ api_platform:
                 xkey:
                     glue: ' '
 
-        normalization_context: ~
+        normalization_context:
+            # Default value to omit null values in conformance with the JSON Merge Patch RFC.
+            skip_null_values: true
         denormalization_context: ~
         swagger_context: ~
         openapi_context: ~
