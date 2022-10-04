@@ -7,7 +7,7 @@ You will probably want to extend or, at least, take a look at [BaseGenerator.js]
 ## Usage
 
 ```shell
-npm init @api-platform/client -g "$(pwd)/path/to/custom/generator.js" -t "$(pwd)/path/to/templates"
+npm init @api-platform/client -- --generator "$(pwd)/path/to/custom/generator.js" -t "$(pwd)/path/to/templates"
 ```
 
 The `-g` argument can point to any resolvable node module which means it can be a package dependency of the current project as well as any js file.

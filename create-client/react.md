@@ -41,7 +41,7 @@ npm run start
 ## Generating a Web App
 
 ```console
-npm init @api-platform/client https://demo.api-platform.com src/ --generator next --resource book
+npm init @api-platform/client https://demo.api-platform.com src/ -- --generator next --resource book
 ```
 
 Replace the URL by the entrypoint of your Hydra-enabled API.

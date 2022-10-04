@@ -54,7 +54,7 @@ Update your `nuxt.config.js` with following:
 ## Generating Routes
 
 ```console
-npm init @api-platform/client https://demo.api-platform.com . --generator nuxt
+npm init @api-platform/client https://demo.api-platform.com . -- --generator nuxt
 ```
 
 Replace the URL by the entrypoint of your Hydra-enabled API.
