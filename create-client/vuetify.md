@@ -48,7 +48,7 @@ Generate the vuetify components with the following command:
 
 ```console
 docker compose exec pwa \
-    pnpm create @api-platform/client -- --generator vuetify --resource book
+    pnpm create @api-platform/client --generator vuetify --resource book
 ```
 
 Omit the resource flag to generate files for all resource types exposed by the API.

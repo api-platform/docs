@@ -41,7 +41,7 @@ If you use the API Platform distribution, generating all the code you need for a
 
 ```console
 docker compose exec pwa \
-    pnpm create @api-platform/client -- --resource book -g next
+    pnpm create @api-platform/client --resource book -g next
 ```
 
 Omit the resource flag to generate files for all resource types exposed by the API.
@@ -50,11 +50,11 @@ If you don't use the standalone installation, run the following command instead:
 
 ```console
 # using pnpm
-pnpm create @api-platform/client https://demo.api-platform.com . -- --generator next --resource book
+pnpm create @api-platform/client https://demo.api-platform.com . --generator next --resource book
 # or using npm
 npm init @api-platform/client https://demo.api-platform.com . -- --generator next --resource book
 # or using yarn
-yarn create @api-platform/client https://demo.api-platform.com . -- --generator next --resource book
+yarn create @api-platform/client https://demo.api-platform.com . --generator next --resource book
 ```
 
 Replace the URL by the entrypoint of your Hydra-enabled API.
