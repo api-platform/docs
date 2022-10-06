@@ -22,7 +22,7 @@ npm install add bootstrap font-awesome
 To generate all the code you need for a given resource run the following command:
 
 ```console
-npm init @api-platform/client https://demo.api-platform.com src/ --generator vue --resource book
+npm init @api-platform/client https://demo.api-platform.com src/ -- --generator vue --resource book
 ```
 
 Replace the URL with the entrypoint of your Hydra-enabled API.

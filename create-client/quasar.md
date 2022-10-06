@@ -11,7 +11,7 @@ cd my-app
 In the app directory, generate the files for the resource you want:
 
 ```console
-npm init @api-platform/client https://demo.api-platform.com src/ --generator quasar --resource foo
+npm init @api-platform/client https://demo.api-platform.com src/ -- --generator quasar --resource foo
 ```
 
 Replace the URL by the entrypoint of your Hydra-enabled API.
