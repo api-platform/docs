@@ -1,6 +1,19 @@
 # The Release Process
 
 API Platform follows the [Semantic Versioning](https://semver.org) strategy.
+A new minor version is released every six months, and a new major version is released every two years, along with a last minor version on the previous major one with the same features and an upgrade path.
+
+For example:
+
+- version 3.0 has been released on 15 September, 2022;
+- version 3.1 will be released on March, 2023;
+- version 3.2 will be released on September, 2023;
+- version 3.3 will be released on March, 2024;
+- versions 3.4 and 4.0 will be released on September, 2024.
+
+<!-- TODO: add a graph similar to https://symfony.com/releases#symfony-releases-calendar here? -->
+
+## Maintenance
 
 Only 3 versions are maintained at the same time:
 
