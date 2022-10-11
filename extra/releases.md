@@ -11,8 +11,6 @@ For example:
 - version 3.3 will be released on March, 2024;
 - versions 3.4 and 4.0 will be released on September, 2024.
 
-<!-- TODO: add a graph similar to https://symfony.com/releases#symfony-releases-calendar here? -->
-
 ## Maintenance
 
 Only 3 versions are maintained at the same time:
