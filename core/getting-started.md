@@ -196,7 +196,7 @@ resources:
         <types>
             <type>https://schema.org/Offer</type> <!-- optional -->
         </types>
-    </resources>
+    </resource>
 </resources>
 ```
 
