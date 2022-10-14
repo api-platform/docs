@@ -251,6 +251,36 @@ Using a numeric ID is also supported: `http://localhost:8000/api/offers?product=
 
 The above URLs will return all offers for the product having the following IRI as JSON-LD identifier (`@id`): `http://localhost:8000/api/products/12`.
 
+For Doctrine ORM, if field is 'guid' type it is possible to pas value both UUID or IRI:
+
+[codeSelector]
+
+```php
+<?php
+// api/src/Entity/Offer.php
+namespace App\Entity;
+
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\ApiFilter;
+use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
+use Doctrine\DBAL\Types\Types;
+
+#[ApiResource]
+#[ApiFilter(SearchFilter::class, properties: ['entityId' => 'exact'])]
+class Offer
+{
+    #[ORM\Column(type: Types::GUID)]
+    protected string $entityId;
+    // ...
+}
+```
+
+[/codeSelector]
+
+Possible URLs:
+- `http://localhost:8000/api/offers?entityId=/api/some_resource/5c7ec118-f73e-4715-a707-8e3849fabee5`
+- `http://localhost:8000/api/offers?entityId=5c7ec118-f73e-4715-a707-8e3849fabee5`
+
 ### Date Filter
 
 The date filter allows to filter a collection by date intervals.
