@@ -251,6 +251,42 @@ Using a numeric ID is also supported: `http://localhost:8000/api/offers?product=
 
 The above URLs will return all offers for the product having the following IRI as JSON-LD identifier (`@id`): `http://localhost:8000/api/products/12`.
 
+It is possible to define multiple search strategies for the same property on a single resource:
+
+[codeSelector]
+
+```php
+<?php
+// api/src/Entity/Offer.php
+namespace App\Entity;
+
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\ApiFilter;
+use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
+
+#[ApiResource]
+#[ApiFilter(
+    SearchFilter::class,
+    properties: [
+        'id' => 'exact',
+        'price' => 'exact',
+        'description[exact]' => ['description' => 'exact'], // Filter for description field with exact strategy
+        'description[partial]' => ['description' => 'partial'], // Filter for description field with partial strategy
+    ]
+)]
+class Offer
+{
+    // ...
+}
+```
+
+The URLs examples:
+- `?description[exact]=some description`
+- `?description[exact][]=foo&description[exact][]=bar`
+- `?description[partial]=contain some text`
+
+[/codeSelector]
+
 ### Date Filter
 
 The date filter allows to filter a collection by date intervals.
