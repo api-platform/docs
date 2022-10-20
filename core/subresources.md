@@ -8,7 +8,7 @@ Subresources work very well by implementing your own state [providers](./state-p
 or [processors](./state-processors.md). In API Platform we provide a working Doctrine layer for
 subresources providing you add the correct configuration for URI Variables.
 
-## URI Variables Configuration
+## URI Variable Configuration
 
 URI Variables are configured via the `uriVariables` node on an `ApiResource`. It's an array indexed by the variables present in your URI, `/companies/{companyId}/employees/{id}` has two uri variables `companyId` and `id`. For each of these, we need to create a `Link` between the previous and the next node, in this example the link between a Company and an Employee.
 
@@ -84,7 +84,7 @@ class Question
 [/codeSelector]
 
 Now to create a new way of retrieving an Answer we will declare another resource on the `Answer` class.
-To make things work, API Platform needs informations about how to retrieve the `Answer` belonging to
+To make things work, API Platform needs information about how to retrieve the `Answer` belonging to
 the `Question`, this is done by configuring the `uriVariables`:
 
 [codeSelector]
@@ -120,7 +120,7 @@ class Answer
 In this example, we instructed API Platform that the `Answer` we retrieve comes **from** the **class** `Question`
 **from** the **property** `answer` of that class.
 
-URI Variables are defined using Links (`ApiPlatform\Metadata\Link`). A `Link` can be binded either from or to a class and a property.
+URI Variables are defined using Links (`ApiPlatform\Metadata\Link`). A `Link` can be bound either from or to a class and a property.
 
 If we had a `relatedQuestions` property on the `Answer` we could retrieve the collection of related questions via the following definition:
 
@@ -220,7 +220,7 @@ class Company
 }
 ```
 
-We did not define any Doctrine annotation here and if we want thinks to work properly with GraphQL, we need to map the `employees` field as a Link to the class `Employee` using the property `company`.
+We did not define any Doctrine annotation here and if we want things to work properly with GraphQL, we need to map the `employees` field as a Link to the class `Employee` using the property `company`.
 
 As a general rule, if the property we want to create a link from is in the `fromClass`, use `fromProperty`, if not, use `toProperty`.
 
