@@ -26,7 +26,7 @@ use Symfony\Component\Validator\Constraints as Assert; // Symfony's built-in con
  * A product.
  *
  */
-#[ORM\Entity] 
+#[ORM\Entity]
 #[ApiResource]
 class Product
 {
@@ -42,7 +42,7 @@ class Product
      *
      * @MinimalProperties
      */
-    #[ORM\Column(type: 'json')] 
+    #[ORM\Column(type: 'json')]
     public $properties;
 
     // Getters and setters...
@@ -130,10 +130,10 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[ApiResource(validationContext: ['groups' => ['a', 'b']])]
 class Book
 {
-    #[Assert\NotBlank(groups: ['a'])]  
+    #[Assert\NotBlank(groups: ['a'])]
     public string $name;
 
-    #[Assert\NotNull(groups: ['b'])] 
+    #[Assert\NotNull(groups: ['b'])]
     public string $author;
 
     // ...
@@ -175,15 +175,15 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[Post(validationContext: ['groups' => ['Default', 'postValidation']])]
 class Book
 {
-    #[Assert\Uuid] 
+    #[Assert\Uuid]
     private $id;
 
-    #[Assert\NotBlank(groups: ['postValidation'])] 
+    #[Assert\NotBlank(groups: ['postValidation'])]
     public $name;
 
     #[Assert\NotNull]
     #[Assert\Length(min: 2, max: 50, groups: ['postValidation'])]
-    #[Assert\Length(min: 2, max: 70, groups: ['putValidation'])] 
+    #[Assert\Length(min: 2, max: 70, groups: ['putValidation'])]
     public $author;
 
     // ...
@@ -230,10 +230,10 @@ class Book
         return ['a'];
     }
 
-    #[Assert\NotBlank(groups: ['a'])] 
+    #[Assert\NotBlank(groups: ['a'])]
     public $name;
 
-    #[Assert\NotNull(groups: ['b'])] 
+    #[Assert\NotNull(groups: ['b'])]
     public $author;
 
     // ...
@@ -291,10 +291,10 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[ApiResource(validationContext: ['groups' => [AdminGroupsGenerator::class]])
 class Book
 {
-    #[Assert\NotBlank(groups: ['a'])] 
+    #[Assert\NotBlank(groups: ['a'])]
     public $name;
 
-    #[Assert\NotNull(groups: ['b'])] 
+    #[Assert\NotNull(groups: ['b'])]
     public $author;
 
     // ...
@@ -354,7 +354,7 @@ class Greeting
 
     /**
      * @var A nice person
-     * 
+     *
      * I want this "second" validation to be executed after the "first" one even though I wrote them in this order.
      * @One(groups={"second"})
      * @Two(groups={"first"})
@@ -555,7 +555,7 @@ final class CustomPropertySchemaRestriction implements PropertySchemaRestriction
         return $constraint instanceof CustomConstraint;
     }
 
-    public function create(Constraint $constraint, ApiProperty $propertyMetadata): array 
+    public function create(Constraint $constraint, ApiProperty $propertyMetadata): array
     {
       // your logic to create property schema restriction based on constraint
       return $restriction;
@@ -573,3 +573,55 @@ services:
     'App\PropertySchemaRestriction\CustomPropertySchemaRestriction': ~
         # Uncomment only if autoconfiguration is disabled
         #tags: [ 'api_platform.metadata.property_schema_restriction' ]
+```
+
+## Collecting Denormalization Errors
+When submitting data you can collect denormalization errors using [Symfony's COLLECT_DENORMALIZATION_ERRORS OPTION](https://symfony.com/doc/current/components/serializer.html#collecting-type-errors-while-denormalizing).
+This can be done directly in the `#[ApiResource]`annotation:
+```php
+<?php
+// api/src/Entity/Book.php
+namespace App\Entity;
+
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\ApiProperty;
+use App\State\BookProvider;
+
+/** A book. */
+#[ApiResource(
+    provider: BookProvider::class,
+    collectDenormalizationErrors: true)]
+class Book
+{
+    //...
+
+    /** A number */
+    private ?bool $number;
+
+    /** A random property */
+    private ?string $property1;
+
+    // getter and setters
+```
+If the submitted data is invalid, the HHTP status code will be set to `422 Unprocessable Content` and the response's body will contain the list of violations:
+```json
+{
+    "@context": "/api/contexts/ConstraintViolationList",
+    "@type": "ConstraintViolationList",
+    "hydra:title": "An error occurred",
+    "hydra:description": "number: The type of the \"number\" attribute must be \"bool\", \"int\" given.\nproperty1: The type of the \"property1\" attribute must be \"string\", \"bool\" given.",
+    "violations": [
+        {
+            "propertyPath": "number",
+            "message": "The type of the \"number\" attribute must be \"bool\", \"int\" given.",
+            "code": "0"
+        },
+        {
+            "propertyPath": "property1",
+            "message": "The type of the \"property1\" attribute must be \"string\", \"bool\" given.",
+            "code": "0"
+        }
+    ]
+}
+```
+You can also enable the collecting of denormalization errors globaly in the [Global Resources Defaults](https://api-platform.com/docs/core/configuration/#global-resources-defaults)
