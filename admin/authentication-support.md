@@ -12,7 +12,7 @@ In short, you have to tweak the data provider and the API documentation parser l
 import Head from "next/head";
 import { useState } from "react";
 import { Navigate, Route } from "react-router-dom";
-import { CustomRoutes } from "react-admin";
+import { CustomRoutes defaultDataProvider } from "react-admin";
 import {
   fetchHydra as baseFetchHydra,
   HydraAdmin,
@@ -63,7 +63,7 @@ const apiDocumentationParser = (setRedirectToLogin) => async () => {
     };
   }
 };
-const dataProvider = (setRedirectToLogin) => baseHydraDataProvider({
+const dataProvider = (setRedirectToLogin) => typeof window === 'undefined' ? defaultDataProvider : baseHydraDataProvider({
   entrypoint: ENTRYPOINT,
   httpClient: fetchHydra,
   apiDocumentationParser: apiDocumentationParser(setRedirectToLogin),
