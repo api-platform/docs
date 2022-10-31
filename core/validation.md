@@ -288,7 +288,7 @@ use ApiPlatform\Metadata\ApiResource;
 use App\Validator\AdminGroupsGenerator;
 use Symfony\Component\Validator\Constraints as Assert;
 
-#[ApiResource(validationContext: ['groups' => [AdminGroupsGenerator::class]])
+#[ApiResource(validationContext: ['groups' => AdminGroupsGenerator::class])
 class Book
 {
     #[Assert\NotBlank(groups: ['a'])] 
