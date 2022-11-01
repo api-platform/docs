@@ -120,7 +120,7 @@ with its awesome [Symfony](https://confluence.jetbrains.com/display/PhpStorm/Get
 and [Php Inspections](https://plugins.jetbrains.com/plugin/7622-php-inspections-ea-extended-) plugins. Give them a try,
 you'll get auto-completion for almost everything and awesome quality analysis.
 
-[PHP IntelliSense for Visual Studio Code](https://marketplace.visualstudio.com/items?itemName=felixfbecker.php-intellisense) also works well, and is free and open source.
+[PHP IntelliSense for Visual Studio Code](https://marketplace.visualstudio.com/items?itemName=zobo.php-intellisense) also works well, and is free and open source.
 
 The API Platform distribution comes with a dummy entity for test purpose: `api/src/Entity/Greeting.php`. We will remove
 it later.
