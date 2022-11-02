@@ -463,7 +463,7 @@ To do so, use the `itemUriTemplate` option only available on `GetCollection` and
 
 ```php
 <?php
-// api/src/Entity/Book.php
+// api/src/Entity/User.php
 namespace App\Entity;
 
 use ApiPlatform\Metadata\ApiResource;

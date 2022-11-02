@@ -48,7 +48,7 @@ Generate the vuetify components with the following command:
 
 ```console
 docker compose exec pwa \
-    pnpm create @api-platform/client -g vuetify --resource book
+    pnpm create @api-platform/client --generator vuetify --resource book
 ```
 
 Omit the resource flag to generate files for all resource types exposed by the API.
@@ -75,7 +75,7 @@ npm install router lodash moment vue-i18n vue-router vuelidate vuex vuex-map-fie
 In the app directory, generate the files for the resource you want:
 
 ```console
-npm init @api-platform/client -g vuetify https://demo.api-platform.com src/
+npm init @api-platform/client https://demo.api-platform.com src/ -- --generator vuetify
 ```
 
 Replace the URL with the entrypoint of your Hydra-enabled API.

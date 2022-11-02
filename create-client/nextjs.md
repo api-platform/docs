@@ -52,7 +52,7 @@ If you don't use the standalone installation, run the following command instead:
 # using pnpm
 pnpm create @api-platform/client https://demo.api-platform.com . --generator next --resource book
 # or using npm
-npm init @api-platform/client https://demo.api-platform.com . --generator next --resource book
+npm init @api-platform/client https://demo.api-platform.com . -- --generator next --resource book
 # or using yarn
 yarn create @api-platform/client https://demo.api-platform.com . --generator next --resource book
 ```
