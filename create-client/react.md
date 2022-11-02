@@ -16,7 +16,7 @@ It is designed to generate code that works seamlessly with [Facebook's Create Re
 Bootstrap a React application:
 
 ```console
-npm init react-app --template typescript my-app
+npm init react-app -- --template typescript my-app
 cd my-app
 ```
 
@@ -41,7 +41,7 @@ npm run start
 ## Generating a Web App
 
 ```console
-npm init @api-platform/client https://demo.api-platform.com src/ -- --generator next --resource book
+npm init @api-platform/client https://demo.api-platform.com src/ -- --generator react --resource book
 ```
 
 Replace the URL by the entrypoint of your Hydra-enabled API.
