@@ -56,8 +56,7 @@ use Hautelook\AliceBundle\PhpUnit\RefreshDatabaseTrait;
 
 abstract class AbstractTest extends ApiTestCase
 {
-    private $token;
-    private $clientWithCredentials;
+    private ?string $token = null;
 
     use RefreshDatabaseTrait;
 
