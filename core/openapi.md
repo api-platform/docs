@@ -50,7 +50,7 @@ docker compose exec php \
 Symfony allows to [decorate services](https://symfony.com/doc/current/service_container/service_decoration.html), here we
 need to decorate `api_platform.openapi.factory`.
 
-In the following example, we will see how to override the title of the Swagger documentation and add a custom filter for
+In the following example, we will see how to override the title and the base path URL of the Swagger documentation and add a custom filter for
 the `GET` operation of `/foos` path.
 
 ```yaml
@@ -94,6 +94,9 @@ class OpenApiFactory implements OpenApiFactoryInterface
         $openApi = $openApi->withInfo((new Model\Info('New Title', 'v2', 'Description of my custom API'))->withExtensionProperty('info-key', 'Info value'));
         $openApi = $openApi->withExtensionProperty('key', 'Custom x-key value');
         $openApi = $openApi->withExtensionProperty('x-value', 'Custom x-value value');
+
+        // to define base path URL
+        $openApi = $openApi->withServers([new Model\Server('https://foo.bar')]);
 
         return $openApi;
     }
