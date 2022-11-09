@@ -94,7 +94,7 @@ Here is an implementation example which sends new users a welcome email after a 
 
 namespace App\State;
 
-use ApiPlatform\Metadata\Delete;
+use ApiPlatform\Metadata\DeleteOperationInterface;
 use ApiPlatform\Metadata\Operation;
 use ApiPlatform\State\ProcessorInterface;
 use App\Entity\User;
@@ -108,7 +108,7 @@ final class UserProcessor implements ProcessorInterface
 
     public function process($data, Operation $operation, array $uriVariables = [], array $context = [])
     {
-        if ($operation instanceof Delete) {
+        if ($operation instanceof DeleteOperationInterface) {
             return $this->removeProcessor($data, $operation, $uriVariables, $context);
         }
     
