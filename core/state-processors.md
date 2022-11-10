@@ -109,7 +109,7 @@ final class UserProcessor implements ProcessorInterface
     public function process($data, Operation $operation, array $uriVariables = [], array $context = [])
     {
         if ($operation instanceof DeleteOperationInterface) {
-            return $this->removeProcessor($data, $operation, $uriVariables, $context);
+            return $this->removeProcessor->process($data, $operation, $uriVariables, $context);
         }
     
         $result = $this->persistProcessor->process($data, $operation, $uriVariables, $context);
