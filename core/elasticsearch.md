@@ -199,6 +199,8 @@ Keep in mind that it is your responsibility to populate your Elasticsearch index
 a custom [state processors](state-processors.md#creating-a-custom-state-processor) or any other mechanism that suits your
 project (such as an [ETL](https://en.wikipedia.org/wiki/Extract,_transform,_load)).
 
+To disable elasticsearch index discovery for non-elasticsearch entities you can set `elasticsearch: false` in the `#[ApiResource]` attribute. If this property is absent, all entities will perform an index check during cache warmup to determine if they are on elasticsearch or not.
+
 You're done! The API is now ready to use.
 
 ### Creating custom mapping
