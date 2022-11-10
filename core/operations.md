@@ -485,7 +485,7 @@ class User
 ```yaml
 # api/config/api_platform/resources.yaml
 resources:
-    App\Entity\Book:
+    App\Entity\User:
         - operations:
             ApiPlatform\Metadata\GetCollection: ~
             ApiPlatform\Metadata\Get: ~
@@ -511,14 +511,14 @@ resources:
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:schemaLocation="https://api-platform.com/schema/metadata/resources-3.0
         https://api-platform.com/schema/metadata/resources-3.0.xsd">
-    <resource class="App\Entity\Book">
+    <resource class="App\Entity\User">
         <operations>
             <operation class="ApiPlatform\Metadata\GetCollection" />
             <operation class="ApiPlatform\Metadata\Get" />
         </operations>
     </resource>
 
-    <resource class="App\Entity\Book">
+    <resource class="App\Entity\User">
         <operations>
             <operation class="ApiPlatform\Metadata\GetCollection" uriTemplate="/companies/{companyId}/users" itemUriTemplate="/companies/{companyId}/users/{id}" />
             <operation class="ApiPlatform\Metadata\Post" uriTemplate="/companies/{companyId}/users" itemUriTemplate="/companies/{companyId}/users/{id}" />
