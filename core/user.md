@@ -287,9 +287,7 @@ You may have wondered about the following lines in our entity file we created be
 ```php
 
     operations: [
-        new GetCollection(
-            ...
-        ),
+        ...
         new Post(
             ...
             processor: UserPasswordHasher::class,
@@ -302,6 +300,7 @@ You may have wondered about the following lines in our entity file we created be
             ...
             processor: UserPasswordHasher::class,
         ),
+        ...
     ],
 ```
 
