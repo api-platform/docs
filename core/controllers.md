@@ -153,7 +153,7 @@ the associated controller respectively.
 
 ## Using the PlaceholderAction
 
-Complex use cases may lead you to create multiple custom operations. 
+Complex use cases may lead you to create multiple custom operations.
 
 In such a case, you will probably create the same amount of custom controllers while you may not need to perform custom logic inside.
 
