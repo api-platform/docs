@@ -4,7 +4,7 @@ This documentation is based on the [official Symfony Documentation](https://symf
 
 ## Creating the Entity & Repository
 
-You can follow the [official Symfony Documentation](https://symfony.com/doc/current/security/user_providers.html) and add the API Platform attributes (e.g. `#[ApiResource]`) by your own, or just use following entity file and modify it to your needs:
+You can follow the [official Symfony Documentation](https://symfony.com/doc/current/security/user_providers.html) and add the API Platform attributes (e.g. `#[ApiResource]`) by your own, or just use the following entity file and modify it to your needs:
 
 ```php
 <?php
