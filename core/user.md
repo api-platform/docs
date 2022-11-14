@@ -21,7 +21,6 @@ use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Patch;
 use ApiPlatform\Metadata\Post;
 use ApiPlatform\Metadata\Put;
-use DateTimeImmutable;
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\UserRepository;
 use App\State\UserPasswordHasher;
@@ -58,7 +57,6 @@ use Symfony\Component\Uid\Uuid;
     ],
     normalizationContext: ['groups' => ['user:read']],
     denormalizationContext: ['groups' => ['user:create', 'user:update']],
-    mercure: true,
     order: ['email' => 'ASC'],
 )]
 #[ORM\Entity(repositoryClass: UserRepository::class)]
@@ -66,13 +64,11 @@ use Symfony\Component\Uid\Uuid;
 #[UniqueEntity('email')]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
-    #[Assert\Uuid]
     #[Groups(['user:read'])]
     #[ORM\Id]
-    #[ORM\Column(type: 'uuid', unique: true)]
-    #[ORM\GeneratedValue(strategy: 'CUSTOM')]
-    #[ORM\CustomIdGenerator(class: 'doctrine.uuid_generator')]
-    private ?Uuid $id = null;
+    #[ORM\Column(type: 'integer')]
+    #[ORM\GeneratedValue]
+    private ?int $id = null;
 
     #[Assert\NotBlank]
     #[Assert\Email]
@@ -90,7 +86,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(type: 'json')]
     private array $roles = [];
 
-    public function getId(): Uuid
+    public function getId(): ?int
     {
         return $this->id;
     }
@@ -238,7 +234,7 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
 }
 ```
 
-## Creating and updating user password
+## Creating and Updating User Password
 
 There's no built-in way for hashing the plain password on `POST`, `PUT` or `PATCH`. Happily you can use the API Platform [state processors](state-processors.md) for auto-hashing plain passwords.
 
@@ -256,19 +252,14 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 final class UserPasswordHasher implements ProcessorInterface
 {
-    private ProcessorInterface $decorated;
-    private UserPasswordHasherInterface $passwordHasher;
-
-    public function __construct(ProcessorInterface $decorated, UserPasswordHasherInterface $passwordHasher)
+    public function __construct(private readonly ProcessorInterface $processor, private readonly UserPasswordHasherInterface $passwordHasher)
     {
-        $this->decorated = $decorated;
-        $this->passwordHasher = $passwordHasher;
     }
 
     public function process($data, Operation $operation, array $uriVariables = [], array $context = [])
     {
         if (!$data->getPlainPassword()) {
-            return $this->decorated->process($data, $operation, $uriVariables, $context);
+            return $this->processor->process($data, $operation, $uriVariables, $context);
         }
 
         $hashedPassword = $this->passwordHasher->hashPassword(
@@ -278,7 +269,7 @@ final class UserPasswordHasher implements ProcessorInterface
         $data->setPassword($hashedPassword);
         $data->eraseCredentials();
 
-        return $this->decorated->process($data, $operation, $uriVariables, $context);
+        return $this->processor->process($data, $operation, $uriVariables, $context);
     }
 }
 ```
@@ -289,10 +280,10 @@ Then bind it to the processors:
 
     App\State\UserPasswordHasher:
         bind:
-            $decorated: '@api_platform.doctrine.orm.state.persist_processor'
+            $processor: '@api_platform.doctrine.orm.state.persist_processor'
 ```
 
-You may have wondered about following lines in our entity file we created before:
+You may have wondered about the following lines in our entity file we created before:
 ```php
 
     operations: [
