@@ -99,7 +99,7 @@ security:
         - { path: ^/, roles: IS_AUTHENTICATED_FULLY }
 ```
 
-You must also declare the route used for `/authentication_token`:
+You must also declare the route used for `/auth`:
 
 ```yaml
 # api/config/routes.yaml
