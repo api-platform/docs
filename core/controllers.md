@@ -157,7 +157,7 @@ Complex use cases may lead you to create multiple custom operations.
 
 In such a case, you will probably create the same amount of custom controllers while you may not need to perform custom logic inside.
 
-To avoid that, API Platform provides the `ApiPlatform\Action\PlaceholderAction` which behaves the same when using the [built-in operations](https://api-platform.com/docs/core/operations/#operations).
+To avoid that, API Platform provides the `ApiPlatform\Action\PlaceholderAction` which behaves the same when using the [built-in operations](operations.md#operations).
 
 You just need to set the `controller` attribute with this class. Here, the previous example updated:
 
