@@ -216,7 +216,7 @@ Click on an operation to display its details. You can also send requests to the 
 Try to create a new *Greeting* resource using the `POST` operation, then access it using the `GET` operation and, finally,
 delete it by executing the `DELETE` operation.
 If you access any API URL with the `.html` extension appended, API Platform displays
-the corresponding API request in the UI. Try it yourself by browsing to `https://localhost/greetings.html`. If the no extension is present, API Platform will use the `Accept` header to select the format to use. By default, a JSON-LD response is sent ([configurable behavior](../core/content-negotiation.md)).
+the corresponding API request in the UI. Try it yourself by browsing to `https://localhost/greetings.html`. If no extension is present, API Platform will use the `Accept` header to select the format to use. By default, a JSON-LD response is sent ([configurable behavior](../core/content-negotiation.md)).
 
 So, if you want to access the raw data, you have two alternatives:
 
