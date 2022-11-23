@@ -1427,7 +1427,7 @@ Start by creating a custom attribute to mark restricted entities:
 
 ```php
 <?php
-// api/Attribute/UserAware.php
+// api/src/Attribute/UserAware.php
 
 namespace App\Attribute;
 
