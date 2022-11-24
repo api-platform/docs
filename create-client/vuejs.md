@@ -30,10 +30,10 @@ You can also use an OpenAPI documentation with `https://demo.api-platform.com/do
 
 Omit the resource flag to generate files for all resource types exposed by the API.
 
-The code is ready to be executed! Register the generated routes and store modules. Here is an example:
+The code is ready to be executed! Replace the content of main.ts and App.vue with the following code:
 
 ```typescript
-// main.ts
+// src/main.ts
 import { createApp } from "vue";
 import { createPinia } from "pinia";
 
@@ -53,7 +53,7 @@ app.mount("#app");
 ```
 
 ```html
-// App.vue
+// src/App.vue
 <script setup lang="ts">
 import { RouterView } from "vue-router";
 </script>
