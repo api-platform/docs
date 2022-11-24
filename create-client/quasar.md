@@ -1,11 +1,28 @@
 # Quasar Framework Generator
 
 Create a Quasar Framework application using
-[quasar-cli](https://quasar.dev/quasar-cli/installation):
+[Quasar CLI](https://quasar.dev/start/quasar-cli):
+
+When asked please choose the following options :
+- App with Quasar CLI
+- Project folder : my-app
+- Quasar v2
+- Typescript
+- Quasar app CLI with Vite
+- Composition API with \<script setup\>
+- State Management (Pinia) / Vue-i18n
 
 ```console
-quasar create my-app
+npm i -g @quasar/cli
+npm init quasar
 cd my-app
+```
+
+Install the required dependencies:
+
+
+```console
+npm install dayjs qs
 ```
 
 In the app directory, generate the files for the resource you want:
@@ -15,37 +32,20 @@ npm init @api-platform/client https://demo.api-platform.com src/ -- --generator 
 ```
 
 Replace the URL by the entrypoint of your Hydra-enabled API.
-You can also use an OpenAPI documentation with `-f openapi3`.
+You can also use an OpenAPI documentation with `https://demo.api-platform.com/docs.json` and `-f openapi3`.
 
 Omit the resource flag to generate files for all resource types exposed by the API.
 
-The code is ready to be executed! Register the generated routes:
+The code is ready to be executed! Import common translations:
 
 ```javascript
-// src/router/routes.js
-import fooRoutes from '../generated/router/foo';
+// src/i18n/en-US/index.ts
+import common from './common';
 
-const routes = [
-  {
-    path: '/',
-    component: () => import('layouts/MyLayout.vue'),
-    children: [
-      ...fooRoutes
-    ],
-```
-
-And add the modules to the store:
-
-```javascript
-// src/store/index.js
-// Replace "foo" with the name of the resource type
-import foo from '../generated/store/modules/foo/';
-
-export default function(/* { ssrContext } */) {
-  const Store = new Vuex.Store({
-    modules: {
-      foo,
-    },
+export default {
+  // ...
+  ...common,
+}
 ```
 
 Finally, make sure to update the config:
@@ -53,27 +53,6 @@ Finally, make sure to update the config:
 ```javascript
 // quasar.conf.js
 framework: {
-  components: [
-    'QTable',
-    'QTh',
-    'QTr',
-    'QTd',
-    'QAjaxBar',
-    'QBreadcrumbs',
-    'QBreadcrumbsEl',
-    'QSpace',
-    'QInput',
-    'QForm',
-    'QSelect',
-    'QMarkupTable',
-    'QDate',
-    'QTime',
-    'QCheckbox',
-    'QPopupProxy'
-
-    // ...
-  ],
-  directives: [..., 'ClosePopup'],
   plugins: ['Notify'],
   config: {
     // ...
