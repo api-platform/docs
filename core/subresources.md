@@ -296,3 +296,9 @@ class Company {
     // ...
 }
 ```
+
+### Subresource only resource
+
+If a resource only has subresource definitions (no routes without `uriVariables`) it's not accessible directly by just it's own identifier.
+
+Note that [bidirectional associations](https://www.doctrine-project.org/projects/doctrine-orm/en/current/reference/association-mapping.html) between the subresource and any resources that are used as `Link` in the `uriVariables` are required for IRI generation to work in this case. In other words: The subresource needs to have direct access to any identifiers in the `uriTemplate`.
