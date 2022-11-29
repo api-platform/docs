@@ -587,32 +587,49 @@ If you implemented OAuth on your API, you should configure OpenApi's authorizati
 ```yaml
 api_platform:
     oauth:
-        # To enable or disable oauth.
+        # To enable or disable OAuth.
         enabled: false
 
-        # The oauth client id.
+        # The OAuth client id.
         clientId: ''
 
-        # The oauth client secret.
+        # The OAuth client secret.
         clientSecret: ''
 
-        # The oauth type.
+        # The OAuth type.
         type: 'oauth2'
 
-        # The oauth flow grant type.
+        # The OAuth flow grant type.
         flow: 'application'
 
-        # The oauth token url.
+        # The OAuth token url.
         tokenUrl: '/oauth/v2/token'
 
-        # The oauth authentication url.
+        # The OAuth authentication url.
         authorizationUrl: '/oauth/v2/auth'
 
-        # The oauth scopes.
+        # The OAuth scopes.
         scopes: []
 ```
 
 Note that `clientId` and `clientSecret` are being used by the SwaggerUI if enabled.
+
+### Configure the OAuth Scopes Option
+
+The `api_platform.oauth.scopes` option requires an array value with the scopes name and description. For example:
+
+```yaml
+api_platform:
+    oauth:
+        scopes:
+            profile: "This scope value requests access to the End-User's default profile Claims, which are: name, family_name, given_name, middle_name, nickname, preferred_username, profile, picture, website, gender, birthdate, zoneinfo, locale, and updated_at."
+            email: "This scope value requests access to the email and email_verified Claims."
+            address: "This scope value requests access to the address Claim."
+            phone: "This scope value requests access to the phone_number and phone_number_verified Claims."
+```
+
+**Note:** if you're using an OpenID Connect server (such as Keycloak or Auth0), the `openid` scope **must** be set according
+to the [OpenID Connect specification](https://openid.net/specs/openid-connect-core-1_0.html).
 
 ## Info Object
 
