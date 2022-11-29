@@ -614,7 +614,7 @@ api_platform:
 
 Note that `clientId` and `clientSecret` are being used by the SwaggerUI if enabled.
 
-### Configure the OAuth Scopes option
+### Configure the OAuth Scopes Option
 
 The `api_platform.oauth.scopes` option requires an array value with the scopes name and description. For example:
 
@@ -628,7 +628,7 @@ api_platform:
             phone: "This scope value requests access to the phone_number and phone_number_verified Claims."
 ```
 
-**Note:** if you're using an OpenID Connect server (such as Keycloak or Auth0), the `openid` scope MUST be set according
+**Note:** if you're using an OpenID Connect server (such as Keycloak or Auth0), the `openid` scope **must** be set according
 to the [OpenID Connect specification](https://openid.net/specs/openid-connect-core-1_0.html).
 
 ## Info Object
