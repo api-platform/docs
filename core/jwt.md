@@ -78,18 +78,15 @@ security:
         dev:
             pattern: ^/_(profiler|wdt)
             security: false
-        auth:
-            pattern: ^/auth
+        main:
             stateless: true
+            provider: users
             json_login:
                 check_path: auth # The name in routes.yaml is enough for mapping
                 username_path: email
                 password_path: password
                 success_handler: lexik_jwt_authentication.handler.authentication_success
                 failure_handler: lexik_jwt_authentication.handler.authentication_failure
-        main:
-            stateless: true
-            provider: users
             jwt: ~
 
     access_control:

@@ -2,7 +2,7 @@
 
 This documentation is based on the [official Symfony Documentation](https://symfony.com/doc/current/security/user_providers.html) with some API Platform integrations.
 
-## Creating the Entity & Repository
+## Creating the Entity and Repository
 
 You can follow the [official Symfony Documentation](https://symfony.com/doc/current/security/user_providers.html) and add the API Platform attributes (e.g. `#[ApiResource]`) by your own, or just use the following entity file and modify it to your needs:
 
@@ -32,31 +32,15 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 #[ApiResource(
     operations: [
-        new GetCollection(
-            name: 'getUserCollection',
-        ),
-        new Post(
-            name: 'postUserCollection',
-            processor: UserPasswordHasher::class,
-        ),
-        new Get(
-            name: 'getUserItem',
-        ),
-        new Put(
-            name: 'putUserItem',
-            processor: UserPasswordHasher::class,
-        ),
-        new Patch(
-            name: 'patchUserItem',
-            processor: UserPasswordHasher::class,
-        ),
-        new Delete(
-            name: 'deleteUserItem',
-        ),
+        new GetCollection(),
+        new Post(processor: UserPasswordHasher::class),
+        new Get(),
+        new Put(processor: UserPasswordHasher::class),
+        new Patch(processor: UserPasswordHasher::class),
+        new Delete(),
     ],
     normalizationContext: ['groups' => ['user:read']],
     denormalizationContext: ['groups' => ['user:create', 'user:update']],
-    order: ['email' => 'ASC'],
 )]
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\Table(name: '`user`')]
@@ -125,7 +109,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setPlainPassword(?string $painPassword): self
     {
         $this->plainPassword = $painPassword;
-        $this->password = null;
 
         return $this;
     }
@@ -137,7 +120,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         $roles = $this->roles;
 
-        $roles[] = 'IS_AUTHENTICATED_FULLY';
+        $roles[] = 'ROLE_USER';
 
         return array_unique($roles);
     }
@@ -156,13 +139,13 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     public function getUserIdentifier(): string
     {
-        return (string)$this->email;
+        return (string) $this->email;
     }
 
     /**
      * @see UserInterface
      */
-    public function eraseCredentials()
+    public function eraseCredentials(): void
     {
         $this->plainPassword = null;
     }
@@ -235,7 +218,8 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
 
 ## Creating and Updating User Password
 
-There's no built-in way for hashing the plain password on `POST`, `PUT` or `PATCH`. Happily you can use the API Platform [state processors](state-processors.md) for auto-hashing plain passwords.
+There's no built-in way for hashing the plain password on `POST`, `PUT` or `PATCH`.
+Happily you can use the API Platform [state processors](state-processors.md) for auto-hashing plain passwords.
 
 First create a new state processor:
 
@@ -273,7 +257,8 @@ final class UserPasswordHasher implements ProcessorInterface
 }
 ```
 
-Then bind it to the processors:
+Then bind it to the ORM persist processor:
+
 ```yaml
 # api/config/services.yaml
 
@@ -283,22 +268,13 @@ Then bind it to the processors:
 ```
 
 You may have wondered about the following lines in our entity file we created before:
-```php
 
+```php
     operations: [
         ...
-        new Post(
-            ...
-            processor: UserPasswordHasher::class,
-        ),
-        new Put(
-            ...
-            processor: UserPasswordHasher::class,
-        ),
-        new Patch(
-            ...
-            processor: UserPasswordHasher::class,
-        ),
+        new Post(processor: UserPasswordHasher::class),
+        new Put(processor: UserPasswordHasher::class),
+        new Patch(processor: UserPasswordHasher::class),
         ...
     ],
 ```
