@@ -133,7 +133,7 @@ api_platform:
 
 To understand what an operation is, please refer to the [operations documentation](operations.md).
 
-For GraphQL, the operations are defined by using the `Query`, `QueryCollection`, `Mutation` and `Subscription` attributes.
+For GraphQL, the operations are defined by using the `Query`, `QueryCollection`, `Mutation`, `DeleteMutation` and `Subscription` attributes.
 
 By default, the following operations are enabled:
 
@@ -141,7 +141,7 @@ By default, the following operations are enabled:
 * `QueryCollection`
 * `Mutation(name: 'create')`
 * `Mutation(name: 'update')`
-* `Mutation(name: 'delete')`
+* `DeleteMutation(name: 'delete')`
 
 You can of course disable or configure these operations.
 
@@ -284,6 +284,7 @@ namespace App\Entity;
 
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\GraphQl\Mutation;
+use ApiPlatform\Metadata\GraphQl\DeleteMutation;
 use ApiPlatform\Metadata\GraphQl\Query;
 use ApiPlatform\Metadata\GraphQl\QueryCollection;
 use App\Resolver\BookCollectionResolver;
@@ -294,7 +295,7 @@ use App\Resolver\BookResolver;
     new QueryCollection(),
     new Mutation(name: 'create'),
     new Mutation(name: 'update'),
-    new Mutation(name: 'delete'),
+    new DeleteMutation(name: 'delete'),
 
     new Query(name: 'retrievedQuery', resolver: BookResolver::class),
     new Query(
@@ -377,7 +378,10 @@ You custom queries will be available like this:
 
 If you don't know what mutations are yet, the documentation about them is [here](https://graphql.org/learn/queries/#mutations).
 
-For each resource, three mutations are available: one for creating it (`create`), one for updating it (`update`) and one for deleting it (`delete`).
+For each resource, three mutations are available:
+* `Mutation(name: 'create')` for creating a new resource
+* `Mutation(name: 'update')` for updating an existing resource
+* `DeleteMutation(name: 'delete')` for deleting an existing resource
 
 When updating or deleting a resource, you need to pass the **IRI** of the resource as argument. See [Global Object Identifier](#global-object-identifier) for more information.
 
@@ -450,6 +454,7 @@ namespace App\Entity;
 
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\GraphQl\Mutation;
+use ApiPlatform\Metadata\GraphQl\DeleteMutation;
 use ApiPlatform\Metadata\GraphQl\Query;
 use ApiPlatform\Metadata\GraphQl\QueryCollection;
 use App\Resolver\BookMutationResolver;
@@ -460,7 +465,7 @@ use App\Resolver\BookMutationResolver;
         new QueryCollection(),
         new Mutation(name: 'create'),
         new Mutation(name: 'update'),
-        new Mutation(name: 'delete'),
+        new DeleteMutation(name: 'delete'),
 
         new Mutation(name: 'mutation', resolver: BookMutationResolver::class),
         new Mutation(
@@ -747,7 +752,7 @@ Filters are supported out-of-the-box. Follow the [filters](filters.md) documenta
 However you don't necessarily have the same needs for your GraphQL endpoint as for your REST one.
 
 In the `QueryCollection` attribute, you can choose to decorrelate the GraphQL filters.
-In order to keep the default behavior (possibility to fetch, delete, update or create), define all the auto-generated operations (`Query` ,`QueryCollection`, and the `delete`, `update` and `create` `Mutation`).
+In order to keep the default behavior (possibility to fetch, delete, update or create), define all the auto-generated operations (`Query` ,`QueryCollection`, `DeleteMutation`, and the `update` and `create` `Mutation`).
 
 For example, this entity will have a search filter for REST and a date filter for GraphQL:
 
@@ -758,6 +763,7 @@ namespace App\Entity;
 
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\GraphQl\Mutation;
+use ApiPlatform\Metadata\GraphQl\DeleteMutation;
 use ApiPlatform\Metadata\GraphQl\Query;
 use ApiPlatform\Metadata\GraphQl\QueryCollection;
 
@@ -766,7 +772,7 @@ use ApiPlatform\Metadata\GraphQl\QueryCollection;
     new QueryCollection(filters: ['offer.date_filter']),
     new Mutation(name: 'create'),
     new Mutation(name: 'update'),
-    new Mutation(name: 'delete')
+    new DeleteMutation(name: 'delete')
 ])]
 class Offer
 {
@@ -971,6 +977,7 @@ namespace App\Entity;
 
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\GraphQl\Mutation;
+use ApiPlatform\Metadata\GraphQl\DeleteMutation;
 use ApiPlatform\Metadata\GraphQl\Query;
 use ApiPlatform\Metadata\GraphQl\QueryCollection;
 
@@ -979,7 +986,7 @@ use ApiPlatform\Metadata\GraphQl\QueryCollection;
     new QueryCollection(paginationType: 'page'),
     new Mutation(name: 'create'),
     new Mutation(name: 'update'),
-    new Mutation(name: 'delete')
+    new DeleteMutation(name: 'delete')
 ])]
 class Offer
 {
@@ -1109,6 +1116,7 @@ namespace App\Entity;
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GraphQl\Mutation;
+use ApiPlatform\Metadata\GraphQl\DeleteMutation;
 use ApiPlatform\Metadata\GraphQl\Query;
 use ApiPlatform\Metadata\GraphQl\QueryCollection;
 use ApiPlatform\Metadata\Post;
@@ -1122,7 +1130,7 @@ use ApiPlatform\Metadata\Post;
     graphQlOperations: [
         new Query(security: "is_granted('ROLE_USER') and object.owner == user"),
         new QueryCollection(security: "is_granted('ROLE_ADMIN')"),
-        new Mutation(name: 'delete', security: "is_granted('ROLE_ADMIN')"),
+        new DeleteMutation(name: 'delete', security: "is_granted('ROLE_ADMIN')"),
         new Mutation(name: 'create', security: "is_granted('ROLE_ADMIN')")
     ]
 )]
