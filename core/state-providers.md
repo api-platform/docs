@@ -129,7 +129,7 @@ class BlogPost {}
 
 If you want to execute custom business logic before or after retrieving data, this can be achieved by [decorating](https://symfony.com/doc/current/service_container/service_decoration.html) the built-in state providers or using [composition](https://en.wikipedia.org/wiki/Object_composition).
 
-The next example uses a [DTO](https://api-platform.com/docs/core/dto/#using-data-transfer-objects-dtos) to change the presentation for data originally retieved by the default state provider.
+The next example uses a [DTO](https://api-platform.com/docs/core/dto/#using-data-transfer-objects-dtos) to change the presentation for data originally retrieved by the default state provider.
 
 ```php
 <?php
