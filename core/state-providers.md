@@ -147,13 +147,13 @@ final class BookRepresentationProvider implements ProviderInterface
     {
     }
     
-    public function provide(Operation $operation, array $uriVariables = [], array $context = [])
+    public function provide(Operation $operation, array $uriVariables = [], array $context = []): object|array|null
     {
-        $book = $this->itemProvider->provide($operation, $uriVariables, $context)
+        $book = $this->itemProvider->provide($operation, $uriVariables, $context);
         
         return new AnotherRepresentation(
-        // DTO constructor params here...
-        // $book->getTitle(),
+            // Add DTO constructor params here.
+            // $book->getTitle(),
         );
     }
 }
@@ -172,7 +172,7 @@ services:
         #tags: [ 'api_platform.state_provider' ]
 ```
 
-And configure that you want to use this processor on the Book resource:
+And configure that you want to use this provider on the Book resource:
 
 ```php
 <?php
