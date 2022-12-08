@@ -54,9 +54,9 @@ Add a MongoDB image to the docker-compose file:
           # You should definitely change the password in production
           - MONGO_INITDB_ROOT_PASSWORD=!ChangeMe!
       volumes:
-          - db-data:/var/lib/mongodb/data:rw
+          - db-data:/data/db:rw
           # You may use a bind-mounted host directory instead, so that it is harder to accidentally remove the volume and lose all your data!
-          # - ./docker/db/data:/var/lib/mongodb/data:rw
+          # - ./docker/db/data:/data/db:rw
       ports:
           - "27017:27017"
 # ...
