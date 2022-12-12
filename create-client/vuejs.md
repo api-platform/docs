@@ -10,13 +10,34 @@ cd my-app
 Install the required dependencies:
 
 ```console
-npm install lodash @types/lodash dayjs
+npm install lodash @types/lodash dayjs tailwindcss postcss autoprefixer
 ```
 
-Optionally, install Bootstrap to get an app that looks good:
+Init Tailwind :
 
 ```console
-npm install bootstrap bootstrap-icons
+npx tailwindcss init -p
+```
+
+Replace the content of tailwind.config.js by:
+
+```js
+/** @type {import('tailwindcss').Config} */
+module.exports = {
+  content: ["./index.html", "./src/**/*.{js,ts,vue}"],
+  theme: {
+    extend: {},
+  },
+  plugins: [],
+};
+```
+
+Create a file `index.css` in `src/css` and put copy/paste this code:
+
+```css
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 ```
 
 To generate all the code you need for a given resource run the following command:
@@ -37,9 +58,7 @@ The code is ready to be executed! Replace the content of main.ts and App.vue wit
 import { createApp } from "vue";
 import { createPinia } from "pinia";
 
-import "bootstrap/dist/css/bootstrap.min.css";
-import "bootstrap";
-import "bootstrap-icons/font/bootstrap-icons.css";
+import "./css/index.css";
 
 import App from "./App.vue";
 import router from "./router";
@@ -54,13 +73,13 @@ app.mount("#app");
 
 ```html
 // src/App.vue
-<script setup lang="ts">
-import { RouterView } from "vue-router";
-</script>
-
 <template>
   <RouterView />
 </template>
+
+<script setup lang="ts">
+import { RouterView } from "vue-router";
+</script>
 ```
 
 Go to `https://localhost/books/` to start using your app.
