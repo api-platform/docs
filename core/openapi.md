@@ -177,10 +177,10 @@ resources:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" ?>
-<properties xmlns="https://api-platform.com/schema/metadata/properties"
+<properties xmlns="https://api-platform.com/schema/metadata/properties-3.0"
            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-           xsi:schemaLocation="https://api-platform.com/schema/metadata/properties
-           https://api-platform.com/schema/metadata/properties.xsd">
+           xsi:schemaLocation="https://api-platform.com/schema/metadata/properties-3.0
+           https://api-platform.com/schema/metadata/properties-3.0.xsd">
     <property resource="App\Entity\Product" name="name">
         <openapiContext>
             <values>
@@ -201,7 +201,7 @@ resources:
                 <value name="type">string</value>
                 <value name="format">date-time</value>
             </values>
-        </attribute>
+        </openapiContext>
     </property>
 </properties>
 ```
