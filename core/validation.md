@@ -114,7 +114,7 @@ errors to HTTP errors.
 Without specific configuration, the default validation group is always used, but this behavior is customizable: the framework
 is able to leverage Symfony's [validation groups](https://symfony.com/doc/current/validation/groups.html).
 
-You can configure the groups you want to use when the validation occurs directly through the `ApiResource` annotation:
+You can configure the groups you want to use when the validation occurs directly through the `ApiResource` attribute:
 
 ```php
 <?php
@@ -141,7 +141,7 @@ With the previous configuration, the validation groups `a` and `b` will be used 
 Like for [serialization groups](serialization.md#using-different-serialization-groups-per-operation),
 you can specify validation groups globally or on a per-operation basis.
 
-Of course, you can use XML or YAML configuration format instead of annotations if you prefer.
+Of course, you can use XML or YAML configuration format instead of attributes if you prefer.
 
 You may also pass in a [group sequence](http://symfony.com/doc/current/validation/sequence_provider.html) in place of
 the array of group names.
