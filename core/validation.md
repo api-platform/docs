@@ -40,7 +40,7 @@ class Product
     /**
      * @var string[] Describe the product
      */
-    #[MinimalProoerties]
+    #[MinimalProperties]
     #[ORM\Column(type: 'json')] 
     public $properties;
 
@@ -73,7 +73,6 @@ namespace App\Validator\Constraints;
 
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
-
 
 #[\Attribute]
 final class MinimalPropertiesValidator extends ConstraintValidator
