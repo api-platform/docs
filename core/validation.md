@@ -10,7 +10,7 @@ for this task, but you can replace it with your preferred validation library suc
 
 Validating submitted data is as simple as adding [Symfony's built-in constraints](http://symfony.com/doc/current/reference/constraints.html)
 or [custom constraints](http://symfony.com/doc/current/validation/custom_constraint.html) directly in classes marked with
-the `#[ApiResource]` annotation:
+the `#[ApiResource]` attribute:
 
 ```php
 <?php
@@ -39,9 +39,8 @@ class Product
 
     /**
      * @var string[] Describe the product
-     *
-     * @MinimalProperties
      */
+    #[MinimalProoerties]
     #[ORM\Column(type: 'json')] 
     public $properties;
 
@@ -59,9 +58,7 @@ namespace App\Validator\Constraints;
 
 use Symfony\Component\Validator\Constraint;
 
-/**
- * @Annotation
- */
+#[\Attribute]
 class MinimalProperties extends Constraint
 {
     public $message = 'The product must have the minimal properties required ("description", "price")';
@@ -77,9 +74,8 @@ namespace App\Validator\Constraints;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
 
-/**
- * @Annotation
- */
+
+#[\Attribute]
 final class MinimalPropertiesValidator extends ConstraintValidator
 {
     public function validate($value, Constraint $constraint): void
