@@ -60,6 +60,7 @@ use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Post;
+use ApiPlatform\OpenApi\Model;
 use App\Controller\CreateMediaObjectAction;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\HttpFoundation\File\File;
@@ -79,9 +80,9 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
             controller: CreateMediaObjectAction::class, 
             deserialize: false, 
             validationContext: ['groups' => ['Default', 'media_object_create']], 
-            openapiContext: [
-                'requestBody' => [
-                    'content' => [
+            openapi: new Model\Operation(
+                requestBody: new Model\RequestBody(
+                    content: new \ArrayObject([
                         'multipart/form-data' => [
                             'schema' => [
                                 'type' => 'object', 
@@ -93,9 +94,9 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
                                 ]
                             ]
                         ]
-                    ]
-                ]
-            ]
+                    ])
+                )
+            )
         )
     ]
 )]
