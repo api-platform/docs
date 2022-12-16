@@ -304,6 +304,7 @@ namespace App\Entity;
 
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Post;
+use ApiPlatform\OpenApi\Model;
 use App\Controller\RandomRabbit;
 
 #[ApiResource]
@@ -311,11 +312,11 @@ use App\Controller\RandomRabbit;
     name: 'create_rabbit', 
     uriTemplate: '/rabbit/create', 
     controller: RandomRabbit::class, 
-    openapiContext: [
-        'summary' => 'Create a rabbit picture', 
-        'description' => '# Pop a great rabbit picture by color!\n\n![A great rabbit](https://rabbit.org/graphics/fun/netbunnies/jellybean1-brennan1.jpg)', 
-        'requestBody' => [
-            'content' => [
+    openapi: new Model\Operation(
+        summary: 'Create a rabbit picture', 
+        description: '# Pop a great rabbit picture by color!\n\n![A great rabbit](https://rabbit.org/graphics/fun/netbunnies/jellybean1-brennan1.jpg)', 
+        requestBody: new Model\RequestBody(
+            content: new \ArrayObject([
                 'application/json' => [
                     'schema' => [
                         'type' => 'object', 
@@ -329,9 +330,9 @@ use App\Controller\RandomRabbit;
                         'description' => 'Pink Rabbit'
                     ]
                 ]
-            ]
-        ]
-    ]
+            ])
+        )
+    )
 )]
 class Rabbit
 {
@@ -347,7 +348,7 @@ resources:
         class: ApiPlatform\Metadata\Post
         path: '/rabbit/create'
         controller: App\Controller\RandomRabbit
-        openapiContext:
+        openapi:
           summary: Random rabbit picture
           description: >
             # Pop a great rabbit picture by color!
@@ -378,7 +379,7 @@ resources:
         <operations>
             <operation class="ApiPlatform\Metadata\Post" name="create_rabbit" uriTemplate="/rabbit/create"
                        controller="App\Controller\RandomRabbit">
-                <openapiContext>
+                <openapi>
                     <values>
                         <value name="summary">Create a rabbit picture </value>
                         <value name="description"># Pop a great rabbit picture by color!!
@@ -412,7 +413,7 @@ resources:
                             </values>
                         </value>
                     </values>
-                </openapiContext>
+                </openapi>
             </operation>
         </operations>
     </resource>
