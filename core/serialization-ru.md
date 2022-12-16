@@ -1086,7 +1086,7 @@ API Platform способна угадать идентификатор объе
 Для ORM также поддерживается [составной identifiers](https://www.doctrine-project.org/projects/doctrine-orm/en/current/tutorials/composite-primary-keys.html).
 
 Если вы не используете Doctrine ORM или MongoDB ODM провайлеры, вы должны явно пометить идентификатор, используя атрибут `identifier`
-аннотации `ApiPlatform\Metadata\ApiProperty`. 
+аннотации `ApiPlatform\Metadata\ApiProperty`.
 Например:
 ```php
 <?php
@@ -1138,7 +1138,7 @@ must do the following:
   or use the `NONE` value
 
 В некоторых случаях вам захочется задать идентификатор ресурса от клиента (например, сгенерированный на стороне клиента UUID или slug).
-В таких случаях вы должны сделать свойство класса identifier доступным для записи. 
+В таких случаях вы должны сделать свойство класса identifier доступным для записи.
 В частности, чтобы использовать идентификаторы, сгенерированные клиентом, вы
 должны выполнить следующее:
 
