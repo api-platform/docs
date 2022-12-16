@@ -1,13 +1,13 @@
 # Performance and Cache
 
-## Enabling the Built-in HTTP Cache Invalidation System
+## Enabling the Built-in HTTP Cache System
 
 Exposing a hypermedia API has [many advantages](http://blog.theamazingrando.com/in-band-vs-out-of-band.html). One of them
 is the ability to know exactly which resources are included in HTTP responses created by the API. We used this specificity
 to make API Platform apps blazing fast.
 
 When the cache mechanism [is enabled](configuration.md), API Platform collects identifiers of every resource included in
-a given HTTP response (including lists, embedded documents and subresources) and returns them in a special HTTP header
+a given HTTP response (including lists, embedded documents and subresources) and returns them by default in a special HTTP header
 called [Cache-Tags](https://support.cloudflare.com/hc/en-us/articles/206596608-How-to-Purge-Cache-Using-Cache-Tags-Enterprise-only-).
 
 A caching [reverse proxy](https://en.wikipedia.org/wiki/Reverse_proxy) supporting cache tags (e.g. Varnish, Cloudflare,
@@ -15,52 +15,60 @@ Fastly) must be put in front of the web server and store all responses returned 
 This means that after the first request, all subsequent requests will not hit the web server, and will be served instantly
 from the cache.
 
-When a resource is modified, API Platform takes care of purging all responses containing it in the proxy’s
-cache. This ensures that the content served will always be fresh, because the cache is purged in real time. Support for
+When a resource is modified, API Platform can take care of invalidating all responses containing it in the proxy’s
+cache. This ensures that the content served will always be fresh, because this is done in real time. Support for
 most specific cases such as the invalidation of collections when a document is added or removed or for relationships and
 inverse relations is built-in.
 
-Integration with Varnish and Doctrine ORM is shipped with the core library, and [Varnish](https://varnish-cache.org/) is
-included in the Docker setup provided with the [API Platform distribution](../distribution/index.md). If you use the distribution,
-this feature works out of the box.
-
-If you don't use the distribution, add the following configuration to enable the cache invalidation system:
+The default configuration looks like this:
 
 ```yaml
 api_platform:
     http_cache:
-        invalidation:
-            enabled: true
-            varnish_urls: ['%env(VARNISH_URL)%']
-        public: true
-    defaults:
-        cache_headers:
-            max_age: 0
-            shared_max_age: 3600
-            vary: ['Content-Type', 'Authorization', 'Origin']
+        tags:
+            header:
+                name: Cache-Tags
+                separator: ,
+            invalidator:
+                enabled: false
 ```
 
-Support for reverse proxies other than Varnish can easily be added by implementing the `ApiPlatform\HttpCache\PurgerInterface`.
-Two purgers are available, the http tags (`api_platform.http_cache.purger.varnish.ban`) or the surrogate key implementation
-(`api_platform.http_cache.purger.varnish.xkey`). You can specify the implementation using the `purger` configuration node,
-for example to use the xkey implementation:
+If you know you won’t use any caching proxy, you can disable tags:
 
 ```yaml
 api_platform:
     http_cache:
-        invalidation:
-            enabled: true
-            varnish_urls: ['%env(VARNISH_URL)%']
-            purger: 'api_platform.http_cache.purger.varnish.xkey'
-        public: true
-    defaults:
-        cache_headers:
-            max_age: 0
-            shared_max_age: 3600
-            vary: ['Content-Type', 'Authorization', 'Origin']
-            invalidation:
-                xkey:
-                    glue: ', '
+        tags:
+            enabled: false
+```
+
+Else, you’ll probably want to configure an invalidator.
+You can use your own service implementing `ApiPlatform\HttpCache\TagsInvalidatorInterface`, or one of the two built-in
+implementations: purger or banner. These will respectively send PURGE or BAN requests to the configured URLs.
+
+```yaml
+api_platform:
+    http_cache:
+        tags:
+            invalidator:
+                # you can only configure one of the following nodes
+                
+                id: my_custom_invalidator_service_id
+                
+                purger:
+                    header:
+                        name: xkey
+                        max_size: 7500
+                        separator: ' '
+                    urls: []
+                    client_options: []
+                
+                banner:
+                    header:
+                        name: ApiPlatform-Ban-Regex
+                        max_size: 7500
+                    urls: []
+                    client_options: []
 ```
 
 In addition to the cache invalidation mechanism, you may want to [use HTTP/2 Server Push to pre-emptively send relations
