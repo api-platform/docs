@@ -56,8 +56,8 @@ framework:
     serializer: { enable_annotations: true }
 ```
 
-Если вы используете [Symfony Flex](https://github.com/symfony/flex), просто выполните 
-`composer req doctrine/annotations` 
+Если вы используете [Symfony Flex](https://github.com/symfony/flex), просто выполните
+`composer req doctrine/annotations`
 и всё готово!
 
 Если вы хотите использовать YAML или XML, пожалуйста, добавьте путь сопоставления в конфигурацию сериализатора:
@@ -186,7 +186,8 @@ In addition to the `groups` key, you can configure any Symfony Serializer option
 Any serialization and deserialization group that you specify will also be leveraged by the built-in actions and the Hydra
 documentation generator.
 
-Чтобы настроить группы сериализации свойств классов, вы должны использовать напрямую [файлы конфигурации Symfony Serializer или аннотации] (https://symfony.com/doc/current/components/serializer.html#attributes-groups).
+Чтобы настроить группы сериализации свойств классов, вы должны использовать напрямую
+[файлы конфигурации Symfony Serializer или аннотации](https://symfony.com/doc/current/components/serializer.html#attributes-groups).
 
 В дополнение к ключу `groups`, вы можете настроить любую опцию Symfony Serializer через параметр `$context`
 (например, ключ `enable_max_depth` при использовании [аннотации `@MaxDepth`](https://symfony.com/doc/current/components/serializer.html#handling-serialization-depth)).
@@ -306,8 +307,7 @@ defined at the resource level is inherited. However the document generated when 
 include the `name` property because of the specific configuration for this operation.
 
 Refer to the [operations](operations.md) documentation to learn more.
-
-Свойства `name` и `author` будут включены в документ, сгенерированный во время операции `GET`, поскольку наследуется конфигурация определенная на уровне ресурсов. 
+Свойства `name` и `author` будут включены в документ, сгенерированный во время операции `GET`, поскольку наследуется конфигурация определенная на уровне ресурсов.
 Однако документ, сгенерированный при получении запроса `PUT`, будет
 содержать только свойство `name` из-за конфигурации указанной для этой операции.
 
@@ -890,17 +890,15 @@ final class BookContextBuilder implements SerializerContextBuilderInterface
 }
 ```
 
-Если у пользователя есть разрешение `ROLE_ADMIN`, а ресурс является экземпляром книги, группа `admin:input` будет динамически добавлена к контекст денормализации. 
+Если у пользователя есть разрешение `ROLE_ADMIN`, а ресурс является экземпляром книги, группа `admin:input` будет динамически добавлена к контекст денормализации.
 Переменная `$normalization` позволяет вам проверить, предназначен ли контекст для нормализации (если `TRUE`) или для денормализации (`FALSE`).
 
 ## Изменение контекста сериализации для каждого элемента
 
 В приведенном выше примере показано, как вы можете изменить контекст нормализации/денормализации на основе текущих разрешения пользователя для всех книг. Однако иногда разрешения различаются в зависимости от того, какая книга обрабатывается.
 
-Подумайте о ACL: пользователь «А» может получить книгу «А», но не книгу «Б». В этом случае нужно использовать мощь Symfony Serializer и зарегистрировать наш собственный нормализатор, который добавляет группу к каждому отдельному элементу 
-(примечание: приоритет `64`
-пример; всегда важно убедиться, что ваш нормализатор загружается первым, поэтому установите приоритет на любое подходящее значение для вашего приложения; 
-более высокие значения загружаются раньше):
+Подумайте о ACL: пользователь «А» может получить книгу «А», но не книгу «Б». В этом случае нужно использовать мощь Symfony Serializer и зарегистрировать наш собственный нормализатор, который добавляет группу к каждому отдельному элементу
+(примечание: приоритет `64` пример; всегда важно убедиться, что ваш нормализатор загружается первым, поэтому установите приоритет на любое подходящее значение для вашего приложения; более высокие значения загружаются раньше):
 
 ```yaml
 # api/config/services.yaml
@@ -1089,9 +1087,7 @@ API Platform способна угадать идентификатор объе
 
 Если вы не используете Doctrine ORM или MongoDB ODM провайлеры, вы должны явно пометить идентификатор, используя атрибут `identifier`
 аннотации `ApiPlatform\Metadata\ApiProperty`. 
-
 Например:
-
 ```php
 <?php
 // api/src/Entity/Book.php
@@ -1146,8 +1142,8 @@ must do the following:
 В частности, чтобы использовать идентификаторы, сгенерированные клиентом, вы
 должны выполнить следующее:
 
-1. создайте сеттер для идентификатора объекта (например, `public function setId(string $id)`) или сделайте его свойством `public` ,
-2. добавьте группу денормализации в свойство (только если вы используете определенную группу денормализации) и,
+1. создайте сеттер для идентификатора объекта (например, `public function setId(string $id)`) или сделайте его свойством `public`
+2. добавьте группу денормализации в свойство (только если вы используете определенную группу денормализации) и
 3. если вы используете Doctrine ORM, убедитесь что **не** пометили это свойство с помощью [`@GeneratedValue` annotation](http://docs.doctrine-project.org/projects/doctrine-orm/en/latest/reference/basic-mapping.html#identifier-generation-strategies)
   или используйте значение `NONE`
 
