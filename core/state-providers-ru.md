@@ -1,7 +1,7 @@
 # Поставщики Состояний
 
 Для извлечения данных, предоставляемых API, API Platform использует классы, называемые **поставщиками состояний**. 
-В библиотеку сключены поставщики состояний, использующий [Doctrine ORM](https://www.doctrine-project.org/projects/orm.html) для извлечения данных из базы данных, 
+В библиотеку включены поставщики состояний, использующий [Doctrine ORM](https://www.doctrine-project.org/projects/orm.html) для извлечения данных из базы данных, 
 [Doctrine MongoDB ODM](https://www.doctrine-project.org/projects/mongodb-odm.html) для извлечения данных из
 базы данных документов и 
 [Elasticsearch-PHP](https://www.elastic.co/guide/en/elasticsearch/client/php-api/current/index.html)
