@@ -762,7 +762,7 @@ You can also choose to generate the code for a specific resource with the `--res
 `pnpm create @api-platform/client --resource books`).
 
 The generated code contains a list (including pagination), a delete button, a creation and an edition form. It also includes
-[Bootstrap](https://getbootstrap.com) markup and [ARIA roles](https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA)
+[Tailwind CSS](https://tailwindcss.com) classes and [ARIA roles](https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA)
 to make the app usable by people with disabilities.
 
 If you prefer to generate a PWA built on top of another frontend stack, read [the dedicated documentation](../create-client/index.md).
