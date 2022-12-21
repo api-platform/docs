@@ -1,6 +1,6 @@
 # Getting Started With API Platform: Create Your API and Your Jamstack Site
 
-![The welcome page](images/api-platform-2.6-welcome.png)
+![The welcome page](images/api-platform-3.0-welcome.png)
 
 > *API Platform* is the most advanced API platform, in any framework or language.
 >
@@ -196,7 +196,7 @@ If you are deploying API Platform directly on an Apache or NGINX webserver and g
 
 Open `https://localhost` in your favorite web browser:
 
-![The welcome page](images/api-platform-2.6-welcome.png)
+![The welcome page](images/api-platform-3.0-welcome.png)
 
 You'll need to add a security exception in your browser to accept the self-signed TLS certificate that has been generated
 for this container when installing the framework.
