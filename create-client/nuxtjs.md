@@ -1,152 +1,90 @@
-# Nuxt.js Generator
+# Nuxt Generator
 
-The Nuxt.js generator scaffolds components for Server Side Rendered applications using [Nuxt.js](https://nuxtjs.org/) and [Vuetify](https://vuetifyjs.com/).
-
-## Install
-
-### Nuxt
-
-Create a [Nuxt.js application](https://nuxtjs.org/guides/get-started/installation#using-create-nuxt-app).
+Bootstrap a Nuxt 3 application:
 
 ```console
-npm init nuxt-app your-app-name
+npx nuxi init my-app
+cd my-app
 ```
 
-It will ask you some questions, you can use these answers:
+Install the required dependencies:
 
 ```console
-Project name: your-app-name
-Programming language: JavaScript
-Package manager: NPM
-UI framework: Vuetify.js
-Nuxt.js modules: None
-Linting tools: Prettier, Lint staged files
-Testing framework: None
-Rendering mode: Single Page App
-Deployment target: Static (Static/JAMStack hosting)
+yarn add dayjs @pinia/nuxt lodash
 ```
 
-### Installing the Generator Dependencies
-
-Install required dependencies:
+To generate all the code you need for a given resource run the following command:
 
 ```console
-npm install moment lodash vue-i18n vuelidate vuex-map-fields nuxt-i18n
-npm install --dev @nuxtjs/vuetify @nuxtjs/fontawesome
+yarn create @api-platform/client https://demo.api-platform.com . --generator nuxt
 ```
 
-## Updating Nuxt Config
+Replace the URL with the entrypoint of your Hydra-enabled API. You can also use an OpenAPI documentation with `https://demo.api-platform.com/docs.json` and `-f openapi3`.
 
-Update your `nuxt.config.js` with following:
+Omit the resource flag to generate files for all resource types exposed by the API.
+
+Add Pinia module in `nuxt.config.ts`:
+
+```typescript
+// https://nuxt.com/docs/api/configuration/nuxt-config
+export default defineNuxtConfig({
+  // ...
+  modules: ["@pinia/nuxt"],
+  // ...
+});
+```
+
+Delete `app.vue` as it will prevent Nuxt router to work correctly.
+
+Optionally, install Tailwind to get an app that looks good:
+
+```console
+yarn add -D tailwindcss postcss autoprefixer
+npx tailwindcss init
+```
+
+Add this code in `nuxt.config.ts`:
+
+```typescript
+// https://nuxt.com/docs/api/configuration/nuxt-config
+export default defineNuxtConfig({
+  // ...
+  css: ['~/assets/css/main.css'],
+  postcss: {
+    plugins: {
+      tailwindcss: {},
+      autoprefixer: {},
+    },
+  },
+  // ...
+});
+```
+
+And this code in `tailwind.config.js`:
 
 ```javascript
-  buildModules: [
-    // ...
-    '@nuxtjs/vuetify',
-    '@nuxtjs/fontawesome',
-    'nuxt-i18n'
+/** @type {import('tailwindcss').Config} */
+module.exports = {
+  content: [
+    "./components/**/*.{js,vue,ts}",
+    "./layouts/**/*.vue",
+    "./pages/**/*.vue",
+    "./plugins/**/*.{js,ts}",
+    "./nuxt.config.{js,ts}",
+    "./app.vue",
   ],
-  // ...
-  // to avoid name conflicts in generators
-  components: false,
-```
-
-## Generating Routes
-
-```console
-npm init @api-platform/client https://demo.api-platform.com . -- --generator nuxt
-```
-
-Replace the URL by the entrypoint of your Hydra-enabled API.
-You can also use an OpenAPI documentation with `-f openapi3`.
-
-**Note:** Omit the resource flag to generate files for all resource types exposed by the API.
-
-## Updating Default Layout
-
-Update your `layouts/default.vue` with following:
-
-```vue
-<template>
-  <v-app>
-    <alert />
-    <v-navigation-drawer v-model="drawer" app>
-      <v-list dense>
-        <v-list-item>
-          <v-list-item-action>
-            <v-icon>mdi-home</v-icon>
-          </v-list-item-action>
-          <v-list-item-content>
-            <v-list-item-title>Home</v-list-item-title>
-          </v-list-item-content>
-        </v-list-item>
-        <v-list-item>
-          <v-list-item-action>
-            <v-icon>mdi-book</v-icon>
-          </v-list-item-action>
-          <v-list-item-content>
-            <v-list-item-title>
-              <nuxt-link :to="{ name: 'books' }">Books</nuxt-link>
-            </v-list-item-title>
-          </v-list-item-content>
-        </v-list-item>
-        <v-list-item>
-          <v-list-item-action>
-            <v-icon>mdi-comment-quote</v-icon>
-          </v-list-item-action>
-          <v-list-item-content>
-            <v-list-item-title>
-              <nuxt-link :to="{ name: 'reviews' }">Reviews</nuxt-link>
-            </v-list-item-title>
-          </v-list-item-content>
-        </v-list-item>
-      </v-list>
-    </v-navigation-drawer>
-    <v-app-bar app color="indigo" dark>
-      <v-app-bar-nav-icon @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
-      <v-toolbar-title>Application</v-toolbar-title>
-    </v-app-bar>
-
-    <v-main>
-      <nuxt />
-    </v-main>
-    <v-footer color="indigo" app>
-      <span class="white--text">&copy; {{ date }}</span>
-    </v-footer>
-  </v-app>
-</template>
-
-<script>
-import Alert from '../components/Alert'
-
-export default {
-  components: {
-    Alert
+  theme: {
+    extend: {},
   },
-
-  data: () => ({
-    date: null,
-    drawer: null
-  }),
-
-  mounted () {
-    this.date = new Date().getFullYear()
-  }
+  plugins: [],
 }
-</script>
 ```
-
-## Starting the Project
 
 You can launch the server with:
 
 ```console
-npm run dev
+yarn dev -o
 ````
 
 Go to `https://localhost:3000/books/` to start using your app.
 
-## Screenshots
-
-![List](images/nuxtjs/create-client-nuxtjs-list.png)  
-![Edit](images/nuxtjs/create-client-nuxtjs-edit.png)
