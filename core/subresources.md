@@ -112,7 +112,6 @@ use ApiPlatform\Metadata\Link;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity]
-#[ApiResource]
 #[ApiResource(
     uriTemplate: '/questions/{id}/answer', 
     uriVariables: [
