@@ -5,11 +5,11 @@
 API Platform включает и расширяет компонент Symfony Serializer для преобразования объектов(сущностей) PHP в ответах API (гипермедиа).
 
 
-<p align="center" class="symfonycasts"><a href="https://symfonycasts.com/screencast/api-platform/serializer?cid=apip"><img src="../distribution/images/symfonycasts-player.png" alt="Serializer screencast"><br>Посмотрите скринкаст про Serializer</a></p>
+<p align="center" class="symfonycasts"><a href="https://symfonycasts.com/screencast/api-platform/serializer?cid=apip"><img src="../../distribution/images/symfonycasts-player.png" alt="Serializer screencast"><br>Посмотрите скринкаст про Serializer</a></p>
 
 Основной процесс сериализации состоит из двух этапов:
 
-![Рабочий процесс сериализатора](images/SerializerWorkflow.png)
+![Рабочий процесс сериализатора](../../distribution/images/SerializerWorkflow.png)
 
 > Как вы можете видеть на рисунке выше, массив используется как посредник. Таким образом, кодировщики(Encoders) будут иметь дело только с преобразованием определенных форматов в массивы и наоборот. Таким же образом нормализаторы(Normalizers) будут иметь дело с превращением определенных объектов в массивы и наоборот.
 
