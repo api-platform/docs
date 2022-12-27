@@ -119,3 +119,47 @@ final class BookRepresentationProvider implements ProviderInterface
     }
 }
 ```
+
+## Implementing a Write Operation With an Output Different From the Resource
+
+The logic stay almost the same than for a [State Provider](./state-providers.md).
+For returning another representation of your data in a [State Processor](./state-processors.md), you should specify your processor class in the `processor` attribute and same for your `output`.
+
+```php
+<?php
+
+namespace App\Entity;
+
+use ApiPlatform\Metadata\Post;
+use App\Dto\AnotherRepresentation;
+use App\State\BookRepresentationProcessor;
+
+#[Post(output: AnotherRepresentation::class, processor: BookRepresentationProcessor::class)]
+class Book {}
+```
+Here the `$data` attribute represent an instance of your ressource. 
+```php
+<?php
+
+namespace App\State;
+
+use App\Dto\AnotherRepresentation;
+use App\Model\Book;
+use ApiPlatform\Metadata\Operation;
+use ApiPlatform\State\ProcessorInterface;
+
+final class BookRepresentationProcessor implements ProcessorInterface
+{
+     /**
+     * @param Book $data
+     */
+    public function process($data, Operation $operation, array $uriVariables = [], array $context = [])
+    {
+        return new AnotherRepresentation(
+            $data->getId(),
+            $data->getTitle(),
+            // etc
+        );
+    }
+}
+```
