@@ -1,43 +1,16 @@
 # Vue.js Generator
 
-Bootstrap a Vue.js application using create-vue:
+Bootstrap a Vue 3 application using create-vue:
 
 ```console
-npm init vue@3 -- --typescript --router --pinia --eslint-with-prettier my-app
+npm init vue@latest -- --typescript --router --pinia --eslint-with-prettier my-app
 cd my-app
 ```
 
 Install the required dependencies:
 
 ```console
-npm install lodash @types/lodash dayjs tailwindcss postcss autoprefixer
-```
-
-Init Tailwind :
-
-```console
-npx tailwindcss init -p
-```
-
-Replace the content of tailwind.config.js by:
-
-```js
-/** @type {import('tailwindcss').Config} */
-module.exports = {
-  content: ["./index.html", "./src/**/*.{js,ts,vue}"],
-  theme: {
-    extend: {},
-  },
-  plugins: [],
-};
-```
-
-Create a file `index.css` in `src/css` and put copy/paste this code:
-
-```css
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+npm install dayjs lodash @types/lodash
 ```
 
 To generate all the code you need for a given resource run the following command:
@@ -51,25 +24,7 @@ You can also use an OpenAPI documentation with `https://demo.api-platform.com/do
 
 Omit the resource flag to generate files for all resource types exposed by the API.
 
-The code is ready to be executed! Replace the content of main.ts and App.vue with the following code:
-
-```typescript
-// src/main.ts
-import { createApp } from "vue";
-import { createPinia } from "pinia";
-
-import "./css/index.css";
-
-import App from "./App.vue";
-import router from "./router";
-
-const app = createApp(App);
-
-app.use(createPinia());
-app.use(router);
-
-app.mount("#app");
-```
+Replace the content of `App.vue` with the following code:
 
 ```html
 // src/App.vue
@@ -82,6 +37,44 @@ import { RouterView } from "vue-router";
 </script>
 ```
 
-Go to `https://localhost/books/` to start using your app.
+Optionally, install Tailwind to get an app that looks good:
 
-In order to Mercure to work you have to use the port 3000.
+```console
+npm install -D tailwindcss postcss autoprefixer
+npx tailwindcss init -p
+```
+
+Replace the content of `tailwind.config.js` by:
+
+```js
+// tailwind.config.js
+/** @type {import('tailwindcss').Config} */
+module.exports = {
+  content: [
+    "./index.html",
+    "./src/**/*.{vue,js,ts,jsx,tsx}",
+  ],
+  theme: {
+    extend: {},
+  },
+  plugins: [],
+};
+```
+
+Replace the content of `src/assets/main.css` by:
+
+```css
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+```
+
+You can launch the server with:
+
+```console
+npm run dev
+```
+
+Go to https://localhost/books/ to start using your app.
+
+*Note: In order to Mercure to work you have to use the port 3000.*
