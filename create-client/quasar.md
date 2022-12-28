@@ -3,19 +3,24 @@
 Create a Quasar Framework application using
 [Quasar CLI](https://quasar.dev/start/quasar-cli):
 
-When asked please choose the following options :
-- App with Quasar CLI
-- Project folder : my-app
-- Quasar v2
-- Typescript
-- Quasar app CLI with Vite
-- Composition API with \<script setup\>
-- State Management (Pinia) / Vue-i18n
-
 ```console
 npm i -g @quasar/cli
 npm init quasar
 cd my-app
+```
+
+It will ask you some questions, you can use these answers:
+
+```
+What would you like to build ? App with Quasar CLI, let's go!
+Project folder: my-app
+Pick Quasar version: Quasar v2 (Vue 3 | latest and greatest)
+Pick script types: Typescript
+Pick Quasar App CLI variant: Quasar App CLI with Vite
+Package name: my-app
+Pick a Vue component style: Composition API with <script setup>
+Check the features needed for your project: ESLint / State Management (Pinia) / Vue-i18n
+Pick an ESLint Preset: Prettier
 ```
 
 Install the required dependencies:
@@ -36,7 +41,7 @@ You can also use an OpenAPI documentation with `https://demo.api-platform.com/do
 
 Omit the resource flag to generate files for all resource types exposed by the API.
 
-The code is ready to be executed! Import common translations:
+Import common translations:
 
 ```javascript
 // src/i18n/en-US/index.ts
@@ -63,3 +68,13 @@ framework: {
     },
   },
 ```
+
+You can launch the server with:
+
+```console
+quasar dev
+```
+
+Go to http://localhost:9000/books/ to start using your app.
+
+*Note: In order to Mercure to work you have to use the port 3000.*
