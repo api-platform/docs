@@ -1,4 +1,4 @@
-# Nuxt Generator
+# Nuxt.js Generator
 
 Bootstrap a Nuxt 3 application:
 
