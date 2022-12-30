@@ -42,7 +42,7 @@ App\Entity\Book:
         title: <sentence(4)>
         description: <text()>
         author: <name()>
-        publicationDate: <dateTime()>
+        publicationDate: <dateTimeImmutable()>
 ```
 
 ```yaml
@@ -52,7 +52,7 @@ App\Entity\Review:
         rating: <numberBetween(0, 5)>
         body: <text()>
         author: <name()>
-        publicationDate: <dateTime()>
+        publicationDate: <dateTimeImmutable()>
         book: '@book_*'
 ```
 
