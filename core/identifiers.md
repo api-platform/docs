@@ -115,7 +115,7 @@ final class UuidUriVariableTransformer implements UriVariableTransformerInterfac
      }
 
     /**
-     * Checks whether the given uri variable is supported for transformation by this trnasformer.
+     * Checks whether the given uri variable is supported for transformation by this transformer.
      *
      * @param mixed $value   The uri variable value to transform
      * @param array $types   The types to which the data should be transformed
