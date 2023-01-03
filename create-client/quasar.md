@@ -11,7 +11,7 @@ cd my-app
 
 It will ask you some questions, you can use these answers:
 
-```
+```console
 What would you like to build ? App with Quasar CLI, let's go!
 Project folder: my-app
 Pick Quasar version: Quasar v2 (Vue 3 | latest and greatest)
@@ -24,7 +24,6 @@ Pick an ESLint Preset: Prettier
 ```
 
 Install the required dependencies:
-
 
 ```console
 npm install dayjs qs
@@ -41,9 +40,11 @@ You can also use an OpenAPI documentation with `https://demo.api-platform.com/do
 
 Omit the resource flag to generate files for all resource types exposed by the API.
 
+**Note:** Make sure to follow the result indications of the command to register the routes and the translations.
+
 Import common translations:
 
-```javascript
+```ts
 // src/i18n/en-US/index.ts
 import common from './common';
 
@@ -55,7 +56,7 @@ export default {
 
 Finally, make sure to update the config:
 
-```javascript
+```js
 // quasar.conf.js
 framework: {
   plugins: ['Notify'],
@@ -75,6 +76,6 @@ You can launch the server with:
 quasar dev
 ```
 
-Go to http://localhost:9000/books/ to start using your app.
+Go to `http://localhost:9000/books/` to start using your app.
 
-*Note: In order to Mercure to work you have to use the port 3000.*
+**Note:** In order to Mercure to work with the demo, you have to use the port 3000.

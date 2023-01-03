@@ -79,4 +79,4 @@ npm run dev
 
 Go to `http://localhost:5173/books/` to start using your app.
 
-**Note:** In order to Mercure to work, you have to use the port 3000.
+**Note:** In order to Mercure to work with the demo, you have to use the port 3000.
