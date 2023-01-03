@@ -24,6 +24,8 @@ You can also use an OpenAPI documentation with `https://demo.api-platform.com/do
 
 Omit the resource flag to generate files for all resource types exposed by the API.
 
+**Note:** Make sure to follow the result indications of the command to register the routes.
+
 Replace the content of `App.vue` with the following code:
 
 ```html
@@ -75,6 +77,6 @@ You can launch the server with:
 npm run dev
 ```
 
-Go to https://localhost/books/ to start using your app.
+Go to `http://localhost:5173/books/` to start using your app.
 
-*Note: In order to Mercure to work you have to use the port 3000.*
+**Note:** In order to Mercure to work, you have to use the port 3000.
