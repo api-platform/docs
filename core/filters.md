@@ -951,7 +951,7 @@ App\Entity\Tweet:
 
 [/codeSelector]
 
-Given that the collection endpoint is `/tweets`, you can filter tweets by id and date in ascending or descending order:
+Given that the collection endpoint is `/tweets`, you can filter tweets by ID and date in ascending or descending order:
 `/tweets?order[id]=asc&order[date]=desc`.
 
 By default, whenever the query does not specify the direction explicitly (e.g: `/tweets?order[id]&order[date]`), filters
@@ -1173,8 +1173,8 @@ to retrieve items, [extensions](extensions.md) are the way to go.
 A Doctrine ORM filter is basically a class implementing the `ApiPlatform\Doctrine\Orm\Filter\FilterInterface`.
 API Platform includes a convenient abstract class implementing this interface and providing utility methods: `ApiPlatform\Doctrine\Orm\Filter\AbstractFilter`.
 
-In the following example, we create a class to filter a collection by applying a regexp to a property. The `REGEXP` DQL
-function used in this example can be found in the [`DoctrineExtensions`](https://github.com/beberlei/DoctrineExtensions)
+In the following example, we create a class to filter a collection by applying a regular expression to a property.
+The `REGEXP` DQL function used in this example can be found in the [`DoctrineExtensions`](https://github.com/beberlei/DoctrineExtensions)
 library. This library must be properly installed and registered to use this example (works only with MySQL).
 
 ```php
@@ -1518,7 +1518,7 @@ final class UserFilter extends SQLFilter
             // Don't worry, getParameter automatically escapes parameters
             $userId = $this->getParameter('id');
         } catch (\InvalidArgumentException $e) {
-            // No user id has been defined
+            // No user ID has been defined
             return '';
         }
 

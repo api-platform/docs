@@ -624,7 +624,7 @@ apiPlatformOldAttributes: false
 # IDs configuration
 id:
 
-    # Automatically add an id field to entities
+    # Automatically add an ID field to entities
     generate:             true
 
     # The ID generation strategy to use ("none" to not let the database generate IDs).
