@@ -274,7 +274,7 @@ You may also be interested in these alternative testing tools (not included in t
 ## Using the API Platform Distribution for End-to-End Testing
 
 If you would like to verify that your stack (including services such as the DBMS, web server, [Varnish](https://varnish-cache.org/))
-works, you need [end-to-end (E2E) testing](https://wiki.c2.com/?EndToEndPrinciple). To do so, we recommend using [Playwright](https://playwright.dev) if you use have PWA/JavaScript-heavy app, or [Symfony Panther](https://github.com/symfony/panther) if you mostly use Twig. 
+works, you need [end-to-end (E2E) testing](https://wiki.c2.com/?EndToEndPrinciple). To do so, we recommend using [Playwright](https://playwright.dev) if you use have PWA/JavaScript-heavy app, or [Symfony Panther](https://github.com/symfony/panther) if you mostly use Twig.
 
 Usually, E2E testing should be done with a production-like setup. For your convenience, you may [run our Docker Compose setup
 for production locally](../deployment/docker-compose.md#running-the-docker-compose-setup-for-production-locally).
