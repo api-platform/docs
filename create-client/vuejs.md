@@ -10,7 +10,7 @@ cd my-app
 Install the required dependencies:
 
 ```console
-npm install dayjs lodash @types/lodash
+npm install dayjs qs @types/qs
 ```
 
 To generate all the code you need for a given resource run the following command:
