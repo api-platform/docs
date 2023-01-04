@@ -247,7 +247,9 @@ class Company {
 
 In order to use Symfony's built-in security system on subrecources the security option of the `Link` attribute can be used.
 
-To restrict the access to a subresource based on the parent object simply use the Symfony expression language as you would do normally, with the exception that the name defined in `toProperty` is used to access the object
+To restrict the access to a subresource based on the parent object simply use the Symfony expression language as you would do normally, with the exception that the name defined in `toProperty` or `fromProperty` is used to access the object.
+
+Alternatively you can also use the `securityObjectName` to set a custom name
 
 ```php
 <?php 
