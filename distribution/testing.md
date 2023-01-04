@@ -250,7 +250,7 @@ To do so, learn how to write unit tests with [PHPUnit](https://phpunit.de/) and 
 
 ## Continuous Integration, Continuous Delivery and Continuous Deployment
 
-Running your test suite in your [CI/CD pipeline](https://en.wikipedia.org/wiki/Continuous_integration) is important to ensure good quality and delivrery time.
+Running your test suite in your [CI/CD pipeline](https://en.wikipedia.org/wiki/Continuous_integration) is important to ensure good quality and delivery time.
 
 The API Platform distribution is [shipped with a GitHub Actions workflow](https://github.com/api-platform/api-platform/blob/main/.github/workflows/ci.yml) that builds the Docker images, does a [smoke test](https://en.wikipedia.org/wiki/Smoke_testing_(software)) to check that the application's entrypoint is accessible, and runs PHPUnit.
 
