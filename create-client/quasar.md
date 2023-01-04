@@ -26,7 +26,7 @@ Pick an ESLint Preset: Prettier
 Install the required dependencies:
 
 ```console
-npm install dayjs qs
+npm install dayjs qs @types/qs
 ```
 
 In the app directory, generate the files for the resource you want:
