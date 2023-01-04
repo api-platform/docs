@@ -235,8 +235,8 @@ allows to easily write functional tests and has good team collaboration features
 Your API Platform project is now 100% functional. Let's expose our own data model.
 Our bookshop API will start simple. It will be composed of a `Book` resource type and a `Review` one.
 
-Books have an id, an ISBN, a title, a description, an author, a publication date and are related to a list of reviews.
-Reviews have an id, a rating (between 0 and 5), a body, an author, a publication date and are related to one book.
+Books have an ID, an ISBN, a title, a description, an author, a publication date and are related to a list of reviews.
+Reviews have an ID, a rating (between 0 and 5), a body, an author, a publication date and are related to one book.
 
 Let's describe this data model as a set of Plain Old PHP Objects (POPO):
 
@@ -335,7 +335,7 @@ Note that entities' and properties' descriptions in the API documentation, and t
 
 The framework also use these metadata to serialize and deserialize data from JSON (and other formats) to PHP objects (back and forth)!
 
-For the sake of simplicity, in this example we used public properties (except for the id, see below). API Platform (as well
+For the sake of simplicity, in this example we used public properties (except for the ID, see below). API Platform (as well
 as Symfony and Doctrine) also supports accessor methods (getters/setters), use them if you want to.
 We used a private property and a getter for the ID to enforce the fact that it is read only (we will let the DBMS generating it). API Platform also has first-grade support for UUIDs. [You should
 probably use them instead of auto-incremented IDs](https://www.clever-cloud.com/blog/engineering/2015/05/20/why-auto-increment-is-a-terrible-idea/).
