@@ -252,7 +252,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 #[ApiResource]
 class Book
 {
-    /** The id of this book. */
+    /** The ID of this book. */
     private ?int $id = null;
 
     /** The ISBN of this book (or null if doesn't have one). */
@@ -296,7 +296,7 @@ use ApiPlatform\Metadata\ApiResource;
 #[ApiResource]
 class Review
 {
-    /** The id of this review. */
+    /** The ID of this review. */
     private ?int $id = null;
 
     /** The rating of this review (between 0 and 5). */
@@ -372,7 +372,7 @@ Modify these files as described in these patches:
  #[ApiResource]
  class Book
  {
-     /** The id of this book. */
+     /** The ID of this book. */
 +    #[ORM\Id, ORM\Column, ORM\GeneratedValue]
      private ?int $id = null;
  
@@ -416,7 +416,7 @@ Modify these files as described in these patches:
  #[ApiResource]
  class Review
  {
-     /** The id of this review. */
+     /** The ID of this review. */
 +    #[ORM\Id, ORM\Column, ORM\GeneratedValue]
      private ?int $id = null;
  

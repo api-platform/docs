@@ -2,7 +2,7 @@
 
 ![List screenshot](images/nextjs/create-client-nextjs-list.png)
 
-The Next.js generator scaffolds components for Server Side Rendered applications using [Next.js](https://nextjs.org/).
+The Next.js generator scaffolds components for server-side rendered (SSR) applications using [Next.js](https://nextjs.org/).
 
 ## Install
 
