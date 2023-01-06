@@ -10,7 +10,7 @@ cd my-app
 Install the required dependencies:
 
 ```console
-yarn add dayjs @pinia/nuxt
+yarn add dayjs @pinia/nuxt qs @types/qs
 ```
 
 To generate all the code you need for a given resource run the following command:
