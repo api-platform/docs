@@ -80,6 +80,14 @@ module.exports = {
 }
 ```
 
+Create file `assets/css/main.css` and add this code in it:
+
+```css
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+```
+
 You can launch the server with:
 
 ```console
