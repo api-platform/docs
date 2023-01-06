@@ -1,6 +1,6 @@
 # Nuxt.js Generator
 
-Bootstrap a Nuxt 3 application:
+Bootstrap a [Nuxt 3](https://nuxt.com/) application:
 
 ```console
 npx nuxi init my-app
