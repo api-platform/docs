@@ -262,7 +262,7 @@ You may also be interested in these alternative testing tools (not included in t
 
 * [Foundry](https://github.com/zenstruck/foundry), a modern fixtures library that will replace Alice as the recommended fixtures library soon;
 * [Hoppscotch](https://docs.hoppscotch.io/features/tests), create functional test for your API
-  Platform project using a nice UI, benefit from its Swagger integration and run tests in the CI using [the CLI tool](https://docs.hoppscotch.io/cli);
+  Platform project using a nice UI, benefit from its Swagger integration and run tests in the CI using [the command-line tool](https://docs.hoppscotch.io/cli);
 * [Behat](http://behat.org), a
   [behavior-driven development (BDD)](https://en.wikipedia.org/wiki/Behavior-driven_development) framework to write the API
   specification as user stories and in natural language then execute these scenarios against the application to validate
