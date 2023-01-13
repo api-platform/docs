@@ -523,7 +523,7 @@ Constraints                                                                     
 [`Isbn`](https://symfony.com/doc/current/reference/constraints/Isbn.html)             | `https://schema.org/isbn`          |
 [`Issn`](https://symfony.com/doc/current/reference/constraints/Issn.html)             | `https://schema.org/issn`          |
 
-## Specification property restrictions
+## Specification Property Restrictions
 
 API Platform generates specification property restrictions based on Symfony’s built-in validator.
 
@@ -576,52 +576,49 @@ services:
 ```
 
 ## Collecting Denormalization Errors
-When submitting data you can collect denormalization errors using [Symfony's COLLECT_DENORMALIZATION_ERRORS OPTION](https://symfony.com/doc/current/components/serializer.html#collecting-type-errors-while-denormalizing).
-This can be done directly in the `#[ApiResource]`annotation:
+
+When submitting data you can collect denormalization errors using the [COLLECT_DENORMALIZATION_ERRORS option](https://symfony.com/doc/current/components/serializer.html#collecting-type-errors-while-denormalizing).
+
+It can be done directly in the `#[ApiResource]` attribute (or in the operations):
+
 ```php
 <?php
 // api/src/Entity/Book.php
 namespace App\Entity;
 
 use ApiPlatform\Metadata\ApiResource;
-use ApiPlatform\Metadata\ApiProperty;
-use App\State\BookProvider;
 
-/** A book. */
 #[ApiResource(
-    provider: BookProvider::class,
-    collectDenormalizationErrors: true)]
+    collectDenormalizationErrors: true
+)]
 class Book
 {
-    //...
-
-    /** A number */
-    private ?bool $number;
-
-    /** A random property */
-    private ?string $property1;
-
-    // getter and setters
+    public ?bool $boolean;
+    public ?string $property1;
+}
 ```
-If the submitted data is invalid, the HHTP status code will be set to `422 Unprocessable Content` and the response's body will contain the list of violations:
+
+If the submitted data has denormalization errors, the HTTP status code will be set to `422 Unprocessable Content` and the response body will contain the list of errors:
+
 ```json
 {
     "@context": "/api/contexts/ConstraintViolationList",
     "@type": "ConstraintViolationList",
     "hydra:title": "An error occurred",
-    "hydra:description": "number: The type of the \"number\" attribute must be \"bool\", \"int\" given.\nproperty1: The type of the \"property1\" attribute must be \"string\", \"bool\" given.",
+    "hydra:description": "boolean: This value should be of type bool.\nproperty1: This value should be of type string.",
     "violations": [
         {
-            "propertyPath": "number",
-            "message": "The type of the \"number\" attribute must be \"bool\", \"int\" given.",
+            "propertyPath": "boolean",
+            "message": "This value should be of type bool.",
             "code": "0"
         },
         {
             "propertyPath": "property1",
-            "message": "The type of the \"property1\" attribute must be \"string\", \"bool\" given.",
+            "message": "This value should be of type string.",
             "code": "0"
         }
     ]
 }
 ```
-You can also enable the collecting of denormalization errors globaly in the [Global Resources Defaults](https://api-platform.com/docs/core/configuration/#global-resources-defaults)
+
+You can also enable collecting of denormalization errors globally in the [Global Resources Defaults](https://api-platform.com/docs/core/configuration/#global-resources-defaults).

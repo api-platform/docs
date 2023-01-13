@@ -377,5 +377,6 @@ api_platform:
 
         # To enable collecting denormalization errors
         collectDenormalizationErrors: false
+
         # ...
 ```
