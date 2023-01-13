@@ -137,7 +137,9 @@ use App\State\BookRepresentationProcessor;
 #[Post(output: AnotherRepresentation::class, processor: BookRepresentationProcessor::class)]
 class Book {}
 ```
-Here the `$data` attribute represent an instance of your ressource. 
+
+Here the `$data` attribute represents an instance of your resource.
+
 ```php
 <?php
 
