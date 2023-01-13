@@ -160,7 +160,7 @@ final class BookRepresentationProcessor implements ProcessorInterface
         return new AnotherRepresentation(
             $data->getId(),
             $data->getTitle(),
-            // etc
+            // etc.
         );
     }
 }
