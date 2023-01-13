@@ -60,7 +60,7 @@ class CreateBookPublication extends AbstractController
 }
 ```
 
-This custom operation behaves exactly like the built-in operation: it returns a JSON-LD document corresponding to the id
+This custom operation behaves exactly like the built-in operation: it returns a JSON-LD document corresponding to the ID
 passed in the URL.
 
 Here we consider that [autowiring](https://symfony.com/doc/current/service_container/autowiring.html) is enabled for

@@ -18,8 +18,8 @@ is also possible.
 There are two types of operations: collection operations and item operations.
 
 Collection operations act on a collection of resources. By default two routes are implemented: `POST` and `GET`. Item
-operations act on an individual resource. Three default routes are defined: `GET`, `PUT` and `DELETE` (`PATCH` is also supported
-when [using the JSON:API format](content-negotiation.md), as required by the specification).
+operations act on an individual resource. Four default routes are defined: `GET`, `PUT`, `DELETE` and `PATCH`. `PATCH` is supported
+with [JSON Merge Patch (RFC 7396)](https://www.rfc-editor.org/rfc/rfc7386), or [using the JSON:API format](https://jsonapi.org/format/#crud-updating), as required by the specification.
 
 When the `ApiPlatform\Metadata\ApiResource` annotation is applied to an entity class, the following built-in CRUD
 operations are automatically enabled:

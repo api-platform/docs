@@ -590,7 +590,7 @@ api_platform:
         # To enable or disable OAuth.
         enabled: false
 
-        # The OAuth client id.
+        # The OAuth client ID.
         clientId: ''
 
         # The OAuth client secret.
