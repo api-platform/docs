@@ -156,7 +156,8 @@ App\Entity\Book:
         https://api-platform.com/schema/metadata/resources-3.0.xsd">
     <resource class="App\Entity\Book">
         <operations>
-            <operation class="ApiPlatform\Metadata\Post" processor="App\State\BookRepresentationProcessor"
+            <operation class="ApiPlatform\Metadata\Post" 
+                       processor="App\State\BookRepresentationProcessor"
                        output="App\Dto\AnotherRepresentation" /> 
         </operations>
     </resource>
@@ -172,10 +173,10 @@ Here the `$data` attribute represents an instance of your resource.
 
 namespace App\State;
 
-use App\Dto\AnotherRepresentation;
-use App\Model\Book;
 use ApiPlatform\Metadata\Operation;
 use ApiPlatform\State\ProcessorInterface;
+use App\Dto\AnotherRepresentation;
+use App\Model\Book;
 
 final class BookRepresentationProcessor implements ProcessorInterface
 {
