@@ -15,13 +15,13 @@ For example:
 
 Only 3 versions are maintained at the same time:
 
-* **stable** (currently the **2.7** branch): regular bug fixes are integrated in this version
-* **old-stable** (currently **2.6** branch): security fixes are integrated in this version, regular bug fixes are **not** backported in it
+* **stable** (currently the **2.7** branch): regular bugfixes are integrated in this version
+* **old-stable** (currently **2.6** branch): security fixes are integrated in this version, regular bugfixes are **not** backported in it
 * **development** (**main** branch): new features target this branch
 
 Older versions (1.x, 2.0...) **are not maintained**. If you still use them, you must upgrade as soon as possible.
 
 The **old-stable** branch is merged in the **stable** branch on a regular basis to propagate [security fixes](security.md).
-The **stable** branch is merged in the **development** branch on a regular basis to propagate [security](security.md) and regular bug fixes.
+The **stable** branch is merged in the **development** branch on a regular basis to propagate [security](security.md) and regular bugfixes.
 
 New versions of API Platform are released **when they are ready**, on the behalf of the API Platform Core Team.

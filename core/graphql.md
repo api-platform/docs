@@ -596,7 +596,7 @@ The `mercureUrl` field is the Mercure URL you need to use to [subscribe to the u
 
 ### Receiving an Update
 
-On the client side, you will receive the pushed updated data like you would receive the updated data if you did an `update` mutation.
+On the client-side, you will receive the pushed updated data like you would receive the updated data if you did an `update` mutation.
 
 For instance, you could receive a JSON payload like this:
 
