@@ -20,17 +20,11 @@ integration](https://github.com/theofidry/AliceBundle#database-testing), an expr
 
 Before creating your functional tests, you will need a dataset to pre-populate your API and be able to test it.
 
-First, install [Zenstruck/Foundry](https://github.com/zenstruck/foundry):
+First, install [Zenstruck/Foundry](https://github.com/zenstruck/foundry) and [Doctrine/DoctrineFixturesBundle](https://github.com/doctrine/DoctrineFixturesBundle):
 
 ```console
 docker compose exec php \
-    composer require --dev foundry
-```
-
-install [Doctrine/DoctrineFixturesBundle](https://github.com/doctrine/DoctrineFixturesBundle)
-
-```console
-docker compose exec php \
+    composer require --dev foundry &&
     composer require --dev orm-fixtures
 ```
 
