@@ -27,14 +27,21 @@ docker compose exec php \
     composer require --dev foundry
 ```
 
-And, install [Doctrine/DoctrineFixturesBundle](https://github.com/doctrine/DoctrineFixturesBundle)
+install [Doctrine/DoctrineFixturesBundle](https://github.com/doctrine/DoctrineFixturesBundle)
 
 ```console
 docker compose exec php \
     composer require --dev orm-fixtures
 ```
 
-Thanks to Symfony Flex, [Doctrine/DoctrineFixturesBundle](https://github.com/doctrine/DoctrineFixturesBundle) and [Zenstruck/Foundry](https://github.com/zenstruck/foundry)) are ready to use!
+And, install [Symfony/MakerBundle](https://github.com/symfony/maker-bundle)
+
+```console
+docker compose exec php \
+    composer require --dev maker
+```
+
+Thanks to Symfony Flex, [Doctrine/DoctrineFixturesBundle](https://github.com/doctrine/DoctrineFixturesBundle) and [Zenstruck/Foundry](https://github.com/zenstruck/foundry) are ready to use!
 
 Then, create some factories for [the bookstore API you created in the tutorial](index.md):
 
