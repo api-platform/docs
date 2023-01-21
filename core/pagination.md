@@ -95,6 +95,37 @@ App\Entity\Book:
 ```
 [/codeSelector]
 
+### Disabling the Pagination For a Specific Operation
+
+You can also disable an operation for a specific operation:
+
+[codeSelector]
+
+```php
+<?php
+// api/src/Entity/Book.php
+namespace App\Entity;
+
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\GetCollection;
+
+#[ApiResource]
+#[GetCollection(paginationEnabled: false)]
+class Book
+{
+    // ...
+}
+```
+
+```yaml
+# api/config/api_platform/resources.yaml
+App\Entity\Book:
+   operations:
+       ApiPlatform\Metadata\GetCollection:
+            paginationEnabled: false
+```
+[/codeSelector]
+
 ### Disabling the Pagination Client-side
 
 #### Disabling the Pagination Client-side Globally
