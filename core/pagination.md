@@ -109,8 +109,13 @@ namespace App\Entity;
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\GetCollection;
 
-#[ApiResource]
-#[GetCollection(paginationEnabled: false)]
+#[ApiResource(
+    operations: [
+        new GetCollection(
+            paginationEnabled: false
+        )   
+    ]
+)]
 class Book
 {
     // ...
@@ -123,6 +128,23 @@ App\Entity\Book:
    operations:
        ApiPlatform\Metadata\GetCollection:
             paginationEnabled: false
+```
+
+```xml
+<?xml version="1.0" encoding="UTF-8" ?>
+<!-- api/config/api_platform/resources.xml -->
+
+<resources xmlns="https://api-platform.com/schema/metadata/resources-3.0"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="https://api-platform.com/schema/metadata/resources-3.0
+        https://api-platform.com/schema/metadata/resources-3.0.xsd">
+    <resource class="App\Entity\Book">
+        <operations>
+            <operation class="ApiPlatform\Metadata\GetCollection"
+                       paginationEnabled="false" /> 
+        </operations>
+    </resource>
+</resources>
 ```
 [/codeSelector]
 
