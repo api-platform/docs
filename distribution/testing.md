@@ -24,7 +24,7 @@ First, install [Zenstruck/Foundry](https://github.com/zenstruck/foundry) and [Do
 
 ```console
 docker compose exec php \
-    composer require --dev foundry &&
+    composer require --dev foundry orm-fixtures
     composer require --dev orm-fixtures
 ```
 
