@@ -76,10 +76,12 @@ use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
 
-#[ApiResource(operations=[
-    new Get(),
-    new GetCollection()
-])]
+#[ApiResource(
+    operations: [
+        new Get(),
+        new GetCollection()
+    ]
+)]
 class Book
 {
     // ...
