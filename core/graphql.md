@@ -330,6 +330,7 @@ Note that you need to explicitly add the auto-generated queries and mutations if
 As you can see, it's possible to define your own arguments for your custom queries.
 They are following the GraphQL type system.
 If you don't define the `args` property, it will be the default ones (for example `id` for an item).
+You can also use the `extraArgs` property if you want to add more arguments than the generated ones.
 
 If you don't want API Platform to retrieve the item for you, disable the `read` stage like in `withDefaultArgsNotRetrievedQuery`.
 Some other stages [can be disabled](#disabling-resolver-stages).
@@ -344,7 +345,7 @@ Note also that:
 
 The arguments you have defined or the default ones and their value will be in `$context['args']` of your resolvers.
 
-You custom queries will be available like this:
+Your custom queries will be available like this:
 
 ```graphql
 {
@@ -467,7 +468,11 @@ use App\Resolver\BookMutationResolver;
         new Mutation(name: 'update'),
         new DeleteMutation(name: 'delete'),
 
-        new Mutation(name: 'mutation', resolver: BookMutationResolver::class),
+        new Mutation(
+            name: 'mutation',
+            resolver: BookMutationResolver::class,
+            extraArgs: ['id' => ['type' => 'ID!']]
+        ),
         new Mutation(
             name: 'withCustomArgsMutation',
             resolver: BookMutationResolver::class,
@@ -496,6 +501,7 @@ Note that you need to explicitly add the auto-generated queries and mutations if
 
 As the custom queries, you can define your own arguments if you don't want to use the default ones (extracted from your resource).
 The only difference with them is that, even if you define your own arguments, the `clientMutationId` will always be set.
+You can also use the `extraArgs` property in case you need to add additional arguments (for instance to add the `id` argument since it is not added by default for a custom mutation).
 
 The arguments will be in `$context['args']['input']` of your resolvers.
 
@@ -521,7 +527,7 @@ Your custom mutations will be available like this:
   }
 
   mutation {
-    disabledStagesMutationBook(input: {id: "/books/18", title: "The Fitz and the Fool"}) {
+    disabledStagesMutationBook(input: {title: "The Fitz and the Fool"}) {
       book {
         title
       }
