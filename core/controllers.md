@@ -148,7 +148,7 @@ App\Entity\Book:
 
 [/codeSelector]
 
-It is mandatory to set the `method`, `path` and `controller` attributes. They allow API Platform to configure the routing path and
+It is mandatory to set the `method`, `uriTemplate` and `controller` attributes. They allow API Platform to configure the routing path and
 the associated controller respectively.
 
 ## Using the PlaceholderAction
