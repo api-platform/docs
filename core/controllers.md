@@ -44,12 +44,9 @@ use Symfony\Component\HttpKernel\Attribute\AsController;
 #[AsController]
 class CreateBookPublication extends AbstractController
 {
-    private $bookPublishingHandler;
-
-    public function __construct(BookPublishingHandler $bookPublishingHandler)
-    {
-        $this->bookPublishingHandler = $bookPublishingHandler;
-    }
+    public function __construct(
+        private BookPublishingHandler $bookPublishingHandler
+    ) {}
 
     public function __invoke(Book $book): Book
     {
