@@ -23,6 +23,10 @@ In the following examples, the built-in `GET` operation is registered as well as
 
 By default, API Platform uses the first `Get` operation defined to generate the IRI of an item and the first `GetCollection` operation to generate the IRI of a collection.
 
+If your resource does not have any `Get` operation, API Platform automatically adds an operation to help generating this IRI.
+If your resource has any identifier, this operation will look like `/books/{id}`. But if your resource doesn't have any identifier, API Platform will use the Skolem format `/.well-known/genid/{id}`.
+Those routes are not exposed from any documentation (for instance OpenAPI), but are anyway declared on the Symfony routing and always return a HTTP 404.
+
 If you create a custom operation, you will probably want to properly document it.
 See the [OpenAPI](openapi.md) part of the documentation to do so.
 
@@ -56,7 +60,7 @@ class CreateBookPublication extends AbstractController
 }
 ```
 
-This custom operation behaves exactly like the built-in operation: it returns a JSON-LD document corresponding to the id
+This custom operation behaves exactly like the built-in operation: it returns a JSON-LD document corresponding to the ID
 passed in the URL.
 
 Here we consider that [autowiring](https://symfony.com/doc/current/service_container/autowiring.html) is enabled for
@@ -144,8 +148,76 @@ App\Entity\Book:
 
 [/codeSelector]
 
-It is mandatory to set the `method`, `path` and `controller` attributes. They allow API Platform to configure the routing path and
+It is mandatory to set the `method`, `uriTemplate` and `controller` attributes. They allow API Platform to configure the routing path and
 the associated controller respectively.
+
+## Using the PlaceholderAction
+
+Complex use cases may lead you to create multiple custom operations.
+
+In such a case, you will probably create the same amount of custom controllers while you may not need to perform custom logic inside.
+
+To avoid that, API Platform provides the `ApiPlatform\Action\PlaceholderAction` which behaves the same when using the [built-in operations](operations.md#operations).
+
+You just need to set the `controller` attribute with this class. Here, the previous example updated:
+
+[codeSelector]
+
+```php
+// api/src/Entity/Book.php
+namespace App\Entity;
+
+use ApiPlatform\Action\PlaceholderAction;
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\Post;
+
+#[ApiResource(operations: [
+    new Get(),
+    new Post(
+        name: 'publication', 
+        uriTemplate: '/books/{id}/publication', 
+        controller: PlaceholderAction::class
+    )
+])]
+class Book
+{
+    // ...
+}
+```
+
+```yaml
+# api/config/api_platform/resources.yaml
+App\Entity\Book:
+    operations:
+        ApiPlatform\Metadata\Get: ~
+        post_publication:
+            class: ApiPlatform\Metadata\Post
+            method: POST
+            uriTemplate: /books/{id}/publication
+            controller: ApiPlatform\Action\PlaceholderAction
+```
+
+```xml
+<?xml version="1.0" encoding="UTF-8" ?>
+<!-- api/config/api_platform/resources.xml -->
+
+<resources
+        xmlns="https://api-platform.com/schema/metadata/resources-3.0"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="https://api-platform.com/schema/metadata/resources-3.0
+        https://api-platform.com/schema/metadata/resources-3.0.xsd">
+    <resource class="App\Entity\Book">
+        <operations>
+            <operation class="ApiPlatform\Metadata\Get" />
+            <operation class="ApiPlatform\Metadata\Post" name="post_publication" uriTemplate="/books/{id}/publication"
+                       controller="ApiPlatform\Action\PlaceholderAction" />
+        </operations>
+    </resource>
+</resources>
+```
+
+[/codeSelector]
 
 ## Using Serialization Groups
 

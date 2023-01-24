@@ -10,7 +10,7 @@ for this task, but you can replace it with your preferred validation library suc
 
 Validating submitted data is as simple as adding [Symfony's built-in constraints](http://symfony.com/doc/current/reference/constraints.html)
 or [custom constraints](http://symfony.com/doc/current/validation/custom_constraint.html) directly in classes marked with
-the `#[ApiResource]` annotation:
+the `#[ApiResource]` attribute:
 
 ```php
 <?php
@@ -39,9 +39,8 @@ class Product
 
     /**
      * @var string[] Describe the product
-     *
-     * @MinimalProperties
      */
+    #[MinimalProperties]
     #[ORM\Column(type: 'json')]
     public $properties;
 
@@ -59,9 +58,7 @@ namespace App\Validator\Constraints;
 
 use Symfony\Component\Validator\Constraint;
 
-/**
- * @Annotation
- */
+#[\Attribute]
 class MinimalProperties extends Constraint
 {
     public $message = 'The product must have the minimal properties required ("description", "price")';
@@ -77,9 +74,6 @@ namespace App\Validator\Constraints;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
 
-/**
- * @Annotation
- */
 final class MinimalPropertiesValidator extends ConstraintValidator
 {
     public function validate($value, Constraint $constraint): void
@@ -118,7 +112,7 @@ errors to HTTP errors.
 Without specific configuration, the default validation group is always used, but this behavior is customizable: the framework
 is able to leverage Symfony's [validation groups](https://symfony.com/doc/current/validation/groups.html).
 
-You can configure the groups you want to use when the validation occurs directly through the `ApiResource` annotation:
+You can configure the groups you want to use when the validation occurs directly through the `ApiResource` attribute:
 
 ```php
 <?php
@@ -145,7 +139,7 @@ With the previous configuration, the validation groups `a` and `b` will be used 
 Like for [serialization groups](serialization.md#using-different-serialization-groups-per-operation),
 you can specify validation groups globally or on a per-operation basis.
 
-Of course, you can use XML or YAML configuration format instead of annotations if you prefer.
+Of course, you can use XML or YAML configuration format instead of attributes if you prefer.
 
 You may also pass in a [group sequence](http://symfony.com/doc/current/validation/sequence_provider.html) in place of
 the array of group names.
@@ -288,7 +282,7 @@ use ApiPlatform\Metadata\ApiResource;
 use App\Validator\AdminGroupsGenerator;
 use Symfony\Component\Validator\Constraints as Assert;
 
-#[ApiResource(validationContext: ['groups' => [AdminGroupsGenerator::class]])
+#[ApiResource(validationContext: ['groups' => AdminGroupsGenerator::class])
 class Book
 {
     #[Assert\NotBlank(groups: ['a'])]

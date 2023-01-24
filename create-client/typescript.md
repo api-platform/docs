@@ -6,7 +6,7 @@ that you can embed in any TypeScript-enabled project (React, Vue.js, Angular..).
 To do so, run the generator:
 
 ```console
-npm init @api-platform/client --generator typescript https://demo.api-platform.com src/ --resource foo
+npm init @api-platform/client https://demo.api-platform.com src/ -- --generator typescript --resource foo
 # Replace the URL with the entrypoint of your Hydra-enabled API.
 ```
 
@@ -24,7 +24,7 @@ This command parses the Hydra documentation and creates one `.ts` file for each 
 Assuming you have 2 resources in your application, `Foo` and `Bar`, when you run:
 
 ```console
-npm init @api-platform/client --generator typescript https://demo.api-platform.com src/
+npm init @api-platform/client https://demo.api-platform.com src/ -- --generator typescript
 ```
 
 You will obtain 2 `.ts` files arranged as following:

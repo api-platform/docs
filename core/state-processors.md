@@ -37,6 +37,7 @@ Here is an implementation example:
 namespace App\State;
 
 use App\Entity\BlogPost;
+use ApiPlatform\Metadata\Operation;
 use ApiPlatform\State\ProcessorInterface;
 
 class BlogPostProcessor implements ProcessorInterface
@@ -80,9 +81,9 @@ services:
         #tags: [ 'api_platform.state_processor' ]
 ```
 
-## Decorating the Built-In State Processors
+## Hooking into the Built-In State Processors
 
-If you want to execute custom business logic before or after persistence, this can be achieved by [decorating](https://symfony.com/doc/current/service_container/service_decoration.html) the built-in state processors.
+If you want to execute custom business logic before or after persistence, this can be achieved by [decorating](https://symfony.com/doc/current/service_container/service_decoration.html) the built-in state processors or using [composition](https://en.wikipedia.org/wiki/Object_composition).
 
 The next example uses [Symfony Mailer](https://symfony.com/doc/current/mailer.html). Read its documentation if you want to use it.
 
@@ -93,6 +94,7 @@ Here is an implementation example which sends new users a welcome email after a 
 
 namespace App\State;
 
+use ApiPlatform\Metadata\DeleteOperationInterface;
 use ApiPlatform\Metadata\Operation;
 use ApiPlatform\State\ProcessorInterface;
 use App\Entity\User;
@@ -100,18 +102,17 @@ use Symfony\Component\Mailer\MailerInterface;
 
 final class UserProcessor implements ProcessorInterface
 {
-    private $decorated;
-    private $mailer;
-
-    public function __construct(ProcessorInterface $decorated, MailerInterface $mailer)
+    public function __construct(private ProcessorInterface $persistProcessor, private ProcessorInterface $removeProcessor, MailerInterface $mailer)
     {
-        $this->decorated = $decorated;
-        $this->mailer = $mailer;
     }
 
     public function process($data, Operation $operation, array $uriVariables = [], array $context = [])
     {
-        $result = $this->decorated->process($data, $operation, $uriVariables, $context);
+        if ($operation instanceof DeleteOperationInterface) {
+            return $this->removeProcessor->process($data, $operation, $uriVariables, $context);
+        }
+    
+        $result = $this->persistProcessor->process($data, $operation, $uriVariables, $context);
         $this->sendWelcomeEmail($data);
         return $result;
     }
@@ -132,7 +133,8 @@ services:
     # ...
     App\State\UserProcessor:
         bind:
-            $decorated: '@api_platform.doctrine.orm.state.persist_processor'
+            $persistProcessor: '@api_platform.doctrine.orm.state.persist_processor'
+            $removeProcessor: '@api_platform.doctrine.orm.state.remove_processor'
         # Uncomment only if autoconfiguration is disabled
         #arguments: ['@App\State\UserProcessor.inner']
         #tags: [ 'api_platform.state_processor' ]

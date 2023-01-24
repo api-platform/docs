@@ -1,6 +1,6 @@
 # Getting Started With API Platform: Create Your API and Your Jamstack Site
 
-![The welcome page](images/api-platform-2.6-welcome.png)
+![The welcome page](images/api-platform-3.0-welcome.png)
 
 > *API Platform* is the most advanced API platform, in any framework or language.
 >
@@ -73,13 +73,13 @@ Similarly, on Windows, only [Docker for Windows](https://docs.docker.com/docker-
 Open a terminal, and navigate to the directory containing your project skeleton. Run the following command to start all
 services using [Docker Compose](https://docs.docker.com/compose/):
 
-Download and build the latest versions of the images:
+Download the latest versions of the images:
 
 ```console
-docker compose build --pull --no-cache
+docker compose pull --include-deps
 ```
 
-Start Docker Compose in detached mode:
+Then build images and Start Docker Compose in detached mode:
 
 ```console
 docker compose up -d 
@@ -120,7 +120,7 @@ with its awesome [Symfony](https://confluence.jetbrains.com/display/PhpStorm/Get
 and [Php Inspections](https://plugins.jetbrains.com/plugin/7622-php-inspections-ea-extended-) plugins. Give them a try,
 you'll get auto-completion for almost everything and awesome quality analysis.
 
-[PHP IntelliSense for Visual Studio Code](https://marketplace.visualstudio.com/items?itemName=felixfbecker.php-intellisense) also works well, and is free and open source.
+[PHP IntelliSense for Visual Studio Code](https://marketplace.visualstudio.com/items?itemName=zobo.php-intellisense) also works well, and is free and open source.
 
 The API Platform distribution comes with a dummy entity for test purpose: `api/src/Entity/Greeting.php`. We will remove
 it later.
@@ -196,7 +196,7 @@ If you are deploying API Platform directly on an Apache or NGINX webserver and g
 
 Open `https://localhost` in your favorite web browser:
 
-![The welcome page](images/api-platform-2.6-welcome.png)
+![The welcome page](images/api-platform-3.0-welcome.png)
 
 You'll need to add a security exception in your browser to accept the self-signed TLS certificate that has been generated
 for this container when installing the framework.
@@ -216,7 +216,7 @@ Click on an operation to display its details. You can also send requests to the 
 Try to create a new *Greeting* resource using the `POST` operation, then access it using the `GET` operation and, finally,
 delete it by executing the `DELETE` operation.
 If you access any API URL with the `.html` extension appended, API Platform displays
-the corresponding API request in the UI. Try it yourself by browsing to `https://localhost/greetings.html`. If the no extension is present, API Platform will use the `Accept` header to select the format to use. By default, a JSON-LD response is sent ([configurable behavior](../core/content-negotiation.md)).
+the corresponding API request in the UI. Try it yourself by browsing to `https://localhost/greetings.html`. If no extension is present, API Platform will use the `Accept` header to select the format to use. By default, a JSON-LD response is sent ([configurable behavior](../core/content-negotiation.md)).
 
 So, if you want to access the raw data, you have two alternatives:
 
@@ -235,8 +235,8 @@ allows to easily write functional tests and has good team collaboration features
 Your API Platform project is now 100% functional. Let's expose our own data model.
 Our bookshop API will start simple. It will be composed of a `Book` resource type and a `Review` one.
 
-Books have an id, an ISBN, a title, a description, an author, a publication date and are related to a list of reviews.
-Reviews have an id, a rating (between 0 and 5), a body, an author, a publication date and are related to one book.
+Books have an ID, an ISBN, a title, a description, an author, a publication date and are related to a list of reviews.
+Reviews have an ID, a rating (between 0 and 5), a body, an author, a publication date and are related to one book.
 
 Let's describe this data model as a set of Plain Old PHP Objects (POPO):
 
@@ -252,7 +252,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 #[ApiResource]
 class Book
 {
-    /** The id of this book. */
+    /** The ID of this book. */
     private ?int $id = null;
 
     /** The ISBN of this book (or null if doesn't have one). */
@@ -296,7 +296,7 @@ use ApiPlatform\Metadata\ApiResource;
 #[ApiResource]
 class Review
 {
-    /** The id of this review. */
+    /** The ID of this review. */
     private ?int $id = null;
 
     /** The rating of this review (between 0 and 5). */
@@ -335,7 +335,7 @@ Note that entities' and properties' descriptions in the API documentation, and t
 
 The framework also use these metadata to serialize and deserialize data from JSON (and other formats) to PHP objects (back and forth)!
 
-For the sake of simplicity, in this example we used public properties (except for the id, see below). API Platform (as well
+For the sake of simplicity, in this example we used public properties (except for the ID, see below). API Platform (as well
 as Symfony and Doctrine) also supports accessor methods (getters/setters), use them if you want to.
 We used a private property and a getter for the ID to enforce the fact that it is read only (we will let the DBMS generating it). API Platform also has first-grade support for UUIDs. [You should
 probably use them instead of auto-incremented IDs](https://www.clever-cloud.com/blog/engineering/2015/05/20/why-auto-increment-is-a-terrible-idea/).
@@ -372,7 +372,7 @@ Modify these files as described in these patches:
  #[ApiResource]
  class Book
  {
-     /** The id of this book. */
+     /** The ID of this book. */
 +    #[ORM\Id, ORM\Column, ORM\GeneratedValue]
      private ?int $id = null;
  
@@ -393,7 +393,7 @@ Modify these files as described in these patches:
      public string $author = '';
  
      /** The publication date of this book. */
-+    #[ORM\Column(type: 'datetime')]
++    #[ORM\Column]
      public ?\DateTimeImmutable $publicationDate = null;
  
      /** @var Review[] Available reviews for this book. */
@@ -416,7 +416,7 @@ Modify these files as described in these patches:
  #[ApiResource]
  class Review
  {
-     /** The id of this review. */
+     /** The ID of this review. */
 +    #[ORM\Id, ORM\Column, ORM\GeneratedValue]
      private ?int $id = null;
  
@@ -433,7 +433,7 @@ Modify these files as described in these patches:
      public string $author = '';
  
      /** The date of publication of this review.*/
-+    #[ORM\Column(type: 'datetime')]
++    #[ORM\Column]
      public ?\DateTimeImmutable $publicationDate = null;
  
      /** The book this review is about. */
@@ -762,7 +762,7 @@ You can also choose to generate the code for a specific resource with the `--res
 `pnpm create @api-platform/client --resource books`).
 
 The generated code contains a list (including pagination), a delete button, a creation and an edition form. It also includes
-[Bootstrap](https://getbootstrap.com) markup and [ARIA roles](https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA)
+[Tailwind CSS](https://tailwindcss.com) classes and [ARIA roles](https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA)
 to make the app usable by people with disabilities.
 
 If you prefer to generate a PWA built on top of another frontend stack, read [the dedicated documentation](../create-client/index.md).

@@ -125,9 +125,9 @@ use App\Exception\ProductWasRemovedException;
 use App\Exception\ProductNotFoundException;
 
 #[ApiResource(
-    exceptionToStatus: ['ProductNotFoundException::class' => 404]
+    exceptionToStatus: [ProductNotFoundException::class => 404]
     operations: [
-        new Get(exceptionToStatus: ['ProductWasRemovedException::class' => 410]),
+        new Get(exceptionToStatus: [ProductWasRemovedException::class => 410]),
         new GetCollection(),
         new Post()
     ]

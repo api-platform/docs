@@ -30,7 +30,7 @@ npm install redux react-redux redux-thunk redux-form react-native-elements react
 In the app directory, generate the files for the resource you want:
 
 ```console
-npm init @api-platform/client https://demo.api-platform.com . --generator react-native --resource book
+npm init @api-platform/client https://demo.api-platform.com . -- --generator react-native --resource book
 ```
 
 Replace the URL with the entrypoint of your Hydra-enabled API.

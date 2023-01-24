@@ -72,6 +72,8 @@ api_platform:
 
 It can also be disabled for a specific resource:
 
+[codeSelector]
+
 ```php
 <?php
 // api/src/Entity/Book.php
@@ -85,6 +87,13 @@ class Book
     // ...
 }
 ```
+
+```yaml
+# api/config/api_platform/resources.yaml
+App\Entity\Book:
+   paginationEnabled: false
+```
+[/codeSelector]
 
 ### Disabling the Pagination Client-side
 

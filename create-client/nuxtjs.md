@@ -1,6 +1,6 @@
 # Nuxt.js Generator
 
-The Nuxt.js generator scaffolds components for Server Side Rendered applications using [Nuxt.js](https://nuxtjs.org/) and [Vuetify](https://vuetifyjs.com/).
+The Nuxt.js generator scaffolds components for server-side rendered (SSR) applications using [Nuxt.js](https://nuxtjs.org/) and [Vuetify](https://vuetifyjs.com/).
 
 ## Install
 
@@ -54,7 +54,7 @@ Update your `nuxt.config.js` with following:
 ## Generating Routes
 
 ```console
-npm init @api-platform/client https://demo.api-platform.com . --generator nuxt
+npm init @api-platform/client https://demo.api-platform.com . -- --generator nuxt
 ```
 
 Replace the URL by the entrypoint of your Hydra-enabled API.
