@@ -73,13 +73,13 @@ Similarly, on Windows, only [Docker for Windows](https://docs.docker.com/docker-
 Open a terminal, and navigate to the directory containing your project skeleton. Run the following command to start all
 services using [Docker Compose](https://docs.docker.com/compose/):
 
-Download and build the latest versions of the images:
+Download the latest versions of the images:
 
 ```console
-docker compose build --pull --no-cache
+docker compose pull --include-deps
 ```
 
-Start Docker Compose in detached mode:
+Then build images and Start Docker Compose in detached mode:
 
 ```console
 docker compose up -d 
