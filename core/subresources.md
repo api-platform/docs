@@ -81,10 +81,24 @@ class Question
 }
 ```
 
+```xml
+<?xml version="1.0" encoding="UTF-8" ?>
+<!-- api/config/api_platform/resources.xml -->
+
+<resources xmlns="https://api-platform.com/schema/metadata/resources-3.0"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="https://api-platform.com/schema/metadata/resources-3.0
+        https://api-platform.com/schema/metadata/resources-3.0.xsd">
+    <resource class="App\Entity\Question"/>
+    <resource class="App\Entity\Answer"/>
+
+</resources>
+```
+
 [/codeSelector]
 
 Now to create a new way of retrieving an Answer we will declare another resource on the `Answer` class.
-To make things work, API Platform needs informations about how to retrieve the `Answer` belonging to
+To make things work, API Platform needs information about how to retrieve the `Answer` belonging to
 the `Question`, this is done by configuring the `uriVariables`:
 
 [codeSelector]
@@ -115,6 +129,29 @@ class Answer
 }
 ```
 
+```xml
+<resources xmlns="https://api-platform.com/schema/metadata/resources-3.0"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="https://api-platform.com/schema/metadata/resources-3.0
+        https://api-platform.com/schema/metadata/resources-3.0.xsd">
+    
+    <resource class="App\Entity\Question"/>
+
+    <resource class="App\Entity\Answer"/>
+
+    <resource class="App\Entity\Answer" uriTemplate="/questions/{id}/answer">
+        <uriVariables>
+            <uriVariable parameterName="id" fromClass="App\Entity\Question" fromProperty="answer"/>
+        </uriVariables>
+
+        <operations>
+            <operation class="ApiPlatform\Metadata\Get"/>
+        </operations>
+    </resource>
+</resources>    
+
+```
+
 [/codeSelector]
 
 In this example, we instructed API Platform that the `Answer` we retrieve comes **from** the **class** `Question`
@@ -123,6 +160,8 @@ In this example, we instructed API Platform that the `Answer` we retrieve comes 
 URI Variables are defined using Links (`ApiPlatform\Metadata\Link`). A `Link` can be binded either from or to a class and a property.
 
 If we had a `relatedQuestions` property on the `Answer` we could retrieve the collection of related questions via the following definition:
+
+[codeSelector]
 
 ```php
 #[ApiResource(
@@ -133,6 +172,21 @@ If we had a `relatedQuestions` property on the `Answer` we could retrieve the co
     operations: [new GetCollection()]
 )]
 ```
+
+```xml
+<resource class="App\Entity\Question" uriTemplate="/answers/{id}/related_questions.{_format}">
+    <uriVariables>
+        <uriVariable parameterName="id" fromClass="App\Entity\Answer" fromProperty="relatedQuestions"/>
+    </uriVariables>
+
+    <operations>
+        <operation class="ApiPlatform\Metadata\GetCollection"/>
+    </operations>
+
+</resource>
+```
+
+[/codeSelector]
 
 ### Company Employee's
 

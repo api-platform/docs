@@ -33,6 +33,7 @@ Here is the fully featured REST API you'll get in minutes:
 * Advanced [serialization](serialization.md) thanks to the Symfony Serializer Component (groups support, relation embedding, max depth...)
 * Automatic routes registration
 * Automatic entrypoint generation giving access to all resources
+* [User](user.md) support
 * [JWT](jwt.md) and [OAuth](https://oauth.net/) support
 * Files and `\DateTime` and serialization and deserialization
 

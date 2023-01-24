@@ -180,10 +180,10 @@ resources:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" ?>
-<properties xmlns="https://api-platform.com/schema/metadata/properties"
+<properties xmlns="https://api-platform.com/schema/metadata/properties-3.0"
            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-           xsi:schemaLocation="https://api-platform.com/schema/metadata/properties
-           https://api-platform.com/schema/metadata/properties.xsd">
+           xsi:schemaLocation="https://api-platform.com/schema/metadata/properties-3.0
+           https://api-platform.com/schema/metadata/properties-3.0.xsd">
     <property resource="App\Entity\Product" name="name">
         <openapiContext>
             <values>
@@ -204,7 +204,7 @@ resources:
                 <value name="type">string</value>
                 <value name="format">date-time</value>
             </values>
-        </attribute>
+        </openapiContext>
     </property>
 </properties>
 ```
@@ -255,6 +255,61 @@ This will produce the following Swagger documentation:
 ```
 
 To pass a context to the OpenAPI **v2** generator, use the `swaggerContext` attribute (notice the prefix: `swagger` instead of `openapi`).
+
+## Disabling an Operation From OpenAPI Documentation
+
+Sometimes you may want to disable an operation from the OpenAPI documentation, for example to not exposing it.
+Using the `openapi` boolean option disables this operation from the OpenAPI documentation:
+
+[codeSelector]
+
+```php
+<?php
+// api/src/Entity/Product.php
+namespace App\Entity;
+
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\GetCollection;
+
+#[ApiResource(
+    operations: [
+        new GetCollection(openapi: false)
+    ]
+)]
+class Product
+{
+    // ...
+}
+```
+
+```yaml
+# api/config/api_platform/resources.yaml
+resources:
+    App\Entity\Product:
+        operations:
+            ApiPlatform\Metadata\GetCollection:
+                openapi: false
+```
+
+```xml
+<?xml version="1.0" encoding="UTF-8" ?>
+<!-- api/config/api_platform/resources.xml -->
+
+<resources xmlns="https://api-platform.com/schema/metadata/resources-3.0"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="https://api-platform.com/schema/metadata/resources-3.0
+           https://api-platform.com/schema/metadata/resources-3.0.xsd">
+    <resource class="App\Entity\Product">
+        <operations>
+            <operation class="ApiPlatform\Metadata\GetCollection" openapi="false" />
+        </operations>
+    </resource>
+</resources>
+```
+
+[/codeSelector]
+
+Note: as your route is not exposed, you may want to return a HTTP 404 if it's called. Prefer using the `NotExposedAction` controller instead.
 
 ## Changing the Name of a Definition
 
@@ -458,7 +513,7 @@ Manually register the Swagger UI controller:
 # app/config/routes.yaml
 api_doc:
     path: /api_documentation
-    controller: api_platform.swagger.action.ui
+    controller: api_platform.swagger_ui.action
 ```
 
 Change `/api_documentation` to the URI you wish Swagger UI to be accessible on.
@@ -536,32 +591,49 @@ If you implemented OAuth on your API, you should configure OpenApi's authorizati
 ```yaml
 api_platform:
     oauth:
-        # To enable or disable oauth.
+        # To enable or disable OAuth.
         enabled: false
 
-        # The oauth client id.
+        # The OAuth client ID.
         clientId: ''
 
-        # The oauth client secret.
+        # The OAuth client secret.
         clientSecret: ''
 
-        # The oauth type.
+        # The OAuth type.
         type: 'oauth2'
 
-        # The oauth flow grant type.
+        # The OAuth flow grant type.
         flow: 'application'
 
-        # The oauth token url.
+        # The OAuth token url.
         tokenUrl: '/oauth/v2/token'
 
-        # The oauth authentication url.
+        # The OAuth authentication url.
         authorizationUrl: '/oauth/v2/auth'
 
-        # The oauth scopes.
+        # The OAuth scopes.
         scopes: []
 ```
 
 Note that `clientId` and `clientSecret` are being used by the SwaggerUI if enabled.
+
+### Configure the OAuth Scopes Option
+
+The `api_platform.oauth.scopes` option requires an array value with the scopes name and description. For example:
+
+```yaml
+api_platform:
+    oauth:
+        scopes:
+            profile: "This scope value requests access to the End-User's default profile Claims, which are: name, family_name, given_name, middle_name, nickname, preferred_username, profile, picture, website, gender, birthdate, zoneinfo, locale, and updated_at."
+            email: "This scope value requests access to the email and email_verified Claims."
+            address: "This scope value requests access to the address Claim."
+            phone: "This scope value requests access to the phone_number and phone_number_verified Claims."
+```
+
+**Note:** if you're using an OpenID Connect server (such as Keycloak or Auth0), the `openid` scope **must** be set according
+to the [OpenID Connect specification](https://openid.net/specs/openid-connect-core-1_0.html).
 
 ## Info Object
 

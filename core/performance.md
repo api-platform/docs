@@ -368,7 +368,7 @@ To configure Blackfire.io follow these simple steps:
                 - BLACKFIRE_DISABLE_LEGACY_PORT=1
     ```
 
-2. Add your Blackfire.io id and server token to your `.env` file at the root of your project (be sure not to commit this to a public repository):
+2. Add your Blackfire.io ID and server token to your `.env` file at the root of your project (be sure not to commit this to a public repository):
 
     ```shell
     BLACKFIRE_SERVER_ID=xxxxxxxxxx

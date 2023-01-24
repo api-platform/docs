@@ -43,6 +43,7 @@ And the processor:
 namespace App\State;
 
 use App\Dto\UserResetPasswordDto;
+use ApiPlatform\Metadata\Operation;
 use ApiPlatform\State\ProcessorInterface;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
@@ -107,6 +108,7 @@ namespace App\State;
 
 use App\Dto\AnotherRepresentation;
 use App\Model\Book;
+use ApiPlatform\Metadata\Operation;
 use ApiPlatform\State\ProviderInterface;
 
 final class BookRepresentationProvider implements ProviderInterface
@@ -114,6 +116,80 @@ final class BookRepresentationProvider implements ProviderInterface
     public function provide(Operation $operation, array $uriVariables = [], array $context = [])
     {
         return new AnotherRepresentation();
+    }
+}
+```
+
+## Implementing a Write Operation With an Output Different From the Resource
+
+For returning another representation of your data in a [State Processor](./state-processors.md), you should specify your processor class in the `processor` attribute and same for your `output`.
+
+[codeSelector]
+
+```php
+<?php
+
+namespace App\Entity;
+
+use ApiPlatform\Metadata\Post;
+use App\Dto\AnotherRepresentation;
+use App\State\BookRepresentationProcessor;
+
+#[Post(output: AnotherRepresentation::class, processor: BookRepresentationProcessor::class)]
+class Book {}
+```
+```yaml
+# api/config/api_platform/resources.yaml
+App\Entity\Book:
+    operations:
+        ApiPlatform\Metadata\Post:
+            output: App\Dto\AnotherRepresentation
+            processor: App\State\BookRepresentationProcessor
+```
+```xml
+<?xml version="1.0" encoding="UTF-8" ?>
+<!-- api/config/api_platform/resources.xml -->
+
+<resources xmlns="https://api-platform.com/schema/metadata/resources-3.0"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="https://api-platform.com/schema/metadata/resources-3.0
+        https://api-platform.com/schema/metadata/resources-3.0.xsd">
+    <resource class="App\Entity\Book">
+        <operations>
+            <operation class="ApiPlatform\Metadata\Post" 
+                       processor="App\State\BookRepresentationProcessor"
+                       output="App\Dto\AnotherRepresentation" /> 
+        </operations>
+    </resource>
+</resources>
+```
+
+[/codeSelector]
+
+Here the `$data` attribute represents an instance of your resource.
+
+```php
+<?php
+
+namespace App\State;
+
+use ApiPlatform\Metadata\Operation;
+use ApiPlatform\State\ProcessorInterface;
+use App\Dto\AnotherRepresentation;
+use App\Model\Book;
+
+final class BookRepresentationProcessor implements ProcessorInterface
+{
+     /**
+     * @param Book $data
+     */
+    public function process($data, Operation $operation, array $uriVariables = [], array $context = [])
+    {
+        return new AnotherRepresentation(
+            $data->getId(),
+            $data->getTitle(),
+            // etc.
+        );
     }
 }
 ```
