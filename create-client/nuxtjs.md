@@ -13,10 +13,10 @@ Install the required dependencies:
 yarn add dayjs @pinia/nuxt qs @types/qs
 ```
 
-To generate all the code you need, run the following command:
+To generate the code you need for a given resource, run the following command:
 
 ```console
-yarn create @api-platform/client https://demo.api-platform.com . --generator nuxt
+yarn create @api-platform/client https://demo.api-platform.com . --generator nuxt --resource foo
 ```
 
 Replace the URL with the entrypoint of your Hydra-enabled API. You can also use an OpenAPI documentation with `https://demo.api-platform.com/docs.json` and `-f openapi3`.
