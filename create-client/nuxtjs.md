@@ -40,7 +40,7 @@ Optionally, install Tailwind to get an app that looks good:
 
 ```console
 yarn add -D tailwindcss postcss autoprefixer
-npx tailwindcss init
+yarn tailwindcss init -p
 ```
 
 Add this code in `nuxt.config.ts`:
@@ -80,7 +80,7 @@ module.exports = {
 }
 ```
 
-Create file `assets/css/main.css` and add this code in it:
+Create the file `assets/css/main.css` and add this code in it:
 
 ```css
 @tailwind base;
