@@ -20,7 +20,7 @@ The easiest and most powerful way to get started is [to download the API Platfor
 
 * the API skeleton, including [the Core library](../core/index.md), [the Symfony framework](https://symfony.com/) ([optional](../core/bootstrap.md)) and [the Doctrine ORM](https://www.doctrine-project.org/projects/orm.html) ([optional](../core/extending.md))
 * [the client scaffolding tool](../create-client/) to generate [Next.js](../create-client/
-) web applications from the API documentation ([Nuxt.js](https://nuxtjs.org/), [Vue](https://vuejs.org/), [Create React App](https://reactjs.org), [React Native](https://facebook.github.io/react-native/), [Quasar](https://quasar.dev/) and [Vuetify](https://vuetifyjs.com/) are also supported)
+) web applications from the API documentation ([Nuxt](https://nuxt.com/), [Vue](https://vuejs.org/), [Create React App](https://reactjs.org), [React Native](https://facebook.github.io/react-native/), [Quasar](https://quasar.dev/) and [Vuetify](https://vuetifyjs.com/) are also supported)
 * [a beautiful admin interface](../admin/), built on top of React Admin, dynamically created by parsing the API documentation
 * all you need to [create real-time and async APIs using the Mercure protocol](../core/mercure.md)
 * a [Docker](../deployment/docker-compose.md) definition to start a working development environment in a single command, providing containers for the API and the Next.js web application

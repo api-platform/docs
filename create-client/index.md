@@ -10,7 +10,7 @@ and native mobile apps from APIs supporting the [Hydra](http://www.hydra-cg.com/
 It is able to generate apps using the following frontend stacks:
 
 - [Next.js](nextjs.md)
-- [Nuxt.js](nuxtjs.md)
+- [Nuxt](nuxt.md)
 - [Quasar](quasar.md)
 - [Vuetify](vuetify.md)
 - [React](react.md)
