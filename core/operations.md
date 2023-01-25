@@ -90,10 +90,11 @@ class Book
 
 ```yaml
 # api/config/api_platform/resources.yaml
-App\Entity\Book:
-    operations:
-        ApiPlatform\Metadata\GetCollection: ~ # nothing more to add if we want to keep the default controller
-        ApiPlatform\Metadata\Get: ~
+resources:
+    App\Entity\Book:
+        operations:
+            ApiPlatform\Metadata\GetCollection: ~ # nothing more to add if we want to keep the default controller
+            ApiPlatform\Metadata\Get: ~
 ```
 
 ```xml
@@ -143,12 +144,13 @@ class Book
 
 ```yaml
 # api/config/api_platform/resources.yaml
-App\Entity\Book:
-    operations:
-        ApiPlatform\Metadata\GetCollection:
-            method: GET
-        ApiPlatform\Metadata\Get:
-            method: GET
+resources:
+    App\Entity\Book:
+        operations:
+            ApiPlatform\Metadata\GetCollection:
+                method: GET
+            ApiPlatform\Metadata\Get:
+                method: GET
 ```
 
 ```xml
@@ -203,13 +205,14 @@ class Book
 
 ```yaml
 # api/config/api_platform/resources.yaml
-App\Entity\Book:
-    operations:
-        ApiPlatform\Metadata\GetCollection: ~
-        ApiPlatform\Metadata\Get:
-            controller: ApiPlatform\Action\NotFoundAction
-            read: false
-            output: false
+resources:
+    App\Entity\Book:
+        operations:
+            ApiPlatform\Metadata\GetCollection: ~
+            ApiPlatform\Metadata\Get:
+                controller: ApiPlatform\Action\NotFoundAction
+                read: false
+                output: false
 ```
 
 ```xml
@@ -272,21 +275,22 @@ class Book
 
 ```yaml
 # api/config/api_platform/resources.yaml
-App\Entity\Book:
-    operations:
-        ApiPlatform\Metadata\Post:
-            uriTemplate: '/grimoire'
-            status: 301
-        ApiPlatform\Metadata\Get:
-            uriTemplate: '/grimoire/{id}'
-            requirements:
-                id: '\d+'
-            defaults:
-                color: 'brown'
-            host: '{subdomain}.api-platform.com'
-            schemes: ['https']
-            options:
-                my_option: 'my_option_value'
+resources:
+    App\Entity\Book:
+        operations:
+            ApiPlatform\Metadata\Post:
+                uriTemplate: '/grimoire'
+                status: 301
+            ApiPlatform\Metadata\Get:
+                uriTemplate: '/grimoire/{id}'
+                requirements:
+                    id: '\d+'
+                defaults:
+                    color: 'brown'
+                host: '{subdomain}.api-platform.com'
+                schemes: ['https']
+                options:
+                    my_option: 'my_option_value'
 ```
 
 ```xml
@@ -349,8 +353,9 @@ class Book
 
 ```yaml
 # api/config/api_platform/resources.yaml
-App\Entity\Book:
-    routePrefix: /library
+resources:
+    App\Entity\Book:
+        routePrefix: /library
 ```
 
 ```xml

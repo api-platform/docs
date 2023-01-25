@@ -1074,6 +1074,8 @@ For ORM, it also supports [composite identifiers](https://www.doctrine-project.o
 If you are not using the Doctrine ORM or MongoDB ODM Provider, you must explicitly mark the identifier using the `identifier` attribute of
 the `ApiPlatform\Metadata\ApiProperty` annotation. For example:
 
+[codeSelector]
+
 ```php
 <?php
 // api/src/Entity/Book.php
@@ -1104,15 +1106,27 @@ class Book
 }
 ```
 
-You can also use the YAML configuration format:
-
 ```yaml
-# api/config/api_platform/resources.yaml
+# api/config/api_platform/properties.yaml
 properties:
     App\Entity\Book:
         id:
             identifier: true
 ```
+
+```xml
+<?xml version="1.0" encoding="UTF-8" ?>
+<!-- api/config/api_platform/properties.xml -->
+
+<properties xmlns="https://api-platform.com/schema/metadata/properties-3.0"
+            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+            xsi:schemaLocation="https://api-platform.com/schema/metadata/properties-3.0
+           https://api-platform.com/schema/metadata/properties-3.0.xsd">
+    <property resource="App\Entity\Product" name="id" identifier="true" />
+</properties>
+```
+
+[/codeSelector]
 
 In some cases, you will want to set the identifier of a resource from the client (e.g. a client-side generated UUID, or a slug).
 In such cases, you must make the identifier property a writable class property. Specifically, to use client-generated IDs, you
