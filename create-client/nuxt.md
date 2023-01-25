@@ -1,4 +1,4 @@
-# Nuxt.js Generator
+# Nuxt Generator
 
 Bootstrap a [Nuxt 3](https://nuxt.com/) application:
 
@@ -96,3 +96,7 @@ yarn dev -o
 
 Go to `https://localhost:3000/books/` to start using your app.
 
+## Screenshots
+
+![List](images/nuxt/create-client-nuxt-list.png)
+![Edit](images/nuxt/create-client-nuxt-edit.png)
