@@ -71,11 +71,12 @@ to a Resource in two ways:
 
     ```yaml
     # api/config/api_platform/resources.yaml
-    App\Entity\Offer:
-        operations:
-            ApiPlatform\Metadata\GetCollection:
-                filters: ['offer.date_filter']
-        # ...
+    resources:
+        App\Entity\Offer:
+            operations:
+                ApiPlatform\Metadata\GetCollection:
+                    filters: ['offer.date_filter']
+            # ...
     ```
 
     ```xml

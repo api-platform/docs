@@ -140,11 +140,12 @@ class Book {}
 ```
 ```yaml
 # api/config/api_platform/resources.yaml
-App\Entity\Book:
-    operations:
-        ApiPlatform\Metadata\Post:
-            output: App\Dto\AnotherRepresentation
-            processor: App\State\BookRepresentationProcessor
+resources:
+    App\Entity\Book:
+        operations:
+            ApiPlatform\Metadata\Post:
+                output: App\Dto\AnotherRepresentation
+                processor: App\State\BookRepresentationProcessor
 ```
 ```xml
 <?xml version="1.0" encoding="UTF-8" ?>

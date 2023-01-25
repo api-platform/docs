@@ -90,8 +90,9 @@ class Book
 
 ```yaml
 # api/config/api_platform/resources.yaml
-App\Entity\Book:
-   paginationEnabled: false
+resources:
+    App\Entity\Book:
+       paginationEnabled: false
 ```
 [/codeSelector]
 
@@ -124,10 +125,11 @@ class Book
 
 ```yaml
 # api/config/api_platform/resources.yaml
-App\Entity\Book:
-   operations:
-       ApiPlatform\Metadata\GetCollection:
-            paginationEnabled: false
+resources:
+    App\Entity\Book:
+       operations:
+           ApiPlatform\Metadata\GetCollection:
+                paginationEnabled: false
 ```
 
 ```xml

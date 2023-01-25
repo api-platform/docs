@@ -161,25 +161,26 @@ class Product // The class name will be used to name exposed resources
 ```
 
 ```yaml
-# api/config/api_platform/resources.yaml
-resources:
+# api/config/api_platform/properties.yaml
+properties:
     App\Entity\Product:
-      properties:
         name:
-          attributes:
-            openapi_context:
-              type: string
-              enum: ['one', 'two']
-              example: one
+            attributes:
+                openapiContext:
+                    type: string
+                    enum: ['one', 'two']
+                    example: one
         timestamp:
-          attributes:
-            openapi_context:
-              type: string
-              format: date-time
+            attributes:
+                openapiContext:
+                    type: string
+                    format: date-time
 ```
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" ?>
+<!-- api/config/api_platform/properties.xml -->
+
 <properties xmlns="https://api-platform.com/schema/metadata/properties-3.0"
            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
            xsi:schemaLocation="https://api-platform.com/schema/metadata/properties-3.0
