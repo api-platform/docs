@@ -13,7 +13,7 @@ Install the required dependencies:
 yarn add dayjs @pinia/nuxt qs @types/qs
 ```
 
-To generate all the code you need for a given resource run the following command:
+To generate all the code you need, run the following command:
 
 ```console
 yarn create @api-platform/client https://demo.api-platform.com . --generator nuxt
