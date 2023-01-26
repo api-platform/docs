@@ -31,7 +31,7 @@ Then add this import in `src/plugins/vuetify.ts`:
 ```javascript
 // src/plugins/vuetify.ts
 import { VDataTableServer } from "vuetify/labs/VDataTable"
-``` 
+```
 
 In the same file replace the export with:
 
@@ -51,7 +51,7 @@ In `src/plugins/index.ts` add this import:
 import i18n from "@/plugins/i18n"
 ```
 
-In the same file add `.use(i18n)` chained with other `use()` functions. 
+In the same file add `.use(i18n)` chained with other `use()` functions.
 
 You can launch the server with:
 
