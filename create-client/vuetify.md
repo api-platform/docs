@@ -10,7 +10,7 @@ cd my-app
 Install the required dependencies:
 
 ```console
-npm install vuetify@3.1.0 dayjs qs @types/qs vue-i18n
+npm install dayjs qs @types/qs vue-i18n
 ```
 
 To generate all the code you need for a given resource run the following command:
