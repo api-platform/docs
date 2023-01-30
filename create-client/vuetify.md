@@ -1,6 +1,6 @@
 # Vuetify Generator
 
-Bootstrap a Vuetify 3 application using create-vuetify:
+Bootstrap a Vuetify 3 application using `create-vuetify`:
 
 ```console
 npm init vuetify -- --typescript --preset essentials
@@ -46,12 +46,12 @@ export default createVuetify({
 
 In `src/plugins/index.ts` add this import:
 
-```javascript
+```typescript
 // src/plugins/index.ts
 import i18n from "@/plugins/i18n"
 ```
 
-In the same file add `.use(i18n)` chained with other `use()` functions.
+In the same file add `.use(i18n)` chained with the other `use()` functions.
 
 You can launch the server with:
 
