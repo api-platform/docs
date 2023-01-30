@@ -35,7 +35,7 @@ import { VDataTableServer } from "vuetify/labs/VDataTable"
 
 In the same file replace the export with:
 
-```javascript
+```typescript
 // src/plugins/vuetify.ts
 export default createVuetify({
   components: {
