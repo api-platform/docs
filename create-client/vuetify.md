@@ -28,7 +28,7 @@ Omit the resource flag to generate files for all resource types exposed by the A
 
 Then add this import in `src/plugins/vuetify.ts`:
 
-```javascript
+```typescript
 // src/plugins/vuetify.ts
 import { VDataTableServer } from "vuetify/labs/VDataTable"
 ```
