@@ -38,7 +38,7 @@ Infos for [Google Container pulling and pushing](https://cloud.google.com/contai
 
     docker build -t gcr.io/test-api-platform/php:0.1.0 -t gcr.io/test-api-platform/php:latest api --target app_php
     docker build -t gcr.io/test-api-platform/caddy:0.1.0 -t gcr.io/test-api-platform/caddy:latest api --target app_caddy
-    docker build -t gcr.io/test-api-platform/pwa:0.1.0 -t gcr.io/test-api-platform/pwa:latest pwa --target api_platform_pwa_prod
+    docker build -t gcr.io/test-api-platform/pwa:0.1.0 -t gcr.io/test-api-platform/pwa:latest pwa --target prod
 
 #### 2. Push your images to your Docker registry
 
