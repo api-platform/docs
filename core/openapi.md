@@ -410,7 +410,6 @@ resources:
             # Pop a great rabbit picture by color!
 
             ![A great rabbit](https://rabbit.org/graphics/fun/netbunnies/jellybean1-brennan1.jpg)
-
           requestBody:
             content:
               application/json:
@@ -435,40 +434,45 @@ resources:
         <operations>
             <operation class="ApiPlatform\Metadata\Post" name="create_rabbit" uriTemplate="/rabbit/create"
                        controller="App\Controller\RandomRabbit">
-                <openapi>
-                    <values>
-                        <value name="summary">Create a rabbit picture </value>
-                        <value name="description"># Pop a great rabbit picture by color!!
+                <openapi summary="Create a rabbit picture"
+                         description="# Pop a great rabbit picture by color!!
     
-    ![A great rabbit](https://rabbit.org/graphics/fun/netbunnies/jellybean1-brennan1.jpg)</value>
-                        <value name="content">
-                            <values>
-                                <value name="application/json">
-                                    <values>
-                                        <value name="schema">
-                                            <values>
-                                                <value name="type">object</value>
-                                                <value name="properties">
-                                                    <values>
-                                                        <value name="name">
-                                                            <values>
-                                                                <value name="type">string</value>
-                                                            </values>
-                                                        </value>
-                                                        <value name="description">
-                                                            <values>
-                                                                <value name="type">string</value>
-                                                            </values>
-                                                        </value>
-                                                    </values>
-                                                </value>
-                                            </values>
-                                        </value>
-                                    </values>
-                                </value>
-                            </values>
-                        </value>
-                    </values>
+    ![A great rabbit](https://rabbit.org/graphics/fun/netbunnies/jellybean1-brennan1.jpg)">
+                    <responses>
+                        <response status="200">
+                            <content>
+                                <values>
+                                    <value name="content">
+                                        <values>
+                                            <value name="application/json">
+                                                <values>
+                                                    <value name="schema">
+                                                        <values>
+                                                            <value name="type">object</value>
+                                                            <value name="properties">
+                                                                <values>
+                                                                    <value name="name">
+                                                                        <values>
+                                                                            <value name="type">string</value>
+                                                                        </values>
+                                                                    </value>
+                                                                    <value name="description">
+                                                                        <values>
+                                                                            <value name="type">string</value>
+                                                                        </values>
+                                                                    </value>
+                                                                </values>
+                                                            </value>
+                                                        </values>
+                                                    </value>
+                                                </values>
+                                            </value>
+                                        </values>
+                                    </value>
+                                </values>
+                            </content>
+                        </response>
+                    </responses>
                 </openapi>
             </operation>
         </operations>
