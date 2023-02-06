@@ -442,25 +442,21 @@ resources:
                         <response status="200">
                             <content>
                                 <values>
-                                    <value name="content">
+                                    <value name="application/json">
                                         <values>
-                                            <value name="application/json">
+                                            <value name="schema">
                                                 <values>
-                                                    <value name="schema">
+                                                    <value name="type">object</value>
+                                                    <value name="properties">
                                                         <values>
-                                                            <value name="type">object</value>
-                                                            <value name="properties">
+                                                            <value name="name">
                                                                 <values>
-                                                                    <value name="name">
-                                                                        <values>
-                                                                            <value name="type">string</value>
-                                                                        </values>
-                                                                    </value>
-                                                                    <value name="description">
-                                                                        <values>
-                                                                            <value name="type">string</value>
-                                                                        </values>
-                                                                    </value>
+                                                                    <value name="type">string</value>
+                                                                </values>
+                                                            </value>
+                                                            <value name="description">
+                                                                <values>
+                                                                    <value name="type">string</value>
                                                                 </values>
                                                             </value>
                                                         </values>
