@@ -16,10 +16,10 @@ For example:
 3 versions are maintained at the same time:
 
 * **stable** (currently the **3.1** branch): regular bugfixes are integrated in this version
-* **old-stable** (currently **3.0** branch): [security fixes](security.md) are integrated in this version, regular bugfixes are **not** backported in it
+* **old-stable** (currently **3.0** and **2.7** branches): [security fixes](security.md) are integrated in this version, regular bugfixes are **not** backported in it
 * **development** (**main** branch): new features target this branch
 
-Older versions (1.x, 2.7...) **are not maintained**. If you still use them, you must upgrade as soon as possible.
+Older versions (1.x, 2.6...) **are not maintained**. If you still use them, you must upgrade as soon as possible.
 
 The **old-stable** branch is merged in the **stable** branch on a regular basis to propagate [security fixes](security.md).
 The **stable** branch is merged in the **development** branch on a regular basis to propagate [security](security.md) and regular bugfixes.
