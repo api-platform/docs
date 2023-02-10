@@ -116,7 +116,7 @@ final class BookMailSubscriber implements EventSubscriberInterface
         $book = $event->getControllerResult();
         $method = $event->getRequest()->getMethod();
 
-        if (!$book instanceof Book || Request::METHOD_POST !== $method) {
+        if (!($book instanceof Book) || Request::METHOD_POST !== $method) {
             return;
         }
 
