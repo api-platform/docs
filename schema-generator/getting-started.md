@@ -105,7 +105,7 @@ Using [the API Platform Distribution](../distribution/index.md):
 
 ```console
 docker compose exec php \
-    vendor/bin/schema generate src/ config/schema.yaml -vv
+    vendor/bin/schema generate src/config/schema.yaml -vv
 ```
 
 The corresponding PHP classes will be automatically generated in the `src/` directory!
