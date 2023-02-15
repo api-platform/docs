@@ -15,13 +15,43 @@ Fastly) must be put in front of the web server and store all responses returned 
 This means that after the first request, all subsequent requests will not hit the web server, and will be served instantly
 from the cache.
 
+If you are using the [API Platform distribution](../distribution/index.md), the Caddy server comes with an [HTTP Cache module](https://github.com/caddyserver/cache-handler)
+based on [Souin](https://github.com/darkweak/souin/). It enables Caddy to act as its own caching reverse proxy by default.
+
+You can also configure it to use your own cdn:
+
+```
+// api/docker/caddy/Caddyfile
+{
+    order cache before rewrite
+    cache {
+        allowed_http_verbs GET POST
+        api {
+            souin
+        }
+        cdn {
+            api_key XXXX
+            dynamic
+            email you@domain.com
+            hostname domain.com
+            network your_network
+            provider fastly      # available providers are fastly, varnish, akamai, cloudflare or souin (default)
+            strategy soft
+            service_id 123456_id
+            zone_id anywhere_zone
+        }
+    }
+}
+```
+
+You can find the full configuration for Souin as a Caddy plugin [here](https://github.com/darkweak/souin/tree/master/plugins/caddy).
+
 When a resource is modified, API Platform takes care of purging all responses containing it in the proxy’s
 cache. This ensures that the content served will always be fresh, because the cache is purged in real time. Support for
 most specific cases such as the invalidation of collections when a document is added or removed or for relationships and
 inverse relations is built-in.
 
-Integration with Varnish and Doctrine ORM is shipped with the core library, and [Varnish](https://varnish-cache.org/) is
-included in the Docker setup provided with the [API Platform distribution](../distribution/index.md). If you use the distribution,
+Integration with Varnish and Doctrine ORM is shipped with the core library. If you use the distribution,
 this feature works out of the box.
 
 If you don't use the distribution, add the following configuration to enable the cache invalidation system:
@@ -31,7 +61,7 @@ api_platform:
     http_cache:
         invalidation:
             enabled: true
-            varnish_urls: ['%env(VARNISH_URL)%']
+            urls: ['%env(VARNISH_URL)%']
         public: true
     defaults:
         cache_headers:
@@ -41,8 +71,8 @@ api_platform:
 ```
 
 Support for reverse proxies other than Varnish can easily be added by implementing the `ApiPlatform\HttpCache\PurgerInterface`.
-Two purgers are available, the http tags (`api_platform.http_cache.purger.varnish.ban`) or the surrogate key implementation
-(`api_platform.http_cache.purger.varnish.xkey`). You can specify the implementation using the `purger` configuration node,
+Three purgers are available, the http tags (`api_platform.http_cache.purger.varnish.ban`) or the surrogate key implementations
+(`api_platform.http_cache.purger.varnish.xkey` and `api_platform.http_cache.purger.souin`). You can specify the implementation using the `purger` configuration node,
 for example to use the xkey implementation:
 
 ```yaml
@@ -50,7 +80,7 @@ api_platform:
     http_cache:
         invalidation:
             enabled: true
-            varnish_urls: ['%env(VARNISH_URL)%']
+            urls: ['%env(VARNISH_URL)%']
             purger: 'api_platform.http_cache.purger.varnish.xkey'
         public: true
     defaults:
@@ -61,6 +91,28 @@ api_platform:
             invalidation:
                 xkey:
                     glue: ', '
+```
+
+Or to use the Souin surrogate key implementation:
+
+```yaml
+api_platform:
+    http_cache:
+        invalidation:
+            enabled: true
+            urls: ['%env(SOUIN_API_URL)%']
+            purger: 'api_platform.http_cache.purger.souin'
+        public: true
+    defaults:
+        cache_headers:
+            max_age: 0
+            shared_max_age: 3600
+            vary: ['Content-Type', 'Authorization', 'Origin']
+```
+
+with
+```dotenv
+SOUIN_API_URL=http://caddy/souin-api/souin # If you use the distribution
 ```
 
 In addition to the cache invalidation mechanism, you may want to [use HTTP/2 Server Push to pre-emptively send relations
