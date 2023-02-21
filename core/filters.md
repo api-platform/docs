@@ -71,11 +71,12 @@ to a Resource in two ways:
 
     ```yaml
     # api/config/api_platform/resources.yaml
-    App\Entity\Offer:
-        operations:
-            ApiPlatform\Metadata\GetCollection:
-                filters: ['offer.date_filter']
-        # ...
+    resources:
+        App\Entity\Offer:
+            operations:
+                ApiPlatform\Metadata\GetCollection:
+                    filters: ['offer.date_filter']
+            # ...
     ```
 
     ```xml
@@ -1461,7 +1462,7 @@ Start by creating a custom attribute to mark restricted entities:
 
 ```php
 <?php
-// api/Annotation/UserAware.php
+// api/src/Attribute/UserAware.php
 
 namespace App\Attribute;
 

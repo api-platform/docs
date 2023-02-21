@@ -44,12 +44,9 @@ use Symfony\Component\HttpKernel\Attribute\AsController;
 #[AsController]
 class CreateBookPublication extends AbstractController
 {
-    private $bookPublishingHandler;
-
-    public function __construct(BookPublishingHandler $bookPublishingHandler)
-    {
-        $this->bookPublishingHandler = $bookPublishingHandler;
-    }
+    public function __construct(
+        private BookPublishingHandler $bookPublishingHandler
+    ) {}
 
     public function __invoke(Book $book): Book
     {
@@ -117,14 +114,15 @@ class Book
 
 ```yaml
 # api/config/api_platform/resources.yaml
-App\Entity\Book:
-    operations:
-        ApiPlatform\Metadata\Get: ~
-        post_publication:
-            class: ApiPlatform\Metadata\Post
-            method: POST
-            uriTemplate: /books/{id}/publication
-            controller: App\Controller\CreateBookPublication
+resources:
+    App\Entity\Book:
+        operations:
+            ApiPlatform\Metadata\Get: ~
+            post_publication:
+                class: ApiPlatform\Metadata\Post
+                method: POST
+                uriTemplate: /books/{id}/publication
+                controller: App\Controller\CreateBookPublication
 ```
 
 ```xml
@@ -188,14 +186,15 @@ class Book
 
 ```yaml
 # api/config/api_platform/resources.yaml
-App\Entity\Book:
-    operations:
-        ApiPlatform\Metadata\Get: ~
-        post_publication:
-            class: ApiPlatform\Metadata\Post
-            method: POST
-            uriTemplate: /books/{id}/publication
-            controller: ApiPlatform\Action\PlaceholderAction
+resources:
+    App\Entity\Book:
+        operations:
+            ApiPlatform\Metadata\Get: ~
+            post_publication:
+                class: ApiPlatform\Metadata\Post
+                method: POST
+                uriTemplate: /books/{id}/publication
+                controller: ApiPlatform\Action\PlaceholderAction
 ```
 
 ```xml
@@ -258,15 +257,16 @@ class Book
 
 ```yaml
 # api/config/api_platform/resources.yaml
-App\Entity\Book:
-    operations:
-        ApiPlatform\Metadata\Get: ~
-        post_publication:
-            class: ApiPlatform\Metadata\Get
-            uriTemplate: /books/{id}/publication
-            controller: App\Controller\CreateBookPublication
-            normalizationContext:
-                groups: ['publication']
+resources:
+    App\Entity\Book:
+        operations:
+            ApiPlatform\Metadata\Get: ~
+            post_publication:
+                class: ApiPlatform\Metadata\Get
+                uriTemplate: /books/{id}/publication
+                controller: App\Controller\CreateBookPublication
+                normalizationContext:
+                    groups: ['publication']
 ```
 
 ```xml
@@ -329,14 +329,15 @@ class Book
 
 ```yaml
 # api/config/api_platform/resources.yaml
-App\Entity\Book:
-    operations:
-        ApiPlatform\Metadata\Get: ~
-        post_publication:
-            class: ApiPlatform\Metadata\Post
-            uriTemplate: /books/{id}/publication
-            controller: App\Controller\CreateBookPublication
-            read: false
+resources:
+    App\Entity\Book:
+        operations:
+            ApiPlatform\Metadata\Get: ~
+            post_publication:
+                class: ApiPlatform\Metadata\Post
+                uriTemplate: /books/{id}/publication
+                controller: App\Controller\CreateBookPublication
+                read: false
 ```
 
 ```xml
@@ -401,14 +402,15 @@ class Book
 
 ```yaml
 # api/config/api_platform/resources.yaml
-App\Entity\Book:
-    operations:
-        ApiPlatform\Metadata\Get: ~
-        post_publication:
-            class: ApiPlatform\Metadata\Post
-            routeName: book_post_publication
-        book_post_discontinuation:
-          class: ApiPlatform\Metadata\Post
+resources:
+    App\Entity\Book:
+        operations:
+            ApiPlatform\Metadata\Get: ~
+            post_publication:
+                class: ApiPlatform\Metadata\Post
+                routeName: book_post_publication
+            book_post_discontinuation:
+              class: ApiPlatform\Metadata\Post
 ```
 
 ```xml

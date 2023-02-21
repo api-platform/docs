@@ -249,7 +249,7 @@ Now let's add the Company class:
 
 ```php
 <?php
-// api/src/Entity/Employee.php
+// api/src/Entity/Company.php
 namespace App\Entity;
 
 use ApiPlatform\Metadata\ApiResource;
