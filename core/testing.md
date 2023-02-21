@@ -81,16 +81,16 @@ abstract class AbstractTest extends ApiTestCase
             return $this->token;
         }
 
-        $response = static::createClient()->request('POST', '/login', ['body' => $body ?: [
+        $response = static::createClient()->request('POST', '/login', ['json' => $body ?: [
             'username' => 'admin@example.com',
             'password' => '$3cr3t',
         ]]);
 
         $this->assertResponseIsSuccessful();
-        $data = json_decode($response->getContent());
-        $this->token = $data->access_token;
+        $data = $response->toArray();
+        $this->token = $data['token'];
 
-        return $data->access_token;
+        return $data['token'];
     }
 }
 ```

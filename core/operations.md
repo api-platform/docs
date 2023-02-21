@@ -90,10 +90,11 @@ class Book
 
 ```yaml
 # api/config/api_platform/resources.yaml
-App\Entity\Book:
-    operations:
-        ApiPlatform\Metadata\GetCollection: ~ # nothing more to add if we want to keep the default controller
-        ApiPlatform\Metadata\Get: ~
+resources:
+    App\Entity\Book:
+        operations:
+            ApiPlatform\Metadata\GetCollection: ~ # nothing more to add if we want to keep the default controller
+            ApiPlatform\Metadata\Get: ~
 ```
 
 ```xml
@@ -143,12 +144,13 @@ class Book
 
 ```yaml
 # api/config/api_platform/resources.yaml
-App\Entity\Book:
-    operations:
-        ApiPlatform\Metadata\GetCollection:
-            method: GET
-        ApiPlatform\Metadata\Get:
-            method: GET
+resources:
+    App\Entity\Book:
+        operations:
+            ApiPlatform\Metadata\GetCollection:
+                method: GET
+            ApiPlatform\Metadata\Get:
+                method: GET
 ```
 
 ```xml
@@ -203,13 +205,14 @@ class Book
 
 ```yaml
 # api/config/api_platform/resources.yaml
-App\Entity\Book:
-    operations:
-        ApiPlatform\Metadata\GetCollection: ~
-        ApiPlatform\Metadata\Get:
-            controller: ApiPlatform\Action\NotFoundAction
-            read: false
-            output: false
+resources:
+    App\Entity\Book:
+        operations:
+            ApiPlatform\Metadata\GetCollection: ~
+            ApiPlatform\Metadata\Get:
+                controller: ApiPlatform\Action\NotFoundAction
+                read: false
+                output: false
 ```
 
 ```xml
@@ -272,21 +275,22 @@ class Book
 
 ```yaml
 # api/config/api_platform/resources.yaml
-App\Entity\Book:
-    operations:
-        ApiPlatform\Metadata\Post:
-            uriTemplate: '/grimoire'
-            status: 301
-        ApiPlatform\Metadata\Get:
-            uriTemplate: '/grimoire/{id}'
-            requirements:
-                id: '\d+'
-            defaults:
-                color: 'brown'
-            host: '{subdomain}.api-platform.com'
-            schemes: ['https']
-            options:
-                my_option: 'my_option_value'
+resources:
+    App\Entity\Book:
+        operations:
+            ApiPlatform\Metadata\Post:
+                uriTemplate: '/grimoire'
+                status: 301
+            ApiPlatform\Metadata\Get:
+                uriTemplate: '/grimoire/{id}'
+                requirements:
+                    id: '\d+'
+                defaults:
+                    color: 'brown'
+                host: '{subdomain}.api-platform.com'
+                schemes: ['https']
+                options:
+                    my_option: 'my_option_value'
 ```
 
 ```xml
@@ -349,8 +353,9 @@ class Book
 
 ```yaml
 # api/config/api_platform/resources.yaml
-App\Entity\Book:
-    routePrefix: /library
+resources:
+    App\Entity\Book:
+        routePrefix: /library
 ```
 
 ```xml
@@ -366,81 +371,6 @@ App\Entity\Book:
 ```
 
 [/codeSelector]
-
-API Platform will automatically map this `post_publication` operation to the route `book_post_publication`. Let's create a custom action
-and its related route using annotations:
-
-```php
-<?php
-// api/src/Controller/CreateBookPublication.php
-
-namespace App\Controller;
-
-use App\Entity\Book;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpKernel\Attribute\AsController;
-use Symfony\Component\Routing\Annotation\Route;
-
-#[AsController]
-class CreateBookPublication extends AbstractController
-{
-    public function __construct(
-        private BookPublishingHandler $bookPublishingHandler
-    ) {}
-
-    #[Route(
-        path: '/books/{id}/publication',
-        name: 'book_post_publication',
-        defaults: [
-            '_api_resource_class' => Book::class,
-            '_api_operation_name' => '_api_/books/{id}/publication_post',
-        ],
-        methods: ['POST'],
-    )]
-    public function __invoke(Book $book): Book
-    {
-        $this->bookPublishingHandler->handle($book);
-
-        return $book;
-    }
-}
-```
-
-It is mandatory to set `_api_resource_class` and `_api_operation_name`in the parameters of the route (`defaults` key). It allows API Platform to work with the Symfony routing system.
-
-Alternatively, you can also use a traditional Symfony controller and YAML or XML route declarations. The following example does
-the exact same thing as the previous example:
-
-```php
-<?php
-// api/src/Controller/BookController.php
-
-namespace App\Controller;
-
-use App\Entity\Book;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpKernel\Attribute\AsController;
-
-#[AsController]
-class BookController extends AbstractController
-{
-    public function createPublication(Book $book, BookPublishingHandler $bookPublishingHandler): Book
-    {
-        return $bookPublishingHandler->handle($book);
-    }
-}
-```
-
-```yaml
-# api/config/routes.yaml
-book_post_publication:
-    path: /books/{id}/publication
-    methods: ['POST']
-    defaults:
-        _controller: App\Controller\BookController::createPublication
-        _api_resource_class: App\Entity\Book
-        _api_operation_name: post_publication
-```
 
 ## Defining Which Operation to Use to Generate the IRI
 

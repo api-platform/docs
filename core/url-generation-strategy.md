@@ -51,8 +51,9 @@ class Book
 
 ```yaml
 # api/config/api_platform/resources.yaml
-App\Entity\Book:
-    urlGenerationStrategy: !php/const ApiPlatform\Api\UrlGeneratorInterface::ABS_URL
+resources:
+    App\Entity\Book:
+        urlGenerationStrategy: !php/const ApiPlatform\Api\UrlGeneratorInterface::ABS_URL
 ```
 
 ```xml

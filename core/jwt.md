@@ -198,112 +198,24 @@ You must set the [JWT token](https://github.com/lexik/LexikJWTAuthenticationBund
 
 ### Adding endpoint to SwaggerUI to retrieve a JWT token
 
-We can add a `POST /authentication_token` endpoint to SwaggerUI to conveniently retrieve the token when it's needed.
+LexikJWTAuthenticationBundle has an integration with API Platform to automatically
+add an OpenAPI endpoint to conveniently retrieve the token in Swagger UI.
 
-![API Endpoint to retrieve JWT Token from SwaggerUI](images/jwt-token-swagger-ui.png)
-
-To do it, we need to create a decorator:
-
-```php
-<?php
-// api/src/OpenApi/JwtDecorator.php
-
-namespace App\OpenApi;
-
-use ApiPlatform\OpenApi\Factory\OpenApiFactoryInterface;
-use ApiPlatform\OpenApi\OpenApi;
-use ApiPlatform\OpenApi\Model;
-
-final class JwtDecorator implements OpenApiFactoryInterface
-{
-    public function __construct(
-        private OpenApiFactoryInterface $decorated
-    ) {}
-
-    public function __invoke(array $context = []): OpenApi
-    {
-        $openApi = ($this->decorated)($context);
-        $schemas = $openApi->getComponents()->getSchemas();
-
-        $schemas['Token'] = new \ArrayObject([
-            'type' => 'object',
-            'properties' => [
-                'token' => [
-                    'type' => 'string',
-                    'readOnly' => true,
-                ],
-            ],
-        ]);
-        $schemas['Credentials'] = new \ArrayObject([
-            'type' => 'object',
-            'properties' => [
-                'email' => [
-                    'type' => 'string',
-                    'example' => 'johndoe@example.com',
-                ],
-                'password' => [
-                    'type' => 'string',
-                    'example' => 'apassword',
-                ],
-            ],
-        ]);
-
-        $schemas = $openApi->getComponents()->getSecuritySchemes() ?? [];
-        $schemas['JWT'] = new \ArrayObject([
-            'type' => 'http',
-            'scheme' => 'bearer',
-            'bearerFormat' => 'JWT',
-        ]);
-        
-        $pathItem = new Model\PathItem(
-            ref: 'JWT Token',
-            post: new Model\Operation(
-                operationId: 'postCredentialsItem',
-                tags: ['Token'],
-                responses: [
-                    '200' => [
-                        'description' => 'Get JWT token',
-                        'content' => [
-                            'application/json' => [
-                                'schema' => [
-                                    '$ref' => '#/components/schemas/Token',
-                                ],
-                            ],
-                        ],
-                    ],
-                ],
-                summary: 'Get JWT token to login.',
-                requestBody: new Model\RequestBody(
-                    description: 'Generate new JWT Token',
-                    content: new \ArrayObject([
-                        'application/json' => [
-                            'schema' => [
-                                '$ref' => '#/components/schemas/Credentials',
-                            ],
-                        ],
-                    ]),
-                ),
-                security: [],
-            ),
-        );
-        $openApi->getPaths()->addPath('/auth', $pathItem);
-
-        return $openApi;
-    }
-}
-```
-
-And register this service in `config/services.yaml`:
+If you need to modify the default configuration, you can do it in the dedicated configuration file:
 
 ```yaml
-# api/config/services.yaml
-services:
+# config/packages/lexik_jwt_authentication.yaml
+lexik_jwt_authentication:
     # ...
-
-    App\OpenApi\JwtDecorator:
-        decorates: 'api_platform.openapi.factory'
-        arguments: ['@.inner']
+    api_platform:
+        check_path: /auth
+        username_path: email
+        password_path: password
 ```
+
+You will see something like this in Swagger UI:
+
+![API Endpoint to retrieve JWT Token from SwaggerUI](images/jwt-token-swagger-ui.png)
 
 ## Testing
 
