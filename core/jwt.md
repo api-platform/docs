@@ -73,6 +73,9 @@ security:
             entity:
                 class: App\Entity\User
                 property: email
+            # mongodb:
+            #    class: App\Document\User
+            #    property: email    
 
     firewalls:
         dev:
