@@ -8,6 +8,9 @@ recommended you [read the documentation of
 VichUploaderBundle](https://github.com/dustin10/VichUploaderBundle/blob/master/docs/index.md)
 before proceeding. It will help you get a grasp on how the bundle works, and why we use it.
 
+**Note**: Uploading files won't work in `PUT` or `PATCH` requests, you must use `POST` method to upload files.
+See [the related issue on Symfony](https://github.com/symfony/symfony/issues/9226) and [the related bug in PHP](https://bugs.php.net/bug.php?id=55815) talking about this behavior.
+
 ## Installing VichUploaderBundle
 
 Install the bundle with the help of Composer:
@@ -42,9 +45,6 @@ resource (in our case: `Book`).
 
 This example will use a custom controller to receive the file.
 The second example will use a custom `multipart/form-data` decoder to deserialize the resource instead.
-
-**Note**: Uploading files won't work in `PUT` or `PATCH` requests, you must use `POST` method to upload files.
-See [the related issue on Symfony](https://github.com/symfony/symfony/issues/9226) and [the related bug in PHP](https://bugs.php.net/bug.php?id=55815) talking about this behavior.
 
 ### Configuring the Resource Receiving the Uploaded File
 
