@@ -135,9 +135,9 @@ services:
         bind:
             $persistProcessor: '@api_platform.doctrine.orm.state.persist_processor'
             $removeProcessor: '@api_platform.doctrine.orm.state.remove_processor'
-            # If you're using Doctrine ODM, you can use the following code:
-            #$persistProcessor: '@api_platform.doctrine_mongodb.odm.state.persist_processor'
-            #$removeProcessor: '@api_platform.doctrine_mongodb.odm.state.remove_processor'
+            # If you're using Doctrine MongoDB ODM, you can use the following code:
+            # $persistProcessor: '@api_platform.doctrine_mongodb.odm.state.persist_processor'
+            # $removeProcessor: '@api_platform.doctrine_mongodb.odm.state.remove_processor'
         # Uncomment only if autoconfiguration is disabled
         #arguments: ['@App\State\UserProcessor.inner']
         #tags: [ 'api_platform.state_processor' ]

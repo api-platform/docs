@@ -73,7 +73,7 @@ security:
             entity:
                 class: App\Entity\User
                 property: email
-            # mongodb:
+            # document:
             #    class: App\Document\User
             #    property: email    
 
