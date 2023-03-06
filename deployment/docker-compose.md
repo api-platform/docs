@@ -19,7 +19,7 @@ Otherwise, use [this affiliate link](https://m.do.co/c/5d8aabe3ab80) to get $100
 Then, click on the "Marketplace" tab under the "Choose an image" section and search for the app named "Docker".
 This will provision an Ubuntu server with the latest versions of Docker and Docker Compose already installed!
 
-For test purposes, cheapest plans will be enough, even though you might want at least 2Go of RAM to execute docker compose for the first time. For real production usage, you'll probably want to pick a plan in the "general purpose" section that will fit your needs. 
+For test purposes, cheapest plans will be enough, even though you might want at least 2GB of RAM to execute Docker Compose for the first time. For real production usage, you'll probably want to pick a plan in the "general purpose" section that will fit your needs.
 
 ![Deploying a Symfony app on DigitalOcean with Docker Compose](digitalocean-droplet.png)
 
