@@ -8,14 +8,14 @@ application search, security analytics, metrics, logging, etc.
 API Platform comes natively with the **reading** support for Elasticsearch. It uses internally the official PHP client
 for Elasticsearch: [Elasticsearch-PHP](https://www.elastic.co/guide/en/elasticsearch/client/php-api/current/index.html).
 
-Be careful, API Platform only supports Elasticsearch >= 6.5.0.
+Be careful, API Platform only supports Elasticsearch >= 7.11.0 < 8.0.
 
 ## Enabling Reading Support
 
 To enable the reading support for Elasticsearch, simply require the Elasticsearch-PHP package using Composer:
 
 ```console
-composer require elasticsearch/elasticsearch:^6.0
+composer require elasticsearch/elasticsearch:^7.11
 ```
 
 Then, enable it inside the API Platform configuration:
