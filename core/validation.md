@@ -78,7 +78,7 @@ final class MinimalPropertiesValidator extends ConstraintValidator
 {
     public function validate($value, Constraint $constraint): void
     {
-        if (!array_diff(['description', 'price'], $value)) {
+        if (array_diff(['description', 'price'], $value)) {
             $this->context->buildViolation($constraint->message)->addViolation();
         }
     }
