@@ -23,7 +23,7 @@ Before creating your functional tests, you will need a dataset to pre-populate y
 First, install [Alice](https://github.com/nelmio/alice):
 
 ```console
-docker compose exec php \
+docker compose run php \
     composer require --dev alice
 ```
 
