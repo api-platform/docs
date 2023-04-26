@@ -28,20 +28,13 @@ docker compose exec php \
     composer require --dev orm-fixtures
 ```
 
-And, install [Symfony/MakerBundle](https://github.com/symfony/maker-bundle)
-
-```console
-docker compose exec php \
-    composer require --dev maker
-```
-
 Thanks to Symfony Flex, [Doctrine/DoctrineFixturesBundle](https://github.com/doctrine/DoctrineFixturesBundle) and [Zenstruck/Foundry](https://github.com/zenstruck/foundry) are ready to use!
 
 Then, create some factories for [the bookstore API you created in the tutorial](index.md):
 
 ```console
 docker compose exec php \
-    bin/console make:factory 'App\Entity\Book' && \
+    bin/console make:factory 'App\Entity\Book'
     bin/console make:factory 'App\Entity\Review'
 ```
 
@@ -85,7 +78,7 @@ Create some stories:
 
 ```console
 docker compose exec php \
-    bin/console make:story 'DefaultBooks' && \
+    bin/console make:story 'DefaultBooks'
     bin/console make:story 'DefaultReviews'
 ```
 
