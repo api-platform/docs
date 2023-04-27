@@ -20,30 +20,29 @@ integration](https://github.com/theofidry/AliceBundle#database-testing), an expr
 
 Before creating your functional tests, you will need a dataset to pre-populate your API and be able to test it.
 
-First, install [Zenstruck/Foundry](https://github.com/zenstruck/foundry) and [Doctrine/DoctrineFixturesBundle](https://github.com/doctrine/DoctrineFixturesBundle):
+First, install [Foundry](https://github.com/zenstruck/foundry) and [Doctrine/DoctrineFixturesBundle](https://github.com/doctrine/DoctrineFixturesBundle):
 
 ```console
 docker compose exec php \
     composer require --dev foundry orm-fixtures
-    composer require --dev orm-fixtures
 ```
 
-Thanks to Symfony Flex, [Doctrine/DoctrineFixturesBundle](https://github.com/doctrine/DoctrineFixturesBundle) and [Zenstruck/Foundry](https://github.com/zenstruck/foundry) are ready to use!
+Thanks to Symfony Flex, [DoctrineFixturesBundle](https://github.com/doctrine/DoctrineFixturesBundle) and [Foundry](https://github.com/zenstruck/foundry) are ready to use!
 
 Then, create some factories for [the bookstore API you created in the tutorial](index.md):
 
 ```console
 docker compose exec php \
     bin/console make:factory 'App\Entity\Book'
+docker compose exec php \
     bin/console make:factory 'App\Entity\Review'
-```
 
 Improve the default values:
 
 ```php
 // src/Factory/BookFactory.php
 
-    // [...]
+    // ...
 
     protected function getDefaults(): array
     {
@@ -60,14 +59,14 @@ Improve the default values:
 ```php
 // src/Factory/ReviewFactory.php
 
-    // [...]
+    // ...
 
     protected function getDefaults(): array
     {
         return [
             'author' => self::faker()->name(),
             'body' => self::faker()->text(),
-            'book' => BookFactory::randomOrCreate(),
+            'book' => lazy(fn() => BookFactory::randomOrCreate()),
             'publicationDate' => \DateTimeImmutable::createFromMutable(self::faker()->dateTime()),
             'rating' => self::faker()->numberBetween(0, 5),
         ];
@@ -79,8 +78,8 @@ Create some stories:
 ```console
 docker compose exec php \
     bin/console make:story 'DefaultBooks'
+docker compose exec php \
     bin/console make:story 'DefaultReviews'
-```
 
 ```php
 // src/Story/DefaultBooksStory.php
@@ -115,8 +114,6 @@ final class DefaultReviewsStory extends Story
         ReviewFactory::createMany(200);
     }
 }
-
-
 ```
 
 Edit your Fixtures:
@@ -148,8 +145,8 @@ docker compose exec php \
     bin/console doctrine:fixtures:load
 ```
 
-To learn more about fixtures, take a look at the documentation of [Zenstruck/Foundry](https://symfony.com/bundles/ZenstruckFoundryBundle/current/index.html).
-The list of available generators as well as a cookbook explaining how to create custom generators can be found in the documentation of [Faker](https://github.com/fakerphp/faker), the library used by Zenstruck Foundry under the hood.
+To learn more about fixtures, take a look at the documentation of [Foundry](https://symfony.com/bundles/ZenstruckFoundryBundle/current/index.html).
+The list of available generators as well as a cookbook explaining how to create custom generators can be found in the documentation of [Faker](https://github.com/fakerphp/faker), the library used by Foundry under the hood.
 
 ## Writing Functional Tests
 
