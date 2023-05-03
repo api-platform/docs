@@ -186,7 +186,7 @@ use ApiPlatform\Metadata\Put;
 #[Get(security: "is_granted('BOOK_READ', object)")]
 #[Put(security: "is_granted('BOOK_EDIT', object)")]
 #[Delete(security: "is_granted('BOOK_DELETE', object)")]
-#[GetCollection]
+#[GetCollection(security: "is_granted('BOOK_LIST')")]
 #[Post(securityPostDenormalize: "is_granted('BOOK_CREATE', object)")]
 class Book
 {
@@ -199,7 +199,8 @@ class Book
 App\Entity\Book:
     security: 'is_granted("ROLE_USER")'
     operations:
-        ApiPlatform\Metadata\GetCollection: ~
+        ApiPlatform\Metadata\GetCollection: 
+            security: 'is_granted("BOOK_LIST")'
         ApiPlatform\Metadata\Post:
             securityPostDenormalize: 'is_granted("BOOK_CREATE", object)'
         ApiPlatform\Metadata\Get:
@@ -240,6 +241,10 @@ class BookVoter extends Voter
 
     protected function supports($attribute, $subject): bool
     {
+        if ($attribute == 'BOOK_LIST' && $subject === null) {
+            return true; // We don't have a "subject" to check if we want to check for a listing.
+        }
+
         $supportsAttribute = in_array($attribute, ['BOOK_CREATE', 'BOOK_READ', 'BOOK_EDIT', 'BOOK_DELETE']);
         $supportsSubject = $subject instanceof Book;
 
@@ -270,8 +275,6 @@ class BookVoter extends Voter
 ```
 
 *Note 1: When using Voters on POST methods: The voter needs an `$attribute` and `$subject` as input parameter, so you have to use the `securityPostDenormalize` (i.e. `"post" = { "securityPostDenormalize" = "is_granted('BOOK_CREATE', object)" }` ) because the object does not exist before denormalization (it is not created, yet.)*
-
-*Note 2: You can't use Voters on the collection GET method, use [Collection Filters](https://api-platform.com/docs/core/security/#filtering-collection-according-to-the-current-user-permissions) instead.*
 
 ## Configuring the Access Control Error Message
 
