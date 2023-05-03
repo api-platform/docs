@@ -241,11 +241,11 @@ class BookVoter extends Voter
 
     protected function supports($attribute, $subject): bool
     {
-        if ($attribute == 'BOOK_LIST' && $subject === null) {
+        if (($attribute == 'BOOK_LIST' || $attribute == 'BOOK_CREATE') && $subject === null) {
             return true; // We don't have a "subject" to check if we want to check for a listing.
         }
 
-        $supportsAttribute = in_array($attribute, ['BOOK_CREATE', 'BOOK_READ', 'BOOK_EDIT', 'BOOK_DELETE']);
+        $supportsAttribute = in_array($attribute, ['BOOK_READ', 'BOOK_EDIT', 'BOOK_DELETE']);
         $supportsSubject = $subject instanceof Book;
 
         return $supportsAttribute && $supportsSubject;
