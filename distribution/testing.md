@@ -13,57 +13,93 @@ In this article you'll learn how to use:
 
 * [PHPUnit](https://phpunit.de), a testing framework to cover your classes with unit tests and to write
 API-oriented functional tests thanks to its API Platform and [Symfony](https://symfony.com/doc/current/testing.html) integrations.
-* [Alice](https://github.com/nelmio/alice) and [its Symfony
-integration](https://github.com/theofidry/AliceBundle#database-testing), an expressive fixtures generator to write data fixtures.
+* [DoctrineFixturesBundle](https://symfony.com/bundles/DoctrineFixturesBundle/current/index.html), a bundle to load data fixtures in the database.
+* [Foundry](https://github.com/zenstruck/foundry), an expressive fixtures generator to write data fixtures.
 
 ## Creating Data Fixtures
 
 Before creating your functional tests, you will need a dataset to pre-populate your API and be able to test it.
 
-First, install [Alice](https://github.com/nelmio/alice):
+First, install [DoctrineFixturesBundle](https://symfony.com/bundles/DoctrineFixturesBundle/current/index.html) and [Foundry](https://github.com/zenstruck/foundry):
 
 ```console
 docker compose exec php \
-    composer require --dev alice
+    composer require --dev orm-fixtures zenstruck/foundry 
 ```
 
-Thanks to Symfony Flex, Alice (and [AliceBundle](https://github.com/theofidry/AliceBundle)) are ready to use!
-Place your data fixtures files in a directory named `fixtures/`.
+Thanks to Symfony Flex, the DoctrineFixturesBundle and Foundry are ready to use!
+A `api/src/DataFixtures` directory has been created for you.
 
-Then, create some fixtures for [the bookstore API you created in the tutorial](index.md):
+Then, create some fixtures for [the bookstore API you created in the tutorial](index.md) thanks to the `make:fixtures` command:
 
-```yaml
-# api/fixtures/books.yaml
-App\Entity\Book:
-    book_{1..100}:
-        isbn: <isbn13()>
-        title: <sentence(4)>
-        description: <text()>
-        author: <name()>
-        publicationDate: <dateTimeImmutable()>
+```console
+docker compose exec php \
+    bin/console make:fixtures Book
 ```
 
-```yaml
-# api/fixtures/reviews.yaml
-App\Entity\Review:
-    review_{1..200}:
-        rating: <numberBetween(0, 5)>
-        body: <text()>
-        author: <name()>
-        publicationDate: <dateTimeImmutable()>
-        book: '@book_*'
+```console
+docker compose exec php \
+    bin/console make:fixtures Review
+```
+
+This command creates two fixture classes in the `api/src/Factory` directory: `BookFixtures` and `ReviewFixtures`.
+
+Open the `api/src/Factory/BookFixtures.php` file and edit the `getDefaults()` function to define the default values of the `Book` entity:
+
+```php
+<?php
+// api/src/Factory/BookFixtures.php
+protected function getDefaults(): array
+{
+    return [
+        'isbn' => self::faker()->isbn13(),
+        'title' => self::faker()->sentence(4),
+        'description' => self::faker()->text(),
+        'author' => self::faker()->name(),
+        'publicationDate' => self::faker()->dateTime(),
+    ];
+}
+```
+
+Open the `api/src/Factory/ReviewFixtures.php` file and edit the `getDefaults()` function to define the default values of the `Review` entity:
+
+```php
+// api/src/Factory/ReviewFixtures.php
+protected function getDefaults(): array
+{
+    return [
+        'rating' => self::faker()->numberBetween(0, 5),
+        'body' => self::faker()->text(),
+        'author' => self::faker()->name(),
+        'publicationDate' => self::faker()->dateTime(),
+        'book' => BookFactory::random(),
+    ];
+}
+```
+
+Edit the `api/src/DataFixtures/AppFixtures.php` file to load the fixtures you just created:
+
+```php
+// api/src/DataFixtures/AppFixtures.php
+public function load(ObjectManager $manager)
+{
+    BookFactory::createMany(100);
+    ReviewFactory::createMany(200);
+    
+    $manager->flush();
+}
 ```
 
 You can now load your fixtures in the database with the following command:
 
 ```console
 docker compose exec php \
-    bin/console hautelook:fixtures:load
+    bin/console doctrine:fixtures:load
 ```
 
-To learn more about fixtures, take a look at the documentation of [Alice](https://github.com/nelmio/alice)
-and [AliceBundle](https://github.com/theofidry/AliceBundle).
-The list of available generators as well as a cookbook explaining how to create custom generators can be found in the documentation of [Faker](https://github.com/fakerphp/faker), the library used by Alice under the hood.
+To learn more about fixtures, take a look at the documentation of [Foundry](https://symfony.com/bundles/ZenstruckFoundryBundle/current/index.html)
+and [DoctrineFixturesBundle](https://symfony.com/bundles/DoctrineFixturesBundle/current/index.html).
+The list of available generators as well as a cookbook explaining how to create custom generators can be found in the documentation of [Faker](https://github.com/fakerphp/faker), the library used by Foundry under the hood.
 
 ## Writing Functional Tests
 
