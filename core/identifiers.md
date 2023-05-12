@@ -13,19 +13,21 @@ Let's say you have the following class, which is identified by a `UUID` type. In
 
 ```php
 <?php
+// api/src/Entity/Person.php
 namespace App\Entity;
 
-use ApiPlatform\Core\Annotation\ApiResource;
-use ApiPlatform\Core\Annotation\ApiProperty;
+use ApiPlatform\Metadata\ApiProperty;
+use ApiPlatform\Metadata\ApiResource;
+use App\State\PersonProvider;
 use App\Uuid;
 
-#[ApiResource]
+#[ApiResource(provider: PersonProvider::class)]
 final class Person
 {
     /**
      * @var Uuid
      */
-     #[ApiProperty(identifier: true)]
+    #[ApiProperty(identifier: true)]
     public $code;
     
     // ...
@@ -34,17 +36,21 @@ final class Person
 
 ```yaml
 # api/config/api_platform/resources/Person.yaml
-App\Entity\Person:
-    properties:
+properties:
+    App\Entity\Person:
         code:
             identifier: true
+resource:
+    App\Entity\Person:
+        provider: App\State\PersonProvider
 ```
 
 ```xml
-<resources xmlns="https://api-platform.com/schema/metadata">
-    <resource class="App\EntityPerson">
-        <property name="code" identifier="true"/>
-    </resource>
+<properties xmlns="https://api-platform.com/schema/metadata/properties">
+    <property resource="App\Entity\Person" name="code" identifier="true"/>
+</properties>
+<resources xmlns="https://api-platform.com/schema/metadata/resources-3.0">
+    <resource class="App\Entity\Person" provider="App\State\PersonProvider" />
 </resources>
 ```
 
@@ -53,94 +59,95 @@ App\Entity\Person:
 Once registered as an `ApiResource`, having an existing person, it will be accessible through the following URL: `/people/110e8400-e29b-11d4-a716-446655440000`.
 Note that the property identifying our resource is named `code`.
 
-Let's create a `DataProvider` for the `Person` entity:
+Let's create a `Provider` for the `Person` entity:
 
 ```php
 <?php
-namespace App\DataProvider;
+namespace App\State;
 
-use ApiPlatform\Core\DataProvider\ItemDataProviderInterface;
-use ApiPlatform\Core\DataProvider\RestrictedDataProviderInterface;
 use App\Entity\Person;
+use ApiPlatform\State\ProviderInterface;
 use App\Uuid;
 
-final class PersonDataProvider implements ItemDataProviderInterface, RestrictedDataProviderInterface
+final class PersonProvider implements ProviderInterface
 {
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
-    public function getItem(string $resourceClass, $identifiers, string $operationName = null, array $context = [])
+    public function provide(Operation $operation, array $uriVariables = [], array $context = [])
     {
         // Our identifier is:
-        // $identifiers['code']
+        // $uriVariables['code']
         // although it's a string, it's not an instance of Uuid and we wanted to retrieve the timestamp of our time-based uuid:
-        // $identifiers['code']->getTimestamp()
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function supports(string $resourceClass, string $operationName = null, array $context = []): bool
-    {
-        return $resourceClass === Person::class;
+        // $uriVariable['code']->getTimestamp()
     }
 }
 ```
 
-To cover this use case, we need to `denormalize` the identifier to an instance of our `App\Uuid` class. This case is covered by an identifier denormalizer:
+To cover this use case, we need to `transform` the identifier to an instance of our `App\Uuid` class.
+This case is covered by an URI variable transformer:
 
 ```php
 <?php
 namespace App\Identifier;
 
-use ApiPlatform\Core\Exception\InvalidIdentifierException;
+use ApiPlatform\Api\UriVariableTransformerInterface;
+use ApiPlatform\Exception\InvalidUriVariableException;
 use App\Uuid;
-use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 
-final class UuidNormalizer implements DenormalizerInterface
+final class UuidUriVariableTransformer implements UriVariableTransformerInterface
 {
     /**
-     * {@inheritdoc}
+     * Transforms a uri variable value.
+     *
+     * @param mixed $value   The uri variable value to transform
+     * @param array $types   The guessed type behind the uri variable
+     * @param array $context Options available to the transformer
+     *
+     * @throws InvalidUriVariableException Occurs when the uriVariable could not be transformed
      */
-    public function denormalize($data, $class, $format = null, array $context = [])
-    {
+     public function transform($value, array $types, array $context = []) {
         try {
             return Uuid::fromString($data);
         } catch (InvalidUuidStringException $e) {
-            throw new InvalidIdentifierException($e->getMessage());
+            throw new InvalidUriVariableException($e->getMessage());
         }
-    }
+     }
 
     /**
-     * {@inheritdoc}
+     * Checks whether the given uri variable is supported for transformation by this transformer.
+     *
+     * @param mixed $value   The uri variable value to transform
+     * @param array $types   The types to which the data should be transformed
+     * @param array $context Options available to the transformer
      */
-    public function supportsDenormalization($data, $type, $format = null)
+    public function supportsTransformation($value, array $types, array $context = []): bool
     {
         return is_a($type, Uuid::class, true);
     }
 }
 ```
 
-Tag this service as an `api_platform.identifier.denormalizer`:
+Tag this service as an `api_platform.uri_variables.transformer`:
 
 [codeSelector]
 
 ```yaml
 services:
-    App\Identifier\UuidNormalizer:
+    App\Identifier\UuidUriVariableTransformer:
         tags:
-            - { name: api_platform.identifier.denormalizer }
+            - { name: api_platform.uri_variables.transformer }
 ```
 
 ```xml
-  <service id="App\Identifier\UuidNormalizer" class="App\Identifier\UuidNormalizer" public="false">
-      <tag name="api_platform.identifier.denormalizer" />
+  <service id="App\Identifier\UuidUriVariableTransformer" class="App\Identifier\UuidUriVariableTransformer" public="false">
+      <tag name="api_platform.uri_variables.transformer" />
   </service>
 ```
 
 [/codeSelector]
 
-Your `PersonDataProvider` will now work as expected!
+Your `PersonProvider` will now work as expected!
 
 ## Changing Identifier in a Doctrine Entity
 
@@ -148,10 +155,11 @@ If your resource is also a Doctrine entity and you want to use another identifie
 
 ```php
 <?php
+// api/src/Entity/Person.php
 namespace App\Entity;
 
-use ApiPlatform\Core\Annotation\ApiResource;
-use ApiPlatform\Core\Annotation\ApiProperty;
+use ApiPlatform\Metadata\ApiProperty;
+use ApiPlatform\Metadata\ApiResource;
 use App\Uuid;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -179,7 +187,7 @@ final class Person
 API Platform supports the following identifier types:
 
 - `scalar` (string, integer)
-- `\DateTime` (uses the symfony `DateTimeNormalizer` internally, see [DateTimeIdentifierNormalizer](https://github.com/api-platform/core/blob/2.6/src/Identifier/Normalizer/DateTimeIdentifierDenormalizer.php))
-- `\Ramsey\Uuid\Uuid` (see [UuidNormalizer](https://github.com/api-platform/core/blob/2.6/src/Bridge/RamseyUuid/Identifier/Normalizer/UuidNormalizer.php))
-- `\Symfony\Component\Uid\Ulid` (see [UlidNormalizer](https://github.com/api-platform/core/blob/2.6/src/Bridge/Symfony/Identifier/Normalizer/UlidNormalizer.php))
-- `\Symfony\Component\Uid\Uuid` (see [UuidNormalizer](https://github.com/api-platform/core/blob/2.6/src/Bridge/Symfony/Identifier/Normalizer/UuidNormalizer.php))
+- `\DateTime` (uses the symfony `DateTimeNormalizer` internally, see [DateTimeIdentifierNormalizer](https://github.com/api-platform/core/blob/main/src/Api/UriVariableTransformer/DateTimeUriVariableTransformer.php))
+- `\Ramsey\Uuid\Uuid` (see [UuidNormalizer](https://github.com/api-platform/core/blob/main/src/RamseyUuid/UriVariableTransformer/UuidUriVariableTransformer.php))
+- `\Symfony\Component\Uid\Ulid` (see [UlidNormalizer](https://github.com/api-platform/core/blob/main/src/Symfony/UriVariableTransformer/UlidUriVariableTransformer.php))
+- `\Symfony\Component\Uid\Uuid` (see [UuidNormalizer](https://github.com/api-platform/core/blob/main/src/Symfony/UriVariableTransformer/UuidUriVariableTransformer.php))

@@ -27,16 +27,14 @@ Let's assume we need URLs without separators (e.g. `api.tld/myresources`)
 
 ### Defining the Operation Segment Name Generator
 
-Make sure the custom segment generator implements [`ApiPlatform\Core\Operation\PathSegmentNameGeneratorInterface`](https://github.com/api-platform/core/blob/main/src/Operation/PathSegmentNameGeneratorInterface.php):
+Make sure the custom segment generator implements [`ApiPlatform\Operation\PathSegmentNameGeneratorInterface`](https://github.com/api-platform/core/blob/main/src/Operation/PathSegmentNameGeneratorInterface.php):
 
 ```php
 <?php
-
 // api/src/Operation/SingularPathSegmentNameGenerator.php
-
 namespace App\Operation;
 
-use ApiPlatform\Core\Operation\PathSegmentNameGeneratorInterface;
+use ApiPlatform\Operation\PathSegmentNameGeneratorInterface;
 
 class SingularPathSegmentNameGenerator implements PathSegmentNameGeneratorInterface
 {

@@ -27,13 +27,13 @@ api_platform:
     # Specify a path name generator to use.
     path_segment_name_generator: 'api_platform.path_segment_name_generator.underscore'
 
-    # Allow using plain IDs for JSON format.
-    allow_plain_identifiers: false
-
     validator:
         # Enable the serialization of payload fields when a validation error is thrown.
         # If you want to serialize only some payload fields, define them like this: [ severity, anotherPayloadField ]
         serialize_payload_fields: []
+
+        # To enable or disable query parameters validation on collection GET requests
+        query_parameter_validation: true
 
     eager_loading:
         # To enable or disable eager loading.
@@ -50,14 +50,6 @@ api_platform:
         # If disabled, it will only join relations having the EAGER fetch mode.
         force_eager: true
 
-    # Enabling the FOSUserBundle integration has been deprecated in 2.5 and will be removed in 3.0.
-    # Enable the FOSUserBundle integration.
-    enable_fos_user: false
-
-    # Enabling the NelmioApiDocBundle integration has been deprecated in 2.2 and will be removed in 3.0.
-    # NelmioApiDocBundle 3 has native support for API Platform.
-    enable_nelmio_api_doc: false
-
     # Enable the Swagger documentation and export.
     enable_swagger: true
 
@@ -72,7 +64,7 @@ api_platform:
 
     # Enable the docs.
     enable_docs: true
-    
+
     # Enable the data collector and the WebProfilerBundle integration.
     enable_profiler: true
 
@@ -98,35 +90,6 @@ api_platform:
 
             # The name of the query parameter to enable or disable the partial pagination.
             partial_parameter_name: 'partial'
-
-            # To enable or disable pagination for all resource collections by default.
-            # Deprecated since 2.6 and will be removed in 3.0, use defaults.pagination_enabled instead.
-            enabled: true
-
-            # To allow partial pagination for all resource collections.
-            # This improves performances by skipping the `COUNT` query.
-            # Deprecated since 2.6 and will be removed in 3.0, use defaults.pagination_partial instead.
-            partial: false
-
-            # To allow the client to enable or disable the pagination.
-            # Deprecated since 2.6 and will be removed in 3.0, use defaults.pagination_client_enabled instead.
-            client_enabled: false
-
-            # To allow the client to set the number of items per page.
-            # Deprecated since 2.6 and will be removed in 3.0, use defaults.pagination_client_items_per_page instead.
-            client_items_per_page: false
-
-            # To allow the client to enable or disable the partial pagination.
-            # Deprecated since 2.6 and will be removed in 3.0, use defaults.pagination_client_partial instead.
-            client_partial: false
-
-            # The default number of items per page.
-            # Deprecated since 2.6 and will be removed in 3.0, use defaults.pagination_items_per_page instead.
-            items_per_page: 30
-
-            # The maximum number of items per page.
-            # Deprecated since 2.6 and will be removed in 3.0, use defaults.pagination_maximum_items_per_page instead.
-            maximum_items_per_page: ~
 
     mapping:
         # The list of paths with files or directories where the bundle will look for additional resource files.
@@ -194,7 +157,7 @@ api_platform:
     swagger:
         # The active versions of OpenAPI to be exported or used in the swagger_ui. The first value is the default.
         versions: [2, 3]
-                
+
         # The swagger API keys.
         api_keys: []
             # The name of the header or query parameter containing the API key.
@@ -202,6 +165,13 @@ api_platform:
 
             # Whether the API key should be a query parameter or a header.
             # type: 'query' or 'header'
+
+        swagger_ui_extra_configuration:
+            # Controls the default expansion setting for the operations and tags. It can be 'list' (expands only the tags), 'full' (expands the tags and operations) or 'none' (expands nothing).
+            docExpansion: list
+            # If set, enables filtering. The top bar will show an edit box that you can use to filter the tagged operations that are shown.
+            filter: false
+            # You can use any other configuration parameters too.
 
     openapi:
         # The contact information for the exposed API.
@@ -219,8 +189,15 @@ api_platform:
             # The license name used for the API.
             name:
             # URL to the license used for the API. MUST be in the format of a URL.
-            url:       
-        
+            url:
+
+        swagger_ui_extra_configuration:
+            # Controls the default expansion setting for the operations and tags. It can be 'list' (expands only the tags), 'full' (expands the tags and operations) or 'none' (expands nothing).
+            docExpansion: list
+            # If set, enables filtering. The top bar will show an edit box that you can use to filter the tagged operations that are shown.
+            filter: false
+            # You can use any other configuration parameters too.
+
     http_cache:
         # To make all responses public by default.
         public: ~
@@ -235,21 +212,8 @@ api_platform:
             # To pass options to the client charged with the request.
             request_options: []
 
-        # Automatically generate etags for API responses.
-        # Deprecated since 2.6 and will be removed in 3.0, use defaults.cache_headers.etag instead.
-        etag: true
-
-        # Default value for the response max age.
-        # Deprecated since 2.6 and will be removed in 3.0, use defaults.cache_headers.max_age instead.
-        max_age: 3600
-
-        # Default value for the response shared (proxy) max age.
-        # Deprecated since 2.6 and will be removed in 3.0, use defaults.cache_headers.shared_max_age instead.
-        shared_max_age: 3600
-
-        # Default values of the "Vary" HTTP header.
-        # Deprecated since 2.6 and will be removed in 3.0, use defaults.cache_headers.vary instead.
-        vary: ['Accept']
+            # Use another service as the purger for example "api_platform.http_cache.purger.varnish.xkey"
+            purger: 'api_platform.http_cache.purger.varnish.ban'
 
     mercure:
         # Enabled by default with installed symfony/mercure-bundle.
@@ -278,9 +242,9 @@ api_platform:
         Symfony\Component\Serializer\Exception\ExceptionInterface: 400
 
         # Or with a constant defined in the 'Symfony\Component\HttpFoundation\Response' class.
-        ApiPlatform\Core\Exception\InvalidArgumentException: !php/const Symfony\Component\HttpFoundation\Response::HTTP_BAD_REQUEST
+        ApiPlatform\Exception\InvalidArgumentException: !php/const Symfony\Component\HttpFoundation\Response::HTTP_BAD_REQUEST
 
-        ApiPlatform\Core\Exception\FilterValidationException: 400
+        ApiPlatform\Exception\FilterValidationException: 400
 
         Doctrine\ORM\OptimisticLockException: 409
 
@@ -354,7 +318,13 @@ api_platform:
             # Default values of the "Vary" HTTP header.
             vary: ['Accept']
 
-        normalization_context: ~
+            invalidation:
+                xkey:
+                    glue: ' '
+
+        normalization_context:
+            # Default value to omit null values in conformance with the JSON Merge Patch RFC.
+            skip_null_values: true
         denormalization_context: ~
         swagger_context: ~
         openapi_context: ~
@@ -403,7 +373,10 @@ api_platform:
         stateless: ~
 
         # The URL generation strategy to use for IRIs
-        url_generation_strategy: !php/const ApiPlatform\Core\Api\UrlGeneratorInterface::ABS_PATH
+        url_generation_strategy: !php/const ApiPlatform\Api\UrlGeneratorInterface::ABS_PATH
+
+        # To enable collecting denormalization errors
+        collectDenormalizationErrors: false
 
         # ...
 ```

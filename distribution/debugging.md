@@ -64,6 +64,7 @@ Note for Mac environments use the following:
 ```
 
 In VSCode, alongside the default PHP configuration in `launch.json`, you'll need path mappings for the Docker image.
+
 ```json
 {
     "version": "0.2.0",
@@ -90,7 +91,7 @@ Inspect the installation with the following command. The requested Xdebug
 version should be displayed in the output.
 
 ```console
-$ docker-compose exec php \
+$ docker compose exec php \
     php --version
 
 PHP …

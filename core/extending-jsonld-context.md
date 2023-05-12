@@ -4,36 +4,33 @@
 
 <p align="center" class="symfonycasts"><a href="https://symfonycasts.com/screencast/api-platform/json-ld?cid=apip"><img src="../distribution/images/symfonycasts-player.png" alt="JSON-LD screencast"><br>Watch the JSON-LD screencast</a>
 
-API Platform Core provides the possibility to extend the JSON-LD context of properties. This allows you to describe JSON-LD-typed
+API Platform provides the possibility to extend the JSON-LD context of properties. This allows you to describe JSON-LD-typed
 values, inverse properties using the `@reverse` keyword and you can even overwrite the `@id` property this way. Everything you define
 within the following annotation will be passed to the context. This provides a generic way to extend the context.
 
 ```php
 <?php
 // api/src/Entity/Book.php
-
 namespace App\Entity;
 
-use ApiPlatform\Core\Annotation\ApiProperty;
-use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Metadata\ApiProperty;
+use ApiPlatform\Metadata\ApiResource;
 
-#[ApiResource(iri: "https://schema.org/Book")]
+#[ApiResource(types: ['https://schema.org/Book'])]
 class Book
 {
     // ...
 
     #[ApiProperty(
-      iri: "https://schema.org/name",
-      attributes: [
-        "jsonld_context" => [
-          "@id" => "http://yourcustomid.com",
-          "@type" => "http://www.w3.org/2001/XMLSchema#string",
-          "someProperty" => [
-            "a" => "textA",
-            "b" => "textB"
-          ]
+        types: ['https://schema.org/name'],
+        jsonldContext: [
+            '@id' => 'http://yourcustomid.com',
+            '@type' => 'http://www.w3.org/2001/XMLSchema#string',
+            'someProperty' => [
+                'a' => 'textA',
+                'b' => 'textB'
+            ]
         ]
-      ]
     )]
     public $name;
     
@@ -75,11 +72,13 @@ It's also possible to replace the Hydra context used by the documentation genera
 ```php
 <?php
 // api/src/Entity/Book.php
+namespace App\Entity;
 
-use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Get;
 
-#[ApiResource(itemOperations: [
-  "get" => ["hydra_context" => ["foo" => "bar"]]
+#[ApiResource(operations: [
+  new Get(hydraContext: ['foo' => 'bar'])
 ])]
 class Book
 {
@@ -89,28 +88,31 @@ class Book
 
 ```yaml
 # api/config/api_platform/resources.yaml
-App\Entity\Book:
-    itemOperations:
-        get:
-            hydra_context: { foo: 'bar' }
+resources:
+    App\Entity\Book:
+        operations:
+            ApiPlatform\Metadata\Get:
+                hydraContext: { foo: 'bar' }
 ```
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" ?>
 <!-- api/config/api_platform/resources.xml -->
 
-<resources xmlns="https://api-platform.com/schema/metadata"
+<resources xmlns="https://api-platform.com/schema/metadata/resources-3.0"
            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-           xsi:schemaLocation="https://api-platform.com/schema/metadata
-           https://api-platform.com/schema/metadata/metadata-2.0.xsd">
+           xsi:schemaLocation="https://api-platform.com/schema/metadata/resources-3.0
+           https://api-platform.com/schema/metadata/resources-3.0.xsd">
     <resource class="App\Entity\Book">
-        <itemOperations>
-            <itemOperation name="get">              
-                <attribute name="hydra_context">
-                    <attribute name="foo">bar</attribute>
-                </attribute>
-            </itemOperation>
-        </itemOperations>
+        <operations>
+            <operation class="ApiPlatform\Metadata\Get">              
+                <hydraContext>
+                    <values>
+                        <value name="foo">bar</value>
+                    </values>
+                </hydraContext>
+            </operation>
+        </operations>
     </resource>
 </resources>
 ```

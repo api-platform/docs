@@ -1,16 +1,5 @@
 # FOSUserBundle Integration
 
-## ⚠️ Deprecated: this integration is deprecated and will be removed in API Platform 3
-
-FOSUserBundle is not well suited for APIs. We strongly encourage you to use the [Doctrine user provider](https://symfony.com/doc/current/security/user_provider.html#entity-user-provider)
-shipped with Symfony or to [create a custom user provider](https://symfony.com/doc/current/security/user_provider.html#creating-a-custom-user-provider)
-instead of using this bundle.
-
-API Platform Core is shipped with a bridge for [FOSUserBundle](https://github.com/FriendsOfSymfony/FOSUserBundle).
-If the FOSUser bundle is enabled, this bridge will use its `UserManager` to create, update and delete user resources.
-
-<p align="center" class="symfonycasts"><a href="https://symfonycasts.com/screencast/api-platform/user-entity?cid=apip"><img src="../distribution/images/symfonycasts-player.png" alt="User Entity screencast"><br>Watch the User Entity screencast</a></p>
-
 ## Installing the Bundle
 
 The installation procedure of the FOSUserBundle is described [in the main Symfony docs](https://symfony.com/doc/master/bundles/FOSUserBundle/index.html)
@@ -31,33 +20,22 @@ framework:
     form: { enabled: true }
 ```
 
-## Enabling the Bridge
-
-To enable the provided bridge with FOSUserBundle, you need to add the following configuration to API Platform:
-
-```yaml
-# api/config/packages/api_platform.yaml
-api_platform:
-    enable_fos_user: true
-```
-
 ## Creating a `User` Entity with Serialization Groups
 
 Here's an example of declaration of a [Doctrine ORM User class](https://github.com/FriendsOfSymfony/FOSUserBundle/blob/master/Resources/doc/index.rst#a-doctrine-orm-user-class).
 There's also an example for a [Doctrine MongoDB ODM](https://github.com/FriendsOfSymfony/FOSUserBundle/blob/master/Resources/doc/index.rst#b-mongodb-user-class).
 You need to use serialization groups to hide some properties like `plainPassword` (only in read) and `password`. The properties
-shown are handled with [`normalization_context`](serialization.md#normalization), while the properties
-you can modify are handled with [`denormalization_context`](serialization.md#denormalization).
+shown are handled with [`normalizationContext`](serialization.md#normalization), while the properties
+you can modify are handled with [`denormalizationContext`](serialization.md#denormalization).
 
 Create your User entity with serialization groups:
 
 ```php
 <?php
 // api/src/Entity/User.php
-
 namespace App\Entity;
 
-use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Metadata\ApiResource;
 use Doctrine\ORM\Mapping as ORM;
 use FOS\UserBundle\Model\User as BaseUser;
 use FOS\UserBundle\Model\UserInterface;
@@ -66,8 +44,8 @@ use Symfony\Component\Serializer\Annotation\Groups;
 #[ORM\Entity]
 #[ORM\Table(name: 'fos_user')]
 #[ApiResource(
-    normalizationContext: ["groups" => ["user", "user:read"]],
-    denormalizationContext: ["groups" => ["user", "user:write"]]
+    normalizationContext: ['groups' => ['user']],
+    denormalizationContext: ['groups' => ['user', 'user:write']],
 )]
 class User extends BaseUser
 {

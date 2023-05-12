@@ -146,8 +146,8 @@ Here is an example of mappings for 2 resources, `User` and `Tweet`, and their mo
 // api/src/Model/User.php
 namespace App\Model;
 
-use ApiPlatform\Core\Annotation\ApiProperty;
-use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Metadata\ApiProperty;
+use ApiPlatform\Metadata\ApiResource;
 
 #[ApiResource]
 class User
@@ -175,8 +175,8 @@ class User
 // api/src/Model/Tweet.php
 namespace App\Model;
 
-use ApiPlatform\Core\Annotation\ApiProperty;
-use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Metadata\ApiProperty;
+use ApiPlatform\Metadata\ApiResource;
 
  #[ApiResource]
 class Tweet
@@ -196,8 +196,10 @@ API Platform will automatically disable write operations and snake case document
 camel case object properties during serialization.
 
 Keep in mind that it is your responsibility to populate your Elasticsearch index. To do so, you can use [Logstash](https://www.elastic.co/products/logstash),
-a custom [data persister](data-persisters.md#creating-a-custom-data-persister) or any other mechanism that suits your
+a custom [state processors](state-processors.md#creating-a-custom-state-processor) or any other mechanism that suits your
 project (such as an [ETL](https://en.wikipedia.org/wiki/Extract,_transform,_load)).
+
+To disable elasticsearch index discovery for non-elasticsearch entities you can set `elasticsearch: false` in the `#[ApiResource]` attribute. If this property is absent, all entities will perform an index check during cache warmup to determine if they are on elasticsearch or not.
 
 You're done! The API is now ready to use.
 

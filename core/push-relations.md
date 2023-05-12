@@ -11,11 +11,11 @@ Vulcain is faster, cleaner, more flexible, and is supported out of the box in [t
 
 ```php
 <?php
-
+// api/src/Entity/Book.php
 namespace App\Entity;
 
-use ApiPlatform\Core\Annotation\ApiProperty;
-use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Metadata\ApiProperty;
+use ApiPlatform\Metadata\ApiResource;
 
 #[ApiResource]
 class Book

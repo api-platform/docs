@@ -2,7 +2,7 @@
 
 <p align="center" class="symfonycasts"><a href="https://symfonycasts.com/screencast/api-platform/pagination?cid=apip"><img src="../distribution/images/symfonycasts-player.png" alt="Pagination screencast"><br>Watch the Pagination screencast</a></p>
 
-API Platform Core has native support for paged collections. Pagination is enabled by default for all collections. Each collection
+API Platform has native support for paged collections. Pagination is enabled by default for all collections. Each collection
 contains 30 items per page.
 The activation of the pagination and the number of elements per page can be configured from:
 
@@ -72,24 +72,89 @@ api_platform:
 
 It can also be disabled for a specific resource:
 
+[codeSelector]
+
 ```php
 <?php
 // api/src/Entity/Book.php
+namespace App\Entity;
 
-use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Metadata\ApiResource;
 
-#[ApiResource(attributes: ["pagination_enabled" => false])]
+#[ApiResource(paginationEnabled: false)]
 class Book
 {
     // ...
 }
 ```
 
+```yaml
+# api/config/api_platform/resources.yaml
+resources:
+    App\Entity\Book:
+       paginationEnabled: false
+```
+[/codeSelector]
+
+### Disabling the Pagination For a Specific Operation
+
+You can also disable an operation for a specific operation:
+
+[codeSelector]
+
+```php
+<?php
+// api/src/Entity/Book.php
+namespace App\Entity;
+
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\GetCollection;
+
+#[ApiResource(
+    operations: [
+        new GetCollection(
+            paginationEnabled: false
+        )   
+    ]
+)]
+class Book
+{
+    // ...
+}
+```
+
+```yaml
+# api/config/api_platform/resources.yaml
+resources:
+    App\Entity\Book:
+       operations:
+           ApiPlatform\Metadata\GetCollection:
+                paginationEnabled: false
+```
+
+```xml
+<?xml version="1.0" encoding="UTF-8" ?>
+<!-- api/config/api_platform/resources.xml -->
+
+<resources xmlns="https://api-platform.com/schema/metadata/resources-3.0"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="https://api-platform.com/schema/metadata/resources-3.0
+        https://api-platform.com/schema/metadata/resources-3.0.xsd">
+    <resource class="App\Entity\Book">
+        <operations>
+            <operation class="ApiPlatform\Metadata\GetCollection"
+                       paginationEnabled="false" /> 
+        </operations>
+    </resource>
+</resources>
+```
+[/codeSelector]
+
 ### Disabling the Pagination Client-side
 
 #### Disabling the Pagination Client-side Globally
 
-You can configure API Platform Core to let the client enable or disable the pagination. To activate this feature globally,
+You can configure API Platform to let the client enable or disable the pagination. To activate this feature globally,
 use the following configuration:
 
 ```yaml
@@ -117,10 +182,11 @@ The client ability to disable the pagination can also be set in the resource con
 ```php
 <?php
 // api/src/Entity/Book.php
+namespace App\Entity;
 
-use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Metadata\ApiResource;
 
-#[ApiResource(attributes: ["pagination_client_enabled" => true])]
+#[ApiResource(paginationClientEnabled: true)]
 class Book
 {
     // ...
@@ -147,10 +213,11 @@ api_platform:
 ```php
 <?php
 // api/src/Entity/Book.php
+namespace App\Entity;
 
-use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Metadata\ApiResource;
 
-#[ApiResource(attributes: ["pagination_items_per_page" => 30])]
+#[ApiResource(paginationItemsPerPage: 30)]
 class Book
 {
     // ...
@@ -180,10 +247,11 @@ Changing the number of items per page can be enabled (or disabled) for a specifi
 ```php
 <?php
 // api/src/Entity/Book.php
+namespace App\Entity;
 
-use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Metadata\ApiResource;
 
-#[ApiResource(attributes: ["pagination_client_items_per_page" => true])]
+#[ApiResource(paginationClientItemsPerPage: true)]
 class Book
 {
     // ...
@@ -208,10 +276,11 @@ api_platform:
 ```php
 <?php
 // api/src/Entity/Book.php
+namespace App\Entity;
 
-use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Metadata\ApiResource;
 
-#[ApiResource(attributes: ["pagination_maximum_items_per_page" => 50])]
+#[ApiResource(paginationMaximumItemsPerPage: 50)]
 class Book
 {
     // ...
@@ -223,13 +292,13 @@ class Book
 ```php
 <?php
 // api/src/Entity/Book.php
+namespace App\Entity;
 
-use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\GetCollection;
 
-#[ApiResource(collectionOperations: [
-  "get" => ["pagination_maximum_items_per_page" => 50]
-])]
-)
+#[ApiResource]
+#[GetCollection(paginationMaximumItemsPerPage: 50)]
 class Book
 {
     // ...
@@ -257,12 +326,12 @@ api_platform:
 
 ```php
 <?php
-
 // api/src/Entity/Book.php
+namespace App\Entity;
 
-use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Metadata\ApiResource;
 
-#[ApiResource(attributes: ["pagination_partial" => true])]
+#[ApiResource(paginationPartial: true)]
 class Book
 {
     // ...
@@ -290,12 +359,12 @@ The partial pagination retrieval can now be changed by toggling a query paramete
 
 ```php
 <?php
-
 // api/src/Entity/Book.php
+namespace App\Entity;
 
-use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Metadata\ApiResource;
 
-#[ApiResource(attributes: ["pagination_client_partial" => true])]
+#[ApiResource(paginationClientPartial: true)]
 class Book
 {
     // ...
@@ -304,26 +373,26 @@ class Book
 
 ## Cursor-Based Pagination
 
-To configure your resource to use the cursor-based pagination, select your unique sorted field as well as the direction you’ll like the pagination to go via filters and enable the `pagination_via_cursor` option.
+To configure your resource to use the cursor-based pagination, select your unique sorted field as well as the direction you’ll like the pagination to go via filters and enable the `paginationViaCursor` option.
 Note that for now you have to declare a `RangeFilter` and an `OrderFilter` on the property used for the cursor-based pagination.
 
 The following configuration also works on a specific operation:
 
 ```php
 <?php
-
 // api/src/Entity/Book.php
+namespace App\Entity;
 
-use ApiPlatform\Core\Annotation\ApiFilter;
-use ApiPlatform\Core\Annotation\ApiResource;
-use ApiPlatform\Core\Bridge\Doctrine\MongoDbOdm\Filter\OrderFilter;
-use ApiPlatform\Core\Bridge\Doctrine\MongoDbOdm\Filter\RangeFilter;
+use ApiPlatform\Metadata\ApiFilter;
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Doctrine\Odm\Filter\OrderFilter;
+use ApiPlatform\Doctrine\Odm\Filter\RangeFilter;
 
-#[ApiResource(attributes: [
-  "pagination_partial" => true,
-  "pagination_via_cursor" => [
-    ["field" => "id", "direction" => "DESC"],
-  ],
+#[ApiResource(
+    paginationPartial: true, 
+    paginationViaCursor: [
+        ['field' => 'id', 'direction' => 'DESC']
+    ]
 )]
 #[ApiFilter(RangeFilter::class, properties: ["id"])]
 #[ApiFilter(OrderFilter::class, properties: ["id" => "DESC"])]
@@ -337,28 +406,23 @@ To know more about cursor-based pagination take a look at [this blog post on med
 
 ## Controlling The Behavior of The Doctrine ORM Paginator
 
-The [PaginationExtension](https://github.com/api-platform/core/blob/2.6/src/Bridge/Doctrine/Orm/Extension/PaginationExtension.php) of API Platform performs some checks on the `QueryBuilder` to guess, in most common cases, the correct values to use when configuring the Doctrine ORM Paginator:
+The [PaginationExtension](https://github.com/api-platform/core/blob/main/src/Doctrine/Orm/Extension/PaginationExtension.php) of API Platform performs some checks on the `QueryBuilder` to guess, in most common cases, the correct values to use when configuring the Doctrine ORM Paginator:
 
 * `$fetchJoinCollection` argument: Whether there is a join to a collection-valued association. When set to `true`, the Doctrine ORM Paginator will perform an additional query, in order to get the correct number of results.
 
-    You can configure this using the `pagination_fetch_join_collection` attribute on a resource or on a per-operation basis:
+    You can configure this using the `paginationFetchJoinCollection` attribute on a resource or on a per-operation basis:
 
     ```php
     <?php
     // api/src/Entity/Book.php
+    namespace App\Entity;
 
-    use ApiPlatform\Core\Annotation\ApiResource;
+    use ApiPlatform\Metadata\ApiResource;
+    use ApiPlatform\Metadata\GetCollection;
 
-    #[ApiResource(
-      attributes: ["pagination_fetch_join_collection" => false],
-      collectionOperations: [
-        "get",
-        "get_custom" => [
-          // ...
-          "pagination_fetch_join_collection" => true,
-        ],
-      ],
-    )]
+    #[ApiResource(paginationFetchJoinCollection: false)]
+    #[GetCollection]
+    #[GetCollection(name: 'get_custom', paginationFetchJoinCollection: true)]
     class Book
     {
         // ...
@@ -367,24 +431,19 @@ The [PaginationExtension](https://github.com/api-platform/core/blob/2.6/src/Brid
 
 * `setUseOutputWalkers` setter: Whether to use output walkers. When set to `true`, the Doctrine ORM Paginator will use output walkers, which are compulsory for some types of queries.
 
-    You can configure this using the `pagination_use_output_walkers` attribute on a resource or on a per-operation basis:
+    You can configure this using the `paginationUseOutputWalkers` attribute on a resource or on a per-operation basis:
 
     ```php
     <?php
     // api/src/Entity/Book.php
+    namespace App\Entity;
 
-    use ApiPlatform\Core\Annotation\ApiResource;
+    use ApiPlatform\Metadata\ApiResource;
+    use ApiPlatform\Metadata\GetCollection;
 
-    #[ApiResource(
-      attributes: ["pagination_use_output_walkers" => false],
-      collectionOperations: [
-        "get",
-        "get_custom" => [
-          // ...
-          "pagination_use_output_walkers" => true,
-        ],
-      ],
-    )]
+    #[ApiResource(paginationUseOutputWalkers: false)]
+    #[GetCollection]
+    #[GetCollection(name: 'get_custom', paginationUseOutputWalkers: true)]
     class Book
     {
         // ...
@@ -402,9 +461,7 @@ First example:
 
 ```php
 <?php
-
 // api/src/Repository/BookRepository.php
-
 namespace App\Repository;
 
 use App\Entity\Book;
@@ -412,7 +469,7 @@ use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Doctrine\ORM\Tools\Pagination\Paginator as DoctrinePaginator;
-use ApiPlatform\Core\Bridge\Doctrine\Orm\Paginator;
+use ApiPlatform\Doctrine\Orm\Paginator;
 use Doctrine\Common\Collections\Criteria;
 
 class BookRepository extends ServiceEntityRepository
@@ -459,12 +516,10 @@ The Controller would look like this:
 
 ```php
 <?php
-
 // api/src/Controller/Book/GetBooksByFavoriteAuthorAction.php
-
 namespace App\Controller\Book;
 
-use ApiPlatform\Core\Bridge\Doctrine\Orm\Paginator;
+use ApiPlatform\Doctrine\Orm\Paginator;
 use App\Repository\BookRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpKernel\Attribute\AsController;
@@ -520,3 +575,14 @@ class BookRepository extends ServiceEntityRepository
     }
 }
 ```
+
+## Pagination for Custom State Providers
+
+If you are using custom state providers (not the provided Doctrine ORM, ODM or ElasticSearch ones)
+and if you want your results to be paginated, you will need to return an instance of a
+`ApiPlatform\State\Pagination\PartialPaginatorInterface` or
+`ApiPlatform\State\Pagination\PaginatorInterface`.
+A few existing classes are provided to make it easier to paginate the results:
+
+* `ApiPlatform\State\Pagination\ArrayPaginator`
+* `ApiPlatform\State\Pagination\TraversablePaginator`

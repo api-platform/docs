@@ -4,8 +4,9 @@
 
 ### AdminGuesser
 
-`<AdminGuesser>` renders automatically an [Admin component](https://marmelab.com/react-admin/Admin.html) for resources exposed by a web API documented with any format supported by `@api-platform/api-doc-parser` (for Hydra documented APIs,
-use the [HydraAdmin component](components.md#hydraadmin) instead).
+`<AdminGuesser>` renders automatically an [Admin component](https://marmelab.com/react-admin/Admin.html) for resources exposed by a web API documented with any format supported by `@api-platform/api-doc-parser`
+(for Hydra documented APIs, use the [HydraAdmin component](components.md#hydraadmin) instead,
+for OpenAPI documented APIs, use the [OpenApiAdmin component](components.md#openapiadmin) instead).
 It also creates a [schema analyzer](components.md#schema-analyzer) context, where the `schemaAnalyzer` service (for getting information about the provided API documentation) is stored.
 
 `<AdminGuesser>` renders all exposed resources by default, but you can choose what resource you want to render by passing [ResourceGuesser components](components.md#resourceguesser) as children.
@@ -17,7 +18,6 @@ import { AdminGuesser, ResourceGuesser } from "@api-platform/admin";
 
 const App = () => (
   <AdminGuesser
-    entrypoint={entrypoint}
     dataProvider={dataProvider}
     authProvider={authProvider}>
     <ResourceGuesser
@@ -35,13 +35,12 @@ export default App;
 
 #### Props
 
-| Name              | Type               | Value          | required | Description                                                                      |
-|-------------------|--------------------|----------------|----------|----------------------------------------------------------------------------------|
-| dataProvider      | object or function | -              | yes      | communicates with your API                                                       |
-| schemaAnalyzer    | object             | schemaAnalyzer | yes      | retrieves resource type according to [Schema.org](https://schema.org) vocabulary |
-| children          | node or function   | -              | no       | -                                                                                |
-| theme             | object             | theme          | no       | theme of your Admin App                                                          |
-| includeDeprecated | boolean            | true or false  | no       | displays or not deprecated resources                                             |
+| Name              | Type    | Value          | required | Description                                                                      |
+|-------------------|---------|----------------|----------|----------------------------------------------------------------------------------|
+| dataProvider      | object  | dataProvider   | yes      | communicates with your API                                                       |
+| schemaAnalyzer    | object  | schemaAnalyzer | yes      | retrieves resource type according to [Schema.org](https://schema.org) vocabulary |
+| theme             | object  | theme          | no       | theme of your Admin App                                                          |
+| includeDeprecated | boolean | true or false  | no       | displays or not deprecated resources                                             |
 
 ### ResourceGuesser
 
@@ -55,7 +54,6 @@ import { AdminGuesser, ResourceGuesser } from "@api-platform/admin";
 
 const App = () => (
   <AdminGuesser
-    entrypoint={entrypoint}
     dataProvider={dataProvider}
     schemaAnalyzer={schemaAnalyzer}
   >
@@ -109,11 +107,9 @@ export const BooksList = props => (
 
 #### ListGuesser Props
 
-| Name     | Type             | Value | required | Description                             |
-|----------|------------------|-------|----------|-----------------------------------------|
-| children | node or function | -     | no       | -                                       |
-| resource | string           | -     | yes      | endpoint of the resource                |
-| filters  | element          | -     | no       | filters that can be applied to the list |
+| Name     | Type    | Value | required | Description                             |
+|----------|---------|-------|----------|-----------------------------------------|
+| filters  | element | -     | no       | filters that can be applied to the list |
 
 You can also use props accepted by React Admin [List](https://marmelab.com/react-admin/List.html).
 
@@ -139,12 +135,7 @@ export const BooksCreate = props => (
 
 #### CreateGuesser Props
 
-| Name     | Type             | Value | required | Description              |
-|----------|------------------|-------|----------|--------------------------|
-| children | node or function | -     | no       | -                        |
-| resource | string           | -     | yes      | endpoint of the resource |
-
-You can also use props accepted by React Admin [Create](https://marmelab.com/react-admin/CreateEdit.html).
+You can use props accepted by React Admin [Create](https://marmelab.com/react-admin/CreateEdit.html).
 
 ### EditGuesser
 
@@ -168,12 +159,7 @@ export const BooksEdit = props => (
 
 #### EditGuesser Props
 
-| Name     | Type             | Value | required | Description              |
-|----------|------------------|-------|----------|--------------------------|
-| children | node or function | -     | no       | -                        |
-| resource | string           | -     | yes      | endpoint of the resource |
-
-You can also use props accepted by React Admin [Edit](https://marmelab.com/react-admin/CreateEdit.html).
+You can use props accepted by React Admin [Edit](https://marmelab.com/react-admin/CreateEdit.html).
 
 ### ShowGuesser
 
@@ -196,12 +182,7 @@ export const BooksShow = props => (
 
 #### ShowGuesser Props
 
-| Name     | Type             | Value | required | Description              |
-|----------|------------------|-------|----------|--------------------------|
-| children | node or function | -     | no       | -                        |
-| resource | string           | -     | yes      | endpoint of the resource |
-
-You can also use props accepted by React Admin [Show component](https://marmelab.com/react-admin/Show.html).
+You can use props accepted by React Admin [Show component](https://marmelab.com/react-admin/Show.html).
 
 ## Hydra
 
@@ -230,34 +211,78 @@ export default App;
 
 #### HydraAdmin Props
 
-| Name       | Type           | Value | required | Description                  |
-|------------|----------------|-------|----------|------------------------------|
-| entrypoint | string         | -     | yes      | entrypoint of the API        |
-| mercure    | boolean|object | *     | yes      | configuration to use Mercure |
+| Name         | Type                | Value        | required | Description                  |
+|--------------|---------------------|--------------|----------|------------------------------|
+| entrypoint   | string              | -            | yes      | entrypoint of the API        |
+| mercure      | object&#124;boolean | *            | no       | configuration to use Mercure |
+| dataProvider | object              | dataProvider | no       | hydra data provider to use   |
 
 \* `false` to explicitly disable, `true` to enable with default parameters or an object with the following properties:
 - `hub`: the URL to your Mercure hub
 - `jwt`: a subscriber JWT to access your Mercure hub
 - `topicUrl`: the topic URL of your resources
 
-### Data Provider
+### Hydra Data Provider
 
 Based on React Admin `create`, `delete`, `getList`, `getManyReference`, `getOne`, `update` methods, the `dataProvider` is used by API Platform Admin to communicate with the API.
 In addition, the specific `introspect` method parses your API documentation.
 Note that the `dataProvider` can be overridden to fit your API needs.
 
-### Schema Analyzer
+### Hydra Schema Analyzer
+
+Analyses your resources and retrieves their types according to the [Schema.org](https://schema.org) vocabulary.
+
+## OpenAPI
+
+### OpenApiAdmin
+
+Creates a complete Admin, as [AdminGuesser](components.md#adminguesser), but configured specially for [OpenAPI](https://www.openapis.org/).
+If you want to use other formats (see supported formats: `@api-platform/api-doc-parser`) use [AdminGuesser](components.md#adminguesser) instead.
+
+```javascript
+// App.js
+import { OpenApiAdmin, ResourceGuesser } from "@api-platform/admin";
+
+const App = () => (
+  <OpenApiAdmin
+    entrypoint={entrypoint}
+    docEntrypoint={docEntrypoint}
+    dataProvider={dataProvider}
+    authProvider={authProvider}
+   >
+     <ResourceGuesser name="books" />
+     { /* ... */ }
+  </OpenApiAdmin>
+);
+
+export default App;
+```
+
+#### OpenApiAdmin Props
+
+| Name          | Type                | Value | required | Description                  |
+|---------------|---------------------|-------|----------|------------------------------|
+| dataProvider  | dataProvider        | -     | yes      | data provider to use         |
+| docEntrypoint | string              | -     | yes      | doc entrypoint of the API    |
+| entrypoint    | string              | -     | yes      | entrypoint of the API        |
+| mercure       | object&#124;boolean | *     | no       | configuration to use Mercure |
+
+\* `false` to explicitly disable, `true` to enable with default parameters or an object with the following properties:
+- `hub`: the URL to your Mercure hub
+- `jwt`: a subscriber JWT to access your Mercure hub
+- `topicUrl`: the topic URL of your resources
+
+### Open API Data Provider
+
+Based on React Admin `create`, `delete`, `getList`, `getManyReference`, `getOne`, `update` methods, the `dataProvider` is used by API Platform Admin to communicate with the API.
+In addition, the specific `introspect` method parses your API documentation.
+Note that the `dataProvider` can be overridden to fit your API needs.
+
+### Open API Schema Analyzer
 
 Analyses your resources and retrieves their types according to the [Schema.org](https://schema.org) vocabulary.
 
 ## Other Components
-
-### Pagination
-
-Set by default in the [ListGuesser component](components.md#listguesser), the `Pagination` component uses React Admin [Pagination component](https://marmelab.com/react-admin/List.html#pagination).
-By default, it renders 30 items per page and displays a navigation UI.
-If you want to change the number of items per page or disable the pagination, see the [Pagination documentation](../core/pagination.md).
-It is also capable to handle partial pagination.
 
 ### FieldGuesser
 
@@ -281,9 +306,9 @@ export const BooksShow = props => (
 
 #### FieldGuesser Props
 
-| Name   | Type   | Value | required | Description              |
-|--------|--------|-------|----------|--------------------------|
-| source | string | -     | yes      | endpoint of the resource |
+| Name   | Type   | Value | required | Description                          |
+|--------|--------|-------|----------|--------------------------------------|
+| source | string | -     | yes      | name of the property of the resource |
 
 You can also use props accepted by React Admin [basic fields](https://marmelab.com/react-admin/Fields.html#basic-fields).
 
@@ -293,6 +318,6 @@ Uses React Admin [input components](https://marmelab.com/react-admin/Inputs.html
 
 #### InputGuesser Props
 
-| Name   | Type   | Value | required | Description              |
-|--------|--------|-------|----------|--------------------------|
-| source | string | -     | yes      | endpoint of the resource |
+| Name   | Type   | Value | required | Description                          |
+|--------|--------|-------|----------|--------------------------------------|
+| source | string | -     | yes      | name of the property of the resource |

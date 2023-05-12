@@ -1,23 +1,24 @@
 chapters:
-  - title: 'The Distribution: Create Powerful APIs with Ease'
+  - title: "The Distribution: Create Powerful APIs with Ease"
     path: distribution
     items:
       - index
       - testing
       - debugging
       - caddy
-  - title: The API Component
+  - title: Core
     path: core
     items:
       - index
       - getting-started
+      - upgrade-guide
       - design
       - extending
       - testing
       - operations
       - graphql
-      - data-providers
-      - data-persisters
+      - state-providers
+      - state-processors
       - filters
       - subresources
       - serialization
@@ -47,6 +48,7 @@ chapters:
       - events
       - file-upload
       - jwt
+      - user
       - form-data
       - angularjs-integration
       - fosuser-bundle
@@ -54,18 +56,19 @@ chapters:
       - bootstrap
       - configuration
       - migrate-from-fosrestbundle
-  - title: The Schema Generator Component
+  - title: Schema Generator
     path: schema-generator
     items:
       - index
       - getting-started
       - configuration
-  - title: The Admin Component
+  - title: Admin
     path: admin
     items:
       - index
       - getting-started
       - handling-relations
+      - openapi
       - schema.org
       - validation
       - real-time-mercure
@@ -74,18 +77,19 @@ chapters:
       - performance
       - customizing
       - components
-  - title: The Client Generator Component
-    path: client-generator
+  - title: Create Client
+    path: create-client
     items:
       - index
       - nextjs
-      - nuxtjs
+      - nuxt
       - vuetify
       - quasar
       - react
       - react-native
       - vuejs
       - typescript
+      - custom
       - troubleshooting
   - title: Deployment
     path: deployment

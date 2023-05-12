@@ -25,11 +25,12 @@ These built-in event listeners are registered for routes managed by API Platform
 Name                          | Event              | [Pre & Post hooks](#custom-event-listeners) | Priority | Description
 ------------------------------|--------------------|---------------------------------------------|----------|-------------
 `AddFormatListener`           | `kernel.request`   | None                                        | 7        | Guesses the best response format ([content negotiation](content-negotiation.md))
-`ReadListener`                | `kernel.request`   | `PRE_READ`, `POST_READ`                     | 4        | Retrieves data from the persistence system using the [data providers](data-providers.md) (`GET`, `PUT`, `PATCH`, `DELETE`)
-`DeserializeListener`         | `kernel.request`   | `PRE_DESERIALIZE`, `POST_DESERIALIZE`       | 2        | Deserializes data into a PHP entity (`POST`); updates the entity retrieved using the data provider (`PUT`, `PATCH`)
+`QueryParameterValidateListener` | `kernel.request`   | None                                        | 16       | Validates query parameters
+`ReadListener`                | `kernel.request`   | `PRE_READ`, `POST_READ`                     | 4        | Retrieves data from the persistence system using the [state providers](data-providers.md) (`GET`, `PUT`, `PATCH`, `DELETE`)
+`DeserializeListener`         | `kernel.request`   | `PRE_DESERIALIZE`, `POST_DESERIALIZE`       | 2        | Deserializes data into a PHP entity (`POST`); updates the entity retrieved using the state provider (`PUT`, `PATCH`)
 `DenyAccessListener`          | `kernel.request`   | None                                        | 1        | Enforces [access control](security.md) using Security expressions
 `ValidateListener`            | `kernel.view`      | `PRE_VALIDATE`, `POST_VALIDATE`             | 64       | [Validates data](validation.md) (`POST`, `PUT`, `PATCH`)
-`WriteListener`               | `kernel.view`      | `PRE_WRITE`, `POST_WRITE`                   | 32       | Persists changes in the persistence system using the [data persisters](data-persisters.md) (`POST`, `PUT`, `PATCH`, `DELETE`)
+`WriteListener`               | `kernel.view`      | `PRE_WRITE`, `POST_WRITE`                   | 32       | Persists changes in the persistence system using the [state processors](state-processors.md) (`POST`, `PUT`, `PATCH`, `DELETE`)
 `SerializeListener`           | `kernel.view`      | `PRE_SERIALIZE`, `POST_SERIALIZE`           | 16       | Serializes the PHP entity in string [according to the request format](content-negotiation.md)
 `RespondListener`             | `kernel.view`      | `PRE_RESPOND`, `POST_RESPOND`               | 8        | Transforms serialized to a `Symfony\Component\HttpFoundation\Response` instance
 `AddLinkHeaderListener`       | `kernel.response`  | None                                        | 0        | Adds a `Link` HTTP header pointing to the Hydra documentation
@@ -38,13 +39,14 @@ Name                          | Event              | [Pre & Post hooks](#custom-
 
 Some of these built-in listeners can be enabled/disabled by setting operation attributes:
 
-Attribute     | Type   | Default | Description
---------------|--------|---------|-------------
-`read`        | `bool` | `true`  | Enables or disables `ReadListener`
-`deserialize` | `bool` | `true`  | Enables or disables `DeserializeListener`
-`validate`    | `bool` | `true`  | Enables or disables `ValidateListener`
-`write`       | `bool` | `true`  | Enables or disables `WriteListener`
-`serialize`   | `bool` | `true`  | Enables or disables `SerializeListener`
+Attribute                  | Type   | Default | Description
+---------------------------|--------|---------|-------------
+`query_parameter_validate` | `bool` | `true`  | Enables or disables `QueryParameterValidateListener`
+`read`                     | `bool` | `true`  | Enables or disables `ReadListener`
+`deserialize`              | `bool` | `true`  | Enables or disables `DeserializeListener`
+`validate`                 | `bool` | `true`  | Enables or disables `ValidateListener`
+`write`                    | `bool` | `true`  | Enables or disables `WriteListener`
+`serialize`                | `bool` | `true`  | Enables or disables `SerializeListener`
 
 Some of these built-in listeners can be enabled/disabled by setting request attributes (for instance in the [`defaults`
 attribute of an operation](operations.md#recommended-method)):
@@ -59,7 +61,7 @@ Attribute      | Type   | Default | Description
 
 Registering your own event listeners to add extra logic is convenient.
 
-The [`ApiPlatform\Core\EventListener\EventPriorities`](https://github.com/api-platform/core/blob/2.6/src/EventListener/EventPriorities.php) class comes with a convenient set of class constants corresponding to commonly used priorities:
+The [`ApiPlatform\Symfony\EventListener\EventPriorities`](https://github.com/api-platform/core/blob/main/src/Symfony/EventListener/EventPriorities.php) class comes with a convenient set of class constants corresponding to commonly used priorities:
 
 Constant           | Event             | Priority |
 -------------------|-------------------|----------|
@@ -84,7 +86,7 @@ In the following example, we will send a mail each time a new book is created us
 
 namespace App\EventSubscriber;
 
-use ApiPlatform\Core\EventListener\EventPriorities;
+use ApiPlatform\Symfony\EventListener\EventPriorities;
 use App\Entity\Book;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\Request;

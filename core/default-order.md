@@ -1,6 +1,6 @@
 # Overriding Default Order
 
-API Platform Core provides an easy way to override the default order of items in your collection.
+API Platform provides an easy way to override the default order of items in your collection.
 
 By default, items in the collection are ordered in ascending (ASC) order by their resource identifier(s). If you want to
 customize this order, you must add an `order` attribute on your ApiResource annotation:
@@ -12,9 +12,9 @@ customize this order, you must add an `order` attribute on your ApiResource anno
 // api/src/Entity/Book.php
 namespace App\Entity;
 
-use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Metadata\ApiResource;
 
-#[ApiResource(order: ["foo" => "ASC"])]
+#[ApiResource(order: ['foo' => 'ASC'])]
 class Book
 {
     // ...
@@ -31,9 +31,8 @@ class Book
 ```yaml
 # api/config/api_platform/resources/Book.yaml
 App\Entity\Book:
-    attributes:
-        order:
-            foo: ASC
+    order:
+        foo: ASC
 ```
 
 [/codeSelector]
@@ -48,9 +47,9 @@ If you only specify the key, `ASC` direction will be used as default. For exampl
 // api/src/Entity/Book.php
 namespace App\Entity;
 
-use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Metadata\ApiResource;
 
-#[ApiResource(order: ["foo", "bar"])]
+#[ApiResource(order: ['foo', 'bar'])]
 class Book
 {
     // ...
@@ -72,8 +71,7 @@ class Book
 ```yaml
 # api/config/api_platform/resources/Book.yaml
 App\Entity\Book:
-    attributes:
-        order: ['foo', 'bar']
+    order: ['foo', 'bar']
 ```
 
 [/codeSelector]
@@ -87,9 +85,9 @@ It's also possible to configure the default order on an association property:
 // api/src/Entity/Book.php
 namespace App\Entity;
 
-use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Metadata\ApiResource;
 
-#[ApiResource(order: ["author.username"])]
+#[ApiResource(order: ['author.username'])]
 class Book
 {
     // ...
@@ -106,8 +104,7 @@ class Book
 ```yaml
 # api/config/api_platform/resources/Book.yaml
 App\Entity\Book:
-    attributes:
-        order: ['author.username']
+    order: ['author.username']
 ```
 
 [/codeSelector]
@@ -117,21 +114,18 @@ Another possibility is to apply the default order for a specific collection oper
 [codeSelector]
 
 ```php
-#[ApiResource(
-    collectionOperations: [
-        "get",
-        "get_desc_custom" => [
-            "method" => "GET",
-            "path" => "custom_collection_desc_foos",
-            "order" => ["name" => "DESC"]
-        ],
-        "get_asc_custom" => [
-            "method" => "GET",
-            "path" => "custom_collection_asc_foos",
-            "order" => ["name" => "ASC"]
-        ],
-    ]
-)]
+<?php
+// api/src/Entity/Book.php
+namespace App\Entity;
+
+use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\ApiResource;
+
+#[ApiResource(operations: [
+    new GetCollection(),
+    new GetCollection(name: 'get_desc_custom', uriTemplate: 'custom_collection_desc_foos', order: ['name' => 'DESC'])],
+    new GetCollection(name: 'get_asc_custom', uriTemplate: 'custom_collection_asc_foos', order: ['name' => 'ASC'])]
+])]
 class Book
 {
     // ...
@@ -148,15 +142,15 @@ class Book
 ```yaml
 # api/config/api_platform/resources/Book.yaml
 App\Entity\Book:
-    get: ~
+    ApiPlatform\Metadata\GetCollection: ~
     get_desc_custom:
-        method: get
-        path: custom_collection_desc_foos
+        class: ApiPlatform\Metadata\GetCollection
+        uriTemplate: custom_collection_desc_foos
         order:
             name: DESC
     get_asc_custom:
-        method: get
-        path: custom_collection_asc_foos
+        class: ApiPlatform\Metadata\GetCollection
+        uriTemplate: custom_collection_asc_foos
         order:
             name: ASC
 ```

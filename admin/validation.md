@@ -7,13 +7,14 @@ API Platform Admin manages automatically two types of validation: client-side va
 If the API documentation indicates that a field is mandatory,
 API Platform Admin will automatically add a [required client-side validation](https://marmelab.com/react-admin/CreateEdit.html#per-input-validation-built-in-field-validators).
 
-For instance, with API Platform Core as backend, if you write the following:
+For instance, with API Platform as backend, if you write the following:
 
 ```php
 <?php
 // api/src/Entity/Book.php
+namespace App\Entity;
 
-use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Metadata\ApiResource;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ApiResource]
@@ -36,15 +37,16 @@ API Platform Admin will automatically show the errors for the corresponding fiel
 To do so, it uses the [submission validation](https://marmelab.com/react-admin/CreateEdit.html#submission-validation) feature of React Admin,
 and the mapping between the response and the fields is done by the [schema analyzer](components.md#schemaanalyzer) with its method `getSubmissionErrors`.
 
-API Platform Core is supported by default, but if you use another backend, you will need to override the `getSubmissionErrors` method.
+API Platform is supported by default, but if you use another backend, you will need to override the `getSubmissionErrors` method.
 
 For example if you have this code:
 
 ```php
 <?php
 // api/src/Entity/Book.php
+namespace App\Entity;
 
-use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Metadata\ApiResource;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ApiResource]

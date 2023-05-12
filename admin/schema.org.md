@@ -16,9 +16,12 @@ To configure which property should be shown to represent your entity, map the pr
 
 ```php
 // api/src/Entity/Person.php
+...
 
-#[ApiProperty(iri: "https://schema.org/name")]
+#[ApiProperty(types: ["https://schema.org/name"])]
 private $name;
+
+...
 ```
 
 ## Emails, URLs and Identifiers

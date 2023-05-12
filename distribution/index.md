@@ -1,6 +1,6 @@
 # Getting Started With API Platform: Create Your API and Your Jamstack Site
 
-![The welcome page](images/api-platform-2.6-welcome.png)
+![The welcome page](images/api-platform-3.0-welcome.png)
 
 > *API Platform* is the most advanced API platform, in any framework or language.
 >
@@ -19,8 +19,8 @@ API Platform also provides ambitious **JavaScript** tools to create web and mobi
 The easiest and most powerful way to get started is [to download the API Platform distribution](https://github.com/api-platform/api-platform/releases). It contains:
 
 * the API skeleton, including [the Core library](../core/index.md), [the Symfony framework](https://symfony.com/) ([optional](../core/bootstrap.md)) and [the Doctrine ORM](https://www.doctrine-project.org/projects/orm.html) ([optional](../core/extending.md))
-* [the client scaffolding tool](../client-generator/) to generate [Next.js](../client-generator/
-) web applications from the API documentation ([Nuxt.js](https://nuxtjs.org/), [Vue](https://vuejs.org/), [Create React App](https://reactjs.org), [React Native](https://facebook.github.io/react-native/), [Quasar](https://quasar.dev/) and [Vuetify](https://vuetifyjs.com/) are also supported)
+* [the client scaffolding tool](../create-client/) to generate [Next.js](../create-client/
+) web applications from the API documentation ([Nuxt](https://nuxt.com/), [Vue](https://vuejs.org/), [Create React App](https://reactjs.org), [React Native](https://facebook.github.io/react-native/), [Quasar](https://quasar.dev/) and [Vuetify](https://vuetifyjs.com/) are also supported)
 * [a beautiful admin interface](../admin/), built on top of React Admin, dynamically created by parsing the API documentation
 * all you need to [create real-time and async APIs using the Mercure protocol](../core/mercure.md)
 * a [Docker](../deployment/docker-compose.md) definition to start a working development environment in a single command, providing containers for the API and the Next.js web application
@@ -73,19 +73,19 @@ Similarly, on Windows, only [Docker for Windows](https://docs.docker.com/docker-
 Open a terminal, and navigate to the directory containing your project skeleton. Run the following command to start all
 services using [Docker Compose](https://docs.docker.com/compose/):
 
-Download and build the latest versions of the images:
+Download the latest versions of the images:
 
 ```console
-docker-compose build --pull --no-cache
+docker compose pull --include-deps
 ```
 
-Start Docker Compose in detached mode:
+Then build images and Start Docker Compose in detached mode:
 
 ```console
-docker-compose up -d 
+docker compose up -d 
 ```
 
-**Tip:** be sure that the ports `80`, `443` and `5432` of the host are not already in use. The usual offenders are Apache, NGINX and Postgres. If they are running, stop them and run `docker-compose up -d` again.
+**Tip:** be sure that the ports `80`, `443` and `5432` of the host are not already in use. The usual offenders are Apache, NGINX and Postgres. If they are running, stop them and run `docker compose up -d` again.
 
 This starts the following services:
 
@@ -93,7 +93,7 @@ This starts the following services:
 |----------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | caddy    | [Caddy web server](caddy.md) with the [Mercure](../core/mercure.md) (real-time and async) and [Vulcain](https://vulcain.rocks) (relations preloading) modules |
 | php      | The API with PHP 8, Composer and sensitive configs                                                                                                                           |
-| pwa      | Next.js webapp with API Platform Admin and Client Generator preinstalled                                                                                                     |
+| pwa      | Next.js project compatible with Create Client and having Admin preinstalled                                                                                                     |
 | database | PostgreSQL database server                                                                                                                                                   |
 
 The following components are available:
@@ -107,7 +107,7 @@ The following components are available:
 To see the container's logs, run:
 
 ```console
-docker-compose logs -f
+docker compose logs -f
 ```
 
 The `-f` option is to follow the logs.
@@ -120,7 +120,7 @@ with its awesome [Symfony](https://confluence.jetbrains.com/display/PhpStorm/Get
 and [Php Inspections](https://plugins.jetbrains.com/plugin/7622-php-inspections-ea-extended-) plugins. Give them a try,
 you'll get auto-completion for almost everything and awesome quality analysis.
 
-[PHP IntelliSense for Visual Studio Code](https://marketplace.visualstudio.com/items?itemName=felixfbecker.php-intellisense) also works well, and is free and open source.
+[PHP IntelliSense for Visual Studio Code](https://marketplace.visualstudio.com/items?itemName=zobo.php-intellisense) also works well, and is free and open source.
 
 The API Platform distribution comes with a dummy entity for test purpose: `api/src/Entity/Greeting.php`. We will remove
 it later.
@@ -187,7 +187,7 @@ symfony serve
 ```
 
 All JavaScript components are also [available as standalone libraries](https://github.com/api-platform?language=javascript)
-installable with npm or Yarn.  
+installable with npm (or any other package manager).  
 
 **Note:** when installing API Platform this way, the API will be exposed as the `/api/` path. You need to open `http://localhost:8000/api/` to see the API documentation.
 If you are deploying API Platform directly on an Apache or NGINX webserver and getting a 404 error on opening this link, you will need to enable the [rewriting rules](https://symfony.com/doc/current/setup/web_server_configuration.html) for your specific webserver software.
@@ -196,7 +196,7 @@ If you are deploying API Platform directly on an Apache or NGINX webserver and g
 
 Open `https://localhost` in your favorite web browser:
 
-![The welcome page](images/api-platform-2.6-welcome.png)
+![The welcome page](images/api-platform-3.0-welcome.png)
 
 You'll need to add a security exception in your browser to accept the self-signed TLS certificate that has been generated
 for this container when installing the framework.
@@ -216,7 +216,7 @@ Click on an operation to display its details. You can also send requests to the 
 Try to create a new *Greeting* resource using the `POST` operation, then access it using the `GET` operation and, finally,
 delete it by executing the `DELETE` operation.
 If you access any API URL with the `.html` extension appended, API Platform displays
-the corresponding API request in the UI. Try it yourself by browsing to `https://localhost/greetings.html`. If the no extension is present, API Platform will use the `Accept` header to select the format to use. By default, a JSON-LD response is sent ([configurable behavior](../core/content-negotiation.md)).
+the corresponding API request in the UI. Try it yourself by browsing to `https://localhost/greetings.html`. If no extension is present, API Platform will use the `Accept` header to select the format to use. By default, a JSON-LD response is sent ([configurable behavior](../core/content-negotiation.md)).
 
 So, if you want to access the raw data, you have two alternatives:
 
@@ -235,25 +235,24 @@ allows to easily write functional tests and has good team collaboration features
 Your API Platform project is now 100% functional. Let's expose our own data model.
 Our bookshop API will start simple. It will be composed of a `Book` resource type and a `Review` one.
 
-Books have an id, an ISBN, a title, a description, an author, a publication date and are related to a list of reviews.
-Reviews have an id, a rating (between 0 and 5), a body, an author, a publication date and are related to one book.
+Books have an ID, an ISBN, a title, a description, an author, a publication date and are related to a list of reviews.
+Reviews have an ID, a rating (between 0 and 5), a body, an author, a publication date and are related to one book.
 
 Let's describe this data model as a set of Plain Old PHP Objects (POPO):
 
 ```php
 <?php
 // api/src/Entity/Book.php
-
 namespace App\Entity;
 
-use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Metadata\ApiResource;
 use Doctrine\Common\Collections\ArrayCollection;
 
 /** A book. */
 #[ApiResource]
 class Book
 {
-    /** The id of this book. */
+    /** The ID of this book. */
     private ?int $id = null;
 
     /** The ISBN of this book (or null if doesn't have one). */
@@ -289,16 +288,15 @@ class Book
 ```php
 <?php
 // api/src/Entity/Review.php
-
 namespace App\Entity;
 
-use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Metadata\ApiResource;
 
 /** A review of a book. */
 #[ApiResource]
 class Review
 {
-    /** The id of this review. */
+    /** The ID of this review. */
     private ?int $id = null;
 
     /** The rating of this review (between 0 and 5). */
@@ -337,7 +335,7 @@ Note that entities' and properties' descriptions in the API documentation, and t
 
 The framework also use these metadata to serialize and deserialize data from JSON (and other formats) to PHP objects (back and forth)!
 
-For the sake of simplicity, in this example we used public properties (except for the id, see below). API Platform (as well
+For the sake of simplicity, in this example we used public properties (except for the ID, see below). API Platform (as well
 as Symfony and Doctrine) also supports accessor methods (getters/setters), use them if you want to.
 We used a private property and a getter for the ID to enforce the fact that it is read only (we will let the DBMS generating it). API Platform also has first-grade support for UUIDs. [You should
 probably use them instead of auto-incremented IDs](https://www.clever-cloud.com/blog/engineering/2015/05/20/why-auto-increment-is-a-terrible-idea/).
@@ -365,7 +363,7 @@ Modify these files as described in these patches:
 `api/src/Entity/Book.php`
 
 ```diff
- use ApiPlatform\Core\Annotation\ApiResource;
+ use ApiPlatform\Metadata\ApiResource;
  use Doctrine\Common\Collections\ArrayCollection;
 +use Doctrine\ORM\Mapping as ORM;
  
@@ -374,7 +372,7 @@ Modify these files as described in these patches:
  #[ApiResource]
  class Book
  {
-     /** The id of this book. */
+     /** The ID of this book. */
 +    #[ORM\Id, ORM\Column, ORM\GeneratedValue]
      private ?int $id = null;
  
@@ -410,7 +408,7 @@ Modify these files as described in these patches:
 ```diff
  namespace App\Entity;
  
- use ApiPlatform\Core\Annotation\ApiResource;
+ use ApiPlatform\Metadata\ApiResource;
 +use Doctrine\ORM\Mapping as ORM;
  
  /** A review of a book. */
@@ -418,7 +416,7 @@ Modify these files as described in these patches:
  #[ApiResource]
  class Review
  {
-     /** The id of this review. */
+     /** The ID of this review. */
 +    #[ORM\Id, ORM\Column, ORM\GeneratedValue]
      private ?int $id = null;
  
@@ -448,12 +446,13 @@ Modify these files as described in these patches:
 **Tip**: you can also use Symfony [MakerBundle](https://symfonycasts.com/screencast/symfony-fundamentals/maker-command?cid=apip) thanks to the `--api-resource` option:
 
 ```console
-docker-compose exec php \
+docker compose exec php \
     bin/console make:entity --api-resource
 ```
 
-Doctrine's annotations map these entities to tables in the database. Annotations are convenient as they allow grouping
-the code and the configuration but, if you want to decouple classes from their metadata, you can switch to XML or YAML mappings.
+Doctrine's [annotations](https://www.doctrine-project.org/projects/doctrine-orm/en/latest/reference/annotations-reference.html) map these entities to tables in the database.
+Mapping through [attributes](https://www.doctrine-project.org/projects/doctrine-orm/en/latest/reference/attributes-reference.html) is also supported, if you prefer those.
+Both methods are convenient as they allow grouping the code and the configuration but, if you want to decouple classes from their metadata, you can switch to XML or YAML mappings.
 They are supported as well.
 
 Learn more about how to map entities with the Doctrine ORM in [the project's official documentation](https://docs.doctrine-project.org/projects/doctrine-orm/en/latest/reference/association-mapping.html)
@@ -463,13 +462,13 @@ Now, delete the file `api/src/Entity/Greeting.php`. This demo entity isn't usefu
 Finally, generate a new database migration using [Doctrine Migrations](https://symfony.com/doc/current/doctrine.html#migrations-creating-the-database-tables-schema) and apply it:
 
 ```console
-docker-compose exec php \
+docker compose exec php \
     bin/console doctrine:migrations:diff
-docker-compose exec php \
+docker compose exec php \
     bin/console doctrine:migrations:migrate
 ```
 
-The `php` container is where your API app stands. Prefixing a command by `docker-compose exec php` allows executing the
+The `php` container is where your API app stands. Prefixing a command by `docker compose exec php` allows executing the
 given command in this container. You may want [to create an alias](http://www.linfo.org/alias.html) to make your life easier.
 
 **We now have a working API with read and write capabilities!**
@@ -543,7 +542,7 @@ To summarize, if you want to expose any entity you just have to:
 
 1. Put it under the `App\Entity\` namespace
 2. Write your data providers and persisters, or if you use Doctrine, map it with the database
-3. Mark it with the `#[ApiPlatform\Core\Annotation\ApiResource]` attribute
+3. Mark it with the `#[ApiPlatform\Metadata\ApiResource]` attribute
 
 Could it be any easier?!
 
@@ -572,7 +571,7 @@ Modify the following files as described in these patches:
 `api/src/Entity/Book.php`
 
 ```diff
- use ApiPlatform\Core\Annotation\ApiResource;
+ use ApiPlatform\Metadata\ApiResource;
  use Doctrine\Common\Collections\ArrayCollection;
  use Doctrine\ORM\Mapping as ORM;
 +use Symfony\Component\Validator\Constraints as Assert;
@@ -601,7 +600,7 @@ Modify the following files as described in these patches:
 `api/src/Entity/Review.php`
 
 ```diff
- use ApiPlatform\Core\Annotation\ApiResource;
+ use ApiPlatform\Metadata\ApiResource;
  use Doctrine\ORM\Mapping as ORM;
 +use Symfony\Component\Validator\Constraints as Assert;
 
@@ -661,7 +660,7 @@ Isn't API Platform a REST **and** GraphQL framework? That's true! GraphQL suppor
 need to install the [graphql-php](https://webonyx.github.io/graphql-php/) library. Run the following command:
 
 ```console
-docker-compose exec php sh -c '
+docker compose exec php sh -c '
     composer require webonyx/graphql-php
     bin/console cache:clear
 '
@@ -745,14 +744,14 @@ occurs**.
 
 ## A Next.js Web App
 
-API Platform also has an awesome [client generator](../client-generator/index.md) able to scaffold fully working Next.js, Nuxt.js, React/Redux, Vue.js, Quasar and Vuetify Progressive Web Apps that you can easily tune and customize. The generator also supports
+API Platform also has an awesome [client generator](../create-client/index.md) able to scaffold fully working Next.js, Nuxt.js, React/Redux, Vue.js, Quasar and Vuetify Progressive Web Apps that you can easily tune and customize. The generator also supports
 [React Native](https://facebook.github.io/react-native/) if you prefer to leverage all capabilities of mobile devices.
 
 The distribution comes with a skeleton ready to welcome the [Next.js](https://nextjs.org/) flavor of the generated code. To bootstrap your app, run:
 
 ```console
-docker-compose exec pwa \
-    generate-api-platform-client
+docker compose exec pwa \
+    pnpm create @api-platform/client
 ```
 
 Open `https://localhost/books/` in your browser:
@@ -760,13 +759,13 @@ Open `https://localhost/books/` in your browser:
 ![The Next.js Progressive Web App](images/api-platform-2.6-pwa-react.png)
 
 You can also choose to generate the code for a specific resource with the `--resource` argument (example:
-`generate-api-platform-client --resource books`).
+`pnpm create @api-platform/client --resource books`).
 
 The generated code contains a list (including pagination), a delete button, a creation and an edition form. It also includes
-[Bootstrap](https://getbootstrap.com) markup and [ARIA roles](https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA)
+[Tailwind CSS](https://tailwindcss.com) classes and [ARIA roles](https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA)
 to make the app usable by people with disabilities.
 
-If you prefer to generate a PWA built on top of another frontend stack, read [the dedicated documentation](../client-generator/index.md).
+If you prefer to generate a PWA built on top of another frontend stack, read [the dedicated documentation](../create-client/index.md).
 
 ## Hooking Your Own Business Logic
 

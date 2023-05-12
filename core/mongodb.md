@@ -37,7 +37,7 @@ If you are using the [API Platform Distribution](../distribution/index.md), modi
 Then rebuild the `php` image:
 
 ```console
-docker-compose build php
+docker compose build php
 ```
 
 Add a MongoDB image to the docker-compose file:
@@ -54,9 +54,9 @@ Add a MongoDB image to the docker-compose file:
           # You should definitely change the password in production
           - MONGO_INITDB_ROOT_PASSWORD=!ChangeMe!
       volumes:
-          - db-data:/var/lib/mongodb/data:rw
+          - db-data:/data/db:rw
           # You may use a bind-mounted host directory instead, so that it is harder to accidentally remove the volume and lose all your data!
-          # - ./docker/db/data:/var/lib/mongodb/data:rw
+          # - ./docker/db/data:/data/db:rw
       ports:
           - "27017:27017"
 # ...
@@ -66,7 +66,7 @@ Once the extension is installed, to enable the MongoDB support, require the [Doc
 package using Composer:
 
 ```console
-docker-compose exec php \
+docker compose exec php \
     composer require doctrine/mongodb-odm-bundle
 ```
 
@@ -103,16 +103,15 @@ Creating resources mapped to MongoDB documents is as simple as creating entities
 
 namespace App\Document;
 
-use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Metadata\ApiResource;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ODM\MongoDB\Mapping\Annotations as ODM;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * @ApiResource
- *
  * @ODM\Document
  */
+#[ApiResource]
 class Product
 {
     /**
@@ -163,14 +162,14 @@ class Product
 
 namespace App\Document;
 
-use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Metadata\ApiResource;
 use Doctrine\ODM\MongoDB\Mapping\Annotations as ODM;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ODM\Document
  */
-#[ApiResource(iri: "https://schema.org/Offer")]
+#[ApiResource(types: ['https://schema.org/Offer'])]
 class Offer
 {
     /**
@@ -229,24 +228,15 @@ For instance at the operation level:
 
 namespace App\Document;
 
-use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\GetCollection;
 use Doctrine\ODM\MongoDB\Mapping\Annotations as ODM;
 
 /**
  * @ODM\Document
  */
-#[ApiResource(attributes: [
-    collectionOperations => [
-        "get" => [
-            "method" => "GET",
-            "doctrine_mongodb" => [
-                "execute_options" => [
-                    "allowDiskUse" => true,
-                ]
-            ]
-        ]
-    ]
-])]
+#[ApiResource]
+#[GetCollection(extraProperties: ['doctrineMongodb' => ['execute_options' => ['allowDiskUse' => true]]])]
 class Offer
 {
     // ...
@@ -261,19 +251,13 @@ Or at the resource level:
 
 namespace App\Document;
 
-use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Metadata\ApiResource;
 use Doctrine\ODM\MongoDB\Mapping\Annotations as ODM;
 
 /**
  * @ODM\Document
  */
-#[ApiResource(attributes: [
-    "doctrine_mongodb" => [
-        "execute_options" => [
-            "allowDiskUse" => true
-        ]
-    ]
-])]
+#[ApiResource(extraProperties: ['doctrineMongodb' => ['execute_options' => ['allowDiskUse' => true]]])]
 class Offer
 {
     // ...

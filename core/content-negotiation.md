@@ -2,7 +2,7 @@
 
 The API system has built-in [content negotiation](https://en.wikipedia.org/wiki/Content_negotiation) capabilities.
 
-By default, only the [JSON-LD](https://json-ld.org) and JSON formats are enabled. However API Platform Core supports many more formats and can be extended.
+By default, only the [JSON-LD](https://json-ld.org) and JSON formats are enabled. However API Platform supports many more formats and can be extended.
 
 The framework natively supports JSON-LD (and Hydra), GraphQL, JSON:API, HAL, YAML, CSV, HTML (API docs), raw JSON and raw XML.
 Using the raw JSON or raw XML formats is discouraged, prefer using JSON-LD instead, which provides more feature and is as easy to use.
@@ -11,7 +11,7 @@ API Platform also supports [JSON Merge Patch (RFC 7396)](https://tools.ietf.org/
 
 <p align="center" class="symfonycasts"><a href="https://symfonycasts.com/screencast/api-platform/formats?cid=apip"><img src="../distribution/images/symfonycasts-player.png" alt="Formats screencast"><br>Watch the Formats screencast</a></p>
 
-API Platform Core will automatically detect the best resolving format depending on:
+API Platform will automatically detect the best resolving format depending on:
 
 * enabled formats (see below)
 * the requested format, specified in either [the `Accept` HTTP header](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Accept) or as an extension appended to the URL
@@ -23,7 +23,7 @@ Format                                                          | Format name  |
 [JSON-LD](https://json-ld.org)                                  | `jsonld`     | `application/ld+json`         | yes
 [GraphQL](graphql.md)                                           | n/a          | n/a                           | yes
 [JSON:API](http://jsonapi.org/)                                 | `jsonapi`    | `application/vnd.api+json`    | yes
-[HAL](http://stateless.co/hal_specification.html)               | `jsonhal`    | `application/hal+json`        | yes
+[HAL](https://stateless.group/hal_specification.html)           | `jsonhal`    | `application/hal+json`        | yes
 [YAML](http://yaml.org/)                                        | `yaml`       | `application/x-yaml`          | no
 [CSV](https://tools.ietf.org/html/rfc4180)                      | `csv`        | `text/csv`                    | no
 [HTML](https://whatwg.org/) (API docs)                          | `html`       | `text/html`                   | no
@@ -94,20 +94,19 @@ api_platform:
 
 ## Configuring Formats For a Specific Resource or Operation
 
-Support for specific formats can also be configured at resource and operation level using the `input_formats` and `output_formats` attributes.
-`input_formats` controls the formats accepted in request bodies while `output_formats` controls formats available for responses.
+Support for specific formats can also be configured at resource and operation level using the `inputFormats` and `outputFormats` attributes.
+`inputFormats` controls the formats accepted in request bodies while `outputFormats` controls formats available for responses.
 
-The `formats` attribute can be used as a shortcut, it sets both the `input_formats` and `output_formats` in one time.
+The `format` attribute can be used as a shortcut, it sets both the `inputFormats` and `outputFormats` in one time.
 
 ```php
 <?php
 // api/src/Entity/Book.php
-
 namespace App\Entity;
 
-use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Metadata\ApiResource;
 
- #[ApiResource(formats: ['xml', 'jsonld', 'csv' => ['text/csv']])]
+#[ApiResource(formats: ['xml', 'jsonld', 'csv' => ['text/csv']])]
 class Book
 {
     // ...
@@ -127,21 +126,18 @@ You can specify different accepted formats at operation level too, it's especial
 ```php
 <?php
 // api/src/Entity/Book.php
-
 namespace App\Entity;
 
-use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Patch;
+use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\Post;
 
-#[ApiResource(
-    formats: ['jsonld', 'csv' => ['text/csv']],
-    itemOperations: [
-        'patch' => [
-            'input_formats' => [
-                'json' => ['application/merge-patch+json'],
-            ],
-        ],
-    ],
-)]
+#[ApiResource(formats: ['jsonld', 'csv' => ['text/csv']], operations: [
+    new Patch(inputFormats: ['json' => ['application/merge-patch+json']]),
+    new GetCollection(),
+    new Post(),
+])]
 class Book
 {
     // ...
@@ -151,37 +147,33 @@ class Book
 ```yaml
 resources:
     App\Entity\Book:
-        attributes:
-            formats:
-               0: 'jsonld' # format already defined in the config
-               csv: 'text/csv'
-        itemOperations:
-            get:
+        formats:
+           0: 'jsonld' # format already defined in the config
+           csv: 'text/csv'
+        operations:
+            ApiPlatform\Metadata\Get:
                 formats:
                     json: ['application/merge-patch+json'] # works also with "application/merge-patch+json"
 ```
 
 ```xml
-<resources xmlns="https://api-platform.com/schema/metadata"
+<resources xmlns="https://api-platform.com/schema/metadata/resources-3.0"
            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-           xsi:schemaLocation="https://api-platform.com/schema/metadata
-           https://api-platform.com/schema/metadata/metadata-2.0.xsd">
+           xsi:schemaLocation="https://api-platform.com/schema/metadata/resources-3.0
+           https://api-platform.com/schema/metadata/resources-3.0.xsd">
     <resource class="App\Entity\Greeting">
-        <attribute name="formats">
-            <attribute>jsonld</attribute> <!-- format already defined in the config -->
-            <attribute name="csv">text/csv</attribute>
-        </attribute>
+        <formats>
+            <format>jsonld</format> <!-- format already defined in the config -->
+            <format name="csv">text/csv</format>
+        </formats>
 
-        <itemOperations>
-            <itemOperation name="get">
-                <attribute name="input_formats">
-                    <attribute name="json">
-                        <attribute>application/merge-patch+json</attribute>
-                    </attribute>
-                    <!-- works also with <attribute name="json">application/merge-patch+json</attribute> -->
-                </attribute>
-            </itemOperation>
-        </itemOperations>
+        <operations>
+            <operation class="ApiPlatform\Metadata\Get">
+                <inputFormats>
+                    <format name="json">application/merge-patch+json</format>
+                </inputFormats>
+            </operation>
+        </operations>
     </resource>
 </resources>
 ```
@@ -204,7 +196,7 @@ api_platform:
         myformat: ['application/vnd.myformat']
 ```
 
-API Platform Core will automatically call the serializer with your defined format name as `format` parameter during the deserialization process (`myformat` in the example).
+API Platform will automatically call the serializer with your defined format name as `format` parameter during the deserialization process (`myformat` in the example).
 It will then return the result to the client with the requested MIME type using its built-in responder.
 For non-standard formats, [a vendor, vanity or unregistered MIME type should be used](https://en.wikipedia.org/wiki/Media_type#Vendor_tree).
 
@@ -227,7 +219,6 @@ services:
 ```php
 <?php
 // api/src/Serializer/CustomItemNormalizer.php
-
 namespace App\Serializer;
 
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
@@ -274,7 +265,6 @@ flatten or remove overly complex relations:
 ```php
 <?php
 // api/src/Serializer/CustomItemNormalizer.php
-
 namespace App\Serializer;
 
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
@@ -308,4 +298,4 @@ class CustomItemNormalizer implements NormalizerInterface, DenormalizerInterface
 ### Contributing Support for New Formats
 
 Adding support for **standard** formats upstream is welcome!
-We'll be glad to merge new encoders and normalizers in API Platform Core.
+We'll be glad to merge new encoders and normalizers in API Platform.

@@ -1,6 +1,6 @@
 # Operations
 
-API Platform Core relies on the concept of operations. Operations can be applied to a resource exposed by the API. From
+API Platform relies on the concept of operations. Operations can be applied to a resource exposed by the API. From
 an implementation point of view, an operation is a link between a resource, a route and its related controller.
 
 <p align="center" class="symfonycasts"><a href="https://symfonycasts.com/screencast/api-platform/operations?cid=apip"><img src="../distribution/images/symfonycasts-player.png" alt="Operations screencast"><br>Watch the Operations screencast</a></p>
@@ -18,10 +18,10 @@ is also possible.
 There are two types of operations: collection operations and item operations.
 
 Collection operations act on a collection of resources. By default two routes are implemented: `POST` and `GET`. Item
-operations act on an individual resource. Three default routes are defined: `GET`, `PUT` and `DELETE` (`PATCH` is also supported
-when [using the JSON:API format](content-negotiation.md), as required by the specification).
+operations act on an individual resource. Four default routes are defined: `GET`, `PUT`, `DELETE` and `PATCH`. `PATCH` is supported
+with [JSON Merge Patch (RFC 7396)](https://www.rfc-editor.org/rfc/rfc7386), or [using the JSON:API format](https://jsonapi.org/format/#crud-updating), as required by the specification.
 
-When the `ApiPlatform\Core\Annotation\ApiResource` annotation is applied to an entity class, the following built-in CRUD
+When the `ApiPlatform\Metadata\ApiResource` annotation is applied to an entity class, the following built-in CRUD
 operations are automatically enabled:
 
 Collection operations:
@@ -54,33 +54,33 @@ Implementing [the standard `PUT` behavior](https://httpwg.org/specs/rfc7231.html
 If no operation is specified, all default CRUD operations are automatically registered. It is also possible - and recommended
 for large projects - to define operations explicitly.
 
-Keep in mind that `collectionOperations` and `itemOperations` behave independently. For instance, if you don't explicitly
-configure operations for `collectionOperations`, `GET` and `POST` operations will be automatically registered, even if you
-explicitly configure `itemOperations`. The reverse is also true.
+Keep in mind that once you explicitly set up an operation, the automatically registered CRUD will no longer be.
+If you declare even one operation manually, such as `#[GET]`, you must declare the others manually as well if you need them.
 
 Operations can be configured using annotations, XML or YAML. In the following examples, we enable only the built-in operation
-for the `GET` method for both `collectionOperations` and `itemOperations` to create a readonly endpoint.
-
-`itemOperations` and `collectionOperations` are arrays containing a list of operations. Each operation is defined by a key
-corresponding to the name of the operation that can be anything you want and an array of properties as value. If an
-empty list of operations is provided, all operations are disabled.
+for the `GET` method for both `collection` and `item` to create a readonly endpoint.
 
 If the operation's name matches a supported HTTP methods (`GET`, `POST`, `PUT`, `PATCH` or `DELETE`), the corresponding `method` property
 will be automatically added.
+
+Note: The `#[GetCollection]` attribute is an alias for `#[Get(collection: true)]`
 
 [codeSelector]
 
 ```php
 <?php
 // api/src/Entity/Book.php
-
 namespace App\Entity;
 
-use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\GetCollection;
 
 #[ApiResource(
-    collectionOperations: ['get'],
-    itemOperations: ['get'],
+    operations: [
+        new Get(),
+        new GetCollection()
+    ]
 )]
 class Book
 {
@@ -90,33 +90,32 @@ class Book
 
 ```yaml
 # api/config/api_platform/resources.yaml
-App\Entity\Book:
-    collectionOperations:
-        get: ~ # nothing more to add if we want to keep the default controller
-    itemOperations:
-        get: ~
+resources:
+    App\Entity\Book:
+        operations:
+            ApiPlatform\Metadata\GetCollection: ~ # nothing more to add if we want to keep the default controller
+            ApiPlatform\Metadata\Get: ~
 ```
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" ?>
 <!-- api/config/api_platform/resources.xml -->
 
-<resources xmlns="https://api-platform.com/schema/metadata"
+<resources xmlns="https://api-platform.com/schema/metadata/resources-3.0"
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xsi:schemaLocation="https://api-platform.com/schema/metadata
-        https://api-platform.com/schema/metadata/metadata-2.0.xsd">
+        xsi:schemaLocation="https://api-platform.com/schema/metadata/resources-3.0
+        https://api-platform.com/schema/metadata/resources-3.0.xsd">
     <resource class="App\Entity\Book">
-        <itemOperations>
-            <itemOperation name="get" />
-        </itemOperations>
-        <collectionOperations>
-            <collectionOperation name="get" />
-        </collectionOperations>
+        <operations>
+            <operation class="ApiPlatform\Metadata\Get" />
+            <operation class="ApiPlatform\Metadata\GetCollection" />
+        </operations>
     </resource>
 </resources>
 ```
 
 [/codeSelector]
+
 
 The previous example can also be written with an explicit method definition:
 
@@ -125,18 +124,17 @@ The previous example can also be written with an explicit method definition:
 ```php
 <?php
 // api/src/Entity/Book.php
-
 namespace App\Entity;
 
-use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\GetCollection;
 
 #[ApiResource(
-    collectionOperations: [
-        'get' => ['method' => 'get'],
-    ],
-    itemOperations: [
-        'get' => ['method' => 'get'],
-    ],
+    operations: [
+        new Get(),
+        new GetCollection()
+    ]
 )]
 class Book
 {
@@ -146,39 +144,35 @@ class Book
 
 ```yaml
 # api/config/api_platform/resources.yaml
-App\Entity\Book:
-    collectionOperations:
-        get:
-            method: GET
-    itemOperations:
-        get:
-            method: GET
+resources:
+    App\Entity\Book:
+        operations:
+            ApiPlatform\Metadata\GetCollection:
+                method: GET
+            ApiPlatform\Metadata\Get:
+                method: GET
 ```
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" ?>
 <!-- api/config/api_platform/resources.xml -->
 
-<resources xmlns="https://api-platform.com/schema/metadata"
+<resources xmlns="https://api-platform.com/schema/metadata/resources-3.0"
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xsi:schemaLocation="https://api-platform.com/schema/metadata
-        https://api-platform.com/schema/metadata/metadata-2.0.xsd">
+        xsi:schemaLocation="https://api-platform.com/schema/metadata/resources-3.0
+        https://api-platform.com/schema/metadata/resources-3.0.xsd">
     <resource class="App\Entity\Book">
-        <collectionOperations>
-            <collectionOperation name="get" />
-        </collectionOperations>
-        <itemOperations>
-            <itemOperation name="get">
-                <attribute name="method">GET</attribute>
-            </itemOperation>
-        </itemOperations>
+        <operations>
+            <operation class="ApiPlatform\Metadata\GetCollection" />
+            <operation class="ApiPlatform\Metadata\Get" method="GET" />
+        </operations>
     </resource>
 </resources>
 ```
 
 [/codeSelector]
 
-API Platform Core is smart enough to automatically register the applicable Symfony route referencing a built-in CRUD action
+API Platform is smart enough to automatically register the applicable Symfony route referencing a built-in CRUD action
 just by specifying the method name as key, or by checking the explicitly configured HTTP method.
 
 If you do not want to allow access to the resource item (i.e. you don't want a `GET` item operation), instead of omitting it altogether, you should instead declare a `GET` item operation which returns HTTP 404 (Not Found), so that the resource item can still be identified by an IRI. For example:
@@ -188,60 +182,53 @@ If you do not want to allow access to the resource item (i.e. you don't want a `
 ```php
 <?php
 // api/src/Entity/Book.php
-
 namespace App\Entity;
 
-use ApiPlatform\Core\Action\NotFoundAction;
-use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Action\NotFoundAction;
+use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\ApiResource;
 
-#[ApiResource(
-    collectionOperations: [
-        'get' => ['method' => 'get'],
-    ],
-    itemOperations: [
-        'get' => [
-            'controller' => NotFoundAction::class,
-            'read' => false,
-            'output' => false,
-        ],
-    ],
-)]
+#[ApiResource(operations: [
+    new Get(
+        controller: NotFoundAction::class, 
+        read: false, 
+        output: false
+    ),
+    new GetCollection()
+])]
 class Book
 {
+    // ...
 }
 ```
 
 ```yaml
 # api/config/api_platform/resources.yaml
-App\Entity\Book:
-    collectionOperations:
-        get: ~
-    itemOperations:
-        get:
-            controller: ApiPlatform\Core\Action\NotFoundAction
-            read: false
-            output: false
+resources:
+    App\Entity\Book:
+        operations:
+            ApiPlatform\Metadata\GetCollection: ~
+            ApiPlatform\Metadata\Get:
+                controller: ApiPlatform\Action\NotFoundAction
+                read: false
+                output: false
 ```
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" ?>
 <!-- api/config/api_platform/resources.xml -->
 
-<resources xmlns="https://api-platform.com/schema/metadata"
+<resources xmlns="https://api-platform.com/schema/metadata/resources-3.0"
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xsi:schemaLocation="https://api-platform.com/schema/metadata
-        https://api-platform.com/schema/metadata/metadata-2.0.xsd">
+        xsi:schemaLocation="https://api-platform.com/schema/metadata/resources-3.0
+        https://api-platform.com/schema/metadata/resources-3.0.xsd">
     <resource class="App\Entity\Book">
-        <collectionOperations>
-            <collectionOperation name="get" />
-        </collectionOperations>
-        <itemOperations>
-            <itemOperation name="get">
-                <attribute name="controller">ApiPlatform\Core\Action\NotFoundAction</attribute>
-                <attribute name="read">false</attribute>
-                <attribute name="output">false</attribute>
-            </itemOperation>
-        </itemOperations>
+        <operations>
+            <operation class="ApiPlatform\Metadata\GetCollection" />
+            <operation class="ApiPlatform\Metadata\Get" controller="ApiPlatform\Action\NotFoundAction"
+                       read="false" output="false" />
+        </operations>
     </resource>
 </resources>
 ```
@@ -260,29 +247,26 @@ In addition to that, we require the `id` parameter in the URL of the `GET` opera
 ```php
 <?php
 // api/src/Entity/Book.php
-
 namespace App\Entity;
 
-use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\Post;
 
-#[ApiResource(
-    collectionOperations: [
-        'post' => [
-            'path' => '/grimoire',
-            'status' => 301,
-        ],
-    ],
-    itemOperations: [
-        'get' => [
-            'path' => '/grimoire/{id}',
-            'requirements' => ['id' => '\d+'],
-            'defaults' => ['color' => 'brown'],
-            'options' => ['my_option' => 'my_option_value'],
-            'schemes' => ['https'],
-            'host' => '{subdomain}.api-platform.com',
-        ],
-    ],
-)]
+#[ApiResource(operations: [
+    new Get(
+        uriTemplate: '/grimoire/{id}', 
+        requirements: ['id' => '\d+'], 
+        defaults: ['color' => 'brown'], 
+        options: ['my_option' => 'my_option_value'], 
+        schemes: ['https'], 
+        host: '{subdomain}.api-platform.com'
+    ),
+    new Post(
+        uriTemplate: '/grimoire', 
+        status: 301
+    )
+])]
 class Book
 {
     //...
@@ -291,143 +275,54 @@ class Book
 
 ```yaml
 # api/config/api_platform/resources.yaml
-App\Entity\Book:
-    collectionOperations:
-        post:
-            path: '/grimoire'
-            status: 301
-    itemOperations:
-        get:
-            method: 'GET'
-            path: '/grimoire/{id}'
-            requirements:
-                id: '\d+'
-            defaults:
-                color: 'brown'
-            host: '{subdomain}.api-platform.com'
-            schemes: ['https']
-            options:
-                my_option: 'my_option_value'
+resources:
+    App\Entity\Book:
+        operations:
+            ApiPlatform\Metadata\Post:
+                uriTemplate: '/grimoire'
+                status: 301
+            ApiPlatform\Metadata\Get:
+                uriTemplate: '/grimoire/{id}'
+                requirements:
+                    id: '\d+'
+                defaults:
+                    color: 'brown'
+                host: '{subdomain}.api-platform.com'
+                schemes: ['https']
+                options:
+                    my_option: 'my_option_value'
 ```
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" ?>
 <!-- api/config/api_platform/resources.xml -->
 
-<resources xmlns="https://api-platform.com/schema/metadata"
+<resources xmlns="https://api-platform.com/schema/metadata/resources-3.0"
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xsi:schemaLocation="https://api-platform.com/schema/metadata
-        https://api-platform.com/schema/metadata/metadata-2.0.xsd">
+        xsi:schemaLocation="https://api-platform.com/schema/metadata/resources-3.0
+        https://api-platform.com/schema/metadata/resources-3.0.xsd">
     <resource class="App\Entity\Book">
-        <collectionOperations>
-            <collectionOperation name="post">
-                <attribute name="path">/grimoire</attribute>
-                <attribute name="status">301</attribute>
-            </collectionOperation>
-        </collectionOperations>
-        <itemOperations>
-            <itemOperation name="get">
-                <attribute name="path">/grimoire/{id}</attribute>
-                <attribute name="requirements">
-                    <attribute name="id">\d+</attribute>
-                </attribute>
-                <attribute name="defaults">
-                    <attribute name="color">brown</attribute>
-                </attribute>
-                <attribute name="host">{subdomain}.api-platform.com</attribute>
-                <attribute name="schemes">
-                    <attribute>https</attribute>
-                </attribute>
-                <attribute name="options">
-                    <attribute name="color">brown</attribute>
-                </attribute>
-            </itemOperation>
-        </itemOperations>
-    </resource>
-</resources>
-```
-
-[/codeSelector]
-
-In all these examples, the `method` attribute is omitted because it matches the operation name.
-
-When specifying sub options, you must always use snake case as demonstrated below with the `denormalization_context` option on the `put` operation:
-
-[codeSelector]
-
-```php
-<?php
-// api/src/Entity/Book.php
-
-namespace App\Entity;
-
-use ApiPlatform\Core\Annotation\ApiResource;
-
-#[ApiResource(
-    itemOperations: [
-            'get',
-            'put' => [
-                'denormalization_context' => [
-                    'groups' => ['item:put'],
-                    'swagger_definition_name' => 'put',
-                ],
-            ],
-            'delete',
-        ],
-    ],
-    denormalizationContext: [
-        'groups' => ['item:post'],
-        'swagger_definition_name' => 'post',
-    ],
-)]
-class Book
-{
-    //...
-}
-```
-
-```yaml
-# api/config/api_platform/resources.yaml
-App\Entity\Book:
-    itemOperations:
-        get: ~
-        put:
-            denormalization_context:
-                groups: ['item:put']
-                swagger_definition_name: 'put',
-        delete: ~
-    denormalizationContext:
-        groups: ['item:post']
-        swagger_definition_name: 'post'
-```
-
-```xml
-<?xml version="1.0" encoding="UTF-8" ?>
-<!-- api/config/api_platform/resources.xml -->
-
-<resources xmlns="https://api-platform.com/schema/metadata"
-        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xsi:schemaLocation="https://api-platform.com/schema/metadata
-        https://api-platform.com/schema/metadata/metadata-2.0.xsd">
-    <resource class="App\Entity\Book">
-        <itemOperations>
-            <itemOperation name="get" />
-            <itemOperation name="put">
-                <attribute name="denormalization_context">
-                    <attribute name="groups">
-                        <attribute>item:put</attribute>
-                    </attribute>
-                    <attribute name="swagger_definition_name">put</attribute>
-                </attribute>
-            </itemOperation>
-            <itemOperation name="delete" />
-        </itemOperations>
-        <denormalizationContext>
-            <attribute name="groups">
-                <attribute>item:post</attribute>
-            </attribute>
-            <attribute name="swagger_definition_name">post</attribute>
-        </denormalizationContext>
+        <operations>
+            <operation class="ApiPlatform\Metadata\Post" uriTemplate="/grimoire" status="301" />
+            <operation class="ApiPlatform\Metadata\Get" uriTemplate="/grimoire/{id}" host="{subdomain}.api-platform.com">
+                <requirements>
+                    <requirement property="id">\d+</requirement>
+                </requirements>
+                <defaults>
+                    <values>
+                        <value name="color">brown</value>
+                    </values>
+                </defaults>
+                <schemes>
+                    <scheme>https</scheme>
+                </schemes>
+                <options>
+                    <values>
+                        <value name="color">brown</value>
+                    </values>
+                </options>
+            </operation>
+        </operations>
     </resource>
 </resources>
 ```
@@ -438,17 +333,16 @@ App\Entity\Book:
 
 Sometimes it's also useful to put a whole resource into its own "namespace" regarding the URI. Let's say you want to
 put everything that's related to a `Book` into the `library` so that URIs become `library/book/{id}`. In that case
-you don't need to override all the operations to set the path but configure the `route_prefix` attribute for the whole entity instead:
+you don't need to override all the operations to set the path but configure the `routePrefix` attribute for the whole entity instead:
 
 [codeSelector]
 
 ```php
 <?php
 // api/src/Entity/Book.php
-
 namespace App\Entity;
 
-use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Metadata\ApiResource;
 
 #[ApiResource(routePrefix: '/library')]
 class Book
@@ -459,28 +353,118 @@ class Book
 
 ```yaml
 # api/config/api_platform/resources.yaml
-App\Entity\Book:
-    attributes:
-        route_prefix: /library
+resources:
+    App\Entity\Book:
+        routePrefix: /library
 ```
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" ?>
 <!-- api/config/api_platform/resources.xml -->
 
-<resources xmlns="https://api-platform.com/schema/metadata"
+<resources xmlns="https://api-platform.com/schema/metadata/resources-3.0"
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xsi:schemaLocation="https://api-platform.com/schema/metadata
-        https://api-platform.com/schema/metadata/metadata-2.0.xsd">
-    <resource class="App\Entity\Book">
-        <attribute name="route_prefix">/library</attribute>
+        xsi:schemaLocation="https://api-platform.com/schema/metadata/resources-3.0
+        https://api-platform.com/schema/metadata/resources-3.0.xsd">
+    <resource class="App\Entity\Book" routePrefix="/library" />
+</resources>
+```
+
+[/codeSelector]
+
+## Defining Which Operation to Use to Generate the IRI
+
+Using multiple operations on your resource, you may want to specify which operation to use to generate the IRI, instead
+of letting API Platform use the first one it finds.
+
+Let's say you have 2 resources in relationship: `Company` and `User`, where a company has multiple users. You can declare
+the following routes:
+
+- `/users`
+- `/users/{id}`
+- `/companies/{companyId}/users`
+- `/companies/{companyId}/users/{id}`
+
+The first routes (`/users...`) are only accessible by the admin, and the others by regular users. Calling
+`/companies/{companyId}/users` should return IRIs matching `/companies/{companyId}/users/{id}` to not expose an admin
+route to regular users.
+
+To do so, use the `itemUriTemplate` option only available on `GetCollection` and `Post` operations:
+
+[codeSelector]
+
+```php
+<?php
+// api/src/Entity/User.php
+namespace App\Entity;
+
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\Post;
+
+#[GetCollection] // auto-generated path will be /users
+#[Get] // auto-generated path will be /users/{id}
+#[GetCollection(uriTemplate: '/companies/{companyId}/users', itemUriTemplate: '/companies/{companyId}/users/{id}'/*, ... */)]
+#[Post(uriTemplate: '/companies/{companyId}/users', itemUriTemplate: '/companies/{companyId}/users/{id}'/*, ... */)]
+#[Get(uriTemplate: '/companies/{companyId}/users/{id}'/*, ... */)]
+class User
+{
+    //...
+}
+```
+
+```yaml
+# api/config/api_platform/resources.yaml
+resources:
+    App\Entity\User:
+        - operations:
+            ApiPlatform\Metadata\GetCollection: ~
+            ApiPlatform\Metadata\Get: ~
+        - operations:
+            ApiPlatform\Metadata\GetCollection:
+                uriTemplate: /companies/{companyId}/users
+                itemUriTemplate: /companies/{companyId}/users/{id}
+                # ...
+            ApiPlatform\Metadata\Post:
+                uriTemplate: /companies/{companyId}/users
+                itemUriTemplate: /companies/{companyId}/users/{id}
+                # ...
+            ApiPlatform\Metadata\Get:
+                uriTemplate: /companies/{companyId}/users/{id}
+                # ...
+```
+
+```xml
+<?xml version="1.0" encoding="UTF-8" ?>
+<!-- api/config/api_platform/resources.xml -->
+
+<resources xmlns="https://api-platform.com/schema/metadata/resources-3.0"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="https://api-platform.com/schema/metadata/resources-3.0
+        https://api-platform.com/schema/metadata/resources-3.0.xsd">
+    <resource class="App\Entity\User">
+        <operations>
+            <operation class="ApiPlatform\Metadata\GetCollection" />
+            <operation class="ApiPlatform\Metadata\Get" />
+        </operations>
+    </resource>
+
+    <resource class="App\Entity\User">
+        <operations>
+            <operation class="ApiPlatform\Metadata\GetCollection" uriTemplate="/companies/{companyId}/users" itemUriTemplate="/companies/{companyId}/users/{id}" />
+            <operation class="ApiPlatform\Metadata\Post" uriTemplate="/companies/{companyId}/users" itemUriTemplate="/companies/{companyId}/users/{id}" />
+            <operation class="ApiPlatform\Metadata\Get" uriTemplate="/companies/{companyId}/users/{id}" />
+        </operations>
     </resource>
 </resources>
 ```
 
 [/codeSelector]
 
-Alternatively, the more verbose attribute syntax can be used: `#[ApiResource(attributes: ["route_prefix" => "/library"])]`.
+API Platform will find the operation matching this `itemUriTemplate` and use it to generate the IRI.
+
+If this option is not set, the first `Get` operation is used to generate the IRI.
 
 ## Expose a Model Without Any Routes
 
@@ -492,8 +476,7 @@ Let's say you have the following entities in your project:
 
 ```php
 <?php
-// src/Entity/Place.php
-
+// api/src/Entity/Place.php
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
@@ -519,8 +502,7 @@ class Place
 
 ```php
 <?php
-// src/Entity/Weather.php
-
+// api/src/Entity/Weather.php
 namespace App\Entity;
 
 class Weather
@@ -538,31 +520,29 @@ Because we want to get the weather for a known place, it is more reasonable to q
 
 ```php
 <?php
-// src/Entity/Place.php
-
+// api/src/Entity/Place.php
 namespace App\Entity;
 
-use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\Put;
+use ApiPlatform\Metadata\Delete;
+use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\Post;
+use ApiPlatform\Metadata\ApiResource;
 use App\Controller\GetWeather;
 use Doctrine\ORM\Mapping as ORM;
 
-#[ORM\Entity]
 #[ApiResource(
-    collectionOperations: [
-        'get',
-        'post',
-    ],
-    itemOperations: [
-        'get',
-        'put',
-        'delete',
-        'get_weather' => [
-            'method' => 'GET',
-            'path' => '/places/{id}/weather',
-            'controller' => GetWeather::class,
-        ],
-    ],
+    operations: [
+        new Get(),
+        new Put(),
+        new Delete(),
+        new Get(name: 'weather', uriTemplate: '/places/{id}/weather', controller: GetWeather::class),
+        new GetCollection(),
+        new Post(),
+    ]
 )]
+#[ORM\Entity]
 class Place
 {
     // ...
@@ -573,11 +553,10 @@ This implies that API Platform has to know about this entity, so we will need to
 
 ```php
 <?php
-// src/Entity/Weather.php
-
+// api/src/Entity/Weather.php
 namespace App\Entity;
 
-use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Metadata\ApiResource;
 
 #[ApiResource]
 class Weather
@@ -590,23 +569,19 @@ Since we are required to expose at least one route, let's expose just one:
 
 ```php
 <?php
-// src/Entity/Weather.php
-
+// api/src/Entity/Weather.php
 namespace App\Entity;
 
-use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Get;
 
-#[ApiResource(
-    itemOperations: [
-        'get' => [
-            'method' => 'GET',
-            'controller' => SomeRandomController::class,
-        ],
-    ],
-)]
+#[ApiResource(operations: [
+    new Get(controller: SomeRandomController::class)
+])]
 class Weather
 {
     // ...
+}
 ```
 
 This way, we expose a route that will do… nothing. Note that the controller does not even need to exist.
@@ -618,12 +593,11 @@ Then, remove the route from the decorator:
 ```php
 <?php
 // src/OpenApi/OpenApiFactory.php
-
 namespace App\OpenApi;
 
-use ApiPlatform\Core\OpenApi\Factory\OpenApiFactoryInterface;
-use ApiPlatform\Core\OpenApi\OpenApi;
-use ApiPlatform\Core\OpenApi\Model;
+use ApiPlatform\OpenApi\Factory\OpenApiFactoryInterface;
+use ApiPlatform\OpenApi\OpenApi;
+use ApiPlatform\OpenApi\Model;
 
 final class OpenApiFactory implements OpenApiFactoryInterface
 {

@@ -10,14 +10,14 @@ The generated schema can be used with libraries such as [react-json-schema-form]
 To export the schema corresponding to an API Resource, run the following command:
 
 ```console
-docker-compose exec php \
+docker compose exec php \
     bin/console api:json-schema:generate 'App\Entity\Book'
 ```
 
 To see all options available, try:
 
 ```console
-docker-compose exec php \
+docker compose exec php \
     bin/console help api:json-schema:generate
 ```
 
@@ -42,7 +42,7 @@ You will need to add the `json_schema_context` property in the [`ApiProperty`](o
 
 namespace App\Entity;
 
-use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Metadata\ApiResource;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity]
@@ -59,16 +59,16 @@ class Greeting
         return $this->id;
     }
 
-    #[ApiProperty(attributes: [
-        "openapi_context" => [
-            "type" => "array",
-            "items" => ["type" => "integer"]
+    #[ApiProperty(
+        openapiContext: [
+            'type' => 'array',
+            'items' => ['type' => 'integer']
         ],
-        "json_schema_context" => [ // <- MAGIC IS HERE, you can override the json_schema_context here.
-            "type" => "array",
-            "items" => ["type" => "integer"]
+        jsonSchemaContext: [
+            'type' => 'array',
+            'items' => ['type' => 'integer']
         ]
-    ])]
+    )]
     public function getSomeNumbers(): array {
         return [1, 2, 3, 4];
     }

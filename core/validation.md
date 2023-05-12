@@ -10,15 +10,14 @@ for this task, but you can replace it with your preferred validation library suc
 
 Validating submitted data is as simple as adding [Symfony's built-in constraints](http://symfony.com/doc/current/reference/constraints.html)
 or [custom constraints](http://symfony.com/doc/current/validation/custom_constraint.html) directly in classes marked with
-the `#[ApiResource]` annotation:
+the `#[ApiResource]` attribute:
 
 ```php
 <?php
 // api/src/Entity/Product.php
-
 namespace App\Entity;
 
-use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Metadata\ApiResource;
 use App\Validator\Constraints\MinimalProperties; // A custom constraint
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert; // Symfony's built-in constraints
@@ -27,7 +26,7 @@ use Symfony\Component\Validator\Constraints as Assert; // Symfony's built-in con
  * A product.
  *
  */
-#[ORM\Entity] 
+#[ORM\Entity]
 #[ApiResource]
 class Product
 {
@@ -40,10 +39,9 @@ class Product
 
     /**
      * @var string[] Describe the product
-     *
-     * @MinimalProperties
      */
-    #[ORM\Column(type: 'json')] 
+    #[MinimalProperties]
+    #[ORM\Column(type: 'json')]
     public $properties;
 
     // Getters and setters...
@@ -60,9 +58,7 @@ namespace App\Validator\Constraints;
 
 use Symfony\Component\Validator\Constraint;
 
-/**
- * @Annotation
- */
+#[\Attribute]
 class MinimalProperties extends Constraint
 {
     public $message = 'The product must have the minimal properties required ("description", "price")';
@@ -78,9 +74,6 @@ namespace App\Validator\Constraints;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
 
-/**
- * @Annotation
- */
 final class MinimalPropertiesValidator extends ConstraintValidator
 {
     public function validate($value, Constraint $constraint): void
@@ -119,22 +112,22 @@ errors to HTTP errors.
 Without specific configuration, the default validation group is always used, but this behavior is customizable: the framework
 is able to leverage Symfony's [validation groups](https://symfony.com/doc/current/validation/groups.html).
 
-You can configure the groups you want to use when the validation occurs directly through the `ApiResource` annotation:
+You can configure the groups you want to use when the validation occurs directly through the `ApiResource` attribute:
 
 ```php
 <?php
 // api/src/Entity/Book.php
 
-use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Metadata\ApiResource;
 use Symfony\Component\Validator\Constraints as Assert;
 
-#[ApiResource(attributes: ['validation_groups' => ['a', 'b']])]
+#[ApiResource(validationContext: ['groups' => ['a', 'b']])]
 class Book
 {
-    #[Assert\NotBlank(groups: ['a'])]  
+    #[Assert\NotBlank(groups: ['a'])]
     public string $name;
 
-    #[Assert\NotNull(groups: ['b'])] 
+    #[Assert\NotNull(groups: ['b'])]
     public string $author;
 
     // ...
@@ -146,7 +139,7 @@ With the previous configuration, the validation groups `a` and `b` will be used 
 Like for [serialization groups](serialization.md#using-different-serialization-groups-per-operation),
 you can specify validation groups globally or on a per-operation basis.
 
-Of course, you can use XML or YAML configuration format instead of annotations if you prefer.
+Of course, you can use XML or YAML configuration format instead of attributes if you prefer.
 
 You may also pass in a [group sequence](http://symfony.com/doc/current/validation/sequence_provider.html) in place of
 the array of group names.
@@ -159,31 +152,32 @@ You can have different validation for each [operation](operations.md) related to
 <?php
 // api/src/Entity/Book.php
 
-use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Delete;
+use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\Put;
+use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\Post;
+use ApiPlatform\Metadata\ApiResource;
 use Symfony\Component\Validator\Constraints as Assert;
 
-#[ApiResource(
-    collectionOperations: [
-        'get',
-        'post' => ['validation_groups' => ['Default', 'postValidation']]
-    ],
-    itemOperations: [
-        'delete',
-        'get',
-        'put' => ['validation_groups' => ['Default', 'putValidation']]
-    ]
-)]
+#[ApiResource]
+#[Delete]
+#[Get]
+#[Put(validationContext: ['groups' => ['Default', 'putValidation']])]
+#[GetCollection]
+#[Post(validationContext: ['groups' => ['Default', 'postValidation']])]
 class Book
 {
-    #[Assert\Uuid] 
+    #[Assert\Uuid]
     private $id;
 
-    #[Assert\NotBlank(groups: ['postValidation'])] 
+    #[Assert\NotBlank(groups: ['postValidation'])]
     public $name;
 
     #[Assert\NotNull]
     #[Assert\Length(min: 2, max: 50, groups: ['postValidation'])]
-    #[Assert\Length(min: 2, max: 70, groups: ['putValidation'])] 
+    #[Assert\Length(min: 2, max: 70, groups: ['putValidation'])]
     public $author;
 
     // ...
@@ -210,11 +204,11 @@ In the following example, we use a static method to return the validation groups
 <?php
 // api/src/Entity/Book.php
 
-use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Metadata\ApiResource;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ApiResource(
-    attributes: ['validation_groups' => [Book::class, 'validationGroups']]
+    validationContext: ['groups' => [Book::class, 'validationGroups']
 )]
 class Book
 {
@@ -230,10 +224,10 @@ class Book
         return ['a'];
     }
 
-    #[Assert\NotBlank(groups: ['a'])] 
+    #[Assert\NotBlank(groups: ['a'])]
     public $name;
 
-    #[Assert\NotNull(groups: ['b'])] 
+    #[Assert\NotNull(groups: ['b'])]
     public $author;
 
     // ...
@@ -248,7 +242,7 @@ Alternatively, you can use a service to retrieve the groups to use:
 
 namespace App\Validator;
 
-use ApiPlatform\Core\Bridge\Symfony\Validator\ValidationGroupsGeneratorInterface;
+use ApiPlatform\Symfony\Validator\ValidationGroupsGeneratorInterface;
 use App\Entity\Book;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
@@ -282,20 +276,19 @@ Then, configure the entity class to use this service to retrieve validation grou
 ```php
 <?php
 // api/src/Entity/Book.php
-
 namespace App\Entity;
 
-use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Metadata\ApiResource;
 use App\Validator\AdminGroupsGenerator;
 use Symfony\Component\Validator\Constraints as Assert;
 
-#[ApiResource(attributes: ['validation_groups' => AdminGroupsGenerator::class])
+#[ApiResource(validationContext: ['groups' => AdminGroupsGenerator::class])
 class Book
 {
-    #[Assert\NotBlank(groups: ['a'])] 
+    #[Assert\NotBlank(groups: ['a'])]
     public $name;
 
-    #[Assert\NotNull(groups: ['b'])] 
+    #[Assert\NotNull(groups: ['b'])]
     public $author;
 
     // ...
@@ -309,9 +302,6 @@ First, you need to create your sequenced group.
 
 ```php
 <?php
-
-declare(strict_types=1);
-
 namespace App\Validator;
 
 use Symfony\Component\Validator\Constraints\GroupSequence;
@@ -338,23 +328,19 @@ And then, you need to use your class as a validation group.
 
 ```php
 <?php
-
+// api/src/Entity/Greeting.php
 namespace App\Entity;
 
-use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Post;
 use App\Validator\One; // classic custom constraint
 use App\Validator\Two; // classic custom constraint
 use App\Validator\MySequencedGroup; // the sequence group to use
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity]
-#[ApiResource(
-    collectionOperations: [
-      'post' => [
-        'validation_groups' => MySequencedGroup::class
-      ]
-    ]
-)]
+#[ApiResource]
+#[Post(validationContext: ['groups' => MySequencedGroup::class])]
 class Greeting
 {
     #[ORM\Id, ORM\Column, ORM\GeneratedValue]
@@ -362,7 +348,7 @@ class Greeting
 
     /**
      * @var A nice person
-     * 
+     *
      * I want this "second" validation to be executed after the "first" one even though I wrote them in this order.
      * @One(groups={"second"})
      * @Two(groups={"first"})
@@ -389,16 +375,16 @@ Assume that you have the following entity that uses a custom delete validator:
 
 namespace App\Entity;
 
-use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Delete;
+use App\State\MyEntityRemoveProcessor;
 use App\Validator\AssertCanDelete;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity]
 #[ApiResource(
-    itemOperations: [
-      'delete' => [
-        'validation_groups' => ['deleteValidation']
-      ]
+    operations: [
+        new Delete(validationContext: ['groups' => ['deleteValidation']], processor: MyEntityRemoveProcessor::class)
     ]
 )]
 #[AssertCanDelete(groups: ['deleteValidation'])]
@@ -412,52 +398,33 @@ class MyEntity
 }
 ```
 
-Create a data persister, which decorates the default data persister, where you will trigger the validation:
+Create a processor, which receives the default processor, where you will trigger the validation:
 
 ```php
 <?php
-// api/src/DataPersister/MyEntityDataPersister.php
+// api/src/State/MyEntityRemoveProcessor.php
 
-namespace App\DataPersister;
+namespace App\State;
 
-use ApiPlatform\Core\DataPersister\DataPersisterInterface;
-use ApiPlatform\Core\Validator\ValidatorInterface;
+use ApiPlatform\Doctrine\Common\State\RemoveProcessor as DoctrineRemoveProcessor;
+use ApiPlatform\State\ProcessorInterface;
+use ApiPlatform\Validator\ValidatorInterface;
 use App\Entity\MyEntity;
 
-class MyEntityDataPersister implements DataPersisterInterface
+class MyEntityRemoveProcessor implements ProcessorInterface
 {
     public function __construct(
-        private DataPersisterInterface $decoratedDoctrineDataPersister,
+        private DoctrineRemoveProcessor $doctrineProcessor,
         private ValidatorInterface $validator,
     ) {
     }
 
-    public function persist($data): void {
-        $this->decoratedDoctrineDataPersister->persist($data);
-    }
-
-    public function remove($data): void {
-        $this->validator->validate(
-            $data,
-            ['groups' => ['deleteValidation']]
-        );
-        $this->decoratedDoctrineDataPersister->remove($data);
-    }
-
-    public function supports($data): bool {
-        return $data instanceof MyEntity;
+    public function process($data, Operation $operation, array $uriVariables = [], array $context = [])
+    {
+        $this->validator->validate($data, ['groups' => ['deleteValidation']]);
+        $this->doctrineProcessor->process($data, $operation, $uriVariables, $context);
     }
 }
-```
-
-Register the new data persister in `api/config/services.yaml`:
-
-```yaml
-# api/config/services.yaml
-services:
-    _defaults:
-        bind:
-            $decoratedDoctrineDataPersister: '@api_platform.doctrine.orm.data_persister'
 ```
 
 ## Error Levels and Payload Serialization
@@ -504,7 +471,7 @@ For example:
 
 ```php
 <?php
-
+// api/src/Entity/Brand.php
 namespace App\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
@@ -550,7 +517,7 @@ Constraints                                                                     
 [`Isbn`](https://symfony.com/doc/current/reference/constraints/Isbn.html)             | `https://schema.org/isbn`          |
 [`Issn`](https://symfony.com/doc/current/reference/constraints/Issn.html)             | `https://schema.org/issn`          |
 
-## Specification property restrictions
+## Specification Property Restrictions
 
 API Platform generates specification property restrictions based on Symfony’s built-in validator.
 
@@ -560,7 +527,7 @@ For example, from [`Regex`](https://symfony.com/doc/4.4/reference/constraints/Re
 For building custom property schema based on custom validation constraints you can create a custom class
 for generating property scheme restriction.
 
-To create property schema, you have to implement the [`PropertySchemaRestrictionMetadataInterface`](https://github.com/api-platform/core/blob/caca7f26b7f22a0abf84390463a1ea47c47d7757/src/Bridge/Symfony/Validator/Metadata/Property/Restriction/PropertySchemaRestrictionMetadataInterface.php).
+To create property schema, you have to implement the [`PropertySchemaRestrictionMetadataInterface`](https://github.com/api-platform/core/blob/main/src/Symfony/Validator/Metadata/Property/Restriction/PropertySchemaRestrictionMetadataInterface.php).
 This interface defines only 2 methods:
 
 * `create`: to create property schema
@@ -571,18 +538,18 @@ Here is an implementation example:
 ```php
 namespace App\PropertySchemaRestriction;
 
-use ApiPlatform\Core\Metadata\Property\PropertyMetadata;
+use ApiPlatform\Metadata\ApiProperty;
 use Symfony\Component\Validator\Constraint;
 use App\Validator\CustomConstraint;
 
 final class CustomPropertySchemaRestriction implements PropertySchemaRestrictionMetadataInterface
 {
-    public function supports(Constraint $constraint, PropertyMetadata $propertyMetadata): bool
+    public function supports(Constraint $constraint, ApiProperty $propertyMetadata): bool
     {
         return $constraint instanceof CustomConstraint;
     }
 
-    public function create(Constraint $constraint, PropertyMetadata $propertyMetadata): array 
+    public function create(Constraint $constraint, ApiProperty $propertyMetadata): array
     {
       // your logic to create property schema restriction based on constraint
       return $restriction;
@@ -600,3 +567,52 @@ services:
     'App\PropertySchemaRestriction\CustomPropertySchemaRestriction': ~
         # Uncomment only if autoconfiguration is disabled
         #tags: [ 'api_platform.metadata.property_schema_restriction' ]
+```
+
+## Collecting Denormalization Errors
+
+When submitting data you can collect denormalization errors using the [COLLECT_DENORMALIZATION_ERRORS option](https://symfony.com/doc/current/components/serializer.html#collecting-type-errors-while-denormalizing).
+
+It can be done directly in the `#[ApiResource]` attribute (or in the operations):
+
+```php
+<?php
+// api/src/Entity/Book.php
+namespace App\Entity;
+
+use ApiPlatform\Metadata\ApiResource;
+
+#[ApiResource(
+    collectDenormalizationErrors: true
+)]
+class Book
+{
+    public ?bool $boolean;
+    public ?string $property1;
+}
+```
+
+If the submitted data has denormalization errors, the HTTP status code will be set to `422 Unprocessable Content` and the response body will contain the list of errors:
+
+```json
+{
+    "@context": "/api/contexts/ConstraintViolationList",
+    "@type": "ConstraintViolationList",
+    "hydra:title": "An error occurred",
+    "hydra:description": "boolean: This value should be of type bool.\nproperty1: This value should be of type string.",
+    "violations": [
+        {
+            "propertyPath": "boolean",
+            "message": "This value should be of type bool.",
+            "code": "0"
+        },
+        {
+            "propertyPath": "property1",
+            "message": "This value should be of type string.",
+            "code": "0"
+        }
+    ]
+}
+```
+
+You can also enable collecting of denormalization errors globally in the [Global Resources Defaults](https://api-platform.com/docs/core/configuration/#global-resources-defaults).

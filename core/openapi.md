@@ -20,28 +20,28 @@ You can also dump an OpenAPI specification for your API.
 OpenAPI, JSON format:
 
 ```console
-docker-compose exec php \
+docker compose exec php \
     bin/console api:openapi:export
 ```
 
 OpenAPI, YAML format:
 
 ```console
-docker-compose exec php \
+docker compose exec php \
     bin/console api:openapi:export --yaml
 ```
 
 Create a file containing the specification:
 
 ```console
-docker-compose exec php \
+docker compose exec php \
     bin/console api:openapi:export --output=swagger_docs.json
 ```
 
 If you want to use the old OpenAPI v2 (Swagger) JSON format, use:
 
 ```console
-docker-compose exec php \
+docker compose exec php \
     bin/console api:swagger:export
 ```
 
@@ -50,7 +50,7 @@ docker-compose exec php \
 Symfony allows to [decorate services](https://symfony.com/doc/current/service_container/service_decoration.html), here we
 need to decorate `api_platform.openapi.factory`.
 
-In the following example, we will see how to override the title of the Swagger documentation and add a custom filter for
+In the following example, we will see how to override the title and the base path URL of the Swagger documentation and add a custom filter for
 the `GET` operation of `/foos` path.
 
 ```yaml
@@ -65,9 +65,9 @@ the `GET` operation of `/foos` path.
 <?php
 namespace App\OpenApi;
 
-use ApiPlatform\Core\OpenApi\Factory\OpenApiFactoryInterface;
-use ApiPlatform\Core\OpenApi\OpenApi;
-use ApiPlatform\Core\OpenApi\Model;
+use ApiPlatform\OpenApi\Factory\OpenApiFactoryInterface;
+use ApiPlatform\OpenApi\OpenApi;
+use ApiPlatform\OpenApi\Model;
 
 class OpenApiFactory implements OpenApiFactoryInterface
 {
@@ -95,6 +95,9 @@ class OpenApiFactory implements OpenApiFactoryInterface
         $openApi = $openApi->withExtensionProperty('key', 'Custom x-key value');
         $openApi = $openApi->withExtensionProperty('x-value', 'Custom x-value value');
 
+        // to define base path URL
+        $openApi = $openApi->withServers([new Model\Server('https://foo.bar')]);
+
         return $openApi;
     }
 }
@@ -114,11 +117,10 @@ The following configuration will give you total control over your OpenAPI defini
 ```php
 <?php
 // api/src/Entity/Product.php
-
 namespace App\Entity;
 
-use ApiPlatform\Core\Annotation\ApiResource;
-use ApiPlatform\Core\Annotation\ApiProperty;
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\ApiProperty;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -136,20 +138,21 @@ class Product // The class name will be used to name exposed resources
     #[ORM\Column]
     #[Assert\NotBlank]
     #[ApiProperty(
-        attributes: [
-            "openapi_context" => [
-                "type" => "string",
-                "enum" => ["one", "two"],
-                "example" => "one",
-            ],
-        ],
+        openapiContext: [
+            'type' => 'string',
+            'enum' => ['one', 'two'],
+            'example' => 'one'
+        ]
     )]
     public string $name;
 
     #[ORM\Column(type: "datetime")] 
     #[Assert\DateTime]
     #[ApiProperty(
-        openapi_context: ["type" => "string", "format" => "date-time"]
+        openapiContext: [
+            'type' => 'string',
+            'format' => 'date-time'
+        ]
     )]
     public $timestamp;
 
@@ -158,47 +161,53 @@ class Product // The class name will be used to name exposed resources
 ```
 
 ```yaml
-# api/config/api_platform/resources.yaml
-resources:
+# api/config/api_platform/properties.yaml
+properties:
     App\Entity\Product:
-      properties:
         name:
-          attributes:
-            openapi_context:
-              type: string
-              enum: ['one', 'two']
-              example: one
+            attributes:
+                openapiContext:
+                    type: string
+                    enum: ['one', 'two']
+                    example: one
         timestamp:
-          attributes:
-            openapi_context:
-              type: string
-              format: date-time
+            attributes:
+                openapiContext:
+                    type: string
+                    format: date-time
 ```
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" ?>
-<resources xmlns="https://api-platform.com/schema/metadata"
+<!-- api/config/api_platform/properties.xml -->
+
+<properties xmlns="https://api-platform.com/schema/metadata/properties-3.0"
            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-           xsi:schemaLocation="https://api-platform.com/schema/metadata https://api-platform.com/schema/metadata/metadata-2.0.xsd">
-    <resource class="App\Entity\Product">
-        <property name="name">
-            <attribute name="openapi_context">
-                <attribute name="type">type</attribute>
-                <attribute name="enum">
-                    <attribute>one</attribute>
-                    <attribute>two</attribute>
-                </attribute>
-                <attribute name="example">one</attribute>
-            </attribute>
-        </property>
-        <property name="timestamp">
-            <attribute name="openapi_context">
-                <attribute name="type">string</attribute>
-                <attribute name="format">date-time</attribute>
-            </attribute>
-        </property>
-    </resource>
-</resources>
+           xsi:schemaLocation="https://api-platform.com/schema/metadata/properties-3.0
+           https://api-platform.com/schema/metadata/properties-3.0.xsd">
+    <property resource="App\Entity\Product" name="name">
+        <openapiContext>
+            <values>
+                <value name="type">type</value>
+                <value name="enum">
+                    <values>
+                        <value>one</value>
+                        <value>two</value>
+                    </values>
+                </value>
+                <value name="example">one</value>
+            </values>
+        </openapiContext>
+    </property>
+    <property resource="App\Entity\Product" name="timestamp">
+        <openapiContext>
+            <values>
+                <value name="type">string</value>
+                <value name="format">date-time</value>
+            </values>
+        </openapiContext>
+    </property>
+</properties>
 ```
 
 [/codeSelector]
@@ -246,40 +255,89 @@ This will produce the following Swagger documentation:
 }
 ```
 
-To pass a context to the OpenAPI **v2** generator, use the `swagger_context` attribute (notice the prefix: `swagger_` instead of `openapi_`).
+To pass a context to the OpenAPI **v2** generator, use the `swaggerContext` attribute (notice the prefix: `swagger` instead of `openapi`).
+
+## Disabling an Operation From OpenAPI Documentation
+
+Sometimes you may want to disable an operation from the OpenAPI documentation, for example to not exposing it.
+Using the `openapi` boolean option disables this operation from the OpenAPI documentation:
+
+[codeSelector]
+
+```php
+<?php
+// api/src/Entity/Product.php
+namespace App\Entity;
+
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\GetCollection;
+
+#[ApiResource(
+    operations: [
+        new GetCollection(openapi: false)
+    ]
+)]
+class Product
+{
+    // ...
+}
+```
+
+```yaml
+# api/config/api_platform/resources.yaml
+resources:
+    App\Entity\Product:
+        operations:
+            ApiPlatform\Metadata\GetCollection:
+                openapi: false
+```
+
+```xml
+<?xml version="1.0" encoding="UTF-8" ?>
+<!-- api/config/api_platform/resources.xml -->
+
+<resources xmlns="https://api-platform.com/schema/metadata/resources-3.0"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="https://api-platform.com/schema/metadata/resources-3.0
+           https://api-platform.com/schema/metadata/resources-3.0.xsd">
+    <resource class="App\Entity\Product">
+        <operations>
+            <operation class="ApiPlatform\Metadata\GetCollection" openapi="false" />
+        </operations>
+    </resource>
+</resources>
+```
+
+[/codeSelector]
+
+Note: as your route is not exposed, you may want to return a HTTP 404 if it's called. Prefer using the `NotExposedAction` controller instead.
 
 ## Changing the Name of a Definition
 
 API Platform generates a definition name based on the serializer `groups` defined
-in the (`de`)`normalization_context`. It's possible to override the name
+in the (`de`)`normalizationContext`. It's possible to override the name
 thanks to the `swagger_definition_name` option:
 
 ```php
-#[ApiResource(
-    collectionOperations: [
-        "post" => [
-            "denormalization_context" => [
-                "groups" => ["user:read"],
-                "swagger_definition_name" => "Read",
-            ],
-        ],
-    ],
-)]
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Post;
+
+#[ApiResource]
+#[Post(denormalizationContext: ['groups' => ['user:read'], 'swagger_definition_name' => 'Read'])]
 class User
 {
+    // ...
 }
 ```
 
-It's also possible to re-use the (`de`)`normalization_context`:
+It's also possible to re-use the (`de`)`normalizationContext`:
 
 ```php
-#[ApiResource(
-    collectionOperations: [
-        "post" => [
-            "denormalization_context" => User::API_WRITE,
-        ],
-    ],
-)]
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Post;
+
+#[ApiResource]
+#[Post(denormalizationContext: [User::API_WRITE])]
 class User
 {
     const API_WRITE = [
@@ -298,60 +356,60 @@ You also have full control over both built-in and custom operations documentatio
 ```php
 <?php
 // api/src/Entity/Rabbit.php
+namespace App\Entity;
 
-use ApiPlatform\Core\Annotation\ApiProperty;
-use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Post;
+use ApiPlatform\OpenApi\Model;
 use App\Controller\RandomRabbit;
 
-#[ApiResource(collectionOperations: [
-        'create_rabbit' => [
-            'method'          => 'post',
-            'path'            => '/rabbit/create',
-            'controller'      => RandomRabbit::class,
-            'openapi_context' => [
-                'summary'     => 'Create a rabbit picture',
-                'description' => "# Pop a great rabbit picture by color!\n\n![A great rabbit](https://rabbit.org/graphics/fun/netbunnies/jellybean1-brennan1.jpg)",
-                'requestBody' => [
-                    'content' => [
-                        'application/json' => [
-                            'schema'  => [
-                                'type'       => 'object',
-                                'properties' =>
-                                    [
-                                        'name'        => ['type' => 'string'],
-                                        'description' => ['type' => 'string'],
-                                    ],
-                            ],
-                            'example' => [
-                                'name'        => 'Mr. Rabbit',
-                                'description' => 'Pink Rabbit',
-                            ],
-                        ],
-                    ],
-                ],
-            ],
-        ],
-    ]
+#[ApiResource]
+#[Post(
+    name: 'create_rabbit', 
+    uriTemplate: '/rabbit/create', 
+    controller: RandomRabbit::class, 
+    openapi: new Model\Operation(
+        summary: 'Create a rabbit picture', 
+        description: '# Pop a great rabbit picture by color!\n\n![A great rabbit](https://rabbit.org/graphics/fun/netbunnies/jellybean1-brennan1.jpg)', 
+        requestBody: new Model\RequestBody(
+            content: new \ArrayObject([
+                'application/json' => [
+                    'schema' => [
+                        'type' => 'object', 
+                        'properties' => [
+                            'name' => ['type' => 'string'], 
+                            'description' => ['type' => 'string']
+                        ]
+                    ], 
+                    'example' => [
+                        'name' => 'Mr. Rabbit', 
+                        'description' => 'Pink Rabbit'
+                    ]
+                ]
+            ])
+        )
+    )
 )]
 class Rabbit
-{}
+{
+    // ...
+}
 ```
 
 ```yaml
 resources:
   App\Entity\Rabbit:
-    collectionOperations:
+    operations:
       create_rabbit:
-        method: post
+        class: ApiPlatform\Metadata\Post
         path: '/rabbit/create'
         controller: App\Controller\RandomRabbit
-        openapi_context:
+        openapi:
           summary: Random rabbit picture
           description: >
             # Pop a great rabbit picture by color!
 
             ![A great rabbit](https://rabbit.org/graphics/fun/netbunnies/jellybean1-brennan1.jpg)
-
           requestBody:
             content:
               application/json:
@@ -368,39 +426,52 @@ resources:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" ?>
-<resources xmlns="https://api-platform.com/schema/metadata"
+<resources xmlns="https://api-platform.com/schema/metadata/resources-3.0"
            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-           xsi:schemaLocation="https://api-platform.com/schema/metadata
-        https://api-platform.com/schema/metadata/metadata-2.0.xsd">
+           xsi:schemaLocation="https://api-platform.com/schema/metadata/resources-3.0
+        https://api-platform.com/schema/metadata/resources-3.0.xsd">
     <resource class="App\Entity\Rabbit">
-        <collectionOperations>
-            <collectionOperation name="create_rabbit">
-                <attribute name="path">/rabbit/create</attribute>
-                <attribute name="method">post</attribute>
-                <attribute name="controller">App\Controller\RandomRabbit</attribute>
-                <attribute name="openapi_context">
-                    <attribute name="summary">Create a rabbit picture </attribute>
-                    <attribute name="description"># Pop a great rabbit picture by color!!
-
-![A great rabbit](https://rabbit.org/graphics/fun/netbunnies/jellybean1-brennan1.jpg)</attribute>
-                    <attribute name="content">
-                        <attribute name="application/json">
-                            <attribute name="schema">
-                                <attribute name="type">object</attribute>
-                                <attribute name="properties">
-                                    <attribute name="name">
-                                        <attribute name="type">string</attribute>
-                                    </attribute>
-                                    <attribute name="description">
-                                        <attribute name="type">string</attribute>
-                                    </attribute>
-                                </attribute>
-                            </attribute>
-                        </attribute>
-                    </attribute>
-                </attribute>
-            </collectionOperation>
-        </collectionOperations>
+        <operations>
+            <operation class="ApiPlatform\Metadata\Post" name="create_rabbit" uriTemplate="/rabbit/create"
+                       controller="App\Controller\RandomRabbit">
+                <openapi summary="Create a rabbit picture"
+                         description="# Pop a great rabbit picture by color!!
+    
+    ![A great rabbit](https://rabbit.org/graphics/fun/netbunnies/jellybean1-brennan1.jpg)">
+                    <responses>
+                        <response status="200">
+                            <content>
+                                <values>
+                                    <value name="application/json">
+                                        <values>
+                                            <value name="schema">
+                                                <values>
+                                                    <value name="type">object</value>
+                                                    <value name="properties">
+                                                        <values>
+                                                            <value name="name">
+                                                                <values>
+                                                                    <value name="type">string</value>
+                                                                </values>
+                                                            </value>
+                                                            <value name="description">
+                                                                <values>
+                                                                    <value name="type">string</value>
+                                                                </values>
+                                                            </value>
+                                                        </values>
+                                                    </value>
+                                                </values>
+                                            </value>
+                                        </values>
+                                    </value>
+                                </values>
+                            </content>
+                        </response>
+                    </responses>
+                </openapi>
+            </operation>
+        </operations>
     </resource>
 </resources>
 ```
@@ -409,11 +480,48 @@ resources:
 
 ![Impact on Swagger UI](../distribution/images/swagger-ui-2.png)
 
+## Disabling Swagger UI or ReDoc
+
+To disable Swagger UI (ReDoc will be shown by default):
+
+```yaml
+# api/config/packages/api_platform.yaml
+api_platform:
+    # ...
+    enable_swagger_ui: false
+```
+
+To disable ReDoc:
+
+```yaml
+# api/config/packages/api_platform.yaml
+api_platform:
+    # ...
+    enable_re_doc: false
+```
+
 ## Changing the Location of Swagger UI
 
-Sometimes you may want to have the API at one location, and the Swagger UI at a different location. This can be done by disabling the Swagger UI from the API Platform configuration file and manually adding the Swagger UI controller.
+By default, the Swagger UI is available at the API location (when the HTML format is asked) and at the route `/docs`.
 
-### Disabling Swagger UI or ReDoc
+You may want to change its route and/or disable it at the API location.
+
+### Changing the Route
+
+Manually register the Swagger UI controller:
+
+```yaml
+# app/config/routes.yaml
+api_doc:
+    path: /api_documentation
+    controller: api_platform.swagger_ui.action
+```
+
+Change `/api_documentation` to the URI you wish Swagger UI to be accessible on.
+
+### Disabling Swagger UI at the API Location
+
+To disable the Swagger UI at the API location, disable both Swagger UI and ReDoc:
 
 ```yaml
 # api/config/packages/api_platform.yaml
@@ -423,16 +531,7 @@ api_platform:
     enable_re_doc: false
 ```
 
-### Manually Registering the Swagger UI Controller
-
-```yaml
-# app/config/routes.yaml
-swagger_ui:
-    path: /docs
-    controller: api_platform.swagger.action.ui
-```
-
-Change `/docs` to the URI you wish Swagger to be accessible on.
+If you have manually registered the Swagger UI controller, the Swagger UI will still be accessible at the route you have chosen.
 
 ## Using a custom Asset Package in Swagger UI
 
@@ -476,7 +575,7 @@ As described [in the Symfony documentation](https://symfony.com/doc/current/temp
 </html>
 ```
 
-You may want to copy the [one shipped with API Platform](https://github.com/api-platform/core/blob/2.6/src/Bridge/Symfony/Bundle/Resources/views/SwaggerUi/index.html.twig) and customize it.
+You may want to copy the [one shipped with API Platform](https://github.com/api-platform/core/blob/main/src/Symfony/Bundle/Resources/views/SwaggerUi/index.html.twig) and customize it.
 
 ## Compatibility Layer with Amazon API Gateway
 
@@ -493,32 +592,49 @@ If you implemented OAuth on your API, you should configure OpenApi's authorizati
 ```yaml
 api_platform:
     oauth:
-        # To enable or disable oauth.
+        # To enable or disable OAuth.
         enabled: false
 
-        # The oauth client id.
+        # The OAuth client ID.
         clientId: ''
 
-        # The oauth client secret.
+        # The OAuth client secret.
         clientSecret: ''
 
-        # The oauth type.
+        # The OAuth type.
         type: 'oauth2'
 
-        # The oauth flow grant type.
+        # The OAuth flow grant type.
         flow: 'application'
 
-        # The oauth token url.
+        # The OAuth token url.
         tokenUrl: '/oauth/v2/token'
 
-        # The oauth authentication url.
+        # The OAuth authentication url.
         authorizationUrl: '/oauth/v2/auth'
 
-        # The oauth scopes.
+        # The OAuth scopes.
         scopes: []
 ```
 
 Note that `clientId` and `clientSecret` are being used by the SwaggerUI if enabled.
+
+### Configure the OAuth Scopes Option
+
+The `api_platform.oauth.scopes` option requires an array value with the scopes name and description. For example:
+
+```yaml
+api_platform:
+    oauth:
+        scopes:
+            profile: "This scope value requests access to the End-User's default profile Claims, which are: name, family_name, given_name, middle_name, nickname, preferred_username, profile, picture, website, gender, birthdate, zoneinfo, locale, and updated_at."
+            email: "This scope value requests access to the email and email_verified Claims."
+            address: "This scope value requests access to the address Claim."
+            phone: "This scope value requests access to the phone_number and phone_number_verified Claims."
+```
+
+**Note:** if you're using an OpenID Connect server (such as Keycloak or Auth0), the `openid` scope **must** be set according
+to the [OpenID Connect specification](https://openid.net/specs/openid-connect-core-1_0.html).
 
 ## Info Object
 

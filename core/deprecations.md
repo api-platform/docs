@@ -22,10 +22,9 @@ To deprecate a resource class, use the `deprecationReason` attribute:
 ```php
 <?php
 // api/src/Entity/Parchment.php
-
 namespace App\Entity;
 
-use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Metadata\ApiResource;
 
 #[ApiResource(deprecationReason: "Create a Book instead")]
 class Parchment
@@ -37,8 +36,8 @@ class Parchment
 As you can see, to deprecate a resource, we just have to explain what the client should do to upgrade in the dedicated attribute.
 
 The deprecation will automatically be taken into account by clients supporting the previously mentioned format, including
-[API Platform Admin](../admin/index.md), [API Platform Client Generator](../client-generator/index.md) and the lower level
-[api-doc-parser library](https://github.com/api-platform/api-doc-parser).
+[Admin](../admin/index.md), clients created with [Create Client](../create-client/index.md) and the lower level
+[api-doc-parser](https://github.com/api-platform/api-doc-parser) library.
 
 Here is how it renders for OpenAPI in the built-in Swagger UI shipped with the framework:
 
@@ -53,12 +52,13 @@ You can also use this new `deprecationReason` attribute to deprecate specific [o
 ```php
 <?php
 // api/src/Entity/Parchment.php
-
 namespace App\Entity;
 
-use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Get;
 
-#[ApiResource(itemOperations: [ "get" => ["deprecation_reason" => "Retrieve a Book instead"])]
+#[ApiResource]
+#[Get(deprecationReason: 'Retrieve a Book instead')]
 class Parchment
 {
     // ...
@@ -72,11 +72,10 @@ It's also possible to deprecate a single property:
 ```php
 <?php
 // api/src/Entity/Review.php
-
 namespace App\Entity;
 
-use ApiPlatform\Core\Annotation\ApiProperty;
-use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\ApiProperty;
 
 #[ApiResource]
 class Review
@@ -92,14 +91,12 @@ class Review
 
 ```yaml
 # api/config/api_platform/resources/Review.yaml
-resources:
+properties:
     # ...
     App\Entity\Review:
-        properties:
-            # ...
-            letter:
-                attributes:
-                    deprecation_reason: 'Use the rating property instead'
+        # ...
+        letter:
+            deprecationReason: 'Use the rating property instead'
 ```
 
 [/codeSelector]
@@ -118,14 +115,13 @@ Thanks to the `sunset` attribute, API Platform makes it easy to set this header 
 ```php
 <?php
 // api/src/Entity/Parchment.php
-
 namespace App\Entity;
 
-use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Metadata\ApiResource;
 
 #[ApiResource(
-    deprecationReason: "Create a Book instead",
-    sunset: "01/01/2020"
+    deprecationReason: 'Create a Book instead',
+    sunset: '01/01/2020'
 )]
 class Parchment
 {
@@ -141,17 +137,16 @@ It's also possible to set the `Sunset` header only for a specific [operation](op
 ```php
 <?php
 // api/src/Entity/Parchment.php
-
 namespace App\Entity;
 
-use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Get;
 
-#[ApiResource(itemOperations: [
-    "get" => [
-        "deprecation_reason" => "Retrieve a Book instead",
-        "sunset" => "01/01/2020"
-    ]
-])]
+#[ApiResource]
+#[Get(
+    deprecationReason: 'Retrieve a Book instead',
+    sunset: '01/01/2020'
+)]
 class Parchment
 {
     // ...

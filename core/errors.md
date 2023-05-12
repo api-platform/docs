@@ -17,21 +17,20 @@ configure API Platform to convert it to a `404 Not Found` error:
 ```php
 <?php
 // api/src/Exception/ProductNotFoundException.php
-
 namespace App\Exception;
 
 final class ProductNotFoundException extends \Exception
 {
+    // ...
 }
 ```
 
 ```php
 <?php
 // api/src/EventSubscriber/ProductManager.php
-
 namespace App\EventSubscriber;
 
-use ApiPlatform\Core\EventListener\EventPriorities;
+use ApiPlatform\EventListener\EventPriorities;
 use App\Entity\Product;
 use App\Exception\ProductNotFoundException;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -76,12 +75,12 @@ api_platform:
     exception_to_status:
         # The 4 following handlers are registered by default, keep those lines to prevent unexpected side effects
         Symfony\Component\Serializer\Exception\ExceptionInterface: 400 # Use a raw status code (recommended)
-        ApiPlatform\Core\Exception\InvalidArgumentException: !php/const Symfony\Component\HttpFoundation\Response::HTTP_BAD_REQUEST
-        ApiPlatform\Core\Exception\FilterValidationException: 400
+        ApiPlatform\Exception\InvalidArgumentException: !php/const Symfony\Component\HttpFoundation\Response::HTTP_BAD_REQUEST
+        ApiPlatform\Exception\FilterValidationException: 400
         Doctrine\ORM\OptimisticLockException: 409
 
         # Validation exception
-        ApiPlatform\Core\Bridge\Symfony\Validator\Exception\ValidationException: !php/const Symfony\Component\HttpFoundation\Response::HTTP_UNPROCESSABLE_ENTITY
+        ApiPlatform\Validator\Exception\ValidationException: !php/const Symfony\Component\HttpFoundation\Response::HTTP_UNPROCESSABLE_ENTITY
 
         # Custom mapping
         App\Exception\ProductNotFoundException: 404 # Here is the handler for our custom exception
@@ -108,3 +107,36 @@ Depending on the status code you use, the message may be replaced with a generic
 If your status code is >= 500 and < 600, the exception message will only be displayed in debug mode (dev and test). In production, a generic message matching the status code provided will be shown instead. If you are using an unofficial HTTP code, a general message will be displayed.
 
 In any other cases, your exception message will be sent to end users.
+
+## Fine-grained Configuration
+
+The `exceptionToStatus` configuration can be set on resources and operations:
+
+```php
+<?php
+// api/src/Entity/Book.php
+namespace App\Entity;
+
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\Post;
+use App\Exception\ProductWasRemovedException;
+use App\Exception\ProductNotFoundException;
+
+#[ApiResource(
+    exceptionToStatus: [ProductNotFoundException::class => 404]
+    operations: [
+        new Get(exceptionToStatus: [ProductWasRemovedException::class => 410]),
+        new GetCollection(),
+        new Post()
+    ]
+)]
+class Book
+{
+    // ...
+}
+```
+
+Exceptions mappings defined on operations take precedence over mappings defined on resources, which take precedence over
+the global config.

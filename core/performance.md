@@ -40,7 +40,28 @@ api_platform:
             vary: ['Content-Type', 'Authorization', 'Origin']
 ```
 
-Support for reverse proxies other than Varnish can easily be added by implementing the `ApiPlatform\Core\HttpCache\PurgerInterface`.
+Support for reverse proxies other than Varnish can easily be added by implementing the `ApiPlatform\HttpCache\PurgerInterface`.
+Two purgers are available, the http tags (`api_platform.http_cache.purger.varnish.ban`) or the surrogate key implementation
+(`api_platform.http_cache.purger.varnish.xkey`). You can specify the implementation using the `purger` configuration node,
+for example to use the xkey implementation:
+
+```yaml
+api_platform:
+    http_cache:
+        invalidation:
+            enabled: true
+            varnish_urls: ['%env(VARNISH_URL)%']
+            purger: 'api_platform.http_cache.purger.varnish.xkey'
+        public: true
+    defaults:
+        cache_headers:
+            max_age: 0
+            shared_max_age: 3600
+            vary: ['Content-Type', 'Authorization', 'Origin']
+            invalidation:
+                xkey:
+                    glue: ', '
+```
 
 In addition to the cache invalidation mechanism, you may want to [use HTTP/2 Server Push to pre-emptively send relations
 to the client](push-relations.md).
@@ -52,12 +73,10 @@ augmented with these resources. Here is an example of how this can be done:
 
 ```php
 <?php
-
-declare(strict_types=1);
-
+// api/src/EventSubscriber/UserResourcesSubscriber.php
 namespace App\EventSubscriber;
 
-use ApiPlatform\Core\EventListener\EventPriorities;
+use ApiPlatform\Symfony\EventListener\EventPriorities;
 use App\Entity\User;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
@@ -90,16 +109,18 @@ final class UserResourcesSubscriber implements EventSubscriberInterface
 
 ## Setting Custom HTTP Cache Headers
 
-The `cache_headers` attribute can be used to set custom HTTP cache headers:
+The `cacheHeaders` attribute can be used to set custom HTTP cache headers:
 
 ```php
-use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Metadata\ApiResource;
 
-#[ApiResource(cacheHeaders: [
-    "max_age" => 60,
-    "shared_max_age" => 120,
-    "vary" => ["Authorization", "Accept-Language"]
-])]
+#[ApiResource(
+    cacheHeaders: [
+        'max_age' => 60, 
+        'shared_max_age' => 120, 
+        'vary' => ['Authorization', 'Accept-Language']
+    ]
+)]
 class Book
 {
     // ...
@@ -116,15 +137,16 @@ Vary: Authorization, Accept-Language
 It's also possible to set different cache headers per operation:
 
 ```php
-use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Get;
 
-#[ApiResource(
-    itemOperations: [
-        "get" => [
-            "cache_headers" => ["max_age" => 60, "shared_max_age" => 120],
-        ]
+#[ApiResource]
+#[Get(
+    cacheHeaders: [
+        'max_age' => 60, 
+        'shared_max_age' => 120
     ]
-  )
+)]
 class Book
 {
     // ...
@@ -171,14 +193,18 @@ readable association according to the serialization context. If you want to fetc
 you have to bypass `readable` and `readableLink` by using the `fetchEager` attribute on the property declaration, for example:
 
 ```php
+...
+
 #[ApiProperty(fetchEager: true)]
- public $foo;
+public $foo;
+
+...
 ```
 
 #### Max Joins
 
 There is a default restriction with this feature. We allow up to 30 joins per query. Beyond that, an
-`ApiPlatform\Core\Exception\RuntimeException` exception will be thrown but this value can easily be increased with a
+`ApiPlatform\Exception\RuntimeException` exception will be thrown but this value can easily be increased with a
 bit of configuration:
 
 ```yaml
@@ -225,10 +251,9 @@ from the configuration of each resource. You can do this at the resource level, 
 ```php
 <?php
 // api/src/Entity/Address.php
-
 namespace App\Entity;
 
-use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Metadata\ApiResource;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity]
@@ -242,10 +267,9 @@ class Address
 ```php
 <?php
 // api/src/Entity/User.php
-
 namespace App\Entity;
 
-use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Metadata\ApiResource;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity]
@@ -269,24 +293,19 @@ class User
 ```php
 <?php
 // api/src/Entity/Group.php
-
 namespace App\Entity;
 
-use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\Post;
+use ApiPlatform\Metadata\GetCollection;
 use Doctrine\ORM\Mapping as ORM;
 
+#[ApiResource(forceEager: false)]
+#[Get(forceEager: true)]
+#[Post]
+#[GetCollection(forceEager: true)]
 #[ORM\Entity]
-#[ApiResource(
-    forceEager: false,
-    itemOperations: [
-        "get" => ["force_eager" => true],
-        "post",
-    ],
-    collectionOperations; [
-        "get" => ["force_eager" => true],
-        "post",
-    ]
-)]
 class Group
 {
     /**
@@ -349,7 +368,7 @@ To configure Blackfire.io follow these simple steps:
                 - BLACKFIRE_DISABLE_LEGACY_PORT=1
     ```
 
-2. Add your Blackfire.io id and server token to your `.env` file at the root of your project (be sure not to commit this to a public repository):
+2. Add your Blackfire.io ID and server token to your `.env` file at the root of your project (be sure not to commit this to a public repository):
 
     ```shell
     BLACKFIRE_SERVER_ID=xxxxxxxxxx
@@ -377,8 +396,8 @@ To configure Blackfire.io follow these simple steps:
 4. Rebuild and restart all your containers
 
     ```console
-    docker-compose build
-    docker-compose up -d
+    docker compose build
+    docker compose up -d
     ```
 
 For details on how to perform profiling, see [the Blackfire.io documentation](https://blackfire.io/docs/integrations/docker#using-the-client-for-http-profiling).

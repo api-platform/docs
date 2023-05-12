@@ -28,7 +28,7 @@ It can be configured globally:
 # api/config/packages/api_platform.yaml
 api_platform:
     defaults:
-        url_generation_strategy: !php/const ApiPlatform\Core\Api\UrlGeneratorInterface::ABS_URL
+        url_generation_strategy: !php/const ApiPlatform\Api\UrlGeneratorInterface::ABS_URL
 ```
 
 It can also be configured only for a specific resource:
@@ -39,8 +39,8 @@ It can also be configured only for a specific resource:
 <?php
 // api/src/Entity/Book.php
 
-use ApiPlatform\Core\Annotation\ApiResource;
-use ApiPlatform\Core\Api\UrlGeneratorInterface;
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Api\UrlGeneratorInterface;
 
 #[ApiResource(urlGenerationStrategy: UrlGeneratorInterface::ABS_URL)]
 class Book
@@ -51,9 +51,9 @@ class Book
 
 ```yaml
 # api/config/api_platform/resources.yaml
-App\Entity\Book:
-    attributes:
-        url_generation_strategy: !php/const ApiPlatform\Core\Api\UrlGeneratorInterface::ABS_URL
+resources:
+    App\Entity\Book:
+        urlGenerationStrategy: !php/const ApiPlatform\Api\UrlGeneratorInterface::ABS_URL
 ```
 
 ```xml
@@ -61,13 +61,11 @@ App\Entity\Book:
 <!-- api/config/api_platform/resources.xml -->
 
 <resources
-        xmlns="https://api-platform.com/schema/metadata"
+        xmlns="https://api-platform.com/schema/metadata/resources-3.0"
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xsi:schemaLocation="https://api-platform.com/schema/metadata
-        https://api-platform.com/schema/metadata/metadata-2.0.xsd">
-    <resource class="App\Entity\Book">
-        <attribute name="url_generation_strategy" type="constant">ApiPlatform\Core\Api\UrlGeneratorInterface::ABS_URL</attribute>
-    </resource>
+        xsi:schemaLocation="https://api-platform.com/schema/metadata/resources-3.0
+        https://api-platform.com/schema/metadata/resources-3.0.xsd">
+    <resource class="App\Entity\Book" urlGenerationStrategy="0" />
 </resources>
 ```
 

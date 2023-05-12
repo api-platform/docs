@@ -4,10 +4,10 @@
 
 If you plan to migrate from FOSRestBundle, you might want to read [this guide](migrate-from-fosrestbundle.md) to get started with API Platform.
 
-## Installing API Platform Core
+## Installing API Platform
 
 If you are starting a new project, the easiest way to get API Platform up is to install the [API Platform Distribution](../distribution/index.md).
-It comes with the API Platform Core library integrated with [the Symfony framework](https://symfony.com), [the schema generator](../schema-generator/),
+It comes with the API Platform core library integrated with [the Symfony framework](https://symfony.com), [the schema generator](../schema-generator/),
 [Doctrine ORM](https://www.doctrine-project.org), [Elasticsearch-PHP](https://www.elastic.co/guide/en/elasticsearch/client/php-api/current/index.html),
 [NelmioCorsBundle](https://github.com/nelmio/NelmioCorsBundle) and [Behat](http://behat.org).
 [Doctrine MongoDB ODM](https://www.doctrine-project.org/projects/mongodb-odm.html) can also be enabled by following the [MongoDB documentation](mongodb.md).
@@ -20,6 +20,8 @@ project:
 
 There are no mandatory configuration options although [many settings are available](configuration.md).
 
+**Warning**: If you are migrating from an older version of API Platform than 2.7, make sure you read the [Upgrade Guide](upgrade-guide.md).
+
 ## Before Reading this Documentation
 
 If you haven't read it already, take a look at [the Getting Started guide](../distribution/index.md).
@@ -30,7 +32,7 @@ and what [JSON-LD](http://json-ld.org/) and [Hydra](http://www.hydra-cg.com/) fo
 
 <p align="center" class="symfonycasts"><a href="https://symfonycasts.com/screencast/api-platform/api-resource?cid=apip"><img src="../distribution/images/symfonycasts-player.png" alt="Create an API Resource screencast"><br>Watch the Create an API Resource screencast</a></p>
 
-API Platform Core is able to automatically expose entities mapped as "API resources" through a REST API supporting CRUD
+API Platform is able to automatically expose entities mapped as "API resources" through a REST API supporting CRUD
 operations.
 To expose your entities, you can use Docblock annotations, XML and YAML configuration files.
 
@@ -39,10 +41,9 @@ Here is an example of entities mapped using annotations which will be exposed th
 ```php
 <?php
 // api/src/Entity/Product.php
-
 namespace App\Entity;
 
-use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Metadata\ApiResource;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -101,10 +102,9 @@ class Product // The class name will be used to name exposed resources
 ```php
 <?php
 // api/src/Entity/Offer.php
-
 namespace App\Entity;
 
-use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Metadata\ApiResource;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -113,7 +113,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  *
  */
 #[ORM\Entity]
-#[ApiResource(iri: 'https://schema.org/Offer')]
+#[ApiResource(types: ['https://schema.org/Offer'])]
 class Offer
 {
     #[ORM\Id, ORM\Column, ORM\GeneratedValue]
@@ -142,11 +142,11 @@ web API.
 If you are familiar with the Symfony ecosystem, you noticed that entity classes are also mapped with Doctrine ORM annotations
 and validation constraints from [the Symfony Validator Component](http://symfony.com/doc/current/book/validation.html).
 This isn't mandatory. You can use [your preferred persistence](data-providers.md) and [validation](validation.md) systems.
-However, API Platform Core has built-in support for those libraries and is able to use them without requiring any specific
+However, API Platform has built-in support for those libraries and is able to use them without requiring any specific
 code or configuration to automatically persist and validate your data. They are a good default option and we encourage you to use
 them unless you know what you are doing.
 
-Thanks to the mapping done previously, API Platform Core will automatically register the following REST [operations](operations.md)
+Thanks to the mapping done previously, API Platform will automatically register the following REST [operations](operations.md)
 for resources of the product type:
 
 ### Product
@@ -175,26 +175,28 @@ resources:
     App\Entity\Offer:
         shortName: 'Offer'                   # optional
         description: 'An offer from my shop' # optional
-        iri: 'https://schema.org/Offer'       # optional
-        attributes:                          # optional
-            pagination_items_per_page: 25    # optional
+        types: ['https://schema.org/Offer']   # optional
+        paginationItemsPerPage: 25           # optional
 ```
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" ?>
 <!-- api/config/api_platform/resources.xml -->
 
-<resources xmlns="https://api-platform.com/schema/metadata"
+<resources xmlns="https://api-platform.com/schema/metadata/resources-3.0"
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xsi:schemaLocation="https://api-platform.com/schema/metadata
-        https://api-platform.com/schema/metadata/metadata-2.0.xsd">
+        xsi:schemaLocation="https://api-platform.com/schema/metadata/resources-3.0
+        https://api-platform.com/schema/metadata/resources-3.0.xsd">
     <resource class="App\Entity\Product" />
     <resource
         class="App\Entity\Offer"
         shortName="Offer" <!-- optional -->
         description="An offer from my shop" <!-- optional -->
-        iri="https://schema.org/Offer" <!-- optional -->
-    />
+    >
+        <types>
+            <type>https://schema.org/Offer</type> <!-- optional -->
+        </types>
+    </resource>
 </resources>
 ```
 

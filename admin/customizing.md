@@ -6,8 +6,10 @@ To do so, you can use the React components provided by API Platform Admin itself
 
 ## Customizing the Admin's Main Page and the Resource List
 
-By default, API Platform Admin automatically builds a tailored [Resource component](https://marmelab.com/react-admin/Resource.html) (and all its appropriate children) for each resource type exposed by a web API.
-Under the hood it uses the `@api-platform/api-doc-parser` library to parse the API documentation. The API documentation can use Hydra, OpenAPI and any other format supported by the library.
+By default, API Platform Admin automatically builds a tailored [Resource component](https://marmelab.com/react-admin/Resource.html)
+(and all its appropriate children) for each resource type exposed by a web API.
+Under the hood it uses the `@api-platform/api-doc-parser` library to parse the API documentation.
+The API documentation can use Hydra, OpenAPI and any other format supported by the library.
 Resources are listed in the order they appear in the machine-readable documentation.
 
 However, it's also possible to display only specific resources, and to order them, while still benefiting from all discovery features provided by API Platform Admin.
@@ -77,15 +79,15 @@ import {
 
 const ReviewsShow = props => (
   <ShowGuesser {...props}>
-    <FieldGuesser source="author" addLabel={true} />
-    <FieldGuesser source="book" addLabel={true} />
-    <FieldGuesser source="rating" addLabel={true} />
+    <FieldGuesser source="author" />
+    <FieldGuesser source="book" />
+    <FieldGuesser source="rating" />
 
     {/* While deprecated fields are hidden by default, using an explicit FieldGuesser component allows to add them back. */}
-    <FieldGuesser source="letter" addLabel={true} />
+    <FieldGuesser source="letter" />
 
-    <FieldGuesser source="body" addLabel={true} />
-    <FieldGuesser source="publicationDate" addLabel={true} />
+    <FieldGuesser source="body" />
+    <FieldGuesser source="publicationDate" />
   </ShowGuesser>
 );
 

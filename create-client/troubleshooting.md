@@ -3,10 +3,10 @@
 ## Self-Signed TLS Certificate
 
 If you are running API Platform on development machine which does not have valid TLS certificate,
-add `NODE_TLS_REJECT_UNAUTHORIZED=0` before running client-generator:
+add `NODE_TLS_REJECT_UNAUTHORIZED=0` before running create-client:
 
 ```console
-NODE_TLS_REJECT_UNAUTHORIZED=0 npx @api-platform/client-generator --generator typescript https://127.0.0.1:8000/api src/
+NODE_TLS_REJECT_UNAUTHORIZED=0 npm init @api-platform/client --generator typescript https://127.0.0.1:8000/api src/
 ```
 
 ## Authenticated API
@@ -58,4 +58,6 @@ message in JSON format was being returned.
 
 ## Docker distribution on Windows and hot-reloading
 
-Due to [a long-time known Docker for Windows issue](https://forums.docker.com/t/file-system-watch-does-not-work-with-mounted-volumes/12038), the files changes on the host are not notified on the `pwa` container. It causes the hot-reloading feature to not working properly for Windows users.
+Due to [a long-time known Docker for Windows issue](https://forums.docker.com/t/file-system-watch-does-not-work-with-mounted-volumes/12038),
+the files changes on the host are not notified on the `pwa` container.
+It causes the hot-reloading feature to not working properly for Windows users.

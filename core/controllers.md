@@ -21,17 +21,20 @@ automatically instantiated and injected, without having to declare it explicitly
 
 In the following examples, the built-in `GET` operation is registered as well as a custom operation called `post_publication`.
 
-By default, API Platform uses the first `GET` operation defined in `itemOperations` to generate the IRI of an item and the first `GET` operation defined in `collectionOperations` to generate the IRI of a collection.
+By default, API Platform uses the first `Get` operation defined to generate the IRI of an item and the first `GetCollection` operation to generate the IRI of a collection.
+
+If your resource does not have any `Get` operation, API Platform automatically adds an operation to help generating this IRI.
+If your resource has any identifier, this operation will look like `/books/{id}`. But if your resource doesn't have any identifier, API Platform will use the Skolem format `/.well-known/genid/{id}`.
+Those routes are not exposed from any documentation (for instance OpenAPI), but are anyway declared on the Symfony routing and always return a HTTP 404.
 
 If you create a custom operation, you will probably want to properly document it.
-See the [OpenAPI](swagger.md) part of the documentation to do so.
+See the [OpenAPI](openapi.md) part of the documentation to do so.
 
 First, let's create your custom operation:
 
 ```php
 <?php
 // api/src/Controller/CreateBookPublication.php
-
 namespace App\Controller;
 
 use App\Entity\Book;
@@ -41,23 +44,20 @@ use Symfony\Component\HttpKernel\Attribute\AsController;
 #[AsController]
 class CreateBookPublication extends AbstractController
 {
-    private $bookPublishingHandler;
+    public function __construct(
+        private BookPublishingHandler $bookPublishingHandler
+    ) {}
 
-    public function __construct(BookPublishingHandler $bookPublishingHandler)
+    public function __invoke(Book $book): Book
     {
-        $this->bookPublishingHandler = $bookPublishingHandler;
-    }
+        $this->bookPublishingHandler->handle($book);
 
-    public function __invoke(Book $data): Book
-    {
-        $this->bookPublishingHandler->handle($data);
-
-        return $data;
+        return $book;
     }
 }
 ```
 
-This custom operation behaves exactly like the built-in operation: it returns a JSON-LD document corresponding to the id
+This custom operation behaves exactly like the built-in operation: it returns a JSON-LD document corresponding to the ID
 passed in the URL.
 
 Here we consider that [autowiring](https://symfony.com/doc/current/service_container/autowiring.html) is enabled for
@@ -65,9 +65,13 @@ controller classes (the default when using the API Platform distribution).
 This action will be automatically registered as a service (the service name is the same as the class name:
 `App\Controller\CreateBookPublication`).
 
-API Platform automatically retrieves the appropriate PHP entity using the data provider then deserializes user data in it,
-and for `POST`, `PUT` and `PATCH` requests updates the entity with data provided by the user.
+API Platform automatically retrieves the appropriate PHP entity using the state provider then deserializes user data in it,
+and for `POST`, `PUT` and `PATCH` requests updates the entity with state provided by the user.
 
+The entity is retrieved in the `__invoke` method thanks to a dedicated argument resolver.
+
+When using `GET`, the `__invoke()` method parameter will receive the identifier and should be called the same as the resource identifier.
+So for the path `/user/{uuid}/bookmarks`, you must use `__invoke(string $uuid)`.
 **Warning: the `__invoke()` method parameter [MUST be called `$data`](https://symfony.com/doc/current/components/http_kernel.html#4-getting-the-controller-arguments)**, otherwise, it will not be filled correctly!
 
 Services (`$bookPublishingHandler` here) are automatically injected thanks to the autowiring feature. You can type-hint any service
@@ -87,17 +91,20 @@ The routing has not been configured yet because we will add it at the resource c
 ```php
 <?php
 // api/src/Entity/Book.php
+namespace App\Entity;
 
-use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\Post;
 use App\Controller\CreateBookPublication;
 
-#[ApiResource(itemOperations: [
-    'get',
-    'post_publication' => [
-        'method' => 'POST',
-        'path' => '/books/{id}/publication',
-        'controller' => CreateBookPublication::class,
-    ],
+#[ApiResource(operations: [
+    new Get(),
+    new Post(
+        name: 'publication', 
+        uriTemplate: '/books/{id}/publication', 
+        controller: CreateBookPublication::class
+    )
 ])]
 class Book
 {
@@ -107,13 +114,15 @@ class Book
 
 ```yaml
 # api/config/api_platform/resources.yaml
-App\Entity\Book:
-    itemOperations:
-        get: ~
-        post_publication:
-            method: POST
-            path: /books/{id}/publication
-            controller: App\Controller\CreateBookPublication
+resources:
+    App\Entity\Book:
+        operations:
+            ApiPlatform\Metadata\Get: ~
+            post_publication:
+                class: ApiPlatform\Metadata\Post
+                method: POST
+                uriTemplate: /books/{id}/publication
+                controller: App\Controller\CreateBookPublication
 ```
 
 ```xml
@@ -121,50 +130,119 @@ App\Entity\Book:
 <!-- api/config/api_platform/resources.xml -->
 
 <resources
-        xmlns="https://api-platform.com/schema/metadata"
+        xmlns="https://api-platform.com/schema/metadata/resources-3.0"
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xsi:schemaLocation="https://api-platform.com/schema/metadata
-        https://api-platform.com/schema/metadata/metadata-2.0.xsd">
+        xsi:schemaLocation="https://api-platform.com/schema/metadata/resources-3.0
+        https://api-platform.com/schema/metadata/resources-3.0.xsd">
     <resource class="App\Entity\Book">
-        <itemOperations>
-            <itemOperation name="get" />
-            <itemOperation name="post_publication">
-                <attribute name="method">POST</attribute>
-                <attribute name="path">/books/{id}/publication</attribute>
-                <attribute name="controller">App\Controller\CreateBookPublication</attribute>
-            </itemOperation>
-        </itemOperations>
+        <operations>
+            <operation class="ApiPlatform\Metadata\Get" />
+            <operation class="ApiPlatform\Metadata\Post" name="post_publication" uriTemplate="/books/{id}/publication"
+                       controller="App\Controller\CreateBookPublication" />
+        </operations>
     </resource>
 </resources>
 ```
 
 [/codeSelector]
 
-It is mandatory to set the `method`, `path` and `controller` attributes. They allow API Platform to configure the routing path and
+It is mandatory to set the `method`, `uriTemplate` and `controller` attributes. They allow API Platform to configure the routing path and
 the associated controller respectively.
+
+## Using the PlaceholderAction
+
+Complex use cases may lead you to create multiple custom operations.
+
+In such a case, you will probably create the same amount of custom controllers while you may not need to perform custom logic inside.
+
+To avoid that, API Platform provides the `ApiPlatform\Action\PlaceholderAction` which behaves the same when using the [built-in operations](operations.md#operations).
+
+You just need to set the `controller` attribute with this class. Here, the previous example updated:
+
+[codeSelector]
+
+```php
+// api/src/Entity/Book.php
+namespace App\Entity;
+
+use ApiPlatform\Action\PlaceholderAction;
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\Post;
+
+#[ApiResource(operations: [
+    new Get(),
+    new Post(
+        name: 'publication', 
+        uriTemplate: '/books/{id}/publication', 
+        controller: PlaceholderAction::class
+    )
+])]
+class Book
+{
+    // ...
+}
+```
+
+```yaml
+# api/config/api_platform/resources.yaml
+resources:
+    App\Entity\Book:
+        operations:
+            ApiPlatform\Metadata\Get: ~
+            post_publication:
+                class: ApiPlatform\Metadata\Post
+                method: POST
+                uriTemplate: /books/{id}/publication
+                controller: ApiPlatform\Action\PlaceholderAction
+```
+
+```xml
+<?xml version="1.0" encoding="UTF-8" ?>
+<!-- api/config/api_platform/resources.xml -->
+
+<resources
+        xmlns="https://api-platform.com/schema/metadata/resources-3.0"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="https://api-platform.com/schema/metadata/resources-3.0
+        https://api-platform.com/schema/metadata/resources-3.0.xsd">
+    <resource class="App\Entity\Book">
+        <operations>
+            <operation class="ApiPlatform\Metadata\Get" />
+            <operation class="ApiPlatform\Metadata\Post" name="post_publication" uriTemplate="/books/{id}/publication"
+                       controller="ApiPlatform\Action\PlaceholderAction" />
+        </operations>
+    </resource>
+</resources>
+```
+
+[/codeSelector]
 
 ## Using Serialization Groups
 
-You may want different serialization groups for your custom operations. Just configure the proper `normalization_context` and/or `denormalization_context` in your operation:
+You may want different serialization groups for your custom operations. Just configure the proper `normalizationContext` and/or `denormalizationContext` in your operation:
 
 [codeSelector]
 
 ```php
 <?php
 // api/src/Entity/Book.php
+namespace App\Entity;
 
-use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\Post;
 use App\Controller\CreateBookPublication;
 use Symfony\Component\Serializer\Annotation\Groups;
 
-#[ApiResource(itemOperations: [
-    'get',
-    'post_publication' => [
-        'method' => 'POST',
-        'path' => '/books/{id}/publication',
-        'controller' => CreateBookPublication::class,
-        'normalization_context' => ['groups' => 'publication'],
-    ],
+#[ApiResource(operations: [
+    new Get(),
+    new Post(
+        name: 'publication', 
+        uriTemplate: '/books/{id}/publication', 
+        controller: CreateBookPublication::class, 
+        normalizationContext: ['groups' => 'publication']
+    )
 ])]
 class Book
 {
@@ -179,39 +257,38 @@ class Book
 
 ```yaml
 # api/config/api_platform/resources.yaml
-App\Entity\Book:
-    itemOperations:
-        get: ~
-        post_publication:
-            method: POST
-            path: /books/{id}/publication
-            controller: App\Controller\CreateBookPublication
-            normalization_context:
-                groups: ['publication']
+resources:
+    App\Entity\Book:
+        operations:
+            ApiPlatform\Metadata\Get: ~
+            post_publication:
+                class: ApiPlatform\Metadata\Get
+                uriTemplate: /books/{id}/publication
+                controller: App\Controller\CreateBookPublication
+                normalizationContext:
+                    groups: ['publication']
 ```
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" ?>
 <!-- api/config/api_platform/resources.xml -->
 
-<resources xmlns="https://api-platform.com/schema/metadata"
+<resources xmlns="https://api-platform.com/schema/metadata/resources-3.0"
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xsi:schemaLocation="https://api-platform.com/schema/metadata
-        https://api-platform.com/schema/metadata/metadata-2.0.xsd">
+        xsi:schemaLocation="https://api-platform.com/schema/metadata/resources-3.0
+        https://api-platform.com/schema/metadata/resources-3.0.xsd">
     <resource class="App\Entity\Book">
-        <itemOperations>
-            <itemOperation name="get" />
-            <itemOperation name="post_publication">
-                <attribute name="method">POST</attribute>
-                <attribute name="path">/books/{id}/publication</attribute>
-                <attribute name="controller">App\Controller\CreateBookPublication</attribute>
-                <attribute name="normalization_context">
-                    <attribute name="groups">
-                        <attribute>publication</attribute>
-                    </attribute>
-                </attribute>
-            </itemOperation>
-        </itemOperations>
+        <operations>
+            <operation class="ApiPlatform\Metadata\Get" />
+            <operation class="ApiPlatform\Metadata\Post" name="post_publication" uriTemplate="/books/{id}/publication"
+                controller="App\Controller\CreateBookPublication">
+                <normalizationContext>
+                    <values>
+                        <value name="groups">publication</value>
+                    </values>
+                </normalizationContext>
+            </operation>
+        </operations>
     </resource>
 </resources>
 ```
@@ -220,7 +297,7 @@ App\Entity\Book:
 
 ## Retrieving the Entity
 
-If you want to bypass the automatic retrieval of the entity in your custom operation, you can set `"read"=false` in the
+If you want to bypass the automatic retrieval of the entity in your custom operation, you can set `read: false` in the
 operation attribute:
 
 [codeSelector]
@@ -228,18 +305,21 @@ operation attribute:
 ```php
 <?php
 // api/src/Entity/Book.php
+namespace App\Entity;
 
-use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\Post;
 use App\Controller\CreateBookPublication;
 
-#[ApiResource(itemOperations: [
-    'get',
-    'post_publication' => [
-        'method' => 'POST',
-        'path' => '/books/{id}/publication',
-        'controller' => CreateBookPublication::class,
-        'read' => false,
-    ],
+#[ApiResource(operations: [
+    new Get(),
+    new Post(
+        name: 'publication', 
+        uriTemplate: '/books/{id}/publication', 
+        controller: CreateBookPublication::class, 
+        read: false
+    )
 ])]
 class Book
 {
@@ -249,34 +329,31 @@ class Book
 
 ```yaml
 # api/config/api_platform/resources.yaml
-App\Entity\Book:
-    itemOperations:
-        get: ~
-        post_publication:
-            method: POST
-            path: /books/{id}/publication
-            controller: App\Controller\CreateBookPublication
-            read: false
+resources:
+    App\Entity\Book:
+        operations:
+            ApiPlatform\Metadata\Get: ~
+            post_publication:
+                class: ApiPlatform\Metadata\Post
+                uriTemplate: /books/{id}/publication
+                controller: App\Controller\CreateBookPublication
+                read: false
 ```
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" ?>
 <!-- api/config/api_platform/resources.xml -->
 
-<resources xmlns="https://api-platform.com/schema/metadata"
+<resources xmlns="https://api-platform.com/schema/metadata/resources-3.0"
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xsi:schemaLocation="https://api-platform.com/schema/metadata
-        https://api-platform.com/schema/metadata/metadata-2.0.xsd">
+        xsi:schemaLocation="https://api-platform.com/schema/metadata/resources-3.0
+        https://api-platform.com/schema/metadata/resources-3.0.xsd">
     <resource class="App\Entity\Book">
-        <itemOperations>
-            <itemOperation name="get" />
-            <itemOperation name="post_publication">
-                <attribute name="method">POST</attribute>
-                <attribute name="path">/books/{id}/publication</attribute>
-                <attribute name="controller">App\Controller\CreateBookPublication</attribute>
-                <attribute name="read">false</attribute>
-            </itemOperation>
-        </itemOperations>
+        <operations>
+            <operation class="ApiPlatform\Metadata\Get" />
+            <operation class="ApiPlatform\Metadata\Post" name="post_publication" uriTemplate="/books/{id}/publication"
+                controller="App\Controller\CreateBookPublication" read="false" />
+        </operations>
     </resource>
 </resources>
 ```
@@ -297,7 +374,7 @@ the configuration at the same time in the routing and the resource configuration
 The `post_publication` operation references the Symfony route named `book_post_publication`.
 
 Since version 2.3, you can also use the route name as operation name by convention, as shown in the following example
-for `book_post_discontinuation` when neither `method` nor `route_name` attributes are specified.
+for `book_post_discontinuation` when neither `method` nor `routeName` attributes are specified.
 
 First, let's create your resource configuration:
 
@@ -306,13 +383,16 @@ First, let's create your resource configuration:
 ```php
 <?php
 // api/src/Entity/Book.php
+namespace App\Entity;
 
-use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\Post;
 
-#[ApiResource(itemOperations: [
-    'get',
-    'post_publication' => ['route_name' => 'book_post_publication'],
-    'book_post_discontinuation',
+#[ApiResource(operations: [
+    new Get(),
+    new Post(name: 'publication', routeName: 'book_post_publication'),
+    new Post(name: 'book_post_discontinuation')
 ])]
 class Book
 {
@@ -322,30 +402,31 @@ class Book
 
 ```yaml
 # api/config/api_platform/resources.yaml
-App\Entity\Book:
-    itemOperations:
-        get: ~
-        post_publication:
-            route_name: book_post_publication
-        book_post_discontinuation: ~
+resources:
+    App\Entity\Book:
+        operations:
+            ApiPlatform\Metadata\Get: ~
+            post_publication:
+                class: ApiPlatform\Metadata\Post
+                routeName: book_post_publication
+            book_post_discontinuation:
+              class: ApiPlatform\Metadata\Post
 ```
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" ?>
 <!-- api/config/api_platform/resources.xml -->
 
-<resources xmlns="https://api-platform.com/schema/metadata"
+<resources xmlns="https://api-platform.com/schema/metadata/resources-3.0"
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xsi:schemaLocation="https://api-platform.com/schema/metadata
-        https://api-platform.com/schema/metadata/metadata-2.0.xsd">
+        xsi:schemaLocation="https://api-platform.com/schema/metadata/resources-3.0
+        https://api-platform.com/schema/metadata/resources-3.0.xsd">
     <resource class="App\Entity\Book">
-        <itemOperations>
-            <itemOperation name="get" />
-            <itemOperation name="post_publication">
-                <attribute name="route_name">book_post_publication</attribute>
-            </itemOperation>
-            <itemOperation name="book_post_discontinuation" />
-        </itemOperations>
+        <operations>
+            <operation class="ApiPlatform\Metadata\Get" />
+            <operation class="ApiPlatform\Metadata\Post" name="post_publication" routeName="book_post_publication" />
+            <operation class="ApiPlatform\Metadata\Post" name="book_post_discontinuation" />
+        </operations>
     </resource>
 </resources>
 ```
@@ -358,7 +439,6 @@ and its related route using annotations:
 ```php
 <?php
 // api/src/Controller/CreateBookPublication.php
-
 namespace App\Controller;
 
 use App\Entity\Book;
@@ -379,20 +459,19 @@ class CreateBookPublication extends AbstractController
         methods: ['POST'],
         defaults: [
             '_api_resource_class' => Book::class,
-            '_api_item_operation_name' => 'post_publication',
+            '_api_operation_name' => '_api_/books/{id}/publication_post',
         ],
     )]
-    public function __invoke(Book $data): Book
+    public function __invoke(Book $book): Book
     {
-        $this->bookPublishingHandler->handle($data);
+        $this->bookPublishingHandler->handle($book);
 
-        return $data;
+        return $book;
     }
 }
 ```
 
-It is mandatory to set `_api_resource_class` and `_api_item_operation_name` (or `_api_collection_operation_name` for a collection
-operation) in the parameters of the route (`defaults` key). It allows API Platform to work with the Symfony routing system.
+It is mandatory to set `_api_resource_class` and `_api_operation_name` in the parameters of the route (`defaults` key). It allows API Platform to work with the Symfony routing system.
 
 Alternatively, you can also use a traditional Symfony controller and YAML or XML route declarations. The following example does
 the same thing as the previous example:
@@ -400,7 +479,6 @@ the same thing as the previous example:
 ```php
 <?php
 // api/src/Controller/BookController.php
-
 namespace App\Controller;
 
 use App\Entity\Book;
@@ -410,9 +488,9 @@ use Symfony\Component\HttpKernel\Attribute\AsController;
 #[AsController]
 class BookController extends AbstractController
 {
-    public function createPublication(Book $data, BookPublishingHandler $bookPublishingHandler): Book
+    public function createPublication(Book $book, BookPublishingHandler $bookPublishingHandler): Book
     {
-        return $bookPublishingHandler->handle($data);
+        return $bookPublishingHandler->handle($book);
     }
 }
 ```

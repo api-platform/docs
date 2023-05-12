@@ -1,6 +1,6 @@
 # Testing Utilities
 
-API Platform Core provides a set of useful utilities dedicated to API testing.
+API Platform provides a set of useful utilities dedicated to API testing.
 For an overview of how to test an API Platform app, be sure to read [the testing cookbook first](../distribution/testing.md).
 
 <p align="center" class="symfonycasts"><a href="https://symfonycasts.com/screencast/api-platform-security/api-tests?cid=apip"><img src="../distribution/images/symfonycasts-player.png" alt="Test and Assertions screencast"><br>Watch the API Tests & Assertions screencast</a></p>
@@ -17,7 +17,7 @@ Reuse them to run, for instance, SQL queries or requests to external APIs direct
 Install the `symfony/http-client` and `symfony/browser-kit` packages to enabled the API Platform test client:
 
 ```console
-docker-compose exec php \
+docker compose exec php \
     composer require symfony/browser-kit symfony/http-client
 ```
 
@@ -29,7 +29,7 @@ To use the testing client, your test class must extend the `ApiTestCase` class:
 
 namespace App\Tests;
 
-use ApiPlatform\Core\Bridge\Symfony\Bundle\Test\ApiTestCase;
+use ApiPlatform\Symfony\Bundle\Test\ApiTestCase;
 
 class BooksTest extends ApiTestCase
 {
@@ -47,17 +47,16 @@ Note that you can create your own test case class extending the ApiTestCase. For
 
 ```php
 <?php
-
+// api/tests/AbstractTest.php
 namespace App\Tests;
 
-use ApiPlatform\Core\Bridge\Symfony\Bundle\Test\ApiTestCase;
-use ApiPlatform\Core\Bridge\Symfony\Bundle\Test\Client;
+use ApiPlatform\Symfony\Bundle\Test\ApiTestCase;
+use ApiPlatform\Symfony\Bundle\Test\Client;
 use Hautelook\AliceBundle\PhpUnit\RefreshDatabaseTrait;
 
 abstract class AbstractTest extends ApiTestCase
 {
-    private $token;
-    private $clientWithCredentials;
+    private ?string $token = null;
 
     use RefreshDatabaseTrait;
 
@@ -82,16 +81,16 @@ abstract class AbstractTest extends ApiTestCase
             return $this->token;
         }
 
-        $response = static::createClient()->request('POST', '/login', ['body' => $body ?: [
+        $response = static::createClient()->request('POST', '/login', ['json' => $body ?: [
             'username' => 'admin@example.com',
             'password' => '$3cr3t',
         ]]);
 
         $this->assertResponseIsSuccessful();
-        $data = json_decode($response->getContent());
-        $this->token = $data->access_token;
+        $data = $response->toArray();
+        $this->token = $data['token'];
 
-        return $data->access_token;
+        return $data['token'];
     }
 }
 ```
@@ -134,7 +133,7 @@ In addition to [the built-in ones](https://phpunit.readthedocs.io/en/latest/asse
 
 namespace App\Tests;
 
-use ApiPlatform\Core\Bridge\Symfony\Bundle\Test\ApiTestCase;
+use ApiPlatform\Symfony\Bundle\Test\ApiTestCase;
 
 class MyTest extends ApiTestCase
 {
@@ -171,7 +170,7 @@ There is also a method to find the IRI matching a given resource and some criter
 
 namespace App\Tests;
 
-use ApiPlatform\Core\Bridge\Symfony\Bundle\Test\ApiTestCase;
+use ApiPlatform\Symfony\Bundle\Test\ApiTestCase;
 
 class BooksTest extends ApiTestCase
 {
@@ -195,7 +194,7 @@ All tests assertions provided by Symfony (assertions for status codes, headers, 
 
 namespace App\Tests;
 
-use ApiPlatform\Core\Bridge\Symfony\Bundle\Test\ApiTestCase;
+use ApiPlatform\Symfony\Bundle\Test\ApiTestCase;
 
 class BooksTest extends ApiTestCase
 {

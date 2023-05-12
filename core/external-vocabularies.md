@@ -3,23 +3,22 @@
 JSON-LD allows to define classes and properties of your API with open vocabularies such as [Schema.org](https://schema.org)
 and [Good Relations](http://www.heppnetz.de/projects/goodrelations/).
 
-API Platform Core provides annotations usable on PHP classes and properties for specifying a related external [IRI](https://en.wikipedia.org/wiki/Internationalized_resource_identifier).
+API Platform provides annotations usable on PHP classes and properties for specifying a related external [IRI](https://en.wikipedia.org/wiki/Internationalized_resource_identifier).
 
 ```php
 <?php
 // api/src/Entity/Book.php
-
 namespace App\Entity;
 
-use ApiPlatform\Core\Annotation\ApiProperty;
-use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Metadata\ApiProperty;
+use ApiPlatform\Metadata\ApiResource;
 
-#[ApiResource(iri: "https://schema.org/Book")]
+#[ApiResource(types: ['https://schema.org/Book'])]
 class Book
 {
     // ...
 
-    #[ApiProperty(iri: "https://schema.org/name")]
+    #[ApiProperty(types: ['https://schema.org/name'])]
     public $name;
     
     // ...
@@ -53,7 +52,7 @@ The generated JSON for products and the related context document will now use ex
 
 An extended list of existing open vocabularies is available on [the Linked Open Vocabularies (LOV) database](http://lov.okfn.org/dataset/lov/).
 
-By default, when using [validations](validation.md) API Platform Core will try to define known [Schema.org](https://schema.org) types as IRIs for your properties if you did not provide any in your `@ApiProperty` annotations.
+By default, when using [validations](validation.md) API Platform will try to define known [Schema.org](https://schema.org) types as IRIs for your properties if you did not provide any in your `#[ApiProperty]` annotations.
 Built-in mapping is:
 
 Constraints                                          | Schema.org type                   |

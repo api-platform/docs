@@ -14,14 +14,14 @@ API Platform allows to easily add a JWT-based authentication to your API using [
 We begin by installing the bundle:
 
 ```console
-docker-compose exec php \
-    composer require jwt-auth
+docker compose exec php \
+    composer require lexik/jwt-authentication-bundle
 ```
 
 Then we need to generate the public and private keys used for signing JWT tokens. If you're using the [API Platform distribution](../distribution/index.md), you may run this from the project's root directory:
 
 ```console
-docker-compose exec php sh -c '
+docker compose exec php sh -c '
     set -e
     apk add openssl
     php bin/console lexik:jwt:generate-keypair
@@ -34,7 +34,7 @@ Note that the `setfacl` command relies on the `acl` package. This is installed b
 
 This takes care of keypair creation (including using the correct passphrase to encrypt the private key), and setting the correct permissions on the keys allowing the web server to read them.
 
-Since these keys are created by the `root` user from a container, your host user will not be able to read them during the `docker-compose build caddy` process. Add the `config/jwt/` folder to the `api/.dockerignore` file so that they are skipped from the result image.
+Since these keys are created by the `root` user from a container, your host user will not be able to read them during the `docker compose build caddy` process. Add the `config/jwt/` folder to the `api/.dockerignore` file so that they are skipped from the result image.
 
 If you want the keys to be auto generated in `dev` environment, see an example in the [docker-entrypoint script of api-platform/demo](https://github.com/api-platform/demo/blob/master/api/docker/php/docker-entrypoint.sh).
 
@@ -69,7 +69,7 @@ security:
     # https://symfony.com/doc/current/security.html#where-do-users-come-from-user-providers
     providers:
         # used to reload user from session & other features (e.g. switch_user)
-        app_user_provider:
+        users:
             entity:
                 class: App\Entity\User
                 property: email
@@ -80,9 +80,9 @@ security:
             security: false
         main:
             stateless: true
-            provider: app_user_provider
+            provider: users
             json_login:
-                check_path: /authentication_token
+                check_path: auth # The name in routes.yaml is enough for mapping
                 username_path: email
                 password_path: password
                 success_handler: lexik_jwt_authentication.handler.authentication_success
@@ -90,17 +90,18 @@ security:
             jwt: ~
 
     access_control:
-        - { path: ^/docs, roles: PUBLIC_ACCESS } # Allows accessing the Swagger UI
-        - { path: ^/authentication_token, roles: PUBLIC_ACCESS }
+        - { path: ^/$, roles: PUBLIC_ACCESS } # Allows accessing the Swagger UI
+        - { path: ^/docs, roles: PUBLIC_ACCESS } # Allows accessing the Swagger UI docs
+        - { path: ^/auth, roles: PUBLIC_ACCESS }
         - { path: ^/, roles: IS_AUTHENTICATED_FULLY }
 ```
 
-You must also declare the route used for `/authentication_token`:
+You must also declare the route used for `/auth`:
 
 ```yaml
 # api/config/routes.yaml
-authentication_token:
-    path: /authentication_token
+auth:
+    path: /auth
     methods: ['POST']
 ```
 
@@ -126,7 +127,7 @@ security:
     # https://symfony.com/doc/current/security.html#where-do-users-come-from-user-providers
     providers:
         # used to reload user from session & other features (e.g. switch_user)
-        app_user_provider:
+        users:
             entity:
                 class: App\Entity\User
                 property: email
@@ -138,19 +139,20 @@ security:
         api:
             pattern: ^/api/
             stateless: true
-            provider: app_user_provider
+            provider: users
             jwt: ~
         main:
             json_login:
-                check_path: /authentication_token
+                check_path: auth # The name in routes.yaml is enough for mapping
                 username_path: email
                 password_path: password
                 success_handler: lexik_jwt_authentication.handler.authentication_success
                 failure_handler: lexik_jwt_authentication.handler.authentication_failure
 
     access_control:
-        - { path: ^/docs, roles: PUBLIC_ACCESS } # Allows accessing API documentations and Swagger UI
-        - { path: ^/authentication_token, roles: PUBLIC_ACCESS }
+        - { path: ^/$, roles: PUBLIC_ACCESS } # Allows accessing the Swagger UI
+        - { path: ^/docs, roles: PUBLIC_ACCESS } # Allows accessing API documentations and Swagger UI docs
+        - { path: ^/auth, roles: PUBLIC_ACCESS }
         - { path: ^/, roles: IS_AUTHENTICATED_FULLY }
 ```
 
@@ -162,8 +164,6 @@ lexik_jwt_authentication:
     secret_key: '%env(resolve:JWT_SECRET_KEY)%'
     public_key: '%env(resolve:JWT_PUBLIC_KEY)%'
     pass_phrase: '%env(JWT_PASSPHRASE)%'
-
-    user_identity_field: email # Or the field you have setted using make:user
 ```
 
 ## Documenting the Authentication Mechanism with Swagger/Open API
@@ -198,114 +198,24 @@ You must set the [JWT token](https://github.com/lexik/LexikJWTAuthenticationBund
 
 ### Adding endpoint to SwaggerUI to retrieve a JWT token
 
-We can add a `POST /authentication_token` endpoint to SwaggerUI to conveniently retrieve the token when it's needed.
+LexikJWTAuthenticationBundle has an integration with API Platform to automatically
+add an OpenAPI endpoint to conveniently retrieve the token in Swagger UI.
 
-![API Endpoint to retrieve JWT Token from SwaggerUI](images/jwt-token-swagger-ui.png)
-
-To do it, we need to create a decorator:
-
-```php
-<?php
-// api/src/OpenApi/JwtDecorator.php
-
-declare(strict_types=1);
-
-namespace App\OpenApi;
-
-use ApiPlatform\Core\OpenApi\Factory\OpenApiFactoryInterface;
-use ApiPlatform\Core\OpenApi\OpenApi;
-use ApiPlatform\Core\OpenApi\Model;
-
-final class JwtDecorator implements OpenApiFactoryInterface
-{
-    public function __construct(
-        private OpenApiFactoryInterface $decorated
-    ) {}
-
-    public function __invoke(array $context = []): OpenApi
-    {
-        $openApi = ($this->decorated)($context);
-        $schemas = $openApi->getComponents()->getSchemas();
-
-        $schemas['Token'] = new \ArrayObject([
-            'type' => 'object',
-            'properties' => [
-                'token' => [
-                    'type' => 'string',
-                    'readOnly' => true,
-                ],
-            ],
-        ]);
-        $schemas['Credentials'] = new \ArrayObject([
-            'type' => 'object',
-            'properties' => [
-                'email' => [
-                    'type' => 'string',
-                    'example' => 'johndoe@example.com',
-                ],
-                'password' => [
-                    'type' => 'string',
-                    'example' => 'apassword',
-                ],
-            ],
-        ]);
-
-        $schemas = $openApi->getComponents()->getSecuritySchemes() ?? [];
-        $schemas['JWT'] = new \ArrayObject([
-            'type' => 'http',
-            'scheme' => 'bearer',
-            'bearerFormat' => 'JWT',
-        ]);
-        
-        $pathItem = new Model\PathItem(
-            ref: 'JWT Token',
-            post: new Model\Operation(
-                operationId: 'postCredentialsItem',
-                tags: ['Token'],
-                responses: [
-                    '200' => [
-                        'description' => 'Get JWT token',
-                        'content' => [
-                            'application/json' => [
-                                'schema' => [
-                                    '$ref' => '#/components/schemas/Token',
-                                ],
-                            ],
-                        ],
-                    ],
-                ],
-                summary: 'Get JWT token to login.',
-                requestBody: new Model\RequestBody(
-                    description: 'Generate new JWT Token',
-                    content: new \ArrayObject([
-                        'application/json' => [
-                            'schema' => [
-                                '$ref' => '#/components/schemas/Credentials',
-                            ],
-                        ],
-                    ]),
-                ),
-                security: [],
-            ),
-        );
-        $openApi->getPaths()->addPath('/authentication_token', $pathItem);
-
-        return $openApi;
-    }
-}
-```
-
-And register this service in `config/services.yaml`:
+If you need to modify the default configuration, you can do it in the dedicated configuration file:
 
 ```yaml
-# api/config/services.yaml
-services:
+# config/packages/lexik_jwt_authentication.yaml
+lexik_jwt_authentication:
     # ...
-
-    App\OpenApi\JwtDecorator:
-        decorates: 'api_platform.openapi.factory'
-        arguments: ['@.inner']
+    api_platform:
+        check_path: /auth
+        username_path: email
+        password_path: password
 ```
+
+You will see something like this in Swagger UI:
+
+![API Endpoint to retrieve JWT Token from SwaggerUI](images/jwt-token-swagger-ui.png)
 
 ## Testing
 
@@ -317,7 +227,7 @@ To test your authentication with `ApiTestCase`, you can write a method as below:
 
 namespace App\Tests;
 
-use ApiPlatform\Core\Bridge\Symfony\Bundle\Test\ApiTestCase;
+use ApiPlatform\Symfony\Bundle\Test\ApiTestCase;
 use App\Entity\User;
 use Hautelook\AliceBundle\PhpUnit\ReloadDatabaseTrait;
 
@@ -341,7 +251,7 @@ class AuthenticationTest extends ApiTestCase
         $manager->flush();
 
         // retrieve a token
-        $response = $client->request('POST', '/authentication_token', [
+        $response = $client->request('POST', '/auth', [
             'headers' => ['Content-Type' => 'application/json'],
             'json' => [
                 'email' => 'test@example.com',

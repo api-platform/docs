@@ -13,7 +13,7 @@ before proceeding. It will help you get a grasp on how the bundle works, and why
 Install the bundle with the help of Composer:
 
 ```console
-docker-compose exec php \
+docker compose exec php \
     composer require vich/uploader-bundle
 ```
 
@@ -24,7 +24,8 @@ to make it look like this.
 # api/config/packages/vich_uploader.yaml
 vich_uploader:
     db_driver: orm
-
+    metadata:
+        type: attribute
     mappings:
         media_object:
             uri_prefix: /media
@@ -54,8 +55,12 @@ The `MediaObject` resource is implemented like this:
 // api/src/Entity/MediaObject.php
 namespace App\Entity;
 
-use ApiPlatform\Core\Annotation\ApiProperty;
-use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Metadata\ApiProperty;
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\Post;
+use ApiPlatform\OpenApi\Model;
 use App\Controller\CreateMediaObjectAction;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\HttpFoundation\File\File;
@@ -63,38 +68,36 @@ use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 use Vich\UploaderBundle\Mapping\Annotation as Vich;
 
-/**
- * @Vich\Uploadable
- */
+#[Vich\Uploadable]
 #[ORM\Entity]
 #[ApiResource(
-    iri: 'https://schema.org/MediaObject',
-    normalizationContext: ['groups' => ['media_object:read']],
-    itemOperations: ['get'],
-    collectionOperations: [
-        'get',
-        'post' => [
-            'controller' => CreateMediaObjectAction::class,
-            'deserialize' => false,
-            'validation_groups' => ['Default', 'media_object_create'],
-            'openapi_context' => [
-                'requestBody' => [
-                    'content' => [
+    normalizationContext: ['groups' => ['media_object:read']], 
+    types: ['https://schema.org/MediaObject'],
+    operations: [
+        new Get(),
+        new GetCollection(),
+        new Post(
+            controller: CreateMediaObjectAction::class, 
+            deserialize: false, 
+            validationContext: ['groups' => ['Default', 'media_object_create']], 
+            openapi: new Model\Operation(
+                requestBody: new Model\RequestBody(
+                    content: new \ArrayObject([
                         'multipart/form-data' => [
                             'schema' => [
-                                'type' => 'object',
+                                'type' => 'object', 
                                 'properties' => [
                                     'file' => [
-                                        'type' => 'string',
-                                        'format' => 'binary',
-                                    ],
-                                ],
-                            ],
-                        ],
-                    ],
-                ],
-            ],
-        ],
+                                        'type' => 'string', 
+                                        'format' => 'binary'
+                                    ]
+                                ]
+                            ]
+                        ]
+                    ])
+                )
+            )
+        )
     ]
 )]
 class MediaObject
@@ -102,13 +105,11 @@ class MediaObject
     #[ORM\Id, ORM\Column, ORM\GeneratedValue]
     private ?int $id = null;
 
-    #[ApiProperty(iri: 'https://schema.org/contentUrl')]
+    #[ApiProperty(types: ['https://schema.org/contentUrl'])]
     #[Groups(['media_object:read'])]
     public ?string $contentUrl = null;
 
-    /**
-     * @Vich\UploadableField(mapping="media_object", fileNameProperty="filePath")
-     */
+    #[Vich\UploadableField(mapping: "media_object", fileNameProperty: "filePath")]
     #[Assert\NotNull(groups: ['media_object_create'])]
     public ?File $file = null;
 
@@ -224,6 +225,7 @@ your data, you will get a response looking like this:
 ### Accessing Your Media Objects Directly
 
 You will need to modify your Caddyfile to allow the above `contentUrl` to be accessed directly. If you followed the above configuration for the VichUploaderBundle, that will be in `api/public/media`. Add your folder to the list of path matches, e.g. `|^/media/|`:
+
 ```caddyfile
 ...
 # Matches requests for HTML documents, for static files and for Next.js files,
@@ -246,21 +248,21 @@ We first need to edit our Book resource, and add a new property called `image`.
 // api/src/Entity/Book.php
 namespace App\Entity;
 
-use ApiPlatform\Core\Annotation\ApiResource;
-use ApiPlatform\Core\Annotation\ApiProperty;
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\ApiProperty;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\HttpFoundation\File\File;
 use Vich\UploaderBundle\Mapping\Annotation as Vich;
 
 #[ORM\Entity]
-#[ApiResource(iri: 'https://schema.org/Book')]
+#[ApiResource(types: ['https://schema.org/Book'])]
 class Book
 {
     // ...
 
     #[ORM\ManyToOne(targetEntity: MediaObject::class)]
     #[ORM\JoinColumn(nullable: true)]
-    #[ApiProperty(iri: 'https://schema.org/image')]
+    #[ApiProperty(types: ['https://schema.org/image'])]
     public ?MediaObject $image = null;
     
     // ...
@@ -292,7 +294,7 @@ To test your upload with `ApiTestCase`, you can write a method as below:
 
 namespace App\Tests;
 
-use ApiPlatform\Core\Bridge\Symfony\Bundle\Test\ApiTestCase;
+use ApiPlatform\Symfony\Bundle\Test\ApiTestCase;
 use App\Entity\MediaObject;
 use Hautelook\AliceBundle\PhpUnit\RefreshDatabaseTrait;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
@@ -343,8 +345,10 @@ The `Book` resource needs to be modified like this:
 // api/src/Entity/Book.php
 namespace App\Entity;
 
-use ApiPlatform\Core\Annotation\ApiProperty;
-use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Metadata\ApiProperty;
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\Post;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\Serializer\Annotation\Groups;
@@ -355,23 +359,19 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
  */
 #[ORM\Entity]
 #[ApiResource(
-    iri: 'https://schema.org/Book',
-    normalizationContext: ['groups' => ['book:read']],
-    denormalizationContext: ['groups' => ['book:write']],
-    collectionOperations: [
-        'get',
-        'post' => [
-            'input_formats' => [
-                'multipart' => ['multipart/form-data'],
-            ],
-        ],
-    ],
+    normalizationContext: ['groups' => ['book:read']], 
+    denormalizationContext: ['groups' => ['book:write']], 
+    types: ['https://schema.org/Book'],
+    operations: [
+        new GetCollection(),
+        new Post(inputFormats: ['multipart' => ['multipart/form-data']])
+    ]
 )]
 class Book
 {
     // ...
 
-    #[ApiProperty(iri: 'https://schema.org/contentUrl')]
+    #[ApiProperty(types: ['https://schema.org/contentUrl'])]
     #[Groups(['book:read'])]
     public ?string $contentUrl = null;
 

@@ -1,6 +1,6 @@
 # AngularJS Integration
 
-Warning: for a new project, you should consider using [the API Platform's Progressive Web App generator](../client-generator/index.md)
+Warning: for a new project, you should consider using [the API Platform's Progressive Web App generator](../create-client/index.md)
 (that supports React and Vue.js) instead of this Angular v1 integration.
 
 ## Restangular
