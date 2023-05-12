@@ -56,4 +56,4 @@ jobs:
         uses: 'google-github-actions/setup-gcloud@v1'
   
       - name: Deploy on bucket
-        run: gsutil -m rsync -d -r ./public gs://api-platform-website-v1/
+        run: gsutil -m rsync -d -r ./public gs://api-platform-website-v3/
