@@ -18,6 +18,7 @@ This decorator is able to denormalize posted form data to the target object. In 
 namespace App\EventListener;
 
 use ApiPlatform\Core\Util\RequestAttributesExtractor;
+use ApiPlatform\Validator\ValidatorInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
 use ApiPlatform\Core\EventListener\DeserializeListener as DecoratedListener;
@@ -26,15 +27,22 @@ use ApiPlatform\Core\Serializer\SerializerContextBuilderInterface;
 
 final class DeserializeListener
 {
-    private $decorated;
-    private $denormalizer;
-    private $serializerContextBuilder;
+    private DecoratedListener $decorated;
+    private DenormalizerInterface $denormalizer;
+    private SerializerContextBuilderInterface $serializerContextBuilder;
+    private ValidatorInterface $validator;
 
-    public function __construct(DenormalizerInterface $denormalizer, SerializerContextBuilderInterface $serializerContextBuilder, DecoratedListener $decorated)
+    public function __construct(
+        DenormalizerInterface             $denormalizer,
+        SerializerContextBuilderInterface $serializerContextBuilder,
+        DecoratedListener                 $decorated,
+        ValidatorInterface                $validator
+    )
     {
         $this->denormalizer = $denormalizer;
         $this->serializerContextBuilder = $serializerContextBuilder;
         $this->decorated = $decorated;
+        $this->validator = $validator;
     }
 
     public function onKernelRequest(RequestEvent $event): void {
@@ -63,7 +71,10 @@ final class DeserializeListener
         }
 
         $data = $request->request->all();
-        $object = $this->denormalizer->denormalize($data, $attributes['resource_class'], null, $context);
+        $input = $context["input"]["class"] ?? $attributes['resource_class'];
+        $object = $this->denormalizer->denormalize($data, $input, null, $context);
+        $this->validator->validate($object);
+        
         $request->attributes->set('data', $object);
     }
 }
