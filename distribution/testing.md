@@ -60,6 +60,7 @@ Improve the default values:
 // src/Factory/ReviewFactory.php
 // ...
 use function Zenstruck\Foundry\lazy;
+
     // ...
 
     protected function getDefaults(): array
