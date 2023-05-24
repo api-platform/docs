@@ -204,6 +204,7 @@ class BooksTest extends ApiTestCase
 {
     // This trait provided by Foundry will take care of refreshing the database content to a known state before each test
     use ResetDatabase, Factories;
+
     public function testGetCollection(): void
     {
         // Create 100 books using our factory
