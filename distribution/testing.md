@@ -58,8 +58,8 @@ Improve the default values:
 
 ```php
 // src/Factory/ReviewFactory.php
-    // ...
-    use function Zenstruck\Foundry\lazy;
+// ...
+use function Zenstruck\Foundry\lazy;
     // ...
 
     protected function getDefaults(): array
@@ -204,7 +204,6 @@ class BooksTest extends ApiTestCase
 {
     // This trait provided by Foundry will take care of refreshing the database content to a known state before each test
     use ResetDatabase, Factories;
-    
     public function testGetCollection(): void
     {
         // Create 100 books using our factory
@@ -289,7 +288,7 @@ publicationDate: This value should not be null.',
 
     public function testUpdateBook(): void
     {
-        // Only create the book we needed with a given ISBN
+        // Only create the book we need with a given ISBN
         BookFactory::createOne(['isbn' => '9781344037075']);
     
         $client = static::createClient();
@@ -316,7 +315,7 @@ publicationDate: This value should not be null.',
 
     public function testDeleteBook(): void
     {
-        // Only create the book we needed with a given ISBN
+        // Only create the book we need with a given ISBN
         BookFactory::createOne(['isbn' => '9781344037075']);
 
         $client = static::createClient();
