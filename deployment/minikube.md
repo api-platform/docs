@@ -46,17 +46,17 @@ Run `minikube dashboard` at any moment to see the state of your deployments.
 
 ## Using Skaffold
 
-Skaffold is a tool for Kubernetes development: https://skaffold.dev/
+Skaffold is a tool for Kubernetes development: [https://skaffold.dev/](https://skaffold.dev/).
 
 It will build and deploy automatically your app in Kubernetes and apply every changes. The default configuration use minikube and helm. More configurations are available in Skaffold documentation.
 
-First, install the skaffold CLI: https://skaffold.dev/docs/install/#standalone-binary
+First, install the [skaffold CLI](https://skaffold.dev/docs/install/#standalone-binary).
 
 Then, run minikube:
 
-    $ minikube start
+    minikube start
 
 Finally, go to the helm folder, and run skaffold in dev mode:
 
-    $ cd ./helm
-    $ skaffold dev
+    cd ./helm
+    skaffold dev
