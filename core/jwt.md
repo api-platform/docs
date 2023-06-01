@@ -201,10 +201,7 @@ You must set the [JWT token](https://github.com/lexik/LexikJWTAuthenticationBund
 
 ### Adding endpoint to SwaggerUI to retrieve a JWT token
 
-LexikJWTAuthenticationBundle has an integration with API Platform to automatically
-add an OpenAPI endpoint to conveniently retrieve the token in Swagger UI.
-
-If you need to modify the default configuration, you can do it in the dedicated configuration file:
+The integration between LexikJWTAuthenticationBundle and API Platform does not automatically add an OpenAPI endpoint to retrieve the token in Swagger UI. If you want to have this functionality, you need to modify the default configuration , you can do it in the dedicated configuration file:
 
 ```yaml
 # config/packages/lexik_jwt_authentication.yaml
