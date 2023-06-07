@@ -12,58 +12,141 @@ Let's learn how to use them!
 In this article you'll learn how to use:
 
 * [PHPUnit](https://phpunit.de), a testing framework to cover your classes with unit tests and to write
-API-oriented functional tests thanks to its API Platform and [Symfony](https://symfony.com/doc/current/testing.html) integrations.
+  API-oriented functional tests thanks to its API Platform and [Symfony](https://symfony.com/doc/current/testing.html) integrations.
 * [Alice](https://github.com/nelmio/alice) and [its Symfony
-integration](https://github.com/theofidry/AliceBundle#database-testing), an expressive fixtures generator to write data fixtures.
+  integration](https://github.com/theofidry/AliceBundle#database-testing), an expressive fixtures generator to write data fixtures.
 
 ## Creating Data Fixtures
 
 Before creating your functional tests, you will need a dataset to pre-populate your API and be able to test it.
 
-First, install [Alice](https://github.com/nelmio/alice):
+First, install [Foundry](https://github.com/zenstruck/foundry) and [Doctrine/DoctrineFixturesBundle](https://github.com/doctrine/DoctrineFixturesBundle):
 
 ```console
 docker compose exec php \
-    composer require --dev alice
+    composer require --dev foundry orm-fixtures
 ```
 
-Thanks to Symfony Flex, Alice (and [AliceBundle](https://github.com/theofidry/AliceBundle)) are ready to use!
-Place your data fixtures files in a directory named `fixtures/`.
+Thanks to Symfony Flex, [DoctrineFixturesBundle](https://github.com/doctrine/DoctrineFixturesBundle) and [Foundry](https://github.com/zenstruck/foundry) are ready to use!
 
-Then, create some fixtures for [the bookstore API you created in the tutorial](index.md):
+Then, create some factories for [the bookstore API you created in the tutorial](index.md):
 
-```yaml
-# api/fixtures/books.yaml
-App\Entity\Book:
-    book_{1..100}:
-        isbn: <isbn13()>
-        title: <sentence(4)>
-        description: <text()>
-        author: <name()>
-        publicationDate: <dateTimeImmutable()>
+```console
+docker compose exec php \
+    bin/console make:factory 'App\Entity\Book'
+docker compose exec php \
+    bin/console make:factory 'App\Entity\Review'
+
+Improve the default values:
+
+```php
+// src/Factory/BookFactory.php
+
+    // ...
+
+    protected function getDefaults(): array
+    {
+        return [
+            'author' => self::faker()->name(),
+            'description' => self::faker()->text(),
+            'isbn' => self::faker()->isbn13(),
+            'publication_date' => \DateTimeImmutable::createFromMutable(self::faker()->dateTime()),
+            'title' => self::faker()->sentence(4),
+        ];
+    }
 ```
 
-```yaml
-# api/fixtures/reviews.yaml
-App\Entity\Review:
-    review_{1..200}:
-        rating: <numberBetween(0, 5)>
-        body: <text()>
-        author: <name()>
-        publicationDate: <dateTimeImmutable()>
-        book: '@book_*'
+```php
+// src/Factory/ReviewFactory.php
+
+    // ...
+
+    protected function getDefaults(): array
+    {
+        return [
+            'author' => self::faker()->name(),
+            'body' => self::faker()->text(),
+            'book' => lazy(fn() => BookFactory::randomOrCreate()),
+            'publicationDate' => \DateTimeImmutable::createFromMutable(self::faker()->dateTime()),
+            'rating' => self::faker()->numberBetween(0, 5),
+        ];
+    }
+```
+
+Create some stories:
+
+```console
+docker compose exec php \
+    bin/console make:story 'DefaultBooks'
+docker compose exec php \
+    bin/console make:story 'DefaultReviews'
+
+```php
+// src/Story/DefaultBooksStory.php
+
+namespace App\Story;
+
+use App\Factory\BookFactory;
+use Zenstruck\Foundry\Story;
+
+final class DefaultBooksStory extends Story
+{
+    public function build(): void
+    {
+        BookFactory::createMany(100);
+    }
+}
+
+```
+
+```php
+// src/Story/DefaultReviewsStory.php
+
+namespace App\Story;
+
+use App\Factory\ReviewFactory;
+use Zenstruck\Foundry\Story;
+
+final class DefaultReviewsStory extends Story
+{
+    public function build(): void
+    {
+        ReviewFactory::createMany(200);
+    }
+}
+```
+
+Edit your Fixtures:
+
+```php
+//src/DataFixtures/AppFixtures.php
+
+namespace App\DataFixtures;
+
+use App\Story\DefaultBooksStory;
+use App\Story\DefaultReviewsStory;
+use Doctrine\Bundle\FixturesBundle\Fixture;
+use Doctrine\Persistence\ObjectManager;
+
+class AppFixtures extends Fixture
+{
+    public function load(ObjectManager $manager): void
+    {
+        DefaultBooksStory::load();
+        DefaultReviewsStory::load();
+    }
+}
 ```
 
 You can now load your fixtures in the database with the following command:
 
 ```console
 docker compose exec php \
-    bin/console hautelook:fixtures:load
+    bin/console doctrine:fixtures:load
 ```
 
-To learn more about fixtures, take a look at the documentation of [Alice](https://github.com/nelmio/alice)
-and [AliceBundle](https://github.com/theofidry/AliceBundle).
-The list of available generators as well as a cookbook explaining how to create custom generators can be found in the documentation of [Faker](https://github.com/fakerphp/faker), the library used by Alice under the hood.
+To learn more about fixtures, take a look at the documentation of [Foundry](https://symfony.com/bundles/ZenstruckFoundryBundle/current/index.html).
+The list of available generators as well as a cookbook explaining how to create custom generators can be found in the documentation of [Faker](https://github.com/fakerphp/faker), the library used by Foundry under the hood.
 
 ## Writing Functional Tests
 
@@ -261,7 +344,7 @@ The API Platform Demo [contains a CD worklow](https://github.com/api-platform/de
 You may also be interested in these alternative testing tools (not included in the API Platform distribution):
 
 * [Foundry](https://github.com/zenstruck/foundry), a modern fixtures library that will replace Alice as the recommended fixtures library soon;
-* [Hoppscotch](https://docs.hoppscotch.io/documentation/features/rest-api-testing/), create functional test for your API
+* [Hoppscotch](https://docs.hoppscotch.io/features/tests), create functional test for your API
   Platform project using a nice UI, benefit from its Swagger integration and run tests in the CI using [the command-line tool](https://docs.hoppscotch.io/cli);
 * [Behat](http://behat.org), a
   [behavior-driven development (BDD)](https://en.wikipedia.org/wiki/Behavior-driven_development) framework to write the API
