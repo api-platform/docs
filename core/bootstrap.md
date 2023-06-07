@@ -6,11 +6,10 @@ It requires the following composer packages:
 ```console
 composer require \
     api-platform/core \
-    doctrine/annotations \
-    doctrine/common \
     phpdocumentor/reflection-docblock \
     symfony/property-info \
-    symfony/routing
+    symfony/routing \
+    symfony/validator
 ```
 
 The minimal version of API Platform:
@@ -20,89 +19,89 @@ The minimal version of API Platform:
 
 require './vendor/autoload.php';
 
-use ApiPlatform\Core\Action\EntrypointAction;
-use ApiPlatform\Core\Action\ExceptionAction;
-use ApiPlatform\Core\Action\PlaceholderAction;
-use ApiPlatform\Core\Api\IdentifiersExtractor;
-use ApiPlatform\Core\Api\IdentifiersExtractorInterface;
-use ApiPlatform\Core\Api\OperationType;
-use ApiPlatform\Core\Api\ResourceClassResolver;
-use ApiPlatform\Core\Api\UrlGeneratorInterface as ApiUrlGeneratorInterface;
-use ApiPlatform\Core\Bridge\Symfony\Routing\RouteNameGenerator;
-use ApiPlatform\Core\Bridge\Symfony\Validator\EventListener\ValidationExceptionListener;
-use ApiPlatform\Core\Documentation\DocumentationInterface;
-use ApiPlatform\Core\EventListener\AddFormatListener;
-use ApiPlatform\Core\EventListener\DeserializeListener;
-use ApiPlatform\Core\EventListener\ExceptionListener;
-use ApiPlatform\Core\EventListener\ReadListener;
-use ApiPlatform\Core\EventListener\WriteListener;
-use ApiPlatform\Core\Bridge\Symfony\PropertyInfo\Metadata\Property\PropertyInfoPropertyMetadataFactory;
-use ApiPlatform\Core\Bridge\Symfony\PropertyInfo\Metadata\Property\PropertyInfoPropertyNameCollectionFactory;
-use ApiPlatform\Core\Bridge\Symfony\Routing\IriConverter;
-use ApiPlatform\Core\Bridge\Symfony\Routing\RouteNameResolver;
-use ApiPlatform\Core\DataPersister\DataPersisterInterface;
-use ApiPlatform\Core\DataProvider\ContextAwareCollectionDataProviderInterface;
-use ApiPlatform\Core\DataProvider\DenormalizedIdentifiersAwareItemDataProviderInterface;
-use ApiPlatform\Core\DataProvider\PaginationOptions;
-use ApiPlatform\Core\DataProvider\RestrictedDataProviderInterface;
-use ApiPlatform\Core\EventListener\RespondListener;
-use ApiPlatform\Core\EventListener\SerializeListener;
-use ApiPlatform\Core\Hal\Serializer\CollectionNormalizer as HalCollectionNormalizer;
-use ApiPlatform\Core\Hal\Serializer\EntrypointNormalizer as HalEntrypointNormalizer;
-use ApiPlatform\Core\Hal\Serializer\ItemNormalizer as HalItemNormalizer;
-use ApiPlatform\Core\Hal\Serializer\ObjectNormalizer as HalObjectNormalizer;
-use ApiPlatform\Core\Hydra\EventListener\AddLinkHeaderListener;
-use ApiPlatform\Core\Hydra\Serializer\CollectionFiltersNormalizer;
-use ApiPlatform\Core\Hydra\Serializer\CollectionNormalizer as HydraCollectionNormalizer;
-use ApiPlatform\Core\Hydra\Serializer\ConstraintViolationListNormalizer as HydraConstraintViolationListNormalizer;
-use ApiPlatform\Core\Hydra\Serializer\DocumentationNormalizer as HydraDocumentationNormalizer;
-use ApiPlatform\Core\Hydra\Serializer\EntrypointNormalizer as HydraEntrypointNormalizer;
-use ApiPlatform\Core\Hydra\Serializer\ErrorNormalizer as HydraErrorNormalizer;
-use ApiPlatform\Core\Hydra\Serializer\PartialCollectionViewNormalizer;
-use ApiPlatform\Core\Identifier\IdentifierConverter;
-use ApiPlatform\Core\Identifier\Normalizer\IntegerDenormalizer;
-use ApiPlatform\Core\JsonLd\Action\ContextAction;
-use ApiPlatform\Core\JsonLd\Serializer\ItemNormalizer as JsonLdItemNormalizer;
-use ApiPlatform\Core\JsonLd\Serializer\ObjectNormalizer as JsonLdObjectNormalizer;
-use ApiPlatform\Core\JsonLd\ContextBuilder as JsonLdContextBuilder;
-use ApiPlatform\Core\JsonSchema\SchemaFactory;
-use ApiPlatform\Core\JsonSchema\TypeFactory;
-use ApiPlatform\Core\Metadata\Property\Factory\AnnotationPropertyMetadataFactory;
-use ApiPlatform\Core\Metadata\Property\Factory\InheritedPropertyMetadataFactory;
-use ApiPlatform\Core\Metadata\Property\Factory\InheritedPropertyNameCollectionFactory;
-use ApiPlatform\Core\Metadata\Property\Factory\SerializerPropertyMetadataFactory;
-use ApiPlatform\Core\Metadata\Resource\Factory\AnnotationResourceFilterMetadataFactory;
-use ApiPlatform\Core\Metadata\Resource\Factory\AnnotationResourceMetadataFactory;
-use ApiPlatform\Core\Metadata\Resource\Factory\AnnotationResourceNameCollectionFactory;
-use ApiPlatform\Core\Metadata\Resource\Factory\FormatsResourceMetadataFactory;
-use ApiPlatform\Core\Metadata\Resource\Factory\InputOutputResourceMetadataFactory;
-use ApiPlatform\Core\Metadata\Resource\Factory\OperationResourceMetadataFactory;
-use ApiPlatform\Core\Metadata\Resource\Factory\ResourceMetadataFactoryInterface;
-use ApiPlatform\Core\Metadata\Resource\Factory\ResourceNameCollectionFactoryInterface;
-use ApiPlatform\Core\Metadata\Resource\Factory\ShortNameResourceMetadataFactory;
-use ApiPlatform\Core\Metadata\Resource\ResourceMetadata;
-use ApiPlatform\Core\OpenApi\Factory\OpenApiFactory;
-use ApiPlatform\Core\OpenApi\Factory\OpenApiFactoryInterface;
-use ApiPlatform\Core\OpenApi\Options as OpenApiOptions;
-use ApiPlatform\Core\OpenApi\Serializer\OpenApiNormalizer;
-use ApiPlatform\Core\Operation\Factory\SubresourceOperationFactory;
-use ApiPlatform\Core\Operation\UnderscorePathSegmentNameGenerator;
-use ApiPlatform\Core\PathResolver\OperationPathResolver;
-use ApiPlatform\Core\PathResolver\OperationPathResolverInterface;
-use ApiPlatform\Core\Problem\Serializer\ConstraintViolationListNormalizer as ProblemConstraintViolationListNormalizer;
-use ApiPlatform\Core\Problem\Serializer\ErrorNormalizer;
-use ApiPlatform\Core\Serializer\ItemNormalizer;
-use ApiPlatform\Core\Serializer\JsonEncoder as JsonLdEncoder;
-use ApiPlatform\Core\Serializer\SerializerContextBuilder;
-use ApiPlatform\Core\Validator\EventListener\ValidateListener;
-use ApiPlatform\Core\Validator\ValidatorInterface;
-use Doctrine\Common\Annotations\AnnotationReader;
+use ApiPlatform\Action\EntrypointAction;
+use ApiPlatform\Action\ExceptionAction;
+use ApiPlatform\Action\NotExposedAction;
+use ApiPlatform\Action\PlaceholderAction;
+use ApiPlatform\Api\IdentifiersExtractor;
+use ApiPlatform\Api\ResourceClassResolver;
+use ApiPlatform\Api\UriVariablesConverter;
+use ApiPlatform\Api\UriVariableTransformer\DateTimeUriVariableTransformer;
+use ApiPlatform\Api\UriVariableTransformer\IntegerUriVariableTransformer;
+use ApiPlatform\Api\UrlGeneratorInterface as ApiUrlGeneratorInterface;
+use ApiPlatform\Symfony\Validator\EventListener\ValidationExceptionListener;
+use ApiPlatform\Documentation\DocumentationInterface;
+use ApiPlatform\Symfony\EventListener\AddFormatListener;
+use ApiPlatform\Symfony\EventListener\DeserializeListener;
+use ApiPlatform\Symfony\EventListener\ExceptionListener;
+use ApiPlatform\Symfony\EventListener\ReadListener;
+use ApiPlatform\Symfony\EventListener\WriteListener;
+use ApiPlatform\State\Pagination\PaginationOptions;
+use ApiPlatform\Symfony\EventListener\RespondListener;
+use ApiPlatform\Symfony\EventListener\SerializeListener;
+use ApiPlatform\Hal\Serializer\CollectionNormalizer as HalCollectionNormalizer;
+use ApiPlatform\Hal\Serializer\EntrypointNormalizer as HalEntrypointNormalizer;
+use ApiPlatform\Hal\Serializer\ItemNormalizer as HalItemNormalizer;
+use ApiPlatform\Hal\Serializer\ObjectNormalizer as HalObjectNormalizer;
+use ApiPlatform\Hydra\EventListener\AddLinkHeaderListener;
+use ApiPlatform\Hydra\Serializer\CollectionFiltersNormalizer;
+use ApiPlatform\Hydra\Serializer\CollectionNormalizer as HydraCollectionNormalizer;
+use ApiPlatform\Hydra\Serializer\ConstraintViolationListNormalizer as HydraConstraintViolationListNormalizer;
+use ApiPlatform\Hydra\Serializer\DocumentationNormalizer as HydraDocumentationNormalizer;
+use ApiPlatform\Hydra\Serializer\EntrypointNormalizer as HydraEntrypointNormalizer;
+use ApiPlatform\Hydra\Serializer\ErrorNormalizer as HydraErrorNormalizer;
+use ApiPlatform\Hydra\Serializer\PartialCollectionViewNormalizer;
+use ApiPlatform\JsonLd\Action\ContextAction;
+use ApiPlatform\JsonLd\Serializer\ItemNormalizer as JsonLdItemNormalizer;
+use ApiPlatform\JsonLd\Serializer\ObjectNormalizer as JsonLdObjectNormalizer;
+use ApiPlatform\JsonLd\ContextBuilder as JsonLdContextBuilder;
+use ApiPlatform\JsonSchema\SchemaFactory;
+use ApiPlatform\JsonSchema\TypeFactory;
+use ApiPlatform\Metadata\CollectionOperationInterface;
+use ApiPlatform\Metadata\HttpOperation;
+use ApiPlatform\Metadata\Operation;
+use ApiPlatform\Metadata\Property\Factory\PropertyInfoPropertyMetadataFactory;
+use ApiPlatform\Metadata\Property\Factory\PropertyInfoPropertyNameCollectionFactory;
+use ApiPlatform\Metadata\Property\Factory\SerializerPropertyMetadataFactory;
+use ApiPlatform\Metadata\Resource\Factory\AlternateUriResourceMetadataCollectionFactory;
+use ApiPlatform\Metadata\Resource\Factory\AttributesResourceMetadataCollectionFactory;
+use ApiPlatform\Metadata\Resource\Factory\AttributesResourceNameCollectionFactory;
+use ApiPlatform\Metadata\Resource\Factory\FiltersResourceMetadataCollectionFactory;
+use ApiPlatform\Metadata\Resource\Factory\FormatsResourceMetadataCollectionFactory;
+use ApiPlatform\Metadata\Resource\Factory\InputOutputResourceMetadataCollectionFactory;
+use ApiPlatform\Metadata\Resource\Factory\LinkFactory;
+use ApiPlatform\Metadata\Resource\Factory\LinkResourceMetadataCollectionFactory;
+use ApiPlatform\Metadata\Resource\Factory\NotExposedOperationResourceMetadataCollectionFactory;
+use ApiPlatform\Metadata\Resource\Factory\OperationNameResourceMetadataCollectionFactory;
+use ApiPlatform\Metadata\Resource\Factory\PhpDocResourceMetadataCollectionFactory;
+use ApiPlatform\Metadata\Resource\Factory\ResourceMetadataCollectionFactoryInterface;
+use ApiPlatform\Metadata\Resource\Factory\ResourceNameCollectionFactoryInterface;
+use ApiPlatform\Metadata\Resource\Factory\UriTemplateResourceMetadataCollectionFactory;
+use ApiPlatform\OpenApi\Factory\OpenApiFactory;
+use ApiPlatform\OpenApi\Factory\OpenApiFactoryInterface;
+use ApiPlatform\OpenApi\Options as OpenApiOptions;
+use ApiPlatform\OpenApi\Serializer\OpenApiNormalizer;
+use ApiPlatform\Operation\UnderscorePathSegmentNameGenerator;
+use ApiPlatform\Problem\Serializer\ConstraintViolationListNormalizer as ProblemConstraintViolationListNormalizer;
+use ApiPlatform\Problem\Serializer\ErrorNormalizer;
+use ApiPlatform\Serializer\ItemNormalizer;
+use ApiPlatform\Serializer\JsonEncoder as JsonLdEncoder;
+use ApiPlatform\Serializer\Mapping\Factory\ClassMetadataFactory as ApiClassMetadataFactory;
+use ApiPlatform\Serializer\SerializerContextBuilder;
+use ApiPlatform\State\CallableProcessor;
+use ApiPlatform\State\CallableProvider;
+use ApiPlatform\State\ProcessorInterface;
+use ApiPlatform\State\ProviderInterface;
+use ApiPlatform\Symfony\Routing\IriConverter;
+use ApiPlatform\Symfony\EventListener\ValidateListener;
+use ApiPlatform\Symfony\Messenger\Metadata\MessengerResourceMetadataCollectionFactory;
+use ApiPlatform\Symfony\Routing\SkolemIriConverter;
+use ApiPlatform\Validator\ValidatorInterface;
 use Negotiation\Negotiator;
 use Psr\Container\ContainerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Log\Logger;
 use Symfony\Component\HttpKernel\Controller\ArgumentResolver;
 use Symfony\Component\HttpKernel\Controller\ControllerResolver;
@@ -124,7 +123,6 @@ use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Serializer\Mapping\Factory\ClassMetadataFactory;
 use Symfony\Component\Serializer\Mapping\Loader\AnnotationLoader;
 use Symfony\Component\Serializer\NameConverter\MetadataAwareNameConverter;
-use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\Validator\Validation;
 use Symfony\Component\Serializer\Encoder\JsonEncoder;
 use Symfony\Component\Serializer\Normalizer\ArrayDenormalizer;
@@ -139,11 +137,8 @@ use Symfony\Component\Serializer\Normalizer\ProblemNormalizer;
 use Symfony\Component\Serializer\Normalizer\UnwrappingDenormalizer;
 use Symfony\Component\Serializer\Serializer;
 
-/** @deprecated since API Platform 2.7, will be removed in API Platform 3.0 */
-$allowPlainIdentifiers = false;
 $debug = true;
 $defaultContext = [];
-$dataTransformers = [];
 $patchFormats = ['json' => ['application/merge-patch+json'], 'jsonapi' => ['application/vnd.api+json']];
 $formats = ['jsonld' => ['application/ld+json']];
 $errorFormats = [
@@ -164,8 +159,8 @@ $configuration = [
 $exceptionToStatus = [
     # The 4 following handlers are registered by default, keep those lines to prevent unexpected side effects
     \Symfony\Component\Serializer\Exception\ExceptionInterface::class => 400,
-    \ApiPlatform\Core\Exception\InvalidArgumentException::class => 400,
-    \ApiPlatform\Core\Exception\FilterValidationException::class => 400,
+    \ApiPlatform\Exception\InvalidArgumentException::class => 400,
+    \ApiPlatform\Exception\FilterValidationException::class => 400,
     \Doctrine\ORM\OptimisticLockException::class => 409,
 ];
 
@@ -182,33 +177,102 @@ $propertyInfo = new PropertyInfoExtractor(
     [$reflectionExtractor]
 );
 
-$doctrineAnnotationReader = new AnnotationReader();
-$classMetadataFactory = new ClassMetadataFactory(new AnnotationLoader($doctrineAnnotationReader));
+
+$classMetadataFactory = new ClassMetadataFactory(new AnnotationLoader());
 
 final class FilterLocator implements ContainerInterface 
 {
     private $filters = [];
-    public function get($id) {
+    public function get(string $id) {
         return $this->filters[$id] ?? null;
     }
 
-    public function has($id) {
+    public function has(string $id): bool {
         return isset($this->filter[$id]); 
     }
 }
 
-$apiPlatformAnnotationReader = $doctrineAnnotationReader;
-if (\PHP_VERSION_ID >= 80000) {
-    $apiPlatformAnnotationReader = null;
-}
-
 $filterLocator = new FilterLocator();
+$pathSegmentNameGenerator = new UnderscorePathSegmentNameGenerator(); 
 
-$resourceNameCollectionFactory = new AnnotationResourceNameCollectionFactory($apiPlatformAnnotationReader, ['./src/Entity']);
-$resourceMetadataFactory = new FormatsResourceMetadataFactory(new OperationResourceMetadataFactory(new ShortNameResourceMetadataFactory(new InputOutputResourceMetadataFactory(new AnnotationResourceFilterMetadataFactory($apiPlatformAnnotationReader, new AnnotationResourceMetadataFactory($apiPlatformAnnotationReader, null)))), $patchFormats), $formats, $patchFormats);;
-$propertyNameCollectionFactory = new InheritedPropertyNameCollectionFactory($resourceNameCollectionFactory, new PropertyInfoPropertyNameCollectionFactory($propertyInfo));
+$resourceNameCollectionFactory = new AttributesResourceNameCollectionFactory([__DIR__.'/../src/']);
 $resourceClassResolver = new ResourceClassResolver($resourceNameCollectionFactory);
-$propertyMetadataFactory = new SerializerPropertyMetadataFactory($resourceMetadataFactory, $classMetadataFactory, new InheritedPropertyMetadataFactory($resourceNameCollectionFactory, new PropertyInfoPropertyMetadataFactory($propertyInfo, new AnnotationPropertyMetadataFactory($apiPlatformAnnotationReader))), $resourceClassResolver);
+$propertyMetadataFactory = new PropertyInfoPropertyMetadataFactory($propertyInfo);
+$propertyMetadataFactory = new SerializerPropertyMetadataFactory(new ApiClassMetadataFactory($classMetadataFactory), $propertyMetadataFactory, $resourceClassResolver);
+
+$propertyNameCollectionFactory = new PropertyInfoPropertyNameCollectionFactory($propertyInfo);
+$linkFactory = new LinkFactory(
+    $propertyNameCollectionFactory,
+    $propertyMetadataFactory,
+    $resourceClassResolver
+);
+
+// CachedResourceMetadataCollectionFactory decoration-priority="-10"
+// MessengerResourceMetadataCollectionFactory decoration-priority="50"
+// AlternateUriResourceMetadataCollectionFactory decoration-priority="200"
+// FiltersResourceMetadataCollectionFactory decoration-priority="200"
+// FormatsResourceMetadataCollectionFactory decoration-priority="200"
+// InputOutputResourceMetadataCollectionFactory decoration-priority="200"
+// PhpDocResourceMetadataCollectionFactory decoration-priority="200"
+// OperationNameResourceMetadataCollectionFactory decoration-priority="200"
+// LinkResourceMetadataCollectionFactory decoration-priority="500"
+// UriTemplateResourceMetadataCollectionFactory decoration-priority="500"
+// NotExposedOperationResourceMetadataCollectionFactory decoration-priority="700"
+// ExtractorResourceMetadataCollectionFactory  decoration-priority="800"
+
+// AttributesResourceMetadataCollectionFactory decorated
+
+$resourceMetadataFactory = new MessengerResourceMetadataCollectionFactory(
+    new AlternateUriResourceMetadataCollectionFactory(
+        new FiltersResourceMetadataCollectionFactory(
+            new FormatsResourceMetadataCollectionFactory(
+                new InputOutputResourceMetadataCollectionFactory(
+                    new PhpDocResourceMetadataCollectionFactory(
+                        new OperationNameResourceMetadataCollectionFactory(
+                            new LinkResourceMetadataCollectionFactory(
+                                $linkFactory,
+                                new UriTemplateResourceMetadataCollectionFactory(
+                                    $linkFactory,
+                                    $pathSegmentNameGenerator,
+                                    new NotExposedOperationResourceMetadataCollectionFactory(
+                                        $linkFactory,
+                                        new AttributesResourceMetadataCollectionFactory(null, $logger, [], false)
+                                    )
+                                )
+                            )
+                        )
+                    )
+                ),
+                $formats,
+                $patchFormats,
+            )
+        )
+    )
+);
+
+$providerCollection = new class implements ContainerInterface {
+    public array $providers = [];
+    public function get($id) {
+        return $this->providers[$id];
+    }
+
+    public function has($id): bool {
+        return isset($this->providers['id']);
+    }
+};
+$stateProviders = new CallableProvider($providerCollection);
+
+$processorCollection = new class implements ContainerInterface {
+    public array $processors = [];
+    public function get($id) {
+        return $this->processors[$id];
+    }
+
+    public function has($id): bool {
+        return isset($this->processors['id']);
+    }
+};
+$stateProcessors = new CallableProcessor($processorCollection);
 
 class Validator implements ValidatorInterface {
     private $validator;
@@ -217,66 +281,51 @@ class Validator implements ValidatorInterface {
         $this->validator = $validator;
     }
 
-    public function validate($data, array $context = []) {
-        return $this->validator->validate($data, $context);
+    public function validate(object $data, array $context = []): void {
+        $this->validator->validate($data, $context);
     }
 }
 
 $validator = new Validator(Validation::createValidator());
 $validateListener = new ValidateListener($validator, $resourceMetadataFactory);
 
-class DataProvider implements DenormalizedIdentifiersAwareItemDataProviderInterface, RestrictedDataProviderInterface, ContextAwareCollectionDataProviderInterface
-
+class BookProvider implements ProviderInterface
 {
-    public function getCollection(string $resourceClass, string $operationName = null, array $context = [])
+    public function provide(Operation $operation, array $uriVariables = [], array $context = []): object|array|null
     {
         $book = new Book();
-        $book->id = '1';
-        return [$book];
-    }
+        if ($operation instanceof CollectionOperationInterface) {
+            return [$book];
+        }
 
-    public function getItem(string $resourceClass, $identifiers, string $operationName = null, array $context = []) {
-        $book = new Book();
-        $book->id = $identifiers['id'];
+        $book->id = $uriVariables['id'];
         return $book;
     }
-
-    public function supports(string $resourceClass, string $operationName = null, array $context = []): bool {
-        return true;
-    }
 }
 
-$dataProvider = new DataProvider();
+$dataProvider = new BookProvider();
+$providerCollection->providers[BookProvider::class] = $dataProvider;
 
-class DataPersister implements DataPersisterInterface {
-    public function supports($data): bool
-    {
-        return true;
-    }
-    public function persist($data) {}
-    public function remove($data) {}
+class BookProcessor implements ProcessorInterface {
+    public function process(mixed $data, Operation $operation, array $uriVariables = [], array $context = []) {}
 }
 
-$dataPersister = new DataPersister();
+$bookProcessor = new BookProcessor();
+$processorCollection->processors[BookProcessor::class] = $bookProcessor;
 
 $propertyAccessor = PropertyAccess::createPropertyAccessor();
-$identifiersExtractor = new IdentifiersExtractor($propertyNameCollectionFactory, $propertyMetadataFactory, $propertyAccessor);
-$pathSegmentNameGenerator = new UnderscorePathSegmentNameGenerator(); 
-$operationPathResolver = new OperationPathResolver($pathSegmentNameGenerator);
-$subresourceOperationFactory = new SubresourceOperationFactory($resourceMetadataFactory, $propertyNameCollectionFactory, $propertyMetadataFactory, $pathSegmentNameGenerator);
+$identifiersExtractor = new IdentifiersExtractor($resourceMetadataFactory, $resourceClassResolver, $propertyNameCollectionFactory, $propertyMetadataFactory, $propertyAccessor);
 
 class ApiLoader {
     private $resourceNameCollectionFactory;
     private $resourceMetadataFactory;
-    private $identifiersExtractor;
-    private $operationPathResolver;
 
-    public function __construct(ResourceNameCollectionFactoryInterface $resourceNameCollectionFactory, ResourceMetadataFactoryInterface $resourceMetadataFactory, IdentifiersExtractorInterface $identifiersExtractor, OperationPathResolverInterface $operationPathResolver)
-    {
+    public function __construct(
+        ResourceNameCollectionFactoryInterface $resourceNameCollectionFactory, 
+        ResourceMetadataCollectionFactoryInterface $resourceMetadataFactory
+    ) {
         $this->resourceNameCollectionFactory = $resourceNameCollectionFactory;
         $this->resourceMetadataFactory = $resourceMetadataFactory;
-        $this->identifiersExtractor = $identifiersExtractor;
-        $this->operationPathResolver = $operationPathResolver;
     }
 
     public function load(): RouteCollection
@@ -284,78 +333,56 @@ class ApiLoader {
         $routeCollection = new RouteCollection();
 
         foreach ($this->resourceNameCollectionFactory->create() as $resourceClass) {
-            $resourceMetadata = $this->resourceMetadataFactory->create($resourceClass);
-            $resourceShortName = $resourceMetadata->getShortName();
+            foreach ($this->resourceMetadataFactory->create($resourceClass) as $resourceMetadata) {
+                foreach ($resourceMetadata->getOperations() as $operationName => $operation) {
+                    if ($operation->getRouteName()) {
+                        continue;
+                    }
 
-            if (null === $resourceShortName) {
-                throw new InvalidResourceException(sprintf('Resource %s has no short name defined.', $resourceClass));
-            }
+                    if (SkolemIriConverter::$skolemUriTemplate === $operation->getUriTemplate()) {
+                        continue;
+                    }
 
-            if (null !== $collectionOperations = $resourceMetadata->getCollectionOperations()) {
-                foreach ($collectionOperations as $operationName => $operation) {
-                    $this->addRoute($routeCollection, $resourceClass, $operationName, $operation, $resourceMetadata, OperationType::COLLECTION);
-                }
-            }
+                    $path = ($operation->getRoutePrefix() ?? '').$operation->getUriTemplate();
+                    foreach ($operation->getUriVariables() ?? [] as $parameterName => $link) {
+                        if (!$expandedValue = $link->getExpandedValue()) {
+                            continue;
+                        }
 
-            if (null !== $itemOperations = $resourceMetadata->getItemOperations()) {
-                foreach ($itemOperations as $operationName => $operation) {
-                    $this->addRoute($routeCollection, $resourceClass, $operationName, $operation, $resourceMetadata, OperationType::ITEM);
+                        $path = str_replace(sprintf('{%s}', $parameterName), $expandedValue, $path);
+                    }
+
+                    if (($controller = $operation->getController()) && !$this->container->has($controller)) {
+                        throw new RuntimeException(sprintf('There is no builtin action for the "%s" operation. You need to define the controller yourself.', $operationName));
+                    }
+
+                    $route = new Route(
+                        $path,
+                        [
+                            '_controller' => $controller ?? PlaceholderAction::class,
+                            '_format' => null,
+                            '_stateless' => $operation->getStateless(),
+                            '_api_resource_class' => $resourceClass,
+                            '_api_operation_name' => $operationName,
+                        ] + ($operation->getDefaults() ?? []),
+                        $operation->getRequirements() ?? [],
+                        $operation->getOptions() ?? [],
+                        $operation->getHost() ?? '',
+                        $operation->getSchemes() ?? [],
+                        [$operation->getMethod() ?? HttpOperation::METHOD_GET],
+                        $operation->getCondition() ?? ''
+                    );
+
+                    $routeCollection->add($operationName, $route);
                 }
             }
         }
 
         return $routeCollection;
     }
-
-    private function addRoute(RouteCollection $routeCollection, string $resourceClass, string $operationName, array $operation, ResourceMetadata $resourceMetadata, string $operationType): void
-    {
-        $resourceShortName = $resourceMetadata->getShortName();
-
-        if (isset($operation['route_name'])) {
-            if (!isset($operation['method'])) {
-                @trigger_error(sprintf('Not setting the "method" attribute is deprecated and will not be supported anymore in API Platform 3.0, set it for the %s operation "%s" of the class "%s".', OperationType::COLLECTION === $operationType ? 'collection' : 'item', $operationName, $resourceClass), E_USER_DEPRECATED);
-            }
-
-            return;
-        }
-
-        if (!isset($operation['method'])) {
-            throw new RuntimeException(sprintf('Either a "route_name" or a "method" operation attribute must exist for the operation "%s" of the resource "%s".', $operationName, $resourceClass));
-        }
-
-        if (null === $controller = $operation['controller'] ?? null) {
-            $controller = PlaceholderAction::class;
-        }
-
-        $operation['identified_by'] = (array) ($operation['identified_by'] ?? $resourceMetadata->getAttribute('identified_by', $this->identifiersExtractor ? $this->identifiersExtractor->getIdentifiersFromResourceClass($resourceClass) : ['id']));
-        $operation['has_composite_identifier'] = \count($operation['identified_by']) > 1 ? $resourceMetadata->getAttribute('composite_identifier', true) : false;
-        $path = trim(trim($resourceMetadata->getAttribute('route_prefix', '')), '/');
-        $path .= $this->operationPathResolver->resolveOperationPath($resourceShortName, $operation, $operationType, $operationName);
-
-        $route = new Route(
-            $path,
-            [
-                '_controller' => $controller,
-                '_format' => null,
-                '_stateless' => $operation['stateless'],
-                '_api_resource_class' => $resourceClass,
-                '_api_identified_by' => $operation['identified_by'],
-                '_api_has_composite_identifier' => $operation['has_composite_identifier'],
-                sprintf('_api_%s_operation_name', $operationType) => $operationName,
-            ] + ($operation['defaults'] ?? []),
-            $operation['requirements'] ?? [],
-            $operation['options'] ?? [],
-            $operation['host'] ?? '',
-            $operation['schemes'] ?? [],
-            [$operation['method']],
-            $operation['condition'] ?? ''
-        );
-
-        $routeCollection->add(RouteNameGenerator::generate($operationName, $resourceShortName, $operationType), $route);
-    }
 }
 
-$apiLoader = new ApiLoader($resourceNameCollectionFactory, $resourceMetadataFactory, $identifiersExtractor, $operationPathResolver);
+$apiLoader = new ApiLoader($resourceNameCollectionFactory, $resourceMetadataFactory);
 $routes = $apiLoader->load();
 
 $requestContext = new RequestContext();
@@ -381,7 +408,7 @@ class Router implements RouterInterface
         return $this->routes;
     }
 
-    public function match(string $pathinfo) {
+    public function match(string $pathinfo): array {
         return $this->matcher->match($pathinfo);
     }
 
@@ -389,11 +416,11 @@ class Router implements RouterInterface
         $this->context = $context;
     }
 
-    public function getContext() {
+    public function getContext(): RequestContext {
         return $this->context;
     }
 
-    public function generate(string $name, array $parameters = [], int $referenceType = self::ABSOLUTE_PATH) {
+    public function generate(string $name, array $parameters = [], int $referenceType = self::ABSOLUTE_PATH): string {
         return $this->generator->generate($name, $parameters, $referenceType);
     }
 }
@@ -406,7 +433,7 @@ class ApiUrlGenerator implements ApiUrlGeneratorInterface {
         $this->generator = $generator;
     }
 
-    public function generate($name, $parameters = [], $referenceType = self::ABS_PATH) {
+    public function generate($name, $parameters = [], $referenceType = self::ABS_PATH): string {
         return $this->generator->generate($name, $parameters, $referenceType ?: self::ABS_PATH);
     }
 }
@@ -414,38 +441,70 @@ class ApiUrlGenerator implements ApiUrlGeneratorInterface {
 $apiUrlGenerator = new ApiUrlGenerator($generator);
 
 $router = new Router($routes, $matcher, $generator, $requestContext);
-$routeNameResolver = new RouteNameResolver($router);
 
-$identifierDenormalizers = [new IntegerDenormalizer()];
-$identifierConverter = new IdentifierConverter($identifiersExtractor, $propertyMetadataFactory, $identifierDenormalizers, $resourceMetadataFactory);
+$uriVariableTransformers = [
+    new IntegerUriVariableTransformer(),
+    new DateTimeUriVariableTransformer(),
+];
 
-$iriConverter = new IriConverter($propertyNameCollectionFactory, $propertyMetadataFactory, $dataProvider, $routeNameResolver, $router, $propertyAccessor, $identifiersExtractor, /** SubresourceDataProviderInterface */ null, $identifierConverter, $resourceClassResolver, $resourceMetadataFactory);
+$iriConverter = new IriConverter(
+    $stateProviders, 
+    $router, 
+    $identifiersExtractor, 
+    $resourceClassResolver,
+    $resourceMetadataFactory,
+    new UriVariablesConverter($propertyMetadataFactory, $resourceMetadataFactory, $uriVariableTransformers),
+    new SkolemIriConverter($router)
+);
 
-$writeListener = new WriteListener($dataPersister, $iriConverter, $resourceMetadataFactory, $resourceClassResolver);
+$writeListener = new WriteListener(
+    $stateProcessors,
+    $iriConverter, 
+    $resourceClassResolver, 
+    $resourceMetadataFactory, 
+    /**new UriVariablesConverter($propertyMetadataFactory, $resourceMetadataFactory, $uriVariableTransformers)*/ null,
+);
 
 $serializerContextBuilder = new SerializerContextBuilder($resourceMetadataFactory);
 
 $objectNormalizer = new ObjectNormalizer();
 
 $nameConverter = new MetadataAwareNameConverter($classMetadataFactory);
-$jsonLdContextBuilder = new JsonLdContextBuilder($resourceNameCollectionFactory, $resourceMetadataFactory, $propertyNameCollectionFactory, $propertyMetadataFactory, $apiUrlGenerator, $nameConverter);
-$jsonLdItemNormalizer = new JsonLdItemNormalizer($resourceMetadataFactory, $propertyNameCollectionFactory, $propertyMetadataFactory, $iriConverter, $resourceClassResolver, $jsonLdContextBuilder, $propertyAccessor, $nameConverter, $classMetadataFactory, $defaultContext,  $dataTransformers, /** resource access checker **/ null);
+$jsonLdContextBuilder = new JsonLdContextBuilder($resourceNameCollectionFactory, $resourceMetadataFactory, $propertyNameCollectionFactory, $propertyMetadataFactory, $apiUrlGenerator, $iriConverter, $nameConverter);
+$jsonLdItemNormalizer = new JsonLdItemNormalizer($resourceMetadataFactory, $propertyNameCollectionFactory, $propertyMetadataFactory, $iriConverter, $resourceClassResolver, $jsonLdContextBuilder, $propertyAccessor, $nameConverter, $classMetadataFactory, $defaultContext, /** resource access checker **/ null);
 $jsonLdObjectNormalizer = new JsonLdObjectNormalizer($objectNormalizer, $iriConverter, $jsonLdContextBuilder);
 $jsonLdEncoder = new JsonLdEncoder('jsonld', new JsonEncoder());
 
 $problemConstraintViolationListNormalizer = new ProblemConstraintViolationListNormalizer([], $nameConverter, $defaultContext);
 
-$hydraCollectionNormalizer = new HydraCollectionNormalizer($jsonLdContextBuilder, $resourceClassResolver, $iriConverter, $defaultContext);
+$hydraCollectionNormalizer = new HydraCollectionNormalizer($jsonLdContextBuilder, $resourceClassResolver, $iriConverter, $resourceMetadataFactory, $defaultContext);
 $hydraPartialCollectionNormalizer = new PartialCollectionViewNormalizer($hydraCollectionNormalizer, $configuration['collection']['pagination']['page_parameter_name'], $configuration['collection']['pagination']['enabled_parameter_name'], $resourceMetadataFactory, $propertyAccessor);
 $hydraCollectionFiltersNormalizer = new CollectionFiltersNormalizer($hydraPartialCollectionNormalizer, $resourceMetadataFactory, $resourceClassResolver, $filterLocator);
 $hydraErrorNormalizer = new HydraErrorNormalizer($apiUrlGenerator, $debug, $defaultContext);
 $hydraEntrypointNormalizer = new HydraEntrypointNormalizer($resourceMetadataFactory, $iriConverter, $apiUrlGenerator);
-$hydraDocumentationNormalizer = new HydraDocumentationNormalizer($resourceMetadataFactory, $propertyNameCollectionFactory, $propertyMetadataFactory, $resourceClassResolver, null, $apiUrlGenerator, /* SubresourceOperationFactoryInterface */ null, $nameConverter);
+$hydraDocumentationNormalizer = new HydraDocumentationNormalizer($resourceMetadataFactory, $propertyNameCollectionFactory, $propertyMetadataFactory, $resourceClassResolver, $apiUrlGenerator, $nameConverter);
 $hydraConstraintViolationNormalizer = new HydraConstraintViolationListNormalizer($apiUrlGenerator, [], $nameConverter);
 
 $problemErrorNormalizer = new ErrorNormalizer($debug, $defaultContext);
 
-$itemNormalizer = new ItemNormalizer($propertyNameCollectionFactory, $propertyMetadataFactory, $iriConverter, $resourceClassResolver, $propertyAccessor, $nameConverter, $classMetadataFactory, $dataProvider, $allowPlainIdentifiers, $logger, $dataTransformers, $resourceMetadataFactory, /** resourceAccessChecker **/ null);
+// $expressionLanguage = new ExpressionLanguage();
+// $resourceAccessChecker = new ResourceAccessChecker(
+//      $expressionLanguage,
+// );
+
+$itemNormalizer = new ItemNormalizer(
+    $propertyNameCollectionFactory, 
+    $propertyMetadataFactory, 
+    $iriConverter, 
+    $resourceClassResolver, 
+    $propertyAccessor,
+    $nameConverter, 
+    $classMetadataFactory,
+    $logger, 
+    $resourceMetadataFactory,
+    /**$resourceAccessChecker **/ null,
+    $defaultContext
+);
 
 $arrayDenormalizer = new ArrayDenormalizer();
 $problemNormalizer = new ProblemNormalizer($debug, $defaultContext);
@@ -457,7 +516,8 @@ $dateTimeZoneNormalizer = new DateTimeZoneNormalizer();
 $constraintViolationListNormalizer = new ConstraintViolationListNormalizer($defaultContext, $nameConverter);
 $unwrappingDenormalizer = new UnwrappingDenormalizer($propertyAccessor);
 
-$halItemNormalizer = new HalItemNormalizer($propertyNameCollectionFactory, $propertyMetadataFactory, $iriConverter, $resourceClassResolver, $propertyAccessor, $nameConverter, $classMetadataFactory, $dataProvider, $allowPlainIdentifiers, $defaultContext, $dataTransformers, $resourceMetadataFactory, /** resourceAccessChecker **/ null);
+$halItemNormalizer = new HalItemNormalizer($propertyNameCollectionFactory, $propertyMetadataFactory, $iriConverter, $resourceClassResolver, $propertyAccessor, $nameConverter, $classMetadataFactory, $defaultContext, $resourceMetadataFactory, /** resourceAccessChecker **/ null);
+$halItemNormalizer = new HalItemNormalizer($propertyNameCollectionFactory, $propertyMetadataFactory, $iriConverter, $resourceClassResolver, $propertyAccessor, $nameConverter, $classMetadataFactory, $defaultContext, $resourceMetadataFactory, /** resourceAccessChecker **/ null);
 
 $halEntrypointNormalizer = new HalEntrypointNormalizer($resourceMetadataFactory, $iriConverter, $apiUrlGenerator);
 $halCollectionNormalizer = new HalCollectionNormalizer($resourceClassResolver, $configuration['collection']['pagination']['page_parameter_name'], $resourceMetadataFactory);
@@ -494,13 +554,13 @@ $list->insert($openApiNormalizer, -780);
 
 // TODO: JSON-API support
 /**
- * api_platform.jsonapi.normalizer.error                       -790       ApiPlatform\Core\JsonApi\Serializer\ErrorNormalizer
- * api_platform.jsonapi.normalizer.constraint_violation_list   -780       ApiPlatform\Core\JsonApi\Serializer\ConstraintViolationListNormalizer
- * api_platform.openapi.normalizer.api_gateway                 -780       ApiPlatform\Core\Swagger\Serializer\ApiGatewayNormalizer
- * api_platform.jsonapi.normalizer.entrypoint                  -800       ApiPlatform\Core\JsonApi\Serializer\EntrypointNormalizer
- * api_platform.jsonapi.normalizer.collection                  -985       ApiPlatform\Core\JsonApi\Serializer\CollectionNormalizer
- * api_platform.jsonapi.normalizer.item                        -890       ApiPlatform\Core\JsonApi\Serializer\ItemNormalizer
- * api_platform.jsonapi.normalizer.object                      -995       ApiPlatform\Core\JsonApi\Serializer\ObjectNormalizer
+ * api_platform.jsonapi.normalizer.error                       -790       ApiPlatform\JsonApi\Serializer\ErrorNormalizer
+ * api_platform.jsonapi.normalizer.constraint_violation_list   -780       ApiPlatform\JsonApi\Serializer\ConstraintViolationListNormalizer
+ * api_platform.openapi.normalizer.api_gateway                 -780       ApiPlatform\Swagger\Serializer\ApiGatewayNormalizer
+ * api_platform.jsonapi.normalizer.entrypoint                  -800       ApiPlatform\JsonApi\Serializer\EntrypointNormalizer
+ * api_platform.jsonapi.normalizer.collection                  -985       ApiPlatform\JsonApi\Serializer\CollectionNormalizer
+ * api_platform.jsonapi.normalizer.item                        -890       ApiPlatform\JsonApi\Serializer\ItemNormalizer
+ * api_platform.jsonapi.normalizer.object                      -995       ApiPlatform\JsonApi\Serializer\ObjectNormalizer
  */
 
 $encoders = [new JsonEncoder(), $jsonLdEncoder];
@@ -509,21 +569,21 @@ $serializer = new Serializer(iterator_to_array($list), $encoders);
 $serializeListener = new SerializeListener($serializer, $serializerContextBuilder, $resourceMetadataFactory);
 $respondListener = new RespondListener($resourceMetadataFactory);
 $formatListener = new AddFormatListener(new Negotiator(), $resourceMetadataFactory, $formats);
-$readListener = new ReadListener($dataProvider, $dataProvider, /** SubresourceDataProvider **/ null, $serializerContextBuilder, $identifierConverter, $resourceMetadataFactory);
-$deserializeListener = new DeserializeListener($serializer, $serializerContextBuilder, $formats, $resourceMetadataFactory);
+$readListener = new ReadListener($stateProviders, $resourceMetadataFactory, $serializerContextBuilder);
+$deserializeListener = new DeserializeListener($serializer, $serializerContextBuilder, $resourceMetadataFactory);
 $addLinkHeaderListener = new AddLinkHeaderListener($apiUrlGenerator);
 $validationExceptionListener = new ValidationExceptionListener($serializer, $errorFormats, $exceptionToStatus);
 
 $controller = new ExceptionAction($serializer, $errorFormats, $exceptionToStatus);
 $errorListener = new ErrorListener($controller);
-$exceptionListener = new ExceptionListener($controller, null, $debug, $errorListener);
+$exceptionListener = new ExceptionListener($errorListener);
 
 $dispatcher = new EventDispatcher();
 $dispatcher->addSubscriber(new RouterListener($matcher, new RequestStack()));
 $dispatcher->addListener('kernel.view', [$validateListener, 'onKernelView'], 64);
 $dispatcher->addListener('kernel.view', [$writeListener, 'onKernelView'], 32);
 $dispatcher->addListener('kernel.view', [$serializeListener, 'onKernelView'], 16);
-// TODO: ApiPlatform\Core\EventListener\QueryParameterValidateListener, prio 16   
+// TODO: ApiPlatform\EventListener\QueryParameterValidateListener, prio 16   
 $dispatcher->addListener('kernel.view', [$respondListener, 'onKernelView'], 8);
 $dispatcher->addListener('kernel.request', [$formatListener, 'onKernelRequest'], 28);
 $dispatcher->addListener('kernel.request', [$readListener, 'onKernelRequest'], 4);
@@ -534,10 +594,10 @@ $dispatcher->addListener('kernel.response', [$addLinkHeaderListener, 'onKernelRe
 
 /*
  * TODO: 
- * api_platform.security.listener.request.deny_access     kernel.request      onSecurity                  3          ApiPlatform\Core\Security\EventListener\DenyAccessListener
+ * api_platform.security.listener.request.deny_access     kernel.request      onSecurity                  3          ApiPlatform\Security\EventListener\DenyAccessListener
  *   "                                                    kernel.request      onSecurityPostDenormalize   1                                                                   
- * api_platform.swagger.listener.ui                       kernel.request      onKernelRequest                        ApiPlatform\Core\Bridge\Symfony\Bundle\EventListener\SwaggerUiListener
- * api_platform.http_cache.listener.response.configure    kernel.response     onKernelResponse            -1         ApiPlatform\Core\HttpCache\EventListener\AddHeadersListener
+ * api_platform.swagger.listener.ui                       kernel.request      onKernelRequest                        ApiPlatform\Bridge\Symfony\Bundle\EventListener\SwaggerUiListener
+ * api_platform.http_cache.listener.response.configure    kernel.response     onKernelResponse            -1         ApiPlatform\HttpCache\EventListener\AddHeadersListener
 */
 
 final class DocumentationAction 
@@ -564,7 +624,7 @@ $openApiOptions = new OpenApiOptions('API Platform');
 $jsonSchemaTypeFactory = new TypeFactory($resourceClassResolver);
 $jsonSchemaFactory = new SchemaFactory($jsonSchemaTypeFactory, $resourceMetadataFactory, $propertyNameCollectionFactory, $propertyMetadataFactory, $nameConverter, $resourceClassResolver);
 
-$openApiFactory = new OpenApiFactory($resourceNameCollectionFactory, $resourceMetadataFactory, $propertyNameCollectionFactory, $propertyMetadataFactory, $jsonSchemaFactory, $jsonSchemaTypeFactory, $operationPathResolver, $filterLocator, $subresourceOperationFactory, $identifiersExtractor, $formats, $openApiOptions, $paginationOptions);
+$openApiFactory = new OpenApiFactory($resourceNameCollectionFactory, $resourceMetadataFactory, $propertyNameCollectionFactory, $propertyMetadataFactory, $jsonSchemaFactory, $jsonSchemaTypeFactory, $filterLocator);
 $documentationAction = new DocumentationAction($openApiFactory);
 $routes->add('api_doc', new Route('/docs.{_format}', ['_controller' => $documentationAction, '_format' => null, '_api_respond' => true]));
 
@@ -573,6 +633,9 @@ $routes->add('api_entrypoint', new Route('/{index}.{_format}', ['_controller' =>
 
 $contextAction = new ContextAction($jsonLdContextBuilder, $resourceNameCollectionFactory, $resourceMetadataFactory);
 $routes->add('api_jsonld_context', new Route('/contexts/{shortName}.{_format}', ['_controller' => $contextAction, '_format' => 'jsonld', '_api_respond' => true], ['shortName' => '.+']));
+
+$notExposedAction = new NotExposedAction();
+$routes->add('api_genid', new Route('/.well-known/genid/{id}', ['_controller' => $notExposedAction, '_format' => 'text', '_api_respond' => true]));
 
 $controllerResolver = new ControllerResolver();
 $argumentResolver = new ArgumentResolver();

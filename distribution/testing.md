@@ -13,57 +13,142 @@ In this article you'll learn how to use:
 
 * [PHPUnit](https://phpunit.de), a testing framework to cover your classes with unit tests and to write
 API-oriented functional tests thanks to its API Platform and [Symfony](https://symfony.com/doc/current/testing.html) integrations.
-* [Alice](https://github.com/nelmio/alice) and [its Symfony
-integration](https://github.com/theofidry/AliceBundle#database-testing), an expressive fixtures generator to write data fixtures.
+* [DoctrineFixturesBundle](https://symfony.com/bundles/DoctrineFixturesBundle/current/index.html), a bundle to load data fixtures in the database.
+* [Foundry](https://github.com/zenstruck/foundry), an expressive fixtures generator to write data fixtures.
 
 ## Creating Data Fixtures
 
 Before creating your functional tests, you will need a dataset to pre-populate your API and be able to test it.
 
-First, install [Alice](https://github.com/nelmio/alice):
+First, install [Foundry](https://github.com/zenstruck/foundry) and [Doctrine/DoctrineFixturesBundle](https://github.com/doctrine/DoctrineFixturesBundle):
 
 ```console
 docker compose exec php \
-    composer require --dev alice
+    composer require --dev foundry orm-fixtures
 ```
 
-Thanks to Symfony Flex, Alice (and [AliceBundle](https://github.com/theofidry/AliceBundle)) are ready to use!
-Place your data fixtures files in a directory named `fixtures/`.
+Thanks to Symfony Flex, [DoctrineFixturesBundle](https://github.com/doctrine/DoctrineFixturesBundle) and [Foundry](https://github.com/zenstruck/foundry) are ready to use!
 
-Then, create some fixtures for [the bookstore API you created in the tutorial](index.md):
+Then, create some factories for [the bookstore API you created in the tutorial](index.md):
 
-```yaml
-# api/fixtures/books.yaml
-App\Entity\Book:
-    book_{1..100}:
-        isbn: <isbn13()>
-        title: <sentence(4)>
-        description: <text()>
-        author: <name()>
-        publicationDate: <dateTimeImmutable()>
+```console
+docker compose exec php \
+    bin/console make:factory 'App\Entity\Book'
+docker compose exec php \
+    bin/console make:factory 'App\Entity\Review'
+
+Improve the default values:
+
+```php
+// src/Factory/BookFactory.php
+
+    // ...
+
+    protected function getDefaults(): array
+    {
+        return [
+            'author' => self::faker()->name(),
+            'description' => self::faker()->text(),
+            'isbn' => self::faker()->isbn13(),
+            'publication_date' => \DateTimeImmutable::createFromMutable(self::faker()->dateTime()),
+            'title' => self::faker()->sentence(4),
+        ];
+    }
 ```
 
-```yaml
-# api/fixtures/reviews.yaml
-App\Entity\Review:
-    review_{1..200}:
-        rating: <numberBetween(0, 5)>
-        body: <text()>
-        author: <name()>
-        publicationDate: <dateTimeImmutable()>
-        book: '@book_*'
+```php
+// src/Factory/ReviewFactory.php
+// ...
+use function Zenstruck\Foundry\lazy;
+
+    // ...
+
+    protected function getDefaults(): array
+    {
+        return [
+            'author' => self::faker()->name(),
+            'body' => self::faker()->text(),
+            'book' => lazy(fn() => BookFactory::randomOrCreate()),
+            'publicationDate' => \DateTimeImmutable::createFromMutable(self::faker()->dateTime()),
+            'rating' => self::faker()->numberBetween(0, 5),
+        ];
+    }
+```
+
+Create some stories:
+
+```console
+docker compose exec php \
+    bin/console make:story 'DefaultBooks'
+docker compose exec php \
+    bin/console make:story 'DefaultReviews'
+
+```php
+// src/Story/DefaultBooksStory.php
+
+namespace App\Story;
+
+use App\Factory\BookFactory;
+use Zenstruck\Foundry\Story;
+
+final class DefaultBooksStory extends Story
+{
+    public function build(): void
+    {
+        BookFactory::createMany(100);
+    }
+}
+
+```
+
+```php
+// src/Story/DefaultReviewsStory.php
+
+namespace App\Story;
+
+use App\Factory\ReviewFactory;
+use Zenstruck\Foundry\Story;
+
+final class DefaultReviewsStory extends Story
+{
+    public function build(): void
+    {
+        ReviewFactory::createMany(200);
+    }
+}
+```
+
+Edit your Fixtures:
+
+```php
+//src/DataFixtures/AppFixtures.php
+
+namespace App\DataFixtures;
+
+use App\Story\DefaultBooksStory;
+use App\Story\DefaultReviewsStory;
+use Doctrine\Bundle\FixturesBundle\Fixture;
+use Doctrine\Persistence\ObjectManager;
+
+class AppFixtures extends Fixture
+{
+    public function load(ObjectManager $manager): void
+    {
+        DefaultBooksStory::load();
+        DefaultReviewsStory::load();
+    }
+}
 ```
 
 You can now load your fixtures in the database with the following command:
 
 ```console
 docker compose exec php \
-    bin/console hautelook:fixtures:load
+    bin/console doctrine:fixtures:load
 ```
 
-To learn more about fixtures, take a look at the documentation of [Alice](https://github.com/nelmio/alice)
-and [AliceBundle](https://github.com/theofidry/AliceBundle).
-The list of available generators as well as a cookbook explaining how to create custom generators can be found in the documentation of [Faker](https://github.com/fakerphp/faker), the library used by Alice under the hood.
+To learn more about fixtures, take a look at the documentation of [Foundry](https://symfony.com/bundles/ZenstruckFoundryBundle/current/index.html).
+The list of available generators as well as a cookbook explaining how to create custom generators can be found in the documentation of [Faker](https://github.com/fakerphp/faker), the library used by Foundry under the hood.
 
 ## Writing Functional Tests
 
@@ -72,6 +157,26 @@ Now that you have some data fixtures for your API, you are ready to write functi
 The API Platform test client implements the interfaces of the [Symfony HttpClient](https://symfony.com/doc/current/components/http_client.html). HttpClient is shipped with the API Platform distribution. The [Symfony test pack](https://github.com/symfony/test-pack/blob/main/composer.json), which includes PHPUnit as well as Symfony components useful for testing, is also included.
 
 If you don't use the distribution, run `composer require --dev symfony/test-pack symfony/http-client` to install them.
+
+Install [DAMADoctrineTestBundle](https://github.com/dmaicher/doctrine-test-bundle) to reset the database automatically before each test:
+
+```console
+docker compose exec php \
+    composer require --dev dama/doctrine-test-bundle
+```
+
+And activate it in the `phpunit.xml.dist` file:
+
+```xml
+<!-- api/phpunit.xml.dist -->
+<phpunit>
+    <!-- ... -->
+
+    <extensions>
+        <extension class="DAMA\DoctrineTestBundle\PHPUnit\PHPUnitExtension"/>
+    </extensions>
+</phpunit>
+```
 
 Optionally, you can install [JSON Schema for PHP](https://github.com/justinrainbow/json-schema) if you want to use the [JSON Schema](https://json-schema.org) test assertions provided by API Platform:
 
@@ -92,15 +197,20 @@ namespace App\Tests;
 
 use ApiPlatform\Symfony\Bundle\Test\ApiTestCase;
 use App\Entity\Book;
-use Hautelook\AliceBundle\PhpUnit\RefreshDatabaseTrait;
+use App\Factory\BookFactory;
+use Zenstruck\Foundry\Test\Factories;
+use Zenstruck\Foundry\Test\ResetDatabase;
 
 class BooksTest extends ApiTestCase
 {
-    // This trait provided by AliceBundle will take care of refreshing the database content to a known state before each test
-    use RefreshDatabaseTrait;
+    // This trait provided by Foundry will take care of refreshing the database content to a known state before each test
+    use ResetDatabase, Factories;
 
     public function testGetCollection(): void
     {
+        // Create 100 books using our factory
+        BookFactory::createMany(100);
+    
         // The client implements Symfony HttpClient's `HttpClientInterface`, and the response `ResponseInterface`
         $response = static::createClient()->request('GET', '/books');
 
@@ -180,15 +290,22 @@ publicationDate: This value should not be null.',
 
     public function testUpdateBook(): void
     {
+        // Only create the book we need with a given ISBN
+        BookFactory::createOne(['isbn' => '9781344037075']);
+    
         $client = static::createClient();
         // findIriBy allows to retrieve the IRI of an item by searching for some of its properties.
-        // ISBN 9786644879585 has been generated by Alice when loading test fixtures.
-        // Because Alice use a seeded pseudo-random number generator, we're sure that this ISBN will always be generated.
         $iri = $this->findIriBy(Book::class, ['isbn' => '9781344037075']);
 
-        $client->request('PUT', $iri, ['json' => [
-            'title' => 'updated title',
-        ]]);
+        // Use the PATCH method here to do a partial update
+        $client->request('PATCH', $iri, [
+            'json' => [
+                'title' => 'updated title',
+            ],
+            'headers' => [
+                'Content-Type' => 'application/merge-patch+json',
+            ]           
+        ]);
 
         $this->assertResponseIsSuccessful();
         $this->assertJsonContains([
@@ -200,6 +317,9 @@ publicationDate: This value should not be null.',
 
     public function testDeleteBook(): void
     {
+        // Only create the book we need with a given ISBN
+        BookFactory::createOne(['isbn' => '9781344037075']);
+
         $client = static::createClient();
         $iri = $this->findIriBy(Book::class, ['isbn' => '9781344037075']);
 
@@ -211,22 +331,12 @@ publicationDate: This value should not be null.',
             static::getContainer()->get('doctrine')->getRepository(Book::class)->findOneBy(['isbn' => '9781344037075'])
         );
     }
-
-    public function testLogin(): void
-    {
-        $response = static::createClient()->request('POST', '/login', ['json' => [
-            'email' => 'admin@example.com',
-            'password' => 'admin',
-        ]]);
-        
-        $this->assertResponseIsSuccessful();
-    }
 }
 ```
 
-As you can see, the example uses the [trait `RefreshDatabaseTrait`](https://github.com/theofidry/AliceBundle#database-testing)
-from [AliceBundle](https://github.com/theofidry/AliceBundle) which will, at the beginning of each
-test, purge the database, load fixtures, begin a transaction, and, at the end of each test, roll back the
+As you can see, the example uses the [trait `ResetDatabase`](https://symfony.com/bundles/ZenstruckFoundryBundle/current/index.html#database-reset)
+from [Foundry](https://github.com/zenstruck/foundry) which will, at the beginning of each
+test, purge the database, begin a transaction, and, at the end of each test, roll back the
 transaction previously begun. Because of this, you can run your tests without worrying about fixtures.
 
 There is one caveat though: in some tests, it is necessary to perform multiple requests in one test, for example when creating a user via the API and checking that a subsequent login using the same password works. However, the client will by default reboot the kernel, which will reset the database. You can prevent this by adding `$client->disableReboot();` to such tests.
@@ -260,6 +370,7 @@ The API Platform Demo [contains a CD worklow](https://github.com/api-platform/de
 
 You may also be interested in these alternative testing tools (not included in the API Platform distribution):
 
+* [Hoppscotch](https://docs.hoppscotch.io/features/tests), create functional test for your API
 * [Foundry](https://github.com/zenstruck/foundry), a modern fixtures library that will replace Alice as the recommended fixtures library soon;
 * [Hoppscotch](https://docs.hoppscotch.io/documentation/features/rest-api-testing/), create functional test for your API
   Platform project using a nice UI, benefit from its Swagger integration and run tests in the CI using [the command-line tool](https://docs.hoppscotch.io/cli);
