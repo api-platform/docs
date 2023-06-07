@@ -51,16 +51,16 @@ final class Person
 ```yaml
 # api/config/api_platform/resources.yaml
 resources:
-  App\Entity\Person:
-    operations:
-      ApiPlatform\Metadata\Post:
-        status: 202
-        messenger: true
-        output: false
-      ApiPlatform\Metadata\Get:
-        status: 404
-        controller: ApiPlatform\Action\NotFoundAction
-        read: false
+    App\Entity\Person:
+        operations:
+            ApiPlatform\Metadata\Post:
+                status: 202
+                messenger: true
+                output: false
+            ApiPlatform\Metadata\Get:
+                status: 404
+                controller: ApiPlatform\Action\NotFoundAction
+                read: false
 ```
 
 [/codeSelector]

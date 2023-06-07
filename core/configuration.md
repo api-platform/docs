@@ -64,7 +64,7 @@ api_platform:
 
     # Enable the docs.
     enable_docs: true
-    
+
     # Enable the data collector and the WebProfilerBundle integration.
     enable_profiler: true
 
@@ -157,7 +157,7 @@ api_platform:
     swagger:
         # The active versions of OpenAPI to be exported or used in the swagger_ui. The first value is the default.
         versions: [2, 3]
-                
+
         # The swagger API keys.
         api_keys: []
             # The name of the header or query parameter containing the API key.
@@ -192,7 +192,7 @@ api_platform:
             url:
 
         swagger_ui_extra_configuration:
-            # Controls the default expansion setting for the operations and tags. It can be 'list' (expands only the tags), 'full' (expands the tags and operations) or 'none' (expands nothing). 
+            # Controls the default expansion setting for the operations and tags. It can be 'list' (expands only the tags), 'full' (expands the tags and operations) or 'none' (expands nothing).
             docExpansion: list
             # If set, enables filtering. The top bar will show an edit box that you can use to filter the tagged operations that are shown.
             filter: false
@@ -322,7 +322,9 @@ api_platform:
                 xkey:
                     glue: ' '
 
-        normalization_context: ~
+        normalization_context:
+            # Default value to omit null values in conformance with the JSON Merge Patch RFC.
+            skip_null_values: true
         denormalization_context: ~
         swagger_context: ~
         openapi_context: ~
@@ -372,6 +374,9 @@ api_platform:
 
         # The URL generation strategy to use for IRIs
         url_generation_strategy: !php/const ApiPlatform\Api\UrlGeneratorInterface::ABS_PATH
+
+        # To enable collecting denormalization errors
+        collectDenormalizationErrors: false
 
         # ...
 ```

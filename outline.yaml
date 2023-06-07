@@ -82,7 +82,7 @@ chapters:
     items:
       - index
       - nextjs
-      - nuxtjs
+      - nuxt
       - vuetify
       - quasar
       - react

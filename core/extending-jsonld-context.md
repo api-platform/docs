@@ -88,10 +88,11 @@ class Book
 
 ```yaml
 # api/config/api_platform/resources.yaml
-App\Entity\Book:
-    operations:
-        ApiPlatform\Metadata\Get:
-            hydraContext: { foo: 'bar' }
+resources:
+    App\Entity\Book:
+        operations:
+            ApiPlatform\Metadata\Get:
+                hydraContext: { foo: 'bar' }
 ```
 
 ```xml

@@ -20,7 +20,7 @@ The easiest and most powerful way to get started is [to download the API Platfor
 
 * the API skeleton, including [the Core library](../core/index.md), [the Symfony framework](https://symfony.com/) ([optional](../core/bootstrap.md)) and [the Doctrine ORM](https://www.doctrine-project.org/projects/orm.html) ([optional](../core/extending.md))
 * [the client scaffolding tool](../create-client/) to generate [Next.js](../create-client/
-) web applications from the API documentation ([Nuxt.js](https://nuxtjs.org/), [Vue](https://vuejs.org/), [Create React App](https://reactjs.org), [React Native](https://facebook.github.io/react-native/), [Quasar](https://quasar.dev/) and [Vuetify](https://vuetifyjs.com/) are also supported)
+) web applications from the API documentation ([Nuxt](https://nuxt.com/), [Vue](https://vuejs.org/), [Create React App](https://reactjs.org), [React Native](https://facebook.github.io/react-native/), [Quasar](https://quasar.dev/) and [Vuetify](https://vuetifyjs.com/) are also supported)
 * [a beautiful admin interface](../admin/), built on top of React Admin, dynamically created by parsing the API documentation
 * all you need to [create real-time and async APIs using the Mercure protocol](../core/mercure.md)
 * a [Docker](../deployment/docker-compose.md) definition to start a working development environment in a single command, providing containers for the API and the Next.js web application
@@ -189,7 +189,7 @@ symfony serve
 All JavaScript components are also [available as standalone libraries](https://github.com/api-platform?language=javascript)
 installable with npm (or any other package manager).  
 
-**Note:** when installing API Platform this way, the API will be exposed as the `/api/` path. You need to open `http://localhost:8000/api/` to see the API documentation.
+**Note:** when installing API Platform this way, the API will be exposed at the `/api/` path. You need to open `http://localhost:8000/api/` to see the API documentation.
 If you are deploying API Platform directly on an Apache or NGINX webserver and getting a 404 error on opening this link, you will need to enable the [rewriting rules](https://symfony.com/doc/current/setup/web_server_configuration.html) for your specific webserver software.
 
 ## It's Ready
@@ -329,11 +329,11 @@ Reload `https://localhost/docs/`: API Platform used these classes to generate an
 
 Operations available for our 2 resource types appear in the UI. We can also see the awesome [Web Debug Toolbar](https://symfonycasts.com/screencast/symfony/profiler?cid=apip).
 
-Note that entities' and properties' descriptions in the API documentation, and that API Platform use PHP types to generate the appropriate JSON Schemas.
+Note that the entities' and properties' descriptions are present in the API documentation, and that API Platform uses PHP types to generate the appropriate JSON Schemas.
 
 ![Bookshop JSON Schemas](images/api-platform-2.6-bookshop-json-schemas.png)
 
-The framework also use these metadata to serialize and deserialize data from JSON (and other formats) to PHP objects (back and forth)!
+The framework also uses these metadata to serialize and deserialize data from JSON (and other formats) to PHP objects (back and forth)!
 
 For the sake of simplicity, in this example we used public properties (except for the ID, see below). API Platform (as well
 as Symfony and Doctrine) also supports accessor methods (getters/setters), use them if you want to.

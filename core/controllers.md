@@ -44,12 +44,9 @@ use Symfony\Component\HttpKernel\Attribute\AsController;
 #[AsController]
 class CreateBookPublication extends AbstractController
 {
-    private $bookPublishingHandler;
-
-    public function __construct(BookPublishingHandler $bookPublishingHandler)
-    {
-        $this->bookPublishingHandler = $bookPublishingHandler;
-    }
+    public function __construct(
+        private BookPublishingHandler $bookPublishingHandler
+    ) {}
 
     public function __invoke(Book $book): Book
     {
@@ -75,7 +72,6 @@ The entity is retrieved in the `__invoke` method thanks to a dedicated argument 
 
 When using `GET`, the `__invoke()` method parameter will receive the identifier and should be called the same as the resource identifier.
 So for the path `/user/{uuid}/bookmarks`, you must use `__invoke(string $uuid)`.
-**Warning: the `__invoke()` method parameter [MUST be called `$data`](https://symfony.com/doc/current/components/http_kernel.html#4-getting-the-controller-arguments)**, otherwise, it will not be filled correctly!
 
 Services (`$bookPublishingHandler` here) are automatically injected thanks to the autowiring feature. You can type-hint any service
 you need and it will be autowired too.
@@ -117,14 +113,15 @@ class Book
 
 ```yaml
 # api/config/api_platform/resources.yaml
-App\Entity\Book:
-    operations:
-        ApiPlatform\Metadata\Get: ~
-        post_publication:
-            class: ApiPlatform\Metadata\Post
-            method: POST
-            uriTemplate: /books/{id}/publication
-            controller: App\Controller\CreateBookPublication
+resources:
+    App\Entity\Book:
+        operations:
+            ApiPlatform\Metadata\Get: ~
+            post_publication:
+                class: ApiPlatform\Metadata\Post
+                method: POST
+                uriTemplate: /books/{id}/publication
+                controller: App\Controller\CreateBookPublication
 ```
 
 ```xml
@@ -188,14 +185,15 @@ class Book
 
 ```yaml
 # api/config/api_platform/resources.yaml
-App\Entity\Book:
-    operations:
-        ApiPlatform\Metadata\Get: ~
-        post_publication:
-            class: ApiPlatform\Metadata\Post
-            method: POST
-            uriTemplate: /books/{id}/publication
-            controller: ApiPlatform\Action\PlaceholderAction
+resources:
+    App\Entity\Book:
+        operations:
+            ApiPlatform\Metadata\Get: ~
+            post_publication:
+                class: ApiPlatform\Metadata\Post
+                method: POST
+                uriTemplate: /books/{id}/publication
+                controller: ApiPlatform\Action\PlaceholderAction
 ```
 
 ```xml
@@ -258,15 +256,16 @@ class Book
 
 ```yaml
 # api/config/api_platform/resources.yaml
-App\Entity\Book:
-    operations:
-        ApiPlatform\Metadata\Get: ~
-        post_publication:
-            class: ApiPlatform\Metadata\Get
-            uriTemplate: /books/{id}/publication
-            controller: App\Controller\CreateBookPublication
-            normalizationContext:
-                groups: ['publication']
+resources:
+    App\Entity\Book:
+        operations:
+            ApiPlatform\Metadata\Get: ~
+            post_publication:
+                class: ApiPlatform\Metadata\Get
+                uriTemplate: /books/{id}/publication
+                controller: App\Controller\CreateBookPublication
+                normalizationContext:
+                    groups: ['publication']
 ```
 
 ```xml
@@ -329,14 +328,15 @@ class Book
 
 ```yaml
 # api/config/api_platform/resources.yaml
-App\Entity\Book:
-    operations:
-        ApiPlatform\Metadata\Get: ~
-        post_publication:
-            class: ApiPlatform\Metadata\Post
-            uriTemplate: /books/{id}/publication
-            controller: App\Controller\CreateBookPublication
-            read: false
+resources:
+    App\Entity\Book:
+        operations:
+            ApiPlatform\Metadata\Get: ~
+            post_publication:
+                class: ApiPlatform\Metadata\Post
+                uriTemplate: /books/{id}/publication
+                controller: App\Controller\CreateBookPublication
+                read: false
 ```
 
 ```xml
@@ -401,14 +401,15 @@ class Book
 
 ```yaml
 # api/config/api_platform/resources.yaml
-App\Entity\Book:
-    operations:
-        ApiPlatform\Metadata\Get: ~
-        post_publication:
-            class: ApiPlatform\Metadata\Post
-            routeName: book_post_publication
-        book_post_discontinuation:
-          class: ApiPlatform\Metadata\Post
+resources:
+    App\Entity\Book:
+        operations:
+            ApiPlatform\Metadata\Get: ~
+            post_publication:
+                class: ApiPlatform\Metadata\Post
+                routeName: book_post_publication
+            book_post_discontinuation:
+              class: ApiPlatform\Metadata\Post
 ```
 
 ```xml

@@ -249,7 +249,7 @@ Now let's add the Company class:
 
 ```php
 <?php
-// api/src/Entity/Employee.php
+// api/src/Entity/Company.php
 namespace App\Entity;
 
 use ApiPlatform\Metadata\ApiResource;
@@ -274,7 +274,7 @@ class Company
 }
 ```
 
-We did not define any Doctrine annotation here and if we want thinks to work properly with GraphQL, we need to map the `employees` field as a Link to the class `Employee` using the property `company`.
+We did not define any Doctrine annotation here and if we want things to work properly with GraphQL, we need to map the `employees` field as a Link to the class `Employee` using the property `company`.
 
 As a general rule, if the property we want to create a link from is in the `fromClass`, use `fromProperty`, if not, use `toProperty`.
 

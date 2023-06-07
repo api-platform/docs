@@ -50,7 +50,7 @@ docker compose exec php \
 Symfony allows to [decorate services](https://symfony.com/doc/current/service_container/service_decoration.html), here we
 need to decorate `api_platform.openapi.factory`.
 
-In the following example, we will see how to override the title of the Swagger documentation and add a custom filter for
+In the following example, we will see how to override the title and the base path URL of the Swagger documentation and add a custom filter for
 the `GET` operation of `/foos` path.
 
 ```yaml
@@ -71,11 +71,9 @@ use ApiPlatform\OpenApi\Model;
 
 class OpenApiFactory implements OpenApiFactoryInterface
 {
-    private $decorated;
 
-    public function __construct(OpenApiFactoryInterface $decorated)
+    public function __construct(private OpenApiFactoryInterface $decorated)
     {
-        $this->decorated = $decorated;
     }
 
     public function __invoke(array $context = []): OpenApi
@@ -94,6 +92,9 @@ class OpenApiFactory implements OpenApiFactoryInterface
         $openApi = $openApi->withInfo((new Model\Info('New Title', 'v2', 'Description of my custom API'))->withExtensionProperty('info-key', 'Info value'));
         $openApi = $openApi->withExtensionProperty('key', 'Custom x-key value');
         $openApi = $openApi->withExtensionProperty('x-value', 'Custom x-value value');
+
+        // to define base path URL
+        $openApi = $openApi->withServers([new Model\Server('https://foo.bar')]);
 
         return $openApi;
     }
@@ -158,25 +159,26 @@ class Product // The class name will be used to name exposed resources
 ```
 
 ```yaml
-# api/config/api_platform/resources.yaml
-resources:
+# api/config/api_platform/properties.yaml
+properties:
     App\Entity\Product:
-      properties:
         name:
-          attributes:
-            openapi_context:
-              type: string
-              enum: ['one', 'two']
-              example: one
+            attributes:
+                openapiContext:
+                    type: string
+                    enum: ['one', 'two']
+                    example: one
         timestamp:
-          attributes:
-            openapi_context:
-              type: string
-              format: date-time
+            attributes:
+                openapiContext:
+                    type: string
+                    format: date-time
 ```
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" ?>
+<!-- api/config/api_platform/properties.xml -->
+
 <properties xmlns="https://api-platform.com/schema/metadata/properties-3.0"
            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
            xsi:schemaLocation="https://api-platform.com/schema/metadata/properties-3.0
@@ -312,14 +314,14 @@ Note: as your route is not exposed, you may want to return a HTTP 404 if it's ca
 
 API Platform generates a definition name based on the serializer `groups` defined
 in the (`de`)`normalizationContext`. It's possible to override the name
-thanks to the `swagger_definition_name` option:
+thanks to the `openapi_definition_name` option:
 
 ```php
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Post;
 
 #[ApiResource]
-#[Post(denormalizationContext: ['groups' => ['user:read'], 'swagger_definition_name' => 'Read'])]
+#[Post(denormalizationContext: ['groups' => ['user:read'], 'openapi_definition_name' => 'Read'])]
 class User
 {
     // ...
@@ -338,7 +340,7 @@ class User
 {
     const API_WRITE = [
         'groups' => ['user:read'],
-        'swagger_definition_name' => 'Read',
+        'openapi_definition_name' => 'Read',
     ];
 }
 ```
@@ -356,6 +358,7 @@ namespace App\Entity;
 
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Post;
+use ApiPlatform\OpenApi\Model;
 use App\Controller\RandomRabbit;
 
 #[ApiResource]
@@ -363,11 +366,11 @@ use App\Controller\RandomRabbit;
     name: 'create_rabbit', 
     uriTemplate: '/rabbit/create', 
     controller: RandomRabbit::class, 
-    openapiContext: [
-        'summary' => 'Create a rabbit picture', 
-        'description' => '# Pop a great rabbit picture by color!\n\n![A great rabbit](https://rabbit.org/graphics/fun/netbunnies/jellybean1-brennan1.jpg)', 
-        'requestBody' => [
-            'content' => [
+    openapi: new Model\Operation(
+        summary: 'Create a rabbit picture', 
+        description: '# Pop a great rabbit picture by color!\n\n![A great rabbit](https://rabbit.org/graphics/fun/netbunnies/jellybean1-brennan1.jpg)', 
+        requestBody: new Model\RequestBody(
+            content: new \ArrayObject([
                 'application/json' => [
                     'schema' => [
                         'type' => 'object', 
@@ -381,9 +384,9 @@ use App\Controller\RandomRabbit;
                         'description' => 'Pink Rabbit'
                     ]
                 ]
-            ]
-        ]
-    ]
+            ])
+        )
+    )
 )]
 class Rabbit
 {
@@ -399,13 +402,12 @@ resources:
         class: ApiPlatform\Metadata\Post
         path: '/rabbit/create'
         controller: App\Controller\RandomRabbit
-        openapiContext:
+        openapi:
           summary: Random rabbit picture
           description: >
             # Pop a great rabbit picture by color!
 
             ![A great rabbit](https://rabbit.org/graphics/fun/netbunnies/jellybean1-brennan1.jpg)
-
           requestBody:
             content:
               application/json:
@@ -430,41 +432,42 @@ resources:
         <operations>
             <operation class="ApiPlatform\Metadata\Post" name="create_rabbit" uriTemplate="/rabbit/create"
                        controller="App\Controller\RandomRabbit">
-                <openapiContext>
-                    <values>
-                        <value name="summary">Create a rabbit picture </value>
-                        <value name="description"># Pop a great rabbit picture by color!!
+                <openapi summary="Create a rabbit picture"
+                         description="# Pop a great rabbit picture by color!!
     
-    ![A great rabbit](https://rabbit.org/graphics/fun/netbunnies/jellybean1-brennan1.jpg)</value>
-                        <value name="content">
-                            <values>
-                                <value name="application/json">
-                                    <values>
-                                        <value name="schema">
-                                            <values>
-                                                <value name="type">object</value>
-                                                <value name="properties">
-                                                    <values>
-                                                        <value name="name">
-                                                            <values>
-                                                                <value name="type">string</value>
-                                                            </values>
-                                                        </value>
-                                                        <value name="description">
-                                                            <values>
-                                                                <value name="type">string</value>
-                                                            </values>
-                                                        </value>
-                                                    </values>
-                                                </value>
-                                            </values>
-                                        </value>
-                                    </values>
-                                </value>
-                            </values>
-                        </value>
-                    </values>
-                </openapiContext>
+    ![A great rabbit](https://rabbit.org/graphics/fun/netbunnies/jellybean1-brennan1.jpg)">
+                    <responses>
+                        <response status="200">
+                            <content>
+                                <values>
+                                    <value name="application/json">
+                                        <values>
+                                            <value name="schema">
+                                                <values>
+                                                    <value name="type">object</value>
+                                                    <value name="properties">
+                                                        <values>
+                                                            <value name="name">
+                                                                <values>
+                                                                    <value name="type">string</value>
+                                                                </values>
+                                                            </value>
+                                                            <value name="description">
+                                                                <values>
+                                                                    <value name="type">string</value>
+                                                                </values>
+                                                            </value>
+                                                        </values>
+                                                    </value>
+                                                </values>
+                                            </value>
+                                        </values>
+                                    </value>
+                                </values>
+                            </content>
+                        </response>
+                    </responses>
+                </openapi>
             </operation>
         </operations>
     </resource>

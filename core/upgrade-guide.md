@@ -15,6 +15,14 @@ api_platform:
 This will be the default value in 3.0, in 2.7 it's left to `true` so that nothing breaks by updating.
 By doing so you won't get access to legacy services and this will probably break things on code using `api-platform/core:2.6`.
 
+In 3.0, in conformance with the JSON Merge Patch RFC, the default value of the `skip_null_values` property is `true` which means that from now on `null` values are omitted during serialization.
+```yaml
+api_platform:
+  defaults:
+    normalization_context:
+      skip_null_values: true
+```
+
 ### I'm Migrating From 2.6 and Want to Prepare For 3.0
 
 1. Update the code to 2.7: `composer require api-platform/core:^2.7`

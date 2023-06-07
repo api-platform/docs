@@ -26,7 +26,7 @@ use Symfony\Component\Validator\Constraints as Assert; // Symfony's built-in con
  * A product.
  *
  */
-#[ORM\Entity] 
+#[ORM\Entity]
 #[ApiResource]
 class Product
 {
@@ -41,7 +41,7 @@ class Product
      * @var string[] Describe the product
      */
     #[MinimalProperties]
-    #[ORM\Column(type: 'json')] 
+    #[ORM\Column(type: 'json')]
     public $properties;
 
     // Getters and setters...
@@ -78,7 +78,7 @@ final class MinimalPropertiesValidator extends ConstraintValidator
 {
     public function validate($value, Constraint $constraint): void
     {
-        if (!array_diff(['description', 'price'], $value)) {
+        if (array_diff(['description', 'price'], $value)) {
             $this->context->buildViolation($constraint->message)->addViolation();
         }
     }
@@ -124,10 +124,10 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[ApiResource(validationContext: ['groups' => ['a', 'b']])]
 class Book
 {
-    #[Assert\NotBlank(groups: ['a'])]  
+    #[Assert\NotBlank(groups: ['a'])]
     public string $name;
 
-    #[Assert\NotNull(groups: ['b'])] 
+    #[Assert\NotNull(groups: ['b'])]
     public string $author;
 
     // ...
@@ -169,15 +169,15 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[Post(validationContext: ['groups' => ['Default', 'postValidation']])]
 class Book
 {
-    #[Assert\Uuid] 
+    #[Assert\Uuid]
     private $id;
 
-    #[Assert\NotBlank(groups: ['postValidation'])] 
+    #[Assert\NotBlank(groups: ['postValidation'])]
     public $name;
 
     #[Assert\NotNull]
     #[Assert\Length(min: 2, max: 50, groups: ['postValidation'])]
-    #[Assert\Length(min: 2, max: 70, groups: ['putValidation'])] 
+    #[Assert\Length(min: 2, max: 70, groups: ['putValidation'])]
     public $author;
 
     // ...
@@ -224,10 +224,10 @@ class Book
         return ['a'];
     }
 
-    #[Assert\NotBlank(groups: ['a'])] 
+    #[Assert\NotBlank(groups: ['a'])]
     public $name;
 
-    #[Assert\NotNull(groups: ['b'])] 
+    #[Assert\NotNull(groups: ['b'])]
     public $author;
 
     // ...
@@ -285,10 +285,10 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[ApiResource(validationContext: ['groups' => AdminGroupsGenerator::class])
 class Book
 {
-    #[Assert\NotBlank(groups: ['a'])] 
+    #[Assert\NotBlank(groups: ['a'])]
     public $name;
 
-    #[Assert\NotNull(groups: ['b'])] 
+    #[Assert\NotNull(groups: ['b'])]
     public $author;
 
     // ...
@@ -348,7 +348,7 @@ class Greeting
 
     /**
      * @var A nice person
-     * 
+     *
      * I want this "second" validation to be executed after the "first" one even though I wrote them in this order.
      * @One(groups={"second"})
      * @Two(groups={"first"})
@@ -517,7 +517,7 @@ Constraints                                                                     
 [`Isbn`](https://symfony.com/doc/current/reference/constraints/Isbn.html)             | `https://schema.org/isbn`          |
 [`Issn`](https://symfony.com/doc/current/reference/constraints/Issn.html)             | `https://schema.org/issn`          |
 
-## Specification property restrictions
+## Specification Property Restrictions
 
 API Platform generates specification property restrictions based on Symfony’s built-in validator.
 
@@ -549,7 +549,7 @@ final class CustomPropertySchemaRestriction implements PropertySchemaRestriction
         return $constraint instanceof CustomConstraint;
     }
 
-    public function create(Constraint $constraint, ApiProperty $propertyMetadata): array 
+    public function create(Constraint $constraint, ApiProperty $propertyMetadata): array
     {
       // your logic to create property schema restriction based on constraint
       return $restriction;
@@ -567,3 +567,52 @@ services:
     'App\PropertySchemaRestriction\CustomPropertySchemaRestriction': ~
         # Uncomment only if autoconfiguration is disabled
         #tags: [ 'api_platform.metadata.property_schema_restriction' ]
+```
+
+## Collecting Denormalization Errors
+
+When submitting data you can collect denormalization errors using the [COLLECT_DENORMALIZATION_ERRORS option](https://symfony.com/doc/current/components/serializer.html#collecting-type-errors-while-denormalizing).
+
+It can be done directly in the `#[ApiResource]` attribute (or in the operations):
+
+```php
+<?php
+// api/src/Entity/Book.php
+namespace App\Entity;
+
+use ApiPlatform\Metadata\ApiResource;
+
+#[ApiResource(
+    collectDenormalizationErrors: true
+)]
+class Book
+{
+    public ?bool $boolean;
+    public ?string $property1;
+}
+```
+
+If the submitted data has denormalization errors, the HTTP status code will be set to `422 Unprocessable Content` and the response body will contain the list of errors:
+
+```json
+{
+    "@context": "/api/contexts/ConstraintViolationList",
+    "@type": "ConstraintViolationList",
+    "hydra:title": "An error occurred",
+    "hydra:description": "boolean: This value should be of type bool.\nproperty1: This value should be of type string.",
+    "violations": [
+        {
+            "propertyPath": "boolean",
+            "message": "This value should be of type bool.",
+            "code": "0"
+        },
+        {
+            "propertyPath": "property1",
+            "message": "This value should be of type string.",
+            "code": "0"
+        }
+    ]
+}
+```
+
+You can also enable collecting of denormalization errors globally in the [Global Resources Defaults](https://api-platform.com/docs/core/configuration/#global-resources-defaults).
