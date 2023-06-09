@@ -36,6 +36,7 @@ docker compose exec php \
     bin/console make:factory 'App\Entity\Book'
 docker compose exec php \
     bin/console make:factory 'App\Entity\Review'
+```
 
 Improve the default values:
 
@@ -82,6 +83,7 @@ docker compose exec php \
     bin/console make:story 'DefaultBooks'
 docker compose exec php \
     bin/console make:story 'DefaultReviews'
+```
 
 ```php
 // src/Story/DefaultBooksStory.php
@@ -98,7 +100,6 @@ final class DefaultBooksStory extends Story
         BookFactory::createMany(100);
     }
 }
-
 ```
 
 ```php
