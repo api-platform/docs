@@ -197,3 +197,4 @@ API Platform supports the following identifier types:
 - `\Ramsey\Uuid\Uuid` (see [UuidNormalizer](https://github.com/api-platform/core/blob/main/src/RamseyUuid/UriVariableTransformer/UuidUriVariableTransformer.php))
 - `\Symfony\Component\Uid\Ulid` (see [UlidNormalizer](https://github.com/api-platform/core/blob/main/src/Symfony/UriVariableTransformer/UlidUriVariableTransformer.php))
 - `\Symfony\Component\Uid\Uuid` (see [UuidNormalizer](https://github.com/api-platform/core/blob/main/src/Symfony/UriVariableTransformer/UuidUriVariableTransformer.php))
+  `\Stringable` (essential when using composite identifiers from related resource classes)
