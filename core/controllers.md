@@ -502,5 +502,5 @@ book_post_publication:
     defaults:
         _controller: App\Controller\BookController::createPublication
         _api_resource_class: App\Entity\Book
-        _api_item_operation_name: post_publication
+        _api_operation_name: post_publication
 ```
