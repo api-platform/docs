@@ -138,7 +138,7 @@ Doctrine ORM and its bridge support most popular RDBMS including PostgreSQL, MyS
 There is also a shipped [Doctrine MongoDB ODM](https://www.doctrine-project.org/projects/mongodb-odm.html) optional support.
 
 That being said, keep in mind that API Platform is 100% independent of the persistence system. You can use the one(s) that
-best suit(s) your needs (including NoSQL databases or remote web services) by implementing the [right interfaces](../core/data-providers.md). API Platform even supports using several persistence
+best suit(s) your needs (including NoSQL databases or remote web services) by implementing the [right interfaces](../core/state-providers.md). API Platform even supports using several persistence
 systems together in the same project.
 
 ### Using Symfony CLI
@@ -348,7 +348,7 @@ The only remaining task to have a working API is to be able to query and persist
 
 To retrieve and save data, API Platform proposes two main options (and we can mix them):
 
-1. Writing our own [data providers](../core/data-providers.md) and [data persisters](../core/data-persisters.md) to fetch and save data in any persistence system and trigger our custom business logic. This is what we recommend if you want to separate the public data model exposed by the API from the internal one, and to implement a layered architecture such as Clean Architecture or Hexagonal Architecture;
+1. Writing our own [state providers](../core/state-providers.md) and [state processors](../core/state-processors.md) to fetch and save data in any persistence system and trigger our custom business logic. This is what we recommend if you want to separate the public data model exposed by the API from the internal one, and to implement a layered architecture such as Clean Architecture or Hexagonal Architecture;
 2. Using one of the various existing data providers and persisters allowing to automatically fetch and persist data using popular persistence libraries. Out of the box, data providers and persisters are provided for [Doctrine ORM](https://www.doctrine-project.org/projects/orm.html) and [Doctrine MongoDB ODM](../core/mongodb.md).
 A data provider (but no persister yet) is also available for [Elasticsearch](../core/elasticsearch.md). [Pomm](https://github.com/pomm-project/pomm-api-platform) and [PHP Extended SQL](https://github.com/soyuka/esql#api-platform-bridge) also provides data providers and persisters for API Platform. We recommend this approach for Rapid Application Development.
 

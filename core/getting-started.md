@@ -141,7 +141,7 @@ web API.
 
 If you are familiar with the Symfony ecosystem, you noticed that entity classes are also mapped with Doctrine ORM annotations
 and validation constraints from [the Symfony Validator Component](http://symfony.com/doc/current/book/validation.html).
-This isn't mandatory. You can use [your preferred persistence](data-providers.md) and [validation](validation.md) systems.
+This isn't mandatory. You can use [your preferred persistence](state-providers.md) and [validation](validation.md) systems.
 However, API Platform has built-in support for those libraries and is able to use them without requiring any specific
 code or configuration to automatically persist and validate your data. They are a good default option and we encourage you to use
 them unless you know what you are doing.
