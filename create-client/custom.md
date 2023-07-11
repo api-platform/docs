@@ -1,6 +1,6 @@
 # Custom Generator
 
-Create Client provides support for many of the popular JS frameworks, but you may be using another framework or language and may need a solution adapted to your specific needs. For this cenario, you can write your own generator and pass it to the CLI using a path as the `-g` argument.
+Create Client provides support for many of the popular JS frameworks, but you may be using another framework or language and may need a solution adapted to your specific needs. For this scenario, you can write your own generator and pass it to the CLI using a path as the `-g` argument.
 
 You will probably want to extend or, at least, take a look at [BaseGenerator.js](https://github.com/api-platform/create-client/blob/main/src/generators/BaseGenerator.js), since the library expects some methods to be available, as well as one of the [included generators](https://github.com/api-platform/create-client/blob/main/src/generators/BaseGenerator.j) to make your own.
 
