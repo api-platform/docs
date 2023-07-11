@@ -343,9 +343,8 @@ If you don't mind not having the last page available, you can enable partial pag
 ```yaml
 # api/config/packages/api_platform.yaml
 api_platform:
-    collection:
-        pagination:
-            partial: true # Disabled by default
+    defaults:
+        pagination_partial: true # Disabled by default
 ```
 
 More details are available on the [pagination documentation](pagination.md#partial-pagination).
