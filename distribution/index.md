@@ -761,7 +761,7 @@ Open `https://localhost/books/` in your browser:
 You can also choose to generate the code for a specific resource with the `--resource` argument (example:
 `pnpm create @api-platform/client --resource books`).
 
-The generated code contains a list (including pagination), a delete button, a creation and an editation form. It also includes
+The generated code contains a list (including pagination), a delete button, a creation and an edit form. It also includes
 [Tailwind CSS](https://tailwindcss.com) classes and [ARIA roles](https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA)
 to make the app usable by people with disabilities.
 
