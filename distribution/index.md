@@ -10,7 +10,7 @@
 
 ## Introduction
 
-API Platform contains [a **PHP** library (Core)](../core/index.md) to create fully featured hypermedia (or [GraphQL](../core/graphql.md)) web APIs supporting industry-leading standards: [JSON-LD](https://json-ld.org) with [Hydra](https://www.hydra-cg.com), [OpenAPI](../core/swagger.md)...
+API Platform contains [a **PHP** library (Core)](../core/index.md) to create fully featured hypermedia (or [GraphQL](../core/graphql.md)) web APIs supporting industry-leading standards: [JSON-LD](https://json-ld.org) with [Hydra](https://www.hydra-cg.com), [OpenAPI](../core/openapi.md)...
 
 API Platform also provides ambitious **JavaScript** tools to create web and mobile applications based on the most popular frontend technologies in a snap. These tools parse the documentation of the API (or of any other API supporting Hydra or OpenAPI).
 
