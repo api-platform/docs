@@ -526,7 +526,7 @@ Now, add a review for this book using the `POST` operation for the `Review` reso
 
 There are two interesting things to mention about this request:
 
-First, we learned how to work with relations. In a hypermedia API, every resource is identified by an (unique) [IRI](https://en.wikipedia.org/wiki/Internationalized_Resource_Identifier).
+First, we learned how to work with relations. In a hypermedia API, every resource is identified by a (unique) [IRI](https://en.wikipedia.org/wiki/Internationalized_Resource_Identifier).
 A URL is a valid IRI, and it's what API Platform uses. The `@id` property of every JSON-LD document contains the IRI identifying
 it. You can use this IRI to reference this document from other documents. In the previous request, we used the IRI of the
 book we created earlier to link it with the `Review` we were creating. API Platform is smart enough to deal with IRIs.
@@ -761,7 +761,7 @@ Open `https://localhost/books/` in your browser:
 You can also choose to generate the code for a specific resource with the `--resource` argument (example:
 `pnpm create @api-platform/client --resource books`).
 
-The generated code contains a list (including pagination), a delete button, a creation and an edition form. It also includes
+The generated code contains a list (including pagination), a delete button, a creation and an edit form. It also includes
 [Tailwind CSS](https://tailwindcss.com) classes and [ARIA roles](https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA)
 to make the app usable by people with disabilities.
 
