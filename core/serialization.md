@@ -1252,3 +1252,225 @@ final class Brand
 ```
 
 For reference please check [#1534](https://github.com/api-platform/core/pull/1534).
+
+### Return collection property as IRI
+
+When you have a relation between two resources that is a collection, by default API Platform returns a list of IRIs.
+If the serialization groups are sets in cascade, you can get a curated selection of fields for each embedded resources. But you don't always need it.  
+Although you could just discard the field from the group and let your consumers use the collection `GET` operation, it does not help to discover the relation between the two endpoints.
+
+Considering these two resources Brand and Car.
+
+```php
+<?php
+
+declare(strict_types=1);
+
+namespace App\Resource;
+
+use ApiPlatform\Metadata\ApiProperty;
+use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\Post;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
+
+#[
+    Get(normalizationContext: ['groups' => ['read']]), # GET /brands/{id}
+    GetCollection(normalizationContext: ['groups' => ['read']]), # GET /brands
+    Post # POST /brands
+]
+#[ORM\Entity]
+class Brand
+{
+    #[ORM\Id]
+    #[ORM\Column(type: 'integer')]
+    #[ORM\GeneratedValue]
+    private ?int $id = null;
+
+    #[Groups('read')]
+    #[ORM\OneToMany(mappedBy: 'brand', targetEntity: Car::class)]
+    private Collection $cars;
+    
+    /**
+     * @var array<int, Car> $conceptCars
+     */
+    #[Groups('read')]
+    private array $conceptCars = [];
+
+    public function __construct()
+    {
+        $this->cars = new ArrayCollection();
+    }
+
+    public function getId(): ?int
+    {
+        return $this->id;
+    }
+
+    /**
+     * @return Collection<int, Cars>
+     */
+    public function getCars(): Collection
+    {
+        return $this->cars;
+    }
+
+    public function addCar(Car $car): self
+    {
+        if (!$this->cars->contains($car)) {
+            $this->cars->add($car);
+            $car->setBrand($this);
+        }
+
+        return $this;
+    }
+
+    public function removeCar(Car $car): self
+    {
+        if ($this->cars->removeElement($car)) {
+            if ($car->getBrand() === $this) {
+                $car->setBrand(null);
+            }
+        }
+
+        return $this;
+    }
+    
+    /**
+     * @return array<int, Car>
+     */
+    public function getConceptCars(): array
+    {
+        $car = new Car();
+        $car->name = 'Ford Mystere';
+
+        $this->conceptCars[] = $car;
+
+        return $this->conceptCars;
+    }
+}
+```
+
+```php
+<?php
+
+declare(strict_types=1);
+
+namespace App\Resource;
+
+use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\Post;
+use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Validator\Constraints\NotBlank;
+
+#[
+    Get,
+    GetCollection, # GET /cars
+    GetCollection(
+        uriTemplate: '/brands/{brandId}/concept-cars',
+        uriVariables: [
+            'brandId' => new Link(fromProperty: 'brand', fromClass: Brand::class),
+        ]
+    ), # GET /brands/1/concept-cars
+    Post # POST /cars
+]
+#[ORM\Entity]
+class Car
+{
+    /**
+     * The entity ID.
+     */
+    #[ORM\Id]
+    #[ORM\Column(type: 'integer')]
+    #[ORM\GeneratedValue]
+    private ?int $id = null;
+
+    #[ORM\Column]
+    #[NotBlank]
+    #[Groups('read')]
+    public string $name = '';
+
+    #[ORM\ManyToOne(inversedBy: 'cars')]
+    private ?Brand $brand = null;
+
+    public function getId(): ?int
+    {
+        return $this->id ?? 9999;
+    }
+
+    public function getBrand(): ?Brand
+    {
+        return $this->brand;
+    }
+
+    public function setBrand(?Brand $brand): void
+    {
+        $this->brand = $brand;
+    }
+}
+```
+
+A GET request on `/brands/1` will produce this response:
+
+```json
+{
+    "@context": "/contexts/Brand",
+    "@id": "/brands/1",
+    "@type": "Brand",
+    "cars": [
+        {
+            "@id": "/cars/1",
+            "@type": "Car",
+            "name": "T Torpedo Roadster"
+        }
+    ], 
+    "conceptCars": [
+        {
+            "@id": "/cars/2",
+            "@type": "Car",
+            "name": "Ford Mystere"
+        }
+    ]  
+}
+```
+
+By using `ApiProperty::uriTemplate` option on iterable properties (**both classes must be marked as ApiResource**), you get the target resource `GetCollection` operation IRI.
+
+```php
+    #[Groups('read')]
+    #[ORM\OneToMany(mappedBy: 'brand', targetEntity: Car::class)]
+    #[ApiProperty(uriTemplate: '/cars')]
+    private Collection $cars;
+
+    /**
+     * @var array<int, Car> $conceptCars
+     */
+    #[Groups('read')]
+    #[ApiProperty(uriTemplate: '/brands/{brandId}/concept-cars')]
+    private array $conceptCars = [];
+```
+
+Will result in:
+
+```json
+{
+  "@context": "/contexts/Brand",
+  "@id": "/brands/1",
+  "@type": "Brand",
+  "cars": "/cars",
+  "conceptCars": "/brands/1/concept-cars"
+}
+```
+
+If API Platform does not find any `GetCollection` operation on the target resource, it will result in a `NotFoundException`.
+
+The **OpenAPI** documentation will set the properties as `read-only` of type `string` in the format `iri-reference` for `JSON-LD` and `HAL` formats.
+
+The **Hydra** documentation will set the properties as `hydra:Link` from the domain `#Brand` in the `#Car` range, with `hydra:readable` to `true` but `hydra:writable` to `false`.
+
+*Additional Note:* If you are using the default doctrine provider, this will prevent unnecessary sql join and related processing.  
