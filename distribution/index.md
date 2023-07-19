@@ -82,10 +82,10 @@ docker compose pull --include-deps
 Then build images and Start Docker Compose in detached mode:
 
 ```console
-docker compose up -d 
+docker compose up --wait 
 ```
 
-**Tip:** be sure that the ports `80`, `443` and `5432` of the host are not already in use. The usual offenders are Apache, NGINX and Postgres. If they are running, stop them and run `docker compose up -d` again.
+**Tip:** be sure that the ports `80`, `443` and `5432` of the host are not already in use. The usual offenders are Apache, NGINX and Postgres. If they are running, stop them and run `docker compose up --wait` again.
 
 This starts the following services:
 
@@ -101,8 +101,8 @@ The following components are available:
 | URL                        | Path               | Language   | Description             |
 |----------------------------|--------------------|------------|-------------------------|
 | `https://localhost/docs/`  | `api/`             | PHP        | The API                 |
-| `https://localhost/`       | `pwa/`             | JavaScript | The Next.js application |
-| `https://localhost/admin/` | `pwa/pages/admin/` | JavaScript | The Admin               |
+| `https://localhost/`       | `pwa/`             | TypeScript | The Next.js application |
+| `https://localhost/admin/` | `pwa/pages/admin/` | TypeScript | The Admin               |
 
 To see the container's logs, run:
 
@@ -186,7 +186,7 @@ And start the built-in PHP server:
 symfony serve
 ```
 
-All JavaScript components are also [available as standalone libraries](https://github.com/api-platform?language=javascript)
+All TypeScript components are also [available as standalone libraries](https://github.com/api-platform?language=typescript)
 installable with npm (or any other package manager).  
 
 **Note:** when installing API Platform this way, the API will be exposed at the `/api/` path. You need to open `http://localhost:8000/api/` to see the API documentation.
