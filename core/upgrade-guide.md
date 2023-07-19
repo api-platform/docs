@@ -241,3 +241,87 @@ Data transformers have been deprecated, instead you can still document the `outp
 Then, just handle the `input` in a custom [State Processor](./state-processors.md) or return another `output` in a custom [State Provider](./state-providers.md).
 
 The [dto documentation](./dto.md) has been adapted accordingly.
+
+## Custom controller
+
+Using the `Foo\Bar\MyController::myAction` notation has been deprecated when defining a custom controller on an operation.
+
+You can define your routing information directly in your controller (See the [Symfony Routing documentation](https://symfony.com/doc/current/routing.html) for more information).
+
+Alternatively, you can define an [invokable controller](https://www.php.net/manual/en/language.oop5.magic.php#object.invoke) as your operation custom controller.
+
+Before:
+
+```php
+<?php
+// api/src/Entity/Book.php
+namespace App\Entity;
+
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\Post;
+use App\Controller\BookController;
+
+#[ApiResource(types: ['https://schema.org/Book'], operations: [
+    new Get(),
+    new Post(name: 'publication', uriTemplate: '/books/{id}/publication', controller: BookController::class.'::createPublication')
+])]
+class Book
+{
+    // ...
+}
+```
+
+```php
+<?php
+// api/src/Controller/BookController.php
+namespace App\Controller;
+
+use App\Entity\Book;
+
+class BookController
+{
+    public function createPublication(Book $book): Response
+    {
+        ...
+    }
+}
+```
+
+After:
+
+```php
+<?php
+// api/src/Entity/Book.php
+namespace App\Entity;
+
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\Post;
+use App\Controller\CreateBookPublication;
+
+#[ApiResource(types: ['https://schema.org/Book'], operations: [
+    new Get(),
+    new Post(name: 'publication', uriTemplate: '/books/{id}/publication', controller: CreateBookPublication::class)
+])]
+class Book
+{
+    // ...
+}
+```
+
+```php
+<?php
+// api/src/Controller/CreateBookPublication.php
+namespace App\Controller;
+
+use App\Entity\Book;
+
+class CreateBookPublication
+{
+    public function __invoke(Book $book): Response
+    {
+        ...
+    }
+}
+```
