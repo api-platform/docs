@@ -103,7 +103,7 @@ class OpenApiFactory implements OpenApiFactoryInterface
 
 The impact on the swagger-ui is the following:
 
-![Swagger UI](core/images/swagger-ui-modified.png)
+![Swagger UI](images/swagger-ui-modified.png)
 
 ## Using the OpenAPI and Swagger Contexts
 
