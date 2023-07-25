@@ -21,7 +21,7 @@ This will provision an Ubuntu server with the latest versions of Docker and Dock
 
 For test purposes, cheapest plans will be enough, even though you might want at least 2GB of RAM to execute Docker Compose for the first time. For real production usage, you'll probably want to pick a plan in the "general purpose" section that will fit your needs.
 
-![Deploying a Symfony app on DigitalOcean with Docker Compose](digitalocean-droplet.png)
+![Deploying a Symfony app on DigitalOcean with Docker Compose](images/digitalocean-droplet.png)
 
 You can keep the defaults for other settings or tweak them according to your needs.
 Don't forget to add your SSH key or to create a password, then press the "Finalize and create" button.
@@ -49,7 +49,7 @@ your-domain-name.example.com.  IN  A     207.154.233.113
 
 Example in Gandi's UI:
 
-![Creating a DNS record at Gandi.net](gandi-dns.png)
+![Creating a DNS record at Gandi.net](images/gandi-dns.png)
 
 Note: Let's Encrypt, the service used by default by API Platform to automatically generate a TLS certificate, doesn't support using bare IP addresses.
 Using a domain name is mandatory to use Let's Encrypt.
