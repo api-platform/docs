@@ -6,7 +6,7 @@
 >
 > —Fabien Potencier (creator of Symfony)
 
-[API Platform](https://api-platform.com) is a powerful yet easy to use **full stack** framework dedicated to API-driven projects and implementing the [Jamstack](https://jamstack.org/) architecture.
+[API Platform](https://api-platform.com) is a powerful yet easy-to-use **full stack** framework dedicated to API-driven projects and implementing the [Jamstack](https://jamstack.org/) architecture.
 
 ## Introduction
 
@@ -30,12 +30,12 @@ The easiest and most powerful way to get started is [to download the API Platfor
 
 To discover how the framework works, we will create an API to manage a bookshop.
 
-To create a fully featured API, an admin interface and a Progressive Web App using Next.js, all you need is to design **the public data
+To create a fully featured API, an admin interface, and a Progressive Web App using Next.js, all you need is to design **the public data
 model of our API** and handcraft it as *Plain Old PHP Objects*.
 
 API Platform uses these model classes to expose and document a web API having a bunch of built-in features:
 
-* creating, retrieving, updating and deleting (CRUD) resources
+* creating, retrieving, updating, and deleting (CRUD) resources
 * data validation
 * pagination
 * filtering
@@ -51,7 +51,7 @@ API Platform uses these model classes to expose and document a web API having a 
 
 One more thing, before we start: as the API Platform distribution includes [the Symfony framework](https://symfony.com),
 it is compatible with most [Symfony bundles](https://flex.symfony.com)
-(plugins) and benefits from [the numerous extensions points](../core/extending.md) provided by this rock-solid foundation (events, Dependency Injection Container...).
+(plugins) and benefits from [the numerous extension points](../core/extending.md) provided by this rock-solid foundation (events, Dependency Injection Container...).
 Adding features like custom or service-oriented API endpoints, JWT or OAuth authentication, HTTP caching, mail sending or
 asynchronous jobs to your APIs is straightforward.
 
@@ -73,26 +73,26 @@ Similarly, on Windows, only [Docker for Windows](https://docs.docker.com/docker-
 Open a terminal, and navigate to the directory containing your project skeleton. Run the following command to start all
 services using [Docker Compose](https://docs.docker.com/compose/):
 
-Download the latest versions of the images:
+Build the images:
 
 ```console
-docker compose pull --include-deps
+docker compose build --no-cache --pull
 ```
 
-Then build images and Start Docker Compose in detached mode:
+Then, start Docker Compose in detached mode:
 
 ```console
 docker compose up --wait 
 ```
 
-**Tip:** be sure that the ports `80`, `443` and `5432` of the host are not already in use. The usual offenders are Apache, NGINX and Postgres. If they are running, stop them and run `docker compose up --wait` again.
+**Tip:** Be sure that the ports `80`, `443`, and `5432` of the host are not already in use. The usual offenders are Apache, NGINX, and Postgres. If they are running, stop them and run `docker compose up --wait` again.
 
 This starts the following services:
 
 | Name     | Description                                                                                                                                                                  |
 |----------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | caddy    | [Caddy web server](caddy.md) with the [Mercure](../core/mercure.md) (real-time and async) and [Vulcain](https://vulcain.rocks) (relations preloading) modules |
-| php      | The API with PHP 8, Composer and sensitive configs                                                                                                                           |
+| php      | The API with PHP 8, Composer, and sensitive configs                                                                                                                           |
 | pwa      | Next.js project compatible with Create Client and having Admin preinstalled                                                                                                     |
 | database | PostgreSQL database server                                                                                                                                                   |
 
@@ -122,11 +122,11 @@ you'll get auto-completion for almost everything and awesome quality analysis.
 
 [PHP IntelliSense for Visual Studio Code](https://marketplace.visualstudio.com/items?itemName=zobo.php-intellisense) also works well, and is free and open source.
 
-The API Platform distribution comes with a dummy entity for test purpose: `api/src/Entity/Greeting.php`. We will remove
+The API Platform distribution comes with a dummy entity for test purposes: `api/src/Entity/Greeting.php`. We will remove
 it later.
 
 If you're used to the PHP ecosystem, you probably guessed that this test entity uses the industry-leading [Doctrine ORM](https://www.doctrine-project.org/projects/orm.html)
-library as persistence system. It is shipped, in the API Platform distribution.
+library as a persistence system. It is shipped, in the API Platform distribution.
 
 Doctrine ORM is the easiest way to persist and query data in an API Platform project thanks to the bridge shipped with the
 distribution, but it's also entirely optional, and [you may prefer to plug your own persistence system](../core/design.md).
@@ -134,7 +134,7 @@ distribution, but it's also entirely optional, and [you may prefer to plug your 
 The Doctrine Bridge is optimized for performance and development convenience. For instance, when using Doctrine, API Platform
 is able to automatically optimize the generated SQL queries by adding the appropriate `JOIN` clauses. It also provides a
 lot of powerful [built-in filters](../core/filters.md).
-Doctrine ORM and its bridge support most popular RDBMS including PostgreSQL, MySQL, MariaDB, SQL Server, Oracle and SQLite.
+Doctrine ORM and its bridge support the most popular RDBMS including PostgreSQL, MySQL, MariaDB, SQL Server, Oracle and SQLite.
 There is also a shipped [Doctrine MongoDB ODM](https://www.doctrine-project.org/projects/mongodb-odm.html) optional support.
 
 That being said, keep in mind that API Platform is 100% independent of the persistence system. You can use the one(s) that
@@ -744,7 +744,7 @@ occurs**.
 
 ## A Next.js Web App
 
-API Platform also has an awesome [client generator](../create-client/index.md) able to scaffold fully working Next.js, Nuxt.js, React/Redux, Vue.js, Quasar and Vuetify Progressive Web Apps that you can easily tune and customize. The generator also supports
+API Platform also has an awesome [client generator](../create-client/index.md) able to scaffold fully working Next.js, Nuxt.js, React/Redux, Vue.js, Quasar, and Vuetify Progressive Web Apps that you can easily tune and customize. The generator also supports
 [React Native](https://facebook.github.io/react-native/) if you prefer to leverage all capabilities of mobile devices.
 
 The distribution comes with a skeleton ready to welcome the [Next.js](https://nextjs.org/) flavor of the generated code. To bootstrap your app, run:
@@ -780,16 +780,16 @@ Then, there are many more features to learn! Read [the full documentation](../co
 and how to extend API Platform to fit your needs.
 API Platform is incredibly efficient for prototyping and Rapid Application Development (RAD), but the framework is mostly
 designed to create complex API-driven projects, far beyond simple CRUD apps. It benefits from [**strong extension points**](../core/extending.md)
-and it is **continuously optimized for [performance](../core/performance.md).** It powers numerous high traffic websites.
+and it is **continuously optimized for [performance](../core/performance.md).** It powers numerous high-traffic websites.
 
-API Platform has a built-in HTTP cache invalidation system which allows to make API Platform apps blazing fast using [Varnish](https://varnish-cache.org/). Read more in the chapter
+API Platform has a built-in HTTP cache invalidation system which allows making API Platform apps blazing fast using [Varnish](https://varnish-cache.org/). Read more in the chapter
 [API Platform Core Library: Enabling the Built-in HTTP Cache Invalidation System](../core/performance.md#enabling-the-built-in-http-cache-invalidation-system).
 
-Keep in mind that you can use your favorite client-side technology: API Platform provides generators for popular JavaScript frameworks, but you can also use your preferred client-side technology including Angular, Ionic and Swift directly. Any language able to send HTTP
+Keep in mind that you can use your favorite client-side technology: API Platform provides generators for popular JavaScript frameworks, but you can also use your preferred client-side technology including Angular, Ionic, and Swift directly. Any language able to send HTTP
 requests is OK (even COBOL can do that).
 
 To go further, the API Platform team maintains a demo application showing more advanced use cases like leveraging serialization
-groups, user management or JWT and OAuth authentication. [Checkout the demo code source on GitHub](https://github.com/api-platform/demo)
+groups, user management, or JWT and OAuth authentication. [Checkout the demo code source on GitHub](https://github.com/api-platform/demo)
 and [browse it online](https://demo.api-platform.com).
 
 ## Screencasts
