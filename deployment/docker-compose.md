@@ -21,10 +21,10 @@ This will provision an Ubuntu server with the latest versions of Docker and Dock
 
 For test purposes, cheapest plans will be enough, even though you might want at least 2GB of RAM to execute Docker Compose for the first time. For real production usage, you'll probably want to pick a plan in the "general purpose" section that will fit your needs.
 
-![Deploying a Symfony app on DigitalOcean with Docker Compose](images/digitalocean-droplet.png)
+![Deploying an API Platform project on DigitalOcean with Docker Compose](images/digitalocean-droplet.png)
 
-You can keep the defaults for other settings or tweak them according to your needs.
-Don't forget to add your SSH key or to create a password, then press the "Finalize and create" button.
+You can keep the defaults for other settings, or tweak them according to your needs.
+Don't forget to add your SSH key or to create a password then press the "Finalize and create" button.
 
 Then, wait a few seconds while your Droplet is provisioning.
 When your Droplet is ready, use SSH to connect:
@@ -35,9 +35,8 @@ ssh root@<droplet-ip>
 
 ## Configuring a Domain Name
 
-In most cases, you'll want to associate a domain name with your website.
+In most cases, you'll want to associate a domain name to your website.
 If you don't own a domain name yet, you'll have to buy one through a registrar.
-Use [this affiliate link](https://gandi.link/f/93650337) to redeem a 20% discount at Gandi.net.
 
 Then create a DNS record of type `A` for your domain name pointing to the IP address of your server.
 
@@ -46,10 +45,6 @@ Example:
 ```dns
 your-domain-name.example.com.  IN  A     207.154.233.113
 ````
-
-Example in Gandi's UI:
-
-![Creating a DNS record at Gandi.net](images/gandi-dns.png)
 
 Note: Let's Encrypt, the service used by default by API Platform to automatically generate a TLS certificate, doesn't support using bare IP addresses.
 Using a domain name is mandatory to use Let's Encrypt.
@@ -72,17 +67,41 @@ Go into the directory containing your project (`<project-name>`), and start the 
 SERVER_NAME=your-domain-name.example.com \
 APP_SECRET=ChangeMe \
 POSTGRES_PASSWORD=ChangeMe \
-CADDY_MERCURE_JWT_SECRET=ChangeMe \
+CADDY_MERCURE_JWT_SECRET=ChangeThisMercureHubJWTSecretKey \
 docker compose -f docker-compose.yml -f docker-compose.prod.yml up --wait
 ```
 
-Be sure to replace `your-domain-name.example.com` with your actual domain name and to set the values of `APP_SECRET`, `CADDY_MERCURE_JWT_SECRET` to cryptographically secure random values.
+Be sure to replace `your-domain-name.example.com` by your actual domain name and to set the values of `APP_SECRET`, `CADDY_MERCURE_JWT_SECRET` to cryptographically secure random values.
 
 Your server is up and running, and a Let's Encrypt HTTPS certificate has been automatically generated for you.
 Go to `https://your-domain-name.example.com` and enjoy!
+
+## Disabling HTTPS
+
+Alternatively, if you don't want to expose an HTTPS server but only an HTTP one, run the following command:
+
+```console
+SERVER_NAME=:80 \
+APP_SECRET=ChangeMe \
+CADDY_MERCURE_JWT_SECRET=ChangeThisMercureHubJWTSecretKey \
+docker compose -f docker-compose.yml -f docker-compose.prod.yml up --wait
+```
 
 ## Deploying on Multiple Nodes
 
 If you want to deploy your app on a cluster of machines, we recommend using [Kubernetes](kubernetes.md).
 You can use [Docker Swarm](https://docs.docker.com/engine/swarm/stack-deploy/),
 which is compatible with the provided Compose files.
+
+## Configuring a Load Balancer or a Reverse Proxy
+
+Since Caddy 2.5, XFF values of incoming requests will be ignored to prevent spoofing.
+So if Caddy is not the first server being connected to by your clients (for example when a CDN is in front of Caddy), you may configure `trusted_proxies` with a list of IP ranges (CIDRs) from which incoming requests are trusted to have sent good values for these headers.
+As a shortcut, `private_ranges` may be configured to trust all private IP ranges.
+
+```diff
+-php_fastcgi unix//var/run/php/php-fpm.sock
++php_fastcgi unix//var/run/php/php-fpm.sock {
++    trusted_proxies private_ranges
++}
+```
