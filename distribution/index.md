@@ -76,13 +76,13 @@ services using [Docker Compose](https://docs.docker.com/compose/):
 Build the images:
 
 ```console
-docker compose build --no-cache --pull
+docker compose build --no-cache
 ```
 
 Then, start Docker Compose in detached mode:
 
 ```console
-docker compose up --wait 
+docker compose up --pull --wait 
 ```
 
 **Tip:** Be sure that the ports `80`, `443`, and `5432` of the host are not already in use. The usual offenders are Apache, NGINX, and Postgres. If they are running, stop them and run `docker compose up --wait` again.
