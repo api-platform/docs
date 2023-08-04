@@ -116,6 +116,20 @@ api_platform:
 # ...
 ```
 
+## Disabling the introspection query
+
+For security reason, the introspection query should be disabled to not expose the graphql schema.
+
+If you need to disable it, it can be done in the configuration:
+
+```yaml
+# api/config/packages/api_platform.yaml
+api_platform:
+    graphql:
+        introspection: false
+# ...
+```
+
 ## Request with `application/graphql` Content-Type
 
 If you wish to send a [POST request using the `application/graphql` Content-Type](https://graphql.org/learn/serving-over-http/#post-request),

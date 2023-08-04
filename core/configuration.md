@@ -147,6 +147,10 @@ api_platform:
             # Enabled by default with installed webonyx/graphql-php and Twig.
             enabled: false
 
+        introspection:
+            # Enabled by default with installed webonyx/graphql-php.
+            enabled: true
+
         # The nesting separator used in the filter names.
         nesting_separator: _
 
