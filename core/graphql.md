@@ -116,7 +116,7 @@ api_platform:
 # ...
 ```
 
-## Disabling the introspection query
+## Disabling the Introspection Query
 
 For security reason, the introspection query should be disabled to not expose the GraphQL schema.
 
