@@ -81,6 +81,13 @@ class Question
 }
 ```
 
+```yaml
+# api/config/api_platform/resources.yaml
+resources:
+    App\Entity\Answer: ~
+    App\Entity\Question: ~
+```
+
 ```xml
 <?xml version="1.0" encoding="UTF-8" ?>
 <!-- api/config/api_platform/resources.xml -->
@@ -129,6 +136,21 @@ class Answer
 }
 ```
 
+```yaml
+# api/config/api_platform/resources.yaml
+resources:
+    App\Entity\Answer:
+        uriTemplate: /questions/{id}/answer
+        uriVariable:
+            id:
+                fromClass: App\Entity\Question
+                fromProperty: answer
+        operations:
+            ApiPlatform\Metadata\Get: ~
+
+    App\Entity\Question: ~
+```
+
 ```xml
 <resources xmlns="https://api-platform.com/schema/metadata/resources-3.0"
            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -171,6 +193,19 @@ If we had a `relatedQuestions` property on the `Answer` we could retrieve the co
     ], 
     operations: [new GetCollection()]
 )]
+```
+
+```yaml
+# api/config/api_platform/resources.yaml
+resources:
+    App\Entity\Question:
+        uriTemplate: /answers/{id}/related_questions.{_format}
+        uriVariable:
+            id:
+                fromClass: App\Entity\Answer
+                fromProperty: relatedQuestions
+        operations:
+            ApiPlatform\Metadata\GetCollection: ~
 ```
 
 ```xml
