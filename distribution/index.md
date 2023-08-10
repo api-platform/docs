@@ -50,7 +50,7 @@ API Platform uses these model classes to expose and document a web API having a 
 * and basically everything needed to build modern APIs.
 
 One more thing, before we start: as the API Platform distribution includes [the Symfony framework](https://symfony.com),
-it is compatible with most [Symfony bundles](https://flex.symfony.com)
+it is compatible with most [Symfony bundles](https://symfony.com/bundles)
 (plugins) and benefits from [the numerous extension points](../core/extending.md) provided by this rock-solid foundation (events, Dependency Injection Container...).
 Adding features like custom or service-oriented API endpoints, JWT or OAuth authentication, HTTP caching, mail sending or
 asynchronous jobs to your APIs is straightforward.
@@ -59,7 +59,7 @@ asynchronous jobs to your APIs is straightforward.
 
 ### Using the API Platform Distribution (Recommended)
 
-Start by [downloading the API Platform distribution](https://github.com/api-platform/api-platform/releases/latest), or [generate a GitHub repository from the template we provide](https://github.com/api-platform/api-platform/generate).
+Start by [downloading the API Platform distribution](https://github.com/api-platform/api-platform/releases/latest), or [generate a GitHub repository from the template we provide](https://github.com/new?template_name=api-platform&template_owner=api-platform).
 You will add your own code and configuration inside this skeleton.
 
 **Note**: Avoid downloading the `.zip` archive, as it may cause potential [permission](https://github.com/api-platform/api-platform/issues/319#issuecomment-307037562) [issues](https://github.com/api-platform/api-platform/issues/777#issuecomment-412515342), prefer the `.tar.gz` archive.
@@ -450,7 +450,7 @@ docker compose exec php \
     bin/console make:entity --api-resource
 ```
 
-Doctrine's [annotations](https://www.doctrine-project.org/projects/doctrine-orm/en/latest/reference/annotations-reference.html) map these entities to tables in the database.
+Doctrine's [attributes](https://www.doctrine-project.org/projects/doctrine-orm/en/latest/reference/attributes-reference.html) map these entities to tables in the database.
 Mapping through [attributes](https://www.doctrine-project.org/projects/doctrine-orm/en/latest/reference/attributes-reference.html) is also supported, if you prefer those.
 Both methods are convenient as they allow grouping the code and the configuration but, if you want to decouple classes from their metadata, you can switch to XML or YAML mappings.
 They are supported as well.
@@ -722,7 +722,7 @@ You can also try things a bit more complex:
 ```
 
 The GraphQL implementation supports [queries](https://graphql.org/learn/queries/), [mutations](https://graphql.org/learn/queries/#mutations),
-[100% of the Relay server specification](https://facebook.github.io/relay/docs/en/graphql-server-specification.html), pagination,
+[100% of the Relay server specification](https://relay.dev/docs/guides/graphql-server-specification/), pagination,
 [filters](../core/filters.md) and [access control rules](../core/security.md).
 You can use it with the popular [RelayJS](https://facebook.github.io/relay/) and [Apollo](https://www.apollographql.com/docs/react/)
 clients.
