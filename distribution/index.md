@@ -724,7 +724,7 @@ You can also try things a bit more complex:
 The GraphQL implementation supports [queries](https://graphql.org/learn/queries/), [mutations](https://graphql.org/learn/queries/#mutations),
 [100% of the Relay server specification](https://relay.dev/docs/guides/graphql-server-specification/), pagination,
 [filters](../core/filters.md) and [access control rules](../core/security.md).
-You can use it with the popular [RelayJS](https://facebook.github.io/relay/) and [Apollo](https://www.apollographql.com/docs/react/)
+You can use it with the popular [RelayJS](https://relay.dev) and [Apollo](https://www.apollographql.com/docs/react/)
 clients.
 
 ## The Admin
