@@ -11,12 +11,11 @@ API Platform uses [Doctrine MongoDB ODM 2](https://www.doctrine-project.org/proj
 its [aggregation builder](https://www.doctrine-project.org/projects/doctrine-mongodb-odm/en/latest/reference/aggregation-builder.html)
 to leverage all the possibilities of the database.
 
-Doctrine MongoDB ODM 2 relies on the [mongodb](https://secure.php.net/manual/en/set.mongodb.php) PHP extension and not on
-the legacy [mongo](https://secure.php.net/manual/en/book.mongo.php) extension.
+Doctrine MongoDB ODM 2 relies on the [mongodb](https://www.php.net/manual/en/set.mongodb.php) PHP extension.
 
 ## Enabling MongoDB Support
 
-If the `mongodb` PHP extension is not installed yet, [install it beforehand](https://secure.php.net/manual/en/mongodb.installation.pecl.php).
+If the `mongodb` PHP extension is not installed yet, [install it beforehand](https://www.php.net/manual/en/mongodb.installation.pecl.php).
 
 If you are using the [API Platform Distribution](../distribution/index.md), modify the `Dockerfile` to add the extension:
 
