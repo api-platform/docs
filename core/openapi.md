@@ -2,6 +2,8 @@
 
 API Platform natively support the [OpenAPI](https://www.openapis.org/) API specification format.
 
+For the full list of availables configurations, please refer to the [OpenAPI Specifications](https://spec.openapis.org/oas/latest.html). The current doc page only give some examples but focus mostly on the openapi integration inside ApiPlatform without telling you all you can pass into the attributes.
+
 ![Screenshot](../distribution/images/swagger-ui-1.png)
 
 <p align="center" class="symfonycasts"><a href="https://symfonycasts.com/screencast/api-platform/open-api-spec?cid=apip"><img src="../distribution/images/symfonycasts-player.png" alt="OpenAPI screencast"><br>Watch the OpenAPI screencast</a></p>
