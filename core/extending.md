@@ -1,6 +1,6 @@
 # Extending API Platform
 
-Because it handles the complex, tedious and repetitive task of creating an API infrastructure for you, API Platform lets you focus on what matter the most for the end user: the business logic.
+Because it handles the complex, tedious and repetitive task of creating an API infrastructure for you, API Platform lets you focus on what matters the most for the end user: the business logic.
 To do so, API Platform provides a lot of extension points you can use to hook your own code.
 Those extensions points are taken into account both by the REST and [GraphQL](graphql.md) subsystems.
 

@@ -36,7 +36,7 @@ yarn add isomorphic-unfetch formik react-query
 ```
 
 The generated HTML will contain [Tailwind CSS](https://tailwindcss.com) classes.
-Optionnaly, [follow the Tailwind installation guide for NextJS projects](https://tailwindcss.com/docs/guides/nextjs)
+Optionally, [follow the Tailwind installation guide for NextJS projects](https://tailwindcss.com/docs/guides/nextjs)
 (Tailwind is preinstalled in [the API Platform distribution](../distribution/index.md))
 
 ## Generating Routes

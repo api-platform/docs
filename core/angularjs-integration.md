@@ -5,7 +5,7 @@ Warning: for a new project, you should consider using [the API Platform's Progre
 
 ## Restangular
 
-API Platform works fine with [AngularJS v1](http://angularjs.org). The popular [Restangular](https://github.com/mgonto/restangular)
+API Platform works fine with [AngularJS v1](https://angularjs.org/). The popular [Restangular](https://github.com/mgonto/restangular)
 REST client library for Angular can easily be configured to handle the API format.
 
 Here is a working Restangular config:

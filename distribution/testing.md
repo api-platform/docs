@@ -365,7 +365,7 @@ Running your test suite in your [CI/CD pipeline](https://en.wikipedia.org/wiki/C
 
 The API Platform distribution is [shipped with a GitHub Actions workflow](https://github.com/api-platform/api-platform/blob/main/.github/workflows/ci.yml) that builds the Docker images, does a [smoke test](https://en.wikipedia.org/wiki/Smoke_testing_(software)) to check that the application's entrypoint is accessible, and runs PHPUnit.
 
-The API Platform Demo [contains a CD worklow](https://github.com/api-platform/demo/tree/main/.github/workflows) that uses [the Helm chart provided with the distribution](../deployment/kubernetes.md) to deploy the app on a Kubernetes cluster.
+The API Platform Demo [contains a CD workflow](https://github.com/api-platform/demo/tree/main/.github/workflows) that uses [the Helm chart provided with the distribution](../deployment/kubernetes.md) to deploy the app on a Kubernetes cluster.
 
 ## Additional and Alternative Testing Tools
 
@@ -375,7 +375,7 @@ You may also be interested in these alternative testing tools (not included in t
 * [Foundry](https://github.com/zenstruck/foundry), a modern fixtures library that will replace Alice as the recommended fixtures library soon;
 * [Hoppscotch](https://docs.hoppscotch.io/documentation/features/rest-api-testing/), create functional test for your API
   Platform project using a nice UI, benefit from its Swagger integration and run tests in the CI using [the command-line tool](https://docs.hoppscotch.io/cli);
-* [Behat](http://behat.org), a
+* [Behat](https://behat.org), a
   [behavior-driven development (BDD)](https://en.wikipedia.org/wiki/Behavior-driven_development) framework to write the API
   specification as user stories and in natural language then execute these scenarios against the application to validate
   its behavior;

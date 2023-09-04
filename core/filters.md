@@ -9,7 +9,7 @@ by the library.
 
 By default, all filters are disabled. They must be enabled explicitly.
 
-When a filter is enabled, it automatically appears in the [OpenAPI](swagger.md) and [GraphQL](graphql.md) documentations.
+When a filter is enabled, it automatically appears in the [OpenAPI](openapi.md) and [GraphQL](graphql.md) documentations.
 It is also automatically documented as a `hydra:search` property for JSON-LD responses.
 
 <p align="center" class="symfonycasts"><a href="https://symfonycasts.com/screencast/api-platform/filters?cid=apip"><img src="../distribution/images/symfonycasts-player.png" alt="Filtering and Searching screencast"><br>Watch the Filtering & Searching screencast</a>
@@ -1416,10 +1416,10 @@ class AndOperatorFilterExtension implements RequestBodySearchCollectionExtension
 
 ### Using Doctrine ORM Filters
 
-Doctrine ORM features [a filter system](http://docs.doctrine-project.org/projects/doctrine-orm/en/latest/reference/filters.html) that allows the developer to add SQL to the conditional clauses of queries, regardless of the place where the SQL is generated (e.g. from a DQL query, or by loading associated entities).
+Doctrine ORM features [a filter system](https://www.doctrine-project.org/projects/doctrine-orm/en/latest/reference/filters.html) that allows the developer to add SQL to the conditional clauses of queries, regardless of the place where the SQL is generated (e.g. from a DQL query, or by loading associated entities).
 These are applied to collections and items and therefore are incredibly useful.
 
-The following information, specific to Doctrine filters in Symfony, is based upon [a great article posted on Michaël Perrin's blog](http://blog.michaelperrin.fr/2014/12/05/doctrine-filters/).
+The following information, specific to Doctrine filters in Symfony, is based upon [a great article posted on Michaël Perrin's blog](https://www.michaelperrin.fr/blog/2014/12/doctrine-filters).
 
 Suppose we have a `User` entity and an `Order` entity related to the `User` one. A user should only see his orders and no one else's.
 

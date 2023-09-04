@@ -22,9 +22,9 @@ Format                                                          | Format name  |
 ----------------------------------------------------------------|--------------|-------------------------------|----------------------------------------
 [JSON-LD](https://json-ld.org)                                  | `jsonld`     | `application/ld+json`         | yes
 [GraphQL](graphql.md)                                           | n/a          | n/a                           | yes
-[JSON:API](http://jsonapi.org/)                                 | `jsonapi`    | `application/vnd.api+json`    | yes
+[JSON:API](https://jsonapi.org/)                                | `jsonapi`    | `application/vnd.api+json`    | yes
 [HAL](https://stateless.group/hal_specification.html)           | `jsonhal`    | `application/hal+json`        | yes
-[YAML](http://yaml.org/)                                        | `yaml`       | `application/x-yaml`          | no
+[YAML](https://yaml.org/)                                       | `yaml`       | `application/x-yaml`          | no
 [CSV](https://tools.ietf.org/html/rfc4180)                      | `csv`        | `text/csv`                    | no
 [HTML](https://whatwg.org/) (API docs)                          | `html`       | `text/html`                   | no
 [XML](https://www.w3.org/XML/)                                  | `xml`        | `application/xml`, `text/xml` | no
@@ -119,7 +119,7 @@ Additionally the `csv` format is added with the MIME type `text/csv`.
 It is also important to notice that the usage of this attribute will override the formats defined in the configuration, therefore
 this configuration might disable the `json` or the `html` on this resource for example.
 
-You can specify different accepted formats at operation level too, it's especially convenient for to configure formats available for the `PATCH` method:
+You can specify different accepted formats at operation level too, it's especially convenient to configure formats available for the `PATCH` method:
 
 [codeSelector]
 
@@ -183,7 +183,7 @@ resources:
 ## Supporting Custom Formats
 
 The API Platform content negotiation system is extendable.
-You can add support for formats not available by default by creating custom normalizer and encoders.
+You can add support for formats not available by default by creating custom normalizers and encoders.
 Refer to the Symfony documentation to learn [how to create and register such classes](https://symfony.com/doc/current/serializer.html#adding-normalizers-and-encoders).
 
 Then, register the new format in the configuration:

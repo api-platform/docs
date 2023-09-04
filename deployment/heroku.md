@@ -13,7 +13,7 @@ Edition.*
 
 If you don't already have one, [create an account on Heroku](https://signup.heroku.com/signup/dc). Then install [the Heroku
 toolbelt](https://devcenter.heroku.com/articles/getting-started-with-php#set-up). We're guessing you already
-have a working install of [Composer](http://getcomposer.org). Perfect, we will need it.
+have a working install of [Composer](https://getcomposer.org/). Perfect, we will need it.
 
 Create a new [API Platform project](distribution/index.md) which will be used in the rest of this example.
 

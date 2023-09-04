@@ -129,7 +129,7 @@ Browse [the configuration documentation](configuration.md).
 
 The Cardinality Extractor is a standalone tool (also used internally by the generator) extracting a property's cardinality.
 It extracts cardinality described with the [Web Ontology Language (OWL)](https://en.wikipedia.org/wiki/Web_Ontology_Language) vocabulary
-or in [GoodRelations](http://www.heppnetz.de/projects/goodrelations/).
+or in [GoodRelations](https://www.heppnetz.de/projects/goodrelations/).
 When cardinality cannot be automatically extracted, its value is set to `unknown`.
 
 Usage:

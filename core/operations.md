@@ -57,10 +57,10 @@ for large projects - to define operations explicitly.
 Keep in mind that once you explicitly set up an operation, the automatically registered CRUD will no longer be.
 If you declare even one operation manually, such as `#[GET]`, you must declare the others manually as well if you need them.
 
-Operations can be configured using annotations, XML or YAML. In the following examples, we enable only the built-in operation
+Operations can be configured using attributes, XML or YAML. In the following examples, we enable only the built-in operation
 for the `GET` method for both `collection` and `item` to create a readonly endpoint.
 
-If the operation's name matches a supported HTTP methods (`GET`, `POST`, `PUT`, `PATCH` or `DELETE`), the corresponding `method` property
+If the operation's name matches a supported HTTP method (`GET`, `POST`, `PUT`, `PATCH` or `DELETE`), the corresponding `method` property
 will be automatically added.
 
 Note: The `#[GetCollection]` attribute is an alias for `#[Get(collection: true)]`
@@ -564,7 +564,7 @@ class Weather
     // ...
 ```
 
-This will expose the `Weather` model, but also all the default CRUD routes: `GET`, `PUT`, `PATCH`, `DELETE` and `POST`, which is a non-sense in our context.
+This will expose the `Weather` model, but also all the default CRUD routes: `GET`, `PUT`, `PATCH`, `DELETE` and `POST`, which is nonsense in our context.
 Since we are required to expose at least one route, let's expose just one:
 
 ```php

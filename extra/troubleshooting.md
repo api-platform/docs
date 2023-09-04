@@ -28,7 +28,7 @@ You can change the port to be used in the `docker-compose.yml` file (default is 
 
 ## Using API Platform and JMS Serializer in the same project
 
-For the latest versions of [JMSSerializerBundle](http://jmsyst.com/bundles/JMSSerializerBundle), there is no conflict so everything should work out of the box.
+For the latest versions of [JMSSerializerBundle](https://jmsyst.com/bundles/JMSSerializerBundle), there is no conflict so everything should work out of the box.
 
 If you are still using the old, unmaintained v1 of JMSSerializerBundle, the best way would be to [upgrade to v2](https://github.com/schmittjoh/JMSSerializerBundle/blob/2.4.2/UPGRADING.md#upgrading-from-1x-to-20) of JMSSerializerBundle.
 
