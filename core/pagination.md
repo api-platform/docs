@@ -9,7 +9,7 @@ The activation of the pagination and the number of elements per page can be conf
 * the server-side (globally or per resource)
 * the client-side, via a custom GET parameter (disabled by default)
 
-When issuing a `GET` request on a collection containing more than 1 page (here `/books`), a [Hydra collection](http://www.hydra-cg.com/spec/latest/core/#collections)
+When issuing a `GET` request on a collection containing more than 1 page (here `/books`), a [Hydra collection](https://www.hydra-cg.com/spec/latest/core/#collections)
 is returned. It's a valid JSON(-LD) document containing items of the requested page and metadata.
 
 ```json

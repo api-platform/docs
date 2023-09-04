@@ -3,7 +3,7 @@
 ![Screencast](images/admin-demo.gif)
 
 API Platform Admin is a tool to automatically create a beautiful (Material Design) and fully-featured administration interface
-for any API supporting [the Hydra Core Vocabulary](http://www.hydra-cg.com/), exposing an [OpenAPI documentation](https://www.openapis.org/)
+for any API supporting [the Hydra Core Vocabulary](https://www.hydra-cg.com/), exposing an [OpenAPI documentation](https://www.openapis.org/)
 or other API specification formats supported by [`@api-platform/api-doc-parser`](https://github.com/api-platform/api-doc-parser).
 
 API Platform Admin is the perfect companion of APIs created

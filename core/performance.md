@@ -154,7 +154,7 @@ class Book
 ## Enabling the Metadata Cache
 
 Computing metadata used by the bundle is a costly operation. Fortunately, metadata can be computed once and then cached.
-API Platform internally uses a [PSR-6](http://www.php-fig.org/psr/psr-6/) cache. If the Symfony Cache component is available
+API Platform internally uses a [PSR-6](https://www.php-fig.org/psr/psr-6/) cache. If the Symfony Cache component is available
 (the default in the API Platform distribution), it automatically enables support for the best cache adapter available.
 
 Best performance is achieved using [APCu](https://github.com/krakjoe/apcu). Be sure to have the APCu extension installed
@@ -173,9 +173,9 @@ Keep in mind that PPM is still in an early stage of development and can cause is
 
 When using the `SearchFilter` and case insensitivity, Doctrine will use the `LOWER` SQL function. Depending on your
 driver, you may want to carefully index it by using a [function-based
-index](http://use-the-index-luke.com/sql/where-clause/functions/case-insensitive-search) or it will impact performance
+index](https://use-the-index-luke.com/sql/where-clause/functions/case-insensitive-search) or it will impact performance
 with a huge collection. [Here are some examples to index LIKE
-filters](http://use-the-index-luke.com/sql/where-clause/searching-for-ranges/like-performance-tuning) depending on your
+filters](https://use-the-index-luke.com/sql/where-clause/searching-for-ranges/like-performance-tuning) depending on your
 database driver.
 
 ### Eager Loading

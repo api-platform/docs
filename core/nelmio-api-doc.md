@@ -1,6 +1,6 @@
 # NelmioApiDocBundle Integration
 
-NelmioApiDoc provides an alternative to [the native Swagger/Open API support](swagger.md) provided by API Platform.
+NelmioApiDoc provides an alternative to [the native Swagger/Open API support](openapi.md) provided by API Platform.
 
 As NelmioApiDocBundle 3+ has built-in support for API Platform, this documentation is only relevant for people using
 NelmioApiDocBundle between version 2.9 and 3.0.

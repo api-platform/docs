@@ -43,7 +43,7 @@ class BooksTest extends ApiTestCase
 
 Refer to [the Symfony HttpClient documentation](https://symfony.com/doc/current/components/http_client.html) to discover all the features of the client (custom headers, JSON encoding and decoding, HTTP Basic and Bearer authentication and cookies support, among other things).
 
-Note that you can create your own test case class extending the ApiTestCase. For example to set up a Json Web Token authentification:
+Note that you can create your own test case class extending the ApiTestCase. For example to set up a Json Web Token authentication:
 
 ```php
 <?php
@@ -162,7 +162,7 @@ class MyTest extends ApiTestCase
 }
 ```
 
-There is also a method to find the IRI matching a given resource and some criterias:
+There is also a method to find the IRI matching a given resource and some criteria:
 
 ```php
 <?php
@@ -186,7 +186,7 @@ class BooksTest extends ApiTestCase
 
 ## HTTP Test Assertions
 
-All tests assertions provided by Symfony (assertions for status codes, headers, cookies, XML documents...) can be used out of the box with the API Platform test client:
+All test assertions provided by Symfony (assertions for status codes, headers, cookies, XML documents...) can be used out of the box with the API Platform test client:
 
 ```php
 <?php

@@ -1,6 +1,6 @@
 # OpenAPI Specification Support (formerly Swagger)
 
-API Platform natively support the [OpenAPI](https://www.openapis.org/) API specification format.
+API Platform natively supports the [OpenAPI](https://www.openapis.org/) API specification format.
 
 ![Screenshot](../distribution/images/swagger-ui-1.png)
 

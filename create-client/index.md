@@ -1,7 +1,7 @@
 # API Platform Create Client
 
 Create Client is the fastest way to scaffold fully featured webapps
-and native mobile apps from APIs supporting the [Hydra](http://www.hydra-cg.com/) or [OpenAPI](https://www.openapis.org/) format.
+and native mobile apps from APIs supporting the [Hydra](https://www.hydra-cg.com/) or [OpenAPI](https://www.openapis.org/) format.
 
 ![Screencast](images/create-client-demo.gif)
 

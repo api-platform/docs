@@ -59,5 +59,5 @@ message in JSON format was being returned.
 ## Docker distribution on Windows and hot-reloading
 
 Due to [a long-time known Docker for Windows issue](https://forums.docker.com/t/file-system-watch-does-not-work-with-mounted-volumes/12038),
-the files changes on the host are not notified on the `pwa` container.
+the file changes on the host are not notified on the `pwa` container.
 It causes the hot-reloading feature to not working properly for Windows users.
