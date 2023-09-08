@@ -208,7 +208,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
 #[Put(normalizationContext: ['groups' => ['put']])]
 class Book
 {
-    #[Groups(['get', 'put'])
+    #[Groups(['get', 'put'])]
     public $name;
 
     #[Groups('get')]
