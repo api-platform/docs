@@ -2,7 +2,7 @@
 
 API Platform natively support the [OpenAPI](https://www.openapis.org/) API specification format.
 
-For the full list of availables configurations, please refer to the [OpenAPI Specifications](https://spec.openapis.org/oas/latest.html). The current doc page only give some examples but focus mostly on the openapi integration inside ApiPlatform without telling you all you can pass into the attributes.
+For the full list of available configurations, please refer to the [OpenAPI Specifications](https://spec.openapis.org/oas/latest.html). The current doc page only gives some examples but focuses mostly on the OpenAPI integration inside API Platform without telling you all you can pass into the attributes.
 
 ![Screenshot](../distribution/images/swagger-ui-1.png)
 
