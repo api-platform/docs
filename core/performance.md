@@ -20,11 +20,9 @@ cache. This ensures that the content served will always be fresh, because the ca
 most specific cases such as the invalidation of collections when a document is added or removed or for relationships and
 inverse relations is built-in.
 
-Integration with Varnish and Doctrine ORM is shipped with the core library, and [Varnish](https://varnish-cache.org/) is
-included in the Docker setup provided with the [API Platform distribution](../distribution/index.md). If you use the distribution,
-this feature works out of the box.
+Integration with Varnish and Doctrine ORM is shipped with the core library.
 
-If you don't use the distribution, add the following configuration to enable the cache invalidation system:
+Add the following configuration to enable the cache invalidation system:
 
 ```yaml
 api_platform:
@@ -40,7 +38,7 @@ api_platform:
             vary: ['Content-Type', 'Authorization', 'Origin']
 ```
 
-Support for reverse proxies other than Varnish can easily be added by implementing the `ApiPlatform\HttpCache\PurgerInterface`.
+Support for reverse proxies other than Varnish can be added by implementing the `ApiPlatform\HttpCache\PurgerInterface`.
 Two purgers are available, the http tags (`api_platform.http_cache.purger.varnish.ban`) or the surrogate key implementation
 (`api_platform.http_cache.purger.varnish.xkey`). You can specify the implementation using the `purger` configuration node,
 for example to use the xkey implementation:
