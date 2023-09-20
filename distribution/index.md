@@ -91,8 +91,7 @@ This starts the following services:
 
 | Name     | Description                                                                                                                                                                  |
 |----------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| caddy    | [Caddy web server](caddy.md) with the [Mercure](../core/mercure.md) (real-time and async) and [Vulcain](https://vulcain.rocks) (relations preloading) modules |
-| php      | The API with PHP 8, Composer, and sensitive configs                                                                                                                           |
+| php      | The API powered by [FrankenPHP](https://frankenphp.dev) (a modern application server for PHP built on top of [Caddy web server](caddy.md) and with native support for [Mercure realtime](../core/mercure.md), [Vulcain relations preloading](https://vulcain.rocks), and [XDebug](debugging.md)), Composer, and sensitive configs                                                                                                                           |
 | pwa      | Next.js project compatible with Create Client and having Admin preinstalled                                                                                                     |
 | database | PostgreSQL database server                                                                                                                                                   |
 
