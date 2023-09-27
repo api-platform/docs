@@ -79,9 +79,17 @@ const Admin = () => {
       </Head>
 
       <HydraAdmin dataProvider={dataProvider(setRedirectToLogin)} authProvider={authProvider} entrypoint={window.origin}>
-        <CustomRoutes>
-          {redirectToLogin ? <Route path="/" element={<RedirectToLogin />} /> : null}
-        </CustomRoutes>
+        {redirectToLogin ? (
+          <CustomRoutes>
+            <Route path="/" element={<RedirectToLogin />} />
+            <Route path="/:any" element={<RedirectToLogin />} />
+          </CustomRoutes>
+        ) : (
+          <>
+            <Resource name=".." list="..">
+            <Resource name=".." list="..">
+          </>
+        )}
       </HydraAdmin>
     </>
   );
