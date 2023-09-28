@@ -357,46 +357,46 @@ To configure Blackfire.io follow these simple steps:
 
 1. Add the following to your `docker-compose.override.yml` file:
 
-    ```yaml
-        blackfire:
-            image: blackfire/blackfire:2
-            environment:
-                # Exposes the host BLACKFIRE_SERVER_ID and TOKEN environment variables.
-                - BLACKFIRE_SERVER_ID
-                - BLACKFIRE_SERVER_TOKEN
-                - BLACKFIRE_DISABLE_LEGACY_PORT=1
-    ```
+```yaml
+    blackfire:
+        image: blackfire/blackfire:2
+        environment:
+            # Exposes the host BLACKFIRE_SERVER_ID and TOKEN environment variables.
+            - BLACKFIRE_SERVER_ID
+            - BLACKFIRE_SERVER_TOKEN
+            - BLACKFIRE_DISABLE_LEGACY_PORT=1
+```
 
 2. Add your Blackfire.io ID and server token to your `.env` file at the root of your project (be sure not to commit this to a public repository):
 
-    ```shell
-    BLACKFIRE_SERVER_ID=xxxxxxxxxx
-    BLACKFIRE_SERVER_TOKEN=xxxxxxxxxx
-    ```
+```shell
+BLACKFIRE_SERVER_ID=xxxxxxxxxx
+BLACKFIRE_SERVER_TOKEN=xxxxxxxxxx
+```
 
-    Or set it in the console before running Docker commands:
+Or set it in the console before running Docker commands:
 
-    ```shell
-    export BLACKFIRE_SERVER_ID=xxxxxxxxxx
-    export BLACKFIRE_SERVER_TOKEN=xxxxxxxxxx
-    ```
+```shell
+export BLACKFIRE_SERVER_ID=xxxxxxxxxx
+export BLACKFIRE_SERVER_TOKEN=xxxxxxxxxx
+```
 
 3. Install and configure the Blackfire probe in the app container, by adding the following to your `./Dockerfile`:
 
-    ```dockerfile
-            RUN version=$(php -r "echo PHP_MAJOR_VERSION.PHP_MINOR_VERSION;") \
-                && curl -A "Docker" -o /tmp/blackfire-probe.tar.gz -D - -L -s https://blackfire.io/api/v1/releases/probe/php/alpine/amd64/$version \
-                && mkdir -p /tmp/blackfire \
-                && tar zxpf /tmp/blackfire-probe.tar.gz -C /tmp/blackfire \                        
-                && mv /tmp/blackfire/blackfire-*.so $(php -r "echo ini_get('extension_dir');")/blackfire.so \
-                && printf "extension=blackfire.so\nblackfire.agent_socket=tcp://blackfire:8307\n" > $PHP_INI_DIR/conf.d/blackfire.ini
-    ```
+```dockerfile
+        RUN version=$(php -r "echo PHP_MAJOR_VERSION.PHP_MINOR_VERSION;") \
+            && curl -A "Docker" -o /tmp/blackfire-probe.tar.gz -D - -L -s https://blackfire.io/api/v1/releases/probe/php/alpine/amd64/$version \
+            && mkdir -p /tmp/blackfire \
+            && tar zxpf /tmp/blackfire-probe.tar.gz -C /tmp/blackfire \                        
+            && mv /tmp/blackfire/blackfire-*.so $(php -r "echo ini_get('extension_dir');")/blackfire.so \
+            && printf "extension=blackfire.so\nblackfire.agent_socket=tcp://blackfire:8307\n" > $PHP_INI_DIR/conf.d/blackfire.ini
+```
 
 4. Rebuild and restart all your containers
 
-    ```console
-    docker compose build
-    docker compose up --wait
-    ```
+```console
+docker compose build
+docker compose up --wait
+```
 
 For details on how to perform profiling, see [the Blackfire.io documentation](https://blackfire.io/docs/integrations/docker#using-the-client-for-http-profiling).
