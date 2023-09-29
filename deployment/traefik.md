@@ -2,7 +2,7 @@
 
 > An open-source reverse proxy and load balancer for HTTP and TCP-based applications that is easy, dynamic, automatic, fast, full-featured, production proven, provides metrics and integrates with every major cluster technology.
 >
-> —<https://traefik.io>
+> —[https://traefik.io](https://traefik.io)
 
 ## Basic Implementation
 

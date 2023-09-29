@@ -4,7 +4,7 @@ API Platform can automatically push the modified version of the resources expose
 
 > *Mercure* is a protocol allowing to push data updates to web browsers and other HTTP clients in a convenient, fast, reliable and battery-efficient way. It is especially useful to publish real-time updates of resources served through web APIs, to reactive web and mobile apps.
 >
-> —<https://mercure.rocks>
+> —(https://mercure.rocks)[https://mercure.rocks]
 
 API Platform detects changes made to your Doctrine entities, and sends the updated resources to the Mercure hub.
 Then, the Mercure hub dispatches the updates to all connected clients using [Server-sent Events (SSE)](https://developer.mozilla.org/en-US/docs/Web/API/Server-sent_events).
@@ -106,14 +106,14 @@ In addition to `private`, the following options are available:
 
 Use `iri` (iriConverter) and `escape` (rawurlencode) functions to add an alternative topic, in order to restrict a subscriber with `topic_selector` to receive only publications that are authorized (partner match).
 
-> Let's say that a subscriber wants to receive updates concerning all book resources it has access to. The subscriber can use the topic selector <https://example.com/books/{id}> as value of the topic query parameter.
+> Let's say that a subscriber wants to receive updates concerning all book resources it has access to. The subscriber can use the topic selector `https://example.com/books/{id}` as value of the topic query parameter.
 > Adding this same URI template to the mercure.subscribe claim of the JWS presented by the subscriber to the hub would allow this subscriber to receive all updates for all book resources. It is not what we want here: this subscriber is only authorized to access some of these resources.
 >
-> To solve this problem, the mercure.subscribe claim could contain a topic selector such as: <https://example.com/users/foo/{?topic}>.
+> To solve this problem, the mercure.subscribe claim could contain a topic selector such as: `https://example.com/users/foo/{?topic}`.
 >
-> The publisher could then take advantage of the previously described behavior by publishing a private update having <https://example.com/books/1> as canonical topic and <https://example.com/users/foo/?topic=https%3A%2F%2Fexample.com%2Fbooks%2F1> as alternate topic.
+> The publisher could then take advantage of the previously described behavior by publishing a private update having `https://example.com/books/1` as canonical topic and `https://example.com/users/foo/?topic=https%3A%2F%2Fexample.com%2Fbooks%2F1` as alternate topic.
 >
-> —<https://mercure.rocks/spec#subscribers>
+> —[https://mercure.rocks/spec#subscribers](https://mercure.rocks/spec#subscribers)
 
 Below is an example using the `topics` option:
 
