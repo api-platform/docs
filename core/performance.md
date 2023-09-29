@@ -201,6 +201,8 @@ public $foo;
 ...
 ```
 
+> **Warning**: in order to trigger the `EagerLoadingExtension` you must use [Serializer groups](serialization.md) on relations properties.
+
 #### Max Joins
 
 There is a default restriction with this feature. We allow up to 30 joins per query. Beyond that, an
