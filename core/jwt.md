@@ -12,10 +12,13 @@ API Platform allows to easily add a JWT-based authentication to your API using [
 
 We begin by installing the bundle:
 
+```
     $ docker-compose exec php composer require jwt-auth
+```
 
 Then we need to generate the public and private keys used for signing JWT tokens. If you're using the [API Platform distribution](../distribution/index.md), you may run this from the project's root directory:
 
+```
     $ docker-compose exec php sh -c '
         set -e
         apk add openssl
@@ -26,6 +29,7 @@ Then we need to generate the public and private keys used for signing JWT tokens
         setfacl -R -m u:www-data:rX -m u:"$(whoami)":rwX config/jwt
         setfacl -dR -m u:www-data:rX -m u:"$(whoami)":rwX config/jwt
     '
+```
 
 Note that the `setfacl` command relies on the `acl` package. This is installed by default when using the API Platform docker distribution but may need be installed in your working environment in order to execute the `setfacl` command.
 
