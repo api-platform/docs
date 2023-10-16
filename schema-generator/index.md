@@ -1,6 +1,6 @@
 # The Schema Generator
 
-`schema` is a command line tool part of [the API Platform framework](https://api-platform.com) that instantly generates a set
+`schema` is a command-line tool part of [the API Platform framework](https://api-platform.com) that instantly generates a set
 of PHP classes from [RDF](https://en.wikipedia.org/wiki/Resource_Description_Framework) vocabularies such as (but not limited to)
 [Schema.org](https://schema.org) or [ActivityStreams](https://www.w3.org/TR/activitystreams-core/).
 Alternatively, it can generate PHP classes from an [OpenAPI](https://www.openapis.org/) documentation.
