@@ -117,10 +117,10 @@ Note that your extensions should have a positive priority if defined. Internal e
 
 | Service name                                               | Priority | Class                                              |
 |------------------------------------------------------------|------|---------------------------------------------------------|
-| `api_platform.doctrine.orm.query_extension.eager_loading` (collection) | -8 | ApiPlatform\Doctrine\Orm\Extension\EagerLoadingExtension |
 | `api_platform.doctrine.orm.query_extension.eager_loading` (item) | -8 | ApiPlatform\Doctrine\Orm\Extension\EagerLoadingExtension |
 | `api_platform.doctrine.orm.query_extension.filter` | -16 | ApiPlatform\Doctrine\Orm\Extension\FilterExtension |
 | `api_platform.doctrine.orm.query_extension.filter_eager_loading` | -17 | ApiPlatform\Doctrine\Orm\Extension\FilterEagerLoadingExtension |
+| `api_platform.doctrine.orm.query_extension.eager_loading` (collection) | -18 | ApiPlatform\Doctrine\Orm\Extension\EagerLoadingExtension |
 | `api_platform.doctrine.orm.query_extension.order` | -32 | ApiPlatform\Doctrine\Orm\Extension\OrderExtension |
 | `api_platform.doctrine.orm.query_extension.pagination` | -64 | ApiPlatform\Doctrine\Orm\Extension\PaginationExtension |
 
