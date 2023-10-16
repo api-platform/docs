@@ -6,11 +6,11 @@
 >
 > —Fabien Potencier (creator of Symfony)
 
-[API Platform](https://api-platform.com) is a powerful yet easy to use **full stack** framework dedicated to API-driven projects and implementing the [Jamstack](https://jamstack.org/) architecture.
+[API Platform](https://api-platform.com) is a powerful yet easy-to-use **full stack** framework dedicated to API-driven projects and implementing the [Jamstack](https://jamstack.org/) architecture.
 
 ## Introduction
 
-API Platform contains [a **PHP** library (Core)](../core/index.md) to create fully featured hypermedia (or [GraphQL](../core/graphql.md)) web APIs supporting industry-leading standards: [JSON-LD](https://json-ld.org) with [Hydra](https://www.hydra-cg.com), [OpenAPI](../core/swagger.md)...
+API Platform contains [a **PHP** library (Core)](../core/index.md) to create fully featured hypermedia (or [GraphQL](../core/graphql.md)) web APIs supporting industry-leading standards: [JSON-LD](https://json-ld.org) with [Hydra](https://www.hydra-cg.com), [OpenAPI](../core/openapi.md)...
 
 API Platform also provides ambitious **JavaScript** tools to create web and mobile applications based on the most popular frontend technologies in a snap. These tools parse the documentation of the API (or of any other API supporting Hydra or OpenAPI).
 
@@ -20,7 +20,7 @@ The easiest and most powerful way to get started is [to download the API Platfor
 
 * the API skeleton, including [the Core library](../core/index.md), [the Symfony framework](https://symfony.com/) ([optional](../core/bootstrap.md)) and [the Doctrine ORM](https://www.doctrine-project.org/projects/orm.html) ([optional](../core/extending.md))
 * [the client scaffolding tool](../create-client/) to generate [Next.js](../create-client/
-) web applications from the API documentation ([Nuxt.js](https://nuxtjs.org/), [Vue](https://vuejs.org/), [Create React App](https://reactjs.org), [React Native](https://facebook.github.io/react-native/), [Quasar](https://quasar.dev/) and [Vuetify](https://vuetifyjs.com/) are also supported)
+) web applications from the API documentation ([Nuxt](https://nuxt.com/), [Vue](https://vuejs.org/), [Create React App](https://reactjs.org), [React Native](https://facebook.github.io/react-native/), [Quasar](https://quasar.dev/) and [Vuetify](https://vuetifyjs.com/) are also supported)
 * [a beautiful admin interface](../admin/), built on top of React Admin, dynamically created by parsing the API documentation
 * all you need to [create real-time and async APIs using the Mercure protocol](../core/mercure.md)
 * a [Docker](../deployment/docker-compose.md) definition to start a working development environment in a single command, providing containers for the API and the Next.js web application
@@ -30,12 +30,12 @@ The easiest and most powerful way to get started is [to download the API Platfor
 
 To discover how the framework works, we will create an API to manage a bookshop.
 
-To create a fully featured API, an admin interface and a Progressive Web App using Next.js, all you need is to design **the public data
+To create a fully featured API, an admin interface, and a Progressive Web App using Next.js, all you need is to design **the public data
 model of our API** and handcraft it as *Plain Old PHP Objects*.
 
 API Platform uses these model classes to expose and document a web API having a bunch of built-in features:
 
-* creating, retrieving, updating and deleting (CRUD) resources
+* creating, retrieving, updating, and deleting (CRUD) resources
 * data validation
 * pagination
 * filtering
@@ -50,8 +50,8 @@ API Platform uses these model classes to expose and document a web API having a 
 * and basically everything needed to build modern APIs.
 
 One more thing, before we start: as the API Platform distribution includes [the Symfony framework](https://symfony.com),
-it is compatible with most [Symfony bundles](https://flex.symfony.com)
-(plugins) and benefits from [the numerous extensions points](../core/extending.md) provided by this rock-solid foundation (events, Dependency Injection Container...).
+it is compatible with most [Symfony bundles](https://symfony.com/bundles)
+(plugins) and benefits from [the numerous extension points](../core/extending.md) provided by this rock-solid foundation (events, Dependency Injection Container...).
 Adding features like custom or service-oriented API endpoints, JWT or OAuth authentication, HTTP caching, mail sending or
 asynchronous jobs to your APIs is straightforward.
 
@@ -59,7 +59,7 @@ asynchronous jobs to your APIs is straightforward.
 
 ### Using the API Platform Distribution (Recommended)
 
-Start by [downloading the API Platform distribution](https://github.com/api-platform/api-platform/releases/latest), or [generate a GitHub repository from the template we provide](https://github.com/api-platform/api-platform/generate).
+Start by [downloading the API Platform distribution](https://github.com/api-platform/api-platform/releases/latest), or [generate a GitHub repository from the template we provide](https://github.com/new?template_name=api-platform&template_owner=api-platform).
 You will add your own code and configuration inside this skeleton.
 
 **Note**: Avoid downloading the `.zip` archive, as it may cause potential [permission](https://github.com/api-platform/api-platform/issues/319#issuecomment-307037562) [issues](https://github.com/api-platform/api-platform/issues/777#issuecomment-412515342), prefer the `.tar.gz` archive.
@@ -73,26 +73,26 @@ Similarly, on Windows, only [Docker for Windows](https://docs.docker.com/docker-
 Open a terminal, and navigate to the directory containing your project skeleton. Run the following command to start all
 services using [Docker Compose](https://docs.docker.com/compose/):
 
-Download the latest versions of the images:
+Build the images:
 
 ```console
-docker compose pull --include-deps
+docker compose build --no-cache
 ```
 
-Then build images and Start Docker Compose in detached mode:
+Then, start Docker Compose in detached mode:
 
 ```console
-docker compose up -d 
+docker compose up --pull --wait 
 ```
 
-**Tip:** be sure that the ports `80`, `443` and `5432` of the host are not already in use. The usual offenders are Apache, NGINX and Postgres. If they are running, stop them and run `docker compose up -d` again.
+**Tip:** Be sure that the ports `80`, `443`, and `5432` of the host are not already in use. The usual offenders are Apache, NGINX, and Postgres. If they are running, stop them and run `docker compose up --wait` again.
 
 This starts the following services:
 
 | Name     | Description                                                                                                                                                                  |
 |----------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | caddy    | [Caddy web server](caddy.md) with the [Mercure](../core/mercure.md) (real-time and async) and [Vulcain](https://vulcain.rocks) (relations preloading) modules |
-| php      | The API with PHP 8, Composer and sensitive configs                                                                                                                           |
+| php      | The API with PHP 8, Composer, and sensitive configs                                                                                                                           |
 | pwa      | Next.js project compatible with Create Client and having Admin preinstalled                                                                                                     |
 | database | PostgreSQL database server                                                                                                                                                   |
 
@@ -101,8 +101,8 @@ The following components are available:
 | URL                        | Path               | Language   | Description             |
 |----------------------------|--------------------|------------|-------------------------|
 | `https://localhost/docs/`  | `api/`             | PHP        | The API                 |
-| `https://localhost/`       | `pwa/`             | JavaScript | The Next.js application |
-| `https://localhost/admin/` | `pwa/pages/admin/` | JavaScript | The Admin               |
+| `https://localhost/`       | `pwa/`             | TypeScript | The Next.js application |
+| `https://localhost/admin/` | `pwa/pages/admin/` | TypeScript | The Admin               |
 
 To see the container's logs, run:
 
@@ -122,11 +122,11 @@ you'll get auto-completion for almost everything and awesome quality analysis.
 
 [PHP IntelliSense for Visual Studio Code](https://marketplace.visualstudio.com/items?itemName=zobo.php-intellisense) also works well, and is free and open source.
 
-The API Platform distribution comes with a dummy entity for test purpose: `api/src/Entity/Greeting.php`. We will remove
+The API Platform distribution comes with a dummy entity for test purposes: `api/src/Entity/Greeting.php`. We will remove
 it later.
 
 If you're used to the PHP ecosystem, you probably guessed that this test entity uses the industry-leading [Doctrine ORM](https://www.doctrine-project.org/projects/orm.html)
-library as persistence system. It is shipped, in the API Platform distribution.
+library as a persistence system. It is shipped, in the API Platform distribution.
 
 Doctrine ORM is the easiest way to persist and query data in an API Platform project thanks to the bridge shipped with the
 distribution, but it's also entirely optional, and [you may prefer to plug your own persistence system](../core/design.md).
@@ -134,11 +134,11 @@ distribution, but it's also entirely optional, and [you may prefer to plug your 
 The Doctrine Bridge is optimized for performance and development convenience. For instance, when using Doctrine, API Platform
 is able to automatically optimize the generated SQL queries by adding the appropriate `JOIN` clauses. It also provides a
 lot of powerful [built-in filters](../core/filters.md).
-Doctrine ORM and its bridge support most popular RDBMS including PostgreSQL, MySQL, MariaDB, SQL Server, Oracle and SQLite.
+Doctrine ORM and its bridge support the most popular RDBMS including PostgreSQL, MySQL, MariaDB, SQL Server, Oracle and SQLite.
 There is also a shipped [Doctrine MongoDB ODM](https://www.doctrine-project.org/projects/mongodb-odm.html) optional support.
 
 That being said, keep in mind that API Platform is 100% independent of the persistence system. You can use the one(s) that
-best suit(s) your needs (including NoSQL databases or remote web services) by implementing the [right interfaces](../core/data-providers.md). API Platform even supports using several persistence
+best suit(s) your needs (including NoSQL databases or remote web services) by implementing the [right interfaces](../core/state-providers.md). API Platform even supports using several persistence
 systems together in the same project.
 
 ### Using Symfony CLI
@@ -186,10 +186,10 @@ And start the built-in PHP server:
 symfony serve
 ```
 
-All JavaScript components are also [available as standalone libraries](https://github.com/api-platform?language=javascript)
+All TypeScript components are also [available as standalone libraries](https://github.com/api-platform?language=typescript)
 installable with npm (or any other package manager).  
 
-**Note:** when installing API Platform this way, the API will be exposed as the `/api/` path. You need to open `http://localhost:8000/api/` to see the API documentation.
+**Note:** when installing API Platform this way, the API will be exposed at the `/api/` path. You need to open `http://localhost:8000/api/` to see the API documentation.
 If you are deploying API Platform directly on an Apache or NGINX webserver and getting a 404 error on opening this link, you will need to enable the [rewriting rules](https://symfony.com/doc/current/setup/web_server_configuration.html) for your specific webserver software.
 
 ## It's Ready
@@ -329,11 +329,11 @@ Reload `https://localhost/docs/`: API Platform used these classes to generate an
 
 Operations available for our 2 resource types appear in the UI. We can also see the awesome [Web Debug Toolbar](https://symfonycasts.com/screencast/symfony/profiler?cid=apip).
 
-Note that entities' and properties' descriptions in the API documentation, and that API Platform use PHP types to generate the appropriate JSON Schemas.
+Note that the entities' and properties' descriptions are present in the API documentation, and that API Platform uses PHP types to generate the appropriate JSON Schemas.
 
 ![Bookshop JSON Schemas](images/api-platform-2.6-bookshop-json-schemas.png)
 
-The framework also use these metadata to serialize and deserialize data from JSON (and other formats) to PHP objects (back and forth)!
+The framework also uses these metadata to serialize and deserialize data from JSON (and other formats) to PHP objects (back and forth)!
 
 For the sake of simplicity, in this example we used public properties (except for the ID, see below). API Platform (as well
 as Symfony and Doctrine) also supports accessor methods (getters/setters), use them if you want to.
@@ -348,7 +348,7 @@ The only remaining task to have a working API is to be able to query and persist
 
 To retrieve and save data, API Platform proposes two main options (and we can mix them):
 
-1. Writing our own [data providers](../core/data-providers.md) and [data persisters](../core/data-persisters.md) to fetch and save data in any persistence system and trigger our custom business logic. This is what we recommend if you want to separate the public data model exposed by the API from the internal one, and to implement a layered architecture such as Clean Architecture or Hexagonal Architecture;
+1. Writing our own [state providers](../core/state-providers.md) and [state processors](../core/state-processors.md) to fetch and save data in any persistence system and trigger our custom business logic. This is what we recommend if you want to separate the public data model exposed by the API from the internal one, and to implement a layered architecture such as Clean Architecture or Hexagonal Architecture;
 2. Using one of the various existing data providers and persisters allowing to automatically fetch and persist data using popular persistence libraries. Out of the box, data providers and persisters are provided for [Doctrine ORM](https://www.doctrine-project.org/projects/orm.html) and [Doctrine MongoDB ODM](../core/mongodb.md).
 A data provider (but no persister yet) is also available for [Elasticsearch](../core/elasticsearch.md). [Pomm](https://github.com/pomm-project/pomm-api-platform) and [PHP Extended SQL](https://github.com/soyuka/esql#api-platform-bridge) also provides data providers and persisters for API Platform. We recommend this approach for Rapid Application Development.
 
@@ -450,7 +450,7 @@ docker compose exec php \
     bin/console make:entity --api-resource
 ```
 
-Doctrine's [annotations](https://www.doctrine-project.org/projects/doctrine-orm/en/latest/reference/annotations-reference.html) map these entities to tables in the database.
+Doctrine's [attributes](https://www.doctrine-project.org/projects/doctrine-orm/en/latest/reference/attributes-reference.html) map these entities to tables in the database.
 Mapping through [attributes](https://www.doctrine-project.org/projects/doctrine-orm/en/latest/reference/attributes-reference.html) is also supported, if you prefer those.
 Both methods are convenient as they allow grouping the code and the configuration but, if you want to decouple classes from their metadata, you can switch to XML or YAML mappings.
 They are supported as well.
@@ -526,7 +526,7 @@ Now, add a review for this book using the `POST` operation for the `Review` reso
 
 There are two interesting things to mention about this request:
 
-First, we learned how to work with relations. In a hypermedia API, every resource is identified by an (unique) [IRI](https://en.wikipedia.org/wiki/Internationalized_Resource_Identifier).
+First, we learned how to work with relations. In a hypermedia API, every resource is identified by a (unique) [IRI](https://en.wikipedia.org/wiki/Internationalized_Resource_Identifier).
 A URL is a valid IRI, and it's what API Platform uses. The `@id` property of every JSON-LD document contains the IRI identifying
 it. You can use this IRI to reference this document from other documents. In the previous request, we used the IRI of the
 book we created earlier to link it with the `Review` we were creating. API Platform is smart enough to deal with IRIs.
@@ -722,9 +722,9 @@ You can also try things a bit more complex:
 ```
 
 The GraphQL implementation supports [queries](https://graphql.org/learn/queries/), [mutations](https://graphql.org/learn/queries/#mutations),
-[100% of the Relay server specification](https://facebook.github.io/relay/docs/en/graphql-server-specification.html), pagination,
+[100% of the Relay server specification](https://relay.dev/docs/guides/graphql-server-specification/), pagination,
 [filters](../core/filters.md) and [access control rules](../core/security.md).
-You can use it with the popular [RelayJS](https://facebook.github.io/relay/) and [Apollo](https://www.apollographql.com/docs/react/)
+You can use it with the popular [RelayJS](https://relay.dev) and [Apollo](https://www.apollographql.com/docs/react/)
 clients.
 
 ## The Admin
@@ -744,7 +744,7 @@ occurs**.
 
 ## A Next.js Web App
 
-API Platform also has an awesome [client generator](../create-client/index.md) able to scaffold fully working Next.js, Nuxt.js, React/Redux, Vue.js, Quasar and Vuetify Progressive Web Apps that you can easily tune and customize. The generator also supports
+API Platform also has an awesome [client generator](../create-client/index.md) able to scaffold fully working Next.js, Nuxt.js, React/Redux, Vue.js, Quasar, and Vuetify Progressive Web Apps that you can easily tune and customize. The generator also supports
 [React Native](https://facebook.github.io/react-native/) if you prefer to leverage all capabilities of mobile devices.
 
 The distribution comes with a skeleton ready to welcome the [Next.js](https://nextjs.org/) flavor of the generated code. To bootstrap your app, run:
@@ -761,7 +761,7 @@ Open `https://localhost/books/` in your browser:
 You can also choose to generate the code for a specific resource with the `--resource` argument (example:
 `pnpm create @api-platform/client --resource books`).
 
-The generated code contains a list (including pagination), a delete button, a creation and an edition form. It also includes
+The generated code contains a list (including pagination), a delete button, a creation and an edit form. It also includes
 [Tailwind CSS](https://tailwindcss.com) classes and [ARIA roles](https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA)
 to make the app usable by people with disabilities.
 
@@ -780,16 +780,16 @@ Then, there are many more features to learn! Read [the full documentation](../co
 and how to extend API Platform to fit your needs.
 API Platform is incredibly efficient for prototyping and Rapid Application Development (RAD), but the framework is mostly
 designed to create complex API-driven projects, far beyond simple CRUD apps. It benefits from [**strong extension points**](../core/extending.md)
-and it is **continuously optimized for [performance](../core/performance.md).** It powers numerous high traffic websites.
+and it is **continuously optimized for [performance](../core/performance.md).** It powers numerous high-traffic websites.
 
-API Platform has a built-in HTTP cache invalidation system which allows to make API Platform apps blazing fast using [Varnish](https://varnish-cache.org/). Read more in the chapter
+API Platform has a built-in HTTP cache invalidation system which allows making API Platform apps blazing fast using [Varnish](https://varnish-cache.org/). Read more in the chapter
 [API Platform Core Library: Enabling the Built-in HTTP Cache Invalidation System](../core/performance.md#enabling-the-built-in-http-cache-invalidation-system).
 
-Keep in mind that you can use your favorite client-side technology: API Platform provides generators for popular JavaScript frameworks, but you can also use your preferred client-side technology including Angular, Ionic and Swift directly. Any language able to send HTTP
+Keep in mind that you can use your favorite client-side technology: API Platform provides generators for popular JavaScript frameworks, but you can also use your preferred client-side technology including Angular, Ionic, and Swift directly. Any language able to send HTTP
 requests is OK (even COBOL can do that).
 
 To go further, the API Platform team maintains a demo application showing more advanced use cases like leveraging serialization
-groups, user management or JWT and OAuth authentication. [Checkout the demo code source on GitHub](https://github.com/api-platform/demo)
+groups, user management, or JWT and OAuth authentication. [Checkout the demo code source on GitHub](https://github.com/api-platform/demo)
 and [browse it online](https://demo.api-platform.com).
 
 ## Screencasts

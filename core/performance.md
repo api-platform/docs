@@ -343,9 +343,8 @@ If you don't mind not having the last page available, you can enable partial pag
 ```yaml
 # api/config/packages/api_platform.yaml
 api_platform:
-    collection:
-        pagination:
-            partial: true # Disabled by default
+    defaults:
+        pagination_partial: true # Disabled by default
 ```
 
 More details are available on the [pagination documentation](pagination.md#partial-pagination).
@@ -397,7 +396,7 @@ To configure Blackfire.io follow these simple steps:
 
     ```console
     docker compose build
-    docker compose up -d
+    docker compose up --wait
     ```
 
 For details on how to perform profiling, see [the Blackfire.io documentation](https://blackfire.io/docs/integrations/docker#using-the-client-for-http-profiling).

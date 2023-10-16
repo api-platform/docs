@@ -81,6 +81,13 @@ class Question
 }
 ```
 
+```yaml
+# api/config/api_platform/resources.yaml
+resources:
+    App\Entity\Answer: ~
+    App\Entity\Question: ~
+```
+
 ```xml
 <?xml version="1.0" encoding="UTF-8" ?>
 <!-- api/config/api_platform/resources.xml -->
@@ -129,6 +136,21 @@ class Answer
 }
 ```
 
+```yaml
+# api/config/api_platform/resources.yaml
+resources:
+    App\Entity\Answer:
+        uriTemplate: /questions/{id}/answer
+        uriVariable:
+            id:
+                fromClass: App\Entity\Question
+                fromProperty: answer
+        operations:
+            ApiPlatform\Metadata\Get: ~
+
+    App\Entity\Question: ~
+```
+
 ```xml
 <resources xmlns="https://api-platform.com/schema/metadata/resources-3.0"
            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -171,6 +193,19 @@ If we had a `relatedQuestions` property on the `Answer` we could retrieve the co
     ], 
     operations: [new GetCollection()]
 )]
+```
+
+```yaml
+# api/config/api_platform/resources.yaml
+resources:
+    App\Entity\Question:
+        uriTemplate: /answers/{id}/related_questions.{_format}
+        uriVariable:
+            id:
+                fromClass: App\Entity\Answer
+                fromProperty: relatedQuestions
+        operations:
+            ApiPlatform\Metadata\GetCollection: ~
 ```
 
 ```xml
@@ -249,7 +284,7 @@ Now let's add the Company class:
 
 ```php
 <?php
-// api/src/Entity/Employee.php
+// api/src/Entity/Company.php
 namespace App\Entity;
 
 use ApiPlatform\Metadata\ApiResource;
@@ -274,7 +309,7 @@ class Company
 }
 ```
 
-We did not define any Doctrine annotation here and if we want thinks to work properly with GraphQL, we need to map the `employees` field as a Link to the class `Employee` using the property `company`.
+We did not define any Doctrine annotation here and if we want things to work properly with GraphQL, we need to map the `employees` field as a Link to the class `Employee` using the property `company`.
 
 As a general rule, if the property we want to create a link from is in the `fromClass`, use `fromProperty`, if not, use `toProperty`.
 

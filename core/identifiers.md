@@ -108,7 +108,7 @@ final class UuidUriVariableTransformer implements UriVariableTransformerInterfac
      */
      public function transform($value, array $types, array $context = []) {
         try {
-            return Uuid::fromString($data);
+            return Uuid::fromString($value);
         } catch (InvalidUuidStringException $e) {
             throw new InvalidUriVariableException($e->getMessage());
         }
@@ -123,7 +123,13 @@ final class UuidUriVariableTransformer implements UriVariableTransformerInterfac
      */
     public function supportsTransformation($value, array $types, array $context = []): bool
     {
-        return is_a($type, Uuid::class, true);
+        foreach ($types as $type) {
+            if (is_a($type, Uuid::class, true)) {
+                return true;
+            }
+        }
+        
+        return false;
     }
 }
 ```
@@ -191,3 +197,4 @@ API Platform supports the following identifier types:
 - `\Ramsey\Uuid\Uuid` (see [UuidNormalizer](https://github.com/api-platform/core/blob/main/src/RamseyUuid/UriVariableTransformer/UuidUriVariableTransformer.php))
 - `\Symfony\Component\Uid\Ulid` (see [UlidNormalizer](https://github.com/api-platform/core/blob/main/src/Symfony/UriVariableTransformer/UlidUriVariableTransformer.php))
 - `\Symfony\Component\Uid\Uuid` (see [UuidNormalizer](https://github.com/api-platform/core/blob/main/src/Symfony/UriVariableTransformer/UuidUriVariableTransformer.php))
+  `\Stringable` (essential when using composite identifiers from related resource classes)
