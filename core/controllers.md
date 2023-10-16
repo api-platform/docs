@@ -240,7 +240,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
         name: 'publication', 
         uriTemplate: '/books/{id}/publication', 
         controller: CreateBookPublication::class, 
-        normalizationContext: ['groups' => 'publication']
+        normalizationContext: ['groups' => ['publication']],
     )
 ])]
 class Book
