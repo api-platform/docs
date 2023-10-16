@@ -46,7 +46,7 @@ The JMS Serializer service is available as `jms_serializer`.
 
 ## "upstream sent too big header while reading response header from upstream" NGINX 502 Error
 
-Some of your api calls fail with a 502 error and the logs for the api container shows the following error message `upstream sent too big header while reading response header from upstream`.
+Some of your API calls fail with a 502 error and the logs for the API container shows the following error message `upstream sent too big header while reading response header from upstream`.
 
 This can be due to the cache invalidation headers that are too big for NGINX. When you query the API, API Platform adds the IDs of all returned entities and their dependencies in the headers like so : `Cache-Tags: /entity/1,/dependent_entity/1,/entity/2`. This can overflow the default header size (4k) when your API gets larger and more complex.
 
