@@ -20,7 +20,7 @@ The easiest and most powerful way to get started is [to download the API Platfor
 
 * the API skeleton, including [the Core library](../core/index.md), [the Symfony framework](https://symfony.com/) ([optional](../core/bootstrap.md)) and [the Doctrine ORM](https://www.doctrine-project.org/projects/orm.html) ([optional](../core/extending.md))
 * [the client scaffolding tool](../create-client/) to generate [Next.js](../create-client/
-) web applications from the API documentation ([Nuxt](https://nuxt.com/), [Vue](https://vuejs.org/), [Create React App](https://reactjs.org), [React Native](https://facebook.github.io/react-native/), [Quasar](https://quasar.dev/) and [Vuetify](https://vuetifyjs.com/) are also supported)
+) web applications from the API documentation ([Nuxt](https://nuxt.com/), [Vue](https://vuejs.org/), [Create React App](https://reactjs.org), [React Native](https://reactnative.dev/), [Quasar](https://quasar.dev/) and [Vuetify](https://vuetifyjs.com/) are also supported)
 * [a beautiful admin interface](../admin/), built on top of React Admin, dynamically created by parsing the API documentation
 * all you need to [create real-time and async APIs using the Mercure protocol](../core/mercure.md)
 * a [Docker](../deployment/docker-compose.md) definition to start a working development environment in a single command, providing containers for the API and the Next.js web application
@@ -227,7 +227,7 @@ For instance, go to `https://localhost/greetings.jsonld` to retrieve the list of
 `https://localhost/greetings.json` to retrieve data in raw JSON.
 
 Of course, you can also use your favorite HTTP client to query the API.
-We are fond of [Postman](https://www.getpostman.com/). It works perfectly well with API Platform, has native OpenAPI support,
+We are fond of [Postman](https://www.postman.com/). It works perfectly well with API Platform, has native OpenAPI support,
 allows to easily write functional tests and has good team collaboration features.
 
 ## Bringing your Own Model
@@ -337,7 +337,7 @@ The framework also uses these metadata to serialize and deserialize data from JS
 
 For the sake of simplicity, in this example we used public properties (except for the ID, see below). API Platform (as well
 as Symfony and Doctrine) also supports accessor methods (getters/setters), use them if you want to.
-We used a private property and a getter for the ID to enforce the fact that it is read only (we will let the DBMS generating it). API Platform also has first-grade support for UUIDs. [You should
+We used a private property and a getter for the ID to enforce the fact that it is read only (we will let the DBMS generate it). API Platform also has first-grade support for UUIDs. [You should
 probably use them instead of auto-incremented IDs](https://www.clever-cloud.com/blog/engineering/2015/05/20/why-auto-increment-is-a-terrible-idea/).
 
 Because API Platform provides all the infrastructure for us, our API is almost ready!
@@ -356,7 +356,7 @@ Be sure to read the [General Design Considerations](../core/design.md) document 
 
 Here, we will use the built-in Doctrine ORM data provider in the rest of this tutorial.
 
-Modify the classes to map them to database tables using the annotations provided by the Doctrine ORM.
+Modify the classes to map them to database tables using the attributes provided by the Doctrine ORM.
 
 Modify these files as described in these patches:
 
@@ -469,7 +469,7 @@ docker compose exec php \
 ```
 
 The `php` container is where your API app stands. Prefixing a command by `docker compose exec php` allows executing the
-given command in this container. You may want [to create an alias](http://www.linfo.org/alias.html) to make your life easier.
+given command in this container. You may want [to create an alias](https://www.linfo.org/alias.html) to make your life easier.
 
 **We now have a working API with read and write capabilities!**
 
@@ -745,7 +745,7 @@ occurs**.
 ## A Next.js Web App
 
 API Platform also has an awesome [client generator](../create-client/index.md) able to scaffold fully working Next.js, Nuxt.js, React/Redux, Vue.js, Quasar, and Vuetify Progressive Web Apps that you can easily tune and customize. The generator also supports
-[React Native](https://facebook.github.io/react-native/) if you prefer to leverage all capabilities of mobile devices.
+[React Native](https://reactnative.dev/) if you prefer to leverage all capabilities of mobile devices.
 
 The distribution comes with a skeleton ready to welcome the [Next.js](https://nextjs.org/) flavor of the generated code. To bootstrap your app, run:
 

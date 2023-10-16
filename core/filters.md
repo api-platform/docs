@@ -9,7 +9,7 @@ by the library.
 
 By default, all filters are disabled. They must be enabled explicitly.
 
-When a filter is enabled, it automatically appears in the [OpenAPI](swagger.md) and [GraphQL](graphql.md) documentations.
+When a filter is enabled, it automatically appears in the [OpenAPI](openapi.md) and [GraphQL](graphql.md) documentations.
 It is also automatically documented as a `hydra:search` property for JSON-LD responses.
 
 <p align="center" class="symfonycasts"><a href="https://symfonycasts.com/screencast/api-platform/filters?cid=apip"><img src="../distribution/images/symfonycasts-player.png" alt="Filtering and Searching screencast"><br>Watch the Filtering & Searching screencast</a>
@@ -23,112 +23,112 @@ to a Resource in two ways:
 
 1. Through the resource declaration, as the `filters` attribute.
 
-   For example, having a filter service declaration in `services.yaml`:
+For example, having a filter service declaration in `services.yaml`:
 
-    ```yaml
-    # api/config/services.yaml
-    services:
+```yaml
+# api/config/services.yaml
+services:
+    # ...
+    offer.date_filter:
+        parent: 'api_platform.doctrine.orm.date_filter'
+        arguments: [ { dateProperty: ~ } ]
+        tags:  [ 'api_platform.filter' ]
+        # The following are mandatory only if a _defaults section is defined with inverted values.
+        # You may want to isolate filters in a dedicated file to avoid adding the following lines.
+        autowire: false
+        autoconfigure: false
+        public: false
+```
+
+Alternatively, you can choose to use a dedicated file to gather filters together:
+
+```yaml
+# api/config/filters.yaml
+services:
+    offer.date_filter:
+        parent: 'api_platform.doctrine.orm.date_filter'
+        arguments: [ { dateProperty: ~ } ]
+        tags:  [ 'api_platform.filter' ]
+```
+
+We're linking the filter `offer.date_filter` with the resource like this:
+
+[codeSelector]
+
+```php
+<?php
+// api/src/Entity/Offer.php
+namespace App\Entity;
+
+use ApiPlatform\Metadata\ApiResource;
+
+#[ApiResource(filters: ['offer.date_filter'])]
+class Offer
+{
+    // ...
+}
+```
+
+```yaml
+# api/config/api_platform/resources.yaml
+resources:
+    App\Entity\Offer:
+        operations:
+            ApiPlatform\Metadata\GetCollection:
+                filters: ['offer.date_filter']
         # ...
-        offer.date_filter:
-            parent: 'api_platform.doctrine.orm.date_filter'
-            arguments: [ { dateProperty: ~ } ]
-            tags:  [ 'api_platform.filter' ]
-            # The following are mandatory only if a _defaults section is defined with inverted values.
-            # You may want to isolate filters in a dedicated file to avoid adding the following lines.
-            autowire: false
-            autoconfigure: false
-            public: false
-    ```
+```
 
-    Alternatively, you can choose to use a dedicated file to gather filters together:
+```xml
+<?xml version="1.0" encoding="UTF-8" ?>
+<!-- api/config/api_platform/resources.xml -->
 
-    ```yaml
-    # api/config/filters.yaml
-    services:
-        offer.date_filter:
-            parent: 'api_platform.doctrine.orm.date_filter'
-            arguments: [ { dateProperty: ~ } ]
-            tags:  [ 'api_platform.filter' ]
-    ```
+<resources xmlns="https://api-platform.com/schema/metadata/resources-3.0"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="https://api-platform.com/schema/metadata/resources-3.0
+        https://api-platform.com/schema/metadata/resources-3.0.xsd">
+    <resource class="App\Entity\Offer">
+        <operations>
+            <operation class="ApiPlatform\Metadata\GetCollection">
+                <filters>
+                    <filter>offer.date_filter</filter>
+                </filters>
+            </operation>
+            <!-- ... -->
+        </operations>
+    </resource>
+</resources>
+```
 
-   We're linking the filter `offer.date_filter` with the resource like this:
-
-   [codeSelector]
-
-    ```php
-    <?php
-    // api/src/Entity/Offer.php
-    namespace App\Entity;
-
-    use ApiPlatform\Metadata\ApiResource;
-
-    #[ApiResource(filters: ['offer.date_filter'])]
-    class Offer
-    {
-        // ...
-    }
-    ```
-
-    ```yaml
-    # api/config/api_platform/resources.yaml
-    resources:
-        App\Entity\Offer:
-            operations:
-                ApiPlatform\Metadata\GetCollection:
-                    filters: ['offer.date_filter']
-            # ...
-    ```
-
-    ```xml
-    <?xml version="1.0" encoding="UTF-8" ?>
-    <!-- api/config/api_platform/resources.xml -->
-
-    <resources xmlns="https://api-platform.com/schema/metadata/resources-3.0"
-            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-            xsi:schemaLocation="https://api-platform.com/schema/metadata/resources-3.0
-            https://api-platform.com/schema/metadata/resources-3.0.xsd">
-        <resource class="App\Entity\Offer">
-            <operations>
-                <operation class="ApiPlatform\Metadata\GetCollection">
-                    <filters>
-                        <filter>offer.date_filter</filter>
-                    </filters>
-                </operation>
-                <!-- ... -->
-            </operations>
-        </resource>
-    </resources>
-    ```
-
-   [/codeSelector]
+[/codeSelector]
 
 2. By using the `#[ApiFilter]` attribute.
 
-   This attribute automatically declares the service, and you just have to use the filter class you want:
+This attribute automatically declares the service, and you just have to use the filter class you want:
 
-    ```php
-    <?php
-    // api/src/Entity/Offer.php
-    namespace App\Entity;
+```php
+<?php
+// api/src/Entity/Offer.php
+namespace App\Entity;
 
-    use ApiPlatform\Metadata\ApiFilter;
-    use ApiPlatform\Metadata\ApiResource;
-    use ApiPlatform\Doctrine\Orm\Filter\DateFilter;
+use ApiPlatform\Metadata\ApiFilter;
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Doctrine\Orm\Filter\DateFilter;
 
-    #[ApiResource]
-    #[ApiFilter(DateFilter::class, properties: ['dateProperty'])]
-    class Offer
-    {
-        // ...
-    }
-    ```
+#[ApiResource]
+#[ApiFilter(DateFilter::class, properties: ['dateProperty'])]
+class Offer
+{
+    // ...
+}
+```
 
-   Learn more on how the [ApiFilter attribute](filters.md#apifilter-attribute) works.
+Learn more on how the [ApiFilter attribute](filters.md#apifilter-attribute) works.
 
-   For the sake of consistency, we're using the attribute in the below documentation.
+For the sake of consistency, we're using the attribute in the below documentation.
 
-   For MongoDB ODM, all the filters are in the namespace `ApiPlatform\Doctrine\Odm\Filter`. The filter
-   services all begin with `api_platform.doctrine_mongodb.odm`.
+For MongoDB ODM, all the filters are in the namespace `ApiPlatform\Doctrine\Odm\Filter`. The filter
+services all begin with `api_platform.doctrine_mongodb.odm`.
 
 ### Search Filter
 
@@ -1416,10 +1416,10 @@ class AndOperatorFilterExtension implements RequestBodySearchCollectionExtension
 
 ### Using Doctrine ORM Filters
 
-Doctrine ORM features [a filter system](http://docs.doctrine-project.org/projects/doctrine-orm/en/latest/reference/filters.html) that allows the developer to add SQL to the conditional clauses of queries, regardless of the place where the SQL is generated (e.g. from a DQL query, or by loading associated entities).
+Doctrine ORM features [a filter system](https://www.doctrine-project.org/projects/doctrine-orm/en/latest/reference/filters.html) that allows the developer to add SQL to the conditional clauses of queries, regardless of the place where the SQL is generated (e.g. from a DQL query, or by loading associated entities).
 These are applied to collections and items and therefore are incredibly useful.
 
-The following information, specific to Doctrine filters in Symfony, is based upon [a great article posted on Michaël Perrin's blog](http://blog.michaelperrin.fr/2014/12/05/doctrine-filters/).
+The following information, specific to Doctrine filters in Symfony, is based upon [a great article posted on Michaël Perrin's blog](https://www.michaelperrin.fr/blog/2014/12/doctrine-filters).
 
 Suppose we have a `User` entity and an `Order` entity related to the `User` one. A user should only see his orders and no one else's.
 

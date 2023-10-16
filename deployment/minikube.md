@@ -2,9 +2,9 @@
 
 ## Install Minikube
 
-If you haven't an existing installation of Minikube on your computer, [follow the official tutorial](https://minikube.sigs.k8s.io/docs/start/).
+If you have no existing installation of Minikube on your computer, [follow the official tutorial](https://minikube.sigs.k8s.io/docs/start/).
 
-When Minkube is installed, start the cluster:
+When Minikube is installed, start the cluster:
 
     minikube start --addons registry --addons dashboard
 

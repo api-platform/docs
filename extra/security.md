@@ -47,7 +47,7 @@ Scores from the following areas are added together to produce a score. The score
 
 * Integrity: Does this vulnerability cause non-public data to be accessible? If so, does the attacker have control over the data disclosed? (0-4)
 * Disclosure: Can this exploit allow system data (or data handled by the system) to be compromised? If so, does the attacker have control over modification? (0-4)
-* Code Execution: Does the vulnerability allow arbitrary code to be executed on an end-users system, or the server that it runs on? (0-4)
+* Code Execution: Does the vulnerability allow arbitrary code to be executed on an end users system, or the server that it runs on? (0-4)
 * Availability: Is the availability of a service or application affected? Is it reduced availability or total loss of availability of a service / application? Availability includes networked services (e.g., databases) or resources such as consumption of network bandwidth, processor cycles, or disk space. (0-4)
 
 ### Affected Projects

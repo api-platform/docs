@@ -6,7 +6,7 @@
 
 ## Basic Implementation
 
-This tutorial will help you to define your own routes for your client, api and more generally for your containers.
+This tutorial will help you to define your own routes for your client, API and more generally for your containers.
 
 Use this custom API Platform `docker-compose.yml` file which implements ready-to-use Træfik container configuration. Override
 ports and add labels to tell Træfik to listen on the routes mentioned and redirect routes to a specified container.
@@ -14,7 +14,7 @@ ports and add labels to tell Træfik to listen on the routes mentioned and redir
 A few points to note:
 
 * `--api.insecure=true` Tells Træfik to generate a browser view to watch containers and IP/DNS associated easier  
-* `--providers.docker` Tells Træfik to listen on Docker Api  
+* `--providers.docker` Tells Træfik to listen on Docker API  
 * `labels:` Key for Træfik configuration into Docker integration
 
   ```yaml

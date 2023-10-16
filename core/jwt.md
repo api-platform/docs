@@ -30,7 +30,7 @@ docker compose exec php sh -c '
 '
 ```
 
-Note that the `setfacl` command relies on the `acl` package. This is installed by default when using the API Platform docker distribution but may need be installed in your working environment in order to execute the `setfacl` command.
+Note that the `setfacl` command relies on the `acl` package. This is installed by default when using the API Platform docker distribution but may need to be installed in your working environment in order to execute the `setfacl` command.
 
 This takes care of keypair creation (including using the correct passphrase to encrypt the private key), and setting the correct permissions on the keys allowing the web server to read them.
 
@@ -73,7 +73,7 @@ security:
             entity:
                 class: App\Entity\User
                 property: email
-            # document:
+            # mongodb:
             #    class: App\Document\User
             #    property: email    
 
@@ -124,9 +124,6 @@ security:
     # https://symfony.com/doc/current/security.html#c-hashing-passwords
     password_hashers:
         App\Entity\User: 'auto'
-
-    # https://symfony.com/doc/current/security/authenticator_manager.html
-    enable_authenticator_manager: true
     # https://symfony.com/doc/current/security.html#where-do-users-come-from-user-providers
     providers:
         # used to reload user from session & other features (e.g. switch_user)

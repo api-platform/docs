@@ -1,6 +1,6 @@
 # JSON Schema Support
 
-[JSON Schema](https://json-schema.org/) is a popular vocabulary to describe the shape of JSON documents. A variant of JSON Schema is also used [in OpenAPI specifications](swagger.md).
+[JSON Schema](https://json-schema.org/) is a popular vocabulary to describe the shape of JSON documents. A variant of JSON Schema is also used [in OpenAPI specifications](openapi.md).
 
 API Platform provides an infrastructure to generate JSON Schemas for any resource, represented in any format (including JSON-LD).
 The generated schema can be used with libraries such as [react-json-schema-form](https://github.com/rjsf-team/react-jsonschema-form) to build forms for the documented resources, or to [be used for validation](https://json-schema.org/implementations.html#validators).
@@ -75,7 +75,7 @@ class Greeting
 }
 ```
 
-You can obtain more information about the available [JSON Schema Types and format here](http://json-schema.org/understanding-json-schema/reference/type.html).
+You can obtain more information about the available [JSON Schema Types and format here](https://json-schema.org/understanding-json-schema/reference/type.html).
 
 ## Generating a JSON Schema Programmatically
 

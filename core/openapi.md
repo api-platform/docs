@@ -1,6 +1,6 @@
 # OpenAPI Specification Support (formerly Swagger)
 
-API Platform natively support the [OpenAPI](https://www.openapis.org/) API specification format.
+API Platform natively supports the [OpenAPI](https://www.openapis.org/) API specification format.
 
 ![Screenshot](../distribution/images/swagger-ui-1.png)
 
@@ -108,6 +108,9 @@ The impact on the swagger-ui is the following:
 ## Using the OpenAPI and Swagger Contexts
 
 Sometimes you may want to change the information included in your OpenAPI documentation.
+
+For the full list of available configurations, please refer to the [OpenAPI Specifications](https://spec.openapis.org/oas/latest.html). The current doc page only gives some examples but focuses mostly on the OpenAPI integration inside API Platform without telling you all you can pass into the attributes.
+
 The following configuration will give you total control over your OpenAPI definitions:
 
 [codeSelector]

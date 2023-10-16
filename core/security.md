@@ -1,7 +1,7 @@
 # Security
 
-The API Platform security layer is built on top of the [Symfony Security component](http://symfony.com/doc/current/book/security.html).
-All its features, including [global access control directives](http://symfony.com/doc/current/book/security.html#securing-url-patterns-access-control) are supported.
+The API Platform security layer is built on top of the [Symfony Security component](https://symfony.com/doc/current/security.html).
+All its features, including [global access control directives](https://symfony.com/doc/current/security.html#securing-url-patterns-access-control) are supported.
 API Platform also provides convenient [access control expressions](https://symfony.com/doc/current/expressions.html#security-complex-access-controls-with-expressions) which you can apply at resource and operation level.
 
 <p align="center" class="symfonycasts"><a href="https://symfonycasts.com/screencast/api-platform-security/?cid=apip"><img src="../distribution/images/symfonycasts-player.png" alt="Security screencast"><br>Watch the Security screencast</a>
@@ -261,7 +261,7 @@ class BookVoter extends Voter
                 if ( $this->security->isGranted(Role::ADMIN) ) { return true; }  // only admins can create books
                 break;
             case 'BOOK_READ':
-                /** ... other autorization rules ... **/
+                /** ... other authorization rules ... **/
         }
 
         return false;

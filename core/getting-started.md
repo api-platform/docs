@@ -9,11 +9,11 @@ If you plan to migrate from FOSRestBundle, you might want to read [this guide](m
 If you are starting a new project, the easiest way to get API Platform up is to install the [API Platform Distribution](../distribution/index.md).
 It comes with the API Platform core library integrated with [the Symfony framework](https://symfony.com), [the schema generator](../schema-generator/),
 [Doctrine ORM](https://www.doctrine-project.org), [Elasticsearch-PHP](https://www.elastic.co/guide/en/elasticsearch/client/php-api/current/index.html),
-[NelmioCorsBundle](https://github.com/nelmio/NelmioCorsBundle) and [Behat](http://behat.org).
+[NelmioCorsBundle](https://github.com/nelmio/NelmioCorsBundle) and [Behat](https://behat.org/).
 [Doctrine MongoDB ODM](https://www.doctrine-project.org/projects/mongodb-odm.html) can also be enabled by following the [MongoDB documentation](mongodb.md).
 Basically, it is a Symfony edition packaged with the best tools to develop a REST API and sensible default settings.
 
-Alternatively, you can use [Composer](http://getcomposer.org) to install the standalone bundle in an existing Symfony Flex
+Alternatively, you can use [Composer](https://getcomposer.org/) to install the standalone bundle in an existing Symfony Flex
 project:
 
 `composer require api`
@@ -26,7 +26,7 @@ There are no mandatory configuration options although [many settings are availab
 
 If you haven't read it already, take a look at [the Getting Started guide](../distribution/index.md).
 This tutorial covers basic concepts required to understand how API Platform works including how it implements the REST pattern
-and what [JSON-LD](http://json-ld.org/) and [Hydra](http://www.hydra-cg.com/) formats are.
+and what [JSON-LD](https://json-ld.org/) and [Hydra](https://www.hydra-cg.com/) formats are.
 
 ## Mapping the Entities
 
@@ -34,9 +34,9 @@ and what [JSON-LD](http://json-ld.org/) and [Hydra](http://www.hydra-cg.com/) fo
 
 API Platform is able to automatically expose entities mapped as "API resources" through a REST API supporting CRUD
 operations.
-To expose your entities, you can use Docblock annotations, XML and YAML configuration files.
+To expose your entities, you can use attributes, XML and YAML configuration files.
 
-Here is an example of entities mapped using annotations which will be exposed through a REST API:
+Here is an example of entities mapped using attributes which will be exposed through a REST API:
 
 ```php
 <?php
@@ -139,8 +139,8 @@ class Offer
 It is the minimal configuration required to expose `Product` and `Offer` entities as JSON-LD documents through an hypermedia
 web API.
 
-If you are familiar with the Symfony ecosystem, you noticed that entity classes are also mapped with Doctrine ORM annotations
-and validation constraints from [the Symfony Validator Component](http://symfony.com/doc/current/book/validation.html).
+If you are familiar with the Symfony ecosystem, you noticed that entity classes are also mapped with Doctrine ORM attributes
+and validation constraints from [the Symfony Validator Component](https://symfony.com/doc/current/validation.html).
 This isn't mandatory. You can use [your preferred persistence](state-providers.md) and [validation](validation.md) systems.
 However, API Platform has built-in support for those libraries and is able to use them without requiring any specific
 code or configuration to automatically persist and validate your data. They are a good default option and we encourage you to use
@@ -164,7 +164,7 @@ The same operations are available for the offer method (routes will start with t
 Route prefixes are built by pluralizing the name of the mapped entity class.
 It is also possible to override the naming convention using [operation path namings](operation-path-naming.md).
 
-As an alternative to annotations, you can map entity classes using YAML or XML:
+As an alternative to attributes, you can map entity classes using YAML or XML:
 
 [codeSelector]
 
@@ -202,14 +202,14 @@ resources:
 
 [/codeSelector]
 
-If you prefer to use YAML or XML files instead of annotations, you must configure API Platform to load the appropriate files:
+If you prefer to use YAML or XML files instead of attributes, you must configure API Platform to load the appropriate files:
 
 ```yaml
 # api/config/packages/api_platform.yaml
 api_platform:
     mapping:
         paths: 
-            - '%kernel.project_dir%/src/Entity' # default configuration for annotations
+            - '%kernel.project_dir%/src/Entity' # default configuration for attributes
             - '%kernel.project_dir%/config/api_platform' # yaml or xml directory configuration
 ```
 
@@ -220,6 +220,6 @@ If you want to serialize only a subset of your data, please refer to the [Serial
 You now have a fully featured API exposing your entities.
 Run the Symfony app with the [Symfony Local Web Server](https://symfony.com/doc/current/setup/symfony_server.html) (`symfony server:start`) and browse the API entrypoint at `http://localhost:8000/api`.
 
-Interact with the API using a REST client (we recommend [Postman](https://www.getpostman.com/)) or an Hydra-aware application
+Interact with the API using a REST client (we recommend [Postman](https://www.postman.com/)) or an Hydra-aware application
 (you should give [Hydra Console](https://github.com/lanthaler/HydraConsole) a try). Take
 a look at the usage examples in [the `features` directory](https://github.com/api-platform/core/tree/main/features).

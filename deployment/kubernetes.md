@@ -127,7 +127,7 @@ In this example the symfony console is called.
 
 ## Caution for system architecture
 
-If the pods do not run, and you get the following error from google kubernetes engine logs,
+If the pods do not run, and you get the following error from google Kubernetes engine logs,
 there is probably a problem with the system architecture.
 `standard_init_linux.go:211: exec user process caused "exec format error`
 Build the images with the same system architecture as the cluster runs.
@@ -140,12 +140,12 @@ There are 2 main upgrade strategies.
 
 ### 1. Always version your images (recommended)
 
-Change the version in the attribut "appVersion" in Chart.yaml and tag the images with this version.
+Change the version in the attribute "appVersion" in Chart.yaml and tag the images with this version.
 You can upgrade with the same command from the installation and pass all parameters.
 
 ### 2. Use :latest tags
 
-Infos about [best practices for tagging images for kubernetes](https://kubernetes.io/docs/concepts/containers/images/)
+Infos about [best practices for tagging images for Kubernetes](https://kubernetes.io/docs/concepts/containers/images/)
 You have to use the *.image.pullPolicy=Always see the last 3 parameters.
 
     helm upgrade api-platform ./helm/api-platform --namespace=default \
