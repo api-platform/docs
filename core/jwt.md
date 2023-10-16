@@ -73,7 +73,7 @@ security:
             entity:
                 class: App\Entity\User
                 property: email
-            # document:
+            # mongodb:
             #    class: App\Document\User
             #    property: email    
 
@@ -124,9 +124,6 @@ security:
     # https://symfony.com/doc/current/security.html#c-hashing-passwords
     password_hashers:
         App\Entity\User: 'auto'
-
-    # https://symfony.com/doc/current/security/authenticator_manager.html
-    enable_authenticator_manager: true
     # https://symfony.com/doc/current/security.html#where-do-users-come-from-user-providers
     providers:
         # used to reload user from session & other features (e.g. switch_user)
