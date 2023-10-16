@@ -71,11 +71,9 @@ use ApiPlatform\OpenApi\Model;
 
 class OpenApiFactory implements OpenApiFactoryInterface
 {
-    private $decorated;
 
-    public function __construct(OpenApiFactoryInterface $decorated)
+    public function __construct(private OpenApiFactoryInterface $decorated)
     {
-        $this->decorated = $decorated;
     }
 
     public function __invoke(array $context = []): OpenApi
@@ -105,7 +103,7 @@ class OpenApiFactory implements OpenApiFactoryInterface
 
 The impact on the swagger-ui is the following:
 
-![Swagger UI](core/images/swagger-ui-modified.png)
+![Swagger UI](images/swagger-ui-modified.png)
 
 ## Using the OpenAPI and Swagger Contexts
 
@@ -316,14 +314,14 @@ Note: as your route is not exposed, you may want to return a HTTP 404 if it's ca
 
 API Platform generates a definition name based on the serializer `groups` defined
 in the (`de`)`normalizationContext`. It's possible to override the name
-thanks to the `swagger_definition_name` option:
+thanks to the `openapi_definition_name` option:
 
 ```php
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Post;
 
 #[ApiResource]
-#[Post(denormalizationContext: ['groups' => ['user:read'], 'swagger_definition_name' => 'Read'])]
+#[Post(denormalizationContext: ['groups' => ['user:read'], 'openapi_definition_name' => 'Read'])]
 class User
 {
     // ...
@@ -342,7 +340,7 @@ class User
 {
     const API_WRITE = [
         'groups' => ['user:read'],
-        'swagger_definition_name' => 'Read',
+        'openapi_definition_name' => 'Read',
     ];
 }
 ```

@@ -72,7 +72,6 @@ The entity is retrieved in the `__invoke` method thanks to a dedicated argument 
 
 When using `GET`, the `__invoke()` method parameter will receive the identifier and should be called the same as the resource identifier.
 So for the path `/user/{uuid}/bookmarks`, you must use `__invoke(string $uuid)`.
-**Warning: the `__invoke()` method parameter [MUST be called `$data`](https://symfony.com/doc/current/components/http_kernel.html#4-getting-the-controller-arguments)**, otherwise, it will not be filled correctly!
 
 Services (`$bookPublishingHandler` here) are automatically injected thanks to the autowiring feature. You can type-hint any service
 you need and it will be autowired too.
@@ -503,5 +502,5 @@ book_post_publication:
     defaults:
         _controller: App\Controller\BookController::createPublication
         _api_resource_class: App\Entity\Book
-        _api_item_operation_name: post_publication
+        _api_operation_name: post_publication
 ```

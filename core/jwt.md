@@ -73,6 +73,9 @@ security:
             entity:
                 class: App\Entity\User
                 property: email
+            # document:
+            #    class: App\Document\User
+            #    property: email    
 
     firewalls:
         dev:

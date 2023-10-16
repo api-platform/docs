@@ -8,14 +8,14 @@ application search, security analytics, metrics, logging, etc.
 API Platform comes natively with the **reading** support for Elasticsearch. It uses internally the official PHP client
 for Elasticsearch: [Elasticsearch-PHP](https://www.elastic.co/guide/en/elasticsearch/client/php-api/current/index.html).
 
-Be careful, API Platform only supports Elasticsearch >= 6.5.0.
+Be careful, API Platform only supports Elasticsearch >= 7.11.0 < 8.0.
 
 ## Enabling Reading Support
 
 To enable the reading support for Elasticsearch, simply require the Elasticsearch-PHP package using Composer:
 
 ```console
-composer require elasticsearch/elasticsearch:^6.0
+composer require elasticsearch/elasticsearch:^7.11
 ```
 
 Then, enable it inside the API Platform configuration:
@@ -146,10 +146,20 @@ Here is an example of mappings for 2 resources, `User` and `Tweet`, and their mo
 // api/src/Model/User.php
 namespace App\Model;
 
+use ApiPlatform\Elasticsearch\State\CollectionProvider;
+use ApiPlatform\Elasticsearch\State\ItemProvider;
+use ApiPlatform\Elasticsearch\State\Options;
 use ApiPlatform\Metadata\ApiProperty;
 use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\GetCollection;
 
-#[ApiResource]
+#[ApiResource(
+    operations: [
+        new GetCollection(provider: CollectionProvider::class, stateOptions: new Options(index: 'user')),
+        new Get(provider: ItemProvider::class, stateOptions: new Options(index: 'user')),
+    ],
+)]
 class User
 {
     #[ApiProperty(identifier: true)]
@@ -175,10 +185,20 @@ class User
 // api/src/Model/Tweet.php
 namespace App\Model;
 
+use ApiPlatform\Elasticsearch\State\CollectionProvider;
+use ApiPlatform\Elasticsearch\State\ItemProvider;
+use ApiPlatform\Elasticsearch\State\Options;
 use ApiPlatform\Metadata\ApiProperty;
 use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\GetCollection;
 
- #[ApiResource]
+#[ApiResource(
+    operations: [
+        new GetCollection(provider: CollectionProvider::class, stateOptions: new Options(index: 'tweet')),
+        new Get(provider: ItemProvider::class, stateOptions: new Options(index: 'tweet')),
+    ],
+)]
 class Tweet
 {
     #[ApiProperty(identifier: true)]
@@ -199,42 +219,7 @@ Keep in mind that it is your responsibility to populate your Elasticsearch index
 a custom [state processors](state-processors.md#creating-a-custom-state-processor) or any other mechanism that suits your
 project (such as an [ETL](https://en.wikipedia.org/wiki/Extract,_transform,_load)).
 
-To disable elasticsearch index discovery for non-elasticsearch entities you can set `elasticsearch: false` in the `#[ApiResource]` attribute. If this property is absent, all entities will perform an index check during cache warmup to determine if they are on elasticsearch or not.
-
 You're done! The API is now ready to use.
-
-### Creating custom mapping
-
-If you don't follow the Elasticsearch recommendations, you may want a custom mapping between API Platform resources and
-Elasticsearch indexes/types.
-
-For example, consider an index being similar to a database in an SQL database and a type being equivalent to a table.
-So the `User` and `Tweet` resources of the previous example would become `user` and `tweet` types in an index named `app`:
-
-```yaml
-# api/config/packages/api_platform.yaml
-parameters:
-    # ...
-    env(ELASTICSEARCH_HOST): 'http://localhost:9200'
-
-api_platform:
-    # ...
-    
-    mapping:
-        paths: ['%kernel.project_dir%/src/Model']
-
-    elasticsearch:
-        hosts: ['%env(ELASTICSEARCH_HOST)%']
-        mapping:
-            App\Model\User:
-                index: app
-                type: user
-            App\Model\Tweet:
-                index: app
-                type: tweet
-
-    #...
-```
 
 ## Filtering
 
