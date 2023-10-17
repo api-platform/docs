@@ -4,45 +4,16 @@ on:
   push:
     branches:
       - main
-      - '*.*'
+      - '[0-9]+.[0-9]+'
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout the website
-        uses: actions/checkout@v3
+      - name: Trigger website workflow
+        uses: convictional/trigger-workflow-and-wait@v1.6.1
         with:
-          repository: api-platform/website
-          ref: main
-
-      - name: Get yarn cache directory path
-        id: yarn-cache-dir-path
-        run: echo "dir=$(yarn cache dir)" >> "$GITHUB_OUTPUT"
-
-      - uses: actions/cache@v3
-        id: yarn-cache
-        with:
-          path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
-          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-yarn-
-
-      - name: Install deps
-        run: yarn install
-
-      - name: Retrieve docs
-        run: bin/retrieve-documentation
-
-      - name: Build website
-        env:
-          GITHUB_KEY: ${{ secrets.CONTRIBUTORS_GITHUB_TOKEN }}
-          NODE_OPTIONS: --openssl-legacy-provider
-        run: yarn gatsby build
-
-      - name: Deploy
-        uses: peaceiris/actions-gh-pages@v3
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./public
-          cname: api-platform.com
+          owner: api-platform
+          repo: website
+          workflow_file_name: cd.yml
+          github_token: ${{ secrets.WEBSITE_ACCESS_TOKEN }}
