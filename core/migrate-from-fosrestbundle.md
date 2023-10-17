@@ -82,7 +82,7 @@ Both the request and the response body's format can be customized.
 
 You can configure the formats of the API either globally or in specific resources or operations. API Platform provides native support for multiple formats including JSON, XML, CSV, YAML, etc.
 
-See [Content negociation](content-negotiation.md).
+See [Content negotiation](content-negotiation.md).
 
 ### Name conversion
 

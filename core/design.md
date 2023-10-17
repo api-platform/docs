@@ -8,7 +8,7 @@ To do so, you have to write a plain old PHP object (POPO) representing the input
 that is [marked with the `#[ApiResource]` attribute](../distribution/index.md).
 This class **doesn't have** to be mapped with Doctrine ORM, or any other persistence system. It must be simple (it's usually
 just a data structure with no or minimal behaviors) and will be automatically converted to [Hydra](extending-jsonld-context.md),
-[OpenAPI](swagger.md) and [GraphQL](graphql.md) documentations or schemas by API Platform (there is a 1-1 mapping
+[OpenAPI](openapi.md) and [GraphQL](graphql.md) documentations or schemas by API Platform (there is a 1-1 mapping
 between this class and those docs).
 
 Then, it's up to the developer to feed API Platform with an hydrated instance of this API resource object by implementing

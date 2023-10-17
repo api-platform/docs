@@ -6,7 +6,7 @@ Extensions are specific to Doctrine and Elasticsearch-PHP, and therefore, the Do
 reading support must be enabled to use this feature. If you use custom providers it's up to you to implement your own
 extension system or not.
 
-You can find a working example of a custom extension using a pagination in the [API Platform's demo application](https://github.com/api-platform/demo/blob/main/api/src/State/Extension/TopBookPaginationExtension.php).
+You can find a working example of a custom extension in the [API Platform's demo application](https://github.com/api-platform/demo/blob/main/api/src/Doctrine/Orm/Extension/BookmarkQueryCollectionExtension.php).
 
 ## Custom Doctrine ORM Extension
 
@@ -63,15 +63,13 @@ use ApiPlatform\Doctrine\Orm\Util\QueryNameGeneratorInterface;
 use ApiPlatform\Metadata\Operation;
 use App\Entity\Offer;
 use Doctrine\ORM\QueryBuilder;
-use Symfony\Component\Security\Core\Security;
+use Symfony\Bundle\SecurityBundle\Security;
 
 final class CurrentUserExtension implements QueryCollectionExtensionInterface, QueryItemExtensionInterface
 {
-    private $security;
 
-    public function __construct(Security $security)
+    public function __construct(private readonly Security $security)
     {
-        $this->security = $security;
     }
 
     public function applyToCollection(QueryBuilder $queryBuilder, QueryNameGeneratorInterface $queryNameGenerator, string $resourceClass, Operation $operation = null, array $context = []): void
@@ -119,10 +117,10 @@ Note that your extensions should have a positive priority if defined. Internal e
 
 | Service name                                               | Priority | Class                                              |
 |------------------------------------------------------------|------|---------------------------------------------------------|
-| `api_platform.doctrine.orm.query_extension.eager_loading` (collection) | -8 | ApiPlatform\Doctrine\Orm\Extension\EagerLoadingExtension |
 | `api_platform.doctrine.orm.query_extension.eager_loading` (item) | -8 | ApiPlatform\Doctrine\Orm\Extension\EagerLoadingExtension |
 | `api_platform.doctrine.orm.query_extension.filter` | -16 | ApiPlatform\Doctrine\Orm\Extension\FilterExtension |
 | `api_platform.doctrine.orm.query_extension.filter_eager_loading` | -17 | ApiPlatform\Doctrine\Orm\Extension\FilterEagerLoadingExtension |
+| `api_platform.doctrine.orm.query_extension.eager_loading` (collection) | -18 | ApiPlatform\Doctrine\Orm\Extension\EagerLoadingExtension |
 | `api_platform.doctrine.orm.query_extension.order` | -32 | ApiPlatform\Doctrine\Orm\Extension\OrderExtension |
 | `api_platform.doctrine.orm.query_extension.pagination` | -64 | ApiPlatform\Doctrine\Orm\Extension\PaginationExtension |
 

@@ -9,7 +9,7 @@ The activation of the pagination and the number of elements per page can be conf
 * the server-side (globally or per resource)
 * the client-side, via a custom GET parameter (disabled by default)
 
-When issuing a `GET` request on a collection containing more than 1 page (here `/books`), a [Hydra collection](http://www.hydra-cg.com/spec/latest/core/#collections)
+When issuing a `GET` request on a collection containing more than 1 page (here `/books`), a [Hydra collection](https://www.hydra-cg.com/spec/latest/core/#collections)
 is returned. It's a valid JSON(-LD) document containing items of the requested page and metadata.
 
 ```json
@@ -410,45 +410,45 @@ The [PaginationExtension](https://github.com/api-platform/core/blob/main/src/Doc
 
 * `$fetchJoinCollection` argument: Whether there is a join to a collection-valued association. When set to `true`, the Doctrine ORM Paginator will perform an additional query, in order to get the correct number of results.
 
-    You can configure this using the `paginationFetchJoinCollection` attribute on a resource or on a per-operation basis:
+You can configure this using the `paginationFetchJoinCollection` attribute on a resource or on a per-operation basis:
 
-    ```php
-    <?php
-    // api/src/Entity/Book.php
-    namespace App\Entity;
+```php
+<?php
+// api/src/Entity/Book.php
+namespace App\Entity;
 
-    use ApiPlatform\Metadata\ApiResource;
-    use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\GetCollection;
 
-    #[ApiResource(paginationFetchJoinCollection: false)]
-    #[GetCollection]
-    #[GetCollection(name: 'get_custom', paginationFetchJoinCollection: true)]
-    class Book
-    {
-        // ...
-    }
-    ```
+#[ApiResource(paginationFetchJoinCollection: false)]
+#[GetCollection]
+#[GetCollection(name: 'get_custom', paginationFetchJoinCollection: true)]
+class Book
+{
+    // ...
+}
+```
 
 * `setUseOutputWalkers` setter: Whether to use output walkers. When set to `true`, the Doctrine ORM Paginator will use output walkers, which are compulsory for some types of queries.
 
-    You can configure this using the `paginationUseOutputWalkers` attribute on a resource or on a per-operation basis:
+You can configure this using the `paginationUseOutputWalkers` attribute on a resource or on a per-operation basis:
 
-    ```php
-    <?php
-    // api/src/Entity/Book.php
-    namespace App\Entity;
+```php
+<?php
+// api/src/Entity/Book.php
+namespace App\Entity;
 
-    use ApiPlatform\Metadata\ApiResource;
-    use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\GetCollection;
 
-    #[ApiResource(paginationUseOutputWalkers: false)]
-    #[GetCollection]
-    #[GetCollection(name: 'get_custom', paginationUseOutputWalkers: true)]
-    class Book
-    {
-        // ...
-    }
-    ```
+#[ApiResource(paginationUseOutputWalkers: false)]
+#[GetCollection]
+#[GetCollection(name: 'get_custom', paginationUseOutputWalkers: true)]
+class Book
+{
+    // ...
+}
+```
 
 For more information, please see the [Pagination](https://www.doctrine-project.org/projects/doctrine-orm/en/current/tutorials/pagination.html) entry in the Doctrine ORM documentation.
 

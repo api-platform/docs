@@ -4,7 +4,7 @@ Note: using custom controllers with API Platform is **discouraged**. Also, Graph
 [For most use cases, better extension points, working both with REST and GraphQL, are available](design.md).
 
 API Platform can leverage the Symfony routing system to register custom operations related to custom controllers. Such custom
-controllers can be any valid [Symfony controller](http://symfony.com/doc/current/book/controller.html), including standard
+controllers can be any valid [Symfony controller](https://symfony.com/doc/current/controller.html), including standard
 Symfony controllers extending the [`Symfony\Bundle\FrameworkBundle\Controller\AbstractController`](http://api.symfony.com/4.1/Symfony/Bundle/FrameworkBundle/Controller/AbstractController.html)
 helper class.
 
@@ -15,7 +15,7 @@ implements the [Action-Domain-Responder](https://github.com/pmjones/adr) pattern
 The distribution of API Platform also eases the implementation of the ADR pattern: it automatically registers action classes
 stored in `api/src/Controller` as autowired services.
 
-Thanks to the [autowiring](http://symfony.com/doc/current/components/dependency_injection/autowiring.html) feature of the
+Thanks to the [autowiring](https://symfony.com/doc/current/service_container/autowiring.html) feature of the
 Symfony Dependency Injection container, services required by an action can be type-hinted in its constructor, it will be
 automatically instantiated and injected, without having to declare it explicitly.
 
@@ -72,7 +72,6 @@ The entity is retrieved in the `__invoke` method thanks to a dedicated argument 
 
 When using `GET`, the `__invoke()` method parameter will receive the identifier and should be called the same as the resource identifier.
 So for the path `/user/{uuid}/bookmarks`, you must use `__invoke(string $uuid)`.
-**Warning: the `__invoke()` method parameter [MUST be called `$data`](https://symfony.com/doc/current/components/http_kernel.html#4-getting-the-controller-arguments)**, otherwise, it will not be filled correctly!
 
 Services (`$bookPublishingHandler` here) are automatically injected thanks to the autowiring feature. You can type-hint any service
 you need and it will be autowired too.
@@ -241,7 +240,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
         name: 'publication', 
         uriTemplate: '/books/{id}/publication', 
         controller: CreateBookPublication::class, 
-        normalizationContext: ['groups' => 'publication']
+        normalizationContext: ['groups' => ['publication']],
     )
 ])]
 class Book
@@ -434,7 +433,7 @@ resources:
 [/codeSelector]
 
 API Platform will automatically map this `post_publication` operation to the route `book_post_publication`. Let's create a custom action
-and its related route using annotations:
+and its related route using attributes:
 
 ```php
 <?php
@@ -503,5 +502,5 @@ book_post_publication:
     defaults:
         _controller: App\Controller\BookController::createPublication
         _api_resource_class: App\Entity\Book
-        _api_item_operation_name: post_publication
+        _api_operation_name: post_publication
 ```

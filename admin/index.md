@@ -3,7 +3,7 @@
 ![Screencast](images/admin-demo.gif)
 
 API Platform Admin is a tool to automatically create a beautiful (Material Design) and fully-featured administration interface
-for any API supporting [the Hydra Core Vocabulary](http://www.hydra-cg.com/), exposing an [OpenAPI documentation](https://www.openapis.org/)
+for any API supporting [the Hydra Core Vocabulary](https://www.hydra-cg.com/), exposing an [OpenAPI documentation](https://www.openapis.org/)
 or other API specification formats supported by [`@api-platform/api-doc-parser`](https://github.com/api-platform/api-doc-parser).
 
 API Platform Admin is the perfect companion of APIs created
@@ -16,6 +16,8 @@ API Platform Admin parses the API documentation then uses the awesome [React Adm
 library to expose a nice, responsive, management interface (Create-Retrieve-Update-Delete) for all documented resource types.
 
 You can **customize everything** by using provided React Admin and [MUI](https://mui.com/) components, or by writing your custom [React](https://reactjs.org/) components.
+
+<p align="center" class="symfonycasts"><a href="https://symfonycasts.com/screencast/api-platform/react-admin?cid=apip"><img src="../distribution/images/symfonycasts-player.png" alt="React Admin Screencast"><br>Watch the React Admin screencast</a></p>
 
 ## Features
 

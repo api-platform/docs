@@ -1,6 +1,6 @@
 # The Schema Generator
 
-`schema` is a command line tool part of [the API Platform framework](https://api-platform.com) that instantly generates a set
+`schema` is a command-line tool part of [the API Platform framework](https://api-platform.com) that instantly generates a set
 of PHP classes from [RDF](https://en.wikipedia.org/wiki/Resource_Description_Framework) vocabularies such as (but not limited to)
 [Schema.org](https://schema.org) or [ActivityStreams](https://www.w3.org/TR/activitystreams-core/).
 Alternatively, it can generate PHP classes from an [OpenAPI](https://www.openapis.org/) documentation.
@@ -14,7 +14,7 @@ You get a fully featured PHP data model including:
 
 * A set of PHP entities with properties, constants (enum values), getters, setters, adders and removers. The class
 hierarchy provided by the vocabulary will be translated to a PHP class hierarchy with parents as `abstract` classes.
-The generated code complies with [PSR](http://www.php-fig.org/) coding standards;
+The generated code complies with [PSR](https://www.php-fig.org/) coding standards;
 * Full, high-quality PHPDoc and type declarations for classes, properties, constants and methods extracted from the vocabulary;
 * Doctrine ORM or MongoDB ODM attributes mapping including database columns / fields with type guessing, relations with cardinality guessing,
 smart class inheritance (through the `#[MappedSuperclass]` or `#[InheritanceType]` attributes depending on if the resource is used in a relation);
@@ -31,7 +31,7 @@ Bonus:
 and a custom generator can be added;
 * The code generator can load previously generated files and add new changes while keeping the user-added ones;
 * The generated code can be used as is in a [Symfony](https://symfony.com) app (but it will work too in a raw PHP project
-or any other framework including [Laravel](https://laravel.com) and [Zend Framework](http://framework.zend.com/)).
+or any other framework including [Laravel](https://laravel.com) and [Zend Framework](https://framework.zend.com/)).
 
 ## What Is Schema.org?
 
@@ -62,7 +62,7 @@ specific mapping nor adaptation. It's a matter of minutes.
 
 ### Be Ready for The Future
 
-Schema.org improves the interoperability of your applications. Used with hypermedia technologies such as [Hydra](http://www.hydra-cg.com/)
+Schema.org improves the interoperability of your applications. Used with hypermedia technologies such as [Hydra](https://www.hydra-cg.com/)
 it's a big step towards the semantic and machine-readable web.
 It opens the way to generic web API clients able to extract and process data from any website or app using such technologies.
 

@@ -1,15 +1,15 @@
 # Validation
 
 API Platform takes care of validating the data sent to the API by the client (usually user data entered through forms).
-By default, the framework relies on [the powerful Symfony Validator Component](http://symfony.com/doc/current/validation.html)
+By default, the framework relies on [the powerful Symfony Validator Component](https://symfony.com/doc/current/validation.html)
 for this task, but you can replace it with your preferred validation library such as [the PHP filter extension](https://www.php.net/manual/en/intro.filter.php) if you want to.
 
 <p align="center" class="symfonycasts"><a href="https://symfonycasts.com/screencast/api-platform/validation?cid=apip"><img src="../distribution/images/symfonycasts-player.png" alt="Validation screencast"><br>Watch the Validation screencast</a></p>
 
 ## Validating Submitted Data
 
-Validating submitted data is as simple as adding [Symfony's built-in constraints](http://symfony.com/doc/current/reference/constraints.html)
-or [custom constraints](http://symfony.com/doc/current/validation/custom_constraint.html) directly in classes marked with
+Validating submitted data is as simple as adding [Symfony's built-in constraints](https://symfony.com/doc/current/reference/constraints.html)
+or [custom constraints](https://symfony.com/doc/current/validation/custom_constraint.html) directly in classes marked with
 the `#[ApiResource]` attribute:
 
 ```php
@@ -78,7 +78,7 @@ final class MinimalPropertiesValidator extends ConstraintValidator
 {
     public function validate($value, Constraint $constraint): void
     {
-        if (!array_diff(['description', 'price'], $value)) {
+        if (array_diff(['description', 'price'], $value)) {
             $this->context->buildViolation($constraint->message)->addViolation();
         }
     }
@@ -141,7 +141,7 @@ you can specify validation groups globally or on a per-operation basis.
 
 Of course, you can use XML or YAML configuration format instead of attributes if you prefer.
 
-You may also pass in a [group sequence](http://symfony.com/doc/current/validation/sequence_provider.html) in place of
+You may also pass in a [group sequence](https://symfony.com/doc/current/validation/sequence_provider.html) in place of
 the array of group names.
 
 ## Using Validation Groups on Operations
@@ -196,7 +196,7 @@ With this configuration, there are three validation groups:
 
 If you need to dynamically determine which validation groups to use for an entity in different scenarios, just pass in a
 [callable](https://www.php.net/manual/en/language.types.callable.php). The callback will receive the entity object as its first
-argument, and should return an array of group names or a [group sequence](http://symfony.com/doc/current/validation/sequence_provider.html).
+argument, and should return an array of group names or a [group sequence](https://symfony.com/doc/current/validation/sequence_provider.html).
 
 In the following example, we use a static method to return the validation groups:
 
@@ -297,7 +297,7 @@ class Book
 
 ## Sequential Validation Groups
 
-If you need to specify the order in which your validation groups must be tested against, you can use a [group sequence](http://symfony.com/doc/current/validation/sequence_provider.html).
+If you need to specify the order in which your validation groups must be tested against, you can use a [group sequence](https://symfony.com/doc/current/validation/sequence_provider.html).
 First, you need to create your sequenced group.
 
 ```php

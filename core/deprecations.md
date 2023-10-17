@@ -9,7 +9,7 @@ It's a tedious task that should be avoided as much as possible.
 On the other hand, the evolution strategy (also known as versionless APIs) consists of deprecating the fields, resources
 types or operations that will be removed at some point.
 
-Most modern API formats including [JSON-LD / Hydra](content-negotiation.md), [GraphQL](graphql.md) and [OpenAPI](swagger.md)
+Most modern API formats including [JSON-LD / Hydra](content-negotiation.md), [GraphQL](graphql.md) and [OpenAPI](openapi.md)
 allow you to mark resources types, operations or fields as deprecated.
 
 ## Deprecating Resource Classes, Operations and Properties

@@ -4,8 +4,8 @@ API Platform Core is an easy-to-use and powerful library to create [hypermedia-d
 It is a component of the [API Platform framework](https://api-platform.com). It can be used as a standalone or with [the Symfony
 framework](https://symfony.com) (recommended).
 
-It embraces [JSON for Linked Data (JSON-LD)](http://json-ld.org) and [Hydra Core Vocabulary](http://www.hydra-cg.com) web
-standards but also supports [HAL](http://stateless.co/hal_specification.html), [Swagger/Open API](https://www.openapis.org/), XML, JSON, CSV and YAML.
+It embraces [JSON for Linked Data (JSON-LD)](https://json-ld.org/) and [Hydra Core Vocabulary](https://www.hydra-cg.com/) web
+standards but also supports [HAL](https://stateless.co/hal_specification.html), [Swagger/Open API](https://www.openapis.org/), XML, JSON, CSV and YAML.
 
 Build a working and fully featured CRUD API in minutes. Leverage the awesome features of the tool to develop complex and
 high-performance API-first projects.
@@ -21,7 +21,7 @@ Here is the fully featured REST API you'll get in minutes:
 
 * [Automatic CRUD](operations.md)
 * Hypermedia (JSON-LD and HAL)
-* Machine-readable documentation of the API in the Hydra and [Swagger/Open API](swagger.md) formats,
+* Machine-readable documentation of the API in the Hydra and [Swagger/Open API](openapi.md) formats,
   guessed from PHPDoc, Serializer, Validator and Doctrine ORM / MongoDB ODM metadata
 * Nice human-readable documentation built with Swagger UI (including a sandbox) and/or ReDoc
 * [Pagination](pagination.md)

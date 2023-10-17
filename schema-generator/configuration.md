@@ -30,7 +30,7 @@ types:
 
 ## Forcing a Field Type (Range)
 
-RDF allows a property to have several types (ranges). However, the generator allows only one type by property.
+RDF allows a property to have several types (ranges). However, the generator allows only one type per property.
 If not configured, it will use the first defined type.
 The `range` option is useful to set the type of a given property.
 It can also be used to force a type (even if not in the RDF vocabulary definition).
@@ -518,7 +518,7 @@ types:
 ## Checking GoodRelation Compatibility
 
 If the `checkIsGoodRelations` option is set to `true`, the generator will emit a warning if an encountered property is not
-par of the [GoodRelations](http://www.heppnetz.de/projects/goodrelations/) schema.
+par of the [GoodRelations](https://www.heppnetz.de/projects/goodrelations/) schema.
 
 This is useful when generating e-commerce data models.
 

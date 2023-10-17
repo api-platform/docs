@@ -43,8 +43,8 @@ to limit the serialization depth.
 
 ### Configuration
 
-Just like other Symfony and API Platform components, the Serializer component can be configured using annotations, XML
-or YAML. Since annotations are easy to understand, we will use them in the following examples.
+Just like other Symfony and API Platform components, the Serializer component can be configured using attributes, XML
+or YAML. Since attributes are easy to understand, we will use them in the following examples.
 
 Note: if you aren't using the API Platform distribution, you will need to enable annotation support in the serializer configuration:
 
@@ -174,7 +174,7 @@ returned by the API.
 Internally, API Platform passes the value of the `normalizationContext` as the 3rd argument of [the `Serializer::serialize()` method](https://api.symfony.com/master/Symfony/Component/Serializer/SerializerInterface.html#method_serialize) during the normalization
 process. `denormalizationContext` is passed as the 4th argument of [the `Serializer::deserialize()` method](https://api.symfony.com/master/Symfony/Component/Serializer/SerializerInterface.html#method_deserialize) during denormalization (writing).
 
-To configure the serialization groups of classes's properties, you must use directly [the Symfony Serializer's configuration files or annotations](https://symfony.com/doc/current/components/serializer.html#attributes-groups).
+To configure the serialization groups of classes's properties, you must use directly [the Symfony Serializer's configuration files or attributes](https://symfony.com/doc/current/components/serializer.html#attributes-groups).
 
 In addition to the `groups` key, you can configure any Symfony Serializer option through the `$context` parameter
 (e.g. the `enable_max_depth`key when using [the `@MaxDepth` annotation](https://symfony.com/doc/current/components/serializer.html#handling-serialization-depth)).
@@ -208,7 +208,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
 #[Put(normalizationContext: ['groups' => ['put']])]
 class Book
 {
-    #[Groups(['get', 'put'])
+    #[Groups(['get', 'put'])]
     public $name;
 
     #[Groups('get')]
@@ -322,7 +322,7 @@ In the following JSON document, the relation from a book to an author is by defa
 ```
 
 It is possible to embed related objects (in their entirety, or only some of their properties) directly in the parent
-response through the use of serialization groups. By using the following serialization groups annotations (`#[Groups]`),
+response through the use of serialization groups. By using the following serialization groups attributes (`#[Groups]`),
 a JSON representation of the author is embedded in the book response. As soon as any of the author's attributes is in
 the `book` group, the author will be embedded.
 
@@ -831,7 +831,7 @@ All entry points are the same for all users, so we should find a way to detect i
 dynamically add the `admin:input` value to deserialization groups in the `$context` array.
 
 API Platform implements a `ContextBuilder`, which prepares the context for serialization & deserialization. Let's
-[decorate this service](http://symfony.com/doc/current/service_container/service_decoration.html) to override the
+[decorate this service](https://symfony.com/doc/current/service_container/service_decoration.html) to override the
 `createFromRequest` method:
 
 ```yaml
@@ -968,7 +968,7 @@ provides many useful other services that might be better suited to your use case
 
 ## Name Conversion
 
-The Serializer Component provides a handy way to map PHP field names to serialized names. See the related [Symfony documentation](http://symfony.com/doc/master/components/serializer.html#converting-property-names-when-serializing-and-deserializing).
+The Serializer Component provides a handy way to map PHP field names to serialized names. See the related [Symfony documentation](https://symfony.com/doc/current/components/serializer.html#converting-property-names-when-serializing-and-deserializing).
 
 To use this feature, declare a new name converter service. For example, you can convert `CamelCase` to
 `snake_case` with the following configuration:

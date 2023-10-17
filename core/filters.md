@@ -1,7 +1,7 @@
 # Filters
 
 API Platform provides a generic system to apply filters and sort criteria on collections.
-Useful filters for Doctrine ORM, MongoDB ODM and ElasticSearch are provided with the library.
+Useful filters for Doctrine ORM, MongoDB ODM, and ElasticSearch are provided with the library.
 
 You can also create custom filters that fit your specific needs.
 You can also add filtering support to your custom [state providers](state-providers.md) by implementing interfaces provided
@@ -9,7 +9,7 @@ by the library.
 
 By default, all filters are disabled. They must be enabled explicitly.
 
-When a filter is enabled, it automatically appears in the [OpenAPI](swagger.md) and [GraphQL](graphql.md) documentations.
+When a filter is enabled, it automatically appears in the [OpenAPI](openapi.md) and [GraphQL](graphql.md) documentations.
 It is also automatically documented as a `hydra:search` property for JSON-LD responses.
 
 <p align="center" class="symfonycasts"><a href="https://symfonycasts.com/screencast/api-platform/filters?cid=apip"><img src="../distribution/images/symfonycasts-player.png" alt="Filtering and Searching screencast"><br>Watch the Filtering & Searching screencast</a>
@@ -23,112 +23,112 @@ to a Resource in two ways:
 
 1. Through the resource declaration, as the `filters` attribute.
 
-   For example having a filter service declaration in `services.yaml`:
+For example, having a filter service declaration in `services.yaml`:
 
-    ```yaml
-    # api/config/services.yaml
-    services:
+```yaml
+# api/config/services.yaml
+services:
+    # ...
+    offer.date_filter:
+        parent: 'api_platform.doctrine.orm.date_filter'
+        arguments: [ { dateProperty: ~ } ]
+        tags:  [ 'api_platform.filter' ]
+        # The following are mandatory only if a _defaults section is defined with inverted values.
+        # You may want to isolate filters in a dedicated file to avoid adding the following lines.
+        autowire: false
+        autoconfigure: false
+        public: false
+```
+
+Alternatively, you can choose to use a dedicated file to gather filters together:
+
+```yaml
+# api/config/filters.yaml
+services:
+    offer.date_filter:
+        parent: 'api_platform.doctrine.orm.date_filter'
+        arguments: [ { dateProperty: ~ } ]
+        tags:  [ 'api_platform.filter' ]
+```
+
+We're linking the filter `offer.date_filter` with the resource like this:
+
+[codeSelector]
+
+```php
+<?php
+// api/src/Entity/Offer.php
+namespace App\Entity;
+
+use ApiPlatform\Metadata\ApiResource;
+
+#[ApiResource(filters: ['offer.date_filter'])]
+class Offer
+{
+    // ...
+}
+```
+
+```yaml
+# api/config/api_platform/resources.yaml
+resources:
+    App\Entity\Offer:
+        operations:
+            ApiPlatform\Metadata\GetCollection:
+                filters: ['offer.date_filter']
         # ...
-        offer.date_filter:
-            parent: 'api_platform.doctrine.orm.date_filter'
-            arguments: [ { dateProperty: ~ } ]
-            tags:  [ 'api_platform.filter' ]
-            # The following are mandatory only if a _defaults section is defined with inverted values.
-            # You may want to isolate filters in a dedicated file to avoid adding the following lines.
-            autowire: false
-            autoconfigure: false
-            public: false
-    ```
+```
 
-    Alternatively, you can choose to use a dedicated file to gather filters together:
+```xml
+<?xml version="1.0" encoding="UTF-8" ?>
+<!-- api/config/api_platform/resources.xml -->
 
-    ```yaml
-    # api/config/filters.yaml
-    services:
-        offer.date_filter:
-            parent: 'api_platform.doctrine.orm.date_filter'
-            arguments: [ { dateProperty: ~ } ]
-            tags:  [ 'api_platform.filter' ]
-    ```
+<resources xmlns="https://api-platform.com/schema/metadata/resources-3.0"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="https://api-platform.com/schema/metadata/resources-3.0
+        https://api-platform.com/schema/metadata/resources-3.0.xsd">
+    <resource class="App\Entity\Offer">
+        <operations>
+            <operation class="ApiPlatform\Metadata\GetCollection">
+                <filters>
+                    <filter>offer.date_filter</filter>
+                </filters>
+            </operation>
+            <!-- ... -->
+        </operations>
+    </resource>
+</resources>
+```
 
-   We're linking the filter `offer.date_filter` with the resource like this:
-
-   [codeSelector]
-
-    ```php
-    <?php
-    // api/src/Entity/Offer.php
-    namespace App\Entity;
-
-    use ApiPlatform\Metadata\ApiResource;
-
-    #[ApiResource(filters: ['offer.date_filter'])]
-    class Offer
-    {
-        // ...
-    }
-    ```
-
-    ```yaml
-    # api/config/api_platform/resources.yaml
-    resources:
-        App\Entity\Offer:
-            operations:
-                ApiPlatform\Metadata\GetCollection:
-                    filters: ['offer.date_filter']
-            # ...
-    ```
-
-    ```xml
-    <?xml version="1.0" encoding="UTF-8" ?>
-    <!-- api/config/api_platform/resources.xml -->
-
-    <resources xmlns="https://api-platform.com/schema/metadata/resources-3.0"
-            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-            xsi:schemaLocation="https://api-platform.com/schema/metadata/resources-3.0
-            https://api-platform.com/schema/metadata/resources-3.0.xsd">
-        <resource class="App\Entity\Offer">
-            <operations>
-                <operation class="ApiPlatform\Metadata\GetCollection">
-                    <filters>
-                        <filter>offer.date_filter</filter>
-                    </filters>
-                </operation>
-                <!-- ... -->
-            </operations>
-        </resource>
-    </resources>
-    ```
-
-   [/codeSelector]
+[/codeSelector]
 
 2. By using the `#[ApiFilter]` attribute.
 
-   This attribute automatically declares the service, and you just have to use the filter class you want:
+This attribute automatically declares the service, and you just have to use the filter class you want:
 
-    ```php
-    <?php
-    // api/src/Entity/Offer.php
-    namespace App\Entity;
+```php
+<?php
+// api/src/Entity/Offer.php
+namespace App\Entity;
 
-    use ApiPlatform\Metadata\ApiFilter;
-    use ApiPlatform\Metadata\ApiResource;
-    use ApiPlatform\Doctrine\Orm\Filter\DateFilter;
+use ApiPlatform\Metadata\ApiFilter;
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Doctrine\Orm\Filter\DateFilter;
 
-    #[ApiResource]
-    #[ApiFilter(DateFilter::class, properties: ['dateProperty'])]
-    class Offer
-    {
-        // ...
-    }
-    ```
+#[ApiResource]
+#[ApiFilter(DateFilter::class, properties: ['dateProperty'])]
+class Offer
+{
+    // ...
+}
+```
 
-   Learn more on how the [ApiFilter attribute](filters.md#apifilter-attribute) works.
+Learn more on how the [ApiFilter attribute](filters.md#apifilter-attribute) works.
 
-   For the sake of consistency, we're using the attribute in the below documentation.
+For the sake of consistency, we're using the attribute in the below documentation.
 
-   For MongoDB ODM, all the filters are in the namespace `ApiPlatform\Doctrine\Odm\Filter`. The filter
-   services all begin with `api_platform.doctrine_mongodb.odm`.
+For MongoDB ODM, all the filters are in the namespace `ApiPlatform\Doctrine\Odm\Filter`. The filter
+services all begin with `api_platform.doctrine_mongodb.odm`.
 
 ### Search Filter
 
@@ -254,7 +254,7 @@ The above URLs will return all offers for the product having the following IRI a
 
 ### Date Filter
 
-The date filter allows to filter a collection by date intervals.
+The date filter allows filtering a collection by date intervals.
 
 Syntax: `?property[<after|before|strictly_after|strictly_before>]=value`
 
@@ -262,7 +262,7 @@ The value can take any date format supported by the [`\DateTime` constructor](ht
 
 The `after` and `before` filters will filter including the value whereas `strictly_after` and `strictly_before` will filter excluding the value.
 
-Like others filters, the date filter must be explicitly enabled:
+Like other filters, the date filter must be explicitly enabled:
 
 [codeSelector]
 
@@ -533,7 +533,7 @@ You can filter offers by joining two values, for example: `/offers?price[gt]=12.
 
 ### Exists Filter
 
-The exists filter allows you to select items based on a nullable field value.
+The "exists" filter allows you to select items based on a nullable field value.
 It will also check the emptiness of a collection association.
 
 Syntax: `?exists[property]=<true|false|1|0>`
@@ -582,7 +582,7 @@ App\Entity\Offer:
 
 [/codeSelector]
 
-Given that the collection endpoint is `/offers`, you can filter offers on nullable field with the following query: `/offers?exists[transportFees]=true`.
+Given that the collection endpoint is `/offers`, you can filter offers on the nullable field with the following query: `/offers?exists[transportFees]=true`.
 
 It will return all offers where `transportFees` is not `null`.
 
@@ -600,7 +600,7 @@ api_platform:
 
 ### Order Filter (Sorting)
 
-The order filter allows to sort a collection against the given properties.
+The order filter allows sorting a collection against the given properties.
 
 Syntax: `?order[property]=<asc|desc>`
 
@@ -990,8 +990,8 @@ api_platform:
 
 ### Match Filter
 
-The match filter allows to find resources that [match](https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl-match-query.html)
-the specified text on full text fields.
+The match filter allows us to find resources that [match](https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl-match-query.html)
+the specified text on full-text fields.
 
 Syntax: `?property[]=value`
 
@@ -1021,7 +1021,7 @@ Given that the collection endpoint is `/tweets`, you can filter tweets by messag
 
 ### Term Filter
 
-The term filter allows to find resources that contain the exact specified
+The term filter allows us to find resources that contain the exact specified
 [terms](https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl-term-query.html).
 
 Syntax: `?property[]=value`
@@ -1194,7 +1194,7 @@ final class RegexpFilter extends AbstractFilter
 {
     protected function filterProperty(string $property, $value, QueryBuilder $queryBuilder, QueryNameGeneratorInterface $queryNameGenerator, string $resourceClass, Operation $operation = null, array $context = []): void
     {
-        // otherwise filter is applied to order and page as well
+        // Otherwise filter is applied to order and page as well
         if (
             !$this->isPropertyEnabled($property, $resourceClass) ||
             !$this->isPropertyMapped($property, $resourceClass)
@@ -1260,7 +1260,7 @@ class Offer
 You can now use this filter in the URL like `http://example.com/offers?regexp_email=^[FOO]`. This new filter will also
 appear in OpenAPI and Hydra documentations.
 
-In the previous example, the filter can be applied on any property. You can also apply this filter on a specific property:
+In the previous example, the filter can be applied to any property. You can also apply this filter on a specific property:
 
 ```php
 <?php
@@ -1303,10 +1303,11 @@ class Offer
 ```
 These properties can then be accessed in the custom filter like this:
 ```php
-//App/Filter/CustomAndFilter.php
-protected function filterProperty(string $property, $value, QueryBuilder $queryBuilder, QueryNameGeneratorInterface $queryNameGenerator, string $resourceClass, Operation $operation = null, array $context = []) {  
+// api/src/Filter/CustomAndFilter.php
+
+protected function filterProperty(string $property, $value, QueryBuilder $queryBuilder, QueryNameGeneratorInterface $queryNameGenerator, string $resourceClass, Operation $operation = null, array $context = []): void {  
   $rootAlias = $queryBuilder->getRootAliases()[0];  
-  foreach (array_keys($this->getProperties()) as $prop) { //NOTE: we use array_keys because getProperties() returns a map of property => strategy
+  foreach(array_keys($this->getProperties()) as $prop) { // we use array_keys() because getProperties() returns a map of property => strategy
       if (!$this->isPropertyEnabled($prop, $resourceClass) || !$this->isPropertyMapped($prop, $resourceClass)) {  
           return;  
       }  
@@ -1335,7 +1336,7 @@ services:
         tags: [ 'api_platform.filter' ]
 ```
 
-In the previous example, the filter can be applied on any property. However, thanks to the `AbstractFilter` class,
+In the previous example, the filter can be applied to any property. However, thanks to the `AbstractFilter` class,
 it can also be enabled for some properties:
 
 ```yaml
@@ -1394,10 +1395,11 @@ Suppose you want to use the [match filter](#match-filter) on a property named `$
 namespace App\ElasticSearch;
 
 use ApiPlatform\Elasticsearch\Extension\RequestBodySearchCollectionExtensionInterface;
+use ApiPlatform\Metadata\Operation;
 
 class AndOperatorFilterExtension implements RequestBodySearchCollectionExtensionInterface
 {
-    public function applyToCollection(array $requestBody, string $resourceClass, ?string $operationName = null, array $context = []): array
+    public function applyToCollection(array $requestBody, string $resourceClass, ?Operation $operation = null, array $context = []): array;
     {
         $requestBody['query'] = $requestBody['query'] ?? [];
         $andQuery = [
@@ -1414,10 +1416,10 @@ class AndOperatorFilterExtension implements RequestBodySearchCollectionExtension
 
 ### Using Doctrine ORM Filters
 
-Doctrine ORM features [a filter system](http://docs.doctrine-project.org/projects/doctrine-orm/en/latest/reference/filters.html) that allows the developer to add SQL to the conditional clauses of queries, regardless of the place where the SQL is generated (e.g. from a DQL query, or by loading associated entities).
-These are applied on collections and items and therefore are incredibly useful.
+Doctrine ORM features [a filter system](https://www.doctrine-project.org/projects/doctrine-orm/en/latest/reference/filters.html) that allows the developer to add SQL to the conditional clauses of queries, regardless of the place where the SQL is generated (e.g. from a DQL query, or by loading associated entities).
+These are applied to collections and items and therefore are incredibly useful.
 
-The following information, specific to Doctrine filters in Symfony, is based upon [a great article posted on Michaël Perrin's blog](http://blog.michaelperrin.fr/2014/12/05/doctrine-filters/).
+The following information, specific to Doctrine filters in Symfony, is based upon [a great article posted on Michaël Perrin's blog](https://www.michaelperrin.fr/blog/2014/12/doctrine-filters).
 
 Suppose we have a `User` entity and an `Order` entity related to the `User` one. A user should only see his orders and no one else's.
 
@@ -1594,7 +1596,7 @@ On the first property, `name`, it's straightforward. The first attribute argumen
 #[ApiFilter(SearchFilter::class, strategy: 'partial')]
 ```
 
-In the second attribute, we specify `properties` on which the filter should apply. It's necessary here because we don't want to filter `colors` but the `prop` property of the `colors` association.
+In the second attribute, we specify `properties` to which the filter should apply. It's necessary here because we don't want to filter `colors` but the `prop` property of the `colors` association.
 Note that for each given property we specify the strategy:
 
 ```php
@@ -1632,7 +1634,7 @@ class DummyCar
 
 ```
 
-The `BooleanFilter` is applied to every `Boolean` property of the class. Indeed, in each core filter we check the Doctrine type. It's written only by using the filter class:
+The `BooleanFilter` is applied to every `Boolean` property of the class. Indeed, in each core filter, we check the Doctrine type. It's written only by using the filter class:
 
 ```php
 #[ApiFilter(BooleanFilter::class)]

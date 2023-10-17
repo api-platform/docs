@@ -20,11 +20,9 @@ cache. This ensures that the content served will always be fresh, because the ca
 most specific cases such as the invalidation of collections when a document is added or removed or for relationships and
 inverse relations is built-in.
 
-Integration with Varnish and Doctrine ORM is shipped with the core library, and [Varnish](https://varnish-cache.org/) is
-included in the Docker setup provided with the [API Platform distribution](../distribution/index.md). If you use the distribution,
-this feature works out of the box.
+Integration with Varnish and Doctrine ORM is shipped with the core library.
 
-If you don't use the distribution, add the following configuration to enable the cache invalidation system:
+Add the following configuration to enable the cache invalidation system:
 
 ```yaml
 api_platform:
@@ -40,7 +38,7 @@ api_platform:
             vary: ['Content-Type', 'Authorization', 'Origin']
 ```
 
-Support for reverse proxies other than Varnish can easily be added by implementing the `ApiPlatform\HttpCache\PurgerInterface`.
+Support for reverse proxies other than Varnish can be added by implementing the `ApiPlatform\HttpCache\PurgerInterface`.
 Two purgers are available, the http tags (`api_platform.http_cache.purger.varnish.ban`) or the surrogate key implementation
 (`api_platform.http_cache.purger.varnish.xkey`). You can specify the implementation using the `purger` configuration node,
 for example to use the xkey implementation:
@@ -156,7 +154,7 @@ class Book
 ## Enabling the Metadata Cache
 
 Computing metadata used by the bundle is a costly operation. Fortunately, metadata can be computed once and then cached.
-API Platform internally uses a [PSR-6](http://www.php-fig.org/psr/psr-6/) cache. If the Symfony Cache component is available
+API Platform internally uses a [PSR-6](https://www.php-fig.org/psr/psr-6/) cache. If the Symfony Cache component is available
 (the default in the API Platform distribution), it automatically enables support for the best cache adapter available.
 
 Best performance is achieved using [APCu](https://github.com/krakjoe/apcu). Be sure to have the APCu extension installed
@@ -175,9 +173,9 @@ Keep in mind that PPM is still in an early stage of development and can cause is
 
 When using the `SearchFilter` and case insensitivity, Doctrine will use the `LOWER` SQL function. Depending on your
 driver, you may want to carefully index it by using a [function-based
-index](http://use-the-index-luke.com/sql/where-clause/functions/case-insensitive-search) or it will impact performance
+index](https://use-the-index-luke.com/sql/where-clause/functions/case-insensitive-search) or it will impact performance
 with a huge collection. [Here are some examples to index LIKE
-filters](http://use-the-index-luke.com/sql/where-clause/searching-for-ranges/like-performance-tuning) depending on your
+filters](https://use-the-index-luke.com/sql/where-clause/searching-for-ranges/like-performance-tuning) depending on your
 database driver.
 
 ### Eager Loading
@@ -200,6 +198,8 @@ public $foo;
 
 ...
 ```
+
+> **Warning**: in order to trigger the `EagerLoadingExtension` you must use [Serializer groups](serialization.md) on relations properties.
 
 #### Max Joins
 
@@ -343,9 +343,8 @@ If you don't mind not having the last page available, you can enable partial pag
 ```yaml
 # api/config/packages/api_platform.yaml
 api_platform:
-    collection:
-        pagination:
-            partial: true # Disabled by default
+    defaults:
+        pagination_partial: true # Disabled by default
 ```
 
 More details are available on the [pagination documentation](pagination.md#partial-pagination).
@@ -358,46 +357,46 @@ To configure Blackfire.io follow these simple steps:
 
 1. Add the following to your `docker-compose.override.yml` file:
 
-    ```yaml
-        blackfire:
-            image: blackfire/blackfire:2
-            environment:
-                # Exposes the host BLACKFIRE_SERVER_ID and TOKEN environment variables.
-                - BLACKFIRE_SERVER_ID
-                - BLACKFIRE_SERVER_TOKEN
-                - BLACKFIRE_DISABLE_LEGACY_PORT=1
-    ```
+```yaml
+    blackfire:
+        image: blackfire/blackfire:2
+        environment:
+            # Exposes the host BLACKFIRE_SERVER_ID and TOKEN environment variables.
+            - BLACKFIRE_SERVER_ID
+            - BLACKFIRE_SERVER_TOKEN
+            - BLACKFIRE_DISABLE_LEGACY_PORT=1
+```
 
 2. Add your Blackfire.io ID and server token to your `.env` file at the root of your project (be sure not to commit this to a public repository):
 
-    ```shell
-    BLACKFIRE_SERVER_ID=xxxxxxxxxx
-    BLACKFIRE_SERVER_TOKEN=xxxxxxxxxx
-    ```
+```shell
+BLACKFIRE_SERVER_ID=xxxxxxxxxx
+BLACKFIRE_SERVER_TOKEN=xxxxxxxxxx
+```
 
-    Or set it in the console before running Docker commands:
+Or set it in the console before running Docker commands:
 
-    ```shell
-    export BLACKFIRE_SERVER_ID=xxxxxxxxxx
-    export BLACKFIRE_SERVER_TOKEN=xxxxxxxxxx
-    ```
+```shell
+export BLACKFIRE_SERVER_ID=xxxxxxxxxx
+export BLACKFIRE_SERVER_TOKEN=xxxxxxxxxx
+```
 
 3. Install and configure the Blackfire probe in the app container, by adding the following to your `./Dockerfile`:
 
-    ```dockerfile
-            RUN version=$(php -r "echo PHP_MAJOR_VERSION.PHP_MINOR_VERSION;") \
-                && curl -A "Docker" -o /tmp/blackfire-probe.tar.gz -D - -L -s https://blackfire.io/api/v1/releases/probe/php/alpine/amd64/$version \
-                && mkdir -p /tmp/blackfire \
-                && tar zxpf /tmp/blackfire-probe.tar.gz -C /tmp/blackfire \                        
-                && mv /tmp/blackfire/blackfire-*.so $(php -r "echo ini_get('extension_dir');")/blackfire.so \
-                && printf "extension=blackfire.so\nblackfire.agent_socket=tcp://blackfire:8307\n" > $PHP_INI_DIR/conf.d/blackfire.ini
-    ```
+```dockerfile
+        RUN version=$(php -r "echo PHP_MAJOR_VERSION.PHP_MINOR_VERSION;") \
+            && curl -A "Docker" -o /tmp/blackfire-probe.tar.gz -D - -L -s https://blackfire.io/api/v1/releases/probe/php/alpine/amd64/$version \
+            && mkdir -p /tmp/blackfire \
+            && tar zxpf /tmp/blackfire-probe.tar.gz -C /tmp/blackfire \                        
+            && mv /tmp/blackfire/blackfire-*.so $(php -r "echo ini_get('extension_dir');")/blackfire.so \
+            && printf "extension=blackfire.so\nblackfire.agent_socket=tcp://blackfire:8307\n" > $PHP_INI_DIR/conf.d/blackfire.ini
+```
 
 4. Rebuild and restart all your containers
 
-    ```console
-    docker compose build
-    docker compose up -d
-    ```
+```console
+docker compose build
+docker compose up --wait
+```
 
 For details on how to perform profiling, see [the Blackfire.io documentation](https://blackfire.io/docs/integrations/docker#using-the-client-for-http-profiling).
