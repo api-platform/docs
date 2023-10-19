@@ -26,7 +26,7 @@ docker build -t gcr.io/test-api-platform/varnish -t gcr.io/test-api-platform/var
 
 2. Push your images to your Docker registry, example with [Google Container Registry](https://cloud.google.com/container-registry/):
 
-Docker client versions <= 18.03:
+Docker client versions `<= 18.03`:
 
 ```console
 gcloud docker -- push gcr.io/test-api-platform/php
@@ -34,7 +34,7 @@ gcloud docker -- push gcr.io/test-api-platform/nginx
 gcloud docker -- push gcr.io/test-api-platform/varnish
 ```
 
-Docker client versions > 18.03:
+Docker client versions `> 18.03`:
 
 ```console
 gcloud auth configure-docker
@@ -95,9 +95,6 @@ Before running your application for the first time, be sure to create the databa
 ```console
 PHP_POD=$(kubectl --namespace=bar get pods -l app=php -o jsonpath="{.items[0].metadata.name}")
 kubectl --namespace=bar exec -it $PHP_POD -- bin/console doctrine:schema:create
-```
-    PHP_POD=$(kubectl --namespace=bar get pods -l app=php -o jsonpath="{.items[0].metadata.name}")
-    kubectl --namespace=bar exec -it $PHP_POD -- bin/console doctrine:schema:create
 ```
 
 ## Tiller RBAC Issue
