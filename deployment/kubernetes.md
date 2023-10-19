@@ -29,7 +29,7 @@ Change the name "test-api-platform" to your Google project ID (not the project n
 [Quickstart Google Cloud](https://cloud.google.com/sdk/docs/quickstart?hl=de)
 If you do not have gcloud yet, install it with these command.
 
-```
+```console
 curl https://sdk.cloud.google.com | bash
 ```
 
@@ -38,7 +38,7 @@ curl https://sdk.cloud.google.com | bash
 Versioning: The 0.1.0 is the version. This value should be the same as the attribute `appVersion` in `Chart.yaml`.
 Infos for [Google Container pulling and pushing](https://cloud.google.com/container-registry/docs/pushing-and-pulling)
 
-```
+```console
 docker build -t gcr.io/test-api-platform/php:0.1.0 -t gcr.io/test-api-platform/php:latest api --target api_platform_php
 docker build -t gcr.io/test-api-platform/caddy:0.1.0 -t gcr.io/test-api-platform/caddy:latest api --target api_platform_caddy
 docker build -t gcr.io/test-api-platform/pwa:0.1.0 -t gcr.io/test-api-platform/pwa:latest pwa --target api_platform_pwa_prod
@@ -55,7 +55,7 @@ docker push gcr.io/test-api-platform/pwa
 
 Optional push the version images:
 
-```
+```console
 docker push gcr.io/test-api-platform/php:0.1.0 
 docker push gcr.io/test-api-platform/caddy:0.1.0 
 docker push gcr.io/test-api-platform/pwa:0.1.0 
@@ -70,7 +70,7 @@ The result should look similar to these images.
 
 ### 1. Check the Helm version
 
-```
+```console
 helm version
 ```
 
@@ -78,7 +78,7 @@ If you are using version 2.x follow this [guide to migrate Helm to v3](https://h
 
 ### 2. Firstly you need to update helm dependencies by running
 
-```
+```console
 helm dependency update ./helm/api-platform
 ```
 
@@ -87,13 +87,13 @@ Actual this is [bitnami/postgresql](https://bitnami.com/stack/postgresql/helm), 
 
 ### 3. Optional: If you made changes to the Helm chart, check if its format is correct
 
-```
+```console
 helm lint ./helm/api-platform
 ```
 
 ### 4. Deploy your API to the container
 
-```
+```console
 helm upgrade main ./helm/api-platform --namespace=default --create-namespace --wait \
     --install \
     --set "php.image.repository=gcr.io/test-api-platform/php" \
@@ -125,7 +125,7 @@ get access on your local machine to the deploy. See image below.
 If you prefer to use a managed DBMS like [Heroku Postgres](https://www.heroku.com/postgres) or
 [Google Cloud SQL](https://cloud.google.com/sql/docs/postgres/) (recommended):
 
-```
+```console
 helm upgrade api-platform ./helm/api-platform \
     # ...
     --set postgresql.enabled=false \
@@ -140,7 +140,7 @@ site hosting service](https://create-react-app.dev/docs/deployment/).
 You can access the php container of the pod with the following command.
 In this example the symfony console is called.
 
-```
+```console
 CADDY_PHP_POD=$(kubectl --namespace=default get pods -l app.kubernetes.io/name=api-platform -o jsonpath="{.items[0].metadata.name}")
 kubectl --namespace=default exec -it $CADDY_PHP_POD -c api-platform-php -- bin/console
 ```
@@ -171,7 +171,6 @@ You have to use the *.image.pullPolicy=Always see the last 3 parameters.
 ```console
 PHP_POD=$(kubectl --namespace=bar get pods -l app=php -o jsonpath="{.items[0].metadata.name}")
 kubectl --namespace=bar exec -it $PHP_POD -- bin/console doctrine:schema:create
-```
 helm upgrade api-platform ./helm/api-platform --namespace=default \
     --set "php.image.repository=gcr.io/test-api-platform/php" \
     --set php.image.tag=latest \
@@ -200,7 +199,7 @@ Start by creating a new template for the queue-worker-deployment. The `deploymen
 
 Add the following lines under `containers` to overwrite the command.
 
-```
+```yaml
 command:
 {{ range .Values.queue_worker.command }}
     - {{ . | quote }}
@@ -213,14 +212,14 @@ args:
 
 Here is an example on how to use it from your `values.yaml`:
 
-```
+```yaml
 command: ['bin/console']
 commandArgs: ['messenger:consume', 'async', '--memory-limit=100M']
 ```
 
 The `readinessProbe` and the `livenessProble` can not use the default `docker-healthcheck` but should test if the command is running.
 
-```
+```yaml
 readinessProbe:
     exec:
         command: ["/bin/sh", "-c", "/bin/ps -ef | grep messenger:consume | grep -v grep"]
