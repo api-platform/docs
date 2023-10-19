@@ -152,7 +152,7 @@ there is probably a problem with the system architecture.
 `standard_init_linux.go:211: exec user process caused "exec format error`
 Build the images with the same system architecture as the cluster runs.
 Example: Building with Mac M1 with arm64 leads to problems. Most cluster will run with x86_64.
-Solution: <https://blog.jaimyn.dev/how-to-build-multi-architecture-docker-images-on-an-m1-mac/>
+Solution: [https://blog.jaimyn.dev/how-to-build-multi-architecture-docker-images-on-an-m1-mac](https://blog.jaimyn.dev/how-to-build-multi-architecture-docker-images-on-an-m1-mac)
 
 ## Updates
 
