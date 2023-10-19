@@ -4,7 +4,7 @@ API Platform can automatically push the modified version of the resources expose
 
 > *Mercure* is a protocol allowing to push data updates to web browsers and other HTTP clients in a convenient, fast, reliable and battery-efficient way. It is especially useful to publish real-time updates of resources served through web APIs, to reactive web and mobile apps.
 >
-> —<https://mercure.rocks>
+> —[https://mercure.rocks](https://mercure.rocks)
 
 API Platform detects changes made to your Doctrine entities, and sends the updated resources to the Mercure hub.
 Then, the Mercure hub dispatches the updates to all connected clients using [Server-sent Events (SSE)](https://developer.mozilla.org/en-US/docs/Web/API/Server-sent_events).
