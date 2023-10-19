@@ -18,7 +18,7 @@ package manager) chart to deploy in a wink on any of these platforms.
 
 1. Build the PHP and Nginx Docker images:
 
-```
+```console
 docker build -t gcr.io/test-api-platform/php -t gcr.io/test-api-platform/php:latest api --target api_platform_php
 docker build -t gcr.io/test-api-platform/nginx -t gcr.io/test-api-platform/nginx:latest api --target api_platform_nginx
 docker build -t gcr.io/test-api-platform/varnish -t gcr.io/test-api-platform/varnish:latest api --target api_platform_varnish
@@ -28,7 +28,7 @@ docker build -t gcr.io/test-api-platform/varnish -t gcr.io/test-api-platform/var
 
 Docker client versions <= 18.03:
 
-```
+```console
 gcloud docker -- push gcr.io/test-api-platform/php
 gcloud docker -- push gcr.io/test-api-platform/nginx
 gcloud docker -- push gcr.io/test-api-platform/varnish
@@ -36,7 +36,7 @@ gcloud docker -- push gcr.io/test-api-platform/varnish
 
 Docker client versions > 18.03:
 
-```
+```console
 gcloud auth configure-docker
 docker push gcr.io/test-api-platform/php
 docker push gcr.io/test-api-platform/nginx
@@ -104,7 +104,7 @@ kubectl --namespace=bar exec -it $PHP_POD -- bin/console doctrine:schema:create
 
 We noticed that some tiller RBAC trouble occurred, you generally can resolve it running:
 
-```
+```console
 kubectl create serviceaccount --namespace kube-system tiller
   serviceaccount "tiller" created
 
