@@ -18,24 +18,30 @@ package manager) chart to deploy in a wink on any of these platforms.
 
 1. Build the PHP and Nginx Docker images:
 
-        docker build -t gcr.io/test-api-platform/php -t gcr.io/test-api-platform/php:latest api --target api_platform_php
-        docker build -t gcr.io/test-api-platform/nginx -t gcr.io/test-api-platform/nginx:latest api --target api_platform_nginx
-        docker build -t gcr.io/test-api-platform/varnish -t gcr.io/test-api-platform/varnish:latest api --target api_platform_varnish
+```
+docker build -t gcr.io/test-api-platform/php -t gcr.io/test-api-platform/php:latest api --target api_platform_php
+docker build -t gcr.io/test-api-platform/nginx -t gcr.io/test-api-platform/nginx:latest api --target api_platform_nginx
+docker build -t gcr.io/test-api-platform/varnish -t gcr.io/test-api-platform/varnish:latest api --target api_platform_varnish
+```
 
 2. Push your images to your Docker registry, example with [Google Container Registry](https://cloud.google.com/container-registry/):
 
-    Docker client versions <= 18.03:
-    
-        gcloud docker -- push gcr.io/test-api-platform/php
-        gcloud docker -- push gcr.io/test-api-platform/nginx
-        gcloud docker -- push gcr.io/test-api-platform/varnish
-        
-    Docker client versions > 18.03:
-    
-        gcloud auth configure-docker
-        docker push gcr.io/test-api-platform/php
-        docker push gcr.io/test-api-platform/nginx
-        docker push gcr.io/test-api-platform/varnish
+Docker client versions <= 18.03:
+
+```
+gcloud docker -- push gcr.io/test-api-platform/php
+gcloud docker -- push gcr.io/test-api-platform/nginx
+gcloud docker -- push gcr.io/test-api-platform/varnish
+```
+
+Docker client versions > 18.03:
+
+```
+gcloud auth configure-docker
+docker push gcr.io/test-api-platform/php
+docker push gcr.io/test-api-platform/nginx
+docker push gcr.io/test-api-platform/varnish
+```
 
 ## Deploying
 
@@ -89,19 +95,22 @@ Before running your application for the first time, be sure to create the databa
 ```
     PHP_POD=$(kubectl --namespace=bar get pods -l app=php -o jsonpath="{.items[0].metadata.name}")
     kubectl --namespace=bar exec -it $PHP_POD -- bin/console doctrine:schema:create
+```
 
 ## Tiller RBAC Issue
 
 We noticed that some tiller RBAC trouble occurred, you generally can resolve it running:
 
-    kubectl create serviceaccount --namespace kube-system tiller
-      serviceaccount "tiller" created
+```
+kubectl create serviceaccount --namespace kube-system tiller
+  serviceaccount "tiller" created
 
-    kubectl create clusterrolebinding tiller-cluster-rule --clusterrole=cluster-admin --serviceaccount=kube-system:tiller
-      clusterrolebinding "tiller-cluster-rule" created
+kubectl create clusterrolebinding tiller-cluster-rule --clusterrole=cluster-admin --serviceaccount=kube-system:tiller
+  clusterrolebinding "tiller-cluster-rule" created
 
-    kubectl patch deploy --namespace kube-system tiller-deploy -p '{"spec":{"template":{"spec":{"serviceAccount":"tiller"}}}}'
-      deployment "tiller-deploy" patched
+kubectl patch deploy --namespace kube-system tiller-deploy -p '{"spec":{"template":{"spec":{"serviceAccount":"tiller"}}}}'
+  deployment "tiller-deploy" patched
+```
 
 Please, see the [related issue](https://github.com/kubernetes/helm/issues/3130) for further details / informations
 You can also take a look to the [related documentation](https://github.com/kubernetes/helm/blob/master/docs/rbac.md)
