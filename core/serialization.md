@@ -1011,7 +1011,8 @@ Note: this normalizer will work only for JSON-LD format, if you want to process 
 
 ```php
 <?php
-// api/src/Serializer/ApiNormalizer
+// api/src/Serializer/ApiNormalizer.php
+
 namespace App\Serializer;
 
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;

@@ -46,7 +46,7 @@ resource:
 ```
 
 ```xml
-<properties xmlns="https://api-platform.com/schema/metadata/properties">
+<properties xmlns="https://api-platform.com/schema/metadata/properties-3.0">
     <property resource="App\Entity\Person" name="code" identifier="true"/>
 </properties>
 <resources xmlns="https://api-platform.com/schema/metadata/resources-3.0">
