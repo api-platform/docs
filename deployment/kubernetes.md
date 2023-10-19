@@ -46,7 +46,7 @@ docker build -t gcr.io/test-api-platform/pwa:0.1.0 -t gcr.io/test-api-platform/p
 
 #### 2. Push your images to your Docker registry
 
-```
+```console
 gcloud auth configure-docker
 docker push gcr.io/test-api-platform/php
 docker push gcr.io/test-api-platform/caddy
@@ -168,6 +168,9 @@ You can upgrade with the same command from the installation and pass all paramet
 Infos about [best practices for tagging images for kubernetes](https://kubernetes.io/docs/concepts/containers/images/)
 You have to use the *.image.pullPolicy=Always see the last 3 parameters.
 
+```console
+PHP_POD=$(kubectl --namespace=bar get pods -l app=php -o jsonpath="{.items[0].metadata.name}")
+kubectl --namespace=bar exec -it $PHP_POD -- bin/console doctrine:schema:create
 ```
 helm upgrade api-platform ./helm/api-platform --namespace=default \
     --set "php.image.repository=gcr.io/test-api-platform/php" \
