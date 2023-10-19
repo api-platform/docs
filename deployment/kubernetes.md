@@ -29,29 +29,37 @@ Change the name "test-api-platform" to your Google project ID (not the project n
 [Quickstart Google Cloud](https://cloud.google.com/sdk/docs/quickstart?hl=de)
 If you do not have gcloud yet, install it with these command.
 
-    curl https://sdk.cloud.google.com | bash
+```
+curl https://sdk.cloud.google.com | bash
+```
 
 #### 1. Build the PHP and Caddy Docker images and tag them
 
 Versioning: The 0.1.0 is the version. This value should be the same as the attribute `appVersion` in `Chart.yaml`.
 Infos for [Google Container pulling and pushing](https://cloud.google.com/container-registry/docs/pushing-and-pulling)
 
-    docker build -t gcr.io/test-api-platform/php:0.1.0 -t gcr.io/test-api-platform/php:latest api --target api_platform_php
-    docker build -t gcr.io/test-api-platform/caddy:0.1.0 -t gcr.io/test-api-platform/caddy:latest api --target api_platform_caddy
-    docker build -t gcr.io/test-api-platform/pwa:0.1.0 -t gcr.io/test-api-platform/pwa:latest pwa --target api_platform_pwa_prod
+```
+docker build -t gcr.io/test-api-platform/php:0.1.0 -t gcr.io/test-api-platform/php:latest api --target api_platform_php
+docker build -t gcr.io/test-api-platform/caddy:0.1.0 -t gcr.io/test-api-platform/caddy:latest api --target api_platform_caddy
+docker build -t gcr.io/test-api-platform/pwa:0.1.0 -t gcr.io/test-api-platform/pwa:latest pwa --target api_platform_pwa_prod
+```
 
 #### 2. Push your images to your Docker registry
 
-    gcloud auth configure-docker
-    docker push gcr.io/test-api-platform/php
-    docker push gcr.io/test-api-platform/caddy
-    docker push gcr.io/test-api-platform/pwa
+```
+gcloud auth configure-docker
+docker push gcr.io/test-api-platform/php
+docker push gcr.io/test-api-platform/caddy
+docker push gcr.io/test-api-platform/pwa
+```
 
 Optional push the version images:
 
-    docker push gcr.io/test-api-platform/php:0.1.0 
-    docker push gcr.io/test-api-platform/caddy:0.1.0 
-    docker push gcr.io/test-api-platform/pwa:0.1.0 
+```
+docker push gcr.io/test-api-platform/php:0.1.0 
+docker push gcr.io/test-api-platform/caddy:0.1.0 
+docker push gcr.io/test-api-platform/pwa:0.1.0 
+```
 
 The result should look similar to these images.
 
@@ -62,35 +70,43 @@ The result should look similar to these images.
 
 ### 1. Check the Helm version
 
-    helm version
+```
+helm version
+```
 
 If you are using version 2.x follow this [guide to migrate Helm to v3](https://helm.sh/docs/topics/v2_v3_migration/#helm)
 
 ### 2. Firstly you need to update helm dependencies by running
 
-    helm dependency update ./helm/api-platform
+```
+helm dependency update ./helm/api-platform
+```
 
 This will create a folder helm/api-platform/charts/ and add all dependencies there.
 Actual this is [bitnami/postgresql](https://bitnami.com/stack/postgresql/helm), a file postgresql-[VERSION].tgz is created.
 
 ### 3. Optional: If you made changes to the Helm chart, check if its format is correct
 
-    helm lint ./helm/api-platform
+```
+helm lint ./helm/api-platform
+```
 
 ### 4. Deploy your API to the container
 
-    helm upgrade main ./helm/api-platform --namespace=default --create-namespace --wait \
-        --install \
-        --set "php.image.repository=gcr.io/test-api-platform/php" \
-        --set php.image.tag=latest \
-        --set "caddy.image.repository=gcr.io/test-api-platform/caddy" \
-        --set caddy.image.tag=latest \
-        --set "pwa.image.repository=gcr.io/test-api-platform/pwa" \
-        --set pwa.image.tag=latest \
-        --set php.appSecret='!ChangeMe!' \
-        --set postgresql.postgresqlPassword='!ChangeMe!' \
-        --set postgresql.persistence.enabled=true \
-        --set "corsAllowOrigin=^https?:\/\/[a-z]*\.mywebsite.com$"
+```
+helm upgrade main ./helm/api-platform --namespace=default --create-namespace --wait \
+    --install \
+    --set "php.image.repository=gcr.io/test-api-platform/php" \
+    --set php.image.tag=latest \
+    --set "caddy.image.repository=gcr.io/test-api-platform/caddy" \
+    --set caddy.image.tag=latest \
+    --set "pwa.image.repository=gcr.io/test-api-platform/pwa" \
+    --set pwa.image.tag=latest \
+    --set php.appSecret='!ChangeMe!' \
+    --set postgresql.postgresqlPassword='!ChangeMe!' \
+    --set postgresql.persistence.enabled=true \
+    --set "corsAllowOrigin=^https?:\/\/[a-z]*\.mywebsite.com$"
+```
 
 The `"` are necessary for Windows. Use ^ on Windows instead of \ to split commands into multiple lines.
 You can add the parameter `--dry-run` to check upfront if anything is correct.
@@ -109,10 +125,12 @@ get access on your local machine to the deploy. See image below.
 If you prefer to use a managed DBMS like [Heroku Postgres](https://www.heroku.com/postgres) or
 [Google Cloud SQL](https://cloud.google.com/sql/docs/postgres/) (recommended):
 
-    helm upgrade api-platform ./helm/api-platform \
-        # ...
-        --set postgresql.enabled=false \
-        --set postgresql.url=pgsql://username:password@host/database?serverVersion=13
+```
+helm upgrade api-platform ./helm/api-platform \
+    # ...
+    --set postgresql.enabled=false \
+    --set postgresql.url=pgsql://username:password@host/database?serverVersion=13
+```
 
 Finally, build the `pwa` (client and admin) JavaScript apps and [deploy them on a static
 site hosting service](https://create-react-app.dev/docs/deployment/).
@@ -122,8 +140,10 @@ site hosting service](https://create-react-app.dev/docs/deployment/).
 You can access the php container of the pod with the following command.
 In this example the symfony console is called.
 
-    CADDY_PHP_POD=$(kubectl --namespace=default get pods -l app.kubernetes.io/name=api-platform -o jsonpath="{.items[0].metadata.name}")
-    kubectl --namespace=default exec -it $CADDY_PHP_POD -c api-platform-php -- bin/console
+```
+CADDY_PHP_POD=$(kubectl --namespace=default get pods -l app.kubernetes.io/name=api-platform -o jsonpath="{.items[0].metadata.name}")
+kubectl --namespace=default exec -it $CADDY_PHP_POD -c api-platform-php -- bin/console
+```
 
 ## Caution for system architecture
 
@@ -148,7 +168,8 @@ You can upgrade with the same command from the installation and pass all paramet
 Infos about [best practices for tagging images for kubernetes](https://kubernetes.io/docs/concepts/containers/images/)
 You have to use the *.image.pullPolicy=Always see the last 3 parameters.
 
-    helm upgrade api-platform ./helm/api-platform --namespace=default \
+```
+helm upgrade api-platform ./helm/api-platform --namespace=default \
     --set "php.image.repository=gcr.io/test-api-platform/php" \
     --set php.image.tag=latest \
     --set "caddy.image.repository=gcr.io/test-api-platform/caddy" \
@@ -162,6 +183,7 @@ You have to use the *.image.pullPolicy=Always see the last 3 parameters.
     --set php.image.pullPolicy=Always \
     --set caddy.image.pullPolicy=Always \
     --set pwa.image.pullPolicy=Always
+```
 
 ## GitHub Actions Example for deployment
 
@@ -175,24 +197,30 @@ Start by creating a new template for the queue-worker-deployment. The `deploymen
 
 Add the following lines under `containers` to overwrite the command.
 
-    command:
-    {{ range .Values.queue_worker.command }}
-        - {{ . | quote }}
-    {{ end }}
-    args:
-    {{ range .Values.queue_worker.commandArgs }}
-        - {{ . | quote }}
-    {{ end }}
+```
+command:
+{{ range .Values.queue_worker.command }}
+    - {{ . | quote }}
+{{ end }}
+args:
+{{ range .Values.queue_worker.commandArgs }}
+    - {{ . | quote }}
+{{ end }}
+```
 
 Here is an example on how to use it from your `values.yaml`:
 
-    command: ['bin/console']
-    commandArgs: ['messenger:consume', 'async', '--memory-limit=100M']
+```
+command: ['bin/console']
+commandArgs: ['messenger:consume', 'async', '--memory-limit=100M']
+```
 
 The `readinessProbe` and the `livenessProble` can not use the default `docker-healthcheck` but should test if the command is running.
 
-    readinessProbe:
-        exec:
-            command: ["/bin/sh", "-c", "/bin/ps -ef | grep messenger:consume | grep -v grep"]
-            initialDelaySeconds: 120
-            periodSeconds: 3
+```
+readinessProbe:
+    exec:
+        command: ["/bin/sh", "-c", "/bin/ps -ef | grep messenger:consume | grep -v grep"]
+        initialDelaySeconds: 120
+        periodSeconds: 3
+```
