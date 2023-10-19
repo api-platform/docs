@@ -41,12 +41,15 @@ package manager) chart to deploy in a wink on any of these platforms.
 
 Firstly you need to update helm dependencies by running:
 
+```
     helm dependency update ./api/helm/api
+```
 
 You are now ready to deploy the API!
 
 Deploy your API to the container:
 
+```
     helm install ./api/helm/api --namespace=baz --name baz \
         --set php.repository=gcr.io/test-api-platform/php \
         --set nginx.repository=gcr.io/test-api-platform/nginx \
@@ -54,22 +57,27 @@ Deploy your API to the container:
         --set postgresql.postgresPassword=MyPgPassword \
         --set postgresql.persistence.enabled=true \
         --set corsAllowOrigin='^https?://[a-z\]*\.mywebsite.com$'
+```
 
 If you prefer to use a managed DBMS like [Heroku Postgres](https://www.heroku.com/postgres) or
 [Google Cloud SQL](https://cloud.google.com/sql/docs/postgres/) (recommended):
 
+```
     helm install --name api ./api/helm/api \
         # ...
         --set postgresql.enabled=false \
         --set postgresql.url=pgsql://username:password@host/database?serverVersion=9.6
+```
 
 If you want to use a managed Varnish such as [Fastly](https://www.fastly.com) for the invalidation cache mechanism
 provided by API Platform:
 
+```
     helm install --name api ./api/helm/api \
         # ...
         --set varnish.enabled=false \
         --set varnish.url=https://myvarnish.com
+```
 
 Finally, build the `client` and `admin` JavaScript apps and [deploy them on a static
 website hosting service](https://github.com/facebookincubator/create-react-app/blob/master/packages/react-scripts/template/README.md#deployment).
@@ -78,6 +86,7 @@ website hosting service](https://github.com/facebookincubator/create-react-app/b
 
 Before running your application for the first time, be sure to create the database schema:
 
+```
     PHP_POD=$(kubectl --namespace=bar get pods -l app=php -o jsonpath="{.items[0].metadata.name}")
     kubectl --namespace=bar exec -it $PHP_POD -- bin/console doctrine:schema:create
 
