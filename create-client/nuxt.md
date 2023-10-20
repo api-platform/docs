@@ -19,7 +19,7 @@ To generate the code you need for a given resource, run the following command:
 yarn create @api-platform/client https://demo.api-platform.com . --generator nuxt --resource foo
 ```
 
-Replace the URL with the entrypoint of your Hydra-enabled API. You can also use an OpenAPI documentation with `https://demo.api-platform.com/docs.json` and `-f openapi3`.
+Replace the URL with the entrypoint of your Hydra-enabled API. You can also use an OpenAPI documentation with `https://demo.api-platform.com/docs.jsonopenapi` and `-f openapi3`.
 
 Omit the resource flag to generate files for all resource types exposed by the API.
 
