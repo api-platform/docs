@@ -8,7 +8,7 @@
 
 This tutorial will help you to define your own routes for your client, API and more generally for your containers.
 
-Use this custom API Platform `docker-compose.yml` file which implements ready-to-use Træfik container configuration. Override
+Use this custom API Platform `compose.yaml` file which implements ready-to-use Træfik container configuration. Override
 ports and add labels to tell Træfik to listen on the routes mentioned and redirect routes to a specified container.
 
 A few points to note:
@@ -39,7 +39,7 @@ Then you edited your `admin/Dockerfile` and `client/Dockerfile` like this:
 After that, don't forget to re-build your containers
 
 ```yaml
-# docker-compose.yml
+# compose.yaml
 version: '3.4'
 
 x-cache-from:
@@ -190,12 +190,12 @@ If your network is of type B, it may conflict with the Træfik sub-network.
 
 ## Going Further
 
-As this Træfik configuration listens on 80 and 443 ports, you can run only 1 Træfik instance per server. However, you may want to run multiple API Platform projects on the same server. To deal with it, you'll have to externalize the Træfik configuration to another `docker-compose.yml` file, anywhere on your server.
+As this Træfik configuration listens on 80 and 443 ports, you can run only 1 Træfik instance per server. However, you may want to run multiple API Platform projects on the same server. To deal with it, you'll have to externalize the Træfik configuration to another `compose.yaml` file, anywhere on your server.
 
 Here is a working example:
 
 ```yaml
-# /somewhere/docker-compose.yml
+# /somewhere/compose.yaml
 version: '3.4'
 
 services:
@@ -224,10 +224,10 @@ networks:
   # Add other networks here
 ```
 
-Then update the `docker-compose.yml` file belonging to your API Platform projects:
+Then update the `compose.yaml` file belonging to your API Platform projects:
 
 ```diff
-# /anywhere/api-platform/docker-compose.yml
+# /anywhere/api-platform/compose.yaml
 version: '3.4'
 
 x-cache:
@@ -438,7 +438,7 @@ RANDOM_UNIQUE_KEY=yourUniqueKeyForYourSecondInstance
 Then update each traefik http routers names and services following this sample for admin
 
 ```yaml
-# /anywhere/first/api-plaform/docker-compose.yml
+# /anywhere/first/api-plaform/compose.yaml
 # ...
     labels:
       - traefik.http.routers.admin-${RANDOM_UNIQUE_KEY}.rule=Host(`admin.${DOMAIN_NAME}`)
@@ -450,7 +450,7 @@ Then update each traefik http routers names and services following this sample f
 Here is a fully working sample for Træfik generic config with a little script using docker-compose override approach.  
 We assume that you've set `EXPOSE 3000` in your client and admin Dockerfile.
 
-Create a new `init-dc.sh` which contains the generation code that will be written in `docker-compose.override.yaml` file.
+Create a new `init-dc.sh` which contains the generation code that will be written in `compose.override.yaml` file.
 
 ```bash
 #!/bin/sh
@@ -475,7 +475,7 @@ for k in "${services[@]}" ; do
 "
 done
 
-echo "$text" > ./docker-compose.override.yml
+echo "$text" > ./compose.override.yaml
 ```
 
 Write this minimal configuration into your `traefik.toml` file:
@@ -502,10 +502,10 @@ Write this minimal configuration into your `traefik.toml` file:
   address = ":443"
 ```
 
-Then after that update respectively your API Platform and Træfik `docker-compose.yml` following these examples below.
+Then after that update respectively your API Platform and Træfik `compose.yaml` following these examples below.
 
 ```yaml
-# /anywhere/api-platform/docker-compose.yml
+# /anywhere/api-platform/compose.yaml
 version: '3.4'
 
 x-cache:
@@ -640,7 +640,7 @@ networks:
 ```
 
 ```yaml
-# /anywhere/traefik/docker-compose.yml
+# /anywhere/traefik/compose.yaml
 version: '3.4'
 
 x-network:

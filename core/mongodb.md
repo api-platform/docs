@@ -43,8 +43,10 @@ docker compose build php
 Add a MongoDB image to the docker-compose file:
 
 ```yaml
-# docker-compose.yml
-# ...
+# compose.yaml
+
+services:
+  # ...
   db-mongodb:
       # In production, you may want to use a managed database service
       image: mongo
