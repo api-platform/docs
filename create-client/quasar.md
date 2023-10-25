@@ -36,7 +36,7 @@ npm init @api-platform/client https://demo.api-platform.com src/ -- --generator 
 ```
 
 Replace the URL by the entrypoint of your Hydra-enabled API.
-You can also use an OpenAPI documentation with `https://demo.api-platform.com/docs.json` and `-f openapi3`.
+You can also use an OpenAPI documentation with `https://demo.api-platform.com/docs.jsonopenapi` and `-f openapi3`.
 
 Omit the resource flag to generate files for all resource types exposed by the API.
 

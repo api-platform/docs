@@ -8,7 +8,7 @@ To use it, use the `OpenApiAdmin` component, with the entrypoint of the API and 
 import { OpenApiAdmin } from "@api-platform/admin";
 
 export default () => (
-  <OpenApiAdmin entrypoint="https://demo.api-platform.com" docEntrypoint="https://demo.api-platform.com/docs.json" />
+  <OpenApiAdmin entrypoint="https://demo.api-platform.com" docEntrypoint="https://demo.api-platform.com/docs.jsonopenapi" />
 );
 ```
 
