@@ -24,7 +24,9 @@ On Windows, you can use `netstat`. This will give you all TCP/IP network connect
 netstat -a -b
 ```
 
-You can change the port to be used in the `docker-compose.yml` file (default is port 80).
+The same problem may occur for port 443. In this case, follow the same steps but replace 80 by 443.
+
+You can change the port to be used in the `compose.yaml` file (default ports are 443 and 80).
 
 ## Using API Platform and JMS Serializer in the same project
 
