@@ -18,7 +18,7 @@ It is also automatically documented as a `hydra:search` property for JSON-LD res
 
 ### Basic Knowledge
 
-Filters are services (see the section on [custom filters](#creating-custom-filters)), and they can be linked
+Filters are services (see the section on [custom filters](filters.md#creating-custom-filters)), and they can be linked
 to a Resource in two ways:
 
 1. Through the resource declaration, as the `filters` attribute.
