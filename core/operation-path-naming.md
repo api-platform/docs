@@ -7,18 +7,18 @@ Pre-registered resolvers are available and can easily be overridden.
 
 There are two pre-registered operation path naming services:
 
-Service name                                          | Entity name  | Path result
-------------------------------------------------------|--------------|----------------
-`api_platform.path_segment_name_generator.underscore` | `MyResource` | `/my_resources`
-`api_platform.path_segment_name_generator.dash`       | `MyResource` | `/my-resources`
+Service name                                                   | Entity name  | Path result
+---------------------------------------------------------------|--------------|----------------
+`api_platform.metadata.path_segment_name_generator.underscore` | `MyResource` | `/my_resources`
+`api_platform.metadata.path_segment_name_generator.dash`       | `MyResource` | `/my-resources`
 
-The default resolver is `api_platform.path_segment_name_generator.underscore`.
+The default resolver is `api_platform.metadata.path_segment_name_generator.underscore`.
 To change it to the dash resolver, add the following lines to `api/config/packages/api_platform.yaml`:
 
 ```yaml
 # api/config/packages/api_platform.yaml
 api_platform:
-    path_segment_name_generator: api_platform.path_segment_name_generator.dash
+    path_segment_name_generator: api_platform.metadata.path_segment_name_generator.dash
 ```
 
 ## Create a Custom Operation Path Resolver
@@ -27,14 +27,14 @@ Let's assume we need URLs without separators (e.g. `api.tld/myresources`)
 
 ### Defining the Operation Segment Name Generator
 
-Make sure the custom segment generator implements [`ApiPlatform\Operation\PathSegmentNameGeneratorInterface`](https://github.com/api-platform/core/blob/main/src/Operation/PathSegmentNameGeneratorInterface.php):
+Make sure the custom segment generator implements [`ApiPlatform\Metadata]\Operation\PathSegmentNameGeneratorInterface`](https://github.com/api-platform/core/blob/main/src/Metadata/Operation/PathSegmentNameGeneratorInterface.php):
 
 ```php
 <?php
 // api/src/Operation/SingularPathSegmentNameGenerator.php
 namespace App\Operation;
 
-use ApiPlatform\Operation\PathSegmentNameGeneratorInterface;
+use ApiPlatform\Metadata\Operation\PathSegmentNameGeneratorInterface;
 
 class SingularPathSegmentNameGenerator implements PathSegmentNameGeneratorInterface
 {
