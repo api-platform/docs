@@ -68,9 +68,9 @@ cause: null } }
 ```
 
 Check access to the specified URL, in this case `https://demo.api-platform.com/contexts/Entrypoint`, use `curl` to check
-access and the response `curl https://demo.api-platform.com/contexts/Entrypoint`. 
+access and the response `curl https://demo.api-platform.com/contexts/Entrypoint`.
 
-In the above case an "Access Denied" message in JSON format was being returned. To fix this, you have the possibility to specify `If your API is protected with JWT You can specify 
+In the above case an "Access Denied" message in JSON format was being returned. To fix this, you have the possibility to specify `If your API is protected with JWT You can specify.
 
 ## Docker distribution on Windows and hot-reloading
 
