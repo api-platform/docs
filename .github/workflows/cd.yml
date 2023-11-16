@@ -35,7 +35,13 @@ jobs:
           hugo-version: '0.119.0'
           extended: true
 
-      - run: |
+      - name: Compute documentation
+        working-directory: ./pwa
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+          tools: phive
+        run: |
           git clone https://github.com/api-platform/docs-website
           cd docs-website
           npm install
