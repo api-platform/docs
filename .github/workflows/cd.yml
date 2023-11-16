@@ -36,21 +36,21 @@ jobs:
           extended: true
 
       - run: |
-        git clone git@github.com:api-platform/docs-website
-        cd docs-website
-        npm install
-        # fetches api-platform/docs
-        bash tools/get-docs.sh
-        # fetches api-platform/core for reference and guides
-        bash tools/get-core-docs.sh
-        # builds the config/_default/menu.toml according to the outline.yaml from api-platform/docs
-        node tools/menu.mjs
-        # build our tailwind theme
-        hugo --minify
-        # env:
-        #   GITHUB_KEY: ${{ secrets.CONTRIBUTORS_GITHUB_TOKEN }}
-        #   NODE_OPTIONS: --openssl-legacy-provider
-        # run: yarn gatsby build
+          git clone git@github.com:api-platform/docs-website
+          cd docs-website
+          npm install
+          # fetches api-platform/docs
+          bash tools/get-docs.sh
+          # fetches api-platform/core for reference and guides
+          bash tools/get-core-docs.sh
+          # builds the config/_default/menu.toml according to the outline.yaml from api-platform/docs
+          node tools/menu.mjs
+          # build our tailwind theme
+          hugo --minify
+          # env:
+          #   GITHUB_KEY: ${{ secrets.CONTRIBUTORS_GITHUB_TOKEN }}
+          #   NODE_OPTIONS: --openssl-legacy-provider
+          # run: yarn gatsby build
 
       # - name: Deploy
       #   uses: peaceiris/actions-gh-pages@v3
