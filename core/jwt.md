@@ -116,7 +116,7 @@ also want to [configure Swagger UI for JWT authentication](#documenting-the-auth
 
 ### Adding Authentication to an API Which Uses a Path Prefix
 
-If your API uses a [path prefix](https://symfony.com/doc/current/routing/external_resources.html#prefixing-the-urls-of-imported-routes), the security configuration would look something like this instead:
+If your API uses a [path prefix](https://symfony.com/doc/current/routing/external_resources.html#route-groups-and-prefixes), the security configuration would look something like this instead:
 
 ```yaml
 # api/config/packages/security.yaml
