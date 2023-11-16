@@ -36,7 +36,7 @@ jobs:
           extended: true
 
       - run: |
-          git clone git@github.com:api-platform/docs-website
+          git clone https://github.com/api-platform/docs-website
           cd docs-website
           npm install
           # fetches api-platform/docs
