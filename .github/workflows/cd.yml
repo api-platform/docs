@@ -41,6 +41,14 @@ jobs:
           php-version: '8.2'
           tools: phive
 
+      - name: Auth gcloud
+        uses: google-github-actions/auth@v1
+        with:
+          credentials_json: ${{ secrets.BUCKET_CREDS }}
+        
+      - name: 'Set up Cloud SDK'
+        uses: 'google-github-actions/setup-gcloud@v1'
+
       - name: Compute documentation
         run: |
           git clone https://github.com/api-platform/docs-website
@@ -54,6 +62,8 @@ jobs:
           node tools/menu.mjs
           # build our tailwind theme
           hugo --minify
+          ls -la
+          gsutil -m rsync -d -r ./public gs://api-platform-website-v3/
           # env:
           #   GITHUB_KEY: ${{ secrets.CONTRIBUTORS_GITHUB_TOKEN }}
           #   NODE_OPTIONS: --openssl-legacy-provider
@@ -65,14 +75,3 @@ jobs:
       #     github_token: ${{ secrets.GITHUB_TOKEN }}
       #     publish_dir: ./public
       #     cname: api-platform.com
-
-      - name: Auth gcloud
-        uses: google-github-actions/auth@v1
-        with:
-          credentials_json: ${{ secrets.BUCKET_CREDS }}
-        
-      - name: 'Set up Cloud SDK'
-        uses: 'google-github-actions/setup-gcloud@v1'
-  
-      - name: Deploy on bucket
-        run: gsutil -m rsync -d -r ./public gs://api-platform-website-v3/
