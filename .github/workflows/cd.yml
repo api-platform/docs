@@ -62,7 +62,6 @@ jobs:
           node tools/menu.mjs
           # build our tailwind theme
           hugo --minify
-          ls -la
           gsutil -q -m rsync -d -r ./public gs://api-platform-website-v3/
           # This need to move to website
           # env:
