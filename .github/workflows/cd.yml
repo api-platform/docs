@@ -63,11 +63,11 @@ jobs:
           # build our tailwind theme
           hugo --minify
           ls -la
-          gsutil -m rsync -d -r ./public gs://api-platform-website-v3/
+          gsutil -q -m rsync -d -r ./public gs://api-platform-website-v3/
+          # This need to move to website
           # env:
           #   GITHUB_KEY: ${{ secrets.CONTRIBUTORS_GITHUB_TOKEN }}
           #   NODE_OPTIONS: --openssl-legacy-provider
-          # run: yarn gatsby build
 
       # - name: Deploy
       #   uses: peaceiris/actions-gh-pages@v3
