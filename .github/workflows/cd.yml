@@ -28,24 +28,18 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-yarn-
 
-      - name: Install deps
-        run: yarn install
 
-      - name: Retrieve docs
-        run: bin/retrieve-documentation
-
-      - name: Build website
-        env:
-          GITHUB_KEY: ${{ secrets.CONTRIBUTORS_GITHUB_TOKEN }}
-          NODE_OPTIONS: --openssl-legacy-provider
-        run: yarn gatsby build
-
-      - name: Deploy
-        uses: peaceiris/actions-gh-pages@v3
+      - name: Setup Hugo
+        uses: peaceiris/actions-hugo@v2
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./public
-          cname: api-platform.com
+          hugo-version: '0.119.0'
+          extended: true
+
+      - name: Install php
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+          tools: phive
 
       - name: Auth gcloud
         uses: google-github-actions/auth@v1
@@ -54,6 +48,30 @@ jobs:
         
       - name: 'Set up Cloud SDK'
         uses: 'google-github-actions/setup-gcloud@v1'
-  
-      - name: Deploy on bucket
-        run: gsutil -m rsync -d -r ./public gs://api-platform-website-v3/
+
+      - name: Compute documentation
+        run: |
+          git clone https://github.com/api-platform/docs-website
+          cd docs-website
+          npm install
+          # fetches api-platform/docs
+          bash tools/get-docs.sh
+          # fetches api-platform/core for reference and guides
+          bash tools/get-core-docs.sh
+          # builds the config/_default/menu.toml according to the outline.yaml from api-platform/docs
+          node tools/menu.mjs
+          # build our tailwind theme
+          hugo --minify
+          gsutil -q -m rsync -d -r ./public gs://api-platform-website-v3/
+          # This need to move to website
+          # env:
+          #   GITHUB_KEY: ${{ secrets.CONTRIBUTORS_GITHUB_TOKEN }}
+          #   NODE_OPTIONS: --openssl-legacy-provider
+
+      # - name: Deploy
+      #   uses: peaceiris/actions-gh-pages@v3
+      #   with:
+      #     github_token: ${{ secrets.GITHUB_TOKEN }}
+      #     publish_dir: ./public
+      #     cname: api-platform.com
+
