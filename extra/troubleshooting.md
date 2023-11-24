@@ -24,7 +24,9 @@ On Windows, you can use `netstat`. This will give you all TCP/IP network connect
 netstat -a -b
 ```
 
-You can change the port to be used in the `docker-compose.yml` file (default is port 80).
+The same problem may occur for port 443. In this case, follow the same steps but replace 80 by 443.
+
+You can change the port to be used in the `compose.yaml` file (default ports are 443 and 80).
 
 ## Using API Platform and JMS Serializer in the same project
 
@@ -50,11 +52,11 @@ Some of your API calls fail with a 502 error and the logs for the API container 
 
 This can be due to the cache invalidation headers that are too big for NGINX. When you query the API, API Platform adds the IDs of all returned entities and their dependencies in the headers like so : `Cache-Tags: /entity/1,/dependent_entity/1,/entity/2`. This can overflow the default header size (4k) when your API gets larger and more complex.
 
-You can modify the `api/docker/nginx/conf.d/default.conf` file and set values to `fastcgi_buffer_size` and `fastcgi_buffers` that suit your needs, like so:
+You can modify the PHP FPM configuration file and set values to `fastcgi_buffer_size` and `fastcgi_buffers` that suit your needs, like so:
 
 ```nginx
 server {
-    root /srv/api/public;
+    root /app/public;
 
     location / {
         # try to serve file directly, fallback to index.php
@@ -67,7 +69,7 @@ server {
         #resolver 127.0.0.11;
         #set $upstream_host php;
         #fastcgi_pass $upstream_host:9000;
-        
+
         # Bigger buffer size to handle cache invalidation headers expansion
         fastcgi_buffer_size 32k;
         fastcgi_buffers 8 16k;

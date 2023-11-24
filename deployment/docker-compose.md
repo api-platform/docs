@@ -68,7 +68,7 @@ SERVER_NAME=your-domain-name.example.com \
 APP_SECRET=ChangeMe \
 POSTGRES_PASSWORD=ChangeMe \
 CADDY_MERCURE_JWT_SECRET=ChangeThisMercureHubJWTSecretKey \
-docker compose -f docker-compose.yml -f docker-compose.prod.yml up --wait
+docker compose -f compose.yaml -f compose.prod.yaml up --wait
 ```
 
 Be sure to replace `your-domain-name.example.com` by your actual domain name and to set the values of `APP_SECRET`, `CADDY_MERCURE_JWT_SECRET` to cryptographically secure random values.
@@ -84,7 +84,7 @@ Alternatively, if you don't want to expose an HTTPS server but only an HTTP one,
 SERVER_NAME=:80 \
 APP_SECRET=ChangeMe \
 CADDY_MERCURE_JWT_SECRET=ChangeThisMercureHubJWTSecretKey \
-docker compose -f docker-compose.yml -f docker-compose.prod.yml up --wait
+docker compose -f -compose.yaml -f compose.prod.yaml up --wait
 ```
 
 ## Deploying on Multiple Nodes

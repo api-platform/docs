@@ -18,7 +18,7 @@ import { OpenApiAdmin } from "@api-platform/admin";
 export default () => (
   <OpenApiAdmin
     entrypoint="https://demo.api-platform.com"
-    docEntrypoint="https://demo.api-platform.com/docs.json"
+    docEntrypoint="https://demo.api-platform.com/docs.jsonopenapi"
     mercure={{ hub: "https://mercure.rocks/hub" }}
   />
 );

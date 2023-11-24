@@ -7,7 +7,7 @@ The tokens are signed by the server's key, so the server is able to verify that 
 
 API Platform allows to easily add a JWT-based authentication to your API using [LexikJWTAuthenticationBundle](https://github.com/lexik/LexikJWTAuthenticationBundle).
 
-<p align="center" class="symfonycasts"><a href="https://symfonycasts.com/screencast/symfony-rest4/json-web-token?cid=apip"><img src="../distribution/images/symfonycasts-player.png" alt="JWT screencast"><br>Watch the LexikJWTAuthenticationBundle screencast</a></p>
+<p align="center" class="symfonycasts"><a href="https://symfonycasts.com/screencast/symfony-rest4/json-web-token?cid=apip"><img src="/docs/distribution/images/symfonycasts-player.png" alt="JWT screencast"><br>Watch the LexikJWTAuthenticationBundle screencast</a></p>
 
 ## Installing LexikJWTAuthenticationBundle
 
@@ -116,7 +116,7 @@ also want to [configure Swagger UI for JWT authentication](#documenting-the-auth
 
 ### Adding Authentication to an API Which Uses a Path Prefix
 
-If your API uses a [path prefix](https://symfony.com/doc/current/routing/external_resources.html#prefixing-the-urls-of-imported-routes), the security configuration would look something like this instead:
+If your API uses a [path prefix](https://symfony.com/doc/current/routing/external_resources.html#route-groups-and-prefixes), the security configuration would look something like this instead:
 
 ```yaml
 # api/config/packages/security.yaml

@@ -1,6 +1,6 @@
 # Debugging
 
-<p align="center" class="symfonycasts"><a href="https://symfonycasts.com/screencast/api-platform/profiler?cid=apip"><img src="../distribution/images/symfonycasts-player.png" alt="API Platform debugging screencast"><br>Watch the Debugging API Platform screencast</a></p>
+<p align="center" class="symfonycasts"><a href="https://symfonycasts.com/screencast/api-platform/profiler?cid=apip"><img src="/docs/distribution/images/symfonycasts-player.png" alt="API Platform debugging screencast"><br>Watch the Debugging API Platform screencast</a></p>
 
 ## Xdebug
 
@@ -27,43 +27,11 @@ RUN set -eux; \
 
 ## Configure Xdebug with Docker Compose Override
 
-Using an [override](https://docs.docker.com/compose/reference/overview/#specifying-multiple-compose-files) file named
-`docker-compose.override.yml` ensures that the production configuration remains untouched.
+XDebug is shipped by default with the API Platform distribution.
+To enable it, run: `XDEBUG_MODE=debug docker compose up --wait`
 
-As an example, an override could look like this:
-
-```yml
-version: "3.4"
-
-services:
-  php:
-    build:
-      target: api_platform_php_dev
-    environment:
-      # See https://docs.docker.com/docker-for-mac/networking/#i-want-to-connect-from-a-container-to-a-service-on-the-host
-      # See https://github.com/docker/for-linux/issues/264
-      # The `remote_host` below may optionally be replaced with `remote_connect_back`
-      # XDEBUG_MODE required for step debugging
-      XDEBUG_MODE: debug
-      # default port for Xdebug 3 is 9003
-      # idekey=VSCODE if you are debugging with VSCode
-      XDEBUG_CONFIG: >-
-        client_host=host.docker.internal
-        idekey=PHPSTORM 
-      # This should correspond to the server declared in PHPStorm `Preferences | Languages & Frameworks | PHP | Servers`
-      # Then PHPStorm will use the corresponding path mappings
-      PHP_IDE_CONFIG: serverName=api-platform
-```
-
-Note for Mac environments use the following:
-
-```yml
-      XDEBUG_CONFIG: >-
-        idekey=PHPSTORM
-        client_host=docker.for.mac.localhost
-```
-
-In VSCode, alongside the default PHP configuration in `launch.json`, you'll need path mappings for the Docker image.
+If you are using VSCode, use the following `launch.json` to debug.
+Note that this configuration includes the path mappings for the Docker image.
 
 ```json
 {
@@ -83,7 +51,8 @@ In VSCode, alongside the default PHP configuration in `launch.json`, you'll need
 }
 ```
 
-Note: For Linux environments, the `client_host` setting of `host.docker.internal` will not work, you will need the actual local IP address of your computer.
+Note: On Linux, the `client_host` setting of `host.docker.internal` may not work.
+In this case you will need the actual local IP address of your computer.
 
 ## Troubleshooting
 

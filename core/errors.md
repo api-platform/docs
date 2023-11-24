@@ -6,7 +6,39 @@ API Platform automatically sends the appropriate HTTP status code to the client:
 unexpected ones. It also provides a description of the error in [the Hydra error format](https://www.hydra-cg.com/spec/latest/core/#description-of-http-status-codes-and-errors)
 or in the format described in the [RFC 7807](https://tools.ietf.org/html/rfc7807), depending of the format selected during the [content negotiation](content-negotiation.md).
 
-## Converting PHP Exceptions to HTTP Errors
+# Errors 
+
+## Backward compatibility with < 3.1
+
+Use the following configuration: 
+
+```yaml
+api_platform:
+    defaults:
+            rfc_7807_compliant_errors: false
+```
+
+This can also be configured on an `ApiResource` or in an `HttpOperation`, for example: 
+
+```php
+#[ApiResource(extraProperties: ['rfc_7807_compliant_errors' => false])
+```
+
+## Exception status code decision
+
+There are many ways of configuring the exception status code we recommend reading the guides on how to use an [Error Provider](/docs/guides/error-provider) or create an [Error Resource](/docs/guides/error-resource).
+
+1. we look at `exception_to_status` and take one if there's a match
+2. If your exception is a `Symfony\Component\HttpKernel\Exception\HttpExceptionInterface` we get its status.
+3. If the exception is a `ApiPlatform\Metadata\Exception\ProblemExceptionInterface` and there is a status we use it
+4. Same for `ApiPlatform\Metadata\Exception\HttpExceptionInterface` 
+5. We have some defaults: 
+  - `Symfony\Component\HttpFoundation\Exception\RequestExceptionInterface` => 400
+  - `ApiPlatform\Validator\Exception\ValidationException` => 422
+6. the status defined on an `ErrorResource`
+7. 500 is the fallback
+
+## Exception to status
 
 The framework also allows you to configure the HTTP status code sent to the clients when custom exceptions are thrown
 on an API Platform resource operation.
@@ -101,14 +133,14 @@ the error will be returned in this format as well:
 }
 ```
 
-## Message Scope
+### Message Scope
 
 Depending on the status code you use, the message may be replaced with a generic one in production to avoid leaking unwanted information.
 If your status code is >= 500 and < 600, the exception message will only be displayed in debug mode (dev and test). In production, a generic message matching the status code provided will be shown instead. If you are using an unofficial HTTP code, a general message will be displayed.
 
 In any other cases, your exception message will be sent to end users.
 
-## Fine-grained Configuration
+### Fine-grained Configuration
 
 The `exceptionToStatus` configuration can be set on resources and operations:
 
@@ -140,3 +172,106 @@ class Book
 
 Exceptions mappings defined on operations take precedence over mappings defined on resources, which take precedence over
 the global config.
+
+## Control your exceptions
+
+With `rfc_7807_compliant_errors` a few things happen. First Hydra exception are compatible with the JSON Problem specification. Default exception that are handled by API Platform in JSON will be returned as `application/problem+json`. 
+
+To customize the API Platform response, replace the `api_platform.state.error_provider` with your own provider: 
+
+```php
+<?php
+
+namespace App\State;
+
+use ApiPlatform\Metadata\Operation;
+use ApiPlatform\State\ApiResource\Error;
+use ApiPlatform\State\ProviderInterface;
+use Symfony\Component\DependencyInjection\Attribute\AsAlias;
+use Symfony\Component\DependencyInjection\Attribute\AsTaggedItem;
+
+#[AsAlias('api_platform.state.error_provider')]
+#[AsTaggedItem('api_platform.state.error_provider')]
+final class ErrorProvider implements ProviderInterface
+{
+    public function provide(Operation $operation, array $uriVariables = [], array $context = []): object|array|null
+    {
+        $request = $context['request'];
+        $format = $request->getRequestFormat();
+        $exception = $request->attributes->get('exception');
+
+        /** @var \ApiPlatform\Metadata\HttpOperation $operation */
+        $status = $operation->getStatus() ?? 500;
+        // You don't have to use this, you can use a Response, an array or any object (preferably a resource that API Platform can handle).
+        $error = Error::createFromException($exception, $status);
+
+        // care about hiding informations as this can be a security leak
+        if ($status >= 500) {
+            $error->setDetail('Something went wrong');
+        }
+        
+        return $error;
+    }
+}
+```
+
+```yaml
+    api_platform.state.error_provider:
+        class: 'App\State\ErrorProvider'
+        tags: 
+            - key: 'api_platform.state.error_provider'
+              name: 'api_platform.state_provider'
+```
+
+Note that our validation exception have their own error provider at:
+
+```yaml
+api_platform.validator.state.error_provider:
+    tags: 
+        - key: 'api_platform.validator.state.error_provider'
+          name: 'api_platform.state_provider'
+```
+
+## Domain exceptions
+
+Another way of having full control over domain exceptions is to create your own Error resource: 
+
+```php
+<?php
+
+namespace App\ApiResource;
+
+use ApiPlatform\Metadata\ErrorResource;
+use ApiPlatform\Metadata\Exception\ProblemExceptionInterface;
+
+#[ErrorResource]
+class Error extends \Exception implements ProblemExceptionInterface
+{
+    public function getType(): string
+    {
+        return 'teapot';
+    }
+
+    public function getTitle(): ?string
+    {
+        return null;
+    }
+
+    public function getStatus(): ?int
+    {
+        return 418;
+    }
+
+    public function getDetail(): ?string
+    {
+        return 'I am teapot';
+    }
+
+    public function getInstance(): ?string
+    {
+        return null;
+    }
+}
+```
+
+We recommend using the `\ApiPlatform\Metadata\Exception\ProblemExceptionInterface` and the `\ApiPlatform\Metadata\Exception\HttpExceptionInterface`. For security reasons we add: `normalizationContext: ['ignored_attributes' => ['trace', 'file', 'line', 'code', 'message', 'traceAsString']]` because you usually don't want these. You can override this context value if you want.

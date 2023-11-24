@@ -4,11 +4,11 @@ API Platform natively supports the [OpenAPI](https://www.openapis.org/) API spec
 
 ![Screenshot](../distribution/images/swagger-ui-1.png)
 
-<p align="center" class="symfonycasts"><a href="https://symfonycasts.com/screencast/api-platform/open-api-spec?cid=apip"><img src="../distribution/images/symfonycasts-player.png" alt="OpenAPI screencast"><br>Watch the OpenAPI screencast</a></p>
+<p align="center" class="symfonycasts"><a href="https://symfonycasts.com/screencast/api-platform/open-api-spec?cid=apip"><img src="/docs/distribution/images/symfonycasts-player.png" alt="OpenAPI screencast"><br>Watch the OpenAPI screencast</a></p>
 
-The specification of the API is available at the `/docs.json` path.
+The specification of the API is available at the `/docs.jsonopenapi` path.
 By default, OpenAPI v3 is used.
-You can also get an OpenAPI v3-compliant version thanks to the `spec_version` query parameter: `/docs.json?spec_version=3`
+You can also get an OpenAPI v3-compliant version thanks to the `spec_version` query parameter: `/docs.jsonopenapi?spec_version=3`
 
 It also integrates a customized version of [Swagger UI](https://swagger.io/swagger-ui/) and [ReDoc](https://rebilly.github.io/ReDoc/), some nice tools to display the
 API documentation in a user friendly way.
@@ -583,7 +583,7 @@ You may want to copy the [one shipped with API Platform](https://github.com/api-
 [AWS API Gateway](https://aws.amazon.com/api-gateway/) supports OpenAPI partially, but it [requires some changes](https://docs.aws.amazon.com/apigateway/latest/developerguide/api-gateway-known-issues.html).
 API Platform provides a way to be compatible with Amazon API Gateway.
 
-To enable API Gateway compatibility on your OpenAPI docs, add `api_gateway=true` as query parameter: `http://www.example.com/docs.json?api_gateway=true`.
+To enable API Gateway compatibility on your OpenAPI docs, add `api_gateway=true` as query parameter: `http://www.example.com/docs.jsonopenapi?api_gateway=true`.
 The flag `--api-gateway` is also available through the command-line.
 
 ## OAuth

@@ -82,7 +82,7 @@ docker compose build --no-cache
 Then, start Docker Compose in detached mode:
 
 ```console
-docker compose up --pull --wait 
+docker compose up --wait 
 ```
 
 **Tip:** Be sure that the ports `80`, `443`, and `5432` of the host are not already in use. The usual offenders are Apache, NGINX, and Postgres. If they are running, stop them and run `docker compose up --wait` again.
@@ -91,8 +91,7 @@ This starts the following services:
 
 | Name     | Description                                                                                                                                                                  |
 |----------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| caddy    | [Caddy web server](caddy.md) with the [Mercure](../core/mercure.md) (real-time and async) and [Vulcain](https://vulcain.rocks) (relations preloading) modules |
-| php      | The API with PHP 8, Composer, and sensitive configs                                                                                                                           |
+| php      | The API powered by [FrankenPHP](https://frankenphp.dev) (a modern application server for PHP built on top of [Caddy web server](caddy.md) and with native support for [Mercure realtime](../core/mercure.md), [Vulcain relations preloading](https://vulcain.rocks), and [XDebug](debugging.md)), Composer, and sensitive configs |
 | pwa      | Next.js project compatible with Create Client and having Admin preinstalled                                                                                                     |
 | database | PostgreSQL database server                                                                                                                                                   |
 
@@ -348,7 +347,8 @@ The only remaining task to have a working API is to be able to query and persist
 
 To retrieve and save data, API Platform proposes two main options (and we can mix them):
 
-1. Writing our own [state providers](../core/state-providers.md) and [state processors](../core/state-processors.md) to fetch and save data in any persistence system and trigger our custom business logic. This is what we recommend if you want to separate the public data model exposed by the API from the internal one, and to implement a layered architecture such as Clean Architecture or Hexagonal Architecture;
+1. Writing our own [state providers](../core/state-providers.md) and [state processors](../core/state-processors.md) to fetch and save data in any persistence system and trigger our custom business logic.
+This is what we recommend if you want to separate the public data model exposed by the API from the internal one, and to implement a layered architecture such as Clean Architecture or Hexagonal Architecture;
 2. Using one of the various existing data providers and persisters allowing to automatically fetch and persist data using popular persistence libraries. Out of the box, data providers and persisters are provided for [Doctrine ORM](https://www.doctrine-project.org/projects/orm.html) and [Doctrine MongoDB ODM](../core/mongodb.md).
 A data provider (but no persister yet) is also available for [Elasticsearch](../core/elasticsearch.md). [Pomm](https://github.com/pomm-project/pomm-api-platform) and [PHP Extended SQL](https://github.com/soyuka/esql#api-platform-bridge) also provides data providers and persisters for API Platform. We recommend this approach for Rapid Application Development.
 
@@ -794,6 +794,6 @@ and [browse it online](https://demo.api-platform.com).
 
 ## Screencasts
 
-<p align="center" class="symfonycasts"><a href="https://symfonycasts.com/tracks/rest?cid=apip#api-platform"><img src="../distribution/images/symfonycasts-player.png" alt="SymfonyCasts, API Platform screencasts"></a></p>
+<p align="center" class="symfonycasts"><a href="https://symfonycasts.com/tracks/rest?cid=apip#api-platform"><img src="/docs/distribution/images/symfonycasts-player.png" alt="SymfonyCasts, API Platform screencasts"></a></p>
 
 The easiest and funniest way to learn how to use API Platform is to watch [the more than 60 screencasts available on SymfonyCasts](https://symfonycasts.com/tracks/rest?cid=apip#api-platform)!
