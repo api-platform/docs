@@ -4,16 +4,73 @@ on:
   push:
     branches:
       - main
-      - '[0-9]+.[0-9]+'
+      - '*.*'
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-      - name: Trigger website workflow
-        uses: convictional/trigger-workflow-and-wait@v1.6.5
+      - name: Checkout the website
+        uses: actions/checkout@v3
         with:
-          owner: api-platform
-          repo: website
-          workflow_file_name: cd.yml
-          github_token: ${{ secrets.WEBSITE_ACCESS_TOKEN }}
+          repository: api-platform/website
+          ref: main
+
+      - name: Get yarn cache directory path
+        id: yarn-cache-dir-path
+        run: echo "dir=$(yarn cache dir)" >> "$GITHUB_OUTPUT"
+
+      - uses: actions/cache@v3
+        id: yarn-cache
+        with:
+          path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
+          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-yarn-
+
+
+      - name: Setup Hugo
+        uses: peaceiris/actions-hugo@v2
+        with:
+          hugo-version: '0.119.0'
+          extended: true
+
+      - name: Install php
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+          tools: phive
+
+      - name: Auth gcloud
+        uses: google-github-actions/auth@v1
+        with:
+          credentials_json: ${{ secrets.BUCKET_CREDS }}
+        
+      - name: 'Set up Cloud SDK'
+        uses: 'google-github-actions/setup-gcloud@v1'
+
+      - name: Compute documentation
+        run: |
+          git clone https://github.com/api-platform/docs-website
+          cd docs-website
+          npm install
+          # fetches api-platform/docs
+          bash tools/get-docs.sh
+          # fetches api-platform/core for reference and guides
+          bash tools/get-core-docs.sh
+          # builds the config/_default/menu.toml according to the outline.yaml from api-platform/docs
+          node tools/menu.mjs
+          # build our tailwind theme
+          hugo --minify
+          gsutil -q -m rsync -d -r ./public gs://api-platform-website-v3/
+          # This need to move to website
+          # env:
+          #   GITHUB_KEY: ${{ secrets.CONTRIBUTORS_GITHUB_TOKEN }}
+          #   NODE_OPTIONS: --openssl-legacy-provider
+
+      # - name: Deploy
+      #   uses: peaceiris/actions-gh-pages@v3
+      #   with:
+      #     github_token: ${{ secrets.GITHUB_TOKEN }}
+      #     publish_dir: ./public
+     #     cname: api-platform.com
