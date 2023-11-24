@@ -1,0 +1,10 @@
+{
+  "rules": {
+    "terminology": {
+      "exclude": [
+        "Node(?:js)?",
+        "web[- ]?site(s)?"
+      ]
+    }
+  }
+}
