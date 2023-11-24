@@ -6,11 +6,11 @@ API Platform automatically sends the appropriate HTTP status code to the client:
 unexpected ones. It also provides a description of the error in [the Hydra error format](https://www.hydra-cg.com/spec/latest/core/#description-of-http-status-codes-and-errors)
 or in the format described in the [RFC 7807](https://tools.ietf.org/html/rfc7807), depending of the format selected during the [content negotiation](content-negotiation.md).
 
-# Errors 
+# Errors
 
 ## Backward compatibility with < 3.1
 
-Use the following configuration: 
+Use the following configuration:
 
 ```yaml
 api_platform:
@@ -19,7 +19,7 @@ api_platform:
             rfc_7807_compliant_errors: false
 ```
 
-This can also be configured on an `ApiResource` or in an `HttpOperation`, for example: 
+This can also be configured on an `ApiResource` or in an `HttpOperation`, for example:
 
 ```php
 #[ApiResource(extraProperties: ['rfc_7807_compliant_errors' => false])
@@ -32,10 +32,8 @@ There are many ways of configuring the exception status code we recommend readin
 1. we look at `exception_to_status` and take one if there's a match
 2. If your exception is a `Symfony\Component\HttpKernel\Exception\HttpExceptionInterface` we get its status.
 3. If the exception is a `ApiPlatform\Metadata\Exception\ProblemExceptionInterface` and there is a status we use it
-4. Same for `ApiPlatform\Metadata\Exception\HttpExceptionInterface` 
-5. We have some defaults: 
-  - `Symfony\Component\HttpFoundation\Exception\RequestExceptionInterface` => 400
-  - `ApiPlatform\Validator\Exception\ValidationException` => 422
+4. Same for `ApiPlatform\Metadata\Exception\HttpExceptionInterface`
+5. We have some defaults `Symfony\Component\HttpFoundation\Exception\RequestExceptionInterface` => 400 and `ApiPlatform\Validator\Exception\ValidationException` => 422
 6. the status defined on an `ErrorResource`
 7. 500 is the fallback
 
@@ -178,7 +176,7 @@ the global config.
 
 With `rfc_7807_compliant_errors` a few things happen. First Hydra exception are compatible with the JSON Problem specification. Default exception that are handled by API Platform in JSON will be returned as `application/problem+json`. 
 
-To customize the API Platform response, replace the `api_platform.state.error_provider` with your own provider: 
+To customize the API Platform response, replace the `api_platform.state.error_provider` with your own provider:
 
 ```php
 <?php
@@ -235,7 +233,7 @@ api_platform.validator.state.error_provider:
 
 ## Domain exceptions
 
-Another way of having full control over domain exceptions is to create your own Error resource: 
+Another way of having full control over domain exceptions is to create your own Error resource:
 
 ```php
 <?php
