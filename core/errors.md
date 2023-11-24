@@ -6,8 +6,6 @@ API Platform automatically sends the appropriate HTTP status code to the client:
 unexpected ones. It also provides a description of the error in [the Hydra error format](https://www.hydra-cg.com/spec/latest/core/#description-of-http-status-codes-and-errors)
 or in the format described in the [RFC 7807](https://tools.ietf.org/html/rfc7807), depending of the format selected during the [content negotiation](content-negotiation.md).
 
-# Errors
-
 ## Backward compatibility with < 3.1
 
 Use the following configuration:
@@ -174,7 +172,7 @@ the global config.
 
 ## Control your exceptions
 
-With `rfc_7807_compliant_errors` a few things happen. First Hydra exception are compatible with the JSON Problem specification. Default exception that are handled by API Platform in JSON will be returned as `application/problem+json`. 
+With `rfc_7807_compliant_errors` a few things happen. First Hydra exception are compatible with the JSON Problem specification. Default exception that are handled by API Platform in JSON will be returned as `application/problem+json`.
 
 To customize the API Platform response, replace the `api_platform.state.error_provider` with your own provider:
 
