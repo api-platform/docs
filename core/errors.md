@@ -15,6 +15,7 @@ Use the following configuration:
 ```yaml
 api_platform:
     defaults:
+        extra_properties:
             rfc_7807_compliant_errors: false
 ```
 
