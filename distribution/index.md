@@ -222,8 +222,7 @@ So, if you want to access the raw data, you have two alternatives:
 * Add the correct `Accept` header (or don't set any `Accept` header at all if you don't care about security) - preferred when writing API clients
 * Add the format you want as the extension of the resource - for debug purpose only
 
-For instance, go to `https://localhost/greetings.jsonld` to retrieve the list of `Greeting` resources in JSON-LD, or to
-`https://localhost/greetings.json` to retrieve data in raw JSON.
+For instance, go to `https://localhost/greetings.jsonld` to retrieve the list of `Greeting` resources in JSON-LD.
 
 Of course, you can also use your favorite HTTP client to query the API.
 We are fond of [Postman](https://www.postman.com/). It works perfectly well with API Platform, has native OpenAPI support,
