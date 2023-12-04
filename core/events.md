@@ -1,5 +1,7 @@
 # The Event System
 
+In API Platform 3.2 you may need `event_listeners_backward_compatibility_layer: true` to keep event listeners activated.
+
 Note: using Kernel event with API Platform should be mostly limited to tweaking the generated HTTP response. Also, GraphQL is **not supported**.
 [For most use cases, better extension points, working both with REST and GraphQL, are available](extending.md).
 
