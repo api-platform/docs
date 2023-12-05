@@ -521,7 +521,7 @@ If you are using vocabularies that have adopted numerical IDs, such as [Wikidata
 
 You can use one of the dedicated options available at each level of your configuration to achieve this: 'nameAllFromLabels' for the full config level and the vocabulary level, or 'nameFromLabel' at the types level.
 
-The two sub-options 'language' and 'namingConvention' are available for each of these levels and allow you to determine the preferred language when using the labels for naming purpose (default: ‘en’) and the naming convention on which naming will be based (i.e., 'snake case', default: 'camel case'). 
+The two sub-options 'language' and 'namingConvention' are available for each of these levels and allow you to determine the preferred language when using the labels for naming purpose (default: ‘en’) and the naming convention on which naming will be based (i.e., 'snake case', default: 'camel case').
 
 Using labels can also be preferred for any vocabulary as long as labels are defined. If no label is found, the ID part of the URI fragment identifier will be used as with the default behavior.
 
@@ -541,15 +541,15 @@ language: en
 ```yaml
 vocabularies:
     - { uri: http://purl.obolibrary.org/obo/ro.owl, format: rdfxml, nameAllFromLabels: true, language: en, namingConvention: camel case }
-    - { uri: https://raw.githubusercontent.com/w3c/dxwg/gh-pages/dcat/rdf/dcat3.rdf, format: rdfxml, nameAllFromLabels: false}
+    - { uri: https://raw.githubusercontent.com/w3c/dxwg/gh-pages/dcat/rdf/dcat3.rdf, format: rdfxml, nameAllFromLabels: false }
 
 allTypes: true # Generate all types by default for vocabularies
 ```
 **Type level**
 ```yaml
 vocabularies:
-    - { uri: http://www.wikidata.org/entity/Q115634351.rdf}
-    - { uri: https://raw.githubusercontent.com/w3c/dxwg/gh-pages/dcat/rdf/dcat3.rdf, format: rdfxml}
+    - { uri: http://www.wikidata.org/entity/Q115634351.rdf }
+    - { uri: https://raw.githubusercontent.com/w3c/dxwg/gh-pages/dcat/rdf/dcat3.rdf, format: rdfxml }
 
 types:
     Q115634351:
