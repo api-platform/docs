@@ -27,7 +27,7 @@ api_platform:
 
 ### Formats
 
-We noticed that API Platform was enabling `json` by default because of our OpenAPI support. We introduced the new `application/vnd.openapi+json`. Therefore if you want `json` you need to explicitly handle it: 
+We noticed that API Platform was enabling `json` by default because of our OpenAPI support. We introduced the new `application/vnd.openapi+json`. Therefore if you want `json` you need to explicitly handle it:
 
 ```yaml
 formats: 
@@ -47,7 +47,7 @@ event_listeners_backward_compatibility_layer: false
 ```
 
 This allows API Platform to not use http kernel event listeners. It also allows you to force options like `read: true` or `validate: true`. This simplifies use cases like [validating a delete operation](/docs/v3.2/guides/delete-operation-with-validation/)
-Event listeners will not get removed and are not deprecated, they'll use our providers and processors in a future version. 
+Event listeners will not get removed and are not deprecated, they'll use our providers and processors in a future version.
 
 ### Inflector
 
