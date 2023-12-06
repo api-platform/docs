@@ -1860,7 +1860,7 @@ final class TypeConverter implements TypeConverterInterface
     public function convertType(Type $type, bool $input, Operation $rootOperation, string $resourceClass, string $rootResource, ?string $property, int $depth)
     {
         if ('publicationDate' === $property
-            && Book::class === $resourceClass
+            && Book::class === $rootResource
         ) {
             return 'DateTime';
         }
