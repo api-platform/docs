@@ -57,6 +57,7 @@ use ApiPlatform\JsonLd\Serializer\ObjectNormalizer as JsonLdObjectNormalizer;
 use ApiPlatform\JsonLd\ContextBuilder as JsonLdContextBuilder;
 use ApiPlatform\JsonSchema\SchemaFactory;
 use ApiPlatform\JsonSchema\TypeFactory;
+use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\CollectionOperationInterface;
 use ApiPlatform\Metadata\HttpOperation;
 use ApiPlatform\Metadata\Operation;
@@ -257,7 +258,7 @@ $providerCollection = new class implements ContainerInterface {
     }
 
     public function has($id): bool {
-        return isset($this->providers['id']);
+        return isset($this->providers[$id]);
     }
 };
 $stateProviders = new CallableProvider($providerCollection);
@@ -288,6 +289,12 @@ class Validator implements ValidatorInterface {
 
 $validator = new Validator(Validation::createValidator());
 $validateListener = new ValidateListener($validator, $resourceMetadataFactory);
+
+#[ApiResource(provider: \BookProvider::class)]
+class Book
+{
+    public int $id;
+}
 
 class BookProvider implements ProviderInterface
 {
