@@ -44,7 +44,7 @@ Note that this configuration includes the path mappings for the Docker image.
             "port": 9003,
             "log": true,
             "pathMappings": {
-                "/srv/api": "${workspaceFolder}/api"
+                "/app": "${workspaceFolder}/api"
             },
         },
     ]
