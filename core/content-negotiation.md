@@ -237,9 +237,9 @@ final class CustomItemNormalizer implements NormalizerInterface, DenormalizerInt
         $this->normalizer = $normalizer;
     }
 
-    public function denormalize($data, $class, $format = null, array $context = [])
+    public function denormalize($data, $type, $format = null, array $context = [])
     {
-        return $this->normalizer->denormalize($data, $class, $format, $context);
+        return $this->normalizer->denormalize($data, $type, $format, $context);
     }
 
     public function supportsDenormalization($data, $type, $format = null)
