@@ -175,6 +175,8 @@ api_platform:
             docExpansion: list
             # If set, enables filtering. The top bar will show an edit box that you can use to filter the tagged operations that are shown.
             filter: false
+            # If set, enables deep linking for tags and operations. The information of selected tag and operation will be appended to the URL. The Swagger UI will automatically expand a specific tag or operation and scroll to it when loaded.
+            deepLinking: true
             # You can use any other configuration parameters too.
 
     openapi:
@@ -200,6 +202,8 @@ api_platform:
             docExpansion: list
             # If set, enables filtering. The top bar will show an edit box that you can use to filter the tagged operations that are shown.
             filter: false
+            # If set, enables deep linking for tags and operations. The information of selected tag and operation will be appended to the URL. The Swagger UI will automatically expand a specific tag or operation and scroll to it when loaded.
+            deepLinking: true
             # You can use any other configuration parameters too.
 
     http_cache:
