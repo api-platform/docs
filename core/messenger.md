@@ -20,7 +20,7 @@ docker compose exec php \
 
 Set the `messenger` attribute to `true`, and API Platform will automatically dispatch the API Resource instance as a message using the message bus provided by the Messenger Component. The following example allows you to create a new `Person` in an asynchronous manner:
 
-[codeSelector]
+<code-selector>
 
 ```php
 <?php
@@ -63,7 +63,7 @@ resources:
                 read: false
 ```
 
-[/codeSelector]
+</code-selector>
 
 Because the `messenger` attribute is `true`, when a `POST` is handled by API Platform, the corresponding instance of the `Person` will be dispatched.
 
