@@ -161,7 +161,7 @@ You can of course disable or configure these operations.
 
 For instance, in the following example, only the query of an item and the create mutation are enabled:
 
-[codeSelector]
+<code-selector>
 
 ```php
 <?php
@@ -205,7 +205,7 @@ resources:
 </resources>
 ```
 
-[/codeSelector]
+</code-selector>
 
 ## Queries
 
@@ -452,7 +452,7 @@ resources:
 </resources>
 ```
 
-[/codeSelector]
+</code-selector>
 
 Note that you need to explicitly add the auto-generated queries and mutations if they are needed when configuring custom queries, like it's done for the [operations](#operations).
 
@@ -699,7 +699,7 @@ resources:
 </resources>
 ```
 
-[/codeSelector]
+</code-selector>
 
 Note that you need to explicitly add the auto-generated queries and mutations if they are needed when configuring custom mutations, like it's done for the [operations](#operations).
 
@@ -802,7 +802,7 @@ resources:
 </resources>
 ```
 
-[/codeSelector]
+</code-selector>
 
 ### Subscribe
 
@@ -980,7 +980,7 @@ resources:
 </resources>
 ```
 
-[/codeSelector]
+</code-selector>
 
 Or at the resource attributes level (will be also applied in REST and for all operations):
 
@@ -1033,7 +1033,7 @@ resources:
 </resources>
 ```
 
-[/codeSelector]
+</code-selector>
 
 ## Events
 
@@ -1120,7 +1120,7 @@ resources:
 </resources>
 ```
 
-[/codeSelector]
+</code-selector>
 
 ### Syntax for Filters with a List of Key / Value Arguments
 
@@ -1370,7 +1370,7 @@ resources:
 </resources>
 ```
 
-[/codeSelector]
+</code-selector>
 
 Or if you want to do it at the resource level:
 
@@ -1405,7 +1405,7 @@ resources:
 </resources>
 ```
 
-[/codeSelector]
+</code-selector>
 
 Once enabled, a `page` filter will be available in the collection query (its name [can be changed in the configuration](pagination.md)) and an `itemsPerPage` filter will be available too if [client-side-pagination](pagination.md#client-side) is enabled.
 
@@ -1486,7 +1486,7 @@ resources:
 </resources>
 ```
 
-[/codeSelector]
+</code-selector>
 
 #### For a Specific Resource Collection Operation
 
@@ -1530,7 +1530,7 @@ resources:
 </resources>
 ```
 
-[/codeSelector]
+</code-selector>
 
 ### Partial Pagination
 
@@ -1627,7 +1627,7 @@ resources:
 </resources>
 ```
 
-[/codeSelector]
+</code-selector>
 
 ### Securing Properties (Including Associations)
 
@@ -1730,7 +1730,7 @@ properties:
 </properties>
 ```
 
-[/codeSelector]
+</code-selector>
 
 [codeselector]
 
@@ -1811,7 +1811,7 @@ properties:
 </properties>
 ```
 
-[/codeSelector]
+</code-selector>
 
 The above example only allows admins to see the full collection of each resource (`QueryCollection`).
 Users must be granted the `VIEW` attribute on a resource to be able to query it directly (`Query`) - which would use a `Voter` to make this decision.
@@ -1970,7 +1970,7 @@ resources:
 </resources>
 ```
 
-[/codeSelector]
+</code-selector>
 
 In this case, the REST endpoint will be able to get the two attributes of the book and to modify only its title.
 
@@ -2042,7 +2042,7 @@ resources:
 </resources>
 ```
 
-[/codeSelector]
+</code-selector>
 
 Creating a book with its author will be done like this, where `/authors/32` is the IRI of an existing resource:
 
@@ -2124,7 +2124,7 @@ resources:
 </resources>
 ```
 
-[/codeSelector]
+</code-selector>
 
 And in the author resource:
 
