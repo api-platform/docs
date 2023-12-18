@@ -1459,7 +1459,7 @@ final class ErrorHandler implements ErrorHandlerInterface
 
 Then register the service:
 
-[codeSelector]
+<code-selector>
 
 ```yaml
 # api/config/services.yaml
@@ -1500,7 +1500,7 @@ return function(ContainerConfigurator $configurator) {
 };
 ```
 
-[/codeSelector]
+</code-selector>
 
 ### Formatting Exceptions and Errors
 
