@@ -94,13 +94,13 @@ resources:
     App\Entity\Book:
        paginationEnabled: false
 ```
-[/codeSelector]
+</code-selector>
 
 ### Disabling the Pagination For a Specific Operation
 
 You can also disable an operation for a specific operation:
 
-[codeSelector]
+<code-selector>
 
 ```php
 <?php

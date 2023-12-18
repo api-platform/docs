@@ -1075,7 +1075,7 @@ For ORM, it also supports [composite identifiers](https://www.doctrine-project.o
 If you are not using the Doctrine ORM or MongoDB ODM Provider, you must explicitly mark the identifier using the `identifier` attribute of
 the `ApiPlatform\Metadata\ApiProperty` annotation. For example:
 
-[codeSelector]
+<code-selector>
 
 ```php
 <?php
@@ -1127,7 +1127,7 @@ properties:
 </properties>
 ```
 
-[/codeSelector]
+</code-selector>
 
 In some cases, you will want to set the identifier of a resource from the client (e.g. a client-side generated UUID, or a slug).
 In such cases, you must make the identifier property a writable class property. Specifically, to use client-generated IDs, you
