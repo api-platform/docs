@@ -74,7 +74,7 @@ It is simple to specify what groups to use in the API system:
 1. Add the normalization context and denormalization context attributes to the resource, and specify which groups to use. Here you see that we add `read` and `write`, respectively. You can use any group names you wish.
 2. Apply the groups to properties in the object.
 
-[codeSelector]
+<code-selector>
 ```php
 <?php
 // api/src/Entity/Book.php
@@ -124,7 +124,7 @@ App\Entity\Book:
         author:
             groups: ['write']
 ```
-[/codeSelector]
+</code-selector>
 
 Alternatively, you can use the more verbose syntax:
 

@@ -9,7 +9,7 @@ However, it's sometimes useful to use a specific class to represent the input or
 For a given resource class, you may want to have a different representation of this class as input (write) or output (read).
 To do so, a resource can take an input and/or an output class:
 
-[codeSelector]
+<code-selector>
 ```php
 <?php
 // api/src/Entity/Book.php
@@ -55,7 +55,7 @@ resources:
     </resource>
 </resources>
 ```
-[/codeSelector]
+</code-selector>
 
 The `input` attribute is used during [the deserialization process](serialization.md), when transforming the user-provided data to a resource instance.
 Similarly, the `output` attribute is used during [the serialization process](serialization.md). This class represents how the `Book` resource will be represented in the `Response`.
@@ -278,7 +278,7 @@ will be skipped. If `output` is `false`, the serialization process will be skipp
 
 `input` and `output` attributes can be set on a per operation basis:
 
-[codeSelector]
+<code-selector>
 ```php
 <?php
 // api/src/Entity/Book.php
@@ -355,7 +355,7 @@ resources:
     </resource>
 </resources>
 ```
-[/codeSelector]
+</code-selector>
 
 ## Input/Output Metadata
 

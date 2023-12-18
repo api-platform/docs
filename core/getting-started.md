@@ -178,7 +178,7 @@ It is also possible to override the naming convention using [operation path nami
 
 As an alternative to annotations, you can map entity classes using YAML or XML:
 
-[codeSelector]
+<code-selector>
 ```yaml
 # api/config/api_platform/resources.yaml
 resources:
@@ -208,7 +208,7 @@ resources:
     />
 </resources>
 ```
-[/codeSelector]
+</code-selector>
 
 If you prefer to use YAML or XML files instead of annotations, you must configure API Platform to load the appropriate files:
 

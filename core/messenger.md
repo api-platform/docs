@@ -17,7 +17,7 @@ To enable the support of Messenger, install the library:
 
 Set the `messenger` attribute to `true`, and API Platform will automatically dispatch the API Resource instance as a message using the message bus provided by the Messenger Component:
 
-[codeSelector]
+<code-selector>
 ```php
 <?php
 
@@ -61,7 +61,7 @@ resources:
         messenger: true
         output: false
 ```
-[/codeSelector]
+</code-selector>
 
 Because the `messenger` attribute is `true`, when a `POST` is handled by API Platform, the corresponding instance of the `ResetPasswordRequest` will be dispatched.
 

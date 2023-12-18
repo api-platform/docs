@@ -170,7 +170,7 @@ API Platform provides a few extensions that you can reuse in your custom DataPro
 Note that there are a few kinds of extensions which are detailed in [their own chapter of the documentation](extensions.md).
 Because extensions are tagged services, you can use the [injection of tagged services](https://symfony.com/blog/new-in-symfony-3-4-simpler-injection-of-tagged-services):
 
-[codeSelector]
+<code-selector>
 ```yaml
 services:
     'App\DataProvider\BlogPostItemDataProvider':
@@ -185,7 +185,7 @@ services:
     </service>
 </services>
 ```
-[/codeSelector]
+</code-selector>
 
 Your data provider will now have access to the core extensions, here is an example on how to use them:
 

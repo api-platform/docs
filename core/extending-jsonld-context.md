@@ -75,7 +75,7 @@ Note that you do not have to provide the `@id` attribute. If you do not provide 
 
 It's also possible to replace the Hydra context used by the documentation generator:
 
-[codeSelector]
+<code-selector>
 ```php
 <?php
 // api/src/Entity/Book.php
@@ -121,4 +121,4 @@ App\Entity\Book:
     </resource>
 </resources>
 ```
-[/codeSelector]
+</code-selector>

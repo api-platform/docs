@@ -42,7 +42,7 @@ services:
 
 We're linking the filter `offer.date_filter` with the resource like this:
 
-[codeSelector]
+<code-selector>
 ```php
 <?php
 // api/src/Entity/Offer.php
@@ -89,7 +89,7 @@ App\Entity\Offer:
     </resource>
 </resources>
 ```
-[/codeSelector]
+</code-selector>
 
 2. By using the `@ApiFilter` annotation.
 

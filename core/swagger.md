@@ -105,7 +105,7 @@ final class SwaggerDecorator implements NormalizerInterface
 Sometimes you may want to change the information included in your OpenAPI documentation.
 The following configuration will give you total control over your OpenAPI definitions:
 
-[codeSelector]
+<code-selector>
 ```php
 <?php
 // api/src/Entity/Product.php
@@ -208,7 +208,7 @@ resources:
     </resource>
 </resources>
 ```
-[/codeSelector]
+</code-selector>
 
 This will produce the following Swagger documentation:
 ```json
@@ -292,7 +292,7 @@ class User
 
 You also have full control over both built-in and custom operations documentation.
 
-[codeSelector]
+<code-selector>
 ```yaml
 resources:
   App\Entity\Rabbit:
@@ -368,7 +368,7 @@ resources:
     </resource>
 </resources>
 ```
-[/codeSelector]
+</code-selector>
 
 ![Impact on Swagger UI](../distribution/images/swagger-ui-2.png)
 

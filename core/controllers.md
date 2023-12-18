@@ -79,7 +79,7 @@ the client.
 
 The routing has not been configured yet because we will add it at the resource configuration level:
 
-[codeSelector]
+<code-selector>
 ```php
 <?php
 // api/src/Entity/Book.php
@@ -134,7 +134,7 @@ App\Entity\Book:
     </resource>
 </resources>
 ```
-[/codeSelector]
+</code-selector>
 
 It is mandatory to set the `method`, `path` and `controller` attributes. They allow API Platform to configure the routing path and
 the associated controller respectively.
@@ -143,7 +143,7 @@ the associated controller respectively.
 
 You may want different serialization groups for your custom operations. Just configure the proper `normalization_context` and/or `denormalization_context` in your operation:
 
-[codeSelector]
+<code-selector>
 ```php
 <?php
 // api/src/Entity/Book.php
@@ -214,14 +214,14 @@ App\Entity\Book:
     </resource>
 </resources>
 ```
-[/codeSelector]
+</code-selector>
 
 ## Retrieving the Entity
 
 If you want to bypass the automatic retrieval of the entity in your custom operation, you can set `"read"=false` in the
 operation attribute:
 
-[codeSelector]
+<code-selector>
 ```php
 <?php
 // api/src/Entity/Book.php
@@ -279,7 +279,7 @@ App\Entity\Book:
     </resource>
 </resources>
 ```
-[/codeSelector]
+</code-selector>
 
 This way, it will skip the `ReadListener`. You can do the same for some other built-in listeners. See [Built-in Event Listeners](events.md#built-in-event-listeners)
 for more information.
@@ -296,7 +296,7 @@ for `book_post_discontinuation` when neither `method` nor `route_name` attribute
 
 First, let's create your resource configuration:
 
-[codeSelector]
+<code-selector>
 ```php
 <?php
 // api/src/Entity/Book.php
@@ -345,7 +345,7 @@ App\Entity\Book:
     </resource>
 </resources>
 ```
-[/codeSelector]
+</code-selector>
 
 API Platform will automatically map this `post_publication` operation to the route `book_post_publication`. Let's create a custom action
 and its related route using annotations:
