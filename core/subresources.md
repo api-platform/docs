@@ -21,7 +21,7 @@ the Question about the Universe using the following URI: `/question/42/answer`.
 
 Let's start by defining the resources:
 
-[codeSelector]
+<code-selector>
 
 ```php
 <?php
@@ -102,13 +102,13 @@ resources:
 </resources>
 ```
 
-[/codeSelector]
+</code-selector>
 
 Now to create a new way of retrieving an Answer we will declare another resource on the `Answer` class.
 To make things work, API Platform needs information about how to retrieve the `Answer` belonging to
 the `Question`, this is done by configuring the `uriVariables`:
 
-[codeSelector]
+<code-selector>
 ```php
 <?php
 // api/src/Entity/Answer.php
@@ -174,7 +174,7 @@ resources:
 
 ```
 
-[/codeSelector]
+</code-selector>
 
 In this example, we instructed API Platform that the `Answer` we retrieve comes **from** the **class** `Question`
 **from** the **property** `answer` of that class.
@@ -183,7 +183,7 @@ URI Variables are defined using Links (`ApiPlatform\Metadata\Link`). A `Link` ca
 
 If we had a `relatedQuestions` property on the `Answer` we could retrieve the collection of related questions via the following definition:
 
-[codeSelector]
+<code-selector>
 
 ```php
 #[ApiResource(
@@ -221,7 +221,7 @@ resources:
 </resource>
 ```
 
-[/codeSelector]
+</code-selector>
 
 ### Company Employee's
 

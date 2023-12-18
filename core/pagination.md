@@ -72,7 +72,7 @@ api_platform:
 
 It can also be disabled for a specific resource:
 
-[codeSelector]
+<code-selector>
 
 ```php
 <?php
@@ -148,7 +148,7 @@ resources:
     </resource>
 </resources>
 ```
-[/codeSelector]
+</code-selector>
 
 ### Disabling the Pagination Client-side
 
