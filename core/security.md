@@ -6,7 +6,7 @@ API Platform also provides convenient [access control expressions](https://symfo
 
 <p align="center" class="symfonycasts"><a href="https://symfonycasts.com/screencast/api-platform-security/?cid=apip"><img src="/docs/distribution/images/symfonycasts-player.png" alt="Security screencast"><br>Watch the Security screencast</a></p>
 
-[codeSelector]
+<code-selector>
 
 ```php
 <?php
@@ -63,11 +63,11 @@ App\Entity\Book:
             security: 'is_granted("ROLE_ADMIN") or object.owner == user'
 ```
 
-[/codeSelector]
+</code-selector>
 
 Resource signature can be modified at the property level as well:
 
-[codeSelector]
+<code-selector>
 
 ```php
 class Book
@@ -91,7 +91,7 @@ App\Entity\Book:
                 security: 'is_granted("ROLE_ADMIN")'
 ```
 
-[/codeSelector]
+</code-selector>
 
 In this example:
 
@@ -113,7 +113,7 @@ It means than for `PUT` or `PATCH` requests, `object` doesn't contain the value 
 In some cases, it might be useful to execute a security after the denormalization step.
 To do so, use the `security_post_denormalize` attribute:
 
-[codeSelector]
+<code-selector>
 
 ```php
 <?php
@@ -145,7 +145,7 @@ App\Entity\Book:
     # ...
 ```
 
-[/codeSelector]
+</code-selector>
 
 This time, the `object` variable contains data that have been extracted from the HTTP request body during the denormalization process.
 However, the object is not persisted yet.
@@ -164,7 +164,7 @@ In order to give the current `object` to your voter, use the expression `is_gran
 
 For example:
 
-[codeSelector]
+<code-selector>
 
 ```php
 <?php
@@ -210,7 +210,7 @@ App\Entity\Book:
             security: 'is_granted("BOOK_DELETE", object)'
 ```
 
-[/codeSelector]
+</code-selector>
 
 Please note that if you use both `attributes={"security"="..` and then `"post" = { "security_post_denormalize" = "...`, the `security` on top level is called first, and after `security_post_denormalize`. This could lead to unwanted behaviour, so avoid using both of them simultaneously.
 If you need to use `security_post_denormalize`, consider adding `security` for the other operations instead of the global one.
@@ -280,7 +280,7 @@ You can change it by configuring the `security_message` attribute or the `securi
 
 For example:
 
-[codeSelector]
+<code-selector>
 
 ```php
 <?php
@@ -337,7 +337,7 @@ App\Entity\Book:
     # ...
 ```
 
-[/codeSelector]
+</code-selector>
 
 ## Filtering Collection According to the Current User Permissions
 

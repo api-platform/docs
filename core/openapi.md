@@ -109,7 +109,7 @@ The impact on the swagger-ui is the following:
 Sometimes you may want to change the information included in your OpenAPI documentation.
 The following configuration will give you total control over your OpenAPI definitions:
 
-[codeSelector]
+<code-selector>
 
 ```php
 <?php
@@ -201,7 +201,7 @@ resources:
 </resources>
 ```
 
-[/codeSelector]
+</code-selector>
 
 This will produce the following Swagger documentation:
 
@@ -293,7 +293,7 @@ class User
 
 You also have full control over both built-in and custom operations documentation.
 
-[codeSelector]
+<code-selector>
 
 ```php
 <?php
@@ -405,7 +405,7 @@ resources:
 </resources>
 ```
 
-[/codeSelector]
+</code-selector>
 
 ![Impact on Swagger UI](../distribution/images/swagger-ui-2.png)
 

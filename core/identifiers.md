@@ -9,7 +9,7 @@ To help with your development experience, we introduced an identifier normalizat
 
 Let's say you have the following class, which is identified by a `UUID` type. In this example, `UUID` is not a simple string but an object with many attributes.
 
-[codeSelector]
+<code-selector>
 
 ```php
 <?php
@@ -48,7 +48,7 @@ App\Entity\Person:
 </resources>
 ```
 
-[/codeSelector]
+</code-selector>
 
 Once registered as an `ApiResource`, having an existing person, it will be accessible through the following URL: `/people/110e8400-e29b-11d4-a716-446655440000`.
 Note that the property identifying our resource is named `code`.
@@ -123,7 +123,7 @@ final class UuidNormalizer implements DenormalizerInterface
 
 Tag this service as an `api_platform.identifier.denormalizer`:
 
-[codeSelector]
+<code-selector>
 
 ```yaml
 services:
@@ -138,7 +138,7 @@ services:
   </service>
 ```
 
-[/codeSelector]
+</code-selector>
 
 Your `PersonDataProvider` will now work as expected!
 

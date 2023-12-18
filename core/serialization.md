@@ -74,7 +74,7 @@ It is simple to specify what groups to use in the API system:
 1. Add the normalization context and denormalization context attributes to the resource, and specify which groups to use. Here you see that we add `read` and `write`, respectively. You can use any group names you wish.
 2. Apply the groups to properties in the object.
 
-[codeSelector]
+<code-selector>
 
 ```php
 <?php
@@ -120,7 +120,7 @@ App\Entity\Book:
             groups: ['write']
 ```
 
-[/codeSelector]
+</code-selector>
 
 Alternatively, you can use the more verbose syntax:
 
@@ -158,7 +158,7 @@ level ignored.
 
 In the following example we use different serialization groups for the `GET` and `PUT` operations:
 
-[codeSelector]
+<code-selector>
 
 ```php
 <?php
@@ -211,7 +211,7 @@ App\Entity\Book:
             groups: ['get']
 ```
 
-[/codeSelector]
+</code-selector>
 
 The `name` and `author` properties will be included in the document generated during a `GET` operation because the configuration
 defined at the resource level is inherited. However the document generated when a `PUT` request will be received will only
@@ -247,7 +247,7 @@ response through the use of serialization groups. By using the following seriali
 a JSON representation of the author is embedded in the book response. As soon as any of the author's attributes is in
 the `book` group, the author will be embedded.
 
-[codeSelector]
+<code-selector>
 
 ```php
 <?php
@@ -287,9 +287,9 @@ App\Entity\Book:
             groups: ['book']
 ```
 
-[/codeSelector]
+</code-selector>
 
-[codeSelector]
+<code-selector>
 
 ```php
 <?php
@@ -318,7 +318,7 @@ App\Entity\Person:
             groups: ['book']
 ```
 
-[/codeSelector]
+</code-selector>
 
 The generated JSON using previous settings is below:
 
@@ -347,7 +347,7 @@ Instead of embedding relations in the main HTTP response, you may want [to "push
 It is also possible to embed a relation in `PUT`, `PATCH` and `POST` requests. To enable that feature, set the serialization groups
 the same way as normalization. For example:
 
-[codeSelector]
+<code-selector>
 
 ```php
 <?php
@@ -372,7 +372,7 @@ App\Entity\Book:
             groups: ['book']
 ```
 
-[/codeSelector]
+</code-selector>
 
 The following rules apply when denormalizing embedded relations:
 
@@ -386,7 +386,7 @@ You can specify as many embedded relation levels as you want.
 
 It is a common problem to have entities that reference other entities of the same type:
 
-[codeSelector]
+<code-selector>
 
 ```php
 <?php
@@ -438,13 +438,13 @@ App\Entity\Person:
             groups: ['person']
 ```
 
-[/codeSelector]
+</code-selector>
 
 The problem here is that the **$parent** property become automatically an embedded object. Besides, the property won't be shown on the OpenAPI view.
 
 To force the **$parent** property to be used as an IRI, add an **#[ApiProperty(readableLink: false, writableLink: false)]** annotation:
 
-[codeSelector]
+<code-selector>
 
 ```php
 <?php
@@ -499,7 +499,7 @@ App\Entity\Person:
             groups: ['person']
 ```
 
-[/codeSelector]
+</code-selector>
 
 ## Property Normalization Context
 
@@ -602,7 +602,7 @@ class Book
 
 Sometimes you need to expose calculated fields. This can be done by leveraging the groups. This time not on a property, but on a method.
 
-[codeSelector]
+<code-selector>
 
 ```php
 <?php
@@ -667,7 +667,7 @@ App\Entity\Greeting:
             groups: 'greeting:collection:get'
 ```
 
-[/codeSelector]
+</code-selector>
 
 ## Changing the Serialization Context Dynamically
 
@@ -675,7 +675,7 @@ App\Entity\Greeting:
 
 Let's imagine a resource where most fields can be managed by any user, but some can be managed only by admin users:
 
-[codeSelector]
+<code-selector>
 
 ```php
 <?php
@@ -728,7 +728,7 @@ App\Entity\Book:
             groups: ['book:output', 'book:input']
 ```
 
-[/codeSelector]
+</code-selector>
 
 All entry points are the same for all users, so we should find a way to detect if the authenticated user is an admin, and if so
 dynamically add the `admin:input` value to deserialization groups in the `$context` array.
@@ -1040,7 +1040,7 @@ an IRI. A client that uses JSON-LD must send a second HTTP request to retrieve i
 You can configure API Platform to embed the JSON-LD context in the root document by adding the `jsonld_embed_context`
 attribute to the `#[ApiResource]` annotation:
 
-[codeSelector]
+<code-selector>
 
 ```php
 <?php
@@ -1065,7 +1065,7 @@ App\Entity\Book:
             jsonld_embed_context: true
 ```
 
-[/codeSelector]
+</code-selector>
 
 The JSON output will now include the embedded context:
 
