@@ -161,6 +161,8 @@ You can of course disable or configure these operations.
 
 For instance, in the following example, only the query of an item and the create mutation are enabled:
 
+<code-selector>
+
 ```php
 <?php
 // api/src/Entity/Book.php
@@ -179,6 +181,31 @@ class Book
     // ...
 }
 ```
+
+```yaml
+resources:
+    App\Entity\Book:
+        graphQlOperations:
+            ApiPlatform\Metadata\GraphQl\Query: ~
+            ApiPlatform\Metadata\GraphQl\Mutation:
+                name: create
+```
+
+```xml
+<resources xmlns="https://api-platform.com/schema/metadata/resources-3.0"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="https://api-platform.com/schema/metadata/resources-3.0
+           https://api-platform.com/schema/metadata/resources-3.0.xsd">
+    <resource class="App\Entity\Book">
+        <graphQlOperations>
+            <graphQlOperation class="ApiPlatform\Metadata\GraphQl\Query" />
+            <graphQlOperation class="ApiPlatform\Metadata\GraphQl\Mutation" name="create" />
+        </graphQlOperations>
+    </resource>
+</resources>
+```
+
+</code-selector>
 
 ## Queries
 
@@ -291,6 +318,8 @@ Now that your resolver is created and registered, you can configure your custom 
 
 In your resource, add the following:
 
+[codeselector]
+
 ```php
 <?php
 // api/src/Entity/Book.php
@@ -338,6 +367,92 @@ class Book
     // ...
 }
 ```
+
+```yaml
+resources:
+    App\Entity\Book:
+        graphQlOperations:
+            - class: ApiPlatform\Metadata\GraphQl\Query
+            - class: ApiPlatform\Metadata\GraphQl\QueryCollection
+            - class: ApiPlatform\Metadata\GraphQl\Mutation
+              name: create
+            - class: ApiPlatform\Metadata\GraphQl\Mutation
+              name: update
+            - class: ApiPlatform\Metadata\GraphQl\Mutation
+              name: delete
+
+            - class: ApiPlatform\Metadata\GraphQl\Query
+              name: retrievedQuery
+              resolver: App\Resolver\BookResolver
+            - class: ApiPlatform\Metadata\GraphQl\Query
+              name: notRetrievedQuery
+              resolver: App\Resolver\BookResolver
+              args: []
+            - class: ApiPlatform\Metadata\GraphQl\Query
+              name: withDefaultArgsNotRetrievedQuery
+              resolver: App\Resolver\BookResolver
+              read: false
+            - class: ApiPlatform\Metadata\GraphQl\Query
+              name: withCustomArgsQuery
+              resolver: App\Resolver\BookResolver
+              args:
+                  id:
+                      type: 'ID!'
+                  log:
+                      type: 'Boolean!'
+                      description: 'Is logging activated?'
+                  logDate:
+                      type: 'DateTime'
+            - class: ApiPlatform\Metadata\GraphQl\QueryCollection
+              name: collectionQuery
+              resolver: App\Resolver\BookCollectionResolver
+```
+
+```xml
+<resources xmlns="https://api-platform.com/schema/metadata/resources-3.0"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="https://api-platform.com/schema/metadata/resources-3.0
+           https://api-platform.com/schema/metadata/resources-3.0.xsd">
+    <resource class="App\Entity\Book">
+        <graphQlOperations>
+            <graphQlOperation class="ApiPlatform\Metadata\GraphQl\Query" />
+            <graphQlOperation class="ApiPlatform\Metadata\GraphQl\QueryCollection" />
+            <graphQlOperation class="ApiPlatform\Metadata\GraphQl\Mutation" name="create" />
+            <graphQlOperation class="ApiPlatform\Metadata\GraphQl\Mutation" name="update" />
+            <graphQlOperation class="ApiPlatform\Metadata\GraphQl\Mutation" name="delete" />
+
+            <graphQlOperation class="ApiPlatform\Metadata\GraphQl\Query" name="retrievedQuery" resolver="App\Resolver\BookResolver" />
+            <graphQlOperation class="ApiPlatform\Metadata\GraphQl\Query" name="notRetrievedQuery" resolver="App\Resolver\BookResolver">
+                <args/>
+            </graphQlOperation>
+            <graphQlOperation class="ApiPlatform\Metadata\GraphQl\Query" name="withDefaultArgsNotRetrievedQuery" read="false" />
+            <graphQlOperation class="ApiPlatform\Metadata\GraphQl\Query" name="withCustomArgsQuery" resolver="App\Resolver\BookResolver">
+                <args>
+                    <arg id="id">
+                        <values>
+                            <value name="type">ID!</value>
+                        </values>
+                    </arg>
+                    <arg id="log">
+                        <values>
+                            <value name="type">Boolean!</value>
+                            <value name="description">Is logging activated?</value>
+                        </values>
+                    </arg>
+                    <arg id="logDate">
+                        <values>
+                            <value name="type">DateTime</value>
+                        </values>
+                    </arg>
+                </args>
+            </graphQlOperation>
+            <graphQlOperation class="ApiPlatform\Metadata\GraphQl\QueryCollection" name="collectionQuery" provider="App\Resolver\BookCollectionResolver" />
+        </graphQlOperations>
+    </resource>
+</resources>
+```
+
+</code-selector>
 
 Note that you need to explicitly add the auto-generated queries and mutations if they are needed when configuring custom queries, like it's done for the [operations](#operations).
 
@@ -462,6 +577,8 @@ If you don't use autoconfiguration, add the tag `api_platform.graphql.mutation_r
 
 Now in your resource:
 
+[codeselector]
+
 ```php
 <?php
 // api/src/Entity/Book.php
@@ -510,6 +627,79 @@ class Book
     // ...
 }
 ```
+
+```yaml
+resources:
+    App\Entity\Book:
+        graphQlOperations:
+            - class: ApiPlatform\Metadata\GraphQl\Query
+            - class: ApiPlatform\Metadata\GraphQl\QueryCollection
+            - class: ApiPlatform\Metadata\GraphQl\Mutation
+              name: create
+            - class: ApiPlatform\Metadata\GraphQl\Mutation
+              name: update
+            - class: ApiPlatform\Metadata\GraphQl\Mutation
+              name: delete
+
+            - class: ApiPlatform\Metadata\GraphQl\Mutation
+              name: mutation
+              resolver: App\Resolver\BookMutationResolver
+              extraArgs:
+                  id:
+                      type: 'ID!'
+            - class: ApiPlatform\Metadata\GraphQl\Mutation
+              name: withCustomArgsMutation
+              resolver: App\Resolver\BookMutationResolver
+              args:
+                  sendMail:
+                      type: 'Boolean!'
+                      description: 'Send a mail?'
+            - class: ApiPlatform\Metadata\GraphQl\Mutation
+              name: disabledStagesMutation
+              resolver: App\Resolver\BookMutationResolver
+              deserialize: false
+              write: false
+```
+
+```xml
+<resources xmlns="https://api-platform.com/schema/metadata/resources-3.0"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="https://api-platform.com/schema/metadata/resources-3.0
+           https://api-platform.com/schema/metadata/resources-3.0.xsd">
+    <resource class="App\Entity\Book">
+        <graphQlOperations>
+            <graphQlOperation class="ApiPlatform\Metadata\GraphQl\Query" />
+            <graphQlOperation class="ApiPlatform\Metadata\GraphQl\QueryCollection" />
+            <graphQlOperation class="ApiPlatform\Metadata\GraphQl\Mutation" name="create" />
+            <graphQlOperation class="ApiPlatform\Metadata\GraphQl\Mutation" name="update" />
+            <graphQlOperation class="ApiPlatform\Metadata\GraphQl\Mutation" name="delete" />
+
+            <graphQlOperation class="ApiPlatform\Metadata\GraphQl\Mutation" name="mutation" resolver="App\Resolver\BookMutationResolver">
+                <extraArgs>
+                    <arg id="id">
+                        <values>
+                            <value name="type">ID!</value>
+                        </values>
+                    </arg>
+                </extraArgs>
+            </graphQlOperation>
+            <graphQlOperation class="ApiPlatform\Metadata\GraphQl\Mutation" name="withCustomArgsMutation" resolver="App\Resolver\BookMutationResolver">
+                <args>
+                    <arg id="sendMail">
+                        <values>
+                            <value name="type">Boolean!</value>
+                            <value name="description">Send a mail?</value>
+                        </values>
+                    </arg>
+                </args>
+            </graphQlOperation>
+            <graphQlOperation class="ApiPlatform\Metadata\GraphQl\Mutation" name="disabledStagesMutation" resolver="App\Resolver\BookMutationResolver" deserialize="false" write="false" />
+        </graphQlOperations>
+    </resource>
+</resources>
+```
+
+</code-selector>
 
 Note that you need to explicitly add the auto-generated queries and mutations if they are needed when configuring custom mutations, like it's done for the [operations](#operations).
 
@@ -568,6 +758,8 @@ To enable update subscriptions for a resource, these conditions have to be met:
 
 For instance, your resource should look like this:
 
+[codeselector]
+
 ```php
 <?php
 // api/src/Entity/Book.php
@@ -586,6 +778,31 @@ class Book
     // ...
 }
 ```
+
+```yaml
+resources:
+    App\Entity\Book:
+        graphQlOperations:
+            ApiPlatform\Metadata\GraphQl\Mutation:
+                name: update
+            ApiPlatform\Metadata\GraphQl\Subscription: ~
+```
+
+```xml
+<resources xmlns="https://api-platform.com/schema/metadata/resources-3.0"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="https://api-platform.com/schema/metadata/resources-3.0
+           https://api-platform.com/schema/metadata/resources-3.0.xsd">
+    <resource class="App\Entity\Book">
+        <graphQlOperations>
+            <graphQlOperation class="ApiPlatform\Metadata\GraphQl\Mutation" name="update" />
+            <graphQlOperation class="ApiPlatform\Metadata\GraphQl\Subscription" />
+        </graphQlOperations>
+    </resource>
+</resources>
+```
+
+</code-selector>
 
 ### Subscribe
 
@@ -704,15 +921,17 @@ If you need to, you can disable some stages done by the resolvers, for instance 
 
 The following table lists the stages you can disable in your resource configuration.
 
-Attribute     | Type   | Default | Description
---------------|--------|---------|-------------
-`read`        | `bool` | `true`  | Enables or disables the reading of data
-`deserialize` | `bool` | `true`  | Enables or disables the deserialization of data (mutation only)
-`validate`    | `bool` | `true`  | Enables or disables the validation of the denormalized data (mutation only)
-`write`       | `bool` | `true`  | Enables or disables the writing of data into the persistence system (mutation only)
-`serialize`   | `bool` | `true`  | Enables or disables the serialization of data
+| Attribute     | Type   | Default | Description                                                                         |
+|---------------|--------|---------|-------------------------------------------------------------------------------------|
+| `read`        | `bool` | `true`  | Enables or disables the reading of data                                             |
+| `deserialize` | `bool` | `true`  | Enables or disables the deserialization of data (mutation only)                     |
+| `validate`    | `bool` | `true`  | Enables or disables the validation of the denormalized data (mutation only)         |
+| `write`       | `bool` | `true`  | Enables or disables the writing of data into the persistence system (mutation only) |
+| `serialize`   | `bool` | `true`  | Enables or disables the serialization of data                                       |
 
 A stage can be disabled at the operation level:
+
+[codeselector]
 
 ```php
 <?php
@@ -735,7 +954,37 @@ class Book
 }
 ```
 
+```yaml
+resources:
+    App\Entity\Book:
+        graphQlOperations:
+            ApiPlatform\Metadata\GraphQl\Query: ~
+            ApiPlatform\Metadata\GraphQl\QueryCollection: ~
+            ApiPlatform\Metadata\GraphQl\Mutation:
+              name: create
+              write: false
+```
+
+```xml
+<resources xmlns="https://api-platform.com/schema/metadata/resources-3.0"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="https://api-platform.com/schema/metadata/resources-3.0
+           https://api-platform.com/schema/metadata/resources-3.0.xsd">
+    <resource class="App\Entity\Book">
+        <graphQlOperations>
+            <graphQlOperation class="ApiPlatform\Metadata\GraphQl\Query" />
+            <graphQlOperation class="ApiPlatform\Metadata\GraphQl\QueryCollection" />
+            <graphQlOperation class="ApiPlatform\Metadata\GraphQl\Mutation" name="create" write="false" />
+        </graphQlOperations>
+    </resource>
+</resources>
+```
+
+</code-selector>
+
 Or at the resource attributes level (will be also applied in REST and for all operations):
+
+[codeselector]
 
 ```php
 <?php
@@ -758,6 +1007,34 @@ class Book
 }
 ```
 
+```yaml
+resources:
+    App\Entity\Book:
+        write: false
+        graphQlOperations:
+            ApiPlatform\Metadata\GraphQl\Query: ~
+            ApiPlatform\Metadata\GraphQl\QueryCollection: ~
+            ApiPlatform\Metadata\GraphQl\Mutation:
+              name: create
+```
+
+```xml
+<resources xmlns="https://api-platform.com/schema/metadata/resources-3.0"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="https://api-platform.com/schema/metadata/resources-3.0
+           https://api-platform.com/schema/metadata/resources-3.0.xsd">
+    <resource class="App\Entity\Greeting" write="false">
+        <graphQlOperations>
+            <graphQlOperation class="ApiPlatform\Metadata\GraphQl\Query" />
+            <graphQlOperation class="ApiPlatform\Metadata\GraphQl\QueryCollection" />
+            <graphQlOperation class="ApiPlatform\Metadata\GraphQl\Mutation" name="create" />
+        </graphQlOperations>
+    </resource>
+</resources>
+```
+
+</code-selector>
+
 ## Events
 
 No events are sent by the resolvers in API Platform. If you want to add your custom logic, [decorating the stages](#workflow-of-the-resolvers) is
@@ -775,6 +1052,8 @@ In the `QueryCollection` attribute, you can choose to decorrelate the GraphQL fi
 In order to keep the default behavior (possibility to fetch, delete, update or create), define all the auto-generated operations (`Query` ,`QueryCollection`, `DeleteMutation`, and the `update` and `create` `Mutation`).
 
 For example, this entity will have a search filter for REST and a date filter for GraphQL:
+
+[codeselector]
 
 ```php
 <?php
@@ -799,6 +1078,49 @@ class Offer
     // ...
 }
 ```
+
+```yaml
+resources:
+    App\Entity\Book:
+        filters: ['offer.search_filter']
+        graphQlOperations:
+            - class: ApiPlatform\Metadata\GraphQl\Query
+            - class: ApiPlatform\Metadata\GraphQl\QueryCollection
+              filters: ['offer.date_filter']
+            - class: ApiPlatform\Metadata\GraphQl\Mutation
+              name: create
+            - class: ApiPlatform\Metadata\GraphQl\Mutation
+              name: update
+            - class: ApiPlatform\Metadata\GraphQl\Mutation
+              name: delete
+```
+
+```xml
+<resources xmlns="https://api-platform.com/schema/metadata/resources-3.0"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="https://api-platform.com/schema/metadata/resources-3.0
+           https://api-platform.com/schema/metadata/resources-3.0.xsd">
+    <resource class="App\Entity\Book">
+        <filters>
+            <filter>offer.search_filter</filter>
+        </filters>
+
+        <graphQlOperations>
+            <graphQlOperation class="ApiPlatform\Metadata\GraphQl\Query" />
+            <graphQlOperation class="ApiPlatform\Metadata\GraphQl\QueryCollection">
+                <fitlers>
+                    <filter>offer.date_filter</filter>
+                </fitlers>
+            </graphQlOperation>
+            <graphQlOperation class="ApiPlatform\Metadata\GraphQl\Mutation" name="create" />
+            <graphQlOperation class="ApiPlatform\Metadata\GraphQl\Mutation" name="update" />
+            <graphQlOperation class="ApiPlatform\Metadata\GraphQl\Mutation" name="delete" />
+        </graphQlOperations>
+    </resource>
+</resources>
+```
+
+</code-selector>
 
 ### Syntax for Filters with a List of Key / Value Arguments
 
@@ -990,6 +1312,8 @@ In order to use the page-based pagination, you need to enable it in the resource
 
 For instance at the operation level:
 
+[codeselector]
+
 ```php
 <?php
 // api/src/Entity/Offer.php
@@ -1014,7 +1338,43 @@ class Offer
 }
 ```
 
+```yaml
+resources:
+    App\Entity\Book:
+        graphQlOperations:
+            - class: ApiPlatform\Metadata\GraphQl\Query
+            - class: ApiPlatform\Metadata\GraphQl\QueryCollection
+              paginationType: page
+            - class: ApiPlatform\Metadata\GraphQl\Mutation
+              name: create
+            - class: ApiPlatform\Metadata\GraphQl\Mutation
+              name: update
+            - class: ApiPlatform\Metadata\GraphQl\Mutation
+              name: delete
+```
+
+```xml
+<resources xmlns="https://api-platform.com/schema/metadata/resources-3.0"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="https://api-platform.com/schema/metadata/resources-3.0
+           https://api-platform.com/schema/metadata/resources-3.0.xsd">
+    <resource class="App\Entity\Book">
+        <graphQlOperations>
+            <graphQlOperation class="ApiPlatform\Metadata\GraphQl\Query" />
+            <graphQlOperation class="ApiPlatform\Metadata\GraphQl\QueryCollection" paginationType="page" />
+            <graphQlOperation class="ApiPlatform\Metadata\GraphQl\Mutation" name="create" />
+            <graphQlOperation class="ApiPlatform\Metadata\GraphQl\Mutation" name="update" />
+            <graphQlOperation class="ApiPlatform\Metadata\GraphQl\Mutation" name="delete" />
+        </graphQlOperations>
+    </resource>
+</resources>
+```
+
+</code-selector>
+
 Or if you want to do it at the resource level:
+
+[codeselector]
 
 ```php
 <?php
@@ -1029,6 +1389,23 @@ class Offer
     // ...
 }
 ```
+
+```yaml
+resources:
+    App\Entity\Book:
+        paginationType: page
+```
+
+```xml
+<resources xmlns="https://api-platform.com/schema/metadata/resources-3.0"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="https://api-platform.com/schema/metadata/resources-3.0
+           https://api-platform.com/schema/metadata/resources-3.0.xsd">
+    <resource class="App\Entity\Book" paginationType="page" />
+</resources>
+```
+
+</code-selector>
 
 Once enabled, a `page` filter will be available in the collection query (its name [can be changed in the configuration](pagination.md)) and an `itemsPerPage` filter will be available too if [client-side-pagination](pagination.md#client-side) is enabled.
 
@@ -1078,6 +1455,8 @@ api_platform:
 
 It can also be disabled for a specific resource (REST and GraphQL):
 
+[codeselector]
+
 ```php
 <?php
 // api/src/Entity/Book.php
@@ -1092,9 +1471,28 @@ class Book
 }
 ```
 
+```yaml
+resources:
+    App\Entity\Book:
+        paginationEnabled: false
+```
+
+```xml
+<resources xmlns="https://api-platform.com/schema/metadata/resources-3.0"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="https://api-platform.com/schema/metadata/resources-3.0
+           https://api-platform.com/schema/metadata/resources-3.0.xsd">
+    <resource class="App\Entity\Book" paginationEnabled="false" />
+</resources>
+```
+
+</code-selector>
+
 #### For a Specific Resource Collection Operation
 
 You can also disable the pagination for a specific collection operation:
+
+[codeselector]
 
 ```php
 <?php
@@ -1110,6 +1508,29 @@ class Book
     // ...
 }
 ```
+
+```yaml
+resources:
+    App\Entity\Book:
+        graphQlOperations:
+            ApiPlatform\Metadata\GraphQl\QueryCollection:
+                paginationEnabled: false
+```
+
+```xml
+<resources xmlns="https://api-platform.com/schema/metadata/resources-3.0"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="https://api-platform.com/schema/metadata/resources-3.0
+           https://api-platform.com/schema/metadata/resources-3.0.xsd">
+    <resource class="App\Entity\Book">
+        <graphQlOperations>
+            <graphQlOperation class="ApiPlatform\Metadata\GraphQl\QueryCollection" paginationEnabled="false" />
+        </graphQlOperations>
+    </resource>
+</resources>
+```
+
+</code-selector>
 
 ### Partial Pagination
 
@@ -1127,6 +1548,8 @@ If you have only some parts differing between REST and GraphQL, you have to rede
 
 In the example below, we want the same security rules as we have in REST, but we also want to allow an admin to delete a book only in GraphQL.
 Please note that, it's not possible to update a book in GraphQL because the `update` operation is not defined.
+
+[codeselector]
 
 ```php
 <?php
@@ -1160,6 +1583,52 @@ class Book
 }
 ```
 
+```yaml
+resources:
+    App\Entity\Book:
+        security: "is_granted('ROLE_USER')"
+        operations:
+            ApiPlatform\Metadata\Get:
+                security: "is_granted('ROLE_USER') and object.owner == user"
+                securityMessage: 'Sorry, but you are not the book owner.'
+            ApiPlatform\Metadata\Post:
+                security: "is_granted('ROLE_ADMIN')"
+                securityMessage: 'Only admins can add books.'
+        graphQlOperations:
+            ApiPlatform\Metadata\GraphQl\Query:
+                security: "is_granted('ROLE_USER') and object.owner == user"
+            ApiPlatform\Metadata\GraphQl\QueryCollection:
+                security: "is_granted('ROLE_ADMIN')"
+            ApiPlatform\Metadata\GraphQl\DeleteMutation:
+                name: delete
+                security: "is_granted('ROLE_ADMIN')"
+            ApiPlatform\Metadata\GraphQl\Mutation:
+                name: create
+                security: "is_granted('ROLE_ADMIN')"
+```
+
+```xml
+<resources xmlns="https://api-platform.com/schema/metadata/resources-3.0"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="https://api-platform.com/schema/metadata/resources-3.0
+           https://api-platform.com/schema/metadata/resources-3.0.xsd">
+    <resource class="App\Entity\Book" security="is_granted('ROLE_USER')">
+        <operations>
+            <operation class="ApiPlatform\Metadata\Get" security="is_granted('ROLE_USER') and object.owner == user" securityMessage="Sorry, but you are not the book owner." />
+            <operation class="ApiPlatform\Metadata\Post" security="is_granted('ROLE_ADMIN')" securityMessage="Only admins can add books." />
+        </operations>
+        <graphQlOperations>
+            <graphQlOperation class="ApiPlatform\Metadata\GraphQl\Query" security="is_granted('ROLE_USER') and object.owner == user" />
+            <graphQlOperation class="ApiPlatform\Metadata\GraphQl\QueryCollection" security="is_granted('ROLE_ADMIN')" />
+            <graphQlOperation class="ApiPlatform\Metadata\GraphQl\DeleteMutation" name="delete" security="is_granted('ROLE_ADMIN')" />
+            <graphQlOperation class="ApiPlatform\Metadata\GraphQl\Mutation" name="create" security="is_granted('ROLE_ADMIN')" />
+        </graphQlOperations>
+    </resource>
+</resources>
+```
+
+</code-selector>
+
 ### Securing Properties (Including Associations)
 
 You may want to limit access to certain resource properties with a security expression. This can be done with the `ApiProperty` `security` attribute.
@@ -1181,6 +1650,8 @@ A traversal attack is where a user can gain unintended access to a resource by q
 For example, a user may be denied using `Query.getUser` to get a user, but is able to access the user through an association on an object that they do have access to (e.g. `document.createdBy`).
 
 The following example shows how associations can be secured:
+
+[codeselector]
 
 ```php
 <?php
@@ -1218,6 +1689,51 @@ class User
 }
 ```
 
+```yaml
+resources:
+    App\Entity\User:
+        graphQlOperations:
+            ApiPlatform\Metadata\GraphQl\Query:
+                security: "is_granted('VIEW', object)"
+            ApiPlatform\Metadata\GraphQl\QueryCollection:
+                security: "is_granted('ROLE_ADMIN')"
+
+properties:
+    App\Entity\User:
+        viewableDocuments:
+            security: "is_granted('VIEW', object)"
+        email:
+            security: "is_granted('ROLE_ADMIN')"
+```
+
+```xml
+<!-- resources.xml -->
+<resources xmlns="https://api-platform.com/schema/metadata/resources-3.0"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="https://api-platform.com/schema/metadata/resources-3.0
+           https://api-platform.com/schema/metadata/resources-3.0.xsd">
+    <resource class="App\Entity\User">
+        <graphQlOperations>
+            <graphQlOperation class="ApiPlatform\Metadata\GraphQl\Query" security="is_granted('VIEW', object)" />
+            <graphQlOperation class="ApiPlatform\Metadata\GraphQl\QueryCollection" security="is_granted('ROLE_ADMIN')" />
+        </graphQlOperations>
+    </resource>
+</resources>
+
+<!-- properties.xml -->
+<properties xmlns="https://api-platform.com/schema/metadata/properties-3.0"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="https://api-platform.com/schema/metadata/properties-3.0
+           https://api-platform.com/schema/metadata/properties-3.0.xsd">
+    <property resource="App\Entity\User" name="viewableDocuments" security="is_granted('VIEW', object)" />
+    <property resource="App\Entity\User" name="email" security="is_granted('ROLE_ADMIN')" />
+</properties>
+```
+
+</code-selector>
+
+[codeselector]
+
 ```php
 <?php
 // api/src/Entity/Document.php
@@ -1254,6 +1770,49 @@ class Document
 }
 ```
 
+```yaml
+resources:
+    App\Entity\Document:
+        graphQlOperations:
+            ApiPlatform\Metadata\GraphQl\Query:
+                security: "is_granted('VIEW', object)"
+            ApiPlatform\Metadata\GraphQl\QueryCollection:
+                security: "is_granted('ROLE_ADMIN')"
+
+properties:
+    App\Entity\Document:
+        viewers:
+            security: "is_granted('VIEW', object)"
+        createdBy:
+            security: "is_granted('VIEW', object)"
+```
+
+```xml
+<!-- resources.xml -->
+<resources xmlns="https://api-platform.com/schema/metadata/resources-3.0"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="https://api-platform.com/schema/metadata/resources-3.0
+           https://api-platform.com/schema/metadata/resources-3.0.xsd">
+    <resource class="App\Entity\User">
+        <graphQlOperations>
+            <graphQlOperation class="ApiPlatform\Metadata\GraphQl\Query" security="is_granted('VIEW', object)" />
+            <graphQlOperation class="ApiPlatform\Metadata\GraphQl\QueryCollection" security="is_granted('ROLE_ADMIN')" />
+        </graphQlOperations>
+    </resource>
+</resources>
+
+<!-- properties.xml -->
+<properties xmlns="https://api-platform.com/schema/metadata/properties-3.0"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="https://api-platform.com/schema/metadata/properties-3.0
+           https://api-platform.com/schema/metadata/properties-3.0.xsd">
+    <property resource="App\Entity\Document" name="viewers" security="is_granted('VIEW', object)" />
+    <property resource="App\Entity\Document" name="createdBy" security="is_granted('VIEW', object)" />
+</properties>
+```
+
+</code-selector>
+
 The above example only allows admins to see the full collection of each resource (`QueryCollection`).
 Users must be granted the `VIEW` attribute on a resource to be able to query it directly (`Query`) - which would use a `Voter` to make this decision.
 
@@ -1277,6 +1836,8 @@ Note that:
 
 The following example shows you what can be done:
 
+[codeselector]
+
 ```php
 <?php
 // api/src/Entity/Book.php
@@ -1293,7 +1854,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
     denormalizationContext: ['groups' => ['write']],
     graphQlOperations: [
         new Query(normalizationContext: ['groups' => ['query']]),
-        new QueryCollection(normalizationContext: ['groups' => ['query_collection']])
+        new QueryCollection(normalizationContext: ['groups' => ['query_collection']]),
         new Mutation(
             name: 'create',
             normalizationContext: ['groups' => ['query_collection']],
@@ -1314,6 +1875,102 @@ class Book
     // ...
 }
 ```
+
+```yaml
+resources:
+    App\Entity\Book:
+        normalizationContext:
+            groups: ['read']
+        denormalizationContext:
+            groups: ['write']
+        graphQlOperations:
+            ApiPlatform\Metadata\GraphQl\Query:
+                normalizationContext:
+                    groups: ['query']
+            ApiPlatform\Metadata\GraphQl\QueryCollection:
+                normalizationContext:
+                    groups: ['query_collection']
+            ApiPlatform\Metadata\GraphQl\Mutation:
+                name: create
+                normalizationContext:
+                    groups: ['query_collection']
+                denormalizationContext:
+                    groups: ['mutation']
+```
+
+```xml
+<resources xmlns="https://api-platform.com/schema/metadata/resources-3.0"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="https://api-platform.com/schema/metadata/resources-3.0
+           https://api-platform.com/schema/metadata/resources-3.0.xsd">
+    <resource class="App\Entity\Book">
+        <normalizationContext>
+            <values>
+                <value name="groups">
+                    <values>
+                        <value>read</value>
+                    </values>
+                </value>
+            </values>
+        </normalizationContext>
+        <denormalizationContext>
+            <values>
+                <value name="groups">
+                    <values>
+                        <value>write</value>
+                    </values>
+                </value>
+            </values>
+        </denormalizationContext>
+        <graphQlOperations>
+            <graphQlOperation class="ApiPlatform\Metadata\GraphQl\Query">
+                <normalizationContext>
+                    <values>
+                        <value name="groups">
+                            <values>
+                                <value>query</value>
+                            </values>
+                        </value>
+                    </values>
+                </normalizationContext>
+            </graphQlOperation>
+            <graphQlOperation class="ApiPlatform\Metadata\GraphQl\QueryCollection">
+                <normalizationContext>
+                    <values>
+                        <value name="groups">
+                            <values>
+                                <value>query_collection</value>
+                            </values>
+                        </value>
+                    </values>
+                </normalizationContext>
+            </graphQlOperation>
+            <graphQlOperation class="ApiPlatform\Metadata\GraphQl\Mutation" name="create">
+                <normalizationContext>
+                    <values>
+                        <value name="groups">
+                            <values>
+                                <value>query_collection</value>
+                            </values>
+                        </value>
+                    </values>
+                </normalizationContext>
+                <denormalizationContext>
+                    <values>
+                        <value name="groups">
+                            <values>
+                                <value>mutation</value>
+                            </values>
+                        </value>
+                    </values>
+                </denormalizationContext>
+            </graphQlOperation>
+        </graphQlOperations>
+    </resource>
+</resources>
+```
+
+</code-selector>
 
 In this case, the REST endpoint will be able to get the two attributes of the book and to modify only its title.
 
@@ -1341,6 +1998,8 @@ Indeed, the mutation expects an IRI for the relation in the input, so you need t
 
 For instance if you have the following resource:
 
+[codeselector]
+
 ```php
 <?php
 // api/src/Entity/Book.php
@@ -1362,6 +2021,29 @@ class Book
 }
 ```
 
+```yaml
+resources:
+    App\Entity\Book:
+        graphQlOperations:
+            ApiPlatform\Metadata\GraphQl\Mutation:
+                name: create
+```
+
+```xml
+<resources xmlns="https://api-platform.com/schema/metadata/resources-3.0"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="https://api-platform.com/schema/metadata/resources-3.0
+           https://api-platform.com/schema/metadata/resources-3.0.xsd">
+    <resource class="App\Entity\Book">
+        <graphQlOperations>
+            <graphQlOperation class="ApiPlatform\Metadata\GraphQl\Mutation" name="create" />
+        </graphQlOperations>
+    </resource>
+</resources>
+```
+
+</code-selector>
+
 Creating a book with its author will be done like this, where `/authors/32` is the IRI of an existing resource:
 
 ```graphql
@@ -1382,6 +2064,8 @@ Creating a book with its author will be done like this, where `/authors/32` is t
 In order to create an author as the same time as a book,
 you need to use the denormalization context and groups on the book and the author
 (see also [the dedicated part in the serialization documentation](serialization.md#denormalization):
+
+[codeselector]
 
 ```php
 <?php
@@ -1406,6 +2090,41 @@ class Book
     // ...
 }
 ```
+
+```yaml
+resources:
+    App\Entity\Book:
+        graphQlOperations:
+            ApiPlatform\Metadata\GraphQl\Mutation:
+                name: create
+                denormalizationContext:
+                    groups: ['book:create']
+```
+
+```xml
+<resources xmlns="https://api-platform.com/schema/metadata/resources-3.0"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="https://api-platform.com/schema/metadata/resources-3.0
+           https://api-platform.com/schema/metadata/resources-3.0.xsd">
+    <resource class="App\Entity\Book">
+        <graphQlOperations>
+            <graphQlOperation class="ApiPlatform\Metadata\GraphQl\Mutation" name="create">
+                <denormalizationContext>
+                    <values>
+                        <value name="groups">
+                            <values>
+                                <value>book:create</value>
+                            </values>
+                        </value>
+                    </values>
+                </denormalizationContext>
+            </graphQlOperation>
+        </graphQlOperations>
+    </resource>
+</resources>
+```
+
+</code-selector>
 
 And in the author resource:
 
@@ -1487,7 +2206,7 @@ final class ErrorHandler implements ErrorHandlerInterface
 
 Then register the service:
 
-[codeSelector]
+<code-selector>
 
 ```yaml
 # api/config/services.yaml
@@ -1528,7 +2247,7 @@ return function(ContainerConfigurator $configurator) {
 };
 ```
 
-[/codeSelector]
+</code-selector>
 
 ### Formatting Exceptions and Errors
 
@@ -1609,7 +2328,7 @@ services:
 
 You can modify how the property names of your resources are converted into field and filter names of your GraphQL schema.
 
-By default the property name will be used without conversion. If you want to apply a name converter, follow the [Name Conversion documentation](serialization.md#name-conversion).
+By default, the property name will be used without conversion. If you want to apply a name converter, follow the [Name Conversion documentation](serialization.md#name-conversion).
 
 For instance, your resource can have properties in camelCase:
 
@@ -1880,7 +2599,7 @@ final class TypeConverter implements TypeConverterInterface
     public function convertType(Type $type, bool $input, Operation $rootOperation, string $resourceClass, string $rootResource, ?string $property, int $depth)
     {
         if ('publicationDate' === $property
-            && Book::class === $resourceClass
+            && Book::class === $rootResource
         ) {
             return 'DateTime';
         }

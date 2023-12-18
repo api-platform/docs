@@ -121,7 +121,7 @@ this configuration might disable the `json` or the `html` on this resource for e
 
 You can specify different accepted formats at operation level too, it's especially convenient to configure formats available for the `PATCH` method:
 
-[codeSelector]
+<code-selector>
 
 ```php
 <?php
@@ -178,7 +178,7 @@ resources:
 </resources>
 ```
 
-[/codeSelector]
+</code-selector>
 
 ## Supporting Custom Formats
 
@@ -237,9 +237,9 @@ final class CustomItemNormalizer implements NormalizerInterface, DenormalizerInt
         $this->normalizer = $normalizer;
     }
 
-    public function denormalize($data, $class, $format = null, array $context = [])
+    public function denormalize($data, $type, $format = null, array $context = [])
     {
-        return $this->normalizer->denormalize($data, $class, $format, $context);
+        return $this->normalizer->denormalize($data, $type, $format, $context);
     }
 
     public function supportsDenormalization($data, $type, $format = null)

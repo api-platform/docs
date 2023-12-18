@@ -33,7 +33,7 @@ api_platform:
 
 It can also be configured only for a specific resource:
 
-[codeSelector]
+<code-selector>
 
 ```php
 <?php
@@ -69,7 +69,7 @@ resources:
 </resources>
 ```
 
-[/codeSelector]
+</code-selector>
 
 For the above configuration, the collection will be like this:
 

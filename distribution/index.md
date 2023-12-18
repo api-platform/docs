@@ -222,8 +222,7 @@ So, if you want to access the raw data, you have two alternatives:
 * Add the correct `Accept` header (or don't set any `Accept` header at all if you don't care about security) - preferred when writing API clients
 * Add the format you want as the extension of the resource - for debug purpose only
 
-For instance, go to `https://localhost/greetings.jsonld` to retrieve the list of `Greeting` resources in JSON-LD, or to
-`https://localhost/greetings.json` to retrieve data in raw JSON.
+For instance, go to `https://localhost/greetings.jsonld` to retrieve the list of `Greeting` resources in JSON-LD.
 
 Of course, you can also use your favorite HTTP client to query the API.
 We are fond of [Postman](https://www.postman.com/). It works perfectly well with API Platform, has native OpenAPI support,
@@ -349,12 +348,12 @@ To retrieve and save data, API Platform proposes two main options (and we can mi
 
 1. Writing our own [state providers](../core/state-providers.md) and [state processors](../core/state-processors.md) to fetch and save data in any persistence system and trigger our custom business logic.
 This is what we recommend if you want to separate the public data model exposed by the API from the internal one, and to implement a layered architecture such as Clean Architecture or Hexagonal Architecture;
-2. Using one of the various existing data providers and persisters allowing to automatically fetch and persist data using popular persistence libraries. Out of the box, data providers and persisters are provided for [Doctrine ORM](https://www.doctrine-project.org/projects/orm.html) and [Doctrine MongoDB ODM](../core/mongodb.md).
-A data provider (but no persister yet) is also available for [Elasticsearch](../core/elasticsearch.md). [Pomm](https://github.com/pomm-project/pomm-api-platform) and [PHP Extended SQL](https://github.com/soyuka/esql#api-platform-bridge) also provides data providers and persisters for API Platform. We recommend this approach for Rapid Application Development.
+2. Using one of the various existing state providers and processors allowing to automatically fetch and persist data using popular persistence libraries. Out of the box, state providers and processors are provided for [Doctrine ORM](https://www.doctrine-project.org/projects/orm.html) and [Doctrine MongoDB ODM](../core/mongodb.md).
+A state provider (but no processor yet) is also available for [Elasticsearch](../core/elasticsearch.md). [Pomm](https://github.com/pomm-project/pomm-api-platform) and [PHP Extended SQL](https://github.com/soyuka/esql#api-platform-bridge) also provides state providers and processors for API Platform. We recommend this approach for Rapid Application Development.
 
 Be sure to read the [General Design Considerations](../core/design.md) document to learn more about the architecture of API Platform and how to choose between these two approaches.
 
-Here, we will use the built-in Doctrine ORM data provider in the rest of this tutorial.
+Here, we will use the built-in Doctrine ORM state provider in the rest of this tutorial.
 
 Modify the classes to map them to database tables using the attributes provided by the Doctrine ORM.
 
