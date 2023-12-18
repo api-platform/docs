@@ -141,7 +141,7 @@ class Answer
 resources:
     App\Entity\Answer:
         uriTemplate: /questions/{id}/answer
-        uriVariable:
+        uriVariables:
             id:
                 fromClass: App\Entity\Question
                 fromProperty: answer
@@ -200,7 +200,7 @@ If we had a `relatedQuestions` property on the `Answer` we could retrieve the co
 resources:
     App\Entity\Question:
         uriTemplate: /answers/{id}/related_questions.{_format}
-        uriVariable:
+        uriVariables:
             id:
                 fromClass: App\Entity\Answer
                 fromProperty: relatedQuestions
