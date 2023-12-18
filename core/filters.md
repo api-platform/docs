@@ -53,7 +53,7 @@ to a Resource in two ways:
 
    We're linking the filter `offer.date_filter` with the resource like this:
 
-   [codeSelector]
+   <code-selector>
 
     ```php
     <?php
@@ -99,7 +99,7 @@ to a Resource in two ways:
     </resources>
     ```
 
-   [/codeSelector]
+   </code-selector>
 
 2. By using the `#[ApiFilter]` attribute.
 
@@ -154,7 +154,7 @@ Syntax: `?property[]=foo&property[]=bar`
 
 In the following example, we will see how to allow the filtering of a list of e-commerce offers:
 
-[codeSelector]
+<code-selector>
 
 ```php
 <?php
@@ -194,7 +194,7 @@ App\Entity\Offer:
             filters: ['offer.search_filter']
 ```
 
-[/codeSelector]
+</code-selector>
 
 `http://localhost:8000/api/offers?price=10` will return all offers with a price being exactly `10`.
 `http://localhost:8000/api/offers?description=shirt` will return all offers with a description containing the word "shirt".
@@ -203,7 +203,7 @@ Filters can be combined together: `http://localhost:8000/api/offers?price=10&des
 
 It is possible to filter on relations too, if `Offer` has a `Product` relation:
 
-[codeSelector]
+<code-selector>
 
 ```php
 <?php
@@ -243,7 +243,7 @@ App\Entity\Offer:
             filters: ['offer.search_filter']
 ```
 
-[/codeSelector]
+</code-selector>
 
 With this service definition, it is possible to find all offers belonging to the product identified by a given IRI.
 Try the following: `http://localhost:8000/api/offers?product=/api/products/12`.
@@ -263,7 +263,7 @@ The `after` and `before` filters will filter including the value whereas `strict
 
 Like others filters, the date filter must be explicitly enabled:
 
-[codeSelector]
+<code-selector>
 
 ```php
 <?php
@@ -303,7 +303,7 @@ App\Entity\Offer:
             filters: ['offer.date_filter']
 ```
 
-[/codeSelector]
+</code-selector>
 
 Given that the collection endpoint is `/offers`, you can filter offers by date with the following query: `/offers?createdAt[after]=2018-03-19`.
 
@@ -324,7 +324,7 @@ Always include items                 | `ApiPlatform\Doctrine\Orm\Filter\DateFilt
 
 For instance, exclude entries with a property value of `null` with the following service definition:
 
-[codeSelector]
+<code-selector>
 
 ```php
 <?php
@@ -364,7 +364,7 @@ App\Entity\Offer:
             filters: ['offer.date_filter']
 ```
 
-[/codeSelector]
+</code-selector>
 
 ### Boolean Filter
 
@@ -374,7 +374,7 @@ Syntax: `?property=<true|false|1|0>`
 
 Enable the filter:
 
-[codeSelector]
+<code-selector>
 
 ```php
 <?php
@@ -414,7 +414,7 @@ App\Entity\Offer:
             filters: ['offer.boolean_filter']
 ```
 
-[/codeSelector]
+</code-selector>
 
 Given that the collection endpoint is `/offers`, you can filter offers with the following query: `/offers?isAvailableGenericallyInMyCountry=true`.
 
@@ -428,7 +428,7 @@ Syntax: `?property=<int|bigint|decimal...>`
 
 Enable the filter:
 
-[codeSelector]
+<code-selector>
 
 ```php
 <?php
@@ -468,7 +468,7 @@ App\Entity\Offer:
             filters: ['offer.numeric_filter']
 ```
 
-[/codeSelector]
+</code-selector>
 
 Given that the collection endpoint is `/offers`, you can filter offers with the following query: `/offers?sold=1`.
 
@@ -482,7 +482,7 @@ Syntax: `?property[<lt|gt|lte|gte|between>]=value`
 
 Enable the filter:
 
-[codeSelector]
+<code-selector>
 
 ```php
 <?php
@@ -522,7 +522,7 @@ App\Entity\Offer:
             filters: ['offer.range_filter']
 ```
 
-[/codeSelector]
+</code-selector>
 
 Given that the collection endpoint is `/offers`, you can filter the price with the following query: `/offers?price[between]=12.99..15.99`.
 
@@ -539,7 +539,7 @@ Syntax: `?exists[property]=<true|false|1|0>`
 
 Enable the filter:
 
-[codeSelector]
+<code-selector>
 
 ```php
 <?php
@@ -579,7 +579,7 @@ App\Entity\Offer:
             filters: ['offer.exists_filter']
 ```
 
-[/codeSelector]
+</code-selector>
 
 Given that the collection endpoint is `/offers`, you can filter offers on nullable field with the following query: `/offers?exists[transportFees]=true`.
 
@@ -605,7 +605,7 @@ Syntax: `?order[property]=<asc|desc>`
 
 Enable the filter:
 
-[codeSelector]
+<code-selector>
 
 ```php
 <?php
@@ -647,7 +647,7 @@ App\Entity\Offer:
             filters: ['offer.order_filter']
 ```
 
-[/codeSelector]
+</code-selector>
 
 Given that the collection endpoint is `/offers`, you can filter offers by name in ascending order and then by ID in descending
 order with the following query: `/offers?order[name]=desc&order[id]=asc`.
@@ -655,7 +655,7 @@ order with the following query: `/offers?order[name]=desc&order[id]=asc`.
 By default, whenever the query does not specify the direction explicitly (e.g.: `/offers?order[name]&order[id]`), filters
 will not be applied unless you configure a default order direction to use:
 
-[codeSelector]
+<code-selector>
 
 ```php
 <?php
@@ -695,7 +695,7 @@ App\Entity\Offer:
             filters: ['offer.order_filter']
 ```
 
-[/codeSelector]
+</code-selector>
 
 #### Comparing with Null Values
 
@@ -712,7 +712,7 @@ Order items always last              | `ApiPlatform\Doctrine\Orm\Filter\OrderFil
 
 For instance, treat entries with a property value of `null` as the smallest, with the following service definition:
 
-[codeSelector]
+<code-selector>
 
 ```php
 <?php
@@ -752,7 +752,7 @@ App\Entity\Offer:
             filters: ['offer.order_filter']
 ```
 
-[/codeSelector]
+</code-selector>
 
 The strategy to use by default can be configured globally:
 
@@ -780,7 +780,7 @@ api_platform:
 Sometimes, you need to be able to perform filtering based on some linked resources (on the other side of a relation). All
 built-in filters support nested properties using the dot (`.`) syntax, e.g.:
 
-[codeSelector]
+<code-selector>
 
 ```php
 <?php
@@ -831,7 +831,7 @@ App\Entity\Offer:
             filters: ['offer.order_filter', 'offer.search_filter']
 ```
 
-[/codeSelector]
+</code-selector>
 
 The above allows you to find offers by their respective product's color: `http://localhost:8000/api/offers?product.color=red`,
 or order offers by the product's release date: `http://localhost:8000/api/offers?order[product.releaseDate]=desc`
@@ -842,7 +842,7 @@ As we have seen in previous examples, properties where filters can be applied mu
 care about security and performance (e.g. an API with restricted access), it is also possible to enable built-in filters
 for all properties:
 
-[codeSelector]
+<code-selector>
 
 ```php
 <?php
@@ -882,7 +882,7 @@ App\Entity\Offer:
             filters: ['offer.order_filter']
 ```
 
-[/codeSelector]
+</code-selector>
 
 **Note: Filters on nested properties must still be enabled explicitly, in order to keep things sane.**
 
@@ -908,7 +908,7 @@ Syntax: `?order[property]=<asc|desc>`
 
 Enable the filter:
 
-[codeSelector]
+<code-selector>
 
 ```php
 <?php
@@ -949,7 +949,7 @@ App\Entity\Tweet:
     filters: ['tweet.order_filter']
 ```
 
-[/codeSelector]
+</code-selector>
 
 Given that the collection endpoint is `/tweets`, you can filter tweets by ID and date in ascending or descending order:
 `/tweets?order[id]=asc&order[date]=desc`.

@@ -124,7 +124,7 @@ final class BookRepresentationProvider implements ProviderInterface
 
 For returning another representation of your data in a [State Processor](./state-processors.md), you should specify your processor class in the `processor` attribute and same for your `output`.
 
-[codeSelector]
+<code-selector>
 
 ```php
 <?php
@@ -164,7 +164,7 @@ App\Entity\Book:
 </resources>
 ```
 
-[/codeSelector]
+</code-selector>
 
 Here the `$data` attribute represents an instance of your resource.
 

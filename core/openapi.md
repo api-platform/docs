@@ -109,7 +109,7 @@ The impact on the swagger-ui is the following:
 Sometimes you may want to change the information included in your OpenAPI documentation.
 The following configuration will give you total control over your OpenAPI definitions:
 
-[codeSelector]
+<code-selector>
 
 ```php
 <?php
@@ -206,7 +206,7 @@ resources:
 </properties>
 ```
 
-[/codeSelector]
+</code-selector>
 
 This will produce the following Swagger documentation:
 
@@ -258,7 +258,7 @@ To pass a context to the OpenAPI **v2** generator, use the `swaggerContext` attr
 Sometimes you may want to disable an operation from the OpenAPI documentation, for example to not exposing it.
 Using the `openapi` boolean option disables this operation from the OpenAPI documentation:
 
-[codeSelector]
+<code-selector>
 
 ```php
 <?php
@@ -304,7 +304,7 @@ resources:
 </resources>
 ```
 
-[/codeSelector]
+</code-selector>
 
 Note: as your route is not exposed, you may want to return a HTTP 404 if it's called. Prefer using the `NotExposedAction` controller instead.
 
@@ -347,7 +347,7 @@ class User
 
 You also have full control over both built-in and custom operations documentation.
 
-[codeSelector]
+<code-selector>
 
 ```php
 <?php
@@ -471,7 +471,7 @@ resources:
 </resources>
 ```
 
-[/codeSelector]
+</code-selector>
 
 ![Impact on Swagger UI](../distribution/images/swagger-ui-2.png)
 

@@ -72,7 +72,7 @@ api_platform:
 
 It can also be disabled for a specific resource:
 
-[codeSelector]
+<code-selector>
 
 ```php
 <?php
@@ -93,7 +93,7 @@ class Book
 App\Entity\Book:
    paginationEnabled: false
 ```
-[/codeSelector]
+</code-selector>
 
 ### Disabling the Pagination Client-side
 
