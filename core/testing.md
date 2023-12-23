@@ -209,3 +209,10 @@ class BooksTest extends ApiTestCase
 ```
 
 [Check out the dedicated Symfony documentation entry](https://symfony.com/doc/current/testing/functional_tests_assertions.html).
+
+
+## Testing File Uploads and multipart/form-data Requests
+
+It is also possible to test file uploads and `multipart/form-data` requests with the API Platform test client.
+
+[Check out the dedicated File Upload Testing documentation entry](https://api-platform.com/docs/core/file-upload/#testing).
