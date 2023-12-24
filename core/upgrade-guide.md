@@ -46,7 +46,7 @@ For new users we recommend to use
 event_listeners_backward_compatibility_layer: false
 ```
 
-This allows API Platform to not use http kernel event listeners. It also allows you to force options like `read: true` or `validate: true`. This simplifies use cases like [validating a delete operation](/docs/v3.2/guides/delete-operation-with-validation/)
+This allows API Platform to not use http kernel event listeners. It also allows you to force options like `read: true` or `validate: true`. This simplifies use cases like [validating a delete operation](https://api-platform.com/docs/v3.2/guides/delete-operation-with-validation/)
 Event listeners will not get removed and are not deprecated, they'll use our providers and processors in a future version.
 
 ### Inflector
@@ -54,7 +54,7 @@ Event listeners will not get removed and are not deprecated, they'll use our pro
 We're switching to `symfony/string` [inflector](https://symfony.com/doc/current/components/string.html#inflector), to keep using `doctrine/inflector` use:
 
 ```yaml
-keep_legacy_inflector: false
+keep_legacy_inflector: true
 ```
 
 We strongly recommend that you use your own inflector anyways with a [PathSegmentNameGenerator](https://github.com/api-platform/core/blob/f776f11fd23e5397a65c1355a9ebcbb20afac9c2/src/Metadata/Operation/UnderscorePathSegmentNameGenerator.php).
