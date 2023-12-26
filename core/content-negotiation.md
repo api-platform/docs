@@ -196,6 +196,19 @@ api_platform:
         myformat: ['application/vnd.myformat']
 ```
 
+You will also need to declare an encoder which supports the new format:
+
+```yaml
+services:
+    app.api-platform.myformat.encoder:
+      class: ApiPlatform\Serializer\JsonEncoder
+      arguments:
+          $format: 'myformat'
+      # The following lines are only needed if autoconfigure is disabled
+      # tags:
+      #     - { name: 'serializer.encoder' }
+```
+
 API Platform will automatically call the serializer with your defined format name as `format` parameter during the deserialization process (`myformat` in the example).
 It will then return the result to the client with the requested MIME type using its built-in responder.
 For non-standard formats, [a vendor, vanity or unregistered MIME type should be used](https://en.wikipedia.org/wiki/Media_type#Vendor_tree).
