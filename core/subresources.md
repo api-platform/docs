@@ -108,7 +108,6 @@ Now to create a new way of retrieving an Answer we will declare another resource
 To make things work, API Platform needs information about how to retrieve the `Answer` belonging to
 the `Question`, this is done by configuring the `uriVariables`:
 
-<code-selector>
 ```php
 <?php
 // api/src/Entity/Answer.php
