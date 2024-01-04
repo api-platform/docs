@@ -2822,7 +2822,7 @@ and for an example implementation for the Apollo client check out [Apollo Upload
 
 ```graphql
 mutation CreateMediaObject($file: Upload!) {
-    createMediaObject(input: {file: $file}) {
+    uploadMediaObject(input: {file: $file}) {
         mediaObject {
             id
             contentUrl
