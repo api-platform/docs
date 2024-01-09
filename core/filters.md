@@ -1331,7 +1331,7 @@ services:
     # This whole definition can be omitted if automatic service loading is enabled
     'App\Filter\RegexpFilter':
         # The "arguments" key can be omitted if the autowiring is enabled
-        arguments: [ '@doctrine', ~, '@?logger' ]
+        arguments: [ '@doctrine', '@?logger' ]
         # The "tags" key can be omitted if the autoconfiguration is enabled
         tags: [ 'api_platform.filter' ]
 ```
@@ -1343,7 +1343,7 @@ it can also be enabled for some properties:
 # api/config/services.yaml
 services:
     'App\Filter\RegexpFilter':
-        arguments: [ '@doctrine', ~, '@?logger', { email: ~, anOtherProperty: ~ } ]
+        arguments: [ '@doctrine', '@?logger', { email: ~, anOtherProperty: ~ } ]
         tags: [ 'api_platform.filter' ]
 ```
 
