@@ -33,6 +33,7 @@ First, your `BlogPostProvider` has to implement the
 
 ```php
 <?php
+// api/src/State/BlogPostProvider.php
 
 namespace App\State;
 
@@ -42,9 +43,6 @@ use ApiPlatform\State\ProviderInterface;
 
 final class BlogPostProvider implements ProviderInterface
 {
-    /**
-     * {@inheritDoc}
-     */
     public function provide(Operation $operation, array $uriVariables = [], array $context = [])
     {
         return new BlogPost($uriVariables['id']);
@@ -59,6 +57,7 @@ To use this provider we need to configure the provider on the operation:
 
 ```php
 <?php
+// api/src/Entity/BlogPost.php
 
 namespace App\Entity;
 
@@ -75,6 +74,7 @@ To declare the service explicitly, you can use the following snippet:
 
 ```yaml
 # api/config/services.yaml
+
 services:
     # ...
     App\State\BlogPostProvider: ~
@@ -87,6 +87,7 @@ supporting a wider range of operations. Then we can provide a collection of blog
 
 ```php
 <?php
+// api/src/State/BlogPostProvider.php
 
 namespace App\State;
 
@@ -97,10 +98,7 @@ use ApiPlatform\Metadata\CollectionOperationInterface;
 
 final class BlogPostProvider implements ProviderInterface
 {
-    /**
-     * {@inheritDoc}
-     */
-    public function provide(Operation $operation, array $uriVariables = [], array $context = [])
+    public function provide(@Operation $operation, array $uriVariables = [], array $context = [])
     {
         if ($operation instanceof CollectionOperationInterface) {
             return [new BlogPost(), new BlogPost()];
@@ -115,6 +113,7 @@ We then need to configure this same provider on the BlogPost `GetCollection` ope
 
 ```php
 <?php
+// api/src/Entity/BlogPost.php
 
 namespace App\Entity;
 
@@ -133,6 +132,7 @@ The next example uses a [DTO](https://api-platform.com/docs/core/dto/#using-data
 
 ```php
 <?php
+// api/src/State/BlogPostProvider.php
 
 namespace App\State;
 
@@ -163,6 +163,7 @@ Even with service autowiring and autoconfiguration enabled, you must still confi
 
 ```yaml
 # api/config/services.yaml
+
 services:
     # ...
     App\State\BookRepresentationProvider:
@@ -176,6 +177,7 @@ And configure that you want to use this provider on the Book resource:
 
 ```php
 <?php
+// api/src/Entity/Book.php
 
 namespace App\Entity;
 

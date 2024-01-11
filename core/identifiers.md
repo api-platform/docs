@@ -63,6 +63,7 @@ Let's create a `Provider` for the `Person` entity:
 
 ```php
 <?php
+// api/src/State/PersonProvider.php
 namespace App\State;
 
 use App\Entity\Person;
@@ -71,9 +72,6 @@ use App\Uuid;
 
 final class PersonProvider implements ProviderInterface
 {
-    /**
-     * {@inheritDoc}
-     */
     public function provide(Operation $operation, array $uriVariables = [], array $context = [])
     {
         // Our identifier is:
@@ -89,6 +87,7 @@ This case is covered by an URI variable transformer:
 
 ```php
 <?php
+// api/src/Identifier/UuidUriVariableTransformer.php
 namespace App\Identifier;
 
 use ApiPlatform\Api\UriVariableTransformerInterface;
