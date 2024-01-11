@@ -19,12 +19,12 @@ Otherwise, use [this affiliate link](https://m.do.co/c/5d8aabe3ab80) to get $100
 Then, click on the "Marketplace" tab under the "Choose an image" section and search for the app named "Docker".
 This will provision an Ubuntu server with the latest versions of Docker and Docker Compose already installed!
 
-For test purposes, cheapest plans will be enough, even though you might want at least 2GB of RAM to execute Docker Compose for the first time. For real production usage, you'll probably want to pick a plan in the "general purpose" section that will fit your needs.
+For test purposes, the cheapest plans will be enough, even though you might want at least 2GB of RAM to execute Docker Compose for the first time. For real production usage, you'll probably want to pick a plan in the "general purpose" section to fit your needs.
 
 ![Deploying an API Platform project on DigitalOcean with Docker Compose](images/digitalocean-droplet.png)
 
 You can keep the defaults for other settings, or tweak them according to your needs.
-Don't forget to add your SSH key or to create a password then press the "Finalize and create" button.
+Don't forget to add your SSH key or create a password then press the "Finalize and create" button.
 
 Then, wait a few seconds while your Droplet is provisioning.
 When your Droplet is ready, use SSH to connect:
@@ -35,23 +35,26 @@ ssh root@<droplet-ip>
 
 ## Configuring a Domain Name
 
-In most cases, you'll want to associate a domain name to your website.
+In most cases, you'll want to associate a domain name with your site.
 If you don't own a domain name yet, you'll have to buy one through a registrar.
 
-Then create a DNS record of type `A` for your domain name pointing to the IP address of your server.
-
-Example:
+Then create a DNS record of type `A` for your domain name pointing to the IP address of your server:
 
 ```dns
 your-domain-name.example.com.  IN  A     207.154.233.113
-````
+```
 
-Note: Let's Encrypt, the service used by default by API Platform to automatically generate a TLS certificate, doesn't support using bare IP addresses.
-Using a domain name is mandatory to use Let's Encrypt.
+Example with the DigitalOcean Domains service ("Networking" > "Domains"):
+
+![Configuring DNS on DigitalOcean](digitalocean-dns.png)
+
+> [!NOTE]
+> Let's Encrypt, the service used by default by API Platform to automatically generate a TLS certificate, doesn't support using bare IP addresses.
+> Using a domain name is mandatory to use Let's Encrypt.
 
 ## Deploying
 
-Copy your project on the server using `git clone`, `scp` or any other tool that may fit your needs.
+Copy your project on the server using `git clone`, `scp`, or any other tool that may fit your needs.
 If you use GitHub, you may want to use [a deploy key](https://docs.github.com/en/developers/overview/managing-deploy-keys#deploy-keys).
 Deploy keys are also [supported by GitLab](https://docs.gitlab.com/ee/user/project/deploy_keys/).
 
@@ -71,10 +74,16 @@ CADDY_MERCURE_JWT_SECRET=ChangeThisMercureHubJWTSecretKey \
 docker compose -f compose.yaml -f compose.prod.yaml up --wait
 ```
 
-Be sure to replace `your-domain-name.example.com` by your actual domain name and to set the values of `APP_SECRET`, `CADDY_MERCURE_JWT_SECRET` to cryptographically secure random values.
+Be sure to replace `your-domain-name.example.com` with your actual domain name and to set the values of `APP_SECRET`, `CADDY_MERCURE_JWT_SECRET` to cryptographically secure random values.
 
 Your server is up and running, and a Let's Encrypt HTTPS certificate has been automatically generated for you.
 Go to `https://your-domain-name.example.com` and enjoy!
+
+> [!NOTE]
+> The worker mode of FrankenPHP is enabled by default in prod. To disable it, add the env var FRANKENPHP_CONFIG as empty to the compose.prod.yaml file.
+
+> [!CAUTION]
+> Docker can have a cache layer, make sure you have the right build for each deployment or rebuild your project with --no-cache option to avoid cache issue.
 
 ## Disabling HTTPS
 
