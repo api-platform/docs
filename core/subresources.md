@@ -109,7 +109,7 @@ To make things work, API Platform needs information about how to retrieve the `A
 the `Question`, this is done by configuring the `uriVariables`:
 
 <code-selector>
-    
+
 ```php
 <?php
 // api/src/Entity/Answer.php
@@ -189,7 +189,7 @@ If we had a `relatedQuestions` property on the `Answer` we could retrieve the co
     uriTemplate: '/answers/{id}/related_questions.{_format}',
     uriVariables: [
         'id' => new Link(fromClass: Answer::class, fromProperty: 'relatedQuestions')
-    ], 
+    ],
     operations: [new GetCollection()]
 )]
 ```
