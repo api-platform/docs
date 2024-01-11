@@ -108,6 +108,8 @@ Now to create a new way of retrieving an Answer we will declare another resource
 To make things work, API Platform needs information about how to retrieve the `Answer` belonging to
 the `Question`, this is done by configuring the `uriVariables`:
 
+<code-selector>
+    
 ```php
 <?php
 // api/src/Entity/Answer.php
@@ -170,7 +172,6 @@ resources:
         </operations>
     </resource>
 </resources>    
-
 ```
 
 </code-selector>
@@ -183,7 +184,6 @@ URI Variables are defined using Links (`ApiPlatform\Metadata\Link`). A `Link` ca
 If we had a `relatedQuestions` property on the `Answer` we could retrieve the collection of related questions via the following definition:
 
 <code-selector>
-
 ```php
 #[ApiResource(
     uriTemplate: '/answers/{id}/related_questions.{_format}',
