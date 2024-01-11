@@ -41,9 +41,12 @@ use App\Entity\BlogPost;
 use ApiPlatform\Metadata\Operation;
 use ApiPlatform\State\ProviderInterface;
 
+/**
+ * @implements ProviderInterface<BlogPost>
+ */
 final class BlogPostProvider implements ProviderInterface
 {
-    public function provide(Operation $operation, array $uriVariables = [], array $context = [])
+    public function provide(Operation $operation, array $uriVariables = [], array $context = []): BlogPost
     {
         return new BlogPost($uriVariables['id']);
     }
@@ -68,20 +71,6 @@ use App\State\BlogPostProvider;
 class BlogPost {}
 ```
 
-If you use the default configuration, the corresponding service will be automatically registered thanks to
-[autowiring](https://symfony.com/doc/current/service_container/autowiring.html).
-To declare the service explicitly, you can use the following snippet:
-
-```yaml
-# api/config/services.yaml
-
-services:
-    # ...
-    App\State\BlogPostProvider: ~
-        # Uncomment only if autoconfiguration is disabled
-        #tags: [ 'api_platform.state_provider' ]
-```
-
 Now let's say that we also want to handle the `/blog_posts` URI which returns a collection. We can change the Provider into
 supporting a wider range of operations. Then we can provide a collection of blog posts when the operation is a `CollectionOperationInterface`:
 
@@ -96,9 +85,12 @@ use ApiPlatform\Metadata\Operation;
 use ApiPlatform\State\ProviderInterface;
 use ApiPlatform\Metadata\CollectionOperationInterface;
 
+/**
+ * @implements ProviderInterface<BlogPost[]>
+ */
 final class BlogPostProvider implements ProviderInterface
 {
-    public function provide(@Operation $operation, array $uriVariables = [], array $context = [])
+    public function provide(Operation $operation, array $uriVariables = [], array $context = []): array
     {
         if ($operation instanceof CollectionOperationInterface) {
             return [new BlogPost(), new BlogPost()];
@@ -140,14 +132,21 @@ use App\Dto\AnotherRepresentation;
 use App\Model\Book;
 use ApiPlatform\Metadata\Operation;
 use ApiPlatform\State\ProviderInterface;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
 
+/**
+ * @implements ProviderInterface<AnotherRepresentation>
+ */
 final class BookRepresentationProvider implements ProviderInterface
 {
-    public function __construct(private ProviderInterface $itemProvider)
+    public function __construct(
+        #[Autowire('api_platform.doctrine.orm.state.item_provider')]
+        private ProviderInterface $itemProvider,
+    )
     {
     }
     
-    public function provide(Operation $operation, array $uriVariables = [], array $context = []): object|array|null
+    public function provide(Operation $operation, array $uriVariables = [], array $context = []): AnotherRepresentation
     {
         $book = $this->itemProvider->provide($operation, $uriVariables, $context);
         
@@ -157,20 +156,6 @@ final class BookRepresentationProvider implements ProviderInterface
         );
     }
 }
-```
-
-Even with service autowiring and autoconfiguration enabled, you must still configure the decoration:
-
-```yaml
-# api/config/services.yaml
-
-services:
-    # ...
-    App\State\BookRepresentationProvider:
-        bind:
-            $itemProvider: '@api_platform.doctrine.orm.state.item_provider'
-        # Uncomment only if autoconfiguration is disabled
-        #tags: [ 'api_platform.state_provider' ]
 ```
 
 And configure that you want to use this provider on the Book resource:
@@ -187,4 +172,28 @@ use App\State\BookRepresentationProvider;
 
 #[Get(output: AnotherRepresentation::class, provider: BookRepresentationProvider::class)]
 class Book {}
+```
+
+## Registering Services Without Autowiring
+
+The services in the previous examples are automatically registered because
+[autowiring](https://symfony.com/doc/current/service_container/autowiring.html)
+ and autoconfiguration are enabled by default in API Platform.
+To declare the service explicitly, you can use the following snippet:
+
+```yaml
+# api/config/services.yaml
+
+services:
+    # ...
+    App\State\BlogPostProvider: ~
+        tags: [ 'api_platform.state_provider' ]
+
+# api/config/services.yaml
+services:
+    # ...
+    App\State\BookRepresentationProvider:
+        arguments:
+            $itemProvider: '@api_platform.doctrine.orm.state.item_provider'
+        tags: [ 'api_platform.state_provider' ]
 ```
