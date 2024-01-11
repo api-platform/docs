@@ -25,6 +25,7 @@ to make it look like this.
 
 ```yaml
 # api/config/packages/vich_uploader.yaml
+
 vich_uploader:
     db_driver: orm
     metadata:
@@ -34,7 +35,7 @@ vich_uploader:
             uri_prefix: /media
             upload_destination: '%kernel.project_dir%/public/media'
             # Will rename uploaded files using a uniqueid as a prefix.
-            namer: Vich\UploaderBundle\Naming\OrignameNamer
+            namer: Vich\UploaderBundle\Naming\SmartUniqueNamer
 ```
 
 ## Uploading to a Dedicated Resource
@@ -53,6 +54,7 @@ The `MediaObject` resource is implemented like this:
 ```php
 <?php
 // api/src/Entity/MediaObject.php
+
 namespace App\Entity;
 
 use ApiPlatform\Metadata\ApiProperty;
@@ -109,7 +111,7 @@ class MediaObject
     #[Groups(['media_object:read'])]
     public ?string $contentUrl = null;
 
-    #[Vich\UploadableField(mapping: "media_object", fileNameProperty: "filePath")]
+    #[Vich\UploadableField(mapping: 'media_object', fileNameProperty: 'filePath')]
     #[Assert\NotNull(groups: ['media_object_create'])]
     public ?File $file = null;
 
@@ -172,12 +174,11 @@ A [normalizer](serialization.md#normalization) could be used to set the `content
 namespace App\Serializer;
 
 use App\Entity\MediaObject;
-use Symfony\Component\Serializer\Normalizer\ContextAwareNormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerAwareInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerAwareTrait;
 use Vich\UploaderBundle\Storage\StorageInterface;
 
-final class MediaObjectNormalizer implements ContextAwareNormalizerInterface, NormalizerAwareInterface
+final class MediaObjectNormalizer implements NormalizerAwareInterface
 {
     use NormalizerAwareTrait;
 
@@ -246,6 +247,7 @@ We first need to edit our Book resource, and add a new property called `image`.
 ```php
 <?php
 // api/src/Entity/Book.php
+
 namespace App\Entity;
 
 use ApiPlatform\Metadata\ApiResource;
@@ -406,11 +408,10 @@ final class MultipartDecoder implements DecoderInterface
 {
     public const FORMAT = 'multipart';
 
-    public function __construct(private RequestStack $requestStack) {}
+    public function __construct(private RequestStack $requestStack)
+    {
+    }
 
-    /**
-     * {@inheritdoc}
-     */
     public function decode(string $data, string $format, array $context = []): ?array
     {
         $request = $this->requestStack->getCurrentRequest();
@@ -427,9 +428,6 @@ final class MultipartDecoder implements DecoderInterface
         }, $request->request->all()) + $request->files->all();
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function supportsDecoding(string $format): bool
     {
         return self::FORMAT === $format;
@@ -452,17 +450,11 @@ use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 
 final class UploadedFileDenormalizer implements DenormalizerInterface
 {
-    /**
-     * {@inheritdoc}
-     */
     public function denormalize($data, string $type, string $format = null, array $context = []): UploadedFile
     {
         return $data;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function supportsDenormalization($data, $type, $format = null): bool
     {
         return $data instanceof UploadedFile;
