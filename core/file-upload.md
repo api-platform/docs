@@ -225,16 +225,20 @@ your data, you will get a response looking like this:
 
 ### Accessing Your Media Objects Directly
 
-You will need to modify your Caddyfile to allow the above `contentUrl` to be accessed directly. If you followed the above configuration for the VichUploaderBundle, that will be in `api/public/media`. Add your folder to the list of path matches, e.g. `|^/media/|`:
+You will need to modify your `Caddyfile` to allow the above `contentUrl` to be accessed directly. If you followed the above configuration for the VichUploaderBundle, that will be in `api/public/media`. Add your folder to the list of path matches, e.g. `|^/media/|`:
 
-```caddyfile
-...
-# Matches requests for HTML documents, for static files and for Next.js files,
-# except for known API paths and paths with extensions handled by API Platform
-@pwa expression `(
-        {header.Accept}.matches("\\btext/html\\b")
-        && !{path}.matches("(?i)(?:^/docs|^/graphql|^/bundles/|^/media/|^/_profiler|^/_wdt|\\.(?:json|html$|csv$|ya?ml$|xml$))")
-...
+```patch
+	# Matches requests for HTML documents, for static files and for Next.js files,
+	# except for known API paths and paths with extensions handled by API Platform
+	@pwa expression `(
+			header({'Accept': '*text/html*'})
+			&& !path(
+-				'/docs*', '/graphql*', '/bundles*', '/media*', '/contexts*', '/_profiler*', '/_wdt*',
++				'/media*', '/docs*', '/graphql*', '/bundles*', '/media*', '/contexts*', '/_profiler*', '/_wdt*',
+				'*.json*', '*.html', '*.csv', '*.yml', '*.yaml', '*.xml'
+			)
+		)
+		|| path('/favicon.ico', '/manifest.json', '/robots.txt', '/_next*', '/sitemap*')`
 ```
 
 ### Linking a MediaObject Resource to Another Resource
