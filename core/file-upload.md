@@ -227,6 +227,7 @@ your data, you will get a response looking like this:
 
 You will need to modify your `Caddyfile` to allow the above `contentUrl` to be accessed directly. If you followed the above configuration for the VichUploaderBundle, that will be in `api/public/media`. Add your folder to the list of path matches, e.g. `|^/media/|`:
 
+<!-- markdownlint-disable no-hard-tabs -->
 ```patch
 	# Matches requests for HTML documents, for static files and for Next.js files,
 	# except for known API paths and paths with extensions handled by API Platform
@@ -240,6 +241,7 @@ You will need to modify your `Caddyfile` to allow the above `contentUrl` to be a
 		)
 		|| path('/favicon.ico', '/manifest.json', '/robots.txt', '/_next*', '/sitemap*')`
 ```
+<!-- markdownlint-enable no-hard-tabs -->
 
 ### Linking a MediaObject Resource to Another Resource
 
