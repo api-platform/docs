@@ -888,9 +888,6 @@ final class WriteStage implements WriteStageInterface
         $this->writeStage = $writeStage;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function __invoke($data, string $resourceClass, string $operationName, array $context)
     {
         // You can add pre-write code here.
@@ -2192,9 +2189,6 @@ final class ErrorHandler implements ErrorHandlerInterface
         $this->defaultErrorHandler = $defaultErrorHandler;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function __invoke(array $errors, callable $formatter): array
     {
         // Log or filter the errors.
@@ -2285,9 +2279,6 @@ use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
 final class MyExceptionNormalizer implements NormalizerInterface
 {
-    /**
-     * {@inheritdoc}
-     */
     public function normalize($object, $format = null, array $context = []): array
     {
         $exception = $object->getPrevious();
@@ -2299,9 +2290,6 @@ final class MyExceptionNormalizer implements NormalizerInterface
         return $error;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function supportsNormalization($data, $format = null): bool
     {
         return $data instanceof Error && $data->getPrevious() instanceof MyException;
@@ -2486,9 +2474,6 @@ final class DateTimeType extends ScalarType implements TypeInterface
         return $this->name;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function serialize($value)
     {
         // Already serialized.
@@ -2503,10 +2488,7 @@ final class DateTimeType extends ScalarType implements TypeInterface
         return $value->format(\DateTime::ATOM);
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function parseValue($value)
+   public function parseValue($value)
     {
         if (!\is_string($value)) {
             throw new Error(sprintf('DateTime cannot represent non string value: %s', Utils::printSafeJson($value)));
@@ -2520,9 +2502,6 @@ final class DateTimeType extends ScalarType implements TypeInterface
         return $value;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function parseLiteral($valueNode, ?array $variables = null)
     {
         if ($valueNode instanceof StringValueNode && false !== \DateTime::createFromFormat(\DateTime::ATOM, $valueNode->value)) {
@@ -2593,9 +2572,6 @@ final class TypeConverter implements TypeConverterInterface
         $this->defaultTypeConverter = $defaultTypeConverter;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function convertType(Type $type, bool $input, Operation $rootOperation, string $resourceClass, string $rootResource, ?string $property, int $depth)
     {
         if ('publicationDate' === $property
@@ -2607,9 +2583,6 @@ final class TypeConverter implements TypeConverterInterface
         return $this->defaultTypeConverter->convertType($type, $input, $rootOperation, $resourceClass, $rootResource, $property, $depth);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function resolveType(string $type): ?GraphQLType
     {
         return $this->defaultTypeConverter->resolveType($type);

@@ -594,9 +594,6 @@ class PlainIdentifierDenormalizer implements ContextAwareDenormalizerInterface, 
         $this->iriConverter = $iriConverter;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function denormalize($data, $class, $format = null, array $context = [])
     {
         $data['relatedDummy'] = $this->iriConverter->getIriFromResource(resource: RelatedDummy::class, context: ['uri_variables' => ['id' => $data['relatedDummy']]]);
@@ -604,9 +601,6 @@ class PlainIdentifierDenormalizer implements ContextAwareDenormalizerInterface, 
         return $this->denormalizer->denormalize($data, $class, $format, $context + [__CLASS__ => true]);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function supportsDenormalization($data, $type, $format = null, array $context = []): bool
     {
         return \in_array($format, ['json', 'jsonld'], true) && is_a($type, Dummy::class, true) && !empty($data['relatedDummy']) && !isset($context[__CLASS__]);
@@ -624,6 +618,7 @@ For instance:
 ```php
 <?php
 // api/src/Entity/Book.php
+
 namespace App\Entity;
 
 use ApiPlatform\Metadata\ApiResource;
@@ -657,6 +652,7 @@ It's also possible to only change the denormalization or normalization context:
 ```php
 <?php
 // api/src/Entity/Book.php
+
 namespace App\Entity;
 
 use ApiPlatform\Metadata\ApiResource;
@@ -679,6 +675,7 @@ Groups are also supported:
 ```php
 <?php
 // api/src/Entity/Book.php
+
 namespace App\Entity;
 
 use ApiPlatform\Metadata\ApiResource;
@@ -711,6 +708,7 @@ Sometimes you need to expose calculated fields. This can be done by leveraging t
 ```php
 <?php
 // api/src/Entity/Greeting.php
+
 namespace App\Entity;
 
 use ApiPlatform\Metadata\ApiResource;

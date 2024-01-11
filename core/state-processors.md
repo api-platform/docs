@@ -33,6 +33,7 @@ Here is an implementation example:
 
 ```php
 <?php
+// api/src/State/BlogPostProcessor.php
 
 namespace App\State;
 
@@ -42,9 +43,6 @@ use ApiPlatform\State\ProcessorInterface;
 
 class BlogPostProcessor implements ProcessorInterface
 {
-    /**
-     * {@inheritDoc}
-     */
     public function process($data, Operation $operation, array $uriVariables = [], array $context = [])
     {
         // call your persistence layer to save $data
@@ -57,6 +55,7 @@ We then configure our operation to use this processor:
 
 ```php
 <?php
+// api/src/Entity/BlogPost.php
 
 namespace App\Entity;
 
@@ -74,6 +73,7 @@ Otherwise, if you use a custom dependency injection configuration, you need to r
 
 ```yaml
 # api/config/services.yaml
+
 services:
     # ...
     App\State\BlogPostProcessor: ~
@@ -91,6 +91,7 @@ Here is an implementation example which sends new users a welcome email after a 
 
 ```php
 <?php
+// api/src/Sate/UserProcessor.php
 
 namespace App\State;
 
@@ -129,6 +130,7 @@ Even with service autowiring and autoconfiguration enabled, you must still confi
 
 ```yaml
 # api/config/services.yaml
+
 services:
     # ...
     App\State\UserProcessor:
@@ -147,6 +149,7 @@ And configure that you want to use this processor on the User resource:
 
 ```php
 <?php
+// api/src/Entity/User.php
 
 namespace App\Entity;
 

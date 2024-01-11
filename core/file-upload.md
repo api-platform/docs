@@ -408,9 +408,6 @@ final class MultipartDecoder implements DecoderInterface
 
     public function __construct(private RequestStack $requestStack) {}
 
-    /**
-     * {@inheritdoc}
-     */
     public function decode(string $data, string $format, array $context = []): ?array
     {
         $request = $this->requestStack->getCurrentRequest();
@@ -427,9 +424,6 @@ final class MultipartDecoder implements DecoderInterface
         }, $request->request->all()) + $request->files->all();
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function supportsDecoding(string $format): bool
     {
         return self::FORMAT === $format;
@@ -452,17 +446,11 @@ use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 
 final class UploadedFileDenormalizer implements DenormalizerInterface
 {
-    /**
-     * {@inheritdoc}
-     */
     public function denormalize($data, string $type, string $format = null, array $context = []): UploadedFile
     {
         return $data;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function supportsDenormalization($data, $type, $format = null): bool
     {
         return $data instanceof UploadedFile;
