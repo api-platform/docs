@@ -25,6 +25,7 @@ to make it look like this.
 
 ```yaml
 # api/config/packages/vich_uploader.yaml
+
 vich_uploader:
     db_driver: orm
     metadata:
@@ -34,7 +35,7 @@ vich_uploader:
             uri_prefix: /media
             upload_destination: '%kernel.project_dir%/public/media'
             # Will rename uploaded files using a uniqueid as a prefix.
-            namer: Vich\UploaderBundle\Naming\OrignameNamer
+            namer: Vich\UploaderBundle\Naming\SmartUniqueNamer
 ```
 
 ## Uploading to a Dedicated Resource
@@ -53,6 +54,7 @@ The `MediaObject` resource is implemented like this:
 ```php
 <?php
 // api/src/Entity/MediaObject.php
+
 namespace App\Entity;
 
 use ApiPlatform\Metadata\ApiProperty;
@@ -109,7 +111,7 @@ class MediaObject
     #[Groups(['media_object:read'])]
     public ?string $contentUrl = null;
 
-    #[Vich\UploadableField(mapping: "media_object", fileNameProperty: "filePath")]
+    #[Vich\UploadableField(mapping: 'media_object', fileNameProperty: 'filePath')]
     #[Assert\NotNull(groups: ['media_object_create'])]
     public ?File $file = null;
 
@@ -172,12 +174,11 @@ A [normalizer](serialization.md#normalization) could be used to set the `content
 namespace App\Serializer;
 
 use App\Entity\MediaObject;
-use Symfony\Component\Serializer\Normalizer\ContextAwareNormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerAwareInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerAwareTrait;
 use Vich\UploaderBundle\Storage\StorageInterface;
 
-final class MediaObjectNormalizer implements ContextAwareNormalizerInterface, NormalizerAwareInterface
+final class MediaObjectNormalizer implements NormalizerAwareInterface
 {
     use NormalizerAwareTrait;
 
@@ -224,17 +225,23 @@ your data, you will get a response looking like this:
 
 ### Accessing Your Media Objects Directly
 
-You will need to modify your Caddyfile to allow the above `contentUrl` to be accessed directly. If you followed the above configuration for the VichUploaderBundle, that will be in `api/public/media`. Add your folder to the list of path matches, e.g. `|^/media/|`:
+You will need to modify your `Caddyfile` to allow the above `contentUrl` to be accessed directly. If you followed the above configuration for the VichUploaderBundle, that will be in `api/public/media`. Add your folder to the list of path matches, e.g. `|^/media/|`:
 
-```caddyfile
-...
-# Matches requests for HTML documents, for static files and for Next.js files,
-# except for known API paths and paths with extensions handled by API Platform
-@pwa expression `(
-        {header.Accept}.matches("\\btext/html\\b")
-        && !{path}.matches("(?i)(?:^/docs|^/graphql|^/bundles/|^/media/|^/_profiler|^/_wdt|\\.(?:json|html$|csv$|ya?ml$|xml$))")
-...
+<!-- markdownlint-disable no-hard-tabs -->
+```patch
+	# Matches requests for HTML documents, for static files and for Next.js files,
+	# except for known API paths and paths with extensions handled by API Platform
+	@pwa expression `(
+			header({'Accept': '*text/html*'})
+			&& !path(
+-				'/docs*', '/graphql*', '/bundles*', '/media*', '/contexts*', '/_profiler*', '/_wdt*',
++				'/media*', '/docs*', '/graphql*', '/bundles*', '/media*', '/contexts*', '/_profiler*', '/_wdt*',
+				'*.json*', '*.html', '*.csv', '*.yml', '*.yaml', '*.xml'
+			)
+		)
+		|| path('/favicon.ico', '/manifest.json', '/robots.txt', '/_next*', '/sitemap*')`
 ```
+<!-- markdownlint-enable no-hard-tabs -->
 
 ### Linking a MediaObject Resource to Another Resource
 
@@ -246,6 +253,7 @@ We first need to edit our Book resource, and add a new property called `image`.
 ```php
 <?php
 // api/src/Entity/Book.php
+
 namespace App\Entity;
 
 use ApiPlatform\Metadata\ApiResource;
@@ -406,7 +414,9 @@ final class MultipartDecoder implements DecoderInterface
 {
     public const FORMAT = 'multipart';
 
-    public function __construct(private RequestStack $requestStack) {}
+    public function __construct(private RequestStack $requestStack)
+    {
+    }
 
     public function decode(string $data, string $format, array $context = []): ?array
     {
