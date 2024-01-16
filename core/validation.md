@@ -255,9 +255,6 @@ final class AdminGroupsGenerator implements ValidationGroupsGeneratorInterface
         $this->authorizationChecker = $authorizationChecker;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function __invoke($book): array
     {
         assert($book instanceof Book);

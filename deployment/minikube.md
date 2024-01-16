@@ -6,7 +6,9 @@ If you have no existing installation of Minikube on your computer, [follow the o
 
 When Minikube is installed, start the cluster:
 
-    minikube start --addons registry --addons dashboard
+```console
+minikube start --addons registry --addons dashboard
+```
 
 The previous command starts Minikube with a Docker registry (we'll use it in the next step) and with the Kubernetes dashboard.
 
@@ -18,27 +20,33 @@ Finally, [install Helm](https://helm.sh/docs/intro/install/). We'll use it to de
 
 First, build the images:
 
-    docker build -t localhost:5000/php api --target api_platform_php
-    docker build -t localhost:5000/caddy api --target api_platform_caddy
-    docker build -t localhost:5000/pwa pwa --target api_platform_pwa_prod
+```console
+docker build -t localhost:5000/php api --target api_platform_php
+docker build -t localhost:5000/caddy api --target api_platform_caddy
+docker build -t localhost:5000/pwa pwa --target api_platform_pwa_prod
+```
 
 Then push the images in the registry installed in Minikube:
 
-    docker push localhost:5000/php
-    docker push localhost:5000/caddy
-    docker push localhost:5000/pwa
+```console
+docker push localhost:5000/php
+docker push localhost:5000/caddy
+docker push localhost:5000/pwa
+```
 
 ## Deploying
 
 Finally, deploy the project using the Helm chart:
 
-    $ helm install my-project helm/api-platform \
-      --set php.image.repository=localhost:5000/php \
-      --set php.image.tag=latest \
-      --set caddy.image.repository=localhost:5000/caddy \
-      --set caddy.image.tag=latest \
-      --set pwa.image.repository=localhost:5000/pwa \
-      --set pwa.image.tag=latest
+```console
+$ helm install my-project helm/api-platform \
+  --set php.image.repository=localhost:5000/php \
+  --set php.image.tag=latest \
+  --set caddy.image.repository=localhost:5000/caddy \
+  --set caddy.image.tag=latest \
+  --set pwa.image.repository=localhost:5000/pwa \
+  --set pwa.image.tag=latest
+```
 
 Copy and paste the commands displayed in the terminal to enable the port forwarding then go to `http://localhost:8080` to access your application!
 

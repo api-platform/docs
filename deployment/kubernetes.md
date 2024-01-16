@@ -38,7 +38,7 @@ curl https://sdk.cloud.google.com | bash
 Versioning: The 0.1.0 is the version. This value should be the same as the attribute `appVersion` in `Chart.yaml`.
 Infos for [Google Container pulling and pushing](https://cloud.google.com/container-registry/docs/pushing-and-pulling)
 
-```
+```console
 docker build -t gcr.io/test-api-platform/php:0.1.0 -t gcr.io/test-api-platform/php:latest api --target php_prod
 docker build -t gcr.io/test-api-platform/caddy:0.1.0 -t gcr.io/test-api-platform/caddy:latest api --target caddy_prod
 docker build -t gcr.io/test-api-platform/pwa:0.1.0 -t gcr.io/test-api-platform/pwa:latest pwa --target prod
