@@ -8,6 +8,17 @@ controllers can be any valid [Symfony controller](https://symfony.com/doc/curren
 Symfony controllers extending the [`Symfony\Bundle\FrameworkBundle\Controller\AbstractController`](http://api.symfony.com/4.1/Symfony/Bundle/FrameworkBundle/Controller/AbstractController.html)
 helper class.
 
+To enable this feature use `use_symfony_listeners: true` in your `api_platform` configuration file:
+
+```yaml
+api_platform:
+    title: 'My Dummy API'
+    description: |
+        This is a test API.
+        Made with love
+    use_symfony_listeners: true
+```
+
 However, API Platform recommends to use **action classes** instead of typical Symfony controllers. Internally, API Platform
 implements the [Action-Domain-Responder](https://github.com/pmjones/adr) pattern (ADR), a web-specific refinement of
 [MVC](https://en.wikipedia.org/wiki/Model%E2%80%93view%E2%80%93controller).
