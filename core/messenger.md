@@ -85,9 +85,10 @@ To process the message that will be dispatched, [a handler](https://symfony.com/
 namespace App\Handler;
 
 use App\Entity\Person;
-use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
+use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 
-final class PersonHandler implements MessageHandlerInterface
+#[AsMessageHandler]
+final class PersonHandler
 {
     public function __invoke(Person $person)
     {
@@ -174,9 +175,10 @@ In this case, when a `POST` request is issued on `/users/reset_password` the mes
 namespace App\Handler;
 
 use App\Dto\ResetPasswordRequest;
-use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
+use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 
-final class ResetPasswordRequestHandler implements MessageHandlerInterface
+#[AsMessageHandler]
+final class ResetPasswordRequestHandler
 {
     public function __invoke(ResetPasswordRequest $forgotPassword)
     {
