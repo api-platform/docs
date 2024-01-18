@@ -42,7 +42,7 @@ use ApiPlatform\Metadata\Operation;
 use ApiPlatform\State\ProcessorInterface;
 
 /**
- * @implements ProcessorInterface<BlogPost>
+ * @implements ProcessorInterface<BlogPost, BlogPost>
  */
 final class BlogPostProcessor implements ProcessorInterface
 {
@@ -89,7 +89,7 @@ use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\Mailer\MailerInterface;
 
 /**
- * @implements ProcessorInterface<User>
+ * @implements ProcessorInterface<User, User>
  */
 final class UserProcessor implements ProcessorInterface
 {
