@@ -86,7 +86,7 @@ use ApiPlatform\State\ProviderInterface;
 use ApiPlatform\Metadata\CollectionOperationInterface;
 
 /**
- * @implements ProviderInterface<BlogPost[]>
+ * @implements ProviderInterface<BlogPost[]|BlogPost>
  */
 final class BlogPostProvider implements ProviderInterface
 {
