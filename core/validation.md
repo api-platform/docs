@@ -408,15 +408,16 @@ use ApiPlatform\State\ProcessorInterface;
 use ApiPlatform\Validator\ValidatorInterface;
 use App\Entity\MyEntity;
 
-class MyEntityRemoveProcessor implements ProcessorInterface
+final readonly class MyEntityRemoveProcessor implements ProcessorInterface
 {
     public function __construct(
         private DoctrineRemoveProcessor $doctrineProcessor,
         private ValidatorInterface $validator,
-    ) {
+    )
+    {
     }
 
-    public function process($data, Operation $operation, array $uriVariables = [], array $context = [])
+    public function process(mixed $data, Operation $operation, array $uriVariables = [], array $context = [])
     {
         $this->validator->validate($data, ['groups' => ['deleteValidation']]);
         $this->doctrineProcessor->process($data, $operation, $uriVariables, $context);
@@ -469,6 +470,7 @@ For example:
 ```php
 <?php
 // api/src/Entity/Brand.php
+
 namespace App\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
@@ -533,6 +535,8 @@ This interface defines only 2 methods:
 Here is an implementation example:
 
 ```php
+// api/src/PropertySchemaRestriction/CustomPropertySchemaRestriction.php
+
 namespace App\PropertySchemaRestriction;
 
 use ApiPlatform\Metadata\ApiProperty;
@@ -559,6 +563,7 @@ If you use a custom dependency injection configuration, you need to register the
 
 ```yaml
 # api/config/services.yaml
+
 services:
     # ...
     'App\PropertySchemaRestriction\CustomPropertySchemaRestriction': ~
@@ -575,6 +580,7 @@ It can be done directly in the `#[ApiResource]` attribute (or in the operations)
 ```php
 <?php
 // api/src/Entity/Book.php
+
 namespace App\Entity;
 
 use ApiPlatform\Metadata\ApiResource;

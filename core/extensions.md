@@ -65,10 +65,12 @@ use App\Entity\Offer;
 use Doctrine\ORM\QueryBuilder;
 use Symfony\Bundle\SecurityBundle\Security;
 
-final class CurrentUserExtension implements QueryCollectionExtensionInterface, QueryItemExtensionInterface
+final readonly class CurrentUserExtension implements QueryCollectionExtensionInterface, QueryItemExtensionInterface
 {
 
-    public function __construct(private readonly Security $security)
+    public function __construct(
+        private Security $security,
+    )
     {
     }
 

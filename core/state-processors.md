@@ -55,6 +55,7 @@ final class BlogPostProcessor implements ProcessorInterface
 ```
 
 The `process()` method must return the created or modified object, or nothing (that's why `void` is allowed) for `DELETE` operations.
+The `process()` method can also take an object as input, in the `$data` parameter, that isn't of the same type that its output (the returned object). See [the DTO documentation entry](dto.md) for more details.
 
 We then configure our operation to use this processor:
 
