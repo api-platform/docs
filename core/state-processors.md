@@ -42,17 +42,19 @@ use ApiPlatform\Metadata\Operation;
 use ApiPlatform\State\ProcessorInterface;
 
 /**
- * @implements ProcessorInterface<BlogPost, BlogPost>
+ * @implements ProcessorInterface<BlogPost, BlogPost|void>
  */
 final class BlogPostProcessor implements ProcessorInterface
 {
-    public function process(mixed $data, Operation $operation, array $uriVariables = [], array $context = []): BlogPost
+    public function process(mixed $data, Operation $operation, array $uriVariables = [], array $context = []): BlogPost|void
     {
         // call your persistence layer to save $data
         return $data;
     }
 }
 ```
+
+The `process()` method must return the created or modified object, or nothing (that's why `void` is allowed) for `DELETE` operations.
 
 We then configure our operation to use this processor:
 
@@ -89,7 +91,7 @@ use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\Mailer\MailerInterface;
 
 /**
- * @implements ProcessorInterface<User, User>
+ * @implements ProcessorInterface<User, User|void>
  */
 final class UserProcessor implements ProcessorInterface
 {
@@ -103,7 +105,7 @@ final class UserProcessor implements ProcessorInterface
     {
     }
 
-    public function process(mixed $data, Operation $operation, array $uriVariables = [], array $context = []): User
+    public function process(mixed $data, Operation $operation, array $uriVariables = [], array $context = []): User|void
     {
         if ($operation instanceof DeleteOperationInterface) {
             return $this->removeProcessor->process($data, $operation, $uriVariables, $context);
@@ -111,6 +113,7 @@ final class UserProcessor implements ProcessorInterface
     
         $result = $this->persistProcessor->process($data, $operation, $uriVariables, $context);
         $this->sendWelcomeEmail($data);
+
         return $result;
     }
 

@@ -42,19 +42,27 @@ use ApiPlatform\Metadata\Operation;
 use ApiPlatform\State\ProviderInterface;
 
 /**
- * @implements ProviderInterface<BlogPost>
+ * @implements ProviderInterface<BlogPost|null>
  */
 final class BlogPostProvider implements ProviderInterface
 {
-    public function provide(Operation $operation, array $uriVariables = [], array $context = []): BlogPost
+    private const DATA = [
+        'ab' => new BlogPost('ab'),
+        'cd' => new BlogPost('cd'),
+    ];
+
+    public function provide(Operation $operation, array $uriVariables = [], array $context = []): BlogPost|null
     {
-        return new BlogPost($uriVariables['id']);
+        return self::DATA[$uriVariables['id']] ?? null;
     }
 }
 ```
 
-As this operation expects a BlogPost we return an instance of the BlogPost in the `provide` method.
-The `uriVariables` parameter is an array with the values of the URI variables.
+For the example, we store the list of our blog posts in an associative array (the `BlogPostProvider::DATA` constant).
+
+As this operation expects a `BlogPost`, the `provide` methods return the instance of the `BlogPost` corresponding to the ID passed in the URL. If the ID doesn't exist in the associative array, `provide()` returns `null`. API Platform will automatically generate a 404 response if the provider returns `null`.
+
+The `$uriVariables` parameter contains an array with the values of the URI variables.
 
 To use this provider we need to configure the provider on the operation:
 
@@ -86,17 +94,22 @@ use ApiPlatform\State\ProviderInterface;
 use ApiPlatform\Metadata\CollectionOperationInterface;
 
 /**
- * @implements ProviderInterface<BlogPost[]|BlogPost>
+ * @implements ProviderInterface<BlogPost[]|BlogPost|null>
  */
 final class BlogPostProvider implements ProviderInterface
 {
-    public function provide(Operation $operation, array $uriVariables = [], array $context = []): array|BlogPost
+    private const DATA = [
+        'ab' => new BlogPost('ab'),
+        'cd' => new BlogPost('cd'),
+    ];
+
+    public function provide(Operation $operation, array $uriVariables = [], array $context = []): iterable|BlogPost|null
     {
         if ($operation instanceof CollectionOperationInterface) {
-            return [new BlogPost(), new BlogPost()];
+            return self::DATA;
         }
 
-        return new BlogPost($uriVariables['id']);
+        return self::DATA[$uriVariables['id']] ?? null;
     }
 }
 ```
