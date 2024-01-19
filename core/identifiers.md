@@ -64,15 +64,19 @@ Let's create a `Provider` for the `Person` entity:
 ```php
 <?php
 // api/src/State/PersonProvider.php
+
 namespace App\State;
 
 use App\Entity\Person;
 use ApiPlatform\State\ProviderInterface;
 use App\Uuid;
 
+/**
+ * @implements ProviderInterface<Person>
+ */
 final class PersonProvider implements ProviderInterface
 {
-    public function provide(Operation $operation, array $uriVariables = [], array $context = [])
+    public function provide(Operation $operation, array $uriVariables = [], array $context = []): Person
     {
         // Our identifier is:
         // $uriVariables['code']
@@ -105,7 +109,8 @@ final class UuidUriVariableTransformer implements UriVariableTransformerInterfac
      *
      * @throws InvalidUriVariableException Occurs when the uriVariable could not be transformed
      */
-     public function transform($value, array $types, array $context = []) {
+     public function transform($value, array $types, array $context = []): Uuid
+     {
         try {
             return Uuid::fromString($value);
         } catch (InvalidUuidStringException $e) {
@@ -138,6 +143,8 @@ Tag this service as an `api_platform.uri_variables.transformer`:
 <code-selector>
 
 ```yaml
+# api/config/services.yaml
+
 services:
     App\Identifier\UuidUriVariableTransformer:
         tags:
@@ -161,6 +168,7 @@ If your resource is also a Doctrine entity and you want to use another identifie
 ```php
 <?php
 // api/src/Entity/Person.php
+
 namespace App\Entity;
 
 use ApiPlatform\Metadata\ApiProperty;

@@ -11,6 +11,7 @@ Using an input, the request body will be denormalized to the input instead of yo
 ```php
 <?php
 // api/src/Dto/UserResetPasswordDto.php
+
 namespace App\Dto;
 
 use Symfony\Component\Validator\Constraints as Assert;
@@ -25,6 +26,7 @@ final class UserResetPasswordDto
 ```php
 <?php
 // api/src/Model/User.php
+
 namespace App\Model;
 
 use ApiPlatform\Metadata\Post;
@@ -39,6 +41,7 @@ And the processor:
 
 ```php
 <?php
+// api/src/State/UserResetPasswordProcessor.php
 
 namespace App\State;
 
@@ -47,12 +50,17 @@ use ApiPlatform\Metadata\Operation;
 use ApiPlatform\State\ProcessorInterface;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
+/**
+ * @implements ProcessorInterface<UserResetPasswordDto, User>
+ */
 final class UserResetPasswordProcessor implements ProcessorInterface
 {
     /**
      * @param UserResetPasswordDto $data
+     *
+     * @throws NotFoundHttpException
      */
-    public function process($data, Operation $operation, array $uriVariables = [], array $context = [])
+    public function process(mixed $data, Operation $operation, array $uriVariables = [], array $context = []): User
     {
         if ('user@example.com' === $data->email) {
             return new User(email: $data->email, id: 1);
@@ -71,6 +79,7 @@ Let's use a message that will be processed by [Symfony Messenger](https://symfon
 
 ```php
 <?php
+// api/src/Model/SendMessage.php
 
 namespace App\Model;
 
@@ -90,6 +99,7 @@ To return another representation of your data in a [State Provider](./state-prov
 
 ```php
 <?php
+// api/src/Entity/Book.php
 
 namespace App\Entity;
 
@@ -103,6 +113,7 @@ class Book {}
 
 ```php
 <?php
+// api/src/State/BookRepresentationProvider.php
 
 namespace App\State;
 
@@ -111,9 +122,12 @@ use App\Model\Book;
 use ApiPlatform\Metadata\Operation;
 use ApiPlatform\State\ProviderInterface;
 
+/**
+ * @implements ProviderInterface<AnotherRepresentation>
+ */
 final class BookRepresentationProvider implements ProviderInterface
 {
-    public function provide(Operation $operation, array $uriVariables = [], array $context = [])
+    public function provide(Operation $operation, array $uriVariables = [], array $context = []): AnotherRepresentation
     {
         return new AnotherRepresentation();
     }
@@ -128,6 +142,7 @@ For returning another representation of your data in a [State Processor](./state
 
 ```php
 <?php
+// api/src/Entity/Book.php
 
 namespace App\Entity;
 
@@ -171,6 +186,7 @@ Here the `$data` attribute represents an instance of your resource.
 
 ```php
 <?php
+// api/src/State/BookRepresentationProcessor.php
 
 namespace App\State;
 
@@ -179,12 +195,15 @@ use ApiPlatform\State\ProcessorInterface;
 use App\Dto\AnotherRepresentation;
 use App\Model\Book;
 
+/**
+ * @implements ProcessorInterface<Book, AnotherRepresentation>
+ */
 final class BookRepresentationProcessor implements ProcessorInterface
 {
      /**
      * @param Book $data
      */
-    public function process($data, Operation $operation, array $uriVariables = [], array $context = [])
+    public function process(mixed $data, Operation $operation, array $uriVariables = [], array $context = []): AnotherRepresentation
     {
         return new AnotherRepresentation(
             $data->getId(),
