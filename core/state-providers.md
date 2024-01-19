@@ -90,7 +90,7 @@ use ApiPlatform\Metadata\CollectionOperationInterface;
  */
 final class BlogPostProvider implements ProviderInterface
 {
-    public function provide(Operation $operation, array $uriVariables = [], array $context = []): array
+    public function provide(Operation $operation, array $uriVariables = [], array $context = []): array|BlogPost
     {
         if ($operation instanceof CollectionOperationInterface) {
             return [new BlogPost(), new BlogPost()];
