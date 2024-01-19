@@ -196,7 +196,7 @@ use App\Dto\AnotherRepresentation;
 use App\Model\Book;
 
 /**
- * @implements ProviderInterface<Book, AnotherRepresentation>
+ * @implements ProcessorInterface<Book, AnotherRepresentation>
  */
 final class BookRepresentationProcessor implements ProcessorInterface
 {
