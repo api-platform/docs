@@ -99,7 +99,7 @@ final class UserProcessor implements ProcessorInterface
     public function __construct(
         #[Autowire(service: 'api_platform.doctrine.orm.state.persist_processor')]
         private ProcessorInterface $persistProcessor,
-        #[Autowire('@api_platform.doctrine.orm.state.remove_processor')]
+        #[Autowire(service: 'api_platform.doctrine.orm.state.remove_processor')]
         private ProcessorInterface $removeProcessor,
         MailerInterface $mailer,
     )
