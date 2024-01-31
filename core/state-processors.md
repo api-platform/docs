@@ -97,9 +97,9 @@ use Symfony\Component\Mailer\MailerInterface;
 final class UserProcessor implements ProcessorInterface
 {
     public function __construct(
-        #[Autowire('api_platform.doctrine.orm.state.persist_processor')]
+        #[Autowire('@api_platform.doctrine.orm.state.persist_processor')]
         private ProcessorInterface $persistProcessor,
-        #[Autowire('api_platform.doctrine.orm.state.remove_processor')]
+        #[Autowire('@api_platform.doctrine.orm.state.remove_processor')]
         private ProcessorInterface $removeProcessor,
         MailerInterface $mailer,
     )
