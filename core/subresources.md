@@ -88,6 +88,7 @@ To make things work, API Platform needs informations about how to retrieve the `
 the `Question`, this is done by configuring the `uriVariables`:
 
 <code-selector>
+
 ```php
 <?php
 // api/src/Entity/Answer.php
@@ -139,8 +140,8 @@ If we had a `relatedQuestions` property on the `Answer` we could retrieve the co
 Note that in this example, we declared an association using Doctrine only between Employee and Company using a ManyToOne. There is no inverse association hence the use of `toProperty` in the URI Variables definition.
 
 The following declares a few subresources:
-    - `/companies/{companyId}/employees/{id}` - get an employee belonging to a company
-    - `/companies/{companyId}/employees` - get the company employee's
+* `/companies/{companyId}/employees/{id}` - get an employee belonging to a company
+* `/companies/{companyId}/employees` - get the company employee's
 
 ```php
 <?php
