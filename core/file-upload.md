@@ -451,19 +451,28 @@ We also need to make sure the field containing the uploaded file is not denormal
 
 namespace App\Serializer;
 
-use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 
 final class UploadedFileDenormalizer implements DenormalizerInterface
 {
-    public function denormalize($data, string $type, string $format = null, array $context = []): UploadedFile
+    public function denormalize($data, string $type, string $format = null, array $context = []): File
     {
         return $data;
     }
 
-    public function supportsDenormalization($data, $type, $format = null): bool
+    public function supportsDenormalization($data, $type, $format = null, array $context = []): bool
     {
-        return $data instanceof UploadedFile;
+        return $data instanceof File;
+    }
+
+    public function getSupportedTypes(?string $format): array
+    {
+        return [
+            'object' => null,
+            '*' => false,
+            File::class => true,
+        ];
     }
 }
 ```
