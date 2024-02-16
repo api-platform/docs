@@ -407,6 +407,7 @@ Create a processor, which receives the default processor, where you will trigger
 namespace App\State;
 
 use ApiPlatform\Doctrine\Common\State\RemoveProcessor as DoctrineRemoveProcessor;
+use ApiPlatform\Metadata\Operation;
 use ApiPlatform\State\ProcessorInterface;
 use ApiPlatform\Validator\ValidatorInterface;
 use App\Entity\MyEntity;
