@@ -1411,6 +1411,7 @@ A `paginationInfo` field can be queried to obtain the following information:
 * `itemsPerPage`: the number of items per page. To change it, follow the [pagination documentation](pagination.md#changing-the-number-of-items-per-page).
 * `lastPage`: the last page of the collection.
 * `totalCount`: the total number of items in the collection.
+* `hasNextPage`: does the current collection offers a next page.
 
 The collection items data are available in the `collection` field.
 
@@ -1426,6 +1427,7 @@ An example of a query:
       itemsPerPage
       lastPage
       totalCount
+      hasNextPage
     }
   }
 }
