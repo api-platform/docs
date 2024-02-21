@@ -327,6 +327,15 @@ const ReviewsEdit = props => (
     >
       <AutocompleteInput optionText="title" />
     </ReferenceInput>
+    // or
+    <ReferenceInput 
+        source="book.@id" 
+        reference="books" 
+        label="Books" 
+        filterToQuery={searchText => ({ title: searchText })}
+    >
+      <AutocompleteInput optionText="title" />
+    </ReferenceInput>
 
     <InputGuesser source="rating" />
     <InputGuesser source="body" />
@@ -346,3 +355,42 @@ export default () => (
 ```
 
 The autocomplete field should now work properly!
+
+Let's say `useEmbedded` parameter is set to `true` and you have nested a nested objects array you want to use in an ReferenceArrayInput. ReferenceArrayInput expects an array of ids. In this case you have to tell it, where it finds those ids. This is done via "format"
+
+```javascript
+import React from "react";
+import {
+  HydraAdmin,
+  ResourceGuesser,
+  CreateGuesser,
+  EditGuesser,
+  InputGuesser
+} from "@api-platform/admin";
+import { ReferenceInput, AutocompleteInput } from "react-admin";
+
+...
+const BooksEdit = props => (
+  <EditGuesser {...props}>
+    ...
+    
+    <ReferenceArrayInput source="books" reference="books_reference" label="Books" sort={{field: 'title', order: 'ASC'}}
+                  format={v => (v ? v.map(i => (i["@id"] 11? i["@id"] : i)) : [])}>
+        <SelectArrayInput source="title" optionText="title" optionValue="@id"/>
+    </ReferenceArrayInput>
+    ...
+  </EditGuesser>
+);
+
+...
+export default () => (
+  <HydraAdmin entrypoint={process.env.REACT_APP_API_ENTRYPOINT}>
+    <ResourceGuesser
+      name="books_reference"
+      edit={BooksEdit}
+      ...
+    />
+  </HydraAdmin>
+);
+
+```
