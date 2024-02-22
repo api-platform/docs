@@ -103,16 +103,16 @@ api_platform:
     # ...
     exception_to_status:
         # The 4 following handlers are registered by default, keep those lines to prevent unexpected side effects
-        Symfony\Component\Serializer\Exception\ExceptionInterface: 400 # Use a raw status code (recommended)
+        Symfony\Component\Serializer\Exception\ExceptionInterface: !php/const Symfony\Component\HttpFoundation\Response::HTTP_BAD_REQUEST # Use a raw status code (recommended)
         ApiPlatform\Exception\InvalidArgumentException: !php/const Symfony\Component\HttpFoundation\Response::HTTP_BAD_REQUEST
-        ApiPlatform\Exception\FilterValidationException: 400
-        Doctrine\ORM\OptimisticLockException: 409
+        ApiPlatform\Exception\FilterValidationException: !php/const Symfony\Component\HttpFoundation\Response::HTTP_BAD_REQUEST
+        Doctrine\ORM\OptimisticLockException: !php/const Symfony\Component\HttpFoundation\Response::HTTP_CONFLICT
 
         # Validation exception
         ApiPlatform\Validator\Exception\ValidationException: !php/const Symfony\Component\HttpFoundation\Response::HTTP_UNPROCESSABLE_ENTITY
 
         # Custom mapping
-        App\Exception\ProductNotFoundException: 404 # Here is the handler for our custom exception
+        App\Exception\ProductNotFoundException: !php/const Symfony\Component\HttpFoundation\Response::HTTP_NOT_FOUND # Here is the handler for our custom exception
 ```
 
 Any type of `Exception` can be thrown, API Platform will convert it to a Symfony's `HttpException` (note that it means the exception will be flattened and lose all of its custom properties). The framework also takes
