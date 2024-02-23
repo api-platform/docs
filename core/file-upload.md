@@ -176,9 +176,10 @@ namespace App\Serializer;
 use App\Entity\MediaObject;
 use Symfony\Component\Serializer\Normalizer\NormalizerAwareInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerAwareTrait;
+use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 use Vich\UploaderBundle\Storage\StorageInterface;
 
-final class MediaObjectNormalizer implements NormalizerAwareInterface
+final class MediaObjectNormalizer implements NormalizerAwareInterface, NormalizerInterface
 {
     use NormalizerAwareTrait;
 
@@ -234,8 +235,8 @@ You will need to modify your `Caddyfile` to allow the above `contentUrl` to be a
 	@pwa expression `(
 			header({'Accept': '*text/html*'})
 			&& !path(
--				'/docs*', '/graphql*', '/bundles*', '/media*', '/contexts*', '/_profiler*', '/_wdt*',
-+				'/media*', '/docs*', '/graphql*', '/bundles*', '/media*', '/contexts*', '/_profiler*', '/_wdt*',
+-				'/docs*', '/graphql*', '/bundles*', '/contexts*', '/_profiler*', '/_wdt*',
++				'/media*', '/docs*', '/graphql*', '/bundles*', '/contexts*', '/_profiler*', '/_wdt*',
 				'*.json*', '*.html', '*.csv', '*.yml', '*.yaml', '*.xml'
 			)
 		)
