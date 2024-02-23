@@ -20,6 +20,21 @@ api_doc                                    ANY      ANY      ANY    /docs.{_form
 api_jsonld_context                         ANY      ANY      ANY    /contexts/{shortName}.{_format}
 ```
 
+For instance, the `access_control` definition in the `security.yaml` could look like this:
+```yaml
+access_control:
+    - { path: ^/index.jsonld, roles: PUBLIC_ACCESS }
+    - { path: ^/docs.jsonld, roles: PUBLIC_ACCESS }
+    - { path: ^/contexts/hydra.jsonld, roles: PUBLIC_ACCESS }
+    - ...
+```
+
+You can also define a `--bearer` arg in case of [JWT authentication](../core/jwt.md), or the `--username` and `--password` arguments in case of basic authentication:
+```console
+docker compose exec pwa \
+    pnpm create @api-platform/client --resource book -g next --bearer eyJ0eXAiOiJKV1QiLCJhbGciO...
+```
+
 ## ApiDocumentation doesn't exist
 
 If you receive `Error: The class http://www.w3.org/ns/hydra/core#ApiDocumentation doesn't exist.` you may have
@@ -52,9 +67,10 @@ url: 'https://demo.api-platform.com/contexts/Entrypoint',
 cause: null } }
 ```
 
-Check access to the specified URL, in this case `https://demo.api-platform.com/contexts/Entrypoint`, use curl to check
-access and the response `curl https://demo.api-platform.com/contexts/Entrypoint`. In the above case an "Access Denied"
-message in JSON format was being returned.  
+Check access to the specified URL, in this case `https://demo.api-platform.com/contexts/Entrypoint`, use `curl` to check
+access and the response `curl https://demo.api-platform.com/contexts/Entrypoint`.
+
+For instance, your API is protected by a JWT strategy, so in the above case an "Access Denied" message in JSON format was being returned. To fix this, you can set the `--bearer` flag with a valid token.
 
 ## Docker distribution on Windows and hot-reloading
 
