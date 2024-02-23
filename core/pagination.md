@@ -586,3 +586,6 @@ A few existing classes are provided to make it easier to paginate the results:
 
 * `ApiPlatform\State\Pagination\ArrayPaginator`
 * `ApiPlatform\State\Pagination\TraversablePaginator`
+* `ApiPlatform\Doctrine\Common\CollectionPaginator`
+* `ApiPlatform\Doctrine\Common\SelectablePaginator`
+* `ApiPlatform\Doctrine\Common\SelectablePartialPaginator`
