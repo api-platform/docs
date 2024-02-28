@@ -9,14 +9,12 @@ from the ecosystem:
 * [React Router](https://reactrouter.com/)
 * [React Hook Form](https://react-hook-form.com/)
 
-It is designed to generate code that works seamlessly with [Facebook's Create React App](https://create-react-app.dev/).
-
 ## Install
 
 Bootstrap a React application:
 
 ```console
-npm init react-app -- --template typescript my-app
+npm create vite@latest my-app -- --template react-ts
 cd my-app
 ```
 
@@ -35,7 +33,7 @@ npm install bootstrap font-awesome
 Finally, start the integrated web server:
 
 ```console
-npm run start
+npm run dev
 ```
 
 ## Generating a Web App
@@ -54,7 +52,7 @@ The code has been generated, and is ready to be executed!
 Register the reducers and the routes:
 
 ```typescript
-// client/src/index.tsx
+// my-app/src/main.tsx
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
@@ -74,9 +72,9 @@ root.render(
   <React.StrictMode>
     <Router>
       <Routes>
-        <Route path="/" component={Welcome} strict={true} exact={true}/>
+        <Route path="/" element={<App/>}/>
         {/* Add your routes here */}
-        <Route render={() => <h1>Not Found</h1>} />
+        <Route path='*' element={<NotFound/>} />
       </Routes>
     </Router>
   </React.StrictMode>
