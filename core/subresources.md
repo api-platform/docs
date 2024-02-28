@@ -109,6 +109,7 @@ To make things work, API Platform needs information about how to retrieve the `A
 the `Question`, this is done by configuring the `uriVariables`:
 
 <code-selector>
+
 ```php
 <?php
 // api/src/Entity/Answer.php
