@@ -80,7 +80,7 @@ Here is an implementation example which uses [Symfony Mailer](https://symfony.co
 
 ```php
 <?php
-// api/src/Sate/UserProcessor.php
+// api/src/State/UserProcessor.php
 
 namespace App\State;
 
