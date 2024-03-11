@@ -223,6 +223,6 @@ The `readinessProbe` and the `livenessProble` can not use the default `docker-he
 readinessProbe:
     exec:
         command: ["/bin/sh", "-c", "/bin/ps -ef | grep messenger:consume | grep -v grep"]
-        initialDelaySeconds: 120
-        periodSeconds: 3
+    initialDelaySeconds: 120
+    periodSeconds: 3
 ```
