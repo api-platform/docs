@@ -45,6 +45,7 @@ chapters:
       - events
       - file-upload
       - jwt
+      - oAuth2
       - form-data
       - angularjs-integration
       - fosuser-bundle
