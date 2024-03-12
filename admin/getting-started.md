@@ -27,10 +27,15 @@ For instance, if you used Create React App, replace the content of `src/App.js` 
 ```javascript
 import { HydraAdmin } from "@api-platform/admin";
 
+import { defaultTheme } from 'react-admin';
+
+const lightTheme = defaultTheme;
+const darkTheme = { ...defaultTheme, palette: { mode: 'dark' } };
+
 // Replace with your own API entrypoint
 // For instance if https://example.com/api/books is the path to the collection of book resources, then the entrypoint is https://example.com/api
 export default () => (
-  <HydraAdmin entrypoint="https://demo.api-platform.com" />
+  <HydraAdmin entrypoint="https://demo.api-platform.com" theme={lightTheme} darkTheme={darkTheme}/>
 );
 ```
 
