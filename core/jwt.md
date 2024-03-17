@@ -23,7 +23,7 @@ Then we need to generate the public and private keys used for signing JWT tokens
 ```console
 docker compose exec php sh -c '
     set -e
-    apk add openssl
+    apt-get install openssl
     php bin/console lexik:jwt:generate-keypair
     setfacl -R -m u:www-data:rX -m u:"$(whoami)":rwX config/jwt
     setfacl -dR -m u:www-data:rX -m u:"$(whoami)":rwX config/jwt
