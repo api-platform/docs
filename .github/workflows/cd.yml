@@ -49,20 +49,28 @@ jobs:
       - name: 'Set up Cloud SDK'
         uses: 'google-github-actions/setup-gcloud@v1'
 
-      - name: Compute documentation
-        run: |
-          git clone https://github.com/api-platform/docs-website
-          cd docs-website
-          npm install
+      - name: Clone website
+        uses: actions/checkout@v2
+        with:
+          repository: api-platform/docs-website
+          path: docs-website
+      - name: Install javascript packages
+        working-directory: docs-website
+        run: npm install
       - name: Fetch API Platform docs
+        working-directory: docs-website
         run: tools/get-docs.sh
       - name: Fetch API Platform references and guides
+        working-directory: docs-website
         run: tools/get-core-docs.sh
       - name: Build menu 
+        working-directory: docs-website
         run: node tools/menu.mjs
       - name: Hugo
+        working-directory: docs-website
         run: hugo --minify
       - name: Deploy
+        working-directory: docs-website
         run: gsutil -q -m rsync -d -r ./public gs://api-platform-website-v3/
       # This need to move to website
       # env:
