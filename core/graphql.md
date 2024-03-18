@@ -318,7 +318,7 @@ Now that your resolver is created and registered, you can configure your custom 
 
 In your resource, add the following:
 
-[codeselector]
+<code-selector>
 
 ```php
 <?php
@@ -577,7 +577,7 @@ If you don't use autoconfiguration, add the tag `api_platform.graphql.mutation_r
 
 Now in your resource:
 
-[codeselector]
+<code-selector>
 
 ```php
 <?php
@@ -758,7 +758,7 @@ To enable update subscriptions for a resource, these conditions have to be met:
 
 For instance, your resource should look like this:
 
-[codeselector]
+<code-selector>
 
 ```php
 <?php
@@ -928,7 +928,7 @@ The following table lists the stages you can disable in your resource configurat
 
 A stage can be disabled at the operation level:
 
-[codeselector]
+<code-selector>
 
 ```php
 <?php
@@ -981,7 +981,7 @@ resources:
 
 Or at the resource attributes level (will be also applied in REST and for all operations):
 
-[codeselector]
+<code-selector>
 
 ```php
 <?php
@@ -1050,7 +1050,7 @@ In order to keep the default behavior (possibility to fetch, delete, update or c
 
 For example, this entity will have a search filter for REST and a date filter for GraphQL:
 
-[codeselector]
+<code-selector>
 
 ```php
 <?php
@@ -1309,7 +1309,7 @@ In order to use the page-based pagination, you need to enable it in the resource
 
 For instance at the operation level:
 
-[codeselector]
+<code-selector>
 
 ```php
 <?php
@@ -1371,7 +1371,7 @@ resources:
 
 Or if you want to do it at the resource level:
 
-[codeselector]
+<code-selector>
 
 ```php
 <?php
@@ -1452,7 +1452,7 @@ api_platform:
 
 It can also be disabled for a specific resource (REST and GraphQL):
 
-[codeselector]
+<code-selector>
 
 ```php
 <?php
@@ -1489,7 +1489,7 @@ resources:
 
 You can also disable the pagination for a specific collection operation:
 
-[codeselector]
+<code-selector>
 
 ```php
 <?php
@@ -1546,7 +1546,7 @@ If you have only some parts differing between REST and GraphQL, you have to rede
 In the example below, we want the same security rules as we have in REST, but we also want to allow an admin to delete a book only in GraphQL.
 Please note that, it's not possible to update a book in GraphQL because the `update` operation is not defined.
 
-[codeselector]
+<code-selector>
 
 ```php
 <?php
@@ -1648,7 +1648,7 @@ For example, a user may be denied using `Query.getUser` to get a user, but is ab
 
 The following example shows how associations can be secured:
 
-[codeselector]
+<code-selector>
 
 ```php
 <?php
@@ -1729,7 +1729,7 @@ properties:
 
 </code-selector>
 
-[codeselector]
+<code-selector>
 
 ```php
 <?php
@@ -1833,7 +1833,7 @@ Note that:
 
 The following example shows you what can be done:
 
-[codeselector]
+<code-selector>
 
 ```php
 <?php
@@ -1995,7 +1995,7 @@ Indeed, the mutation expects an IRI for the relation in the input, so you need t
 
 For instance if you have the following resource:
 
-[codeselector]
+<code-selector>
 
 ```php
 <?php
@@ -2062,7 +2062,7 @@ In order to create an author as the same time as a book,
 you need to use the denormalization context and groups on the book and the author
 (see also [the dedicated part in the serialization documentation](serialization.md#denormalization):
 
-[codeselector]
+<code-selector>
 
 ```php
 <?php
