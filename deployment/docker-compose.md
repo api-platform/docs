@@ -122,7 +122,18 @@ This setup ensures the Next.js client can access the API at build time to genera
 
 ### Configuration Steps
 
-#### 1. Adjust the compose.prod.yaml file
+#### 1. Adjust the compose.yaml file
+
+Modify the php service to allow overriding the TRUSTED_HOSTS and MERCURE_PUBLIC_URL environment variables:
+
+```yaml
+  php:
+    environment:
+      TRUSTED_HOSTS: ${TRUSTED_HOSTS:-^${SERVER_NAME:-example\.com|localhost}|php$$}
+      MERCURE_PUBLIC_URL: ${CADDY_MERCURE_PUBLIC_URL:-https://${SERVER_NAME:-localhost}/.well-known/mercure}
+```
+
+#### 2. Adjust the compose.prod.yaml file
 
 Modify the pwa service to ensure network communication between the pwa and php services during the build:
 
@@ -136,36 +147,40 @@ Modify the pwa service to ensure network communication between the pwa and php s
         - php=127.0.0.1
 ```
 
-#### 2. Build and start the php service
+#### 3. Build and start the php service
 
 Begin by starting the php service container:
 
 ```bash
 SERVER_NAME=http://localhost \
+MERCURE_PUBLIC_URL=http://localhost/.well-known/mercure \
+TRUSTED_HOSTS='^localhost|php$$' \
 APP_SECRET=!ChangeMe! \
 CADDY_MERCURE_JWT_SECRET=ChangeThisMercureHubJWTSecretKey \
 POSTGRES_PASSWORD=!ChangeMe! \
 docker compose -f compose.yaml -f compose.prod.yaml up -d --build --wait php
 ```
 
-#### 3. Optional: Env file with create-client:
+#### 4. Optional: Env file with create-client
 
-If your are using the [create-client](../create-client/nextjs.md) generator inside your Next client, you need to create a `.env` file in the `pwa` directory with the `NEXT_PUBLIC_ENTRYPOINT` environment variable to ensure the Next.js client knows where to find the API:
+If your are using the [create-client](../create-client/nextjs.md) generator inside your Next.js client, you need to create a `.env` file in the `pwa` directory with the `NEXT_PUBLIC_ENTRYPOINT` environment variable to ensure the Next.js client knows where to find the API:
 
 ```dotenv
 NEXT_PUBLIC_ENTRYPOINT=http://php
 ```
 
-#### 4. Build the pwa service
+#### 5. Build the pwa service
 
 ```bash
 docker compose -f compose.yaml -f compose.prod.yaml build pwa
 ```
 
-#### 5. Finally, bring up the full project
+#### 6. Finally, bring up the full project
 
 ```bash
 SERVER_NAME=http://localhost \
+MERCURE_PUBLIC_URL=http://localhost/.well-known/mercure \
+TRUSTED_HOSTS='^localhost|php$$' \
 APP_SECRET=!ChangeMe! \
 CADDY_MERCURE_JWT_SECRET=ChangeThisMercureHubJWTSecretKey \
 POSTGRES_PASSWORD=!ChangeMe! \
