@@ -54,20 +54,20 @@ jobs:
           git clone https://github.com/api-platform/docs-website
           cd docs-website
           npm install
-          # fetches api-platform/docs
-          bash tools/get-docs.sh
-          # fetches api-platform/core for reference and guides
-          bash tools/get-core-docs.sh
-          # builds the config/_default/menu.toml according to the outline.yaml from api-platform/docs
-          node tools/menu.mjs
-          # build our tailwind theme
-          hugo --minify
-          gsutil -q -m rsync -d -r ./public gs://api-platform-website-v3/
-          # This need to move to website
-          # env:
-          #   GITHUB_KEY: ${{ secrets.CONTRIBUTORS_GITHUB_TOKEN }}
-          #   NODE_OPTIONS: --openssl-legacy-provider
-
+      - name: Fetch API Platform docs
+        run: tools/get-docs.sh
+      - name: Fetch API Platform references and guides
+        run: tools/get-core-docs.sh
+      - name: Build menu 
+        run: node tools/menu.mjs
+      - name: Hugo
+        run: hugo --minify
+      - name: Deploy
+        run: gsutil -q -m rsync -d -r ./public gs://api-platform-website-v3/
+      # This need to move to website
+      # env:
+      #   GITHUB_KEY: ${{ secrets.CONTRIBUTORS_GITHUB_TOKEN }}
+      #   NODE_OPTIONS: --openssl-legacy-provider
       # - name: Deploy
       #   uses: peaceiris/actions-gh-pages@v3
       #   with:
