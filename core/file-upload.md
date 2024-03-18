@@ -316,12 +316,13 @@ class MediaObjectTest extends ApiTestCase
         $file = new UploadedFile('fixtures/files/image.png', 'image.png');
         $client = self::createClient();
 
+        // Do not pass extra form fields through the "body" option as it won't work
         $client->request('POST', '/media_objects', [
             'headers' => ['Content-Type' => 'multipart/form-data'],
             'extra' => [
                 // If you have additional fields in your MediaObject entity, use the parameters.
                 'parameters' => [
-                    'title' => 'My file uploaded',
+                    'title' => 'My file uploaded', // These parameters will be available in the application through $request->request
                 ],
                 'files' => [
                     'file' => $file,
@@ -336,6 +337,8 @@ class MediaObjectTest extends ApiTestCase
     }
 }
 ```
+
+**Important:** Using Symfony's `FormDataPart` Class will not work with the ApiTestCase Client.
 
 ## Uploading to an Existing Resource with its Fields
 
