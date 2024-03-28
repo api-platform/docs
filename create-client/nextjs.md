@@ -98,6 +98,10 @@ yarn dev
 
 Go to `http://localhost:3000/books/` to start using your app.
 
+## Generating a production build locally with docker compose
+
+If you want to generate a production build locally with docker compose, follow [these instructions](../deployment/docker-compose.md)
+
 ## Screenshots
 
 ![List](images/nextjs/create-client-nextjs-list.png)

@@ -44,6 +44,12 @@ docker build -t gcr.io/test-api-platform/caddy:0.1.0 -t gcr.io/test-api-platform
 docker build -t gcr.io/test-api-platform/pwa:0.1.0 -t gcr.io/test-api-platform/pwa:latest pwa --target prod
 ```
 
+Optional: If your pwa project use Static Site Generation (SSG) and you need to build it against the API running locally, you can build the pwa with the command below.
+
+```bash
+docker build -t gcr.io/test-api-platform/pwa:0.1.0 -t gcr.io/test-api-platform/pwa:latest pwa --target prod --network=host --add-host php=127.0.0.1
+```
+
 #### 2. Push your images to your Docker registry
 
 ```console
@@ -53,12 +59,12 @@ docker push gcr.io/test-api-platform/caddy
 docker push gcr.io/test-api-platform/pwa
 ```
 
-Optional push the version images:
+Optional: push the version images:
 
 ```console
-docker push gcr.io/test-api-platform/php:0.1.0 
-docker push gcr.io/test-api-platform/caddy:0.1.0 
-docker push gcr.io/test-api-platform/pwa:0.1.0 
+docker push gcr.io/test-api-platform/php:0.1.0
+docker push gcr.io/test-api-platform/caddy:0.1.0
+docker push gcr.io/test-api-platform/pwa:0.1.0
 ```
 
 The result should look similar to these images.
@@ -114,7 +120,7 @@ Replace the values with the image parameters from the stage above.
 The parameter `php.appSecret` is the `AppSecret` from ./.env
 Fill the rest of the values with the correct settings.
 For available options see /helm/api-platform/values.yaml.
-If you want a test deploy you can set corsAllowOrigin='*'
+If you want a test deploy you can set corsAllowOrigin='\*'
 
 After a successful installation, there is a message at the end.
 You can copy these commands and execute them to set a port-forwarding and
@@ -166,7 +172,7 @@ You can upgrade with the same command from the installation and pass all paramet
 ### 2. Use :latest tags
 
 Infos about [best practices for tagging images for Kubernetes](https://kubernetes.io/docs/concepts/containers/images/)
-You have to use the *.image.pullPolicy=Always see the last 3 parameters.
+You have to use the \*.image.pullPolicy=Always see the last 3 parameters.
 
 ```console
 PHP_POD=$(kubectl --namespace=bar get pods -l app=php -o jsonpath="{.items[0].metadata.name}")
