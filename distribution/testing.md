@@ -372,7 +372,6 @@ The API Platform Demo [contains a CD workflow](https://github.com/api-platform/d
 You may also be interested in these alternative testing tools (not included in the API Platform distribution):
 
 * [Hoppscotch](https://docs.hoppscotch.io/features/tests), create functional test for your API
-* [Foundry](https://github.com/zenstruck/foundry), a modern fixtures library that will replace Alice as the recommended fixtures library soon;
 * [Hoppscotch](https://docs.hoppscotch.io/documentation/features/rest-api-testing/), create functional test for your API
   Platform project using a nice UI, benefit from its Swagger integration and run tests in the CI using [the command-line tool](https://docs.hoppscotch.io/cli);
 * [Behat](https://behat.org), a
