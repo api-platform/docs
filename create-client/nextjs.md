@@ -35,6 +35,11 @@ npm install isomorphic-unfetch formik react-query
 yarn add isomorphic-unfetch formik react-query
 ```
 
+> Unfetch package installed by `isomorphic-unfetch` has an [issue](https://github.com/developit/unfetch/pull/164) with his v5.0.0 version so we need to manually rollback to v4.2.0
+> with `npm i unfetch@4`
+>
+> There's an alternative solution for [webpack here](https://github.com/developit/unfetch/pull/164#issuecomment-1571557585) or [vite here](https://github.com/developit/unfetch/pull/164#issuecomment-1778126508)
+
 The generated HTML will contain [Tailwind CSS](https://tailwindcss.com) classes.
 Optionally, [follow the Tailwind installation guide for NextJS projects](https://tailwindcss.com/docs/guides/nextjs)
 (Tailwind is preinstalled in [the API Platform distribution](../distribution/index.md))
