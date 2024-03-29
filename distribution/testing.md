@@ -200,12 +200,11 @@ use ApiPlatform\Symfony\Bundle\Test\ApiTestCase;
 use App\Entity\Book;
 use App\Factory\BookFactory;
 use Zenstruck\Foundry\Test\Factories;
-use Zenstruck\Foundry\Test\ResetDatabase;
 
 class BooksTest extends ApiTestCase
 {
     // This trait provided by Foundry will take care of refreshing the database content to a known state before each test
-    use ResetDatabase, Factories;
+    use Factories;
 
     public function testGetCollection(): void
     {
@@ -334,11 +333,6 @@ publicationDate: This value should not be null.',
     }
 }
 ```
-
-As you can see, the example uses the [trait `ResetDatabase`](https://symfony.com/bundles/ZenstruckFoundryBundle/current/index.html#database-reset)
-from [Foundry](https://github.com/zenstruck/foundry) which will, at the beginning of each
-test, purge the database, begin a transaction, and, at the end of each test, roll back the
-transaction previously begun. Because of this, you can run your tests without worrying about fixtures.
 
 There is one caveat though: in some tests, it is necessary to perform multiple requests in one test, for example when creating a user via the API and checking that a subsequent login using the same password works. However, the client will by default reboot the kernel, which will reset the database. You can prevent this by adding `$client->disableReboot();` to such tests.
 
