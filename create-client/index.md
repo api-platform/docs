@@ -36,3 +36,18 @@ Create Client works especially well with APIs built with the [API Platform](http
 - Integration with [Tailwind CSS](https://tailwindcss.com) (NextJS) or [Bootstrap](https://getbootstrap.com/) and [FontAwesome](https://fontawesome.com/) (other generators)
 - Integration with [React Native Elements](https://react-native-training.github.io/react-native-elements/)
 - Accessible to people with disabilities ([ARIA](https://www.w3.org/WAI/intro/aria) support in webapps)
+
+## Security
+
+If you use a securised api like described in the [JWT section](https://api-platform.com/docs/core/jwt/) you will have to allow a public access to "/contexts" path.
+
+```yaml
+# api/config/packages/security.yaml
+security:
+    # Easy way to control access for large sections of your site
+    # Note: Only the *first* access control that matches will be used
+    access_control:
+        - { path: ^/contexts, roles: PUBLIC_ACCESS }
+```
+
+
