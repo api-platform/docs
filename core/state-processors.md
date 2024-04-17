@@ -101,7 +101,7 @@ final class UserProcessor implements ProcessorInterface
         private ProcessorInterface $persistProcessor,
         #[Autowire(service: 'api_platform.doctrine.orm.state.remove_processor')]
         private ProcessorInterface $removeProcessor,
-        MailerInterface $mailer,
+        private MailerInterface $mailer,
     )
     {
     }
