@@ -153,7 +153,7 @@ use Symfony\Component\DependencyInjection\Attribute\Autowire;
 final class BookRepresentationProvider implements ProviderInterface
 {
     public function __construct(
-        #[Autowire('api_platform.doctrine.orm.state.item_provider')]
+        #[Autowire(service: 'api_platform.doctrine.orm.state.item_provider')]
         private ProviderInterface $itemProvider,
     )
     {
