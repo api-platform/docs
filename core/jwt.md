@@ -64,8 +64,6 @@ security:
     password_hashers:
         App\Entity\User: 'auto'
 
-    # https://symfony.com/doc/current/security/authenticator_manager.html
-    enable_authenticator_manager: true
     # https://symfony.com/doc/current/security.html#where-do-users-come-from-user-providers
     providers:
         # used to reload user from session & other features (e.g. switch_user)
