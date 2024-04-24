@@ -225,6 +225,8 @@ commandArgs: ['messenger:consume', 'async', '--memory-limit=100M']
 
 The `readinessProbe` and the `livenessProble` can not use the default `docker-healthcheck` but should test if the command is running.
 
+If you are using the FrankenPHP image make sure to install the `/bin/ps` binary (just add `procps` in the `apt-get install script`), otherwise the `readinessProbe` and `livenessProbe` will fail.
+
 ```yaml
 readinessProbe:
     exec:
