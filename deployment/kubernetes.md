@@ -225,7 +225,7 @@ commandArgs: ['messenger:consume', 'async', '--memory-limit=100M']
 
 The `readinessProbe` and the `livenessProble` can not use the default `docker-healthcheck` but should test if the command is running.
 
-Finally, make sure to install the `/bin/ps` binary), otherwise the `readinessProbe` and `livenessProbe` will fail:
+Finally, make sure to install the `/bin/ps` binary, otherwise the `readinessProbe` and `livenessProbe` will fail:
 
 ```patch
 # api/Dockerfile
