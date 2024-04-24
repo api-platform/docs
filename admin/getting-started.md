@@ -18,7 +18,7 @@ Finally, install the `@api-platform/admin` library:
 
     $ yarn add @api-platform/admin
 
-## Creating the Admin
+## Creating the Admin (React)
 
 To initialize API Platform Admin, register it in your application.
 For instance, if you used Create React App, replace the content of `src/App.js` by:
@@ -64,3 +64,36 @@ Clear the cache to apply this change:
 Your new administration interface is ready! Type `yarn start` to try it!
 
 Note: if you don't want to hardcode the API URL, you can [use an environment variable](https://create-react-app.dev/docs/adding-custom-environment-variables).
+
+## Creating the Admin (React) and customize it with Twig
+
+You can install the admin component with Composer by using:
+
+    $ composer require api-admin
+    
+You also need to install the JavaScript libraries: 
+
+    $ yarn add react react-dom @babel/preset-react
+    
+Don't forget to uncomment the following lines in your `webpack.config.js` file:
+
+```javascript
+.enableReactPreset()
+.addEntry('admin', './assets/js/admin.js')
+```
+
+If you try to access to your `/admin` route, the new admin will show.
+You can customize the render in `templates/admin.html.twig`. 
+The file contains actually this : 
+```twig
+{% extends 'base.html.twig' %}
+
+{% block title %}API Platform Admin{% endblock %}
+
+{% block body %}<div id="api-platform-admin"></div>{% endblock %}
+
+{% block javascripts %}
+    <script type="text/plain" id="api-entrypoint">{{ path('api_entrypoint') }}</script>
+    {{ encore_entry_script_tags('admin') }}
+{% endblock %}
+```
