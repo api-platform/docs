@@ -19,7 +19,7 @@ For instance, when you create your own Symfony controllers serving HTML pages,
 or when using bundles such as EasyAdmin or SonataAdmin.
 
 To do so, you have to tweak the rules used to route the requests.
-Open `api-platform/api/docker/caddy/Caddyfile` and modify the expression.
+Open `api-platform/api/frankenphp/Caddyfile` and modify the expression.
 You can use [any CEL (Common Expression Language) expression](https://caddyserver.com/docs/caddyfile/matchers#expression) supported by Caddy.
 
 For instance, if you want to route all requests to a path starting with `/admin` to the API, modify the existing expression like this:

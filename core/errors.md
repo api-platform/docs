@@ -25,7 +25,7 @@ This can also be configured on an `ApiResource` or in an `HttpOperation`, for ex
 
 ## Exception status code decision
 
-There are many ways of configuring the exception status code we recommend reading the guides on how to use an [Error Provider](/docs/guides/error-provider) or create an [Error Resource](/docs/guides/error-resource).
+There are many ways of configuring the exception status code we recommend reading the guides on how to use an [Error Provider](https://api-platform.com/docs/guides/error-provider/) or create an [Error Resource](https://api-platform.com/docs/guides/error-resource/).
 
 1. we look at `exception_to_status` and take one if there's a match
 2. If your exception is a `Symfony\Component\HttpKernel\Exception\HttpExceptionInterface` we get its status.

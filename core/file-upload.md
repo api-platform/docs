@@ -169,43 +169,53 @@ A [normalizer](serialization.md#normalization) could be used to set the `content
 
 ```php
 <?php
-// api/src/Serializer/MediaObjectNormalizer.php
 
 namespace App\Serializer;
 
 use App\Entity\MediaObject;
-use Symfony\Component\Serializer\Normalizer\NormalizerAwareInterface;
-use Symfony\Component\Serializer\Normalizer\NormalizerAwareTrait;
 use Vich\UploaderBundle\Storage\StorageInterface;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
+use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
-final class MediaObjectNormalizer implements NormalizerAwareInterface
+class MediaObjectNormalizer implements NormalizerInterface
 {
-    use NormalizerAwareTrait;
 
-    private const ALREADY_CALLED = 'MEDIA_OBJECT_NORMALIZER_ALREADY_CALLED';
+  private const ALREADY_CALLED = 'MEDIA_OBJECT_NORMALIZER_ALREADY_CALLED';
 
-    public function __construct(private StorageInterface $storage)
-    {
+  public function __construct(
+    #[Autowire(service: 'serializer.normalizer.object')]
+    private readonly NormalizerInterface $normalizer,
+    private readonly StorageInterface $storage
+  ) {
+  }
+
+  public function normalize($object, ?string $format = null, array $context = []): array|string|int|float|bool|\ArrayObject|null
+  {
+    $context[self::ALREADY_CALLED] = true;
+
+    $object->contentUrl = $this->storage->resolveUri($object, 'file');
+
+    return $this->normalizer->normalize($object, $format, $context);
+  }
+
+  public function supportsNormalization($data, ?string $format = null, array $context = []): bool
+  {
+
+    if (isset($context[self::ALREADY_CALLED])) {
+      return false;
     }
 
-    public function normalize($object, ?string $format = null, array $context = []): array|string|int|float|bool|\ArrayObject|null
-    {
-        $context[self::ALREADY_CALLED] = true;
+    return $data instanceof MediaObject;
+  }
 
-        $object->contentUrl = $this->storage->resolveUri($object, 'file');
-
-        return $this->normalizer->normalize($object, $format, $context);
-    }
-
-    public function supportsNormalization($data, ?string $format = null, array $context = []): bool
-    {
-        if (isset($context[self::ALREADY_CALLED])) {
-            return false;
-        }
-
-        return $data instanceof MediaObject;
-    }
+  public function getSupportedTypes(?string $format): array
+  {
+    return [
+      MediaObject::class => true,
+    ];
+  }
 }
+
 ```
 
 ### Making a Request to the `/media_objects` Endpoint
@@ -234,8 +244,8 @@ You will need to modify your `Caddyfile` to allow the above `contentUrl` to be a
 	@pwa expression `(
 			header({'Accept': '*text/html*'})
 			&& !path(
--				'/docs*', '/graphql*', '/bundles*', '/media*', '/contexts*', '/_profiler*', '/_wdt*',
-+				'/media*', '/docs*', '/graphql*', '/bundles*', '/media*', '/contexts*', '/_profiler*', '/_wdt*',
+-				'/docs*', '/graphql*', '/bundles*', '/contexts*', '/_profiler*', '/_wdt*',
++				'/media*', '/docs*', '/graphql*', '/bundles*', '/contexts*', '/_profiler*', '/_wdt*',
 				'*.json*', '*.html', '*.csv', '*.yml', '*.yaml', '*.xml'
 			)
 		)
@@ -313,25 +323,26 @@ class MediaObjectTest extends ApiTestCase
 
     public function testCreateAMediaObject(): void
     {
-        $file = new UploadedFile('fixtures/files/image.png', 'image.png');
+        // The file "image.jpg" is the folder fixtures which is in the project dir
+        $file = new UploadedFile(__DIR__ . '/../fixtures/image.jpg', 'image.jpg');
         $client = self::createClient();
 
-        $client->request('POST', '/media_objects', [
-            'headers' => ['Content-Type' => 'multipart/form-data'],
-            'extra' => [
-                // If you have additional fields in your MediaObject entity, use the parameters.
-                'parameters' => [
-                    'title' => 'My file uploaded',
-                ],
-                'files' => [
-                    'file' => $file,
-                ],
-            ]
+        $client->request('POST', 'http://localhost:8888/api/media_objects', [
+          'headers' => ['Content-Type' => 'multipart/form-data'],
+          'extra' => [
+            // If you have additional fields in your MediaObject entity, use the parameters.
+            'parameters' => [
+                // 'title' => 'title'
+            ],
+            'files' => [
+              'file' => $file,
+            ],
+          ]
         ]);
         $this->assertResponseIsSuccessful();
         $this->assertMatchesResourceItemJsonSchema(MediaObject::class);
         $this->assertJsonContains([
-            'title' => 'My file uploaded',
+            // 'title' => 'My file uploaded',
         ]);
     }
 }
@@ -451,19 +462,28 @@ We also need to make sure the field containing the uploaded file is not denormal
 
 namespace App\Serializer;
 
-use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 
 final class UploadedFileDenormalizer implements DenormalizerInterface
 {
-    public function denormalize($data, string $type, string $format = null, array $context = []): UploadedFile
+    public function denormalize($data, string $type, string $format = null, array $context = []): File
     {
         return $data;
     }
 
-    public function supportsDenormalization($data, $type, $format = null): bool
+    public function supportsDenormalization($data, $type, $format = null, array $context = []): bool
     {
-        return $data instanceof UploadedFile;
+        return $data instanceof File;
+    }
+
+    public function getSupportedTypes(?string $format): array
+    {
+        return [
+            'object' => null,
+            '*' => false,
+            File::class => true,
+        ];
     }
 }
 ```

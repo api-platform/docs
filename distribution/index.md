@@ -201,7 +201,7 @@ You'll need to add a security exception in your browser to accept the self-signe
 for this container when installing the framework.
 
 Later you will probably replace this welcome screen by the homepage of your Next.js application. If you don't plan to create
-a Progressive Web App, you can remove the `pwa/` directory as well as the related lines in `docker-compose*.yml` and in `api/docker/caddy/Caddyfile` (don't do it
+a Progressive Web App, you can remove the `pwa/` directory as well as the related lines in `docker-compose*.yml` and in `api/frankenphp/Caddyfile` (don't do it
 now, we'll use this container later in this tutorial).
 
 Click on the "API" button, or go to `https://localhost/docs/`:

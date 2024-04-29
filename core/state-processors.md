@@ -41,15 +41,21 @@ use App\Entity\BlogPost;
 use ApiPlatform\Metadata\Operation;
 use ApiPlatform\State\ProcessorInterface;
 
-class BlogPostProcessor implements ProcessorInterface
+/**
+ * @implements ProcessorInterface<BlogPost, BlogPost|void>
+ */
+final class BlogPostProcessor implements ProcessorInterface
 {
-    public function process($data, Operation $operation, array $uriVariables = [], array $context = [])
+    public function process(mixed $data, Operation $operation, array $uriVariables = [], array $context = []): BlogPost|void
     {
         // call your persistence layer to save $data
         return $data;
     }
 }
 ```
+
+The `process()` method must return the created or modified object, or nothing (that's why `void` is allowed) for `DELETE` operations.
+The `process()` method can also take an object as input, in the `$data` parameter, that isn't of the same type that its output (the returned object). See [the DTO documentation entry](dto.md) for more details.
 
 We then configure our operation to use this processor:
 
@@ -66,32 +72,15 @@ use App\State\BlogPostProcessor;
 class BlogPost {}
 ```
 
-If service autowiring and autoconfiguration are enabled (they are by default), you are done!
-
-Otherwise, if you use a custom dependency injection configuration, you need to register the corresponding service and add the
-`api_platform.state_processor` tag.
-
-```yaml
-# api/config/services.yaml
-
-services:
-    # ...
-    App\State\BlogPostProcessor: ~
-        # Uncomment only if autoconfiguration is disabled
-        #tags: [ 'api_platform.state_processor' ]
-```
-
 ## Hooking into the Built-In State Processors
 
-If you want to execute custom business logic before or after persistence, this can be achieved by [decorating](https://symfony.com/doc/current/service_container/service_decoration.html) the built-in state processors or using [composition](https://en.wikipedia.org/wiki/Object_composition).
+If you want to execute custom business logic before or after persistence, this can be achieved by using [composition](https://en.wikipedia.org/wiki/Object_composition).
 
-The next example uses [Symfony Mailer](https://symfony.com/doc/current/mailer.html). Read its documentation if you want to use it.
-
-Here is an implementation example which sends new users a welcome email after a REST `POST` or GraphQL `create` operation, in a project using the native Doctrine ORM state processor:
+Here is an implementation example which uses [Symfony Mailer](https://symfony.com/doc/current/mailer.html) to send new users a welcome email after a REST `POST` or GraphQL `create` operation, in a project using the native Doctrine ORM state processor:
 
 ```php
 <?php
-// api/src/Sate/UserProcessor.php
+// api/src/State/UserProcessor.php
 
 namespace App\State;
 
@@ -99,15 +88,25 @@ use ApiPlatform\Metadata\DeleteOperationInterface;
 use ApiPlatform\Metadata\Operation;
 use ApiPlatform\State\ProcessorInterface;
 use App\Entity\User;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\Mailer\MailerInterface;
 
+/**
+ * @implements ProcessorInterface<User, User|void>
+ */
 final class UserProcessor implements ProcessorInterface
 {
-    public function __construct(private ProcessorInterface $persistProcessor, private ProcessorInterface $removeProcessor, MailerInterface $mailer)
+    public function __construct(
+        #[Autowire(service: 'api_platform.doctrine.orm.state.persist_processor')]
+        private ProcessorInterface $persistProcessor,
+        #[Autowire(service: 'api_platform.doctrine.orm.state.remove_processor')]
+        private ProcessorInterface $removeProcessor,
+        private MailerInterface $mailer,
+    )
     {
     }
 
-    public function process($data, Operation $operation, array $uriVariables = [], array $context = [])
+    public function process(mixed $data, Operation $operation, array $uriVariables = [], array $context = []): User|void
     {
         if ($operation instanceof DeleteOperationInterface) {
             return $this->removeProcessor->process($data, $operation, $uriVariables, $context);
@@ -115,10 +114,11 @@ final class UserProcessor implements ProcessorInterface
     
         $result = $this->persistProcessor->process($data, $operation, $uriVariables, $context);
         $this->sendWelcomeEmail($data);
+
         return $result;
     }
 
-    private function sendWelcomeEmail(User $user)
+    private function sendWelcomeEmail(User $user): void
     {
         // Your welcome email logic...
         // $this->mailer->send(...);
@@ -126,26 +126,11 @@ final class UserProcessor implements ProcessorInterface
 }
 ```
 
-Even with service autowiring and autoconfiguration enabled, you must still configure the decoration:
+The `Autowire` attribute is used to inject the built-in processor services registered by API Platform.
 
-```yaml
-# api/config/services.yaml
+If you're using Doctrine MongoDB ODM instead of Doctrine ORM, replace `orm` by `odm` in the name of the injected services.
 
-services:
-    # ...
-    App\State\UserProcessor:
-        bind:
-            $persistProcessor: '@api_platform.doctrine.orm.state.persist_processor'
-            $removeProcessor: '@api_platform.doctrine.orm.state.remove_processor'
-            # If you're using Doctrine MongoDB ODM, you can use the following code:
-            # $persistProcessor: '@api_platform.doctrine_mongodb.odm.state.persist_processor'
-            # $removeProcessor: '@api_platform.doctrine_mongodb.odm.state.remove_processor'
-        # Uncomment only if autoconfiguration is disabled
-        #arguments: ['@App\State\UserProcessor.inner']
-        #tags: [ 'api_platform.state_processor' ]
-```
-
-And configure that you want to use this processor on the User resource:
+Finally, configure that you want to use this processor on the User resource:
 
 ```php
 <?php
@@ -158,4 +143,28 @@ use App\State\UserProcessor;
 
 #[ApiResource(processor: UserProcessor::class)]
 class User {}
+```
+
+## Registering Services Without Autowiring
+
+The previous examples work because service autowiring and autoconfiguration are enabled by default in Symfony and API Platform.
+If you disabled this feature, you need to register the services by yourself and add the `api_platform.state_processor` tag.
+
+```yaml
+# api/config/services.yaml
+
+services:
+    # ...
+    App\State\BlogPostProcessor: ~
+        tags: [ 'api_platform.state_processor' ]
+
+    App\State\UserProcessor:
+        arguments:
+            $persistProcessor: '@api_platform.doctrine.orm.state.persist_processor'
+            $removeProcessor: '@api_platform.doctrine.orm.state.remove_processor'
+            # If you're using Doctrine MongoDB ODM, you can use the following code:
+            # $persistProcessor: '@api_platform.doctrine_mongodb.odm.state.persist_processor'
+            # $removeProcessor: '@api_platform.doctrine_mongodb.odm.state.remove_processor'
+            $mailer: '@mailer'
+        tags: [ 'api_platform.state_processor' ]
 ```
