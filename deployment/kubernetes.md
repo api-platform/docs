@@ -225,8 +225,29 @@ commandArgs: ['messenger:consume', 'async', '--memory-limit=100M']
 
 The `readinessProbe` and the `livenessProble` can not use the default `docker-healthcheck` but should test if the command is running.
 
+First, make sure to install the `/bin/ps` binary, otherwise the `readinessProbe` and `livenessProbe` will fail:
+
+<!-- markdownlint-disable no-hard-tabs -->
+
+```patch
+# api/Dockerfile
+
+RUN apt-get update && apt-get install --no-install-recommends -y \
++	procps \
+# ...
+```
+
+<!-- markdownlint-enable no-hard-tabs -->
+
+Then, update the probes:
+
 ```yaml
 readinessProbe:
+    exec:
+        command: ["/bin/sh", "-c", "/bin/ps -ef | grep messenger:consume | grep -v grep"]
+    initialDelaySeconds: 120
+    periodSeconds: 3
+livenessProbe:
     exec:
         command: ["/bin/sh", "-c", "/bin/ps -ef | grep messenger:consume | grep -v grep"]
     initialDelaySeconds: 120
