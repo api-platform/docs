@@ -2,12 +2,12 @@
 
 ## Enabling the Built-in HTTP Cache Invalidation System
 
-Exposing a hypermedia API has [many advantages](http://blog.theamazingrando.com/in-band-vs-out-of-band.html). One of them
+Exposing a hypermedia API has [many advantages](http://blog.theamazingrando.com/in-band-vs-out-of-band.html). One
 is the ability to know exactly which resources are included in HTTP responses created by the API. We used this specificity
 to make API Platform apps blazing fast.
 
 When the cache mechanism [is enabled](configuration.md), API Platform collects identifiers of every resource included in
-a given HTTP response (including lists, embedded documents and subresources) and returns them in a special HTTP header
+a given HTTP response (including lists, embedded documents, and subresources) and returns them in a special HTTP header
 called [Cache-Tags](https://support.cloudflare.com/hc/en-us/articles/206596608-How-to-Purge-Cache-Using-Cache-Tags-Enterprise-only-).
 
 A caching [reverse proxy](https://en.wikipedia.org/wiki/Reverse_proxy) supporting cache tags (e.g. Varnish, Cloudflare,
@@ -16,7 +16,7 @@ This means that after the first request, all subsequent requests will not hit th
 from the cache.
 
 When a resource is modified, API Platform takes care of purging all responses containing it in the proxy’s
-cache. This ensures that the content served will always be fresh, because the cache is purged in real time. Support for
+cache. This ensures that the content served will always be fresh because the cache is purged in real-time. Support for
 most specific cases such as the invalidation of collections when a document is added or removed or for relationships and
 inverse relations is built-in.
 
@@ -24,9 +24,9 @@ inverse relations is built-in.
 
 #### Built-in Caddy HTTP cache
 
-The API Platform distribution relies on the [Caddy web server](https://caddyserver.com) which provide an official HTTP cache module called [cache-handler](https://github.com/caddyserver/cache-handler), that is based on [Souin](https://github.com/darkweak/souin).
+The API Platform distribution relies on the [Caddy web server](https://caddyserver.com) which provides an official HTTP cache module called [cache-handler](https://github.com/caddyserver/cache-handler), that is based on [Souin](https://github.com/darkweak/souin).
 
-The integration using the cache-handler is quite simple. You juste have to update the `api/Dockerfile` to build your caddy instance with the HTTP cache
+The integration using the cache handler is quite simple. You just have to update the `api/Dockerfile` to build your caddy instance with the HTTP cache
 
 ```diff
 # Versions
@@ -61,7 +61,7 @@ Update your Caddyfile with the following configuration:
     }
 }
 ```
-This will tell to caddy to use the HTTP cache and activate the tag based invalidation API. You can refer to the [cache-handler documentation](https://github.com/caddyserver/cache-handler) or the [souin website documentation](https://docs.souin.io) to learn how to configure the HTTP cache server.
+This will tell to caddy to use the HTTP cache and activate the tag-based invalidation API. You can refer to the [cache-handler documentation](https://github.com/caddyserver/cache-handler) or the [souin website documentation](https://docs.souin.io) to learn how to configure the HTTP cache server.
 
 Setup the HTTP cache invalidation in your API Platform project
 ```yaml
@@ -96,6 +96,7 @@ api_platform:
 ```
 
 ## Configuration
+
 Support for reverse proxies other than Varnish or Caddy with the HTTP cache module can be added by implementing the `ApiPlatform\HttpCache\PurgerInterface`.
 Three purgers are available, the built-in caddy http cache purger (`api_platform.http_cache.purger.souin`), the http tags (`api_platform.http_cache.purger.varnish.ban`), the surrogate key implementation
 (`api_platform.http_cache.purger.varnish.xkey`). You can specify the implementation using the `purger` configuration node,
@@ -411,7 +412,7 @@ More details are available on the [pagination documentation](pagination.md#parti
 
 Blackfire.io allows you to monitor the performance of your applications. For more information, visit the [Blackfire.io website](https://blackfire.io/).
 
-To configure Blackfire.io follow these simple steps:
+To configure Blackfire.io follow these steps:
 
 1. Add the following to your `compose.override.yaml` file:
 
@@ -444,12 +445,14 @@ export BLACKFIRE_SERVER_TOKEN=xxxxxxxxxx
 3. Install and configure the Blackfire probe in the app container, by adding the following to your `./Dockerfile`:
 
 ```dockerfile
-        RUN version=$(php -r "echo PHP_MAJOR_VERSION.PHP_MINOR_VERSION;") \
-            && curl -A "Docker" -o /tmp/blackfire-probe.tar.gz -D - -L -s https://blackfire.io/api/v1/releases/probe/php/alpine/amd64/$version \
+        RUN version=$(php -r "echo PHP_MAJOR_VERSION.PHP_MINOR_VERSION.(PHP_ZTS ? '-zts' : '');") \
+            && architecture=$(uname -m) \
+            && curl -A "Docker" -o /tmp/blackfire-probe.tar.gz -D - -L -s https://blackfire.io/api/v1/releases/probe/php/linux/$architecture/$version \
             && mkdir -p /tmp/blackfire \
-            && tar zxpf /tmp/blackfire-probe.tar.gz -C /tmp/blackfire \                        
-            && mv /tmp/blackfire/blackfire-*.so $(php -r "echo ini_get('extension_dir');")/blackfire.so \
-            && printf "extension=blackfire.so\nblackfire.agent_socket=tcp://blackfire:8307\n" > $PHP_INI_DIR/conf.d/blackfire.ini
+            && tar zxpf /tmp/blackfire-probe.tar.gz -C /tmp/blackfire \
+            && mv /tmp/blackfire/blackfire-*.so $(php -r "echo ini_get ('extension_dir');")/blackfire.so \
+            && printf "extension=blackfire.so\nblackfire.agent_socket=tcp://blackfire:8307\n" > $PHP_INI_DIR/conf.d/blackfire.ini \
+            && rm -rf /tmp/blackfire /tmp/blackfire-probe.tar.gz
 ```
 
 4. Rebuild and restart all your containers
