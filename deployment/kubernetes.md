@@ -227,6 +227,8 @@ The `readinessProbe` and the `livenessProble` can not use the default `docker-he
 
 First, make sure to install the `/bin/ps` binary, otherwise the `readinessProbe` and `livenessProbe` will fail:
 
+<!-- markdownlint-disable no-hard-tabs -->
+
 ```patch
 # api/Dockerfile
 
@@ -234,6 +236,8 @@ RUN apt-get update && apt-get install --no-install-recommends -y \
 +	procps \
 # ...
 ```
+
+<!-- markdownlint-enable no-hard-tabs -->
 
 Then, update the probes:
 
