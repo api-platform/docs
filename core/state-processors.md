@@ -46,7 +46,10 @@ use ApiPlatform\State\ProcessorInterface;
  */
 final class BlogPostProcessor implements ProcessorInterface
 {
-    public function process(mixed $data, Operation $operation, array $uriVariables = [], array $context = []): BlogPost|void
+    /**
+     * @return BlogPost|void
+     */
+    public function process(mixed $data, Operation $operation, array $uriVariables = [], array $context = []): mixed
     {
         // call your persistence layer to save $data
         return $data;
@@ -106,7 +109,10 @@ final class UserProcessor implements ProcessorInterface
     {
     }
 
-    public function process(mixed $data, Operation $operation, array $uriVariables = [], array $context = []): User|void
+    /**
+     * @return User|void
+     */
+    public function process(mixed $data, Operation $operation, array $uriVariables = [], array $context = []): mixed
     {
         if ($operation instanceof DeleteOperationInterface) {
             return $this->removeProcessor->process($data, $operation, $uriVariables, $context);
