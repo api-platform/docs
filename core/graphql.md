@@ -2516,7 +2516,7 @@ final class DateTimeType extends ScalarType implements TypeInterface
 }
 ```
 
-You can also check the documentation of [graphql-php](https://webonyx.github.io/graphql-php/type-system/scalar-types/#writing-custom-scalar-types).
+You can also check the documentation of [graphql-php](https://webonyx.github.io/graphql-php/type-definitions/scalars/#writing-custom-scalar-types).
 
 The big difference in API Platform is that the value is already serialized when it's received in your type class.
 Similarly, you would not want to denormalize your parsed value since it will be done by API Platform later.
