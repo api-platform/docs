@@ -68,6 +68,7 @@ Let's create a `Provider` for the `Person` entity:
 namespace App\State;
 
 use App\Entity\Person;
+use ApiPlatform\Metadata\Operation;
 use ApiPlatform\State\ProviderInterface;
 use App\Uuid;
 
