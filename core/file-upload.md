@@ -79,6 +79,7 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
         new Get(),
         new GetCollection(),
         new Post(
+            inputFormats: ['multipart' => ['multipart/form-data']],
             controller: CreateMediaObjectAction::class, 
             deserialize: false, 
             validationContext: ['groups' => ['Default', 'media_object_create']], 
@@ -124,6 +125,7 @@ class MediaObject
     }
 }
 ```
+Note: From V3.3 onwards, `'multipart/form-data'` must either be including in the global API-Platform config, either in `formats` or `defaults->inputFormats`, or defined as an `inputFormats` parameter on an operation by operation basis.
 
 ### Creating the Controller
 
