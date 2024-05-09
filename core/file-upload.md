@@ -166,8 +166,8 @@ use Vich\UploaderBundle\Storage\StorageInterface;
 final class SaveMediaObject implements ProcessorInterface
 {
     public function __construct(
-        #[Autowire('@api_platform.doctrine.orm.state.persist_processor')] private readonly ProcessorInterface $processor,
-        private readonly StorageInterface $storage
+        #[Autowire('@api_platform.doctrine.orm.state.persist_processor')]
+        private readonly ProcessorInterface $processor
     ) {}
 
     public function process(mixed $data, Operation $operation, array $uriVariables = [], array $context = [])
