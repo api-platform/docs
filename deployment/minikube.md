@@ -51,3 +51,22 @@ $ helm install my-project helm/api-platform \
 Copy and paste the commands displayed in the terminal to enable the port forwarding then go to `http://localhost:8080` to access your application!
 
 Run `minikube dashboard` at any moment to see the state of your deployments.
+
+## Using Skaffold
+
+Skaffold is a tool for Kubernetes development: [https://skaffold.dev/](https://skaffold.dev/).
+
+It will build and deploy automatically your app in Kubernetes and apply every changes. The default configuration use minikube and helm. More configurations are available in Skaffold documentation.
+
+First, install the [skaffold CLI](https://skaffold.dev/docs/install/#standalone-binary).
+
+Then, run minikube:
+
+    minikube start
+
+Add Skaffold configuration in the file `./helm/skaffold.yaml`. You can find a [complete configuration file for minikube](https://github.com/api-platform/api-platform/blob/main/helm/skaffold.yaml) with its [Helm values override](https://github.com/api-platform/api-platform/blob/main/helm/skaffold-values.yaml).
+
+Finally, go to the helm folder, and run skaffold in dev mode:
+
+    cd ./helm
+    skaffold dev
