@@ -1852,3 +1852,31 @@ class SearchFilterParameter
     }
 }
 ```
+
+### Parameter validation
+
+Parameter validation is automatic based on the configuration for example:
+
+```php
+<?php
+use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\QueryParameter;
+
+#[GetCollection(
+    uriTemplate: 'validate_parameters{._format}',
+    parameters: [
+        'enum' => new QueryParameter(schema: ['enum' => ['a', 'b'], 'uniqueItems' => true]),
+        'num' => new QueryParameter(schema: ['minimum' => 1, 'maximum' => 3]),
+        'exclusiveNum' => new QueryParameter(schema: ['exclusiveMinimum' => 1, 'exclusiveMaximum' => 3]),
+        'blank' => new QueryParameter(openApi: new OpenApiParameter(name: 'blank', in: 'query', allowEmptyValue: false)),
+        'length' => new QueryParameter(schema: ['maxLength' => 1, 'minLength' => 3]),
+        'array' => new QueryParameter(schema: ['minItems' => 2, 'maxItems' => 3]),
+        'multipleOf' => new QueryParameter(schema: ['multipleOf' => 2]),
+        'pattern' => new QueryParameter(schema: ['pattern' => '/\d/']),
+        'required' => new QueryParameter(required: true),
+    ],
+)]
+class ValidateParameter {}
+``` 
+
+You can also use your own constraint by setting the `constraints` option on a Parameter. In that case we won't setup the automatic validation for you and it'll replace our defaults.
