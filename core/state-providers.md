@@ -146,6 +146,7 @@ use App\Model\Book;
 use ApiPlatform\Metadata\Operation;
 use ApiPlatform\State\ProviderInterface;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
+use Symfony\Component\HttpFoundation\JsonResponse;
 
 /**
  * @implements ProviderInterface<AnotherRepresentation>
@@ -159,14 +160,16 @@ final class BookRepresentationProvider implements ProviderInterface
     {
     }
     
-    public function provide(Operation $operation, array $uriVariables = [], array $context = []): AnotherRepresentation
+    public function provide(Operation $operation, array $uriVariables = [], array $context = []): JsonResponse
     {
         $book = $this->itemProvider->provide($operation, $uriVariables, $context);
         
-        return new AnotherRepresentation(
+        $bookDto = new AnotherRepresentation(
             // Add DTO constructor params here.
             // $book->getTitle(),
         );
+
+        return new JsonResponse($bookDto);
     }
 }
 ```
