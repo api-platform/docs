@@ -142,7 +142,7 @@ A [normalizer](serialization.md#normalization) could be used to set the `content
 
 ```php
 <?php
-/api/src/Serializer/MediaObjectNormalizer.php
+// api/src/Serializer/MediaObjectNormalizer.php
 
 namespace App\Serializer;
 
