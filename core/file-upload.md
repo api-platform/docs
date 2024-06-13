@@ -11,14 +11,7 @@ before proceeding. It will help you get a grasp on how the bundle works, and why
 **Note**: Uploading files won't work in `PUT` or `PATCH` requests, you must use `POST` method to upload files.
 See [the related issue on Symfony](https://github.com/symfony/symfony/issues/9226) and [the related bug in PHP](https://bugs.php.net/bug.php?id=55815) talking about this behavior.
 
-Previously to API Platform 3.3, file upload was using controllers that needs: 
-
-```yaml
-api_platform:
-    use_symfony_listeners: true
-```
-
-Since 3.3, we recommend to use a Processor, note that you need to enable the multipart format globally: 
+Note that you need to enable the multipart format globally in order to use it as the input format in the resource: 
 
 ```yaml
 api_platform:
@@ -61,9 +54,6 @@ In this example, we will create a `MediaObject` API resource. We will post files
 to this resource endpoint, and then link the newly created resource to another
 resource (in our case: `Book`).
 
-This example will use a custom controller to receive the file.
-The second example will use a custom `multipart/form-data` decoder to deserialize the resource instead.
-
 ### Configuring the Resource Receiving the Uploaded File
 
 The `MediaObject` resource is implemented like this:
@@ -98,9 +88,6 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
         new GetCollection(),
         new Post(
             inputFormats: ['multipart' => ['multipart/form-data']],
-            processor: SaveMediaObject::class,
-            deserialize: false, 
-            validationContext: ['groups' => ['Default', 'media_object_create']], 
             openapi: new Model\Operation(
                 requestBody: new Model\RequestBody(
                     content: new \ArrayObject([
@@ -126,14 +113,15 @@ class MediaObject
     #[ORM\Id, ORM\Column, ORM\GeneratedValue]
     private ?int $id = null;
 
-    #[ApiProperty(types: ['https://schema.org/contentUrl'])]
+    #[ApiProperty(types: ['https://schema.org/contentUrl'], writable: false)]
     #[Groups(['media_object:read'])]
     public ?string $contentUrl = null;
 
     #[Vich\UploadableField(mapping: 'media_object', fileNameProperty: 'filePath')]
-    #[Assert\NotNull(groups: ['media_object_create'])]
+    #[Assert\NotNull]
     public ?File $file = null;
 
+    #[ApiProperty(writable: false)]
     #[ORM\Column(nullable: true)] 
     public ?string $filePath = null;
 
@@ -145,45 +133,6 @@ class MediaObject
 ```
 Note: From V3.3 onwards, `'multipart/form-data'` must either be including in the global API-Platform config, either in `formats` or `defaults->inputFormats`, or defined as an `inputFormats` parameter on an operation by operation basis.
 
-### Creating the Processor
-
-At this point, the entity is configured, but we still need to write the processor
-that handles the file upload.
-
-```php
-<?php
-// api/src/State/SaveMediaObject.php
-
-namespace App\State;
-
-use ApiPlatform\Metadata\Operation;
-use ApiPlatform\State\ProcessorInterface;
-use App\Entity\MediaObject;
-use Symfony\Component\DependencyInjection\Attribute\Autowire;
-use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
-use Vich\UploaderBundle\Storage\StorageInterface;
-
-final class SaveMediaObject implements ProcessorInterface
-{
-    public function __construct(
-        #[Autowire('@api_platform.doctrine.orm.state.persist_processor')]
-        private readonly ProcessorInterface $processor
-    ) {}
-
-    public function process(mixed $data, Operation $operation, array $uriVariables = [], array $context = [])
-    {
-        $uploadedFile = $context['request']->files->get('file');
-        if (!$uploadedFile) {
-            throw new BadRequestHttpException('"file" is required');
-        }
-
-        $mediaObject = new MediaObject();
-        $mediaObject->file = $uploadedFile;
-        return $this->processor->process($mediaObject, $operation, $uriVariables, $context);
-    }
-}
-```
-
 ### Resolving the File URL
 
 Returning the plain file path on the filesystem where the file is stored is not useful for the client, which needs a
@@ -193,6 +142,7 @@ A [normalizer](serialization.md#normalization) could be used to set the `content
 
 ```php
 <?php
+/api/src/Serializer/MediaObjectNormalizer.php
 
 namespace App\Serializer;
 
