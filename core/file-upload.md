@@ -11,11 +11,10 @@ before proceeding. It will help you get a grasp on how the bundle works, and why
 **Note**: Uploading files won't work in `PUT` or `PATCH` requests, you must use `POST` method to upload files.
 See [the related issue on Symfony](https://github.com/symfony/symfony/issues/9226) and [the related bug in PHP](https://bugs.php.net/bug.php?id=55815) talking about this behavior.
 
-Note that you need to enable the multipart format globally in order to use it as the input format in the resource: 
+Enable the multipart format globally in order to use it as the input format of your resource: 
 
 ```yaml
 api_platform:
-    use_symfony_listeners: false
     formats:
         multipart: ['multipart/form-data']
         jsonld: ['application/ld+json']
