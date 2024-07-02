@@ -244,12 +244,12 @@ Then, update the probes:
 ```yaml
 readinessProbe:
     exec:
-        command: ["/bin/sh", "-c", "/bin/ps -ef | grep messenger:consume | grep -v grep"]
+        command: ["/bin/sh", "-c", "/usr/bin/pgrep -af '^php.*bin/console.*messenger:consume'"]
     initialDelaySeconds: 120
     periodSeconds: 3
 livenessProbe:
     exec:
-        command: ["/bin/sh", "-c", "/bin/ps -ef | grep messenger:consume | grep -v grep"]
+        command: ["/bin/sh", "-c", "/usr/bin/pgrep -af '^php.*bin/console.*messenger:consume'"]
     initialDelaySeconds: 120
     periodSeconds: 3
 ```
