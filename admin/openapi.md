@@ -17,7 +17,7 @@ See the [dedicated part in the `api-doc-parser` library README](https://github.c
 
 ## Data Provider
 
-By default, the component will use a very basic data provider, without pagination support.
+By default, the component will use a basic data provider, without pagination support.
 
 If you want to use [another data provider](https://marmelab.com/react-admin/DataProviderList.html), pass the `dataProvider` prop to the component:
 
