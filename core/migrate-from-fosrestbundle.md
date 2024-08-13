@@ -3,7 +3,7 @@
 [FOSRestBundle](https://github.com/FriendsOfSymfony/FOSRestBundle) is a popular bundle to rapidly develop RESTful APIs with Symfony.
 This page provides a guide to help developers migrating from FOSRestBundle to API Platform.
 
-[On 21 September, 2021](https://twitter.com/lsmith/status/1440216817876627459), FOSRestBundle's creators recommended to use API Platform.
+[On 21 September 2021](https://twitter.com/lsmith/status/1440216817876627459), FOSRestBundle's creators recommended to use API Platform.
 
 ## Features Comparison
 
