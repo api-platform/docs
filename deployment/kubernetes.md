@@ -33,14 +33,13 @@ If you do not have gcloud yet, install it with these command.
 curl https://sdk.cloud.google.com | bash
 ```
 
-#### 1. Build the PHP and Caddy Docker images and tag them
+#### 1. Build the PHP and PWA Docker images and tag them
 
 Versioning: The 0.1.0 is the version. This value should be the same as the attribute `appVersion` in `Chart.yaml`.
 Infos for [Google Container pulling and pushing](https://cloud.google.com/container-registry/docs/pushing-and-pulling)
 
 ```console
-docker build -t gcr.io/test-api-platform/php:0.1.0 -t gcr.io/test-api-platform/php:latest api --target php_prod
-docker build -t gcr.io/test-api-platform/caddy:0.1.0 -t gcr.io/test-api-platform/caddy:latest api --target caddy_prod
+docker build -t gcr.io/test-api-platform/php:0.1.0 -t gcr.io/test-api-platform/php:latest api --target frankenphp_prod
 docker build -t gcr.io/test-api-platform/pwa:0.1.0 -t gcr.io/test-api-platform/pwa:latest pwa --target prod
 ```
 
@@ -55,7 +54,6 @@ docker build -t gcr.io/test-api-platform/pwa:0.1.0 -t gcr.io/test-api-platform/p
 ```console
 gcloud auth configure-docker
 docker push gcr.io/test-api-platform/php
-docker push gcr.io/test-api-platform/caddy
 docker push gcr.io/test-api-platform/pwa
 ```
 
@@ -63,14 +61,12 @@ Optional: push the version images:
 
 ```console
 docker push gcr.io/test-api-platform/php:0.1.0
-docker push gcr.io/test-api-platform/caddy:0.1.0
 docker push gcr.io/test-api-platform/pwa:0.1.0
 ```
 
 The result should look similar to these images.
 
 ![Example of Google Images - Overview](images/google-image-overview.png)
-![Example of Google Caddy Image - Details](images/google-image-caddy-details.png)
 
 ## Deploying with Helm 3
 
@@ -104,8 +100,6 @@ helm upgrade main ./helm/api-platform --namespace=default --create-namespace --w
     --install \
     --set "php.image.repository=gcr.io/test-api-platform/php" \
     --set php.image.tag=latest \
-    --set "caddy.image.repository=gcr.io/test-api-platform/caddy" \
-    --set caddy.image.tag=latest \
     --set "pwa.image.repository=gcr.io/test-api-platform/pwa" \
     --set pwa.image.tag=latest \
     --set php.appSecret='!ChangeMe!' \
@@ -180,8 +174,6 @@ kubectl --namespace=bar exec -it $PHP_POD -- bin/console doctrine:schema:create
 helm upgrade api-platform ./helm/api-platform --namespace=default \
     --set "php.image.repository=gcr.io/test-api-platform/php" \
     --set php.image.tag=latest \
-    --set "caddy.image.repository=gcr.io/test-api-platform/caddy" \
-    --set caddy.image.tag=latest \
     --set "pwa.image.repository=gcr.io/test-api-platform/pwa" \
     --set pwa.image.tag=latest \
     --set php.appSecret='!ChangeMe!' \
@@ -189,7 +181,6 @@ helm upgrade api-platform ./helm/api-platform --namespace=default \
     --set postgresql.persistence.enabled=true \
     --set "corsAllowOrigin=^https?://[a-z\]*\.mywebsite.com$" \
     --set php.image.pullPolicy=Always \
-    --set caddy.image.pullPolicy=Always \
     --set pwa.image.pullPolicy=Always
 ```
 
