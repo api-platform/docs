@@ -35,6 +35,9 @@ The integration using the cache handler is quite simple. You just have to update
 +FROM dunglas/frankenphp:latest-builder AS builder
 +COPY --from=caddy:builder /usr/bin/xcaddy /usr/bin/xcaddy
 +
++RUN apt-get update && apt-get install --no-install-recommends -y \
++    git
++
 +ENV CGO_ENABLED=1 XCADDY_SETCAP=1 XCADDY_GO_BUILD_FLAGS="-ldflags \"-w -s -extldflags '-Wl,-z,stack-size=0x80000'\""
 +RUN xcaddy build \
 +    --output /usr/local/bin/frankenphp \
@@ -42,8 +45,13 @@ The integration using the cache handler is quite simple. You just have to update
 +    --with github.com/dunglas/frankenphp/caddy=./caddy/ \
 +    --with github.com/dunglas/mercure/caddy \
 +    --with github.com/dunglas/vulcain/caddy \
-+    # Use --with github.com/darkweak/souin for the latest improvements
++    --with github.com/dunglas/caddy-cbrotli \
 +    --with github.com/caddyserver/cache-handler
++    # Or use the following lines instead of the cache-handler one for the latest improvements
++    # @65cb24114d76a7de3f4e8c7b8ef7df3efd028899 can be removed when a new release of `darkweak/souin` will be published
++    #--with github.com/darkweak/souin/plugins/caddy@65cb24114d76a7de3f4e8c7b8ef7df3efd028899 \
++    #--with github.com/darkweak/souin@65cb24114d76a7de3f4e8c7b8ef7df3efd028899 \
++    #--with github.com/darkweak/storages/otter/caddy
 +
 +FROM dunglas/frankenphp:latest AS frankenphp_upstream
 +COPY --from=builder --link /usr/local/bin/frankenphp /usr/local/bin/frankenphp
@@ -67,6 +75,8 @@ Setup the HTTP cache invalidation in your API Platform project
 ```yaml
 api_platform:
     http_cache:
+        # To make all responses public by default.
+        public: true
         invalidation:
             # We assume that your API can reach your caddy instance by the hostname http://caddy.
             # The endpoint /souin-api/souin is the default path to the invalidation API.
