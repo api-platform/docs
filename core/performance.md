@@ -243,12 +243,10 @@ Best performance is achieved using [APCu](https://github.com/krakjoe/apcu). Be s
 on your production server (this is the case by default in the Docker image provided by the API Platform distribution).
 API Platform will automatically use it.
 
-## Using PPM (PHP-PM)
+## Using FrankenPHP's Worker Mode
 
-Response time of the API can be improved up to 15x by using [PHP Process Manager](https://github.com/php-pm/php-pm). If
-you want to use it on your project, follow the documentation dedicated to Symfony on the PPM website.
-
-Keep in mind that PPM is still in an early stage of development and can cause issues in production.
+API response times can be significantly improved by enabling [FrankenPHP's worker mode](https://frankenphp.dev/docs/worker/).
+This feature is enabled by default in the production environment of the API Platform distribution.
 
 ## Doctrine Queries and Indexes
 
