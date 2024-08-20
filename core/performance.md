@@ -108,7 +108,6 @@ api_platform:
         invalidation:
             enabled: true
             varnish_urls: ['%env(VARNISH_URL)%']
-        public: true
     defaults:
         cache_headers:
             max_age: 0
