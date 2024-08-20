@@ -60,14 +60,11 @@ The integration using the cache handler is quite simple. You just have to update
 Update your Caddyfile with the following configuration:
 ```caddyfile
 {
-    order cache before rewrite
-    ...
-    cache {
-        api {
-            souin
-        }
-    }
+    cache
+    # ...
 }
+
+# ...
 ```
 This will tell to caddy to use the HTTP cache and activate the tag-based invalidation API. You can refer to the [cache-handler documentation](https://github.com/caddyserver/cache-handler) or the [souin website documentation](https://docs.souin.io) to learn how to configure the HTTP cache server.
 
