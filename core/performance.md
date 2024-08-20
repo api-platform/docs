@@ -72,8 +72,6 @@ Setup the HTTP cache invalidation in your API Platform project
 ```yaml
 api_platform:
     http_cache:
-        # To make all responses public by default.
-        public: true
         invalidation:
             # We assume that your API can reach your caddy instance by the hostname http://caddy.
             # The endpoint /souin-api/souin is the default path to the invalidation API.
