@@ -78,6 +78,22 @@ api_platform:
             urls: [ 'http://caddy/souin-api/souin' ]
             purger: api_platform.http_cache.purger.souin
 ```
+Don't forget to set your `Cache-Control` directive to enable caching on your `ApiResource`. This can be achieved using the `cacheHeaders` attributes:
+
+```php
+use ApiPlatform\Metadata\ApiResource;
+
+#[ApiResource(
+    cacheHeaders: [
+        'public' => true,
+        'max_age' => 60, 
+    ]
+)]
+class Book
+{
+    // ...
+}
+```
 And voilà, you have a fully working HTTP cache with it's own invalidation API.
 
 #### Varnish
