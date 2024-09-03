@@ -898,6 +898,65 @@ It means that the filter will be **silently** ignored if the property:
 * is not enabled
 * has an invalid value
 
+### Aliasing Properties for a given filter
+
+All filters extending 
+- ApiPlatform\Doctrine\Orm\Filter\AbstractFilter
+- ApiPlatform\Doctrine\Odm\Filter\AbstractFilter
+
+Can use property aliasing for the filtering operations.
+
+You can enable and configure this feature like so :
+
+<code-selector>
+
+```php
+<?php
+// api/src/Entity/Offer.php
+namespace App\Entity;
+
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\ApiFilter;
+use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
+
+#[ApiResource]
+#[ApiFilter(
+    SearchFilter::class, 
+    properties: ['product' => 'exact', 'some.relation.ean13' => 'exact'],
+    arguments: ['propertyAliases' => ['product' => 'item', 'some.relation.field' => 'ean13']])]
+class Offer
+{
+    // ...
+}
+```
+
+```yaml
+# config/services.yaml
+services:
+    offer.search_filter:
+        parent: 'api_platform.doctrine.orm.search_filter'
+        arguments: 
+          $properties: { product: 'exact' }
+          $propertyAliases: { 'product': 'item', 'some.relation.field': 'ean13' }
+        tags:  [ 'api_platform.filter' ]
+        # The following are mandatory only if a _defaults section is defined with inverted values.
+        # You may want to isolate filters in a dedicated file to avoid adding the following lines (by adding them in the defaults section)
+        autowire: false
+        autoconfigure: false
+        public: false
+
+# config/api/Offer.yaml
+App\Entity\Offer:
+    # ...
+    operations:
+        ApiPlatform\Metadata\GetCollection:
+            filters: ['offer.search_filter']
+```
+
+</code-selector>
+
+With this configuration you can use the syntax : `?item=my_item&ean13=1234567891234` in order to query your fields.
+
 ## Elasticsearch Filters
 
 ### Ordering Filter (Sorting)
