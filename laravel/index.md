@@ -20,8 +20,8 @@ With API Platform, you can:
 * push changed data to the clients in real-time using Laravel Broadcast and [Mercure](https://mercure.rocks) (a popular WebSockets alternative, created by Kévin Dunglas, the original author of API Platform) and receive them using Laravel Echo
 * benefits from the API Platform JavaScript tools: [admin](../admin/index.md) and [create client](../create-client/index.md) (supports Next/React, Nuxt/Vue.js, Quasar, Vuetify and more!)
 * benefits from native HTTP cache (with automatic invalidation)
-* boot your app with [Octane](https://laravel.com/docs/octane) and [FrankenPHP](https://frankenphp.dev) (the default Octane engine, also created by Kévin)
-* decouple your API from your models and implement patterns such as CQRS
+* boost your app with [Octane](https://laravel.com/docs/octane) and [FrankenPHP](https://frankenphp.dev) (the default Octane engine, also created by Kévin)
+* [decouple your API from your models](../core/state-providers.md) and implement patterns such as CQRS
 * test your API using convenient ad-hoc assertions that works with Pest and PHPUnit
 
 Let's discover how to use API Platform with Laravel!
@@ -394,6 +394,10 @@ For the rest of this tutorial, we'll assume that at least all default operations
 docs todo
 
 ## Gates and Policies
+
+docs todo
+
+## Test assertions
 
 docs todo
 
