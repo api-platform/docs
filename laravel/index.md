@@ -399,10 +399,10 @@ docs todo
 
 ## Using The `IsApiResourceTrait` Instead of Attributes
 
-Whille attributes (introduced in PHP 8) are the preferred way to configure your API Platform resources,
+While attributes (introduced in PHP 8) are the preferred way to configure your API Platform resources,
 it's also possible to use a trait instead.
 
-Both classes are strictly equivalent:
+These two classes are strictly equivalent:
 
 ```php
 // Attributes
@@ -432,7 +432,7 @@ class Book extends Model
 
 When using the `IsApiResourceTrait`, it's also possible to return advanced configuration by definining an `apiResource()` static method.
 
-Both classes are strictly equivalent:
+These two classes are strictly equivalent:
 
 ```php
 // Attributes
@@ -480,8 +480,7 @@ class Book extends Model
 It's quite common to define multiple `ApiResource`, `ApiProperty` and `Filter` attributes on a same class.
 To mimick this behavior, the `apiResource()` function can return an array instead of a single instance of medata class.
 
-Both classes are strictly equivalent:
-
+These two classes are strictly equivalent:
 
 ```php
 // Attributes
