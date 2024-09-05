@@ -3,6 +3,8 @@
 API Platform is **the easiest way** to create **state of the art** web APIs
 using Laravel!
 
+![Basic REST API](images/basic-rest.png)
+
 With API Platform, you can:
 
 * expose your Eloquent models in minutes as:
@@ -15,16 +17,16 @@ With API Platform, you can:
 * add validation logic using Laravel logic
 * add authorization logic using gates and policies (compatible with Passport and Sanctum)
 * add filtering logic
-* push changed data to the clients in real-time using Laravel Broadcast and Mercure (a popular WebSockets alternative, created by the authors of API Platform) and receive them using Laravel Ech
+* push changed data to the clients in real-time using Laravel Broadcast and [Mercure](https://mercure.rocks) (a popular WebSockets alternative, created by Kévin Dunglas, the original author of API Platform) and receive them using Laravel Echo
 * benefits from the API Platform JavaScript tools: [admin](../admin/index.md) and [create client](../create-client/index.md) (supports Next/React, Nuxt/Vue.js, Quasar, Vuetify and more!)
 * benefits from native HTTP cache (with automatic invalidation)
-* boot your app with [Octane](https://laravel.com/docs/octane) and [FrankenPHP](https://frankenphp.dev) (the default Octane engine, also created by the authors of API Platform)
+* boot your app with [Octane](https://laravel.com/docs/octane) and [FrankenPHP](https://frankenphp.dev) (the default Octane engine, also created by Kévin)
 * decouple your API from your models and implement patterns such as CQRS
 * test your API using convenient ad-hoc assertions that works with Pest and PHPUnit
 
 Let's discover how to use API Platform with Laravel!
 
-## Install Laravel
+## Installing Laravel
 
 API Platform can be installed easily on new and existing Laravel projects.
 If you already have an existing project, skip directly to the next section.
@@ -37,7 +39,7 @@ composer create-project laravel/laravel my-api-platform-laravel-app
 cd my-api-platform-laravel-app
 ```
 
-## Install API Platform
+## Installing API Platform
 
 In your Laravel project, install the API Platform integration for Laravel:
 
@@ -51,7 +53,7 @@ Open http://127.0.0.1:8000/api/, your API is already active and documented... bu
 
 ![Empty docs](images/empty-docs.png)
 
-## Create an Eloquent Model
+## Creating an Eloquent Model
 
 To discover how API Platform framework works, we will create an API to manage a bookshop.
 
@@ -65,7 +67,7 @@ By default, Laravel uses SQLite. You can open the `database/database.sqlite` fil
 
 But there is a better alternative: using a migration class.
 
-### Create a Migration
+### Creating a Migration
 
 First, create a migration class for the `books` table:
 
@@ -100,7 +102,7 @@ php artisan migrate
 
 The table and columns have been created for you!
 
-## Expose Your Model
+## Exposing A Model
 
 Open `app/Models/Book.php` that we generated in the previous step and mark the class it contains with the `#[ApiResource]` attribute:
 
@@ -108,12 +110,12 @@ Open `app/Models/Book.php` that we generated in the previous step and mark the c
 namespace App\Models;
 
 +use ApiPlatform\Metadata\ApiResource;
-use Illuminate\Database\Eloquent\Model;
+ use Illuminate\Database\Eloquent\Model;
 
 +#[ApiResource]
-class Book extends Model
-{
-}
+ class Book extends Model
+ {
+ }
 ```
 
 Open http://127.0.0.1:8000/api/, tadam, your API is ready and **entirely functionnal** 🎉:
@@ -126,39 +128,171 @@ Under the hood, API Platform:
 
 1. Registered the standard REST routes in Laravel's router and a controller that implements a state-of-the-art, fully-featured and secure API endpoint using the services provided by the [API Platform Core library](../core/index.md)
 2. Used its built-in Eloquent [state provider](../core/state-providers.md) to introspect the database and gather metadata about all columns to expose through the API
-3. Generated machine readable documentations of the API in the [OpenAPI (formerly known as Swagger)](https://www.openapis.org/) (available at http://127.0.0.1:8000/api/docs.json) and [JSON-LD](https://json-ld.org/)/[Hydra](https://www.hydra-cg.com/) formats using these metadata
-4. Generated a nice human-readable documentation and a sandbox for the API with [SwaggerUI](https://swagger.io/tools/swagger-ui/) (Redoc is also available out of the box)
+3. Generated machine-readable documentations of the API in the [OpenAPI (formerly known as Swagger)](../core/openapi.md) (available at http://127.0.0.1:8000/api/docs.json) and [JSON-LD](https://json-ld.org)/[Hydra](https://www.hydra-cg.com) formats using these metadata TODO: .openapi is broken
+4. Generated a nice human-readable documentation and a sandbox for the API with [SwaggerUI](https://swagger.io/tools/swagger-ui/) (Redoc is also available out-of-the-box)
 
 Imagine doing it all again, properly, by hand? How much time have you saved? Weeks, months? And you've seen nothing yet!
 
-## Populate the Database
+## Playing With The API
 
-```php
-<?php
+TODO: .html is partially broken for now: the request is not played by SwaggerUI
 
-namespace Database\Factories;
+If you access any API URL with the `.html` extension appended, API Platform displays
+the corresponding API request in the UI. Try it yourself by browsing to `http://127.0.0.1:8000/books.html`. If no extension is present, API Platform will use the `Accept` header to select the format to use. By default, a JSON-LD response is sent [but many other formats, including the popular JSON:API and HAL are supported](../core/content-negotiation.md).
 
-use Illuminate\Database\Eloquent\Factories\Factory;
+So, if you want to access the raw data, you have two alternatives:
 
-/**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Book>
- */
-class BookFactory extends Factory
-{
-    /**
-     * Define the model's default state.
-     *
-     * @return array<string, mixed>
-     */
-    public function definition(): array
-    {
-        return [
-            'title' => fake()->title(),
-            'isbn' => fake()->isbn13(),
-            'description' => fake()->text(),
-            'author' => fake()->userName(),
-            'publication_date' => fake()->date()
-        ];
-    }
-}
+* Add the correct `Accept` header (or don't set any `Accept` header at all if you don't care about security) - preferred when writing API clients
+* Add the format you want as the extension of the resource - for debug purpose only
+
+For instance, go to `http://127.0.0.1:8000/books.jsonld` to retrieve the list of `Greeting` resources in JSON-LD.
+
+Of course, you can also use your favorite HTTP client to query the API.
+We are fond of [Hoppscotch](https://hoppscotch.com), a free and open source API client with good support of API Platform.
+
+### Paginating Data
+
+A must-have feature for APIs is pagination. Without pagination, collections responses quickly become huge and slow,
+and can even lead to crashes (Out of Memory, timeouts...).
+
+Fortunately, the Eloquent state provider provided by API Platform automatically paginates data!
+
+To test this feature, let's inject some fake data in the database.
+
+## Seeding the Database
+
+Instead of manually creating the data you need to test your API,
+it can be convenient to automatically insert fake data in the database.
+
+Laravel provides a convenient way to do that: [Eloquent Factories](https://laravel.com/docs/eloquent-factories).
+
+First, create a factory class for our `Book` model:
+
+```console
+php artisan make:factory BookFactory
 ```
+
+Then, edit `database/factories/BookFactory.php` to specify which generator to use for each property of the model:
+
+```patch
+ namespace Database\Factories;
+ 
+ use Illuminate\Database\Eloquent\Factories\Factory;
+ 
+ /**
+  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Book>
+  */
+ class BookFactory extends Factory
+ {
+     /**
+      * Define the model's default state.
+      *
+      * @return array<string, mixed>
+      */
+     public function definition(): array
+     {
+         return [
+-            //
++            'title' => fake()->title(),
++            'isbn' => fake()->isbn13(),
++            'description' => fake()->text(),
++            'author' => fake()->userName(),
++            'publication_date' => fake()->date(),
+         ];
+     }
+ }
+```
+
+Then, update the `app/Models/Book.php` to hint Eloquent that it has an associated factory:
+
+```patch
+ namespace App\Models;
+ 
+ use ApiPlatform\Metadata\ApiResource;
++use Illuminate\Database\Eloquent\Factories\HasFactory;
+ use Illuminate\Database\Eloquent\Model;
+ 
+ #[ApiResource]
+ class Book extends Model
+ {
++    use HasFactory;
+ }
+```
+
+Referencee this factory in the seeder (`database/seeder/DatabaseSeeder.php`):
+
+```patch
+ namespace Database\Seeders;
+ 
+ use App\Models\Book;
+ use App\Models\User;
+ // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+ use Illuminate\Database\Seeder;
+ 
+ class DatabaseSeeder extends Seeder
+ {
+     /**
+      * Seed the application's database.
+      */
+     public function run(): void
+     {
+         // User::factory(10)->create();
+ 
+         User::factory()->create([
+             'name' => 'Test User',
+             'email' => 'test@example.com',
+         ]);
+ 
++        Book::factory(100)->create();
+     }
+ }
+```
+
+Finally, seed the database:
+
+```console
+php artisan db:seed
+```
+
+> [!NOTE]
+>
+> The `fake()` helper provided by Laravel lets you generate different types of random data for testing and seeding purposes. It uses [the Faker library](https://fakerphp.org/), which has been created by François Zaninotto.
+> François is also a member of the API Platform Core Team.
+> He maintains [API Platform Admin](../admin/index.md), a tool built on top of his popular [React-Admin](https://marmelab.com/react-admin/) library that makes creating admin interfaces consuming your API data super easy.
+> What a small world!
+
+### Configuring The Pagination
+
+Send a `GET` request on http://127.0.0.1:8000/api/books.
+
+By default, API Platform paginates collections by slices of 30 items.
+This is configurable. It's also possible to let the client choose 
+
+## Customizing the API
+
+API Platform has a ton of knobs and gives you full control over what is exposed.
+
+For instance, here how to make your API read-only by enabling only the `GET` [operations](../core/operations.md):
+
+```patch
+// app/Models/Book.php
+
+-#[ApiResource]
++#[ApiResource(operations: [
++    new GetCollection(),
++    new Get(),
++])]
+ class Book extends Model
+ {
+ }
+```
+
+![Read-only](images/read-only.png)
+
+We'll use configuration options provided by API Platform all along this getting started guide, but there are tons of feature!
+
+A good way to discover them is to inspect the properties of the `ApiResource` and `ApiProperty` attributes, and, of course, to [read the documentation of the core library](../core/index.md).
+
+You can change the default configuration (for instance, which operations are enabled by default) in the config (`config/api-platform.php`).
+
+For the rest of this tutorial, we'll assume that at least all default operations are enabled (you can also enable `PUT` if you want to support upsert operations).

@@ -225,8 +225,7 @@ So, if you want to access the raw data, you have two alternatives:
 For instance, go to `https://localhost/greetings.jsonld` to retrieve the list of `Greeting` resources in JSON-LD.
 
 Of course, you can also use your favorite HTTP client to query the API.
-We are fond of [Postman](https://www.postman.com/). It works perfectly well with API Platform, has native OpenAPI support,
-allows to easily write functional tests and has good team collaboration features.
+We are fond of [Hoppscotch](https://hoppscotch.com), a free and open source API client with good support of API Platform.
 
 ## Bringing your Own Model
 
