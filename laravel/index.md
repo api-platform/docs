@@ -150,7 +150,71 @@ For instance, go to `http://127.0.0.1:8000/books.jsonld` to retrieve the list of
 Of course, you can also use your favorite HTTP client to query the API.
 We are fond of [Hoppscotch](https://hoppscotch.com), a free and open source API client with good support of API Platform.
 
-### Paginating Data
+## Enabling GraphQL
+
+By default, only the REST endpoints are enabled, but API Platform also [supports GraphQL](../core/graphql.md)!
+
+Install the GraphQL support package:
+
+```console
+composer require api-platform/graphql
+```
+
+Then, enable GraphQL in `config/api-platform.php`:
+
+```patch
+     'graphql' => [
+-        'enabled' => false,
++        'enabled' => true,
+```
+
+TODO: finish this
+
+## Hiding Fields
+
+API Platform allows to control which fields will be publicly exposed by the API using [the same syntax as Eloquent serialization](https://laravel.com/docs/eloquent-serialization#hiding-attributes-from-json):
+
+```php
+namespace App\Models;
+
+use ApiPlatform\Metadata\ApiResource;
+use Illuminate\Database\Eloquent\Model;
+
+#[ApiResource]
+class Book extends Model
+{
+    /**
+     * The attributes that should be hidden (deny list).
+     *
+     * @var array
+     */
+    protected $hidden = ['isbn'];
+}
+```
+
+```php
+namespace App\Models;
+
+use ApiPlatform\Metadata\ApiResource;
+use Illuminate\Database\Eloquent\Model;
+
+#[ApiResource]
+class Book extends Model
+{
+    /**
+     * The attributes that should be visible (allow list).
+     *
+     * @var array
+     */
+    protected $visible = ['title', 'description'];
+}
+```
+
+## Relations and Nested Ressources
+
+docs todo
+
+## Paginating Data
 
 A must-have feature for APIs is pagination. Without pagination, collections responses quickly become huge and slow,
 and can even lead to crashes (Out of Memory, timeouts...).
@@ -159,7 +223,7 @@ Fortunately, the Eloquent state provider provided by API Platform automatically 
 
 To test this feature, let's inject some fake data in the database.
 
-## Seeding the Database
+### Seeding the Database
 
 Instead of manually creating the data you need to test your API,
 it can be convenient to automatically insert fake data in the database.
@@ -219,7 +283,7 @@ Then, update the `app/Models/Book.php` to hint Eloquent that it has an associate
  }
 ```
 
-Referencee this factory in the seeder (`database/seeder/DatabaseSeeder.php`):
+Reference this factory in the seeder (`database/seeder/DatabaseSeeder.php`):
 
 ```patch
  namespace Database\Seeders;
@@ -266,7 +330,32 @@ php artisan db:seed
 Send a `GET` request on http://127.0.0.1:8000/api/books.
 
 By default, API Platform paginates collections by slices of 30 items.
-This is configurable. It's also possible to let the client choose 
+
+This is configurable, to change to 10 items per page, change `app/Models/Book.php` like this:
+
+```patch
+ namespace App\Models;
+ 
+ use ApiPlatform\Metadata\ApiResource;
+ use Illuminate\Database\Eloquent\Factories\HasFactory;
+ use Illuminate\Database\Eloquent\Model;
+ 
+-#[ApiResource]
++#[ApiResource(
++    paginationItemsPerPage: 10,
++)]
+ class Book extends Model
+ {
+     use HasFactory;
+ }
+```
+
+Read the [pagination documentation](../core/pagination.md) to learn all you can do!
+
+> [!CAUTION]
+>
+> Some pagination-related features are currently not supported by the Eloquent provider.
+> Contributions are welcome to fill the gap!
 
 ## Customizing the API
 
@@ -278,10 +367,13 @@ For instance, here how to make your API read-only by enabling only the `GET` [op
 // app/Models/Book.php
 
 -#[ApiResource]
-+#[ApiResource(operations: [
-+    new GetCollection(),
-+    new Get(),
-+])]
+ #[ApiResource(
+     paginationItemsPerPage: 10,
++    operations: [
++       new GetCollection(),
++       new Get(),
++    ],
+)]
  class Book extends Model
  {
  }
@@ -296,3 +388,158 @@ A good way to discover them is to inspect the properties of the `ApiResource` an
 You can change the default configuration (for instance, which operations are enabled by default) in the config (`config/api-platform.php`).
 
 For the rest of this tutorial, we'll assume that at least all default operations are enabled (you can also enable `PUT` if you want to support upsert operations).
+
+## Validation
+
+docs todo
+
+## Gates and Policies
+
+docs todo
+
+## Using The `IsApiResourceTrait` Instead of Attributes
+
+Whille attributes (introduced in PHP 8) are the preferred way to configure your API Platform resources,
+it's also possible to use a trait instead.
+
+Both classes are strictly equivalent:
+
+```php
+// Attributes
+namespace App\Models;
+
+use ApiPlatform\Metadata\ApiResource;
+use Illuminate\Database\Eloquent\Model;
+
+#[ApiResource]
+class Book extends Model
+{
+}
+```
+
+```php
+// Trait
+namespace App\Models;
+
+use ApiPlatform\Metadata\IsApiResource;
+use Illuminate\Database\Eloquent\Model;
+
+class Book extends Model
+{
+    use IsApiResource;
+}
+```
+
+When using the `IsApiResourceTrait`, it's also possible to return advanced configuration by definining an `apiResource()` static method.
+
+Both classes are strictly equivalent:
+
+```php
+// Attributes
+namespace App\Models;
+
+use ApiPlatform\Metadata\ApiResource;
+use Illuminate\Database\Eloquent\Model;
+
+#[ApiResource(
+    paginationItemsPerPage: 10,
+    operations: [
+       new GetCollection(),
+       new Get(),
+    ],
+)]
+class Book extends Model
+{
+}
+```
+
+```php
+// Trait
+namespace App\Models;
+
+use ApiPlatform\Metadata\IsApiResource;
+use Illuminate\Database\Eloquent\Model;
+
+class Book extends Model
+{
+    use IsApiResource;
+
+    public static function apiResource(): ApiResource
+    {
+        return new ApiResource(
+            paginationItemsPerPage: 10,
+            operations: [
+                new GetCollection(),
+                new Get(),
+            ],
+        );
+    }
+}
+```
+
+It's quite common to define multiple `ApiResource`, `ApiProperty` and `Filter` attributes on a same class.
+To mimick this behavior, the `apiResource()` function can return an array instead of a single instance of medata class.
+
+Both classes are strictly equivalent:
+
+
+```php
+// Attributes
+namespace App\Models;
+
+use ApiPlatform\Metadata\ApiResource;
+use Illuminate\Database\Eloquent\Model;
+
+#[ApiResource(
+    paginationEnabled: true,
+    paginationItemsPerPage: 5,
+    rules: BookFormRequest::class,
+    operations: [
+        new Put(),
+        new Patch(),
+        new Get(),
+        new Post(),
+        new Delete(),
+        new GetCollection(),
+    ]
+)]
+#[QueryParameter(key: ':property', filter: SearchFilter::class)]
+class Book extends Model
+{
+}
+```
+
+```php
+// Trait
+namespace App\Models;
+
+use ApiPlatform\Metadata\IsApiResource;
+use Illuminate\Database\Eloquent\Model;
+
+class Book extends Model
+{
+    use IsApiResource;
+
+    public static function apiResource(): array
+    {
+        return [
+            new ApiResource(
+                paginationEnabled: true,
+                paginationItemsPerPage: 5,
+                rules: BookFormRequest::class,
+                operations: [
+                    new Put(),
+                    new Patch(),
+                    new Get(),
+                    new Post(),
+                    new Delete(),
+                    new GetCollection(),
+                ]
+            ),
+            new QueryParameter(key: ':property', filter: SearchFilter::class),
+        ];
+    }
+}
+```
+
+
