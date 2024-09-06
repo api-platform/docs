@@ -450,6 +450,27 @@ Then we can plug the `auth:sanctum` middleware and specify what policy to use:
  }
 ```
 
+## Eloquent filters
+
+API Platform provides an easy shortcut to some [useful filters](./eloquent-filters), for starters you can enable a `PartialSearchFilter` on every exposed properties and add an `OrderFilter`: 
+
+```patch
+// app/Models/Book.php
+
+  use ApiPlatform\Metadata\ApiResource;
++ use ApiPlatform\Laravel\Eloquent\Filter\PartialSearchFilter;
++ use ApiPlatform\Laravel\Eloquent\Filter\OrderFilter;
+
+ #[ApiResource]
++ #[QueryParameter(key: ':property', filter: PartialSearchFilter::class)]
++ #[QueryParameter(key: 'sort[:property]', filter: OrderFilter::class)]
+class Book extends Model
+{
+}
+```
+
+<!-- @dunglas can you add a screenshot? -->
+
 ## Test assertions
 
 docs todo
