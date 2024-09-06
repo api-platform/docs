@@ -391,11 +391,64 @@ For the rest of this tutorial, we'll assume that at least all default operations
 
 ## Validation
 
-docs todo
+To validate user input, you may generate a [FormRequest](https://laravel.com/docs/11.x/validation#creating-form-requests):
+
+```console
+php artisan make:request BookFormRequest
+```
+
+Use this set of rules in your resource to validate user input on every write operation (PATCH, POST):
+
+```patch
+// app/Models/Book.php
++use App\Http\Requests\BookFormRequest;
+
+-#[ApiResource]
+ #[ApiResource(
+     paginationItemsPerPage: 10,
++    rules: BookFormRequest::class
+)]
+ class Book extends Model
+ {
+ }
+```
+
+<!-- todo link to rfc ? -->
+API Platform will transform any exception to JSON Problem errors, you can create your own `Error` resource following [this guide](https://api-platform.com/docs/guides/error-resource/).
 
 ## Gates and Policies
 
-docs todo
+To protect an operation, we create a Laravel [policy](https://laravel.com/docs/11.x/authorization#creating-policies): 
+
+```console
+php artisan make:policy BookPolicy --model=Book
+```
+
+If you want you can also add Sanctum:
+
+```console
+php artisan install:api
+```
+
+Then we can plug the `auth:sanctum` middleware and specify what policy to use: 
+
+```patch
+// app/Models/Book.php
+
+-#[ApiResource]
+ #[ApiResource(
+     paginationItemsPerPage: 10,
++    operations: [
++       new Patch(
++            middleware: 'auth:sanctum',
++            policy: 'update'
++       ),
++    ],
+)]
+ class Book extends Model
+ {
+ }
+```
 
 ## Test assertions
 
