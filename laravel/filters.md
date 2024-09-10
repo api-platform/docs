@@ -68,7 +68,7 @@ class Book extends Model
 
 When programming APIs you may need to apply a filter on many properties at once. For example, we're allowing to sort on every property of our ApiResource with a partial search filter:
 
-```
+```php
 // app/Models/Book.php 
 
 use ApiPlatform\Laravel\Eloquent\Filter\PartialSearchFilter;
