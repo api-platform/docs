@@ -120,6 +120,66 @@ class Book extends Model
 
 Our default strategy is to exclude null values, just remove the `filterContext` if you want to exclude nulls. 
 
+### Or
+
+The `OrFilter` allows to filter using an `OR WHERE` clause:
+
+```php
+// app/Models/Book.php 
+
+use ApiPlatform\Laravel\Eloquent\Filter\DateFilter;
+
+#[ApiResource]
+#[QueryParameter(
+    key: 'q',
+    filter: new OrFilter(new EqualsFilter()),
+    property: 'isbn'
+)]
+class Book extends Model
+{
+    use HasUlids;
+
+    public function author(): BelongsTo
+    {
+        return $this->belongsTo(Author::class);
+    }
+}
+```
+
+This allows to query multiple `isbn` values with a `q` query parameter: `/books?q[]=9781784043735&q[]=9780369406361`.
+
 ### Number
 
 TODO
+
+### PropertyFilter
+
+Note: We strongly recommend using [Vulcain](https://vulcain.rocks) instead of this filter. Vulcain is faster, allows a better hit rate, and is supported out of the box in the API Platform distribution.
+
+The property filter adds the possibility to select the properties to serialize (sparse fieldsets).
+
+```php
+// app/Models/Book.php 
+
+use ApiPlatform\Laravel\Eloquent\Filter\DateFilter;
+use ApiPlatform\Serializer\Filter\PropertyFilter;
+
+#[ApiResource]
+#[QueryParameter(key: 'properties', filter: PropertyFilter::class)]
+class Book extends Model
+{
+    use HasUlids;
+
+    public function author(): BelongsTo
+    {
+        return $this->belongsTo(Author::class);
+    }
+}
+```
+
+A few `filterContext` options are available to configure the filter:
+
+* `override_default_properties` allows to override the default serialization properties (default `false`) Using `true` is dangerous, use carefully this can expose unwanted data!
+* `whitelist` properties whitelist to avoid uncontrolled data exposure (default `null` to allow all properties)
+
+Given that the collection endpoint is `/books`, you can filter the serialization properties with the following query: `/books?properties[]=title&properties[]=author`.
