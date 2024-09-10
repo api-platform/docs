@@ -352,11 +352,6 @@ This is configurable, to change to 10 items per page, change `app/Models/Book.ph
 
 Read the [pagination documentation](../core/pagination.md) to learn all you can do!
 
-> [!CAUTION]
->
-> Some pagination-related features are currently not supported by the Eloquent provider.
-> Contributions are welcome to fill the gap!
-
 ## Customizing the API
 
 API Platform has a ton of knobs and gives you full control over what is exposed.
@@ -452,7 +447,7 @@ Then we can plug the `auth:sanctum` middleware and specify what policy to use:
 
 ## Eloquent filters
 
-API Platform provides an easy shortcut to some [useful filters](./eloquent-filters), for starters you can enable a `PartialSearchFilter` on every exposed properties and add an `OrderFilter`: 
+API Platform provides an easy shortcut to some [useful filters](./filters), for starters you can enable a `PartialSearchFilter` on every exposed properties and add an `OrderFilter`: 
 
 ```patch
 // app/Models/Book.php
