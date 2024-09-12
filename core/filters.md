@@ -1880,3 +1880,24 @@ class ValidateParameter {}
 ``` 
 
 You can also use your own constraint by setting the `constraints` option on a Parameter. In that case we won't setup the automatic validation for you and it'll replace our defaults.
+
+
+### Parameter security
+
+Parameters may have security checks:
+
+``` php
+<?php
+use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\HeaderParameter;
+use ApiPlatform\Metadata\QueryParameter;
+
+#[GetCollection(
+    uriTemplate: 'security_parameters{._format}',
+    parameters: [
+        'sensitive' => new QueryParameter(security: 'is_granted("ROLE_ADMIN")'),
+        'auth' => new HeaderParameter(security: '"secretKey" == auth[0]'),
+    ],
+)]
+class SecurityParameter {}
+```
