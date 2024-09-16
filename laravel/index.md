@@ -308,7 +308,7 @@ Then, edit `database/factories/BookFactory.php` to specify which generator to us
      {
          return [
 -            //
-+            'title' => fake()->title(),
++            'title' => mb_convert_case(fake()->words(4, true), MB_CASE_TITLE),
 +            'isbn' => fake()->isbn13(),
 +            'description' => fake()->text(),
 +            'author' => fake()->name(),
@@ -419,7 +419,7 @@ For instance, here how to make your API read-only by enabling only the `GET` [op
 +       new GetCollection(),
 +       new Get(),
 +    ],
-)]
+ )]
  class Book extends Model
  {
  }
