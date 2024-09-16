@@ -44,8 +44,8 @@ cd my-api-platform-laravel-app
 In your Laravel project, install the API Platform integration for Laravel:
 
 ```console
-composer config minimum-stability alpha
-composer require api-platform/laravel:^4@alpha
+composer config minimum-stability beta
+composer require api-platform/laravel:^4@beta
 ```
 
 If it's not already done, run `php artisan serve` to start the built-in web server.
@@ -158,7 +158,7 @@ By default, only the REST endpoints are enabled, but API Platform also [supports
 Install the GraphQL support package:
 
 ```console
-composer require api-platform/graphql:^4@alpha
+composer require api-platform/graphql:^4@beta
 ```
 
 Then, enable GraphQL in `config/api-platform.php`:
@@ -461,7 +461,7 @@ Then we can plug the `auth:sanctum` middleware and specify what policy to use:
 
 ## Eloquent filters
 
-API Platform provides an easy shortcut to some [useful filters](./filters), for starters you can enable a `PartialSearchFilter` on every exposed properties and add an `OrderFilter`: 
+API Platform provides an easy shortcut to some [useful filters](./filters.md), for starters you can enable a `PartialSearchFilter` on every exposed properties and add an `OrderFilter`: 
 
 ```patch
 // app/Models/Book.php
@@ -475,10 +475,15 @@ API Platform provides an easy shortcut to some [useful filters](./filters), for 
 + #[QueryParameter(key: 'sort[:property]', filter: OrderFilter::class)]
 class Book extends Model
 {
+    protected $visible = ['title', 'description'];
 }
 ```
 
-<!-- @dunglas can you add a screenshot? -->
+The `:property` placeholder gives the ability to create a parameter for each exposed property. These filters will be automatically documented:
+
+![Filters documentation](images/filters-documentation.png)
+
+On top of that, some validation rules are automatically added based on the given JSON Schema. You can customize the set of rules inside the `constraints` option of a `QueryParameter`.
 
 ## Test assertions
 

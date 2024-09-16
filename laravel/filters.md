@@ -72,6 +72,7 @@ When programming APIs you may need to apply a filter on many properties at once.
 // app/Models/Book.php 
 
 use ApiPlatform\Laravel\Eloquent\Filter\PartialSearchFilter;
+use ApiPlatform\Laravel\Eloquent\Filter\OrderFilter;
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\QueryParameter;
 
