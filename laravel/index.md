@@ -153,6 +153,8 @@ We are fond of [Hoppscotch](https://hoppscotch.com), a free and open source API 
 
 ## Enabling GraphQL
 
+![GraphQL in Laravel](images/graphql.png)
+
 By default, only the REST endpoints are enabled, but API Platform also [supports GraphQL](../core/graphql.md)!
 
 Install the GraphQL support package:
@@ -182,7 +184,9 @@ Then open `http://127.0.0.1:8000/api/graphql` and replace the default GraphQL qu
 }
 ```
 
-As you can see, the GraphQL documentation is automatically generated using the GraphQL introspection endpoint.
+You now have a REST and a GraphQL API with the same code!
+
+As you can see, a nice UI ([GraphiQL](https://github.com/graphql/graphiql)) is also available. The documentation is automatically generated using the GraphQL introspection endpoint.
 
 ## Hiding Fields
 
