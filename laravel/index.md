@@ -174,10 +174,12 @@ Then, enable GraphQL in `config/api-platform.php`:
 Then open `http://127.0.0.1:8000/api/graphql` and replace the default GraphQL query example with:
 ```
 {
-  books {
+  books(first: 3) {
     edges {
       node {
+        title
         author
+        publicationDate
       }
     }
   }
