@@ -139,7 +139,7 @@ Imagine doing it all again, properly, by hand? How much time have you saved? Wee
 ![View of an item](images/books-collection.png)
 
 If you access any API URL with the `.html` extension appended, API Platform displays
-the corresponding API request in the UI. Try it yourself by browsing to `http://127.0.0.1:8000/api/books.html`. If no extension is present, API Platform will use the `Accept` header to select the format to use. By default, a JSON-LD response is sent [but many other formats, including the popular JSON:API and HAL are supported](../core/content-negotiation.md).
+the corresponding API request in the UI. Try it yourself by browsing to `http://127.0.0.1:8000/api/books.html`. If no extension is present, API Platform will use the `Accept` header to select the format to use.
 
 So, if you want to access the raw data, you have two alternatives:
 
@@ -150,6 +150,37 @@ For instance, go to `http://127.0.0.1:8000/api/books.jsonld` to retrieve the lis
 
 Of course, you can also use your favorite HTTP client to query the API.
 We are fond of [Hoppscotch](https://hoppscotch.com), a free and open source API client with good support of API Platform.
+
+## Content Negotiation
+
+By default, a JSON-LD response is sent [but many other formats, including CSV and JSON:API are supported](../core/content-negotiation.md).
+You can enable or disable formats in `config/api-platform.php`:
+
+```php
+// config/api-platform.php
+
+// ...
+return [
+    'formats' => [
+        'jsonld' => ['application/ld+json'],
+        'jsonapi' => ['application/vnd.api+json'],
+        'csv' => ['text/csv'],
+    ],
+
+    'patch_formats' => [
+        'json' => ['application/merge-patch+json'],
+    ],
+
+    'docs_formats' => [
+        'jsonld' => ['application/ld+json'],
+        'jsonapi' => ['application/vnd.api+json'],
+        'jsonopenapi' => ['application/vnd.openapi+json'],
+        'html' => ['text/html'],
+    ],
+
+    // ...
+];
+```
 
 ## Enabling GraphQL
 
