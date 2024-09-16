@@ -136,7 +136,7 @@ Imagine doing it all again, properly, by hand? How much time have you saved? Wee
 
 ## Playing With The API
 
-TODO: .html is partially broken for now: the request is not played by SwaggerUI
+![View of an item](images/books-collection.png)
 
 If you access any API URL with the `.html` extension appended, API Platform displays
 the corresponding API request in the UI. Try it yourself by browsing to `http://127.0.0.1:8000/api/books.html`. If no extension is present, API Platform will use the `Accept` header to select the format to use. By default, a JSON-LD response is sent [but many other formats, including the popular JSON:API and HAL are supported](../core/content-negotiation.md).
@@ -274,7 +274,7 @@ Then, edit `database/factories/BookFactory.php` to specify which generator to us
 +            'title' => fake()->title(),
 +            'isbn' => fake()->isbn13(),
 +            'description' => fake()->text(),
-+            'author' => fake()->userName(),
++            'author' => fake()->name(),
 +            'publication_date' => fake()->date(),
          ];
      }
@@ -334,7 +334,7 @@ php artisan db:seed
 
 > [!NOTE]
 >
-> The `fake()` helper provided by Laravel lets you generate different types of random data for testing and seeding purposes. It uses [the Faker library](https://fakerphp.org/), which has been created by François Zaninotto.
+> The `fake()` helper provided by Laravel lets you generate different types of random data for testing and seeding purposes. It uses [the Faker library](https://fakerphp.org), which has been created by François Zaninotto.
 > François is also a member of the API Platform Core Team.
 > He maintains [API Platform Admin](../admin/index.md), a tool built on top of his popular [React-Admin](https://marmelab.com/react-admin/) library that makes creating admin interfaces consuming your API data super easy.
 > What a small world!
