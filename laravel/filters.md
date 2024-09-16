@@ -1,4 +1,4 @@
-# Parameters and filters
+# Parameters and Filters
 
 API Platform is great for Rapid Application Development and provides lots of functionalities out of the box such as collection filtering with Eloquent. Most of the filtering is done using query parameters, which are automatically documented and validated. If needed you can use [state providers](core/state-providers) or a [Links Handler] to provide data.
 
@@ -44,7 +44,7 @@ final class EqualsFilter implements FilterInterface
 
 You can create your own filters by implementing the `ApiPlatform\Laravel\Eloquent\Filter\FilterInterface`. API Platform provides several eloquent filters for a RAD approach.
 
-### Parameter validation
+### Parameter Validation
 
 You can add [validation rules](https://laravel.com/docs/validation) to parameters within the `constraints` attribute:
 
@@ -64,7 +64,7 @@ class Book extends Model
 
 <!-- TODO: The `security` option also allows policy but we need to test this -->
 
-### The :property placeholder
+### The `:property` Placeholder
 
 When programming APIs you may need to apply a filter on many properties at once. For example, we're allowing to sort on every property of our ApiResource with a partial search filter:
 
@@ -149,9 +149,9 @@ class Book extends Model
 
 This allows to query multiple `isbn` values with a `q` query parameter: `/books?q[]=9781784043735&q[]=9780369406361`.
 
-### Number
+<!-- ### Number
 
-TODO
+TODO -->
 
 ### PropertyFilter
 

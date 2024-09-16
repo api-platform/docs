@@ -437,7 +437,7 @@ For the rest of this tutorial, we'll assume that at least all default operations
 
 ## Validation
 
-To validate user input, you may generate a [FormRequest](https://laravel.com/docs/11.x/validation#creating-form-requests):
+To validate user input, you may generate a [FormRequest](https://laravel.com/docs/validation#creating-form-requests):
 
 ```console
 php artisan make:request BookFormRequest
@@ -464,7 +464,7 @@ API Platform will transform any exception to JSON Problem errors, you can create
 
 ## Gates and Policies
 
-To protect an operation, we create a Laravel [policy](https://laravel.com/docs/11.x/authorization#creating-policies): 
+To protect an operation, we create a Laravel [policy](https://laravel.com/docs/authorization#creating-policies): 
 
 ```console
 php artisan make:policy BookPolicy --model=Book
@@ -616,6 +616,9 @@ These two classes are strictly equivalent:
 namespace App\Models;
 
 use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\QueryParameter;
+use ApiPlatform\Laravel\Eloquent\Filter\PartialSearchFilter;
+use App\Http\Requests\BookFormRequest;
 use Illuminate\Database\Eloquent\Model;
 
 #[ApiResource(
@@ -631,7 +634,7 @@ use Illuminate\Database\Eloquent\Model;
         new GetCollection(),
     ]
 )]
-#[QueryParameter(key: ':property', filter: SearchFilter::class)]
+#[QueryParameter(key: ':property', filter: PartialSearchFilter::class)]
 class Book extends Model
 {
 }
@@ -642,6 +645,9 @@ class Book extends Model
 namespace App\Models;
 
 use ApiPlatform\Metadata\IsApiResource;
+use ApiPlatform\Metadata\QueryParameter;
+use ApiPlatform\Laravel\Eloquent\Filter\PartialSearchFilter;
+use App\Http\Requests\BookFormRequest;
 use Illuminate\Database\Eloquent\Model;
 
 class Book extends Model
@@ -664,7 +670,7 @@ class Book extends Model
                     new GetCollection(),
                 ]
             ),
-            new QueryParameter(key: ':property', filter: SearchFilter::class),
+            new QueryParameter(key: ':property', filter: PartialSearchFilter::class),
         ];
     }
 }
