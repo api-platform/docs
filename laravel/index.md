@@ -158,7 +158,7 @@ By default, only the REST endpoints are enabled, but API Platform also [supports
 Install the GraphQL support package:
 
 ```console
-composer require api-platform/graphql:^4.0.0-alpha.7
+composer require api-platform/graphql:^4@alpha
 ```
 
 Then, enable GraphQL in `config/api-platform.php`:
@@ -169,7 +169,7 @@ Then, enable GraphQL in `config/api-platform.php`:
 +        'enabled' => true,
 ```
 
-Then open `http://127.0.0.1:8000/api/graphql` and replace the default graphql query example with:
+Then open `http://127.0.0.1:8000/api/graphql` and replace the default GraphQL query example with:
 ```
 {
   books {
@@ -181,6 +181,8 @@ Then open `http://127.0.0.1:8000/api/graphql` and replace the default graphql qu
   }
 }
 ```
+
+As you can see, the GraphQL documentation is automatically generated using the GraphQL introspection endpoint.
 
 ## Hiding Fields
 
