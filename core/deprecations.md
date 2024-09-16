@@ -107,7 +107,7 @@ properties:
 
 ## Setting the `Sunset` HTTP Header to Indicate When a Resource or an Operation Will Be Removed
 
-[The `Sunset` HTTP response header](https://tools.ietf.org/html/draft-wilde-sunset-header) indicates that a URI is likely to become unresponsive at a specified point in the future.
+[The `Sunset` HTTP response header (RFC 8594)](https://www.rfc-editor.org/rfc/rfc8594) indicates that a URI is likely to become unresponsive at a specified point in the future.
 It is especially useful to indicate when a deprecated URL will not be available anymore.
 
 Thanks to the `sunset` attribute, API Platform makes it easy to set this header for all URLs related to a resource class:
