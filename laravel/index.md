@@ -139,7 +139,7 @@ Imagine doing it all again, properly, by hand? How much time have you saved? Wee
 TODO: .html is partially broken for now: the request is not played by SwaggerUI
 
 If you access any API URL with the `.html` extension appended, API Platform displays
-the corresponding API request in the UI. Try it yourself by browsing to `http://127.0.0.1:8000/books.html`. If no extension is present, API Platform will use the `Accept` header to select the format to use. By default, a JSON-LD response is sent [but many other formats, including the popular JSON:API and HAL are supported](../core/content-negotiation.md).
+the corresponding API request in the UI. Try it yourself by browsing to `http://127.0.0.1:8000/api/books.html`. If no extension is present, API Platform will use the `Accept` header to select the format to use. By default, a JSON-LD response is sent [but many other formats, including the popular JSON:API and HAL are supported](../core/content-negotiation.md).
 
 So, if you want to access the raw data, you have two alternatives:
 
