@@ -44,6 +44,7 @@ cd my-api-platform-laravel-app
 In your Laravel project, install the API Platform integration for Laravel:
 
 ```console
+composer config minimum-stability alpha
 composer require api-platform/laravel:^4@alpha
 ```
 
