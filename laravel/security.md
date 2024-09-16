@@ -8,10 +8,12 @@ API platform is compatible with Laravel [authorization](https://laravel.com/docs
 use ApiPlatform\Metadata\Patch;
 
 #[Patch(policy: 'update')]
-class Book extends Model {}
+class Book extends Model
+{
+}
 ```
 
-Usually you will use [Sanctum](https://laravel.com/docs/sanctum) and add a middleware on secured routes:
+Usually, you will use [Sanctum](https://laravel.com/docs/sanctum) and add a middleware on secured routes:
 
 ```php
 // app/Models/Book.php 
@@ -19,5 +21,7 @@ Usually you will use [Sanctum](https://laravel.com/docs/sanctum) and add a middl
 use ApiPlatform\Metadata\Patch;
 
 #[Patch(middleware: 'auth:sanctum', policy: 'update')]
-class Book extends Model {}
+class Book extends Model
+{
+}
 ```

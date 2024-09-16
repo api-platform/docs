@@ -462,6 +462,8 @@ Use this set of rules in your resource to validate user input on every write ope
 <!-- todo link to rfc ? -->
 API Platform will transform any exception to JSON Problem errors, you can create your own `Error` resource following [this guide](https://api-platform.com/docs/guides/error-resource/).
 
+Read the detailed documentation about [Laravel data validation in API Platform](validation.md).
+
 ## Gates and Policies
 
 To protect an operation, we create a Laravel [policy](https://laravel.com/docs/authorization#creating-policies): 
@@ -496,6 +498,8 @@ Then we can plug the `auth:sanctum` middleware and specify what policy to use:
  }
 ```
 
+Read the detailed documentation about using [Laravel gates and policies with API Platform](security.md).
+
 ## Eloquent filters
 
 API Platform provides an easy shortcut to some [useful filters](./filters.md), for starters you can enable a `PartialSearchFilter` on every exposed properties and add an `OrderFilter`: 
@@ -521,6 +525,8 @@ The `:property` placeholder gives the ability to create a parameter for each exp
 ![Filters documentation](images/filters-documentation.png)
 
 On top of that, some validation rules are automatically added based on the given JSON Schema. You can customize the set of rules inside the `constraints` option of a `QueryParameter`.
+
+API Platform comes with many several filters dedicated to Laravel, [check them out](filters.md)!
 
 ## Test assertions
 
