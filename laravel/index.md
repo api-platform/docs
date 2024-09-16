@@ -146,7 +146,7 @@ So, if you want to access the raw data, you have two alternatives:
 * Add the correct `Accept` header (or don't set any `Accept` header at all if you don't care about security) - preferred when writing API clients
 * Add the format you want as the extension of the resource - for debug purpose only
 
-For instance, go to `http://127.0.0.1:8000/books.jsonld` to retrieve the list of `Greeting` resources in JSON-LD.
+For instance, go to `http://127.0.0.1:8000/api/books.jsonld` to retrieve the list of `Greeting` resources in JSON-LD.
 
 Of course, you can also use your favorite HTTP client to query the API.
 We are fond of [Hoppscotch](https://hoppscotch.com), a free and open source API client with good support of API Platform.
