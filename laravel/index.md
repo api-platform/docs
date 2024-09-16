@@ -435,7 +435,54 @@ You can change the default configuration (for instance, which operations are ena
 
 For the rest of this tutorial, we'll assume that at least all default operations are enabled (you can also enable `PUT` if you want to support upsert operations).
 
-## Validation
+
+## Adding Filters
+
+API Platform provides an easy shortcut to some [useful filters](./filters.md), for starters you can enable a `PartialSearchFilter` the title property:
+
+```patch
+// app/Models/Book.php
+
+  use ApiPlatform\Metadata\ApiResource;
++ use ApiPlatform\Laravel\Eloquent\Filter\PartialSearchFilter;
+
+ #[ApiResource]
++ #[QueryParameter(key: 'title', filter: PartialSearchFilter::class)]
+class Book extends Model
+{
+}
+```
+
+![Title filter](images/title-filter.png)
+
+It's also possible to enable filters on every exposed properties:
+
+```patch
+// app/Models/Book.php
+
+  use ApiPlatform\Metadata\ApiResource;
++ use ApiPlatform\Laravel\Eloquent\Filter\PartialSearchFilter;
++ use ApiPlatform\Laravel\Eloquent\Filter\OrderFilter;
+
+ #[ApiResource]
++ #[QueryParameter(key: ':property', filter: PartialSearchFilter::class)]
++ #[QueryParameter(key: 'sort[:property]', filter: OrderFilter::class)]
+class Book extends Model
+{
+}
+```
+
+The `OrderFilter` allows us to sort the collection.
+
+The `:property` placeholder gives the ability to create a parameter for each exposed property. These filters will be automatically documented:
+
+![Filters documentation](images/filters-documentation.png)
+
+On top of that, some validation rules are automatically added based on the given JSON Schema. You can customize the set of rules inside the `constraints` option of a `QueryParameter`.
+
+API Platform comes with many several filters dedicated to Laravel, [check them out](filters.md)!
+
+## Validating Data
 
 To validate user input, you may generate a [FormRequest](https://laravel.com/docs/validation#creating-form-requests):
 
@@ -464,7 +511,7 @@ API Platform will transform any exception to JSON Problem errors, you can create
 
 Read the detailed documentation about [Laravel data validation in API Platform](validation.md).
 
-## Gates and Policies
+## Securing the API With Gates and Policies
 
 To protect an operation, we create a Laravel [policy](https://laravel.com/docs/authorization#creating-policies): 
 
@@ -500,37 +547,9 @@ Then we can plug the `auth:sanctum` middleware and specify what policy to use:
 
 Read the detailed documentation about using [Laravel gates and policies with API Platform](security.md).
 
-## Eloquent filters
+<!-- ## Testing the API
 
-API Platform provides an easy shortcut to some [useful filters](./filters.md), for starters you can enable a `PartialSearchFilter` on every exposed properties and add an `OrderFilter`: 
-
-```patch
-// app/Models/Book.php
-
-  use ApiPlatform\Metadata\ApiResource;
-+ use ApiPlatform\Laravel\Eloquent\Filter\PartialSearchFilter;
-+ use ApiPlatform\Laravel\Eloquent\Filter\OrderFilter;
-
- #[ApiResource]
-+ #[QueryParameter(key: ':property', filter: PartialSearchFilter::class)]
-+ #[QueryParameter(key: 'sort[:property]', filter: OrderFilter::class)]
-class Book extends Model
-{
-    protected $visible = ['title', 'description'];
-}
-```
-
-The `:property` placeholder gives the ability to create a parameter for each exposed property. These filters will be automatically documented:
-
-![Filters documentation](images/filters-documentation.png)
-
-On top of that, some validation rules are automatically added based on the given JSON Schema. You can customize the set of rules inside the `constraints` option of a `QueryParameter`.
-
-API Platform comes with many several filters dedicated to Laravel, [check them out](filters.md)!
-
-## Test assertions
-
-docs todo
+TODO-->
 
 ## Using The `IsApiResourceTrait` Instead of Attributes
 
