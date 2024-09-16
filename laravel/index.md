@@ -416,8 +416,8 @@ For instance, here how to make your API read-only by enabling only the `GET` [op
  #[ApiResource(
      paginationItemsPerPage: 10,
 +    operations: [
-+       new GetCollection(),
-+       new Get(),
++        new GetCollection(),
++        new Get(),
 +    ],
  )]
  class Book extends Model
