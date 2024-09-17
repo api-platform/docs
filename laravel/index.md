@@ -86,7 +86,7 @@ Open the generated migration class (`database/migrations/<timestamp>_create_book
 
 +            $table->string('isbn')->nullable();
 +            $table->string('title');
-+            $table->string('description');
++            $table->text('description');
 +            $table->string('author');
 +            $table->date('publication_date')->nullable();
 
@@ -482,15 +482,54 @@ On top of that, some validation rules are automatically added based on the given
 
 API Platform comes with many several filters dedicated to Laravel, [check them out](filters.md)!
 
-## Validating Data
+## Write Operations Authorization and Validation
 
-To validate user input, you may generate a [FormRequest](https://laravel.com/docs/validation#creating-form-requests):
+![Form Request](images/form-request.png)
+
+To authorize write operations (`POST`, `PATCH`, `PUT`) and validate user input, you may generate a [Form Request class](https://laravel.com/docs/validation#creating-form-requests):
 
 ```console
 php artisan make:request BookFormRequest
 ```
 
-Use this set of rules in your resource to validate user input on every write operation (PATCH, POST):
+Then, add validation rules to the generated class (`app/Http/Requests/BookFormRequest.php` in our example):
+
+```
+ namespace App\Http\Requests;
+
+ use Illuminate\Foundation\Http\FormRequest;
+
+ class BookFormRequest extends FormRequest
+ {
+     /**
+      * Determine if the user is authorized to make this request.
+      */
+     public function authorize(): bool
+     {
+-        return false;
++        return user()->isAdmin();
+     }
+ 
+     /**
+      * Get the validation rules that apply to the request.
+      *
+      * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
+      */
+     public function rules(): array
+     {
+         return [
+-             //
++            'title' => 'required|unique:books|max:255',
++            'description' => 'required',
++            'author' => 'required|max:100',
+         ];
+     }
+ }
+```
+
+In this example, we only authorize admin users to do write operations, and we add some validation rules.
+
+Use this set of rules in your resource to authorize and validate user input:
 
 ```patch
 // app/Models/Book.php
@@ -506,8 +545,8 @@ Use this set of rules in your resource to validate user input on every write ope
  }
 ```
 
-<!-- todo link to rfc ? -->
-API Platform will transform any exception to JSON Problem errors, you can create your own `Error` resource following [this guide](https://api-platform.com/docs/guides/error-resource/).
+API Platform will transform any exception in the [RFC 7807](https://www.rfc-editor.org/rfc/rfc7807) (Problem Details for HTTP APIs) format.
+You can create your own `Error` resource following [this guide](https://api-platform.com/docs/guides/error-resource/).
 
 Read the detailed documentation about [Laravel data validation in API Platform](validation.md).
 
