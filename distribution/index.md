@@ -85,7 +85,14 @@ Then, start Docker Compose in detached mode:
 docker compose up --wait 
 ```
 
-**Tip:** Be sure that the ports `80`, `443`, and `5432` of the host are not already in use. The usual offenders are Apache, NGINX, and Postgres. If they are running, stop them and run `docker compose up --wait` again.
+> [!TIP]
+>
+>Be sure that the ports `80`, `443`, and `5432` of the host are not already in use. The usual offenders are Apache, NGINX, and Postgres. If they are running, stop them and run `docker compose up --wait` again.
+>
+> Alternatively, run the following command to start the web server on port `8080` with HTTPS disabled:
+> ```console
+> SERVER_NAME=localhost:80 HTTP_PORT=8080 TRUSTED_HOSTS=localhost docker compose up --wait`
+> ```
 
 This starts the following services:
 
