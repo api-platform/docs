@@ -2,12 +2,12 @@
 
 The API system has built-in [content negotiation](https://en.wikipedia.org/wiki/Content_negotiation) capabilities.
 
-By default, only the [JSON-LD](https://json-ld.org) and JSON formats are enabled. However API Platform supports many more formats and can be extended.
+By default, only the [JSON-LD](https://json-ld.org) format is enabled. However API Platform supports many more formats and can be extended.
 
 The framework natively supports JSON-LD (and Hydra), GraphQL, JSON:API, HAL, YAML, CSV, HTML (API docs), raw JSON and raw XML.
 Using the raw JSON or raw XML formats is discouraged, prefer using JSON-LD instead, which provides more feature and is as easy to use.
 
-API Platform also supports [JSON Merge Patch (RFC 7396)](https://tools.ietf.org/html/rfc7396) the JSON:API [`PATCH`](https://tools.ietf.org/html/rfc5789) formats, as well as [Problem Details (RFC 7807)](https://tools.ietf.org/html/rfc7807), Hydra and JSON:API error formats.
+API Platform also supports [JSON Merge Patch (RFC 7396)](https://tools.ietf.org/html/rfc7396) the JSON:API [`PATCH`](https://jsonapi.org/format/#crud-updating) formats, as well as [Problem Details (RFC 7807)](https://tools.ietf.org/html/rfc7807), [Hydra](https://www.hydra-cg.com/spec/latest/core/#description-of-http-status-codes-and-errors) and [JSON:API](https://jsonapi.org/format/#errors) error formats.
 
 <p align="center" class="symfonycasts"><a href="https://symfonycasts.com/screencast/api-platform/formats?cid=apip"><img src="/docs/distribution/images/symfonycasts-player.png" alt="Formats screencast"><br>Watch the Formats screencast</a></p>
 
