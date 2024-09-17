@@ -263,7 +263,57 @@ class Book extends Model
 
 ## Relations and Nested Ressources
 
-docs todo
+Let's replace our author column by a relation to a new `author` table:
+
+```patch
+    public function up(): void
+    {
+        Schema::create('books', function (Blueprint $table) {
+            $table->id();
+
+            $table->string('description');
+-            $table->string('author');
++            $table->integer('author_id')->unsigned();
++            $table->foreign('author_id')->references('id')->on('authors');
+
+            $table->timestamps();
+        });
+
++       Schema::create('authors', function (Blueprint $table): void {
++           $table->id();
++           $table->string('name');
++           $table->timestamps();
++       });
+    }
+```
+
+By doing so, API Platform will automatically handle links to that relation using your prefered format (JSON:API, JSON-LD etc) 
+and when we request a Book we obtain: 
+
+```json
+{
+    "@context": "/api/contexts/Book",
+    "@id": "/api/books/1",
+    "@type": "Book",
+    "name": "Miss Nikki Senger V",
+    "isbn": "9784291624633",
+    "publicationDate": "1971-09-04",
+    "author": "/api/authors/1"
+}
+```
+
+To create a Book related to an author, you should use IRIs to reference the relation:
+
+```http
+PATCH /api/books/1 HTTP/2
+Content-Type: application/merge-patch+json
+
+{
+    "author": "/api/authors/2"
+}
+```
+
+There's a powerful mechanism inside API Platform to create routes using relation (e.g.: "/api/authors/2/books"), read more about [subresources here](../core/subresources.md).
 
 ## Paginating Data
 
