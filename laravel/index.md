@@ -1,22 +1,22 @@
 # API Platform for Laravel Projects
 
-API Platform is **the easiest way** to create **state of the art** web APIs
+API Platform is **the easiest way** to create **state-of-the-art** web APIs
 using Laravel!
 
 ![Basic REST API](images/basic-rest.png)
 
 With API Platform, you can:
 
-* expose your Eloquent models in minutes as:
-    * a REST API implementing the industry-leading standards, formats and best practices: JSON-LD/RDF, JSON:API, HAL many RFCs...
-    * a GraphQL API
+* [expose your Eloquent](#exposing-a-model) models in minutes as:
+    * a REST API implementing the industry-leading standards, formats and best practices: [JSON-LD](https://en.wikipedia.org/wiki/JSON-LD)/[RDF](https://en.wikipedia.org/wiki/Resource_Description_Framework), [JSON:API](https://jsonapi.org), [HAL](https://stateless.group/hal_specification.html), and many RFCs...
+    * a [GraphQL](https://graphql.org/) API
     * or both at the same time, with the same code!
-* automatically expose an OpenAPI specification (formerly Swagger), dynamically generated from your Eloquent models and always up to date
-* automatically expose nice UIs and playgrounds to develop using your API (Swagger UI, Redoc, GraphiQL and/or GraphQL Playground)
+* automatically expose an [OpenAPI](https://www.openapis.org) specification (formerly Swagger), dynamically generated from your Eloquent models and always up to date
+* automatically expose nice UIs and playgrounds to develop using your API ([Swagger UI](https://swagger.io/tools/swagger-ui/) and [GraphiQL](https://github.com/graphql/graphiql))
 * automatically paginate your collections
-* add validation logic using Laravel Form Request
-* add authorization logic using gates and policies (compatible with Sanctum, Passport, Socialite...)
-* add filtering logic
+* add validation logic using Laravel [Form Request Validation](#write-operations-authorization-and-validation)
+* add authorization logic using [gates and policies](#authorization) ([compatible with Sanctum, Passport, Socialite...](#authentication))
+* add [filtering logic](#adding-filters)
 <!--* push changed data to the clients in real-time using Laravel Broadcast and [Mercure](https://mercure.rocks) (a popular WebSockets alternative, created by Kévin Dunglas, the original author of API Platform) and receive them using Laravel Echo-->
 * benefits from the API Platform JavaScript tools: [admin](../admin/index.md) and [create client](../create-client/index.md) (supports Next/React, Nuxt/Vue.js, Quasar, Vuetify and more!)
 <!-- * benefits from native HTTP cache (with automatic invalidation) -->
@@ -676,6 +676,37 @@ Read the detailed documentation about using [Laravel gates and policies with API
 <!-- ## Testing the API
 
 TODO-->
+
+## Using the JavaScript Tools
+
+### The Admin
+
+Wouldn't it be nice to have an administration backend to manage the data exposed by your API? Checkout [API Platform Admin](../admin/index.md)!
+
+![The admin](../distribution/images/api-platform-2.6-admin.png)
+
+This [Material Design](https://material.io/guidelines/) admin is a Single Page App bbuilt with [React Admin](https://marmelab.com/react-admin/). It is powerful and fully customizable.
+
+It leverages the Hydra documentation exposed by the API component to build itself. It's 100% dynamic - **no code generation
+occurs**.
+
+### SPA/PWA Scaffolding
+
+![The Next.js Progressive Web App](../distribution/images/api-platform-2.6-pwa-react.png)
+
+API Platform also has an awesome [client generator](../create-client/index.md) able to scaffold fully working [Next.js](../create-client/nextjs.md), [Nuxt.js](../create-client/nuxt.md), [React/Redux](../create-client/react.md), [Vue.js](../create-client/vuejs.md), [Quasar](../create-client/quasar.md), and [Vuetify](../create-client/vuetify.md) Progressive Web Apps/Single Page Apps that you can easily tune and customize. The generator also supports
+[React Native](../create-client/react-native.md) if you prefer to leverage all capabilities of mobile devices.
+
+
+The generated code contains a list (including pagination), a delete button, a creation and an edit form. It also includes
+[Tailwind CSS](https://tailwindcss.com) classes and [ARIA roles](https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA)
+to make the app usable by people with disabilities.
+
+Checkout [the dedicated documentation](../create-client/index.md).
+
+## Hooking Your Own Business Logic
+
+Now that you learned the basics, be sure to read [the general design considerations](../core/design.md) and [how to extend API Platform](../core/extending.md) to understand how API Platform is designed, and how to hook your custom business logic!
 
 ## Using The `IsApiResourceTrait` Instead of Attributes
 
