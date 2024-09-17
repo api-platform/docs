@@ -550,15 +550,15 @@ You can create your own `Error` resource following [this guide](https://api-plat
 
 Read the detailed documentation about [Laravel data validation in API Platform](validation.md).
 
-## Securing the API With Gates and Policies
+## Auhtorizatino Logic With Policies
 
-To protect an operation, we create a Laravel [policy](https://laravel.com/docs/authorization#creating-policies): 
+To protect an operation and ensure that only authorized users can access them, start by creating a Laravel [policiy](https://laravel.com/docs/authorization#creating-policies): 
 
 ```console
 php artisan make:policy BookPolicy --model=Book
 ```
 
-If you want you can also add Sanctum:
+In addition, you can use [Laravel Sanctum](https://laravel.com/docs/sanctum) to authenticate your users:
 
 ```console
 php artisan install:api
@@ -569,13 +569,18 @@ Then we can plug the `auth:sanctum` middleware and specify what policy to use:
 ```patch
 // app/Models/Book.php
 
+namespace App\Models;
+
+use ApiPlatform\Metadata\ApiResource;
+use Illuminate\Database\Eloquent\Model;
+
 -#[ApiResource]
  #[ApiResource(
      paginationItemsPerPage: 10,
 +    operations: [
 +       new Patch(
 +            middleware: 'auth:sanctum',
-+            policy: 'update'
++            policy: 'update',
 +       ),
 +    ],
 )]
@@ -583,6 +588,8 @@ Then we can plug the `auth:sanctum` middleware and specify what policy to use:
  {
  }
 ```
+
+Alternatively, if you need OAuth, you may want to use [Laravel Passport](https://laravel.com/docs/passport).
 
 Read the detailed documentation about using [Laravel gates and policies with API Platform](security.md).
 
