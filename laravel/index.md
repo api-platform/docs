@@ -8,18 +8,18 @@ using Laravel!
 With API Platform, you can:
 
 * expose your Eloquent models in minutes as:
-    * a REST API implementing the industry-leading standards and best practices: JSON-LD, JSON:API and HAL
+    * a REST API implementing the industry-leading standards, formats and best practices: JSON-LD/RDF, JSON:API, HAL many RFCs...
     * a GraphQL API
     * or both at the same time, with the same code!
 * automatically expose an OpenAPI specification (formerly Swagger), dynamically generated from your Eloquent models and always up to date
 * automatically expose nice UIs and playgrounds to develop using your API (Swagger UI, Redoc, GraphiQL and/or GraphQL Playground)
 * automatically paginate your collections
-* add validation logic using Laravel logic
-* add authorization logic using gates and policies (compatible with Passport and Sanctum)
+* add validation logic using Laravel Form Request
+* add authorization logic using gates and policies (compatible with Sanctum, Passport, Socialite...)
 * add filtering logic
-* push changed data to the clients in real-time using Laravel Broadcast and [Mercure](https://mercure.rocks) (a popular WebSockets alternative, created by Kévin Dunglas, the original author of API Platform) and receive them using Laravel Echo
+<!--* push changed data to the clients in real-time using Laravel Broadcast and [Mercure](https://mercure.rocks) (a popular WebSockets alternative, created by Kévin Dunglas, the original author of API Platform) and receive them using Laravel Echo-->
 * benefits from the API Platform JavaScript tools: [admin](../admin/index.md) and [create client](../create-client/index.md) (supports Next/React, Nuxt/Vue.js, Quasar, Vuetify and more!)
-* benefits from native HTTP cache (with automatic invalidation)
+<!-- * benefits from native HTTP cache (with automatic invalidation) -->
 * boost your app with [Octane](https://laravel.com/docs/octane) and [FrankenPHP](https://frankenphp.dev) (the default Octane engine, also created by Kévin)
 * [decouple your API from your models](../core/state-providers.md) and implement patterns such as CQRS
 * test your API using convenient ad-hoc assertions that works with Pest and PHPUnit
@@ -619,7 +619,7 @@ It also natively supports:
 
 * [Laravel Sanctum](https://laravel.com/docs/sanctum), an authentication system for SPAs (single page applications), mobile applications, and simple, token-based APIs
 * [Laravel Passport](https://laravel.com/docs/passport), a full OAuth 2 server
-* [Laravel Socialite](https://laravel.com/docs/socialite), OAuth providers such as Facebook, X, LinkedIn, Google, GitHub, GitLab, Bitbucket, and Slack
+* [Laravel Socialite](https://laravel.com/docs/socialite), OAuth providers including Facebook, X, LinkedIn, Google, GitHub, GitLab, Bitbucket, and Slack
 
 Follow the official instructions of the tool(s) you want to use.
 
