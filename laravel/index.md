@@ -550,7 +550,38 @@ You can create your own `Error` resource following [this guide](https://api-plat
 
 Read the detailed documentation about [Laravel data validation in API Platform](validation.md).
 
-## Auhtorizatino Logic With Policies
+## Authentication
+
+API Platform hooks into the native [Laravel authentication mechanism](https://laravel.com/docs/authentication).
+
+It also natively supports:
+
+* [Laravel Sanctum](https://laravel.com/docs/sanctum), an authentication system for SPAs (single page applications), mobile applications, and simple, token based APIs
+* [Laravel Passport](https://laravel.com/docs/passport), a full OAuth 2 server
+* [Laravel Socialite](https://laravel.com/docs/socialite), OAuth providers such as Facebook, X, LinkedIn, Google, GitHub, GitLab, Bitbucket, and Slack
+
+Follow the official instructions of the tool(s) you want to use.
+
+### Middlewares
+
+It's sometimes convenient to enforce the use of middlewares for all API routes.
+
+In the following example, we enable the Laravel Sanctum middleware for all API routes:
+
+```php
+<?php
+
+// config/api-platform.php
+
+return [
+    // ..
+    'defaults' => [
+        'middleware' => 'auth:sanctum',
+    ],
+];
+```
+
+## Authorization
 
 To protect an operation and ensure that only authorized users can access them, start by creating a Laravel [policiy](https://laravel.com/docs/authorization#creating-policies): 
 
@@ -558,13 +589,7 @@ To protect an operation and ensure that only authorized users can access them, s
 php artisan make:policy BookPolicy --model=Book
 ```
 
-In addition, you can use [Laravel Sanctum](https://laravel.com/docs/sanctum) to authenticate your users:
-
-```console
-php artisan install:api
-```
-
-Then we can plug the `auth:sanctum` middleware and specify what policy to use: 
+Then, use the `policy` property on an operation attribute to enforce this policy:
 
 ```patch
 // app/Models/Book.php
@@ -579,7 +604,6 @@ use Illuminate\Database\Eloquent\Model;
      paginationItemsPerPage: 10,
 +    operations: [
 +       new Patch(
-+            middleware: 'auth:sanctum',
 +            policy: 'update',
 +       ),
 +    ],
@@ -588,8 +612,6 @@ use Illuminate\Database\Eloquent\Model;
  {
  }
 ```
-
-Alternatively, if you need OAuth, you may want to use [Laravel Passport](https://laravel.com/docs/passport).
 
 Read the detailed documentation about using [Laravel gates and policies with API Platform](security.md).
 
