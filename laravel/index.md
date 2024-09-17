@@ -8,9 +8,9 @@ using Laravel!
 With API Platform, you can:
 
 * expose your Eloquent models in minutes as:
-  * a REST API implementing the industry-leading standards and best practices: JSON-LD, JSON:API and HAL
-  * a GraphQL API
-  * or both at the same time, with the same code!
+    * a REST API implementing the industry-leading standards and best practices: JSON-LD, JSON:API and HAL
+    * a GraphQL API
+    * or both at the same time, with the same code!
 * automatically expose an OpenAPI specification (formerly Swagger), dynamically generated from your Eloquent models and always up to date
 * automatically expose nice UIs and playgrounds to develop using your API (Swagger UI, Redoc, GraphiQL and/or GraphQL Playground)
 * automatically paginate your collections
@@ -64,7 +64,7 @@ Let's start by creating a `Book` model:
 php artisan make:model Book
 ```
 
-By default, Laravel uses SQLite. You can open the `database/database.sqlite` file with your prefered SQLite client (PHPStorm works like charm), create a table named `books` and add some columns, Eloquent and API Platform will detect these columns automatically.
+By default, Laravel uses SQLite. You can open the `database/database.sqlite` file with your preferred SQLite client (PHPStorm works like a charm), create a table named `books`, and add some columns, Eloquent and API Platform will detect these columns automatically.
 
 But there is a better alternative: using a migration class.
 
@@ -95,7 +95,7 @@ Open the generated migration class (`database/migrations/<timestamp>_create_book
     }
 ```
 
-Finally execute the migration:
+Finally, execute the migration:
 
 ```console
 php artisan migrate
@@ -127,10 +127,10 @@ You can play with your API with the sandbox provided by SwaggerUI.
 
 Under the hood, API Platform:
 
-1. Registered the standard REST routes in Laravel's router and a controller that implements a state-of-the-art, fully-featured and secure API endpoint using the services provided by the [API Platform Core library](../core/index.md)
+1. Registered the standard REST routes in Laravel's router and a controller that implements a state-of-the-art, fully-featured, and secure API endpoint using the services provided by the [API Platform Core library](../core/index.md)
 2. Used its built-in Eloquent [state provider](../core/state-providers.md) to introspect the database and gather metadata about all columns to expose through the API
-3. Generated machine-readable documentations of the API in the [OpenAPI (formerly known as Swagger)](../core/openapi.md) (available at http://127.0.0.1:8000/api/docs.json) and [JSON-LD](https://json-ld.org)/[Hydra](https://www.hydra-cg.com) formats using these metadata TODO: .openapi is broken
-4. Generated a nice human-readable documentation and a sandbox for the API with [SwaggerUI](https://swagger.io/tools/swagger-ui/) (Redoc is also available out-of-the-box)
+3. Generated machine-readable documentations of the API in the [OpenAPI (formerly known as Swagger)](../core/openapi.md) (available at http://127.0.0.1:8000/api/docs.json) and [JSON-LD](https://json-ld.org)/[Hydra](https://www.hydra-cg.com) formats using this metadata
+4. Generated nice human-readable documentation and a sandbox for the API with [SwaggerUI](https://swagger.io/tools/swagger-ui/) (Redoc is also available out-of-the-box)
 
 Imagine doing it all again, properly, by hand? How much time have you saved? Weeks, months? And you've seen nothing yet!
 
@@ -144,9 +144,9 @@ the corresponding API request in the UI. Try it yourself by browsing to `http://
 So, if you want to access the raw data, you have two alternatives:
 
 * Add the correct `Accept` header (or don't set any `Accept` header at all if you don't care about security) - preferred when writing API clients
-* Add the format you want as the extension of the resource - for debug purpose only
+* Add the format you want as the extension of the resource - for debug purposes only
 
-For instance, go to `http://127.0.0.1:8000/api/books.jsonld` to retrieve the list of `Greeting` resources in JSON-LD.
+For instance, go to `http://127.0.0.1:8000/api/books.jsonld` to retrieve the list of `Book` resources in JSON-LD.
 
 Of course, you can also use your favorite HTTP client to query the API.
 We are fond of [Hoppscotch](https://hoppscotch.com), a free and open source API client with good support of API Platform.
@@ -267,12 +267,12 @@ docs todo
 
 ## Paginating Data
 
-A must-have feature for APIs is pagination. Without pagination, collections responses quickly become huge and slow,
+A must-have feature for APIs is pagination. Without pagination, collection responses quickly become huge and slow,
 and can even lead to crashes (Out of Memory, timeouts...).
 
 Fortunately, the Eloquent state provider provided by API Platform automatically paginates data!
 
-To test this feature, let's inject some fake data in the database.
+To test this feature, let's inject some fake data into the database.
 
 ### Seeding the Database
 
@@ -339,7 +339,7 @@ Reference this factory in the seeder (`database/seeder/DatabaseSeeder.php`):
 ```patch
  namespace Database\Seeders;
  
- use App\Models\Book;
++use App\Models\Book;
  use App\Models\User;
  // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
  use Illuminate\Database\Seeder;
@@ -407,10 +407,15 @@ Read the [pagination documentation](../core/pagination.md) to learn all you can 
 
 API Platform has a ton of knobs and gives you full control over what is exposed.
 
-For instance, here how to make your API read-only by enabling only the `GET` [operations](../core/operations.md):
+For instance, here is how to make your API read-only by enabling only the `GET` [operations](../core/operations.md):
 
 ```patch
-// app/Models/Book.php
+ // app/Models/Book.php
+ namespace App\Models;
+
++use ApiPlatform\Metadata\Get;
++use ApiPlatform\Metadata\GetCollection;
+ use Illuminate\Database\Eloquent\Model;
 
 -#[ApiResource]
  #[ApiResource(
@@ -427,9 +432,9 @@ For instance, here how to make your API read-only by enabling only the `GET` [op
 
 ![Read-only](images/read-only.png)
 
-We'll use configuration options provided by API Platform all along this getting started guide, but there are tons of feature!
+We'll use configuration options provided by API Platform all along this getting started guide, but there are tons of features!
 
-A good way to discover them is to inspect the properties of the `ApiResource` and `ApiProperty` attributes, and, of course, to [read the documentation of the core library](../core/index.md).
+A good way to discover them is to inspect the properties of the `ApiResource` and `ApiProperty` attributes and, of course, to [read the core library documentation](../core/index.md).
 
 You can change the default configuration (for instance, which operations are enabled by default) in the config (`config/api-platform.php`).
 
@@ -441,35 +446,39 @@ For the rest of this tutorial, we'll assume that at least all default operations
 API Platform provides an easy shortcut to some [useful filters](./filters.md), for starters you can enable a `PartialSearchFilter` the title property:
 
 ```patch
-// app/Models/Book.php
+ // app/Models/Book.php
+ namespace App\Models;
 
-  use ApiPlatform\Metadata\ApiResource;
-+ use ApiPlatform\Laravel\Eloquent\Filter\PartialSearchFilter;
+ use ApiPlatform\Metadata\ApiResource;
++use ApiPlatform\Laravel\Eloquent\Filter\PartialSearchFilter;
+ use Illuminate\Database\Eloquent\Model;
 
  #[ApiResource]
-+ #[QueryParameter(key: 'title', filter: PartialSearchFilter::class)]
-class Book extends Model
-{
-}
++#[QueryParameter(key: 'title', filter: PartialSearchFilter::class)]
+ class Book extends Model
+ {
+ }
 ```
 
 ![Title filter](images/title-filter.png)
 
-It's also possible to enable filters on every exposed properties:
+It's also possible to enable filters on every exposed property:
 
 ```patch
-// app/Models/Book.php
+ // app/Models/Book.php
+ namespace App\Models;
 
-  use ApiPlatform\Metadata\ApiResource;
-+ use ApiPlatform\Laravel\Eloquent\Filter\PartialSearchFilter;
-+ use ApiPlatform\Laravel\Eloquent\Filter\OrderFilter;
+ use ApiPlatform\Metadata\ApiResource;
++use ApiPlatform\Laravel\Eloquent\Filter\PartialSearchFilter;
++use ApiPlatform\Laravel\Eloquent\Filter\OrderFilter;
+ use Illuminate\Database\Eloquent\Model;
 
  #[ApiResource]
-+ #[QueryParameter(key: ':property', filter: PartialSearchFilter::class)]
-+ #[QueryParameter(key: 'sort[:property]', filter: OrderFilter::class)]
-class Book extends Model
-{
-}
++#[QueryParameter(key: ':property', filter: PartialSearchFilter::class)]
++#[QueryParameter(key: 'sort[:property]', filter: OrderFilter::class)]
+ class Book extends Model
+ {
+ }
 ```
 
 The `OrderFilter` allows us to sort the collection.
@@ -480,7 +489,7 @@ The `:property` placeholder gives the ability to create a parameter for each exp
 
 On top of that, some validation rules are automatically added based on the given JSON Schema. You can customize the set of rules inside the `constraints` option of a `QueryParameter`.
 
-API Platform comes with many several filters dedicated to Laravel, [check them out](filters.md)!
+API Platform comes with several filters dedicated to Laravel, [check them out](filters.md)!
 
 ## Write Operations Authorization and Validation
 
@@ -532,14 +541,16 @@ In this example, we only authorize admin users to do write operations, and we ad
 Use this set of rules in your resource to authorize and validate user input:
 
 ```patch
-// app/Models/Book.php
+ // app/Models/Book.php
+ namespace App\Models;
+
 +use App\Http\Requests\BookFormRequest;
+ use Illuminate\Database\Eloquent\Model;
 
 -#[ApiResource]
- #[ApiResource(
-     paginationItemsPerPage: 10,
-+    rules: BookFormRequest::class
-)]
++#[ApiResource(
++    rules: BookFormRequest::class,
++)]
  class Book extends Model
  {
  }
@@ -556,7 +567,7 @@ API Platform hooks into the native [Laravel authentication mechanism](https://la
 
 It also natively supports:
 
-* [Laravel Sanctum](https://laravel.com/docs/sanctum), an authentication system for SPAs (single page applications), mobile applications, and simple, token based APIs
+* [Laravel Sanctum](https://laravel.com/docs/sanctum), an authentication system for SPAs (single page applications), mobile applications, and simple, token-based APIs
 * [Laravel Passport](https://laravel.com/docs/passport), a full OAuth 2 server
 * [Laravel Socialite](https://laravel.com/docs/socialite), OAuth providers such as Facebook, X, LinkedIn, Google, GitHub, GitLab, Bitbucket, and Slack
 
@@ -564,7 +575,7 @@ Follow the official instructions of the tool(s) you want to use.
 
 ### Middlewares
 
-It's sometimes convenient to enforce the use of middlewares for all API routes.
+It's sometimes convenient to enforce the use of middleware for all API routes.
 
 In the following example, we enable the Laravel Sanctum middleware for all API routes:
 
@@ -583,7 +594,7 @@ return [
 
 ## Authorization
 
-To protect an operation and ensure that only authorized users can access them, start by creating a Laravel [policiy](https://laravel.com/docs/authorization#creating-policies): 
+To protect an operation and ensure that only authorized users can access it, start by creating a Laravel [policiy](https://laravel.com/docs/authorization#creating-policies):
 
 ```console
 php artisan make:policy BookPolicy --model=Book
@@ -593,11 +604,11 @@ Then, use the `policy` property on an operation attribute to enforce this policy
 
 ```patch
 // app/Models/Book.php
-
 namespace App\Models;
 
-use ApiPlatform\Metadata\ApiResource;
-use Illuminate\Database\Eloquent\Model;
+ use ApiPlatform\Metadata\ApiResource;
++use ApiPlatform\Metadata\Patch;
+ use Illuminate\Database\Eloquent\Model;
 
 -#[ApiResource]
  #[ApiResource(
@@ -652,7 +663,7 @@ class Book extends Model
 }
 ```
 
-When using the `IsApiResourceTrait`, it's also possible to return advanced configuration by definining an `apiResource()` static method.
+When using the `IsApiResourceTrait`, it's also possible to return advanced configuration by defining an `apiResource()` static method.
 
 These two classes are strictly equivalent:
 
@@ -699,8 +710,8 @@ class Book extends Model
 }
 ```
 
-It's quite common to define multiple `ApiResource`, `ApiProperty` and `Filter` attributes on a same class.
-To mimick this behavior, the `apiResource()` function can return an array instead of a single instance of medata class.
+It's quite common to define multiple `ApiResource`, `ApiProperty`, and `Filter` attributes on the same class.
+To mimic this behavior, the `apiResource()` function can return an array instead of a single instance of metadata class.
 
 These two classes are strictly equivalent:
 
@@ -768,5 +779,3 @@ class Book extends Model
     }
 }
 ```
-
-
