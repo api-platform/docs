@@ -305,7 +305,7 @@ and when we request a Book we obtain:
 To create a Book related to an author, you should use IRIs to reference the relation:
 
 ```http
-PATCH /api/books/1 HTTP/2
+PATCH /api/books/1
 Content-Type: application/merge-patch+json
 
 {
@@ -313,7 +313,7 @@ Content-Type: application/merge-patch+json
 }
 ```
 
-There's a powerful mechanism inside API Platform to create routes using relation (e.g.: "/api/authors/2/books"), read more about [subresources here](../core/subresources.md).
+There's a powerful mechanism inside API Platform to create routes using relation (e.g.: `/api/authors/2/books`), read more about [subresources here](../core/subresources.md).
 
 ## Paginating Data
 
@@ -541,6 +541,35 @@ On top of that, some validation rules are automatically added based on the given
 
 API Platform comes with several filters dedicated to Laravel, [check them out](filters.md)!
 
+
+## Authentication
+
+API Platform hooks into the native [Laravel authentication mechanism](https://laravel.com/docs/authentication).
+
+It also natively supports:
+
+* [Laravel Sanctum](https://laravel.com/docs/sanctum), an authentication system for SPAs (single page applications), mobile applications, and simple, token-based APIs
+* [Laravel Passport](https://laravel.com/docs/passport), a full OAuth 2 server
+* [Laravel Socialite](https://laravel.com/docs/socialite), OAuth providers including Facebook, X, LinkedIn, Google, GitHub, GitLab, Bitbucket, and Slack
+
+Follow the official instructions of the tool(s) you want to use.
+
+### Middlewares
+
+It's sometimes convenient to enforce the use of middleware for all API routes.
+
+In the following example, we enable the Laravel Sanctum middleware for all API routes:
+
+```php
+// config/api-platform.php
+return [
+    // ..
+    'defaults' => [
+        'middleware' => 'auth:sanctum',
+    ],
+];
+```
+
 ## Write Operations Authorization and Validation
 
 ![Form Request](images/form-request.png)
@@ -611,37 +640,6 @@ You can create your own `Error` resource following [this guide](https://api-plat
 
 Read the detailed documentation about [Laravel data validation in API Platform](validation.md).
 
-## Authentication
-
-API Platform hooks into the native [Laravel authentication mechanism](https://laravel.com/docs/authentication).
-
-It also natively supports:
-
-* [Laravel Sanctum](https://laravel.com/docs/sanctum), an authentication system for SPAs (single page applications), mobile applications, and simple, token-based APIs
-* [Laravel Passport](https://laravel.com/docs/passport), a full OAuth 2 server
-* [Laravel Socialite](https://laravel.com/docs/socialite), OAuth providers including Facebook, X, LinkedIn, Google, GitHub, GitLab, Bitbucket, and Slack
-
-Follow the official instructions of the tool(s) you want to use.
-
-### Middlewares
-
-It's sometimes convenient to enforce the use of middleware for all API routes.
-
-In the following example, we enable the Laravel Sanctum middleware for all API routes:
-
-```php
-<?php
-
-// config/api-platform.php
-
-return [
-    // ..
-    'defaults' => [
-        'middleware' => 'auth:sanctum',
-    ],
-];
-```
-
 ## Authorization
 
 To protect an operation and ensure that only authorized users can access it, start by creating a Laravel [policiy](https://laravel.com/docs/authorization#creating-policies):
@@ -653,8 +651,8 @@ php artisan make:policy BookPolicy --model=Book
 Then, use the `policy` property on an operation attribute to enforce this policy:
 
 ```patch
-// app/Models/Book.php
-namespace App\Models;
+ // app/Models/Book.php
+ namespace App\Models;
 
  use ApiPlatform\Metadata\ApiResource;
 +use ApiPlatform\Metadata\Patch;
@@ -662,13 +660,12 @@ namespace App\Models;
 
 -#[ApiResource]
  #[ApiResource(
-     paginationItemsPerPage: 10,
 +    operations: [
 +       new Patch(
 +            policy: 'update',
 +       ),
 +    ],
-)]
+ )]
  class Book extends Model
  {
  }
