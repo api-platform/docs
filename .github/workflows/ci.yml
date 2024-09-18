@@ -19,7 +19,11 @@ jobs:
           VALIDATE_ALL_CODEBASE: false
           VALIDATE_EDITORCONFIG: false
           VALIDATE_JSCPD: false
+<<<<<<< Updated upstream
           DEFAULT_BRANCH: 3.4
+=======
+          DEFAULT_BRANCH: 4.0
+>>>>>>> Stashed changes
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - uses: actions/cache@v3
