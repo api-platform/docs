@@ -225,8 +225,7 @@ So, if you want to access the raw data, you have two alternatives:
 For instance, go to `https://localhost/greetings.jsonld` to retrieve the list of `Greeting` resources in JSON-LD.
 
 Of course, you can also use your favorite HTTP client to query the API.
-We are fond of [Postman](https://www.postman.com/). It works perfectly well with API Platform, has native OpenAPI support,
-allows to easily write functional tests and has good team collaboration features.
+We are fond of [Hoppscotch](https://hoppscotch.com), a free and open source API client with good support of API Platform.
 
 ## Bringing your Own Model
 
@@ -743,8 +742,8 @@ occurs**.
 
 ## A Next.js Web App
 
-API Platform also has an awesome [client generator](../create-client/index.md) able to scaffold fully working Next.js, Nuxt.js, React/Redux, Vue.js, Quasar, and Vuetify Progressive Web Apps that you can easily tune and customize. The generator also supports
-[React Native](https://reactnative.dev/) if you prefer to leverage all capabilities of mobile devices.
+API Platform also has an awesome [client generator](../create-client/index.md) able to scaffold fully working [Next.js](../create-client/nextjs.md), [Nuxt.js](../create-client/nuxt.md), [React/Redux](../create-client/react.md), [Vue.js](../create-client/vuejs.md), [Quasar](../create-client/quasar.md), and [Vuetify](../create-client/vuetify.md) Progressive Web Apps/Single Page Apps that you can easily tune and customize. The generator also supports
+[React Native](../create-client/react-native.md) if you prefer to leverage all capabilities of mobile devices.
 
 The distribution comes with a skeleton ready to welcome the [Next.js](https://nextjs.org/) flavor of the generated code. To bootstrap your app, run:
 
