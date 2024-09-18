@@ -617,7 +617,8 @@ Then, add validation rules to the generated class (`app/Http/Requests/BookFormRe
 
 In this example, we only authorize admin users to do write operations, and we add some validation rules.
 
-Use this set of rules in your resource to authorize and validate user input:
+If the standard Laravel conventions are followed, the Form Request class is autodetected and used automatically.
+Otherwise, reference it explicitly in the `rules` parameter:
 
 ```patch
  // app/Models/Book.php
@@ -647,8 +648,8 @@ To protect an operation and ensure that only authorized users can access it, sta
 ```console
 php artisan make:policy BookPolicy --model=Book
 ```
-
-Then, use the `policy` property on an operation attribute to enforce this policy:
+If the standard Laravel conventions are followed, the Form Request class is autodetected and used automatically.
+Otherwise, you can use the `policy` property on an operation attribute to explicitly enforce a policy:
 
 ```patch
  // app/Models/Book.php
