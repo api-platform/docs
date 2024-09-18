@@ -4,14 +4,23 @@ on:
   push:
   pull_request:
 
+permissions: {}
+
 jobs:
   build:
     name: Lint
     runs-on: ubuntu-latest
 
+    permissions:
+      contents: read
+      packages: read
+      statuses: write
+
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Lint
         uses: github/super-linter/slim@v4
