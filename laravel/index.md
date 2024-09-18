@@ -648,7 +648,8 @@ To protect an operation and ensure that only authorized users can access it, sta
 ```console
 php artisan make:policy BookPolicy --model=Book
 ```
-If the standard Laravel conventions are followed, the Form Request class is autodetected and used automatically.
+
+If the standard Laravel conventions are followed, the Policy class is autodetected and used automatically.
 Otherwise, you can use the `policy` property on an operation attribute to explicitly enforce a policy:
 
 ```patch
