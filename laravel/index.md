@@ -642,7 +642,7 @@ Read the detailed documentation about [Laravel data validation in API Platform](
 
 ## Authorization
 
-To protect an operation and ensure that only authorized users can access it, start by creating a Laravel [policiy](https://laravel.com/docs/authorization#creating-policies):
+To protect an operation and ensure that only authorized users can access it, start by creating a Laravel [policy](https://laravel.com/docs/authorization#creating-policies):
 
 ```console
 php artisan make:policy BookPolicy --model=Book
