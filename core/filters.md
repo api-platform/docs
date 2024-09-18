@@ -184,8 +184,6 @@ class Book {
 }
 ```
 
-The OpenApi documentation will inherit from the JSON Schema documentation if available. It's also possible to declare your documentation from the filter by implementing `JsonSchemaFilterInterface` or the `OpenApiParameterFilterInterface`.
-
 ### Filter aliasing
 
 Filter aliasing is done by declaring a parameter key with a different property:
