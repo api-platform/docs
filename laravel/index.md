@@ -287,8 +287,8 @@ Let's replace our author column by a relation to a new `author` table:
     }
 ```
 
-By doing so, API Platform will automatically handle links to that relation using your prefered format (JSON:API, JSON-LD etc) 
-and when we request a Book we obtain: 
+By doing so, API Platform will automatically handle links to that relation using your prefered format (JSON:API, JSON-LD etc)
+and when we request a Book we obtain:
 
 ```json
 {
@@ -649,29 +649,7 @@ To protect an operation and ensure that only authorized users can access it, sta
 php artisan make:policy BookPolicy --model=Book
 ```
 
-If the standard Laravel conventions are followed, the Policy class is autodetected and used automatically.
-Otherwise, you can use the `policy` property on an operation attribute to explicitly enforce a policy:
-
-```patch
- // app/Models/Book.php
- namespace App\Models;
-
- use ApiPlatform\Metadata\ApiResource;
-+use ApiPlatform\Metadata\Patch;
- use Illuminate\Database\Eloquent\Model;
-
--#[ApiResource]
- #[ApiResource(
-+    operations: [
-+       new Patch(
-+            policy: 'update',
-+       ),
-+    ],
- )]
- class Book extends Model
- {
- }
-```
+Laravel will automatically detect your new policy and use it when manipulating a Book.
 
 Read the detailed documentation about using [Laravel gates and policies with API Platform](security.md).
 
