@@ -11,7 +11,7 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Lint
         uses: github/super-linter/slim@v4
@@ -19,10 +19,10 @@ jobs:
           VALIDATE_ALL_CODEBASE: false
           VALIDATE_EDITORCONFIG: false
           VALIDATE_JSCPD: false
-          DEFAULT_BRANCH: main
+          DEFAULT_BRANCH: "3.3"
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - uses: actions/cache@v3
+      - uses: actions/cache@v4
         with:
           path: ~/.cache/pip
           key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
