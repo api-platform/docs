@@ -305,7 +305,7 @@ and when we request a Book we obtain:
 
 To create a Book related to an author, you should use IRIs to reference the relation:
 
-```json
+```http
 PATCH /api/books/1
 Content-Type: application/merge-patch+json
 
@@ -421,7 +421,6 @@ php artisan db:seed
 ```
 
 > [!NOTE]
->
 > The `fake()` helper provided by Laravel lets you generate different types of random data for testing and seeding purposes. It uses [the Faker library](https://fakerphp.org), which has been created by François Zaninotto.
 > François is also a member of the API Platform Core Team.
 > He maintains [API Platform Admin](../admin/index.md), a tool built on top of his popular [React-Admin](https://marmelab.com/react-admin/) library that makes creating admin interfaces consuming your API data super easy.
