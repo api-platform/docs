@@ -203,7 +203,8 @@ Then, enable GraphQL in `config/api-platform.php`:
 ```
 
 Then open `http://127.0.0.1:8000/api/graphql` and replace the default GraphQL query example with:
-```
+
+```graphql
 {
   books(first: 3) {
     edges {
@@ -304,7 +305,7 @@ and when we request a Book we obtain:
 
 To create a Book related to an author, you should use IRIs to reference the relation:
 
-```http
+```json
 PATCH /api/books/1
 Content-Type: application/merge-patch+json
 
@@ -582,7 +583,7 @@ php artisan make:request BookFormRequest
 
 Then, add validation rules to the generated class (`app/Http/Requests/BookFormRequest.php` in our example):
 
-```
+```php
  namespace App\Http\Requests;
 
  use Illuminate\Foundation\Http\FormRequest;
