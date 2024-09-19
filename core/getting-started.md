@@ -156,9 +156,13 @@ Method | URL            | Description
 GET    | /products      | Retrieve the (paginated) collection
 POST   | /products      | Create a new product
 GET    | /products/{id} | Retrieve a product
-PUT    | /products/{id} | Update a product
 PATCH  | /products/{id} | Apply a partial modification to a product
 DELETE | /products/{id} | Delete a product
+
+> [!NOTE]
+>
+> `PUT` (replace or create) isn't registered automatically,
+> but is entirely supported by API Platform and can be added explicitly.
 
 The same operations are available for the offer method (routes will start with the `/offers` pattern).
 Route prefixes are built by pluralizing the name of the mapped entity class.

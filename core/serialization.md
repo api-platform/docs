@@ -189,7 +189,7 @@ basis. API Platform will always use the most specific definition. For instance, 
 at the resource level and at the operation level, the configuration set at the operation level will be used and the resource
 level ignored.
 
-In the following example we use different serialization groups for the `GET` and `PUT` operations:
+In the following example we use different serialization groups for the `GET` and `PATCH` operations:
 
 <code-selector>
 
@@ -200,15 +200,15 @@ namespace App\Entity;
 
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Get;
-use ApiPlatform\Metadata\Put;
+use ApiPlatform\Metadata\Patch;
 use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ApiResource(normalizationContext: ['groups' => ['get']])]
 #[Get]
-#[Put(normalizationContext: ['groups' => ['put']])]
+#[Patch(normalizationContext: ['groups' => ['patch']])]
 class Book
 {
-    #[Groups(['get', 'put'])]
+    #[Groups(['get', 'patch'])]
     public $name;
 
     #[Groups('get')]
@@ -225,15 +225,15 @@ App\Entity\Book:
         groups: ['get']
     operations:
         ApiPlatform\Metadata\Get: ~
-        ApiPlatform\Metadata\Put:
+        ApiPlatform\Metadata\Patch:
             normalizationContext:
-                groups: ['put']
+                groups: ['patch']
 
 # api/config/serializer/Book.yaml
 App\Entity\Book:
     attributes:
         name:
-            groups: ['get', 'put']
+            groups: ['get', 'patch']
         author:
             groups: ['get']
 ```
@@ -257,12 +257,12 @@ App\Entity\Book:
         </normalizationContext>
         <operations>
             <operation class="ApiPlatform\Metadata\Get" />
-            <operation class="ApiPlatform\Metadata\Put">
+            <operation class="ApiPlatform\Metadata\Patch">
                 <normalizationContext>
             <values>
                 <value name="groups">
                     <values>
-                        <value>put</value>
+                        <value>patch</value>
                     </values>
                 </value>
             </values>
@@ -281,7 +281,7 @@ App\Entity\Book:
     <class name="App\Entity\Book">
         <attribute name="name">
             <group>get</group>
-            <group>put</group>
+            <group>patch</group>
         </attribute>
         <attribute name="author">
             <group>get</group>
@@ -293,7 +293,7 @@ App\Entity\Book:
 </code-selector>
 
 The `name` and `author` properties will be included in the document generated during a `GET` operation because the configuration
-defined at the resource level is inherited. However the document generated when a `PUT` request will be received will only
+defined at the resource level is inherited. However the document generated when a `PATCH` request will be received will only
 include the `name` property because of the specific configuration for this operation.
 
 Refer to the [operations](operations.md) documentation to learn more.
