@@ -93,8 +93,8 @@ error will look like the following if the requested format is JSON-LD (the defau
 {
   "@context": "/contexts/ConstraintViolationList",
   "@type": "ConstraintViolationList",
-  "hydra:title": "An error occurred",
-  "hydra:description": "properties: The product must have the minimal properties required (\"description\", \"price\")",
+  "title": "An error occurred",
+  "description": "properties: The product must have the minimal properties required (\"description\", \"price\")",
   "violations": [
     {
       "propertyPath": "properties",
