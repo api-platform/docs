@@ -44,8 +44,7 @@ cd my-api-platform-laravel-app
 In your Laravel project, install the API Platform integration for Laravel:
 
 ```console
-composer config minimum-stability beta
-composer require api-platform/laravel:^4@beta
+composer require api-platform/laravel:^4
 ```
 
 If it's not already done, run `php artisan serve` to start the built-in web server.
@@ -191,7 +190,7 @@ By default, only the REST endpoints are enabled, but API Platform also [supports
 Install the GraphQL support package:
 
 ```console
-composer require api-platform/graphql:^4@beta
+composer require api-platform/graphql:^4
 ```
 
 Then, enable GraphQL in `config/api-platform.php`:
