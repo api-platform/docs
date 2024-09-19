@@ -47,10 +47,11 @@ The integration using the cache handler is quite simple. You just have to update
 +    --with github.com/dunglas/vulcain/caddy \
 +    --with github.com/dunglas/caddy-cbrotli \
 +    --with github.com/caddyserver/cache-handler
++    # You should use another storage than the default one (e.g. otter). 
++    # The list of the available storages can be find either on the documentation website (https://docs.souin.io/docs/storages/) or on the storages repository https://github.com/darkweak/storages
++    --with github.com/caddyserver/cache-handler
 +    # Or use the following lines instead of the cache-handler one for the latest improvements
-+    # @65cb24114d76a7de3f4e8c7b8ef7df3efd028899 can be removed when a new release of `darkweak/souin` will be published
-+    #--with github.com/darkweak/souin/plugins/caddy@65cb24114d76a7de3f4e8c7b8ef7df3efd028899 \
-+    #--with github.com/darkweak/souin@65cb24114d76a7de3f4e8c7b8ef7df3efd028899 \
++    #--with github.com/darkweak/souin/plugins/caddy \
 +    #--with github.com/darkweak/storages/otter/caddy
 +
 +FROM dunglas/frankenphp:latest AS frankenphp_upstream
