@@ -494,8 +494,10 @@ In Swagger UI, click on the `POST` operation of the `Book` resource type, click 
 You just saved a new book resource through the bookshop API! API Platform automatically transforms the JSON document to
 an instance of the corresponding PHP entity class and uses Doctrine ORM to persist it in the database.
 
-By default, the API supports `GET` (retrieve, on collections and items), `POST` (create), `PUT` (replace), `PATCH` (partial update) and `DELETE` (self-explanatory)
+By default, the API supports `GET` (retrieve, on collections and items), `POST` (create), `PATCH` (partial update) and `DELETE` (self-explanatory)
 HTTP methods. Don't forget to [disable the ones you don't want](../core/operations.md#enabling-and-disabling-operations)!
+
+The `PUT` (replace or create) method is also supported, but is not enabled by default.
 
 Try the `GET` operation on the collection. The book we added appears. When the collection contains more than 30 items,
 the pagination will automatically show up, [and this is entirely configurable](../core/pagination.md). You may be interested
