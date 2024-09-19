@@ -28,7 +28,7 @@ jobs:
           VALIDATE_ALL_CODEBASE: false
           VALIDATE_EDITORCONFIG: false
           VALIDATE_JSCPD: false
-          DEFAULT_BRANCH: "3.3"
+          DEFAULT_BRANCH: "4.0"
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - uses: actions/cache@v4
