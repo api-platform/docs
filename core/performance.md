@@ -16,13 +16,13 @@ This means that after the first request, all subsequent requests will not hit th
 from the cache.
 
 When a resource is modified, API Platform takes care of purging all responses containing it in the proxy’s
-cache. This ensures that the content served will always be fresh because the cache is purged in real-time. Support for
+cache. This ensures that the content served will always be fresh because the cache is purged in real time. Support for
 most specific cases such as the invalidation of collections when a document is added or removed or for relationships and
 inverse relations is built-in.
 
 ### Integrations
 
-#### Built-in Caddy HTTP cache
+#### Built-in Caddy HTTP Cache
 
 The API Platform distribution relies on the [Caddy web server](https://caddyserver.com) which provides an official HTTP cache module called [cache-handler](https://github.com/caddyserver/cache-handler), that is based on [Souin](https://github.com/darkweak/souin).
 
@@ -35,6 +35,9 @@ The integration using the cache handler is quite simple. You just have to update
 +FROM dunglas/frankenphp:latest-builder AS builder
 +COPY --from=caddy:builder /usr/bin/xcaddy /usr/bin/xcaddy
 +
++RUN apt-get update && apt-get install --no-install-recommends -y \
++    git
++
 +ENV CGO_ENABLED=1 XCADDY_SETCAP=1 XCADDY_GO_BUILD_FLAGS="-ldflags \"-w -s -extldflags '-Wl,-z,stack-size=0x80000'\""
 +RUN xcaddy build \
 +    --output /usr/local/bin/frankenphp \
@@ -42,24 +45,28 @@ The integration using the cache handler is quite simple. You just have to update
 +    --with github.com/dunglas/frankenphp/caddy=./caddy/ \
 +    --with github.com/dunglas/mercure/caddy \
 +    --with github.com/dunglas/vulcain/caddy \
-+    # Use --with github.com/darkweak/souin for the latest improvements
++    --with github.com/dunglas/caddy-cbrotli \
 +    --with github.com/caddyserver/cache-handler
++    # You should use another storage than the default one (e.g. otter). 
++    # The list of the available storages can be find either on the documentation website (https://docs.souin.io/docs/storages/) or on the storages repository https://github.com/darkweak/storages
++    --with github.com/caddyserver/cache-handler
++    # Or use the following lines instead of the cache-handler one for the latest improvements
++    #--with github.com/darkweak/souin/plugins/caddy \
++    #--with github.com/darkweak/storages/otter/caddy
 +
 +FROM dunglas/frankenphp:latest AS frankenphp_upstream
 +COPY --from=builder --link /usr/local/bin/frankenphp /usr/local/bin/frankenphp
 ```
 
 Update your Caddyfile with the following configuration:
+
 ```caddyfile
 {
-    order cache before rewrite
-    ...
-    cache {
-        api {
-            souin
-        }
-    }
+    cache
+    # ...
 }
+
+# ...
 ```
 This will tell to caddy to use the HTTP cache and activate the tag-based invalidation API. You can refer to the [cache-handler documentation](https://github.com/caddyserver/cache-handler) or the [souin website documentation](https://docs.souin.io) to learn how to configure the HTTP cache server.
 
@@ -73,7 +80,25 @@ api_platform:
             urls: [ 'http://caddy/souin-api/souin' ]
             purger: api_platform.http_cache.purger.souin
 ```
-And voilà, you have a fully working HTTP cache with it's own invalidation API.
+
+Don't forget to set your `Cache-Control` directive to enable caching on your API resource class.
+This can be achieved using the `cacheHeaders` property:
+
+```php
+use ApiPlatform\Metadata\ApiResource;
+
+#[ApiResource(
+    cacheHeaders: [
+        'public' => true,
+        'max_age' => 60, 
+    ]
+)]
+class Book
+{
+    // ...
+}
+```
+And voilà, you have a fully working HTTP cache with an invalidation API.
 
 #### Varnish
 
@@ -87,7 +112,6 @@ api_platform:
         invalidation:
             enabled: true
             varnish_urls: ['%env(VARNISH_URL)%']
-        public: true
     defaults:
         cache_headers:
             max_age: 0
@@ -98,9 +122,9 @@ api_platform:
 ## Configuration
 
 Support for reverse proxies other than Varnish or Caddy with the HTTP cache module can be added by implementing the `ApiPlatform\HttpCache\PurgerInterface`.
-Three purgers are available, the built-in caddy http cache purger (`api_platform.http_cache.purger.souin`), the http tags (`api_platform.http_cache.purger.varnish.ban`), the surrogate key implementation
+Three purgers are available, the built-in caddy HTTP cache purger (`api_platform.http_cache.purger.souin`), the HTTP tags (`api_platform.http_cache.purger.varnish.ban`), the surrogate key implementation
 (`api_platform.http_cache.purger.varnish.xkey`). You can specify the implementation using the `purger` configuration node,
-for example to use the xkey implementation:
+for example, to use the `xkey` implementation:
 
 ```yaml
 api_platform:
@@ -125,7 +149,7 @@ to the client](push-relations.md).
 
 ### Extending Cache-Tags for Invalidation
 
-Sometimes you need individual resources like `/me`. To work properly with Varnish, the `Cache-Tags` header needs to be
+Sometimes you need individual resources like `/me`. To work properly, the `Cache-Tags` header needs to be
 augmented with these resources. Here is an example of how this can be done:
 
 ```php
@@ -175,7 +199,7 @@ use ApiPlatform\Metadata\ApiResource;
     cacheHeaders: [
         'max_age' => 60, 
         'shared_max_age' => 120, 
-        'vary' => ['Authorization', 'Accept-Language']
+        'vary' => ['Authorization', 'Accept-Language'],
     ]
 )]
 class Book
@@ -201,7 +225,7 @@ use ApiPlatform\Metadata\Get;
 #[Get(
     cacheHeaders: [
         'max_age' => 60, 
-        'shared_max_age' => 120
+        'shared_max_age' => 120,
     ]
 )]
 class Book
@@ -217,14 +241,13 @@ API Platform internally uses a [PSR-6](https://www.php-fig.org/psr/psr-6/) cache
 (the default in the API Platform distribution), it automatically enables support for the best cache adapter available.
 
 Best performance is achieved using [APCu](https://github.com/krakjoe/apcu). Be sure to have the APCu extension installed
-on your production server. API Platform will automatically use it.
+on your production server (this is the case by default in the Docker image provided by the API Platform distribution).
+API Platform will automatically use it.
 
-## Using PPM (PHP-PM)
+## Using FrankenPHP's Worker Mode
 
-Response time of the API can be improved up to 15x by using [PHP Process Manager](https://github.com/php-pm/php-pm). If
-you want to use it on your project, follow the documentation dedicated to Symfony on the PPM website.
-
-Keep in mind that PPM is still in an early stage of development and can cause issues in production.
+API response times can be significantly improved by enabling [FrankenPHP's worker mode](https://frankenphp.dev/docs/worker/).
+This feature is enabled by default in the production environment of the API Platform distribution.
 
 ## Doctrine Queries and Indexes
 
@@ -239,12 +262,12 @@ database driver.
 
 ### Eager Loading
 
-By default Doctrine comes with [lazy loading](https://www.doctrine-project.org/projects/doctrine-orm/en/latest/reference/working-with-objects.html#by-lazy-loading) - usually a killer time-saving feature but also a performance killer with large applications.
+By default, Doctrine comes with [lazy loading](https://www.doctrine-project.org/projects/doctrine-orm/en/latest/reference/working-with-objects.html#by-lazy-loading) - usually a killer time-saving feature but also a performance killer with large applications.
 
 Fortunately, Doctrine offers another approach to solve this problem: [eager loading](https://www.doctrine-project.org/projects/doctrine-orm/en/current/reference/working-with-objects.html#by-eager-loading).
 This can easily be enabled for a relation: `#[ORM\ManyToOne(fetch: "EAGER")]`.
 
-By default in API Platform, we made the choice to force eager loading for all relations, with or without the Doctrine
+By default in API Platform, we chose to force eager loading for all relations, with or without the Doctrine
 `fetch` attribute. Thanks to the eager loading [extension](extensions.md). The `EagerLoadingExtension` will join every
 readable association according to the serialization context. If you want to fetch an association that is not serializable,
 you have to bypass `readable` and `readableLink` by using the `fetchEager` attribute on the property declaration, for example:
@@ -258,7 +281,7 @@ public $foo;
 ...
 ```
 
-> **Warning**: in order to trigger the `EagerLoadingExtension` you must use [Serializer groups](serialization.md) on relations properties.
+> **Warning**: to trigger the `EagerLoadingExtension` you must use [Serializer groups](serialization.md) on relations properties.
 
 #### Max Joins
 
@@ -278,7 +301,7 @@ can be a good solution to fix this issue.
 
 #### Fetch Partial
 
-If you want to fetch only partial data according to serialization groups, you can enable `fetch_partial` parameter:
+If you want to fetch only partial data according to serialization groups, you can enable the `fetch_partial` parameter:
 
 ```yaml
 # api/config/packages/api_platform.yaml
@@ -292,8 +315,8 @@ If enabled, Doctrine ORM entities will not work as expected if any of the other 
 
 #### Force Eager
 
-As mentioned above, by default we force eager loading for all relations. This behaviour can be modified in the
-configuration in order to apply it only on join relations having the `EAGER` fetch mode:
+As mentioned above, by default we force eager loading for all relations. This behavior can be modified in the
+configuration to apply it only on join relations having the `EAGER` fetch mode:
 
 ```yaml
 # api/config/packages/api_platform.yaml
@@ -341,7 +364,7 @@ class User
     /**
      * @var Group[]
      */
-    #[ORM\ManyToMany(targetEntity: 'Group', inversedBy: 'users')]
+    #[ORM\ManyToMany(targetEntity: Group::class, inversedBy: 'users')]
     #[ORM\JoinTable(name: 'users_groups')]
     public $groups;
 
@@ -370,14 +393,14 @@ class Group
     /**
      * @var User[]
      */
-    #[ORM\ManyToMany(targetEntity: 'User', mappedBy: 'groups')] 
+    #[ORM\ManyToMany(targetEntity: User::class, mappedBy: 'groups')] 
     public $users;
 
     // ...
 }
 ```
 
-Be careful, the operation level is higher priority than the resource level but both are higher priority than the global
+Be careful, the operation level has a higher priority than the resource level but both are higher priority than the global
 configuration.
 
 #### Disable Eager Loading
@@ -396,7 +419,7 @@ The whole configuration described before will no longer work and Doctrine will r
 ### Partial Pagination
 
 When using the default pagination, the Doctrine paginator will execute a `COUNT` query on the collection. The result of the
-`COUNT` query is used to compute the last page available. With big collections this can lead to quite long response times.
+`COUNT` query is used to compute the last page available. With big collections, this can lead to quite long response times.
 If you don't mind not having the last page available, you can enable partial pagination and avoid the `COUNT` query:
 
 ```yaml
@@ -430,14 +453,14 @@ services:
 
 2. Add your Blackfire.io ID and server token to your `.env` file at the root of your project (be sure not to commit this to a public repository):
 
-```shell
+```console
 BLACKFIRE_SERVER_ID=xxxxxxxxxx
 BLACKFIRE_SERVER_TOKEN=xxxxxxxxxx
 ```
 
 Or set it in the console before running Docker commands:
 
-```shell
+```console
 export BLACKFIRE_SERVER_ID=xxxxxxxxxx
 export BLACKFIRE_SERVER_TOKEN=xxxxxxxxxx
 ```

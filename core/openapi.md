@@ -166,16 +166,14 @@ class Product // The class name will be used to name exposed resources
 properties:
     App\Entity\Product:
         name:
-            attributes:
-                openapiContext:
-                    type: string
-                    enum: ['one', 'two']
-                    example: one
+            openapiContext:
+                type: string
+                enum: ['one', 'two']
+                example: one
         timestamp:
-            attributes:
-                openapiContext:
-                    type: string
-                    format: date-time
+            openapiContext:
+                type: string
+                format: date-time
 ```
 
 ```xml

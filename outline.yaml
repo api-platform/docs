@@ -1,11 +1,18 @@
 chapters:
-  - title: "The Distribution: Create Powerful APIs with Ease"
-    path: distribution
+  - title: "The Symfony API Platform variant"
+    path: symfony
     items:
       - index
       - testing
       - debugging
       - caddy
+  - title: "The Laravel API Platform variant"
+    path: laravel
+    items:
+      - index
+      - filters
+      - security
+      - validation
   - title: Core
     path: core
     items:

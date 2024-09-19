@@ -105,7 +105,7 @@ api_platform:
         # The 4 following handlers are registered by default, keep those lines to prevent unexpected side effects
         Symfony\Component\Serializer\Exception\ExceptionInterface: 400 # Use a raw status code (recommended)
         ApiPlatform\Exception\InvalidArgumentException: !php/const Symfony\Component\HttpFoundation\Response::HTTP_BAD_REQUEST
-        ApiPlatform\Exception\FilterValidationException: 400
+        ApiPlatform\ParameterValidator\Exception\ValidationExceptionInterface: 400
         Doctrine\ORM\OptimisticLockException: 409
 
         # Validation exception

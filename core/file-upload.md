@@ -11,6 +11,15 @@ before proceeding. It will help you get a grasp on how the bundle works, and why
 **Note**: Uploading files won't work in `PUT` or `PATCH` requests, you must use `POST` method to upload files.
 See [the related issue on Symfony](https://github.com/symfony/symfony/issues/9226) and [the related bug in PHP](https://bugs.php.net/bug.php?id=55815) talking about this behavior.
 
+Enable the multipart format globally in order to use it as the input format of your resource: 
+
+```yaml
+api_platform:
+    formats:
+        multipart: ['multipart/form-data']
+        jsonld: ['application/ld+json']
+```
+
 ## Installing VichUploaderBundle
 
 Install the bundle with the help of Composer:
@@ -44,9 +53,6 @@ In this example, we will create a `MediaObject` API resource. We will post files
 to this resource endpoint, and then link the newly created resource to another
 resource (in our case: `Book`).
 
-This example will use a custom controller to receive the file.
-The second example will use a custom `multipart/form-data` decoder to deserialize the resource instead.
-
 ### Configuring the Resource Receiving the Uploaded File
 
 The `MediaObject` resource is implemented like this:
@@ -63,7 +69,7 @@ use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Post;
 use ApiPlatform\OpenApi\Model;
-use App\Controller\CreateMediaObjectAction;
+use App\State\SaveMediaObject;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\Serializer\Annotation\Groups;
@@ -75,13 +81,12 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
 #[ApiResource(
     normalizationContext: ['groups' => ['media_object:read']], 
     types: ['https://schema.org/MediaObject'],
+    outputFormats: ['jsonld' => ['application/ld+json']],
     operations: [
         new Get(),
         new GetCollection(),
         new Post(
-            controller: CreateMediaObjectAction::class, 
-            deserialize: false, 
-            validationContext: ['groups' => ['Default', 'media_object_create']], 
+            inputFormats: ['multipart' => ['multipart/form-data']],
             openapi: new Model\Operation(
                 requestBody: new Model\RequestBody(
                     content: new \ArrayObject([
@@ -107,14 +112,15 @@ class MediaObject
     #[ORM\Id, ORM\Column, ORM\GeneratedValue]
     private ?int $id = null;
 
-    #[ApiProperty(types: ['https://schema.org/contentUrl'])]
+    #[ApiProperty(types: ['https://schema.org/contentUrl'], writable: false)]
     #[Groups(['media_object:read'])]
     public ?string $contentUrl = null;
 
     #[Vich\UploadableField(mapping: 'media_object', fileNameProperty: 'filePath')]
-    #[Assert\NotNull(groups: ['media_object_create'])]
+    #[Assert\NotNull]
     public ?File $file = null;
 
+    #[ApiProperty(writable: false)]
     #[ORM\Column(nullable: true)] 
     public ?string $filePath = null;
 
@@ -124,41 +130,7 @@ class MediaObject
     }
 }
 ```
-
-### Creating the Controller
-
-At this point, the entity is configured, but we still need to write the action
-that handles the file upload.
-
-```php
-<?php
-// api/src/Controller/CreateMediaObjectAction.php
-
-namespace App\Controller;
-
-use App\Entity\MediaObject;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpKernel\Attribute\AsController;
-use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
-
-#[AsController]
-final class CreateMediaObjectAction extends AbstractController
-{
-    public function __invoke(Request $request): MediaObject
-    {
-        $uploadedFile = $request->files->get('file');
-        if (!$uploadedFile) {
-            throw new BadRequestHttpException('"file" is required');
-        }
-
-        $mediaObject = new MediaObject();
-        $mediaObject->file = $uploadedFile;
-
-        return $mediaObject;
-    }
-}
-```
+Note: From V3.3 onwards, `'multipart/form-data'` must either be including in the global API-Platform config, either in `formats` or `defaults->inputFormats`, or defined as an `inputFormats` parameter on an operation by operation basis.
 
 ### Resolving the File URL
 
@@ -169,6 +141,7 @@ A [normalizer](serialization.md#normalization) could be used to set the `content
 
 ```php
 <?php
+// api/src/Serializer/MediaObjectNormalizer.php
 
 namespace App\Serializer;
 
@@ -183,7 +156,7 @@ class MediaObjectNormalizer implements NormalizerInterface
   private const ALREADY_CALLED = 'MEDIA_OBJECT_NORMALIZER_ALREADY_CALLED';
 
   public function __construct(
-    #[Autowire(service: 'serializer.normalizer.object')]
+    #[Autowire(service: 'api_platform.jsonld.normalizer.item')]
     private readonly NormalizerInterface $normalizer,
     private readonly StorageInterface $storage
   ) {
@@ -383,7 +356,10 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
     types: ['https://schema.org/Book'],
     operations: [
         new GetCollection(),
-        new Post(inputFormats: ['multipart' => ['multipart/form-data']])
+        new Post(
+            outputFormats: ['jsonld' => ['application/ld+json']],
+            inputFormats: ['multipart' => ['multipart/form-data']]
+        )
     ]
 )]
 class Book

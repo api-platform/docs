@@ -8,7 +8,7 @@ API Platform embraces and extends the Symfony Serializer Component to transform 
 
 The main serialization process has two stages:
 
-![Serializer workflow](images/SerializerWorkflow.png)
+![Serializer workflow](/docs/core/images/SerializerWorkflow.png)
 
 > As you can see in the picture above, an array is used as a man-in-the-middle. This way, Encoders will only deal with turning specific formats into arrays and vice versa. The same way, Normalizers will deal with turning specific objects into arrays and vice versa.
 -- [The Symfony documentation](https://symfony.com/doc/current/components/serializer.html)
@@ -579,11 +579,11 @@ namespace App\Serializer;
 use ApiPlatform\Api\IriConverterInterface;
 use App\Entity\Dummy;
 use App\Entity\RelatedDummy;
-use Symfony\Component\Serializer\Normalizer\ContextAwareDenormalizerInterface;
+use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\DenormalizerAwareInterface;
 use Symfony\Component\Serializer\Normalizer\DenormalizerAwareTrait;
 
-class PlainIdentifierDenormalizer implements ContextAwareDenormalizerInterface, DenormalizerAwareInterface
+class PlainIdentifierDenormalizer implements DenormalizerInterface, DenormalizerAwareInterface
 {
     use DenormalizerAwareTrait;
 
@@ -604,6 +604,15 @@ class PlainIdentifierDenormalizer implements ContextAwareDenormalizerInterface, 
     public function supportsDenormalization($data, $type, $format = null, array $context = []): bool
     {
         return \in_array($format, ['json', 'jsonld'], true) && is_a($type, Dummy::class, true) && !empty($data['relatedDummy']) && !isset($context[__CLASS__]);
+    }
+
+    public function getSupportedTypes(?string $format): array
+    {
+        return [
+            'object' => null,
+            '*' => false,
+            Dummy::class => true
+        ];
     }
 }
 ```

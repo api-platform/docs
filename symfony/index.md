@@ -85,7 +85,14 @@ Then, start Docker Compose in detached mode:
 docker compose up --wait 
 ```
 
-**Tip:** Be sure that the ports `80`, `443`, and `5432` of the host are not already in use. The usual offenders are Apache, NGINX, and Postgres. If they are running, stop them and run `docker compose up --wait` again.
+> [!TIP]
+>
+>Be sure that the ports `80`, `443`, and `5432` of the host are not already in use. The usual offenders are Apache, NGINX, and Postgres. If they are running, stop them and run `docker compose up --wait` again.
+>
+> Alternatively, run the following command to start the web server on port `8080` with HTTPS disabled:
+> ```console
+> SERVER_NAME=localhost:80 HTTP_PORT=8080 TRUSTED_HOSTS=localhost docker compose up --wait`
+> ```
 
 This starts the following services:
 
@@ -225,8 +232,7 @@ So, if you want to access the raw data, you have two alternatives:
 For instance, go to `https://localhost/greetings.jsonld` to retrieve the list of `Greeting` resources in JSON-LD.
 
 Of course, you can also use your favorite HTTP client to query the API.
-We are fond of [Postman](https://www.postman.com/). It works perfectly well with API Platform, has native OpenAPI support,
-allows to easily write functional tests and has good team collaboration features.
+We are fond of [Hoppscotch](https://hoppscotch.com), a free and open source API client with good support of API Platform.
 
 ## Bringing your Own Model
 
@@ -743,8 +749,8 @@ occurs**.
 
 ## A Next.js Web App
 
-API Platform also has an awesome [client generator](../create-client/index.md) able to scaffold fully working Next.js, Nuxt.js, React/Redux, Vue.js, Quasar, and Vuetify Progressive Web Apps that you can easily tune and customize. The generator also supports
-[React Native](https://reactnative.dev/) if you prefer to leverage all capabilities of mobile devices.
+API Platform also has an awesome [client generator](../create-client/index.md) able to scaffold fully working [Next.js](../create-client/nextjs.md), [Nuxt.js](../create-client/nuxt.md), [React/Redux](../create-client/react.md), [Vue.js](../create-client/vuejs.md), [Quasar](../create-client/quasar.md), and [Vuetify](../create-client/vuetify.md) Progressive Web Apps/Single Page Apps that you can easily tune and customize. The generator also supports
+[React Native](../create-client/react-native.md) if you prefer to leverage all capabilities of mobile devices.
 
 The distribution comes with a skeleton ready to welcome the [Next.js](https://nextjs.org/) flavor of the generated code. To bootstrap your app, run:
 
@@ -793,6 +799,10 @@ and [browse it online](https://demo.api-platform.com).
 
 ## Screencasts
 
-<p align="center" class="symfonycasts"><a href="https://symfonycasts.com/tracks/rest?cid=apip#api-platform"><img src="/docs/distribution/images/symfonycasts-player.png" alt="SymfonyCasts, API Platform screencasts"></a></p>
+<<<<<<< HEAD:symfony/index.md
+<p align="center" class="symfonycasts"><a href="https://symfonycasts.com/tracks/rest?cid=apip#api-platform"><img src="/docs/symfony/images/symfonycasts-player.png" alt="SymfonyCasts, API Platform screencasts"></a></p>
+=======
+<p align="center" class="symfonycasts"><a href="https://symfonycasts.com/tracks/rest?cid=apip#api-platform-3"><img src="/docs/distribution/images/symfonycasts-player.png" alt="SymfonyCasts, API Platform screencasts"></a></p>
+>>>>>>> 3.4:distribution/index.md
 
-The easiest and funniest way to learn how to use API Platform is to watch [the more than 60 screencasts available on SymfonyCasts](https://symfonycasts.com/tracks/rest?cid=apip#api-platform)!
+The easiest and funniest way to learn how to use API Platform is to watch [the more than 60 screencasts available on SymfonyCasts](https://symfonycasts.com/tracks/rest?cid=apip#api-platform-3)!

@@ -8,7 +8,7 @@ For example:
 - version 3.0 has been released on 15 September, 2022;
 - version 3.1 has been released on 23 January, 2023;
 - version 3.2 has been released on 12 October, 2023;
-- version 3.3 will be released on March, 2024;
+- version 3.3 has been released on 9 April, 2024 (we were a little late, it should have been published in March);
 - versions 3.4 and 4.0 will be released on September, 2024.
 
 ## Maintenance

@@ -98,6 +98,8 @@ final readonly class CurrentUserExtension implements QueryCollectionExtensionInt
 
 ```
 
+Note that the default `rootAlias` is "o" in the bundled `ItemProvider` and `CollectionProvider`, so you should use different aliases for your custom joins in your extension.
+
 Finally, if you're not using the autoconfiguration, you have to register the custom extension with either of those tags:
 
 ```yaml
