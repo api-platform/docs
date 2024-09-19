@@ -261,7 +261,7 @@ class Book extends Model
 }
 ```
 
-## Relations and Nested Ressources
+## Relations and Nested Resources
 
 Let's replace our author column by a relation to a new `author` table:
 
