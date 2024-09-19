@@ -49,7 +49,7 @@ composer require api-platform/laravel:^4
 
 If it's not already done, run `php artisan serve` to start the built-in web server.
 
-Open http://127.0.0.1:8000/api/, your API is already active and documented... but empty!
+Open `http://127.0.0.1:8000/api/`, your API is already active and documented... but empty!
 
 ![Empty docs](images/empty-docs.png)
 
@@ -118,7 +118,7 @@ namespace App\Models;
  }
 ```
 
-Open http://127.0.0.1:8000/api/, tadam, your API is ready and **entirely functionnal** 🎉:
+Open `http://127.0.0.1:8000/api/`, tadam, your API is ready and **entirely functionnal** 🎉:
 
 ![Basic REST API](images/basic-rest.png)
 
@@ -128,7 +128,7 @@ Under the hood, API Platform:
 
 1. Registered the standard REST routes in Laravel's router and a controller that implements a state-of-the-art, fully-featured, and secure API endpoint using the services provided by the [API Platform Core library](../core/index.md)
 2. Used its built-in Eloquent [state provider](../core/state-providers.md) to introspect the database and gather metadata about all columns to expose through the API
-3. Generated machine-readable documentations of the API in the [OpenAPI (formerly known as Swagger)](../core/openapi.md) (available at http://127.0.0.1:8000/api/docs.json) and [JSON-LD](https://json-ld.org)/[Hydra](https://www.hydra-cg.com) formats using this metadata
+3. Generated machine-readable documentations of the API in the [OpenAPI (formerly known as Swagger)](../core/openapi.md) (available at `http://127.0.0.1:8000/api/docs.json`) and [JSON-LD](https://json-ld.org)/[Hydra](https://www.hydra-cg.com) formats using this metadata
 4. Generated nice human-readable documentation and a sandbox for the API with [SwaggerUI](https://swagger.io/tools/swagger-ui/) (Redoc is also available out-of-the-box)
 
 Imagine doing it all again, properly, by hand? How much time have you saved? Weeks, months? And you've seen nothing yet!
@@ -427,7 +427,7 @@ php artisan db:seed
 
 ### Configuring The Pagination
 
-Send a `GET` request on http://127.0.0.1:8000/api/books.
+Send a `GET` request on `http://127.0.0.1:8000/api/books`.
 
 By default, API Platform paginates collections by slices of 30 items.
 
