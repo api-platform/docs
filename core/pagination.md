@@ -16,8 +16,8 @@ is returned. It's a valid JSON(-LD) document containing items of the requested p
 {
   "@context": "/contexts/Book",
   "@id": "/books",
-  "@type": "hydra:Collection",
-  "hydra:member": [
+  "@type": "Collection",
+  "member": [
     {
       "@id": "/books/1",
       "@type": "https://schema.org/Book",
@@ -27,13 +27,13 @@ is returned. It's a valid JSON(-LD) document containing items of the requested p
         "_": "Other items in the collection..."
     },
   ],
-  "hydra:totalItems": 50,
-  "hydra:view": {
+  "totalItems": 50,
+  "view": {
     "@id": "/books?page=1",
-    "@type": "hydra:PartialCollectionView",
-    "hydra:first": "/books?page=1",
-    "hydra:last": "/books?page=2",
-    "hydra:next": "/books?page=2"
+    "@type": "PartialCollectionView",
+    "first": "/books?page=1",
+    "last": "/books?page=2",
+    "next": "/books?page=2"
   }
 }
 ```
@@ -308,7 +308,7 @@ class Book
 ## Partial Pagination
 
 When using the default pagination, a `COUNT` query will be issued against the current requested collection. This may have a
-performance impact on really big collections. The downside is that the information about the last page is lost (ie: `hydra:last`).
+performance impact on really big collections. The downside is that the information about the last page is lost (ie: `last`).
 
 ### Partial Pagination Globally
 
@@ -454,7 +454,7 @@ For more information, please see the [Pagination](https://www.doctrine-project.o
 
 ## Custom Controller Action
 
-In case you're using a custom controller action, make sure you return the `Paginator` object to get the full hydra response with `hydra:view` (which contains information about first, last, next and previous page). The following examples show how to handle it within a repository method.
+In case you're using a custom controller action, make sure you return the `Paginator` object to get the full Hydra response with `view` (which contains information about first, last, next and previous page). The following examples show how to handle it within a repository method.
 The controller needs to pass through the page number. You will need to use the Doctrine Paginator and pass it to the API Platform Paginator.
 
 First example:

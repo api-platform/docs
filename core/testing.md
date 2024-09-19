@@ -117,7 +117,7 @@ final class UsersTest extends AbstractTest
         ]);
 
         $response = $this->createClientWithCredentials($token)->request('GET', '/users');
-        $this->assertJsonContains(['hydra:description' => 'Access Denied.']);
+        $this->assertJsonContains(['description' => 'Access Denied.']);
         $this->assertResponseStatusCodeSame(403);
     }
 }

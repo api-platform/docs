@@ -641,8 +641,8 @@ again the previous `POST` request.
 {
   "@context": "/contexts/ConstraintViolationList",
   "@type": "ConstraintViolationList",
-  "hydra:title": "An error occurred",
-  "hydra:description": "isbn: This value is neither a valid ISBN-10 nor a valid ISBN-13.\ntitle: This value should not be blank.",
+  "title": "An error occurred",
+  "description": "isbn: This value is neither a valid ISBN-10 nor a valid ISBN-13.\ntitle: This value should not be blank.",
   "violations": [
     {
       "propertyPath": "isbn",

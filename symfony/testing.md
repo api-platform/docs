@@ -223,19 +223,19 @@ class BooksTest extends ApiTestCase
         $this->assertJsonContains([
             '@context' => '/contexts/Book',
             '@id' => '/books',
-            '@type' => 'hydra:Collection',
-            'hydra:totalItems' => 100,
-            'hydra:view' => [
+            '@type' => 'Collection',
+            'totalItems' => 100,
+            'view' => [
                 '@id' => '/books?page=1',
-                '@type' => 'hydra:PartialCollectionView',
-                'hydra:first' => '/books?page=1',
-                'hydra:last' => '/books?page=4',
-                'hydra:next' => '/books?page=2',
+                '@type' => 'PartialCollectionView',
+                'first' => '/books?page=1',
+                'last' => '/books?page=4',
+                'next' => '/books?page=2',
             ],
         ]);
 
         // Because test fixtures are automatically loaded between each test, you can assert on them
-        $this->assertCount(30, $response->toArray()['hydra:member']);
+        $this->assertCount(30, $response->toArray()['member']);
 
         // Asserts that the returned JSON is validated by the JSON Schema generated for this resource by API Platform
         // This generated JSON Schema is also used in the OpenAPI spec!
@@ -280,8 +280,8 @@ class BooksTest extends ApiTestCase
         $this->assertJsonContains([
             '@context' => '/contexts/ConstraintViolationList',
             '@type' => 'ConstraintViolationList',
-            'hydra:title' => 'An error occurred',
-            'hydra:description' => 'isbn: This value is neither a valid ISBN-10 nor a valid ISBN-13.
+            'title' => 'An error occurred',
+            'description' => 'isbn: This value is neither a valid ISBN-10 nor a valid ISBN-13.
 title: This value should not be blank.
 description: This value should not be blank.
 author: This value should not be blank.
