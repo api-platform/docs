@@ -11,9 +11,9 @@ Build a working and fully featured CRUD API in minutes. Leverage the awesome fea
 high-performance API-first projects.
 
 If you are starting a new project, the easiest way to get API Platform up is to install
-the [API Platform Distribution](../distribution/index.md).
+the [API Platform Distribution](../symfony/index.md).
 
-![Screenshot](../distribution/images/swagger-ui-1.png)
+![Screenshot](../symfony/images/swagger-ui-1.png)
 
 ## Features
 
@@ -43,6 +43,6 @@ This bundle is extensively tested (unit and functional). The [`Fixtures/` direct
 
 ## Screencasts
 
-<p align="center" class="symfonycasts"><a href="https://symfonycasts.com/tracks/rest?cid=apip#api-platform-3"><img src="/docs/distribution/images/symfonycasts-player.png" alt="SymfonyCasts, API Platform screencasts"></a></p>
+<p align="center" class="symfonycasts"><a href="https://symfonycasts.com/tracks/rest?cid=apip#api-platform-3"><img src="/docs/symfony/images/symfonycasts-player.png" alt="SymfonyCasts, API Platform screencasts"></a></p>
 
 The easiest and funniest way to learn how to use API Platform is to watch [the more than 60 screencasts available on SymfonyCasts](https://symfonycasts.com/tracks/rest?cid=apip#api-platform-3)!

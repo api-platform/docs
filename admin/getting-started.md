@@ -2,7 +2,7 @@
 
 ## Installation
 
-If you use the [API Platform Distribution](../distribution/), API Platform Admin is already installed, you can skip this installation guide.
+If you use the [API Platform Symfony variant](../symfony/), API Platform Admin is already installed, you can skip this installation guide.
 
 Otherwise, follow this guide.
 
@@ -37,7 +37,7 @@ export default () => (
 Be sure to make your API send proper [CORS HTTP headers](https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS) to allow
 the admin's domain to access it.
 
-To do so, if you use the API Platform Distribution, update the value of the `CORS_ALLOW_ORIGIN` parameter in `api/.env` (it will be set to `^https?://localhost:?[0-9]*$`
+To do so, if you use the API Platform Symfony variant, update the value of the `CORS_ALLOW_ORIGIN` parameter in `api/.env` (it will be set to `^https?://localhost:?[0-9]*$`
 by default).
 
 If you use a custom installation of Symfony and [API Platform Core](../core/), you will need to adjust the [NelmioCorsBundle configuration](https://github.com/nelmio/NelmioCorsBundle#configuration) to expose the `Link` HTTP header and to send proper CORS headers on the route under which the API will be served (`/api` by default).

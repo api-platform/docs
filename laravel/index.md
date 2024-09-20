@@ -662,7 +662,7 @@ TODO-->
 
 Wouldn't it be nice to have an administration backend to manage the data exposed by your API? Checkout [API Platform Admin](../admin/index.md)!
 
-![The admin](../distribution/images/api-platform-2.6-admin.png)
+![The admin](../symfony/images/api-platform-2.6-admin.png)
 
 This [Material Design](https://material.io/guidelines/) admin is a Single Page App bbuilt with [React Admin](https://marmelab.com/react-admin/). It is powerful and fully customizable.
 
@@ -671,7 +671,7 @@ occurs**.
 
 ### SPA/PWA Scaffolding
 
-![The Next.js Progressive Web App](../distribution/images/api-platform-2.6-pwa-react.png)
+![The Next.js Progressive Web App](../symfony/images/api-platform-2.6-pwa-react.png)
 
 API Platform also has an awesome [client generator](../create-client/index.md) able to scaffold fully working [Next.js](../create-client/nextjs.md), [Nuxt.js](../create-client/nuxt.md), [React/Redux](../create-client/react.md), [Vue.js](../create-client/vuejs.md), [Quasar](../create-client/quasar.md), and [Vuetify](../create-client/vuetify.md) Progressive Web Apps/Single Page Apps that you can easily tune and customize. The generator also supports
 [React Native](../create-client/react-native.md) if you prefer to leverage all capabilities of mobile devices.

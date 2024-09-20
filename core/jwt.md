@@ -7,7 +7,7 @@ The tokens are signed by the server's key, so the server is able to verify that 
 
 API Platform allows to easily add a JWT-based authentication to your API using [LexikJWTAuthenticationBundle](https://github.com/lexik/LexikJWTAuthenticationBundle).
 
-<p align="center" class="symfonycasts"><a href="https://symfonycasts.com/screencast/symfony-rest4/json-web-token?cid=apip"><img src="/docs/distribution/images/symfonycasts-player.png" alt="JWT screencast"><br>Watch the LexikJWTAuthenticationBundle screencast</a></p>
+<p align="center" class="symfonycasts"><a href="https://symfonycasts.com/screencast/symfony-rest4/json-web-token?cid=apip"><img src="/docs/symfony/images/symfonycasts-player.png" alt="JWT screencast"><br>Watch the LexikJWTAuthenticationBundle screencast</a></p>
 
 ## Installing LexikJWTAuthenticationBundle
 
@@ -18,7 +18,7 @@ docker compose exec php \
     composer require lexik/jwt-authentication-bundle
 ```
 
-Then we need to generate the public and private keys used for signing JWT tokens. If you're using the [API Platform distribution](../distribution/index.md), you may run this from the project's root directory:
+Then we need to generate the public and private keys used for signing JWT tokens. If you're using the [API Platform distribution](../symfony/index.md), you may run this from the project's root directory:
 
 ```console
 docker compose exec php sh -c '
@@ -272,7 +272,7 @@ class AuthenticationTest extends ApiTestCase
 }
 ```
 
-Refer to [Testing the API](../distribution/testing.md) for more information about testing API Platform.
+Refer to [Testing the API](../symfony/testing.md) for more information about testing API Platform.
 
 ### Improving Tests Suite Speed
 

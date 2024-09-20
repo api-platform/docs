@@ -13,7 +13,7 @@ Then, the Mercure hub dispatches the updates to all connected clients using [Ser
 
 ## Installing Mercure Support
 
-Mercure support is already installed, configured and enabled in [the API Platform distribution](../distribution/index.md).
+Mercure support is already installed, configured and enabled in [the API Platform Symfony variant](../symfony/index.md).
 If you use the distribution, you have nothing more to do, and you can skip to the next section.
 
 If you have installed API Platform using another method (such as `composer require api`), you need to install [a Mercure hub](https://mercure.rocks/docs/getting-started) and the Symfony MercureBundle.

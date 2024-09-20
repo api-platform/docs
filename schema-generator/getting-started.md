@@ -2,7 +2,7 @@
 
 ## Installation
 
-If you use [the API Platform distribution](../distribution/index.md), the Schema Generator is already installed as a development
+If you use [the API Platform Symfony variant](../symfony/index.md), the Schema Generator is already installed as a development
 dependency of your project and can be invoked through Docker:
 
 ```console
@@ -101,7 +101,7 @@ Run the generator with the config file as parameter:
 vendor/bin/schema generate api/src/ api/config/schema.yaml -vv
 ```
 
-Using [the API Platform Distribution](../distribution/index.md):
+Using [the API Platform Symfony variant](../symfony/index.md):
 
 ```console
 docker compose exec php \

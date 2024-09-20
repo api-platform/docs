@@ -6,7 +6,7 @@ If you plan to migrate from FOSRestBundle, you might want to read [this guide](m
 
 ## Installing API Platform
 
-If you are starting a new project, the easiest way to get API Platform up is to install the [API Platform Distribution](../distribution/index.md).
+If you are starting a new project, the easiest way to get API Platform up is to install the [API Platform Distribution](../symfony/index.md).
 It comes with the API Platform core library integrated with [the Symfony framework](https://symfony.com), [the schema generator](../schema-generator/),
 [Doctrine ORM](https://www.doctrine-project.org), [Elasticsearch-PHP](https://www.elastic.co/guide/en/elasticsearch/client/php-api/current/index.html),
 [NelmioCorsBundle](https://github.com/nelmio/NelmioCorsBundle) and [Behat](https://behat.org/).
@@ -24,13 +24,13 @@ There are no mandatory configuration options although [many settings are availab
 
 ## Before Reading this Documentation
 
-If you haven't read it already, take a look at [the Getting Started guide](../distribution/index.md).
+If you haven't read it already, take a look at [the Getting Started guide](../symfony/index.md).
 This tutorial covers basic concepts required to understand how API Platform works including how it implements the REST pattern
 and what [JSON-LD](https://json-ld.org/) and [Hydra](https://www.hydra-cg.com/) formats are.
 
 ## Mapping the Entities
 
-<p align="center" class="symfonycasts"><a href="https://symfonycasts.com/screencast/api-platform/api-resource?cid=apip"><img src="/docs/distribution/images/symfonycasts-player.png" alt="Create an API Resource screencast"><br>Watch the Create an API Resource screencast</a></p>
+<p align="center" class="symfonycasts"><a href="https://symfonycasts.com/screencast/api-platform/api-resource?cid=apip"><img src="/docs/symfony/images/symfonycasts-player.png" alt="Create an API Resource screencast"><br>Watch the Create an API Resource screencast</a></p>
 
 API Platform is able to automatically expose entities mapped as "API resources" through a REST API supporting CRUD
 operations.

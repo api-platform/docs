@@ -6,7 +6,7 @@ The Next.js generator scaffolds components for server-side rendered (SSR) applic
 
 ## Install
 
-The easiest way to get started is to install [the API Platform distribution](../distribution/index.md).
+The easiest way to get started is to install [the API Platform Symfony variant](../symfony/index.md).
 It contains a Next.js skeleton generated with Create Next App,
 a development Docker container to serve the webapp, and all the API Platform components you may need, including an API server
 supporting Hydra and OpenAPI.
@@ -37,11 +37,11 @@ yarn add isomorphic-unfetch formik react-query
 
 The generated HTML will contain [Tailwind CSS](https://tailwindcss.com) classes.
 Optionally, [follow the Tailwind installation guide for NextJS projects](https://tailwindcss.com/docs/guides/nextjs)
-(Tailwind is preinstalled in [the API Platform distribution](../distribution/index.md))
+(Tailwind is preinstalled in [the API Platform Symfony variant](../symfony/index.md))
 
 ## Generating Routes
 
-If you use the API Platform distribution, generating all the code you need for a given resource is as simple as running the following command:
+If you use the API Platform symfony variant, generating all the code you need for a given resource is as simple as running the following command:
 
 ```console
 docker compose exec pwa \

@@ -7,7 +7,7 @@
 API Platform leverages this capability by pushing relations of a resource to clients.
 
 **Note:** We strongly recommend using [Vulcain](https://vulcain.rocks) instead of this feature.
-Vulcain is faster, cleaner, more flexible, and is supported out of the box in [the API Platform distribution](../distribution/index.md).
+Vulcain is faster, cleaner, more flexible, and is supported out of the box in [the API Platform distribution](../symfony/index.md).
 
 ```php
 <?php
@@ -30,7 +30,7 @@ class Book
 By setting the `push` attribute to `true` on a property holding a relation, API Platform will automatically add a valid `Link` HTTP header with the `preload` relation.
 According to the [Preload W3C Candidate Recommendation](https://www.w3.org/TR/preload/#server-push-http-2), web servers and proxy servers can read this header, fetch the related resource and send it to the client using Server Push.
 
-With the Caddy web server (the server shipped as part of the [distribution](../distribution/index.md)), you must add [the `push` directive](https://caddyserver.com/docs/caddyfile/directives/push) to your `Caddyfile` to be able to use this feature.
+With the Caddy web server (the server shipped as part of the [distribution](../symfony/index.md)), you must add [the `push` directive](https://caddyserver.com/docs/caddyfile/directives/push) to your `Caddyfile` to be able to use this feature.
 
 [NGINX](https://www.nginx.com/blog/nginx-1-13-9-http2-server-push/), [Apache](https://httpd.apache.org/docs/current/howto/http2.html#push), [Cloudflare](https://www.cloudflare.com/website-optimization/http2/serverpush/), [Fastly](https://docs.fastly.com/guides/performance-tuning/http2-server-push) and [Akamai](https://blogs.akamai.com/2017/03/http2-server-push-the-what-how-and-why.html)
 honor this header.
