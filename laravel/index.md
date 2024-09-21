@@ -664,7 +664,7 @@ Wouldn't it be nice to have an administration backend to manage the data exposed
 
 ![The admin](../symfony/images/api-platform-2.6-admin.png)
 
-This [Material Design](https://material.io/guidelines/) admin is a Single Page App bbuilt with [React Admin](https://marmelab.com/react-admin/). It is powerful and fully customizable.
+This [Material Design](https://material.io/guidelines/) admin is a Single Page App built with [React Admin](https://marmelab.com/react-admin/). It is powerful and fully customizable.
 
 It leverages the Hydra documentation exposed by the API component to build itself. It's 100% dynamic - **no code generation
 occurs**.
