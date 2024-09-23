@@ -589,7 +589,7 @@ php artisan make:request BookFormRequest
 
 Then, add validation rules to the generated class (`app/Http/Requests/BookFormRequest.php` in our example):
 
-```php
+```patch
  namespace App\Http\Requests;
 
  use Illuminate\Foundation\Http\FormRequest;
