@@ -8,9 +8,9 @@ using Laravel!
 With API Platform, you can:
 
 * [expose your Eloquent](#exposing-a-model) models in minutes as:
-    * a REST API implementing the industry-leading standards, formats and best practices: [JSON-LD](https://en.wikipedia.org/wiki/JSON-LD)/[RDF](https://en.wikipedia.org/wiki/Resource_Description_Framework), [JSON:API](https://jsonapi.org), [HAL](https://stateless.group/hal_specification.html), and many RFCs...
-    * a [GraphQL](https://graphql.org/) API
-    * or both at the same time, with the same code!
+  * a REST API implementing the industry-leading standards, formats and best practices: [JSON-LD](https://en.wikipedia.org/wiki/JSON-LD)/[RDF](https://en.wikipedia.org/wiki/Resource_Description_Framework), [JSON:API](https://jsonapi.org), [HAL](https://stateless.group/hal_specification.html), and many RFCs...
+  * a [GraphQL](https://graphql.org/) API
+  * or both at the same time, with the same code!
 * automatically expose an [OpenAPI](https://www.openapis.org) specification (formerly Swagger), dynamically generated from your Eloquent models and always up to date
 * automatically expose nice UIs and playgrounds to develop using your API ([Swagger UI](https://swagger.io/tools/swagger-ui/) and [GraphiQL](https://github.com/graphql/graphiql))
 * automatically paginate your collections
@@ -53,6 +53,14 @@ Open `http://127.0.0.1:8000/api/`, your API is already active and documented... 
 
 ![Empty docs](images/empty-docs.png)
 
+## Publishing the Config File and Assets
+
+After installing API Platform, you can publish its assets and config using the `api-platform:install` Artisan command.
+
+```console
+php artisan api-platform:install
+```
+
 ## Creating an Eloquent Model
 
 To discover how API Platform framework works, we will create an API to manage a bookshop.
@@ -63,7 +71,7 @@ Let's start by creating a `Book` model:
 php artisan make:model Book
 ```
 
-By default, Laravel uses SQLite. You can open the `database/database.sqlite` file with your preferred SQLite client (PHPStorm works like a charm), create a table named `books`, and add some columns, Eloquent and API Platform will detect these columns automatically.
+By default, Laravel uses SQLite. You can open the `database/database.sqlite` file with your preferred SQLite client (PhpStorm works like a charm), create a table named `books`, and add some columns, Eloquent and API Platform will detect these columns automatically.
 
 But there is a better alternative: using a migration class.
 
@@ -553,6 +561,49 @@ It also natively supports:
 
 Follow the official instructions of the tool(s) you want to use.
 
+
+### Swagger UI and Authentication
+
+In the Swagger UI, you can authenticate your requests using the `Authorize` button in the top right corner.
+In order to use it, you need to configure it in the `config/api-platform.php` file.
+
+Here is an example of how to configure API Key authentication:
+
+```php
+// config/api-platform.php
+'swagger_ui' => [
+    'enabled' => true,
+    'apiKeys' => [
+        'api' => [
+            'type' => 'header',
+            'name' => 'X-API-Key'
+        ]
+    ]
+]
+```
+
+Or if you are using Laravel Passport (or any oauth2 server):
+
+```php
+// config/api-platform.php
+'swagger_ui' => [
+    'enabled' => true,
+    'oauth' => [
+        'enabled' => true,
+        'type' => 'oauth2',
+        'flow' => 'authorizationCode',
+        'tokenUrl' => '<oauth_token_endpoint>',
+        'authorizationUrl' =>'<oauth_authorization_endpoint>',
+        'refreshUrl' => '<oauth_refresh_endpoint>',
+        'scopes' => ['scope' => 'Description of the scope'],
+        'pkce' => true,
+    ]
+]
+```
+
+A combination of both is also possible.
+For more information, you can also check the [Swagger UI documentation](https://swagger.io/docs/specification/authentication/).
+
 ### Middlewares
 
 It's sometimes convenient to enforce the use of middleware for all API routes.
@@ -673,7 +724,8 @@ occurs**.
 
 ![The Next.js Progressive Web App](../symfony/images/api-platform-2.6-pwa-react.png)
 
-API Platform also has an awesome [client generator](../create-client/index.md) able to scaffold fully working [Next.js](../create-client/nextjs.md), [Nuxt.js](../create-client/nuxt.md), [React/Redux](../create-client/react.md), [Vue.js](../create-client/vuejs.md), [Quasar](../create-client/quasar.md), and [Vuetify](../create-client/vuetify.md) Progressive Web Apps/Single Page Apps that you can easily tune and customize. The generator also supports
+API Platform also has an awesome [client generator](../create-client/index.md) able to scaffold fully working [Next.js](../create-client/nextjs.md), [Nuxt.js](../create-client/nuxt.md), [React/Redux](../create-client/react.md), [Vue.js](../create-client/vuejs.md), [Quasar](../create-client/quasar.md),
+and [Vuetify](../create-client/vuetify.md) Progressive Web Apps/Single Page Apps that you can easily tune and customize. The generator also supports
 [React Native](../create-client/react-native.md) if you prefer to leverage all capabilities of mobile devices.
 
 
