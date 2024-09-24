@@ -1,8 +1,8 @@
 # The API Platform Core Library
 
 API Platform Core is an easy-to-use and powerful library to create [hypermedia-driven REST APIs](https://en.wikipedia.org/wiki/HATEOAS).
-It is a component of the [API Platform framework](https://api-platform.com). It can be used as a standalone or with [the Symfony
-framework](https://symfony.com) (recommended).
+It is a component of the [API Platform framework](https://api-platform.com). It can be used as a standalone or with one of these frameworks (recommended): [the Symfony
+framework](https://symfony.com) or [the Laravel framework](https://laravel.com/).
 
 It embraces [JSON for Linked Data (JSON-LD)](https://json-ld.org/) and [Hydra Core Vocabulary](https://www.hydra-cg.com/) web
 standards but also supports [HAL](https://stateless.co/hal_specification.html), [Swagger/Open API](https://www.openapis.org/), XML, JSON, CSV and YAML.
@@ -11,7 +11,7 @@ Build a working and fully featured CRUD API in minutes. Leverage the awesome fea
 high-performance API-first projects.
 
 If you are starting a new project, the easiest way to get API Platform up is to install
-the [API Platform Distribution](../symfony/index.md).
+API Platform using a framework (recommended) with [the API Platform Laravel Variant](../laravel/index.md) or the [API Platform Symfony Variant](../symfony/index.md) or, alternatively, [Bootstrapping the API Platform core library manually](../core/bootstrap.md).
 
 ![Screenshot](../symfony/images/swagger-ui-1.png)
 
@@ -41,8 +41,8 @@ Everything is fully customizable through a powerful [event system](events.md) an
 
 This bundle is extensively tested (unit and functional). The [`Fixtures/` directory](https://github.com/api-platform/core/tree/main/tests/Fixtures) contains a working app covering all features of the library.
 
-## Screencasts
+## Symfony Screencasts
 
 <p align="center" class="symfonycasts"><a href="https://symfonycasts.com/tracks/rest?cid=apip#api-platform-3"><img src="/docs/symfony/images/symfonycasts-player.png" alt="SymfonyCasts, API Platform screencasts"></a></p>
 
-The easiest and funniest way to learn how to use API Platform is to watch [the more than 60 screencasts available on SymfonyCasts](https://symfonycasts.com/tracks/rest?cid=apip#api-platform-3)!
+The easiest and funniest way to learn how to use API Platform for Symfony is to watch [the more than 60 screencasts available on SymfonyCasts](https://symfonycasts.com/tracks/rest?cid=apip#api-platform-3)!
