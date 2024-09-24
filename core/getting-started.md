@@ -6,7 +6,16 @@ If you plan to migrate from FOSRestBundle, you might want to read [this guide](m
 
 ## Installing API Platform
 
-If you are starting a new project, the easiest way to get API Platform up is to install the [API Platform Distribution](../symfony/index.md).
+You can choose your preferred stack between Symfony, Laravel or bootstrapping the API Platform core library manually:
+
+### Laravel
+
+If you are starting a new project, the easiest way to get API Platform up is to install the [API Platform Laravel Variant](../laravel/index.md).
+It comes with integrations from the Laravel ecosystem, including [Eloquent](https://laravel.com/docs/eloquent), [Validation](https://laravel.com/docs/validation), [Authorization](https://laravel.com/docs/authorization), [Octane](https://laravel.com/docs/octane), [Pest](https://pestphp.com)...
+
+### Symfony
+
+If you are starting a new project, the easiest way to get API Platform up is to install the [API Platform Symfony Variant](../symfony/index.md).
 It comes with the API Platform core library integrated with [the Symfony framework](https://symfony.com), [the schema generator](../schema-generator/),
 [Doctrine ORM](https://www.doctrine-project.org), [Elasticsearch-PHP](https://www.elastic.co/guide/en/elasticsearch/client/php-api/current/index.html),
 [NelmioCorsBundle](https://github.com/nelmio/NelmioCorsBundle) and [Behat](https://behat.org/).
@@ -22,13 +31,110 @@ There are no mandatory configuration options although [many settings are availab
 
 **Warning**: If you are migrating from an older version of API Platform than 2.7, make sure you read the [Upgrade Guide](upgrade-guide.md).
 
+### Bootstraping the core library
+
+You may want to run a minimal version of API Platform (without GraphQL, Eloquent, Doctrine MongoDB…), use the [Bootstraping the core library documentation](../core/bootstrap.md).
+  
 ## Before Reading this Documentation
 
-If you haven't read it already, take a look at [the Getting Started guide](../symfony/index.md).
-This tutorial covers basic concepts required to understand how API Platform works including how it implements the REST pattern
+If you haven't read it already, take a look at [the Laravel Getting Started guide](../laravel/index.md) or [the Symfony Getting Started guide](../symfony/index.md).
+These tutorials covers basic concepts required to understand how API Platform works including how it implements the REST pattern
 and what [JSON-LD](https://json-ld.org/) and [Hydra](https://www.hydra-cg.com/) formats are.
 
 ## Mapping the Entities
+
+### Laravel with Eloquent
+
+API Platform introspects the database (column names, types, constraints, types, constraints...) to populate API Platform metadata.
+Serialization, OpenAPI and hydra docs are generated from these metadata directly.
+
+#### Example
+
+First, create a migration class for the `products` table:
+
+```console
+ php artisan make:migration create_products_table
+```
+
+Open the generated migration class (`database/migrations/<timestamp>_create_products_table.php`) and add some columns:
+
+```patch
+    public function up(): void
+    {
+        Schema::create('products', function (Blueprint $table) {
+            $table->id();
+
++            $table->string('name');
++            $table->decimal('price', 8, 2);
++            $table->text('description');
++            $table->boolean('is_active')->default(true);
++            $table->date('created_date')->nullable();
+
+            $table->timestamps();
+        });
+    }
+```
+
+Finally, execute the migration:
+
+```console
+php artisan
+```
+
+And after that, just adding the `#[ApiResource]` attribute as follows onto your model:
+```patch
+<?php
+
+namespace App\Models;
+//app/Models/Product.php
++use ApiPlatform\Metadata\ApiResource;
+use Illuminate\Database\Eloquent\Model;
+ 
++#[ApiResource]
+class Product extends Model {}
+```
+
+While attributes (introduced in PHP 8) are the preferred way to configure your API Platform resources, it’s also possible to use a trait instead.
+```patch
+<?php
+
+namespace App\Models;
+//app/Models/Product.php
++use ApiPlatform\Metadata\IsApiResource;
+use Illuminate\Database\Eloquent\Model;
+ 
+class Product extends Model 
+{
++   use IsApiResource;
+}
+```
+
+See the [Using The IsApiResourceTrait Instead of Attributes documentation](../laravel/index.md#using-the-isapiresourcetrait-instead-of-attributes) for examples of advanced configuration in both cases (attributes or static method).
+
+**You're done!** 🎉
+
+You now have a fully featured API exposing your entities.
+
+Run the Laravel app with the Laravel's local development server using [the Artisan Console component](https://laravel.com/docs/artisan) (`php artisan serve`) and browse the API entrypoint at `http://localhost:8000/api`.
+
+Using configurations, API Platform generates metadata that will automatically register the following REST [operations](operations.md)
+for resources of the product type:
+
+### Product API using Laravel
+
+Method | URL            | Description
+-------|----------------|--------------------------------
+GET    | /products      | Retrieve the (paginated) collection
+POST   | /products      | Create a new product
+GET    | /products/{id} | Retrieve a product
+PATCH  | /products/{id} | Apply a partial modification to a product
+DELETE | /products/{id} | Delete a product
+
+In addition, among other things, API Platform under the hood does the following:
+- Generated machine-readable documentations of the API in the [OpenAPI (formerly known as Swagger)](../core/openapi.md) (available at `http://127.0.0.1:8000/api/docs.json`) and [JSON-LD](https://json-ld.org)/[Hydra](https://www.hydra-cg.com) formats using this metadata
+- Generated nice human-readable documentation and a sandbox for the API with [SwaggerUI](https://swagger.io/tools/swagger-ui/) (Redoc is also available out-of-the-box)
+
+### Symfony with Doctrine
 
 <p align="center" class="symfonycasts"><a href="https://symfonycasts.com/screencast/api-platform/api-resource?cid=apip"><img src="/docs/symfony/images/symfonycasts-player.png" alt="Create an API Resource screencast"><br>Watch the Create an API Resource screencast</a></p>
 
@@ -149,7 +255,7 @@ them unless you know what you are doing.
 Thanks to the mapping done previously, API Platform will automatically register the following REST [operations](operations.md)
 for resources of the product type:
 
-### Product
+### Product API using Symfony
 
 Method | URL            | Description
 -------|----------------|--------------------------------
@@ -163,7 +269,6 @@ DELETE | /products/{id} | Delete a product
 >
 > `PUT` (replace or create) isn't registered automatically,
 > but is entirely supported by API Platform and can be added explicitly.
-
 The same operations are available for the offer method (routes will start with the `/offers` pattern).
 Route prefixes are built by pluralizing the name of the mapped entity class.
 It is also possible to override the naming convention using [operation path namings](operation-path-naming.md).
@@ -182,7 +287,6 @@ resources:
         types: ['https://schema.org/Offer']   # optional
         paginationItemsPerPage: 25           # optional
 ```
-
 ```xml
 <?xml version="1.0" encoding="UTF-8" ?>
 <!-- api/config/api_platform/resources.xml -->
@@ -216,13 +320,12 @@ api_platform:
             - '%kernel.project_dir%/src/Entity' # default configuration for attributes
             - '%kernel.project_dir%/config/api_platform' # yaml or xml directory configuration
 ```
-
 If you want to serialize only a subset of your data, please refer to the [Serialization documentation](serialization.md).
-
 **You're done!**
-
 You now have a fully featured API exposing your entities.
 Run the Symfony app with the [Symfony Local Web Server](https://symfony.com/doc/current/setup/symfony_server.html) (`symfony server:start`) and browse the API entrypoint at `http://localhost:8000/api`.
+
+## Interactions with the API
 
 Interact with the API using a REST client (we recommend [Postman](https://www.postman.com/)) or an Hydra-aware application
 (you should give [Hydra Console](https://github.com/lanthaler/HydraConsole) a try). Take
