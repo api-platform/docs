@@ -801,6 +801,6 @@ and [browse it online](https://demo.api-platform.com).
 
 ## Screencasts
 
-<p align="center" class="symfonycasts"><a href="https://symfonycasts.com/tracks/rest?cid=apip#api-platform"><img src="/docs/symfony/images/symfonycasts-player.png" alt="SymfonyCasts, API Platform screencasts"></a></p>
+<p align="center" class="symfonycasts"><a href="https://symfonycasts.com/tracks/rest?cid=apip#api-platform-3"><img src="images/symfonycasts-player.png" alt="SymfonyCasts, API Platform screencasts"></a></p>
 
 The easiest and funniest way to learn how to use API Platform is to watch [the more than 60 screencasts available on SymfonyCasts](https://symfonycasts.com/tracks/rest?cid=apip#api-platform-3)!

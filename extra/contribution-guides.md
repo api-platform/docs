@@ -7,4 +7,4 @@
 
 **To report a security issue, please refer to [the dedicated document](security.md).**
 
-<p align="center" class="symfonycasts"><a href="https://symfonycasts.com/screencast/contributing?cid=apip"><img src="/docs/symfony/images/symfonycasts-player.png" alt="JWT screencast"><br>Watch the Contributing back to Symfony screencast (free)</a></p>
+<p align="center" class="symfonycasts"><a href="https://symfonycasts.com/screencast/contributing?cid=apip"><img src="../symfony/images/symfonycasts-player.png" alt="JWT screencast"><br>Watch the Contributing back to Symfony screencast (free)</a></p>
