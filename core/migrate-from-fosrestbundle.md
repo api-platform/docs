@@ -1,9 +1,9 @@
 # Migrate From FOSRestBundle
 
 [FOSRestBundle](https://github.com/FriendsOfSymfony/FOSRestBundle) is a popular bundle to rapidly develop RESTful APIs with Symfony.
-This page provides a guide to help developers migrating from FOSRestBundle to API Platform.
+This page provides a guide to help developers migrate from FOSRestBundle to API Platform.
 
-[On 21 September, 2021](https://twitter.com/lsmith/status/1440216817876627459), FOSRestBundle's creators recommended to use API Platform.
+[On 21 September 2021](https://x.com/lsmith/status/1440216817876627459), FOSRestBundle's creators recommended to use API Platform.
 
 ## Features Comparison
 
@@ -13,13 +13,13 @@ The table below provides a list of the main features you can find in FOSRestBund
 
 **In FOSRestBundle**
 
-Create a controller extending the `AbstractFOSRestController` abstract class, make your magic manually in your methods and return responses through the `handleView()` provided by FOSRest's `ControllerTrait`.
+Create a controller extending the `AbstractFOSRestController` abstract class, make your magic manually in your methods, and return responses through the `handleView()` provided by FOSRest's `ControllerTrait`.
 
 See [The view layer](https://github.com/FriendsOfSymfony/FOSRestBundle/blob/3.x/Resources/doc/2-the-view-layer.rst).
 
 **In API Platform**
 
-Add the `ApiResource` attribute to your entities, and enable operations you desire inside. By default, every operations are activated.
+Add the `ApiResource` attribute to your entities, and enable the operations you desire inside. By default, every operation is activated.
 
 See [Operations](operations.md).
 
@@ -33,7 +33,7 @@ Same as above.
 
 Even though this is not recommended, API Platform allows you to [create custom controllers](controllers.md) and declare them in your entity's `ApiResource` attribute.
 
-You can use them as you migrate from FOSRestBundle, but you should consider [switching to Symfony Messenger](messenger.md) as it will give you more benefits, such as compatibility with both REST and GraphQL, and better performances of your API on big tasks.
+You can use them as you migrate from FOSRestBundle, but you should consider [switching to Symfony Messenger](messenger.md) as it will give you more benefits, such as compatibility with both REST and GraphQL and better performances of your API on big tasks.
 
 See [General Design Considerations](design.md).
 
@@ -52,11 +52,11 @@ Use the `ApiResource` attribute to activate the HTTP methods you need for your e
 
 See [Operations](operations.md).
 
-### Hook into the requests handling
+### Hook into the handling of the requests
 
 **In FOSRestBundle**
 
-Listen to FOSRest's events to modify the requests before they come into your controllers, and the responses after they come out of them.
+Listen to FOSRest's events to modify the requests before they come into your controllers and the responses after they come out of them.
 
 See [Listener support](https://github.com/FriendsOfSymfony/FOSRestBundle/blob/3.x/Resources/doc/3-listener-support.rst).
 
@@ -140,6 +140,6 @@ See [API versioning](https://github.com/FriendsOfSymfony/FOSRestBundle/blob/3.x/
 
 **In API Platform**
 
-API Platform has no native support to API versioning, but instead provides an approach consisting of deprecating resources when needed. It allows a smoother upgrade for clients, as they need to change their code only when it is necessary.
+API Platform has no native support for API versioning, but instead provides an approach consisting of deprecating resources when needed. It allows a smoother upgrade for clients, as they need to change their code only when it is necessary.
 
 See [Deprecating Resources and Properties](deprecations.md).
