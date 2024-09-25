@@ -125,8 +125,8 @@ the error will be returned in this format as well:
 {
   "@context": "/contexts/Error",
   "@type": "Error",
-  "hydra:title": "An error occurred",
-  "hydra:description": "The product \"1234\" does not exist."
+  "title": "An error occurred",
+  "description": "The product \"1234\" does not exist."
 }
 ```
 
