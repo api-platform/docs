@@ -8,15 +8,15 @@ For instance, in JSON-LD, you will get a collection like this:
 {
   "@context": "/contexts/Book",
   "@id": "/books",
-  "@type": "hydra:Collection",
-  "hydra:member": [
+  "@type": "Collection",
+  "member": [
     {
       "@id": "/books/1",
       "@type": "https://schema.org/Book",
       "name": "My awesome book"
     }
   ],
-  "hydra:totalItems": 1
+  "totalItems": 1
 }
 ```
 
@@ -77,14 +77,14 @@ For the above configuration, the collection will be like this:
 {
   "@context": "http://example.com/contexts/Book",
   "@id": "http://example.com/books",
-  "@type": "hydra:Collection",
-  "hydra:member": [
+  "@type": "Collection",
+  "member": [
     {
       "@id": "http://example.com/books/1",
       "@type": "https://schema.org/Book",
       "name": "My awesome book"
     }
   ],
-  "hydra:totalItems": 1
+  "totalItems": 1
 }
 ```

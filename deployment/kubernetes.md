@@ -4,7 +4,7 @@
 [Google Cloud Platform](https://cloud.google.com/kubernetes-engine/), [Microsoft Azure](https://azure.microsoft.com/en-us/services/container-service/kubernetes/)
 and [Amazon Web Services](https://aws.amazon.com/eks/) and many more companies provide managed Kubernetes environment.
 
-[The official API Platform distribution](../distribution/index.md) contains a built-in [Helm](https://helm.sh/) (the k8s
+[The API Platform symfony variant](../symfony/index.md) contains a built-in [Helm](https://helm.sh/) (the k8s
 package manager) chart to deploy in a wink on any of these platforms.
 
 This guide is based on Helm 3.

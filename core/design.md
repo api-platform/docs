@@ -5,7 +5,7 @@ API framework. However, the "design-first" methodology is strongly recommended: 
 API endpoints.
 
 To do so, you have to write a plain old PHP object (POPO) representing the input and output of your endpoint. This is the class
-that is [marked with the `#[ApiResource]` attribute](../distribution/index.md).
+that is [marked with the `#[ApiResource]` attribute](../symfony/index.md).
 This class **doesn't have** to be mapped with Doctrine ORM, or any other persistence system. It must be simple (it's usually
 just a data structure with no or minimal behaviors) and will be automatically converted to [Hydra](extending-jsonld-context.md),
 [OpenAPI](openapi.md) and [GraphQL](graphql.md) documentations or schemas by API Platform (there is a 1-1 mapping

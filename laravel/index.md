@@ -8,9 +8,9 @@ using Laravel!
 With API Platform, you can:
 
 * [expose your Eloquent](#exposing-a-model) models in minutes as:
-    * a REST API implementing the industry-leading standards, formats and best practices: [JSON-LD](https://en.wikipedia.org/wiki/JSON-LD)/[RDF](https://en.wikipedia.org/wiki/Resource_Description_Framework), [JSON:API](https://jsonapi.org), [HAL](https://stateless.group/hal_specification.html), and many RFCs...
-    * a [GraphQL](https://graphql.org/) API
-    * or both at the same time, with the same code!
+  * a REST API implementing the industry-leading standards, formats and best practices: [JSON-LD](https://en.wikipedia.org/wiki/JSON-LD)/[RDF](https://en.wikipedia.org/wiki/Resource_Description_Framework), [JSON:API](https://jsonapi.org), [HAL](https://stateless.group/hal_specification.html), and many RFCs...
+  * a [GraphQL](https://graphql.org/) API
+  * or both at the same time, with the same code!
 * automatically expose an [OpenAPI](https://www.openapis.org) specification (formerly Swagger), dynamically generated from your Eloquent models and always up to date
 * automatically expose nice UIs and playgrounds to develop using your API ([Swagger UI](https://swagger.io/tools/swagger-ui/) and [GraphiQL](https://github.com/graphql/graphiql))
 * automatically paginate your collections
@@ -49,9 +49,17 @@ composer require api-platform/laravel:^4
 
 If it's not already done, run `php artisan serve` to start the built-in web server.
 
-Open http://127.0.0.1:8000/api/, your API is already active and documented... but empty!
+Open `http://127.0.0.1:8000/api/`, your API is already active and documented... but empty!
 
 ![Empty docs](images/empty-docs.png)
+
+## Publishing the Config File and Assets
+
+After installing API Platform, you can publish its assets and config using the `api-platform:install` Artisan command.
+
+```console
+php artisan api-platform:install
+```
 
 ## Creating an Eloquent Model
 
@@ -63,7 +71,7 @@ Let's start by creating a `Book` model:
 php artisan make:model Book
 ```
 
-By default, Laravel uses SQLite. You can open the `database/database.sqlite` file with your preferred SQLite client (PHPStorm works like a charm), create a table named `books`, and add some columns, Eloquent and API Platform will detect these columns automatically.
+By default, Laravel uses SQLite. You can open the `database/database.sqlite` file with your preferred SQLite client (PhpStorm works like a charm), create a table named `books`, and add some columns, Eloquent and API Platform will detect these columns automatically.
 
 But there is a better alternative: using a migration class.
 
@@ -118,7 +126,7 @@ namespace App\Models;
  }
 ```
 
-Open http://127.0.0.1:8000/api/, tadam, your API is ready and **entirely functionnal** 🎉:
+Open `http://127.0.0.1:8000/api/`, tadam, your API is ready and **entirely functionnal** 🎉:
 
 ![Basic REST API](images/basic-rest.png)
 
@@ -128,7 +136,7 @@ Under the hood, API Platform:
 
 1. Registered the standard REST routes in Laravel's router and a controller that implements a state-of-the-art, fully-featured, and secure API endpoint using the services provided by the [API Platform Core library](../core/index.md)
 2. Used its built-in Eloquent [state provider](../core/state-providers.md) to introspect the database and gather metadata about all columns to expose through the API
-3. Generated machine-readable documentations of the API in the [OpenAPI (formerly known as Swagger)](../core/openapi.md) (available at http://127.0.0.1:8000/api/docs.json) and [JSON-LD](https://json-ld.org)/[Hydra](https://www.hydra-cg.com) formats using this metadata
+3. Generated machine-readable documentations of the API in the [OpenAPI (formerly known as Swagger)](../core/openapi.md) (available at `http://127.0.0.1:8000/api/docs.json`) and [JSON-LD](https://json-ld.org)/[Hydra](https://www.hydra-cg.com) formats using this metadata
 4. Generated nice human-readable documentation and a sandbox for the API with [SwaggerUI](https://swagger.io/tools/swagger-ui/) (Redoc is also available out-of-the-box)
 
 Imagine doing it all again, properly, by hand? How much time have you saved? Weeks, months? And you've seen nothing yet!
@@ -261,7 +269,7 @@ class Book extends Model
 }
 ```
 
-## Relations and Nested Ressources
+## Relations and Nested Resources
 
 Let's replace our author column by a relation to a new `author` table:
 
@@ -427,7 +435,7 @@ php artisan db:seed
 
 ### Configuring The Pagination
 
-Send a `GET` request on http://127.0.0.1:8000/api/books.
+Send a `GET` request on `http://127.0.0.1:8000/api/books`.
 
 By default, API Platform paginates collections by slices of 30 items.
 
@@ -662,18 +670,19 @@ TODO-->
 
 Wouldn't it be nice to have an administration backend to manage the data exposed by your API? Checkout [API Platform Admin](../admin/index.md)!
 
-![The admin](../distribution/images/api-platform-2.6-admin.png)
+![The admin](../symfony/images/api-platform-2.6-admin.png)
 
-This [Material Design](https://material.io/guidelines/) admin is a Single Page App bbuilt with [React Admin](https://marmelab.com/react-admin/). It is powerful and fully customizable.
+This [Material Design](https://material.io/guidelines/) admin is a Single Page App built with [React Admin](https://marmelab.com/react-admin/). It is powerful and fully customizable.
 
 It leverages the Hydra documentation exposed by the API component to build itself. It's 100% dynamic - **no code generation
 occurs**.
 
 ### SPA/PWA Scaffolding
 
-![The Next.js Progressive Web App](../distribution/images/api-platform-2.6-pwa-react.png)
+![The Next.js Progressive Web App](../symfony/images/api-platform-2.6-pwa-react.png)
 
-API Platform also has an awesome [client generator](../create-client/index.md) able to scaffold fully working [Next.js](../create-client/nextjs.md), [Nuxt.js](../create-client/nuxt.md), [React/Redux](../create-client/react.md), [Vue.js](../create-client/vuejs.md), [Quasar](../create-client/quasar.md), and [Vuetify](../create-client/vuetify.md) Progressive Web Apps/Single Page Apps that you can easily tune and customize. The generator also supports
+API Platform also has an awesome [client generator](../create-client/index.md) able to scaffold fully working [Next.js](../create-client/nextjs.md), [Nuxt.js](../create-client/nuxt.md), [React/Redux](../create-client/react.md), [Vue.js](../create-client/vuejs.md), [Quasar](../create-client/quasar.md),
+and [Vuetify](../create-client/vuetify.md) Progressive Web Apps/Single Page Apps that you can easily tune and customize. The generator also supports
 [React Native](../create-client/react-native.md) if you prefer to leverage all capabilities of mobile devices.
 
 

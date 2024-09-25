@@ -493,8 +493,10 @@ In Swagger UI, click on the `POST` operation of the `Book` resource type, click 
 You just saved a new book resource through the bookshop API! API Platform automatically transforms the JSON document to
 an instance of the corresponding PHP entity class and uses Doctrine ORM to persist it in the database.
 
-By default, the API supports `GET` (retrieve, on collections and items), `POST` (create), `PUT` (replace), `PATCH` (partial update) and `DELETE` (self-explanatory)
+By default, the API supports `GET` (retrieve, on collections and items), `POST` (create), `PATCH` (partial update) and `DELETE` (self-explanatory)
 HTTP methods. Don't forget to [disable the ones you don't want](../core/operations.md#enabling-and-disabling-operations)!
+
+The `PUT` (replace or create) method is also supported, but is not enabled by default.
 
 Try the `GET` operation on the collection. The book we added appears. When the collection contains more than 30 items,
 the pagination will automatically show up, [and this is entirely configurable](../core/pagination.md). You may be interested
@@ -639,8 +641,8 @@ again the previous `POST` request.
 {
   "@context": "/contexts/ConstraintViolationList",
   "@type": "ConstraintViolationList",
-  "hydra:title": "An error occurred",
-  "hydra:description": "isbn: This value is neither a valid ISBN-10 nor a valid ISBN-13.\ntitle: This value should not be blank.",
+  "title": "An error occurred",
+  "description": "isbn: This value is neither a valid ISBN-10 nor a valid ISBN-13.\ntitle: This value should not be blank.",
   "violations": [
     {
       "propertyPath": "isbn",
@@ -799,10 +801,6 @@ and [browse it online](https://demo.api-platform.com).
 
 ## Screencasts
 
-<<<<<<< HEAD:symfony/index.md
-<p align="center" class="symfonycasts"><a href="https://symfonycasts.com/tracks/rest?cid=apip#api-platform"><img src="/docs/symfony/images/symfonycasts-player.png" alt="SymfonyCasts, API Platform screencasts"></a></p>
-=======
-<p align="center" class="symfonycasts"><a href="https://symfonycasts.com/tracks/rest?cid=apip#api-platform-3"><img src="/docs/distribution/images/symfonycasts-player.png" alt="SymfonyCasts, API Platform screencasts"></a></p>
->>>>>>> 3.4:distribution/index.md
+<p align="center" class="symfonycasts"><a href="https://symfonycasts.com/tracks/rest?cid=apip#api-platform-3"><img src="images/symfonycasts-player.png" alt="SymfonyCasts, API Platform screencasts"></a></p>
 
 The easiest and funniest way to learn how to use API Platform is to watch [the more than 60 screencasts available on SymfonyCasts](https://symfonycasts.com/tracks/rest?cid=apip#api-platform-3)!

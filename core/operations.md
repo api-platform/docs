@@ -3,7 +3,7 @@
 API Platform relies on the concept of operations. Operations can be applied to a resource exposed by the API. From
 an implementation point of view, an operation is a link between a resource, a route and its related controller.
 
-<p align="center" class="symfonycasts"><a href="https://symfonycasts.com/screencast/api-platform/operations?cid=apip"><img src="/docs/distribution/images/symfonycasts-player.png" alt="Operations screencast"><br>Watch the Operations screencast</a></p>
+<p align="center" class="symfonycasts"><a href="https://symfonycasts.com/screencast/api-platform/operations?cid=apip"><img src="../symfony/images/symfonycasts-player.png" alt="Operations screencast"><br>Watch the Operations screencast</a></p>
 
 API Platform automatically registers typical [CRUD](https://en.wikipedia.org/wiki/Create,_read,_update_and_delete) operations
 and describes them in the exposed documentation (Hydra and Swagger). It also creates and registers routes corresponding
@@ -17,28 +17,30 @@ is also possible.
 
 There are two types of operations: collection operations and item operations.
 
-Collection operations act on a collection of resources. By default two routes are implemented: `POST` and `GET`. Item
-operations act on an individual resource. Four default routes are defined: `GET`, `PUT`, `DELETE` and `PATCH`. `PATCH` is supported
+Collection operations act on a collection of resources. By default two operations are implemented: `POST` and `GET`. Item
+operations act on an individual resource. Three default operation are defined: `GET`, `DELETE` and `PATCH`. `PATCH` is supported
 with [JSON Merge Patch (RFC 7396)](https://www.rfc-editor.org/rfc/rfc7386), or [using the JSON:API format](https://jsonapi.org/format/#crud-updating), as required by the specification.
+
+The `PUT` operation is also supported, but is not registered by default.
 
 When the `ApiPlatform\Metadata\ApiResource` annotation is applied to an entity class, the following built-in CRUD
 operations are automatically enabled:
 
 Collection operations:
 
-Method | Mandatory | Description
--------|-----------|------------------------------------------
-`GET`  | yes       | Retrieve the (paginated) list of elements
-`POST` | no        | Create a new element
+Method | Mandatory | Description                               | Registered by default
+-------|-----------|-------------------------------------------|----------------------
+`GET`  | yes       | Retrieve the (paginated) list of elements | yes
+`POST` | no        | Create a new element                      | yes
 
 Item operations:
 
-Method   | Mandatory | Description
----------|-----------|-------------------------------------------
-`GET`    | yes       | Retrieve an element
-`PUT`    | no        | Replace an element
-`PATCH`  | no        | Apply a partial modification to an element
-`DELETE` | no        | Delete an element
+Method   | Mandatory | Description                                | Registered by default
+---------|-----------|--------------------------------------------|----------------------
+`GET`    | yes       | Retrieve an element                        | yes
+`PUT`    | no        | Replace an element                         | no
+`PATCH`  | no        | Apply a partial modification to an element | yes
+`DELETE` | no        | Delete an element                          | yes
 
 Note: the `PATCH` method must be enabled explicitly in the configuration, refer to the [Content Negotiation](content-negotiation.md) section for more information.
 
@@ -563,7 +565,7 @@ class Weather
     // ...
 ```
 
-This will expose the `Weather` model, but also all the default CRUD routes: `GET`, `PUT`, `PATCH`, `DELETE` and `POST`, which is nonsense in our context.
+This will expose the `Weather` model, but also all the default CRUD routes: `GET`, `PATCH`, `DELETE` and `POST`, which is nonsense in our context.
 Since we are required to expose at least one route, let's expose just one:
 
 ```php

@@ -17,7 +17,7 @@ library to expose a nice, responsive, management interface (Create-Retrieve-Upda
 
 You can **customize everything** by using provided React Admin and [MUI](https://mui.com/) components, or by writing your custom [React](https://reactjs.org/) components.
 
-<p align="center" class="symfonycasts"><a href="https://symfonycasts.com/screencast/api-platform/react-admin?cid=apip"><img src="../distribution/images/symfonycasts-player.png" alt="React Admin Screencast"><br>Watch the React Admin screencast</a></p>
+<p align="center" class="symfonycasts"><a href="https://symfonycasts.com/screencast/api-platform/react-admin?cid=apip"><img src="../symfony/images/symfonycasts-player.png" alt="React Admin Screencast"><br>Watch the React Admin screencast</a></p>
 
 ## Features
 

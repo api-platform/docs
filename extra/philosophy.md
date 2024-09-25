@@ -25,7 +25,7 @@ Like other modern frameworks such as Laravel and Symfony, it's both a full-stack
 
 API Platform makes modern development easy and fun again:
 
-* [Start by **creating a web API**](../distribution/index.md) exposing structured data that can
+* [Start by **creating a web API**](../symfony/index.md) exposing structured data that can
   be understood by any compliant client such as your apps but also search engines (JSON-LD with Schema.org vocabulary).
   This API is the central and unique entry point to access and modify data. It also encapsulates the whole business logic.
 * [Then **create as many clients as you want using frontend technologies you love**](../create-client/index.md): a JavaScript
