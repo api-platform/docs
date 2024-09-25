@@ -1,6 +1,6 @@
 # The API Platform Core Library
 
-API Platform Core is an easy-to-use and powerful library to create [hypermedia-driven REST APIs](https://en.wikipedia.org/wiki/HATEOAS).
+API Platform Core is an easy-to-use and powerful library for creating [hypermedia-driven REST APIs](https://en.wikipedia.org/wiki/HATEOAS).
 It is a component of the [API Platform framework](https://api-platform.com). It can be used as a standalone or with one of these frameworks (recommended): [the Symfony
 framework](https://symfony.com) or [the Laravel framework](https://laravel.com/).
 
@@ -11,7 +11,9 @@ Build a working and fully featured CRUD API in minutes. Leverage the awesome fea
 high-performance API-first projects.
 
 If you are starting a new project, the easiest way to get API Platform up is to install
-API Platform using a framework (recommended) with [the API Platform Laravel Variant](../laravel/index.md) or the [API Platform Symfony Variant](../symfony/index.md) or, alternatively, [Bootstrapping the API Platform core library manually](../core/bootstrap.md).
+API Platform using [API Platform for Symfony](../symfony/index.md) or [API Platform for Laravel](../laravel/index.md).
+
+Alternatively, it's possible to [bootstrap the API Platform core library manually](../core/bootstrap.md).
 
 ![Screenshot](../symfony/images/swagger-ui-1.png)
 
@@ -22,24 +24,24 @@ Here is the fully featured REST API you'll get in minutes:
 * [Automatic CRUD](operations.md)
 * Hypermedia (JSON-LD and HAL)
 * Machine-readable documentation of the API in the Hydra and [Swagger/Open API](openapi.md) formats,
-  guessed from PHPDoc, Serializer, Validator and Doctrine ORM / MongoDB ODM metadata
+  guessed from PHPDoc, Serializer, Validator, and Doctrine ORM / MongoDB ODM metadata
 * Nice human-readable documentation built with Swagger UI (including a sandbox) and/or ReDoc
 * [Pagination](pagination.md)
 * A bunch of [filters](filters.md)
 * [Ordering](default-order.md)
-* [Validation](validation.md) using the Symfony Validator Component (with groups support)
+* [Validation](validation.md) using the Symfony Validator Component (with group support)
 * Advanced [authentication and authorization](security.md) rules
 * Errors serialization (Hydra and the [RFC 7807](https://tools.ietf.org/html/rfc7807) are supported)
 * Advanced [serialization](serialization.md) thanks to the Symfony Serializer Component (groups support, relation embedding, max depth...)
-* Automatic routes registration
-* Automatic entrypoint generation giving access to all resources
+* Automatic route registration
+* Automatic entry point generation giving access to all resources
 * [User](user.md) support
 * [JWT](jwt.md) and [OAuth](https://oauth.net/) support
 * Files and `\DateTime` and serialization and deserialization
 
 Everything is fully customizable through a powerful [event system](events.md) and strong OOP.
 
-This bundle is extensively tested (unit and functional). The [`Fixtures/` directory](https://github.com/api-platform/core/tree/main/tests/Fixtures) contains a working app covering all features of the library.
+This bundle is extensively tested (unit and functional). The [`Fixtures/` directory](https://github.com/api-platform/core/tree/main/tests/Fixtures) contains a working app covering all library features.
 
 ## Symfony Screencasts
 
