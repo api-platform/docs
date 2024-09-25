@@ -1,8 +1,8 @@
 # OpenAPI
 
-API Platform Admin has a native support for API exposing an [OpenAPI documentation](https://www.openapis.org/).
+API Platform Admin has native support for API exposing an [OpenAPI documentation](https://www.openapis.org/).
 
-To use it, use the `OpenApiAdmin` component, with the entrypoint of the API and the entrypoint of the OpenAPI documentation in JSON:
+To use it, use the `OpenApiAdmin` component, with the entry point of the API and the entry point of the OpenAPI documentation in JSON:
 
 ```javascript
 import { OpenApiAdmin } from "@api-platform/admin";
@@ -12,8 +12,10 @@ export default () => (
 );
 ```
 
-**Note:** The OpenAPI documentation needs to follow some assumptions in order to be understood correctly by the underlying `api-doc-parser`.
-See the [dedicated part in the `api-doc-parser` library README](https://github.com/api-platform/api-doc-parser#openapi-support).
+> [!NOTE]
+>
+> The OpenAPI documentation needs to follow some assumptions to be understood correctly by the underlying `api-doc-parser`.
+> See the [dedicated part in the `api-doc-parser` library README](https://github.com/api-platform/api-doc-parser#openapi-support).
 
 ## Data Provider
 
