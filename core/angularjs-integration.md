@@ -39,12 +39,12 @@ var app = angular
             populateHref(data);
 
             if ('getList' === operation) {
-                var collectionResponse = data['hydra:member'];
+                var collectionResponse = data['member'];
                 collectionResponse.metadata = {};
 
                 // Put metadata in a property of the collection
                 angular.forEach(data, function(value, key) {
-                    if ('hydra:member' !== key) {
+                    if ('member' !== key) {
                         collectionResponse.metadata[key] = value;
                     }
                 });
