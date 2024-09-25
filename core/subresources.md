@@ -4,7 +4,7 @@ A Subresource is another way of declaring a resource that usually involves a mor
 In API Platform you can declare as many `ApiResource` as you want on a PHP class
 creating Subresources.
 
-Subresources work very well by implementing your own state [providers](./state-providers.md)
+Subresources work well by implementing your own state [providers](./state-providers.md)
 or [processors](./state-processors.md). In API Platform we provide a working Doctrine layer for
 subresources providing you add the correct configuration for URI Variables.
 

@@ -10,9 +10,9 @@ by the library.
 By default, all filters are disabled. They must be enabled explicitly.
 
 When a filter is enabled, it automatically appears in the [OpenAPI](openapi.md) and [GraphQL](graphql.md) documentations.
-It is also automatically documented as a `hydra:search` property for JSON-LD responses.
+It is also automatically documented as a `search` property for JSON-LD responses.
 
-<p align="center" class="symfonycasts"><a href="https://symfonycasts.com/screencast/api-platform/filters?cid=apip"><img src="/docs/symfony/images/symfonycasts-player.png" alt="Filtering and Searching screencast"><br>Watch the Filtering & Searching screencast</a></p>
+<p align="center" class="symfonycasts"><a href="https://symfonycasts.com/screencast/api-platform/filters?cid=apip"><img src="../symfony/images/symfonycasts-player.png" alt="Filtering and Searching screencast"><br>Watch the Filtering & Searching screencast</a></p>
 
 ## Parameters
 
@@ -27,7 +27,7 @@ use ApiPlatform\Metadata\QueryParameter;
 // This parameter "page" works only on /books
 #[GetCollection(uriTemplate: '/books', parameters: ['page' => new QueryParameter])]
 // This parameter is available on every operations, key is mandatory
-#[QueryParameter(key: 'q', property: 'hydra:freetextQuery')]
+#[QueryParameter(key: 'q', property: 'freetextQuery')]
 class Book {}
 ```
 
@@ -2019,7 +2019,7 @@ use ApiPlatform\Metadata\QueryParameter;
 // This parameter "page" works only on /books
 #[GetCollection(uriTemplate: '/books', parameters: ['page' => new QueryParameter])]
 // This parameter is available on every operations, key is mandatory
-#[QueryParameter(key: 'q', property: 'hydra:freetextQuery')]
+#[QueryParameter(key: 'q', property: 'freetextQuery')]
 class Book {}
 ```
 

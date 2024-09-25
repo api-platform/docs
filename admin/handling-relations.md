@@ -84,8 +84,8 @@ For instance, if your API returns:
 {
   "@context": "/contexts/Book",
   "@id": "/books",
-  "@type": "hydra:Collection",
-  "hydra:member": [
+  "@type": "Collection",
+  "member": [
     {
       "@id": "/books/07b90597-542e-480b-a6bf-5db223c761aa",
       "@type": "https://schema.org/Book",
@@ -98,7 +98,7 @@ For instance, if your API returns:
       }
     }
   ],
-  "hydra:totalItems": 1
+  "totalItems": 1
 }
 ```
 

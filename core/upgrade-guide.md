@@ -9,7 +9,7 @@ api_platform:
 -        event_listeners_backward_compatibility_layer: false
 -        keep_legacy_inflector: false
         extra_properties:
-            standard_put: true
+-            standard_put: true
 -            rfc_7807_compliant_errors: true
 ```
 
@@ -45,6 +45,14 @@ We added an `hydra_prefix` configuration as the `hydra:` prefix will be removed 
 api_platform:
     serializer:
         hydra_prefix: false
+```
+
+Standard PUT is now `true` by default, you can change its value using:
+
+```yaml
+api_platform:
+    extra_properties:
+        standard_put: true
 ```
 
 ## API Platform 3.1/3.2
