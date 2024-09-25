@@ -601,8 +601,8 @@ If the submitted data has denormalization errors, the HTTP status code will be s
 {
     "@context": "/api/contexts/ConstraintViolationList",
     "@type": "ConstraintViolationList",
-    "hydra:title": "An error occurred",
-    "hydra:description": "boolean: This value should be of type bool.\nproperty1: This value should be of type string.",
+    "title": "An error occurred",
+    "description": "boolean: This value should be of type bool.\nproperty1: This value should be of type string.",
     "violations": [
         {
             "propertyPath": "boolean",
