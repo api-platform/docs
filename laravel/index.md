@@ -9,7 +9,7 @@ With API Platform, you can:
 
 * [expose your Eloquent](#exposing-a-model) models in minutes as:
   * a REST API implementing the industry-leading standards, formats and best practices: [JSON-LD](https://en.wikipedia.org/wiki/JSON-LD)/[RDF](https://en.wikipedia.org/wiki/Resource_Description_Framework), [JSON:API](https://jsonapi.org), [HAL](https://stateless.group/hal_specification.html), and many RFCs...
-  * a [GraphQL](https://graphql.org/) API
+  * a [GraphQL](#enabling-graphql) API
   * or both at the same time, with the same code!
 * automatically expose an [OpenAPI](https://www.openapis.org) specification (formerly Swagger), dynamically generated from your Eloquent models and always up to date
 * automatically expose nice UIs and playgrounds to develop using your API ([Swagger UI](https://swagger.io/tools/swagger-ui/) and [GraphiQL](https://github.com/graphql/graphiql))
@@ -589,7 +589,7 @@ php artisan make:request BookFormRequest
 
 Then, add validation rules to the generated class (`app/Http/Requests/BookFormRequest.php` in our example):
 
-```php
+```patch
  namespace App\Http\Requests;
 
  use Illuminate\Foundation\Http\FormRequest;
