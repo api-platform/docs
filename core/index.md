@@ -1,11 +1,10 @@
 # The API Platform Core Library
 
 API Platform Core is an easy-to-use and powerful library for creating [hypermedia-driven REST APIs](https://en.wikipedia.org/wiki/HATEOAS).
-It is a component of the [API Platform framework](https://api-platform.com). It can be used as a standalone or with one of these frameworks (recommended): [the Symfony
-framework](https://symfony.com) or [the Laravel framework](https://laravel.com/).
+It is a component of the [API Platform framework](https://api-platform.com).
 
 It embraces [JSON for Linked Data (JSON-LD)](https://json-ld.org/) and [Hydra Core Vocabulary](https://www.hydra-cg.com/) web
-standards but also supports [HAL](https://stateless.co/hal_specification.html), [Swagger/Open API](https://www.openapis.org/), XML, JSON, CSV and YAML.
+standards but also supports [OpenAPI (formerly known as Swagger)](https://www.openapis.org/), [JSON:API](https://jsonapi.org/), [HAL](https://stateless.co/hal_specification.html), XML, JSON, CSV and YAML.
 
 Build a working and fully featured CRUD API in minutes. Leverage the awesome features of the tool to develop complex and
 high-performance API-first projects.
