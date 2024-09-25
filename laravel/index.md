@@ -22,7 +22,7 @@ With API Platform, you can:
 <!-- * benefits from native HTTP cache (with automatic invalidation) -->
 * boost your app with [Octane](https://laravel.com/docs/octane) and [FrankenPHP](https://frankenphp.dev) (the default Octane engine, also created by Kévin)
 * [decouple your API from your models](../core/state-providers.md) and implement patterns such as CQRS
-* test your API using convenient ad-hoc assertions that works with Pest and PHPUnit
+* test your API using convenient ad-hoc assertions that work with Pest and PHPUnit
 
 Let's discover how to use API Platform with Laravel!
 
@@ -44,22 +44,24 @@ cd my-api-platform-laravel-app
 In your Laravel project, install the API Platform integration for Laravel:
 
 ```console
-composer require api-platform/laravel:^4
+composer require api-platform/laravel
 ```
 
-If it's not already done, run `php artisan serve` to start the built-in web server.
-
-Open `http://127.0.0.1:8000/api/`, your API is already active and documented... but empty!
-
-![Empty docs](images/empty-docs.png)
-
-## Publishing the Config File and Assets
-
-After installing API Platform, you can publish its assets and config using the `api-platform:install` Artisan command.
+After installing API Platform, publish its assets and config:
 
 ```console
 php artisan api-platform:install
 ```
+
+If it's not already done, start the built-in web server:
+
+```console
+php artisan serve
+```
+
+Open `http://127.0.0.1:8000/api/`, your API is already active and documented... but empty!
+
+![Empty docs](images/empty-docs.png)
 
 ## Creating an Eloquent Model
 
@@ -126,7 +128,7 @@ namespace App\Models;
  }
 ```
 
-Open `http://127.0.0.1:8000/api/`, tadam, your API is ready and **entirely functionnal** 🎉:
+Open `http://127.0.0.1:8000/api/`, tadam, your API is ready and **entirely functional** 🎉:
 
 ![Basic REST API](images/basic-rest.png)
 
@@ -271,7 +273,7 @@ class Book extends Model
 
 ## Relations and Nested Resources
 
-Let's replace our author column by a relation to a new `author` table:
+Let's replace our author column with a relation to a new `author` table:
 
 ```patch
     public function up(): void
@@ -295,7 +297,7 @@ Let's replace our author column by a relation to a new `author` table:
     }
 ```
 
-By doing so, API Platform will automatically handle links to that relation using your prefered format (JSON:API, JSON-LD etc)
+By doing so, API Platform will automatically handle links to that relation using your preferred format (JSON:API, JSON-LD, etc)
 and when we request a Book we obtain:
 
 ```json
@@ -559,15 +561,14 @@ It also natively supports:
 * [Laravel Passport](https://laravel.com/docs/passport), a full OAuth 2 server
 * [Laravel Socialite](https://laravel.com/docs/socialite), OAuth providers including Facebook, X, LinkedIn, Google, GitHub, GitLab, Bitbucket, and Slack
 
-Follow the official instructions of the tool(s) you want to use.
+Follow the official instructions for the tool(s) you want to use.
 
+### Login With Swagger UI
 
-### Swagger UI and Authentication
+In Swagger UI, you can authenticate your requests using the `Authorize` button in the top right corner.
+To use it, you need to add some configuration in the `config/api-platform.php` file.
 
-In the Swagger UI, you can authenticate your requests using the `Authorize` button in the top right corner.
-In order to use it, you need to configure it in the `config/api-platform.php` file.
-
-Here is an example of how to configure API Key authentication:
+Here is an example of how to configure API key authentication:
 
 ```php
 // config/api-platform.php
@@ -582,7 +583,7 @@ Here is an example of how to configure API Key authentication:
 ]
 ```
 
-Or if you are using Laravel Passport (or any oauth2 server):
+Or if you are using Laravel Passport (or any other OAuth server):
 
 ```php
 // config/api-platform.php
