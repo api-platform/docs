@@ -1,12 +1,12 @@
 chapters:
-  - title: "The Symfony API Platform variant"
+  - title: "API Platform for Symfony"
     path: symfony
     items:
       - index
       - testing
       - debugging
       - caddy
-  - title: "The Laravel API Platform variant"
+  - title: "API Platform for Laravel"
     path: laravel
     items:
       - index

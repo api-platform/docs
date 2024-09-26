@@ -1,4 +1,4 @@
-# Getting Started With API Platform: Create Your API and Your Jamstack Site
+# Getting Started With API Platform for Symfony
 
 ![The welcome page](images/api-platform-3.0-welcome.png)
 
