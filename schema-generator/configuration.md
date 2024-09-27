@@ -515,6 +515,55 @@ types:
         exclude: true # Exclude the GameEvent type
 ```
 
+## Using Labels for naming the resources
+
+If you are using vocabularies that have adopted numerical IDs, such as [Wikidata](https://www.wikidata.org) or [OBO ontologies](https://obofoundry.org), you might prefer to use the labels for naming your types/resources of interest instead of reusing the ID part of their URI fragment identifier, which is the default behavior.
+
+You can use one of the dedicated options available at each level of your configuration to achieve this: 'nameAllFromLabels' for the full config level and the vocabulary level, or 'nameFromLabel' at the types level.
+
+The two sub-options 'language' and 'namingConvention' are available for each of these levels and allow you to determine the preferred language when using the labels for naming purpose (default: ‘en’) and the naming convention on which naming will be based (i.e., 'snake case', default: 'camel case').
+
+Using labels can also be preferred for any vocabulary as long as labels are defined. If no label is found, the ID part of the URI fragment identifier will be used as with the default behavior.
+
+Here are basic examples for the different levels of configuration:
+
+**General level**
+```yaml
+vocabularies:
+    - { uri: http://purl.obolibrary.org/obo/ro.owl, format: rdfxml }
+
+allTypes: true # Generate all types by default for vocabularies
+nameAllFromLabels: true # Make use of the label information when possible to define all entities names
+namingConvention: snake case
+language: en
+```
+**Vocabulary level**
+```yaml
+vocabularies:
+    - { uri: http://purl.obolibrary.org/obo/ro.owl, format: rdfxml, nameAllFromLabels: true, language: en, namingConvention: camel case }
+    - { uri: https://raw.githubusercontent.com/w3c/dxwg/gh-pages/dcat/rdf/dcat3.rdf, format: rdfxml, nameAllFromLabels: false }
+
+allTypes: true # Generate all types by default for vocabularies
+```
+**Type level**
+```yaml
+vocabularies:
+    - { uri: http://www.wikidata.org/entity/Q115634351.rdf }
+    - { uri: https://raw.githubusercontent.com/w3c/dxwg/gh-pages/dcat/rdf/dcat3.rdf, format: rdfxml }
+
+types:
+    Q115634351:
+        vocabularyNamespace: http://www.wikidata.org/entity/
+        nameFromLabel: true
+        namingConvention: camel case
+        language: es
+    CatalogRecord:
+        vocabularyNamespace: http://www.w3.org/ns/dcat#
+        nameFromLabel: true
+        language: es
+```
+
+
 ## Checking GoodRelation Compatibility
 
 If the `checkIsGoodRelations` option is set to `true`, the generator will emit a warning if an encountered property is not
@@ -596,6 +645,15 @@ vocabularies:
 
         # Generate all types for this vocabulary, even if an explicit configuration exists. If allTypes is enabled globally, it can be disabled for this particular vocabulary
         allTypes:             null
+
+        # Make use of the label information when possible to define all entities names in this vocabulary
+        nameAllFromLabels:    false
+
+        # The language to use, with this vocabulary, among the labels when used as entities names, e.g., en
+        language: null
+
+        # The naming convention to use, with this vocabulary, when naming entities from their labels; possible values are "snake case" or "camel case"(default), classes have first charater in uppercase
+        namingConvention: null
 
         # Attributes (merged with generated attributes)
         attributes:           []
@@ -718,6 +776,15 @@ allTypes:             false
 # If a type is present in a vocabulary but not explicitly imported (types) or if the vocabulary is not totally imported (allTypes), it will be generated
 resolveTypes:         false
 
+# Make use of the label information when possible to define all entities names in all vocabularies
+nameAllFromLabels:    false
+
+# The language to use, with all vocabularies, among the labels when used as entities names, e.g., en
+language: null
+
+# The naming convention to use, with all vocabularies, when naming entities from their labels; possible values are "snake case" or "camel case"(default), classes have first charater in uppercase
+namingConvention: null
+
 # Types to import from the vocabulary
 types:
 
@@ -756,6 +823,15 @@ types:
 
         # Operations for the class
         operations:           []
+
+        # Make use of the label information when possible to define the entity name for the current type
+        nameFromLabels:    false
+
+        # The language to use, with the current type, among the labels when used as entities names, e.g., en
+        language: null
+
+        # The naming convention to use, with the current type, when naming entities from their labels; possible values are "snake case" or "camel case"(default), classes have first charater in uppercase
+        namingConvention: null
 
         # Import all existing properties
         allProperties:        false
