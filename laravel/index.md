@@ -47,12 +47,6 @@ In your Laravel project, install the API Platform integration for Laravel:
 composer require api-platform/laravel
 ```
 
-After installing API Platform, publish its assets and config:
-
-```console
-php artisan api-platform:install
-```
-
 If it's not already done, start the built-in web server:
 
 ```console
