@@ -68,8 +68,11 @@ api_platform:
     # Enable the data collector and the WebProfilerBundle integration.
     enable_profiler: true
 
+    # Use Symfony event listeners instead of providers and processors.
+    event_listeners_backward_compatibility_layer: false
+
     # Keep doctrine/inflector instead of symfony/string to generate plurals for routes.
-    keep_legacy_inflector: true
+    keep_legacy_inflector: false
 
     collection:
         # The name of the query parameter to filter nullable results (with the ExistsFilter).
