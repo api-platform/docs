@@ -45,6 +45,13 @@ docker compose exec php \
     bin/console api:swagger:export
 ```
 
+It is also possible to use OpenAPI v3.0.0 format:
+
+```console
+docker compose exec php \
+    bin/console api:openapi:export --spec-version=3.0.0
+```
+
 ## Overriding the OpenAPI Specification
 
 Symfony allows to [decorate services](https://symfony.com/doc/current/service_container/service_decoration.html), here we
