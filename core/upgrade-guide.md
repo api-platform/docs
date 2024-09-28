@@ -1,6 +1,6 @@
 # Upgrade Guide
 
-## API Platform 3.4 
+## API Platform 3.4
 
 Remove the `keep_legacy_inflector`, the `event_listeners_backward_compatibility_layer` and the `rfc_7807_compliant_errors` flag:
 
@@ -17,8 +17,8 @@ If you use a custom normalizer for validation exception use:
 
 ```yaml
 api_platform:
-	validator:
-		legacy_validation_exception: true
+    validator:
+        legacy_validation_exception: true
 ```
 
 Indeed, we will throw another validation class in API Platform 4 we will throw `ApiPlatform\Validator\Exception\ValidationException` instead of `ApiPlatform\Symfony\Validator\Exception\ValidationException`
@@ -27,7 +27,7 @@ It's really important to add the `use_symfony_listeners` flag, set to `true` if 
 
 ```yaml
 api_platform:
-	use_symfony_listeners: false
+    use_symfony_listeners: false
 ```
 
 The `keep_legacy_inflector` flag will be removed from API Platform 4, you need to fix your issues first. In API Platform 3.4, the Inflector is available as a service that you can configure through:
@@ -53,6 +53,20 @@ Standard PUT is now `true` by default, you can change its value using:
 api_platform:
     extra_properties:
         standard_put: true
+```
+
+We recommend using the standalone API Platform packages instead of the Core monolithic repository.
+
+Update your `composer.json` like that:
+
+```patch
+ {
+     "require": {
+-        "api-platform/core": "^3",
++        "api-platform/symfony": "^3 || ^4"
++        // also add the extra packages you need, like "api-platform/doctrine-orm"
+     }
+ }
 ```
 
 ## API Platform 3.1/3.2

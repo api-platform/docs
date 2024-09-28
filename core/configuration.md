@@ -68,10 +68,7 @@ api_platform:
     # Enable the data collector and the WebProfilerBundle integration.
     enable_profiler: true
 
-    # Keep doctrine/inflector instead of symfony/string to generate plurals for routes.
-    keep_legacy_inflector: true
-
-    collection:
+   collection:
         # The name of the query parameter to filter nullable results (with the ExistsFilter).
         exists_parameter_name: 'exists'
 
