@@ -10,7 +10,7 @@ For development purposes such as debugging tests or remote API requests,
 To enable it, run:
 
 ```console
-XDEBUG_MODE=debug docker compose up --wait
+XDEBUG_MODE=debug XDEBUG_SESSION=1 docker compose up --wait
 ```
 
 ## Using Xdebug with PhpStorm
