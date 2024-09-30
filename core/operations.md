@@ -6,8 +6,9 @@ an implementation point of view, an operation is a link between a resource, a ro
 <p align="center" class="symfonycasts"><a href="https://symfonycasts.com/screencast/api-platform/operations?cid=apip"><img src="../symfony/images/symfonycasts-player.png" alt="Operations screencast"><br>Watch the Operations screencast</a></p>
 
 API Platform automatically registers typical [CRUD](https://en.wikipedia.org/wiki/Create,_read,_update_and_delete) operations
-and describes them in the exposed documentation (Hydra and Swagger). It also creates and registers routes corresponding
-to these operations in the Symfony routing system (if it is available).
+and describes them in the exposed documentation (Hydra and Swagger). It also creates and registers routes
+for these operations in the Symfony routing system, if available, or in the Laravel routing system,
+should that be the case.
 
 The behavior of built-in operations is briefly presented in the [Getting started](getting-started.md#mapping-the-entities)
 guide.
@@ -42,13 +43,20 @@ Method   | Mandatory | Description                                | Registered b
 `PATCH`  | no        | Apply a partial modification to an element | yes
 `DELETE` | no        | Delete an element                          | yes
 
-Note: the `PATCH` method must be enabled explicitly in the configuration, refer to the [Content Negotiation](content-negotiation.md) section for more information.
+> [!NOTE]
+> The `PATCH` method must be enabled explicitly in the configuration, refer to the [Content Negotiation](content-negotiation.md) section for more information.
 
-Note: with JSON Merge Patch, the [null values will be skipped](https://symfony.com/doc/current/components/serializer.html#skipping-null-values) in the response.
+---
 
-Note: Current `PUT` implementation behaves more or less like the `PATCH` method.
-Existing properties not included in the payload are **not** removed, their current values are preserved.
-To remove an existing property, its value must be explicitly set to `null`.
+> [!NOTE]
+> With JSON Merge Patch, the [null values will be skipped](https://symfony.com/doc/current/components/serializer.html#skipping-null-values) in the response.
+
+---
+
+> [!NOTE]
+> Current `PUT` implementation behaves more or less like the `PATCH` method.
+> Existing properties not included in the payload are **not** removed, their current values are preserved.
+> To remove an existing property, its value must be explicitly set to `null`.
 
 ## Enabling and Disabling Operations
 
@@ -64,7 +72,13 @@ for the `GET` method for both `collection` and `item` to create a readonly endpo
 If the operation's name matches a supported HTTP method (`GET`, `POST`, `PUT`, `PATCH` or `DELETE`), the corresponding `method` property
 will be automatically added.
 
-Note: The `#[GetCollection]` attribute is an alias for `#[Get(collection: true)]`
+> [!TIP]
+> The `#[GetCollection]` attribute is an alias for `#[Get(collection: true)]`
+
+---
+
+> [!NOTE]
+> In Symfony we use the term “entities”, while the following documentation is mostly for Laravel “models”.
 
 <code-selector>
 
