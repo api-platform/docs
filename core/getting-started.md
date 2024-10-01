@@ -5,7 +5,6 @@
 You can choose your preferred stack between Symfony, Laravel, or bootstrapping the API Platform core library manually.
 
 > [!CAUTION]
->
 > If you are migrating from an older version of API Platform, make sure you read the [Upgrade Guide](upgrade-guide.md).
 
 ### Symfony
