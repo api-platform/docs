@@ -43,7 +43,7 @@ A parameter can alter the current Operation context, to do so use a `ApiPlatform
 
 ```php
 class GroupsParameterProvider implements ParameterProviderInterface {
-    public function provider(Parameter $parameter, array $uriVariables = [], array $context = []): HttpOperation 
+    public function provide(Parameter $parameter, array $uriVariables = [], array $context = []): HttpOperation 
     {
         $request = $context['request'];
         return $context['operation']->withNormalizationContext(['groups' => $request->query->all('groups')]);
