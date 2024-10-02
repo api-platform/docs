@@ -5,7 +5,6 @@
 You can choose your preferred stack between Symfony, Laravel, or bootstrapping the API Platform core library manually.
 
 > [!CAUTION]
->
 > If you are migrating from an older version of API Platform, make sure you read the [Upgrade Guide](upgrade-guide.md).
 
 ### Symfony
@@ -263,11 +262,11 @@ Open the generated migration class (`database/migrations/<timestamp>_create_prod
         Schema::create('products', function (Blueprint $table) {
             $table->id();
 
-+            $table->string('name');
-+            $table->decimal('price', 8, 2);
-+            $table->text('description');
-+            $table->boolean('is_active')->default(true);
-+            $table->date('created_date')->nullable();
++           $table->string('name');
++           $table->decimal('price', 8, 2);
++           $table->text('description');
++           $table->boolean('is_active')->default(true);
++           $table->date('created_date')->nullable();
 
             $table->timestamps();
         });
@@ -277,7 +276,7 @@ Open the generated migration class (`database/migrations/<timestamp>_create_prod
 Finally, execute the migration:
 
 ```console
-php artisan
+php artisan migrate
 ```
 
 And after that, just adding the `#[ApiResource]` attribute as follows onto your model:

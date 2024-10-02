@@ -43,7 +43,7 @@ A parameter can alter the current Operation context, to do so use a `ApiPlatform
 
 ```php
 class GroupsParameterProvider implements ParameterProviderInterface {
-    public function provider(Parameter $parameter, array $uriVariables = [], array $context = []): HttpOperation 
+    public function provide(Parameter $parameter, array $uriVariables = [], array $context = []): HttpOperation 
     {
         $request = $context['request'];
         return $context['operation']->withNormalizationContext(['groups' => $request->query->all('groups')]);
@@ -1534,6 +1534,7 @@ use ApiPlatform\Doctrine\Orm\Util\QueryNameGeneratorInterface;
 use ApiPlatform\Metadata\Operation;
 use Doctrine\ORM\QueryBuilder;
 use Symfony\Component\PropertyInfo\Type;
+use ApiPlatform\OpenApi\Model\Parameter;
 
 final class RegexpFilter extends AbstractFilter
 {
@@ -1567,12 +1568,14 @@ final class RegexpFilter extends AbstractFilter
                 'type' => Type::BUILTIN_TYPE_STRING,
                 'required' => false,
                 'description' => 'Filter using a regex. This will appear in the OpenApi documentation!',
-                'openapi' => [
-                    'example' => 'Custom example that will be in the documentation and be the default value of the sandbox',
-                    'allowReserved' => false,// if true, query parameters will be not percent-encoded
-                    'allowEmptyValue' => true,
-                    'explode' => false, // to be true, the type must be Type::BUILTIN_TYPE_ARRAY, ?product=blue,green will be ?product=blue&product=green
-                ],
+                'openapi' => new Parameter(
+                    name: $property,
+                    in: 'query',
+                    allowEmptyValue: true,
+                    explode: false, // to be true, the type must be Type::BUILTIN_TYPE_ARRAY, ?product=blue,green will be ?product=blue&product=green
+                    allowReserved: false, // if true, query parameters will be not percent-encoded
+                    example: 'Custom example that will be in the documentation and be the default value of the sandbox',
+                ),
             ];
         }
 

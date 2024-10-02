@@ -1,6 +1,6 @@
 # Parameters and Filters
 
-API Platform is great for Rapid Application Development and provides lots of functionalities out of the box such as collection filtering with Eloquent. Most of the filtering is done using query parameters, which are automatically documented and validated. If needed you can use [state providers](core/state-providers) or a [Links Handler] to provide data.
+API Platform is great for Rapid Application Development and provides lots of functionalities out of the box such as collection filtering with Eloquent. Most of the filtering is done using query parameters, which are automatically documented and validated. If needed you can use [state providers](../core/state-providers.md) or a [Links Handler] to provide data.
 
 ## Parameters
 
@@ -84,13 +84,13 @@ class Book extends Model
 }
 ```
 
-The documentation will output a query parameter per property that applies the `PartialSearchFilter` and also gives the ability to sort by name and id using: `/books?name=search&order[id]=asc&order[name]=desc`.
+The documentation will output a query parameter per property that applies the `PartialSearchFilter` and also gives the ability to sort by name and ID using: `/books?name=search&order[id]=asc&order[name]=desc`.
 
 ## Filters
 
 ### Text
 
-As shown above the following search filters are available: 
+As shown above the following search filters are available:
 
 - `ApiPlatform\Laravel\Eloquent\Filter\PartialSearchFilter` queries `LIKE %term%`
 - `ApiPlatform\Laravel\Eloquent\Filter\EqualsFilter` queries `= term`
@@ -99,7 +99,7 @@ As shown above the following search filters are available:
 
 ### Date
 
-The `DateFilter` allows to filter dates with an operator (`eq`, `lt`, `gt`, `lte`, `gte`): 
+The `DateFilter` allows to filter dates with an operator (`eq`, `lt`, `gt`, `lte`, `gte`):
 
 ```php
 // app/Models/Book.php 
@@ -119,7 +119,7 @@ class Book extends Model
 }
 ```
 
-Our default strategy is to exclude null values, just remove the `filterContext` if you want to exclude nulls. 
+Our default strategy is to exclude null values, just remove the `filterContext` if you want to exclude nulls.
 
 ### Or
 
