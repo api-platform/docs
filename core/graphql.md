@@ -12,12 +12,6 @@ Once enabled, you have nothing to do: your schema describing your API is automat
 
 To enable GraphQL and its IDE (GraphiQL and GraphQL Playground) in your API, simply require the [API Platform GraphQL](https://github.com/api-platform/graphql) package using Composer:
 
-### Symfony installation
-```console
-docker compose exec php sh -c 'composer require api-platform/graphql'
-```
-
-### Laravel installation (without Docker)
 ```console
     composer require api-platform/graphql
 ```
