@@ -59,7 +59,7 @@ The GraphiQL IDE can also be found at `/graphql/graphiql`.
 
 If you need to disable it, it can be done in the configuration:
 
-### Disable GraphiQL with Symfony
+### Disabling GraphiQL with Symfony
 ```yaml
 # api/config/packages/api_platform.yaml
 api_platform:
