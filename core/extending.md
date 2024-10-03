@@ -80,12 +80,12 @@ final class CustomRespondProcessor implements ProcessorInterface
 {
     public function __construct(private readonly ProcessorInterface $processor) {}
 
-    public function __invoke($data, string $resourceClass, string $operationName, array $context)
+    public function process(mixed $data, Operation $operation, array $uriVariables = [], array $context = []): void
     {
         // You can add pre-write code here.
 
-        // Call the decorated write stage (this syntax calls the __invoke method).
-        $writtenObject = ($this->processor)($data, $resourceClass, $operationName, $context);
+        // Call the decorated processor's process method.
+        $this->processor->process($data, $operation, $uriVariables, $context);
 
         // You can add post-write code here.
 
@@ -139,11 +139,7 @@ class AppServiceProvider extends ServiceProvider
 {
     public function register(): void
     {
-        $this->app->singleton(CustomRespondProcessor::class, function (Application $app) {
-            return new CustomRespondProcessor();
-        });
-        
-        $this->app->extend(RespondProcessor::class, function (RespondProcessor $respondProcessor, Application $app) {
+        $this->app->extend(RespondProcessor::class, function (RespondProcessor $respondProcessor) {
             return new CustomRespondProcessor($respondProcessor);
         });
     }
