@@ -64,7 +64,7 @@ When using Symfony, the access checker provider is used at three different stage
 - `api_platform.state_provider.access_checker` decorates the ReadProvider
 
 
-### Decoration example
+### Decoration Example
 
 Here is an example of the decoration of the RespondProcessor:
 
