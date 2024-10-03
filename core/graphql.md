@@ -24,7 +24,7 @@ You can now use GraphQL at the endpoint: `https://localhost:8443/graphql`.
 ## Changing Location of the GraphQL Endpoint
 Sometimes you may want to have the GraphQL endpoint at a different location. This can be done by manually configuring the GraphQL controller.
 
-### Symfony config for routes
+### Symfony Config for Routes
 
 Using the Symfony variant we can do this modification by adding the following code:
 ```yaml
