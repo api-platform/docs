@@ -23,7 +23,7 @@ Alternatively, you can use [Composer](https://getcomposer.org/) to install the s
 project:
 
 ```console
-composer require API
+composer require api
 ```
 
 There are no mandatory configuration options although [many settings are available](configuration.md).
