@@ -59,9 +59,9 @@ flowchart TB
 ### Symfony Access Checker Provider
 
 When using Symfony, the access checker provider is used at three different stages:
-- `api_platform.state_provider.access_checker.post_validate` decorates the ValidateProvider
-- `api_platform.state_provider.access_checker.post_deserialize` decorates the DeserializeProvider
-- `api_platform.state_provider.access_checker` decorates the ReadProvider
+- `api_platform.state_provider.access_checker.post_validate` decorates the `ValidateProvider`
+- `api_platform.state_provider.access_checker.post_deserialize` decorates the `DeserializeProvider`
+- `api_platform.state_provider.access_checker` decorates the `ReadProvider`
 
 
 ### Decoration Example
@@ -78,7 +78,7 @@ use ApiPlatform\State\ProcessorInterface;
 
 final class CustomRespondProcessor implements ProcessorInterface
 {
-    public function __construct(private readonly ProcessorInterface $processor){}
+    public function __construct(private readonly ProcessorInterface $processor) {}
 
     public function __invoke($data, string $resourceClass, string $operationName, array $context)
     {

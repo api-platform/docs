@@ -22,11 +22,13 @@ You can now use GraphQL at the endpoint: `https://localhost:8443/graphql`.
 > If you used [the Symfony Variant thanks to Symfony Flex](../symfony/index.md#using-symfony-flex-and-composer-advanced-users) or the Laravel variant, URLs will be prefixed with `/api` by default. For example, the GraphQL endpoint will be: `https://localhost:8443/api/graphql`.
 
 ## Changing Location of the GraphQL Endpoint
+
 Sometimes you may want to have the GraphQL endpoint at a different location. This can be done by manually configuring the GraphQL controller.
 
-### Symfony Config for Routes
+### Symfony Routes
 
 Using the Symfony variant we can do this modification by adding the following code:
+
 ```yaml
 # api/config/routes.yaml
 api_graphql_entrypoint:
