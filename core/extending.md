@@ -37,7 +37,7 @@ To replace existing API Platform services with your decorators, [check out how t
 
 <p align="center" class="symfonycasts"><a href="https://symfonycasts.com/screencast/api-platform-security/service-decoration?cid=apip"><img src="../symfony/images/symfonycasts-player.png" alt="Service Decoration screencast"><br>Watch the Service Decoration screencast</a></p>
 
-## System providers and processors
+## System Providers and Processors
 
 The system is based on a workflow composed of **state providers** and **state processors**
 
