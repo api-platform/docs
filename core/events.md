@@ -1,9 +1,12 @@
 # The Event System
 
-In API Platform 3.2 you may need `event_listeners_backward_compatibility_layer: true` to keep event listeners activated.
+> [!WARNING]
+> In API Platform 4.0 with Symfony, you need `use_symfony_listeners: true` to activate event listeners.
 
-Note: using Kernel event with API Platform should be mostly limited to tweaking the generated HTTP response. Also, GraphQL is **not supported**.
-[For most use cases, better extension points, working both with REST and GraphQL, are available](extending.md).
+---
+
+> [!NOTE]
+> Using Kernel event with API Platform should be mostly limited to tweaking the generated HTTP response. Also, GraphQL is **not supported**.
 
 API Platform Core implements the [Action-Domain-Responder](https://github.com/pmjones/adr) pattern. This implementation
 is covered in depth in the [Creating custom operations and controllers](operations.md#creating-custom-operations-and-controllers)
