@@ -37,7 +37,7 @@ api_graphql_entrypoint:
 
 Change `/api/graphql` to the URI you wish the GraphQL endpoint to be accessible on.
 
-### Laravel config for routes
+### Laravel Routes
 
 Using the Laravel variant we can do this modification by adding the following code:
 ```php
