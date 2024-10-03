@@ -409,12 +409,11 @@ final class BookCollectionResolver implements QueryCollectionResolverInterface
 }
 ```
 
-### Custom Queries config for Symfony 
+### Custom Queries config for Symfony
 
 If you use autoconfiguration (the default Symfony configuration) in your application, then you are done!
 
 Else, you need to tag your resolver like this if you using Symfony without autoconfiguration :
-
 
 ```yaml
 # api/config/services.yaml
@@ -633,8 +632,8 @@ They are following the GraphQL type system.
 If you don't define the `args` property, it will be the default ones (for example `id` for an item).
 You can also use the `extraArgs` property if you want to add more arguments than the generated ones.
 
-If you don't want API Platform to retrieve the item for you, disable the `read` stage like in `withDefaultArgsNotRetrievedQuery`.
-Some other stages [can be disabled](#disabling-resolver-stages).
+If you don't want API Platform to retrieve the item for you, disable the `read` provider.
+Some other providers and processors [can be disabled](#disabling-system-providers-and-processors).
 Another option would be to make sure there is no `id` argument.
 This is the case for `notRetrievedQuery` (empty args).
 Conversely, if you need to add custom arguments, make sure `id` is added among the arguments if you need the item to be retrieved automatically.
@@ -737,144 +736,16 @@ final class BookMutationResolver implements MutationResolverInterface
 ```
 
 As you can see, depending on how you configure your custom mutation in the resource, the item is retrieved or not.
-For instance, if you don't set an `id` argument or if you disable the `read` or the `deserialize` stage (other stages [can also be disabled](#disabling-resolver-stages)),
+For instance, if you don't set an `id` argument or if you disable the `read` or the `deserialize` providers (other state providers and state processors [can also be disabled](#disabling-system-providers-and-processors)),
 the received item will be `null`.
 
 Likewise, if you don't want your item to be persisted by API Platform,
-you can return `null` instead of the mutated item (be careful: the response will also be `null`) or disable the `write` stage.
+you can return `null` instead of the mutated item (be careful: the response will also be `null`) or disable the `write` provider.
 
 Don't forget the resolver is a service and you can inject the dependencies you want.
 
 If you don't use autoconfiguration, add the tag `api_platform.graphql.mutation_resolver` to the resolver service.
 If you're using Laravel, don't forget to tag the resolver service with the `ApiPlatform\GraphQl\Resolver\MutationResolverInterface`.
-
-Now in your resource:
-
-<code-selector>
-
-```php
-<?php
-// api/src/Entity/Book.php
-namespace App\Entity;
-
-use ApiPlatform\Metadata\ApiResource;
-use ApiPlatform\Metadata\GraphQl\DeleteMutation;
-use ApiPlatform\Metadata\GraphQl\Mutation;
-use ApiPlatform\Metadata\GraphQl\Query;
-use ApiPlatform\Metadata\GraphQl\QueryCollection;
-use App\Resolver\BookMutationResolver;
-
-#[ApiResource(
-    graphQlOperations: [
-        new Query(),
-        new QueryCollection(),
-        new Mutation(name: 'create'),
-        new Mutation(name: 'update'),
-        new DeleteMutation(name: 'delete'),
-
-        new Mutation(
-            name: 'mutation',
-            resolver: BookMutationResolver::class,
-            extraArgs: ['id' => ['type' => 'ID!']]
-        ),
-        new Mutation(
-            name: 'withCustomArgsMutation',
-            resolver: BookMutationResolver::class,
-            args: [
-                'sendMail' => [
-                    'type' => 'Boolean!', 
-                    'description' => 'Send a mail?'
-                ]
-            ]
-        ),
-        new Mutation(
-            name: 'disabledStagesMutation',
-            resolver: BookMutationResolver::class,
-            deserialize: false, 
-            write: false
-        )
-    ]
-)]
-class Book
-{
-    // ...
-}
-```
-
-```yaml
-#The YAML syntax is only supported for Symfony
-resources:
-    App\Entity\Book:
-        graphQlOperations:
-            - class: ApiPlatform\Metadata\GraphQl\Query
-            - class: ApiPlatform\Metadata\GraphQl\QueryCollection
-            - class: ApiPlatform\Metadata\GraphQl\Mutation
-              name: create
-            - class: ApiPlatform\Metadata\GraphQl\Mutation
-              name: update
-            - class: ApiPlatform\Metadata\GraphQl\Mutation
-              name: delete
-
-            - class: ApiPlatform\Metadata\GraphQl\Mutation
-              name: mutation
-              resolver: App\Resolver\BookMutationResolver
-              extraArgs:
-                  id:
-                      type: 'ID!'
-            - class: ApiPlatform\Metadata\GraphQl\Mutation
-              name: withCustomArgsMutation
-              resolver: App\Resolver\BookMutationResolver
-              args:
-                  sendMail:
-                      type: 'Boolean!'
-                      description: 'Send a mail?'
-            - class: ApiPlatform\Metadata\GraphQl\Mutation
-              name: disabledStagesMutation
-              resolver: App\Resolver\BookMutationResolver
-              deserialize: false
-              write: false
-```
-
-```xml
-<!--The XML syntax is only supported for Symfony-->
-<resources xmlns="https://api-platform.com/schema/metadata/resources-3.0"
-           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-           xsi:schemaLocation="https://api-platform.com/schema/metadata/resources-3.0
-           https://api-platform.com/schema/metadata/resources-3.0.xsd">
-    <resource class="App\Entity\Book">
-        <graphQlOperations>
-            <graphQlOperation class="ApiPlatform\Metadata\GraphQl\Query" />
-            <graphQlOperation class="ApiPlatform\Metadata\GraphQl\QueryCollection" />
-            <graphQlOperation class="ApiPlatform\Metadata\GraphQl\Mutation" name="create" />
-            <graphQlOperation class="ApiPlatform\Metadata\GraphQl\Mutation" name="update" />
-            <graphQlOperation class="ApiPlatform\Metadata\GraphQl\Mutation" name="delete" />
-
-            <graphQlOperation class="ApiPlatform\Metadata\GraphQl\Mutation" name="mutation" resolver="App\Resolver\BookMutationResolver">
-                <extraArgs>
-                    <arg id="id">
-                        <values>
-                            <value name="type">ID!</value>
-                        </values>
-                    </arg>
-                </extraArgs>
-            </graphQlOperation>
-            <graphQlOperation class="ApiPlatform\Metadata\GraphQl\Mutation" name="withCustomArgsMutation" resolver="App\Resolver\BookMutationResolver">
-                <args>
-                    <arg id="sendMail">
-                        <values>
-                            <value name="type">Boolean!</value>
-                            <value name="description">Send a mail?</value>
-                        </values>
-                    </arg>
-                </args>
-            </graphQlOperation>
-            <graphQlOperation class="ApiPlatform\Metadata\GraphQl\Mutation" name="disabledStagesMutation" resolver="App\Resolver\BookMutationResolver" deserialize="false" write="false" />
-        </graphQlOperations>
-    </resource>
-</resources>
-```
-
-</code-selector>
 
 Note that you need to explicitly add the auto-generated queries and mutations if they are needed when configuring custom mutations, like it's done for the [operations](#operations).
 
@@ -883,38 +754,6 @@ The only difference with them is that, even if you define your own arguments, th
 You can also use the `extraArgs` property in case you need to add additional arguments (for instance to add the `id` argument since it is not added by default for a custom mutation).
 
 The arguments will be in `$context['args']['input']` of your resolvers.
-
-Your custom mutations will be available like this:
-
-```graphql
-{
-  mutation {
-    mutationBook(input: {id: "/books/18", title: "The Fitz and the Fool"}) {
-      book {
-        title
-      }
-    }
-  }
-
-  mutation {
-    withCustomArgsMutationBook(input: {sendMail: true, clientMutationId: "myId"}) {
-      book {
-        title
-      }
-      clientMutationId
-    }
-  }
-
-  mutation {
-    disabledStagesMutationBook(input: {title: "The Fitz and the Fool"}) {
-      book {
-        title
-      }
-      clientMutationId
-    }
-  }
-}
-```
 
 ## Subscriptions
 
@@ -1043,9 +882,9 @@ See the [Extending API Platform](extending.md) documentation for more informatio
 
 ### Disabling system providers and processors
 
-If you need to, you can disable some stages done by the resolvers, for instance if you don't want your data to be validated.
+If you need to, you can disable some states providers and state processors done by the resolvers, for instance if you don't want your data to be validated.
 
-The following table lists the stages you can disable in your resource configuration.
+The following table lists the system states providers and states processors you can disable in your resource configuration.
 
 | Attribute                  | Type   | Default | Description                               |
 |----------------------------|--------|---------|-------------------------------------------|
@@ -2760,8 +2599,7 @@ You can also check the documentation of [graphql-php](https://webonyx.github.io/
 The big difference in API Platform is that the value is already serialized when it's received in your type class.
 Similarly, you would not want to denormalize your parsed value since it will be done by API Platform later.
 
-
-#### Custom Types config for Symfony
+### Custom Types config for Symfony
 
 If you use autoconfiguration (the default Symfony configuration) in your application, then you are done!
 
@@ -2781,7 +2619,7 @@ Your custom type is now registered and is available in the `TypesContainer`.
 To use it please [modify the extracted types](#modify-the-extracted-types) or use it directly in [custom queries](#custom-queries) or [custom mutations](#custom-mutations).
 
 
-#### Custom Types config for Laravel
+### Custom Types config for Laravel
 
 If you are using Laravel tag your type with:
 
@@ -2928,7 +2766,7 @@ final class BookContextBuilder implements SerializerContextBuilderInterface
 }
 ```
 
-## Export the Schema in SDL 
+## Export the Schema in SDL
 
 > [!WARNING]
 > These commands are only available for API Platform with Symfony!

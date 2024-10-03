@@ -68,7 +68,8 @@ When using Symfony, the access checker provider is used at three different stage
 
 Here is an example of the decoration of the RespondProcessor:
 
-Starts by creating your `CustomRespondProcessor`: 
+Starts by creating your `CustomRespondProcessor`:
+
 ```php
 <?php
 namespace App\State;
