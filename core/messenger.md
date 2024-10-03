@@ -13,7 +13,7 @@ To enable the support of Messenger, install the library:
 
 ```console
 docker compose exec php \
-    composer require messenger
+    composer require symfony/messenger
 ```
 
 ## Dispatching a Resource through the Message Bus
@@ -154,10 +154,12 @@ Where `ResetPasswordRequest` would be:
 // api/src/Dto/ResetPasswordRequest.php
 
 namespace App\Dto;
+
 use Symfony\Component\Validator\Constraints as Assert;
 
 final class ResetPasswordRequest
 {
+    #[Assert\Email]
     public string $username;
 }
 ```
