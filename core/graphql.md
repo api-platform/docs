@@ -69,7 +69,8 @@ api_platform:
 # ...
 ```
 
-### Disable GraphiQL with Laravel
+### Disabling GraphiQL with Laravel
+
 ```php
 <?php
 //api/config/api-platform.php
