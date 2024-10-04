@@ -165,12 +165,55 @@ So, if you want to access the raw data, you have two alternatives:
 
 For instance, go to `http://127.0.0.1:8000/api/books.jsonld` to retrieve the list of `Book` resources in JSON-LD.
 
-> [!NOTE] Read the next parameter if you want to use JSON:API instead!
+> [!NOTE]
+> Documentation for Eloquent "API resources" encourages using the JSON:API community format.
+> While we recommend preferring JSON-LD when possible, JSON:API is also supported by API Platform,
+> read the [Content Negotiation](#content-negotiation) section to learn how to enable it.
 
 Of course, you can also use your favorite HTTP client to query the API.
 We are fond of [Hoppscotch](https://hoppscotch.com), a free and open source API client with good support of API Platform.
 
-As recommended by our [design considerations](../core/design.md), you can totally use the data source of your choice using a [provider](../core/state-providers.md):
+
+## Using Data Transfer Objects and Hooking Custom Logic
+
+While exposing directly the data in the database is convenient for Rapid Application Development, using different classes for the internal data and the public data is a good practice for more complex projects. 
+
+As explained in our [general design considerations](../core/design.md), API Platform allows us to use the data source of our choice using a [provider](../core/state-providers.md) and Data Transfer Objects (DTOs) are first-class citizens! 
+
+Let's create our DTO:
+
+```php
+<?php
+
+namespace App\ApiResource;
+
+use ApiPlatform\Metadata\Get;
+
+#[Get(uriTemplate: '/my_custom_book/{id}')]
+class Book
+{
+    public string $id;
+    public string $title;
+}
+```
+
+and register our new directory to API Platform:
+
+```php
+// config/api-platform.php
+
+// ...
+return [
+    'resources' => [
+        app_path('ApiResource'),
+        app_path('Models'),
+    ],
+
+    // ...
+];
+```
+
+Then we can create the logic to retrieve the state of our `Book` DTO:
 
 ```php
 <?php
@@ -179,12 +222,14 @@ namespace App\State;
 
 use ApiPlatform\Metadata\Operation;
 use ApiPlatform\State\ProviderInterface;
+use App\Models\Book as BookModel;
 
 final class BookProvider implements ProviderInterface
 {
     public function provide(Operation $operation, array $uriVariables = [], array $context = []): object|array|null
     {
-        return new Book(id: $uriVariables['id']);
+        $book = BookModel::find($uriVariables['id']);
+        return new Book(id: $book->id, title: $book->title);
     }
 }
 ```
@@ -217,10 +262,16 @@ Apply the provider to your operation:
 ```php
 <?php
 
-#[Get(provider: BookProvider::class)]
+namespace App\ApiResource;
+
+use ApiPlatform\Metadata\Get;
+use App\State\BookProvider;
+
+#[Get(uriTemplate: '/my_custom_book/{id}', provider: BookProvider::class)]
 class Book
 {
     public string $id;
+    public string $title;
 }
 ```
 
