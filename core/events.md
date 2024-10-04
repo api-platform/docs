@@ -7,6 +7,7 @@
 
 > [!NOTE]
 > Using Kernel event with API Platform should be mostly limited to tweaking the generated HTTP response. Also, GraphQL is **not supported**.
+> We recommend to use [System providers and processors](extending.md#system-providers-and-processors) to extend API Platform internals.
 
 API Platform Core implements the [Action-Domain-Responder](https://github.com/pmjones/adr) pattern. This implementation
 is covered in depth in the [Creating custom operations and controllers](operations.md#creating-custom-operations-and-controllers)
