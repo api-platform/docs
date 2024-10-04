@@ -63,6 +63,10 @@ When using Symfony, the access checker provider is used at three different stage
 - `api_platform.state_provider.access_checker.post_deserialize` decorates the `DeserializeProvider`
 - `api_platform.state_provider.access_checker` decorates the `ReadProvider`
 
+> [!NOTE]
+> For graphql use: `api_platform.graphql.state_provider.access_checker.post_deserialize`,
+> `api_platform.graphql.state_provider.access_checker.post_validate`, `api_platform.graphql.state_provider.validate` and
+> `api_platform.graphql.state_provider.access_checker.after_resolver`
 
 ### Decoration Example
 
@@ -132,7 +136,6 @@ namespace App\Providers;
 
 use App\State\CustomRespondProcessor;
 use ApiPlatform\State\Processor\RespondProcessor;
-use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
