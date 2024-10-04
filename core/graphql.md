@@ -2482,7 +2482,7 @@ In this case, your query will be:
 return [
     // ....
     'graphql' => [
-        'nesting_separator' => __
+        'nesting_separator' => '__'
     ],
 ];
 ```
