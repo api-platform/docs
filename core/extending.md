@@ -85,7 +85,7 @@ final class CustomRespondProcessor implements ProcessorInterface
         // You can add pre-write code here.
 
         // Call the decorated processor's process method.
-        $this->processor->process($data, $operation, $uriVariables, $context);
+        $writtenObject = $this->processor->process($data, $operation, $uriVariables, $context);
 
         // You can add post-write code here.
 
