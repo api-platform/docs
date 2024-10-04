@@ -96,7 +96,7 @@ final class CustomRespondProcessor implements ProcessorInterface
 
 Now decorate the `RespondProcessor` with the `CustomRespondProcessor` using Symfony or Laravel:
 
-### Decorating the RespondProcessor with Symfony
+### Symfony Processor Decoration
 
 With Symfony you can simply do that by adding the `#[AsDecorator]` attribute as following:
 
