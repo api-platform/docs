@@ -868,7 +868,7 @@ For instance, you could receive a JSON payload like this:
 ### Subscriptions Cache
 
 Internally, API Platform stores the subscriptions in a cache, using the [Symfony Cache](https://symfony.com/doc/current/cache.html) if you're using the Symfony variant
-or ÆPI Platform uses [Laravel cache](https://laravel.com/docs/cache) if you're use the Laravel variant.
+or API Platform uses [Laravel cache](https://laravel.com/docs/cache) if you're using the Laravel variant.
 
 The cache is named `api_platform.graphql.cache.subscription` and the subscription keys are generated from the subscription payload by using a SHA-256 hash.
 
