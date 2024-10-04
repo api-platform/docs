@@ -416,7 +416,7 @@ final class BookCollectionResolver implements QueryCollectionResolverInterface
 
 If you use autoconfiguration (the default Symfony configuration) in your application, then you are done!
 
-Else, you need to tag your resolver like this if you using Symfony without autoconfiguration :
+Else, you need to tag your resolver like this if you are using Symfony without autoconfiguration :
 
 ```yaml
 # api/config/services.yaml
