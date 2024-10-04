@@ -75,7 +75,7 @@ api_platform:
 
 ```php
 <?php
-//api/config/api-platform.php
+// config/api-platform.php
 return [
     // ....
     'graphql' => [
@@ -133,18 +133,8 @@ api_platform:
 
 ### Disable GraphQL Playground with Laravel
 
-```php
-<?php
-//api/config/api-platform.php
-return [
-    // ....
-    'graphql' => [
-        'graphql_playground' => [
-            'enabled' => false,
-        ]
-    ],
-];
-```
+> [!WARNING]
+> This is not yet available with Laravel, you're welcome to contribute [on Github](github.com/api-platform/core)
 
 ### Add another Location for GraphQL Playground
 You can add a different location besides `/graphql/graphql_playground`.
@@ -191,7 +181,7 @@ api_platform:
 
 ```php
 <?php
-//api/config/api-platform.php
+// config/api-platform.php
 return [
     // ....
     'graphql' => [
@@ -215,7 +205,7 @@ api_platform:
 ### Laravel config to disable default IDE
 ```php
 <?php
-//api/config/api-platform.php
+// config/api-platform.php
 return [
     // ....
     'graphql' => [
@@ -245,7 +235,7 @@ If you need to disable it, it can be done in the configuration:
 
 ```php
 <?php
-//api/config/api-platform.php
+// config/api-platform.php
 return [
     // ....
     'graphql' => [
@@ -273,7 +263,7 @@ api_platform:
 
 ```php
 <?php
-//api/config/api-platform.php
+// config/api-platform.php
 return [
     // ....
     'formats' => [
@@ -885,7 +875,7 @@ See the [Extending API Platform](extending.md) documentation for more informatio
 
 ### Disabling system providers and processors
 
-If you need to, you can disable some states providers and state processors done by the resolvers, for instance if you don't want your data to be validated.
+If you need to, you can disable some states providers and state processors, for instance if you don't want your data to be validated.
 
 The following table lists the system states providers and states processors you can disable in your resource configuration.
 
@@ -1437,7 +1427,7 @@ api_platform:
 
 ```php
 <?php
-//api/config/api-platform.php
+// config/api-platform.php
 return [
     // ....
     'graphql' => [
@@ -2270,14 +2260,13 @@ namespace App\Providers;
 
 use App\Error\ErrorHandler as ErrorHandlerDecorated;
 use ApiPlatform\GraphQl\Error\ErrorHandler;
-use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
 {
     public function register(): void
     {
-        $this->app->extend(ErrorHandler::class, function (ErrorHandler $errorHandler, Application $app) {
+        $this->app->extend(ErrorHandler::class, function (ErrorHandler $errorHandler) {
             return new ErrorHandlerDecorated($errorHandler);
         });
     }
@@ -2489,7 +2478,7 @@ In this case, your query will be:
 
 ```php
 <?php
-//api/config/api-platform.php
+// config/api-platform.php
 return [
     // ....
     'graphql' => [
@@ -2642,13 +2631,12 @@ To use it please [modify the extracted types](#modify-the-extracted-types) or us
 
 ## Modify the Extracted Types
 
-> [!WARNING]
-> This part is only supported for API Platform with Symfony
-
 The GraphQL schema and its types are extracted from your resources.
 In some cases, you would want to modify the extracted types for instance to use your custom ones.
 
 To do so, you need to decorate the `api_platform.graphql.type_converter` service:
+
+### Symfony TypeConverter Decoration
 
 ```yaml
 # api/config/services.yaml
@@ -2658,7 +2646,29 @@ services:
         decorates: api_platform.graphql.type_converter
 ```
 
-Your class needs to look like this:
+### Laravel TypeConverter Decoration
+
+```php
+<?php
+
+namespace App\Providers;
+
+use App\Type\TypeConverter;
+use ApiPlatform\GraphQl\Type\TypeConverterInterface;
+use Illuminate\Support\ServiceProvider;
+
+class AppServiceProvider extends ServiceProvider
+{
+    public function register(): void
+    {
+        $this->app->extend(TypeConverterInterface::class, function (TypeConverterInterface $typeConverter) {
+            return new TypeConverter($typeConverter);
+        });
+    }
+}
+```
+
+Then, your class needs to look like this:
 
 ```php
 <?php
@@ -2672,12 +2682,8 @@ use Symfony\Component\PropertyInfo\Type;
 
 final class TypeConverter implements TypeConverterInterface
 {
-    private $defaultTypeConverter;
 
-    public function __construct(TypeConverterInterface $defaultTypeConverter)
-    {
-        $this->defaultTypeConverter = $defaultTypeConverter;
-    }
+    public function __construct(private readonly TypeConverterInterface $defaultTypeConverter) {}
 
     public function convertType(Type $type, bool $input, Operation $rootOperation, string $resourceClass, string $rootResource, ?string $property, int $depth)
     {
@@ -2711,10 +2717,7 @@ if (Type::BUILTIN_TYPE_OBJECT === $type->getBuiltinType()
 
 All `DateTimeInterface` properties will have the `DateTime` type in this example.
 
-## Changing the Serialization Context Dynamically (only for Symfony)
-
-> [!WARNING]
-> This part is only supported for API Platform with Symfony
+## Changing the Serialization Context Dynamically
 
 [As REST](serialization.md#changing-the-serialization-context-dynamically), it's possible to add dynamically a (de)serialization group when resolving a query or a mutation.
 
@@ -2723,6 +2726,8 @@ There are some differences though.
 The service is `api_platform.graphql.serializer.context_builder` and the method to override is `create`.
 
 The decorator could be like this:
+
+### Symfony Serialization Context Decoration
 
 ```php
 <?php
@@ -2734,14 +2739,10 @@ use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 final class BookContextBuilder implements SerializerContextBuilderInterface
 {
-    private $decorated;
-    private $authorizationChecker;
-
-    public function __construct(SerializerContextBuilderInterface $decorated, AuthorizationCheckerInterface $authorizationChecker)
-    {
-        $this->decorated = $decorated;
-        $this->authorizationChecker = $authorizationChecker;
-    }
+    public function __construct(
+        private readonly SerializerContextBuilderInterface $decorated,
+        private readonly AuthorizationCheckerInterface $authorizationChecker
+    ) {}
 
     public function create(?string $resourceClass, string $operationName, array $resolverContext, bool $normalization): array
     {
@@ -2753,6 +2754,41 @@ final class BookContextBuilder implements SerializerContextBuilderInterface
         }
 
         return $context;
+    }
+}
+```
+
+### Laravel Serialization Context Decoration
+```php
+<?php
+
+namespace App\Services;
+
+use App\Models\Book;
+use ApiPlatform\GraphQl\Serializer\SerializerContextBuilderInterface;
+use Illuminate\Support\Facades\Auth;
+
+final class BookContextBuilder implements SerializerContextBuilderInterface
+{
+    public function __construct(private readonly SerializerContextBuilderInterface $decorated) {}
+
+    public function create(?string $resourceClass, string $operationName, array $resolverContext, bool $normalization): array
+    {
+        $context = $this->decorated->create($resourceClass, $operationName, $resolverContext, $normalization);
+        $resourceClass = $context['resource_class'] ?? null;
+
+        if ($resourceClass === Book::class && isset($context['groups']) && $this->isAdmin() && !$normalization) {
+            $context['groups'][] = 'admin:input';
+        }
+
+        return $context;
+    }
+
+    private function isAdmin(): bool
+    {
+        $user = Auth::user();
+
+        return $user && $user->role === 'admin';
     }
 }
 ```
@@ -2905,7 +2941,7 @@ api_platform:
 #### Modifying allowed formats with Laravel
 ```php
 <?php
-//api/config/api-platform.php
+// config/api-platform.php
 return [
     // ....
     'formats' => [
