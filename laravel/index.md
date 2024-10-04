@@ -173,7 +173,12 @@ For instance, go to `http://127.0.0.1:8000/api/books.jsonld` to retrieve the lis
 Of course, you can also use your favorite HTTP client to query the API.
 We are fond of [Hoppscotch](https://hoppscotch.com), a free and open source API client with good support of API Platform.
 
-As recommended by our [design considerations](../core/design.md), you can totally use the data source of your choice using a [provider](../core/state-providers.md):
+
+## Using Data Transfer Objects and Hooking Custom Logic
+
+While exposing directly the data in the database is convenient for Rapid Application Development, using different classes for the internal data and the public data is a good practice for more complex projects. 
+
+As explained in our [general design considerations](../core/design.md), API Platform allows us to use the data source of our choice using a [provider](../core/state-providers.md) and Data Transfer Objects (DTOs) are first-class citizens:
 
 ```php
 <?php
