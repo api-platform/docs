@@ -13,7 +13,7 @@ If you are starting a new project, the easiest way to get API Platform up is to 
 
 It comes with the API Platform core library integrated with [the Symfony framework](https://symfony.com), [the schema generator](../schema-generator/),
 [Doctrine ORM](https://www.doctrine-project.org),
-[NelmioCorsBundle](https://github.com/nelmio/NelmioCorsBundle) and [test assertions dedicated to APIs](testing.md).
+[NelmioCorsBundle](https://github.com/nelmio/NelmioCorsBundle) and [test assertions dedicated to APIs](../symfony/testing-utilities.md).
 
 [MongoDB](mongodb.md) and [Elasticsearch](elasticsearch.md) can also be easily enabled.
 
