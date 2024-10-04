@@ -143,9 +143,5 @@ class AppServiceProvider extends ServiceProvider
             return new CustomRespondProcessor($respondProcessor);
         });
     }
-
-    public function boot(): void
-    {
-    }
 }
 ```
