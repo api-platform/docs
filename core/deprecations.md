@@ -152,3 +152,33 @@ class Parchment
     // ...
 }
 ```
+
+## Path versioning
+
+> [!NOTE]
+> REST and GraphQL architectures recommend to use deprecations instead of path versioning. 
+
+You can prefix your URI Templates and change the representation using serialization groups:
+
+```php
+<?php
+// api/src/Entity/Parchment.php
+namespace App\Model;
+
+use ApiPlatform\Metadata\Get;
+use Symfony\Component\Serializer\Attrbute\Groups;
+
+#[Get(uriTemplate: '/v1/books/{id}', normalizationContext: ['groups' => ['v1']])]
+#[Get(uriTemplate: '/v2/books/{id}', normalizationContext: ['groups' => ['v2']])]
+class Parchment
+{
+    #[Groups(['v1'])]
+    public $name;
+
+    #[Groups(['v2'])]
+    public $title;
+}
+```
+
+> [!NOTE]
+> It's also possible to use the configuration `route_prefix` to prefix all your operations.
