@@ -39,7 +39,7 @@ To replace existing API Platform services with your decorators, [check out how t
 
 ## System Providers and Processors
 
-The system is based on a workflow composed of **state providers** and **state processors**
+The system is based on a workflow composed of **state providers** and **state processors**.
 
 The schema below describes them:
 
