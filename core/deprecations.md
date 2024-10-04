@@ -156,7 +156,7 @@ class Parchment
 ## Path versioning
 
 > [!NOTE]
-> REST and GraphQL architectures recommend to use deprecations instead of path versioning. 
+> REST and GraphQL architectures recommend to use deprecations instead of path versioning.
 
 You can prefix your URI Templates and change the representation using serialization groups:
 
