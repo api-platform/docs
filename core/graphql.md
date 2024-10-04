@@ -2764,7 +2764,7 @@ final class BookContextBuilder implements SerializerContextBuilderInterface
 ## Export the Schema in SDL
 
 > [!WARNING]
-> These commands are only available for API Platform with Symfony!
+> This command is not yet available with Laravel, you're welcome to contribute [on Github](github.com/api-platform/core)
 
 You may need to export your schema in SDL (Schema Definition Language) to import it in some tools.
 
