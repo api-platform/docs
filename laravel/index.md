@@ -165,7 +165,10 @@ So, if you want to access the raw data, you have two alternatives:
 
 For instance, go to `http://127.0.0.1:8000/api/books.jsonld` to retrieve the list of `Book` resources in JSON-LD.
 
-> [!NOTE] Read the next parameter if you want to use JSON:API instead!
+> [!NOTE]
+> Documentation for Eloquent "API resources" encourages using the JSON:API community format.
+> While we recommend preferring JSON-LD when possible, JSON:API is also supported by API Platform,
+> read the [Content Negotiation](#content-negotiation) section to learn how to enable it.
 
 Of course, you can also use your favorite HTTP client to query the API.
 We are fond of [Hoppscotch](https://hoppscotch.com), a free and open source API client with good support of API Platform.
