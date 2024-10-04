@@ -124,7 +124,7 @@ services:
 
 And that's it!
 
-### Decorating the RespondProcessor with Laravel
+### Laravel Processor Decoration
 ```php
 <?php
 
