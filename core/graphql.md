@@ -2293,9 +2293,6 @@ It's the case for a `HttpException` for which the `status` entry will be added u
 
 #### Custom Exception Normalizer
 
-> [!CAUTION]
-> Works only for API Platform with Symfony
-
 If you want to add more specific behaviors depending on the exception or if you want to change the behavior of the built-in ones, you can do so by creating your own normalizer.
 
 Please follow the [Symfony documentation to create a custom normalizer](https://symfony.com/doc/current/serializer/custom_normalizer.html).
