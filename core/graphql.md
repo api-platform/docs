@@ -2285,10 +2285,6 @@ class AppServiceProvider extends ServiceProvider
             return new ErrorHandlerDecorated($errorHandler);
         });
     }
-
-    public function boot(): void
-    {
-    }
 }
 ```
 
