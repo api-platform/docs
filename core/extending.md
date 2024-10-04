@@ -36,3 +36,115 @@ For instance, if you want to send a mail after a resource has been persisted, bu
 To replace existing API Platform services with your decorators, [check out how to decorate services](https://symfony.com/doc/current/service_container/service_decoration.html).
 
 <p align="center" class="symfonycasts"><a href="https://symfonycasts.com/screencast/api-platform-security/service-decoration?cid=apip"><img src="../symfony/images/symfonycasts-player.png" alt="Service Decoration screencast"><br>Watch the Service Decoration screencast</a></p>
+
+## System Providers and Processors
+
+The system is based on a workflow composed of **state providers** and **state processors**.
+
+The schema below describes them:
+
+```mermaid
+---
+title: System providers and processors
+---
+flowchart TB
+    C1(ReadProvider) --> C2(AccessCheckerProvider)
+    C2 --> C3(DeserializeProvider)
+    C3 --> C4(ParameterProvider)
+    C4 --> C5(ValidateProcessor)
+    C5 --> C6(WriteProcessor)
+    C6 --> C7(SerializeProcessor)
+```
+
+### Symfony Access Checker Provider
+
+When using Symfony, the access checker provider is used at three different stages:
+- `api_platform.state_provider.access_checker.post_validate` decorates the `ValidateProvider`
+- `api_platform.state_provider.access_checker.post_deserialize` decorates the `DeserializeProvider`
+- `api_platform.state_provider.access_checker` decorates the `ReadProvider`
+
+> [!NOTE]
+> For graphql use: `api_platform.graphql.state_provider.access_checker.post_deserialize`,
+> `api_platform.graphql.state_provider.access_checker.post_validate`, `api_platform.graphql.state_provider.validate` and
+> `api_platform.graphql.state_provider.access_checker.after_resolver`
+
+### Decoration Example
+
+Here is an example of the decoration of the RespondProcessor:
+
+Starts by creating your `CustomRespondProcessor`:
+
+```php
+<?php
+namespace App\State;
+
+use ApiPlatform\State\ProcessorInterface;
+
+final class CustomRespondProcessor implements ProcessorInterface
+{
+    public function __construct(private readonly ProcessorInterface $processor) {}
+
+    public function process(mixed $data, Operation $operation, array $uriVariables = [], array $context = []): void
+    {
+        // You can add pre-write code here.
+
+        // Call the decorated processor's process method.
+        $writtenObject = $this->processor->process($data, $operation, $uriVariables, $context);
+
+        // You can add post-write code here.
+
+        return $writtenObject;
+    }
+}
+```
+
+Now decorate the `RespondProcessor` with the `CustomRespondProcessor` using Symfony or Laravel:
+
+### Symfony Processor Decoration
+
+With Symfony you can simply do that by adding the `#[AsDecorator]` attribute as following:
+
+```php
+namespace App\State;
+
+use ApiPlatform\State\ProcessorInterface;
+
+#[AsDecorator(decorates: 'api_platform.state.processor.respond_processor')]
+final class CustomRespondProcessor implements ProcessorInterface
+{
+    // ...
+}
+```
+
+or in the `services.yaml` by defining:
+
+```yaml
+# api/config/services.yaml
+services:
+    # ...
+    App\State\CustomRespondProcessor:
+        decorates: api_platform.state.processor.respond_processor
+```
+
+And that's it!
+
+### Laravel Processor Decoration
+```php
+<?php
+
+namespace App\Providers;
+
+use App\State\CustomRespondProcessor;
+use ApiPlatform\State\Processor\RespondProcessor;
+use Illuminate\Support\ServiceProvider;
+
+class AppServiceProvider extends ServiceProvider
+{
+    public function register(): void
+    {
+        $this->app->extend(RespondProcessor::class, function (RespondProcessor $respondProcessor) {
+            return new CustomRespondProcessor($respondProcessor);
+        });
+    }
+}
+```
