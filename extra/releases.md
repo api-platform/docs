@@ -21,8 +21,6 @@ For example:
 
 Older versions (1.x, 2.6...) **are not maintained**. If you still use them, you must upgrade as soon as possible.
 
-There's a [crowdfunding for a 2.7 LTS version](https://opencollective.com/api-platform/projects/27-lts).
-
 The **old-stable** branch is merged in the **stable** branch on a regular basis to propagate [security fixes](security.md).
 The **stable** branch is merged in the **development** branch on a regular basis to propagate [security](security.md) and regular bugfixes.
 
