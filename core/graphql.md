@@ -2637,10 +2637,6 @@ class AppServiceProvider extends ServiceProvider
     {
         $this->app->tag([DateTimeType::class], TypeInterface::class);
     }
-
-    public function boot(): void
-    {
-    }
 }
 ```
 
