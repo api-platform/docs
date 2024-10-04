@@ -2277,10 +2277,6 @@ class AppServiceProvider extends ServiceProvider
 {
     public function register(): void
     {
-        $this->app->singleton(ErrorHandlerDecorated::class, function (Application $app) {
-            return new ErrorHandlerDecorated();
-        });
-        
         $this->app->extend(ErrorHandler::class, function (ErrorHandler $errorHandler, Application $app) {
             return new ErrorHandlerDecorated($errorHandler);
         });
