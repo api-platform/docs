@@ -105,7 +105,7 @@ namespace App\State;
 
 use ApiPlatform\State\ProcessorInterface;
 
-#[AsDecorator(decorates: 'api_platform.state.processor.respond_processor',)]
+#[AsDecorator(decorates: 'api_platform.state.processor.respond_processor')]
 final class CustomRespondProcessor implements ProcessorInterface
 {
     // ...
