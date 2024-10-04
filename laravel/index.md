@@ -165,8 +165,64 @@ So, if you want to access the raw data, you have two alternatives:
 
 For instance, go to `http://127.0.0.1:8000/api/books.jsonld` to retrieve the list of `Book` resources in JSON-LD.
 
+> [!NOTE] Read the next parameter if you want to use JSON:API instead!
+
 Of course, you can also use your favorite HTTP client to query the API.
 We are fond of [Hoppscotch](https://hoppscotch.com), a free and open source API client with good support of API Platform.
+
+As recommended by our [design considerations](../core/design.md), you can totally use the data source of your choice using a [provider](../core/state-providers.md):
+
+```php
+<?php
+
+namespace App\State;
+
+use ApiPlatform\Metadata\Operation;
+use ApiPlatform\State\ProviderInterface;
+
+final class BookProvider implements ProviderInterface
+{
+    public function provide(Operation $operation, array $uriVariables = [], array $context = []): object|array|null
+    {
+        return new Book(id: $uriVariables['id']);
+    }
+}
+```
+
+Register the state provider:
+
+```php
+<?php
+ 
+namespace App\Providers;
+ 
+use Illuminate\Contracts\Foundation\Application;
+use Illuminate\Support\ServiceProvider;
+ 
+class ApiServiceProvider extends ServiceProvider
+{
+    public function register(): void
+    {
+        $this->app->singleton(BookProvider::class, function (Application $app) {
+            return new BookProvider();
+        });
+
+        $this->app->tag([BookProvider::class], ProviderInterface::class);
+    }
+}
+```
+
+Apply the provider to your operation: 
+
+```php
+<?php
+
+#[Get(provider: BookProvider::class)]
+class Book
+{
+    public string $id;
+}
+```
 
 ## Content Negotiation
 
