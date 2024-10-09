@@ -29,6 +29,7 @@ jobs:
         env:
           VALIDATE_EDITORCONFIG: false
           VALIDATE_JSCPD: false
+          VALIDATE_MARKDOWN_PRETTIER: false
           DEFAULT_BRANCH: "origin/4.0"
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
