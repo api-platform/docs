@@ -62,11 +62,15 @@ First, install the [skaffold CLI](https://skaffold.dev/docs/install/#standalone-
 
 Then, run minikube:
 
-    minikube start
+```bash
+minikube start
+```
 
 Add Skaffold configuration in the file `./helm/skaffold.yaml`. You can find a [complete configuration file for minikube](https://github.com/api-platform/api-platform/blob/main/helm/skaffold.yaml) with its [Helm values override](https://github.com/api-platform/api-platform/blob/main/helm/skaffold-values.yaml).
 
 Finally, go to the helm folder, and run skaffold in dev mode:
 
-    cd ./helm
-    skaffold dev
+```bash
+cd ./helm
+skaffold dev
+```

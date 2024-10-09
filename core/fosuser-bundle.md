@@ -6,10 +6,10 @@ The installation procedure of the FOSUserBundle is described [in the main Symfon
 
 You can:
 
-* Skip [step 3 (Create your User class)](https://symfony.com/doc/master/bundles/FOSUserBundle/index.html#step-3-create-your-user-class)
-and use the class provided in the next paragraph to set up serialization groups the correct way
-* Skip [step 4 (Configure your application's security.yml)](https://symfony.com/doc/master/bundles/FOSUserBundle/index.html#step-4-configure-your-application-s-security-yml)
-if you are planning to [use a JWT-based authentication using `LexikJWTAuthenticationBundle`](jwt.md)
+- Skip [step 3 (Create your User class)](https://symfony.com/doc/master/bundles/FOSUserBundle/index.html#step-3-create-your-user-class)
+  and use the class provided in the next paragraph to set up serialization groups the correct way
+- Skip [step 4 (Configure your application's security.yml)](https://symfony.com/doc/master/bundles/FOSUserBundle/index.html#step-4-configure-your-application-s-security-yml)
+  if you are planning to [use a JWT-based authentication using `LexikJWTAuthenticationBundle`](jwt.md)
 
 If you are using the API Platform Standard Edition, you will need to enable the form services in the symfony framework
 configuration options:
@@ -17,7 +17,7 @@ configuration options:
 ```yaml
 # api/config/packages/framework.yaml
 framework:
-    form: { enabled: true }
+  form: { enabled: true }
 ```
 
 ## Creating a `User` Entity with Serialization Groups
@@ -55,7 +55,7 @@ class User extends BaseUser
     #[Groups("user")]
     protected string $email;
 
-    #[ORM\Column(nullable: true)] 
+    #[ORM\Column(nullable: true)]
     #[Groups("user")]
     protected string $fullname;
 

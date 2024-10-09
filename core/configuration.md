@@ -292,95 +292,94 @@ If you need to globally configure all the resources instead of adding configurat
 ```yaml
 # api/config/packages/api_platform.yaml
 api_platform:
+  defaults:
+    description: ~
+    iri: ~
+    short_name: ~
+    item_operations: ~
+    collection_operations: ~
 
-    defaults:
-        description: ~
-        iri: ~
-        short_name: ~
-        item_operations: ~
-        collection_operations: ~
+    graphql: ~
 
-        graphql: ~
+    elasticsearch: ~
 
-        elasticsearch: ~
+    security: ~
+    security_message: ~
+    security_post_denormalize: ~
+    security_post_denormalize_message: ~
 
-        security: ~
-        security_message: ~
-        security_post_denormalize: ~
-        security_post_denormalize_message: ~
+    cache_headers:
+      # Automatically generate etags for API responses.
+      etag: true
 
-        cache_headers:
-            # Automatically generate etags for API responses.
-            etag: true
+      # Default value for the response max age.
+      max_age: 3600
 
-            # Default value for the response max age.
-            max_age: 3600
+      # Default value for the response shared (proxy) max age.
+      shared_max_age: 3600
 
-            # Default value for the response shared (proxy) max age.
-            shared_max_age: 3600
+      # Default values of the "Vary" HTTP header.
+      vary: ['Accept']
 
-            # Default values of the "Vary" HTTP header.
-            vary: ['Accept']
+      invalidation:
+        xkey:
+          glue: ' '
 
-            invalidation:
-                xkey:
-                    glue: ' '
+    normalization_context:
+      # Default value to omit null values in conformance with the JSON Merge Patch RFC.
+      skip_null_values: true
+    denormalization_context: ~
+    swagger_context: ~
+    openapi_context: ~
+    deprecation_reason: ~
+    fetch_partial: ~
+    force_eager: ~
+    formats: ~
+    filters: ~
+    hydra_context: ~
+    mercure: ~
+    messenger: ~
+    order: ~
 
-        normalization_context:
-            # Default value to omit null values in conformance with the JSON Merge Patch RFC.
-            skip_null_values: true
-        denormalization_context: ~
-        swagger_context: ~
-        openapi_context: ~
-        deprecation_reason: ~
-        fetch_partial: ~
-        force_eager: ~
-        formats: ~
-        filters: ~
-        hydra_context: ~
-        mercure: ~
-        messenger: ~
-        order: ~
+    # To enable or disable pagination for all resource collections.
+    pagination_enabled: true
 
-        # To enable or disable pagination for all resource collections.
-        pagination_enabled: true
+    # To allow the client to enable or disable the pagination.
+    pagination_client_enabled: false
 
-        # To allow the client to enable or disable the pagination.
-        pagination_client_enabled: false
+    # To allow the client to set the number of items per page.
+    pagination_client_items_per_page: false
 
-        # To allow the client to set the number of items per page.
-        pagination_client_items_per_page: false
+    # To allow the client to enable or disable the partial pagination.
+    pagination_client_partial: false
 
-        # To allow the client to enable or disable the partial pagination.
-        pagination_client_partial: false
+    # The default number of items per page.
+    pagination_items_per_page: 30
 
-        # The default number of items per page.
-        pagination_items_per_page: 30
+    # The maximum number of items per page.
+    pagination_maximum_items_per_page: ~
 
-        # The maximum number of items per page.
-        pagination_maximum_items_per_page: ~
+    # To allow partial pagination for all resource collections.
+    # This improves performances by skipping the `COUNT` query.
+    pagination_partial: false
 
-        # To allow partial pagination for all resource collections.
-        # This improves performances by skipping the `COUNT` query.
-        pagination_partial: false
+    # To use cursor-based pagination.
+    pagination_via_cursor: ~
 
-        # To use cursor-based pagination.
-        pagination_via_cursor: ~
+    pagination_fetch_join_collection: ~
 
-        pagination_fetch_join_collection: ~
+    route_prefix: ~
+    validation_groups: ~
+    sunset: ~
+    input: ~
+    output: ~
+    stateless: ~
 
-        route_prefix: ~
-        validation_groups: ~
-        sunset: ~
-        input: ~
-        output: ~
-        stateless: ~
+    # The URL generation strategy to use for IRIs
+    url_generation_strategy: !php/const ApiPlatform\Api\UrlGeneratorInterface::ABS_PATH
 
-        # The URL generation strategy to use for IRIs
-        url_generation_strategy: !php/const ApiPlatform\Api\UrlGeneratorInterface::ABS_PATH
+    # To enable collecting denormalization errors
+    collectDenormalizationErrors: false
 
-        # To enable collecting denormalization errors
-        collectDenormalizationErrors: false
-
-        # ...
+    # ...
 ```

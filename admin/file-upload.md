@@ -13,10 +13,10 @@ import {
   HydraAdmin,
   ResourceGuesser,
   CreateGuesser,
-} from "@api-platform/admin";
-import { FileField, FileInput } from "react-admin";
+} from '@api-platform/admin';
+import { FileField, FileInput } from 'react-admin';
 
-const MediaObjectsCreate = props => (
+const MediaObjectsCreate = (props) => (
   <CreateGuesser {...props}>
     <FileInput source="file">
       <FileField source="src" title="title" />

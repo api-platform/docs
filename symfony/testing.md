@@ -11,10 +11,10 @@ Let's learn how to use them!
 
 In this article you'll learn how to use:
 
-* [PHPUnit](https://phpunit.de), a testing framework to cover your classes with unit tests and to write
-API-oriented functional tests thanks to its API Platform and [Symfony](https://symfony.com/doc/current/testing.html) integrations.
-* [DoctrineFixturesBundle](https://symfony.com/bundles/DoctrineFixturesBundle/current/index.html), a bundle to load data fixtures in the database.
-* [Foundry](https://github.com/zenstruck/foundry), an expressive fixtures generator to write data fixtures.
+- [PHPUnit](https://phpunit.de), a testing framework to cover your classes with unit tests and to write
+  API-oriented functional tests thanks to its API Platform and [Symfony](https://symfony.com/doc/current/testing.html) integrations.
+- [DoctrineFixturesBundle](https://symfony.com/bundles/DoctrineFixturesBundle/current/index.html), a bundle to load data fixtures in the database.
+- [Foundry](https://github.com/zenstruck/foundry), an expressive fixtures generator to write data fixtures.
 
 ## Creating Data Fixtures
 
@@ -211,7 +211,7 @@ class BooksTest extends ApiTestCase
     {
         // Create 100 books using our factory
         BookFactory::createMany(100);
-    
+
         // The client implements Symfony HttpClient's `HttpClientInterface`, and the response `ResponseInterface`
         $response = static::createClient()->request('GET', '/books');
 
@@ -293,7 +293,7 @@ publicationDate: This value should not be null.',
     {
         // Only create the book we need with a given ISBN
         BookFactory::createOne(['isbn' => '9781344037075']);
-    
+
         $client = static::createClient();
         // findIriBy allows to retrieve the IRI of an item by searching for some of its properties.
         $iri = $this->findIriBy(Book::class, ['isbn' => '9781344037075']);
@@ -305,7 +305,7 @@ publicationDate: This value should not be null.',
             ],
             'headers' => [
                 'Content-Type' => 'application/merge-patch+json',
-            ]           
+            ]
         ]);
 
         $this->assertResponseIsSuccessful();
@@ -363,7 +363,7 @@ To do so, learn how to write unit tests with [PHPUnit](https://phpunit.de/) and 
 
 Running your test suite in your [CI/CD pipeline](https://en.wikipedia.org/wiki/Continuous_integration) is important to ensure good quality and delivery time.
 
-The API Platform distribution is [shipped with a GitHub Actions workflow](https://github.com/api-platform/api-platform/blob/main/.github/workflows/ci.yml) that builds the Docker images, does a [smoke test](https://en.wikipedia.org/wiki/Smoke_testing_(software)) to check that the application's entrypoint is accessible, and runs PHPUnit.
+The API Platform distribution is [shipped with a GitHub Actions workflow](https://github.com/api-platform/api-platform/blob/main/.github/workflows/ci.yml) that builds the Docker images, does a [smoke test](<https://en.wikipedia.org/wiki/Smoke_testing_(software)>) to check that the application's entrypoint is accessible, and runs PHPUnit.
 
 The API Platform Demo [contains a CD workflow](https://github.com/api-platform/demo/tree/main/.github/workflows) that uses [the Helm chart provided with the distribution](../deployment/kubernetes.md) to deploy the app on a Kubernetes cluster.
 
@@ -371,21 +371,21 @@ The API Platform Demo [contains a CD workflow](https://github.com/api-platform/d
 
 You may also be interested in these alternative testing tools (not included in the API Platform distribution):
 
-* [Hoppscotch](https://docs.hoppscotch.io/features/tests), create functional test for your API
-* [Hoppscotch](https://docs.hoppscotch.io/documentation/features/rest-api-testing/), create functional test for your API
+- [Hoppscotch](https://docs.hoppscotch.io/features/tests), create functional test for your API
+- [Hoppscotch](https://docs.hoppscotch.io/documentation/features/rest-api-testing/), create functional test for your API
   Platform project using a nice UI, benefit from its Swagger integration and run tests in the CI using [the command-line tool](https://docs.hoppscotch.io/cli);
-* [Behat](https://behat.org), a
+- [Behat](https://behat.org), a
   [behavior-driven development (BDD)](https://en.wikipedia.org/wiki/Behavior-driven_development) framework to write the API
   specification as user stories and in natural language then execute these scenarios against the application to validate
   its behavior;
-* [Blackfire Player](https://blackfire.io/player), a nice DSL to crawl HTTP services, assert responses, and extract data
+- [Blackfire Player](https://blackfire.io/player), a nice DSL to crawl HTTP services, assert responses, and extract data
   from HTML/XML/JSON responses;
-* [PHP Matcher](https://github.com/coduo/php-matcher), the Swiss Army knife of JSON document testing.
+- [PHP Matcher](https://github.com/coduo/php-matcher), the Swiss Army knife of JSON document testing.
 
 ## Using the API Platform Distribution for End-to-End Testing
 
 If you would like to verify that your stack (including services such as the DBMS, web server, [Varnish](https://varnish-cache.org/))
-works, you need [end-to-end (E2E) testing](https://wiki.c2.com/?EndToEndPrinciple). To do so, we recommend using [Playwright](https://playwright.dev) if you use have PWA/JavaScript-heavy app, or [Symfony Panther](https://github.com/symfony/panther) if you mostly use Twig.
+works, you need [end-to-end testing](https://wiki.c2.com/?EndToEndPrinciple). To do so, we recommend using [Playwright](https://playwright.dev) if you use have PWA/JavaScript-heavy app, or [Symfony Panther](https://github.com/symfony/panther) if you mostly use Twig.
 
-Usually, E2E testing should be done with a production-like setup. For your convenience, you may [run our Docker Compose setup
+Usually, end-to-end testing should be done with a production-like setup. For your convenience, you may [run our Docker Compose setup
 for production locally](../deployment/docker-compose.md#running-the-docker-compose-setup-for-production-locally).

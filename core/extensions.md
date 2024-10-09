@@ -44,7 +44,7 @@ use ApiPlatform\Metadata\ApiResource;
 #[ApiResource]
 class Offer
 {
-    #[ORM\ManyToOne] 
+    #[ORM\ManyToOne]
     public User $user;
 
     //...
@@ -105,13 +105,12 @@ Finally, if you're not using the autoconfiguration, you have to register the cus
 ```yaml
 # api/config/services.yaml
 services:
+  # ...
 
-    # ...
-
-    'App\Doctrine\CurrentUserExtension':
-        tags:
-            - { name: api_platform.doctrine.orm.query_extension.collection }
-            - { name: api_platform.doctrine.orm.query_extension.item }
+  'App\Doctrine\CurrentUserExtension':
+    tags:
+      - { name: api_platform.doctrine.orm.query_extension.collection }
+      - { name: api_platform.doctrine.orm.query_extension.item }
 ```
 
 The `api_platform.doctrine.orm.query_extension.collection` tag will register this service as a collection extension.
@@ -119,14 +118,14 @@ The `api_platform.doctrine.orm.query_extension.item` does the same thing for ite
 
 Note that your extensions should have a positive priority if defined. Internal extensions have negative priorities, for reference:
 
-| Service name                                               | Priority | Class                                              |
-|------------------------------------------------------------|------|---------------------------------------------------------|
-| `api_platform.doctrine.orm.query_extension.eager_loading` (item) | -8 | ApiPlatform\Doctrine\Orm\Extension\EagerLoadingExtension |
-| `api_platform.doctrine.orm.query_extension.filter` | -16 | ApiPlatform\Doctrine\Orm\Extension\FilterExtension |
-| `api_platform.doctrine.orm.query_extension.filter_eager_loading` | -17 | ApiPlatform\Doctrine\Orm\Extension\FilterEagerLoadingExtension |
-| `api_platform.doctrine.orm.query_extension.eager_loading` (collection) | -18 | ApiPlatform\Doctrine\Orm\Extension\EagerLoadingExtension |
-| `api_platform.doctrine.orm.query_extension.order` | -32 | ApiPlatform\Doctrine\Orm\Extension\OrderExtension |
-| `api_platform.doctrine.orm.query_extension.pagination` | -64 | ApiPlatform\Doctrine\Orm\Extension\PaginationExtension |
+| Service name                                                           | Priority | Class                                                          |
+| ---------------------------------------------------------------------- | -------- | -------------------------------------------------------------- |
+| `api_platform.doctrine.orm.query_extension.eager_loading` (item)       | -8       | ApiPlatform\Doctrine\Orm\Extension\EagerLoadingExtension       |
+| `api_platform.doctrine.orm.query_extension.filter`                     | -16      | ApiPlatform\Doctrine\Orm\Extension\FilterExtension             |
+| `api_platform.doctrine.orm.query_extension.filter_eager_loading`       | -17      | ApiPlatform\Doctrine\Orm\Extension\FilterEagerLoadingExtension |
+| `api_platform.doctrine.orm.query_extension.eager_loading` (collection) | -18      | ApiPlatform\Doctrine\Orm\Extension\EagerLoadingExtension       |
+| `api_platform.doctrine.orm.query_extension.order`                      | -32      | ApiPlatform\Doctrine\Orm\Extension\OrderExtension              |
+| `api_platform.doctrine.orm.query_extension.pagination`                 | -64      | ApiPlatform\Doctrine\Orm\Extension\PaginationExtension         |
 
 #### Blocking Anonymous Users
 
@@ -137,11 +136,11 @@ To secure the access to endpoints, use the following access control rule:
 ```yaml
 # app/config/package/security.yaml
 security:
+  # ...
+  access_control:
     # ...
-    access_control:
-        # ...
-        - { path: ^/offers, roles: IS_AUTHENTICATED_FULLY }
-        - { path: ^/users, roles: IS_AUTHENTICATED_FULLY }
+    - { path: ^/offers, roles: IS_AUTHENTICATED_FULLY }
+    - { path: ^/users, roles: IS_AUTHENTICATED_FULLY }
 ```
 
 ## Custom Doctrine MongoDB ODM Extension
@@ -150,8 +149,8 @@ Creating custom extensions is the same as with Doctrine ORM.
 
 The interfaces are:
 
-* `ApiPlatform\Doctrine\Odm\Extension\AggregationItemExtensionInterface` and `ApiPlatform\Doctrine\Odm\Extension\AggregationCollectionExtensionInterface` to add stages to the [aggregation builder](https://www.doctrine-project.org/projects/doctrine-mongodb-odm/en/latest/reference/aggregation-builder.html).
-* `ApiPlatform\Doctrine\Odm\Extension\AggregationResultItemExtensionInterface` and `ApiPlatform\Doctrine\Odm\Extension\AggregationResultCollectionExtensionInterface` to return a result.
+- `ApiPlatform\Doctrine\Odm\Extension\AggregationItemExtensionInterface` and `ApiPlatform\Doctrine\Odm\Extension\AggregationCollectionExtensionInterface` to add stages to the [aggregation builder](https://www.doctrine-project.org/projects/doctrine-mongodb-odm/en/latest/reference/aggregation-builder.html).
+- `ApiPlatform\Doctrine\Odm\Extension\AggregationResultItemExtensionInterface` and `ApiPlatform\Doctrine\Odm\Extension\AggregationResultCollectionExtensionInterface` to return a result.
 
 The tags are `api_platform.doctrine_mongodb.odm.aggregation_extension.item` and `api_platform.doctrine_mongodb.odm.aggregation_extension.collection`.
 

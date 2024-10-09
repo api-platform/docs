@@ -15,9 +15,9 @@ For example:
 
 3 versions are maintained at the same time:
 
-* **stable** (currently the **4.0** branch): regular bugfixes are integrated in this version
-* **old-stable** (are the last 2 minor branches: currently **3.4** and **3.3** branches): [security fixes](security.md) are integrated in this version, regular bugfixes are **not** backported in it
-* **development** (**main** branch): new features target this branch
+- **stable** (currently the **4.0** branch): regular bugfixes are integrated in this version
+- **old-stable** (are the last 2 minor branches: currently **3.4** and **3.3** branches): [security fixes](security.md) are integrated in this version, regular bugfixes are **not** backported in it
+- **development** (**main** branch): new features target this branch
 
 Older versions (1.x, 2.6...) **are not maintained**. If you still use them, you must upgrade as soon as possible.
 

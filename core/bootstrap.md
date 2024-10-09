@@ -181,7 +181,7 @@ $propertyInfo = new PropertyInfoExtractor(
 
 $classMetadataFactory = new ClassMetadataFactory(new AnnotationLoader());
 
-final class FilterLocator implements ContainerInterface 
+final class FilterLocator implements ContainerInterface
 {
     private $filters = [];
     public function get(string $id) {
@@ -189,12 +189,12 @@ final class FilterLocator implements ContainerInterface
     }
 
     public function has(string $id): bool {
-        return isset($this->filter[$id]); 
+        return isset($this->filter[$id]);
     }
 }
 
 $filterLocator = new FilterLocator();
-$pathSegmentNameGenerator = new UnderscorePathSegmentNameGenerator(); 
+$pathSegmentNameGenerator = new UnderscorePathSegmentNameGenerator();
 
 $resourceNameCollectionFactory = new AttributesResourceNameCollectionFactory([__DIR__.'/../src/']);
 $resourceClassResolver = new ResourceClassResolver($resourceNameCollectionFactory);
@@ -277,7 +277,7 @@ $stateProcessors = new CallableProcessor($processorCollection);
 
 class Validator implements ValidatorInterface {
     private $validator;
-    public function __construct($validator) 
+    public function __construct($validator)
     {
         $this->validator = $validator;
     }
@@ -328,7 +328,7 @@ class ApiLoader {
     private $resourceMetadataFactory;
 
     public function __construct(
-        ResourceNameCollectionFactoryInterface $resourceNameCollectionFactory, 
+        ResourceNameCollectionFactoryInterface $resourceNameCollectionFactory,
         ResourceMetadataCollectionFactoryInterface $resourceMetadataFactory
     ) {
         $this->resourceNameCollectionFactory = $resourceNameCollectionFactory;
@@ -396,14 +396,14 @@ $requestContext = new RequestContext();
 $matcher = new UrlMatcher($routes, $requestContext);
 $generator = new UrlGenerator($routes, $requestContext);
 
-class Router implements RouterInterface 
+class Router implements RouterInterface
 {
     private $routes;
     private $context;
     private $matcher;
     private $generator;
 
-    public function __construct(RouteCollection $routes, UrlMatcherInterface $matcher, UrlGeneratorInterface $generator, RequestContext $requestContext) 
+    public function __construct(RouteCollection $routes, UrlMatcherInterface $matcher, UrlGeneratorInterface $generator, RequestContext $requestContext)
     {
         $this->routes = $routes;
         $this->matcher = $matcher;
@@ -455,9 +455,9 @@ $uriVariableTransformers = [
 ];
 
 $iriConverter = new IriConverter(
-    $stateProviders, 
-    $router, 
-    $identifiersExtractor, 
+    $stateProviders,
+    $router,
+    $identifiersExtractor,
     $resourceClassResolver,
     $resourceMetadataFactory,
     new UriVariablesConverter($propertyMetadataFactory, $resourceMetadataFactory, $uriVariableTransformers),
@@ -466,9 +466,9 @@ $iriConverter = new IriConverter(
 
 $writeListener = new WriteListener(
     $stateProcessors,
-    $iriConverter, 
-    $resourceClassResolver, 
-    $resourceMetadataFactory, 
+    $iriConverter,
+    $resourceClassResolver,
+    $resourceMetadataFactory,
     /**new UriVariablesConverter($propertyMetadataFactory, $resourceMetadataFactory, $uriVariableTransformers)*/ null,
 );
 
@@ -500,14 +500,14 @@ $problemErrorNormalizer = new ErrorNormalizer($debug, $defaultContext);
 // );
 
 $itemNormalizer = new ItemNormalizer(
-    $propertyNameCollectionFactory, 
-    $propertyMetadataFactory, 
-    $iriConverter, 
-    $resourceClassResolver, 
+    $propertyNameCollectionFactory,
+    $propertyMetadataFactory,
+    $iriConverter,
+    $resourceClassResolver,
     $propertyAccessor,
-    $nameConverter, 
+    $nameConverter,
     $classMetadataFactory,
-    $logger, 
+    $logger,
     $resourceMetadataFactory,
     /**$resourceAccessChecker **/ null,
     $defaultContext
@@ -590,7 +590,7 @@ $dispatcher->addSubscriber(new RouterListener($matcher, new RequestStack()));
 $dispatcher->addListener('kernel.view', [$validateListener, 'onKernelView'], 64);
 $dispatcher->addListener('kernel.view', [$writeListener, 'onKernelView'], 32);
 $dispatcher->addListener('kernel.view', [$serializeListener, 'onKernelView'], 16);
-// TODO: ApiPlatform\EventListener\QueryParameterValidateListener, prio 16   
+// TODO: ApiPlatform\EventListener\QueryParameterValidateListener, prio 16
 $dispatcher->addListener('kernel.view', [$respondListener, 'onKernelView'], 8);
 $dispatcher->addListener('kernel.request', [$formatListener, 'onKernelRequest'], 28);
 $dispatcher->addListener('kernel.request', [$readListener, 'onKernelRequest'], 4);
@@ -600,14 +600,14 @@ $dispatcher->addListener('kernel.exception', [$validationExceptionListener, 'onK
 $dispatcher->addListener('kernel.response', [$addLinkHeaderListener, 'onKernelResponse'], 2);
 
 /*
- * TODO: 
+ * TODO:
  * api_platform.security.listener.request.deny_access     kernel.request      onSecurity                  3          ApiPlatform\Security\EventListener\DenyAccessListener
- *   "                                                    kernel.request      onSecurityPostDenormalize   1                                                                   
+ *   "                                                    kernel.request      onSecurityPostDenormalize   1
  * api_platform.swagger.listener.ui                       kernel.request      onKernelRequest                        ApiPlatform\Bridge\Symfony\Bundle\EventListener\SwaggerUiListener
  * api_platform.http_cache.listener.response.configure    kernel.response     onKernelResponse            -1         ApiPlatform\HttpCache\EventListener\AddHeadersListener
 */
 
-final class DocumentationAction 
+final class DocumentationAction
 {
     private $openApiFactory;
     public function __construct(OpenApiFactoryInterface $openApiFactory)

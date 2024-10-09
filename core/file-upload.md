@@ -11,13 +11,13 @@ before proceeding. It will help you get a grasp on how the bundle works, and why
 **Note**: Uploading files won't work in `PUT` or `PATCH` requests, you must use `POST` method to upload files.
 See [the related issue on Symfony](https://github.com/symfony/symfony/issues/9226) and [the related bug in PHP](https://bugs.php.net/bug.php?id=55815) talking about this behavior.
 
-Enable the multipart format globally in order to use it as the input format of your resource: 
+Enable the multipart format globally in order to use it as the input format of your resource:
 
 ```yaml
 api_platform:
-    formats:
-        multipart: ['multipart/form-data']
-        jsonld: ['application/ld+json']
+  formats:
+    multipart: ['multipart/form-data']
+    jsonld: ['application/ld+json']
 ```
 
 ## Installing VichUploaderBundle
@@ -36,15 +36,15 @@ to make it look like this.
 # api/config/packages/vich_uploader.yaml
 
 vich_uploader:
-    db_driver: orm
-    metadata:
-        type: attribute
-    mappings:
-        media_object:
-            uri_prefix: /media
-            upload_destination: '%kernel.project_dir%/public/media'
-            # Will rename uploaded files using a uniqueid as a suffix.
-            namer: Vich\UploaderBundle\Naming\SmartUniqueNamer
+  db_driver: orm
+  metadata:
+    type: attribute
+  mappings:
+    media_object:
+      uri_prefix: /media
+      upload_destination: '%kernel.project_dir%/public/media'
+      # Will rename uploaded files using a uniqueid as a suffix.
+      namer: Vich\UploaderBundle\Naming\SmartUniqueNamer
 ```
 
 ## Uploading to a Dedicated Resource
@@ -79,7 +79,7 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
 #[Vich\Uploadable]
 #[ORM\Entity]
 #[ApiResource(
-    normalizationContext: ['groups' => ['media_object:read']], 
+    normalizationContext: ['groups' => ['media_object:read']],
     types: ['https://schema.org/MediaObject'],
     outputFormats: ['jsonld' => ['application/ld+json']],
     operations: [
@@ -92,10 +92,10 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
                     content: new \ArrayObject([
                         'multipart/form-data' => [
                             'schema' => [
-                                'type' => 'object', 
+                                'type' => 'object',
                                 'properties' => [
                                     'file' => [
-                                        'type' => 'string', 
+                                        'type' => 'string',
                                         'format' => 'binary'
                                     ]
                                 ]
@@ -121,7 +121,7 @@ class MediaObject
     public ?File $file = null;
 
     #[ApiProperty(writable: false)]
-    #[ORM\Column(nullable: true)] 
+    #[ORM\Column(nullable: true)]
     public ?string $filePath = null;
 
     public function getId(): ?int
@@ -130,6 +130,7 @@ class MediaObject
     }
 }
 ```
+
 Note: From V3.3 onwards, `'multipart/form-data'` must either be including in the global API-Platform config, either in `formats` or `defaults->inputFormats`, or defined as an `inputFormats` parameter on an operation by operation basis.
 
 ### Resolving the File URL
@@ -211,6 +212,7 @@ your data, you will get a response looking like this:
 You will need to modify your `Caddyfile` to allow the above `contentUrl` to be accessed directly. If you followed the above configuration for the VichUploaderBundle, that will be in `api/public/media`. Add your folder to the list of path matches, e.g. `|^/media/|`:
 
 <!-- markdownlint-disable no-hard-tabs -->
+
 ```patch
 	# Matches requests for HTML documents, for static files and for Next.js files,
 	# except for known API paths and paths with extensions handled by API Platform
@@ -224,6 +226,7 @@ You will need to modify your `Caddyfile` to allow the above `contentUrl` to be a
 		)
 		|| path('/favicon.ico', '/manifest.json', '/robots.txt', '/_next*', '/sitemap*')`
 ```
+
 <!-- markdownlint-enable no-hard-tabs -->
 
 ### Linking a MediaObject Resource to Another Resource
@@ -255,7 +258,7 @@ class Book
     #[ORM\JoinColumn(nullable: true)]
     #[ApiProperty(types: ['https://schema.org/image'])]
     public ?MediaObject $image = null;
-    
+
     // ...
 }
 ```
@@ -351,8 +354,8 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
  */
 #[ORM\Entity]
 #[ApiResource(
-    normalizationContext: ['groups' => ['book:read']], 
-    denormalizationContext: ['groups' => ['book:write']], 
+    normalizationContext: ['groups' => ['book:read']],
+    denormalizationContext: ['groups' => ['book:write']],
     types: ['https://schema.org/Book'],
     operations: [
         new GetCollection(),
@@ -376,9 +379,9 @@ class Book
     #[Groups(['book:write'])]
     public ?File $file = null;
 
-    #[ORM\Column(nullable: true)] 
+    #[ORM\Column(nullable: true)]
     public ?string $filePath = null;
-    
+
     // ...
 }
 ```

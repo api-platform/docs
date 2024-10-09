@@ -7,22 +7,22 @@ using Laravel!
 
 With API Platform, you can:
 
-* [expose your Eloquent](#exposing-a-model) models in minutes as:
-  * a REST API implementing the industry-leading standards, formats and best practices: [JSON-LD](https://en.wikipedia.org/wiki/JSON-LD)/[RDF](https://en.wikipedia.org/wiki/Resource_Description_Framework), [JSON:API](https://jsonapi.org), [HAL](https://stateless.group/hal_specification.html), and many RFCs...
-  * a [GraphQL](#enabling-graphql) API
-  * or both at the same time, with the same code!
-* automatically expose an [OpenAPI](https://www.openapis.org) specification (formerly Swagger), dynamically generated from your Eloquent models and always up to date
-* automatically expose nice UIs and playgrounds to develop using your API ([Swagger UI](https://swagger.io/tools/swagger-ui/) and [GraphiQL](https://github.com/graphql/graphiql))
-* automatically paginate your collections
-* add validation logic using Laravel [Form Request Validation](#write-operations-authorization-and-validation)
-* add authorization logic using [gates and policies](#authorization) ([compatible with Sanctum, Passport, Socialite...](#authentication))
-* add [filtering logic](#adding-filters)
+- [expose your Eloquent](#exposing-a-model) models in minutes as:
+  - a REST API implementing the industry-leading standards, formats and best practices: [JSON-LD](https://en.wikipedia.org/wiki/JSON-LD)/[RDF](https://en.wikipedia.org/wiki/Resource_Description_Framework), [JSON:API](https://jsonapi.org), [HAL](https://stateless.group/hal_specification.html), and many RFCs...
+  - a [GraphQL](#enabling-graphql) API
+  - or both at the same time, with the same code!
+- automatically expose an [OpenAPI](https://www.openapis.org) specification (formerly Swagger), dynamically generated from your Eloquent models and always up to date
+- automatically expose nice UIs and playgrounds to develop using your API ([Swagger UI](https://swagger.io/tools/swagger-ui/) and [GraphiQL](https://github.com/graphql/graphiql))
+- automatically paginate your collections
+- add validation logic using Laravel [Form Request Validation](#write-operations-authorization-and-validation)
+- add authorization logic using [gates and policies](#authorization) ([compatible with Sanctum, Passport, Socialite...](#authentication))
+- add [filtering logic](#adding-filters)
 <!--* push changed data to the clients in real-time using Laravel Broadcast and [Mercure](https://mercure.rocks) (a popular WebSockets alternative, created by Kévin Dunglas, the original author of API Platform) and receive them using Laravel Echo-->
-* benefits from the API Platform JavaScript tools: [admin](../admin/index.md) and [create client](../create-client/index.md) (supports Next/React, Nuxt/Vue.js, Quasar, Vuetify and more!)
+- benefits from the API Platform JavaScript tools: [admin](../admin/index.md) and [create client](../create-client/index.md) (supports Next/React, Nuxt/Vue.js, Quasar, Vuetify and more!)
 <!-- * benefits from native HTTP cache (with automatic invalidation) -->
-* boost your app with [Octane](https://laravel.com/docs/octane) and [FrankenPHP](https://frankenphp.dev) (the default Octane engine, also created by Kévin)
-* [decouple your API from your models](../core/state-providers.md) and implement patterns such as CQRS
-* test your API using convenient ad-hoc assertions that work with Pest and PHPUnit
+- boost your app with [Octane](https://laravel.com/docs/octane) and [FrankenPHP](https://frankenphp.dev) (the default Octane engine, also created by Kévin)
+- [decouple your API from your models](../core/state-providers.md) and implement patterns such as CQRS
+- test your API using convenient ad-hoc assertions that work with Pest and PHPUnit
 
 Let's discover how to use API Platform with Laravel!
 
@@ -160,8 +160,8 @@ the corresponding API request in the UI. Try it yourself by browsing to `http://
 
 So, if you want to access the raw data, you have two alternatives:
 
-* Add the correct `Accept` header (or don't set any `Accept` header at all if you don't care about security) - preferred when writing API clients
-* Add the format you want as the extension of the resource - for debug purposes only
+- Add the correct `Accept` header (or don't set any `Accept` header at all if you don't care about security) - preferred when writing API clients
+- Add the format you want as the extension of the resource - for debug purposes only
 
 For instance, go to `http://127.0.0.1:8000/api/books.jsonld` to retrieve the list of `Book` resources in JSON-LD.
 
@@ -173,12 +173,13 @@ For instance, go to `http://127.0.0.1:8000/api/books.jsonld` to retrieve the lis
 Of course, you can also use your favorite HTTP client to query the API.
 We are fond of [Hoppscotch](https://hoppscotch.com), a free and open source API client with good support of API Platform.
 
-
 ## Using Data Transfer Objects and Hooking Custom Logic
 
-While exposing directly the data in the database is convenient for Rapid Application Development, using different classes for the internal data and the public data is a good practice for more complex projects. 
+While exposing directly the data in the database is convenient for Rapid Application Development, using different classes
+for the internal data and the public data is a good practice for more complex projects.
 
-As explained in our [general design considerations](../core/design.md), API Platform allows us to use the data source of our choice using a [provider](../core/state-providers.md) and Data Transfer Objects (DTOs) are first-class citizens! 
+As explained in our [general design considerations](../core/design.md), API Platform allows us to use the data source of our choice
+using a [provider](../core/state-providers.md) and Data Transfer Objects (DTOs) are first-class citizens!
 
 Let's create our DTO:
 
@@ -238,12 +239,12 @@ Register the state provider:
 
 ```php
 <?php
- 
+
 namespace App\Providers;
- 
+
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Support\ServiceProvider;
- 
+
 class ApiServiceProvider extends ServiceProvider
 {
     public function register(): void
@@ -257,7 +258,7 @@ class ApiServiceProvider extends ServiceProvider
 }
 ```
 
-Apply the provider to your operation: 
+Apply the provider to your operation:
 
 ```php
 <?php
@@ -417,13 +418,13 @@ and when we request a Book we obtain:
 
 ```json
 {
-    "@context": "/api/contexts/Book",
-    "@id": "/api/books/1",
-    "@type": "Book",
-    "name": "Miss Nikki Senger V",
-    "isbn": "9784291624633",
-    "publicationDate": "1971-09-04",
-    "author": "/api/authors/1"
+  "@context": "/api/contexts/Book",
+  "@id": "/api/books/1",
+  "@type": "Book",
+  "name": "Miss Nikki Senger V",
+  "isbn": "9784291624633",
+  "publicationDate": "1971-09-04",
+  "author": "/api/authors/1"
 }
 ```
 
@@ -466,9 +467,9 @@ Then, edit `database/factories/BookFactory.php` to specify which generator to us
 
 ```patch
  namespace Database\Factories;
- 
+
  use Illuminate\Database\Eloquent\Factories\Factory;
- 
+
  /**
   * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Book>
   */
@@ -497,11 +498,11 @@ Then, update the `app/Models/Book.php` to hint Eloquent that it has an associate
 
 ```patch
  namespace App\Models;
- 
+
  use ApiPlatform\Metadata\ApiResource;
 +use Illuminate\Database\Eloquent\Factories\HasFactory;
  use Illuminate\Database\Eloquent\Model;
- 
+
  #[ApiResource]
  class Book extends Model
  {
@@ -513,12 +514,12 @@ Reference this factory in the seeder (`database/seeder/DatabaseSeeder.php`):
 
 ```patch
  namespace Database\Seeders;
- 
+
 +use App\Models\Book;
  use App\Models\User;
  // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
  use Illuminate\Database\Seeder;
- 
+
  class DatabaseSeeder extends Seeder
  {
      /**
@@ -527,12 +528,12 @@ Reference this factory in the seeder (`database/seeder/DatabaseSeeder.php`):
      public function run(): void
      {
          // User::factory(10)->create();
- 
+
          User::factory()->create([
              'name' => 'Test User',
              'email' => 'test@example.com',
          ]);
- 
+
 +        Book::factory(100)->create();
      }
  }
@@ -560,11 +561,11 @@ This is configurable, to change to 10 items per page, change `app/Models/Book.ph
 
 ```patch
  namespace App\Models;
- 
+
  use ApiPlatform\Metadata\ApiResource;
  use Illuminate\Database\Eloquent\Factories\HasFactory;
  use Illuminate\Database\Eloquent\Model;
- 
+
 -#[ApiResource]
 +#[ApiResource(
 +    paginationItemsPerPage: 10,
@@ -613,7 +614,6 @@ A good way to discover them is to inspect the properties of the `ApiResource` an
 You can change the default configuration (for instance, which operations are enabled by default) in the config (`config/api-platform.php`).
 
 For the rest of this tutorial, we'll assume that at least all default operations are enabled (you can also enable `PUT` if you want to support upsert operations).
-
 
 ## Adding Filters
 
@@ -665,16 +665,15 @@ On top of that, some validation rules are automatically added based on the given
 
 API Platform comes with several filters dedicated to Laravel, [check them out](filters.md)!
 
-
 ## Authentication
 
 API Platform hooks into the native [Laravel authentication mechanism](https://laravel.com/docs/authentication).
 
 It also natively supports:
 
-* [Laravel Sanctum](https://laravel.com/docs/sanctum), an authentication system for SPAs (single page applications), mobile applications, and simple, token-based APIs
-* [Laravel Passport](https://laravel.com/docs/passport), a full OAuth 2 server
-* [Laravel Socialite](https://laravel.com/docs/socialite), OAuth providers including Facebook, X, LinkedIn, Google, GitHub, GitLab, Bitbucket, and Slack
+- [Laravel Sanctum](https://laravel.com/docs/sanctum), an authentication system for SPAs (single page applications), mobile applications, and simple, token-based APIs
+- [Laravel Passport](https://laravel.com/docs/passport), a full OAuth 2 server
+- [Laravel Socialite](https://laravel.com/docs/socialite), OAuth providers including Facebook, X, LinkedIn, Google, GitHub, GitLab, Bitbucket, and Slack
 
 Follow the official instructions for the tool(s) you want to use.
 
@@ -763,7 +762,7 @@ Then, add validation rules to the generated class (`app/Http/Requests/BookFormRe
 -        return false;
 +        return user()->isAdmin();
      }
- 
+
      /**
       * Get the validation rules that apply to the request.
       *
@@ -843,7 +842,6 @@ occurs**.
 API Platform also has an awesome [client generator](../create-client/index.md) able to scaffold fully working [Next.js](../create-client/nextjs.md), [Nuxt.js](../create-client/nuxt.md), [React/Redux](../create-client/react.md), [Vue.js](../create-client/vuejs.md), [Quasar](../create-client/quasar.md),
 and [Vuetify](../create-client/vuetify.md) Progressive Web Apps/Single Page Apps that you can easily tune and customize. The generator also supports
 [React Native](../create-client/react-native.md) if you prefer to leverage all capabilities of mobile devices.
-
 
 The generated code contains a list (including pagination), a delete button, a creation and an edit form. It also includes
 [Tailwind CSS](https://tailwindcss.com) classes and [ARIA roles](https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA)

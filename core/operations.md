@@ -29,19 +29,19 @@ operations are automatically enabled:
 
 Collection operations:
 
-Method | Mandatory | Description                               | Registered by default
--------|-----------|-------------------------------------------|----------------------
-`GET`  | yes       | Retrieve the (paginated) list of elements | yes
-`POST` | no        | Create a new element                      | yes
+| Method | Mandatory | Description                               | Registered by default |
+| ------ | --------- | ----------------------------------------- | --------------------- |
+| `GET`  | yes       | Retrieve the (paginated) list of elements | yes                   |
+| `POST` | no        | Create a new element                      | yes                   |
 
 Item operations:
 
-Method   | Mandatory | Description                                | Registered by default
----------|-----------|--------------------------------------------|----------------------
-`GET`    | yes       | Retrieve an element                        | yes
-`PUT`    | no        | Replace an element                         | no
-`PATCH`  | no        | Apply a partial modification to an element | yes
-`DELETE` | no        | Delete an element                          | yes
+| Method   | Mandatory | Description                                | Registered by default |
+| -------- | --------- | ------------------------------------------ | --------------------- |
+| `GET`    | yes       | Retrieve an element                        | yes                   |
+| `PUT`    | no        | Replace an element                         | no                    |
+| `PATCH`  | no        | Apply a partial modification to an element | yes                   |
+| `DELETE` | no        | Delete an element                          | yes                   |
 
 > [!NOTE]
 > The `PATCH` method must be enabled explicitly in the configuration, refer to the [Content Negotiation](content-negotiation.md) section for more information.
@@ -106,10 +106,10 @@ class Book
 ```yaml
 # api/config/api_platform/resources.yaml
 resources:
-    App\Entity\Book:
-        operations:
-            ApiPlatform\Metadata\GetCollection: ~ # nothing more to add if we want to keep the default controller
-            ApiPlatform\Metadata\Get: ~
+  App\Entity\Book:
+    operations:
+      ApiPlatform\Metadata\GetCollection: ~ # nothing more to add if we want to keep the default controller
+      ApiPlatform\Metadata\Get: ~
 ```
 
 ```xml
@@ -130,7 +130,6 @@ resources:
 ```
 
 </code-selector>
-
 
 The previous example can also be written with an explicit method definition:
 
@@ -160,12 +159,12 @@ class Book
 ```yaml
 # api/config/api_platform/resources.yaml
 resources:
-    App\Entity\Book:
-        operations:
-            ApiPlatform\Metadata\GetCollection:
-                method: GET
-            ApiPlatform\Metadata\Get:
-                method: GET
+  App\Entity\Book:
+    operations:
+      ApiPlatform\Metadata\GetCollection:
+        method: GET
+      ApiPlatform\Metadata\Get:
+        method: GET
 ```
 
 ```xml
@@ -206,8 +205,8 @@ use ApiPlatform\Metadata\ApiResource;
 
 #[ApiResource(operations: [
     new Get(
-        controller: NotFoundAction::class, 
-        read: false, 
+        controller: NotFoundAction::class,
+        read: false,
         output: false
     ),
     new GetCollection()
@@ -221,13 +220,13 @@ class Book
 ```yaml
 # api/config/api_platform/resources.yaml
 resources:
-    App\Entity\Book:
-        operations:
-            ApiPlatform\Metadata\GetCollection: ~
-            ApiPlatform\Metadata\Get:
-                controller: ApiPlatform\Action\NotFoundAction
-                read: false
-                output: false
+  App\Entity\Book:
+    operations:
+      ApiPlatform\Metadata\GetCollection: ~
+      ApiPlatform\Metadata\Get:
+        controller: ApiPlatform\Action\NotFoundAction
+        read: false
+        output: false
 ```
 
 ```xml
@@ -270,15 +269,15 @@ use ApiPlatform\Metadata\Post;
 
 #[ApiResource(operations: [
     new Get(
-        uriTemplate: '/grimoire/{id}', 
-        requirements: ['id' => '\d+'], 
-        defaults: ['color' => 'brown'], 
-        options: ['my_option' => 'my_option_value'], 
-        schemes: ['https'], 
+        uriTemplate: '/grimoire/{id}',
+        requirements: ['id' => '\d+'],
+        defaults: ['color' => 'brown'],
+        options: ['my_option' => 'my_option_value'],
+        schemes: ['https'],
         host: '{subdomain}.api-platform.com'
     ),
     new Post(
-        uriTemplate: '/grimoire', 
+        uriTemplate: '/grimoire',
         status: 301
     )
 ])]
@@ -291,21 +290,21 @@ class Book
 ```yaml
 # api/config/api_platform/resources.yaml
 resources:
-    App\Entity\Book:
-        operations:
-            ApiPlatform\Metadata\Post:
-                uriTemplate: '/grimoire'
-                status: 301
-            ApiPlatform\Metadata\Get:
-                uriTemplate: '/grimoire/{id}'
-                requirements:
-                    id: '\d+'
-                defaults:
-                    color: 'brown'
-                host: '{subdomain}.api-platform.com'
-                schemes: ['https']
-                options:
-                    my_option: 'my_option_value'
+  App\Entity\Book:
+    operations:
+      ApiPlatform\Metadata\Post:
+        uriTemplate: '/grimoire'
+        status: 301
+      ApiPlatform\Metadata\Get:
+        uriTemplate: '/grimoire/{id}'
+        requirements:
+          id: '\d+'
+        defaults:
+          color: 'brown'
+        host: '{subdomain}.api-platform.com'
+        schemes: ['https']
+        options:
+          my_option: 'my_option_value'
 ```
 
 ```xml
@@ -369,8 +368,8 @@ class Book
 ```yaml
 # api/config/api_platform/resources.yaml
 resources:
-    App\Entity\Book:
-        routePrefix: /library
+  App\Entity\Book:
+    routePrefix: /library
 ```
 
 ```xml
@@ -432,22 +431,22 @@ class User
 ```yaml
 # api/config/api_platform/resources.yaml
 resources:
-    App\Entity\User:
-        - operations:
-            ApiPlatform\Metadata\GetCollection: ~
-            ApiPlatform\Metadata\Get: ~
-        - operations:
-            ApiPlatform\Metadata\GetCollection:
-                uriTemplate: /companies/{companyId}/users
-                itemUriTemplate: /companies/{companyId}/users/{id}
-                # ...
-            ApiPlatform\Metadata\Post:
-                uriTemplate: /companies/{companyId}/users
-                itemUriTemplate: /companies/{companyId}/users/{id}
-                # ...
-            ApiPlatform\Metadata\Get:
-                uriTemplate: /companies/{companyId}/users/{id}
-                # ...
+  App\Entity\User:
+    - operations:
+        ApiPlatform\Metadata\GetCollection: ~
+        ApiPlatform\Metadata\Get: ~
+    - operations:
+        ApiPlatform\Metadata\GetCollection:
+          uriTemplate: /companies/{companyId}/users
+          itemUriTemplate: /companies/{companyId}/users/{id}
+          # ...
+        ApiPlatform\Metadata\Post:
+          uriTemplate: /companies/{companyId}/users
+          itemUriTemplate: /companies/{companyId}/users/{id}
+          # ...
+        ApiPlatform\Metadata\Get:
+          uriTemplate: /companies/{companyId}/users/{id}
+          # ...
 ```
 
 ```xml
@@ -502,13 +501,13 @@ class Place
     #[ORM\Id, ORM\Column, ORM\GeneratedValue]
     private ?int $id = null;
 
-    #[ORM\Column] 
+    #[ORM\Column]
     private string $name = '';
 
     #[ORM\Column(type: 'float')]
     private float $latitude = 0;
 
-    #[ORM\Column(type: 'float')] 
+    #[ORM\Column(type: 'float')]
     private float $longitude = 0;
 
     // ...

@@ -33,34 +33,34 @@ Then, write a simple YAML config file similar to the following.
 
 Here we will generate a data model for an address book with the following data:
 
-* a [`Person`](https://schema.org/Person) which inherits from [`Thing`](https://schema.org/Thing);
-* a [`PostalAddress`](https://schema.org/PostalAddress) (without its class hierarchy).
+- a [`Person`](https://schema.org/Person) which inherits from [`Thing`](https://schema.org/Thing);
+- a [`PostalAddress`](https://schema.org/PostalAddress) (without its class hierarchy).
 
 ```yaml
 # api/config/schema.yaml
 # The list of types and properties we want to use
 types:
-    # Parent class of Person
-    Thing:
-        properties:
-            name: ~
-    Person:
-        # Enable the generation of the class hierarchy (not enabled by default)
-        parent: ~
-        properties:
-            familyName: ~
-            givenName: ~
-            additionalName: ~
-            address: ~
-    PostalAddress:
-        properties:
-            # Force the type of the addressCountry property to text
-            addressCountry: { range: "Text" }
-            addressLocality: ~
-            addressRegion: ~
-            postOfficeBoxNumber: ~
-            postalCode: ~
-            streetAddress: ~
+  # Parent class of Person
+  Thing:
+    properties:
+      name: ~
+  Person:
+    # Enable the generation of the class hierarchy (not enabled by default)
+    parent: ~
+    properties:
+      familyName: ~
+      givenName: ~
+      additionalName: ~
+      address: ~
+  PostalAddress:
+    properties:
+      # Force the type of the addressCountry property to text
+      addressCountry: { range: 'Text' }
+      addressLocality: ~
+      addressRegion: ~
+      postOfficeBoxNumber: ~
+      postalCode: ~
+      streetAddress: ~
 ```
 
 **Note:** If no properties are specified for a given type, all its properties will be generated.
@@ -74,8 +74,8 @@ A config file generating an enum class:
 
 ```yaml
 types:
-    OfferItemCondition: # The generator will automatically guess that OfferItemCondition is subclass of Enum
-        properties: {} # Remove all properties of the parent class
+  OfferItemCondition: # The generator will automatically guess that OfferItemCondition is subclass of Enum
+    properties: {} # Remove all properties of the parent class
 ```
 
 ### OpenAPI Generation
@@ -90,7 +90,7 @@ Write the following config file:
 ```yaml
 # api/config/schema.yaml
 openApi:
-    file: '../openapi.yaml'
+  file: '../openapi.yaml'
 ```
 
 ## Usage

@@ -7,7 +7,7 @@ API Platform is great for Rapid Application Development and provides lots of fun
 A filter is usually used via a `ApiPlatform\Metadata\QueryParameter` and is also available through `ApiPlatform\Metadata\HeaderParameter`. For example, let's declare an `EqualsFilter` on our `Book` to be able to query an exact match using `/books?name=Animal Farm. A Fairy Story`:
 
 ```php
-// app/Models/Book.php 
+// app/Models/Book.php
 
 use ApiPlatform\Laravel\Eloquent\Filter\EqualsFilter;
 use ApiPlatform\Metadata\ApiResource;
@@ -49,7 +49,7 @@ You can create your own filters by implementing the `ApiPlatform\Laravel\Eloquen
 You can add [validation rules](https://laravel.com/docs/validation) to parameters within the `constraints` attribute:
 
 ```php
-// app/Models/Book.php 
+// app/Models/Book.php
 
 use ApiPlatform\Laravel\Eloquent\Filter\PartialSearchFilter;
 use ApiPlatform\Metadata\ApiResource;
@@ -69,7 +69,7 @@ class Book extends Model
 When programming APIs you may need to apply a filter on many properties at once. For example, we're allowing to sort on every property of our ApiResource with a partial search filter:
 
 ```php
-// app/Models/Book.php 
+// app/Models/Book.php
 
 use ApiPlatform\Laravel\Eloquent\Filter\PartialSearchFilter;
 use ApiPlatform\Laravel\Eloquent\Filter\OrderFilter;
@@ -102,7 +102,7 @@ As shown above the following search filters are available:
 The `DateFilter` allows to filter dates with an operator (`eq`, `lt`, `gt`, `lte`, `gte`):
 
 ```php
-// app/Models/Book.php 
+// app/Models/Book.php
 
 use ApiPlatform\Laravel\Eloquent\Filter\DateFilter;
 
@@ -126,7 +126,7 @@ Our default strategy is to exclude null values, just remove the `filterContext` 
 The `OrFilter` allows to filter using an `OR WHERE` clause:
 
 ```php
-// app/Models/Book.php 
+// app/Models/Book.php
 
 use ApiPlatform\Laravel\Eloquent\Filter\DateFilter;
 
@@ -160,7 +160,7 @@ Note: We strongly recommend using [Vulcain](https://vulcain.rocks) instead of th
 The property filter adds the possibility to select the properties to serialize (sparse fieldsets).
 
 ```php
-// app/Models/Book.php 
+// app/Models/Book.php
 
 use ApiPlatform\Laravel\Eloquent\Filter\DateFilter;
 use ApiPlatform\Serializer\Filter\PropertyFilter;
@@ -180,7 +180,7 @@ class Book extends Model
 
 A few `filterContext` options are available to configure the filter:
 
-* `override_default_properties` allows to override the default serialization properties (default `false`) Using `true` is dangerous, use carefully this can expose unwanted data!
-* `whitelist` properties whitelist to avoid uncontrolled data exposure (default `null` to allow all properties)
+- `override_default_properties` allows to override the default serialization properties (default `false`) Using `true` is dangerous, use carefully this can expose unwanted data!
+- `whitelist` properties whitelist to avoid uncontrolled data exposure (default `null` to allow all properties)
 
 Given that the collection endpoint is `/books`, you can filter the serialization properties with the following query: `/books?properties[]=title&properties[]=author`.

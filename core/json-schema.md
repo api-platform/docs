@@ -51,7 +51,7 @@ class Greeting
 {
     #[ORM\Id, ORM\Column, ORM\GeneratedValue]
     private ?int $id = null;
-    
+
     // [...]
 
     public function getId(): ?int

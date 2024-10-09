@@ -49,15 +49,15 @@ class Book
 ```yaml
 # api/config/api_platform/resources.yaml
 resources:
-    App\Entity\Book:
-        security: 'is_granted("ROLE_USER")'
-        operations:
-            ApiPlatform\Metadata\GetCollection: ~
-            ApiPlatform\Metadata\Post:
-                security: 'is_granted("ROLE_ADMIN")'
-            ApiPlatform\Metadata\Get: ~
-            ApiPlatform\Metadata\Put:
-                security: 'is_granted("ROLE_ADMIN") or object.owner == user'
+  App\Entity\Book:
+    security: 'is_granted("ROLE_USER")'
+    operations:
+      ApiPlatform\Metadata\GetCollection: ~
+      ApiPlatform\Metadata\Post:
+        security: 'is_granted("ROLE_ADMIN")'
+      ApiPlatform\Metadata\Get: ~
+      ApiPlatform\Metadata\Put:
+        security: 'is_granted("ROLE_ADMIN") or object.owner == user'
 ```
 
 </code-selector>
@@ -88,27 +88,27 @@ class Book
 ```yaml
 # api/config/api_platform/resources/Book.yaml
 properties:
-    App\Entity\Book:
-        adminOnlyProperty:
-            security: 'is_granted("ROLE_ADMIN")'
+  App\Entity\Book:
+    adminOnlyProperty:
+      security: 'is_granted("ROLE_ADMIN")'
 ```
 
 </code-selector>
 
 In this example:
 
-* The user must be logged in to interact with `Book` resources (configured at the resource level)
-* Only users having [the role](https://symfony.com/doc/current/security.html#roles) `ROLE_ADMIN` can create a new resource (configured on the `post` operation)
-* Only users having the `ROLE_ADMIN` or owning the current object can replace an existing book (configured on the `put` operation)
-* Only users having the `ROLE_ADMIN` can view or modify the `adminOnlyProperty` property. Only users having the `ROLE_ADMIN` can create a new resource specifying `adminOnlyProperty` value.
-* Only users that are granted the `UPDATE` attribute on the book (via a voter) can write to the field
+- The user must be logged in to interact with `Book` resources (configured at the resource level)
+- Only users having [the role](https://symfony.com/doc/current/security.html#roles) `ROLE_ADMIN` can create a new resource (configured on the `post` operation)
+- Only users having the `ROLE_ADMIN` or owning the current object can replace an existing book (configured on the `put` operation)
+- Only users having the `ROLE_ADMIN` can view or modify the `adminOnlyProperty` property. Only users having the `ROLE_ADMIN` can create a new resource specifying `adminOnlyProperty` value.
+- Only users that are granted the `UPDATE` attribute on the book (via a voter) can write to the field
 
 Available variables are:
 
-* `user`: the current logged in object, if any
-* `object`: the current resource class during denormalization, the current resource during normalization, or collection of resources for collection operations
-* `previous_object`: (`securityPostDenormalize` only) a clone of `object`, before modifications were made - this is `null` for create operations
-* `request` (only at the resource level): the current request
+- `user`: the current logged in object, if any
+- `object`: the current resource class during denormalization, the current resource during normalization, or collection of resources for collection operations
+- `previous_object`: (`securityPostDenormalize` only) a clone of `object`, before modifications were made - this is `null` for create operations
+- `request` (only at the resource level): the current request
 
 Access control checks in the `security` attribute are always executed before the [denormalization step](serialization.md).
 It means that for `PUT` or `PATCH` requests, `object` doesn't contain the value submitted by the user, but values currently stored in [the persistence layer](state-processors.md).
@@ -141,12 +141,12 @@ class Book
 ```yaml
 # api/config/api_platform/resources.yaml
 resources:
-    App\Entity\Book:
-        operations:
-            ApiPlatform\Metadata\Get: ~
-            ApiPlatform\Metadata\GetCollectionPut:
-                securityPostDenormalize: "is_granted('ROLE_ADMIN') or (object.owner == user and previous_object.owner == user)"
-        # ...
+  App\Entity\Book:
+    operations:
+      ApiPlatform\Metadata\Get: ~
+      ApiPlatform\Metadata\GetCollectionPut:
+        securityPostDenormalize: "is_granted('ROLE_ADMIN') or (object.owner == user and previous_object.owner == user)"
+    # ...
 ```
 
 </code-selector>
@@ -197,17 +197,17 @@ class Book
 ```yaml
 # api/config/api_platform/resources/Book.yaml
 App\Entity\Book:
-    security: 'is_granted("ROLE_USER")'
-    operations:
-        ApiPlatform\Metadata\GetCollection: ~
-        ApiPlatform\Metadata\Post:
-            securityPostDenormalize: 'is_granted("BOOK_CREATE", object)'
-        ApiPlatform\Metadata\Get:
-            security: 'is_granted("BOOK_READ", object)'
-        ApiPlatform\Metadata\Put:
-            security: 'is_granted("BOOK_EDIT", object)'
-        ApiPlatform\Metadata\Delete:
-            security: 'is_granted("BOOK_DELETE", object)'
+  security: 'is_granted("ROLE_USER")'
+  operations:
+    ApiPlatform\Metadata\GetCollection: ~
+    ApiPlatform\Metadata\Post:
+      securityPostDenormalize: 'is_granted("BOOK_CREATE", object)'
+    ApiPlatform\Metadata\Get:
+      security: 'is_granted("BOOK_READ", object)'
+    ApiPlatform\Metadata\Put:
+      security: 'is_granted("BOOK_EDIT", object)'
+    ApiPlatform\Metadata\Delete:
+      security: 'is_granted("BOOK_DELETE", object)'
 ```
 
 </code-selector>
@@ -215,7 +215,7 @@ App\Entity\Book:
 Please note that if you use both `security: "..."` and then `"post" => ["securityPostDenormalize" => "..."]`, the `security` on top level is called first, and after `securityPostDenormalize`. This could lead to unwanted behaviour, so avoid using both of them simultaneously.
 If you need to use `securityPostDenormalize`, consider adding `security` for the other operations instead of the global one.
 
-Create a *BookVoter* with the `bin/console make:voter` command:
+Create a _BookVoter_ with the `bin/console make:voter` command:
 
 ```php
 <?php
@@ -269,9 +269,9 @@ class BookVoter extends Voter
 }
 ```
 
-*Note 1: When using Voters on POST methods: The voter needs an `$attribute` and `$subject` as input parameter, so you have to use the `securityPostDenormalize` (i.e. `"post" = { "securityPostDenormalize" = "is_granted('BOOK_CREATE', object)" }` ) because the object does not exist before denormalization (it is not created, yet.)*
+_Note 1: When using Voters on POST methods: The voter needs an `$attribute` and `$subject` as input parameter, so you have to use the `securityPostDenormalize` (i.e. `"post" = { "securityPostDenormalize" = "is_granted('BOOK_CREATE', object)" }` ) because the object does not exist before denormalization (it is not created, yet.)_
 
-*Note 2: You can't use Voters on the collection GET method, use [Collection Filters](https://api-platform.com/docs/core/security/#filtering-collection-according-to-the-current-user-permissions) instead.*
+_Note 2: You can't use Voters on the collection GET method, use [Collection Filters](https://api-platform.com/docs/core/security/#filtering-collection-according-to-the-current-user-permissions) instead._
 
 ## Configuring the Access Control Error Message
 
@@ -296,15 +296,15 @@ use ApiPlatform\Metadata\Put;
     security: "is_granted('ROLE_USER')",
     operations: [
         new Get(
-            security: "is_granted('ROLE_USER') and object.owner == user", 
+            security: "is_granted('ROLE_USER') and object.owner == user",
             securityMessage: 'Sorry, but you are not the book owner.'
         )
         new Put(
-            securityPostDenormalize: "is_granted('ROLE_ADMIN') or (object.owner == user and previous_object.owner == user)", 
+            securityPostDenormalize: "is_granted('ROLE_ADMIN') or (object.owner == user and previous_object.owner == user)",
             securityPostDenormalizeMessage: 'Sorry, but you are not the actual book owner.'
         )
         new Post(
-            security: "is_granted('ROLE_ADMIN')", 
+            security: "is_granted('ROLE_ADMIN')",
             securityMessage: 'Only admins can add books.'
         )
     ]
@@ -318,19 +318,19 @@ class Book
 ```yaml
 # api/config/api_platform/resources.yaml
 resources:
-    App\Entity\Book:
-        security: 'is_granted("ROLE_USER")'
-        operations:
-            ApiPlatform\Metadata\Post:
-                security: 'is_granted("ROLE_ADMIN")'
-                securityMessage: 'Only admins can add books.'
-            ApiPlatform\Metadata\Get:
-                security: 'is_granted("ROLE_USER") and object.owner == user'
-                securityMessage: 'Sorry, but you are not the book owner.'
-            ApiPlatform\Metadata\Put:
-                securityPostDenormalize: "is_granted('ROLE_ADMIN') or (object.owner == user and previous_object.owner == user)"
-                securityPostDenormalizeMessage: 'Sorry, but you are not the actual book owner.'
-        # ...
+  App\Entity\Book:
+    security: 'is_granted("ROLE_USER")'
+    operations:
+      ApiPlatform\Metadata\Post:
+        security: 'is_granted("ROLE_ADMIN")'
+        securityMessage: 'Only admins can add books.'
+      ApiPlatform\Metadata\Get:
+        security: 'is_granted("ROLE_USER") and object.owner == user'
+        securityMessage: 'Sorry, but you are not the book owner.'
+      ApiPlatform\Metadata\Put:
+        securityPostDenormalize: "is_granted('ROLE_ADMIN') or (object.owner == user and previous_object.owner == user)"
+        securityPostDenormalizeMessage: 'Sorry, but you are not the actual book owner.'
+    # ...
 ```
 
 </code-selector>

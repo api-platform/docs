@@ -37,7 +37,6 @@ You can use them as you migrate from FOSRestBundle, but you should consider [swi
 
 See [General Design Considerations](design.md).
 
-
 ### Routing system (with native documentation support)
 
 **In FOSRestBundle**

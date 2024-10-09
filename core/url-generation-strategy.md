@@ -27,8 +27,8 @@ It can be configured globally:
 ```yaml
 # api/config/packages/api_platform.yaml
 api_platform:
-    defaults:
-        url_generation_strategy: !php/const ApiPlatform\Api\UrlGeneratorInterface::ABS_URL
+  defaults:
+    url_generation_strategy: !php/const ApiPlatform\Api\UrlGeneratorInterface::ABS_URL
 ```
 
 It can also be configured only for a specific resource:
@@ -52,8 +52,8 @@ class Book
 ```yaml
 # api/config/api_platform/resources.yaml
 resources:
-    App\Entity\Book:
-        urlGenerationStrategy: !php/const ApiPlatform\Api\UrlGeneratorInterface::ABS_URL
+  App\Entity\Book:
+    urlGenerationStrategy: !php/const ApiPlatform\Api\UrlGeneratorInterface::ABS_URL
 ```
 
 ```xml

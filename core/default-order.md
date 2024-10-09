@@ -23,7 +23,7 @@ class Book
      * ...
      */
     public $foo;
-    
+
     // ...
 }
 ```
@@ -31,8 +31,8 @@ class Book
 ```yaml
 # api/config/api_platform/resources/Book.yaml
 App\Entity\Book:
-    order:
-        foo: ASC
+  order:
+    foo: ASC
 ```
 
 </code-selector>
@@ -63,7 +63,7 @@ class Book
      * ...
      */
     public $bar;
-    
+
     // ...
 }
 ```
@@ -71,7 +71,7 @@ class Book
 ```yaml
 # api/config/api_platform/resources/Book.yaml
 App\Entity\Book:
-    order: ['foo', 'bar']
+  order: ['foo', 'bar']
 ```
 
 </code-selector>
@@ -96,7 +96,7 @@ class Book
      * @var User
      */
     public $author;
-    
+
     // ...
 }
 ```
@@ -104,7 +104,7 @@ class Book
 ```yaml
 # api/config/api_platform/resources/Book.yaml
 App\Entity\Book:
-    order: ['author.username']
+  order: ['author.username']
 ```
 
 </code-selector>
@@ -134,7 +134,7 @@ class Book
      * @var string
      */
     public $name;
-    
+
     // ...
 }
 ```
@@ -142,17 +142,17 @@ class Book
 ```yaml
 # api/config/api_platform/resources/Book.yaml
 App\Entity\Book:
-    ApiPlatform\Metadata\GetCollection: ~
-    get_desc_custom:
-        class: ApiPlatform\Metadata\GetCollection
-        uriTemplate: custom_collection_desc_foos
-        order:
-            name: DESC
-    get_asc_custom:
-        class: ApiPlatform\Metadata\GetCollection
-        uriTemplate: custom_collection_asc_foos
-        order:
-            name: ASC
+  ApiPlatform\Metadata\GetCollection: ~
+  get_desc_custom:
+    class: ApiPlatform\Metadata\GetCollection
+    uriTemplate: custom_collection_desc_foos
+    order:
+      name: DESC
+  get_asc_custom:
+    class: ApiPlatform\Metadata\GetCollection
+    uriTemplate: custom_collection_asc_foos
+    order:
+      name: ASC
 ```
 
 </code-selector>

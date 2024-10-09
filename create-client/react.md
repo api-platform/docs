@@ -5,9 +5,9 @@
 The React generator scaffolds a Single Page Application or a Progressive Web App built with battle-tested libraries
 from the ecosystem:
 
-* [React](https://reactjs.org/)
-* [React Router](https://reactrouter.com/)
-* [React Hook Form](https://react-hook-form.com/)
+- [React](https://reactjs.org/)
+- [React Router](https://reactrouter.com/)
+- [React Hook Form](https://react-hook-form.com/)
 
 ## Install
 

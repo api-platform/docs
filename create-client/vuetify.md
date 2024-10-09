@@ -30,7 +30,7 @@ Then add this import in `src/plugins/vuetify.ts`:
 
 ```typescript
 // src/plugins/vuetify.ts
-import { VDataTableServer } from "vuetify/labs/VDataTable"
+import { VDataTableServer } from 'vuetify/labs/VDataTable';
 ```
 
 In the same file replace the export with:
@@ -48,7 +48,7 @@ In `src/plugins/index.ts` add this import:
 
 ```typescript
 // src/plugins/index.ts
-import i18n from "@/plugins/i18n"
+import i18n from '@/plugins/i18n';
 ```
 
 In the same file add `.use(i18n)` chained with the other `use()` functions.

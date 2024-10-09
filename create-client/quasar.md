@@ -51,7 +51,7 @@ import common from './common';
 export default {
   // ...
   ...common,
-}
+};
 ```
 
 Finally, make sure to update the config:

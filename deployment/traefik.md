@@ -13,20 +13,21 @@ ports and add labels to tell Træfik to listen on the routes mentioned and redir
 
 A few points to note:
 
-* `--api.insecure=true` Tells Træfik to generate a browser view to watch containers and IP/DNS associated easier  
-* `--providers.docker` Tells Træfik to listen on Docker API  
-* `labels:` Key for Træfik configuration into Docker integration
+- `--api.insecure=true` Tells Træfik to generate a browser view to watch containers and IP/DNS associated easier
+- `--providers.docker` Tells Træfik to listen on Docker API
+- `labels:` Key for Træfik configuration into Docker integration
 
   ```yaml
   services:
-  #  ...
+    #  ...
     api:
       labels:
         - traefik.http.routers.api.rule=Host(`api.localhost`)
   ```
 
   The API DNS will be specified with ``traefik.http.routers.api.rule=Host(`your.host`)`` (here api.localhost)
-* `--traefik.routers.clientloadbalancer.server.port=3000` The port specified to Træfik will be exposed by the container (here the React app exposes the 3000 port), but if your container exposes only one port, it can be ignored
+
+- `--traefik.routers.clientloadbalancer.server.port=3000` The port specified to Træfik will be exposed by the container (here the React app exposes the 3000 port), but if your container exposes only one port, it can be ignored
 
 We assume that you've generated a SSL `localhost.crt` and associated `localhost.key` combo under `./certs` folder
 Then you edited your `admin/Dockerfile` and `client/Dockerfile` like this:
@@ -50,20 +51,20 @@ x-cache-from:
 
 services:
   traefik:
-      image: traefik:latest
-      command: --api.insecure=true --providers.docker
-      ports:
-        - target: 80
-          published: 80
-          protocol: tcp
-        - target: 443
-          published: 443
-          protocol: tcp
-        - target: 8080
-          published: 8080
-          protocol: tcp
-      volumes:
-        - /var/run/docker.sock:/var/run/docker.sock
+    image: traefik:latest
+    command: --api.insecure=true --providers.docker
+    ports:
+      - target: 80
+        published: 80
+        protocol: tcp
+      - target: 443
+        published: 443
+        protocol: tcp
+      - target: 8080
+        published: 8080
+        protocol: tcp
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
 
   php:
     build:
@@ -120,9 +121,9 @@ services:
   mercure:
     image: dunglas/mercure
     environment:
-#      - ACME_HOSTS=${DOMAIN_NAME}
-#      - CERT_FILE=/certs/localhost.crt
-#      - KEY_FILE=/certs/localhost.key
+      #      - ACME_HOSTS=${DOMAIN_NAME}
+      #      - CERT_FILE=/certs/localhost.crt
+      #      - KEY_FILE=/certs/localhost.key
       - JWT_KEY=${JWT_KEY}
       - ALLOW_ANONYMOUS=1
       - USE_FORWARDED_HEADERS=true
@@ -440,9 +441,9 @@ Then update each traefik http routers names and services following this sample f
 ```yaml
 # /anywhere/first/api-plaform/compose.yaml
 # ...
-    labels:
-      - traefik.http.routers.admin-${RANDOM_UNIQUE_KEY}.rule=Host(`admin.${DOMAIN_NAME}`)
-      - traefik.http.services.admin-${RANDOM_UNIQUE_KEY}.loadbalancer.server.port=3000
+labels:
+  - traefik.http.routers.admin-${RANDOM_UNIQUE_KEY}.rule=Host(`admin.${DOMAIN_NAME}`)
+  - traefik.http.services.admin-${RANDOM_UNIQUE_KEY}.loadbalancer.server.port=3000
 ```
 
 ## More Generic Approach
@@ -508,15 +509,13 @@ Then after that update respectively your API Platform and Træfik `compose.yaml`
 # /anywhere/api-platform/compose.yaml
 version: '3.4'
 
-x-cache:
-  &cache
+x-cache: &cache
   cache_from:
     - ${CONTAINER_REGISTRY_BASE}/php
     - ${CONTAINER_REGISTRY_BASE}/nginx
     - ${CONTAINER_REGISTRY_BASE}/varnish
 
-x-network:
-  &network
+x-network: &network
   networks:
     - api_platform_network
 
@@ -585,9 +584,9 @@ services:
   mercure:
     image: dunglas/mercure
     environment:
-#      - ACME_HOSTS=${DOMAIN_NAME}
-#      - CERT_FILE=/certs/localhost.crt
-#      - KEY_FILE=/certs/localhost.key
+      #      - ACME_HOSTS=${DOMAIN_NAME}
+      #      - CERT_FILE=/certs/localhost.crt
+      #      - KEY_FILE=/certs/localhost.key
       - JWT_KEY=${JWT_KEY}
       - ALLOW_ANONYMOUS=1
       - USE_FORWARDED_HEADERS=true
@@ -643,8 +642,7 @@ networks:
 # /anywhere/traefik/compose.yaml
 version: '3.4'
 
-x-network:
-  &network
+x-network: &network
   networks:
     - api_platform_network
 

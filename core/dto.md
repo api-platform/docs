@@ -153,15 +153,17 @@ use App\State\BookRepresentationProcessor;
 #[Post(output: AnotherRepresentation::class, processor: BookRepresentationProcessor::class)]
 class Book {}
 ```
+
 ```yaml
 # api/config/api_platform/resources.yaml
 resources:
-    App\Entity\Book:
-        operations:
-            ApiPlatform\Metadata\Post:
-                output: App\Dto\AnotherRepresentation
-                processor: App\State\BookRepresentationProcessor
+  App\Entity\Book:
+    operations:
+      ApiPlatform\Metadata\Post:
+        output: App\Dto\AnotherRepresentation
+        processor: App\State\BookRepresentationProcessor
 ```
+
 ```xml
 <?xml version="1.0" encoding="UTF-8" ?>
 <!-- api/config/api_platform/resources.xml -->
@@ -172,9 +174,9 @@ resources:
         https://api-platform.com/schema/metadata/resources-3.0.xsd">
     <resource class="App\Entity\Book">
         <operations>
-            <operation class="ApiPlatform\Metadata\Post" 
+            <operation class="ApiPlatform\Metadata\Post"
                        processor="App\State\BookRepresentationProcessor"
-                       output="App\Dto\AnotherRepresentation" /> 
+                       output="App\Dto\AnotherRepresentation" />
         </operations>
     </resource>
 </resources>

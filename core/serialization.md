@@ -11,7 +11,7 @@ The main serialization process has two stages:
 ![Serializer workflow](/docs/core/images/SerializerWorkflow.png)
 
 > As you can see in the picture above, an array is used as a man-in-the-middle. This way, Encoders will only deal with turning specific formats into arrays and vice versa. The same way, Normalizers will deal with turning specific objects into arrays and vice versa.
--- [The Symfony documentation](https://symfony.com/doc/current/components/serializer.html)
+> -- [The Symfony documentation](https://symfony.com/doc/current/components/serializer.html)
 
 Unlike Symfony itself, API Platform leverages custom normalizers, its router and the [state provider](state-providers.md) system to perform an advanced transformation. Metadata are added to the generated document including links, type information, pagination data or available filters.
 
@@ -19,16 +19,16 @@ The API Platform Serializer is extendable. You can register custom normalizers a
 
 ## Available Serializers
 
-* [JSON-LD](https://json-ld.org) serializer
-`api_platform.jsonld.normalizer.item`
+- [JSON-LD](https://json-ld.org) serializer
+  `api_platform.jsonld.normalizer.item`
 
 JSON-LD, or JavaScript Object Notation for Linked Data, is a method of encoding Linked Data using JSON. It is a World Wide Web Consortium Recommendation.
 
-* [HAL](https://en.wikipedia.org/wiki/Hypertext_Application_Language) serializer
-`api_platform.hal.normalizer.item`
+- [HAL](https://en.wikipedia.org/wiki/Hypertext_Application_Language) serializer
+  `api_platform.hal.normalizer.item`
 
-* JSON, XML, CSV, YAML serializer (using the Symfony serializer)
-`api_platform.serializer.normalizer.item`
+- JSON, XML, CSV, YAML serializer (using the Symfony serializer)
+  `api_platform.serializer.normalizer.item`
 
 ## The Serialization Context, Groups and Relations
 
@@ -51,7 +51,7 @@ Note: if you aren't using the API Platform distribution, you will need to enable
 ```yaml
 # api/config/packages/framework.yaml
 framework:
-    serializer: { enable_annotations: true }
+  serializer: { enable_annotations: true }
 ```
 
 If you use [Symfony Flex](https://github.com/symfony/flex), just execute `composer req doctrine/annotations` and you are
@@ -62,9 +62,9 @@ If you want to use YAML or XML, please add the mapping path in the serializer co
 ```yaml
 # api/config/packages/framework.yaml
 framework:
-    serializer:
-        mapping:
-            paths: ['%kernel.project_dir%/config/serialization']
+  serializer:
+    mapping:
+      paths: ['%kernel.project_dir%/config/serialization']
 ```
 
 ## Using Serialization Groups
@@ -103,19 +103,19 @@ class Book
 ```yaml
 # api/config/api_platform/resources.yaml
 resources:
-    App\Entity\Book:
-        normalizationContext:
-            groups: ['read']
-        denormalizationContext:
-            groups: ['write']
+  App\Entity\Book:
+    normalizationContext:
+      groups: ['read']
+    denormalizationContext:
+      groups: ['write']
 
 # api/config/serialization/Book.yaml
 App\Entity\Book:
-    attributes:
-        name:
-            groups: ['read', 'write']
-        author:
-            groups: ['write']
+  attributes:
+    name:
+      groups: ['read', 'write']
+    author:
+      groups: ['write']
 ```
 
 ```xml
@@ -389,9 +389,9 @@ class Person
 ```yaml
 # api/config/serializer/Person.yaml
 App\Entity\Person:
-    attributes:
-        name:
-            groups: ['book']
+  attributes:
+    name:
+      groups: ['book']
 ```
 
 </code-selector>
@@ -442,17 +442,17 @@ class Book
 ```yaml
 # api/config/api_platform/resources/Book.yaml
 App\Entity\Book:
-    denormalizationContext:
-        groups: ['book']
+  denormalizationContext:
+    groups: ['book']
 ```
 
 </code-selector>
 
 The following rules apply when denormalizing embedded relations:
 
-* If an `@id` key is present in the embedded resource, then the object corresponding to the given URI will be retrieved through
-the state provider. Any changes in the embedded relation will also be applied to that object.
-* If no `@id` key exists, a new object will be created containing state provided in the embedded JSON document.
+- If an `@id` key is present in the embedded resource, then the object corresponding to the given URI will be retrieved through
+  the state provider. Any changes in the embedded relation will also be applied to that object.
+- If no `@id` key exists, a new object will be created containing state provided in the embedded JSON document.
 
 You can specify as many embedded relation levels as you want.
 
@@ -484,7 +484,7 @@ class Person
     */
     #[Groups('person')]
    public $parent;  // Note that a Person instance has a relation with another Person.
- 
+
     // ...
 }
 ```
@@ -535,7 +535,7 @@ class Person
    #[Groups('person')]
    #[ApiProperty(readableLink: false, writableLink: false)]
    public Person $parent;  // This property is now serialized/deserialized as an IRI.
- 
+
     // ...
 }
 
@@ -544,24 +544,24 @@ class Person
 ```yaml
 # api/config/api_platform/resources/Person.yaml
 resources:
-    App\Entity\Person:
-        normalizationContext:
-          groups: ['person']
-        denormalizationContext:
-          groups: ['person']
+  App\Entity\Person:
+    normalizationContext:
+      groups: ['person']
+    denormalizationContext:
+      groups: ['person']
 properties:
-    App\Entity\Person:
-        parent:
-            readableLink: false
-            writableLink: false
+  App\Entity\Person:
+    parent:
+      readableLink: false
+      writableLink: false
 
 # api/config/serializer/Person.yaml
 App\Entity\Person:
-    attributes:
-        name:
-            groups: ['person']
-        parent:
-            groups: ['person']
+  attributes:
+    name:
+      groups: ['person']
+    parent:
+      groups: ['person']
 ```
 
 </code-selector>
@@ -639,7 +639,7 @@ use Symfony\Component\Serializer\Normalizer\DateTimeNormalizer;
 #[ApiResource]
 class Book
 {
-    #[ORM\Column] 
+    #[ORM\Column]
     #[Context([DateTimeNormalizer::FORMAT_KEY => 'Y-m-d'])]
     public ?\DateTimeInterface $publicationDate = null;
 }
@@ -732,9 +732,9 @@ class Greeting
     #[ORM\Id, ORM\Column, ORM\GeneratedValue]
     #[Groups("greeting:collection:get")]
     private ?int $id = null;
-    
+
     private $a = 1;
-    
+
     private $b = 2;
 
     #[ORM\Column]
@@ -817,7 +817,7 @@ class Book
 
 ```yaml
 # api/config/api_platform/resources/Book.yaml
-App\Entity\Book: 
+App\Entity\Book:
     normalizationContext:
         groups: ['book:output']
     denormalizationContext:
@@ -844,11 +844,11 @@ API Platform implements a `ContextBuilder`, which prepares the context for seria
 ```yaml
 # api/config/services.yaml
 services:
-    # ...
-    'App\Serializer\BookContextBuilder':
-        decorates: 'api_platform.serializer.context_builder'
-        arguments: [ '@App\Serializer\BookContextBuilder.inner' ]
-        autoconfigure: false
+  # ...
+  'App\Serializer\BookContextBuilder':
+    decorates: 'api_platform.serializer.context_builder'
+    arguments: ['@App\Serializer\BookContextBuilder.inner']
+    autoconfigure: false
 ```
 
 ```php
@@ -903,10 +903,10 @@ is appropriate for your application; higher values are loaded earlier):
 ```yaml
 # api/config/services.yaml
 services:
-    'App\Serializer\BookAttributeNormalizer':
-        arguments: [ '@security.token_storage' ]
-        tags:
-            - { name: 'serializer.normalizer', priority: 64 }
+  'App\Serializer\BookAttributeNormalizer':
+    arguments: ['@security.token_storage']
+    tags:
+      - { name: 'serializer.normalizer', priority: 64 }
 ```
 
 The Normalizer class is a bit harder to understand, because it must ensure that it is only called once and that there is no recursion.
@@ -983,13 +983,13 @@ To use this feature, declare a new name converter service. For example, you can 
 ```yaml
 # api/config/services.yaml
 services:
-    'Symfony\Component\Serializer\NameConverter\CamelCaseToSnakeCaseNameConverter': ~
+  'Symfony\Component\Serializer\NameConverter\CamelCaseToSnakeCaseNameConverter': ~
 ```
 
 ```yaml
 # api/config/packages/api_platform.yaml
 api_platform:
-    name_converter: 'Symfony\Component\Serializer\NameConverter\CamelCaseToSnakeCaseNameConverter'
+  name_converter: 'Symfony\Component\Serializer\NameConverter\CamelCaseToSnakeCaseNameConverter'
 ```
 
 If symfony's `MetadataAwareNameConverter` is available it'll be used by default. If you specify one in ApiPlatform configuration, it'll be used. Note that you can use decoration to benefit from this name converter in your own implementation.
@@ -1002,18 +1002,18 @@ date on each request in `GET`:
 ```yaml
 # api/config/services.yaml
 services:
-    'App\Serializer\ApiNormalizer':
-        # By default .inner is passed as argument
-        decorates: 'api_platform.jsonld.normalizer.item'
+  'App\Serializer\ApiNormalizer':
+    # By default .inner is passed as argument
+    decorates: 'api_platform.jsonld.normalizer.item'
 ```
 
 Note: this normalizer will work only for JSON-LD format, if you want to process JSON data too, you have to decorate another service:
 
 ```yaml
-    # Need a different name to avoid duplicate YAML key
-    'app.serializer.normalizer.item.json':
-        class: 'App\Serializer\ApiNormalizer'
-        decorates: 'api_platform.serializer.normalizer.item'
+# Need a different name to avoid duplicate YAML key
+'app.serializer.normalizer.item.json':
+  class: 'App\Serializer\ApiNormalizer'
+  decorates: 'api_platform.serializer.normalizer.item'
 ```
 
 ```php
@@ -1117,9 +1117,9 @@ class Book
 ```yaml
 # api/config/api_platform/properties.yaml
 properties:
-    App\Entity\Book:
-        id:
-            identifier: true
+  App\Entity\Book:
+    id:
+      identifier: true
 ```
 
 ```xml
@@ -1143,7 +1143,7 @@ must do the following:
 1. create a setter for the identifier of the entity (e.g. `public function setId(string $id)`) or make it a `public` property ,
 2. add the denormalization group to the property (only if you use a specific denormalization group), and,
 3. if you use Doctrine ORM, be sure to **not** mark this property with [the `@GeneratedValue` annotation](http://docs.doctrine-project.org/projects/doctrine-orm/en/latest/reference/basic-mapping.html#identifier-generation-strategies)
-  or use the `NONE` value
+   or use the `NONE` value
 
 ## Embedding the JSON-LD Context
 
@@ -1182,8 +1182,8 @@ class Book
 ```yaml
 # api/config/api_platform/resources/Book.yaml
 App\Entity\Book:
-    normalizationContext:
-        jsonldEmbedContext: true
+  normalizationContext:
+    jsonldEmbedContext: true
 ```
 
 </code-selector>
@@ -1207,8 +1207,8 @@ The JSON output will now include the embedded context:
 
 ## Collection Relation
 
-This is a special case where, in an entity, you have a `toMany` relation. By default, Doctrine will use an `ArrayCollection` to store your values. This is fine when you have a *read* operation, but when you try to *write* you can observe an issue where the response is not reflecting the changes correctly. It can lead to client errors even though the update was correct.
-Indeed, after an update on this relation, the collection looks wrong because `ArrayCollection`'s indexes are not sequential. To change this, we recommend to use a getter that returns `$collectionRelation->getValues()`. Thanks to this, the relation is now a real array which is sequentially indexed.
+This is a special case where, in an entity, you have a `toMany` relation. By default, Doctrine will use an `ArrayCollection` to store your values. This is fine when you have a _read_ operation, but when you try to _write_ you can observe an issue where the response is not reflecting the changes correctly. It can lead to client errors even though the update was correct.
+Indeed, after an update on this relation, the collection looks wrong because `ArrayCollection`'s indices are not sequential. To change this, we recommend to use a getter that returns `$collectionRelation->getValues()`. Thanks to this, the relation is now a real array which is sequentially indexed.
 
 ```php
 <?php

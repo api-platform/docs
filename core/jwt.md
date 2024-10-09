@@ -1,7 +1,7 @@
 # JWT Authentication
 
 > [JSON Web Token (JWT)](https://jwt.io/) is a JSON-based open standard ([RFC 7519](https://tools.ietf.org/html/rfc7519)) for creating access tokens that assert some number of claims. For example, a server could generate a token that has the claim "logged in as admin" and provide that to a client. The client could then use that token to prove that he/she is logged in as admin.
-The tokens are signed by the server's key, so the server is able to verify that the token is legitimate. The tokens are designed to be compact, URL-safe and usable especially in web browser single sign-on (SSO) context.
+> The tokens are signed by the server's key, so the server is able to verify that the token is legitimate. The tokens are designed to be compact, URL-safe and usable especially in web browser single sign-on (SSO) context.
 >
 > ―[Wikipedia](https://en.wikipedia.org/wiki/JSON_Web_Token)
 
@@ -60,41 +60,41 @@ Then update the security configuration:
 ```yaml
 # api/config/packages/security.yaml
 security:
-    # https://symfony.com/doc/current/security.html#c-hashing-passwords
-    password_hashers:
-        App\Entity\User: 'auto'
+  # https://symfony.com/doc/current/security.html#c-hashing-passwords
+  password_hashers:
+    App\Entity\User: 'auto'
 
-    # https://symfony.com/doc/current/security.html#where-do-users-come-from-user-providers
-    providers:
-        # used to reload user from session & other features (e.g. switch_user)
-        users:
-            entity:
-                class: App\Entity\User
-                property: email
-            # mongodb:
-            #    class: App\Document\User
-            #    property: email    
+  # https://symfony.com/doc/current/security.html#where-do-users-come-from-user-providers
+  providers:
+    # used to reload user from session & other features (e.g. switch_user)
+    users:
+      entity:
+        class: App\Entity\User
+        property: email
+      # mongodb:
+      #    class: App\Document\User
+      #    property: email
 
-    firewalls:
-        dev:
-            pattern: ^/_(profiler|wdt)
-            security: false
-        main:
-            stateless: true
-            provider: users
-            json_login:
-                check_path: auth # The name in routes.yaml is enough for mapping
-                username_path: email
-                password_path: password
-                success_handler: lexik_jwt_authentication.handler.authentication_success
-                failure_handler: lexik_jwt_authentication.handler.authentication_failure
-            jwt: ~
+  firewalls:
+    dev:
+      pattern: ^/_(profiler|wdt)
+      security: false
+    main:
+      stateless: true
+      provider: users
+      json_login:
+        check_path: auth # The name in routes.yaml is enough for mapping
+        username_path: email
+        password_path: password
+        success_handler: lexik_jwt_authentication.handler.authentication_success
+        failure_handler: lexik_jwt_authentication.handler.authentication_failure
+      jwt: ~
 
-    access_control:
-        - { path: ^/$, roles: PUBLIC_ACCESS } # Allows accessing the Swagger UI
-        - { path: ^/docs, roles: PUBLIC_ACCESS } # Allows accessing the Swagger UI docs
-        - { path: ^/auth, roles: PUBLIC_ACCESS }
-        - { path: ^/, roles: IS_AUTHENTICATED_FULLY }
+  access_control:
+    - { path: ^/$, roles: PUBLIC_ACCESS } # Allows accessing the Swagger UI
+    - { path: ^/docs, roles: PUBLIC_ACCESS } # Allows accessing the Swagger UI docs
+    - { path: ^/auth, roles: PUBLIC_ACCESS }
+    - { path: ^/, roles: IS_AUTHENTICATED_FULLY }
 ```
 
 You must also declare the route used for `/auth`:
@@ -102,8 +102,8 @@ You must also declare the route used for `/auth`:
 ```yaml
 # api/config/routes.yaml
 auth:
-    path: /auth
-    methods: ['POST']
+  path: /auth
+  methods: ['POST']
 ```
 
 If you want to avoid loading the `User` entity from database each time a JWT token needs to be authenticated, you may consider using
@@ -119,39 +119,39 @@ If your API uses a [path prefix](https://symfony.com/doc/current/routing/externa
 ```yaml
 # api/config/packages/security.yaml
 security:
-    # https://symfony.com/doc/current/security.html#c-hashing-passwords
-    password_hashers:
-        App\Entity\User: 'auto'
-    # https://symfony.com/doc/current/security.html#where-do-users-come-from-user-providers
-    providers:
-        # used to reload user from session & other features (e.g. switch_user)
-        users:
-            entity:
-                class: App\Entity\User
-                property: email
+  # https://symfony.com/doc/current/security.html#c-hashing-passwords
+  password_hashers:
+    App\Entity\User: 'auto'
+  # https://symfony.com/doc/current/security.html#where-do-users-come-from-user-providers
+  providers:
+    # used to reload user from session & other features (e.g. switch_user)
+    users:
+      entity:
+        class: App\Entity\User
+        property: email
 
-    firewalls:
-        dev:
-            pattern: ^/_(profiler|wdt)
-            security: false
-        api:
-            pattern: ^/api/
-            stateless: true
-            provider: users
-            jwt: ~
-        main:
-            json_login:
-                check_path: auth # The name in routes.yaml is enough for mapping
-                username_path: email
-                password_path: password
-                success_handler: lexik_jwt_authentication.handler.authentication_success
-                failure_handler: lexik_jwt_authentication.handler.authentication_failure
+  firewalls:
+    dev:
+      pattern: ^/_(profiler|wdt)
+      security: false
+    api:
+      pattern: ^/api/
+      stateless: true
+      provider: users
+      jwt: ~
+    main:
+      json_login:
+        check_path: auth # The name in routes.yaml is enough for mapping
+        username_path: email
+        password_path: password
+        success_handler: lexik_jwt_authentication.handler.authentication_success
+        failure_handler: lexik_jwt_authentication.handler.authentication_failure
 
-    access_control:
-        - { path: ^/$, roles: PUBLIC_ACCESS } # Allows accessing the Swagger UI
-        - { path: ^/docs, roles: PUBLIC_ACCESS } # Allows accessing API documentations and Swagger UI docs
-        - { path: ^/auth, roles: PUBLIC_ACCESS }
-        - { path: ^/, roles: IS_AUTHENTICATED_FULLY }
+  access_control:
+    - { path: ^/$, roles: PUBLIC_ACCESS } # Allows accessing the Swagger UI
+    - { path: ^/docs, roles: PUBLIC_ACCESS } # Allows accessing API documentations and Swagger UI docs
+    - { path: ^/auth, roles: PUBLIC_ACCESS }
+    - { path: ^/, roles: IS_AUTHENTICATED_FULLY }
 ```
 
 ### Be sure to have lexik_jwt_authentication configured on your user_identity_field
@@ -159,9 +159,9 @@ security:
 ```yaml
 # api/config/packages/lexik_jwt_authentication.yaml
 lexik_jwt_authentication:
-    secret_key: '%env(resolve:JWT_SECRET_KEY)%'
-    public_key: '%env(resolve:JWT_PUBLIC_KEY)%'
-    pass_phrase: '%env(JWT_PASSPHRASE)%'
+  secret_key: '%env(resolve:JWT_SECRET_KEY)%'
+  public_key: '%env(resolve:JWT_PUBLIC_KEY)%'
+  pass_phrase: '%env(JWT_PASSPHRASE)%'
 ```
 
 ## Documenting the Authentication Mechanism with Swagger/Open API
@@ -173,11 +173,11 @@ Want to test the routes of your JWT-authentication-protected API?
 ```yaml
 # api/config/packages/api_platform.yaml
 api_platform:
-    swagger:
-         api_keys:
-             JWT:
-                name: Authorization
-                type: header
+  swagger:
+    api_keys:
+      JWT:
+        name: Authorization
+        type: header
 ```
 
 The "Authorize" button will automatically appear in Swagger UI.
@@ -204,11 +204,11 @@ If you need to modify the default configuration, you can do it in the dedicated 
 ```yaml
 # config/packages/lexik_jwt_authentication.yaml
 lexik_jwt_authentication:
-    # ...
-    api_platform:
-        check_path: /auth
-        username_path: email
-        password_path: password
+  # ...
+  api_platform:
+    check_path: /auth
+    username_path: email
+    password_path: password
 ```
 
 You will see something like this in Swagger UI:
@@ -290,9 +290,9 @@ To significantly improve the test suite speed, we can use more simple password h
 ```yaml
 # override in api/config/packages/test/security.yaml for test env
 security:
-    password_hashers:
-        App\Entity\User:
-            algorithm: md5
-            encode_as_base64: false
-            iterations: 0
+  password_hashers:
+    App\Entity\User:
+      algorithm: md5
+      encode_as_base64: false
+      iterations: 0
 ```

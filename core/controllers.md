@@ -12,11 +12,11 @@ To enable this feature use `use_symfony_listeners: true` in your `api_platform` 
 
 ```yaml
 api_platform:
-    title: 'My Dummy API'
-    description: |
-        This is a test API.
-        Made with love
-    use_symfony_listeners: true
+  title: 'My Dummy API'
+  description: |
+    This is a test API.
+    Made with love
+  use_symfony_listeners: true
 ```
 
 However, API Platform recommends to use **action classes** instead of typical Symfony controllers. Internally, API Platform
@@ -111,8 +111,8 @@ use App\Controller\CreateBookPublication;
 #[ApiResource(operations: [
     new Get(),
     new Post(
-        name: 'publication', 
-        uriTemplate: '/books/{id}/publication', 
+        name: 'publication',
+        uriTemplate: '/books/{id}/publication',
         controller: CreateBookPublication::class
     )
 ])]
@@ -125,14 +125,14 @@ class Book
 ```yaml
 # api/config/api_platform/resources.yaml
 resources:
-    App\Entity\Book:
-        operations:
-            ApiPlatform\Metadata\Get: ~
-            post_publication:
-                class: ApiPlatform\Metadata\Post
-                method: POST
-                uriTemplate: /books/{id}/publication
-                controller: App\Controller\CreateBookPublication
+  App\Entity\Book:
+    operations:
+      ApiPlatform\Metadata\Get: ~
+      post_publication:
+        class: ApiPlatform\Metadata\Post
+        method: POST
+        uriTemplate: /books/{id}/publication
+        controller: App\Controller\CreateBookPublication
 ```
 
 ```xml
@@ -183,8 +183,8 @@ use ApiPlatform\Metadata\Post;
 #[ApiResource(operations: [
     new Get(),
     new Post(
-        name: 'publication', 
-        uriTemplate: '/books/{id}/publication', 
+        name: 'publication',
+        uriTemplate: '/books/{id}/publication',
         controller: PlaceholderAction::class
     )
 ])]
@@ -197,14 +197,14 @@ class Book
 ```yaml
 # api/config/api_platform/resources.yaml
 resources:
-    App\Entity\Book:
-        operations:
-            ApiPlatform\Metadata\Get: ~
-            post_publication:
-                class: ApiPlatform\Metadata\Post
-                method: POST
-                uriTemplate: /books/{id}/publication
-                controller: ApiPlatform\Action\PlaceholderAction
+  App\Entity\Book:
+    operations:
+      ApiPlatform\Metadata\Get: ~
+      post_publication:
+        class: ApiPlatform\Metadata\Post
+        method: POST
+        uriTemplate: /books/{id}/publication
+        controller: ApiPlatform\Action\PlaceholderAction
 ```
 
 ```xml
@@ -248,9 +248,9 @@ use Symfony\Component\Serializer\Annotation\Groups;
 #[ApiResource(operations: [
     new Get(),
     new Post(
-        name: 'publication', 
-        uriTemplate: '/books/{id}/publication', 
-        controller: CreateBookPublication::class, 
+        name: 'publication',
+        uriTemplate: '/books/{id}/publication',
+        controller: CreateBookPublication::class,
         normalizationContext: ['groups' => ['publication']],
     )
 ])]
@@ -268,15 +268,15 @@ class Book
 ```yaml
 # api/config/api_platform/resources.yaml
 resources:
-    App\Entity\Book:
-        operations:
-            ApiPlatform\Metadata\Get: ~
-            post_publication:
-                class: ApiPlatform\Metadata\Get
-                uriTemplate: /books/{id}/publication
-                controller: App\Controller\CreateBookPublication
-                normalizationContext:
-                    groups: ['publication']
+  App\Entity\Book:
+    operations:
+      ApiPlatform\Metadata\Get: ~
+      post_publication:
+        class: ApiPlatform\Metadata\Get
+        uriTemplate: /books/{id}/publication
+        controller: App\Controller\CreateBookPublication
+        normalizationContext:
+          groups: ['publication']
 ```
 
 ```xml
@@ -325,9 +325,9 @@ use App\Controller\CreateBookPublication;
 #[ApiResource(operations: [
     new Get(),
     new Post(
-        name: 'publication', 
-        uriTemplate: '/books/{id}/publication', 
-        controller: CreateBookPublication::class, 
+        name: 'publication',
+        uriTemplate: '/books/{id}/publication',
+        controller: CreateBookPublication::class,
         read: false
     )
 ])]
@@ -340,14 +340,14 @@ class Book
 ```yaml
 # api/config/api_platform/resources.yaml
 resources:
-    App\Entity\Book:
-        operations:
-            ApiPlatform\Metadata\Get: ~
-            post_publication:
-                class: ApiPlatform\Metadata\Post
-                uriTemplate: /books/{id}/publication
-                controller: App\Controller\CreateBookPublication
-                read: false
+  App\Entity\Book:
+    operations:
+      ApiPlatform\Metadata\Get: ~
+      post_publication:
+        class: ApiPlatform\Metadata\Post
+        uriTemplate: /books/{id}/publication
+        controller: App\Controller\CreateBookPublication
+        read: false
 ```
 
 ```xml
@@ -413,14 +413,14 @@ class Book
 ```yaml
 # api/config/api_platform/resources.yaml
 resources:
-    App\Entity\Book:
-        operations:
-            ApiPlatform\Metadata\Get: ~
-            post_publication:
-                class: ApiPlatform\Metadata\Post
-                routeName: book_post_publication
-            book_post_discontinuation:
-              class: ApiPlatform\Metadata\Post
+  App\Entity\Book:
+    operations:
+      ApiPlatform\Metadata\Get: ~
+      post_publication:
+        class: ApiPlatform\Metadata\Post
+        routeName: book_post_publication
+      book_post_discontinuation:
+        class: ApiPlatform\Metadata\Post
 ```
 
 ```xml
@@ -508,10 +508,10 @@ class BookController extends AbstractController
 ```yaml
 # api/config/routes.yaml
 book_post_publication:
-    path: /books/{id}/publication
-    methods: ['POST']
-    defaults:
-        _controller: App\Controller\BookController::createPublication
-        _api_resource_class: App\Entity\Book
-        _api_operation_name: post_publication
+  path: /books/{id}/publication
+  methods: ['POST']
+  defaults:
+    _controller: App\Controller\BookController::createPublication
+    _api_resource_class: App\Entity\Book
+    _api_operation_name: post_publication
 ```
