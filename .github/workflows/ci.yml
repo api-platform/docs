@@ -1,10 +1,12 @@
+---
 name: Lint
 
 on:
   push:
   pull_request:
 
-permissions: {}
+permissions:
+  contents: read
 
 jobs:
   build:
@@ -23,7 +25,7 @@ jobs:
           fetch-depth: 0
 
       - name: Lint
-        uses: super-linter/super-linter@v7.1.0
+        uses: super-linter/super-linter@v7
         env:
           VALIDATE_ALL_CODEBASE: false
           VALIDATE_EDITORCONFIG: false

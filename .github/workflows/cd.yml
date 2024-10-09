@@ -1,10 +1,19 @@
+---
 name: Deploy Website
 
 on:
   push:
     branches:
       - main
-      - '*.*'
+      - "*.*"
+
+permissions:
+  contents: read
+  id-token: read
+  actions: read
+  checks: write
+  deployments: write
+  pull-requests: read
 
 jobs:
   deploy:
@@ -28,57 +37,52 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-yarn-
 
-
       - name: Setup Hugo
-        uses: peaceiris/actions-hugo@v2
+        uses: peaceiris/actions-hugo@v3
         with:
-          hugo-version: '0.134.2'
+          hugo-version: "0.134.2"
           extended: true
 
       - name: Install php
         uses: shivammathur/setup-php@v2
         with:
-          php-version: '8.2'
+          php-version: "8.2"
           tools: phive
 
       - name: Auth gcloud
-        uses: google-github-actions/auth@v1
+        uses: google-github-actions/auth@v2
         with:
           credentials_json: ${{ secrets.BUCKET_CREDS }}
-        
-      - name: 'Set up Cloud SDK'
-        uses: 'google-github-actions/setup-gcloud@v1'
+
+      - name: Set up Cloud SDK
+        uses: google-github-actions/setup-gcloud@v2
 
       - name: Clone website
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
         with:
           repository: api-platform/docs-website
           path: docs-website
+
       - name: Install javascript packages
         working-directory: docs-website
         run: npm install
+
       - name: Fetch API Platform docs
         working-directory: docs-website
         run: tools/get-docs.sh
+
       - name: Fetch API Platform references and guides
         working-directory: docs-website
         run: tools/get-core-docs.sh
-      - name: Build menu 
+
+      - name: Build menu
         working-directory: docs-website
         run: node tools/menu.mjs
+
       - name: Hugo
         working-directory: docs-website
         run: hugo --minify
+
       - name: Deploy
         working-directory: docs-website
         run: gsutil -q -m rsync -d -r ./public gs://api-platform-website-v3/
-      # This need to move to website
-      # env:
-      #   GITHUB_KEY: ${{ secrets.CONTRIBUTORS_GITHUB_TOKEN }}
-      #   NODE_OPTIONS: --openssl-legacy-provider
-      # - name: Deploy
-      #   uses: peaceiris/actions-gh-pages@v3
-      #   with:
-      #     github_token: ${{ secrets.GITHUB_TOKEN }}
-      #     publish_dir: ./public
-      #     cname: api-platform.com
