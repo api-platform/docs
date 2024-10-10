@@ -29,7 +29,7 @@ Add Pinia module in `nuxt.config.ts`:
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
   // ...
-  modules: ["@pinia/nuxt"],
+  modules: ['@pinia/nuxt'],
   // ...
 });
 ```
@@ -66,18 +66,18 @@ And this code in `tailwind.config.js`:
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   content: [
-    "./components/**/*.{js,vue,ts}",
-    "./layouts/**/*.vue",
-    "./pages/**/*.vue",
-    "./plugins/**/*.{js,ts}",
-    "./nuxt.config.{js,ts}",
-    "./app.vue",
+    './components/**/*.{js,vue,ts}',
+    './layouts/**/*.vue',
+    './pages/**/*.vue',
+    './plugins/**/*.{js,ts}',
+    './nuxt.config.{js,ts}',
+    './app.vue',
   ],
   theme: {
     extend: {},
   },
   plugins: [],
-}
+};
 ```
 
 Create the file `assets/css/main.css` and add this code in it:
@@ -92,7 +92,7 @@ You can launch the server with:
 
 ```console
 yarn dev -o
-````
+```
 
 Go to `https://localhost:3000/books/` to start using your app.
 

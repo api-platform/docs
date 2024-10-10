@@ -23,30 +23,30 @@ Then, enable it inside the API Platform configuration:
 ```yaml
 # api/config/packages/api_platform.yaml
 parameters:
-    # ...
-    env(ELASTICSEARCH_HOST): 'http://localhost:9200'
+  # ...
+  env(ELASTICSEARCH_HOST): 'http://localhost:9200'
 
 api_platform:
-    # ...
+  # ...
 
-    mapping:
-        paths: ['%kernel.project_dir%/src/Model']
+  mapping:
+    paths: ['%kernel.project_dir%/src/Model']
 
-    elasticsearch:
-        hosts: ['%env(ELASTICSEARCH_HOST)%']
+  elasticsearch:
+    hosts: ['%env(ELASTICSEARCH_HOST)%']
 
-    #...
+  #...
 ```
 
 ## Creating Models
 
 API Platform follows the best practices of Elasticsearch:
 
-* a single index per resource should be used because Elasticsearch is going to [drop support for index types and will allow only a single type per
-index](https://www.elastic.co/guide/en/elasticsearch/reference/current/removal-of-types.html);
-* index name should be the short resource name in lower snake case;
-* the default `_doc` type should be used;
-* all fields should be lower case and should use camel case for combining words.
+- a single index per resource should be used because Elasticsearch is going to [drop support for index types and will allow only a single type per
+  index](https://www.elastic.co/guide/en/elasticsearch/reference/current/removal-of-types.html);
+- index name should be the short resource name in lower snake_case;
+- the default `_doc` type should be used;
+- all fields should be lower case and should use camelCase for combining words.
 
 This involves having mappings and models which absolutely match each other.
 
@@ -212,8 +212,8 @@ class Tweet
 }
 ```
 
-API Platform will automatically disable write operations and snake case document fields will automatically be converted to
-camel case object properties during serialization.
+API Platform will automatically disable write operations and snake_case document fields will automatically be converted to
+camelCase object properties during serialization.
 
 Keep in mind that it is your responsibility to populate your Elasticsearch index. To do so, you can use [Logstash](https://www.elastic.co/products/logstash),
 a custom [state processors](state-processors.md#creating-a-custom-state-processor) or any other mechanism that suits your

@@ -22,53 +22,53 @@ In this example, we'll create a simple [Rust](https://www.rust-lang.org) file de
 
 ```js
 // ./Generator.js
-import BaseGenerator from "@api-platform/create-client/lib/generators/BaseGenerator";
+import BaseGenerator from '@api-platform/create-client/lib/generators/BaseGenerator';
 
 export default class extends BaseGenerator {
-    constructor(params) {
-        super(params);
+  constructor(params) {
+    super(params);
 
-        this.registerTemplates("", ["main.rs"]);
-    }
+    this.registerTemplates('', ['main.rs']);
+  }
 
-    help() {}
+  help() {}
 
-    generate(api, resource, dir) {
-        const context = {
-            type: "Tilia",
-            structure: [
-                { name: "name", type: "String" },
-                { name: "min_size", type: "u8" },
-                { name: "max_size", type: "u8" },
-            ],
-            list: [
-                {
-                    name: "Tilia cordata",
-                    minSize: 50,
-                    maxSize: 80,
-                },
-                {
-                    name: "Tilia platyphyllos",
-                    minSize: 50,
-                    maxSize: 70,
-                },
-                {
-                    name: "Tilia tomentosa",
-                    minSize: 50,
-                    maxSize: 70,
-                },
-                {
-                    name: "Tilia intermedia",
-                    minSize: 50,
-                    maxSize: 165,
-                },
-            ],
-        };
+  generate(api, resource, dir) {
+    const context = {
+      type: 'Tilia',
+      structure: [
+        { name: 'name', type: 'String' },
+        { name: 'min_size', type: 'u8' },
+        { name: 'max_size', type: 'u8' },
+      ],
+      list: [
+        {
+          name: 'Tilia cordata',
+          minSize: 50,
+          maxSize: 80,
+        },
+        {
+          name: 'Tilia platyphyllos',
+          minSize: 50,
+          maxSize: 70,
+        },
+        {
+          name: 'Tilia tomentosa',
+          minSize: 50,
+          maxSize: 70,
+        },
+        {
+          name: 'Tilia intermedia',
+          minSize: 50,
+          maxSize: 165,
+        },
+      ],
+    };
 
-        this.createDir(dir);
+    this.createDir(dir);
 
-        this.createFile("main.rs", `${dir}/main.rs`, context, false);
-    }
+    this.createFile('main.rs', `${dir}/main.rs`, context, false);
+  }
 }
 ```
 

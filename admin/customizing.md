@@ -16,7 +16,7 @@ However, it's also possible to display only specific resources, and to order the
 To cherry-pick the resources to make available through the admin, pass a list of `<ResourceGuesser>` components as children of the root component:
 
 ```javascript
-import { HydraAdmin, ResourceGuesser } from "@api-platform/admin";
+import { HydraAdmin, ResourceGuesser } from '@api-platform/admin';
 
 export default () => (
   <HydraAdmin entrypoint="https://demo.api-platform.com">
@@ -40,10 +40,10 @@ import {
   HydraAdmin,
   ResourceGuesser,
   ListGuesser,
-  FieldGuesser
-} from "@api-platform/admin";
+  FieldGuesser,
+} from '@api-platform/admin';
 
-const ReviewsList = props => (
+const ReviewsList = (props) => (
   <ListGuesser {...props}>
     <FieldGuesser source="author" />
     <FieldGuesser source="book" />
@@ -74,10 +74,10 @@ import {
   HydraAdmin,
   ResourceGuesser,
   ShowGuesser,
-  FieldGuesser
-} from "@api-platform/admin";
+  FieldGuesser,
+} from '@api-platform/admin';
 
-const ReviewsShow = props => (
+const ReviewsShow = (props) => (
   <ShowGuesser {...props}>
     <FieldGuesser source="author" />
     <FieldGuesser source="book" />
@@ -110,10 +110,10 @@ import {
   HydraAdmin,
   ResourceGuesser,
   CreateGuesser,
-  InputGuesser
-} from "@api-platform/admin";
+  InputGuesser,
+} from '@api-platform/admin';
 
-const ReviewsCreate = props => (
+const ReviewsCreate = (props) => (
   <CreateGuesser {...props}>
     <InputGuesser source="author" />
     <InputGuesser source="book" />
@@ -148,10 +148,10 @@ import {
   HydraAdmin,
   ResourceGuesser,
   EditGuesser,
-  InputGuesser
-} from "@api-platform/admin";
+  InputGuesser,
+} from '@api-platform/admin';
 
-const ReviewsEdit = props => (
+const ReviewsEdit = (props) => (
   <EditGuesser {...props}>
     <InputGuesser source="author" />
     <InputGuesser source="book" />
@@ -167,7 +167,7 @@ const ReviewsEdit = props => (
 
 export default () => (
   <HydraAdmin entrypoint="https://demo.api-platform.com">
-    <ResourceGuesser edit={ReviewsEdit}/>
+    <ResourceGuesser edit={ReviewsEdit} />
     {/* ... */}
   </HydraAdmin>
 );

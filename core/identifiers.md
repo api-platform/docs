@@ -29,7 +29,7 @@ final class Person
      */
     #[ApiProperty(identifier: true)]
     public $code;
-    
+
     // ...
 }
 ```
@@ -37,12 +37,12 @@ final class Person
 ```yaml
 # api/config/api_platform/resources/Person.yaml
 properties:
-    App\Entity\Person:
-        code:
-            identifier: true
+  App\Entity\Person:
+    code:
+      identifier: true
 resource:
-    App\Entity\Person:
-        provider: App\State\PersonProvider
+  App\Entity\Person:
+    provider: App\State\PersonProvider
 ```
 
 ```xml
@@ -133,7 +133,7 @@ final class UuidUriVariableTransformer implements UriVariableTransformerInterfac
                 return true;
             }
         }
-        
+
         return false;
     }
 }
@@ -147,9 +147,9 @@ Tag this service as an `api_platform.uri_variables.transformer`:
 # api/config/services.yaml
 
 services:
-    App\Identifier\UuidUriVariableTransformer:
-        tags:
-            - { name: api_platform.uri_variables.transformer }
+  App\Identifier\UuidUriVariableTransformer:
+    tags:
+      - { name: api_platform.uri_variables.transformer }
 ```
 
 ```xml
@@ -184,14 +184,14 @@ final class Person
     #[ORM\Id, ORM\Column, ORM\GeneratedValue]
     #[ApiProperty(identifier: false)]
     private ?int $id = null;
-    
+
     /**
      * @var Uuid
      */
     #[ORM\Column(type: 'uuid', unique: true)]
     #[ApiProperty(identifier: true)]
     public $code;
-    
+
     // ...
 }
 ```

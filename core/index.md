@@ -20,23 +20,23 @@ Alternatively, it's possible to [bootstrap the API Platform core library manuall
 
 Here is the fully featured REST API you'll get in minutes:
 
-* [Automatic CRUD](operations.md)
-* Hypermedia (JSON-LD and HAL)
-* Machine-readable documentation of the API in the Hydra and [Swagger/Open API](openapi.md) formats,
+- [Automatic CRUD](operations.md)
+- Hypermedia (JSON-LD and HAL)
+- Machine-readable documentation of the API in the Hydra and [Swagger/Open API](openapi.md) formats,
   guessed from PHPDoc, Serializer, Validator, and Doctrine ORM / MongoDB ODM metadata
-* Nice human-readable documentation built with Swagger UI (including a sandbox) and/or ReDoc
-* [Pagination](pagination.md)
-* A bunch of [filters](filters.md)
-* [Ordering](default-order.md)
-* [Validation](validation.md) using the Symfony Validator Component (with group support)
-* Advanced [authentication and authorization](security.md) rules
-* Errors serialization (Hydra and the [RFC 7807](https://tools.ietf.org/html/rfc7807) are supported)
-* Advanced [serialization](serialization.md) thanks to the Symfony Serializer Component (groups support, relation embedding, max depth...)
-* Automatic route registration
-* Automatic entry point generation giving access to all resources
-* [User](user.md) support
-* [JWT](jwt.md) and [OAuth](https://oauth.net/) support
-* Files and `\DateTime` and serialization and deserialization
+- Nice human-readable documentation built with Swagger UI (including a sandbox) and/or ReDoc
+- [Pagination](pagination.md)
+- A bunch of [filters](filters.md)
+- [Ordering](default-order.md)
+- [Validation](validation.md) using the Symfony Validator Component (with group support)
+- Advanced [authentication and authorization](security.md) rules
+- Errors serialization (Hydra and the [RFC 7807](https://tools.ietf.org/html/rfc7807) are supported)
+- Advanced [serialization](serialization.md) thanks to the Symfony Serializer Component (groups support, relation embedding, max depth...)
+- Automatic route registration
+- Automatic entry point generation giving access to all resources
+- [User](user.md) support
+- [JWT](jwt.md) and [OAuth](https://oauth.net/) support
+- Files and `\DateTime` and serialization and deserialization
 
 Everything is fully customizable through a powerful [event system](events.md) and strong OOP.
 

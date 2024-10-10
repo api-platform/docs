@@ -51,16 +51,16 @@ final class Person
 ```yaml
 # api/config/api_platform/resources.yaml
 resources:
-    App\Entity\Person:
-        operations:
-            ApiPlatform\Metadata\Post:
-                status: 202
-                messenger: true
-                output: false
-            ApiPlatform\Metadata\Get:
-                status: 404
-                controller: ApiPlatform\Action\NotFoundAction
-                read: false
+  App\Entity\Person:
+    operations:
+      ApiPlatform\Metadata\Post:
+        status: 202
+        messenger: true
+        output: false
+      ApiPlatform\Metadata\Get:
+        status: 404
+        controller: ApiPlatform\Action\NotFoundAction
+        read: false
 ```
 
 </code-selector>
@@ -133,11 +133,11 @@ use App\Dto\ResetPasswordRequest;
   new GetCollection(),
   new Post(),
   new Post(
-      name: 'reset_password', 
-      status: 202, 
-      messenger: 'input', 
-      input: ResetPasswordRequest::class, 
-      output: false, 
+      name: 'reset_password',
+      status: 202,
+      messenger: 'input',
+      input: ResetPasswordRequest::class,
+      output: false,
       uriTemplate: '/users/reset_password'
   )
 ])]

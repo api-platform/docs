@@ -12,9 +12,9 @@ Use the following configuration:
 
 ```yaml
 api_platform:
-    defaults:
-        extra_properties:
-            rfc_7807_compliant_errors: false
+  defaults:
+    extra_properties:
+      rfc_7807_compliant_errors: false
 ```
 
 This can also be configured on an `ApiResource` or in an `HttpOperation`, for example:
@@ -100,19 +100,19 @@ errors:
 ```yaml
 # config/packages/api_platform.yaml
 api_platform:
-    # ...
-    exception_to_status:
-        # The 4 following handlers are registered by default, keep those lines to prevent unexpected side effects
-        Symfony\Component\Serializer\Exception\ExceptionInterface: 400 # Use a raw status code (recommended)
-        ApiPlatform\Exception\InvalidArgumentException: !php/const Symfony\Component\HttpFoundation\Response::HTTP_BAD_REQUEST
-        ApiPlatform\ParameterValidator\Exception\ValidationExceptionInterface: 400
-        Doctrine\ORM\OptimisticLockException: 409
+  # ...
+  exception_to_status:
+    # The 4 following handlers are registered by default, keep those lines to prevent unexpected side effects
+    Symfony\Component\Serializer\Exception\ExceptionInterface: 400 # Use a raw status code (recommended)
+    ApiPlatform\Exception\InvalidArgumentException: !php/const Symfony\Component\HttpFoundation\Response::HTTP_BAD_REQUEST
+    ApiPlatform\ParameterValidator\Exception\ValidationExceptionInterface: 400
+    Doctrine\ORM\OptimisticLockException: 409
 
-        # Validation exception
-        ApiPlatform\Validator\Exception\ValidationException: !php/const Symfony\Component\HttpFoundation\Response::HTTP_UNPROCESSABLE_ENTITY
+    # Validation exception
+    ApiPlatform\Validator\Exception\ValidationException: !php/const Symfony\Component\HttpFoundation\Response::HTTP_UNPROCESSABLE_ENTITY
 
-        # Custom mapping
-        App\Exception\ProductNotFoundException: 404 # Here is the handler for our custom exception
+    # Custom mapping
+    App\Exception\ProductNotFoundException: 404 # Here is the handler for our custom exception
 ```
 
 Any type of `Exception` can be thrown, API Platform will convert it to a Symfony's `HttpException` (note that it means the exception will be flattened and lose all of its custom properties). The framework also takes
@@ -206,27 +206,27 @@ final class ErrorProvider implements ProviderInterface
         if ($status >= 500) {
             $error->setDetail('Something went wrong');
         }
-        
+
         return $error;
     }
 }
 ```
 
 ```yaml
-    api_platform.state.error_provider:
-        class: 'App\State\ErrorProvider'
-        tags: 
-            - key: 'api_platform.state.error_provider'
-              name: 'api_platform.state_provider'
+api_platform.state.error_provider:
+  class: 'App\State\ErrorProvider'
+  tags:
+    - key: 'api_platform.state.error_provider'
+      name: 'api_platform.state_provider'
 ```
 
 Note that our validation exception have their own error provider at:
 
 ```yaml
 api_platform.validator.state.error_provider:
-    tags: 
-        - key: 'api_platform.validator.state.error_provider'
-          name: 'api_platform.state_provider'
+  tags:
+    - key: 'api_platform.validator.state.error_provider'
+      name: 'api_platform.state_provider'
 ```
 
 ## Domain exceptions

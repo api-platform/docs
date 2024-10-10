@@ -13,13 +13,13 @@ Once enabled, API Platform Admin for Hydra will automatically detect that Mercur
 If you want to customize the default Mercure configuration, you can either do it with a prop in the `<HydraAdmin>` or `<OpenApiAdmin>` component:
 
 ```javascript
-import { OpenApiAdmin } from "@api-platform/admin";
+import { OpenApiAdmin } from '@api-platform/admin';
 
 export default () => (
   <OpenApiAdmin
     entrypoint="https://demo.api-platform.com"
     docEntrypoint="https://demo.api-platform.com/docs.jsonopenapi"
-    mercure={{ hub: "https://mercure.rocks/hub" }}
+    mercure={{ hub: 'https://mercure.rocks/hub' }}
   />
 );
 ```
@@ -27,18 +27,19 @@ export default () => (
 Or in the data provider factory:
 
 ```javascript
-import { hydraDataProvider, fetchHydra } from "@api-platform/admin";
-import { parseHydraDocumentation } from "@api-platform/api-doc-parser";
+import { hydraDataProvider, fetchHydra } from '@api-platform/admin';
+import { parseHydraDocumentation } from '@api-platform/api-doc-parser';
 
 const dataProvider = baseHydraDataProvider({
   entrypoint,
   httpClient: fetchHydra,
   apiDocumentationParser: parseHydraDocumentation,
-  mercure: { hub: "https://mercure.rocks/hub" },
+  mercure: { hub: 'https://mercure.rocks/hub' },
 });
 ```
 
 The `mercure` object can take the following properties:
+
 - `hub`: the URL to your Mercure hub (default value: null ; when null it will be discovered by using API responses)
 - `jwt`: a subscriber JWT to access your Mercure hub (default value: null)
 - `topicUrl`: the topic URL of your resources (default value: entrypoint)

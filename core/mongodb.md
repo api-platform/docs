@@ -48,19 +48,19 @@ Add a MongoDB image to the docker-compose file:
 services:
   # ...
   db-mongodb:
-      # In production, you may want to use a managed database service
-      image: mongo
-      environment:
-          - MONGO_INITDB_DATABASE=api
-          - MONGO_INITDB_ROOT_USERNAME=api-platform
-          # You should definitely change the password in production
-          - MONGO_INITDB_ROOT_PASSWORD=!ChangeMe!
-      volumes:
-          - db-data:/data/db:rw
-          # You may use a bind-mounted host directory instead, so that it is harder to accidentally remove the volume and lose all your data!
-          # - ./docker/db/data:/data/db:rw
-      ports:
-          - "27017:27017"
+    # In production, you may want to use a managed database service
+    image: mongo
+    environment:
+      - MONGO_INITDB_DATABASE=api
+      - MONGO_INITDB_ROOT_USERNAME=api-platform
+      # You should definitely change the password in production
+      - MONGO_INITDB_ROOT_PASSWORD=!ChangeMe!
+    volumes:
+      - db-data:/data/db:rw
+      # You may use a bind-mounted host directory instead, so that it is harder to accidentally remove the volume and lose all your data!
+      # - ./docker/db/data:/data/db:rw
+    ports:
+      - '27017:27017'
 # ...
 ```
 
@@ -87,12 +87,13 @@ Change the configuration of API Platform to add the right mapping path:
 ```yaml
 # api/config/packages/api_platform.yaml
 api_platform:
-    # ...
+  # ...
 
-    mapping:
-        paths: ['%kernel.project_dir%/src/Entity', '%kernel.project_dir%/src/Document']
+  mapping:
+    paths:
+      ['%kernel.project_dir%/src/Entity', '%kernel.project_dir%/src/Document']
 
-    # ...
+  # ...
 ```
 
 ## Creating Documents

@@ -7,7 +7,7 @@ Those extensions points are taken into account both by the REST and [GraphQL](gr
 The following tables summarizes which extension point to use depending on what you want to do:
 
 | Extension Point                                                                                | Usage                                                                                                                                                                                                                               |
-|------------------------------------------------------------------------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| ---------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | [State Providers](state-providers.md)                                                          | adapters for custom persistence layers, virtual fields, custom hydration                                                                                                                                                            |
 | [Denormalizers](serialization.md)                                                              | post-process objects created from the payload sent in the HTTP request body                                                                                                                                                         |
 | [Voters](security.md#hooking-custom-permission-checks-using-voters)                            | custom authorization logic                                                                                                                                                                                                          |
@@ -15,15 +15,15 @@ The following tables summarizes which extension point to use depending on what y
 | [State Processors](state-processors)                                                           | custom business logic and computations to trigger before or after persistence (ex: mail, call to an external API...)                                                                                                                |
 | [Normalizers](serialization.md#decorating-a-serializer-and-adding-extra-data)                  | customize the resource sent to the client (add fields in JSON documents, encode codes, dates...)                                                                                                                                    |
 | [Filters](filters.md)                                                                          | create filters for collections and automatically document them (OpenAPI, GraphQL, Hydra)                                                                                                                                            |
-| [Serializer Context Builders](serialization.md#changing-the-serialization-context-dynamically) | change the Serialization context (e.g. groups) dynamically                                                                                                                                                                        |
+| [Serializer Context Builders](serialization.md#changing-the-serialization-context-dynamically) | change the Serialization context (e.g. groups) dynamically                                                                                                                                                                          |
 | [Messenger Handlers](messenger.md)                                                             | create 100% custom, RPC, async, service-oriented endpoints (should be used in place of custom controllers because the messenger integration is compatible with both REST and GraphQL, while custom controllers only work with REST) |
-| [DTOs](dto.md)                                                           | use a specific class to represent the input or output data structure related to an operation                                                                                                                                        |
+| [DTOs](dto.md)                                                                                 | use a specific class to represent the input or output data structure related to an operation                                                                                                                                        |
 | [Kernel Events](events.md)                                                                     | customize the HTTP request or response (REST only, other extension points must be preferred when possible)                                                                                                                          |
 
 ## Doctrine Specific Extension Points
 
 | Extension Point                                            | Usage                                                                                              |
-|------------------------------------------------------------|----------------------------------------------------------------------------------------------------|
+| ---------------------------------------------------------- | -------------------------------------------------------------------------------------------------- |
 | [Extensions](extensions.md)                                | Access to the query builder to change the DQL query                                                |
 | [Filters](filters.md#doctrine-orm-and-mongodb-odm-filters) | Add filters documentations (OpenAPI, GraphQL, Hydra) and automatically apply them to the DQL query |
 
@@ -59,6 +59,7 @@ flowchart TB
 ### Symfony Access Checker Provider
 
 When using Symfony, the access checker provider is used at three different stages:
+
 - `api_platform.state_provider.access_checker.post_validate` decorates the `ValidateProvider`
 - `api_platform.state_provider.access_checker.post_deserialize` decorates the `DeserializeProvider`
 - `api_platform.state_provider.access_checker` decorates the `ReadProvider`
@@ -121,14 +122,15 @@ or in the `services.yaml` by defining:
 ```yaml
 # api/config/services.yaml
 services:
-    # ...
-    App\State\CustomRespondProcessor:
-        decorates: api_platform.state.processor.respond_processor
+  # ...
+  App\State\CustomRespondProcessor:
+    decorates: api_platform.state.processor.respond_processor
 ```
 
 And that's it!
 
 ### Laravel Processor Decoration
+
 ```php
 <?php
 

@@ -7,10 +7,10 @@ Pre-registered resolvers are available and can easily be overridden.
 
 There are two pre-registered operation path naming services:
 
-Service name                                                   | Entity name  | Path result
----------------------------------------------------------------|--------------|----------------
-`api_platform.metadata.path_segment_name_generator.underscore` | `MyResource` | `/my_resources`
-`api_platform.metadata.path_segment_name_generator.dash`       | `MyResource` | `/my-resources`
+| Service name                                                   | Entity name  | Path result     |
+| -------------------------------------------------------------- | ------------ | --------------- |
+| `api_platform.metadata.path_segment_name_generator.underscore` | `MyResource` | `/my_resources` |
+| `api_platform.metadata.path_segment_name_generator.dash`       | `MyResource` | `/my-resources` |
 
 The default resolver is `api_platform.metadata.path_segment_name_generator.underscore`.
 To change it to the dash resolver, add the following lines to `api/config/packages/api_platform.yaml`:
@@ -18,7 +18,7 @@ To change it to the dash resolver, add the following lines to `api/config/packag
 ```yaml
 # api/config/packages/api_platform.yaml
 api_platform:
-    path_segment_name_generator: api_platform.metadata.path_segment_name_generator.dash
+  path_segment_name_generator: api_platform.metadata.path_segment_name_generator.dash
 ```
 
 ## Create a Custom Operation Path Resolver
@@ -59,7 +59,7 @@ class SingularPathSegmentNameGenerator implements PathSegmentNameGeneratorInterf
 }
 ```
 
-Note that `$name` contains a camel case string, by default the resource class name (e.g. `MyResource`).
+Note that `$name` contains a camelCase string, by default the resource class name (e.g. `MyResource`).
 
 ### Registering the Service
 
@@ -70,8 +70,8 @@ Otherwise, you must register this class as a service like in the following examp
 ```yaml
 # api/config/services.yaml
 services:
-    # ...
-    'App\Operation\SingularPathSegmentNameGenerator': ~
+  # ...
+  'App\Operation\SingularPathSegmentNameGenerator': ~
 ```
 
 ### Configuring It
@@ -79,5 +79,5 @@ services:
 ```yaml
 # api/config/packages/api_platform.yaml
 api_platform:
-    path_segment_name_generator: 'App\Operation\SingularPathSegmentNameGenerator'
+  path_segment_name_generator: 'App\Operation\SingularPathSegmentNameGenerator'
 ```

@@ -35,7 +35,7 @@ Replace the content of `App.vue` with the following code:
 </template>
 
 <script setup lang="ts">
-import { RouterView } from "vue-router";
+  import { RouterView } from 'vue-router';
 </script>
 ```
 
@@ -52,10 +52,7 @@ Replace the content of `tailwind.config.js` by:
 // tailwind.config.js
 /** @type {import('tailwindcss').Config} */
 module.exports = {
-  content: [
-    "./index.html",
-    "./src/**/*.{vue,js,ts,jsx,tsx}",
-  ],
+  content: ['./index.html', './src/**/*.{vue,js,ts,jsx,tsx}'],
   theme: {
     extend: {},
   },

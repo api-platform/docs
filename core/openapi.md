@@ -62,10 +62,10 @@ the `GET` operation of `/foos` path.
 
 ```yaml
 # api/config/services.yaml
-    App\OpenApi\OpenApiFactory:
-        decorates: 'api_platform.openapi.factory'
-        arguments: [ '@App\OpenApi\OpenApiFactory.inner' ]
-        autoconfigure: false
+App\OpenApi\OpenApiFactory:
+  decorates: 'api_platform.openapi.factory'
+  arguments: ['@App\OpenApi\OpenApiFactory.inner']
+  autoconfigure: false
 ```
 
 ```php
@@ -154,7 +154,7 @@ class Product // The class name will be used to name exposed resources
     )]
     public string $name;
 
-    #[ORM\Column(type: "datetime")] 
+    #[ORM\Column(type: "datetime")]
     #[Assert\DateTime]
     #[ApiProperty(
         openapiContext: [
@@ -171,16 +171,16 @@ class Product // The class name will be used to name exposed resources
 ```yaml
 # api/config/api_platform/properties.yaml
 properties:
-    App\Entity\Product:
-        name:
-            openapiContext:
-                type: string
-                enum: ['one', 'two']
-                example: one
-        timestamp:
-            openapiContext:
-                type: string
-                format: date-time
+  App\Entity\Product:
+    name:
+      openapiContext:
+        type: string
+        enum: ['one', 'two']
+        example: one
+    timestamp:
+      openapiContext:
+        type: string
+        format: date-time
 ```
 
 ```xml
@@ -292,10 +292,10 @@ class Product
 ```yaml
 # api/config/api_platform/resources.yaml
 resources:
-    App\Entity\Product:
-        operations:
-            ApiPlatform\Metadata\GetCollection:
-                openapi: false
+  App\Entity\Product:
+    operations:
+      ApiPlatform\Metadata\GetCollection:
+        openapi: false
 ```
 
 ```xml
@@ -371,24 +371,24 @@ use App\Controller\RandomRabbit;
 
 #[ApiResource]
 #[Post(
-    name: 'create_rabbit', 
-    uriTemplate: '/rabbit/create', 
-    controller: RandomRabbit::class, 
+    name: 'create_rabbit',
+    uriTemplate: '/rabbit/create',
+    controller: RandomRabbit::class,
     openapi: new Model\Operation(
-        summary: 'Create a rabbit picture', 
-        description: '# Pop a great rabbit picture by color!\n\n![A great rabbit](https://rabbit.org/graphics/fun/netbunnies/jellybean1-brennan1.jpg)', 
+        summary: 'Create a rabbit picture',
+        description: '# Pop a great rabbit picture by color!\n\n![A great rabbit](https://rabbit.org/graphics/fun/netbunnies/jellybean1-brennan1.jpg)',
         requestBody: new Model\RequestBody(
             content: new \ArrayObject([
                 'application/json' => [
                     'schema' => [
-                        'type' => 'object', 
+                        'type' => 'object',
                         'properties' => [
-                            'name' => ['type' => 'string'], 
+                            'name' => ['type' => 'string'],
                             'description' => ['type' => 'string']
                         ]
-                    ], 
+                    ],
                     'example' => [
-                        'name' => 'Mr. Rabbit', 
+                        'name' => 'Mr. Rabbit',
                         'description' => 'Pink Rabbit'
                     ]
                 ]
@@ -427,7 +427,6 @@ resources:
                 example:
                   name: Mr. Rabbit
                   description: Pink rabbit
-
 ```
 
 ```xml
@@ -442,7 +441,7 @@ resources:
                        controller="App\Controller\RandomRabbit">
                 <openapi summary="Create a rabbit picture"
                          description="# Pop a great rabbit picture by color!!
-    
+
     ![A great rabbit](https://rabbit.org/graphics/fun/netbunnies/jellybean1-brennan1.jpg)">
                     <responses>
                         <response status="200">
@@ -493,8 +492,8 @@ To disable Swagger UI (ReDoc will be shown by default):
 ```yaml
 # api/config/packages/api_platform.yaml
 api_platform:
-    # ...
-    enable_swagger_ui: false
+  # ...
+  enable_swagger_ui: false
 ```
 
 To disable ReDoc:
@@ -502,8 +501,8 @@ To disable ReDoc:
 ```yaml
 # api/config/packages/api_platform.yaml
 api_platform:
-    # ...
-    enable_re_doc: false
+  # ...
+  enable_re_doc: false
 ```
 
 ## Changing the Location of Swagger UI
@@ -519,8 +518,8 @@ Manually register the Swagger UI controller:
 ```yaml
 # app/config/routes.yaml
 api_doc:
-    path: /api_documentation
-    controller: api_platform.swagger_ui.action
+  path: /api_documentation
+  controller: api_platform.swagger_ui.action
 ```
 
 Change `/api_documentation` to the URI you wish Swagger UI to be accessible on.
@@ -532,9 +531,9 @@ To disable the Swagger UI at the API location, disable both Swagger UI and ReDoc
 ```yaml
 # api/config/packages/api_platform.yaml
 api_platform:
-    # ...
-    enable_swagger_ui: false
-    enable_re_doc: false
+  # ...
+  enable_swagger_ui: false
+  enable_re_doc: false
 ```
 
 If you have manually registered the Swagger UI controller, the Swagger UI will still be accessible at the route you have chosen.
@@ -550,7 +549,7 @@ Specify a custom asset package name:
 ```yaml
 # config/packages/api_platform.yaml
 api_platform:
-    asset_package: 'api_platform'
+  asset_package: 'api_platform'
 ```
 
 Set or override asset properties per package:
@@ -558,12 +557,12 @@ Set or override asset properties per package:
 ```yaml
 # config/packages/framework.yaml
 framework:
-    # ...
-    assets:
-        base_path: '/custom_base_path' # the default
-        packages:
-            api_platform:
-                base_path: '/'
+  # ...
+  assets:
+    base_path: '/custom_base_path' # the default
+    packages:
+      api_platform:
+        base_path: '/'
 ```
 
 ## Overriding the UI Template
@@ -597,30 +596,30 @@ If you implemented OAuth on your API, you should configure OpenApi's authorizati
 
 ```yaml
 api_platform:
-    oauth:
-        # To enable or disable OAuth.
-        enabled: false
+  oauth:
+    # To enable or disable OAuth.
+    enabled: false
 
-        # The OAuth client ID.
-        clientId: ''
+    # The OAuth client ID.
+    clientId: ''
 
-        # The OAuth client secret.
-        clientSecret: ''
+    # The OAuth client secret.
+    clientSecret: ''
 
-        # The OAuth type.
-        type: 'oauth2'
+    # The OAuth type.
+    type: 'oauth2'
 
-        # The OAuth flow grant type.
-        flow: 'application'
+    # The OAuth flow grant type.
+    flow: 'application'
 
-        # The OAuth token url.
-        tokenUrl: '/oauth/v2/token'
+    # The OAuth token url.
+    tokenUrl: '/oauth/v2/token'
 
-        # The OAuth authentication url.
-        authorizationUrl: '/oauth/v2/auth'
+    # The OAuth authentication url.
+    authorizationUrl: '/oauth/v2/auth'
 
-        # The OAuth scopes.
-        scopes: []
+    # The OAuth scopes.
+    scopes: []
 ```
 
 Note that `clientId` and `clientSecret` are being used by the SwaggerUI if enabled.
@@ -631,12 +630,12 @@ The `api_platform.oauth.scopes` option requires an array value with the scopes n
 
 ```yaml
 api_platform:
-    oauth:
-        scopes:
-            profile: "This scope value requests access to the End-User's default profile Claims, which are: name, family_name, given_name, middle_name, nickname, preferred_username, profile, picture, website, gender, birthdate, zoneinfo, locale, and updated_at."
-            email: "This scope value requests access to the email and email_verified Claims."
-            address: "This scope value requests access to the address Claim."
-            phone: "This scope value requests access to the phone_number and phone_number_verified Claims."
+  oauth:
+    scopes:
+      profile: "This scope value requests access to the End-User's default profile Claims, which are: name, family_name, given_name, middle_name, nickname, preferred_username, profile, picture, website, gender, birthdate, zoneinfo, locale, and updated_at."
+      email: 'This scope value requests access to the email and email_verified Claims.'
+      address: 'This scope value requests access to the address Claim.'
+      phone: 'This scope value requests access to the phone_number and phone_number_verified Claims.'
 ```
 
 **Note:** if you're using an OpenID Connect server (such as Keycloak or Auth0), the `openid` scope **must** be set according
@@ -648,31 +647,30 @@ The [info object](https://swagger.io/specification/#info-object) provides metada
 
 ```yaml
 api_platform:
+  # The title of the API.
+  title: 'API title'
 
-    # The title of the API.
-    title: 'API title'
+  # The description of the API.
+  description: 'API description'
 
-    # The description of the API.
-    description: 'API description'
+  # The version of the API.
+  version: '0.0.0'
 
-    # The version of the API.
-    version: '0.0.0'
-
-    openapi:
-        # The contact information for the exposed API.
-        contact:
-            # The identifying name of the contact person/organization.
-            name:
-            # The URL pointing to the contact information. MUST be in the format of a URL.
-            url:
-            # The email address of the contact person/organization. MUST be in the format of an email address.
-            email:
-        # A URL to the Terms of Service for the API. MUST be in the format of a URL.
-        termsOfService:
-        # The license information for the exposed API.
-        license:
-            # The license name used for the API.
-            name:
-            # URL to the license used for the API. MUST be in the format of a URL.
-            url:
+  openapi:
+    # The contact information for the exposed API.
+    contact:
+      # The identifying name of the contact person/organization.
+      name:
+      # The URL pointing to the contact information. MUST be in the format of a URL.
+      url:
+      # The email address of the contact person/organization. MUST be in the format of an email address.
+      email:
+    # A URL to the Terms of Service for the API. MUST be in the format of a URL.
+    termsOfService:
+    # The license information for the exposed API.
+    license:
+      # The license name used for the API.
+      name:
+      # URL to the license used for the API. MUST be in the format of a URL.
+      url:
 ```

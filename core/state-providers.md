@@ -158,11 +158,11 @@ final class BookRepresentationProvider implements ProviderInterface
     )
     {
     }
-    
+
     public function provide(Operation $operation, array $uriVariables = [], array $context = []): AnotherRepresentation
     {
         $book = $this->itemProvider->provide($operation, $uriVariables, $context);
-        
+
         return new AnotherRepresentation(
             // Add DTO constructor params here.
             // $book->getTitle(),
@@ -191,7 +191,7 @@ class Book {}
 
 The services in the previous examples are automatically registered because
 [autowiring](https://symfony.com/doc/current/service_container/autowiring.html)
- and autoconfiguration are enabled by default in API Platform.
+and autoconfiguration are enabled by default in API Platform.
 To declare the service explicitly, you can use the following snippet:
 
 ```yaml

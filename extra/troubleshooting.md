@@ -39,7 +39,7 @@ In v1 of JMSSerializerBundle, the `serializer` alias is registered for the JMS S
 ```yaml
 # api/config/packages/jms_serializer.yaml
 jms_serializer:
-    enable_short_alias: false
+  enable_short_alias: false
 ```
 
 The JMS Serializer service is available as `jms_serializer`.

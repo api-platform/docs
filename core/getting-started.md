@@ -81,7 +81,7 @@ class Product // The class name will be used to name exposed resources
      * A name property - this description will be available in the API documentation too.
      *
      */
-    #[ORM\Column] 
+    #[ORM\Column]
     #[Assert\NotBlank]
     public string $name = '';
 
@@ -90,7 +90,7 @@ class Product // The class name will be used to name exposed resources
      * @var Offer[]|ArrayCollection
      *
      */
-    #[ORM\OneToMany(targetEntity: Offer::class, mappedBy: 'product', cascade: ['persist'])] 
+    #[ORM\OneToMany(targetEntity: Offer::class, mappedBy: 'product', cascade: ['persist'])]
     public iterable $offers;
 
     public function __construct()
@@ -173,21 +173,21 @@ for resources of the product type:
 
 ### Product API using Symfony
 
-Method | URL            | Description
--------|----------------|--------------------------------
-GET    | /products      | Retrieve the (paginated) collection
-POST   | /products      | Create a new product
-GET    | /products/{id} | Retrieve a product
-PATCH  | /products/{id} | Apply a partial modification to a product
-DELETE | /products/{id} | Delete a product
+| Method | URL            | Description                               |
+| ------ | -------------- | ----------------------------------------- |
+| GET    | /products      | Retrieve the (paginated) collection       |
+| POST   | /products      | Create a new product                      |
+| GET    | /products/{id} | Retrieve a product                        |
+| PATCH  | /products/{id} | Apply a partial modification to a product |
+| DELETE | /products/{id} | Delete a product                          |
 
 > [!NOTE]
 >
 > `PUT` (replace or create) isn't registered automatically,
 > but is entirely supported by API Platform and can be added explicitly.
-The same operations are available for the offer method (routes will start with the `/offers` pattern).
-Route prefixes are built by pluralizing the name of the mapped entity class.
-It is also possible to override the naming convention using [operation path namings](operation-path-naming.md).
+> The same operations are available for the offer method (routes will start with the `/offers` pattern).
+> Route prefixes are built by pluralizing the name of the mapped entity class.
+> It is also possible to override the naming convention using [operation path namings](operation-path-naming.md).
 
 As an alternative to attributes, you can map entity classes using YAML or XML:
 
@@ -196,13 +196,14 @@ As an alternative to attributes, you can map entity classes using YAML or XML:
 ```yaml
 # api/config/api_platform/resources.yaml
 resources:
-    App\Entity\Product: ~
-    App\Entity\Offer:
-        shortName: 'Offer'                   # optional
-        description: 'An offer from my shop' # optional
-        types: ['https://schema.org/Offer']   # optional
-        paginationItemsPerPage: 25           # optional
+  App\Entity\Product: ~
+  App\Entity\Offer:
+    shortName: 'Offer' # optional
+    description: 'An offer from my shop' # optional
+    types: ['https://schema.org/Offer'] # optional
+    paginationItemsPerPage: 25 # optional
 ```
+
 ```xml
 <?xml version="1.0" encoding="UTF-8" ?>
 <!-- api/config/api_platform/resources.xml -->
@@ -231,11 +232,12 @@ If you prefer to use YAML or XML files instead of attributes, you must configure
 ```yaml
 # api/config/packages/api_platform.yaml
 api_platform:
-    mapping:
-        paths: 
-            - '%kernel.project_dir%/src/Entity' # default configuration for attributes
-            - '%kernel.project_dir%/config/api_platform' # yaml or xml directory configuration
+  mapping:
+    paths:
+      - '%kernel.project_dir%/src/Entity' # default configuration for attributes
+      - '%kernel.project_dir%/config/api_platform' # yaml or xml directory configuration
 ```
+
 If you want to serialize only a subset of your data, please refer to the [Serialization documentation](serialization.md).
 **You're done!**
 You now have a fully featured API exposing your entities.
@@ -288,12 +290,13 @@ namespace App\Models;
 //app/Models/Product.php
 +use ApiPlatform\Metadata\ApiResource;
 use Illuminate\Database\Eloquent\Model;
- 
+
 +#[ApiResource]
 class Product extends Model {}
 ```
 
 While attributes (introduced in PHP 8) are the preferred way to configure your API Platform resources, it’s also possible to use a trait instead.
+
 ```patch
 <?php
 
@@ -301,8 +304,8 @@ namespace App\Models;
 //app/Models/Product.php
 +use ApiPlatform\Metadata\IsApiResource;
 use Illuminate\Database\Eloquent\Model;
- 
-class Product extends Model 
+
+class Product extends Model
 {
 +   use IsApiResource;
 }
@@ -321,15 +324,16 @@ for resources of the product type:
 
 ### Product API using Laravel
 
-Method | URL            | Description
--------|----------------|--------------------------------
-GET    | /products      | Retrieve the (paginated) collection
-POST   | /products      | Create a new product
-GET    | /products/{id} | Retrieve a product
-PATCH  | /products/{id} | Apply a partial modification to a product
-DELETE | /products/{id} | Delete a product
+| Method | URL            | Description                               |
+| ------ | -------------- | ----------------------------------------- |
+| GET    | /products      | Retrieve the (paginated) collection       |
+| POST   | /products      | Create a new product                      |
+| GET    | /products/{id} | Retrieve a product                        |
+| PATCH  | /products/{id} | Apply a partial modification to a product |
+| DELETE | /products/{id} | Delete a product                          |
 
 In addition, among other things, API Platform under the hood does the following:
+
 - Generated machine-readable documentations of the API in the [OpenAPI (formerly known as Swagger)](../core/openapi.md) (available at `http://127.0.0.1:8000/api/docs.json`) and [JSON-LD](https://json-ld.org)/[Hydra](https://www.hydra-cg.com) formats using this metadata
 - Generated nice human-readable documentation and a sandbox for the API with [SwaggerUI](https://swagger.io/tools/swagger-ui/) (Redoc is also available out-of-the-box)
 

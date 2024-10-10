@@ -85,7 +85,7 @@ helm dependency update ./helm/api-platform
 ```
 
 This will create a folder helm/api-platform/charts/ and add all dependencies there.
-Actual this is [bitnami/postgresql](https://bitnami.com/stack/postgresql/helm), a file postgresql-[VERSION].tgz is created.
+Actual this is [bitnami/PostgreSQL](https://bitnami.com/stack/postgresql/helm), a file postgresql-[VERSION].tgz is created.
 
 ### 3. Optional: If you made changes to the Helm chart, check if its format is correct
 
@@ -234,13 +234,23 @@ Then, update the probes:
 
 ```yaml
 readinessProbe:
-    exec:
-        command: ["/bin/sh", "-c", "/usr/bin/pgrep -af '^php.*bin/console.*messenger:consume'"]
-    initialDelaySeconds: 120
-    periodSeconds: 3
+  exec:
+    command:
+      [
+        '/bin/sh',
+        '-c',
+        "/usr/bin/pgrep -af '^php.*bin/console.*messenger:consume'",
+      ]
+  initialDelaySeconds: 120
+  periodSeconds: 3
 livenessProbe:
-    exec:
-        command: ["/bin/sh", "-c", "/usr/bin/pgrep -af '^php.*bin/console.*messenger:consume'"]
-    initialDelaySeconds: 120
-    periodSeconds: 3
+  exec:
+    command:
+      [
+        '/bin/sh',
+        '-c',
+        "/usr/bin/pgrep -af '^php.*bin/console.*messenger:consume'",
+      ]
+  initialDelaySeconds: 120
+  periodSeconds: 3
 ```

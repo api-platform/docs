@@ -6,8 +6,8 @@ API Platform has native support for paged collections. Pagination is enabled by 
 contains 30 items per page.
 The activation of the pagination and the number of elements per page can be configured from:
 
-* the server-side (globally or per resource)
-* the client-side, via a custom GET parameter (disabled by default)
+- the server-side (globally or per resource)
+- the client-side, via a custom GET parameter (disabled by default)
 
 When issuing a `GET` request on a collection containing more than 1 page (here `/books`), a [Hydra collection](https://www.hydra-cg.com/spec/latest/core/#collections)
 is returned. It's a valid JSON(-LD) document containing items of the requested page and metadata.
@@ -24,8 +24,8 @@ is returned. It's a valid JSON(-LD) document containing items of the requested p
       "name": "My awesome book"
     },
     {
-        "_": "Other items in the collection..."
-    },
+      "_": "Other items in the collection..."
+    }
   ],
   "totalItems": 50,
   "view": {
@@ -46,9 +46,9 @@ The name of the page parameter can be changed with the following configuration:
 ```yaml
 # api/config/packages/api_platform.yaml
 api_platform:
-    collection:
-        pagination:
-            page_parameter_name: _page
+  collection:
+    pagination:
+      page_parameter_name: _page
 ```
 
 ## Disabling the Pagination
@@ -64,8 +64,8 @@ The pagination can be disabled for all resources using this configuration:
 ```yaml
 # api/config/packages/api_platform.yaml
 api_platform:
-    defaults:
-        pagination_enabled: false
+  defaults:
+    pagination_enabled: false
 ```
 
 ### Disabling the Pagination For a Specific Resource
@@ -91,9 +91,10 @@ class Book
 ```yaml
 # api/config/api_platform/resources.yaml
 resources:
-    App\Entity\Book:
-       paginationEnabled: false
+  App\Entity\Book:
+    paginationEnabled: false
 ```
+
 </code-selector>
 
 ### Disabling the Pagination For a Specific Operation
@@ -114,7 +115,7 @@ use ApiPlatform\Metadata\GetCollection;
     operations: [
         new GetCollection(
             paginationEnabled: false
-        )   
+        )
     ]
 )]
 class Book
@@ -126,10 +127,10 @@ class Book
 ```yaml
 # api/config/api_platform/resources.yaml
 resources:
-    App\Entity\Book:
-       operations:
-           ApiPlatform\Metadata\GetCollection:
-                paginationEnabled: false
+  App\Entity\Book:
+    operations:
+      ApiPlatform\Metadata\GetCollection:
+        paginationEnabled: false
 ```
 
 ```xml
@@ -143,11 +144,12 @@ resources:
     <resource class="App\Entity\Book">
         <operations>
             <operation class="ApiPlatform\Metadata\GetCollection"
-                       paginationEnabled="false" /> 
+                       paginationEnabled="false" />
         </operations>
     </resource>
 </resources>
 ```
+
 </code-selector>
 
 ### Disabling the Pagination Client-side
@@ -160,17 +162,17 @@ use the following configuration:
 ```yaml
 # api/config/packages/api_platform.yaml
 api_platform:
-    defaults:
-        pagination_client_enabled: true
-    collection:
-        pagination:
-            enabled_parameter_name: pagination # optional
+  defaults:
+    pagination_client_enabled: true
+  collection:
+    pagination:
+      enabled_parameter_name: pagination # optional
 ```
 
 The pagination can now be enabled or disabled by adding a query parameter named `pagination`:
 
-* `GET /books?pagination=false`: disabled
-* `GET /books?pagination=true`: enabled
+- `GET /books?pagination=false`: disabled
+- `GET /books?pagination=true`: enabled
 
 Any value accepted by the [`FILTER_VALIDATE_BOOLEAN`](https://www.php.net/manual/en/filter.filters.validate.php) filter can be
 used as the value.
@@ -204,8 +206,8 @@ The number of items per page can be configured for all resources:
 ```yaml
 # api/config/packages/api_platform.yaml
 api_platform:
-    defaults:
-        pagination_items_per_page: 30 # Default value
+  defaults:
+    pagination_items_per_page: 30 # Default value
 ```
 
 ### Changing the Number of Items per Page For a Specific Resource
@@ -231,11 +233,11 @@ class Book
 ```yaml
 # api/config/packages/api_platform.yaml
 api_platform:
-    defaults:
-        pagination_client_items_per_page: true
-    collection:
-        pagination:
-            items_per_page_parameter_name: itemsPerPage # Default value
+  defaults:
+    pagination_client_items_per_page: true
+  collection:
+    pagination:
+      items_per_page_parameter_name: itemsPerPage # Default value
 ```
 
 The number of items per page can now be changed adding a query parameter named `itemsPerPage`: `GET /books?itemsPerPage=20`.
@@ -267,8 +269,8 @@ The number of maximum items per page can be configured for all resources:
 ```yaml
 # api/config/packages/api_platform.yaml
 api_platform:
-    defaults:
-        pagination_maximum_items_per_page: 50
+  defaults:
+    pagination_maximum_items_per_page: 50
 ```
 
 ### Changing Maximum Items Per Page For a Specific Resource
@@ -318,8 +320,8 @@ The partial pagination retrieval can be configured for all resources:
 # api/config/packages/api_platform.yaml
 
 api_platform:
-    defaults:
-        pagination_partial: true # Disabled by default
+  defaults:
+    pagination_partial: true # Disabled by default
 ```
 
 ### Partial Pagination For a Specific Resource
@@ -346,11 +348,11 @@ class Book
 # api/config/packages/api_platform.yaml
 
 api_platform:
-    defaults:
-        pagination_client_partial: true # Disabled by default
-    collection:
-        pagination:
-            partial_parameter_name: 'partial' # Default value
+  defaults:
+    pagination_client_partial: true # Disabled by default
+  collection:
+    pagination:
+      partial_parameter_name: 'partial' # Default value
 ```
 
 The partial pagination retrieval can now be changed by toggling a query parameter named `partial`: `GET /books?partial=true`.
@@ -389,7 +391,7 @@ use ApiPlatform\Doctrine\Odm\Filter\OrderFilter;
 use ApiPlatform\Doctrine\Odm\Filter\RangeFilter;
 
 #[ApiResource(
-    paginationPartial: true, 
+    paginationPartial: true,
     paginationViaCursor: [
         ['field' => 'id', 'direction' => 'DESC']
     ]
@@ -408,7 +410,7 @@ To know more about cursor-based pagination take a look at [this blog post on med
 
 The [PaginationExtension](https://github.com/api-platform/core/blob/main/src/Doctrine/Orm/Extension/PaginationExtension.php) of API Platform performs some checks on the `QueryBuilder` to guess, in most common cases, the correct values to use when configuring the Doctrine ORM Paginator:
 
-* `$fetchJoinCollection` argument: Whether there is a join to a collection-valued association. When set to `true`, the Doctrine ORM Paginator will perform an additional query, in order to get the correct number of results.
+- `$fetchJoinCollection` argument: Whether there is a join to a collection-valued association. When set to `true`, the Doctrine ORM Paginator will perform an additional query, in order to get the correct number of results.
 
 You can configure this using the `paginationFetchJoinCollection` attribute on a resource or on a per-operation basis:
 
@@ -429,7 +431,7 @@ class Book
 }
 ```
 
-* `setUseOutputWalkers` setter: Whether to use output walkers. When set to `true`, the Doctrine ORM Paginator will use output walkers, which are compulsory for some types of queries.
+- `setUseOutputWalkers` setter: Whether to use output walkers. When set to `true`, the Doctrine ORM Paginator will use output walkers, which are compulsory for some types of queries.
 
 You can configure this using the `paginationUseOutputWalkers` attribute on a resource or on a per-operation basis:
 
@@ -584,5 +586,5 @@ and if you want your results to be paginated, you will need to return an instanc
 `ApiPlatform\State\Pagination\PaginatorInterface`.
 A few existing classes are provided to make it easier to paginate the results:
 
-* `ApiPlatform\State\Pagination\ArrayPaginator`
-* `ApiPlatform\State\Pagination\TraversablePaginator`
+- `ApiPlatform\State\Pagination\ArrayPaginator`
+- `ApiPlatform\State\Pagination\TraversablePaginator`

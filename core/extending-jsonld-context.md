@@ -33,7 +33,7 @@ class Book
         ]
     )]
     public $name;
-    
+
     // ...
 }
 ```
@@ -89,10 +89,10 @@ class Book
 ```yaml
 # api/config/api_platform/resources.yaml
 resources:
-    App\Entity\Book:
-        operations:
-            ApiPlatform\Metadata\Get:
-                hydraContext: { foo: 'bar' }
+  App\Entity\Book:
+    operations:
+      ApiPlatform\Metadata\Get:
+        hydraContext: { foo: 'bar' }
 ```
 
 ```xml
@@ -105,7 +105,7 @@ resources:
            https://api-platform.com/schema/metadata/resources-3.0.xsd">
     <resource class="App\Entity\Book">
         <operations>
-            <operation class="ApiPlatform\Metadata\Get">              
+            <operation class="ApiPlatform\Metadata\Get">
                 <hydraContext>
                     <values>
                         <value name="foo">bar</value>

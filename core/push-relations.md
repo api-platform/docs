@@ -22,7 +22,7 @@ class Book
 {
      #[ApiProperty(push: true)]
     public Author $author;
-    
+
     // ...
 }
 ```

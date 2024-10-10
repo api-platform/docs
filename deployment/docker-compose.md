@@ -129,13 +129,13 @@ This setup ensures the Next.js client can access the API at build time to genera
 Modify the pwa service to ensure network communication between the pwa and php services during the build:
 
 ```yaml
-  pwa:
-    build:
-      context: ./pwa
-      target: prod
-      network: host
-      extra_hosts:
-        - php=127.0.0.1
+pwa:
+  build:
+    context: ./pwa
+    target: prod
+    network: host
+    extra_hosts:
+      - php=127.0.0.1
 ```
 
 #### 2. Build and start the php service

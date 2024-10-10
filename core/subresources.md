@@ -10,7 +10,9 @@ subresources providing you add the correct configuration for URI Variables.
 
 ## URI Variables Configuration
 
-URI Variables are configured via the `uriVariables` node on an `ApiResource`. It's an array indexed by the variables present in your URI, `/companies/{companyId}/employees/{id}` has two uri variables `companyId` and `id`. For each of these, we need to create a `Link` between the previous and the next node, in this example the link between a Company and an Employee.
+URI Variables are configured via the `uriVariables` node on an `ApiResource`. It's an array indexed by the variables
+present in your URI, `/companies/{companyId}/employees/{id}` has two URI variables `companyId` and `id`.
+For each of these, we need to create a `Link` between the previous and the next node, in this example the link between a Company and an Employee.
 
 If you're using the Doctrine implementation, queries are automatically built using the provided links.
 
@@ -84,8 +86,8 @@ class Question
 ```yaml
 # api/config/api_platform/resources.yaml
 resources:
-    App\Entity\Answer: ~
-    App\Entity\Question: ~
+  App\Entity\Answer: ~
+  App\Entity\Question: ~
 ```
 
 ```xml
@@ -122,13 +124,13 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\Entity]
 #[ApiResource]
 #[ApiResource(
-    uriTemplate: '/questions/{id}/answer', 
+    uriTemplate: '/questions/{id}/answer',
     uriVariables: [
         'id' => new Link(
             fromClass: Question::class,
             fromProperty: 'answer'
         )
-    ], 
+    ],
     operations: [new Get()]
 )]
 class Answer
@@ -140,16 +142,16 @@ class Answer
 ```yaml
 # api/config/api_platform/resources.yaml
 resources:
-    App\Entity\Answer:
-        uriTemplate: /questions/{id}/answer
-        uriVariables:
-            id:
-                fromClass: App\Entity\Question
-                fromProperty: answer
-        operations:
-            ApiPlatform\Metadata\Get: ~
+  App\Entity\Answer:
+    uriTemplate: /questions/{id}/answer
+    uriVariables:
+      id:
+        fromClass: App\Entity\Question
+        fromProperty: answer
+    operations:
+      ApiPlatform\Metadata\Get: ~
 
-    App\Entity\Question: ~
+  App\Entity\Question: ~
 ```
 
 ```xml
@@ -157,7 +159,7 @@ resources:
            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
            xsi:schemaLocation="https://api-platform.com/schema/metadata/resources-3.0
         https://api-platform.com/schema/metadata/resources-3.0.xsd">
-    
+
     <resource class="App\Entity\Question"/>
 
     <resource class="App\Entity\Answer"/>
@@ -171,7 +173,7 @@ resources:
             <operation class="ApiPlatform\Metadata\Get"/>
         </operations>
     </resource>
-</resources>    
+</resources>
 
 ```
 
@@ -191,7 +193,7 @@ If we had a `relatedQuestions` property on the `Answer` we could retrieve the co
     uriTemplate: '/answers/{id}/related_questions.{_format}',
     uriVariables: [
         'id' => new Link(fromClass: Answer::class, fromProperty: 'relatedQuestions')
-    ], 
+    ],
     operations: [new GetCollection()]
 )]
 ```
@@ -199,14 +201,14 @@ If we had a `relatedQuestions` property on the `Answer` we could retrieve the co
 ```yaml
 # api/config/api_platform/resources.yaml
 resources:
-    App\Entity\Question:
-        uriTemplate: /answers/{id}/related_questions.{_format}
-        uriVariables:
-            id:
-                fromClass: App\Entity\Answer
-                fromProperty: relatedQuestions
-        operations:
-            ApiPlatform\Metadata\GetCollection: ~
+  App\Entity\Question:
+    uriTemplate: /answers/{id}/related_questions.{_format}
+    uriVariables:
+      id:
+        fromClass: App\Entity\Answer
+        fromProperty: relatedQuestions
+    operations:
+      ApiPlatform\Metadata\GetCollection: ~
 ```
 
 ```xml
@@ -228,9 +230,7 @@ resources:
 
 Note that in this example, we declared an association using Doctrine only between Employee and Company using a ManyToOne. There is no inverse association hence the use of `toProperty` in the URI Variables definition.
 
-The following declares a few subresources:
-    - `/companies/{companyId}/employees/{id}` - get an employee belonging to a company
-    - `/companies/{companyId}/employees` - get the company employee's
+The following declares a few subresources: - `/companies/{companyId}/employees/{id}` - get an employee belonging to a company - `/companies/{companyId}/employees` - get the company employee's
 
 ```php
 <?php
@@ -317,7 +317,7 @@ As a general rule, if the property we want to create a link from is in the `from
 For example, we could add a subresource fetching an employee's company. The `company` property belongs to the `Employee` class we can use `fromProperty`:
 
 ```php
-<?php 
+<?php
 #[ApiResource(
     uriTemplate: '/employees/{employeeId}/company',
     uriVariables: [
@@ -342,7 +342,7 @@ To restrict the access to a subresource based on the parent object simply use th
 Alternatively you can also use the `securityObjectName` to set a custom name.
 
 ```php
-<?php 
+<?php
 #[ApiResource(
     uriTemplate: '/employees/{employeeId}/company',
     uriVariables: [
@@ -363,5 +363,5 @@ This is currently an experimental feature disabled by default. To enable it plea
 ```yaml
 # api/config/packages/api_platform.yaml
 api_platform:
-    enable_link_security: true
+  enable_link_security: true
 ```

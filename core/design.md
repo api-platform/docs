@@ -21,10 +21,10 @@ To do so, there is another interface to implement: [`ProcessorInterface`](state-
 
 This class will read the API resource object (the one marked with `#[ApiResource]`) and:
 
-* persist it directly in the database;
-* or hydrate a DTO then trigger a command;
-* or populate an event store;
-* or persist the data in any other useful way.
+- persist it directly in the database;
+- or hydrate a DTO then trigger a command;
+- or populate an event store;
+- or persist the data in any other useful way.
 
 The logic of state processors is the responsibility of application developers, and is **out of the API Platform's scope**.
 
@@ -45,8 +45,8 @@ or [CQRS](https://martinfowler.com/bliki/CQRS.html) thanks to [the Messenger Com
 Last but not least, to create [Event Sourcing](https://martinfowler.com/eaaDev/EventSourcing.html)-based systems, a convenient
 approach is:
 
-* to persist data in an event store using a Messenger handler or a custom [state processor](state-processors.md)
-* to create projections in standard RDBMS (PostgreSQL, MariaDB...) tables or views
-* to map those projections with read-only Doctrine entity classes **and** to mark those classes with `#[ApiResource]`
+- to persist data in an event store using a Messenger handler or a custom [state processor](state-processors.md)
+- to create projections in standard RDBMS (PostgreSQL, MariaDB...) tables or views
+- to map those projections with read-only Doctrine entity classes **and** to mark those classes with `#[ApiResource]`
 
 You can then benefit from the built-in Doctrine filters, sorting, pagination, auto-joins and all of [the extension points](extending.md) provided by API Platform.

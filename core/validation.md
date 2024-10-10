@@ -434,8 +434,8 @@ You can retrieve the payload field by setting the `serialize_payload_fields` to 
 # api/config/packages/api_platform.yaml
 
 api_platform:
-    validator:
-        serialize_payload_fields: ~
+  validator:
+    serialize_payload_fields: ~
 ```
 
 Then, the serializer will return all payload values in the error response.
@@ -446,8 +446,8 @@ If you want to serialize only some payload fields, define them in the config lik
 # api/config/packages/api_platform.yaml
 
 api_platform:
-    validator:
-        serialize_payload_fields: [ severity, anotherPayloadField ]
+  validator:
+    serialize_payload_fields: [severity, anotherPayloadField]
 ```
 
 In this example, only `severity` and `anotherPayloadField` will be serialized.
@@ -499,29 +499,29 @@ API Platform automatically detects Symfony's built-in validators and generates s
 
 The following validation constraints are covered:
 
-Constraints                                                                           | Vocabulary                        |
---------------------------------------------------------------------------------------|-----------------------------------|
-[`Url`](https://symfony.com/doc/current/reference/constraints/Url.html)               | `https://schema.org/url`           |
-[`Email`](https://symfony.com/doc/current/reference/constraints/Email.html)           | `https://schema.org/email`         |
-[`Uuid`](https://symfony.com/doc/current/reference/constraints/Uuid.html)             | `https://schema.org/identifier`    |
-[`CardScheme`](https://symfony.com/doc/current/reference/constraints/CardScheme.html) | `https://schema.org/identifier`    |
-[`Bic`](https://symfony.com/doc/current/reference/constraints/Bic.html)               | `https://schema.org/identifier`    |
-[`Iban`](https://symfony.com/doc/current/reference/constraints/Iban.html)             | `https://schema.org/identifier`    |
-[`Date`](https://symfony.com/doc/current/reference/constraints/Date.html)             | `https://schema.org/Date`          |
-[`DateTime`](https://symfony.com/doc/current/reference/constraints/DateTime.html)     | `https://schema.org/DateTime`      |
-[`Time`](https://symfony.com/doc/current/reference/constraints/Time.html)             | `https://schema.org/Time`          |
-[`Image`](https://symfony.com/doc/current/reference/constraints/Image.html)           | `https://schema.org/image`         |
-[`File`](https://symfony.com/doc/current/reference/constraints/File.html)             | `https://schema.org/MediaObject`   |
-[`Currency`](https://symfony.com/doc/current/reference/constraints/Currency.html)     | `https://schema.org/priceCurrency` |
-[`Isbn`](https://symfony.com/doc/current/reference/constraints/Isbn.html)             | `https://schema.org/isbn`          |
-[`Issn`](https://symfony.com/doc/current/reference/constraints/Issn.html)             | `https://schema.org/issn`          |
+| Constraints                                                                           | Vocabulary                         |
+| ------------------------------------------------------------------------------------- | ---------------------------------- |
+| [`Url`](https://symfony.com/doc/current/reference/constraints/Url.html)               | `https://schema.org/url`           |
+| [`Email`](https://symfony.com/doc/current/reference/constraints/Email.html)           | `https://schema.org/email`         |
+| [`Uuid`](https://symfony.com/doc/current/reference/constraints/Uuid.html)             | `https://schema.org/identifier`    |
+| [`CardScheme`](https://symfony.com/doc/current/reference/constraints/CardScheme.html) | `https://schema.org/identifier`    |
+| [`Bic`](https://symfony.com/doc/current/reference/constraints/Bic.html)               | `https://schema.org/identifier`    |
+| [`Iban`](https://symfony.com/doc/current/reference/constraints/Iban.html)             | `https://schema.org/identifier`    |
+| [`Date`](https://symfony.com/doc/current/reference/constraints/Date.html)             | `https://schema.org/Date`          |
+| [`DateTime`](https://symfony.com/doc/current/reference/constraints/DateTime.html)     | `https://schema.org/DateTime`      |
+| [`Time`](https://symfony.com/doc/current/reference/constraints/Time.html)             | `https://schema.org/Time`          |
+| [`Image`](https://symfony.com/doc/current/reference/constraints/Image.html)           | `https://schema.org/image`         |
+| [`File`](https://symfony.com/doc/current/reference/constraints/File.html)             | `https://schema.org/MediaObject`   |
+| [`Currency`](https://symfony.com/doc/current/reference/constraints/Currency.html)     | `https://schema.org/priceCurrency` |
+| [`Isbn`](https://symfony.com/doc/current/reference/constraints/Isbn.html)             | `https://schema.org/isbn`          |
+| [`Issn`](https://symfony.com/doc/current/reference/constraints/Issn.html)             | `https://schema.org/issn`          |
 
 ## Specification Property Restrictions
 
 API Platform generates specification property restrictions based on Symfony’s built-in validator.
 
 For example, from [`Regex`](https://symfony.com/doc/4.4/reference/constraints/Regex.html) constraint API
- Platform builds [`pattern`](https://swagger.io/docs/specification/data-models/data-types/#pattern) restriction.
+Platform builds [`pattern`](https://swagger.io/docs/specification/data-models/data-types/#pattern) restriction.
 
 For building custom property schema based on custom validation constraints you can create a custom class
 for generating property scheme restriction.
@@ -529,8 +529,8 @@ for generating property scheme restriction.
 To create property schema, you have to implement the [`PropertySchemaRestrictionMetadataInterface`](https://github.com/api-platform/core/blob/main/src/Symfony/Validator/Metadata/Property/Restriction/PropertySchemaRestrictionMetadataInterface.php).
 This interface defines only 2 methods:
 
-* `create`: to create property schema
-* `supports`: to check whether the property and constraint is supported
+- `create`: to create property schema
+- `supports`: to check whether the property and constraint is supported
 
 Here is an implementation example:
 
@@ -565,10 +565,11 @@ If you use a custom dependency injection configuration, you need to register the
 # api/config/services.yaml
 
 services:
-    # ...
-    'App\PropertySchemaRestriction\CustomPropertySchemaRestriction': ~
-        # Uncomment only if autoconfiguration is disabled
-        #tags: [ 'api_platform.metadata.property_schema_restriction' ]
+  # ...
+  'App\PropertySchemaRestriction\CustomPropertySchemaRestriction':
+    ~
+    # Uncomment only if autoconfiguration is disabled
+    #tags: [ 'api_platform.metadata.property_schema_restriction' ]
 ```
 
 ## Collecting Denormalization Errors
@@ -599,22 +600,22 @@ If the submitted data has denormalization errors, the HTTP status code will be s
 
 ```json
 {
-    "@context": "/api/contexts/ConstraintViolationList",
-    "@type": "ConstraintViolationList",
-    "title": "An error occurred",
-    "description": "boolean: This value should be of type bool.\nproperty1: This value should be of type string.",
-    "violations": [
-        {
-            "propertyPath": "boolean",
-            "message": "This value should be of type bool.",
-            "code": "0"
-        },
-        {
-            "propertyPath": "property1",
-            "message": "This value should be of type string.",
-            "code": "0"
-        }
-    ]
+  "@context": "/api/contexts/ConstraintViolationList",
+  "@type": "ConstraintViolationList",
+  "title": "An error occurred",
+  "description": "boolean: This value should be of type bool.\nproperty1: This value should be of type string.",
+  "violations": [
+    {
+      "propertyPath": "boolean",
+      "message": "This value should be of type bool.",
+      "code": "0"
+    },
+    {
+      "propertyPath": "property1",
+      "message": "This value should be of type string.",
+      "code": "0"
+    }
+  ]
 }
 ```
 

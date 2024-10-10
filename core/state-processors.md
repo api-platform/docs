@@ -11,9 +11,9 @@ A [Doctrine MongoDB ODM](https://www.doctrine-project.org/projects/mongodb-odm.h
 
 However, you may want to:
 
-* store data to other persistence layers (Elasticsearch, external web services...)
-* not publicly expose the internal model mapped with the database through the API
-* use a separate model for [read operations](state-providers.md) and for updates by implementing patterns such as [CQRS](https://martinfowler.com/bliki/CQRS.html)
+- store data to other persistence layers (Elasticsearch, external web services...)
+- not publicly expose the internal model mapped with the database through the API
+- use a separate model for [read operations](state-providers.md) and for updates by implementing patterns such as [CQRS](https://martinfowler.com/bliki/CQRS.html)
 
 Custom state processors can be used to do so. A project can include as many state processors as needed. The first able to
 process the data for a given resource will be used.
@@ -117,7 +117,7 @@ final class UserProcessor implements ProcessorInterface
         if ($operation instanceof DeleteOperationInterface) {
             return $this->removeProcessor->process($data, $operation, $uriVariables, $context);
         }
-    
+
         $result = $this->persistProcessor->process($data, $operation, $uriVariables, $context);
         $this->sendWelcomeEmail($data);
 

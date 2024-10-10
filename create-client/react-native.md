@@ -23,7 +23,7 @@ Install the required dependencies:
 
 ```console
 npm install redux react-redux redux-thunk redux-form react-native-elements react-native-router-flux react-native-vector-icons prop-types whatwg-url buffer react-native-event-source react-native-gesture-handler react-native-reanimated react-native-screens
-````
+```
 
 ## Generating a Native App
 
@@ -49,9 +49,7 @@ import BookRoutes from './routes/book';
 
 const RouterComponent = () => (
   <Router>
-    <Stack key="root">
-      {BookRoutes}
-    </Stack>
+    <Stack key="root">{BookRoutes}</Stack>
   </Router>
 );
 
@@ -67,7 +65,7 @@ import { Provider } from 'react-redux';
 import thunk from 'redux-thunk';
 import { createStore, applyMiddleware, combineReducers } from 'redux';
 import { View } from 'react-native';
-import {reducer as form} from 'redux-form';
+import { reducer as form } from 'redux-form';
 
 // see https://github.com/facebook/react-native/issues/14796
 import { Buffer } from 'buffer';
@@ -88,14 +86,18 @@ import Router from './Router';
 
 export default class App extends Component {
   render() {
-    const store = createStore(combineReducers({
-      book,
-      form
-    }), {}, applyMiddleware(thunk));
+    const store = createStore(
+      combineReducers({
+        book,
+        form,
+      }),
+      {},
+      applyMiddleware(thunk)
+    );
     return (
       <Provider store={store}>
-        <View style={{flex: 1}}>
-          <Router/>
+        <View style={{ flex: 1 }}>
+          <Router />
         </View>
       </Provider>
     );

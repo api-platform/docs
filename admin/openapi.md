@@ -5,10 +5,13 @@ API Platform Admin has native support for API exposing an [OpenAPI documentation
 To use it, use the `OpenApiAdmin` component, with the entry point of the API and the entry point of the OpenAPI documentation in JSON:
 
 ```javascript
-import { OpenApiAdmin } from "@api-platform/admin";
+import { OpenApiAdmin } from '@api-platform/admin';
 
 export default () => (
-  <OpenApiAdmin entrypoint="https://demo.api-platform.com" docEntrypoint="https://demo.api-platform.com/docs.jsonopenapi" />
+  <OpenApiAdmin
+    entrypoint="https://demo.api-platform.com"
+    docEntrypoint="https://demo.api-platform.com/docs.jsonopenapi"
+  />
 );
 ```
 
@@ -24,12 +27,12 @@ By default, the component will use a basic data provider, without pagination sup
 If you want to use [another data provider](https://marmelab.com/react-admin/DataProviderList.html), pass the `dataProvider` prop to the component:
 
 ```javascript
-import { OpenApiAdmin } from "@api-platform/admin";
-import drfProvider from "ra-data-django-rest-framework";
+import { OpenApiAdmin } from '@api-platform/admin';
+import drfProvider from 'ra-data-django-rest-framework';
 
 export default () => (
   <OpenApiAdmin
-    dataProvider={drfProvider("https://django-api.com")}
+    dataProvider={drfProvider('https://django-api.com')}
     entrypoint="https://django-api.com"
     docEntrypoint="https://django-api.com/docs.json"
   />
