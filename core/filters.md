@@ -895,7 +895,7 @@ namespace App\Entity;
 
 use ApiPlatform\Metadata\ApiFilter;
 use ApiPlatform\Metadata\ApiResource;
-use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\ExistsFilter;
+use ApiPlatform\Doctrine\Orm\Filter\ExistsFilter;
 
 #[ApiResource]
 #[ApiFilter(ExistsFilter::class, properties: ['transportFees'])]
