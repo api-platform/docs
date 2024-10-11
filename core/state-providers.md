@@ -7,11 +7,10 @@ ORM](https://www.doctrine-project.org/projects/orm.html) is ready to retrieve da
 [Doctrine MongoDB ODM](https://www.doctrine-project.org/projects/mongodb-odm.html) to retrieve data from a document
 database.
 
-With the Laravel variant, a state provider using [Eloquent ORM](https://laravel.com/docs/eloquent) to retrieve data from a relational database and a state provider using [Laravel MongoDB](https://www.mongodb.com/docs/drivers/php/laravel-mongodb/current/) to retrieve data from a document database.
+With the Laravel variant, a state provider using [Eloquent ORM](https://laravel.com/docs/eloquent) to retrieve data from a relational database and a state provider.
 
 The ORM providers are enabled by default, based on your framework variant (Eloquent or Doctrine will be set up).
 
-Also, both Symfony and Laravel variant come with a state provider to retrieve data from an Elasticsearch cluster using the library  [Elasticsearch-PHP](https://www.elastic.co/guide/en/elasticsearch/client/php-api/current/index.html).
 
 These state providers natively support paged collections and filters. They can be used as-is and are perfectly suited to common uses.
 
