@@ -136,7 +136,7 @@ class BlogPost {}
 
 ## Hooking into the Built-In State Processors
 
-### Symfony State Provider mechanism
+### Symfony State Processor mechanism
 If you want to execute custom business logic before or after persistence, this can be achieved by using [composition](https://en.wikipedia.org/wiki/Object_composition).
 
 Here is an implementation example which uses [Symfony Mailer](https://symfony.com/doc/current/mailer.html) to send new users a welcome email after a REST `POST` or GraphQL `create` operation, in a project using the native Doctrine ORM state processor:
@@ -211,7 +211,7 @@ use App\State\UserProcessor;
 class User {}
 ```
 
-### Laravel State Provider mechanism
+### Laravel State Processor mechanism
 If you want to execute custom business logic before or after persistence, this can be achieved by using [composition](https://en.wikipedia.org/wiki/Object_composition).
 
 Here is an implementation example which uses [Laravel Mail](https://laravel.com/docs/mail) to send new users a welcome email after a REST `POST` or GraphQL `create` operation, in a project using the native Eloquent ORM state processor:
