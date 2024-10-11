@@ -11,7 +11,6 @@ A [Doctrine MongoDB ODM](https://www.doctrine-project.org/projects/mongodb-odm.h
 
 With the Laravel variant, a state processor using [Eloquent ORM](https://laravel.com/docs/eloquent) is included with the library and
 is enabled by default. It is able to persist and delete objects that are also mapped as [Related Models](https://laravel.com/docs/eloquent-relationships#inserting-and-updating-related-models).
-A [Laravel MongoDB](https://www.mongodb.com/docs/drivers/php/laravel-mongodb/current/) state processor is also included and can be enabled by following the [MongoDB documentation](../core/mongodb.md).
 
 However, you may want to:
 
