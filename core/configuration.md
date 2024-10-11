@@ -195,13 +195,6 @@ api_platform:
             # URL to the license used for the API. MUST be in the format of a URL.
             url:
 
-        swagger_ui_extra_configuration:
-            # Controls the default expansion setting for the operations and tags. It can be 'list' (expands only the tags), 'full' (expands the tags and operations) or 'none' (expands nothing).
-            docExpansion: list
-            # If set, enables filtering. The top bar will show an edit box that you can use to filter the tagged operations that are shown.
-            filter: false
-            # You can use any other configuration parameters too.
-
     http_cache:
         # To make all responses public by default.
         public: ~
