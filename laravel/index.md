@@ -230,7 +230,7 @@ final class BookProvider implements ProviderInterface
     public function provide(Operation $operation, array $uriVariables = [], array $context = []): object|array|null
     {
         $book = BookModel::find($uriVariables['id']);
-        return new Book(id: $book->id, title: $book->title);
+        return new BookModel(id: $book->id, title: $book->title);
     }
 }
 ```
@@ -242,6 +242,7 @@ Register the state provider:
 
 namespace App\Providers;
 
+use App\State\BookProvider;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Support\ServiceProvider;
 
@@ -253,7 +254,7 @@ class ApiServiceProvider extends ServiceProvider
             return new BookProvider();
         });
 
-        $this->app->tag([BookProvider::class], ProviderInterface::class);
+        $this->app->tag([BookProvider::class], 'provider');
     }
 }
 ```
@@ -624,6 +625,7 @@ API Platform provides an easy shortcut to some [useful filters](./filters.md), f
  namespace App\Models;
 
  use ApiPlatform\Metadata\ApiResource;
++use ApiPlatform\Metadata\QueryParameter;
 +use ApiPlatform\Laravel\Eloquent\Filter\PartialSearchFilter;
  use Illuminate\Database\Eloquent\Model;
 
@@ -643,6 +645,7 @@ It's also possible to enable filters on every exposed property:
  namespace App\Models;
 
  use ApiPlatform\Metadata\ApiResource;
++use ApiPlatform\Metadata\QueryParameter;
 +use ApiPlatform\Laravel\Eloquent\Filter\PartialSearchFilter;
 +use ApiPlatform\Laravel\Eloquent\Filter\OrderFilter;
  use Illuminate\Database\Eloquent\Model;
