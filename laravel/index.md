@@ -193,14 +193,7 @@ use ApiPlatform\Metadata\Get;
 #[Get(uriTemplate: '/my_custom_book/{id}')]
 class Book
 {
-    public string $id;
-    public string $title;
-
-    public function __construct(string $id, string $title)
-    {
-        $this->id = $id;
-        $this->title = $title;
-    }
+    public function __construct(public string $id, public string $title) {}
 }
 ```
 
@@ -280,8 +273,7 @@ use App\State\BookProvider;
 #[Get(uriTemplate: '/my_custom_book/{id}', provider: BookProvider::class)]
 class Book
 {
-    public string $id;
-    public string $title;
+    public function __construct(public string $id, public string $title) {}
 }
 ```
 
