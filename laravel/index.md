@@ -195,6 +195,12 @@ class Book
 {
     public string $id;
     public string $title;
+
+    public function __construct(string $id, string $title)
+    {
+        $this->id = $id;
+        $this->title = $title;
+    }
 }
 ```
 
@@ -224,13 +230,14 @@ namespace App\State;
 use ApiPlatform\Metadata\Operation;
 use ApiPlatform\State\ProviderInterface;
 use App\Models\Book as BookModel;
+use App\ApiResource\Book;
 
 final class BookProvider implements ProviderInterface
 {
     public function provide(Operation $operation, array $uriVariables = [], array $context = []): object|array|null
     {
         $book = BookModel::find($uriVariables['id']);
-        return new BookModel(id: $book->id, title: $book->title);
+        return new Book(id: $book->id, title: $book->title);
     }
 }
 ```
