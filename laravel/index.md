@@ -244,6 +244,7 @@ namespace App\Providers;
 
 use ApiPlatform\State\ProviderInterface;
 use App\State\BookProvider;
++use ApiPlatform\State\ProviderInterface;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Support\ServiceProvider;
 
@@ -255,7 +256,7 @@ class ApiServiceProvider extends ServiceProvider
             return new BookProvider();
         });
 
-        $this->app->tag([BookProvider::class], 'provider');
+        $this->app->tag([BookProvider::class], ProviderInterface::class);
     }
 }
 ```
