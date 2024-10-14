@@ -208,7 +208,7 @@ use ApiPlatform\Metadata\ApiResource;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ApiResource(
-    validationContext: ['groups' => [Book::class, 'validationGroups']
+    validationContext: ['groups' => [Book::class, 'validationGroups']]
 )]
 class Book
 {
