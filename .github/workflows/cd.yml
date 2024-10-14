@@ -9,7 +9,6 @@ on:
 
 permissions:
   contents: read
-  id-token: read
   actions: read
   checks: write
   deployments: write
