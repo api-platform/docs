@@ -230,7 +230,7 @@ final class BookProvider implements ProviderInterface
     public function provide(Operation $operation, array $uriVariables = [], array $context = []): object|array|null
     {
         $book = BookModel::find($uriVariables['id']);
-        return new BookModel(id: $book->id, title: $book->title);
+        return new Book(id: $book->id, title: $book->title);
     }
 }
 ```
