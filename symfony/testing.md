@@ -352,7 +352,7 @@ docker compose exec php \
 If everything is working properly, you should see `OK (5 tests, 17 assertions)`.
 Your REST API is now properly tested!
 
-Check out the [testing documentation](../core/testing.md) to discover the full range of assertions and other features provided by API Platform's test utilities.
+Check out the [testing documentation](testing-utilities.md) to discover the full range of assertions and other features provided by API Platform's test utilities.
 
 ## Writing Unit Tests
 
