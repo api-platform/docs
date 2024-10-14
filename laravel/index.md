@@ -255,7 +255,7 @@ class ApiServiceProvider extends ServiceProvider
             return new BookProvider();
         });
 
-        $this->app->tag([BookProvider::class], 'provider');
+        $this->app->tag([BookProvider::class], ProviderInterface::class);
     }
 }
 ```
