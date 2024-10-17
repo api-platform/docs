@@ -8,20 +8,20 @@ To use this generator you need [Node.js](https://nodejs.org/).
 
 Create a React Native application using [Expo CLI](https://docs.expo.io/workflow/expo-cli/):
 
-```console
+```bash
 npm install -g expo-cli
 npm init expo-app my-app
 ```
 
 When asked, choose to use the blank template, then move to the created directory:
 
-```console
+```bash
 cd my-app
 ```
 
 Install the required dependencies:
 
-```console
+```bash
 npm install redux react-redux redux-thunk redux-form react-native-elements react-native-router-flux react-native-vector-icons prop-types whatwg-url buffer react-native-event-source react-native-gesture-handler react-native-reanimated react-native-screens
 ```
 
@@ -29,7 +29,7 @@ npm install redux react-redux redux-thunk redux-form react-native-elements react
 
 In the app directory, generate the files for the resource you want:
 
-```console
+```bash
 npm init @api-platform/client https://demo.api-platform.com . -- --generator react-native --resource book
 ```
 
@@ -107,7 +107,7 @@ export default class App extends Component {
 
 The code is ready to be executed!
 
-```console
+```bash
 expo start
 ```
 

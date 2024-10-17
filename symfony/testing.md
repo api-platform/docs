@@ -22,20 +22,17 @@ Before creating your functional tests, you will need a dataset to pre-populate y
 
 First, install [Foundry](https://github.com/zenstruck/foundry) and [Doctrine/DoctrineFixturesBundle](https://github.com/doctrine/DoctrineFixturesBundle):
 
-```console
-docker compose exec php \
-    composer require --dev foundry orm-fixtures
+```bash
+composer require --dev foundry orm-fixtures
 ```
 
 Thanks to Symfony Flex, [DoctrineFixturesBundle](https://github.com/doctrine/DoctrineFixturesBundle) and [Foundry](https://github.com/zenstruck/foundry) are ready to use!
 
 Then, create some factories for [the bookstore API you created in the tutorial](index.md):
 
-```console
-docker compose exec php \
-    bin/console make:factory 'App\Entity\Book'
-docker compose exec php \
-    bin/console make:factory 'App\Entity\Review'
+```bash
+bin/console make:factory 'App\Entity\Book'
+bin/console make:factory 'App\Entity\Review'
 ```
 
 Improve the default values:
@@ -78,11 +75,9 @@ use function Zenstruck\Foundry\lazy;
 
 Create some stories:
 
-```console
-docker compose exec php \
-    bin/console make:story 'DefaultBooks'
-docker compose exec php \
-    bin/console make:story 'DefaultReviews'
+```bash
+bin/console make:story 'DefaultBooks'
+bin/console make:story 'DefaultReviews'
 ```
 
 ```php
@@ -143,9 +138,8 @@ class AppFixtures extends Fixture
 
 You can now load your fixtures in the database with the following command:
 
-```console
-docker compose exec php \
-    bin/console doctrine:fixtures:load
+```bash
+bin/console doctrine:fixtures:load
 ```
 
 To learn more about fixtures, take a look at the documentation of [Foundry](https://symfony.com/bundles/ZenstruckFoundryBundle/current/index.html).
@@ -161,9 +155,8 @@ If you don't use the distribution, run `composer require --dev symfony/test-pack
 
 Install [DAMADoctrineTestBundle](https://github.com/dmaicher/doctrine-test-bundle) to reset the database automatically before each test:
 
-```console
-docker compose exec php \
-    composer require --dev dama/doctrine-test-bundle
+```bash
+composer require --dev dama/doctrine-test-bundle
 ```
 
 And activate it in the `phpunit.xml.dist` file:
@@ -179,11 +172,11 @@ And activate it in the `phpunit.xml.dist` file:
 </phpunit>
 ```
 
-Optionally, you can install [JSON Schema for PHP](https://github.com/justinrainbow/json-schema) if you want to use the [JSON Schema](https://json-schema.org) test assertions provided by API Platform:
+Optionally, you can install [JSON Schema for PHP](https://github.com/justinrainbow/json-schema) if you want to use the
+[JSON Schema](https://json-schema.org) test assertions provided by API Platform:
 
-```console
-docker compose exec php \
-    composer require --dev justinrainbow/json-schema
+```bash
+composer require --dev justinrainbow/json-schema
 ```
 
 Your API is now ready to be functionally tested. Create your test classes under the `tests/` directory.
@@ -344,9 +337,8 @@ There is one caveat though: in some tests, it is necessary to perform multiple r
 
 All you have to do now is to run your tests:
 
-```console
-docker compose exec php \
-    bin/phpunit
+```bash
+bin/phpunit
 ```
 
 If everything is working properly, you should see `OK (5 tests, 17 assertions)`.

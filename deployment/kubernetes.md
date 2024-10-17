@@ -29,7 +29,7 @@ Change the name "test-api-platform" to your Google project ID (not the project n
 [Quickstart Google Cloud](https://cloud.google.com/sdk/docs/quickstart?hl=de)
 If you do not have gcloud yet, install it with these command.
 
-```console
+```bash
 curl https://sdk.cloud.google.com | bash
 ```
 
@@ -38,7 +38,7 @@ curl https://sdk.cloud.google.com | bash
 Versioning: The 0.1.0 is the version. This value should be the same as the attribute `appVersion` in `Chart.yaml`.
 Infos for [Google Container pulling and pushing](https://cloud.google.com/container-registry/docs/pushing-and-pulling)
 
-```console
+```bash
 docker build -t gcr.io/test-api-platform/php:0.1.0 -t gcr.io/test-api-platform/php:latest api --target frankenphp_prod
 docker build -t gcr.io/test-api-platform/pwa:0.1.0 -t gcr.io/test-api-platform/pwa:latest pwa --target prod
 ```
@@ -51,7 +51,7 @@ docker build -t gcr.io/test-api-platform/pwa:0.1.0 -t gcr.io/test-api-platform/p
 
 #### 2. Push your images to your Docker registry
 
-```console
+```bash
 gcloud auth configure-docker
 docker push gcr.io/test-api-platform/php
 docker push gcr.io/test-api-platform/pwa
@@ -59,7 +59,7 @@ docker push gcr.io/test-api-platform/pwa
 
 Optional: push the version images:
 
-```console
+```bash
 docker push gcr.io/test-api-platform/php:0.1.0
 docker push gcr.io/test-api-platform/pwa:0.1.0
 ```
@@ -72,7 +72,7 @@ The result should look similar to these images.
 
 ### 1. Check the Helm version
 
-```console
+```bash
 helm version
 ```
 
@@ -80,7 +80,7 @@ If you are using version 2.x follow this [guide to migrate Helm to v3](https://h
 
 ### 2. Firstly you need to update helm dependencies by running
 
-```console
+```bash
 helm dependency update ./helm/api-platform
 ```
 
@@ -89,13 +89,13 @@ Actual this is [bitnami/PostgreSQL](https://bitnami.com/stack/postgresql/helm), 
 
 ### 3. Optional: If you made changes to the Helm chart, check if its format is correct
 
-```console
+```bash
 helm lint ./helm/api-platform
 ```
 
 ### 4. Deploy your API to the container
 
-```console
+```bash
 helm upgrade main ./helm/api-platform --namespace=default --create-namespace --wait \
     --install \
     --set "php.image.repository=gcr.io/test-api-platform/php" \
@@ -125,7 +125,7 @@ get access on your local machine to the deploy. See image below.
 If you prefer to use a managed DBMS like [Heroku Postgres](https://www.heroku.com/postgres) or
 [Google Cloud SQL](https://cloud.google.com/sql/docs/postgres/) (recommended):
 
-```console
+```bash
 helm upgrade api-platform ./helm/api-platform \
     # ...
     --set postgresql.enabled=false \
@@ -140,7 +140,7 @@ site hosting service](https://create-react-app.dev/docs/deployment/).
 You can access the php container of the pod with the following command.
 In this example the symfony console is called.
 
-```console
+```bash
 CADDY_PHP_POD=$(kubectl --namespace=default get pods -l app.kubernetes.io/name=api-platform -o jsonpath="{.items[0].metadata.name}")
 kubectl --namespace=default exec -it $CADDY_PHP_POD -c api-platform-php -- bin/console
 ```
@@ -168,7 +168,7 @@ You can upgrade with the same command from the installation and pass all paramet
 Infos about [best practices for tagging images for Kubernetes](https://kubernetes.io/docs/concepts/containers/images/)
 You have to use the \*.image.pullPolicy=Always see the last 3 parameters.
 
-```console
+```bash
 PHP_POD=$(kubectl --namespace=bar get pods -l app=php -o jsonpath="{.items[0].metadata.name}")
 kubectl --namespace=bar exec -it $PHP_POD -- bin/console doctrine:schema:create
 helm upgrade api-platform ./helm/api-platform --namespace=default \

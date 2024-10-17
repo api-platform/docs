@@ -34,7 +34,7 @@ If you already have an existing project, skip directly to the next section.
 If you don't have an existing Laravel project, [create one](https://laravel.com/docs/installation).
 All Laravel installation methods are supported. For instance, you can use Composer:
 
-```console
+```bash
 composer create-project laravel/laravel my-api-platform-laravel-app
 cd my-api-platform-laravel-app
 ```
@@ -43,19 +43,19 @@ cd my-api-platform-laravel-app
 
 In your Laravel project, install the API Platform integration for Laravel:
 
-```console
+```bash
 composer require api-platform/laravel
 ```
 
 After installing API Platform, publish its assets and config:
 
-```console
+```bash
 php artisan api-platform:install
 ```
 
 If it's not already done, start the built-in web server:
 
-```console
+```bash
 php artisan serve
 ```
 
@@ -67,7 +67,7 @@ Open `http://127.0.0.1:8000/api/`, your API is already active and documented... 
 
 After installing API Platform, you can publish its assets and config using the `api-platform:install` Artisan command.
 
-```console
+```bash
 php artisan api-platform:install
 ```
 
@@ -77,7 +77,7 @@ To discover how API Platform framework works, we will create an API to manage a 
 
 Let's start by creating a `Book` model:
 
-```console
+```bash
 php artisan make:model Book
 ```
 
@@ -89,7 +89,7 @@ But there is a better alternative: using a migration class.
 
 First, create a migration class for the `books` table:
 
-```console
+```bash
  php artisan make:migration create_books_table
 ```
 
@@ -114,7 +114,7 @@ Open the generated migration class (`database/migrations/<timestamp>_create_book
 
 Finally, execute the migration:
 
-```console
+```bash
 php artisan migrate
 ```
 
@@ -315,7 +315,7 @@ By default, only the REST endpoints are enabled, but API Platform also [supports
 
 Install the GraphQL support package:
 
-```console
+```bash
 composer require api-platform/graphql:^4
 ```
 
@@ -459,7 +459,7 @@ Laravel provides a convenient way to do that: [Eloquent Factories](https://larav
 
 First, create a factory class for our `Book` model:
 
-```console
+```bash
 php artisan make:factory BookFactory
 ```
 
@@ -541,7 +541,7 @@ Reference this factory in the seeder (`database/seeder/DatabaseSeeder.php`):
 
 Finally, seed the database:
 
-```console
+```bash
 php artisan db:seed
 ```
 
@@ -741,7 +741,7 @@ return [
 
 To authorize write operations (`POST`, `PATCH`, `PUT`) and validate user input, you may generate a [Form Request class](https://laravel.com/docs/validation#creating-form-requests):
 
-```console
+```bash
 php artisan make:request BookFormRequest
 ```
 
@@ -810,7 +810,7 @@ Read the detailed documentation about [Laravel data validation in API Platform](
 
 To protect an operation and ensure that only authorized users can access it, start by creating a Laravel [policy](https://laravel.com/docs/authorization#creating-policies):
 
-```console
+```bash
 php artisan make:policy BookPolicy --model=Book
 ```
 

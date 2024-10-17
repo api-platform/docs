@@ -2,20 +2,20 @@
 
 Bootstrap a Vue 3 application using create-vue:
 
-```console
+```bash
 npm init vue@latest -- --typescript --router --pinia --eslint-with-prettier my-app
 cd my-app
 ```
 
 Install the required dependencies:
 
-```console
+```bash
 npm install dayjs qs @types/qs
 ```
 
 To generate all the code you need for a given resource run the following command:
 
-```console
+```bash
 npm init @api-platform/client https://demo.api-platform.com src/ -- --generator vue --resource book
 ```
 
@@ -41,7 +41,7 @@ Replace the content of `App.vue` with the following code:
 
 Optionally, install Tailwind to get an app that looks good:
 
-```console
+```bash
 npm install -D tailwindcss postcss autoprefixer
 npx tailwindcss init -p
 ```
@@ -70,7 +70,7 @@ Replace the content of `src/assets/main.css` by:
 
 You can launch the server with:
 
-```console
+```bash
 npm run dev
 ```
 

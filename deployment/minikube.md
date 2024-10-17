@@ -6,7 +6,7 @@ If you have no existing installation of Minikube on your computer, [follow the o
 
 When Minikube is installed, start the cluster:
 
-```console
+```bash
 minikube start --addons registry --addons dashboard
 ```
 
@@ -20,7 +20,7 @@ Finally, [install Helm](https://helm.sh/docs/intro/install/). We'll use it to de
 
 First, build the images:
 
-```console
+```bash
 docker build -t localhost:5000/php api --target api_platform_php
 docker build -t localhost:5000/caddy api --target api_platform_caddy
 docker build -t localhost:5000/pwa pwa --target api_platform_pwa_prod
@@ -28,7 +28,7 @@ docker build -t localhost:5000/pwa pwa --target api_platform_pwa_prod
 
 Then push the images in the registry installed in Minikube:
 
-```console
+```bash
 docker push localhost:5000/php
 docker push localhost:5000/caddy
 docker push localhost:5000/pwa
@@ -38,7 +38,7 @@ docker push localhost:5000/pwa
 
 Finally, deploy the project using the Helm chart:
 
-```console
+```bash
 $ helm install my-project helm/api-platform \
   --set php.image.repository=localhost:5000/php \
   --set php.image.tag=latest \

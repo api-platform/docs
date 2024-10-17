@@ -3,7 +3,7 @@
 Create a Quasar Framework application using
 [Quasar CLI](https://quasar.dev/start/quasar-cli):
 
-```console
+```bash
 npm i -g @quasar/cli
 npm init quasar
 cd my-app
@@ -11,7 +11,7 @@ cd my-app
 
 It will ask you some questions, you can use these answers:
 
-```console
+```bash
 What would you like to build ? App with Quasar CLI, let's go!
 Project folder: my-app
 Pick Quasar version: Quasar v2 (Vue 3 | latest and greatest)
@@ -25,13 +25,13 @@ Pick an ESLint Preset: Prettier
 
 Install the required dependencies:
 
-```console
+```bash
 npm install dayjs qs @types/qs
 ```
 
 In the app directory, generate the files for the resource you want:
 
-```console
+```bash
 npm init @api-platform/client https://demo.api-platform.com src/ -- --generator quasar --resource foo
 ```
 
@@ -72,7 +72,7 @@ framework: {
 
 You can launch the server with:
 
-```console
+```bash
 quasar dev
 ```
 

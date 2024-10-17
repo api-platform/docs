@@ -5,7 +5,7 @@
 If you are running API Platform on development machine which does not have valid TLS certificate,
 add `NODE_TLS_REJECT_UNAUTHORIZED=0` before running create-client:
 
-```console
+```bash
 NODE_TLS_REJECT_UNAUTHORIZED=0 npm init @api-platform/client --generator typescript https://127.0.0.1:8000/api src/
 ```
 
@@ -14,7 +14,7 @@ NODE_TLS_REJECT_UNAUTHORIZED=0 npm init @api-platform/client --generator typescr
 The generator does not perform any authentication, so you must ensure that all referenced Hydra paths for your API are
 accessible anonymously. If you are using API Platform this will at least include:
 
-```console
+```bash
 api_entrypoint                             ANY      ANY      ANY    /{index}.{_format}
 api_doc                                    ANY      ANY      ANY    /docs.{_format}
 api_jsonld_context                         ANY      ANY      ANY    /contexts/{shortName}.{_format}
@@ -39,7 +39,7 @@ you are using by running something like `curl https://demo.api-platform.com/`.
 
 If you receive a message like this:
 
-```console
+```bash
 { Error
 at done (/usr/local/share/.config/yarn/global/node_modules/jsonld/js/jsonld.js:6851:19)
 at <anonymous>

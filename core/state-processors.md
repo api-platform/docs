@@ -26,7 +26,7 @@ process the data for a given resource will be used.
 ### Custom State Processor with Symfony
 If the [Symfony MakerBundle](https://symfony.com/doc/current/bundles/SymfonyMakerBundle) is installed in your project, you can use the following command to generate a custom state processor easily:
 
-```console
+```bash
 bin/console make:state-processor
 ```
 
@@ -81,7 +81,7 @@ class BlogPost {}
 
 ### Custom State Processor with Laravel
 Using [Laravel Artisan Console](https://laravel.com/docs/artisan), you can generate a custom state processor easily with the following command:
-```console
+```bash
 php artisan make:state-processor
 ```
 

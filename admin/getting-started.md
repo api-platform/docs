@@ -8,14 +8,14 @@ Otherwise, follow this guide.
 
 If you don't have an existing React Application, create one using [Create React App](https://create-react-app.dev/):
 
-```console
+```bash
 npm init react-app my-admin
 cd my-admin
 ```
 
 Then, install the `@api-platform/admin` library:
 
-```console
+```bash
 npm install @api-platform/admin
 ```
 
@@ -57,9 +57,8 @@ nelmio_cors:
 
 Clear the cache to apply this change:
 
-```console
-docker compose exec php \
-    bin/console cache:clear --env=prod
+```bash
+bin/console cache:clear --env=prod
 ```
 
 Your new administration interface is ready! Type `npm start` to try it!

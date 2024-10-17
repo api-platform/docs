@@ -14,7 +14,7 @@ Be careful, API Platform only supports Elasticsearch >= 7.11.0 < 8.0.
 
 To enable the reading support for Elasticsearch, simply require the Elasticsearch-PHP package using Composer:
 
-```console
+```bash
 composer require elasticsearch/elasticsearch:^7.11
 ```
 

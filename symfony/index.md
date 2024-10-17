@@ -74,13 +74,13 @@ services using [Docker Compose](https://docs.docker.com/compose/):
 
 Build the images:
 
-```console
+```bash
 docker compose build --no-cache
 ```
 
 Then, start Docker Compose in detached mode:
 
-```console
+```bash
 docker compose up --wait
 ```
 
@@ -90,7 +90,7 @@ docker compose up --wait
 >
 > Alternatively, run the following command to start the web server on port `8080` with HTTPS disabled:
 >
-> ```console
+> ```bash
 > SERVER_NAME=localhost:80 HTTP_PORT=8080 TRUSTED_HOSTS=localhost docker compose up --wait`
 > ```
 
@@ -112,7 +112,7 @@ The following components are available:
 
 To see the container's logs, run:
 
-```console
+```bash
 docker compose logs -f
 ```
 
@@ -147,6 +147,11 @@ That being said, keep in mind that API Platform is 100% independent of the persi
 best suit(s) your needs (including NoSQL databases or remote web services) by implementing the [right interfaces](../core/state-providers.md). API Platform even supports using several persistence
 systems together in the same project.
 
+> [!TIP]
+> The `php` container is where your API app stands. Prefixing a command by `docker compose exec php` allows executing the
+> given command in this container. You may want [to create an alias](https://www.linfo.org/alias.html) to make your life easier.
+> So, for example, you could run a command like this: `docker compose exec php <command>`.
+
 ### Using Symfony CLI
 
 Alternatively, the API Platform server component can also be installed directly on a local machine.
@@ -163,32 +168,32 @@ application using [the Symfony binary](https://symfony.com/download):
 
 Create a new Symfony project:
 
-```console
+```bash
 symfony new bookshop-api
 ```
 
 Enter the project directory:
 
-```console
+```bash
 cd bookshop-api
 ```
 
 Install the API Platform's server component in this skeleton:
 
-```console
+```bash
 symfony composer require api
 ```
 
 Then, create the database and its schema:
 
-```console
+```bash
 symfony console doctrine:database:create
 symfony console doctrine:schema:create
 ```
 
 And start the built-in PHP server:
 
-```console
+```bash
 symfony serve
 ```
 
@@ -450,9 +455,8 @@ Modify these files as described in these patches:
 
 **Tip**: you can also use Symfony [MakerBundle](https://symfonycasts.com/screencast/symfony-fundamentals/maker-command?cid=apip) thanks to the `--api-resource` option:
 
-```console
-docker compose exec php \
-    bin/console make:entity --api-resource
+```bash
+bin/console make:entity --api-resource
 ```
 
 Doctrine's [attributes](https://www.doctrine-project.org/projects/doctrine-orm/en/latest/reference/attributes-reference.html) map these entities to tables in the database.
@@ -466,15 +470,10 @@ or in Kévin's book "[Persistence in PHP with the Doctrine ORM](https://www.amaz
 Now, delete the file `api/src/Entity/Greeting.php`. This demo entity isn't useful anymore.
 Finally, generate a new database migration using [Doctrine Migrations](https://symfony.com/doc/current/doctrine.html#migrations-creating-the-database-tables-schema) and apply it:
 
-```console
-docker compose exec php \
-    bin/console doctrine:migrations:diff
-docker compose exec php \
-    bin/console doctrine:migrations:migrate
+```bash
+bin/console doctrine:migrations:diff
+bin/console doctrine:migrations:migrate
 ```
-
-The `php` container is where your API app stands. Prefixing a command by `docker compose exec php` allows executing the
-given command in this container. You may want [to create an alias](https://www.linfo.org/alias.html) to make your life easier.
 
 **We now have a working API with read and write capabilities!**
 
@@ -666,14 +665,12 @@ ISBN isn't valid...
 Isn't API Platform a REST **and** GraphQL framework? That's true! GraphQL support isn't enabled by default. To add it we
 need to install the [graphql-php](https://webonyx.github.io/graphql-php/) library. Run the following command:
 
-```console
-docker compose exec php sh -c '
-    composer require webonyx/graphql-php
-    bin/console cache:clear
-'
+```bash
+composer require api-platform/graphql
 ```
 
-You now have a GraphQL API! Open `https://localhost/graphql` (or `https://localhost/api/graphql` if you used Symfony Flex to install API Platform) to play with it using the nice [GraphiQL](https://github.com/graphql/graphiql)
+You now have a GraphQL API! Open `https://localhost/graphql` (or `https://localhost/api/graphql` if you used Symfony Flex
+to install API Platform) to play with it using the nice [GraphiQL](https://github.com/graphql/graphiql)
 UI that is shipped with API Platform:
 
 ![GraphQL endpoint](images/api-platform-2.6-graphql.png)
@@ -757,7 +754,7 @@ easily tune and customize. The generator also supports [React Native](../create-
 
 The distribution comes with a skeleton ready to welcome the [Next.js](https://nextjs.org/) flavor of the generated code. To bootstrap your app, run:
 
-```console
+```bash
 docker compose exec pwa \
     pnpm create @api-platform/client
 ```

@@ -9,7 +9,7 @@ For development purposes such as debugging tests or remote API requests,
 
 To enable it, run:
 
-```console
+```bash
 XDEBUG_MODE=debug XDEBUG_SESSION=1 docker compose up --wait
 ```
 
@@ -36,7 +36,7 @@ You can now use the debugger!
 
    Example:
 
-   ```console
+   ```bash
    XDEBUG_SESSION=1 PHP_IDE_CONFIG="serverName=api" php bin/console ...
    ```
 
@@ -73,7 +73,7 @@ Note that this configuration includes the path mappings for the Docker image.
 Inspect the installation with the following command. The requested Xdebug
 version should be displayed in the output.
 
-```console
+```bash
 $ docker compose exec php \
     php --version
 

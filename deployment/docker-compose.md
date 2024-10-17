@@ -29,7 +29,7 @@ Don't forget to add your SSH key or create a password then press the "Finalize a
 Then, wait a few seconds while your Droplet is provisioning.
 When your Droplet is ready, use SSH to connect:
 
-```console
+```bash
 ssh root@<droplet-ip>
 ```
 
@@ -60,13 +60,13 @@ Deploy keys are also [supported by GitLab](https://docs.gitlab.com/ee/user/proje
 
 Example with Git:
 
-```console
+```bash
 git clone git@github.com:<username>/<project-name>.git
 ```
 
 Go into the directory containing your project (`<project-name>`), and start the app in production mode:
 
-```console
+```bash
 SERVER_NAME=your-domain-name.example.com \
 APP_SECRET=ChangeMe \
 POSTGRES_PASSWORD=ChangeMe \

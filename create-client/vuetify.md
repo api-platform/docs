@@ -2,20 +2,20 @@
 
 Bootstrap a Vuetify 3 application using `create-vuetify`:
 
-```console
+```bash
 npm init vuetify -- --typescript --preset essentials
 cd my-app
 ```
 
 Install the required dependencies:
 
-```console
+```bash
 npm install dayjs qs @types/qs vue-i18n
 ```
 
 To generate all the code you need for a given resource run the following command:
 
-```console
+```bash
 npm init @api-platform/client https://demo.api-platform.com src/ -- --generator vuetify --resource book
 ```
 
@@ -55,7 +55,7 @@ In the same file add `.use(i18n)` chained with the other `use()` functions.
 
 You can launch the server with:
 
-```console
+```bash
 npm run dev
 ```
 
