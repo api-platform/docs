@@ -2,20 +2,20 @@
 
 Bootstrap a [Nuxt 3](https://nuxt.com/) application:
 
-```console
+```bash
 npx nuxi init my-app
 cd my-app
 ```
 
 Install the required dependencies:
 
-```console
+```bash
 yarn add dayjs @pinia/nuxt qs @types/qs
 ```
 
 To generate the code you need for a given resource, run the following command:
 
-```console
+```bash
 yarn create @api-platform/client https://demo.api-platform.com . --generator nuxt --resource foo
 ```
 
@@ -38,7 +38,7 @@ Delete `app.vue` as it will prevent Nuxt router to work correctly.
 
 Optionally, install Tailwind to get an app that looks good:
 
-```console
+```bash
 yarn add -D tailwindcss postcss autoprefixer
 yarn tailwindcss init -p
 ```
@@ -90,7 +90,7 @@ Create the file `assets/css/main.css` and add this code in it:
 
 You can launch the server with:
 
-```console
+```bash
 yarn dev -o
 ```
 

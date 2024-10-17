@@ -18,7 +18,7 @@ the legacy [mongo](https://secure.php.net/manual/en/book.mongo.php) extension.
 
 If the `mongodb` PHP extension is not installed yet, [install it beforehand](https://secure.php.net/manual/en/mongodb.installation.pecl.php).
 
-If you are using the [API Platform Distribution](../symfony/index.md), modify the `Dockerfile` to add the extension:
+Or if you are using the [API Platform Distribution with Symfony](../symfony/index.md), modify the `Dockerfile` to add the extension:
 
 ```diff
 # api/Dockerfile
@@ -36,7 +36,7 @@ If you are using the [API Platform Distribution](../symfony/index.md), modify th
 
 Then rebuild the `php` image:
 
-```console
+```bash
 docker compose build php
 ```
 
@@ -64,12 +64,11 @@ services:
 # ...
 ```
 
-Once the extension is installed, to enable the MongoDB support, require the [Doctrine MongoDB ODM bundle](https://github.com/doctrine/DoctrineMongoDBBundle)
+In all cases, enable the MongoDB support by requiring the [Doctrine MongoDB ODM bundle](https://github.com/doctrine/DoctrineMongoDBBundle)
 package using Composer:
 
-```console
-docker compose exec php \
-    composer require doctrine/mongodb-odm-bundle
+```bash
+composer require doctrine/mongodb-odm-bundle
 ```
 
 Execute the contrib recipe to have it already configured.

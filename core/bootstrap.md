@@ -3,7 +3,7 @@
 You may want to run a minimal version of API Platform. This one file runs API Platform (without GraphQL, Eloquent, Doctrine MongoDB...).
 It requires the following Composer packages:
 
-```console
+```bash
 composer require \
     api-platform/core \
     phpdocumentor/reflection-docblock \

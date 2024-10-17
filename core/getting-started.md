@@ -22,7 +22,7 @@ Basically, it is a Symfony edition packaged with the best tools to develop a RES
 Alternatively, you can use [Composer](https://getcomposer.org/) to install the standalone bundle in an existing Symfony Flex
 project:
 
-```console
+```bash
 composer require api
 ```
 
@@ -252,7 +252,7 @@ Serialization, OpenAPI, and hydra docs are generated from these metadata directl
 
 First, create a migration class for the `products` table:
 
-```console
+```bash
  php artisan make:migration create_products_table
 ```
 
@@ -277,7 +277,7 @@ Open the generated migration class (`database/migrations/<timestamp>_create_prod
 
 Finally, execute the migration:
 
-```console
+```bash
 php artisan migrate
 ```
 

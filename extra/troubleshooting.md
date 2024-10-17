@@ -14,13 +14,13 @@ If the `php` container cannot start and display this `Error starting userland pr
 
 Find out if any service listens on port 80. You can use this command on UNIX-based OSes like macOS and Linux:
 
-```console
+```bash
 sudo lsof -n -i :80 | grep LISTEN
 ```
 
 On Windows, you can use `netstat`. This will give you all TCP/IP network connections and not just processes listening to port 80.
 
-```console
+```bash
 netstat -a -b
 ```
 

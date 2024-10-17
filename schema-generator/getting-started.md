@@ -2,17 +2,17 @@
 
 ## Installation
 
-If you use [the API Platform Symfony variant](../symfony/index.md), the Schema Generator is already installed as a development
-dependency of your project and can be invoked through Docker:
+If you use [the API Platform Distribution with Symfony](../symfony/index.md), the Schema Generator is already installed as a development
+dependency of your project and can be invoked with :
 
-```console
-docker compose exec php \
-    vendor/bin/schema
+```bash
+vendor/bin/schema
 ```
 
-The Schema Generator can also [be downloaded independently as a PHAR](https://github.com/api-platform/schema-generator/releases) or installed in an existing project using [Composer](https://getcomposer.org):
+The Schema Generator can also [be downloaded independently as a PHAR](https://github.com/api-platform/schema-generator/releases)
+or installed in an existing project using [Composer](https://getcomposer.org):
 
-```console
+```bash
 composer require --dev api-platform/schema-generator
 ```
 
@@ -97,15 +97,14 @@ openApi:
 
 Run the generator with the config file as parameter:
 
-```console
+```bash
 vendor/bin/schema generate api/src/ api/config/schema.yaml -vv
 ```
 
 Using [the API Platform Symfony variant](../symfony/index.md):
 
-```console
-docker compose exec php \
-    vendor/bin/schema generate src/ config/schema.yaml -vv
+```bash
+vendor/bin/schema generate src/ config/schema.yaml -vv
 ```
 
 The corresponding PHP classes will be automatically generated in the `src/` directory!
@@ -134,6 +133,6 @@ When cardinality cannot be automatically extracted, its value is set to `unknown
 
 Usage:
 
-```console
+```bash
 vendor/bin/schema extract-cardinalities
 ```

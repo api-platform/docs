@@ -56,7 +56,7 @@ web: vendor/bin/heroku-php-apache2 public/
 
 Be sure to add the Apache Pack to your dependencies:
 
-```console
+```bash
 composer require symfony/apache-pack
 ```
 

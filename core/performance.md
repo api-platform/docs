@@ -456,14 +456,14 @@ services:
 
 2. Add your Blackfire.io ID and server token to your `.env` file at the root of your project (be sure not to commit this to a public repository):
 
-```console
+```bash
 BLACKFIRE_SERVER_ID=xxxxxxxxxx
 BLACKFIRE_SERVER_TOKEN=xxxxxxxxxx
 ```
 
 Or set it in the console before running Docker commands:
 
-```console
+```bash
 export BLACKFIRE_SERVER_ID=xxxxxxxxxx
 export BLACKFIRE_SERVER_TOKEN=xxxxxxxxxx
 ```
@@ -483,7 +483,7 @@ export BLACKFIRE_SERVER_TOKEN=xxxxxxxxxx
 
 4. Rebuild and restart all your containers
 
-```console
+```bash
 docker compose build
 docker compose up --wait
 ```

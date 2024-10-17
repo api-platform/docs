@@ -13,32 +13,32 @@ from the ecosystem:
 
 Bootstrap a React application:
 
-```console
+```bash
 npm create vite@latest my-app -- --template react-ts
 cd my-app
 ```
 
 Install the required dependencies:
 
-```console
+```bash
 npm install react-router-dom react-hook-form
 ```
 
 Optionally, install Bootstrap and Font Awesome to get an app that looks good:
 
-```console
+```bash
 npm install bootstrap font-awesome
 ```
 
 Finally, start the integrated web server:
 
-```console
+```bash
 npm run dev
 ```
 
 ## Generating a Web App
 
-```console
+```bash
 npm init @api-platform/client https://demo.api-platform.com src/ -- --generator react --resource book
 ```
 

@@ -34,7 +34,7 @@ Note, that if your entity is not Doctrine-related or Eloquent-related, you need 
 If the [Symfony MakerBundle](https://symfony.com/doc/current/bundles/SymfonyMakerBundle) is installed in your project,
 you can use the following command to generate a custom state provider easily:
 
-```console
+```bash
 bin/console make:state-provider
 ```
 
@@ -145,7 +145,7 @@ class BlogPost {}
 
 Using [Laravel Artisan Console](https://laravel.com/docs/artisan), you can generate a custom state provider easily with the following command:
 
-```console
+```bash
 php artisan make:state-provider
 ```
 
