@@ -62,7 +62,7 @@ First, install the [skaffold CLI](https://skaffold.dev/docs/install/#standalone-
 
 Then, run minikube:
 
-```bash
+```console
 minikube start
 ```
 
@@ -70,7 +70,7 @@ Add Skaffold configuration in the file `./helm/skaffold.yaml`. You can find a [c
 
 Finally, go to the helm folder, and run skaffold in dev mode:
 
-```bash
+```console
 cd ./helm
 skaffold dev
 ```

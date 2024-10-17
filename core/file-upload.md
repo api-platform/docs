@@ -25,8 +25,7 @@ api_platform:
 Install the bundle with the help of Composer:
 
 ```console
-docker compose exec php \
-    composer require vich/uploader-bundle
+composer require vich/uploader-bundle
 ```
 
 This will create a new configuration file that you will need to slightly change

@@ -10,15 +10,13 @@ The generated schema can be used with libraries such as [react-json-schema-form]
 To export the schema corresponding to an API Resource, run the following command:
 
 ```console
-docker compose exec php \
-    bin/console api:json-schema:generate 'App\Entity\Book'
+bin/console api:json-schema:generate 'App\Entity\Book'
 ```
 
 To see all options available, try:
 
 ```console
-docker compose exec php \
-    bin/console help api:json-schema:generate
+bin/console help api:json-schema:generate
 ```
 
 ## Overriding the JSON Schema Specification

@@ -2,15 +2,15 @@
 
 ## Installation
 
-If you use [the API Platform Symfony variant](../symfony/index.md), the Schema Generator is already installed as a development
-dependency of your project and can be invoked through Docker:
+If you use [the API Platform Distribution with Symfony](../symfony/index.md), the Schema Generator is already installed
+as a development dependency of your project and can be invoked with:
 
 ```console
-docker compose exec php \
-    vendor/bin/schema
+vendor/bin/schema
 ```
 
-The Schema Generator can also [be downloaded independently as a PHAR](https://github.com/api-platform/schema-generator/releases) or installed in an existing project using [Composer](https://getcomposer.org):
+The Schema Generator can also [be downloaded independently as a PHAR](https://github.com/api-platform/schema-generator/releases)
+or installed in an existing project using [Composer](https://getcomposer.org):
 
 ```console
 composer require --dev api-platform/schema-generator
@@ -104,8 +104,7 @@ vendor/bin/schema generate api/src/ api/config/schema.yaml -vv
 Using [the API Platform Symfony variant](../symfony/index.md):
 
 ```console
-docker compose exec php \
-    vendor/bin/schema generate src/ config/schema.yaml -vv
+vendor/bin/schema generate src/ config/schema.yaml -vv
 ```
 
 The corresponding PHP classes will be automatically generated in the `src/` directory!

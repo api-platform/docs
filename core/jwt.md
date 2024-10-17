@@ -1,7 +1,10 @@
 # JWT Authentication
 
-> [JSON Web Token (JWT)](https://jwt.io/) is a JSON-based open standard ([RFC 7519](https://tools.ietf.org/html/rfc7519)) for creating access tokens that assert some number of claims. For example, a server could generate a token that has the claim "logged in as admin" and provide that to a client. The client could then use that token to prove that he/she is logged in as admin.
-> The tokens are signed by the server's key, so the server is able to verify that the token is legitimate. The tokens are designed to be compact, URL-safe and usable especially in web browser single sign-on (SSO) context.
+> [JSON Web Token (JWT)](https://jwt.io/) is a JSON-based open standard ([RFC 7519](https://tools.ietf.org/html/rfc7519)) for creating access tokens that assert
+> some number of claims. For example, a server could generate a token that has the claim "logged in as admin" and
+> provide that to a client. The client could then use that token to prove that he/she is logged in as admin.
+> The tokens are signed by the server's key, so the server is able to verify that the token is legitimate. The tokens
+> are designed to be compact, URL-safe and usable especially in web browser single sign-on (SSO) context.
 >
 > ―[Wikipedia](https://en.wikipedia.org/wiki/JSON_Web_Token)
 
@@ -14,11 +17,17 @@ API Platform allows to easily add a JWT-based authentication to your API using [
 We begin by installing the bundle:
 
 ```console
-docker compose exec php \
-    composer require lexik/jwt-authentication-bundle
+composer require lexik/jwt-authentication-bundle
+```
+Then we need to generate the public and private keys used for signing JWT tokens.
+
+You can generate them by using this command:
+
+```console
+php bin/console lexik:jwt:generate-keypair
 ```
 
-Then we need to generate the public and private keys used for signing JWT tokens. If you're using the [API Platform distribution](../symfony/index.md), you may run this from the project's root directory:
+Or if you're using the [API Platform distribution with Symfony](../symfony/index.md), you may run this from the project's root directory:
 
 ```console
 docker compose exec php sh -c '
@@ -30,13 +39,15 @@ docker compose exec php sh -c '
 '
 ```
 
-Note that the `setfacl` command relies on the `acl` package. This is installed by default when using the API Platform docker distribution but may need to be installed in your working environment in order to execute the `setfacl` command.
+Note that the `setfacl` command relies on the `acl` package. This is installed by default when using the API Platform
+docker distribution but may need to be installed in your working environment in order to execute the `setfacl` command.
 
-This takes care of keypair creation (including using the correct passphrase to encrypt the private key), and setting the correct permissions on the keys allowing the web server to read them.
+This takes care of keypair creation (including using the correct passphrase to encrypt the private key), and setting the
+correct permissions on the keys allowing the web server to read them.
 
-Since these keys are created by the `root` user from a container, your host user will not be able to read them during the `docker compose build caddy` process. Add the `config/jwt/` folder to the `api/.dockerignore` file so that they are skipped from the result image.
-
-If you want the keys to be auto generated in `dev` environment, see an example in the [docker-entrypoint script of api-platform/demo](https://github.com/api-platform/demo/blob/master/api/docker/php/docker-entrypoint.sh).
+Since these keys are created by the `root` user from a container, your host user will not be able to read them during
+the `docker compose build caddy` process. Add the `config/jwt/` folder to the `api/.dockerignore` file so that they are
+skipped from the result image.
 
 The keys should not be checked in to the repository (i.e. it's in `api/.gitignore`). However, note that a JWT token could
 only pass signature validation against the same pair of keys it was signed with. This is especially relevant in a production

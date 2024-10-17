@@ -12,8 +12,7 @@ Many transports are supported to dispatch messages to async consumers, including
 To enable the support of Messenger, install the library:
 
 ```console
-docker compose exec php \
-    composer require messenger
+composer require symfony/messenger
 ```
 
 ## Dispatching a Resource through the Message Bus

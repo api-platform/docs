@@ -97,31 +97,31 @@ Go to the `api/` directory, then
 
 1. Initialize a Git repository:
 
-```bash
+```console
 git init
 ```
 
 2. Add all existing files:
 
-```bash
+```console
 git add --all
 ```
 
 3. Commit:
 
-```bash
+```console
 git commit -a -m "My first API Platform app running on Heroku!"
 ```
 
 4. Create the Heroku application:
 
-```bash
+```console
 heroku create
 ```
 
 5. And deploy for the first time:
 
-```bash
+```console
 git push heroku master
 ```
 
