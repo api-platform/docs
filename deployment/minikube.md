@@ -22,7 +22,7 @@ On GNU/Linux and macOS, run the following command following command to point you
 eval $(minikube docker-env)
 ```
 
-Now any `docker` command you run in this current terminal will run against the docker inside minikube cluster. For detailed explanation and instructions for Windows [visit official minikube documentation](https://minikube.sigs.k8s.io/docs/handbook/pushing/#1-pushing-directly-to-the-in-cluster-docker-daemon-docker-env).
+Now any `docker` command you run in this current terminal will run against the Docker Engine inside the minikube cluster. For detailed explanation and instructions for Windows [visit official minikube documentation](https://minikube.sigs.k8s.io/docs/handbook/pushing/#1-pushing-directly-to-the-in-cluster-docker-daemon-docker-env).
 
 Build the images in minikube:
 
