@@ -34,8 +34,8 @@ docker build -t localhost:5000/pwa pwa --target prod
 Then push the images in the registry available in minikube:
 
 ```console
-    docker push localhost:5000/php
-    docker push localhost:5000/pwa
+docker push localhost:5000/php
+docker push localhost:5000/pwa
 ```
     
 ## Deploying
