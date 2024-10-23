@@ -821,6 +821,10 @@ Given that the collection endpoint is `/offers`, you can filter offers with the 
 
 It will return all offers with `sold` equals `1`.
 
+Search for offers with multiple numeric values with the following query: `/offers?price[]=100&price[]=200` or `/offers?price=100,200`.
+
+It will return all offers with `price` equals `100` or `200`.
+
 ### Range Filter
 
 The range filter allows you to filter by a value lower than, greater than, lower than or equal, greater than or equal and between two values.
