@@ -453,7 +453,7 @@ We assume that you've set `EXPOSE 3000` in your client and admin Dockerfile.
 
 Create a new `init-dc.sh` which contains the generation code that will be written in `compose.override.yaml` file.
 
-```bash
+```console
 #!/bin/sh
 # /anywhere/api-platform/init-dc.sh
 

@@ -15,25 +15,34 @@ If you use API Platform, jump to the next section!
 
 Alternatively, create a Next.js application by executing:
 
-```console
-# using pnpm (recommended)
-pnpm create next-app --typescript
-# or using npm
-npm init next-app --typescript
-# or using yarn
-yarn create next-app --typescript
-```
+- Pnpm (recommended)
+    ```console
+    pnpm create next-app --typescript
+    ```
+- Npm
+    ```console
+    npm init next-app --typescript
+    ```
+- Yarn
+    ```console
+    yarn reate next-app --typescript
+    ```
+
 
 Install the required dependencies:
 
-```console
-# using pnpm
-pnpm install isomorphic-unfetch formik react-query
-# or using npm
-npm install isomorphic-unfetch formik react-query
-# or using yarn
-yarn add isomorphic-unfetch formik react-query
-```
+- Pnpm (recommended)
+    ```console
+    pnpm install isomorphic-unfetch formik react-query
+    ```
+- Npm
+    ```console
+    npm install isomorphic-unfetch formik react-query
+    ```
+- Yarn
+    ```console
+    yarn add isomorphic-unfetch formik react-query
+    ```
 
 The generated HTML will contain [Tailwind CSS](https://tailwindcss.com) classes.
 Optionally, [follow the Tailwind installation guide for Next.js projects](https://tailwindcss.com/docs/guides/nextjs)
@@ -41,7 +50,7 @@ Optionally, [follow the Tailwind installation guide for Next.js projects](https:
 
 ## Generating Routes
 
-If you use the API Platform symfony variant, generating all the code you need for a given resource is as simple as running the following command:
+If you are using the [API Platform Distribution with Symfony](../symfony/index.md) generating all the code you need for a given resource is as simple as running the following command:
 
 ```console
 docker compose exec pwa \
@@ -50,16 +59,20 @@ docker compose exec pwa \
 
 Omit the resource flag to generate files for all resource types exposed by the API.
 
-If you don't use the standalone installation, run the following command instead:
+Or if you don't use the standalone installation, run the following command instead:
 
-```console
-# using pnpm
-pnpm create @api-platform/client https://demo.api-platform.com . --generator next --resource book
-# or using npm
-npm init @api-platform/client https://demo.api-platform.com . -- --generator next --resource book
-# or using yarn
-yarn create @api-platform/client https://demo.api-platform.com . --generator next --resource book
-```
+- Pnpm (recommended)
+    ```console
+    pnpm create @api-platform/client https://demo.api-platform.com . --generator next --resource book
+    ```
+- Npm
+    ```console
+    npm init @api-platform/client https://demo.api-platform.com . -- --generator next --resource book
+    ```
+- Yarn
+    ```console
+    yarn create @api-platform/client https://demo.api-platform.com . --generator next --resource book
+    ```
 
 Replace the URL by the entrypoint of your Hydra-enabled API.
 You can also use an OpenAPI documentation with `-f openapi3`.
@@ -85,22 +98,26 @@ export default App;
 
 ## Starting the Project
 
-You can launch the server with
+You can launch the server with:
 
-```console
-# using pnpm
-pnpm dev
-# or using npm
-npm run dev
-# or using yarn
-yarn dev
-```
-
+- Pnpm (recommended)
+    ```console
+    pnpm dev
+    ```
+- Npm
+    ```console
+    npm run dev
+    ```
+- Yarn
+    ```console
+    yarn dev
+    ```
+  
 Go to `http://localhost:3000/books/` to start using your app.
 
 ## Generating a production build locally with docker compose
 
-If you want to generate a production build locally with docker compose, follow [these instructions](../deployment/docker-compose.md)
+If you want to generate a production build locally with docker compose, follow [these instructions](../deployment/docker-compose.md).
 
 ## Screenshots
 

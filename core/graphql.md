@@ -13,7 +13,7 @@ Once enabled, you have nothing to do: your schema describing your API is automat
 To enable GraphQL and its IDE (GraphiQL and GraphQL Playground) in your API, simply require the `api-platform/graphql` package using Composer:
 
 ```console
-    composer require api-platform/graphql
+composer require api-platform/graphql
 ```
 
 You can now use GraphQL at the endpoint: `https://localhost:8443/graphql`.

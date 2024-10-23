@@ -45,7 +45,7 @@ docker build -t gcr.io/test-api-platform/pwa:0.1.0 -t gcr.io/test-api-platform/p
 
 Optional: If your pwa project use Static Site Generation (SSG) and you need to build it against the API running locally, you can build the pwa with the command below.
 
-```bash
+```console
 docker build -t gcr.io/test-api-platform/pwa:0.1.0 -t gcr.io/test-api-platform/pwa:latest pwa --target prod --network=host --add-host php=127.0.0.1
 ```
 

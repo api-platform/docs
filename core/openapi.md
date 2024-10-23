@@ -20,36 +20,31 @@ You can also dump an OpenAPI specification for your API.
 OpenAPI, JSON format:
 
 ```console
-docker compose exec php \
-    bin/console api:openapi:export
+bin/console api:openapi:export
 ```
 
 OpenAPI, YAML format:
 
 ```console
-docker compose exec php \
-    bin/console api:openapi:export --yaml
+bin/console api:openapi:export --yaml
 ```
 
 Create a file containing the specification:
 
 ```console
-docker compose exec php \
-    bin/console api:openapi:export --output=swagger_docs.json
+bin/console api:openapi:export --output=swagger_docs.json
 ```
 
 If you want to use the old OpenAPI v2 (Swagger) JSON format, use:
 
 ```console
-docker compose exec php \
-    bin/console api:swagger:export
+bin/console api:swagger:export
 ```
 
 It is also possible to use OpenAPI v3.0.0 format:
 
 ```console
-docker compose exec php \
-    bin/console api:openapi:export --spec-version=3.0.0
+bin/console api:openapi:export --spec-version=3.0.0
 ```
 
 ## Overriding the OpenAPI Specification
