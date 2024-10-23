@@ -379,7 +379,7 @@ api_platform:
     # ...
 ```
 
-## Larvel configuration
+## Laravel Configuration
 
 Here's the complete configuration of [API Platform for Laravel](../laravel/index.md) including default values:
 
