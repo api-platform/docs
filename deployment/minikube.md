@@ -27,8 +27,8 @@ Now any `docker` command you run in this current terminal will run against the D
 Build the images in minikube:
 
 ```console
-    docker build -t localhost:5000/php api --target frankenphp_prod
-    docker build -t localhost:5000/pwa pwa --target prod
+docker build -t localhost:5000/php api --target frankenphp_prod
+docker build -t localhost:5000/pwa pwa --target prod
 ```
     
 Then push the images in the registry installed in Minikube:
