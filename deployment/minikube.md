@@ -1,8 +1,8 @@
-# Deploying to Minikube
+# Deploying to minikube
 
-## Install Minikube
+## Install minikube
 
-If you have no existing installation of Minikube on your computer, [follow the official tutorial](https://minikube.sigs.k8s.io/docs/start/).
+If you have no existing installation of minikube on your computer, [follow the official tutorial](https://minikube.sigs.k8s.io/docs/start/).
 
 When Minikube is installed, start the cluster:
 
@@ -10,7 +10,7 @@ When Minikube is installed, start the cluster:
 minikube start --addons registry --addons dashboard
 ```
 
-The previous command starts Minikube with a Docker registry (we'll use it in the next step) and with the Kubernetes dashboard.
+The previous command starts minikube with a Docker registry (we'll use it in the next step) and with the Kubernetes dashboard.
 
 Finally, [install Helm](https://helm.sh/docs/intro/install/). We'll use it to deploy the application in the cluster thanks to the chart provided in the API Platform distribution.
 
@@ -30,14 +30,14 @@ Build the images in minikube:
 docker build -t localhost:5000/php api --target frankenphp_prod
 docker build -t localhost:5000/pwa pwa --target prod
 ```
-    
+
 Then push the images in the registry available in minikube:
 
 ```console
 docker push localhost:5000/php
 docker push localhost:5000/pwa
 ```
-    
+
 ## Deploying
 
 Fetch Helm chart dependencies:
@@ -46,7 +46,7 @@ Fetch Helm chart dependencies:
 helm repo add postgresql https://charts.bitnami.com/bitnami/
 helm dependency build helm/api-platform
 ```
-    
+
 Finally, deploy the project using the Helm chart:
 
 ```console
