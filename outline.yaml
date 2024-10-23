@@ -4,6 +4,7 @@ chapters:
     path: symfony
     items:
       - index
+      - validation
       - testing
       - debugging
       - caddy
