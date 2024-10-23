@@ -46,7 +46,7 @@ your-domain-name.example.com.  IN  A     207.154.233.113
 
 Example with the DigitalOcean Domains service ("Networking" > "Domains"):
 
-![Configuring DNS on DigitalOcean](digitalocean-dns.png)
+![Configuring DNS on DigitalOcean](../deployment/images/digitalocean-dns.png)
 
 > [!NOTE]
 > Let's Encrypt, the service used by default by API Platform to automatically generate a TLS certificate, doesn't support using bare IP addresses.
