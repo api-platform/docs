@@ -2,7 +2,7 @@
 
 ## Symfony configuration
 
-Here's the complete configuration of the [Symfony variant](/symfony/index.md) including default values:
+Here's the complete configuration of [API Platform for Symfony](../symfony/index.md) including default values:
 
 ```yaml
 # api/config/packages/api_platform.yaml
