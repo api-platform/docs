@@ -31,7 +31,7 @@ docker build -t localhost:5000/php api --target frankenphp_prod
 docker build -t localhost:5000/pwa pwa --target prod
 ```
     
-Then push the images in the registry installed in Minikube:
+Then push the images in the registry available in minikube:
 
 ```console
     docker push localhost:5000/php
