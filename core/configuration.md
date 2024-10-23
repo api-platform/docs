@@ -381,7 +381,7 @@ api_platform:
 
 ## Larvel configuration
 
-Here's the complete configuration of the [Laravel variant](/laravel/index.md) including default values:
+Here's the complete configuration of [API Platform for Laravel](../laravel/index.md) including default values:
 
 ```php
 <?php
