@@ -1,8 +1,13 @@
-# Security
+# Security with Laravel
 
 ## Policies
 
-API platform is compatible with Laravel [authorization](https://laravel.com/docs/authorization) mechanism. Once a gate is defined, API Platform will automatically detect your policy.
+API Platform is compatible with Laravel's [authorization](https://laravel.com/docs/authorization) mechanism.
+
+To utilize policies in API Platform, it is essential to have Laravel's authentication system initialized.
+See the [Authentication section](#authentication) for more information.
+
+Once a gate is defined, API Platform will automatically detect your policy.
 
 ```php
 // app/Models/Book.php
@@ -15,7 +20,8 @@ class Book extends Model
 }
 ```
 
-API Platform will detect the operation and map it to a specific method in your policy according to the rules defined in this table:
+API Platform will detect the operation and map it to a specific method in your policy according to the rules defined in
+this table:
 
 | Operation      | Policy                                                     |
 | -------------- | ---------------------------------------------------------- |
@@ -26,7 +32,8 @@ API Platform will detect the operation and map it to a specific method in your p
 | DELETE         | `delete`                                                   |
 | PUT            | `update` or `create` if the resource doesn't already exist |
 
-If your policy methods do not match Laravel's conventions, you can always use the `policy` property on an operation attribute to enforce this policy:
+If your policy methods do not match Laravel's conventions, you can always use the `policy` property on an operation
+attribute to enforce this policy:
 
 ```php
 // app/Models/Book.php
@@ -77,4 +84,18 @@ use ApiPlatform\Metadata\Patch;
 class Book extends Model
 {
 }
+```
+
+Or you can define it globally in the configuration by adding the following code:
+
+```php
+<?php
+// config/api-platform.php
+return [
+    // ....
+    'defaults' => [
+        // ....
+        'middleware' => 'auth:sanctum',
+    ],
+];
 ```
