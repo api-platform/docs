@@ -1,6 +1,6 @@
 # Configuration
 
-## Symfony configuration
+## Symfony Configuration
 
 Here's the complete configuration of [API Platform for Symfony](../symfony/index.md) including default values:
 
