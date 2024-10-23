@@ -16,7 +16,7 @@ Finally, [install Helm](https://helm.sh/docs/intro/install/). We'll use it to de
 
 ## Building and Pushing Docker Images
 
-On GNU/Linux and macOS, to point your terminal to use the docker daemon inside minikube run this:
+On GNU/Linux and macOS, run the following command following command to point your terminal’s docker-cli to the Docker Engine inside minikube:
 
 ```console
     eval $(minikube docker-env)
