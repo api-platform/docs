@@ -43,8 +43,8 @@ docker push localhost:5000/pwa
 Fetch Helm chart dependencies:
 
 ```console
-    helm repo add postgresql https://charts.bitnami.com/bitnami/
-    helm dependency build helm/api-platform
+helm repo add postgresql https://charts.bitnami.com/bitnami/
+helm dependency build helm/api-platform
 ```
     
 Finally, deploy the project using the Helm chart:
