@@ -50,11 +50,11 @@ helm dependency build helm/api-platform
 Finally, deploy the project using the Helm chart:
 
 ```console
-    helm install my-project helm/api-platform \
-      --set php.image.repository=localhost:5000/php \
-      --set php.image.tag=latest \
-      --set pwa.image.repository=localhost:5000/pwa \
-      --set pwa.image.tag=latest
+helm install my-project helm/api-platform \
+  --set php.image.repository=localhost:5000/php \
+  --set php.image.tag=latest \
+  --set pwa.image.repository=localhost:5000/pwa \
+  --set pwa.image.tag=latest
 ```
 
 Copy and paste the commands displayed in the terminal to enable the port forwarding then go to `http://localhost:8080` to access your application!
