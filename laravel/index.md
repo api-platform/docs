@@ -849,6 +849,15 @@ to make the app usable by people with disabilities.
 
 Checkout [the dedicated documentation](../create-client/index.md).
 
+## Caching
+
+API Platform supports Caching Metadata out of the box. It uses the Laravel cache system to store that information.
+Caching is automatically enabled in production environments (when `APP_DEBUG` is set to `false`).
+
+Calling `php artisan optimize` will cache the metadata and improve the performance of your API drastically.
+
+To clear the cache, use `php artisan optimize:clear`.
+
 ## Hooking Your Own Business Logic
 
 Now that you learned the basics, be sure to read [the general design considerations](../core/design.md) and [how to extend API Platform](../core/extending.md) to understand how API Platform is designed, and how to hook your custom business logic!
