@@ -32,7 +32,7 @@ The integration using the cache handler is quite simple. You just have to update
 # Versions
 -FROM dunglas/frankenphp:1-php8.3 AS frankenphp_upstream
 
-+FROM dunglas/frankenphp:latest-builder AS builder
++FROM dunglas/frankenphp:latest AS builder
 +COPY --from=caddy:builder /usr/bin/xcaddy /usr/bin/xcaddy
 +
 +RUN apt-get update && apt-get install --no-install-recommends -y \
