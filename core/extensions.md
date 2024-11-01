@@ -6,7 +6,7 @@ Extensions are specific to Doctrine and Elasticsearch-PHP, and therefore, the Do
 reading support must be enabled to use this feature. If you use custom providers it's up to you to implement your own
 extension system or not.
 
-You can find a working example of a custom extension in the [API Platform's demo application](https://github.com/api-platform/demo/blob/main/api/src/Doctrine/Orm/Extension/BookmarkQueryCollectionExtension.php).
+You can find a working example of a custom extension in the [API Platform's demo application](https://github.com/api-platform/demo/blob/4.0/api/src/Doctrine/Orm/Extension/BookmarkQueryCollectionExtension.php).
 
 ## Custom Doctrine ORM Extension
 
