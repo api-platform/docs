@@ -16,7 +16,7 @@ Finally, [install Helm](https://helm.sh/docs/intro/install/). We'll use it to de
 
 ## Building and Pushing Docker Images
 
-On GNU/Linux and macOS, run the following command following command to point your terminal’s docker-cli to the Docker Engine inside minikube:
+On GNU/Linux and macOS, run the following command to point your terminal's docker-cli to the Docker Engine inside minikube:
 
 ```console
 eval $(minikube docker-env)
@@ -43,14 +43,14 @@ docker push localhost:5000/pwa
 Fetch Helm chart dependencies:
 
 ```console
-helm repo add postgresql https://charts.bitnami.com/bitnami/
+helm repo add bitnami https://charts.bitnami.com/bitnami/
 helm dependency build helm/api-platform
 ```
 
 Finally, deploy the project using the Helm chart:
 
 ```console
-helm install my-project helm/api-platform \
+helm upgrade --install my-project helm/api-platform \
   --set php.image.repository=localhost:5000/php \
   --set php.image.tag=latest \
   --set pwa.image.repository=localhost:5000/pwa \
