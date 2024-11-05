@@ -51,8 +51,9 @@ Standard PUT is now `true` by default, you can change its value using:
 
 ```yaml
 api_platform:
-  extra_properties:
-    standard_put: true
+  default:
+    extra_properties:
+      standard_put: true
 ```
 
 We recommend using the standalone API Platform packages instead of the Core monolithic repository.
