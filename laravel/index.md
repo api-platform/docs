@@ -242,6 +242,8 @@ Register the state provider:
 
 namespace App\Providers;
 
+use ApiPlatform\State\ProviderInterface;
+use App\State\BookProvider;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Support\ServiceProvider;
 
