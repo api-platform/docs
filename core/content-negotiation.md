@@ -24,7 +24,7 @@ Format                                                          | Format name  |
 [GraphQL](graphql.md)                                           | n/a          | n/a                           | yes
 [JSON:API](https://jsonapi.org/)                                | `jsonapi`    | `application/vnd.api+json`    | yes
 [HAL](https://stateless.group/hal_specification.html)           | `jsonhal`    | `application/hal+json`        | yes
-[YAML](https://yaml.org/)                                       | `yaml`       | `application/x-yaml`          | no
+[YAML](https://yaml.org/)                                       | `yaml`       | `application/yaml`            | no
 [CSV](https://tools.ietf.org/html/rfc4180)                      | `csv`        | `text/csv`                    | no
 [HTML](https://whatwg.org/) (API docs)                          | `html`       | `text/html`                   | no
 [XML](https://www.w3.org/XML/)                                  | `xml`        | `application/xml`, `text/xml` | no
