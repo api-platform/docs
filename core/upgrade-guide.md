@@ -51,7 +51,7 @@ Standard PUT is now `true` by default, you can change its value using:
 
 ```yaml
 api_platform:
-  default:
+  defaults:
     extra_properties:
       standard_put: true
 ```
