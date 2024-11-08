@@ -349,9 +349,7 @@ use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Vich\UploaderBundle\Mapping\Annotation as Vich;
 
-/**
- * @Vich\Uploadable
- */
+#[Vich\Uploadable]
 #[ORM\Entity]
 #[ApiResource(
     normalizationContext: ['groups' => ['book:read']],
@@ -373,9 +371,10 @@ class Book
     #[Groups(['book:read'])]
     public ?string $contentUrl = null;
 
-    /**
-     * @Vich\UploadableField(mapping="media_object", fileNameProperty="filePath")
-     */
+    #[Vich\UploadableField(
+        mapping: 'media_object',
+        fileNameProperty: 'filePath',
+    )]
     #[Groups(['book:write'])]
     public ?File $file = null;
 
@@ -404,7 +403,7 @@ final class MultipartDecoder implements DecoderInterface
 {
     public const FORMAT = 'multipart';
 
-    public function __construct(private RequestStack $requestStack)
+    public function __construct(private readonly RequestStack $requestStack)
     {
     }
 
@@ -459,8 +458,6 @@ final class UploadedFileDenormalizer implements DenormalizerInterface
     public function getSupportedTypes(?string $format): array
     {
         return [
-            'object' => null,
-            '*' => false,
             File::class => true,
         ];
     }
