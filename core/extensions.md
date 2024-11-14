@@ -149,12 +149,12 @@ Creating custom extensions is the same as with Doctrine ORM.
 
 The interfaces are:
 
-- `ApiPlatform\Doctrine\Odm\Extension\AggregationItemExtensionInterface` and `ApiPlatform\Doctrine\Odm\Extension\AggregationCollectionExtensionInterface` to add stages to the [aggregation builder](https://www.doctrine-project.org/projects/doctrine-mongodb-odm/en/latest/reference/aggregation-builder.html).
+- `ApiPlatform\Doctrine\Odm\Extension\AggregationItemExtensionInterface` and `ApiPlatform\Doctrine\Odm\Extension\AggregationCollectionExtensionInterface` to add stages to the [aggregation builder](https://www.doctrine-project.org/projects/doctrine-mongodb-odm/en/current/reference/aggregation-builder.html).
 - `ApiPlatform\Doctrine\Odm\Extension\AggregationResultItemExtensionInterface` and `ApiPlatform\Doctrine\Odm\Extension\AggregationResultCollectionExtensionInterface` to return a result.
 
 The tags are `api_platform.doctrine_mongodb.odm.aggregation_extension.item` and `api_platform.doctrine_mongodb.odm.aggregation_extension.collection`.
 
-The custom extensions receive the [aggregation builder](https://www.doctrine-project.org/projects/doctrine-mongodb-odm/en/latest/reference/aggregation-builder.html),
+The custom extensions receive the [aggregation builder](https://www.doctrine-project.org/projects/doctrine-mongodb-odm/en/current/reference/aggregation-builder.html),
 used to execute [complex operations on data](https://docs.mongodb.com/manual/aggregation/).
 
 ## Custom Elasticsearch Extension

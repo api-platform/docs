@@ -1727,7 +1727,7 @@ class Offer
 
 ### Creating Custom Doctrine MongoDB ODM Filters
 
-Doctrine MongoDB ODM filters have access to the context created from the HTTP request and to the [aggregation builder](https://www.doctrine-project.org/projects/doctrine-mongodb-odm/en/latest/reference/aggregation-builder.html)
+Doctrine MongoDB ODM filters have access to the context created from the HTTP request and to the [aggregation builder](https://www.doctrine-project.org/projects/doctrine-mongodb-odm/en/current/reference/aggregation-builder.html)
 instance used to retrieve data from the database and to execute [complex operations on data](https://docs.mongodb.com/manual/aggregation/).
 They are only applied to collections. If you want to deal with the aggregation pipeline generated to retrieve items, [extensions](extensions.md) are the way to go.
 
@@ -1775,7 +1775,7 @@ class AndOperatorFilterExtension implements RequestBodySearchCollectionExtension
 
 ### Using Doctrine ORM Filters
 
-Doctrine ORM features [a filter system](https://www.doctrine-project.org/projects/doctrine-orm/en/latest/reference/filters.html) that allows the developer to add SQL to the conditional clauses of queries, regardless of the place where the SQL is generated (e.g. from a DQL query, or by loading associated entities).
+Doctrine ORM features [a filter system](https://www.doctrine-project.org/projects/doctrine-orm/en/current/reference/filters.html) that allows the developer to add SQL to the conditional clauses of queries, regardless of the place where the SQL is generated (e.g. from a DQL query, or by loading associated entities).
 These are applied to collections and items and therefore are incredibly useful.
 
 The following information, specific to Doctrine filters in Symfony, is based upon [a great article posted on Michaël Perrin's blog](https://www.michaelperrin.fr/blog/2014/12/doctrine-filters).

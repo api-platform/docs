@@ -8,7 +8,7 @@ can also shard the database easily for horizontal scalability and has a powerful
 text search or geospatial queries.
 
 API Platform uses [Doctrine MongoDB ODM 2](https://www.doctrine-project.org/projects/mongodb-odm.html) and in particular
-its [aggregation builder](https://www.doctrine-project.org/projects/doctrine-mongodb-odm/en/latest/reference/aggregation-builder.html)
+its [aggregation builder](https://www.doctrine-project.org/projects/doctrine-mongodb-odm/en/current/reference/aggregation-builder.html)
 to leverage all the possibilities of the database.
 
 Doctrine MongoDB ODM 2 relies on the [mongodb](https://secure.php.net/manual/en/set.mongodb.php) PHP extension and not on
