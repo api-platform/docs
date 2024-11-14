@@ -21,7 +21,7 @@ To do so, API Platform Core leverages [events triggered by the Symfony HTTP Kern
 You can also hook your own code to those events. There are handy and powerful extension points available at all points
 of the request lifecycle.
 
-If you are using Doctrine, lifecycle events ([ORM](https://www.doctrine-project.org/projects/doctrine-orm/en/current/reference/events.html#lifecycle-events), [MongoDB ODM](https://www.doctrine-project.org/projects/doctrine-mongodb-odm/en/latest/reference/events.html#lifecycle-events))
+If you are using Doctrine, lifecycle events ([ORM](https://www.doctrine-project.org/projects/doctrine-orm/en/current/reference/events.html#lifecycle-events), [MongoDB ODM](https://www.doctrine-project.org/projects/doctrine-mongodb-odm/en/current/reference/events.html#lifecycle-events))
 are also available if you want to hook into the persistence layer's object lifecycle.
 
 ## Built-in Event Listeners
