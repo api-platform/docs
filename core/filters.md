@@ -1050,13 +1050,13 @@ App\Entity\Offer:
 When the property used for ordering can contain `null` values, you may want to specify how `null` values are treated in
 the comparison:
 
-| Description                          | Strategy to set                                                                          |
-| ------------------------------------ | ---------------------------------------------------------------------------------------- |
-| Use the default behavior of the DBMS | `null`                                                                                   |
-| Consider items as smallest           | `ApiPlatform\Doctrine\Orm\Filter\OrderFilter::NULLS_SMALLEST` (`nulls_smallest`)         |
-| Consider items as largest            | `ApiPlatform\Doctrine\Orm\Filter\OrderFilter::NULLS_LARGEST` (`nulls_largest`)           |
-| Order items always first             | `ApiPlatform\Doctrine\Orm\Filter\OrderFilter::NULLS_ALWAYS_FIRST` (`nulls_always_first`) |
-| Order items always last              | `ApiPlatform\Doctrine\Orm\Filter\OrderFilter::NULLS_ALWAYS_LAST` (`nulls_always_last`)   |
+| Description                          | Strategy to set                                                                                   |
+| ------------------------------------ |---------------------------------------------------------------------------------------------------|
+| Use the default behavior of the DBMS | `null`                                                                                            |
+| Consider items as smallest           | `ApiPlatform\Doctrine\Common\Filter\OrderFilterInterface::NULLS_SMALLEST` (`nulls_smallest`)      |
+| Consider items as largest            | `ApiPlatform\Doctrine\Common\Filter\OrderFilterInterface::NULLS_LARGEST` (`nulls_largest`)           |
+| Order items always first             | `ApiPlatform\Doctrine\Common\Filter\OrderFilterInterface::NULLS_ALWAYS_FIRST` (`nulls_always_first`) |
+| Order items always last              | `ApiPlatform\Doctrine\Common\Filter\OrderFilterInterface::NULLS_ALWAYS_LAST` (`nulls_always_last`)   |
 
 For instance, treat entries with a property value of `null` as the smallest, with the following service definition:
 
@@ -1067,12 +1067,13 @@ For instance, treat entries with a property value of `null` as the smallest, wit
 // api/src/Entity/Offer.php
 namespace App\Entity;
 
+use ApiPlatform\Doctrine\Common\Filter\OrderFilterInterface;
 use ApiPlatform\Metadata\ApiFilter;
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Doctrine\Orm\Filter\OrderFilter;
 
 #[ApiResource]
-#[ApiFilter(OrderFilter::class, properties: ['validFrom' => ['nulls_comparison' => OrderFilter::NULLS_SMALLEST, 'default_direction' => 'DESC']])]
+#[ApiFilter(OrderFilter::class, properties: ['validFrom' => ['nulls_comparison' => OrderFilterInterface::NULLS_SMALLEST, 'default_direction' => 'DESC']])]
 class Offer
 {
     // ...
