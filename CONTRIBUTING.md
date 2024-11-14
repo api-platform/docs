@@ -17,7 +17,7 @@ Before submitting your issue:
 
 ## Code of Conduct
 
-By contributing to this project, you agree to abide by our [Code of Conduct](https://github.com/api-platform/docs#contributor-code-of-conduct). We expect all contributors to foster a welcoming and inclusive environment.
+By contributing to this project, you agree to abide by our [Code of Conduct](https://github.com/api-platform/docs#coc-ov-file). We expect all contributors to foster a welcoming and inclusive environment.
 
 ## How to Contribute
 
