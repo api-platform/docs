@@ -48,12 +48,13 @@ The schema below describes them:
 title: System providers and processors
 ---
 flowchart TB
-    C1(ReadProvider) --> C2(AccessCheckerProvider)
-    C2 --> C3(DeserializeProvider)
-    C3 --> C4(ParameterProvider)
-    C4 --> C5(ValidateProcessor)
-    C5 --> C6(WriteProcessor)
-    C6 --> C7(SerializeProcessor)
+    C1(ContentNegotiationProvider) --> C2(ReadProvider)
+    C2 --> C3(AccessCheckerProvider)
+    C3 --> C4(DeserializeProvider)
+    C4 --> C5(ParameterProvider)
+    C5 --> C6(ValidateProcessor)
+    C6 --> C7(WriteProcessor)
+    C7 --> C8(SerializeProcessor)
 ```
 
 ### Symfony Access Checker Provider
