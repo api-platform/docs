@@ -664,10 +664,10 @@ Four behaviors are available at the property level of the filter:
 | Description                          | Strategy to set                                                                                               |
 | ------------------------------------ | ------------------------------------------------------------------------------------------------------------- |
 | Use the default behavior of the DBMS | `null`                                                                                                        |
-| Exclude items                        | `ApiPlatform\Doctrine\Orm\Filter\DateFilter::EXCLUDE_NULL` (`exclude_null`)                                   |
-| Consider items as oldest             | `ApiPlatform\Doctrine\Orm\Filter\DateFilter::INCLUDE_NULL_BEFORE` (`include_null_before`)                     |
-| Consider items as youngest           | `ApiPlatform\Doctrine\Orm\Filter\DateFilter::INCLUDE_NULL_AFTER` (`include_null_after`)                       |
-| Always include items                 | `ApiPlatform\Doctrine\Orm\Filter\DateFilter::INCLUDE_NULL_BEFORE_AND_AFTER` (`include_null_before_and_after`) |
+| Exclude items                        | `ApiPlatform\Doctrine\Common\Filter\DateFilterInterface::EXCLUDE_NULL` (`exclude_null`)                                   |
+| Consider items as oldest             | `ApiPlatform\Doctrine\Common\Filter\DateFilterInterface::INCLUDE_NULL_BEFORE` (`include_null_before`)                     |
+| Consider items as youngest           | `ApiPlatform\Doctrine\Common\Filter\DateFilterInterface::INCLUDE_NULL_AFTER` (`include_null_after`)                       |
+| Always include items                 | `ApiPlatform\Doctrine\Common\Filter\DateFilterInterface::INCLUDE_NULL_BEFORE_AND_AFTER` (`include_null_before_and_after`) |
 
 For instance, exclude entries with a property value of `null` with the following service definition:
 
@@ -678,12 +678,13 @@ For instance, exclude entries with a property value of `null` with the following
 // api/src/Entity/Offer.php
 namespace App\Entity;
 
+use ApiPlatform\Doctrine\Common\Filter\DateFilterInterface;
 use ApiPlatform\Metadata\ApiFilter;
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Doctrine\Orm\Filter\DateFilter;
 
 #[ApiResource]
-#[ApiFilter(DateFilter::class, properties: ['dateProperty' => DateFilter::EXCLUDE_NULL])]
+#[ApiFilter(DateFilter::class, properties: ['dateProperty' => DateFilterInterface::EXCLUDE_NULL])]
 class Offer
 {
     // ...
@@ -1970,6 +1971,7 @@ For example, let's define three data filters (`DateFilter`, `SearchFilter` and `
 // api/src/Entity/DummyCar.php
 namespace App\Entity;
 
+use ApiPlatform\Doctrine\Common\Filter\DateFilterInterface;
 use ApiPlatform\Metadata\ApiFilter;
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Doctrine\Orm\Filter\BooleanFilter;
@@ -1981,7 +1983,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 #[ApiResource]
 #[ApiFilter(BooleanFilter::class)]
-#[ApiFilter(DateFilter::class, strategy: DateFilter::EXCLUDE_NULL)]
+#[ApiFilter(DateFilter::class, strategy: DateFilterInterface::EXCLUDE_NULL)]
 #[ApiFilter(SearchFilter::class, properties: ['colors.prop' => 'ipartial', 'name' => 'partial'])]
 #[ApiFilter(PropertyFilter::class, arguments: ['parameterName' => 'foobar'])]
 #[ApiFilter(GroupFilter::class, arguments: ['parameterName' => 'foobargroups'])]
@@ -1998,10 +2000,10 @@ The `BooleanFilter` is applied to every `Boolean` property of the class. Indeed,
 #[ApiFilter(BooleanFilter::class)]
 ```
 
-The `DateFilter` given here will be applied to every `Date` property of the `DummyCar` class with the `DateFilter::EXCLUDE_NULL` strategy:
+The `DateFilter` given here will be applied to every `Date` property of the `DummyCar` class with the `DateFilterInterface::EXCLUDE_NULL` strategy:
 
 ```php
-#[ApiFilter(DateFilter::class, strategy: DateFilter::EXCLUDE_NULL)]
+#[ApiFilter(DateFilter::class, strategy: DateFilterInterface::EXCLUDE_NULL)]
 ```
 
 The `SearchFilter` here adds properties. The result is the exact same as the example with attributes on properties:
