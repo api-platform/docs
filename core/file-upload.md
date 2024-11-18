@@ -456,7 +456,7 @@ final class MultipartDecoder implements DecoderInterface
                 'bool' => filter_var($element, FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE),
                 'int' => is_numeric($element) ? (int) $element : $element,
                 'float' => is_numeric($element) ? (float) $element : $element,
-                Collection::class => !is_array($element) ? [] : $element,
+                Collection::class => '' == $element ? [] : $element,
                 default => $element,
             };
         }, $request->request->all());
