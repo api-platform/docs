@@ -394,10 +394,15 @@ We need to create our own decoder to do it:
 <?php
 // api/src/Encoder/MultipartDecoder.php
 
+declare(strict_types=1);
+
 namespace App\Encoder;
 
+use Doctrine\Common\Collections\Collection;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Serializer\Encoder\DecoderInterface;
+use ReflectionClass;
+use ReflectionNamedType;
 
 final class MultipartDecoder implements DecoderInterface
 {
@@ -411,23 +416,77 @@ final class MultipartDecoder implements DecoderInterface
     {
         $request = $this->requestStack->getCurrentRequest();
 
-        if (!$request) {
+        if (!$request || !isset($context['resource_class'])) {
             return null;
         }
 
-        return array_map(static function (string $element) {
+        // Retrieve the target class from the context
+        $targetClass = $context['resource_class'];
+
+        // Get the expected types for the target entity
+        $expectedTypes = $this->getPropertyTypes($targetClass);
+        
+        $arrayMapWithKeys = function (callable $callback, array $array) {
+            $result = [];
+
+            foreach ($array as $key => $value) {
+                $result[$key] = $callback($value, $key);
+            }
+
+            return $result;
+        };
+
+        $map = $arrayMapWithKeys(static function (string $element, string $key) use ($expectedTypes) {
             // Multipart form values will be encoded in JSON.
             $decoded = json_decode($element, true);
 
-            return \is_array($decoded) ? $decoded : $element;
-        }, $request->request->all()) + $request->files->all();
+            if (is_array($decoded)) {
+                return $decoded;
+            }
+
+            if ('null' == $element) {
+                return null;
+            }
+            
+            if (!isset($expectedTypes[$key])) {
+                return $element;
+            }
+
+            return match ($expectedTypes[$key]) {
+                'bool' => filter_var($element, FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE),
+                'int' => is_numeric($element) ? (int) $element : $element,
+                'float' => is_numeric($element) ? (float) $element : $element,
+                Collection::class => !is_array($element) ? [] : $element,
+                default => $element,
+            };
+        }, $request->request->all());
+        
+        //  dd($map + $request->files->all());
+        
+        return $map + $request->files->all();
     }
 
     public function supportsDecoding(string $format): bool
     {
         return self::FORMAT === $format;
     }
+
+    private function getPropertyTypes(string $className): array
+    {
+        $reflectionClass = new ReflectionClass($className);
+        $types = [];
+
+        foreach ($reflectionClass->getProperties() as $property) {
+            $type = $property->getType();
+            if ($type instanceof ReflectionNamedType) {
+                $types[$property->getName()] = $type->getName();
+            }
+        }
+
+        return $types;
+    }
 }
+
 ```
 
 If you're not using `autowiring` and `autoconfiguring`, don't forget to register the service and tag it as `serializer.encoder`.
