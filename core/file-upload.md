@@ -331,6 +331,34 @@ The file and the resource fields will be posted to the resource endpoint.
 
 This example will use a custom `multipart/form-data` decoder to deserialize the resource instead of a custom controller.
 
+> [!WARNING]
+> Make sure to encode the fields in JSON before sending them.
+
+For instance, you could do something like this:
+```js
+async function uploadBook(file) {
+    const bookMetadata = {
+        title: "API Platform Best Practices",
+        genre: "Programming"
+    };
+
+    const formData = new FormData();
+    for (const [name, value] of Object.entries(bookMetadata)) {
+        formData.append(name, JSON.stringify(value));
+    }
+    formData.append('file', file);
+
+    const response = await fetch('https://my-api.com/books', {
+        method: 'POST',
+        body: formData
+    });
+
+    const result = await response.json();
+
+    return result;
+}
+```
+
 ### Configuring the Existing Resource Receiving the Uploaded File
 
 The `Book` resource needs to be modified like this:
@@ -417,9 +445,7 @@ final class MultipartDecoder implements DecoderInterface
 
         return array_map(static function (string $element) {
             // Multipart form values will be encoded in JSON.
-            $decoded = json_decode($element, true);
-
-            return \is_array($decoded) ? $decoded : $element;
+            return json_decode($element, true, flags: \JSON_THROW_ON_ERROR);
         }, $request->request->all()) + $request->files->all();
     }
 
