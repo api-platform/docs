@@ -445,7 +445,7 @@ There's a powerful mechanism inside API Platform to create routes using relation
 
 ## Paginating Data
 
-A must-have feature for APIs is pagination. Without pagination, collection responses quickly become huge and slow,
+A must have feature for APIs is pagination. Without pagination, collection responses quickly become huge and slow,
 and can even lead to crashes (Out of Memory, timeouts...).
 
 Fortunately, the Eloquent state provider provided by API Platform automatically paginates data!
