@@ -4,7 +4,7 @@ In 25 years of PHP, the web changed dramatically and is now evolving faster than
 
 - Thanks to awesome frontend technologies such as [React](https://reactjs.org/) or [Vue.js](https://vuejs.org/),
   [full-JavaScript Progressive Web Apps](https://en.wikipedia.org/wiki/Progressive_web_application) **are becoming the standard**.
-- [Internet users spend more time on their mobile devices than on desktops](https://www.broadbandsearch.net/blog/mobile-desktop-internet-usage-statistics): having a mobile-first website is mandatory and **native mobile apps are a must-have**.
+- [Internet users spend more time on their mobile devices than on desktops](https://www.broadbandsearch.net/blog/mobile-desktop-internet-usage-statistics): having a mobile-first website is mandatory and **native mobile apps are a must have**.
 - [The semantic web](https://en.wikipedia.org/wiki/Semantic_Web) and **especially [Linked Data](https://en.wikipedia.org/wiki/Linked_data)
   is a reality**: with the [Schema.org](https://schema.org/) initiative and new open web standards such as [JSON-LD](https://json-ld.org/),
   search engines (among a bunch of other services and software) consume structured and machine-readable data at web scale.
