@@ -45,6 +45,9 @@ docker distribution but may need to be installed in your working environment in 
 This takes care of keypair creation (including using the correct passphrase to encrypt the private key), and setting the
 correct permissions on the keys allowing the web server to read them.
 
+If you want the keys to be auto generated in `dev` environment, see an example in the
+[docker-entrypoint script of api-platform/demo](https://github.com/api-platform/demo/blob/a03ce4fb1f0e072c126e8104e42a938bb840bffc/api/docker/php/docker-entrypoint.sh#L16-L17).
+
 Since these keys are created by the `root` user from a container, your host user will not be able to read them during
 the `docker compose build caddy` process. Add the `config/jwt/` folder to the `api/.dockerignore` file so that they are
 skipped from the result image.
