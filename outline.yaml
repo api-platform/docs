@@ -12,6 +12,7 @@ chapters:
     path: laravel
     items:
       - index
+      - testing
       - filters
       - security
       - validation
