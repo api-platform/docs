@@ -31,6 +31,8 @@ chapters:
       - state-providers
       - state-processors
       - filters
+      - elasticsearch-filters
+      - doctrine-filters
       - subresources
       - serialization
       - validation
