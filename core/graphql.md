@@ -1468,9 +1468,20 @@ namespace App\Resolver;
 use ApiPlatform\Core\GraphQl\Resolver\MutationResolverInterface;
 use App\Entity\MediaObject;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Vich\UploaderBundle\Storage\StorageInterface;
 
 final class CreateMediaObjectResolver implements MutationResolverInterface
 {
+    /**
+     * @var StorageInterface
+     */
+    private $storage;
+
+    public function __construct(StorageInterface $storage)
+    {
+        $this->storage = $storage;
+    }
+
     /**
      * @param null $item
      */
@@ -1480,7 +1491,7 @@ final class CreateMediaObjectResolver implements MutationResolverInterface
 
         $mediaObject = new MediaObject();
         $mediaObject->file = $uploadedFile;
-
+        $mediaObject->contentUrl = $this->storage->resolveUri($mediaObject); 
         return $mediaObject;
     }
 }
