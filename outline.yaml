@@ -5,6 +5,7 @@ chapters:
     items:
       - index
       - validation
+      - security
       - testing
       - debugging
       - caddy
