@@ -9,8 +9,8 @@ customize this order, you must add an `order` attribute on your ApiResource anno
 
 ```php
 <?php
-// api/src/Entity/Book.php
-namespace App\Entity;
+// api/src/ApiResource/Book.php with Symfony or app/ApiResource/Book.php with Laravel
+namespace App\ApiResource;
 
 use ApiPlatform\Metadata\ApiResource;
 
@@ -30,7 +30,8 @@ class Book
 
 ```yaml
 # api/config/api_platform/resources/Book.yaml
-App\Entity\Book:
+# The YAML syntax is only supported for Symfony
+App\ApiResource\Book:
   order:
     foo: ASC
 ```
@@ -44,8 +45,8 @@ If you only specify the key, `ASC` direction will be used as default. For exampl
 
 ```php
 <?php
-// api/src/Entity/Book.php
-namespace App\Entity;
+// api/src/ApiResource/Book.php with Symfony or app/ApiResource/Book.php with Laravel
+namespace App\ApiResource;
 
 use ApiPlatform\Metadata\ApiResource;
 
@@ -70,7 +71,8 @@ class Book
 
 ```yaml
 # api/config/api_platform/resources/Book.yaml
-App\Entity\Book:
+# The YAML syntax is only supported for Symfony
+App\ApiResource\Book:
   order: ['foo', 'bar']
 ```
 
@@ -82,8 +84,8 @@ It's also possible to configure the default order on an association property:
 
 ```php
 <?php
-// api/src/Entity/Book.php
-namespace App\Entity;
+// api/src/ApiResource/Book.php with Symfony or app/ApiResource/Book.php with Laravel
+namespace App\ApiResource;
 
 use ApiPlatform\Metadata\ApiResource;
 
@@ -103,7 +105,8 @@ class Book
 
 ```yaml
 # api/config/api_platform/resources/Book.yaml
-App\Entity\Book:
+# The YAML syntax is only supported for Symfony
+App\ApiResource\Book:
   order: ['author.username']
 ```
 
@@ -115,8 +118,8 @@ Another possibility is to apply the default order for a specific collection oper
 
 ```php
 <?php
-// api/src/Entity/Book.php
-namespace App\Entity;
+// api/src/ApiResource/Book.php with Symfony or app/ApiResource/Book.php with Laravel
+namespace App\ApiResource;
 
 use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\ApiResource;
@@ -141,7 +144,8 @@ class Book
 
 ```yaml
 # api/config/api_platform/resources/Book.yaml
-App\Entity\Book:
+# The YAML syntax is only supported for Symfony
+App\ApiResource\Book:
   ApiPlatform\Metadata\GetCollection: ~
   get_desc_custom:
     class: ApiPlatform\Metadata\GetCollection
