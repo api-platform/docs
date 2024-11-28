@@ -377,7 +377,7 @@ If you would like to verify that your stack (including services such as the DBMS
 works, you need [end-to-end testing](https://wiki.c2.com/?EndToEndPrinciple). To do so, we recommend using [Playwright](https://playwright.dev) if you use have PWA/JavaScript-heavy app, or [Symfony Panther](https://github.com/symfony/panther) if you mostly use Twig.
 
 Usually, end-to-end testing should be done with a production-like setup. For your convenience, you may [run our Docker Compose setup
-for production locally](../deployment/docker-compose.md#running-the-docker-compose-setup-for-production-locally).
+for production locally](../deployment/docker-compose.md#deploying-with-docker-compose).
 
 ## Testing Utilities for Symfony
 

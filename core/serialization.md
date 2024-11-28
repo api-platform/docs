@@ -192,7 +192,7 @@ documentation generator.
 
 ## Using Serialization Groups per Operation
 
-<p align="center" class="symfonycasts"><a href="https://symfonycasts.com/screencast/api-platform/relations?cid=apip"><img src="../symfony/images/symfonycasts-player.png" alt="Relations screencast"><br>Watch the Relations screencast</a></p>
+<p class="symfonycasts" align="center"><a href="https://symfonycasts.com/screencast/api-platform/relations?cid=apip"><img src="../symfony/images/symfonycasts-player.png" alt="Relations screencast"><br>Watch the Relations screencast</a></p>
 
 By default, the serializer provided with API Platform represents relations between objects using [dereferenceable IRIs](https://en.wikipedia.org/wiki/Internationalized_Resource_Identifier).
 They allow you to retrieve details for related objects by issuing extra HTTP requests. However, for performance reasons,
@@ -239,6 +239,7 @@ App\ApiResource\Book:
     normalizationContext:
         groups: ['get']
     operations:
+        ApiPlatform\Metadata\Get: ~
         ApiPlatform\Metadata\Get: ~
         ApiPlatform\Metadata\Patch:
             normalizationContext:
