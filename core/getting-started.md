@@ -53,7 +53,7 @@ and what [JSON-LD](https://json-ld.org/) and [Hydra](https://www.hydra-cg.com/) 
 
 ### Symfony with Doctrine
 
-<p align="center" class="symfonycasts"><a href="https://symfonycasts.com/screencast/api-platform/api-resource?cid=apip"><img src="../symfony/images/symfonycasts-player.png" alt="Create an API Resource screencast"><br>Watch the Create an API Resource screencast</a></p>
+<p style="display: flex; justify-content: center; text-align: center;" class="symfonycasts"><a href="https://symfonycasts.com/screencast/api-platform/api-resource?cid=apip"><img src="../symfony/images/symfonycasts-player.png" alt="Create an API Resource screencast"><br>Watch the Create an API Resource screencast</a></p>
 
 API Platform can automatically expose entities mapped as "API resources" through a REST API supporting CRUD
 operations.

@@ -4,7 +4,7 @@ The API Platform security layer is built on top of the [Symfony Security compone
 All its features, including [global access control directives](https://symfony.com/doc/current/security.html#securing-url-patterns-access-control) are supported.
 API Platform also provides convenient [access control expressions](https://symfony.com/doc/current/expressions.html#security-complex-access-controls-with-expressions) which you can apply at resource and operation level.
 
-<p align="center" class="symfonycasts"><a href="https://symfonycasts.com/screencast/api-platform-security/?cid=apip"><img src="../symfony/images/symfonycasts-player.png" alt="Security screencast"><br>Watch the Security screencast</a></p>
+<p style="display: flex; justify-content: center; text-align: center;" class="symfonycasts"><a href="https://symfonycasts.com/screencast/api-platform-security/?cid=apip"><img src="../symfony/images/symfonycasts-player.png" alt="Security screencast"><br>Watch the Security screencast</a></p>
 
 <code-selector>
 
@@ -110,8 +110,8 @@ Available variables are:
 - `previous_object`: (`securityPostDenormalize` only) a clone of `object`, before modifications were made - this is `null` for create operations
 - `request` (only at the resource level): the current request
 
-Access control checks in the `security` attribute are always executed before the [denormalization step](serialization.md).
-It means that for `PUT` or `PATCH` requests, `object` doesn't contain the value submitted by the user, but values currently stored in [the persistence layer](state-processors.md).
+Access control checks in the `security` attribute are always executed before the [denormalization step](../core/serialization.md).
+It means that for `PUT` or `PATCH` requests, `object` doesn't contain the value submitted by the user, but values currently stored in [the persistence layer](../core/state-processors.md).
 
 ## Executing Access Control Rules After Denormalization
 
@@ -337,17 +337,17 @@ resources:
 
 ## Filtering Collection According to the Current User Permissions
 
-Filtering collections according to the role or permissions of the current user must be done directly at [the state provider](state-providers.md) level. For instance, when using the built-in adapters for Doctrine ORM, MongoDB and ElasticSearch, removing entries from a collection should be done using [extensions](extensions.md).
+Filtering collections according to the role or permissions of the current user must be done directly at [the state provider](../core/state-providers.md) level. For instance, when using the built-in adapters for Doctrine ORM, MongoDB and ElasticSearch, removing entries from a collection should be done using [extensions](../core/extensions.md).
 Extensions allow to customize the generated DQL/Mongo/Elastic/... query used to retrieve the collection (e.g. add `WHERE` clauses depending of the currently connected user) instead of using access control expressions.
 As extensions are services, you can [inject the Symfony `Security` class](https://symfony.com/doc/current/security.html#b-fetching-the-user-from-a-service) into them to access to current user's roles and permissions.
 
-If you use [custom state providers](state-providers.md), you'll have to implement the filtering logic according to the persistence layer you rely on.
+If you use [custom state providers](../core/state-providers.md), you'll have to implement the filtering logic according to the persistence layer you rely on.
 
 ## Disabling Operations
 
-To completely disable some operations from your application, refer to the [disabling operations](operations.md#enabling-and-disabling-operations)
+To completely disable some operations from your application, refer to the [disabling operations](../core/operations.md#enabling-and-disabling-operations)
 section.
 
 ## Changing Serialization Groups Depending of the Current User
 
-See [how to dynamically change](serialization.md#changing-the-serialization-context-dynamically) the current Serializer context according to the current logged in user.
+See [how to dynamically change](../core/serialization.md#changing-the-serialization-context-dynamically) the current Serializer context according to the current logged-in user.

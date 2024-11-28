@@ -4,7 +4,7 @@ API Platform natively supports the [OpenAPI](https://www.openapis.org/) API spec
 
 ![Screenshot](../symfony/images/swagger-ui-1.png)
 
-<p align="center" class="symfonycasts"><a href="https://symfonycasts.com/screencast/api-platform/open-api-spec?cid=apip"><img src="../symfony/images/symfonycasts-player.png" alt="OpenAPI screencast"><br>Watch the OpenAPI screencast</a></p>
+<p style="display: flex; justify-content: center; text-align: center;" class="symfonycasts"><a href="https://symfonycasts.com/screencast/api-platform/open-api-spec?cid=apip"><img src="../symfony/images/symfonycasts-player.png" alt="OpenAPI screencast"><br>Watch the OpenAPI screencast</a></p>
 
 The specification of the API is available at the `/docs.jsonopenapi` path.
 By default, OpenAPI v3 is used.

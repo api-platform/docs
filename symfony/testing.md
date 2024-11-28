@@ -5,7 +5,7 @@ For an introduction to testing using API Platform, refer to the [Core Testing Do
 
 Let's learn how to use tests with Symfony!
 
-<p align="center" class="symfonycasts"><a href="https://symfonycasts.com/screencast/api-platform-security/api-tests?cid=apip"><img src="images/symfonycasts-player.png" alt="Tests and Assertions screencast"><br>Watch the Tests & Assertions screencast</a></p>
+<p style="display: flex; justify-content: center; text-align: center;" class="symfonycasts"><a href="https://symfonycasts.com/screencast/api-platform-security/api-tests?cid=apip"><img src="images/symfonycasts-player.png" alt="Tests and Assertions screencast"><br>Watch the Tests & Assertions screencast</a></p>
 
 In this article you'll learn how to use:
 
@@ -377,14 +377,14 @@ If you would like to verify that your stack (including services such as the DBMS
 works, you need [end-to-end testing](https://wiki.c2.com/?EndToEndPrinciple). To do so, we recommend using [Playwright](https://playwright.dev) if you use have PWA/JavaScript-heavy app, or [Symfony Panther](https://github.com/symfony/panther) if you mostly use Twig.
 
 Usually, end-to-end testing should be done with a production-like setup. For your convenience, you may [run our Docker Compose setup
-for production locally](../deployment/docker-compose.md#running-the-docker-compose-setup-for-production-locally).
+for production locally](../deployment/docker-compose.md#deploying-with-docker-compose).
 
 ## Testing Utilities for Symfony
 
 API Platform provides a set of useful utilities dedicated to API testing.
 For an overview of how to test an API Platform app, be sure to read [the testing part first](#testing-the-api-with-symfony).
 
-<p align="center" class="symfonycasts"><a href="https://symfonycasts.com/screencast/api-platform-security/api-tests?cid=apip"><img src="images/symfonycasts-player.png" alt="Test and Assertions screencast"><br>Watch the API Tests & Assertions screencast</a></p>
+<p style="display: flex; justify-content: center; text-align: center;" class="symfonycasts"><a href="https://symfonycasts.com/screencast/api-platform-security/api-tests?cid=apip"><img src="images/symfonycasts-player.png" alt="Test and Assertions screencast"><br>Watch the API Tests & Assertions screencast</a></p>
 
 ### The Test HttpClient
 

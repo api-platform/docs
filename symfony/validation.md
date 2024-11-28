@@ -4,7 +4,7 @@ API Platform takes care of validating the data sent to the API by the client (us
 By default, the framework relies on [the powerful Symfony Validator Component](https://symfony.com/doc/current/validation.html)
 for this task, but you can replace it with your preferred validation library such as [the PHP filter extension](https://www.php.net/manual/en/intro.filter.php) if you want to.
 
-<p align="center" class="symfonycasts"><a href="https://symfonycasts.com/screencast/api-platform/validation?cid=apip"><img src="../symfony/images/symfonycasts-player.png" alt="Validation screencast"><br>Watch the Validation screencast</a></p>
+<p style="display: flex; justify-content: center; text-align: center;" class="symfonycasts"><a href="https://symfonycasts.com/screencast/api-platform/validation?cid=apip"><img src="../symfony/images/symfonycasts-player.png" alt="Validation screencast"><br>Watch the Validation screencast</a></p>
 
 ## Validating Submitted Data
 
@@ -104,7 +104,7 @@ error will look like the following if the requested format is JSON-LD (the defau
 }
 ```
 
-Take a look at the [Errors Handling guide](errors.md) to learn how API Platform converts PHP exceptions like validation
+Take a look at the [Errors Handling guide](../core/errors.md) to learn how API Platform converts PHP exceptions like validation
 errors to HTTP errors.
 
 ## Using Validation Groups
@@ -136,7 +136,7 @@ class Book
 
 With the previous configuration, the validation groups `a` and `b` will be used when validation is performed.
 
-Like for [serialization groups](serialization.md#using-different-serialization-groups-per-operation),
+Like for [serialization groups](../core/serialization.md#using-serialization-groups-per-operation),
 you can specify validation groups globally or on a per-operation basis.
 
 Of course, you can use XML or YAML configuration format instead of attributes if you prefer.
@@ -146,7 +146,7 @@ the array of group names.
 
 ## Using Validation Groups on Operations
 
-You can have different validation for each [operation](operations.md) related to your resource.
+You can have different validation for each [operation](../core/operations.md) related to your resource.
 
 ```php
 <?php
@@ -456,7 +456,7 @@ In this example, only `severity` and `anotherPayloadField` will be serialized.
 
 Use the [Valid](https://symfony.com/doc/current/reference/constraints/Valid.html) constraint.
 
-Note: this is related to the [collection relation denormalization](./serialization.md#collection-relation).
+Note: this is related to the [collection relation denormalization](../core/serialization.md#collection-relation-using-doctrine).
 You may have an issue when trying to validate a relation representing a Doctrine's `ArrayCollection` (`toMany`). Fix the denormalization using the property getter. Return an `array` instead of an `ArrayCollection` with `$collectionRelation->getValues()`. Then, define your validation on the getter instead of the property.
 
 For example:

@@ -5,7 +5,7 @@
 > **we recommend adopting open standards such as [OpenID Connect (OIDC)](https://openid.net/connect/)** for robust, scalable,
 > and interoperable authentication.
 
-<p align="center" class="symfonycasts"><a href="https://symfonycasts.com/screencast/symfony-rest4/json-web-token?cid=apip"><img src="../symfony/images/symfonycasts-player.png" alt="JWT screencast"><br>Watch the LexikJWTAuthenticationBundle screencast</a></p>
+<p class="symfonycasts" style="display: flex; justify-content: center; text-align: center;"><a href="https://symfonycasts.com/screencast/symfony-rest4/json-web-token?cid=apip"><img src="../symfony/images/symfonycasts-player.png" alt="JWT screencast"><br>Watch the LexikJWTAuthenticationBundle screencast</a></p>
 
 ## Installing LexikJWTAuthenticationBundle
 

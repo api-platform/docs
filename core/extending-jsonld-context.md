@@ -2,7 +2,7 @@
 
 ## JSON-LD
 
-<p align="center" class="symfonycasts"><a href="https://symfonycasts.com/screencast/api-platform/json-ld?cid=apip"><img src="../symfony/images/symfonycasts-player.png" alt="JSON-LD screencast"><br>Watch the JSON-LD screencast</a></p>
+<p style="display: flex; justify-content: center; text-align: center;" class="symfonycasts"><a href="https://symfonycasts.com/screencast/api-platform/json-ld?cid=apip"><img src="../symfony/images/symfonycasts-player.png" alt="JSON-LD screencast"><br>Watch the JSON-LD screencast</a></p>
 
 API Platform provides the possibility to extend the JSON-LD context of properties. This allows you to describe JSON-LD-typed
 values, inverse properties using the `@reverse` keyword, and you can even overwrite the `@id` property this way.
@@ -64,7 +64,7 @@ Note that you do not have to provide the `@id` attribute. If you do not provide 
 
 ## Hydra
 
-<p align="center" class="symfonycasts"><a href="https://symfonycasts.com/screencast/api-platform/hydra?cid=apip"><img src="../symfony/images/symfonycasts-player.png" alt="Hydra screencast"><br>Watch the Hydra screencast</a></p>
+<p style="display: flex; justify-content: center; text-align: center;" class="symfonycasts"><a href="https://symfonycasts.com/screencast/api-platform/hydra?cid=apip"><img src="../symfony/images/symfonycasts-player.png" alt="Hydra screencast"><br>Watch the Hydra screencast</a></p>
 
 It's also possible to replace the Hydra context used by the documentation generator:
 

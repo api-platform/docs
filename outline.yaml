@@ -9,14 +9,14 @@ chapters:
       - testing
       - debugging
       - caddy
-      - migrate-from-fosrestbundle
-      - fosuser-bundle
-      - nelmio-api-doc
-      - user
       - jwt
+      - messenger
+      - user
       - file-upload
       - controllers
-      - messenger
+      - nelmio-api-doc
+      - migrate-from-fosrestbundle
+      - fosuser-bundle
   - title: "API Platform for Laravel"
     path: laravel
     items:

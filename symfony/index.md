@@ -19,8 +19,8 @@ API Platform is shipped with **[Docker](../deployment/docker-compose.md)** and *
 The easiest and most powerful way to get started is [to download the API Platform distribution](https://github.com/api-platform/api-platform/releases). It contains:
 
 - the API skeleton, including [the Core library](../core/index.md), [the Symfony framework](https://symfony.com/) ([optional](../core/bootstrap.md)) and [the Doctrine ORM](https://www.doctrine-project.org/projects/orm.html) ([optional](../core/extending.md))
-- [the client scaffolding tool](../create-client/) to generate [Next.js](../create-client/) web applications from the API documentation ([Nuxt](https://nuxt.com/), [Vue](https://vuejs.org/), [Create React App](https://reactjs.org), [React Native](https://reactnative.dev/), [Quasar](https://quasar.dev/) and [Vuetify](https://vuetifyjs.com/) are also supported)
-- [a beautiful admin interface](../admin/), built on top of React Admin, dynamically created by parsing the API documentation
+- [the client scaffolding tool](../create-client/index.md) to generate [Next.js](../create-client/index.md) web applications from the API documentation ([Nuxt](https://nuxt.com/), [Vue](https://vuejs.org/), [Create React App](https://reactjs.org), [React Native](https://reactnative.dev/), [Quasar](https://quasar.dev/) and [Vuetify](https://vuetifyjs.com/) are also supported)
+- [a beautiful admin interface](../admin/index.md), built on top of React Admin, dynamically created by parsing the API documentation
 - all you need to [create real-time and async APIs using the Mercure protocol](../core/mercure.md)
 - a [Docker](../deployment/docker-compose.md) definition to start a working development environment in a single command, providing containers for the API and the Next.js web application
 - a [Helm](https://helm.sh/) chart to deploy the API in any [Kubernetes](../deployment/kubernetes.md) cluster
@@ -799,6 +799,6 @@ and [browse it online](https://demo.api-platform.com).
 
 ## Screencasts
 
-<p align="center" class="symfonycasts"><a href="https://symfonycasts.com/tracks/rest?cid=apip#api-platform-3"><img src="images/symfonycasts-player.png" alt="SymfonyCasts, API Platform screencasts"></a></p>
+<p style="display: flex; justify-content: center; text-align: center;" class="symfonycasts"><a href="https://symfonycasts.com/tracks/rest?cid=apip#api-platform-3"><img src="images/symfonycasts-player.png" alt="SymfonyCasts, API Platform screencasts"></a></p>
 
 The easiest and funniest way to learn how to use API Platform is to watch [the more than 60 screencasts available on SymfonyCasts](https://symfonycasts.com/tracks/rest?cid=apip#api-platform-3)!

@@ -12,7 +12,7 @@ By default, all filters are disabled. They must be enabled explicitly.
 When a filter is enabled, it automatically appears in the [OpenAPI](openapi.md) and [GraphQL](graphql.md) documentations.
 It is also automatically documented as a `search` property for JSON-LD responses.
 
-<p align="center" class="symfonycasts"><a href="https://symfonycasts.com/screencast/api-platform/filters?cid=apip"><img src="../symfony/images/symfonycasts-player.png" alt="Filtering and Searching screencast"><br>Watch the Filtering & Searching screencast</a></p>
+<p style="display: flex; justify-content: center; text-align: center;" class="symfonycasts"><a href="https://symfonycasts.com/screencast/api-platform/filters?cid=apip"><img src="../symfony/images/symfonycasts-player.png" alt="Filtering and Searching screencast"><br>Watch the Filtering & Searching screencast</a></p>
 
 For the **specific filters documentation**, please refer to the following pages, depending on your needs:
 - [Doctrine filters documentation](../core/doctrine-filters.md)
