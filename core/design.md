@@ -40,7 +40,7 @@ Again, it's up to the developers to use, or to not use these built-in state prov
 they are dealing with.
 API Platform makes it easy to create custom state providers and processors.
 It also makes it easy to implement patterns such as [CQS](https://www.martinfowler.com/bliki/CommandQuerySeparation.html)
-or [CQRS](https://martinfowler.com/bliki/CQRS.html) thanks to [the Messenger Component integration](messenger.md) and the [DTO support](dto.md).
+or [CQRS](https://martinfowler.com/bliki/CQRS.html) thanks to [the Messenger Component integration](../symfony/messenger.md) and the [DTO support](dto.md).
 
 Last but not least, to create [Event Sourcing](https://martinfowler.com/eaaDev/EventSourcing.html)-based systems, a convenient
 approach is:
