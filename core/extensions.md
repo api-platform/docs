@@ -1,4 +1,7 @@
-# Extensions
+# Extensions for Doctrine and Elasticsearch
+
+> [!WARNING]
+> This is not yet available with [Eloquent](https://laravel.com/docs/eloquent), you're welcome to contribute [on GitHub](https://github.com/api-platform/core)
 
 API Platform provides a system to extend queries on items and collections.
 
@@ -127,7 +130,7 @@ Note that your extensions should have a positive priority if defined. Internal e
 | `api_platform.doctrine.orm.query_extension.order`                      | -32      | ApiPlatform\Doctrine\Orm\Extension\OrderExtension              |
 | `api_platform.doctrine.orm.query_extension.pagination`                 | -64      | ApiPlatform\Doctrine\Orm\Extension\PaginationExtension         |
 
-#### Blocking Anonymous Users
+#### Blocking Anonymous Users using Symfony
 
 This example adds a `WHERE` clause condition only when a fully authenticated user without `ROLE_ADMIN` tries to access a resource. It means that anonymous users will be able to access all data. To prevent this potential security issue, the API must ensure that the current user is authenticated.
 

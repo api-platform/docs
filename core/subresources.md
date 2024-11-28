@@ -348,7 +348,7 @@ class Company {
 ## Security
 
 > [!WARNING]
-> This is not yet available with Laravel, you're welcome to contribute [on Github](github.com/api-platform/core)
+> This is not yet available with Laravel, you're welcome to contribute [on GitHub](https://github.com/api-platform/core)
 
 In order to use Symfony's built-in security system on subresources the security option of the `Link` attribute can be used.
 
