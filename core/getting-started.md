@@ -79,7 +79,6 @@ class Product // The class name will be used to name exposed resources
 
     /**
      * A name property - this description will be available in the API documentation too.
-     *
      */
     #[ORM\Column]
     #[Assert\NotBlank]
@@ -88,7 +87,6 @@ class Product // The class name will be used to name exposed resources
     // Notice the "cascade" option below, this is mandatory if you want Doctrine to automatically persist the related entity
     /**
      * @var Offer[]|ArrayCollection
-     *
      */
     #[ORM\OneToMany(targetEntity: Offer::class, mappedBy: 'product', cascade: ['persist'])]
     public iterable $offers;
