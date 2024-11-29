@@ -347,9 +347,9 @@ class Greeting
      * @var A nice person
      *
      * I want this "second" validation to be executed after the "first" one even though I wrote them in this order.
-     * @One(groups={"second"})
-     * @Two(groups={"first"})
      */
+    #[One(groups: ['second'])]
+    #[Two(groups: ['first'])]
     #[ORM\Column]
     public string $name = '';
 
