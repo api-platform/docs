@@ -49,7 +49,7 @@ services:
   # ...
   db-mongodb:
     # In production, you may want to use a managed database service
-    image: mongodb/mongodb-atlas-local:latest
+    image: mongodb/mongodb-community-server:latest
     environment:
       - MONGODB_INITDB_DATABASE=api
       - MONGODB_INITDB_ROOT_USERNAME=api-platform
