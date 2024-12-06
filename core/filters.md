@@ -411,7 +411,7 @@ If you need more information about creating custom filters, refer to the followi
 
 - [Creating Custom Doctrine ORM filters](../core/doctrine-filters.md#creating-custom-doctrine-orm-filters)
 - [Creating Custom Doctrine Mongo ODM filters](../core/doctrine-filters.md#creating-custom-doctrine-mongodb-odm-filters)
-- [Creating Custom Doctrine ORM filters](../core/elasticsearch-filters.md#creating-custom-elasticsearch-filters)
+- [Creating Custom Elasticsearch Filters](../core/elasticsearch-filters.md#creating-custom-elasticsearch-filters)
 
 ## ApiFilter Attribute
 
