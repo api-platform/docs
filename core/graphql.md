@@ -19,8 +19,8 @@ composer require api-platform/graphql
 You can now use GraphQL at the endpoint: `https://localhost:8443/graphql`.
 
 > [!NOTE]
-> If you used [the Symfony Variant thanks to Symfony Flex](../symfony/index.md#installing-the-framework)
-> or the Laravel variant, URLs will be prefixed with `/api` by default. For example, the GraphQL endpoint will be: `https://localhost:8443/api/graphql`.
+> If you used [the Symfony Variant thanks to Symfony Flex](../symfony/index.md#installing-the-framework) or the Laravel
+> variant, URLs will be prefixed with `/api` by default. For example, the GraphQL endpoint will be: `https://localhost:8443/api/graphql`.
 
 ## Changing Location of the GraphQL Endpoint
 
@@ -2830,9 +2830,10 @@ Since the command prints the schema to the output if you don't use the `-o` opti
     bin/console api:graphql:export > path/in/host/schema.graphql
 ```
 
-## Handling File Upload
+## Handling File Upload with Symfony
 
-Please follow the [file upload documentation](file-upload.md), only the differences will be documented here.
+If you use Symfony, please follow the [file upload documentation](../symfony/file-upload.md), only the differences
+will be documented here.
 
 The file upload with GraphQL follows the [GraphQL multipart request specification](https://github.com/jaydenseric/graphql-multipart-request-spec).
 
