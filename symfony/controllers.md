@@ -1,11 +1,13 @@
-# Creating Custom Operations and Controllers
+# Creating Custom Operations and Symfony Controllers
 
-Note: using custom controllers with API Platform is **discouraged**. Also, GraphQL is **not supported**.
-[For most use cases, better extension points, working both with REST and GraphQL, are available](design.md).
+> [!NOTE]
+> Using custom Symfony controllers with API Platform is **discouraged**. Also, GraphQL is **not supported**.
+> [For most use cases, better extension points, working both with REST and GraphQL, are available](../core/design.md).
+> We recommend to use [System providers and processors](../core/extending.md#system-providers-and-processors) to extend API Platform internals.
 
 API Platform can leverage the Symfony routing system to register custom operations related to custom controllers. Such custom
 controllers can be any valid [Symfony controller](https://symfony.com/doc/current/controller.html), including standard
-Symfony controllers extending the [`Symfony\Bundle\FrameworkBundle\Controller\AbstractController`](http://api.symfony.com/4.1/Symfony/Bundle/FrameworkBundle/Controller/AbstractController.html)
+Symfony controllers extending the [`Symfony\Bundle\FrameworkBundle\Controller\AbstractController`](https://symfony.com/doc/current/controller.html#the-base-controller-class-services)
 helper class.
 
 To enable this feature use `use_symfony_listeners: true` in your `api_platform` configuration file:
@@ -39,7 +41,7 @@ If your resource has any identifier, this operation will look like `/books/{id}`
 Those routes are not exposed from any documentation (for instance OpenAPI), but are anyway declared on the Symfony routing and always return a HTTP 404.
 
 If you create a custom operation, you will probably want to properly document it.
-See the [OpenAPI](openapi.md) part of the documentation to do so.
+See the [OpenAPI](../core/openapi.md) part of the documentation to do so.
 
 First, let's create your custom operation:
 
@@ -90,7 +92,7 @@ you need and it will be autowired too.
 The `__invoke` method of the action is called when the matching route is hit. It can return either an instance of
 `Symfony\Component\HttpFoundation\Response` (that will be displayed to the client immediately by the Symfony kernel) or,
 like in this example, an instance of an entity mapped as a resource (or a collection of instances for collection operations).
-In this case, the entity will pass through [all built-in event listeners](events.md#built-in-event-listeners) of API Platform. It will be
+In this case, the entity will pass through [all built-in event listeners](../core/events.md#built-in-event-listeners) of API Platform. It will be
 automatically validated, persisted and serialized in JSON-LD. Then the Symfony kernel will send the resulting document to
 the client.
 
@@ -165,7 +167,7 @@ Complex use cases may lead you to create multiple custom operations.
 
 In such a case, you will probably create the same amount of custom controllers while you may not need to perform custom logic inside.
 
-To avoid that, API Platform provides the `ApiPlatform\Action\PlaceholderAction` which behaves the same when using the [built-in operations](operations.md#operations).
+To avoid that, API Platform provides the `ApiPlatform\Action\PlaceholderAction` which behaves the same when using the [built-in operations](../core/operations.md#operations).
 
 You just need to set the `controller` attribute with this class. Here, the previous example updated:
 
@@ -370,7 +372,7 @@ resources:
 
 </code-selector>
 
-This way, it will skip the `ReadListener`. You can do the same for some other built-in listeners. See [Built-in Event Listeners](events.md#built-in-event-listeners)
+This way, it will skip the `ReadListener`. You can do the same for some other built-in listeners. See [Built-in Event Listeners](../core/events.md#built-in-event-listeners)
 for more information.
 
 In your custom controller, the `__invoke()` method parameter should be called the same as the entity identifier.

@@ -33,7 +33,7 @@ Same as above.
 
 **In API Platform**
 
-Even though this is not recommended, API Platform allows you to [create custom controllers](../core/controllers.md) and declare them in your entity's `ApiResource` attribute.
+Even though this is not recommended, API Platform allows you to [create custom controllers](controllers.md) and declare them in your entity's `ApiResource` attribute.
 
 You can use them as you migrate from FOSRestBundle, but you should consider [switching to Symfony Messenger](../core/messenger.md) as it will give you more benefits, such as compatibility with both REST and GraphQL and better performances of your API on big tasks.
 

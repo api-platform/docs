@@ -7,10 +7,11 @@ Those extensions points are taken into account both by the REST and [GraphQL](gr
 The following tables summarizes which extension point to use depending on what you want to do:
 
 | Extension Point                                                                                | Usage                                                                                                                                                                                                                               |
-| ---------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+|------------------------------------------------------------------------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | [State Providers](state-providers.md)                                                          | adapters for custom persistence layers, virtual fields, custom hydration                                                                                                                                                            |
 | [Denormalizers](serialization.md)                                                              | post-process objects created from the payload sent in the HTTP request body                                                                                                                                                         |
-| [Voters](security.md#hooking-custom-permission-checks-using-voters)                            | custom authorization logic                                                                                                                                                                                                          |
+| [Symfony Voters](../symfony/security.md#hooking-custom-permission-checks-using-voters)         | custom authorization logic                                                                                                                                                                                                          |
+| [Laravel Policies](../laravel/security.md#policies)                                            | custom authorization logic                                                                                                                                                                                                          |
 | [Validation constraints](validation.md)                                                        | custom validation logic                                                                                                                                                                                                             |
 | [State Processors](state-processors)                                                           | custom business logic and computations to trigger before or after persistence (ex: mail, call to an external API...)                                                                                                                |
 | [Normalizers](serialization.md#decorating-a-serializer-and-adding-extra-data)                  | customize the resource sent to the client (add fields in JSON documents, encode codes, dates...)                                                                                                                                    |
@@ -22,16 +23,16 @@ The following tables summarizes which extension point to use depending on what y
 
 ## Doctrine Specific Extension Points
 
-| Extension Point                                            | Usage                                                                                              |
-| ---------------------------------------------------------- | -------------------------------------------------------------------------------------------------- |
-| [Extensions](extensions.md)                                | Access to the query builder to change the DQL query                                                |
-| [Filters](filters.md#doctrine-orm-and-mongodb-odm-filters) | Add filters documentations (OpenAPI, GraphQL, Hydra) and automatically apply them to the DQL query |
+| Extension Point                | Usage                                                                                              |
+|--------------------------------|----------------------------------------------------------------------------------------------------|
+| [Extensions](extensions.md)    | Access to the query builder to change the DQL query                                                |
+| [Filters](doctrine-filters.md) | Add filters documentations (OpenAPI, GraphQL, Hydra) and automatically apply them to the DQL query |
 
 ## Leveraging the Built-in Infrastructure Using Composition
 
 While most API Platform classes are marked as `final`, built-in services are straightforward to reuse and customize [using composition](https://en.wikipedia.org/wiki/Composition_over_inheritance).
 
-For instance, if you want to send a mail after a resource has been persisted, but still want to benefit from the native Doctrine ORM [state processor](state-processors.md), use [the decorator design pattern](https://en.wikipedia.org/wiki/Decorator_pattern#PHP) to wrap the native state processor in your own class sending the mail, as demonstrated in [this example](state-processors.md#decorating-the-built-in-state-processors).
+For instance, if you want to send a mail after a resource has been persisted, but still want to benefit from the native Doctrine ORM [state processor](state-processors.md), use [the decorator design pattern](https://en.wikipedia.org/wiki/Decorator_pattern#PHP) to wrap the native state processor in your own class sending the mail, as demonstrated in [this example](../core/state-processors.md#creating-a-custom-state-processor).
 
 To replace existing API Platform services with your decorators, [check out how to decorate services](https://symfony.com/doc/current/service_container/service_decoration.html).
 

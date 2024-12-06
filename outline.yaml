@@ -15,6 +15,7 @@ chapters:
       - user
       - jwt
       - file-upload
+      - controllers
   - title: "API Platform for Laravel"
     path: laravel
     items:
@@ -64,7 +65,6 @@ chapters:
       - identifiers
       - mongodb
       - elasticsearch
-      - controllers
       - events
       - jwt
       - form-data
