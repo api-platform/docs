@@ -13,6 +13,7 @@ chapters:
       - fosuser-bundle
       - nelmio-api-doc
       - user
+      - jwt
   - title: "API Platform for Laravel"
     path: laravel
     items:
@@ -21,6 +22,7 @@ chapters:
       - filters
       - security
       - validation
+      - jwt
   - title: Core
     path: core
     items:
