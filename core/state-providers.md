@@ -58,19 +58,23 @@ use ApiPlatform\State\ProviderInterface;
  */
 final class BlogPostProvider implements ProviderInterface
 {
-    private const DATA = [
-        'ab' => new BlogPost('ab'),
-        'cd' => new BlogPost('cd'),
-    ];
+    private array $data;
+
+    public function __construct() {
+        $this->data = [
+            'ab' => new BlogPost('ab'),
+            'cd' => new BlogPost('cd'),
+        ];
+    } 
 
     public function provide(Operation $operation, array $uriVariables = [], array $context = []): BlogPost|null
     {
-        return self::DATA[$uriVariables['id']] ?? null;
+        return $this->data[$uriVariables['id']] ?? null;
     }
 }
 ```
 
-For the example, we store the list of our blog posts in an associative array (the `BlogPostProvider::DATA` constant).
+For the example, we store the list of our blog posts in an associative array `$data`.
 
 As this operation expects a `BlogPost`, the `provide` methods return the instance of the `BlogPost` corresponding to the ID passed in the URL. If the ID doesn't exist in the associative array, `provide()` returns `null`. API Platform will automatically generate a 404 response if the provider returns `null`.
 
@@ -110,18 +114,15 @@ use ApiPlatform\Metadata\CollectionOperationInterface;
  */
 final class BlogPostProvider implements ProviderInterface
 {
-    private const DATA = [
-        'ab' => new BlogPost('ab'),
-        'cd' => new BlogPost('cd'),
-    ];
+    private array $data;
 
     public function provide(Operation $operation, array $uriVariables = [], array $context = []): iterable|BlogPost|null
     {
         if ($operation instanceof CollectionOperationInterface) {
-            return self::DATA;
+            return $this->data;
         }
 
-        return self::DATA[$uriVariables['id']] ?? null;
+        return $this->data[$uriVariables['id']] ?? null;
     }
 }
 ```
@@ -169,19 +170,16 @@ use ApiPlatform\State\ProviderInterface;
  */
 final class BlogPostProvider implements ProviderInterface
 {
-    private const DATA = [
-        'ab' => new BlogPost('ab'),
-        'cd' => new BlogPost('cd'),
-    ];
+    private array $data;
 
     public function provide(Operation $operation, array $uriVariables = [], array $context = []): BlogPost|null
     {
-        return self::DATA[$uriVariables['id']] ?? null;
+        return $this->data[$uriVariables['id']] ?? null;
     }
 }
 ```
 
-For the example, we store the list of our blog posts in an associative array (the `BlogPostProvider::DATA` constant).
+For the example, we store the list of our blog posts in an associative array `$data`.
 
 As this operation expects a `BlogPost`, the `provide` methods return the instance of the `BlogPost` corresponding to the ID passed in the URL. If the ID doesn't exist in the associative array, `provide()` returns `null`. API Platform will automatically generate a 404 response if the provider returns `null`.
 
@@ -221,18 +219,15 @@ use ApiPlatform\Metadata\CollectionOperationInterface;
  */
 final class BlogPostProvider implements ProviderInterface
 {
-    private const DATA = [
-        'ab' => new BlogPost('ab'),
-        'cd' => new BlogPost('cd'),
-    ];
+    private array $data;
 
     public function provide(Operation $operation, array $uriVariables = [], array $context = []): iterable|BlogPost|null
     {
         if ($operation instanceof CollectionOperationInterface) {
-            return self::DATA;
+            return $this->data;
         }
 
-        return self::DATA[$uriVariables['id']] ?? null;
+        return $this->data[$uriVariables['id']] ?? null;
     }
 }
 ```
