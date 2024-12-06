@@ -2,7 +2,7 @@
 
 For further documentation on filters (including for Eloquent and Elasticsearch), please see the [Filters documentation](filters.md).
 
-!> [!WARNING]
+> [!WARNING]
 > Prefer using QueryParameter instead of ApiFilter for more flexibility, this is subject to change in the next major version.
 
 ## Basic Knowledge
