@@ -18,7 +18,9 @@ To enable the reading support for Elasticsearch, simply require the Elasticsearc
 composer require elasticsearch/elasticsearch:^7.11
 ```
 
-Then, enable it inside the API Platform configuration:
+Then, enable it inside the API Platform configuration, using one of the configurations below:
+
+### Enabling Reading Support using Symfony
 
 ```yaml
 # api/config/packages/api_platform.yaml
@@ -38,12 +40,32 @@ api_platform:
   #...
 ```
 
+### Enabling Reading Support using Laravel
+
+```php
+<?php
+// config/api-platform.php
+return [
+    // ....
+    'mapping' => [
+        'paths' => [
+            base_path('app/Models'),
+        ],
+    ],
+    'elasticsearch' => [
+        'hosts' => [
+            env('ELASTICSEARCH_HOST', 'http://localhost:9200'),
+        ],
+    ],
+];
+```
+
 ## Creating Models
 
 API Platform follows the best practices of Elasticsearch:
 
-- a single index per resource should be used because Elasticsearch is going to [drop support for index types and will allow only a single type per
-  index](https://www.elastic.co/guide/en/elasticsearch/reference/current/removal-of-types.html);
+- a single index per resource should be used because Elasticsearch is going to [drop support for index types and will
+allow only a single type per index](https://www.elastic.co/guide/en/elasticsearch/reference/current/removal-of-types.html);
 - index name should be the short resource name in lower snake_case;
 - the default `_doc` type should be used;
 - all fields should be lower case and should use camelCase for combining words.
@@ -143,7 +165,7 @@ Here is an example of mappings for 2 resources, `User` and `Tweet`, and their mo
 
 ```php
 <?php
-// api/src/Model/User.php
+// api/src/Model/User.php with Symfony or app/Model/User.php with Laravel
 namespace App\Model;
 
 use ApiPlatform\Elasticsearch\State\CollectionProvider;
@@ -182,7 +204,7 @@ class User
 
 ```php
 <?php
-// api/src/Model/Tweet.php
+// api/src/Model/Tweet.php with Symfony or app/Model/Tweet.php with Laravel
 namespace App\Model;
 
 use ApiPlatform\Elasticsearch\State\CollectionProvider;
@@ -223,8 +245,9 @@ You're done! The API is now ready to use.
 
 ## Filtering
 
-See how to use Elasticsearch filters and how to create Elasticsearch custom filters in [the Filters chapter](filters.md).
+See how to use Elasticsearch filters and how to create Elasticsearch custom filters in the
+[Elasticsearch filters documentation](../core/elasticsearch-filters.md).
 
 ## Creating Custom Extensions
 
-See how to create Elasticsearch custom extensions in [the Extensions chapter](extensions.md).
+See how to create Elasticsearch custom extensions in [the Extensions chapter](extensions.md#custom-elasticsearch-extension).
