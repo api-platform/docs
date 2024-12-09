@@ -19,7 +19,8 @@ composer require api-platform/graphql
 You can now use GraphQL at the endpoint: `https://localhost:8443/graphql`.
 
 > [!NOTE]
-> If you used [the Symfony Variant thanks to Symfony Flex](../symfony/index.md#using-symfony-flex-and-composer-advanced-users) or the Laravel variant, URLs will be prefixed with `/api` by default. For example, the GraphQL endpoint will be: `https://localhost:8443/api/graphql`.
+> If you used [the Symfony Variant thanks to Symfony Flex](../symfony/index.md#installing-the-framework)
+> or the Laravel variant, URLs will be prefixed with `/api` by default. For example, the GraphQL endpoint will be: `https://localhost:8443/api/graphql`.
 
 ## Changing Location of the GraphQL Endpoint
 
@@ -138,7 +139,7 @@ api_platform:
 ### Disable GraphQL Playground with Laravel
 
 > [!WARNING]
-> This is not yet available with Laravel, you're welcome to contribute [on Github](github.com/api-platform/core)
+> This is not yet available with Laravel, you're welcome to contribute [on GitHub](https://github.com/api-platform/core)
 
 ### Add another Location for GraphQL Playground
 
@@ -1100,7 +1101,7 @@ resources:
 
 ### Syntax for Filters with a List of Key / Value Arguments
 
-Some filters like the [exists filter](filters.md#exists-filter) or the [order filter](filters.md#order-filter-sorting) take a list of key / value as arguments.
+Some filters like the [exists filter](doctrine-filters.md#exists-filter) or the [order filter](doctrine-filters.md#order-filter-sorting) take a list of key / value as arguments.
 
 The first syntax coming to mind to use them is to write:
 
@@ -1387,7 +1388,8 @@ resources:
 
 </code-selector>
 
-Once enabled, a `page` filter will be available in the collection query (its name [can be changed in the configuration](pagination.md)) and an `itemsPerPage` filter will be available too if [client-side-pagination](pagination.md#client-side) is enabled.
+Once enabled, a `page` filter will be available in the collection query (its name [can be changed in the configuration](pagination.md))
+and an `itemsPerPage` filter will be available too if [client-side-pagination](pagination.md#changing-the-number-of-items-per-page-for-a-specific-resource) is enabled.
 
 A `paginationInfo` field can be queried to obtain the following information:
 
@@ -2812,7 +2814,7 @@ final class BookContextBuilder implements SerializerContextBuilderInterface
 ## Export the Schema in SDL
 
 > [!WARNING]
-> This command is not yet available with Laravel, you're welcome to contribute [on Github](github.com/api-platform/core)
+> This command is not yet available with Laravel, you're welcome to contribute [on GitHub](https://github.com/api-platform/core)
 
 You may need to export your schema in SDL (Schema Definition Language) to import it in some tools.
 
