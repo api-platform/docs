@@ -21,8 +21,8 @@ To deprecate a resource class, use the `deprecationReason` attribute:
 
 ```php
 <?php
-// api/src/Entity/Parchment.php
-namespace App\Entity;
+// api/src/ApiResource/Parchment.php with Symfony or app/ApiResource/Parchment.php with Laravel
+namespace App\ApiResource;
 
 use ApiPlatform\Metadata\ApiResource;
 
@@ -51,8 +51,8 @@ You can also use this new `deprecationReason` attribute to deprecate specific [o
 
 ```php
 <?php
-// api/src/Entity/Parchment.php
-namespace App\Entity;
+// api/src/ApiResource/Parchment.php with Symfony or app/ApiResource/Parchment.php with Laravel
+namespace App\ApiResource;
 
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Get;
@@ -71,8 +71,8 @@ It's also possible to deprecate a single property:
 
 ```php
 <?php
-// api/src/Entity/Review.php
-namespace App\Entity;
+// api/src/ApiResource/Review.php with Symfony or app/ApiResource/Review.php with Laravel
+namespace App\ApiResource;
 
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\ApiProperty;
@@ -91,9 +91,10 @@ class Review
 
 ```yaml
 # api/config/api_platform/resources/Review.yaml
+# The YAML syntax is only supported for Symfony
 properties:
   # ...
-  App\Entity\Review:
+  App\ApiResource\Review:
     # ...
     letter:
       deprecationReason: 'Use the rating property instead'
@@ -114,8 +115,8 @@ Thanks to the `sunset` attribute, API Platform makes it easy to set this header 
 
 ```php
 <?php
-// api/src/Entity/Parchment.php
-namespace App\Entity;
+// api/src/ApiResource/Parchment.php with Symfony or app/ApiResource/Parchment.php with Laravel
+namespace App\ApiResource;
 
 use ApiPlatform\Metadata\ApiResource;
 
@@ -136,8 +137,8 @@ It's also possible to set the `Sunset` header only for a specific [operation](op
 
 ```php
 <?php
-// api/src/Entity/Parchment.php
-namespace App\Entity;
+// api/src/ApiResource/Parchment.php with Symfony or app/ApiResource/Parchment.php with Laravel
+namespace App\ApiResource;
 
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Get;
@@ -162,8 +163,8 @@ You can prefix your URI Templates and change the representation using serializat
 
 ```php
 <?php
-// api/src/Entity/Parchment.php
-namespace App\Model;
+// api/src/ApiResource/Parchment.php with Symfony or app/ApiResource/Parchment.php with Laravel
+namespace App\ApiResource;
 
 use ApiPlatform\Metadata\Get;
 use Symfony\Component\Serializer\Attrbute\Groups;
