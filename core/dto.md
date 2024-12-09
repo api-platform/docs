@@ -1,6 +1,6 @@
 # Using Data Transfer Objects (DTOs)
 
-<p class="symfonycasts" style="text-align: center;"><a href="https://symfonycasts.com/api-platform-extending?cid=apip"><img src="../symfony/images/symfonycasts-player.png" alt="Custom Resources screencast"><br>Watch the Custom Resources screencast</a></p>
+<p class="symfonycasts" align="center"><a href="https://symfonycasts.com/api-platform-extending?cid=apip"><img src="../symfony/images/symfonycasts-player.png" alt="Custom Resources screencast"><br>Watch the Custom Resources screencast</a></p>
 
 As stated in [the general design considerations](design.md), in most cases [the DTO pattern](https://en.wikipedia.org/wiki/Data_transfer_object) should be implemented using an API Resource class representing the public data model exposed through the API and [a custom State Provider](state-providers.md). In such cases, the class marked with `#[ApiResource]` will act as a DTO.
 
