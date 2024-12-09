@@ -1,15 +1,20 @@
-# FOSUserBundle Integration
+# FOSUserBundle Integration with Symfony
+
+> [!WARNING]
+> The use of FOSUserBundle is no longer recommended for better flexibility and security. It is advised to switch to the
+> [Doctrine entity user provider](https://symfony.com/doc/current/security/user_provider.html#entity-user-provider) (recommended)
+> or consider [creating a custom user provider](https://symfony.com/doc/current/security/user_provider.html#creating-a-custom-user-provider).
 
 ## Installing the Bundle
 
-The installation procedure of the FOSUserBundle is described [in the main Symfony docs](https://symfony.com/doc/master/bundles/FOSUserBundle/index.html)
+The installation procedure of the FOSUserBundle is described [in the FOSUserBundle documentation](https://github.com/FriendsOfSymfony/FOSUserBundle/blob/master/docs/index.rst).
 
 You can:
 
-- Skip [step 3 (Create your User class)](https://symfony.com/doc/master/bundles/FOSUserBundle/index.html#step-3-create-your-user-class)
+- Skip [step 3 (Create your User class)](https://github.com/FriendsOfSymfony/FOSUserBundle/blob/master/docs/index.rst#step-3-create-your-user-class)
   and use the class provided in the next paragraph to set up serialization groups the correct way
-- Skip [step 4 (Configure your application's security.yml)](https://symfony.com/doc/master/bundles/FOSUserBundle/index.html#step-4-configure-your-application-s-security-yml)
-  if you are planning to [use a JWT-based authentication using `LexikJWTAuthenticationBundle`](jwt.md)
+- Skip [step 4 (Configure your application's security.yml)](https://github.com/FriendsOfSymfony/FOSUserBundle/blob/master/docs/index.rst#step-4-configure-your-applications-securityyml)
+  if you are planning to [use a JWT-based authentication using `LexikJWTAuthenticationBundle`](../core/jwt.md)
 
 If you are using the API Platform Standard Edition, you will need to enable the form services in the symfony framework
 configuration options:
@@ -22,11 +27,11 @@ framework:
 
 ## Creating a `User` Entity with Serialization Groups
 
-Here's an example of declaration of a [Doctrine ORM User class](https://github.com/FriendsOfSymfony/FOSUserBundle/blob/master/Resources/doc/index.rst#a-doctrine-orm-user-class).
-There's also an example for a [Doctrine MongoDB ODM](https://github.com/FriendsOfSymfony/FOSUserBundle/blob/master/Resources/doc/index.rst#b-mongodb-user-class).
+Here's an example of declaration of a [Doctrine ORM User class](https://github.com/FriendsOfSymfony/FOSUserBundle/blob/master/docs/index.rst#a-doctrine-orm-user-class).
+There's also an example for a [Doctrine MongoDB ODM](https://github.com/FriendsOfSymfony/FOSUserBundle/blob/master/docs/index.rst#b-mongodb-user-class).
 You need to use serialization groups to hide some properties like `plainPassword` (only in read) and `password`. The properties
-shown are handled with [`normalizationContext`](serialization.md#normalization), while the properties
-you can modify are handled with [`denormalizationContext`](serialization.md#denormalization).
+shown are handled with [`normalizationContext`](../core/serialization.md#normalization), while the properties
+you can modify are handled with [`denormalizationContext`](../core/serialization.md#denormalization).
 
 Create your User entity with serialization groups:
 
