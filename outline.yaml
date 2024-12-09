@@ -11,6 +11,7 @@ chapters:
       - caddy
       - migrate-from-fosrestbundle
       - fosuser-bundle
+      - nelmio-api-doc
   - title: "API Platform for Laravel"
     path: laravel
     items:
@@ -65,7 +66,6 @@ chapters:
       - jwt
       - user
       - form-data
-      - nelmio-api-doc
       - bootstrap
       - configuration
   - title: Schema Generator
