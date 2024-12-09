@@ -10,6 +10,7 @@ chapters:
       - debugging
       - caddy
       - migrate-from-fosrestbundle
+      - fosuser-bundle
   - title: "API Platform for Laravel"
     path: laravel
     items:
@@ -65,7 +66,6 @@ chapters:
       - user
       - form-data
       - angularjs-integration
-      - fosuser-bundle
       - nelmio-api-doc
       - bootstrap
       - configuration

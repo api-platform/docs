@@ -65,7 +65,7 @@ We're not done yet! Let's move on to configuring the Symfony SecurityBundle for 
 
 It is necessary to configure a user provider. You can either use the [Doctrine entity user provider](https://symfony.com/doc/current/security/user_provider.html#entity-user-provider)
 provided by Symfony (recommended), [create a custom user provider](https://symfony.com/doc/current/security/user_provider.html#creating-a-custom-user-provider)
-or use [API Platform's FOSUserBundle integration](fosuser-bundle.md) (not recommended).
+or use [API Platform's FOSUserBundle integration](../symfony/fosuser-bundle.md) (not recommended).
 
 If you choose to use the Doctrine entity user provider, start by [creating your `User` class](https://symfony.com/doc/current/security.html#a-create-your-user-class).
 
