@@ -74,7 +74,7 @@ In some cases, using an input DTO is a way to avoid serialization groups.
 
 ## Use Symfony Messenger With an Input DTO
 
-Let's use a message that will be processed by [Symfony Messenger](https://symfony.com/components/Messenger). API Platform has an [integration with messenger](./messenger.md), to use a DTO as input you need to specify the `input` attribute:
+Let's use a message that will be processed by [Symfony Messenger](https://symfony.com/components/Messenger). API Platform has an [integration with messenger](../symfony/messenger.md), to use a DTO as input you need to specify the `input` attribute:
 
 ```php
 <?php

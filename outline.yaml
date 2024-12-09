@@ -16,6 +16,7 @@ chapters:
       - jwt
       - file-upload
       - controllers
+      - messenger
   - title: "API Platform for Laravel"
     path: laravel
     items:
@@ -51,7 +52,6 @@ chapters:
       - default-order
       - performance
       - extensions
-      - messenger
       - dto
       - openapi
       - json-schema
