@@ -11,9 +11,9 @@ You can choose your preferred stack between Symfony, Laravel, or bootstrapping t
 
 If you are starting a new project, the easiest way to get API Platform up is to install [API Platform for Symfony](../symfony/index.md).
 
-It comes with the API Platform core library integrated with [the Symfony framework](https://symfony.com), [the schema generator](../schema-generator/),
+It comes with the API Platform core library integrated with [the Symfony framework](https://symfony.com), [the schema generator](../schema-generator/index.md),
 [Doctrine ORM](https://www.doctrine-project.org),
-[NelmioCorsBundle](https://github.com/nelmio/NelmioCorsBundle) and [test assertions dedicated to APIs](../symfony/testing-utilities.md).
+[NelmioCorsBundle](https://github.com/nelmio/NelmioCorsBundle) and [test assertions dedicated to APIs](../symfony/testing.md).
 
 [MongoDB](mongodb.md) and [Elasticsearch](elasticsearch.md) can also be easily enabled.
 
@@ -30,7 +30,8 @@ There are no mandatory configuration options although [many settings are availab
 
 ### Migrating from FOSRestBundle
 
-If you plan to migrate from FOSRestBundle, you might want to read [this guide](migrate-from-fosrestbundle.md) to get started with API Platform.
+If you plan to migrate from FOSRestBundle, you might want to read [this guide](../symfony/migrate-from-fosrestbundle.md)
+to get started with API Platform.
 
 ### Laravel
 
