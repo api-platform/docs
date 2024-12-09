@@ -65,7 +65,6 @@ chapters:
       - jwt
       - user
       - form-data
-      - angularjs-integration
       - nelmio-api-doc
       - bootstrap
       - configuration
