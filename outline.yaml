@@ -9,6 +9,7 @@ chapters:
       - testing
       - debugging
       - caddy
+      - migrate-from-fosrestbundle
   - title: "API Platform for Laravel"
     path: laravel
     items:
@@ -68,7 +69,6 @@ chapters:
       - nelmio-api-doc
       - bootstrap
       - configuration
-      - migrate-from-fosrestbundle
   - title: Schema Generator
     path: schema-generator
     items:
