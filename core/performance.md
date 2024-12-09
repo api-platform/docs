@@ -71,7 +71,9 @@ Update your Caddyfile with the following configuration:
 
 This will tell to caddy to use the HTTP cache and activate the tag-based invalidation API. You can refer to the [cache-handler documentation](https://github.com/caddyserver/cache-handler) or the [souin website documentation](https://docs.souin.io) to learn how to configure the HTTP cache server.
 
-Setup the HTTP cache invalidation in your API Platform project
+Set up HTTP cache invalidation in your API Platform project using the Symfony or Laravel configuration below:
+
+##### Cache Invalidation Configuration using Symfony
 
 ```yaml
 api_platform:
@@ -81,6 +83,24 @@ api_platform:
       # The endpoint /souin-api/souin is the default path to the invalidation API.
       urls: ['http://caddy/souin-api/souin']
       purger: api_platform.http_cache.purger.souin
+```
+
+##### Cache Invalidation Configuration using Laravel
+
+```php
+<?php
+// config/api-platform.php
+return [
+    // ....
+    'http_cache' => [
+        'invalidation' => [
+            // We assume that your API can reach your caddy instance by the hostname http://caddy.
+            // The endpoint /souin-api/souin is the default path to the invalidation API.
+            'urls' => ['http://caddy/souin-api/souin'],
+            'purger' => 'api_platform.http_cache.purger.souin',
+        ]
+    ],
+];
 ```
 
 Don't forget to set your `Cache-Control` directive to enable caching on your API resource class.
@@ -107,6 +127,8 @@ And voilà, you have a fully working HTTP cache with an invalidation API.
 
 Integration with Varnish and Doctrine ORM is shipped with the core library.
 
+##### Varnish cache invalidation system using Symfony
+
 Add the following configuration to enable the cache invalidation system:
 
 ```yaml
@@ -122,12 +144,39 @@ api_platform:
       vary: ['Content-Type', 'Authorization', 'Origin']
 ```
 
+##### Varnish cache invalidation system using Laravel
+
+Add the following configuration to enable the cache invalidation system:
+
+```php
+<?php
+// config/api-platform.php
+return [
+    // ....
+    'http_cache' => [
+        'invalidation' => [
+            'enabled' => true,
+            'varnish_urls' => ['%env(VARNISH_URL)%'],
+        ]
+    ],
+    'defaults' => [
+        'cache_headers' => [
+            'max_age' => 0,
+            'shared_max_age' => 3600,
+            'vary' => ['Content-Type', 'Authorization', 'Origin'],
+        ]
+    ],
+];
+```
+
 ## Configuration
 
 Support for reverse proxies other than Varnish or Caddy with the HTTP cache module can be added by implementing the `ApiPlatform\HttpCache\PurgerInterface`.
 Three purgers are available, the built-in caddy HTTP cache purger (`api_platform.http_cache.purger.souin`), the HTTP tags (`api_platform.http_cache.purger.varnish.ban`), the surrogate key implementation
 (`api_platform.http_cache.purger.varnish.xkey`). You can specify the implementation using the `purger` configuration node,
-for example, to use the `xkey` implementation:
+for example, to use the `Xkey` implementation see the Symfony or Laravel configuration below:
+
+### Exemple of Varnish Xkey implementation using Symfony
 
 ```yaml
 api_platform:
@@ -146,6 +195,37 @@ api_platform:
         xkey:
           glue: ', '
 ```
+
+### Exemple of Varnish Xkey implementation using Laravel
+
+```php
+<?php
+// config/api-platform.php
+return [
+    // ....
+    'http_cache' => [
+        'invalidation' => [
+            'enabled' => true,
+            'varnish_urls' => ['%env(VARNISH_URL)%'],
+            'purger' => 'api_platform.http_cache.purger.varnish.xkey',
+        ],
+        'public' => true,
+    ],
+    'defaults' => [
+        'cache_headers' => [
+            'max_age' => 0,
+            'shared_max_age' => 3600,
+            'vary' => ['Content-Type', 'Authorization', 'Origin'],
+            'invalidation' => [
+                'xkey' => [
+                    'glue' => ', ',
+                ]
+            ],
+        ]
+    ],
+];
+```
+
 
 In addition to the cache invalidation mechanism, you may want to [use HTTP/2 Server Push to pre-emptively send relations
 to the client](push-relations.md).
@@ -257,20 +337,18 @@ This feature is enabled by default in the production environment of the API Plat
 ### Search Filter
 
 When using the `SearchFilter` and case insensitivity, Doctrine will use the `LOWER` SQL function. Depending on your
-driver, you may want to carefully index it by using a [function-based
-index](https://use-the-index-luke.com/sql/where-clause/functions/case-insensitive-search) or it will impact performance
-with a huge collection. [Here are some examples to index LIKE
-filters](https://use-the-index-luke.com/sql/where-clause/searching-for-ranges/like-performance-tuning) depending on your
-database driver.
+driver, you may want to carefully index it by using a [function-based index,](https://use-the-index-luke.com/sql/where-clause/functions/case-insensitive-search) or it will impact performance
+with a huge collection. [Here are some examples to index LIKE filters](https://use-the-index-luke.com/sql/where-clause/searching-for-ranges/like-performance-tuning) depending on your database driver.
 
 ### Eager Loading
 
-By default, Doctrine comes with [lazy loading](https://www.doctrine-project.org/projects/doctrine-orm/en/current/reference/working-with-objects.html#by-lazy-loading) - usually a killer time-saving feature but also a performance killer with large applications.
+By default, Doctrine comes with [lazy loading](https://www.doctrine-project.org/projects/doctrine-orm/en/current/reference/working-with-objects.html#by-lazy-loading)
+- usually a killer time-saving feature but also a performance killer with large applications.
 
 Fortunately, Doctrine offers another approach to solve this problem: [eager loading](https://www.doctrine-project.org/projects/doctrine-orm/en/current/reference/working-with-objects.html#by-eager-loading).
 This can easily be enabled for a relation: `#[ORM\ManyToOne(fetch: "EAGER")]`.
 
-By default in API Platform, we chose to force eager loading for all relations, with or without the Doctrine
+By default, in API Platform, we chose to force eager loading for all relations, with or without the Doctrine
 `fetch` attribute. Thanks to the eager loading [extension](extensions.md). The `EagerLoadingExtension` will join every
 readable association according to the serialization context. If you want to fetch an association that is not serializable,
 you have to bypass `readable` and `readableLink` by using the `fetchEager` attribute on the property declaration, for example:
