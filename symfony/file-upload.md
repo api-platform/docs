@@ -1,15 +1,14 @@
-# Handling File Upload
+# Handling File Upload with Symfony
 
-As common a problem as it may seem, handling file upload requires a custom
-implementation in your app. This page will guide you in handling file upload in
-your API, with the help of
-[VichUploaderBundle](https://github.com/dustin10/VichUploaderBundle). It is
-recommended you [read the documentation of
-VichUploaderBundle](https://github.com/dustin10/VichUploaderBundle/blob/master/docs/index.md)
+As common a problem as it may seem, handling file upload requires a custom implementation in your app. This page will
+guide you in handling file upload in your API, with the help of[VichUploaderBundle](https://github.com/dustin10/VichUploaderBundle).
+It is recommended you [read the documentation of VichUploaderBundle](https://github.com/dustin10/VichUploaderBundle/blob/master/docs/index.md)
 before proceeding. It will help you get a grasp on how the bundle works, and why we use it.
 
-**Note**: Uploading files won't work in `PUT` or `PATCH` requests, you must use `POST` method to upload files.
-See [the related issue on Symfony](https://github.com/symfony/symfony/issues/9226) and [the related bug in PHP](https://bugs.php.net/bug.php?id=55815) talking about this behavior.
+> [!NOTE]
+> Uploading files won't work in `PUT` or `PATCH` requests, you must use `POST` method to upload files.
+> See [the related issue on Symfony](https://github.com/symfony/symfony/issues/9226) and
+> [the related bug in PHP](https://bugs.php.net/bug.php?id=55815) talking about this behavior.
 
 Enable the multipart format globally in order to use it as the input format of your resource:
 
@@ -137,7 +136,7 @@ Note: From V3.3 onwards, `'multipart/form-data'` must either be including in the
 Returning the plain file path on the filesystem where the file is stored is not useful for the client, which needs a
 URL to work with.
 
-A [normalizer](serialization.md#normalization) could be used to set the `contentUrl` property:
+A [normalizer](../core/serialization.md#normalization) could be used to set the `contentUrl` property:
 
 ```php
 <?php
