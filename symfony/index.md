@@ -1,4 +1,4 @@
-# Getting Started With API Platform for Symfony
+# Getting Started With API Platform with Symfony
 
 ![The welcome page](images/api-platform-3.0-welcome.png)
 
