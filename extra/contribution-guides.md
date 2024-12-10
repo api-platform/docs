@@ -1,10 +1,14 @@
-# Contribution guides
+# Contribution Guides
 
-1. [API Platform Core Library](https://github.com/api-platform/core/blob/main/CONTRIBUTING.md)
-2. [API Platform Schema Generator](https://github.com/api-platform/schema-generator/blob/main/CONTRIBUTING.md)
-3. [API Platform Admin](https://github.com/api-platform/admin/blob/master/CONTRIBUTING.md)
-4. [API Platform CRUD Generator](https://github.com/api-platform/create-client/blob/master/CONTRIBUTING.md)
+## API Platform Core  
+- [General Contribution Guide](https://github.com/api-platform/core/blob/main/CONTRIBUTING.md)  
+- [Laravel-Specific Contribution Guide](https://github.com/api-platform/core/blob/main/src/Laravel/CONTRIBUTING.md)  
 
-**To report a security issue, please refer to [the dedicated document](security.md).**
+## API Platform Tools  
+- [Schema Generator Contribution Guide](https://github.com/api-platform/schema-generator/blob/main/CONTRIBUTING.md)  
+- [Admin Contribution Guide](https://github.com/api-platform/admin/blob/master/CONTRIBUTING.md)  
+- [CRUD Generator Contribution Guide](https://github.com/api-platform/create-client/blob/master/CONTRIBUTING.md)  
+
+**To report a security issue, please take a look at [the dedicated document](security.md).**
 
 <p align="center" class="symfonycasts"><a href="https://symfonycasts.com/screencast/contributing?cid=apip"><img src="../symfony/images/symfonycasts-player.png" alt="JWT screencast"><br>Watch the Contributing back to Symfony screencast (free)</a></p>
