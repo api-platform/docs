@@ -125,6 +125,40 @@ use App\State\BlogPostProvider;
 class BlogPost {}
 ```
 
+## Getting the user in a provider
+
+Receiving a user in your provider to allow for filtering of entities can be achieved by adding the `Security` class in your constructor;
+
+```php
+<?php
+
+namespace App\State;
+
+use ApiPlatform\Metadata\CollectionOperationInterface;
+use ApiPlatform\Metadata\Operation;
+use ApiPlatform\State\ProviderInterface;
+use App\Repository\BlogPostRepository;
+use Symfony\Bundle\SecurityBundle\Security;
+
+class BlogPostProvider implements ProviderInterface
+{
+    public function __construct(
+        private readonly BlogPostRepository $blogPostRepository,
+        private readonly Security $security
+    ) {
+    }
+
+    public function provide(Operation $operation, array $uriVariables = [], array $context = []): object|array|null
+    {
+        if ($operation instanceof CollectionOperationInterface) {
+            return $this->blogPostRepository->findAllForUser($this->security->getToken()->getUser());
+        }
+
+        return $this->blogPostRepository->find($uriVariables['id']);
+    }
+}
+```
+
 ## Hooking into the Built-In State Provider
 
 If you want to execute custom business logic before or after retrieving data, this can be achieved by [decorating](https://symfony.com/doc/current/service_container/service_decoration.html) the built-in state providers or using [composition](https://en.wikipedia.org/wiki/Object_composition).
