@@ -41,8 +41,7 @@ The integration using the cache handler is quite simple. You just have to update
 +ENV CGO_ENABLED=1 XCADDY_SETCAP=1 XCADDY_GO_BUILD_FLAGS="-ldflags \"-w -s -extldflags '-Wl,-z,stack-size=0x80000'\""
 +RUN xcaddy build \
 +    --output /usr/local/bin/frankenphp \
-+    --with github.com/dunglas/frankenphp=./ \
-+    --with github.com/dunglas/frankenphp/caddy=./caddy/ \
++    --with github.com/dunglas/frankenphp/caddy \
 +    --with github.com/dunglas/mercure/caddy \
 +    --with github.com/dunglas/vulcain/caddy \
 +    --with github.com/dunglas/caddy-cbrotli \

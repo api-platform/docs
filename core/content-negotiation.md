@@ -19,7 +19,7 @@ API Platform will automatically detect the best resolving format depending on:
 Available formats are:
 
 | Format                                                | Format name | MIME types                    | Backward Compatibility guaranteed |
-| ----------------------------------------------------- | ----------- | ----------------------------- | --------------------------------- |
+|-------------------------------------------------------|-------------|-------------------------------|-----------------------------------|
 | [JSON-LD](https://json-ld.org)                        | `jsonld`    | `application/ld+json`         | yes                               |
 | [GraphQL](graphql.md)                                 | n/a         | n/a                           | yes                               |
 | [JSON:API](https://jsonapi.org/)                      | `jsonapi`   | `application/vnd.api+json`    | yes                               |
