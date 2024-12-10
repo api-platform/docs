@@ -1,23 +1,22 @@
-# Handling File Upload
+# Handling File Upload with Symfony
 
-As common a problem as it may seem, handling file upload requires a custom
-implementation in your app. This page will guide you in handling file upload in
-your API, with the help of
-[VichUploaderBundle](https://github.com/dustin10/VichUploaderBundle). It is
-recommended you [read the documentation of
-VichUploaderBundle](https://github.com/dustin10/VichUploaderBundle/blob/master/docs/index.md)
+As common a problem as it may seem, handling file upload requires a custom implementation in your app. This page will
+guide you in handling file upload in your API, with the help of[VichUploaderBundle](https://github.com/dustin10/VichUploaderBundle).
+It is recommended you [read the documentation of VichUploaderBundle](https://github.com/dustin10/VichUploaderBundle/blob/master/docs/index.md)
 before proceeding. It will help you get a grasp on how the bundle works, and why we use it.
 
-**Note**: Uploading files won't work in `PUT` or `PATCH` requests, you must use `POST` method to upload files.
-See [the related issue on Symfony](https://github.com/symfony/symfony/issues/9226) and [the related bug in PHP](https://bugs.php.net/bug.php?id=55815) talking about this behavior.
+> [!NOTE]
+> Uploading files won't work in `PUT` or `PATCH` requests, you must use `POST` method to upload files.
+> See [the related issue on Symfony](https://github.com/symfony/symfony/issues/9226) and
+> [the related bug in PHP](https://bugs.php.net/bug.php?id=55815) talking about this behavior.
 
-Enable the multipart format globally in order to use it as the input format of your resource: 
+Enable the multipart format globally in order to use it as the input format of your resource:
 
 ```yaml
 api_platform:
-    formats:
-        multipart: ['multipart/form-data']
-        jsonld: ['application/ld+json']
+  formats:
+    multipart: ['multipart/form-data']
+    jsonld: ['application/ld+json']
 ```
 
 ## Installing VichUploaderBundle
@@ -25,8 +24,7 @@ api_platform:
 Install the bundle with the help of Composer:
 
 ```console
-docker compose exec php \
-    composer require vich/uploader-bundle
+composer require vich/uploader-bundle
 ```
 
 This will create a new configuration file that you will need to slightly change
@@ -36,15 +34,15 @@ to make it look like this.
 # api/config/packages/vich_uploader.yaml
 
 vich_uploader:
-    db_driver: orm
-    metadata:
-        type: attribute
-    mappings:
-        media_object:
-            uri_prefix: /media
-            upload_destination: '%kernel.project_dir%/public/media'
-            # Will rename uploaded files using a uniqueid as a suffix.
-            namer: Vich\UploaderBundle\Naming\SmartUniqueNamer
+  db_driver: orm
+  metadata:
+    type: attribute
+  mappings:
+    media_object:
+      uri_prefix: /media
+      upload_destination: '%kernel.project_dir%/public/media'
+      # Will rename uploaded files using a uniqueid as a suffix.
+      namer: Vich\UploaderBundle\Naming\SmartUniqueNamer
 ```
 
 ## Uploading to a Dedicated Resource
@@ -79,7 +77,7 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
 #[Vich\Uploadable]
 #[ORM\Entity]
 #[ApiResource(
-    normalizationContext: ['groups' => ['media_object:read']], 
+    normalizationContext: ['groups' => ['media_object:read']],
     types: ['https://schema.org/MediaObject'],
     outputFormats: ['jsonld' => ['application/ld+json']],
     operations: [
@@ -92,10 +90,10 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
                     content: new \ArrayObject([
                         'multipart/form-data' => [
                             'schema' => [
-                                'type' => 'object', 
+                                'type' => 'object',
                                 'properties' => [
                                     'file' => [
-                                        'type' => 'string', 
+                                        'type' => 'string',
                                         'format' => 'binary'
                                     ]
                                 ]
@@ -121,7 +119,7 @@ class MediaObject
     public ?File $file = null;
 
     #[ApiProperty(writable: false)]
-    #[ORM\Column(nullable: true)] 
+    #[ORM\Column(nullable: true)]
     public ?string $filePath = null;
 
     public function getId(): ?int
@@ -130,6 +128,7 @@ class MediaObject
     }
 }
 ```
+
 Note: From V3.3 onwards, `'multipart/form-data'` must either be including in the global API-Platform config, either in `formats` or `defaults->inputFormats`, or defined as an `inputFormats` parameter on an operation by operation basis.
 
 ### Resolving the File URL
@@ -137,7 +136,7 @@ Note: From V3.3 onwards, `'multipart/form-data'` must either be including in the
 Returning the plain file path on the filesystem where the file is stored is not useful for the client, which needs a
 URL to work with.
 
-A [normalizer](serialization.md#normalization) could be used to set the `contentUrl` property:
+A [normalizer](../core/serialization.md#normalization) could be used to set the `contentUrl` property:
 
 ```php
 <?php
@@ -211,6 +210,7 @@ your data, you will get a response looking like this:
 You will need to modify your `Caddyfile` to allow the above `contentUrl` to be accessed directly. If you followed the above configuration for the VichUploaderBundle, that will be in `api/public/media`. Add your folder to the list of path matches, e.g. `|^/media/|`:
 
 <!-- markdownlint-disable no-hard-tabs -->
+
 ```patch
 	# Matches requests for HTML documents, for static files and for Next.js files,
 	# except for known API paths and paths with extensions handled by API Platform
@@ -224,6 +224,7 @@ You will need to modify your `Caddyfile` to allow the above `contentUrl` to be a
 		)
 		|| path('/favicon.ico', '/manifest.json', '/robots.txt', '/_next*', '/sitemap*')`
 ```
+
 <!-- markdownlint-enable no-hard-tabs -->
 
 ### Linking a MediaObject Resource to Another Resource
@@ -255,7 +256,7 @@ class Book
     #[ORM\JoinColumn(nullable: true)]
     #[ApiProperty(types: ['https://schema.org/image'])]
     public ?MediaObject $image = null;
-    
+
     // ...
 }
 ```
@@ -328,6 +329,34 @@ The file and the resource fields will be posted to the resource endpoint.
 
 This example will use a custom `multipart/form-data` decoder to deserialize the resource instead of a custom controller.
 
+> [!WARNING]
+> Make sure to encode the fields in JSON before sending them.
+
+For instance, you could do something like this:
+```js
+async function uploadBook(file) {
+    const bookMetadata = {
+        title: "API Platform Best Practices",
+        genre: "Programming"
+    };
+
+    const formData = new FormData();
+    for (const [name, value] of Object.entries(bookMetadata)) {
+        formData.append(name, JSON.stringify(value));
+    }
+    formData.append('file', file);
+
+    const response = await fetch('https://my-api.com/books', {
+        method: 'POST',
+        body: formData
+    });
+
+    const result = await response.json();
+
+    return result;
+}
+```
+
 ### Configuring the Existing Resource Receiving the Uploaded File
 
 The `Book` resource needs to be modified like this:
@@ -346,13 +375,11 @@ use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Vich\UploaderBundle\Mapping\Annotation as Vich;
 
-/**
- * @Vich\Uploadable
- */
+#[Vich\Uploadable]
 #[ORM\Entity]
 #[ApiResource(
-    normalizationContext: ['groups' => ['book:read']], 
-    denormalizationContext: ['groups' => ['book:write']], 
+    normalizationContext: ['groups' => ['book:read']],
+    denormalizationContext: ['groups' => ['book:write']],
     types: ['https://schema.org/Book'],
     operations: [
         new GetCollection(),
@@ -370,15 +397,16 @@ class Book
     #[Groups(['book:read'])]
     public ?string $contentUrl = null;
 
-    /**
-     * @Vich\UploadableField(mapping="media_object", fileNameProperty="filePath")
-     */
+    #[Vich\UploadableField(
+        mapping: 'media_object',
+        fileNameProperty: 'filePath',
+    )]
     #[Groups(['book:write'])]
     public ?File $file = null;
 
-    #[ORM\Column(nullable: true)] 
+    #[ORM\Column(nullable: true)]
     public ?string $filePath = null;
-    
+
     // ...
 }
 ```
@@ -401,7 +429,7 @@ final class MultipartDecoder implements DecoderInterface
 {
     public const FORMAT = 'multipart';
 
-    public function __construct(private RequestStack $requestStack)
+    public function __construct(private readonly RequestStack $requestStack)
     {
     }
 
@@ -415,9 +443,7 @@ final class MultipartDecoder implements DecoderInterface
 
         return array_map(static function (string $element) {
             // Multipart form values will be encoded in JSON.
-            $decoded = json_decode($element, true);
-
-            return \is_array($decoded) ? $decoded : $element;
+            return json_decode($element, true, flags: \JSON_THROW_ON_ERROR);
         }, $request->request->all()) + $request->files->all();
     }
 
@@ -456,8 +482,6 @@ final class UploadedFileDenormalizer implements DenormalizerInterface
     public function getSupportedTypes(?string $format): array
     {
         return [
-            'object' => null,
-            '*' => false,
             File::class => true,
         ];
     }

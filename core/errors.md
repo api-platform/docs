@@ -4,7 +4,7 @@ API Platform comes with a powerful error system. It handles expected (such as fa
 client or validation errors) as well as unexpected errors (PHP exceptions and errors).
 API Platform automatically sends the appropriate HTTP status code to the client: `400` for expected errors, `500` for
 unexpected ones. It also provides a description of the error in [the Hydra error format](https://www.hydra-cg.com/spec/latest/core/#description-of-http-status-codes-and-errors)
-or in the format described in the [RFC 7807](https://tools.ietf.org/html/rfc7807), depending of the format selected during the [content negotiation](content-negotiation.md).
+or in the format described in the [RFC 7807](https://tools.ietf.org/html/rfc7807), depending on the format selected during the [content negotiation](content-negotiation.md).
 
 ## Backward compatibility with < 3.1
 
@@ -12,9 +12,9 @@ Use the following configuration:
 
 ```yaml
 api_platform:
-    defaults:
-        extra_properties:
-            rfc_7807_compliant_errors: false
+  defaults:
+    extra_properties:
+      rfc_7807_compliant_errors: false
 ```
 
 This can also be configured on an `ApiResource` or in an `HttpOperation`, for example:
@@ -25,15 +25,32 @@ This can also be configured on an `ApiResource` or in an `HttpOperation`, for ex
 
 ## Exception status code decision
 
-There are many ways of configuring the exception status code we recommend reading the guides on how to use an [Error Provider](https://api-platform.com/docs/guides/error-provider/) or create an [Error Resource](https://api-platform.com/docs/guides/error-resource/).
+There are many ways of configuring the exception status code we recommend reading the guides on how to use an
+[Error Provider](https://api-platform.com/docs/guides/error-provider/) or create an [Error Resource](https://api-platform.com/docs/guides/error-resource/).
 
-1. we look at `exception_to_status` and take one if there's a match
+The decision works like this, if you are using API Platform with Symfony:
+
+1. We look at `exception_to_status` and take one if there's a match
 2. If your exception is a `Symfony\Component\HttpKernel\Exception\HttpExceptionInterface` we get its status.
 3. If the exception is a `ApiPlatform\Metadata\Exception\ProblemExceptionInterface` and there is a status we use it
 4. Same for `ApiPlatform\Metadata\Exception\HttpExceptionInterface`
-5. We have some defaults `Symfony\Component\HttpFoundation\Exception\RequestExceptionInterface` => 400 and `ApiPlatform\Validator\Exception\ValidationException` => 422
-6. the status defined on an `ErrorResource`
+5. Use defaults for the following exceptions:
+    - `Symfony\Component\HttpFoundation\Exception\RequestExceptionInterface` => 400
+    - `ApiPlatform\Symfony\Validator\Exception\ValidationException` => 422
+6. The status defined on an `ErrorResource`
 7. 500 is the fallback
+
+And like this, if you are using API Platform with Laravel:
+
+1. Check an `exception_to_status` array and use its value if a match is found.
+2. If the exception implements `Illuminate\Contracts\Http\Exception\HttpResponseException`, retrieve its HTTP status.
+3. If the exception implements `App\Contracts\Exceptions\ProblemExceptionInterface` and a status is defined, use it.
+4. Similarly, check for `App\Contracts\Exceptions\HttpExceptionInterface`.
+5. Use defaults for the following exceptions:
+    - `Illuminate\Http\Exceptions\HttpResponseException` => 400
+    - `ApiPlatform\Symfony\Validator\Exception\ValidationException` => 422
+6. The status defined on an `ErrorResource`
+7. Fallback to 500.
 
 ## Exception to status
 
@@ -45,7 +62,7 @@ configure API Platform to convert it to a `404 Not Found` error:
 
 ```php
 <?php
-// api/src/Exception/ProductNotFoundException.php
+// api/src/Exception/ProductNotFoundException.php with Symfony or app/Exception/ProductNotFoundException.php with Laravel
 namespace App\Exception;
 
 final class ProductNotFoundException extends \Exception
@@ -56,11 +73,12 @@ final class ProductNotFoundException extends \Exception
 
 ```php
 <?php
-// api/src/EventSubscriber/ProductManager.php
+// api/src/EventSubscriber/ProductManager.php with Symfony or app/EventSubscriber/ProductManager.php with Laravel
+
 namespace App\EventSubscriber;
 
 use ApiPlatform\EventListener\EventPriorities;
-use App\Entity\Product;
+use App\ApiResource\Product;
 use App\Exception\ProductNotFoundException;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -92,32 +110,57 @@ final class ProductManager implements EventSubscriberInterface
 ```
 
 If you use the standard distribution of API Platform, this event listener will be automatically registered. If you use a
-custom installation, [learn how to register listeners](events.md#custom-event-listeners).
+custom installation, [learn how to extend API Platform](extending.md).
 
 Then, configure the framework to catch `App\Exception\ProductNotFoundException` exceptions and convert them into `404`
 errors:
 
+### Exception to status Configuration using Symfony
+
 ```yaml
 # config/packages/api_platform.yaml
 api_platform:
-    # ...
-    exception_to_status:
-        # The 4 following handlers are registered by default, keep those lines to prevent unexpected side effects
-        Symfony\Component\Serializer\Exception\ExceptionInterface: 400 # Use a raw status code (recommended)
-        ApiPlatform\Exception\InvalidArgumentException: !php/const Symfony\Component\HttpFoundation\Response::HTTP_BAD_REQUEST
-        ApiPlatform\ParameterValidator\Exception\ValidationExceptionInterface: 400
-        Doctrine\ORM\OptimisticLockException: 409
+  # ...
+  exception_to_status:
+    # The 4 following handlers are registered by default, keep those lines to prevent unexpected side effects
+    Symfony\Component\Serializer\Exception\ExceptionInterface: 400 # Use a raw status code (recommended)
+    ApiPlatform\Exception\InvalidArgumentException: !php/const Symfony\Component\HttpFoundation\Response::HTTP_BAD_REQUEST
+    ApiPlatform\ParameterValidator\Exception\ValidationExceptionInterface: 400
+    Doctrine\ORM\OptimisticLockException: 409
 
-        # Validation exception
-        ApiPlatform\Validator\Exception\ValidationException: !php/const Symfony\Component\HttpFoundation\Response::HTTP_UNPROCESSABLE_ENTITY
+    # Validation exception
+    ApiPlatform\Validator\Exception\ValidationException: !php/const Symfony\Component\HttpFoundation\Response::HTTP_UNPROCESSABLE_ENTITY
 
-        # Custom mapping
-        App\Exception\ProductNotFoundException: 404 # Here is the handler for our custom exception
+    # Custom mapping
+    App\Exception\ProductNotFoundException: 404 # Here is the handler for our custom exception
 ```
 
-Any type of `Exception` can be thrown, API Platform will convert it to a Symfony's `HttpException` (note that it means the exception will be flattened and lose all of its custom properties). The framework also takes
-care of serializing the error description according to the request format. For instance, if the API should respond in JSON-LD,
-the error will be returned in this format as well:
+### Exception to status Configuration using Laravel
+
+```php
+<?php
+// config/api-platform.php
+return [
+    // ....
+    'exception_to_status' => [
+        // The 3 following handlers are registered by default, keep those lines to prevent unexpected side effects
+        Symfony\Component\Serializer\Exception\ExceptionInterface::class => 400,
+        ApiPlatform\Exception\InvalidArgumentException::class => Illuminate\Http\Response::HTTP_BAD_REQUEST,
+        ApiPlatform\ParameterValidator\Exception\ValidationExceptionInterface => 400,
+
+        //Validation exception
+        ApiPlatform\Validator\Exception\ValidationException::class => Illuminate\Http\Response::HTTP_UNPROCESSABLE_ENTITY,
+        
+        //Custom mapping
+        App\Exception\ProductNotFoundException::class => 404 // Here is the handler for our custom exception
+    ],
+];
+```
+
+Any type of `Exception` can be thrown, API Platform will convert it to a Symfony's `HttpException` (note that it means
+the exception will be flattened and lose all of its custom properties). The framework also takes care of serializing the
+error description according to the request format. For instance, if the API should respond in JSON-LD, the error will be
+returned in this format as well:
 
 `GET /products/1234`
 
@@ -133,7 +176,9 @@ the error will be returned in this format as well:
 ### Message Scope
 
 Depending on the status code you use, the message may be replaced with a generic one in production to avoid leaking unwanted information.
-If your status code is >= 500 and < 600, the exception message will only be displayed in debug mode (dev and test). In production, a generic message matching the status code provided will be shown instead. If you are using an unofficial HTTP code, a general message will be displayed.
+If your status code is >= 500 and < 600, the exception message will only be displayed in debug mode (dev and test).
+In production, a generic message matching the status code provided will be shown instead. If you are using an unofficial
+HTTP code, a general message will be displayed.
 
 In any other cases, your exception message will be sent to end users.
 
@@ -143,8 +188,8 @@ The `exceptionToStatus` configuration can be set on resources and operations:
 
 ```php
 <?php
-// api/src/Entity/Book.php
-namespace App\Entity;
+// api/src/ApiResource/Book.php with Symfony or app/ApiResource/Book.php with Laravel
+namespace App\ApiResource;
 
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Get;
@@ -172,7 +217,8 @@ the global config.
 
 ## Control your exceptions
 
-With `rfc_7807_compliant_errors` a few things happen. First Hydra exception are compatible with the JSON Problem specification. Default exception that are handled by API Platform in JSON will be returned as `application/problem+json`.
+With `rfc_7807_compliant_errors` a few things happen. First Hydra exception are compatible with the JSON Problem specification.
+Default exception that are handled by API Platform in JSON will be returned as `application/problem+json`.
 
 To customize the API Platform response, replace the `api_platform.state.error_provider` with your own provider:
 
@@ -202,31 +248,33 @@ final class ErrorProvider implements ProviderInterface
         // You don't have to use this, you can use a Response, an array or any object (preferably a resource that API Platform can handle).
         $error = Error::createFromException($exception, $status);
 
-        // care about hiding informations as this can be a security leak
+        // care about hiding information as this can be a security leak
         if ($status >= 500) {
             $error->setDetail('Something went wrong');
         }
-        
+
         return $error;
     }
 }
 ```
 
 ```yaml
-    api_platform.state.error_provider:
-        class: 'App\State\ErrorProvider'
-        tags: 
-            - key: 'api_platform.state.error_provider'
-              name: 'api_platform.state_provider'
+# The YAML syntax is only supported for Symfony
+api_platform.state.error_provider:
+  class: 'App\State\ErrorProvider'
+  tags:
+    - key: 'api_platform.state.error_provider'
+      name: 'api_platform.state_provider'
 ```
 
 Note that our validation exception have their own error provider at:
 
 ```yaml
+# The YAML syntax is only supported for Symfony
 api_platform.validator.state.error_provider:
-    tags: 
-        - key: 'api_platform.validator.state.error_provider'
-          name: 'api_platform.state_provider'
+  tags:
+    - key: 'api_platform.validator.state.error_provider'
+      name: 'api_platform.state_provider'
 ```
 
 ## Domain exceptions
@@ -271,4 +319,7 @@ class Error extends \Exception implements ProblemExceptionInterface
 }
 ```
 
-We recommend using the `\ApiPlatform\Metadata\Exception\ProblemExceptionInterface` and the `\ApiPlatform\Metadata\Exception\HttpExceptionInterface`. For security reasons we add: `normalizationContext: ['ignored_attributes' => ['trace', 'file', 'line', 'code', 'message', 'traceAsString']]` because you usually don't want these. You can override this context value if you want.
+We recommend using the `\ApiPlatform\Metadata\Exception\ProblemExceptionInterface` and the
+`\ApiPlatform\Metadata\Exception\HttpExceptionInterface`. For security reasons we add: `normalizationContext: ['ignored_attributes'
+=> ['trace', 'file', 'line', 'code', 'message', 'traceAsString']]` because you usually don't want these. You can override
+this context value if you want.

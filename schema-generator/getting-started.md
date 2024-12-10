@@ -2,15 +2,15 @@
 
 ## Installation
 
-If you use [the API Platform Symfony variant](../symfony/index.md), the Schema Generator is already installed as a development
-dependency of your project and can be invoked through Docker:
+If you use [the API Platform Distribution with Symfony](../symfony/index.md), the Schema Generator is already installed
+as a development dependency of your project and can be invoked with:
 
 ```console
-docker compose exec php \
-    vendor/bin/schema
+vendor/bin/schema
 ```
 
-The Schema Generator can also [be downloaded independently as a PHAR](https://github.com/api-platform/schema-generator/releases) or installed in an existing project using [Composer](https://getcomposer.org):
+The Schema Generator can also [be downloaded independently as a PHAR](https://github.com/api-platform/schema-generator/releases)
+or installed in an existing project using [Composer](https://getcomposer.org):
 
 ```console
 composer require --dev api-platform/schema-generator
@@ -33,34 +33,34 @@ Then, write a simple YAML config file similar to the following.
 
 Here we will generate a data model for an address book with the following data:
 
-* a [`Person`](https://schema.org/Person) which inherits from [`Thing`](https://schema.org/Thing);
-* a [`PostalAddress`](https://schema.org/PostalAddress) (without its class hierarchy).
+- a [`Person`](https://schema.org/Person) which inherits from [`Thing`](https://schema.org/Thing);
+- a [`PostalAddress`](https://schema.org/PostalAddress) (without its class hierarchy).
 
 ```yaml
 # api/config/schema.yaml
 # The list of types and properties we want to use
 types:
-    # Parent class of Person
-    Thing:
-        properties:
-            name: ~
-    Person:
-        # Enable the generation of the class hierarchy (not enabled by default)
-        parent: ~
-        properties:
-            familyName: ~
-            givenName: ~
-            additionalName: ~
-            address: ~
-    PostalAddress:
-        properties:
-            # Force the type of the addressCountry property to text
-            addressCountry: { range: "Text" }
-            addressLocality: ~
-            addressRegion: ~
-            postOfficeBoxNumber: ~
-            postalCode: ~
-            streetAddress: ~
+  # Parent class of Person
+  Thing:
+    properties:
+      name: ~
+  Person:
+    # Enable the generation of the class hierarchy (not enabled by default)
+    parent: ~
+    properties:
+      familyName: ~
+      givenName: ~
+      additionalName: ~
+      address: ~
+  PostalAddress:
+    properties:
+      # Force the type of the addressCountry property to text
+      addressCountry: { range: 'Text' }
+      addressLocality: ~
+      addressRegion: ~
+      postOfficeBoxNumber: ~
+      postalCode: ~
+      streetAddress: ~
 ```
 
 **Note:** If no properties are specified for a given type, all its properties will be generated.
@@ -74,8 +74,8 @@ A config file generating an enum class:
 
 ```yaml
 types:
-    OfferItemCondition: # The generator will automatically guess that OfferItemCondition is subclass of Enum
-        properties: {} # Remove all properties of the parent class
+  OfferItemCondition: # The generator will automatically guess that OfferItemCondition is subclass of Enum
+    properties: {} # Remove all properties of the parent class
 ```
 
 ### OpenAPI Generation
@@ -90,7 +90,7 @@ Write the following config file:
 ```yaml
 # api/config/schema.yaml
 openApi:
-    file: '../openapi.yaml'
+  file: '../openapi.yaml'
 ```
 
 ## Usage
@@ -104,8 +104,7 @@ vendor/bin/schema generate api/src/ api/config/schema.yaml -vv
 Using [the API Platform Symfony variant](../symfony/index.md):
 
 ```console
-docker compose exec php \
-    vendor/bin/schema generate src/ config/schema.yaml -vv
+vendor/bin/schema generate src/ config/schema.yaml -vv
 ```
 
 The corresponding PHP classes will be automatically generated in the `src/` directory!

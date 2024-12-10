@@ -19,12 +19,12 @@ First, [create a PHP debug remote server configuration](https://www.jetbrains.co
 
 1. In the `Settings/Preferences` dialog, go to `PHP | Servers`
 2. Create a new server:
-   * Name: `api` (or whatever you want to use for the variable `PHP_IDE_CONFIG`)
-   * Host: `localhost` (or the one defined using the `SERVER_NAME` environment variable)
-   * Port: `443`
-   * Debugger: `Xdebug`
-   * Check `Use path mappings`
-   * Map the local `api/` directory to the `/app` absolute path on the server
+   - Name: `api` (or whatever you want to use for the variable `PHP_IDE_CONFIG`)
+   - Host: `localhost` (or the one defined using the `SERVER_NAME` environment variable)
+   - Port: `443`
+   - Debugger: `Xdebug`
+   - Check `Use path mappings`
+   - Map the local `api/` directory to the `/app` absolute path on the server
 
 You can now use the debugger!
 
@@ -34,32 +34,32 @@ You can now use the debugger!
 
 3. On the command-line, we might need to tell PhpStorm which [path mapping configuration](https://www.jetbrains.com/help/phpstorm/zero-configuration-debugging-cli.html#configure-path-mappings) should be used, set the value of the PHP_IDE_CONFIG environment variable to `serverName=api`, where `api` is the name of the debug server configured higher.
 
-    Example:
+   Example:
 
-    ```console
-    XDEBUG_SESSION=1 PHP_IDE_CONFIG="serverName=api" php bin/console ...
-    ```
+   ```console
+   XDEBUG_SESSION=1 PHP_IDE_CONFIG="serverName=api" php bin/console ...
+   ```
 
-## Using Xdebug With VSCode
+## Using Xdebug With Visual Studio Code
 
-If you are using VSCode, use the following `launch.json` to debug.
+If you are using Visual Studio Code, use the following `launch.json` to debug.
 Note that this configuration includes the path mappings for the Docker image.
 
 ```json
 {
-    "version": "0.2.0",
-    "configurations": [
-        {
-            "name": "Listen for Xdebug",
-            "type": "php",
-            "request": "launch",
-            "port": 9003,
-            "log": true,
-            "pathMappings": {
-                "/app": "${workspaceFolder}/api"
-            },
-        },
-    ]
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Listen for Xdebug",
+      "type": "php",
+      "request": "launch",
+      "port": 9003,
+      "log": true,
+      "pathMappings": {
+        "/app": "${workspaceFolder}/api"
+      }
+    }
+  ]
 }
 ```
 

@@ -9,8 +9,8 @@ customize this order, you must add an `order` attribute on your ApiResource anno
 
 ```php
 <?php
-// api/src/Entity/Book.php
-namespace App\Entity;
+// api/src/ApiResource/Book.php with Symfony or app/ApiResource/Book.php with Laravel
+namespace App\ApiResource;
 
 use ApiPlatform\Metadata\ApiResource;
 
@@ -23,16 +23,17 @@ class Book
      * ...
      */
     public $foo;
-    
+
     // ...
 }
 ```
 
 ```yaml
 # api/config/api_platform/resources/Book.yaml
-App\Entity\Book:
-    order:
-        foo: ASC
+# The YAML syntax is only supported for Symfony
+App\ApiResource\Book:
+  order:
+    foo: ASC
 ```
 
 </code-selector>
@@ -44,8 +45,8 @@ If you only specify the key, `ASC` direction will be used as default. For exampl
 
 ```php
 <?php
-// api/src/Entity/Book.php
-namespace App\Entity;
+// api/src/ApiResource/Book.php with Symfony or app/ApiResource/Book.php with Laravel
+namespace App\ApiResource;
 
 use ApiPlatform\Metadata\ApiResource;
 
@@ -63,15 +64,16 @@ class Book
      * ...
      */
     public $bar;
-    
+
     // ...
 }
 ```
 
 ```yaml
 # api/config/api_platform/resources/Book.yaml
-App\Entity\Book:
-    order: ['foo', 'bar']
+# The YAML syntax is only supported for Symfony
+App\ApiResource\Book:
+  order: ['foo', 'bar']
 ```
 
 </code-selector>
@@ -82,8 +84,8 @@ It's also possible to configure the default order on an association property:
 
 ```php
 <?php
-// api/src/Entity/Book.php
-namespace App\Entity;
+// api/src/ApiResource/Book.php with Symfony or app/ApiResource/Book.php with Laravel
+namespace App\ApiResource;
 
 use ApiPlatform\Metadata\ApiResource;
 
@@ -96,15 +98,16 @@ class Book
      * @var User
      */
     public $author;
-    
+
     // ...
 }
 ```
 
 ```yaml
 # api/config/api_platform/resources/Book.yaml
-App\Entity\Book:
-    order: ['author.username']
+# The YAML syntax is only supported for Symfony
+App\ApiResource\Book:
+  order: ['author.username']
 ```
 
 </code-selector>
@@ -115,8 +118,8 @@ Another possibility is to apply the default order for a specific collection oper
 
 ```php
 <?php
-// api/src/Entity/Book.php
-namespace App\Entity;
+// api/src/ApiResource/Book.php with Symfony or app/ApiResource/Book.php with Laravel
+namespace App\ApiResource;
 
 use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\ApiResource;
@@ -134,25 +137,26 @@ class Book
      * @var string
      */
     public $name;
-    
+
     // ...
 }
 ```
 
 ```yaml
 # api/config/api_platform/resources/Book.yaml
-App\Entity\Book:
-    ApiPlatform\Metadata\GetCollection: ~
-    get_desc_custom:
-        class: ApiPlatform\Metadata\GetCollection
-        uriTemplate: custom_collection_desc_foos
-        order:
-            name: DESC
-    get_asc_custom:
-        class: ApiPlatform\Metadata\GetCollection
-        uriTemplate: custom_collection_asc_foos
-        order:
-            name: ASC
+# The YAML syntax is only supported for Symfony
+App\ApiResource\Book:
+  ApiPlatform\Metadata\GetCollection: ~
+  get_desc_custom:
+    class: ApiPlatform\Metadata\GetCollection
+    uriTemplate: custom_collection_desc_foos
+    order:
+      name: DESC
+  get_asc_custom:
+    class: ApiPlatform\Metadata\GetCollection
+    uriTemplate: custom_collection_asc_foos
+    order:
+      name: ASC
 ```
 
 </code-selector>

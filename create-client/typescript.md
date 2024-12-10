@@ -29,7 +29,7 @@ npm init @api-platform/client https://demo.api-platform.com src/ -- --generator 
 
 You will obtain 2 `.ts` files arranged as following:
 
-* src/
-  * interfaces/
-    * foo.ts
-    * bar.ts
+- src/
+  - interfaces/
+    - foo.ts
+    - bar.ts

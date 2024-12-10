@@ -45,7 +45,7 @@ docker build -t gcr.io/test-api-platform/pwa:0.1.0 -t gcr.io/test-api-platform/p
 
 Optional: If your pwa project use Static Site Generation (SSG) and you need to build it against the API running locally, you can build the pwa with the command below.
 
-```bash
+```console
 docker build -t gcr.io/test-api-platform/pwa:0.1.0 -t gcr.io/test-api-platform/pwa:latest pwa --target prod --network=host --add-host php=127.0.0.1
 ```
 
@@ -85,7 +85,7 @@ helm dependency update ./helm/api-platform
 ```
 
 This will create a folder helm/api-platform/charts/ and add all dependencies there.
-Actual this is [bitnami/postgresql](https://bitnami.com/stack/postgresql/helm), a file postgresql-[VERSION].tgz is created.
+Actual this is [bitnami/PostgreSQL](https://bitnami.com/stack/postgresql/helm), a file postgresql-[VERSION].tgz is created.
 
 ### 3. Optional: If you made changes to the Helm chart, check if its format is correct
 
@@ -234,13 +234,23 @@ Then, update the probes:
 
 ```yaml
 readinessProbe:
-    exec:
-        command: ["/bin/sh", "-c", "/usr/bin/pgrep -af '^php.*bin/console.*messenger:consume'"]
-    initialDelaySeconds: 120
-    periodSeconds: 3
+  exec:
+    command:
+      [
+        '/bin/sh',
+        '-c',
+        "/usr/bin/pgrep -af '^php.*bin/console.*messenger:consume'",
+      ]
+  initialDelaySeconds: 120
+  periodSeconds: 3
 livenessProbe:
-    exec:
-        command: ["/bin/sh", "-c", "/usr/bin/pgrep -af '^php.*bin/console.*messenger:consume'"]
-    initialDelaySeconds: 120
-    periodSeconds: 3
+  exec:
+    command:
+      [
+        '/bin/sh',
+        '-c',
+        "/usr/bin/pgrep -af '^php.*bin/console.*messenger:consume'",
+      ]
+  initialDelaySeconds: 120
+  periodSeconds: 3
 ```

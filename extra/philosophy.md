@@ -2,14 +2,14 @@
 
 In 25 years of PHP, the web changed dramatically and is now evolving faster than ever:
 
-* Thanks to awesome frontend technologies such as [React](https://reactjs.org/) or [Vue.js](https://vuejs.org/),
+- Thanks to awesome frontend technologies such as [React](https://reactjs.org/) or [Vue.js](https://vuejs.org/),
   [full-JavaScript Progressive Web Apps](https://en.wikipedia.org/wiki/Progressive_web_application) **are becoming the standard**.
-* [Internet users spend more time on their mobile devices than on desktops](https://www.broadbandsearch.net/blog/mobile-desktop-internet-usage-statistics): having a mobile-first website is mandatory and **native mobile apps are a must-have**.
-* [The semantic web](https://en.wikipedia.org/wiki/Semantic_Web) and **especially [Linked Data](https://en.wikipedia.org/wiki/Linked_data)
+- [Internet users spend more time on their mobile devices than on desktops](https://www.broadbandsearch.net/blog/mobile-desktop-internet-usage-statistics): having a mobile-first website is mandatory and **native mobile apps are a must have**.
+- [The semantic web](https://en.wikipedia.org/wiki/Semantic_Web) and **especially [Linked Data](https://en.wikipedia.org/wiki/Linked_data)
   is a reality**: with the [Schema.org](https://schema.org/) initiative and new open web standards such as [JSON-LD](https://json-ld.org/),
   search engines (among a bunch of other services and software) consume structured and machine-readable data at web scale.
   Not exposing such data decrease interoperability and search engine ranking/efficiency (think rich snippets).
-* HTTP/2 and HTTP/3 [dramatically improve the performance of web applications](https://vulcain.rocks) thanks to multiplexing, Server Push and their other new capabilities.
+- HTTP/2 and HTTP/3 [dramatically improve the performance of web applications](https://vulcain.rocks) thanks to multiplexing, Server Push and their other new capabilities.
 
 [PHP.net](https://www.php.net), [Symfony](https://symfony.com), [Facebook](https://hhvm.com/) and many others have worked hard
 to improve and professionalize the PHP ecosystem. The PHP world has closed the gap with most backend solutions and is often
@@ -25,10 +25,10 @@ Like other modern frameworks such as Laravel and Symfony, it's both a full-stack
 
 API Platform makes modern development easy and fun again:
 
-* [Start by **creating a web API**](../symfony/index.md) exposing structured data that can
+- [Start by **creating a web API**](../symfony/index.md) exposing structured data that can
   be understood by any compliant client such as your apps but also search engines (JSON-LD with Schema.org vocabulary).
   This API is the central and unique entry point to access and modify data. It also encapsulates the whole business logic.
-* [Then **create as many clients as you want using frontend technologies you love**](../create-client/index.md): a JavaScript
+- [Then **create as many clients as you want using frontend technologies you love**](../create-client/index.md): a JavaScript
   webapp built with React or with Vue querying the API but also a native iOS or Android app, or even a desktop application. Clients
   only display data and forms.
 

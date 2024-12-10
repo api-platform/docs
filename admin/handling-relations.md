@@ -18,24 +18,21 @@ Embedded data is inserted to a local cache: it will not be necessary to make mor
 ```javascript
 // admin/src/App.js
 
-import { HydraAdmin, fetchHydra, hydraDataProvider } from "@api-platform/admin";
-import { parseHydraDocumentation } from "@api-platform/api-doc-parser";
+import { HydraAdmin, fetchHydra, hydraDataProvider } from '@api-platform/admin';
+import { parseHydraDocumentation } from '@api-platform/api-doc-parser';
 
 const entrypoint = process.env.REACT_APP_API_ENTRYPOINT;
 
 const dataProvider = hydraDataProvider({
-    entrypoint,
-    httpClient: fetchHydra,
-    apiDocumentationParser: parseHydraDocumentation,
-    mercure: true,
-    useEmbedded: false,
+  entrypoint,
+  httpClient: fetchHydra,
+  apiDocumentationParser: parseHydraDocumentation,
+  mercure: true,
+  useEmbedded: false,
 });
 
 export default () => (
-  <HydraAdmin
-      dataProvider={dataProvider}
-      entrypoint={entrypoint}
-  />
+  <HydraAdmin dataProvider={dataProvider} entrypoint={entrypoint} />
 );
 ```
 
@@ -50,9 +47,9 @@ import {
   HydraAdmin,
   FieldGuesser,
   ListGuesser,
-  ResourceGuesser
-} from "@api-platform/admin";
-import { TextField } from "react-admin";
+  ResourceGuesser,
+} from '@api-platform/admin';
+import { TextField } from 'react-admin';
 
 const BooksList = (props) => (
   <ListGuesser {...props}>
@@ -64,17 +61,14 @@ const BooksList = (props) => (
 
 export default () => (
   <HydraAdmin entrypoint={process.env.REACT_APP_API_ENTRYPOINT}>
-    <ResourceGuesser
-      name="books"
-      list={BooksList}
-    />
+    <ResourceGuesser name="books" list={BooksList} />
   </HydraAdmin>
 );
 ```
 
 If `useEmbedded` is explicitly set to `false`, make sure you write the code as if the relation needs to be fetched as a reference.
 
-In this case, you *cannot* use the dot separator to do so.
+In this case, you _cannot_ use the dot separator to do so.
 
 Note that you cannot edit the embedded data directly with this behavior.
 
@@ -109,15 +103,19 @@ import {
   HydraAdmin,
   FieldGuesser,
   ListGuesser,
-  ResourceGuesser
-} from "@api-platform/admin";
-import { ReferenceField, TextField } from "react-admin";
+  ResourceGuesser,
+} from '@api-platform/admin';
+import { ReferenceField, TextField } from 'react-admin';
 
 const BooksList = (props) => (
   <ListGuesser {...props}>
     <FieldGuesser source="title" />
     {/* Use react-admin components directly when you want complex fields. */}
-    <ReferenceField label="Author first name" source="author" reference="authors">
+    <ReferenceField
+      label="Author first name"
+      source="author"
+      reference="authors"
+    >
       <TextField source="firstName" />
     </ReferenceField>
   </ListGuesser>
@@ -125,10 +123,7 @@ const BooksList = (props) => (
 
 export default () => (
   <HydraAdmin entrypoint={process.env.REACT_APP_API_ENTRYPOINT}>
-    <ResourceGuesser
-      name="books"
-      list={BooksList}
-    />
+    <ResourceGuesser name="books" list={BooksList} />
     <ResourceGuesser name="authors" />
   </HydraAdmin>
 );
@@ -181,11 +176,11 @@ class Book
     #[ORM\Id, ORM\Column, ORM\GeneratedValue]
     public ?int $id = null;
 
-    #[ORM\Column] 
+    #[ORM\Column]
     #[ApiFilter(SearchFilter::class, strategy: 'ipartial')]
     public string $title;
 
-    #[ORM\OneToMany(targetEntity: Review::class, mappedBy: 'book')] 
+    #[ORM\OneToMany(targetEntity: Review::class, mappedBy: 'book')]
     public $reviews;
 
     public function __construct()
@@ -205,19 +200,16 @@ import {
   ResourceGuesser,
   CreateGuesser,
   EditGuesser,
-  InputGuesser
-} from "@api-platform/admin";
-import { ReferenceInput, AutocompleteInput } from "react-admin";
+  InputGuesser,
+} from '@api-platform/admin';
+import { ReferenceInput, AutocompleteInput } from 'react-admin';
 
-const ReviewsCreate = props => (
+const ReviewsCreate = (props) => (
   <CreateGuesser {...props}>
     <InputGuesser source="author" />
-    <ReferenceInput
-      source="book"
-      reference="books"
-    >
+    <ReferenceInput source="book" reference="books">
       <AutocompleteInput
-        filterToQuery={searchText => ({ title: searchText })}
+        filterToQuery={(searchText) => ({ title: searchText })}
         optionText="title"
         label="Books"
       />
@@ -229,16 +221,13 @@ const ReviewsCreate = props => (
   </CreateGuesser>
 );
 
-const ReviewsEdit = props => (
+const ReviewsEdit = (props) => (
   <EditGuesser {...props}>
     <InputGuesser source="author" />
 
-    <ReferenceInput
-      source="book"
-      reference="books"
-    >
+    <ReferenceInput source="book" reference="books">
       <AutocompleteInput
-        filterToQuery={searchText => ({ title: searchText })}
+        filterToQuery={(searchText) => ({ title: searchText })}
         optionText="title"
         label="Books"
       />
@@ -252,11 +241,7 @@ const ReviewsEdit = props => (
 
 export default () => (
   <HydraAdmin entrypoint={process.env.REACT_APP_API_ENTRYPOINT}>
-    <ResourceGuesser
-      name="reviews"
-      create={ReviewsCreate}
-      edit={ReviewsEdit}
-    />
+    <ResourceGuesser name="reviews" create={ReviewsCreate} edit={ReviewsEdit} />
   </HydraAdmin>
 );
 ```
@@ -270,19 +255,16 @@ import {
   ResourceGuesser,
   CreateGuesser,
   EditGuesser,
-  InputGuesser
-} from "@api-platform/admin";
-import { ReferenceInput, AutocompleteInput } from "react-admin";
+  InputGuesser,
+} from '@api-platform/admin';
+import { ReferenceInput, AutocompleteInput } from 'react-admin';
 
-const ReviewsCreate = props => (
+const ReviewsCreate = (props) => (
   <CreateGuesser {...props}>
     <InputGuesser source="author" />
-    <ReferenceInput
-      source="book"
-      reference="books"
-    >
+    <ReferenceInput source="book" reference="books">
       <AutocompleteInput
-        filterToQuery={searchText => ({ title: searchText })}
+        filterToQuery={(searchText) => ({ title: searchText })}
         optionText="title"
         label="Books"
       />
@@ -294,17 +276,14 @@ const ReviewsCreate = props => (
   </CreateGuesser>
 );
 
-const ReviewsEdit = props => (
+const ReviewsEdit = (props) => (
   <EditGuesser {...props}>
     <InputGuesser source="author" />
 
-    <ReferenceInput
-      source="book"
-      reference="books"
-    >
+    <ReferenceInput source="book" reference="books">
       <AutocompleteInput
-        filterToQuery={searchText => ({ title: searchText })}
-        format={v => v['@id'] || v}
+        filterToQuery={(searchText) => ({ title: searchText })}
+        format={(v) => v['@id'] || v}
         optionText="title"
         label="Books"
       />
@@ -318,11 +297,7 @@ const ReviewsEdit = props => (
 
 export default () => (
   <HydraAdmin entrypoint={process.env.REACT_APP_API_ENTRYPOINT}>
-    <ResourceGuesser
-      name="reviews"
-      create={ReviewsCreate}
-      edit={ReviewsEdit}
-    />
+    <ResourceGuesser name="reviews" create={ReviewsCreate} edit={ReviewsEdit} />
   </HydraAdmin>
 );
 ```

@@ -1,6 +1,6 @@
 # Deploying an API Platform App on Heroku
 
-[Heroku](https://www.heroku.com) is a popular, fast, scalable and reliable *Platform As A Service* (PaaS). As Heroku offers a
+[Heroku](https://www.heroku.com) is a popular, fast, scalable and reliable _Platform As A Service_ (PaaS). As Heroku offers a
 free plan including database support through [Heroku Postgres](https://www.heroku.com/postgres), it's a convenient way
 to experiment with API Platform.
 
@@ -8,8 +8,8 @@ The API Platform Heroku integration also supports MySQL databases provided by [t
 
 Deploying API Platform applications on Heroku is straightforward and you will learn how to do it in this tutorial.
 
-*Note: this tutorial works perfectly well with API Platform but also with any Symfony application based on the Symfony Standard
-Edition.*
+_Note: this tutorial works perfectly well with API Platform but also with any Symfony application based on the Symfony Standard
+Edition._
 
 If you don't already have one, [create an account on Heroku](https://signup.heroku.com/signup/dc). Then install [the Heroku
 toolbelt](https://devcenter.heroku.com/articles/getting-started-with-php#set-up). We're guessing you already
@@ -28,12 +28,10 @@ Create a Heroku `app.json` file at the root of the `api/` directory to configure
   "success_url": "/",
   "env": {
     "APP_ENV": "prod",
-    "APP_SECRET": {"generator": "secret"},
+    "APP_SECRET": { "generator": "secret" },
     "CORS_ALLOW_ORIGIN": "https://your-client-url.com"
   },
-  "addons": [
-    "heroku-postgresql"
-  ],
+  "addons": ["heroku-postgresql"],
   "buildpacks": [
     {
       "url": "https://github.com/heroku/heroku-buildpack-php"
@@ -97,25 +95,35 @@ We are now ready to deploy our app!
 
 Go to the `api/` directory, then
 
-1. Initialize a git repository:
+1. Initialize a Git repository:
 
-    git init
+```console
+git init
+```
 
 2. Add all existing files:
 
-    git add --all
+```console
+git add --all
+```
 
 3. Commit:
 
-    git commit -a -m "My first API Platform app running on Heroku!"
+```console
+git commit -a -m "My first API Platform app running on Heroku!"
+```
 
 4. Create the Heroku application:
 
-    heroku create
+```console
+heroku create
+```
 
 5. And deploy for the first time:
 
-    git push heroku master
+```console
+git push heroku master
+```
 
 **We're done.** You can play with the demo API provided with API Platform. It is ready for production and you
 can scale it in one click from the Heroku interface.

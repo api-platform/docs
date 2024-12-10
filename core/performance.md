@@ -32,7 +32,7 @@ The integration using the cache handler is quite simple. You just have to update
 # Versions
 -FROM dunglas/frankenphp:1-php8.3 AS frankenphp_upstream
 
-+FROM dunglas/frankenphp:latest-builder AS builder
++FROM dunglas/frankenphp:1-builder-php8.3 AS builder
 +COPY --from=caddy:builder /usr/bin/xcaddy /usr/bin/xcaddy
 +
 +RUN apt-get update && apt-get install --no-install-recommends -y \
@@ -41,13 +41,12 @@ The integration using the cache handler is quite simple. You just have to update
 +ENV CGO_ENABLED=1 XCADDY_SETCAP=1 XCADDY_GO_BUILD_FLAGS="-ldflags \"-w -s -extldflags '-Wl,-z,stack-size=0x80000'\""
 +RUN xcaddy build \
 +    --output /usr/local/bin/frankenphp \
-+    --with github.com/dunglas/frankenphp=./ \
-+    --with github.com/dunglas/frankenphp/caddy=./caddy/ \
++    --with github.com/dunglas/frankenphp/caddy \
 +    --with github.com/dunglas/mercure/caddy \
 +    --with github.com/dunglas/vulcain/caddy \
 +    --with github.com/dunglas/caddy-cbrotli \
 +    --with github.com/caddyserver/cache-handler
-+    # You should use another storage than the default one (e.g. otter). 
++    # You should use another storage than the default one (e.g. otter).
 +    # The list of the available storages can be find either on the documentation website (https://docs.souin.io/docs/storages/) or on the storages repository https://github.com/darkweak/storages
 +    --with github.com/caddyserver/cache-handler
 +    # Or use the following lines instead of the cache-handler one for the latest improvements
@@ -68,17 +67,39 @@ Update your Caddyfile with the following configuration:
 
 # ...
 ```
+
 This will tell to caddy to use the HTTP cache and activate the tag-based invalidation API. You can refer to the [cache-handler documentation](https://github.com/caddyserver/cache-handler) or the [souin website documentation](https://docs.souin.io) to learn how to configure the HTTP cache server.
 
-Setup the HTTP cache invalidation in your API Platform project
+Set up HTTP cache invalidation in your API Platform project using the Symfony or Laravel configuration below:
+
+##### Cache Invalidation Configuration using Symfony
+
 ```yaml
 api_platform:
-    http_cache:
-        invalidation:
-            # We assume that your API can reach your caddy instance by the hostname http://caddy.
-            # The endpoint /souin-api/souin is the default path to the invalidation API.
-            urls: [ 'http://caddy/souin-api/souin' ]
-            purger: api_platform.http_cache.purger.souin
+  http_cache:
+    invalidation:
+      # We assume that your API can reach your caddy instance by the hostname http://caddy.
+      # The endpoint /souin-api/souin is the default path to the invalidation API.
+      urls: ['http://caddy/souin-api/souin']
+      purger: api_platform.http_cache.purger.souin
+```
+
+##### Cache Invalidation Configuration using Laravel
+
+```php
+<?php
+// config/api-platform.php
+return [
+    // ....
+    'http_cache' => [
+        'invalidation' => [
+            // We assume that your API can reach your caddy instance by the hostname http://caddy.
+            // The endpoint /souin-api/souin is the default path to the invalidation API.
+            'urls' => ['http://caddy/souin-api/souin'],
+            'purger' => 'api_platform.http_cache.purger.souin',
+        ]
+    ],
+];
 ```
 
 Don't forget to set your `Cache-Control` directive to enable caching on your API resource class.
@@ -90,7 +111,7 @@ use ApiPlatform\Metadata\ApiResource;
 #[ApiResource(
     cacheHeaders: [
         'public' => true,
-        'max_age' => 60, 
+        'max_age' => 60,
     ]
 )]
 class Book
@@ -98,25 +119,53 @@ class Book
     // ...
 }
 ```
+
 And voilà, you have a fully working HTTP cache with an invalidation API.
 
 #### Varnish
 
 Integration with Varnish and Doctrine ORM is shipped with the core library.
 
+##### Varnish cache invalidation system using Symfony
+
 Add the following configuration to enable the cache invalidation system:
 
 ```yaml
 api_platform:
-    http_cache:
-        invalidation:
-            enabled: true
-            varnish_urls: ['%env(VARNISH_URL)%']
-    defaults:
-        cache_headers:
-            max_age: 0
-            shared_max_age: 3600
-            vary: ['Content-Type', 'Authorization', 'Origin']
+  http_cache:
+    invalidation:
+      enabled: true
+      varnish_urls: ['%env(VARNISH_URL)%']
+  defaults:
+    cache_headers:
+      max_age: 0
+      shared_max_age: 3600
+      vary: ['Content-Type', 'Authorization', 'Origin']
+```
+
+##### Varnish cache invalidation system using Laravel
+
+Add the following configuration to enable the cache invalidation system:
+
+```php
+<?php
+// config/api-platform.php
+return [
+    // ....
+    'http_cache' => [
+        'invalidation' => [
+            'enabled' => true,
+            'varnish_urls' => ['%env(VARNISH_URL)%'],
+        ]
+    ],
+    'defaults' => [
+        'cache_headers' => [
+            'max_age' => 0,
+            'shared_max_age' => 3600,
+            'vary' => ['Content-Type', 'Authorization', 'Origin'],
+        ]
+    ],
+];
 ```
 
 ## Configuration
@@ -124,25 +173,58 @@ api_platform:
 Support for reverse proxies other than Varnish or Caddy with the HTTP cache module can be added by implementing the `ApiPlatform\HttpCache\PurgerInterface`.
 Three purgers are available, the built-in caddy HTTP cache purger (`api_platform.http_cache.purger.souin`), the HTTP tags (`api_platform.http_cache.purger.varnish.ban`), the surrogate key implementation
 (`api_platform.http_cache.purger.varnish.xkey`). You can specify the implementation using the `purger` configuration node,
-for example, to use the `xkey` implementation:
+for example, to use the `Xkey` implementation see the Symfony or Laravel configuration below:
+
+### Exemple of Varnish Xkey implementation using Symfony
 
 ```yaml
 api_platform:
-    http_cache:
-        invalidation:
-            enabled: true
-            varnish_urls: ['%env(VARNISH_URL)%']
-            purger: 'api_platform.http_cache.purger.varnish.xkey'
-        public: true
-    defaults:
-        cache_headers:
-            max_age: 0
-            shared_max_age: 3600
-            vary: ['Content-Type', 'Authorization', 'Origin']
-            invalidation:
-                xkey:
-                    glue: ', '
+  http_cache:
+    invalidation:
+      enabled: true
+      varnish_urls: ['%env(VARNISH_URL)%']
+      purger: 'api_platform.http_cache.purger.varnish.xkey'
+    public: true
+  defaults:
+    cache_headers:
+      max_age: 0
+      shared_max_age: 3600
+      vary: ['Content-Type', 'Authorization', 'Origin']
+      invalidation:
+        xkey:
+          glue: ', '
 ```
+
+### Exemple of Varnish Xkey implementation using Laravel
+
+```php
+<?php
+// config/api-platform.php
+return [
+    // ....
+    'http_cache' => [
+        'invalidation' => [
+            'enabled' => true,
+            'varnish_urls' => ['%env(VARNISH_URL)%'],
+            'purger' => 'api_platform.http_cache.purger.varnish.xkey',
+        ],
+        'public' => true,
+    ],
+    'defaults' => [
+        'cache_headers' => [
+            'max_age' => 0,
+            'shared_max_age' => 3600,
+            'vary' => ['Content-Type', 'Authorization', 'Origin'],
+            'invalidation' => [
+                'xkey' => [
+                    'glue' => ', ',
+                ]
+            ],
+        ]
+    ],
+];
+```
+
 
 In addition to the cache invalidation mechanism, you may want to [use HTTP/2 Server Push to pre-emptively send relations
 to the client](push-relations.md).
@@ -197,8 +279,8 @@ use ApiPlatform\Metadata\ApiResource;
 
 #[ApiResource(
     cacheHeaders: [
-        'max_age' => 60, 
-        'shared_max_age' => 120, 
+        'max_age' => 60,
+        'shared_max_age' => 120,
         'vary' => ['Authorization', 'Accept-Language'],
     ]
 )]
@@ -224,7 +306,7 @@ use ApiPlatform\Metadata\Get;
 #[ApiResource]
 #[Get(
     cacheHeaders: [
-        'max_age' => 60, 
+        'max_age' => 60,
         'shared_max_age' => 120,
     ]
 )]
@@ -249,25 +331,23 @@ API Platform will automatically use it.
 API response times can be significantly improved by enabling [FrankenPHP's worker mode](https://frankenphp.dev/docs/worker/).
 This feature is enabled by default in the production environment of the API Platform distribution.
 
-## Doctrine Queries and Indexes
+## Doctrine Queries and Index
 
 ### Search Filter
 
 When using the `SearchFilter` and case insensitivity, Doctrine will use the `LOWER` SQL function. Depending on your
-driver, you may want to carefully index it by using a [function-based
-index](https://use-the-index-luke.com/sql/where-clause/functions/case-insensitive-search) or it will impact performance
-with a huge collection. [Here are some examples to index LIKE
-filters](https://use-the-index-luke.com/sql/where-clause/searching-for-ranges/like-performance-tuning) depending on your
-database driver.
+driver, you may want to carefully index it by using a [function-based index,](https://use-the-index-luke.com/sql/where-clause/functions/case-insensitive-search) or it will impact performance
+with a huge collection. [Here are some examples to index LIKE filters](https://use-the-index-luke.com/sql/where-clause/searching-for-ranges/like-performance-tuning) depending on your database driver.
 
 ### Eager Loading
 
-By default, Doctrine comes with [lazy loading](https://www.doctrine-project.org/projects/doctrine-orm/en/latest/reference/working-with-objects.html#by-lazy-loading) - usually a killer time-saving feature but also a performance killer with large applications.
+By default, Doctrine comes with [lazy loading](https://www.doctrine-project.org/projects/doctrine-orm/en/current/reference/working-with-objects.html#by-lazy-loading)
+- usually a killer time-saving feature but also a performance killer with large applications.
 
 Fortunately, Doctrine offers another approach to solve this problem: [eager loading](https://www.doctrine-project.org/projects/doctrine-orm/en/current/reference/working-with-objects.html#by-eager-loading).
 This can easily be enabled for a relation: `#[ORM\ManyToOne(fetch: "EAGER")]`.
 
-By default in API Platform, we chose to force eager loading for all relations, with or without the Doctrine
+By default, in API Platform, we chose to force eager loading for all relations, with or without the Doctrine
 `fetch` attribute. Thanks to the eager loading [extension](extensions.md). The `EagerLoadingExtension` will join every
 readable association according to the serialization context. If you want to fetch an association that is not serializable,
 you have to bypass `readable` and `readableLink` by using the `fetchEager` attribute on the property declaration, for example:
@@ -292,8 +372,8 @@ bit of configuration:
 ```yaml
 # api/config/packages/api_platform.yaml
 api_platform:
-    eager_loading:
-        max_joins: 100
+  eager_loading:
+    max_joins: 100
 ```
 
 Be careful when you exceed this limit, it's often caused by the result of a circular reference. [Serializer groups](serialization.md)
@@ -306,8 +386,8 @@ If you want to fetch only partial data according to serialization groups, you ca
 ```yaml
 # api/config/packages/api_platform.yaml
 api_platform:
-    eager_loading:
-        fetch_partial: true
+  eager_loading:
+    fetch_partial: true
 ```
 
 It is disabled by default.
@@ -321,8 +401,8 @@ configuration to apply it only on join relations having the `EAGER` fetch mode:
 ```yaml
 # api/config/packages/api_platform.yaml
 api_platform:
-    eager_loading:
-        force_eager: false
+  eager_loading:
+    force_eager: false
 ```
 
 #### Override at Resource and Operation Level
@@ -393,7 +473,7 @@ class Group
     /**
      * @var User[]
      */
-    #[ORM\ManyToMany(targetEntity: User::class, mappedBy: 'groups')] 
+    #[ORM\ManyToMany(targetEntity: User::class, mappedBy: 'groups')]
     public $users;
 
     // ...
@@ -410,8 +490,8 @@ If for any reason you don't want the eager loading feature, you can turn it off 
 ```yaml
 # api/config/packages/api_platform.yaml
 api_platform:
-    eager_loading:
-        enabled: false
+  eager_loading:
+    enabled: false
 ```
 
 The whole configuration described before will no longer work and Doctrine will recover its default behavior.
@@ -425,8 +505,8 @@ If you don't mind not having the last page available, you can enable partial pag
 ```yaml
 # api/config/packages/api_platform.yaml
 api_platform:
-    defaults:
-        pagination_partial: true # Disabled by default
+  defaults:
+    pagination_partial: true # Disabled by default
 ```
 
 More details are available on the [pagination documentation](pagination.md#partial-pagination).
@@ -441,14 +521,14 @@ To configure Blackfire.io follow these steps:
 
 ```yaml
 services:
-    # ...
-    blackfire:
-        image: blackfire/blackfire:2
-        environment:
-            # Exposes the host BLACKFIRE_SERVER_ID and TOKEN environment variables.
-            - BLACKFIRE_SERVER_ID
-            - BLACKFIRE_SERVER_TOKEN
-            - BLACKFIRE_DISABLE_LEGACY_PORT=1
+  # ...
+  blackfire:
+    image: blackfire/blackfire:2
+    environment:
+      # Exposes the host BLACKFIRE_SERVER_ID and TOKEN environment variables.
+      - BLACKFIRE_SERVER_ID
+      - BLACKFIRE_SERVER_TOKEN
+      - BLACKFIRE_DISABLE_LEGACY_PORT=1
 ```
 
 2. Add your Blackfire.io ID and server token to your `.env` file at the root of your project (be sure not to commit this to a public repository):

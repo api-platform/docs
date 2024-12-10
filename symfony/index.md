@@ -2,7 +2,7 @@
 
 ![The welcome page](images/api-platform-3.0-welcome.png)
 
-> *API Platform* is the most advanced API platform, in any framework or language.
+> _API Platform_ is the most advanced API platform, in any framework or language.
 >
 > —Fabien Potencier (creator of Symfony)
 
@@ -14,40 +14,39 @@ API Platform contains [a **PHP** library (Core)](../core/index.md) to create ful
 
 API Platform also provides ambitious **JavaScript** tools to create web and mobile applications based on the most popular frontend technologies in a snap. These tools parse the documentation of the API (or of any other API supporting Hydra or OpenAPI).
 
- API Platform is shipped with **[Docker](../deployment/docker-compose.md)** and **[Kubernetes](../deployment/kubernetes.md)** definitions, to develop and deploy instantly on the cloud.
+API Platform is shipped with **[Docker](../deployment/docker-compose.md)** and **[Kubernetes](../deployment/kubernetes.md)** definitions, to develop and deploy instantly on the cloud.
 
 The easiest and most powerful way to get started is [to download the API Platform distribution](https://github.com/api-platform/api-platform/releases). It contains:
 
-* the API skeleton, including [the Core library](../core/index.md), [the Symfony framework](https://symfony.com/) ([optional](../core/bootstrap.md)) and [the Doctrine ORM](https://www.doctrine-project.org/projects/orm.html) ([optional](../core/extending.md))
-* [the client scaffolding tool](../create-client/) to generate [Next.js](../create-client/
-) web applications from the API documentation ([Nuxt](https://nuxt.com/), [Vue](https://vuejs.org/), [Create React App](https://reactjs.org), [React Native](https://reactnative.dev/), [Quasar](https://quasar.dev/) and [Vuetify](https://vuetifyjs.com/) are also supported)
-* [a beautiful admin interface](../admin/), built on top of React Admin, dynamically created by parsing the API documentation
-* all you need to [create real-time and async APIs using the Mercure protocol](../core/mercure.md)
-* a [Docker](../deployment/docker-compose.md) definition to start a working development environment in a single command, providing containers for the API and the Next.js web application
-* a [Helm](https://helm.sh/) chart to deploy the API in any [Kubernetes](../deployment/kubernetes.md) cluster
+- the API skeleton, including [the Core library](../core/index.md), [the Symfony framework](https://symfony.com/) ([optional](../core/bootstrap.md)) and [the Doctrine ORM](https://www.doctrine-project.org/projects/orm.html) ([optional](../core/extending.md))
+- [the client scaffolding tool](../create-client/index.md) to generate [Next.js](../create-client/index.md) web applications from the API documentation ([Nuxt](https://nuxt.com/), [Vue](https://vuejs.org/), [Create React App](https://reactjs.org), [React Native](https://reactnative.dev/), [Quasar](https://quasar.dev/) and [Vuetify](https://vuetifyjs.com/) are also supported)
+- [a beautiful admin interface](../admin/index.md), built on top of React Admin, dynamically created by parsing the API documentation
+- all you need to [create real-time and async APIs using the Mercure protocol](../core/mercure.md)
+- a [Docker](../deployment/docker-compose.md) definition to start a working development environment in a single command, providing containers for the API and the Next.js web application
+- a [Helm](https://helm.sh/) chart to deploy the API in any [Kubernetes](../deployment/kubernetes.md) cluster
 
 ## A Bookshop API
 
 To discover how the framework works, we will create an API to manage a bookshop.
 
 To create a fully featured API, an admin interface, and a Progressive Web App using Next.js, all you need is to design **the public data
-model of our API** and handcraft it as *Plain Old PHP Objects*.
+model of our API** and handcraft it as _Plain Old PHP Objects_.
 
 API Platform uses these model classes to expose and document a web API having a bunch of built-in features:
 
-* creating, retrieving, updating, and deleting (CRUD) resources
-* data validation
-* pagination
-* filtering
-* sorting
-* hypermedia/[HATEOAS](https://en.wikipedia.org/wiki/HATEOAS) and content negotiation support ([JSON-LD](https://json-ld.org) and [Hydra](https://www.hydra-cg.com/), [JSON:API](https://jsonapi.org/), [HAL](https://tools.ietf.org/html/draft-kelly-json-hal-08)...)
-* [GraphQL support](../core/graphql.md)
-* Nice UI and machine-readable documentations ([Swagger UI/OpenAPI](https://swagger.io), [GraphiQL](https://github.com/graphql/graphiql)...)
-* authentication ([Basic HTTP](https://en.wikipedia.org/wiki/Basic_access_authentication), cookies as well as [JWT](../core/jwt.md) and [OAuth](https://oauth.net) through extensions)
-* [CORS headers](https://developer.mozilla.org/en-US/docs/Web/HTTP/Access_control_CORS)
-* security checks and headers (tested against [OWASP recommendations](https://www.owasp.org/index.php/REST_Security_Cheat_Sheet))
-* [invalidation-based HTTP caching](../core/performance.md)
-* and basically everything needed to build modern APIs.
+- creating, retrieving, updating, and deleting (CRUD) resources
+- data validation
+- pagination
+- filtering
+- sorting
+- hypermedia/[HATEOAS](https://en.wikipedia.org/wiki/HATEOAS) and content negotiation support ([JSON-LD](https://json-ld.org) and [Hydra](https://www.hydra-cg.com/), [JSON:API](https://jsonapi.org/), [HAL](https://tools.ietf.org/html/draft-kelly-json-hal-08)...)
+- [GraphQL support](../core/graphql.md)
+- Nice UI and machine-readable documentations ([Swagger UI/OpenAPI](https://swagger.io), [GraphiQL](https://github.com/graphql/graphiql)...)
+- authentication ([Basic HTTP](https://en.wikipedia.org/wiki/Basic_access_authentication), cookies as well as [JWT](../core/jwt.md) and [OAuth](https://oauth.net) through extensions)
+- [CORS headers](https://developer.mozilla.org/en-US/docs/Web/HTTP/Access_control_CORS)
+- security checks and headers (tested against [OWASP recommendations](https://www.owasp.org/index.php/REST_Security_Cheat_Sheet))
+- [invalidation-based HTTP caching](../core/performance.md)
+- and basically everything needed to build modern APIs.
 
 One more thing, before we start: as the API Platform distribution includes [the Symfony framework](https://symfony.com),
 it is compatible with most [Symfony bundles](https://symfony.com/bundles)
@@ -82,30 +81,31 @@ docker compose build --no-cache
 Then, start Docker Compose in detached mode:
 
 ```console
-docker compose up --wait 
+docker compose up --wait
 ```
 
 > [!TIP]
 >
->Be sure that the ports `80`, `443`, and `5432` of the host are not already in use. The usual offenders are Apache, NGINX, and Postgres. If they are running, stop them and run `docker compose up --wait` again.
+> Be sure that the ports `80`, `443`, and `5432` of the host are not already in use. The usual offenders are Apache, NGINX, and Postgres. If they are running, stop them and run `docker compose up --wait` again.
 >
 > Alternatively, run the following command to start the web server on port `8080` with HTTPS disabled:
+>
 > ```console
 > SERVER_NAME=localhost:80 HTTP_PORT=8080 TRUSTED_HOSTS=localhost docker compose up --wait`
 > ```
 
 This starts the following services:
 
-| Name     | Description                                                                                                                                                                  |
-|----------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| Name     | Description                                                                                                                                                                                                                                                                                                                       |
+| -------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | php      | The API powered by [FrankenPHP](https://frankenphp.dev) (a modern application server for PHP built on top of [Caddy web server](caddy.md) and with native support for [Mercure realtime](../core/mercure.md), [Vulcain relations preloading](https://vulcain.rocks), and [XDebug](debugging.md)), Composer, and sensitive configs |
-| pwa      | Next.js project compatible with Create Client and having Admin preinstalled                                                                                                     |
-| database | PostgreSQL database server                                                                                                                                                   |
+| pwa      | Next.js project compatible with Create Client and having Admin preinstalled                                                                                                                                                                                                                                                       |
+| database | PostgreSQL database server                                                                                                                                                                                                                                                                                                        |
 
 The following components are available:
 
 | URL                        | Path               | Language   | Description             |
-|----------------------------|--------------------|------------|-------------------------|
+| -------------------------- | ------------------ | ---------- | ----------------------- |
 | `https://localhost/docs/`  | `api/`             | PHP        | The API                 |
 | `https://localhost/`       | `pwa/`             | TypeScript | The Next.js application |
 | `https://localhost/admin/` | `pwa/pages/admin/` | TypeScript | The Admin               |
@@ -146,6 +146,11 @@ There is also a shipped [Doctrine MongoDB ODM](https://www.doctrine-project.org/
 That being said, keep in mind that API Platform is 100% independent of the persistence system. You can use the one(s) that
 best suit(s) your needs (including NoSQL databases or remote web services) by implementing the [right interfaces](../core/state-providers.md). API Platform even supports using several persistence
 systems together in the same project.
+
+> [!TIP]
+> The `php` container is where your API app stands. Prefixing a command by `docker compose exec php` allows executing the
+> given command in this container. You may want [to create an alias](https://www.linfo.org/alias.html) to make your life easier.
+> So, for example, you could run a command like this: `docker compose exec php <command>`.
 
 ### Using Symfony CLI
 
@@ -193,7 +198,7 @@ symfony serve
 ```
 
 All TypeScript components are also [available as standalone libraries](https://github.com/api-platform?language=typescript)
-installable with npm (or any other package manager).  
+installable with npm (or any other package manager).
 
 **Note:** when installing API Platform this way, the API will be exposed at the `/api/` path. You need to open `http://localhost:8000/api/` to see the API documentation.
 If you are deploying API Platform directly on an Apache or NGINX webserver and getting a 404 error on opening this link, you will need to enable the [rewriting rules](https://symfony.com/doc/current/setup/web_server_configuration.html) for your specific webserver software.
@@ -219,15 +224,15 @@ API Platform exposes a description of the API in the [OpenAPI](https://www.opena
 It also integrates a customized version of [Swagger UI](https://swagger.io/swagger-ui/), a nice interface rendering the
 OpenAPI documentation.
 Click on an operation to display its details. You can also send requests to the API directly from the UI.
-Try to create a new *Greeting* resource using the `POST` operation, then access it using the `GET` operation and, finally,
+Try to create a new _Greeting_ resource using the `POST` operation, then access it using the `GET` operation and, finally,
 delete it by executing the `DELETE` operation.
 If you access any API URL with the `.html` extension appended, API Platform displays
 the corresponding API request in the UI. Try it yourself by browsing to `https://localhost/greetings.html`. If no extension is present, API Platform will use the `Accept` header to select the format to use. By default, a JSON-LD response is sent ([configurable behavior](../core/content-negotiation.md)).
 
 So, if you want to access the raw data, you have two alternatives:
 
-* Add the correct `Accept` header (or don't set any `Accept` header at all if you don't care about security) - preferred when writing API clients
-* Add the format you want as the extension of the resource - for debug purpose only
+- Add the correct `Accept` header (or don't set any `Accept` header at all if you don't care about security) - preferred when writing API clients
+- Add the format you want as the extension of the resource - for debug purpose only
 
 For instance, go to `https://localhost/greetings.jsonld` to retrieve the list of `Greeting` resources in JSON-LD.
 
@@ -353,9 +358,9 @@ The only remaining task to have a working API is to be able to query and persist
 To retrieve and save data, API Platform proposes two main options (and we can mix them):
 
 1. Writing our own [state providers](../core/state-providers.md) and [state processors](../core/state-processors.md) to fetch and save data in any persistence system and trigger our custom business logic.
-This is what we recommend if you want to separate the public data model exposed by the API from the internal one, and to implement a layered architecture such as Clean Architecture or Hexagonal Architecture;
+   This is what we recommend if you want to separate the public data model exposed by the API from the internal one, and to implement a layered architecture such as Clean Architecture or Hexagonal Architecture;
 2. Using one of the various existing state providers and processors allowing to automatically fetch and persist data using popular persistence libraries. Out of the box, state providers and processors are provided for [Doctrine ORM](https://www.doctrine-project.org/projects/orm.html) and [Doctrine MongoDB ODM](../core/mongodb.md).
-A state provider (but no processor yet) is also available for [Elasticsearch](../core/elasticsearch.md). [Pomm](https://github.com/pomm-project/pomm-api-platform) and [PHP Extended SQL](https://github.com/soyuka/esql#api-platform-bridge) also provides state providers and processors for API Platform. We recommend this approach for Rapid Application Development.
+   A state provider (but no processor yet) is also available for [Elasticsearch](../core/elasticsearch.md). [Pomm](https://github.com/pomm-project/pomm-api-platform) and [PHP Extended SQL](https://github.com/soyuka/esql#api-platform-bridge) also provides state providers and processors for API Platform. We recommend this approach for Rapid Application Development.
 
 Be sure to read the [General Design Considerations](../core/design.md) document to learn more about the architecture of API Platform and how to choose between these two approaches.
 
@@ -371,7 +376,7 @@ Modify these files as described in these patches:
  use ApiPlatform\Metadata\ApiResource;
  use Doctrine\Common\Collections\ArrayCollection;
 +use Doctrine\ORM\Mapping as ORM;
- 
+
  /** A book. */
 +#[ORM\Entity]
  #[ApiResource]
@@ -380,31 +385,31 @@ Modify these files as described in these patches:
      /** The ID of this book. */
 +    #[ORM\Id, ORM\Column, ORM\GeneratedValue]
      private ?int $id = null;
- 
+
      /** The ISBN of this book (or null if doesn't have one). */
 +    #[ORM\Column(nullable: true)]
      public ?string $isbn = null;
- 
+
      /** The title of this book. */
 +    #[ORM\Column]
      public string $title = '';
- 
+
      /** The description of this book. */
 +    #[ORM\Column(type: 'text')]
      public string $description = '';
- 
+
      /** The author of this book. */
 +    #[ORM\Column]
      public string $author = '';
- 
+
      /** The publication date of this book. */
 +    #[ORM\Column]
      public ?\DateTimeImmutable $publicationDate = null;
- 
+
      /** @var Review[] Available reviews for this book. */
 +    #[ORM\OneToMany(targetEntity: Review::class, mappedBy: 'book', cascade: ['persist', 'remove'])]
      public iterable $reviews;
- 
+
      public function __construct()
 ```
 
@@ -412,10 +417,10 @@ Modify these files as described in these patches:
 
 ```diff
  namespace App\Entity;
- 
+
  use ApiPlatform\Metadata\ApiResource;
 +use Doctrine\ORM\Mapping as ORM;
- 
+
  /** A review of a book. */
 +#[ORM\Entity]
  #[ApiResource]
@@ -424,57 +429,51 @@ Modify these files as described in these patches:
      /** The ID of this review. */
 +    #[ORM\Id, ORM\Column, ORM\GeneratedValue]
      private ?int $id = null;
- 
+
      /** The rating of this review (between 0 and 5). */
 +    #[ORM\Column(type: 'smallint')]
      public int $rating = 0;
- 
+
      /** The body of the review. */
 +    #[ORM\Column(type: 'text')]
      public string $body = '';
- 
+
      /** The author of the review. */
 +    #[ORM\Column]
      public string $author = '';
- 
+
      /** The date of publication of this review.*/
 +    #[ORM\Column]
      public ?\DateTimeImmutable $publicationDate = null;
- 
+
      /** The book this review is about. */
 +    #[ORM\ManyToOne(inversedBy: 'reviews')]
      public ?Book $book = null;
- 
+
      public function getId(): ?int
 ```
 
 **Tip**: you can also use Symfony [MakerBundle](https://symfonycasts.com/screencast/symfony-fundamentals/maker-command?cid=apip) thanks to the `--api-resource` option:
 
 ```console
-docker compose exec php \
-    bin/console make:entity --api-resource
+bin/console make:entity --api-resource
 ```
 
-Doctrine's [attributes](https://www.doctrine-project.org/projects/doctrine-orm/en/latest/reference/attributes-reference.html) map these entities to tables in the database.
-Mapping through [attributes](https://www.doctrine-project.org/projects/doctrine-orm/en/latest/reference/attributes-reference.html) is also supported, if you prefer those.
+Doctrine's [attributes](https://www.doctrine-project.org/projects/doctrine-orm/en/current/reference/attributes-reference.html) map these entities to tables in the database.
+Mapping through [attributes](https://www.doctrine-project.org/projects/doctrine-orm/en/current/reference/attributes-reference.html) is also supported, if you prefer those.
 Both methods are convenient as they allow grouping the code and the configuration but, if you want to decouple classes from their metadata, you can switch to XML or YAML mappings.
 They are supported as well.
 
-Learn more about how to map entities with the Doctrine ORM in [the project's official documentation](https://docs.doctrine-project.org/projects/doctrine-orm/en/latest/reference/association-mapping.html)
+Learn more about how to map entities with the Doctrine ORM in [the project's official documentation](https://docs.doctrine-project.org/projects/doctrine-orm/en/current/reference/association-mapping.html)
 or in Kévin's book "[Persistence in PHP with the Doctrine ORM](https://www.amazon.fr/gp/product/B00HEGSKYQ/ref=as_li_tl?ie=UTF8&camp=1642&creative=6746&creativeASIN=B00HEGSKYQ&linkCode=as2&tag=kevidung-21)".
 
 Now, delete the file `api/src/Entity/Greeting.php`. This demo entity isn't useful anymore.
 Finally, generate a new database migration using [Doctrine Migrations](https://symfony.com/doc/current/doctrine.html#migrations-creating-the-database-tables-schema) and apply it:
 
 ```console
-docker compose exec php \
-    bin/console doctrine:migrations:diff
-docker compose exec php \
-    bin/console doctrine:migrations:migrate
+bin/console doctrine:migrations:diff
+bin/console doctrine:migrations:migrate
 ```
-
-The `php` container is where your API app stands. Prefixing a command by `docker compose exec php` allows executing the
-given command in this container. You may want [to create an alias](https://www.linfo.org/alias.html) to make your life easier.
 
 **We now have a working API with read and write capabilities!**
 
@@ -521,11 +520,11 @@ Now, add a review for this book using the `POST` operation for the `Review` reso
 
 ```json
 {
-    "book": "/books/1",
-    "rating": 5,
-    "body": "Interesting book!",
-    "author": "Kévin",
-    "publicationDate": "September 21, 2016"
+  "book": "/books/1",
+  "rating": 5,
+  "body": "Interesting book!",
+  "author": "Kévin",
+  "publicationDate": "September 21, 2016"
 }
 ```
 
@@ -583,22 +582,22 @@ Modify the following files as described in these patches:
  use Doctrine\ORM\Mapping as ORM;
 +use Symfony\Component\Validator\Constraints as Assert;
 
-     #[ORM\Column(nullable: true)] 
+     #[ORM\Column(nullable: true)]
 +    #[Assert\Isbn]
-     public ?string $isbn = null;     
- 
+     public ?string $isbn = null;
+
      #[ORM\Column]
 +    #[Assert\NotBlank]
      public string $title = '';
- 
+
      #[ORM\Column(type: 'text')]
 +    #[Assert\NotBlank]
      public string $description = '';
- 
-     #[ORM\Column] 
+
+     #[ORM\Column]
 +    #[Assert\NotBlank]
      public string $author = '';
- 
+
      #[ORM\Column]
 +    #[Assert\NotNull]
      public ?\DateTimeImmutable $publicationDate = null;
@@ -611,26 +610,26 @@ Modify the following files as described in these patches:
  use Doctrine\ORM\Mapping as ORM;
 +use Symfony\Component\Validator\Constraints as Assert;
 
-     #[ORM\Column(type: 'smallint')]   
+     #[ORM\Column(type: 'smallint')]
 +    #[Assert\Range(min: 0, max: 5)]
      public int $rating = 0;
- 
+
      #[ORM\Column(type: 'text')]
 +    #[Assert\NotBlank]
      public string $body = '';
- 
+
      #[ORM\Column]
 +    #[Assert\NotBlank]
      public string $author = '';
- 
-     #[ORM\Column] 
+
+     #[ORM\Column]
 +    #[Assert\NotNull]
      public ?\DateTimeImmutable $publicationDate = null;
- 
-     #[ORM\ManyToOne(inversedBy: 'reviews')] 
+
+     #[ORM\ManyToOne(inversedBy: 'reviews')]
 +    #[Assert\NotNull]
      public ?Book $book = null;
- 
+
      public function getId(): ?int
 ```
 
@@ -667,13 +666,11 @@ Isn't API Platform a REST **and** GraphQL framework? That's true! GraphQL suppor
 need to install the [graphql-php](https://webonyx.github.io/graphql-php/) library. Run the following command:
 
 ```console
-docker compose exec php sh -c '
-    composer require webonyx/graphql-php
-    bin/console cache:clear
-'
-````
+composer require api-platform/graphql
+```
 
-You now have a GraphQL API! Open `https://localhost/graphql` (or `https://localhost/api/graphql` if you used Symfony Flex to install API Platform) to play with it using the nice [GraphiQL](https://github.com/graphql/graphiql)
+You now have a GraphQL API! Open `https://localhost/graphql` (or `https://localhost/api/graphql` if you used Symfony Flex
+to install API Platform) to play with it using the nice [GraphiQL](https://github.com/graphql/graphiql)
 UI that is shipped with API Platform:
 
 ![GraphQL endpoint](images/api-platform-2.6-graphql.png)
@@ -682,7 +679,7 @@ Try it out by creating a greeting:
 
 ```graphql
 mutation {
-  createGreeting(input: {name: "Test2"}) {
+  createGreeting(input: { name: "Test2" }) {
     greeting {
       id
       name
@@ -751,8 +748,9 @@ occurs**.
 
 ## A Next.js Web App
 
-API Platform also has an awesome [client generator](../create-client/index.md) able to scaffold fully working [Next.js](../create-client/nextjs.md), [Nuxt.js](../create-client/nuxt.md), [React/Redux](../create-client/react.md), [Vue.js](../create-client/vuejs.md), [Quasar](../create-client/quasar.md), and [Vuetify](../create-client/vuetify.md) Progressive Web Apps/Single Page Apps that you can easily tune and customize. The generator also supports
-[React Native](../create-client/react-native.md) if you prefer to leverage all capabilities of mobile devices.
+API Platform also has an awesome [client generator](../create-client/index.md) able to scaffold fully working [Next.js](../create-client/nextjs.md), [Nuxt.js](../create-client/nuxt.md),
+[React/Redux](../create-client/react.md), [Vue.js](../create-client/vuejs.md), [Quasar](../create-client/quasar.md), and [Vuetify](../create-client/vuetify.md) Progressive Web Apps/Single Page Apps that you can
+easily tune and customize. The generator also supports [React Native](../create-client/react-native.md) if you prefer to leverage all capabilities of mobile devices.
 
 The distribution comes with a skeleton ready to welcome the [Next.js](https://nextjs.org/) flavor of the generated code. To bootstrap your app, run:
 

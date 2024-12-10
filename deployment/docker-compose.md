@@ -46,7 +46,7 @@ your-domain-name.example.com.  IN  A     207.154.233.113
 
 Example with the DigitalOcean Domains service ("Networking" > "Domains"):
 
-![Configuring DNS on DigitalOcean](digitalocean-dns.png)
+![Configuring DNS on DigitalOcean](../deployment/images/digitalocean-dns.png)
 
 > [!NOTE]
 > Let's Encrypt, the service used by default by API Platform to automatically generate a TLS certificate, doesn't support using bare IP addresses.
@@ -89,7 +89,7 @@ Go to `https://your-domain-name.example.com` and enjoy!
 
 Alternatively, if you don't want to expose an HTTPS server but only an HTTP one, run the following command:
 
-```bash
+```console
 SERVER_NAME=http://localhost \
 MERCURE_PUBLIC_URL=http://localhost/.well-known/mercure \
 TRUSTED_HOSTS='^localhost|php$' \
@@ -129,20 +129,20 @@ This setup ensures the Next.js client can access the API at build time to genera
 Modify the pwa service to ensure network communication between the pwa and php services during the build:
 
 ```yaml
-  pwa:
-    build:
-      context: ./pwa
-      target: prod
-      network: host
-      extra_hosts:
-        - php=127.0.0.1
+pwa:
+  build:
+    context: ./pwa
+    target: prod
+    network: host
+    extra_hosts:
+      - php=127.0.0.1
 ```
 
 #### 2. Build and start the php service
 
 Begin by starting the php service container:
 
-```bash
+```console
 SERVER_NAME=http://localhost \
 MERCURE_PUBLIC_URL=http://localhost/.well-known/mercure \
 TRUSTED_HOSTS='^localhost|php$' \
@@ -162,13 +162,13 @@ NEXT_PUBLIC_ENTRYPOINT=http://php
 
 #### 4. Build the pwa service
 
-```bash
+```console
 docker compose -f compose.yaml -f compose.prod.yaml build pwa
 ```
 
 #### 5. Finally, bring up the full project
 
-```bash
+```console
 SERVER_NAME=http://localhost \
 MERCURE_PUBLIC_URL=http://localhost/.well-known/mercure \
 TRUSTED_HOSTS='^localhost|php$' \

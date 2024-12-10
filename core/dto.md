@@ -1,5 +1,7 @@
 # Using Data Transfer Objects (DTOs)
 
+<p class="symfonycasts" align="center"><a href="https://symfonycasts.com/api-platform-extending?cid=apip"><img src="../symfony/images/symfonycasts-player.png" alt="Custom Resources screencast"><br>Watch the Custom Resources screencast</a></p>
+
 As stated in [the general design considerations](design.md), in most cases [the DTO pattern](https://en.wikipedia.org/wiki/Data_transfer_object) should be implemented using an API Resource class representing the public data model exposed through the API and [a custom State Provider](state-providers.md). In such cases, the class marked with `#[ApiResource]` will act as a DTO.
 
 However, it's sometimes useful to use a specific class to represent the input or output data structure related to an operation. These techniques are useful to document your API properly (using Hydra or OpenAPI) and will often be used on `POST` operations.
@@ -10,8 +12,7 @@ Using an input, the request body will be denormalized to the input instead of yo
 
 ```php
 <?php
-// api/src/Dto/UserResetPasswordDto.php
-
+// api/src/Dto/UserResetPasswordDto.php with Symfony or app/Dto/UserResetPasswordDto.php with Laravel
 namespace App\Dto;
 
 use Symfony\Component\Validator\Constraints as Assert;
@@ -25,8 +26,7 @@ final class UserResetPasswordDto
 
 ```php
 <?php
-// api/src/Model/User.php
-
+// api/src/Model/User.php with Symfony or app/Model/User.php with Laravel
 namespace App\Model;
 
 use ApiPlatform\Metadata\Post;
@@ -41,8 +41,7 @@ And the processor:
 
 ```php
 <?php
-// api/src/State/UserResetPasswordProcessor.php
-
+// api/src/State/UserResetPasswordProcessor.php with Symfony or app/State/UserResetPasswordProcessor.php with Laravel
 namespace App\State;
 
 use App\Dto\UserResetPasswordDto;
@@ -73,14 +72,13 @@ final class UserResetPasswordProcessor implements ProcessorInterface
 
 In some cases, using an input DTO is a way to avoid serialization groups.
 
-## Use Messenger With an Input DTO
+## Use Symfony Messenger With an Input DTO
 
-Let's use a message that will be processed by [Symfony Messenger](https://symfony.com/components/Messenger). API Platform has an [integration with messenger](./messenger.md), to use a DTO as input you need to specify the `input` attribute:
+Let's use a message that will be processed by [Symfony Messenger](https://symfony.com/components/Messenger). API Platform has an [integration with messenger](../symfony/messenger.md), to use a DTO as input you need to specify the `input` attribute:
 
 ```php
 <?php
-// api/src/Model/SendMessage.php
-
+// api/src/Model/SendMessage.php with Symfony or app/Model/SendMessage.php with Laravel
 namespace App\Model;
 
 use ApiPlatform\Metadata\Post;
@@ -99,9 +97,8 @@ To return another representation of your data in a [State Provider](./state-prov
 
 ```php
 <?php
-// api/src/Entity/Book.php
-
-namespace App\Entity;
+// api/src/ApiResource/Book.php with Symfony or app/ApiResource/Book.php with Laravel
+namespace App\ApiResource;
 
 use ApiPlatform\Metadata\Get;
 use App\Dto\AnotherRepresentation;
@@ -113,8 +110,7 @@ class Book {}
 
 ```php
 <?php
-// api/src/State/BookRepresentationProvider.php
-
+// api/src/State/BookRepresentationProvider.php with Symfony or app/State/BookRepresentationProvider.php with Laravel
 namespace App\State;
 
 use App\Dto\AnotherRepresentation;
@@ -136,15 +132,15 @@ final class BookRepresentationProvider implements ProviderInterface
 
 ## Implementing a Write Operation With an Output Different From the Resource
 
-For returning another representation of your data in a [State Processor](./state-processors.md), you should specify your processor class in the `processor` attribute and same for your `output`.
+For returning another representation of your data in a [State Processor](./state-processors.md), you should specify your processor class in
+the `processor` attribute and same for your `output`.
 
 <code-selector>
 
 ```php
 <?php
-// api/src/Entity/Book.php
-
-namespace App\Entity;
+// api/src/ApiResource/Book.php with Symfony or app/ApiResource/Book.php with Laravel
+namespace App\ApiResource;
 
 use ApiPlatform\Metadata\Post;
 use App\Dto\AnotherRepresentation;
@@ -153,18 +149,22 @@ use App\State\BookRepresentationProcessor;
 #[Post(output: AnotherRepresentation::class, processor: BookRepresentationProcessor::class)]
 class Book {}
 ```
+
 ```yaml
 # api/config/api_platform/resources.yaml
+# The YAML syntax is only supported for Symfony
 resources:
-    App\Entity\Book:
-        operations:
-            ApiPlatform\Metadata\Post:
-                output: App\Dto\AnotherRepresentation
-                processor: App\State\BookRepresentationProcessor
+  App\ApiResource\Book:
+    operations:
+      ApiPlatform\Metadata\Post:
+        output: App\Dto\AnotherRepresentation
+        processor: App\State\BookRepresentationProcessor
 ```
+
 ```xml
 <?xml version="1.0" encoding="UTF-8" ?>
 <!-- api/config/api_platform/resources.xml -->
+<!-- The XML syntax is only supported for Symfony -->
 
 <resources xmlns="https://api-platform.com/schema/metadata/resources-3.0"
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -172,9 +172,9 @@ resources:
         https://api-platform.com/schema/metadata/resources-3.0.xsd">
     <resource class="App\Entity\Book">
         <operations>
-            <operation class="ApiPlatform\Metadata\Post" 
+            <operation class="ApiPlatform\Metadata\Post"
                        processor="App\State\BookRepresentationProcessor"
-                       output="App\Dto\AnotherRepresentation" /> 
+                       output="App\Dto\AnotherRepresentation" />
         </operations>
     </resource>
 </resources>
@@ -186,7 +186,7 @@ Here the `$data` attribute represents an instance of your resource.
 
 ```php
 <?php
-// api/src/State/BookRepresentationProcessor.php
+// api/src/State/BookRepresentationProcessor.php with Symfony or app/State/BookRepresentationProcessor.php with Laravel
 
 namespace App\State;
 

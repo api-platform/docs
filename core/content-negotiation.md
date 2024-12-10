@@ -13,22 +13,22 @@ API Platform also supports [JSON Merge Patch (RFC 7396)](https://tools.ietf.org/
 
 API Platform will automatically detect the best resolving format depending on:
 
-* enabled formats (see below)
-* the requested format, specified in either [the `Accept` HTTP header](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Accept) or as an extension appended to the URL
+- enabled formats (see below)
+- the requested format, specified in either [the `Accept` HTTP header](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Accept) or as an extension appended to the URL
 
 Available formats are:
 
-Format                                                          | Format name  | MIME types                    | Backward Compatibility guaranteed
-----------------------------------------------------------------|--------------|-------------------------------|----------------------------------------
-[JSON-LD](https://json-ld.org)                                  | `jsonld`     | `application/ld+json`         | yes
-[GraphQL](graphql.md)                                           | n/a          | n/a                           | yes
-[JSON:API](https://jsonapi.org/)                                | `jsonapi`    | `application/vnd.api+json`    | yes
-[HAL](https://stateless.group/hal_specification.html)           | `jsonhal`    | `application/hal+json`        | yes
-[YAML](https://yaml.org/)                                       | `yaml`       | `application/x-yaml`          | no
-[CSV](https://tools.ietf.org/html/rfc4180)                      | `csv`        | `text/csv`                    | no
-[HTML](https://whatwg.org/) (API docs)                          | `html`       | `text/html`                   | no
-[XML](https://www.w3.org/XML/)                                  | `xml`        | `application/xml`, `text/xml` | no
-[JSON](https://www.json.org/)                                   | `json`       |  `application/json`           | no
+| Format                                                | Format name | MIME types                    | Backward Compatibility guaranteed |
+|-------------------------------------------------------|-------------|-------------------------------|-----------------------------------|
+| [JSON-LD](https://json-ld.org)                        | `jsonld`    | `application/ld+json`         | yes                               |
+| [GraphQL](graphql.md)                                 | n/a         | n/a                           | yes                               |
+| [JSON:API](https://jsonapi.org/)                      | `jsonapi`   | `application/vnd.api+json`    | yes                               |
+| [HAL](https://stateless.group/hal_specification.html) | `jsonhal`   | `application/hal+json`        | yes                               |
+| [YAML](https://yaml.org/)                             | `yaml`      | `application/x-yaml`          | no                                |
+| [CSV](https://tools.ietf.org/html/rfc4180)            | `csv`       | `text/csv`                    | no                                |
+| [HTML](https://whatwg.org/) (API docs)                | `html`      | `text/html`                   | no                                |
+| [XML](https://www.w3.org/XML/)                        | `xml`       | `application/xml`, `text/xml` | no                                |
+| [JSON](https://www.json.org/)                         | `json`      | `application/json`            | no                                |
 
 If the client's requested format is not specified, the response format will be the first format defined in the `formats` configuration key (see below).
 If the request format is not supported, an [Unsupported Media Type](https://developer.mozilla.org/fr/docs/Web/HTTP/Status/415) error will be returned.
@@ -43,16 +43,16 @@ and of a custom format called `myformat` and having `application/vnd.myformat` a
 ```yaml
 # api/config/packages/api_platform.yaml
 api_platform:
-    formats:
-        jsonld:   ['application/ld+json']
-        jsonhal:  ['application/hal+json']
-        jsonapi:  ['application/vnd.api+json']
-        json:     ['application/json']
-        xml:      ['application/xml', 'text/xml']
-        yaml:     ['application/x-yaml']
-        csv:      ['text/csv']
-        html:     ['text/html']
-        myformat: ['application/vnd.myformat']
+  formats:
+    jsonld: ['application/ld+json']
+    jsonhal: ['application/hal+json']
+    jsonapi: ['application/vnd.api+json']
+    json: ['application/json']
+    xml: ['application/xml', 'text/xml']
+    yaml: ['application/x-yaml']
+    csv: ['text/csv']
+    html: ['text/html']
+    myformat: ['application/vnd.myformat']
 ```
 
 To enable GraphQL support, [read the dedicated chapter](graphql.md).
@@ -70,9 +70,9 @@ JSON Merge Patch support must be enabled explicitly:
 ```yaml
 # api/config/packages/api_platform.yaml
 api_platform:
-    patch_formats:
-        json:     ['application/merge-patch+json']
-        jsonapi:  ['application/vnd.api+json']
+  patch_formats:
+    json: ['application/merge-patch+json']
+    jsonapi: ['application/vnd.api+json']
 ```
 
 When support for at least one PATCH format is enabled, [an `Accept-Patch` HTTP header](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Accept-Patch) containing the list of supported patch formats is automatically added to all HTTP responses for items.
@@ -86,10 +86,10 @@ Available formats can also be configured:
 ```yaml
 # api/config/packages/api_platform.yaml
 api_platform:
-    error_formats:
-        jsonproblem:                   ['application/problem+json']
-        jsonld:                        ['application/ld+json']      # Hydra error formats
-        jsonapi:                       ['application/vnd.api+json']
+  error_formats:
+    jsonproblem: ['application/problem+json']
+    jsonld: ['application/ld+json'] # Hydra error formats
+    jsonapi: ['application/vnd.api+json']
 ```
 
 ## Configuring Formats For a Specific Resource or Operation
@@ -146,14 +146,14 @@ class Book
 
 ```yaml
 resources:
-    App\Entity\Book:
+  App\Entity\Book:
+    formats:
+      0: 'jsonld' # format already defined in the config
+      csv: 'text/csv'
+    operations:
+      ApiPlatform\Metadata\Get:
         formats:
-           0: 'jsonld' # format already defined in the config
-           csv: 'text/csv'
-        operations:
-            ApiPlatform\Metadata\Get:
-                formats:
-                    json: ['application/merge-patch+json'] # works also with "application/merge-patch+json"
+          json: ['application/merge-patch+json'] # works also with "application/merge-patch+json"
 ```
 
 ```xml
@@ -191,9 +191,9 @@ Then, register the new format in the configuration:
 ```yaml
 # api/config/packages/api_platform.yaml
 api_platform:
-    formats:
-        # ...
-        myformat: ['application/vnd.myformat']
+  formats:
+    # ...
+    myformat: ['application/vnd.myformat']
 ```
 
 API Platform will automatically call the serializer with your defined format name as `format` parameter during the deserialization process (`myformat` in the example).
@@ -208,12 +208,12 @@ own implementation of `CustomItemNormalizer`:
 ```yaml
 # api/config/services.yaml
 services:
-    'App\Serializer\CustomItemNormalizer':
-        arguments: [ '@api_platform.serializer.normalizer.item' ]
-        # Uncomment if you don't use the autoconfigure feature
-        #tags: [ 'serializer.normalizer' ]
-    
-    # ...
+  'App\Serializer\CustomItemNormalizer':
+    arguments: ['@api_platform.serializer.normalizer.item']
+    # Uncomment if you don't use the autoconfigure feature
+    #tags: [ 'serializer.normalizer' ]
+
+  # ...
 ```
 
 ```php

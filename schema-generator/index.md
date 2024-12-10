@@ -12,31 +12,31 @@ Alternatively, design your API with tools like [Stoplight](https://stoplight.io/
 
 You get a fully featured PHP data model including:
 
-* A set of PHP entities with properties, constants (enum values), getters, setters, adders and removers. The class
-hierarchy provided by the vocabulary will be translated to a PHP class hierarchy with parents as `abstract` classes.
-The generated code complies with [PSR](https://www.php-fig.org/) coding standards;
-* Full, high-quality PHPDoc and type declarations for classes, properties, constants and methods extracted from the vocabulary;
-* Doctrine ORM or MongoDB ODM attributes mapping including database columns / fields with type guessing, relations with cardinality guessing,
-smart class inheritance (through the `#[MappedSuperclass]` or `#[InheritanceType]` attributes depending on if the resource is used in a relation);
-* Data validation through [Symfony Validator](https://symfony.com/doc/current/book/validation.html) attributes including enum support (choices) and check for required properties;
-* API Platform attributes;
-* Interfaces and [Doctrine `ResolveTargetEntityListener`](https://www.doctrine-project.org/projects/doctrine-orm/en/current/cookbook/resolve-target-entity-listener.html)
-support;
-* Custom PHP namespace support;
-* List of values provided the vocabulary with [PHP Enum](https://github.com/myclabs/php-enum) classes.
+- A set of PHP entities with properties, constants (enum values), getters, setters, adders and removers. The class
+  hierarchy provided by the vocabulary will be translated to a PHP class hierarchy with parents as `abstract` classes.
+  The generated code complies with [PSR](https://www.php-fig.org/) coding standards;
+- Full, high-quality PHPDoc and type declarations for classes, properties, constants and methods extracted from the vocabulary;
+- Doctrine ORM or MongoDB ODM attributes mapping including database columns / fields with type guessing, relations with cardinality guessing,
+  smart class inheritance (through the `#[MappedSuperclass]` or `#[InheritanceType]` attributes depending on if the resource is used in a relation);
+- Data validation through [Symfony Validator](https://symfony.com/doc/current/book/validation.html) attributes including enum support (choices) and check for required properties;
+- API Platform attributes;
+- Interfaces and [Doctrine `ResolveTargetEntityListener`](https://www.doctrine-project.org/projects/doctrine-orm/en/current/cookbook/resolve-target-entity-listener.html)
+  support;
+- Custom PHP namespace support;
+- List of values provided the vocabulary with [PHP Enum](https://github.com/myclabs/php-enum) classes.
 
 Bonus:
 
-* The code generator is fully configurable and extendable. All features can be deactivated (e.g., the Doctrine mapping generator)
-and a custom generator can be added;
-* The code generator can load previously generated files and add new changes while keeping the user-added ones;
-* The generated code can be used as is in a [Symfony](https://symfony.com) app (but it will work too in a raw PHP project
-or any other framework including [Laravel](https://laravel.com) and [Zend Framework](https://framework.zend.com/)).
+- The code generator is fully configurable and extendable. All features can be deactivated (e.g., the Doctrine mapping generator)
+  and a custom generator can be added;
+- The code generator can load previously generated files and add new changes while keeping the user-added ones;
+- The generated code can be used as is in a [Symfony](https://symfony.com) app (but it will work too in a raw PHP project
+  or any other framework including [Laravel](https://laravel.com) and [Zend Framework](https://framework.zend.com/)).
 
 ## What Is Schema.org?
 
 Schema.org is a vocabulary representing common data structures and their relations. Schema.org can be exposed as [JSON-LD](https://en.wikipedia.org/wiki/JSON-LD),
-[microdata](https://en.wikipedia.org/wiki/Microdata_(HTML)) and [RDF](https://en.wikipedia.org/wiki/Resource_Description_Framework).
+[microdata](<https://en.wikipedia.org/wiki/Microdata_(HTML)>) and [RDF](https://en.wikipedia.org/wiki/Resource_Description_Framework).
 Extracting semantical data exposed in the Schema.org vocabulary is supported by a growing number of companies including
 Google (Search, Gmail), Yahoo!, Bing and Yandex.
 
@@ -68,5 +68,5 @@ It opens the way to generic web API clients able to extract and process data fro
 
 ## Documentation
 
-* [Getting Started](getting-started.md)
-* [Configuration](configuration.md)
+- [Getting Started](getting-started.md)
+- [Configuration](configuration.md)

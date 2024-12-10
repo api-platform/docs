@@ -21,8 +21,8 @@ To deprecate a resource class, use the `deprecationReason` attribute:
 
 ```php
 <?php
-// api/src/Entity/Parchment.php
-namespace App\Entity;
+// api/src/ApiResource/Parchment.php with Symfony or app/ApiResource/Parchment.php with Laravel
+namespace App\ApiResource;
 
 use ApiPlatform\Metadata\ApiResource;
 
@@ -51,8 +51,8 @@ You can also use this new `deprecationReason` attribute to deprecate specific [o
 
 ```php
 <?php
-// api/src/Entity/Parchment.php
-namespace App\Entity;
+// api/src/ApiResource/Parchment.php with Symfony or app/ApiResource/Parchment.php with Laravel
+namespace App\ApiResource;
 
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Get;
@@ -71,8 +71,8 @@ It's also possible to deprecate a single property:
 
 ```php
 <?php
-// api/src/Entity/Review.php
-namespace App\Entity;
+// api/src/ApiResource/Review.php with Symfony or app/ApiResource/Review.php with Laravel
+namespace App\ApiResource;
 
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\ApiProperty;
@@ -84,26 +84,27 @@ class Review
 
     #[ApiProperty(deprecationReason: "Use the rating property instead")]
     public $letter;
-    
+
     // ...
 }
 ```
 
 ```yaml
 # api/config/api_platform/resources/Review.yaml
+# The YAML syntax is only supported for Symfony
 properties:
+  # ...
+  App\ApiResource\Review:
     # ...
-    App\Entity\Review:
-        # ...
-        letter:
-            deprecationReason: 'Use the rating property instead'
+    letter:
+      deprecationReason: 'Use the rating property instead'
 ```
 
 </code-selector>
 
-* With JSON-lD / Hydra, [an `owl:deprecated` annotation property](https://www.w3.org/TR/owl2-syntax/#Annotation_Properties) will be added to the appropriate data structure
-* With Swagger / OpenAPI, [a `deprecated` property](https://swagger.io/docs/specification/2-0/paths-and-operations/) will be added
-* With GraphQL, the [`isDeprecated` and `deprecationReason` properties](https://facebook.github.io/graphql/June2018/#sec-Deprecation) will be added to the schema
+- With JSON-lD / Hydra, [an `owl:deprecated` annotation property](https://www.w3.org/TR/owl2-syntax/#Annotation_Properties) will be added to the appropriate data structure
+- With Swagger / OpenAPI, [a `deprecated` property](https://swagger.io/docs/specification/2-0/paths-and-operations/) will be added
+- With GraphQL, the [`isDeprecated` and `deprecationReason` properties](https://facebook.github.io/graphql/June2018/#sec-Deprecation) will be added to the schema
 
 ## Setting the `Sunset` HTTP Header to Indicate When a Resource or an Operation Will Be Removed
 
@@ -114,8 +115,8 @@ Thanks to the `sunset` attribute, API Platform makes it easy to set this header 
 
 ```php
 <?php
-// api/src/Entity/Parchment.php
-namespace App\Entity;
+// api/src/ApiResource/Parchment.php with Symfony or app/ApiResource/Parchment.php with Laravel
+namespace App\ApiResource;
 
 use ApiPlatform\Metadata\ApiResource;
 
@@ -136,8 +137,8 @@ It's also possible to set the `Sunset` header only for a specific [operation](op
 
 ```php
 <?php
-// api/src/Entity/Parchment.php
-namespace App\Entity;
+// api/src/ApiResource/Parchment.php with Symfony or app/ApiResource/Parchment.php with Laravel
+namespace App\ApiResource;
 
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Get;
@@ -152,3 +153,33 @@ class Parchment
     // ...
 }
 ```
+
+## Path versioning
+
+> [!NOTE]
+> REST and GraphQL architectures recommend to use deprecations instead of path versioning.
+
+You can prefix your URI Templates and change the representation using serialization groups:
+
+```php
+<?php
+// api/src/ApiResource/Parchment.php with Symfony or app/ApiResource/Parchment.php with Laravel
+namespace App\ApiResource;
+
+use ApiPlatform\Metadata\Get;
+use Symfony\Component\Serializer\Attrbute\Groups;
+
+#[Get(uriTemplate: '/v1/books/{id}', normalizationContext: ['groups' => ['v1']])]
+#[Get(uriTemplate: '/v2/books/{id}', normalizationContext: ['groups' => ['v2']])]
+class Parchment
+{
+    #[Groups(['v1'])]
+    public $name;
+
+    #[Groups(['v2'])]
+    public $title;
+}
+```
+
+> [!NOTE]
+> It's also possible to use the configuration `route_prefix` to prefix all your operations.

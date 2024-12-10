@@ -8,27 +8,30 @@ API Platform embraces and extends the Symfony Serializer Component to transform 
 
 The main serialization process has two stages:
 
-![Serializer workflow](/docs/core/images/SerializerWorkflow.png)
+![Serializer workflow](images/SerializerWorkflow.png)
 
 > As you can see in the picture above, an array is used as a man-in-the-middle. This way, Encoders will only deal with turning specific formats into arrays and vice versa. The same way, Normalizers will deal with turning specific objects into arrays and vice versa.
--- [The Symfony documentation](https://symfony.com/doc/current/components/serializer.html)
+> -- [The Symfony documentation](https://symfony.com/doc/current/components/serializer.html)
 
-Unlike Symfony itself, API Platform leverages custom normalizers, its router and the [state provider](state-providers.md) system to perform an advanced transformation. Metadata are added to the generated document including links, type information, pagination data or available filters.
+Unlike Symfony or Laravel themselves, API Platform leverages custom normalizers, its router and the [state provider](state-providers.md)
+system to perform an advanced transformation. Metadata are added to the generated document including links, type
+information, pagination data or available filters.
 
-The API Platform Serializer is extendable. You can register custom normalizers and encoders in order to support other formats. You can also decorate existing normalizers to customize their behaviors.
+The API Platform Serializer is extendable. You can register custom normalizers and encoders in order to support other formats.
+You can also decorate existing normalizers to customize their behaviors.
 
 ## Available Serializers
 
-* [JSON-LD](https://json-ld.org) serializer
-`api_platform.jsonld.normalizer.item`
+- [JSON-LD](https://json-ld.org) serializer
+  `api_platform.jsonld.normalizer.item`
 
 JSON-LD, or JavaScript Object Notation for Linked Data, is a method of encoding Linked Data using JSON. It is a World Wide Web Consortium Recommendation.
 
-* [HAL](https://en.wikipedia.org/wiki/Hypertext_Application_Language) serializer
-`api_platform.hal.normalizer.item`
+- [HAL](https://en.wikipedia.org/wiki/Hypertext_Application_Language) serializer
+  `api_platform.hal.normalizer.item`
 
-* JSON, XML, CSV, YAML serializer (using the Symfony serializer)
-`api_platform.serializer.normalizer.item`
+- JSON, XML, CSV, YAML serializer (using the Symfony serializer)
+  `api_platform.serializer.normalizer.item`
 
 ## The Serialization Context, Groups and Relations
 
@@ -41,7 +44,7 @@ feature of the Symfony Serializer component.
 In addition to groups, you can use any option supported by the Symfony Serializer. For example, you can use [`enable_max_depth`](https://symfony.com/doc/current/components/serializer.html#handling-serialization-depth)
 to limit the serialization depth.
 
-### Configuration
+### Configuration for Symfony
 
 Just like other Symfony and API Platform components, the Serializer component can be configured using attributes, XML
 or YAML. Since attributes are easy to understand, we will use them in the following examples.
@@ -51,7 +54,7 @@ Note: if you aren't using the API Platform distribution, you will need to enable
 ```yaml
 # api/config/packages/framework.yaml
 framework:
-    serializer: { enable_annotations: true }
+  serializer: { enable_annotations: true }
 ```
 
 If you use [Symfony Flex](https://github.com/symfony/flex), just execute `composer req doctrine/annotations` and you are
@@ -62,24 +65,25 @@ If you want to use YAML or XML, please add the mapping path in the serializer co
 ```yaml
 # api/config/packages/framework.yaml
 framework:
-    serializer:
-        mapping:
-            paths: ['%kernel.project_dir%/config/serialization']
+  serializer:
+    mapping:
+      paths: ['%kernel.project_dir%/config/serialization']
 ```
 
 ## Using Serialization Groups
 
 It is simple to specify what groups to use in the API system:
 
-1. Add the normalization context and denormalization context attributes to the resource, and specify which groups to use. Here you see that we add `read` and `write`, respectively. You can use any group names you wish.
+1. Add the normalization context and denormalization context attributes to the resource, and specify which groups to use.
+    Here you see that we add `read` and `write`, respectively. You can use any group names you wish.
 2. Apply the groups to properties in the object.
 
 <code-selector>
 
 ```php
 <?php
-// api/src/Entity/Book.php
-namespace App\Entity;
+// api/src/ApiResource/Book.php with Symfony or app/ApiResource/Book.php with Laravel
+namespace App\ApiResource;
 
 use ApiPlatform\Metadata\ApiResource;
 use Symfony\Component\Serializer\Annotation\Groups;
@@ -101,31 +105,34 @@ class Book
 ```
 
 ```yaml
+# The YAML syntax is only supported for Symfony
 # api/config/api_platform/resources.yaml
 resources:
-    App\Entity\Book:
-        normalizationContext:
-            groups: ['read']
-        denormalizationContext:
-            groups: ['write']
+  App\ApiResource\Book:
+    normalizationContext:
+      groups: ['read']
+    denormalizationContext:
+      groups: ['write']
 
+# The YAML syntax is only supported for Symfony
 # api/config/serialization/Book.yaml
-App\Entity\Book:
-    attributes:
-        name:
-            groups: ['read', 'write']
-        author:
-            groups: ['write']
+App\ApiResource\Book:
+  attributes:
+    name:
+      groups: ['read', 'write']
+    author:
+      groups: ['write']
 ```
 
 ```xml
+<!--The XML syntax is only supported for Symfony -->
 <!-- api/config/api_platform/resources.xml -->
 <?xml version="1.0" encoding="UTF-8" ?>
 <resources xmlns="https://api-platform.com/schema/metadata/resources-3.0"
            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
            xsi:schemaLocation="https://api-platform.com/schema/metadata/resources-3.0
                                https://api-platform.com/schema/metadata/resources-3.0.xsd">
-    <resource class="App\Entity\Book">
+    <resource class="App\ApiResource\Book">
         <normalizationContext>
             <values>
                 <value name="groups">
@@ -146,14 +153,15 @@ App\Entity\Book:
         </denormalizationContext>
     </resource>
 </resources>
-
+    
+<!--The XML syntax is only supported for Symfony -->
 <!-- api/config/serialization/Book.xml -->
 <?xml version="1.0" encoding="UTF-8" ?>
 <serializer xmlns="http://symfony.com/schema/dic/serializer-mapping"
             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
             xsi:schemaLocation="http://symfony.com/schema/dic/serializer-mapping
                                 http://symfony.com/schema/dic/serializer-mapping/serializer-mapping-1.0.xsd">
-    <class name="App\Entity\Book">
+    <class name="App\ApiResource\Book">
         <attribute name="name">
             <group>read</group>
             <group>write</group>
@@ -184,6 +192,12 @@ documentation generator.
 
 ## Using Serialization Groups per Operation
 
+<p class="symfonycasts" align="center"><a href="https://symfonycasts.com/screencast/api-platform/relations?cid=apip"><img src="../symfony/images/symfonycasts-player.png" alt="Relations screencast"><br>Watch the Relations screencast</a></p>
+
+By default, the serializer provided with API Platform represents relations between objects using [dereferenceable IRIs](https://en.wikipedia.org/wiki/Internationalized_Resource_Identifier).
+They allow you to retrieve details for related objects by issuing extra HTTP requests. However, for performance reasons,
+it is sometimes preferable to avoid forcing the client to issue extra HTTP requests.
+
 It is possible to specify normalization and denormalization contexts (as well as any other attribute) on a per-operation
 basis. API Platform will always use the most specific definition. For instance, if normalization groups are set both
 at the resource level and at the operation level, the configuration set at the operation level will be used and the resource
@@ -195,8 +209,8 @@ In the following example we use different serialization groups for the `GET` and
 
 ```php
 <?php
-// api/src/Entity/Book.php
-namespace App\Entity;
+// api/src/ApiResource/Book.php with Symfony or app/ApiResource/Book.php with Laravel
+namespace App\ApiResource;
 
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Get;
@@ -219,18 +233,21 @@ class Book
 ```
 
 ```yaml
+# The YAML syntax is only supported for Symfony
 # api/config/api_platform/resources/Book.yaml
-App\Entity\Book:
+App\ApiResource\Book:
     normalizationContext:
         groups: ['get']
     operations:
+        ApiPlatform\Metadata\Get: ~
         ApiPlatform\Metadata\Get: ~
         ApiPlatform\Metadata\Patch:
             normalizationContext:
                 groups: ['patch']
 
+# The YAML syntax is only supported for Symfony
 # api/config/serializer/Book.yaml
-App\Entity\Book:
+App\ApiResource\Book:
     attributes:
         name:
             groups: ['get', 'patch']
@@ -239,13 +256,14 @@ App\Entity\Book:
 ```
 
 ```xml
+<!-- The XML syntax is only supported for Symfony -->
 <!-- api/config/api_platform/resources.xml -->
 <?xml version="1.0" encoding="UTF-8" ?>
 <resources xmlns="https://api-platform.com/schema/metadata/resources-3.0"
            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
            xsi:schemaLocation="https://api-platform.com/schema/metadata/resources-3.0
                                https://api-platform.com/schema/metadata/resources-3.0.xsd">
-    <resource class="App\Entity\Book">
+    <resource class="App\ApiResource\Book">
         <normalizationContext>
             <values>
                 <value name="groups">
@@ -272,13 +290,14 @@ App\Entity\Book:
     </resource>
 </resources>
 
+<!-- The XML syntax is only supported for Symfony -->
 <!-- api/config/serialization/Book.xml -->
 <?xml version="1.0" encoding="UTF-8" ?>
 <serializer xmlns="http://symfony.com/schema/dic/serializer-mapping"
             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
             xsi:schemaLocation="http://symfony.com/schema/dic/serializer-mapping
                                 http://symfony.com/schema/dic/serializer-mapping/serializer-mapping-1.0.xsd">
-    <class name="App\Entity\Book">
+    <class name="App\ApiResource\Book">
         <attribute name="name">
             <group>get</group>
             <group>patch</group>
@@ -330,8 +349,8 @@ the `book` group, the author will be embedded.
 
 ```php
 <?php
-// api/src/Entity/Book.php
-namespace App\Entity;
+// api/src/ApiResource/Book.php with Symfony or app/ApiResource/Book.php with Laravel
+namespace App\ApiResource;
 
 use ApiPlatform\Metadata\ApiResource;
 use Symfony\Component\Serializer\Annotation\Groups;
@@ -350,13 +369,15 @@ class Book
 ```
 
 ```yaml
+# The YAML syntax is only supported for Symfony
 # api/config/api_platform/resources/Book.yaml
-App\Entity\Book:
+App\ApiResource\Book:
     normalizationContext:
         groups: ['book']
 
+# The YAML syntax is only supported for Symfony
 # api/config/serializer/Book.yaml
-App\Entity\Book:
+App\ApiResource\Book:
     attributes:
         name:
             groups: ['book']
@@ -370,8 +391,8 @@ App\Entity\Book:
 
 ```php
 <?php
-// api/src/Entity/Person.php
-namespace App\Entity;
+// api/src/ApiResource/Person.php with Symfony or app/ApiResource/Person.php with Laravel
+namespace App\ApiResource;
 
 use ApiPlatform\Metadata\ApiResource;
 use Symfony\Component\Serializer\Annotation\Groups;
@@ -387,11 +408,12 @@ class Person
 ```
 
 ```yaml
+# The YAML syntax is only supported for Symfony
 # api/config/serializer/Person.yaml
-App\Entity\Person:
-    attributes:
-        name:
-            groups: ['book']
+App\ApiResource\Person:
+  attributes:
+    name:
+      groups: ['book']
 ```
 
 </code-selector>
@@ -427,8 +449,8 @@ the same way as normalization. For example:
 
 ```php
 <?php
-// api/src/Entity/Book.php
-namespace App\Entity;
+// api/src/ApiResource/Book.php with Symfony or app/ApiResource/Book.php with Laravel
+namespace App\ApiResource;
 
 use ApiPlatform\Metadata\ApiResource;
 
@@ -440,19 +462,20 @@ class Book
 ```
 
 ```yaml
+# The YAML syntax is only supported for Symfony
 # api/config/api_platform/resources/Book.yaml
-App\Entity\Book:
-    denormalizationContext:
-        groups: ['book']
+App\ApiResource\Book:
+  denormalizationContext:
+    groups: ['book']
 ```
 
 </code-selector>
 
 The following rules apply when denormalizing embedded relations:
 
-* If an `@id` key is present in the embedded resource, then the object corresponding to the given URI will be retrieved through
-the state provider. Any changes in the embedded relation will also be applied to that object.
-* If no `@id` key exists, a new object will be created containing state provided in the embedded JSON document.
+- If an `@id` key is present in the embedded resource, then the object corresponding to the given URI will be retrieved through
+  the state provider. Any changes in the embedded relation will also be applied to that object.
+- If no `@id` key exists, a new object will be created containing state provided in the embedded JSON document.
 
 You can specify as many embedded relation levels as you want.
 
@@ -464,8 +487,8 @@ It is a common problem to have entities that reference other entities of the sam
 
 ```php
 <?php
-// api/src/Entity/Person.php
-namespace App\Entity;
+// api/src/ApiResource/Person.php with Symfony or app/ApiResource/Person.php with Laravel
+namespace App\ApiResource;
 
 use ApiPlatform\Metadata\ApiResource;
 use Symfony\Component\Serializer\Annotation\Groups;
@@ -484,21 +507,23 @@ class Person
     */
     #[Groups('person')]
    public $parent;  // Note that a Person instance has a relation with another Person.
- 
+
     // ...
 }
 ```
 
 ```yaml
+# The YAML syntax is only supported for Symfony
 # api/config/api_platform/resources/Person.yaml
-App\Entity\Person:
+App\ApiResource\Person:
     normalizationContext:
         groups: ['person']
     denormalizationContext:
         groups: ['person']
 
+# The YAML syntax is only supported for Symfony
 # api/config/serializer/Person.yaml
-App\Entity\Person:
+App\ApiResource\Person:
     attributes:
         name:
             groups: ['person']
@@ -516,8 +541,8 @@ To force the **$parent** property to be used as an IRI, add an `#[ApiProperty(re
 
 ```php
 <?php
-// api/src/Entity/Person.php
-namespace App\Entity;
+// api/src/ApiResource/Person.php with Symfony or app/ApiResource/Person.php with Laravel
+namespace App\ApiResource;
 
 use ApiPlatform\Metadata\ApiProperty;
 use ApiPlatform\Metadata\ApiResource;
@@ -535,38 +560,40 @@ class Person
    #[Groups('person')]
    #[ApiProperty(readableLink: false, writableLink: false)]
    public Person $parent;  // This property is now serialized/deserialized as an IRI.
- 
+
     // ...
 }
 
 ```
 
 ```yaml
+# The YAML syntax is only supported for Symfony
 # api/config/api_platform/resources/Person.yaml
 resources:
-    App\Entity\Person:
-        normalizationContext:
-          groups: ['person']
-        denormalizationContext:
-          groups: ['person']
+  App\ApiResource\Person:
+    normalizationContext:
+      groups: ['person']
+    denormalizationContext:
+      groups: ['person']
 properties:
-    App\Entity\Person:
-        parent:
-            readableLink: false
-            writableLink: false
+  App\ApiResource\Person:
+    parent:
+      readableLink: false
+      writableLink: false
 
+# The YAML syntax is only supported for Symfony
 # api/config/serializer/Person.yaml
-App\Entity\Person:
-    attributes:
-        name:
-            groups: ['person']
-        parent:
-            groups: ['person']
+App\ApiResource\Person:
+  attributes:
+    name:
+      groups: ['person']
+    parent:
+      groups: ['person']
 ```
 
 </code-selector>
 
-### Plain Identifiers
+### Plain Identifiers for Symfony
 
 Instead of sending an IRI to set a relation, you may want to send a plain identifier. To do so, you must create your own denormalizer:
 
@@ -577,8 +604,8 @@ Instead of sending an IRI to set a relation, you may want to send a plain identi
 namespace App\Serializer;
 
 use ApiPlatform\Api\IriConverterInterface;
-use App\Entity\Dummy;
-use App\Entity\RelatedDummy;
+use App\ApiResource\Dummy;
+use App\ApiResource\RelatedDummy;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\DenormalizerAwareInterface;
 use Symfony\Component\Serializer\Normalizer\DenormalizerAwareTrait;
@@ -617,7 +644,7 @@ class PlainIdentifierDenormalizer implements DenormalizerInterface, Denormalizer
 }
 ```
 
-## Property Normalization Context
+## Property Normalization Context for Symfony
 
 If you want to change the (de)normalization context of a property, for instance if you want to change the format of the date time,
 you can do so by using the `#[Context]` attribute from the Symfony Serializer component.
@@ -639,7 +666,7 @@ use Symfony\Component\Serializer\Normalizer\DateTimeNormalizer;
 #[ApiResource]
 class Book
 {
-    #[ORM\Column] 
+    #[ORM\Column]
     #[Context([DateTimeNormalizer::FORMAT_KEY => 'Y-m-d'])]
     public ?\DateTimeInterface $publicationDate = null;
 }
@@ -708,7 +735,7 @@ class Book
 }
 ```
 
-## Calculated Field
+## Calculated Field using Doctrine
 
 Sometimes you need to expose calculated fields. This can be done by leveraging the groups. This time not on a property, but on a method.
 
@@ -732,9 +759,9 @@ class Greeting
     #[ORM\Id, ORM\Column, ORM\GeneratedValue]
     #[Groups("greeting:collection:get")]
     private ?int $id = null;
-    
+
     private $a = 1;
-    
+
     private $b = 2;
 
     #[ORM\Column]
@@ -755,6 +782,7 @@ class Greeting
 ```
 
 ```yaml
+# The YAML syntax is only supported for Symfony
 # api/config/api_platform/resources/Greeting.yaml
 App\Entity\Greeting:
     operations:
@@ -762,6 +790,7 @@ App\Entity\Greeting:
             normalizationContext:
                 groups: 'greeting:collection:get'
 
+# The YAML syntax is only supported for Symfony
 # api/config/serializer/Greeting.yaml
 App\Entity\Greeting:
     attributes:
@@ -785,8 +814,8 @@ Let's imagine a resource where most fields can be managed by any user, but some 
 
 ```php
 <?php
-// api/src/Entity/Book.php
-namespace App\Entity;
+// api/src/ApiResource/Book.php with Symfony or app/ApiResource/Book.php with Laravel
+namespace App\ApiResource;
 
 use ApiPlatform\Metadata\ApiResource;
 use Symfony\Component\Serializer\Annotation\Groups;
@@ -816,15 +845,17 @@ class Book
 ```
 
 ```yaml
+# The YAML syntax is only supported for Symfony
 # api/config/api_platform/resources/Book.yaml
-App\Entity\Book: 
+App\ApiResource\Book:
     normalizationContext:
         groups: ['book:output']
     denormalizationContext:
         groups: ['book:input']
 
+# The YAML syntax is only supported for Symfony
 # api/config/serializer/Book.yaml
-App\Entity\Book:
+App\ApiResource\Book:
     attributes:
         active:
             groups: ['book:output', 'admin:input']
@@ -842,13 +873,14 @@ API Platform implements a `ContextBuilder`, which prepares the context for seria
 `createFromRequest` method:
 
 ```yaml
+# The YAML syntax is only supported for Symfony
 # api/config/services.yaml
 services:
-    # ...
-    'App\Serializer\BookContextBuilder':
-        decorates: 'api_platform.serializer.context_builder'
-        arguments: [ '@App\Serializer\BookContextBuilder.inner' ]
-        autoconfigure: false
+  # ...
+  'App\Serializer\BookContextBuilder':
+    decorates: 'api_platform.serializer.context_builder'
+    arguments: ['@App\Serializer\BookContextBuilder.inner']
+    autoconfigure: false
 ```
 
 ```php
@@ -859,7 +891,7 @@ namespace App\Serializer;
 use ApiPlatform\Serializer\SerializerContextBuilderInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
-use App\Entity\Book;
+use App\ApiResource\Book;
 
 final class BookContextBuilder implements SerializerContextBuilderInterface
 {
@@ -890,7 +922,7 @@ If the user has the `ROLE_ADMIN` permission and the subject is an instance of Bo
 denormalization context. The `$normalization` variable lets you check whether the context is for normalization (if `TRUE`) or denormalization
 (`FALSE`).
 
-## Changing the Serialization Context on a Per-item Basis
+## Changing the Serialization Context on a Per-item Basis for Symfony
 
 The example above demonstrates how you can modify the normalization/denormalization context based on the current user
 permissions for all books. Sometimes, however, the permissions vary depending on what book is being processed.
@@ -903,10 +935,10 @@ is appropriate for your application; higher values are loaded earlier):
 ```yaml
 # api/config/services.yaml
 services:
-    'App\Serializer\BookAttributeNormalizer':
-        arguments: [ '@security.token_storage' ]
-        tags:
-            - { name: 'serializer.normalizer', priority: 64 }
+  'App\Serializer\BookAttributeNormalizer':
+    arguments: ['@security.token_storage']
+    tags:
+      - { name: 'serializer.normalizer', priority: 64 }
 ```
 
 The Normalizer class is a bit harder to understand, because it must ensure that it is only called once and that there is no recursion.
@@ -973,7 +1005,7 @@ instance.
 Note: In this example, we use the `TokenStorageInterface` to verify access to the book instance. However, Symfony
 provides many useful other services that might be better suited to your use case. For example, the [`AuthorizationChecker`](https://symfony.com/doc/current/components/security/authorization.html#authorization-checker).
 
-## Name Conversion
+## Name Conversion for Symfony
 
 The Serializer Component provides a handy way to map PHP field names to serialized names. See the related [Symfony documentation](https://symfony.com/doc/current/components/serializer.html#converting-property-names-when-serializing-and-deserializing).
 
@@ -983,18 +1015,18 @@ To use this feature, declare a new name converter service. For example, you can 
 ```yaml
 # api/config/services.yaml
 services:
-    'Symfony\Component\Serializer\NameConverter\CamelCaseToSnakeCaseNameConverter': ~
+  'Symfony\Component\Serializer\NameConverter\CamelCaseToSnakeCaseNameConverter': ~
 ```
 
 ```yaml
 # api/config/packages/api_platform.yaml
 api_platform:
-    name_converter: 'Symfony\Component\Serializer\NameConverter\CamelCaseToSnakeCaseNameConverter'
+  name_converter: 'Symfony\Component\Serializer\NameConverter\CamelCaseToSnakeCaseNameConverter'
 ```
 
 If symfony's `MetadataAwareNameConverter` is available it'll be used by default. If you specify one in ApiPlatform configuration, it'll be used. Note that you can use decoration to benefit from this name converter in your own implementation.
 
-## Decorating a Serializer and Adding Extra Data
+## Decorating a Serializer and Adding Extra Data for Symfony
 
 In the following example, we will see how we add extra information to the serialized output. Here is how we add the
 date on each request in `GET`:
@@ -1002,18 +1034,18 @@ date on each request in `GET`:
 ```yaml
 # api/config/services.yaml
 services:
-    'App\Serializer\ApiNormalizer':
-        # By default .inner is passed as argument
-        decorates: 'api_platform.jsonld.normalizer.item'
+  'App\Serializer\ApiNormalizer':
+    # By default .inner is passed as argument
+    decorates: 'api_platform.jsonld.normalizer.item'
 ```
 
 Note: this normalizer will work only for JSON-LD format, if you want to process JSON data too, you have to decorate another service:
 
 ```yaml
-    # Need a different name to avoid duplicate YAML key
-    'app.serializer.normalizer.item.json':
-        class: 'App\Serializer\ApiNormalizer'
-        decorates: 'api_platform.serializer.normalizer.item'
+# Need a different name to avoid duplicate YAML key
+'app.serializer.normalizer.item.json':
+  class: 'App\Serializer\ApiNormalizer'
+  decorates: 'api_platform.serializer.normalizer.item'
 ```
 
 ```php
@@ -1074,10 +1106,14 @@ final class ApiNormalizer implements NormalizerInterface, DenormalizerInterface,
 }
 ```
 
-## Entity Identifier Case
+## Entity/Model Identifier Case
 
-API Platform is able to guess the entity identifier using Doctrine metadata ([ORM](https://www.doctrine-project.org/projects/doctrine-orm/en/current/reference/basic-mapping.html#identifiers-primary-keys), [MongoDB ODM](https://www.doctrine-project.org/projects/doctrine-mongodb-odm/en/latest/reference/basic-mapping.html#identifiers)).
-For ORM, it also supports [composite identifiers](https://www.doctrine-project.org/projects/doctrine-orm/en/current/tutorials/composite-primary-keys.html).
+API Platform is able to guess the entity/model identifier using Doctrine metadata ([ORM](https://www.doctrine-project.org/projects/doctrine-orm/en/current/reference/basic-mapping.html#identifiers-primary-keys),
+[MongoDB ODM](https://www.doctrine-project.org/projects/doctrine-mongodb-odm/en/current/reference/basic-mapping.html#identifiers))
+or Laravel Eloquent metadata ([ORM](https://laravel.com/docs/eloquent#primary-keys)).
+
+For ORM, it also supports [Doctrine composite identifiers](https://www.doctrine-project.org/projects/doctrine-orm/en/current/tutorials/composite-primary-keys.html)
+and [Eloquent composite identifiers](https://laravel.com/docs/eloquent#composite-primary-keys).
 
 If you are not using the Doctrine ORM or MongoDB ODM Provider, you must explicitly mark the identifier using the `identifier` attribute of
 the `ApiPlatform\Metadata\ApiProperty` annotation. For example:
@@ -1086,8 +1122,8 @@ the `ApiPlatform\Metadata\ApiProperty` annotation. For example:
 
 ```php
 <?php
-// api/src/Entity/Book.php
-namespace App\Entity;
+// api/src/ApiResource/Book.php with Symfony or app/ApiResource/Book.php with Laravel
+namespace App\ApiResource;
 
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\ApiProperty;
@@ -1115,22 +1151,24 @@ class Book
 ```
 
 ```yaml
+# The YAML syntax is only supported for Symfony
 # api/config/api_platform/properties.yaml
 properties:
-    App\Entity\Book:
-        id:
-            identifier: true
+  App\ApiResource\Book:
+    id:
+      identifier: true
 ```
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" ?>
+<!-- The XML syntax is only supported for Symfony -->
 <!-- api/config/api_platform/properties.xml -->
 
 <properties xmlns="https://api-platform.com/schema/metadata/properties-3.0"
             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
             xsi:schemaLocation="https://api-platform.com/schema/metadata/properties-3.0
            https://api-platform.com/schema/metadata/properties-3.0.xsd">
-    <property resource="App\Entity\Product" name="id" identifier="true" />
+    <property resource="App\ApiResource\Product" name="id" identifier="true" />
 </properties>
 ```
 
@@ -1140,10 +1178,10 @@ In some cases, you will want to set the identifier of a resource from the client
 In such cases, you must make the identifier property a writable class property. Specifically, to use client-generated IDs, you
 must do the following:
 
-1. create a setter for the identifier of the entity (e.g. `public function setId(string $id)`) or make it a `public` property ,
+1. create a setter for the identifier of the entity/model (e.g. `public function setId(string $id)`) or make it a `public` property ,
 2. add the denormalization group to the property (only if you use a specific denormalization group), and,
-3. if you use Doctrine ORM, be sure to **not** mark this property with [the `@GeneratedValue` annotation](http://docs.doctrine-project.org/projects/doctrine-orm/en/latest/reference/basic-mapping.html#identifier-generation-strategies)
-  or use the `NONE` value
+3. if you use Doctrine ORM, be sure to **not** mark this property with [the `@GeneratedValue` annotation](http://docs.doctrine-project.org/projects/doctrine-orm/en/current/reference/basic-mapping.html#identifier-generation-strategies)
+   or use the `NONE` value
 
 ## Embedding the JSON-LD Context
 
@@ -1167,8 +1205,8 @@ attribute to the `#[ApiResource]` annotation:
 
 ```php
 <?php
-// api/src/Entity/Book.php
-namespace App\Entity;
+// api/src/ApiResource/Book.php with Symfony or app/ApiResource/Book.php with Laravel
+namespace App\ApiResource;
 
 use ApiPlatform\Metadata\ApiResource;
 
@@ -1180,10 +1218,11 @@ class Book
 ```
 
 ```yaml
+# The YAML syntax is only supported for Symfony
 # api/config/api_platform/resources/Book.yaml
-App\Entity\Book:
-    normalizationContext:
-        jsonldEmbedContext: true
+App\ApiResource\Book:
+  normalizationContext:
+    jsonldEmbedContext: true
 ```
 
 </code-selector>
@@ -1205,10 +1244,10 @@ The JSON output will now include the embedded context:
 }
 ```
 
-## Collection Relation
+## Collection Relation using Doctrine
 
-This is a special case where, in an entity, you have a `toMany` relation. By default, Doctrine will use an `ArrayCollection` to store your values. This is fine when you have a *read* operation, but when you try to *write* you can observe an issue where the response is not reflecting the changes correctly. It can lead to client errors even though the update was correct.
-Indeed, after an update on this relation, the collection looks wrong because `ArrayCollection`'s indexes are not sequential. To change this, we recommend to use a getter that returns `$collectionRelation->getValues()`. Thanks to this, the relation is now a real array which is sequentially indexed.
+This is a special case where, in an entity, you have a `toMany` relation. By default, Doctrine will use an `ArrayCollection` to store your values. This is fine when you have a _read_ operation, but when you try to _write_ you can observe an issue where the response is not reflecting the changes correctly. It can lead to client errors even though the update was correct.
+Indeed, after an update on this relation, the collection looks wrong because `ArrayCollection`'s indices are not sequential. To change this, we recommend to use a getter that returns `$collectionRelation->getValues()`. Thanks to this, the relation is now a real array which is sequentially indexed.
 
 ```php
 <?php

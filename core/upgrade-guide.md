@@ -17,8 +17,8 @@ If you use a custom normalizer for validation exception use:
 
 ```yaml
 api_platform:
-    validator:
-        legacy_validation_exception: true
+  validator:
+    legacy_validation_exception: true
 ```
 
 Indeed, we will throw another validation class in API Platform 4 we will throw `ApiPlatform\Validator\Exception\ValidationException` instead of `ApiPlatform\Symfony\Validator\Exception\ValidationException`
@@ -27,14 +27,14 @@ It's really important to add the `use_symfony_listeners` flag, set to `true` if 
 
 ```yaml
 api_platform:
-    use_symfony_listeners: false
+  use_symfony_listeners: false
 ```
 
 The `keep_legacy_inflector` flag will be removed from API Platform 4, you need to fix your issues first. In API Platform 3.4, the Inflector is available as a service that you can configure through:
 
 ```yaml
 api_platform:
-    inflector: api_platform.metadata.inflector
+  inflector: api_platform.metadata.inflector
 ```
 
 Implement the `ApiPlatform\Metadata\InflectorInterface` if you need to tweak its behavior.
@@ -43,16 +43,17 @@ We added an `hydra_prefix` configuration as the `hydra:` prefix will be removed 
 
 ```yaml
 api_platform:
-    serializer:
-        hydra_prefix: false
+  serializer:
+    hydra_prefix: false
 ```
 
 Standard PUT is now `true` by default, you can change its value using:
 
 ```yaml
 api_platform:
+  defaults:
     extra_properties:
-        standard_put: true
+      standard_put: true
 ```
 
 We recommend using the standalone API Platform packages instead of the Core monolithic repository.
@@ -75,23 +76,23 @@ This is the recommended configuration for API Platform 3.2. We review each of th
 
 ```yaml
 api_platform:
-    title: Hello API Platform
-    version: 1.0.0
-    formats:
-        jsonld: ['application/ld+json']
-    docs_formats:
-        jsonld: ['application/ld+json']
-        jsonopenapi: ['application/vnd.openapi+json']
-        html: ['text/html']
-    defaults:
-        stateless: true
-        cache_headers:
-            vary: ['Content-Type', 'Authorization', 'Origin']
-        extra_properties:
-            standard_put: true
-            rfc_7807_compliant_errors: true
-    event_listeners_backward_compatibility_layer: false
-    keep_legacy_inflector: false
+  title: Hello API Platform
+  version: 1.0.0
+  formats:
+    jsonld: ['application/ld+json']
+  docs_formats:
+    jsonld: ['application/ld+json']
+    jsonopenapi: ['application/vnd.openapi+json']
+    html: ['text/html']
+  defaults:
+    stateless: true
+    cache_headers:
+      vary: ['Content-Type', 'Authorization', 'Origin']
+    extra_properties:
+      standard_put: true
+      rfc_7807_compliant_errors: true
+  event_listeners_backward_compatibility_layer: false
+  keep_legacy_inflector: false
 ```
 
 ### Formats
@@ -99,8 +100,8 @@ api_platform:
 We noticed that API Platform was enabling `json` by default because of our OpenAPI support. We introduced the new `application/vnd.openapi+json`. Therefore if you want `json` you need to explicitly handle it:
 
 ```yaml
-formats: 
-    json: ['application/json']
+formats:
+  json: ['application/json']
 ```
 
 You can also remove documentations you're not using via the new `docs_formats`.
@@ -132,8 +133,8 @@ We strongly recommend that you use your own inflector anyways with a [PathSegmen
 
 ```yaml
 defaults:
-    extra_properties:
-        rfc_7807_compliant_errors: true
+  extra_properties:
+    rfc_7807_compliant_errors: true
 ```
 
 As this is an `extraProperties` it's configurable per resource/operation. This is improving the compatibility of Hydra errors with JSON problem. It also enables new extension points on [Errors](https://api-platform.com/docs/v3.2/core/errors/) such as [Error provider](https://api-platform.com/docs/v3.2/guides/error-provider/) and [Error Resource](https://api-platform.com/docs/v3.2/guides/error-resource/).

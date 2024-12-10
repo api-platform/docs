@@ -1,6 +1,6 @@
 # Handling File Upload
 
-If you need to handle the file upload in the server part, please follow [the related documentation](../core/file-upload.md).
+If you need to handle the file upload in the server part, please follow [the related documentation](../symfony/file-upload.md).
 
 This documentation assumes you have a `/media_objects` endpoint accepting `multipart/form-data`-encoded data.
 
@@ -13,10 +13,10 @@ import {
   HydraAdmin,
   ResourceGuesser,
   CreateGuesser,
-} from "@api-platform/admin";
-import { FileField, FileInput } from "react-admin";
+} from '@api-platform/admin';
+import { FileField, FileInput } from 'react-admin';
 
-const MediaObjectsCreate = props => (
+const MediaObjectsCreate = (props) => (
   <CreateGuesser {...props}>
     <FileInput source="file">
       <FileField source="src" title="title" />

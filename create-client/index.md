@@ -33,6 +33,6 @@ Create Client works especially well with APIs built with the [API Platform](http
 - Client-side validation
 - Subscribes to data updates pushed by servers supporting [the Mercure protocol](https://mercure.rocks)
 - Displays server-side validation errors under the related input (if using API Platform Core)
-- Integration with [Tailwind CSS](https://tailwindcss.com) (NextJS) or [Bootstrap](https://getbootstrap.com/) and [FontAwesome](https://fontawesome.com/) (other generators)
+- Integration with [Tailwind CSS](https://tailwindcss.com) (Next.js) or [Bootstrap](https://getbootstrap.com/) and [Font Awesome](https://fontawesome.com/) (other generators)
 - Integration with [React Native Elements](https://react-native-training.github.io/react-native-elements/)
 - Accessible to people with disabilities ([ARIA](https://www.w3.org/WAI/intro/aria) support in webapps)

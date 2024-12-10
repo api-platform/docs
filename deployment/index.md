@@ -11,10 +11,10 @@ while the Progressive Web Application is a standard Next.js project:
 
 <p align="center" class="symfonycasts"><a href="https://symfonycasts.com/screencast/ansistrano?cid=apip"><img src="../symfony/images/symfonycasts-player.png" alt="JWT screencast"><br>Watch the Animated Deployment with Ansistrano screencast</a></p>
 
-* [Deploying the Symfony application](https://symfony.com/doc/current/deployment.html)
-* [Deploying the Next.js application](https://nextjs.org/docs/deployment)
+- [Deploying the Symfony application](https://symfony.com/doc/current/deployment.html)
+- [Deploying the Next.js application](https://nextjs.org/docs/deployment)
 
 Alternatively, you may want to deploy API Platform on a PaaS (Platform as a Service):
 
-* [Deploying the server application of API Platform on Heroku](heroku.md)
-* [Deploying API Platform on Platform.sh (outdated)](https://platform.sh/blog/deploy-api-platform-on-platformsh)
+- [Deploying the server application of API Platform on Heroku](heroku.md)
+- [Deploying API Platform on Platform.sh (outdated)](https://platform.sh/blog/deploy-api-platform-on-platformsh)

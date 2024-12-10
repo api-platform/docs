@@ -1,22 +1,24 @@
-# Creating Custom Operations and Controllers
+# Creating Custom Operations and Symfony Controllers
 
-Note: using custom controllers with API Platform is **discouraged**. Also, GraphQL is **not supported**.
-[For most use cases, better extension points, working both with REST and GraphQL, are available](design.md).
+> [!NOTE]
+> Using custom Symfony controllers with API Platform is **discouraged**. Also, GraphQL is **not supported**.
+> [For most use cases, better extension points, working both with REST and GraphQL, are available](../core/design.md).
+> We recommend to use [System providers and processors](../core/extending.md#system-providers-and-processors) to extend API Platform internals.
 
 API Platform can leverage the Symfony routing system to register custom operations related to custom controllers. Such custom
 controllers can be any valid [Symfony controller](https://symfony.com/doc/current/controller.html), including standard
-Symfony controllers extending the [`Symfony\Bundle\FrameworkBundle\Controller\AbstractController`](http://api.symfony.com/4.1/Symfony/Bundle/FrameworkBundle/Controller/AbstractController.html)
+Symfony controllers extending the [`Symfony\Bundle\FrameworkBundle\Controller\AbstractController`](https://symfony.com/doc/current/controller.html#the-base-controller-class-services)
 helper class.
 
 To enable this feature use `use_symfony_listeners: true` in your `api_platform` configuration file:
 
 ```yaml
 api_platform:
-    title: 'My Dummy API'
-    description: |
-        This is a test API.
-        Made with love
-    use_symfony_listeners: true
+  title: 'My Dummy API'
+  description: |
+    This is a test API.
+    Made with love
+  use_symfony_listeners: true
 ```
 
 However, API Platform recommends to use **action classes** instead of typical Symfony controllers. Internally, API Platform
@@ -39,7 +41,7 @@ If your resource has any identifier, this operation will look like `/books/{id}`
 Those routes are not exposed from any documentation (for instance OpenAPI), but are anyway declared on the Symfony routing and always return a HTTP 404.
 
 If you create a custom operation, you will probably want to properly document it.
-See the [OpenAPI](openapi.md) part of the documentation to do so.
+See the [OpenAPI](../core/openapi.md) part of the documentation to do so.
 
 First, let's create your custom operation:
 
@@ -90,7 +92,7 @@ you need and it will be autowired too.
 The `__invoke` method of the action is called when the matching route is hit. It can return either an instance of
 `Symfony\Component\HttpFoundation\Response` (that will be displayed to the client immediately by the Symfony kernel) or,
 like in this example, an instance of an entity mapped as a resource (or a collection of instances for collection operations).
-In this case, the entity will pass through [all built-in event listeners](events.md#built-in-event-listeners) of API Platform. It will be
+In this case, the entity will pass through [all built-in event listeners](../core/events.md#built-in-event-listeners) of API Platform. It will be
 automatically validated, persisted and serialized in JSON-LD. Then the Symfony kernel will send the resulting document to
 the client.
 
@@ -111,8 +113,8 @@ use App\Controller\CreateBookPublication;
 #[ApiResource(operations: [
     new Get(),
     new Post(
-        name: 'publication', 
-        uriTemplate: '/books/{id}/publication', 
+        name: 'publication',
+        uriTemplate: '/books/{id}/publication',
         controller: CreateBookPublication::class
     )
 ])]
@@ -125,14 +127,14 @@ class Book
 ```yaml
 # api/config/api_platform/resources.yaml
 resources:
-    App\Entity\Book:
-        operations:
-            ApiPlatform\Metadata\Get: ~
-            post_publication:
-                class: ApiPlatform\Metadata\Post
-                method: POST
-                uriTemplate: /books/{id}/publication
-                controller: App\Controller\CreateBookPublication
+  App\Entity\Book:
+    operations:
+      ApiPlatform\Metadata\Get: ~
+      post_publication:
+        class: ApiPlatform\Metadata\Post
+        method: POST
+        uriTemplate: /books/{id}/publication
+        controller: App\Controller\CreateBookPublication
 ```
 
 ```xml
@@ -165,7 +167,7 @@ Complex use cases may lead you to create multiple custom operations.
 
 In such a case, you will probably create the same amount of custom controllers while you may not need to perform custom logic inside.
 
-To avoid that, API Platform provides the `ApiPlatform\Action\PlaceholderAction` which behaves the same when using the [built-in operations](operations.md#operations).
+To avoid that, API Platform provides the `ApiPlatform\Action\PlaceholderAction` which behaves the same when using the [built-in operations](../core/operations.md#operations).
 
 You just need to set the `controller` attribute with this class. Here, the previous example updated:
 
@@ -183,8 +185,8 @@ use ApiPlatform\Metadata\Post;
 #[ApiResource(operations: [
     new Get(),
     new Post(
-        name: 'publication', 
-        uriTemplate: '/books/{id}/publication', 
+        name: 'publication',
+        uriTemplate: '/books/{id}/publication',
         controller: PlaceholderAction::class
     )
 ])]
@@ -197,14 +199,14 @@ class Book
 ```yaml
 # api/config/api_platform/resources.yaml
 resources:
-    App\Entity\Book:
-        operations:
-            ApiPlatform\Metadata\Get: ~
-            post_publication:
-                class: ApiPlatform\Metadata\Post
-                method: POST
-                uriTemplate: /books/{id}/publication
-                controller: ApiPlatform\Action\PlaceholderAction
+  App\Entity\Book:
+    operations:
+      ApiPlatform\Metadata\Get: ~
+      post_publication:
+        class: ApiPlatform\Metadata\Post
+        method: POST
+        uriTemplate: /books/{id}/publication
+        controller: ApiPlatform\Action\PlaceholderAction
 ```
 
 ```xml
@@ -248,9 +250,9 @@ use Symfony\Component\Serializer\Annotation\Groups;
 #[ApiResource(operations: [
     new Get(),
     new Post(
-        name: 'publication', 
-        uriTemplate: '/books/{id}/publication', 
-        controller: CreateBookPublication::class, 
+        name: 'publication',
+        uriTemplate: '/books/{id}/publication',
+        controller: CreateBookPublication::class,
         normalizationContext: ['groups' => ['publication']],
     )
 ])]
@@ -268,15 +270,15 @@ class Book
 ```yaml
 # api/config/api_platform/resources.yaml
 resources:
-    App\Entity\Book:
-        operations:
-            ApiPlatform\Metadata\Get: ~
-            post_publication:
-                class: ApiPlatform\Metadata\Get
-                uriTemplate: /books/{id}/publication
-                controller: App\Controller\CreateBookPublication
-                normalizationContext:
-                    groups: ['publication']
+  App\Entity\Book:
+    operations:
+      ApiPlatform\Metadata\Get: ~
+      post_publication:
+        class: ApiPlatform\Metadata\Get
+        uriTemplate: /books/{id}/publication
+        controller: App\Controller\CreateBookPublication
+        normalizationContext:
+          groups: ['publication']
 ```
 
 ```xml
@@ -325,9 +327,9 @@ use App\Controller\CreateBookPublication;
 #[ApiResource(operations: [
     new Get(),
     new Post(
-        name: 'publication', 
-        uriTemplate: '/books/{id}/publication', 
-        controller: CreateBookPublication::class, 
+        name: 'publication',
+        uriTemplate: '/books/{id}/publication',
+        controller: CreateBookPublication::class,
         read: false
     )
 ])]
@@ -340,14 +342,14 @@ class Book
 ```yaml
 # api/config/api_platform/resources.yaml
 resources:
-    App\Entity\Book:
-        operations:
-            ApiPlatform\Metadata\Get: ~
-            post_publication:
-                class: ApiPlatform\Metadata\Post
-                uriTemplate: /books/{id}/publication
-                controller: App\Controller\CreateBookPublication
-                read: false
+  App\Entity\Book:
+    operations:
+      ApiPlatform\Metadata\Get: ~
+      post_publication:
+        class: ApiPlatform\Metadata\Post
+        uriTemplate: /books/{id}/publication
+        controller: App\Controller\CreateBookPublication
+        read: false
 ```
 
 ```xml
@@ -370,7 +372,7 @@ resources:
 
 </code-selector>
 
-This way, it will skip the `ReadListener`. You can do the same for some other built-in listeners. See [Built-in Event Listeners](events.md#built-in-event-listeners)
+This way, it will skip the `ReadListener`. You can do the same for some other built-in listeners. See [Built-in Event Listeners](../core/events.md#built-in-event-listeners)
 for more information.
 
 In your custom controller, the `__invoke()` method parameter should be called the same as the entity identifier.
@@ -413,14 +415,14 @@ class Book
 ```yaml
 # api/config/api_platform/resources.yaml
 resources:
-    App\Entity\Book:
-        operations:
-            ApiPlatform\Metadata\Get: ~
-            post_publication:
-                class: ApiPlatform\Metadata\Post
-                routeName: book_post_publication
-            book_post_discontinuation:
-              class: ApiPlatform\Metadata\Post
+  App\Entity\Book:
+    operations:
+      ApiPlatform\Metadata\Get: ~
+      post_publication:
+        class: ApiPlatform\Metadata\Post
+        routeName: book_post_publication
+      book_post_discontinuation:
+        class: ApiPlatform\Metadata\Post
 ```
 
 ```xml
@@ -508,10 +510,10 @@ class BookController extends AbstractController
 ```yaml
 # api/config/routes.yaml
 book_post_publication:
-    path: /books/{id}/publication
-    methods: ['POST']
-    defaults:
-        _controller: App\Controller\BookController::createPublication
-        _api_resource_class: App\Entity\Book
-        _api_operation_name: post_publication
+  path: /books/{id}/publication
+  methods: ['POST']
+  defaults:
+    _controller: App\Controller\BookController::createPublication
+    _api_resource_class: App\Entity\Book
+    _api_operation_name: post_publication
 ```
