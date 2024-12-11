@@ -109,6 +109,7 @@ history.onpushstate = function(e) {
 Assuming `/authors/1` returned the following:
 
 ```http
+(docs(client-integration): introduce documentation)
 Link: <https://localhost/authors/1>; rel="self"
 Link: <https://localhost/.well-known/mercure>; rel="mercure"
 ```
