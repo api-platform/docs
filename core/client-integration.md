@@ -108,7 +108,7 @@ history.onpushstate = function(e) {
 
 Assuming `/authors/1` returned the following:
 
-```http request
+```http
 Link: <https://localhost/authors/1>; rel="self"
 Link: <https://localhost/.well-known/mercure>; rel="mercure"
 ```
