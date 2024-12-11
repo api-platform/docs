@@ -58,8 +58,7 @@ nelmio_cors:
 Clear the cache to apply this change:
 
 ```console
-docker compose exec php \
-    bin/console cache:clear --env=prod
+bin/console cache:clear --env=prod
 ```
 
 Your new administration interface is ready! Type `npm start` to try it!

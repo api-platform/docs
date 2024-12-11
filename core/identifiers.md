@@ -13,8 +13,8 @@ Let's say you have the following class, which is identified by a `UUID` type. In
 
 ```php
 <?php
-// api/src/Entity/Person.php
-namespace App\Entity;
+// api/src/ApiResource/Person.php with Symfony or app/ApiResource/Person.php with Laravel
+namespace App\ApiResource;
 
 use ApiPlatform\Metadata\ApiProperty;
 use ApiPlatform\Metadata\ApiResource;
@@ -36,38 +36,40 @@ final class Person
 
 ```yaml
 # api/config/api_platform/resources/Person.yaml
+# The YAML syntax is only supported for Symfony
 properties:
-  App\Entity\Person:
+  App\ApiResource\Person:
     code:
       identifier: true
 resource:
-  App\Entity\Person:
+  App\ApiResource\Person:
     provider: App\State\PersonProvider
 ```
 
 ```xml
+<!-- The XML syntax is only supported for Symfony -->
 <properties xmlns="https://api-platform.com/schema/metadata/properties-3.0">
-    <property resource="App\Entity\Person" name="code" identifier="true"/>
+    <property resource="App\ApiResource\Person" name="code" identifier="true"/>
 </properties>
 <resources xmlns="https://api-platform.com/schema/metadata/resources-3.0">
-    <resource class="App\Entity\Person" provider="App\State\PersonProvider" />
+    <resource class="App\ApiResource\Person" provider="App\State\PersonProvider" />
 </resources>
 ```
 
 </code-selector>
 
-Once registered as an `ApiResource`, having an existing person, it will be accessible through the following URL: `/people/110e8400-e29b-11d4-a716-446655440000`.
-Note that the property identifying our resource is named `code`.
+Once registered as an `ApiResource`, having an existing person, it will be accessible through the following URL:
+`/people/110e8400-e29b-11d4-a716-446655440000`. Note that the property identifying our resource is named `code`.
 
-Let's create a `Provider` for the `Person` entity:
+Let's create a `Provider` for the `Person` resource:
 
 ```php
 <?php
-// api/src/State/PersonProvider.php
+// api/src/State/PersonProvider.php with Symfony or app/State/PersonProvider.php with Laravel
 
 namespace App\State;
 
-use App\Entity\Person;
+use App\ApiResource\Person;
 use ApiPlatform\Metadata\Operation;
 use ApiPlatform\State\ProviderInterface;
 use App\Uuid;
@@ -92,7 +94,7 @@ This case is covered by an URI variable transformer:
 
 ```php
 <?php
-// api/src/Identifier/UuidUriVariableTransformer.php
+// api/src/Identifier/UuidUriVariableTransformer.php with Symfony or app/Identifier/UuidUriVariableTransformer.php with Laravel 
 namespace App\Identifier;
 
 use ApiPlatform\Api\UriVariableTransformerInterface;
@@ -139,12 +141,15 @@ final class UuidUriVariableTransformer implements UriVariableTransformerInterfac
 }
 ```
 
-Tag this service as an `api_platform.uri_variables.transformer`:
+Tag this service as an `api_platform.uri_variables.transformer` using one of the configurations below:
+
+### Tag the Service using Symfony
 
 <code-selector>
 
 ```yaml
 # api/config/services.yaml
+# The YAML syntax is only supported for Symfony
 
 services:
   App\Identifier\UuidUriVariableTransformer:
@@ -153,12 +158,36 @@ services:
 ```
 
 ```xml
+<!-- The XML syntax is only supported for Symfony -->
+
   <service id="App\Identifier\UuidUriVariableTransformer" class="App\Identifier\UuidUriVariableTransformer" public="false">
       <tag name="api_platform.uri_variables.transformer" />
   </service>
 ```
 
 </code-selector>
+
+Your `PersonProvider` will now work as expected!
+
+### Tag the Service using Laravel
+
+```php
+<?php
+
+namespace App\Providers;
+
+use App\Identifier\UuidUriVariableTransformer;
+use ApiPlatform\Metadata\UriVariableTransformerInterface;
+use Illuminate\Support\ServiceProvider;
+
+class AppServiceProvider extends ServiceProvider
+{
+    public function register(): void
+    {
+        $this->app->tag([UuidUriVariableTransformer::class], UriVariableTransformerInterface::class);
+    }
+}
+```
 
 Your `PersonProvider` will now work as expected!
 

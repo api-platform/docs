@@ -16,9 +16,13 @@ Then, the Mercure hub dispatches the updates to all connected clients using [Ser
 Mercure support is already installed, configured and enabled in [the API Platform Symfony variant](../symfony/index.md).
 If you use the distribution, you have nothing more to do, and you can skip to the next section.
 
-If you have installed API Platform using another method (such as `composer require api`), you need to install [a Mercure hub](https://mercure.rocks/docs/getting-started) and the Symfony MercureBundle.
+If you installed API Platform using another method (e.g., `composer require api`), you will need to set up the following:
 
-[Learn how to install and configure MercureBundle manually on the Symfony website](https://symfony.com/doc/current/mercure.html)
+1. A [Mercure hub](https://mercure.rocks/docs/getting-started).
+
+2. One of the following, depending on your framework:
+    - For Symfony users: the [MercureBundle](https://symfony.com/doc/current/mercure.html).
+    - For Laravel users: the [Laravel Mercure Broadcaster](https://github.com/mvanduijker/laravel-mercure-broadcaster).
 
 ## Pushing the API Updates
 
@@ -26,8 +30,8 @@ Use the `mercure` attribute to hint API Platform that it must dispatch the updat
 
 ```php
 <?php
-// api/src/Entity/Book.php
-namespace App\Entity;
+// api/src/ApiResource/Book.php with Symfony or app/ApiResource/Book.php with Laravel
+namespace App\ApiResource;
 
 use ApiPlatform\Metadata\ApiResource;
 
@@ -38,8 +42,8 @@ class Book
 }
 ```
 
-Then, every time an object of this type is created, updated or deleted, the new version is sent to all connected clients through the Mercure hub.
-If the resource has been deleted, only the (now deleted) IRI of the resource is sent to the clients.
+Then, every time an object of this type is created, updated or deleted, the new version is sent to all connected clients
+through the Mercure hub. If the resource has been deleted, only the (now deleted) IRI of the resource is sent to the clients.
 
 In addition, API Platform automatically adds a `Link` HTTP header to all responses related to this resource class.
 This header allows smart clients to automatically discover the Mercure hub.
@@ -61,8 +65,8 @@ Then, use options to mark the published updates as privates:
 
 ```php
 <?php
-// api/src/Entity/Book.php
-namespace App\Entity;
+// api/src/ApiResource/Book.php with Symfony or app/ApiResource/Book.php with Laravel
+namespace App\ApiResource;
 
 use ApiPlatform\Metadata\ApiResource;
 
@@ -73,12 +77,13 @@ class Book
 }
 ```
 
-It's also possible to execute an _expression_ (using the [Symfony Expression Language component](https://symfony.com/doc/current/components/expression_language.html)), to generate the options dynamically:
+It's also possible to execute an _expression_ (using the [Symfony Expression Language component](https://symfony.com/doc/current/components/expression_language.html)),
+to generate the options dynamically:
 
 ```php
 <?php
-// api/src/Entity/Book.php
-namespace App\Entity;
+// api/src/ApiResource/Book.php with Symfony or app/ApiResource/Book.php with Laravel
+namespace App\ApiResource;
 
 use ApiPlatform\Metadata\ApiResource;
 
@@ -104,14 +109,19 @@ In addition to `private`, the following options are available:
 
 ## Dispatching Restrictive Updates (Security Mode)
 
-Use `iri` (iriConverter) and `escape` (rawurlencode) functions to add an alternative topic, in order to restrict a subscriber with `topic_selector` to receive only publications that are authorized (partner match).
+Use `iri` (iriConverter) and `escape` (rawurlencode) functions to add an alternative topic, in order to restrict a subscriber
+with `topic_selector` to receive only publications that are authorized (partner match).
 
-> Let's say that a subscriber wants to receive updates concerning all book resources it has access to. The subscriber can use the topic selector `https://example.com/books/{id}` as value of the topic query parameter.
-> Adding this same URI template to the mercure.subscribe claim of the JWS presented by the subscriber to the hub would allow this subscriber to receive all updates for all book resources. It is not what we want here: this subscriber is only authorized to access some of these resources.
+> Let's say that a subscriber wants to receive updates concerning all book resources it has access to. The subscriber
+> can use the topic selector `https://example.com/books/{id}` as value of the topic query parameter.
+> Adding this same URI template to the mercure.subscribe claim of the JWS presented by the subscriber to the hub would
+> allow this subscriber to receive all updates for all book resources. It is not what we want here: this subscriber is
+> only authorized to access some of these resources.
 >
 > To solve this problem, the mercure.subscribe claim could contain a topic selector such as: `https://example.com/users/foo/{?topic}`.
 >
-> The publisher could then take advantage of the previously described behavior by publishing a private update having `https://example.com/books/1` as canonical topic and `https://example.com/users/foo/?topic=https%3A%2F%2Fexample.com%2Fbooks%2F1` as alternate topic.
+> The publisher could then take advantage of the previously described behavior by publishing a private update having
+> `https://example.com/books/1` as canonical topic and `https://example.com/users/foo/?topic=https%3A%2F%2Fexample.com%2Fbooks%2F1` as alternate topic.
 >
 > —[https://mercure.rocks/spec#subscribers](https://mercure.rocks/spec#subscribers)
 
@@ -119,12 +129,12 @@ Below is an example using the `topics` option:
 
 ```php
 <?php
-// api/src/Entity/Book.php
-namespace App\Entity;
+// api/src/ApiResource/Book.php with Symfony or app/ApiResource/Book.php with Laravel
+namespace App\ApiResource;
 
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Api\UrlGeneratorInterface;
-use App\Entity\User;
+use App\ApiResource\User;
 
 #[ApiResource(
     mercure: [
@@ -153,11 +163,11 @@ Using an _expression_ function:
 
 ```php
 <?php
-// api/src/Entity/Book.php
-namespace App\Entity;
+// api/src/ApiResource/Book.php with Symfony or app/ApiResource/Book.php with Laravel
+namespace App\ApiResource;
 
 use ApiPlatform\Metadata\ApiResource;
-use App\Entity\User;
+use App\ApiResource\User;
 
 #[ApiResource(
     mercure: 'object.getMercureOptions()',

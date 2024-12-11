@@ -17,18 +17,18 @@ Before submitting your issue:
 
 ## Code of Conduct
 
-By contributing to this project, you agree to abide by our [Code of Conduct](https://github.com/api-platform/docs#contributor-code-of-conduct). We expect all contributors to foster a welcoming and inclusive environment.
+By contributing to this project, you agree to abide by our [Code of Conduct](https://github.com/api-platform/docs#coc-ov-file). We expect all contributors to foster a welcoming and inclusive environment.
 
 ## How to Contribute
 
 1. Fork this repository by clicking the "Fork" button at the top right of the `api-platform/docs` repository page.
 
 2. Clone the forked repository to your local machine:
-   ```bash
+   ```console
      git clone https://github.com/your-username/repository-name.git
    ```
 3. Create a new branch for your contribution:
-   ```bash
+   ```console
      git switch -c docs-your-branch-name
    ```
 4. Commit and push your changes

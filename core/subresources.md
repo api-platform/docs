@@ -5,8 +5,8 @@ In API Platform you can declare as many `ApiResource` as you want on a PHP class
 creating Subresources.
 
 Subresources work well by implementing your own state [providers](./state-providers.md)
-or [processors](./state-processors.md). In API Platform we provide a working Doctrine layer for
-subresources providing you add the correct configuration for URI Variables.
+or [processors](./state-processors.md). In API Platform, we provide functional Doctrine and Eloquent layers for
+subresources, as long as the correct configuration for URI variables is added.
 
 ## URI Variables Configuration
 
@@ -14,9 +14,12 @@ URI Variables are configured via the `uriVariables` node on an `ApiResource`. It
 present in your URI, `/companies/{companyId}/employees/{id}` has two URI variables `companyId` and `id`.
 For each of these, we need to create a `Link` between the previous and the next node, in this example the link between a Company and an Employee.
 
-If you're using the Doctrine implementation, queries are automatically built using the provided links.
+If you're using the Doctrine or the Eloquent implementation, queries are automatically built using the provided links.
 
 ### Answer to a Question
+
+> [!NOTE]
+> In Symfony we use the term “entities”, while the following documentation is mostly for Laravel “models”.
 
 For this example we have two classes, a Question and an Answer. We want to find the Answer to
 the Question about the Universe using the following URI: `/question/42/answer`.
@@ -84,6 +87,7 @@ class Question
 ```
 
 ```yaml
+# The YAML syntax is only supported for Symfony
 # api/config/api_platform/resources.yaml
 resources:
   App\Entity\Answer: ~
@@ -92,6 +96,7 @@ resources:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" ?>
+<!--The XML syntax is only supported for Symfony-->
 <!-- api/config/api_platform/resources.xml -->
 
 <resources xmlns="https://api-platform.com/schema/metadata/resources-3.0"
@@ -140,6 +145,7 @@ class Answer
 ```
 
 ```yaml
+# The YAML syntax is only supported for Symfony
 # api/config/api_platform/resources.yaml
 resources:
   App\Entity\Answer:
@@ -155,6 +161,7 @@ resources:
 ```
 
 ```xml
+<!--The XML syntax is only supported for Symfony-->
 <resources xmlns="https://api-platform.com/schema/metadata/resources-3.0"
            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
            xsi:schemaLocation="https://api-platform.com/schema/metadata/resources-3.0
@@ -199,6 +206,7 @@ If we had a `relatedQuestions` property on the `Answer` we could retrieve the co
 ```
 
 ```yaml
+#The YAML syntax is only supported for Symfony
 # api/config/api_platform/resources.yaml
 resources:
   App\Entity\Question:
@@ -212,6 +220,7 @@ resources:
 ```
 
 ```xml
+<!--The XML syntax is only supported for Symfony-->
 <resource class="App\Entity\Question" uriTemplate="/answers/{id}/related_questions.{_format}">
     <uriVariables>
         <uriVariable parameterName="id" fromClass="App\Entity\Answer" fromProperty="relatedQuestions"/>
@@ -227,6 +236,9 @@ resources:
 </code-selector>
 
 ### Company Employee's
+
+> [!NOTE]
+> In Symfony we use the term “entities”, while the following documentation is mostly for Laravel “models”.
 
 Note that in this example, we declared an association using Doctrine only between Employee and Company using a ManyToOne. There is no inverse association hence the use of `toProperty` in the URI Variables definition.
 
@@ -310,7 +322,7 @@ class Company
 }
 ```
 
-We did not define any Doctrine annotation here and if we want things to work properly with GraphQL, we need to map the `employees` field as a Link to the class `Employee` using the property `company`.
+We did not define any Doctrine or Eloquent annotation here and if we want things to work properly with GraphQL, we need to map the `employees` field as a Link to the class `Employee` using the property `company`.
 
 As a general rule, if the property we want to create a link from is in the `fromClass`, use `fromProperty`, if not, use `toProperty`.
 
@@ -334,6 +346,9 @@ class Company {
 ```
 
 ## Security
+
+> [!WARNING]
+> This is not yet available with Laravel, you're welcome to contribute [on GitHub](https://github.com/api-platform/core)
 
 In order to use Symfony's built-in security system on subresources the security option of the `Link` attribute can be used.
 

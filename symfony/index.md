@@ -1,4 +1,4 @@
-# Getting Started With API Platform for Symfony
+# Getting Started With API Platform with Symfony
 
 ![The welcome page](images/api-platform-3.0-welcome.png)
 
@@ -19,8 +19,8 @@ API Platform is shipped with **[Docker](../deployment/docker-compose.md)** and *
 The easiest and most powerful way to get started is [to download the API Platform distribution](https://github.com/api-platform/api-platform/releases). It contains:
 
 - the API skeleton, including [the Core library](../core/index.md), [the Symfony framework](https://symfony.com/) ([optional](../core/bootstrap.md)) and [the Doctrine ORM](https://www.doctrine-project.org/projects/orm.html) ([optional](../core/extending.md))
-- [the client scaffolding tool](../create-client/) to generate [Next.js](../create-client/) web applications from the API documentation ([Nuxt](https://nuxt.com/), [Vue](https://vuejs.org/), [Create React App](https://reactjs.org), [React Native](https://reactnative.dev/), [Quasar](https://quasar.dev/) and [Vuetify](https://vuetifyjs.com/) are also supported)
-- [a beautiful admin interface](../admin/), built on top of React Admin, dynamically created by parsing the API documentation
+- [the client scaffolding tool](../create-client/index.md) to generate [Next.js](../create-client/index.md) web applications from the API documentation ([Nuxt](https://nuxt.com/), [Vue](https://vuejs.org/), [Create React App](https://reactjs.org), [React Native](https://reactnative.dev/), [Quasar](https://quasar.dev/) and [Vuetify](https://vuetifyjs.com/) are also supported)
+- [a beautiful admin interface](../admin/index.md), built on top of React Admin, dynamically created by parsing the API documentation
 - all you need to [create real-time and async APIs using the Mercure protocol](../core/mercure.md)
 - a [Docker](../deployment/docker-compose.md) definition to start a working development environment in a single command, providing containers for the API and the Next.js web application
 - a [Helm](https://helm.sh/) chart to deploy the API in any [Kubernetes](../deployment/kubernetes.md) cluster
@@ -146,6 +146,11 @@ There is also a shipped [Doctrine MongoDB ODM](https://www.doctrine-project.org/
 That being said, keep in mind that API Platform is 100% independent of the persistence system. You can use the one(s) that
 best suit(s) your needs (including NoSQL databases or remote web services) by implementing the [right interfaces](../core/state-providers.md). API Platform even supports using several persistence
 systems together in the same project.
+
+> [!TIP]
+> The `php` container is where your API app stands. Prefixing a command by `docker compose exec php` allows executing the
+> given command in this container. You may want [to create an alias](https://www.linfo.org/alias.html) to make your life easier.
+> So, for example, you could run a command like this: `docker compose exec php <command>`.
 
 ### Using Symfony CLI
 
@@ -451,30 +456,24 @@ Modify these files as described in these patches:
 **Tip**: you can also use Symfony [MakerBundle](https://symfonycasts.com/screencast/symfony-fundamentals/maker-command?cid=apip) thanks to the `--api-resource` option:
 
 ```console
-docker compose exec php \
-    bin/console make:entity --api-resource
+bin/console make:entity --api-resource
 ```
 
-Doctrine's [attributes](https://www.doctrine-project.org/projects/doctrine-orm/en/latest/reference/attributes-reference.html) map these entities to tables in the database.
-Mapping through [attributes](https://www.doctrine-project.org/projects/doctrine-orm/en/latest/reference/attributes-reference.html) is also supported, if you prefer those.
+Doctrine's [attributes](https://www.doctrine-project.org/projects/doctrine-orm/en/current/reference/attributes-reference.html) map these entities to tables in the database.
+Mapping through [attributes](https://www.doctrine-project.org/projects/doctrine-orm/en/current/reference/attributes-reference.html) is also supported, if you prefer those.
 Both methods are convenient as they allow grouping the code and the configuration but, if you want to decouple classes from their metadata, you can switch to XML or YAML mappings.
 They are supported as well.
 
-Learn more about how to map entities with the Doctrine ORM in [the project's official documentation](https://docs.doctrine-project.org/projects/doctrine-orm/en/latest/reference/association-mapping.html)
+Learn more about how to map entities with the Doctrine ORM in [the project's official documentation](https://docs.doctrine-project.org/projects/doctrine-orm/en/current/reference/association-mapping.html)
 or in Kévin's book "[Persistence in PHP with the Doctrine ORM](https://www.amazon.fr/gp/product/B00HEGSKYQ/ref=as_li_tl?ie=UTF8&camp=1642&creative=6746&creativeASIN=B00HEGSKYQ&linkCode=as2&tag=kevidung-21)".
 
 Now, delete the file `api/src/Entity/Greeting.php`. This demo entity isn't useful anymore.
 Finally, generate a new database migration using [Doctrine Migrations](https://symfony.com/doc/current/doctrine.html#migrations-creating-the-database-tables-schema) and apply it:
 
 ```console
-docker compose exec php \
-    bin/console doctrine:migrations:diff
-docker compose exec php \
-    bin/console doctrine:migrations:migrate
+bin/console doctrine:migrations:diff
+bin/console doctrine:migrations:migrate
 ```
-
-The `php` container is where your API app stands. Prefixing a command by `docker compose exec php` allows executing the
-given command in this container. You may want [to create an alias](https://www.linfo.org/alias.html) to make your life easier.
 
 **We now have a working API with read and write capabilities!**
 
@@ -667,13 +666,11 @@ Isn't API Platform a REST **and** GraphQL framework? That's true! GraphQL suppor
 need to install the [graphql-php](https://webonyx.github.io/graphql-php/) library. Run the following command:
 
 ```console
-docker compose exec php sh -c '
-    composer require webonyx/graphql-php
-    bin/console cache:clear
-'
+composer require api-platform/graphql
 ```
 
-You now have a GraphQL API! Open `https://localhost/graphql` (or `https://localhost/api/graphql` if you used Symfony Flex to install API Platform) to play with it using the nice [GraphiQL](https://github.com/graphql/graphiql)
+You now have a GraphQL API! Open `https://localhost/graphql` (or `https://localhost/api/graphql` if you used Symfony Flex
+to install API Platform) to play with it using the nice [GraphiQL](https://github.com/graphql/graphiql)
 UI that is shipped with API Platform:
 
 ![GraphQL endpoint](images/api-platform-2.6-graphql.png)

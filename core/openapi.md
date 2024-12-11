@@ -15,44 +15,44 @@ API documentation in a user friendly way.
 
 ## Using the OpenAPI Command
 
+> [!WARNING]
+> These commands are not yet available with Laravel, you're welcome to contribute [on GitHub](https://github.com/api-platform/core)
+
 You can also dump an OpenAPI specification for your API.
 
 OpenAPI, JSON format:
 
 ```console
-docker compose exec php \
-    bin/console api:openapi:export
+bin/console api:openapi:export
 ```
 
 OpenAPI, YAML format:
 
 ```console
-docker compose exec php \
-    bin/console api:openapi:export --yaml
+bin/console api:openapi:export --yaml
 ```
 
 Create a file containing the specification:
 
 ```console
-docker compose exec php \
-    bin/console api:openapi:export --output=swagger_docs.json
+bin/console api:openapi:export --output=swagger_docs.json
 ```
 
 If you want to use the old OpenAPI v2 (Swagger) JSON format, use:
 
 ```console
-docker compose exec php \
-    bin/console api:swagger:export
+bin/console api:swagger:export
 ```
 
 It is also possible to use OpenAPI v3.0.0 format:
 
 ```console
-docker compose exec php \
-    bin/console api:openapi:export --spec-version=3.0.0
+bin/console api:openapi:export --spec-version=3.0.0
 ```
 
 ## Overriding the OpenAPI Specification
+
+### Overriding the OpenAPI Specification with Symfony
 
 Symfony allows to [decorate services](https://symfony.com/doc/current/service_container/service_decoration.html), here we
 need to decorate `api_platform.openapi.factory`.
@@ -112,6 +112,78 @@ The impact on the swagger-ui is the following:
 
 ![Swagger UI](images/swagger-ui-modified.png)
 
+### Overriding the OpenAPI Specification with Laravel
+
+Laravel allows to [decorate services](https://laravel.com/docs/container#extending-bindings), here we
+need to decorate `api_platform.openapi.factory`.
+
+In the following example, we will see how to override the title and the base path URL of the Swagger documentation and add a custom filter for
+the `GET` operation of `/foos` path.
+
+```php
+<?php
+
+namespace App\Providers;
+
+use Illuminate\Support\ServiceProvider;
+use ApiPlatform\OpenApi\Factory\OpenApiFactoryInterface;
+use App\OpenApi\OpenApiFactory;
+
+class AppServiceProvider extends ServiceProvider
+{
+    public function register(): void
+    {
+        $this->app->extend(OpenApiFactoryInterface::class, function (OpenApiFactoryInterface $factory) {
+            return new OpenApiFactory($factory);
+        });
+    }
+}
+```
+
+```php
+<?php
+namespace App\OpenApi;
+
+use ApiPlatform\OpenApi\Factory\OpenApiFactoryInterface;
+use ApiPlatform\OpenApi\OpenApi;
+use ApiPlatform\OpenApi\Model;
+
+class OpenApiFactory implements OpenApiFactoryInterface
+{
+
+    public function __construct(private OpenApiFactoryInterface $decorated)
+    {
+    }
+
+    public function __invoke(array $context = []): OpenApi
+    {
+        $openApi = $this->decorated->__invoke($context);
+        $pathItem = $openApi->getPaths()->getPath('/api/grumpy_pizzas/{id}');
+        $operation = $pathItem->getGet();
+
+        $openApi->getPaths()->addPath('/api/grumpy_pizzas/{id}', $pathItem->withGet(
+            $operation->withParameters(array_merge(
+                $operation->getParameters(),
+                [new Model\Parameter('fields', 'query', 'Fields to remove of the output')]
+            ))
+        ));
+
+        $openApi = $openApi->withInfo((new Model\Info('New Title', 'v2', 'Description of my custom API'))->withExtensionProperty('info-key', 'Info value'));
+        $openApi = $openApi->withExtensionProperty('key', 'Custom x-key value');
+        $openApi = $openApi->withExtensionProperty('x-value', 'Custom x-value value');
+
+        // to define base path URL
+        $openApi = $openApi->withServers([new Model\Server('https://foo.bar')]);
+
+        return $openApi;
+    }
+}
+```
+
+The impact on the swagger-ui is the following:
+
+![Swagger UI](images/swagger-ui-modified.png)
+
 ## Using the OpenAPI and Swagger Contexts
 
 Sometimes you may want to change the information included in your OpenAPI documentation.
@@ -124,54 +196,68 @@ The following configuration will give you total control over your OpenAPI defini
 
 ```php
 <?php
-// api/src/Entity/Product.php
-namespace App\Entity;
+// api/src/ApiResource/Product.php with Symfony or app/ApiResource/Product.php with Laravel
+namespace App\ApiResource;
 
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\ApiProperty;
-use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
-#[ORM\Entity]
 #[ApiResource]
 class Product // The class name will be used to name exposed resources
 {
-    #[ORM\Id, ORM\Column, ORM\GeneratedValue]
+    #[ApiProperty(
+        identifier: true,
+        description: 'Unique identifier for the product.',
+        openapiContext: [
+            'type' => 'integer',
+            'example' => 1
+        ]
+    )]
+    #[Assert\NotBlank]
     private ?int $id = null;
 
     /**
      * @param string $name A name property - this description will be available in the API documentation too.
      *
      */
-    #[ORM\Column]
     #[Assert\NotBlank]
     #[ApiProperty(
+        description: 'A name property - this description will be available in the API documentation too.',
         openapiContext: [
             'type' => 'string',
             'enum' => ['one', 'two'],
             'example' => 'one'
         ]
     )]
+    #[Assert\NotBlank]
     public string $name;
 
-    #[ORM\Column(type: "datetime")]
-    #[Assert\DateTime]
     #[ApiProperty(
+        description: 'A timestamp property.',
         openapiContext: [
             'type' => 'string',
-            'format' => 'date-time'
+            'format' => 'date-time',
         ]
     )]
-    public $timestamp;
+    #[Assert\DateTime]
+    public string $timestamp;
 
-    // ...
+    // Optionnel : Ajout d'un constructeur pour faciliter l'initialisation
+    public function __construct(string $name, string $timestamp)
+    {
+        $this->name = $name;
+        $this->timestamp = $timestamp;
+    }
 }
+
 ```
 
 ```yaml
 # api/config/api_platform/properties.yaml
+# The YAML syntax is only supported for Symfony
 properties:
-  App\Entity\Product:
+  App\ApiResource\Product:
     name:
       openapiContext:
         type: string
@@ -186,12 +272,12 @@ properties:
 ```xml
 <?xml version="1.0" encoding="UTF-8" ?>
 <!-- api/config/api_platform/properties.xml -->
-
+<!-- The XML syntax is only supported for Symfony -->
 <properties xmlns="https://api-platform.com/schema/metadata/properties-3.0"
            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
            xsi:schemaLocation="https://api-platform.com/schema/metadata/properties-3.0
            https://api-platform.com/schema/metadata/properties-3.0.xsd">
-    <property resource="App\Entity\Product" name="name">
+    <property resource="App\ApiResource\Product" name="name">
         <openapiContext>
             <values>
                 <value name="type">type</value>
@@ -205,7 +291,7 @@ properties:
             </values>
         </openapiContext>
     </property>
-    <property resource="App\Entity\Product" name="timestamp">
+    <property resource="App\ApiResource\Product" name="timestamp">
         <openapiContext>
             <values>
                 <value name="type">string</value>
@@ -272,8 +358,8 @@ Using the `openapi` boolean option disables this operation from the OpenAPI docu
 
 ```php
 <?php
-// api/src/Entity/Product.php
-namespace App\Entity;
+// api/src/ApiResource/Product.php with Symfony or app/ApiResource/Product.php with Laravel
+namespace App\ApiResource;
 
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\GetCollection;
@@ -291,6 +377,7 @@ class Product
 
 ```yaml
 # api/config/api_platform/resources.yaml
+# The YAML syntax is only supported for Symfony
 resources:
   App\Entity\Product:
     operations:
@@ -301,6 +388,7 @@ resources:
 ```xml
 <?xml version="1.0" encoding="UTF-8" ?>
 <!-- api/config/api_platform/resources.xml -->
+<!-- The XML syntax is only supported for Symfony -->
 
 <resources xmlns="https://api-platform.com/schema/metadata/resources-3.0"
            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -320,9 +408,8 @@ Note: as your route is not exposed, you may want to return a HTTP 404 if it's ca
 
 ## Changing the Name of a Definition
 
-API Platform generates a definition name based on the serializer `groups` defined
-in the (`de`)`normalizationContext`. It's possible to override the name
-thanks to the `openapi_definition_name` option:
+API Platform generates a definition name based on the serializer `groups` defined in the (`de`)`normalizationContext`.
+It's possible to override the name thanks to the `openapi_definition_name` option:
 
 ```php
 use ApiPlatform\Metadata\ApiResource;
@@ -361,8 +448,8 @@ You also have full control over both built-in and custom operations documentatio
 
 ```php
 <?php
-// api/src/Entity/Rabbit.php
-namespace App\Entity;
+// api/src/ApiResource/Rabbit.php with Symfony or app/ApiResource/Rabbit.php with Laravel
+namespace App\ApiResource;
 
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Post;
@@ -403,8 +490,9 @@ class Rabbit
 ```
 
 ```yaml
+# The YAML syntax is only supported for Symfony
 resources:
-  App\Entity\Rabbit:
+  App\ApiResource\Rabbit:
     operations:
       create_rabbit:
         class: ApiPlatform\Metadata\Post
@@ -431,6 +519,8 @@ resources:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" ?>
+<!-- The XML syntax is only supported for Symfony -->
+
 <resources xmlns="https://api-platform.com/schema/metadata/resources-3.0"
            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
            xsi:schemaLocation="https://api-platform.com/schema/metadata/resources-3.0
@@ -487,6 +577,8 @@ resources:
 
 ## Disabling Swagger UI or ReDoc
 
+### Disabling Swagger UI or ReDoc with Symfony
+
 To disable Swagger UI (ReDoc will be shown by default):
 
 ```yaml
@@ -505,6 +597,30 @@ api_platform:
   enable_re_doc: false
 ```
 
+### Disabling Swagger UI or ReDoc with Laravel
+
+To disable Swagger UI (ReDoc will be shown by default):
+
+```php
+<?php
+// config/api-platform.php
+return [
+    // ....
+    'enable_swagger_ui' => false,
+];
+```
+
+To disable ReDoc:
+
+```php
+<?php
+// config/api-platform.php
+return [
+    // ....
+    'enable_re_doc' => false,
+];
+```
+
 ## Changing the Location of Swagger UI
 
 By default, the Swagger UI is available at the API location (when the HTML format is asked) and at the route `/docs`.
@@ -513,20 +629,39 @@ You may want to change its route and/or disable it at the API location.
 
 ### Changing the Route
 
+#### Changing the Route with Symfony
+
 Manually register the Swagger UI controller:
 
 ```yaml
 # app/config/routes.yaml
 api_doc:
   path: /api_documentation
-  controller: api_platform.swagger_ui.action
+  controller: api_platform.swagger_ui.processor
+```
+
+Change `/api_documentation` to the URI you wish Swagger UI to be accessible on.
+
+#### Changing the Route with Laravel
+
+Manually register the Swagger UI controller:
+
+```php
+// routes/web.php
+use Illuminate\Support\Facades\Route;
+use ApiPlatform\Laravel\State\SwaggerUiProcessor;
+
+Route::post('/api_documentation', SwaggerUiProcessor::class)
+    ->name('api_doc');
 ```
 
 Change `/api_documentation` to the URI you wish Swagger UI to be accessible on.
 
 ### Disabling Swagger UI at the API Location
 
-To disable the Swagger UI at the API location, disable both Swagger UI and ReDoc:
+To disable the Swagger UI at the API location, disable both Swagger UI and ReDoc.
+
+With Symfony use:
 
 ```yaml
 # api/config/packages/api_platform.yaml
@@ -536,9 +671,24 @@ api_platform:
   enable_re_doc: false
 ```
 
+Or with Laravel use:
+
+```php
+<?php
+// config/api-platform.php
+return [
+    // ....
+    'enable_swagger_ui' => false,
+    'enable_re_doc' => false,
+];
+```
+
 If you have manually registered the Swagger UI controller, the Swagger UI will still be accessible at the route you have chosen.
 
 ## Using a custom Asset Package in Swagger UI
+
+> [!WARNING]
+> This feature is not yet available with Laravel, you're welcome to contribute [on GitHub](https://github.com/api-platform/core)
 
 Sometimes you may want to use a different [Asset Package](https://symfony.com/doc/current/reference/configuration/framework.html#packages) for the Swagger UI.
 In this way you'll have more fine-grained control over the asset URL generations.
@@ -592,9 +742,12 @@ The flag `--api-gateway` is also available through the command-line.
 
 ## OAuth
 
+### OAuth using Symfony
+
 If you implemented OAuth on your API, you should configure OpenApi's authorization using API Platform's configuration:
 
 ```yaml
+# config/packages/api_platform.yaml
 api_platform:
   oauth:
     # To enable or disable OAuth.
@@ -624,7 +777,31 @@ api_platform:
 
 Note that `clientId` and `clientSecret` are being used by the SwaggerUI if enabled.
 
+### OAuth using Laravel
+
+If you implemented OAuth on your API, you should configure OpenApi's authorization using API Platform's configuration:
+
+```php
+<?php
+// config/api-platform.php
+return [
+    // ....
+    'oauth' => [
+        'enabled' => false, // To enable or disable OAuth.
+        'clientId' => '', // The OAuth client ID.
+        'clientSecret' => '', // The OAuth client secret. 
+        'type' => 'oauth2', // The OAuth flow grant type.
+        'authorizationUrl' => '/oauth/v2/auth' // The OAuth authentication url.
+        'scopes' => [], // The OAuth scopes.
+    ],
+];
+```
+
+Note that `clientId` and `clientSecret` are being used by the SwaggerUI if enabled.
+
 ### Configure the OAuth Scopes Option
+
+#### Configure the OAuth Scopes Option using Symfony
 
 The `api_platform.oauth.scopes` option requires an array value with the scopes name and description. For example:
 
@@ -638,12 +815,40 @@ api_platform:
       phone: 'This scope value requests access to the phone_number and phone_number_verified Claims.'
 ```
 
-**Note:** if you're using an OpenID Connect server (such as Keycloak or Auth0), the `openid` scope **must** be set according
-to the [OpenID Connect specification](https://openid.net/specs/openid-connect-core-1_0.html).
+> [!NOTE]
+> If you're using an OpenID Connect server (such as Keycloak or Auth0), the `openid` scope **must** be set according
+> to the [OpenID Connect specification](https://openid.net/specs/openid-connect-core-1_0.html).
+
+#### Configure the OAuth Scopes Option using Laravel
+
+The `api_platform.oauth.scopes` option requires an array value with the scopes name and description. For example:
+
+```php
+<?php
+// config/api-platform.php
+return [
+    // ....
+    'oauth' => [
+        'scopes' => [
+            'profile' => "This scope value requests access to the End-User's default profile Claims, which are: name, family_name, given_name, middle_name, nickname, preferred_username, profile, picture, website, gender, birthdate, zoneinfo, locale, and updated_at.",
+            'email' => 'This scope value requests access to the email and email_verified Claims.',
+            'address' => 'This scope value requests access to the address Claim.',
+            'phone' => 'This scope value requests access to the phone_number and phone_number_verified Claims.',
+        ]
+    ],
+];
+```
+
+> [!NOTE]
+> If you're using an OpenID Connect server (such as Keycloak or Auth0), the `openid` scope **must** be set according
+> to the [OpenID Connect specification](https://openid.net/specs/openid-connect-core-1_0.html).
 
 ## Info Object
 
-The [info object](https://swagger.io/specification/#info-object) provides metadata about the API like licensing information or a contact. You can specify this information using API Platform's configuration:
+The [info object](https://swagger.io/specification/#info-object) provides metadata about the API like licensing
+information or a contact. You can specify this information using API Platform's configuration below:
+
+### Info Object Configuration using Symfony  
 
 ```yaml
 api_platform:
@@ -673,4 +878,30 @@ api_platform:
       name:
       # URL to the license used for the API. MUST be in the format of a URL.
       url:
+```
+
+### Info Object Configuration using Laravel
+
+```php
+<?php
+// config/api-platform.php
+return [
+    // ....
+    'title' => 'API title', // The title of the API.
+    'description' => 'API description', // The description of the API.
+    'version' => '0.0.0', // The version of the API.
+    //...
+    'openapi' => [
+        'contact' => [ // The contact information for the exposed API.
+            'name' => '', // The identifying name of the contact person/organization.
+            'url' => '', // The URL pointing to the contact information. MUST be in the format of a URL.
+            'email' => '', // The email address of the contact person/organization. MUST be in the format of an email address.
+        ],
+        'termsOfService' => '', // A URL to the Terms of Service for the API. MUST be in the format of a URL.
+        'license' => [ // The license information for the exposed API.
+            'name' => '', // The license name used for the API.
+            'url' => '', // URL to the license used for the API. MUST be in the format of a URL.
+        ]
+    ],
+];
 ```

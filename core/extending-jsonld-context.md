@@ -5,13 +5,14 @@
 <p align="center" class="symfonycasts"><a href="https://symfonycasts.com/screencast/api-platform/json-ld?cid=apip"><img src="../symfony/images/symfonycasts-player.png" alt="JSON-LD screencast"><br>Watch the JSON-LD screencast</a></p>
 
 API Platform provides the possibility to extend the JSON-LD context of properties. This allows you to describe JSON-LD-typed
-values, inverse properties using the `@reverse` keyword and you can even overwrite the `@id` property this way. Everything you define
-within the following annotation will be passed to the context. This provides a generic way to extend the context.
+values, inverse properties using the `@reverse` keyword, and you can even overwrite the `@id` property this way.
+Everything you define within the following annotation will be passed to the context. This provides a generic way to
+extend the context.
 
 ```php
 <?php
-// api/src/Entity/Book.php
-namespace App\Entity;
+// api/src/ApiResource/Book.php with Symfony or app/ApiResource/Book.php with Laravel
+namespace App\ApiResource;
 
 use ApiPlatform\Metadata\ApiProperty;
 use ApiPlatform\Metadata\ApiResource;
@@ -71,8 +72,8 @@ It's also possible to replace the Hydra context used by the documentation genera
 
 ```php
 <?php
-// api/src/Entity/Book.php
-namespace App\Entity;
+// api/src/ApiResource/Book.php with Symfony or app/ApiResource/Book.php with Laravel
+namespace App\ApiResource;
 
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Get;
@@ -88,8 +89,9 @@ class Book
 
 ```yaml
 # api/config/api_platform/resources.yaml
+# The YAML syntax is only supported for Symfony
 resources:
-  App\Entity\Book:
+  App\ApiResource\Book:
     operations:
       ApiPlatform\Metadata\Get:
         hydraContext: { foo: 'bar' }
@@ -98,12 +100,13 @@ resources:
 ```xml
 <?xml version="1.0" encoding="UTF-8" ?>
 <!-- api/config/api_platform/resources.xml -->
+<!-- The XML syntax is only supported for Symfony -->
 
 <resources xmlns="https://api-platform.com/schema/metadata/resources-3.0"
            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
            xsi:schemaLocation="https://api-platform.com/schema/metadata/resources-3.0
            https://api-platform.com/schema/metadata/resources-3.0.xsd">
-    <resource class="App\Entity\Book">
+    <resource class="App\ApiResource\Book">
         <operations>
             <operation class="ApiPlatform\Metadata\Get">
                 <hydraContext>

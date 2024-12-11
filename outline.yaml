@@ -4,16 +4,28 @@ chapters:
     path: symfony
     items:
       - index
+      - validation
+      - security
       - testing
       - debugging
       - caddy
+      - jwt
+      - messenger
+      - user
+      - file-upload
+      - controllers
+      - nelmio-api-doc
+      - migrate-from-fosrestbundle
+      - fosuser-bundle
   - title: "API Platform for Laravel"
     path: laravel
     items:
       - index
+      - testing
       - filters
       - security
       - validation
+      - jwt
   - title: Core
     path: core
     items:
@@ -28,6 +40,8 @@ chapters:
       - state-providers
       - state-processors
       - filters
+      - elasticsearch-filters
+      - doctrine-filters
       - subresources
       - serialization
       - validation
@@ -38,7 +52,6 @@ chapters:
       - default-order
       - performance
       - extensions
-      - messenger
       - dto
       - openapi
       - json-schema
@@ -52,18 +65,11 @@ chapters:
       - identifiers
       - mongodb
       - elasticsearch
-      - controllers
       - events
-      - file-upload
       - jwt
-      - user
       - form-data
-      - angularjs-integration
-      - fosuser-bundle
-      - nelmio-api-doc
       - bootstrap
       - configuration
-      - migrate-from-fosrestbundle
   - title: Schema Generator
     path: schema-generator
     items:

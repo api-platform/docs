@@ -1,4 +1,4 @@
-# User Entity
+# User Entity with Symfony
 
 This documentation is based on the [official Symfony Documentation](https://symfony.com/doc/current/security/user_providers.html) with some API Platform integrations.
 
@@ -219,7 +219,7 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
 ## Creating and Updating User Password
 
 There's no built-in way for hashing the plain password on `POST`, `PUT` or `PATCH`.
-Happily you can use the API Platform [state processors](state-processors.md) for auto-hashing plain passwords.
+Happily you can use the API Platform [state processors](../core/state-processors.md) for auto-hashing plain passwords.
 
 First create a new state processor:
 

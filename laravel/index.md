@@ -243,7 +243,7 @@ Register the state provider:
 namespace App\Providers;
 
 use App\State\BookProvider;
-+use ApiPlatform\State\ProviderInterface;
+use ApiPlatform\State\ProviderInterface;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Support\ServiceProvider;
 
@@ -444,7 +444,7 @@ There's a powerful mechanism inside API Platform to create routes using relation
 
 ## Paginating Data
 
-A must-have feature for APIs is pagination. Without pagination, collection responses quickly become huge and slow,
+A must have feature for APIs is pagination. Without pagination, collection responses quickly become huge and slow,
 and can even lead to crashes (Out of Memory, timeouts...).
 
 Fortunately, the Eloquent state provider provided by API Platform automatically paginates data!
@@ -851,6 +851,15 @@ The generated code contains a list (including pagination), a delete button, a cr
 to make the app usable by people with disabilities.
 
 Checkout [the dedicated documentation](../create-client/index.md).
+
+## Caching
+
+API Platform supports Caching Metadata out of the box. It uses the Laravel cache system to store that information.
+Caching is automatically enabled in production environments (when `APP_DEBUG` is set to `false`).
+
+Calling `php artisan optimize` will cache the metadata and improve the performance of your API drastically.
+
+To clear the cache, use `php artisan optimize:clear`.
 
 ## Hooking Your Own Business Logic
 

@@ -1,9 +1,11 @@
-# Migrate From FOSRestBundle
+# Migrate From FOSRestBundle with Symfony
 
 [FOSRestBundle](https://github.com/FriendsOfSymfony/FOSRestBundle) is a popular bundle to rapidly develop RESTful APIs with Symfony.
 This page provides a guide to help developers migrate from FOSRestBundle to API Platform.
 
-[On 21 September 2021](https://x.com/lsmith/status/1440216817876627459), FOSRestBundle's creators recommended to use API Platform.
+> [!IMPORTANT]  
+> Since [2021](https://x.com/lsmith/status/1440216817876627459), the creators of FOSRestBundle have recommended
+> transitioning to **API Platform** as the preferred solution **for building modern APIs**.
 
 ## Features Comparison
 
@@ -21,7 +23,7 @@ See [The view layer](https://github.com/FriendsOfSymfony/FOSRestBundle/blob/3.x/
 
 Add the `ApiResource` attribute to your entities, and enable the operations you desire inside. By default, every operation is activated.
 
-See [Operations](operations.md).
+See [Operations](../core/operations.md).
 
 ### Make custom controllers
 
@@ -35,7 +37,7 @@ Even though this is not recommended, API Platform allows you to [create custom c
 
 You can use them as you migrate from FOSRestBundle, but you should consider [switching to Symfony Messenger](messenger.md) as it will give you more benefits, such as compatibility with both REST and GraphQL and better performances of your API on big tasks.
 
-See [General Design Considerations](design.md).
+See [General Design Considerations](../core/design.md).
 
 ### Routing system (with native documentation support)
 
@@ -49,7 +51,7 @@ See [Full default annotations](https://github.com/FriendsOfSymfony/FOSRestBundle
 
 Use the `ApiResource` attribute to activate the HTTP methods you need for your entity. By default, all the methods are enabled.
 
-See [Operations](operations.md).
+See [Operations](../core/operations.md).
 
 ### Hook into the handling of the requests
 
@@ -63,7 +65,7 @@ See [Listener support](https://github.com/FriendsOfSymfony/FOSRestBundle/blob/3.
 
 API Platform provides a lot of ways to customize the behavior of your API, depending on what you exactly want to do.
 
-See [Extending API Platform](extending.md) for more details.
+See [Extending API Platform](../core/extending.md) for more details.
 
 ### Customize the formats of the requests and the responses
 
@@ -81,7 +83,7 @@ Both the request and the response body's format can be customized.
 
 You can configure the formats of the API either globally or in specific resources or operations. API Platform provides native support for multiple formats including JSON, XML, CSV, YAML, etc.
 
-See [Content negotiation](content-negotiation.md).
+See [Content negotiation](../core/content-negotiation.md).
 
 ### Name conversion
 
@@ -99,7 +101,7 @@ Both request and response bodies can be converted.
 
 API Platform uses [name converters](https://symfony.com/doc/current/components/serializer.html#component-serializer-converting-property-names-when-serializing-and-deserializing) included in the Serializer component of Symfony. You can create your own by implementing the `NameConverterInterface` provided by Symfony.
 
-See [_Name Conversion_ in The Serialization Process](serialization.md#name-conversion).
+See [_Name Conversion_ in The Serialization Process](../core/serialization.md#name-conversion-for-symfony).
 
 ### Handle errors
 
@@ -113,7 +115,7 @@ See [ExceptionController support](https://github.com/FriendsOfSymfony/FOSRestBun
 
 Map the exceptions to HTTP statuses in the `api_platform.exception_to_status` parameter.
 
-See [Errors Handling](errors.md).
+See [Errors Handling](../core/errors.md).
 
 ### Security
 
@@ -127,7 +129,7 @@ Use the `security` attribute in the `ApiResource` and `ApiProperty` attributes. 
 
 Note you can also use the `security.yml` file if you only need to limit access to specific roles.
 
-See [Security](security.md).
+See [Security](../core/security.md).
 
 ### API versioning
 
@@ -141,4 +143,4 @@ See [API versioning](https://github.com/FriendsOfSymfony/FOSRestBundle/blob/3.x/
 
 API Platform has no native support for API versioning, but instead provides an approach consisting of deprecating resources when needed. It allows a smoother upgrade for clients, as they need to change their code only when it is necessary.
 
-See [Deprecating Resources and Properties](deprecations.md).
+See [Deprecating Resources and Properties](../core/deprecations.md).

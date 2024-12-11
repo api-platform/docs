@@ -1,11 +1,9 @@
-# Testing the API
+# Testing the API with Symfony
 
-Now that you have a functional API, you should write tests to ensure it has no bugs, and to prevent future regressions.
-Some would argue that it's even better to [write tests first](https://martinfowler.com/bliki/TestDrivenDevelopment.html).
+For an introduction to testing using API Platform, refer to the [Core Testing Documentation](../core/testing.md), or access the
+[Laravel Testing Guide](../laravel/testing.md).
 
-API Platform provides a set of helpful testing utilities to write unit tests, functional tests, and to create [test fixtures](https://en.wikipedia.org/wiki/Test_fixture#Software).
-
-Let's learn how to use them!
+Let's learn how to use tests with Symfony!
 
 <p align="center" class="symfonycasts"><a href="https://symfonycasts.com/screencast/api-platform-security/api-tests?cid=apip"><img src="images/symfonycasts-player.png" alt="Tests and Assertions screencast"><br>Watch the Tests & Assertions screencast</a></p>
 
@@ -23,8 +21,7 @@ Before creating your functional tests, you will need a dataset to pre-populate y
 First, install [Foundry](https://github.com/zenstruck/foundry) and [Doctrine/DoctrineFixturesBundle](https://github.com/doctrine/DoctrineFixturesBundle):
 
 ```console
-docker compose exec php \
-    composer require --dev foundry orm-fixtures
+composer require --dev foundry orm-fixtures
 ```
 
 Thanks to Symfony Flex, [DoctrineFixturesBundle](https://github.com/doctrine/DoctrineFixturesBundle) and [Foundry](https://github.com/zenstruck/foundry) are ready to use!
@@ -32,10 +29,8 @@ Thanks to Symfony Flex, [DoctrineFixturesBundle](https://github.com/doctrine/Doc
 Then, create some factories for [the bookstore API you created in the tutorial](index.md):
 
 ```console
-docker compose exec php \
-    bin/console make:factory 'App\Entity\Book'
-docker compose exec php \
-    bin/console make:factory 'App\Entity\Review'
+bin/console make:factory 'App\Entity\Book'
+bin/console make:factory 'App\Entity\Review'
 ```
 
 Improve the default values:
@@ -79,10 +74,8 @@ use function Zenstruck\Foundry\lazy;
 Create some stories:
 
 ```console
-docker compose exec php \
-    bin/console make:story 'DefaultBooks'
-docker compose exec php \
-    bin/console make:story 'DefaultReviews'
+bin/console make:story 'DefaultBooks'
+bin/console make:story 'DefaultReviews'
 ```
 
 ```php
@@ -144,8 +137,7 @@ class AppFixtures extends Fixture
 You can now load your fixtures in the database with the following command:
 
 ```console
-docker compose exec php \
-    bin/console doctrine:fixtures:load
+bin/console doctrine:fixtures:load
 ```
 
 To learn more about fixtures, take a look at the documentation of [Foundry](https://symfony.com/bundles/ZenstruckFoundryBundle/current/index.html).
@@ -162,8 +154,7 @@ If you don't use the distribution, run `composer require --dev symfony/test-pack
 Install [DAMADoctrineTestBundle](https://github.com/dmaicher/doctrine-test-bundle) to reset the database automatically before each test:
 
 ```console
-docker compose exec php \
-    composer require --dev dama/doctrine-test-bundle
+composer require --dev dama/doctrine-test-bundle
 ```
 
 And activate it in the `phpunit.xml.dist` file:
@@ -179,11 +170,11 @@ And activate it in the `phpunit.xml.dist` file:
 </phpunit>
 ```
 
-Optionally, you can install [JSON Schema for PHP](https://github.com/justinrainbow/json-schema) if you want to use the [JSON Schema](https://json-schema.org) test assertions provided by API Platform:
+Optionally, you can install [JSON Schema for PHP](https://github.com/justinrainbow/json-schema) if you want to use the
+[JSON Schema](https://json-schema.org) test assertions provided by API Platform:
 
 ```console
-docker compose exec php \
-    composer require --dev justinrainbow/json-schema
+composer require --dev justinrainbow/json-schema
 ```
 
 Your API is now ready to be functionally tested. Create your test classes under the `tests/` directory.
@@ -345,14 +336,14 @@ There is one caveat though: in some tests, it is necessary to perform multiple r
 All you have to do now is to run your tests:
 
 ```console
-docker compose exec php \
-    bin/phpunit
+bin/phpunit
 ```
 
 If everything is working properly, you should see `OK (5 tests, 17 assertions)`.
 Your REST API is now properly tested!
 
-Check out the [testing documentation](../core/testing.md) to discover the full range of assertions and other features provided by API Platform's test utilities.
+Check out the [API Test Assertions section](#api-test-assertions-with-symfony) to discover the full range of assertions
+and other features provided by API Platform's test utilities.
 
 ## Writing Unit Tests
 
@@ -374,10 +365,8 @@ You may also be interested in these alternative testing tools (not included in t
 - [Hoppscotch](https://docs.hoppscotch.io/features/tests), create functional test for your API
 - [Hoppscotch](https://docs.hoppscotch.io/documentation/features/rest-api-testing/), create functional test for your API
   Platform project using a nice UI, benefit from its Swagger integration and run tests in the CI using [the command-line tool](https://docs.hoppscotch.io/cli);
-- [Behat](https://behat.org), a
-  [behavior-driven development (BDD)](https://en.wikipedia.org/wiki/Behavior-driven_development) framework to write the API
-  specification as user stories and in natural language then execute these scenarios against the application to validate
-  its behavior;
+- [Behat](https://behat.org), a [behavior-driven development (BDD)](https://en.wikipedia.org/wiki/Behavior-driven_development) framework to write the API specification as user
+  stories and in natural language then execute these scenarios against the application to validate its behavior;
 - [Blackfire Player](https://blackfire.io/player), a nice DSL to crawl HTTP services, assert responses, and extract data
   from HTML/XML/JSON responses;
 - [PHP Matcher](https://github.com/coduo/php-matcher), the Swiss Army knife of JSON document testing.
@@ -388,4 +377,215 @@ If you would like to verify that your stack (including services such as the DBMS
 works, you need [end-to-end testing](https://wiki.c2.com/?EndToEndPrinciple). To do so, we recommend using [Playwright](https://playwright.dev) if you use have PWA/JavaScript-heavy app, or [Symfony Panther](https://github.com/symfony/panther) if you mostly use Twig.
 
 Usually, end-to-end testing should be done with a production-like setup. For your convenience, you may [run our Docker Compose setup
-for production locally](../deployment/docker-compose.md#running-the-docker-compose-setup-for-production-locally).
+for production locally](../deployment/docker-compose.md#deploying-with-docker-compose).
+
+## Testing Utilities for Symfony
+
+API Platform provides a set of useful utilities dedicated to API testing.
+For an overview of how to test an API Platform app, be sure to read [the testing part first](#testing-the-api-with-symfony).
+
+<p align="center" class="symfonycasts"><a href="https://symfonycasts.com/screencast/api-platform-security/api-tests?cid=apip"><img src="images/symfonycasts-player.png" alt="Test and Assertions screencast"><br>Watch the API Tests & Assertions screencast</a></p>
+
+### The Test HttpClient
+
+API Platform provides its own implementation of the [Symfony HttpClient](https://symfony.com/doc/current/components/http_client.html)'s interfaces, tailored to be used directly in [PHPUnit](https://phpunit.de/) test classes.
+
+While all the convenient features of Symfony HttpClient are available and usable directly, under the hood the API Platform implementation manipulates [the Symfony HttpKernel](https://symfony.com/doc/current/components/http_kernel.html) directly to simulate HTTP requests and responses.
+This approach results in a huge performance boost compared to triggering real network requests.
+It also allows access to the [Symfony HttpKernel](https://symfony.com/doc/current/components/http_kernel.html) and to all your services via the [Dependency Injection Container](https://symfony.com/doc/current/testing.html#accessing-the-container).
+Reuse them to run, for instance, SQL queries or requests to external APIs directly from your tests.
+
+Install the `symfony/http-client` and `symfony/browser-kit` packages to enable the API Platform test client:
+
+```console
+composer require symfony/browser-kit symfony/http-client
+```
+
+To use the testing client, your test class must extend the `ApiTestCase` class:
+
+```php
+<?php
+// api/tests/BooksTest.php
+
+namespace App\Tests;
+
+use ApiPlatform\Symfony\Bundle\Test\ApiTestCase;
+
+class BooksTest extends ApiTestCase
+{
+    public function testGetCollection(): void
+    {
+        $response = static::createClient()->request('GET', '/books');
+        // your assertions here...
+    }
+}
+```
+
+Refer to [the Symfony HttpClient documentation](https://symfony.com/doc/current/components/http_client.html) to discover all the features of the client (custom headers, JSON encoding and decoding, HTTP Basic and Bearer authentication and cookies support, among other things).
+
+Note that you can create your own test case class extending the ApiTestCase. For example to set up a Json Web Token authentication:
+
+```php
+<?php
+// api/tests/AbstractTest.php
+namespace App\Tests;
+
+use ApiPlatform\Symfony\Bundle\Test\ApiTestCase;
+use ApiPlatform\Symfony\Bundle\Test\Client;
+use Hautelook\AliceBundle\PhpUnit\RefreshDatabaseTrait;
+
+abstract class AbstractTest extends ApiTestCase
+{
+    private ?string $token = null;
+
+    use RefreshDatabaseTrait;
+
+    public function setUp(): void
+    {
+        self::bootKernel();
+    }
+
+    protected function createClientWithCredentials($token = null): Client
+    {
+        $token = $token ?: $this->getToken();
+
+        return static::createClient([], ['headers' => ['authorization' => 'Bearer '.$token]]);
+    }
+
+    /**
+     * Use other credentials if needed.
+     */
+    protected function getToken($body = []): string
+    {
+        if ($this->token) {
+            return $this->token;
+        }
+
+        $response = static::createClient()->request('POST', '/login', ['json' => $body ?: [
+            'username' => 'admin@example.com',
+            'password' => '$3cr3t',
+        ]]);
+
+        $this->assertResponseIsSuccessful();
+        $data = $response->toArray();
+        $this->token = $data['token'];
+
+        return $data['token'];
+    }
+}
+```
+
+Use it by extending the `AbstractTest` class. For example this class tests the `/users` resource accessibility where only the admin can retrieve the collection:
+
+```php
+<?php
+namespace App\Tests;
+
+final class UsersTest extends AbstractTest
+{
+    public function testAdminResource()
+    {
+        $response = $this->createClientWithCredentials()->request('GET', '/users');
+        $this->assertResponseIsSuccessful();
+    }
+
+    public function testLoginAsUser()
+    {
+        $token = $this->getToken([
+            'username' => 'user@example.com',
+            'password' => '$3cr3t',
+        ]);
+
+        $response = $this->createClientWithCredentials($token)->request('GET', '/users');
+        $this->assertJsonContains(['description' => 'Access Denied.']);
+        $this->assertResponseStatusCodeSame(403);
+    }
+}
+```
+
+### API Test Assertions with Symfony
+
+In addition to [the built-in ones](https://phpunit.readthedocs.io/en/11.4/assertions.html), API Platform provides convenient PHPUnit assertions dedicated to API testing:
+
+```php
+<?php
+// api/tests/MyTest.php
+
+namespace App\Tests;
+
+use ApiPlatform\Symfony\Bundle\Test\ApiTestCase;
+
+class MyTest extends ApiTestCase
+{
+    public function testSomething(): void
+    {
+        // static::createClient()->request(...);
+
+        // Asserts that the returned JSON is equal to the passed one
+        $this->assertJsonEquals(/* a JSON document as an array or as a string */);
+
+        // Asserts that the returned JSON is a superset of the passed one
+        $this->assertJsonContains(/* a JSON document as an array or as a string */);
+
+        // justinrainbow/json-schema must be installed to use the following assertions
+
+        // Asserts that the returned JSON matches the passed JSON Schema
+        $this->assertMatchesJsonSchema(/* a JSON Schema as an array or as a string */);
+
+        // Asserts that the returned JSON is validated by the JSON Schema generated for this resource by API Platform
+
+        // For collections
+        $this->assertMatchesResourceCollectionJsonSchema(YourApiResource::class);
+        // And for items
+        $this->assertMatchesResourceItemJsonSchema(YourApiResource::class);
+    }
+}
+```
+
+There is also a method to find the IRI matching a given resource and some criteria:
+
+```php
+<?php
+// api/tests/BooksTest.php
+
+namespace App\Tests;
+
+use ApiPlatform\Symfony\Bundle\Test\ApiTestCase;
+
+class BooksTest extends ApiTestCase
+{
+    public function testFindBook(): void
+    {
+        // Asserts that the returned JSON is equal to the passed one
+        $iri = $this->findIriBy(Book::class, ['isbn' => '9780451524935']);
+        static::createClient()->request('GET', $iri);
+        $this->assertResponseIsSuccessful();
+    }
+}
+```
+
+### HTTP Test Assertions
+
+All test assertions provided by Symfony (assertions for status codes, headers, cookies, XML documents...) can be used out of the box with the API Platform test client:
+
+```php
+<?php
+// api/tests/BooksTest.php
+
+namespace App\Tests;
+
+use ApiPlatform\Symfony\Bundle\Test\ApiTestCase;
+
+class BooksTest extends ApiTestCase
+{
+    public function testGetCollection(): void
+    {
+        static::createClient()->request('GET', '/books');
+
+        $this->assertResponseIsSuccessful();
+        $this->assertResponseHeaderSame('content-type', 'application/ld+json; charset=utf-8');
+    }
+}
+```
+
+[Check out the dedicated Symfony documentation entry](https://symfony.com/doc/current/testing/functional_tests_assertions.html).

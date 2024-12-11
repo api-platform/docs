@@ -1,8 +1,8 @@
-# Deploying to Minikube
+# Deploying to minikube
 
-## Install Minikube
+## Install minikube
 
-If you have no existing installation of Minikube on your computer, [follow the official tutorial](https://minikube.sigs.k8s.io/docs/start/).
+If you have no existing installation of minikube on your computer, [follow the official tutorial](https://minikube.sigs.k8s.io/docs/start/).
 
 When Minikube is installed, start the cluster:
 
@@ -10,40 +10,49 @@ When Minikube is installed, start the cluster:
 minikube start --addons registry --addons dashboard
 ```
 
-The previous command starts Minikube with a Docker registry (we'll use it in the next step) and with the Kubernetes dashboard.
-
-If you use Mac or Windows, [refer to the documentation](https://minikube.sigs.k8s.io/docs/handbook/registry/#docker-on-macos) to learn how to expose the Docker registry installed as an addon on the port 5000 of the host.
+The previous command starts minikube with a Docker registry (we'll use it in the next step) and with the Kubernetes dashboard.
 
 Finally, [install Helm](https://helm.sh/docs/intro/install/). We'll use it to deploy the application in the cluster thanks to the chart provided in the API Platform distribution.
 
 ## Building and Pushing Docker Images
 
-First, build the images:
+On GNU/Linux and macOS, run the following command to point your terminal's docker-cli to the Docker Engine inside minikube:
 
 ```console
-docker build -t localhost:5000/php api --target api_platform_php
-docker build -t localhost:5000/caddy api --target api_platform_caddy
-docker build -t localhost:5000/pwa pwa --target api_platform_pwa_prod
+eval $(minikube docker-env)
 ```
 
-Then push the images in the registry installed in Minikube:
+Now any `docker` command you run in this current terminal will run against the Docker Engine inside the minikube cluster. For detailed explanation and instructions for Windows [visit official minikube documentation](https://minikube.sigs.k8s.io/docs/handbook/pushing/#1-pushing-directly-to-the-in-cluster-docker-daemon-docker-env).
+
+Build the images in minikube:
+
+```console
+docker build -t localhost:5000/php api --target frankenphp_prod
+docker build -t localhost:5000/pwa pwa --target prod
+```
+
+Then push the images in the registry available in minikube:
 
 ```console
 docker push localhost:5000/php
-docker push localhost:5000/caddy
 docker push localhost:5000/pwa
 ```
 
 ## Deploying
 
+Fetch Helm chart dependencies:
+
+```console
+helm repo add bitnami https://charts.bitnami.com/bitnami/
+helm dependency build helm/api-platform
+```
+
 Finally, deploy the project using the Helm chart:
 
 ```console
-$ helm install my-project helm/api-platform \
+helm upgrade --install my-project helm/api-platform \
   --set php.image.repository=localhost:5000/php \
   --set php.image.tag=latest \
-  --set caddy.image.repository=localhost:5000/caddy \
-  --set caddy.image.tag=latest \
   --set pwa.image.repository=localhost:5000/pwa \
   --set pwa.image.tag=latest
 ```
@@ -62,7 +71,7 @@ First, install the [skaffold CLI](https://skaffold.dev/docs/install/#standalone-
 
 Then, run minikube:
 
-```bash
+```console
 minikube start
 ```
 
@@ -70,7 +79,7 @@ Add Skaffold configuration in the file `./helm/skaffold.yaml`. You can find a [c
 
 Finally, go to the helm folder, and run skaffold in dev mode:
 
-```bash
+```console
 cd ./helm
 skaffold dev
 ```
