@@ -70,6 +70,7 @@ chapters:
       - form-data
       - bootstrap
       - configuration
+      - client-integration
   - title: Schema Generator
     path: schema-generator
     items:
