@@ -110,6 +110,7 @@ Assuming `/authors/1` returned the following:
 
 ```http
 (docs(client-integration): introduce documentation)
+162eae78c8a (fix(markdown): change code block type to http)
 Link: <https://localhost/authors/1>; rel="self"
 Link: <https://localhost/.well-known/mercure>; rel="mercure"
 ```
