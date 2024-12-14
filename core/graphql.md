@@ -2942,6 +2942,26 @@ final class CreateMediaObjectResolver implements MutationResolverInterface
 
 For handling the upload of multiple files, iterate over `$context['args']['input']['files']`.
 
+### Normalization of MediaObjects
+
+In the constructor of the `MediaObjectNormalizer`, the injected Normalizer must be replaced with the one from the
+graphql-namespace:
+
+```PHP
+<?php
+// api/src/Serializer/MediaObjectNormalizer.php
+
+...
+
+public function __construct(
+    #[Autowire(service: 'api_platform.graphql.normalizer.item')]
+    private readonly NormalizerInterface $normalizer,
+    private readonly StorageInterface $storage
+) {}
+
+...
+```
+
 ### Using the `createMediaObject` Mutation
 
 Following the specification, the upload must be done with a `multipart/form-data` content type.
