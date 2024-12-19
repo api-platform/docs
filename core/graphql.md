@@ -254,6 +254,38 @@ return [
 ];
 ```
 
+## Change Max Query Depth
+
+For security reason, the max query depth should be limited to avoid deep queries. It's set to 100 by default.
+
+### Symfony config to change the Max Query Depth
+
+If you need to change it, it can be done in the configuration:
+
+```yaml
+# api/config/packages/api_platform.yaml
+api_platform:
+  graphql:
+    max_query_depth: 7
+# ...
+```
+
+## Change Max Query Complexity
+
+For security reason, the max query complexity should be limited to avoid complex queries. It's set to 100 by default.
+
+### Symfony config to change the Max Query Complexity
+
+If you need to change it, it can be done in the configuration:
+
+```yaml
+# api/config/packages/api_platform.yaml
+api_platform:
+  graphql:
+    max_query_complexity: 50
+# ...
+```
+
 ## Request with `application/graphql` Content-Type
 
 If you wish to send a [POST request using the `application/graphql` Content-Type](https://graphql.org/learn/serving-over-http/#post-request),
