@@ -24,7 +24,7 @@ import authProvider from "utils/authProvider";
 import { ENTRYPOINT } from "config/entrypoint";
 
 const getHeaders = (defaultHeaders = {}) => {
-    const authHeaders = localStorage.getItem("auth")
+    const authHeaders = localStorage.getItem("token")
         ? { Authorization: `Bearer ${localStorage.getItem("token")}` }
         : {};
 
