@@ -23,9 +23,16 @@ import { parseHydraDocumentation } from "@api-platform/api-doc-parser";
 import authProvider from "utils/authProvider";
 import { ENTRYPOINT } from "config/entrypoint";
 
-const getHeaders = () => localStorage.getItem("token") ? {
-  Authorization: `Bearer ${localStorage.getItem("token")}`,
-} : {};
+const getHeaders = (defaultHeaders = {}) => {
+    const authHeaders = localStorage.getItem("auth")
+        ? { Authorization: `Bearer ${JSON.parse(localStorage.getItem('auth'))['token']}` }
+        : {};
+
+    return {
+        ...defaultHeaders,
+        ...authHeaders,
+    };
+};
 const fetchHydra = (url, options = {}) =>
   baseFetchHydra(url, {
     ...options,
