@@ -25,7 +25,7 @@ import { ENTRYPOINT } from "config/entrypoint";
 
 const getHeaders = (defaultHeaders = {}) => {
     const authHeaders = localStorage.getItem("auth")
-        ? { Authorization: `Bearer ${JSON.parse(localStorage.getItem('auth'))['token']}` }
+        ? { Authorization: `Bearer ${localStorage.getItem("token")}` }
         : {};
 
     return {
