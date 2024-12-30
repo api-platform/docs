@@ -717,6 +717,10 @@ framework:
 
 ## Overriding the UI Template
 
+You can extend the default UI Template using the Symfony and Laravel instructions below:
+
+### Overriding the UI Template using Symfony
+
 As described [in the Symfony documentation](https://symfony.com/doc/current/templating/overriding.html), it's possible to override the Twig template that loads Swagger UI and renders the documentation:
 
 ```twig
@@ -731,6 +735,28 @@ As described [in the Symfony documentation](https://symfony.com/doc/current/temp
 ```
 
 You may want to copy the [one shipped with API Platform](https://github.com/api-platform/core/blob/main/src/Symfony/Bundle/Resources/views/SwaggerUi/index.html.twig) and customize it.
+
+### Overriding the UI Template using Laravel
+
+As described [in the Laravel documentation](https://laravel.com/docs/blade#extending-a-layout), it's possible to override the Blade template that loads Swagger UI and renders the documentation:
+
+```blade
+{# resources/views/swagger-ui.blade.php #}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>
+        @if(isset($title)) 
+            {{ $title }} 
+        @endif
+        My custom template
+    </title>
+    {# ... #}
+</html>
+```
+
+You may want to copy the [one shipped with API Platform](https://github.com/api-platform/core/blob/main/src/Laravel/resources/views/swagger-ui.blade.php) and customize it.
 
 ## Compatibility Layer with Amazon API Gateway
 
