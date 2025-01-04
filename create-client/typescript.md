@@ -1,6 +1,6 @@
 # TypeScript Interfaces
 
-The TypeScript Generator allows you to create [TypeScript interfaces](https://www.typescriptlang.org/docs/handbook/interfaces.html)
+The TypeScript Generator allows you to create [TypeScript interfaces](https://www.typescriptlang.org/docs/handbook/2/everyday-types.html#interfaces)
 that you can embed in any TypeScript-enabled project (React, Vue.js, Angular..).
 
 To do so, run the generator:
