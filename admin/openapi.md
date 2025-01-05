@@ -41,8 +41,8 @@ export default () => (
 
 ### Custom Data Provider
 
-For more advanced use cases, you can create a custom dataProvider to add features such as authentication, 
-logging, or token-based authorization. 
+For more advanced use cases, you can create a custom dataProvider to add features such as authentication,
+logging, or token-based authorization.
 
 Below is an example of integrating a simpleRestProvider with a custom httpClient:
 
@@ -95,9 +95,9 @@ export default () => (
 
 > [!NOTE]
 >
-> The `getAccessToken` function is a placeholder for your custom logic to retrieve a JWT token. 
-> 
->Implement this function according to your application's requirements, such as reading the token from local storage, 
+> The `getAccessToken` function is a placeholder for your custom logic to retrieve a JWT token.
+>
+> Implement this function according to your application's requirements, such as reading the token from local storage,
 > cookies, or a secure context.
 
 ## Mercure Support
