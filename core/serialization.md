@@ -49,7 +49,15 @@ to limit the serialization depth.
 Just like other Symfony and API Platform components, the Serializer component can be configured using attributes, XML
 or YAML. Since attributes are easy to understand, we will use them in the following examples.
 
-Note: if you aren't using the API Platform distribution, you will need to enable annotation support in the serializer configuration:
+> [!NOTE]
+> If you are not using the API Platform distribution, you need to enable annotation support in the serializer
+> configuration as outlined below, depending on your Symfony version.
+
+#### Configuration for Symfony `<= 6.4`
+
+##### General Case
+
+Add the following configuration to your `framework.yaml` file:
 
 ```yaml
 # api/config/packages/framework.yaml
@@ -57,10 +65,35 @@ framework:
   serializer: { enable_annotations: true }
 ```
 
-If you use [Symfony Flex](https://github.com/symfony/flex), just execute `composer req doctrine/annotations` and you are
-all set!
+##### Using Symfony Flex
 
-If you want to use YAML or XML, please add the mapping path in the serializer configuration:
+If you use [Symfony Flex](https://github.com/symfony/flex) and Symfony `<= 6.4`, simply run the following command:
+
+```console
+composer req doctrine/annotations
+```
+
+You're all set!
+
+#### Configuration for Symfony `>= 7.0`
+
+If you are using Symfony >= 7.0, [annotations have been replaced by attributes](https://www.doctrine-project.org/2022/11/04/annotations-to-attributes.html).
+
+Update your configuration as follows:
+
+```diff
+# api/config/packages/framework.yaml
+
+framework:
+-  serializer: { enable_annotations: true }
++  serializer: { enable_attributes: true }
+```
+
+#### Additional Syntax Configuration for All Versions
+
+If you want to use YAML or XML for serialization, add the mapping path to the serializer configuration:
+
+<code-selector>
 
 ```yaml
 # api/config/packages/framework.yaml
@@ -69,6 +102,21 @@ framework:
     mapping:
       paths: ['%kernel.project_dir%/config/serialization']
 ```
+
+```xml
+<!-- api/config/packages/framework.xml -->
+<framework> 
+    <!-- ... -->
+    <serializer>
+        <mapping>
+            <path>%kernel.project_dir%/config/serialization</path>
+        </mapping>
+    </serializer>
+</framework>
+
+```
+
+</code-selector>
 
 ## Using Serialization Groups
 
@@ -435,7 +483,7 @@ The generated JSON using previous settings is below:
 ```
 
 In order to optimize such embedded relations, the default Doctrine state provider will automatically join entities on relations
-marked as [`EAGER`](https://www.doctrine-project.org/projects/doctrine-orm/en/current/reference/annotations-reference.html#manytoone).
+marked as [`EAGER`](https://www.doctrine-project.org/projects/doctrine-orm/en/current/reference/attributes-reference.html#manytoone).
 This avoids the need for extra queries to be executed when serializing the related objects.
 
 Instead of embedding relations in the main HTTP response, you may want [to "push" them to the client using HTTP/2 server push](push-relations.md).
