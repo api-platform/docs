@@ -44,7 +44,7 @@ export default () => (
 For more advanced use cases, you can create a custom dataProvider to add features such as authentication,
 logging, or token-based authorization.
 
-Below is an example of integrating a simpleRestProvider with a custom httpClient:
+Here's an example of how to integrate a simpleRestProvider with a customized httpClient:
 
 ```javascript
 import { fetchUtils } from 'react-admin';
