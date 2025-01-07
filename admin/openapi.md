@@ -94,7 +94,6 @@ export default () => (
 ```
 
 > [!NOTE]
->
 > The `getAccessToken` function is a placeholder for your custom logic to retrieve a JWT token.
 >
 > Implement this function according to your application's requirements, such as reading the token from local storage,
