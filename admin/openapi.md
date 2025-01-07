@@ -69,7 +69,6 @@ const httpClient = async (url, options = {}) => {
 
   try {
     const { status, headers, body, json } = await fetchUtils.fetchJson(url, options);
-    console.log('HTTP Response:', { status, headers, body, json });
     return { status, headers, body, json };
   } catch (error) {
     throw error;
