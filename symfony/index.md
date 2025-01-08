@@ -460,7 +460,7 @@ bin/console make:entity --api-resource
 ```
 
 Doctrine's [attributes](https://www.doctrine-project.org/projects/doctrine-orm/en/current/reference/attributes-reference.html) map these entities to tables in the database.
-Mapping through [attributes](https://www.doctrine-project.org/projects/doctrine-orm/en/current/reference/attributes-reference.html) is also supported, if you prefer those.
+Mapping through [annotations](https://www.doctrine-project.org/projects/doctrine-annotations/en/2.0/index.html)  is still supported for backward compatibility, but they are considered deprecated and attributes are now the recommended approach.
 Both methods are convenient as they allow grouping the code and the configuration but, if you want to decouple classes from their metadata, you can switch to XML or YAML mappings.
 They are supported as well.
 
