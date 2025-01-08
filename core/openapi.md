@@ -649,9 +649,9 @@ Manually register the Swagger UI controller:
 ```php
 // routes/web.php
 use Illuminate\Support\Facades\Route;
-use ApiPlatform\Laravel\State\SwaggerUiProcessor;
+use ApiPlatform\Laravel\Controller\DocumentationController;
 
-Route::post('/api_documentation', SwaggerUiProcessor::class)
+Route::post('/api_documentation', DocumentationController::class)
     ->name('api_doc');
 ```
 
