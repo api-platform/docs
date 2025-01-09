@@ -65,7 +65,7 @@ composer require symfony/apache-pack
 As Heroku doesn't support Varnish out of the box, let's disable its integration:
 
 ```diff
-# api/config/packages/api_platform.yaml
+# config/packages/api_platform.yaml
 -    http_cache:
 -        invalidation:
 -            enabled: true
@@ -82,7 +82,7 @@ and persist application logs. Because API Platform writes logs on `STDERR`, it w
 However, if you use Monolog instead of the default logger, you'll need to configure it to output to `STDERR` instead of
 in a file.
 
-Open `api/config/packages/prod/monolog.yaml` and apply the following patch:
+Open `config/packages/prod/monolog.yaml` and apply the following patch:
 
 ```diff
      handlers:

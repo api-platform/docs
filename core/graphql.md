@@ -28,7 +28,7 @@ You can now use GraphQL at the endpoint: `https://localhost:8443/graphql`.
 Sometimes you may want to have the GraphQL endpoint at a different location. This can be done by manually configuring the GraphQL controller.
 
 ```yaml
-# api/config/routes.yaml
+# config/routes.yaml
 api_graphql_entrypoint:
     path: /api/graphql
     controller: api_platform.graphql.action.entrypoint
@@ -46,7 +46,7 @@ The GraphiQL IDE can also be found at `/graphql/graphiql`.
 If you need to disable it, it can be done in the configuration:
 
 ```yaml
-# api/config/packages/api_platform.yaml
+# config/packages/api_platform.yaml
 api_platform:
     graphql:
         graphiql:
@@ -59,7 +59,7 @@ api_platform:
 If you want to add a different location besides `/graphql/graphiql`, you can do it like this:
 
 ```yaml
-# app/config/routes.yaml
+# config/routes.yaml
 graphiql:
     path: /docs/graphiql
     controller: api_platform.graphql.action.graphiql
@@ -74,7 +74,7 @@ It can be found at `/graphql/graphql_playground`.
 You can disable it if you want in the configuration:
 
 ```yaml
-# api/config/packages/api_platform.yaml
+# config/packages/api_platform.yaml
 api_platform:
     graphql:
         graphql_playground:
@@ -87,7 +87,7 @@ api_platform:
 You can add a different location besides `/graphql/graphql_playground`:
 
 ```yaml
-# app/config/routes.yaml
+# config/routes.yaml
 graphql_playground:
     path: /docs/graphql_playground
     controller: api_platform.graphql.action.graphql_playground
@@ -98,7 +98,7 @@ graphql_playground:
 When going to the GraphQL endpoint, you can choose to launch the IDE you want.
 
 ```yaml
-# api/config/packages/api_platform.yaml
+# config/packages/api_platform.yaml
 api_platform:
     graphql:
         # Choose between graphiql or graphql-playground
@@ -109,7 +109,7 @@ api_platform:
 You can also disable this feature by setting the configuration value to `false`.
 
 ```yaml
-# api/config/packages/api_platform.yaml
+# config/packages/api_platform.yaml
 api_platform:
     graphql:
         default_ide: false
@@ -122,7 +122,7 @@ If you wish to send a [POST request using the `application/graphql` Content-Type
 you need to enable it in the [allowed formats of API Platform](content-negotiation.md#configuring-formats-globally):
 
 ```yaml
-# api/config/packages/api_platform.yaml
+# config/packages/api_platform.yaml
 api_platform:
     formats:
         # ...
@@ -230,7 +230,7 @@ If you use autoconfiguration (the default Symfony configuration) in your applica
 Else, you need to tag your resolver like this:
 
 ```yaml
-# api/config/services.yaml
+# config/services.yaml
 services:
     # ...
     App\Resolver\BookCollectionResolver:
@@ -664,7 +664,7 @@ final class WriteStage implements WriteStageInterface
 Decorate the API Platform stage service:
 
 ```yaml
-# api/config/services.yaml
+# config/services.yaml
 services:
     # ...
     'App\Stage\WriteStage':
@@ -1047,7 +1047,7 @@ See also the [pagination documentation](pagination.md#disabling-the-pagination).
 The pagination can be disabled for all GraphQL resources using this configuration:
 
 ```yaml
-# api/config/packages/api_platform.yaml
+# config/packages/api_platform.yaml
 api_platform:
     graphql:
         collection:
@@ -1252,7 +1252,7 @@ Then register the service:
 <code-selector>
 
 ```yaml
-# api/config/services.yaml
+# config/services.yaml
 services:
     # ...
     App\Error\ErrorHandler:
@@ -1362,7 +1362,7 @@ If you use a positive priority (or no priority), your normalizer will always be 
 For instance, you can register a custom normalizer like this:
 
 ```yaml
-# api/config/services.yaml
+# config/services.yaml
 services:
     App\Serializer\Exception\MyExceptionNormalizer:
         tags:
@@ -1475,7 +1475,7 @@ You would need to use the search filter like this:
 To avoid this issue, you can configure the nesting separator to use, for example, `__` instead of `_`:
 
 ```yaml
-# api/config/packages/api_platform.yaml
+# config/packages/api_platform.yaml
 api_platform:
     graphql:
         nesting_separator: __
@@ -1593,7 +1593,7 @@ If you use autoconfiguration (the default Symfony configuration) in your applica
 Else, you need to tag your type class like this:
 
 ```yaml
-# api/config/services.yaml
+# config/services.yaml
 services:
     # ...
     App\Type\Definition\DateTimeType:
@@ -1613,7 +1613,7 @@ In some cases, you would want to modify the extracted types for instance to use 
 To do so, you need to decorate the `api_platform.graphql.type_converter` service:
 
 ```yaml
-# api/config/services.yaml
+# config/services.yaml
 services:
     # ...
     'App\Type\TypeConverter':
@@ -1859,7 +1859,7 @@ Following the specification, the upload must be done with a `multipart/form-data
 You need to enable it in the [allowed formats of API Platform](content-negotiation.md#configuring-formats-globally):
 
 ```yaml
-# api/config/packages/api_platform.yaml
+# config/packages/api_platform.yaml
 api_platform:
     formats:
         # ...

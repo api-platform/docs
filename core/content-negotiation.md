@@ -41,7 +41,7 @@ The first required step is to configure allowed formats. The following configura
 and of a custom format called `myformat` and having `application/vnd.myformat` as [MIME type](https://en.wikipedia.org/wiki/Media_type).
 
 ```yaml
-# api/config/packages/api_platform.yaml
+# config/packages/api_platform.yaml
 api_platform:
     formats:
         jsonld:   ['application/ld+json']
@@ -68,7 +68,7 @@ Support for the JSON:API PATCH format is automatically enabled if JSON:API suppo
 JSON Merge Patch support must be enabled explicitly:
 
 ```yaml
-# api/config/packages/api_platform.yaml
+# config/packages/api_platform.yaml
 api_platform:
     patch_formats:
         json:     ['application/merge-patch+json']
@@ -84,7 +84,7 @@ API Platform will try to send to the client the error format matching with the f
 Available formats can also be configured:
 
 ```yaml
-# api/config/packages/api_platform.yaml
+# config/packages/api_platform.yaml
 api_platform:
     error_formats:
         jsonproblem:                   ['application/problem+json']
@@ -197,7 +197,7 @@ Refer to the Symfony documentation to learn [how to create and register such cla
 Then, register the new format in the configuration:
 
 ```yaml
-# api/config/packages/api_platform.yaml
+# config/packages/api_platform.yaml
 api_platform:
     formats:
         # ...
@@ -214,7 +214,7 @@ Using composition is the recommended way to implement a custom normalizer. You c
 own implementation of `CustomItemNormalizer`:
 
 ```yaml
-# api/config/services.yaml
+# config/services.yaml
 services:
     'App\Serializer\CustomItemNormalizer':
         arguments: [ '@api_platform.serializer.normalizer.item' ]

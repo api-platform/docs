@@ -13,7 +13,7 @@ implements the [Action-Domain-Responder](https://github.com/pmjones/adr) pattern
 [MVC](https://en.wikipedia.org/wiki/Model%E2%80%93view%E2%80%93controller).
 
 The distribution of API Platform also eases the implementation of the ADR pattern: it automatically registers action classes
-stored in `api/src/Controller` as autowired services.
+stored in `src/Controller` as autowired services.
 
 Thanks to the [autowiring](http://symfony.com/doc/current/components/dependency_injection/autowiring.html) feature of the
 Symfony Dependency Injection container, services required by an action can be type-hinted in its constructor, it will be
@@ -106,7 +106,7 @@ class Book
 ```
 
 ```yaml
-# api/config/api_platform/resources.yaml
+# config/api_platform/resources.yaml
 App\Entity\Book:
     itemOperations:
         get: ~
@@ -178,7 +178,7 @@ class Book
 ```
 
 ```yaml
-# api/config/api_platform/resources.yaml
+# config/api_platform/resources.yaml
 App\Entity\Book:
     itemOperations:
         get: ~
@@ -248,7 +248,7 @@ class Book
 ```
 
 ```yaml
-# api/config/api_platform/resources.yaml
+# config/api_platform/resources.yaml
 App\Entity\Book:
     itemOperations:
         get: ~
@@ -321,7 +321,7 @@ class Book
 ```
 
 ```yaml
-# api/config/api_platform/resources.yaml
+# config/api_platform/resources.yaml
 App\Entity\Book:
     itemOperations:
         get: ~
@@ -418,7 +418,7 @@ class BookController extends AbstractController
 ```
 
 ```yaml
-# api/config/routes.yaml
+# config/routes.yaml
 book_post_publication:
     path: /books/{id}/publication
     methods: ['POST']

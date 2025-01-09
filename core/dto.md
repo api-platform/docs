@@ -29,7 +29,7 @@ final class Book
 ```
 
 ```yaml
-# api/config/api_platform/resources.yaml
+# config/api_platform/resources.yaml
 resources:
     App\Entity\Book:
         attributes:
@@ -129,7 +129,7 @@ final class BookInputDataTransformer implements DataTransformerInterface
 We now register it:
 
 ```yaml
-# api/config/services.yaml
+# config/services.yaml
 services:
     # ...
     'App\DataTransformer\BookInputDataTransformer': ~
@@ -192,7 +192,7 @@ final class BookOutputDataTransformer implements DataTransformerInterface
 We now register it:
 
 ```yaml
-# api/config/services.yaml
+# config/services.yaml
 services:
     # ...
     'App\DataTransformer\BookOutputDataTransformer': ~
@@ -267,7 +267,7 @@ final class BookInputDataTransformer implements DataTransformerInterface
 ```
 
 ```yaml
-# api/config/services.yaml
+# config/services.yaml
 services:
     # ...
     'App\DataTransformer\BookInputDataTransformer': ~
@@ -340,7 +340,7 @@ final class BookInputDataTransformerInitializer implements DataTransformerInitia
 Register it:
 
 ```yaml
-# api/config/services.yaml
+# config/services.yaml
 services:
     # ...
     'App\DataTransformer\BookInputDataTransformerInitializer': ~
@@ -392,7 +392,7 @@ final class Book
 ```
 
 ```yaml
-# api/config/api_platform/resources.yaml
+# config/api_platform/resources.yaml
 resources:
     App\Entity\Book:
         collectionOperations:

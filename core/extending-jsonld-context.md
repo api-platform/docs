@@ -88,7 +88,7 @@ class Book
 ```
 
 ```yaml
-# api/config/api_platform/resources.yaml
+# config/api_platform/resources.yaml
 App\Entity\Book:
     itemOperations:
         get:

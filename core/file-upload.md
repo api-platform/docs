@@ -21,7 +21,7 @@ This will create a new configuration file that you will need to slightly change
 to make it look like this.
 
 ```yaml
-# api/config/packages/vich_uploader.yaml
+# config/packages/vich_uploader.yaml
 vich_uploader:
     db_driver: orm
 

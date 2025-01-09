@@ -3,7 +3,7 @@
 Here's the complete configuration of the Symfony bundle including default values:
 
 ```yaml
-# api/config/packages/api_platform.yaml
+# config/packages/api_platform.yaml
 api_platform:
 
     # The title of the API.
@@ -322,7 +322,7 @@ api_platform:
 If you need to globally configure all the resources instead of adding configuration in each one, it's possible to do so with the `defaults` key:
 
 ```yaml
-# api/config/packages/api_platform.yaml
+# config/packages/api_platform.yaml
 api_platform:
 
     defaults:

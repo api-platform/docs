@@ -89,7 +89,7 @@ class Book
 ```
 
 ```yaml
-# api/config/api_platform/resources.yaml
+# config/api_platform/resources.yaml
 App\Entity\Book:
     collectionOperations:
         get: ~ # nothing more to add if we want to keep the default controller
@@ -145,7 +145,7 @@ class Book
 ```
 
 ```yaml
-# api/config/api_platform/resources.yaml
+# config/api_platform/resources.yaml
 App\Entity\Book:
     collectionOperations:
         get:
@@ -212,7 +212,7 @@ class Book
 ```
 
 ```yaml
-# api/config/api_platform/resources.yaml
+# config/api_platform/resources.yaml
 App\Entity\Book:
     collectionOperations:
         get: ~
@@ -290,7 +290,7 @@ class Book
 ```
 
 ```yaml
-# api/config/api_platform/resources.yaml
+# config/api_platform/resources.yaml
 App\Entity\Book:
     collectionOperations:
         post:
@@ -387,7 +387,7 @@ class Book
 ```
 
 ```yaml
-# api/config/api_platform/resources.yaml
+# config/api_platform/resources.yaml
 App\Entity\Book:
     itemOperations:
         get: ~
@@ -458,7 +458,7 @@ class Book
 ```
 
 ```yaml
-# api/config/api_platform/resources.yaml
+# config/api_platform/resources.yaml
 App\Entity\Book:
     attributes:
         route_prefix: /library

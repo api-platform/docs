@@ -44,7 +44,7 @@ of total items in the collection.
 The name of the page parameter can be changed with the following configuration:
 
 ```yaml
-# api/config/packages/api_platform.yaml
+# config/packages/api_platform.yaml
 api_platform:
     collection:
         pagination:
@@ -62,7 +62,7 @@ However, for small collections, it can be convenient to fully disable the pagina
 The pagination can be disabled for all resources using this configuration:
 
 ```yaml
-# api/config/packages/api_platform.yaml
+# config/packages/api_platform.yaml
 api_platform:
     defaults:
         pagination_enabled: false
@@ -93,7 +93,7 @@ You can configure API Platform Core to let the client enable or disable the pagi
 use the following configuration:
 
 ```yaml
-# api/config/packages/api_platform.yaml
+# config/packages/api_platform.yaml
 api_platform:
     defaults:
         pagination_client_enabled: true
@@ -136,7 +136,7 @@ In the same manner, the number of items per page is configurable and can be set 
 The number of items per page can be configured for all resources:
 
 ```yaml
-# api/config/packages/api_platform.yaml
+# config/packages/api_platform.yaml
 api_platform:
     defaults:
         pagination_items_per_page: 30 # Default value
@@ -162,7 +162,7 @@ class Book
 #### Changing the Number of Items per Page Client-side Globally
 
 ```yaml
-# api/config/packages/api_platform.yaml
+# config/packages/api_platform.yaml
 api_platform:
     defaults:
         pagination_client_items_per_page: true
@@ -197,7 +197,7 @@ class Book
 The number of maximum items per page can be configured for all resources:
 
 ```yaml
-# api/config/packages/api_platform.yaml
+# config/packages/api_platform.yaml
 api_platform:
     defaults:
         pagination_maximum_items_per_page: 50
@@ -246,7 +246,7 @@ performance impact on really big collections. The downside is that the informati
 The partial pagination retrieval can be configured for all resources:
 
 ```yaml
-# api/config/packages/api_platform.yaml
+# config/packages/api_platform.yaml
 
 api_platform:
     defaults:
@@ -274,7 +274,7 @@ class Book
 #### Partial Pagination Client-side Globally
 
 ```yaml
-# api/config/packages/api_platform.yaml
+# config/packages/api_platform.yaml
 
 api_platform:
     defaults:

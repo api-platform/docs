@@ -26,7 +26,7 @@ If you are using the API Platform Standard Edition, you will need to enable the 
 configuration options:
 
 ```yaml
-# api/config/packages/framework.yaml
+# config/packages/framework.yaml
 framework:
     form: { enabled: true }
 ```
@@ -36,7 +36,7 @@ framework:
 To enable the provided bridge with FOSUserBundle, you need to add the following configuration to API Platform:
 
 ```yaml
-# api/config/packages/api_platform.yaml
+# config/packages/api_platform.yaml
 api_platform:
     enable_fos_user: true
 ```

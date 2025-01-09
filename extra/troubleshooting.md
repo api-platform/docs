@@ -35,7 +35,7 @@ If you are still using the old, unmaintained v1 of JMSSerializerBundle, the best
 In v1 of JMSSerializerBundle, the `serializer` alias is registered for the JMS Serializer service by default. However, API Platform requires the Symfony Serializer (and not the JMS one) to work properly. If you cannot upgrade for some reason, this behavior can be deactivated using the following configuration:
 
 ```yaml
-# api/config/packages/jms_serializer.yaml
+# config/packages/jms_serializer.yaml
 jms_serializer:
     enable_short_alias: false
 ```

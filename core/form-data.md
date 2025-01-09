@@ -72,7 +72,7 @@ final class DeserializeListener
 ## Creating the Service Definition
 
 ```yaml
-# api/config/services.yaml
+# config/services.yaml
 services:
     # ...
     'App\EventListener\DeserializeListener':

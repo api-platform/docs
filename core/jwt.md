@@ -34,11 +34,11 @@ Note that the `setfacl` command relies on the `acl` package. This is installed b
 
 This takes care of keypair creation (including using the correct passphrase to encrypt the private key), and setting the correct permissions on the keys allowing the web server to read them.
 
-Since these keys are created by the `root` user from a container, your host user will not be able to read them during the `docker-compose build caddy` process. Add the `config/jwt/` folder to the `api/.dockerignore` file so that they are skipped from the result image.
+Since these keys are created by the `root` user from a container, your host user will not be able to read them during the `docker-compose build caddy` process. Add the `config/jwt/` folder to the `.dockerignore` file so that they are skipped from the result image.
 
 If you want the keys to be auto generated in `dev` environment, see an example in the [docker-entrypoint script of api-platform/demo](https://github.com/api-platform/demo/blob/master/api/docker/php/docker-entrypoint.sh).
 
-The keys should not be checked in to the repository (i.e. it's in `api/.gitignore`). However, note that a JWT token could
+The keys should not be checked in to the repository (i.e. it's in `.gitignore`). However, note that a JWT token could
 only pass signature validation against the same pair of keys it was signed with. This is especially relevant in a production
 environment, where you don't want to accidentally invalidate all your clients' tokens at every deployment.
 
@@ -58,7 +58,7 @@ If you choose to use the Doctrine entity user provider, start by [creating your 
 Then update the security configuration:
 
 ```yaml
-# api/config/packages/security.yaml
+# config/packages/security.yaml
 security:
     # https://symfony.com/doc/current/security.html#c-hashing-passwords
     password_hashers:
@@ -98,7 +98,7 @@ security:
 You must also declare the route used for `/authentication_token`:
 
 ```yaml
-# api/config/routes.yaml
+# config/routes.yaml
 authentication_token:
     path: /authentication_token
     methods: ['POST']
@@ -115,7 +115,7 @@ also want to [configure Swagger UI for JWT authentication](#documenting-the-auth
 If your API uses a [path prefix](https://symfony.com/doc/current/routing/external_resources.html#prefixing-the-urls-of-imported-routes), the security configuration would look something like this instead:
 
 ```yaml
-# api/config/packages/security.yaml
+# config/packages/security.yaml
 security:
     # https://symfony.com/doc/current/security.html#c-hashing-passwords
     password_hashers:
@@ -157,7 +157,7 @@ security:
 ### Be sure to have lexik_jwt_authentication configured on your user_identity_field
 
 ```yaml
-# api/config/packages/lexik_jwt_authentication.yaml
+# config/packages/lexik_jwt_authentication.yaml
 lexik_jwt_authentication:
     secret_key: '%env(resolve:JWT_SECRET_KEY)%'
     public_key: '%env(resolve:JWT_PUBLIC_KEY)%'
@@ -173,7 +173,7 @@ Want to test the routes of your JWT-authentication-protected API?
 ### Configuring API Platform
 
 ```yaml
-# api/config/packages/api_platform.yaml
+# config/packages/api_platform.yaml
 api_platform:
     swagger:
          api_keys:
@@ -298,7 +298,7 @@ final class JwtDecorator implements OpenApiFactoryInterface
 And register this service in `config/services.yaml`:
 
 ```yaml
-# api/config/services.yaml
+# config/services.yaml
 services:
     # ...
 

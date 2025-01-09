@@ -102,7 +102,7 @@ final class CurrentUserExtension implements QueryCollectionExtensionInterface, Q
 Finally, if you're not using the autoconfiguration, you have to register the custom extension with either of those tags:
 
 ```yaml
-# api/config/services.yaml
+# config/services.yaml
 services:
 
     # ...
@@ -134,7 +134,7 @@ This example adds a `WHERE` clause condition only when a fully authenticated use
 To secure the access to endpoints, use the following access control rule:
 
 ```yaml
-# app/config/package/security.yaml
+# config/package/security.yaml
 security:
     # ...
     access_control:

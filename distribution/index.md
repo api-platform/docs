@@ -122,7 +122,7 @@ you'll get auto-completion for almost everything and awesome quality analysis.
 
 [PHP IntelliSense for Visual Studio Code](https://marketplace.visualstudio.com/items?itemName=felixfbecker.php-intellisense) also works well, and is free and open source.
 
-The API Platform distribution comes with a dummy entity for test purpose: `api/src/Entity/Greeting.php`. We will remove
+The API Platform distribution comes with a dummy entity for test purpose: `src/Entity/Greeting.php`. We will remove
 it later.
 
 If you're used to the PHP ecosystem, you probably guessed that this test entity uses the industry-leading [Doctrine ORM](https://www.doctrine-project.org/projects/orm.html)
@@ -362,7 +362,7 @@ Modify the classes to map them to database tables using the annotations provided
 
 Modify these files as described in these patches:
 
-`api/src/Entity/Book.php`
+`src/Entity/Book.php`
 
 ```diff
  use ApiPlatform\Core\Annotation\ApiResource;
@@ -405,7 +405,7 @@ Modify these files as described in these patches:
      public function __construct()
 ```
 
-`api/src/Entity/Review.php`
+`src/Entity/Review.php`
 
 ```diff
  namespace App\Entity;
@@ -459,7 +459,7 @@ They are supported as well.
 Learn more about how to map entities with the Doctrine ORM in [the project's official documentation](https://docs.doctrine-project.org/projects/doctrine-orm/en/latest/reference/association-mapping.html)
 or in Kévin's book "[Persistence in PHP with the Doctrine ORM](https://www.amazon.fr/gp/product/B00HEGSKYQ/ref=as_li_tl?ie=UTF8&camp=1642&creative=6746&creativeASIN=B00HEGSKYQ&linkCode=as2&tag=kevidung-21)".
 
-Now, delete the file `api/src/Entity/Greeting.php`. This demo entity isn't useful anymore.
+Now, delete the file `src/Entity/Greeting.php`. This demo entity isn't useful anymore.
 Finally, generate a new database migration using [Doctrine Migrations](https://symfony.com/doc/current/doctrine.html#migrations-creating-the-database-tables-schema) and apply it:
 
 ```console
@@ -569,7 +569,7 @@ to validate user-submitted data. Let's add some validation rules to our data mod
 
 Modify the following files as described in these patches:
 
-`api/src/Entity/Book.php`
+`src/Entity/Book.php`
 
 ```diff
  use ApiPlatform\Core\Annotation\ApiResource;
@@ -598,7 +598,7 @@ Modify the following files as described in these patches:
      public ?\DateTimeImmutable $publicationDate = null;
 ```
 
-`api/src/Entity/Review.php`
+`src/Entity/Review.php`
 
 ```diff
  use ApiPlatform\Core\Annotation\ApiResource;

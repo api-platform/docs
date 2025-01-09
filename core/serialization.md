@@ -49,7 +49,7 @@ or YAML. Since annotations are easy to understand, we will use them in the follo
 Note: if you aren't using the API Platform distribution, you will need to enable annotation support in the serializer configuration:
 
 ```yaml
-# api/config/packages/framework.yaml
+# config/packages/framework.yaml
 framework:
     serializer: { enable_annotations: true }
 ```
@@ -60,7 +60,7 @@ all set!
 If you want to use YAML or XML, please add the mapping path in the serializer configuration:
 
 ```yaml
-# api/config/packages/framework.yaml
+# config/packages/framework.yaml
 framework:
     serializer:
         mapping:
@@ -102,7 +102,7 @@ class Book
 ```
 
 ```yaml
-# api/config/api_platform/resources.yaml
+# config/api_platform/resources.yaml
 resources:
     App\Entity\Book:
         attributes:
@@ -111,7 +111,7 @@ resources:
             denormalization_context:
                 groups: ['write']
 
-# api/config/serialization/Book.yaml
+# config/serialization/Book.yaml
 App\Entity\Book:
     attributes:
         name:
@@ -191,7 +191,7 @@ class Book
 ```
 
 ```yaml
-# api/config/api_platform/resources/Book.yaml
+# config/api_platform/resources/Book.yaml
 App\Entity\Book:
     attributes:
         normalization_context:
@@ -202,7 +202,7 @@ App\Entity\Book:
             normalization_context:
                 groups: ['put']
 
-# api/config/serializer/Book.yaml
+# config/serializer/Book.yaml
 App\Entity\Book:
     attributes:
         name:
@@ -272,13 +272,13 @@ class Book
 ```
 
 ```yaml
-# api/config/api_platform/resources/Book.yaml
+# config/api_platform/resources/Book.yaml
 App\Entity\Book:
     attributes:
         normalization_context:
             groups: ['book']
 
-# api/config/serializer/Book.yaml
+# config/serializer/Book.yaml
 App\Entity\Book:
     attributes:
         name:
@@ -311,7 +311,7 @@ class Person
 ```
 
 ```yaml
-# api/config/serializer/Person.yaml
+# config/serializer/Person.yaml
 App\Entity\Person:
     attributes:
         name:
@@ -365,7 +365,7 @@ class Book
 ```
 
 ```yaml
-# api/config/api_platform/resources/Book.yaml
+# config/api_platform/resources/Book.yaml
 App\Entity\Book:
     attributes:
         denormalization_context:
@@ -421,7 +421,7 @@ class Person
 ```
 
 ```yaml
-# api/config/api_platform/resources/Person.yaml
+# config/api_platform/resources/Person.yaml
 App\Entity\Person:
     attributes:
         normalization_context:
@@ -429,7 +429,7 @@ App\Entity\Person:
         denormalization_context:
             groups: ['person']
 
-# api/config/serializer/Person.yaml
+# config/serializer/Person.yaml
 App\Entity\Person:
     attributes:
         name:
@@ -478,7 +478,7 @@ class Person
 ```
 
 ```yaml
-# api/config/api_platform/resources/Person.yaml
+# config/api_platform/resources/Person.yaml
 App\Entity\Person:
     attributes:
         normalization_context:
@@ -490,7 +490,7 @@ App\Entity\Person:
             readableLink: false
             writableLink: false
 
-# api/config/serializer/Person.yaml
+# config/serializer/Person.yaml
 App\Entity\Person:
     attributes:
         name:
@@ -649,14 +649,14 @@ class Greeting
 ```
 
 ```yaml
-# api/config/api_platform/resources/Greeting.yaml
+# config/api_platform/resources/Greeting.yaml
 App\Entity\Greeting:
     collectionOperations:
         get:
             normalization_context:
                 groups: 'greeting:collection:get'
 
-# api/config/serializer/Greeting.yaml
+# config/serializer/Greeting.yaml
 App\Entity\Greeting:
     attributes:
         id:
@@ -711,7 +711,7 @@ class Book
 ```
 
 ```yaml
-# api/config/api_platform/resources/Book.yaml
+# config/api_platform/resources/Book.yaml
 App\Entity\Book: 
     attributes:
         normalization_context:
@@ -719,7 +719,7 @@ App\Entity\Book:
         denormalization_context:
             groups: ['book:input']
 
-# api/config/serializer/Book.yaml
+# config/serializer/Book.yaml
 App\Entity\Book:
     attributes:
         active:
@@ -738,7 +738,7 @@ API Platform implements a `ContextBuilder`, which prepares the context for seria
 `createFromRequest` method:
 
 ```yaml
-# api/config/services.yaml
+# config/services.yaml
 services:
     # ...
     'App\Serializer\BookContextBuilder':
@@ -798,7 +798,7 @@ an example; it is always important to make sure your normalizer gets loaded firs
 is appropriate for your application; higher values are loaded earlier):
 
 ```yaml
-# api/config/services.yaml
+# config/services.yaml
 services:
     'App\Serializer\BookAttributeNormalizer':
         arguments: [ '@security.token_storage' ]
@@ -879,13 +879,13 @@ To use this feature, declare a new name converter service. For example, you can 
 `snake_case` with the following configuration:
 
 ```yaml
-# api/config/services.yaml
+# config/services.yaml
 services:
     'Symfony\Component\Serializer\NameConverter\CamelCaseToSnakeCaseNameConverter': ~
 ```
 
 ```yaml
-# api/config/packages/api_platform.yaml
+# config/packages/api_platform.yaml
 api_platform:
     name_converter: 'Symfony\Component\Serializer\NameConverter\CamelCaseToSnakeCaseNameConverter'
 ```
@@ -898,7 +898,7 @@ In the following example, we will see how we add extra information to the serial
 date on each request in `GET`:
 
 ```yaml
-# api/config/services.yaml
+# config/services.yaml
 services:
     'App\Serializer\ApiNormalizer':
         # By default .inner is passed as argument
@@ -1006,7 +1006,7 @@ class Book
 You can also use the YAML configuration format:
 
 ```yaml
-# api/config/api_platform/resources.yaml
+# config/api_platform/resources.yaml
 App\Entity\Book:
     properties:
         id:
@@ -1058,7 +1058,7 @@ class Book
 ```
 
 ```yaml
-# api/config/api_platform/resources/Book.yaml
+# config/api_platform/resources/Book.yaml
 App\Entity\Book:
     attributes:
         normalization_context:

@@ -74,7 +74,7 @@ class Question
 ```
 
 ```yaml
-# api/config/api_platform/resources.yaml
+# config/api_platform/resources.yaml
 App\Entity\Answer: ~
 App\Entity\Question:
     properties:
@@ -136,7 +136,7 @@ class Answer
 ```
 
 ```yaml
-# api/config/api_platform/resources.yaml
+# config/api_platform/resources.yaml
 App\Entity\Answer:
     subresourceOperations:
         api_questions_answer_get_subresource:

@@ -13,10 +13,10 @@ Service name                                          | Entity name  | Path resu
 `api_platform.path_segment_name_generator.dash`       | `MyResource` | `/my-resources`
 
 The default resolver is `api_platform.path_segment_name_generator.underscore`.
-To change it to the dash resolver, add the following lines to `api/config/packages/api_platform.yaml`:
+To change it to the dash resolver, add the following lines to `config/packages/api_platform.yaml`:
 
 ```yaml
-# api/config/packages/api_platform.yaml
+# config/packages/api_platform.yaml
 api_platform:
     path_segment_name_generator: api_platform.path_segment_name_generator.dash
 ```
@@ -70,7 +70,7 @@ do.
 Otherwise, you must register this class as a service like in the following example:
 
 ```yaml
-# api/config/services.yaml
+# config/services.yaml
 services:
     # ...
     'App\Operation\SingularPathSegmentNameGenerator': ~
@@ -79,7 +79,7 @@ services:
 ### Configuring It
 
 ```yaml
-# api/config/packages/api_platform.yaml
+# config/packages/api_platform.yaml
 api_platform:
     path_segment_name_generator: 'App\Operation\SingularPathSegmentNameGenerator'
 ```

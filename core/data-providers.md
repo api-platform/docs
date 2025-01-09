@@ -64,7 +64,7 @@ If you use the default configuration, the corresponding service will be automati
 To declare the service explicitly, or to set a custom priority, you can use the following snippet:
 
 ```yaml
-# api/config/services.yaml
+# config/services.yaml
 services:
     # ...
     'App\DataProvider\BlogPostCollectionDataProvider':
@@ -118,7 +118,7 @@ Otherwise, if you use a custom dependency injection configuration, you need to r
 providers.
 
 ```yaml
-# api/config/services.yaml
+# config/services.yaml
 services:
     # ...
     'App\DataProvider\BlogPostItemDataProvider': ~
@@ -163,7 +163,7 @@ final class BlogPostSubresourceDataProvider implements SubresourceDataProviderIn
 Declare the service in your services configuration:
 
 ```yaml
-# api/config/services.yaml
+# config/services.yaml
 services:
     # ...
     'App\DataProvider\BlogPostSubresourceDataProvider':

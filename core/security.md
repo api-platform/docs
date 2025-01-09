@@ -49,7 +49,7 @@ class Book
 ```
 
 ```yaml
-# api/config/api_platform/resources.yaml
+# config/api_platform/resources.yaml
 App\Entity\Book:
     attributes:
         security: 'is_granted("ROLE_USER")'
@@ -83,7 +83,7 @@ class Book
 ```
 
 ```yaml
-# api/config/api_platform/resources/Book.yaml
+# config/api_platform/resources/Book.yaml
 App\Entity\Book:
     properties:
         adminOnlyProperty:
@@ -136,7 +136,7 @@ class Book
 ```
 
 ```yaml
-# api/config/api_platform/resources.yaml
+# config/api_platform/resources.yaml
 App\Entity\Book:
     itemOperations:
         get: ~
@@ -193,7 +193,7 @@ class Book
 ```
 
 ```yaml
-# api/config/api_platform/resources/Book.yaml
+# config/api_platform/resources/Book.yaml
 App\Entity\Book:
     attributes:
         security: 'is_granted("ROLE_USER")'
@@ -316,7 +316,7 @@ class Book
 ```
 
 ```yaml
-# api/config/api_platform/resources.yaml
+# config/api_platform/resources.yaml
 App\Entity\Book:
     attributes:
         security: 'is_granted("ROLE_USER")'

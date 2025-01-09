@@ -26,7 +26,7 @@ to a Resource in two ways:
    For example having a filter service declaration:
 
     ```yaml
-    # api/config/services.yaml
+    # config/services.yaml
     services:
         # ...
         offer.date_filter:
@@ -60,7 +60,7 @@ to a Resource in two ways:
     ```
 
     ```yaml
-    # api/config/api_platform/resources.yaml
+    # config/api_platform/resources.yaml
     App\Entity\Offer:
         collectionOperations:
             get:
@@ -123,7 +123,7 @@ to a Resource in two ways:
 ### Search Filter
 
 If Doctrine ORM or MongoDB ODM support is enabled, adding filters is as easy as registering a filter service in the
-`api/config/services.yaml` file and adding an attribute to your resource configuration.
+`config/services.yaml` file and adding an attribute to your resource configuration.
 
 The search filter supports `exact`, `partial`, `start`, `end`, and `word_start` matching strategies:
 
@@ -591,7 +591,7 @@ A conflict will occur if `exists` is also the name of a property with the search
 Luckily, the query parameter name to use is configurable:
 
 ```yaml
-# api/config/packages/api_platform.yaml
+# config/packages/api_platform.yaml
 api_platform:
     collection:
         exists_parameter_name: 'not_null' # the URL query parameter to use is now "not_null"
@@ -761,7 +761,7 @@ A conflict will occur if `order` is also the name of a property with the search 
 Luckily, the query parameter name to use is configurable:
 
 ```yaml
-# api/config/packages/api_platform.yaml
+# config/packages/api_platform.yaml
 api_platform:
     collection:
         order_parameter_name: '_order' # the URL query parameter to use is now "_order"
@@ -975,7 +975,7 @@ A conflict will occur if `order` is also the name of a property with the term fi
 parameter name to use is configurable:
 
 ```yaml
-# api/config/packages/api_platform.yaml
+# config/packages/api_platform.yaml
 api_platform:
     collection:
         order_parameter_name: '_order' # the URL query parameter to use is now "_order"
@@ -1283,7 +1283,7 @@ If you don't use Symfony's automatic service loading, you have to register the f
 Use the following service definition (remember, by default, this isn't needed!):
 
 ```yaml
-# api/config/services.yaml
+# config/services.yaml
 services:
     # ...
     # This whole definition can be omitted if automatic service loading is enabled
@@ -1298,7 +1298,7 @@ In the previous example, the filter can be applied on any property. However, tha
 it can also be enabled for some properties:
 
 ```yaml
-# api/config/services.yaml
+# config/services.yaml
 services:
     'App\Filter\RegexpFilter':
         arguments: [ '@doctrine', ~, '@?logger', { email: ~, anOtherProperty: ~ } ]
@@ -1501,7 +1501,7 @@ final class UserFilter extends SQLFilter
 Now, we must configure the Doctrine filter.
 
 ```yaml
-# api/config/packages/api_platform.yaml
+# config/packages/api_platform.yaml
 doctrine:
     orm:
         filters:

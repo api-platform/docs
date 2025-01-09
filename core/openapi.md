@@ -54,7 +54,7 @@ In the following example, we will see how to override the title of the Swagger d
 the `GET` operation of `/foos` path.
 
 ```yaml
-# api/config/services.yaml
+# config/services.yaml
     App\OpenApi\OpenApiFactory:
         decorates: 'api_platform.openapi.factory'
         arguments: [ '@App\OpenApi\OpenApiFactory.inner' ]
@@ -158,7 +158,7 @@ class Product // The class name will be used to name exposed resources
 ```
 
 ```yaml
-# api/config/api_platform/resources.yaml
+# config/api_platform/resources.yaml
 resources:
     App\Entity\Product:
       properties:
@@ -416,7 +416,7 @@ Sometimes you may want to have the API at one location, and the Swagger UI at a 
 ### Disabling Swagger UI or ReDoc
 
 ```yaml
-# api/config/packages/api_platform.yaml
+# config/packages/api_platform.yaml
 api_platform:
     # ...
     enable_swagger_ui: false
@@ -426,7 +426,7 @@ api_platform:
 ### Manually Registering the Swagger UI Controller
 
 ```yaml
-# app/config/routes.yaml
+# config/routes.yaml
 swagger_ui:
     path: /docs
     controller: api_platform.swagger.action.ui

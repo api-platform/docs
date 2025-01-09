@@ -30,7 +30,7 @@ Here we will generate a data model for an address book with the following data:
 * a [`PostalAddress`](https://schema.org/PostalAddress) which inherits from [`ContactPoint`](https://schema.org/ContactPoint), which itself inherits from [`StructuredValue`](https://schema.org/StructuredValue), etc.
 
 ```yaml
-# api/config/schema.yaml
+# config/schema.yaml
 # The list of types and properties we want to use
 types:
     # Parent class of Person

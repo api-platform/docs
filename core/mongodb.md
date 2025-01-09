@@ -21,7 +21,7 @@ If the `mongodb` PHP extension is not installed yet, [install it beforehand](htt
 If you are using the [API Platform Distribution](../distribution/index.md), modify the `Dockerfile` to add the extension:
 
 ```diff
-# api/Dockerfile
+# Dockerfile
   pecl install \
    apcu-${APCU_VERSION} \
 +  mongodb \
@@ -75,7 +75,7 @@ Execute the contrib recipe to have it already configured.
 Change the MongoDB environment variables to match your Docker image:
 
 ```shell
-# api/.env
+# .env
 MONGODB_URL=mongodb://api-platform:!ChangeMe!@db-mongodb
 MONGODB_DB=api
 ```
@@ -83,7 +83,7 @@ MONGODB_DB=api
 Change the configuration of API Platform to add the right mapping path:
 
 ```yaml
-# api/config/packages/api_platform.yaml
+# config/packages/api_platform.yaml
 api_platform:
     # ...
 

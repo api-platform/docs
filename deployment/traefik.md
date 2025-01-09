@@ -182,7 +182,7 @@ If you want to implement custom DNS such as production DNS in local, just add th
 127.0.0.1       your.domain.com
 ```
 
-If you do that, you'll have to update the `CORS_ALLOW_ORIGIN` environment variable `api/.env` to accept the specified URL.
+If you do that, you'll have to update the `CORS_ALLOW_ORIGIN` environment variable `.env` to accept the specified URL.
 
 ## Known Issues
 

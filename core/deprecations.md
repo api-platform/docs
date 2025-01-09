@@ -91,7 +91,7 @@ class Review
 ```
 
 ```yaml
-# api/config/api_platform/resources/Review.yaml
+# config/api_platform/resources/Review.yaml
 resources:
     # ...
     App\Entity\Review:

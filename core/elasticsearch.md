@@ -21,7 +21,7 @@ composer require elasticsearch/elasticsearch:^6.0
 Then, enable it inside the API Platform configuration:
 
 ```yaml
-# api/config/packages/api_platform.yaml
+# config/packages/api_platform.yaml
 parameters:
     # ...
     env(ELASTICSEARCH_HOST): 'http://localhost:9200'
@@ -210,7 +210,7 @@ For example, consider an index being similar to a database in an SQL database an
 So the `User` and `Tweet` resources of the previous example would become `user` and `tweet` types in an index named `app`:
 
 ```yaml
-# api/config/packages/api_platform.yaml
+# config/packages/api_platform.yaml
 parameters:
     # ...
     env(ELASTICSEARCH_HOST): 'http://localhost:9200'

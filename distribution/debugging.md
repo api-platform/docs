@@ -14,7 +14,7 @@ To avoid deploying API Platform to production with an active Xdebug extension,
 it's recommended to add a custom stage to the end of the `api/Dockerfile`.
 
 ```Dockerfile
-# api/Dockerfile
+# Dockerfile
 FROM api_platform_php as api_platform_php_dev
 
 ARG XDEBUG_VERSION=3.1.3

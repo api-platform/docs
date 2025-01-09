@@ -63,7 +63,7 @@ Otherwise, if you use a custom dependency injection configuration, you need to r
 `api_platform.data_persister` tag. The `priority` attribute can be used to order persisters.
 
 ```yaml
-# api/config/services.yaml
+# config/services.yaml
 services:
     # ...
     App\DataPersister\BlogPostDataPersister: ~
@@ -138,7 +138,7 @@ final class UserDataPersister implements ContextAwareDataPersisterInterface
 Even with service autowiring and autoconfiguration enabled, you must still configure the decoration:
 
 ```yaml
-# api/config/services.yaml
+# config/services.yaml
 services:
     # ...
     App\DataPersister\UserDataPersister:
@@ -229,7 +229,7 @@ final class BlogPostDataPersister implements ContextAwareDataPersisterInterface,
 ```
 
 ```yaml
-# api/config/services.yaml
+# config/services.yaml
 services:
     # ...
     App\DataPersister\BlogPostDataPersister: ~

@@ -49,7 +49,7 @@ final class Person
 ```
 
 ```yaml
-# api/config/api_platform/resources.yaml
+# config/api_platform/resources.yaml
 resources:
   App\Entity\Person:
     collectionOperations:

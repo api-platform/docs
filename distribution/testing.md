@@ -35,7 +35,7 @@ Place your data fixtures files in a directory named `fixtures/`.
 Then, create some fixtures for [the bookstore API you created in the tutorial](index.md):
 
 ```yaml
-# api/fixtures/books.yaml
+# fixtures/books.yaml
 App\Entity\Book:
     book_{1..100}:
         isbn: <isbn13()>
@@ -46,7 +46,7 @@ App\Entity\Book:
 ```
 
 ```yaml
-# api/fixtures/reviews.yaml
+# fixtures/reviews.yaml
 App\Entity\Review:
     review_{1..200}:
         rating: <numberBetween(0, 5)>

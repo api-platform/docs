@@ -328,7 +328,7 @@ class MySequencedGroup
 Just creating the class is not enough because Symfony does not see this service as being used. Therefore to prevent the service to be removed, you need to enforce it to be public.
 
 ```yaml
-# api/config/services.yaml
+# config/services.yaml
 services:
     App\Validator\MySequencedGroup: ~
         public: true
@@ -450,10 +450,10 @@ class MyEntityDataPersister implements DataPersisterInterface
 }
 ```
 
-Register the new data persister in `api/config/services.yaml`:
+Register the new data persister in `config/services.yaml`:
 
 ```yaml
-# api/config/services.yaml
+# config/services.yaml
 services:
     _defaults:
         bind:
@@ -466,7 +466,7 @@ As stated in the [Symfony documentation](https://symfony.com/doc/current/validat
 You can retrieve the payload field by setting the `serialize_payload_fields` to an empty `array` in the API Platform config:
 
 ```yaml
-# api/config/packages/api_platform.yaml
+# config/packages/api_platform.yaml
 
 api_platform:
     validator:
@@ -478,7 +478,7 @@ Then, the serializer will return all payload values in the error response.
 If you want to serialize only some payload fields, define them in the config like this:
 
 ```yaml
-# api/config/packages/api_platform.yaml
+# config/packages/api_platform.yaml
 
 api_platform:
     validator:
@@ -594,7 +594,7 @@ If you use a custom dependency injection configuration, you need to register the
 `api_platform.metadata.property_schema_restriction` tag. The `priority` attribute can be used for service ordering.
 
 ```yaml
-# api/config/services.yaml
+# config/services.yaml
 services:
     # ...
     'App\PropertySchemaRestriction\CustomPropertySchemaRestriction': ~

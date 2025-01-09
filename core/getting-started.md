@@ -169,7 +169,7 @@ As an alternative to annotations, you can map entity classes using YAML or XML:
 <code-selector>
 
 ```yaml
-# api/config/api_platform/resources.yaml
+# config/api_platform/resources.yaml
 resources:
     App\Entity\Product: ~
     App\Entity\Offer:
@@ -203,7 +203,7 @@ resources:
 If you prefer to use YAML or XML files instead of annotations, you must configure API Platform to load the appropriate files:
 
 ```yaml
-# api/config/packages/api_platform.yaml
+# config/packages/api_platform.yaml
 api_platform:
     mapping:
         paths: 

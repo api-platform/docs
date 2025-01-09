@@ -182,7 +182,7 @@ There is a default restriction with this feature. We allow up to 30 joins per qu
 bit of configuration:
 
 ```yaml
-# api/config/packages/api_platform.yaml
+# config/packages/api_platform.yaml
 api_platform:
     eager_loading:
         max_joins: 100
@@ -196,7 +196,7 @@ can be a good solution to fix this issue.
 If you want to fetch only partial data according to serialization groups, you can enable `fetch_partial` parameter:
 
 ```yaml
-# api/config/packages/api_platform.yaml
+# config/packages/api_platform.yaml
 api_platform:
     eager_loading:
         fetch_partial: true
@@ -211,7 +211,7 @@ As mentioned above, by default we force eager loading for all relations. This be
 configuration in order to apply it only on join relations having the `EAGER` fetch mode:
 
 ```yaml
-# api/config/packages/api_platform.yaml
+# config/packages/api_platform.yaml
 api_platform:
     eager_loading:
         force_eager: false
@@ -307,7 +307,7 @@ configuration.
 If for any reason you don't want the eager loading feature, you can turn it off in the configuration:
 
 ```yaml
-# api/config/packages/api_platform.yaml
+# config/packages/api_platform.yaml
 api_platform:
     eager_loading:
         enabled: false
@@ -322,7 +322,7 @@ When using the default pagination, the Doctrine paginator will execute a `COUNT`
 If you don't mind not having the last page available, you can enable partial pagination and avoid the `COUNT` query:
 
 ```yaml
-# api/config/packages/api_platform.yaml
+# config/packages/api_platform.yaml
 api_platform:
     collection:
         pagination:
