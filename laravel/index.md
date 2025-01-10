@@ -193,8 +193,7 @@ use ApiPlatform\Metadata\Get;
 #[Get(uriTemplate: '/my_custom_book/{id}')]
 class Book
 {
-    public string $id;
-    public string $title;
+    public function __construct(public string $id, public string $title) {}
 }
 ```
 
@@ -224,6 +223,7 @@ namespace App\State;
 use ApiPlatform\Metadata\Operation;
 use ApiPlatform\State\ProviderInterface;
 use App\Models\Book as BookModel;
+use App\ApiResource\Book;
 
 final class BookProvider implements ProviderInterface
 {
@@ -242,8 +242,8 @@ Register the state provider:
 
 namespace App\Providers;
 
-use ApiPlatform\State\ProviderInterface;
 use App\State\BookProvider;
+use ApiPlatform\State\ProviderInterface;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Support\ServiceProvider;
 
@@ -273,8 +273,7 @@ use App\State\BookProvider;
 #[Get(uriTemplate: '/my_custom_book/{id}', provider: BookProvider::class)]
 class Book
 {
-    public string $id;
-    public string $title;
+    public function __construct(public string $id, public string $title) {}
 }
 ```
 
@@ -626,6 +625,7 @@ API Platform provides an easy shortcut to some [useful filters](./filters.md), f
  namespace App\Models;
 
  use ApiPlatform\Metadata\ApiResource;
++use ApiPlatform\Metadata\QueryParameter;
 +use ApiPlatform\Laravel\Eloquent\Filter\PartialSearchFilter;
  use Illuminate\Database\Eloquent\Model;
 
@@ -645,6 +645,7 @@ It's also possible to enable filters on every exposed property:
  namespace App\Models;
 
  use ApiPlatform\Metadata\ApiResource;
++use ApiPlatform\Metadata\QueryParameter;
 +use ApiPlatform\Laravel\Eloquent\Filter\PartialSearchFilter;
 +use ApiPlatform\Laravel\Eloquent\Filter\OrderFilter;
  use Illuminate\Database\Eloquent\Model;

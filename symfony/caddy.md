@@ -1,4 +1,4 @@
-# Configuring the Caddy Web Server
+# Configuring the Caddy Web Server with Symfony
 
 [The API Platform distribution](index.md) is shipped with [the Caddy web server](https://caddyserver.com).
 The build contains the [Mercure](../core/mercure.md) and the [Vulcain](https://vulcain.rocks) Caddy modules.
