@@ -243,7 +243,7 @@ Register the state provider:
 namespace App\Providers;
 
 use App\State\BookProvider;
-+use ApiPlatform\State\ProviderInterface;
+use ApiPlatform\State\ProviderInterface;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Support\ServiceProvider;
 
