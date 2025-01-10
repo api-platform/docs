@@ -153,6 +153,33 @@ This allows to query multiple `isbn` values with a `q` query parameter: `/books?
 
 TODO -->
 
+### BooleanFilter
+
+The `BooleanFilter` allows to filter using an `WHERE` clause on a boolean field with (`true`, `false`, `0`, `1`):
+
+```php
+// app/Models/Book.php
+
+use ApiPlatform\Laravel\Eloquent\Filter\BooleanFilter;
+
+#[ApiResource]
+#[QueryParameter(key: 'published', filter: BooleanFilter::class)]
+class Book extends Model
+{
+    use HasUlids;
+
+    public function author(): BelongsTo
+    {
+        return $this->belongsTo(Author::class);
+    }
+}
+```
+Examples:
+- `/books?published=true`
+- `/books?published=1`
+- `/books?published=false`
+- `/books?published=0`
+
 ### PropertyFilter
 
 Note: We strongly recommend using [Vulcain](https://vulcain.rocks) instead of this filter. Vulcain is faster, allows a better hit rate, and is supported out of the box in the API Platform distribution.
