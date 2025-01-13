@@ -45,7 +45,6 @@ The integration using the cache handler is quite simple. You just have to update
 +    --with github.com/dunglas/mercure/caddy \
 +    --with github.com/dunglas/vulcain/caddy \
 +    --with github.com/dunglas/caddy-cbrotli \
-+    --with github.com/caddyserver/cache-handler
 +    # You should use another storage than the default one (e.g. otter).
 +    # The list of the available storages can be find either on the documentation website (https://docs.souin.io/docs/storages/) or on the storages repository https://github.com/darkweak/storages
 +    --with github.com/caddyserver/cache-handler

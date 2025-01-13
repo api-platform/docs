@@ -637,7 +637,7 @@ Manually register the Swagger UI controller:
 # app/config/routes.yaml
 api_doc:
   path: /api_documentation
-  controller: api_platform.swagger_ui.processor
+  controller: api_platform.action.documentation
 ```
 
 Change `/api_documentation` to the URI you wish Swagger UI to be accessible on.
@@ -649,9 +649,9 @@ Manually register the Swagger UI controller:
 ```php
 // routes/web.php
 use Illuminate\Support\Facades\Route;
-use ApiPlatform\Laravel\State\SwaggerUiProcessor;
+use ApiPlatform\Laravel\Controller\DocumentationController;
 
-Route::post('/api_documentation', SwaggerUiProcessor::class)
+Route::post('/api_documentation', DocumentationController::class)
     ->name('api_doc');
 ```
 
