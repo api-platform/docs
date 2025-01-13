@@ -47,7 +47,7 @@ const RedirectToLogin = () => {
 };
 ```
 
-### Api Documentation Parsing
+### API Documentation Parsing
 
 Extend the `parseHydraDocumentaion` function from the [API Doc Parser library](https://github.com/api-platform/api-doc-parser)
 to handle the documentation parsing. Customize it to clear
