@@ -49,7 +49,9 @@ const RedirectToLogin = () => {
 
 ### Api Documentation Parsing
 
-Handle API documentation parsing and clear an expired token.
+Extend the `parseHydraDocumentaion` function from the [API Doc Parser library](https://github.com/api-platform/api-doc-parser)
+to handle the documentation parsing. Customize it to clear
+expired tokens when encountering unauthorized `401` response.
 
 ```typescript
 const apiDocumentationParser = (setRedirectToLogin) => async () => {
@@ -72,7 +74,7 @@ const apiDocumentationParser = (setRedirectToLogin) => async () => {
 
 ### Data Provider
 
-Initialize the data provider with custom headers and the documentation parser.
+Initialize the hydra data provider with custom headers and the documentation parser.
 
 ```typescript
 const dataProvider = (setRedirectToLogin) =>
@@ -85,9 +87,11 @@ const dataProvider = (setRedirectToLogin) =>
 
 ### Export Admin Component
 
-Export the admin component, and track the users' authentication status.
+Export the Hydra admin component, and track the users' authentication status.
 
 ```typescript
+// components/admin/Admin.tsx
+
 import Head from "next/head";
 import { useState } from "react";
 import { Navigate, Route } from "react-router-dom";
