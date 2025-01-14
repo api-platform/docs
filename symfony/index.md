@@ -247,7 +247,7 @@ You have started a project with the API Platform template and you would like to 
 Run the following command to import the changes since your last update:
 
 ```console
-curl -sSL https://raw.githubusercontent.com/mano-lis/template-sync/main/template-sync.sh | sh -s -- https://github.com/api-platform/api-platform
+curl -sSL https://raw.githubusercontent.com/coopTilleuls/template-sync/main/template-sync.sh| sh -s -- https://github.com/api-platform/api-platform
 ```
 Resolve potential conflicts, run `git cherry-pick --continue` and you are done!
 
