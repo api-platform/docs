@@ -196,6 +196,8 @@ final class Person
 }
 ```
 
+Changing Identifier will automatically change the behaviour of [get operation](operations), instead of the resource `id` field, the get operation will try to retrieve resource by using the `code` field.
+
 ## Supported Identifiers
 
 API Platform supports the following identifier types:
