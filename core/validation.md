@@ -360,6 +360,43 @@ class Greeting
 }
 ```
 
+## Using the Group Sequence Provider
+
+If you need to use a Group Sequence Provider, you'll have to tell the Serializer to ignore the getter added by the Interface:
+
+```php
+class Greeting implements GroupSequenceProvider
+{
+    #[ORM\Id, ORM\Column, ORM\GeneratedValue]
+    private ?int $id = null;
+
+    #[ORM\Column]
+    #[Assert\NotBlank(groups: ['needs_name'])
+    public string $name = '';
+
+    public function getId(): int
+    {
+        return $this->id;
+    }
+    
+    // You need to add this Ignore statement.
+    #[Ignore]
+    public function getGroupSequence(): array|GroupSequence
+    {
+        $groups = [
+            'Greeting',
+        ];
+
+        if ($this->getId() % 2) {
+           $groups[] = 'needs_name';
+        }
+
+        return new GroupSequence($groups);
+    }
+}
+```
+
+
 ## Validating Delete Operations
 
 By default, validation rules that are specified on the API resource are not evaluated during DELETE operations. You need to trigger the validation in your code, if needed.
