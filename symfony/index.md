@@ -251,7 +251,7 @@ curl -sSL https://raw.githubusercontent.com/coopTilleuls/template-sync/main/temp
 ```
 Resolve potential conflicts, run `git cherry-pick --continue` and you are done!
 
-[Full documentation](https://github.com/coopTilleuls/template-sync/blob/main/README.md)
+For more details, refer to the [coopTilleuls/template-sync documentation](https://github.com/coopTilleuls/template-sync/blob/main/README.md)
 
 ## Bringing your Own Model
 
