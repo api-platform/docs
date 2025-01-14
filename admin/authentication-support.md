@@ -106,9 +106,12 @@ import { parseHydraDocumentation } from "@api-platform/api-doc-parser";
 import authProvider from "utils/authProvider";
 import { ENTRYPOINT } from "config/entrypoint";
 
-// *****
-// Here put the code parts shown above
-// *****
+// Auth, Parser, Provider calls
+const getHeaders = () => {...};
+const fetchHydra = (url, options = {}) => {...};
+const RedirectToLogin = () => {...};
+const apiDocumentationParser = (setRedirectToLogin) => async () => {...};
+const dataProvider = (setRedirectToLogin) => {...};
 
 const Admin = () => {
   const [redirectToLogin, setRedirectToLogin] = useState(false);
@@ -144,4 +147,127 @@ export default Admin;
 
 ### Additional Notes
 
-For the implementation of the admin conponent, you can find a working example in the [API Platform's demo application](https://github.com/api-platform/demo/blob/4.0/pwa/components/admin/Admin.tsx).
+For the implementation of the admin component, you can find a working example in the [API Platform's demo application](https://github.com/api-platform/demo/blob/4.0/pwa/components/admin/Admin.tsx).
+
+## OpenApiAdmin
+
+This section explains how to set up and customize the [OpenApiAdmin component](https://api-platform.com/docs/admin/components/#openapi) authentication layer.
+It covers:
+* Creating a custom HTTP Client
+* Data and rest data provider configuration
+* Implementation of an auth provider
+
+### Data Provider & HTTP Client
+
+Create a custom HTTP client to add authentication tokens to request headers.
+Configure the data `ApiPlatformAdminDataProvider` data provider, and
+inject the custom HTTP client into the [Simple REST Data Provider for React-Admin](https://github.com/Serind/ra-data-simple-rest).
+
+**File:** `src/components/jsonDataProvider.tsx`
+```typescript
+const httpClient = async (url: string, options: fetchUtils.Options = {}) => {
+    options.headers = new Headers({
+        ...options.headers,
+        Accept: 'application/json',
+    }) as Headers;
+
+    const token = getAccessToken();
+    options.user = { token: `Bearer ${token}`, authenticated: !!token };
+
+    return await fetchUtils.fetchJson(url, options);
+};
+
+const jsonDataProvider = openApiDataProvider({
+  dataProvider: simpleRestProvider(API_ENTRYPOINT_PATH, httpClient),
+  entrypoint: API_ENTRYPOINT_PATH,
+  docEntrypoint: API_DOCS_PATH,
+});
+```
+
+> [!NOTE]
+> The `simpleRestProvider` provider expect the API to include a `Content-Range` header in the response.
+> You can find more about the header syntax in the [Mozilla’s MDN documentation: Content-Range](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Range).
+> 
+> The `getAccessToken` function retrieves the JWT token stored in the browser.
+
+### Authentication and Authorization
+
+Create and export an `authProvider` object that handles authentication and authorization logic.
+
+**File:** `src/components/authProvider.tsx`
+```typescript
+interface JwtPayload {
+    exp?: number;
+    iat?: number;
+    roles: string[];
+    username: string;
+}
+
+const authProvider = {
+    login: async ({username, password}: { username: string; password: string }) => {
+        const request = new Request(API_AUTH_PATH, {
+            method: "POST",
+            body: JSON.stringify({ email: username, password }),
+            headers: new Headers({ "Content-Type": "application/json" }),
+        });
+
+        const response = await fetch(request);
+
+        if (response.status < 200 || response.status >= 300) {
+            throw new Error(response.statusText);
+        }
+
+        const auth = await response.json();
+        localStorage.setItem("token", auth.token);
+    },
+    logout: () => {
+        localStorage.removeItem("token");
+        return Promise.resolve();
+    },
+    checkAuth: () => getAccessToken() ? Promise.resolve() : Promise.reject(),
+    checkError: (error: { status: number }) => {
+        const status = error.status;
+        if (status === 401 || status === 403) {
+            localStorage.removeItem("token");
+            return Promise.reject();
+        }
+
+        return Promise.resolve();
+    },
+    getIdentity: () => {
+        const token = getAccessToken();
+
+        if (!token) return Promise.reject();
+
+        const decoded = jwtDecode<JwtPayload>(token);
+
+        return Promise.resolve({
+            id: "",
+            fullName: decoded.username,
+            avatar: "",
+        });
+    },
+    getPermissions: () => Promise.resolve(""),
+};
+
+export default authProvider;
+```
+
+### Export OpenApiAdmin Component
+
+**File:** `src/App.tsx`
+```typescript
+import {OpenApiAdmin} from '@api-platform/admin';
+import authProvider from "./components/authProvider";
+import jsonDataProvider from "./components/jsonDataProvider";
+import {API_DOCS_PATH, API_ENTRYPOINT_PATH} from "./config/api";
+
+export default () => (
+  <OpenApiAdmin
+    entrypoint={API_ENTRYPOINT_PATH}
+    docEntrypoint={API_DOCS_PATH}
+    dataProvider={jsonDataProvider}
+    authProvider={authProvider}
+  />
+);
+```
