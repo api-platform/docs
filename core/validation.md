@@ -419,10 +419,10 @@ final readonly class MyEntityRemoveProcessor implements ProcessorInterface
 
     public function process(mixed $data, Operation $operation, array $uriVariables = [], array $context = [])
     {
-        $validationErrors = $this->validator->validate($data, groups: ['deleteValidation']]);
-        if($validationErrors->count() > 0) {
-            //trigger some error / throw some exception...for example
-            throw new ConflictHttpException($errors->get(0)->getMessage());
+        $violations = $this->validator->validate($data, groups: ['deleteValidation']]);
+        if(0 !== \count($violations)) {
+            //trigger some error / throw some exception...for example :
+            throw new ValidationException($violations);
         }
         $this->doctrineProcessor->process($data, $operation, $uriVariables, $context);
     }
