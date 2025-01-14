@@ -239,7 +239,7 @@ For instance, go to `https://localhost/greetings.jsonld` to retrieve the list of
 Of course, you can also use your favorite HTTP client to query the API.
 We are fond of [Hoppscotch](https://hoppscotch.com), a free and open source API client with good support of API Platform.
 
-## Update Your Project
+## Keep Your Project in Sync with the API Platform Template
 
 You have started a project with the API Platform template and you would like to benefit from the latest enhancements introduced since you created your project (i.e. [FrankenPHP](https://frankenphp.dev/). Juste use this Git based tool
 [The _template-sync_ project](https://github.com/coopTilleuls/template-sync) got you covered.
