@@ -241,8 +241,8 @@ We are fond of [Hoppscotch](https://hoppscotch.com), a free and open source API 
 
 ## Update Your Project
 
-You have started a project with the API Platform template and you would like to benefit from the latest enhancements introduced since you created your project (i.e. [FrankenPHP](https://frankenphp.dev/). Juste use this git based tool
-[The *template-sync* project](https://github.com/coopTilleuls/template-sync) got you covered.
+You have started a project with the API Platform template and you would like to benefit from the latest enhancements introduced since you created your project (i.e. [FrankenPHP](https://frankenphp.dev/). Juste use this Git based tool
+[The _template-sync_ project](https://github.com/coopTilleuls/template-sync) got you covered.
 
 Run the following command to import the changes since your last update:
 
