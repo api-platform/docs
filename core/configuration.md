@@ -155,7 +155,13 @@ api_platform:
 
         # The nesting separator used in the filter names.
         nesting_separator: _
-
+        
+        # The maximum query depth. Set to 0 to disable it. Look at https://webonyx.github.io/graphql-php/security/#limiting-query-depth
+        max_query_depth: 20
+        
+        # The maximum query complexity. Set to 0 to disable it. Look at https://webonyx.github.io/graphql-php/security/#query-complexity-analysis
+        max_query_complexity: 500
+        
         collection:
             pagination:
                 enabled: true
@@ -545,6 +551,12 @@ return [
 
         // The nesting separator used in the filter names.
         'nesting_separator' => '_',
+        
+        // The maximum query depth. Set to 0 to disable it. Look at https://webonyx.github.io/graphql-php/security/#limiting-query-depth
+        'max_query_depth' => 20,
+        
+        // The maximum query complexity. Set to 0 to disable it. Look at https://webonyx.github.io/graphql-php/security/#query-complexity-analysis
+        'max_query_complexity' => 500,
 
         'collection' => [
             'pagination' => [
