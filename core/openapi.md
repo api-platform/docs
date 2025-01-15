@@ -740,7 +740,7 @@ You may want to copy the [one shipped with API Platform](https://github.com/api-
 
 As described [in the Laravel documentation](https://laravel.com/docs/blade#extending-a-layout), it's possible to override the Blade template that loads Swagger UI and renders the documentation:
 
-```blade
+```html
 {# resources/views/swagger-ui.blade.php #}
 <!DOCTYPE html>
 <html>
