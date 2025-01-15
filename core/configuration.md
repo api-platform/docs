@@ -98,8 +98,8 @@ api_platform:
             partial_parameter_name: 'partial'
 
     mapping:
-        # The list of paths with files or directories where the bundle will look for additional resource files.
-        paths: []
+        # The list of paths with files or directories where the bundle will look for resource files (if you use this, you need to add the current project path and the new one)
+        paths: ["%kernel.project_dir%/src", "%kernel.project_dir%/vendor/foo-vendor/foo-bundle/src"]
 
     # The list of your resources class directories. Defaults to the directories of the mapping paths but might differ.
     resource_class_directories:
