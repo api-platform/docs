@@ -512,8 +512,11 @@ Manually register the Swagger UI controller:
 ```yaml
 # app/config/routes.yaml
 api_doc:
-    path: /api_documentation
+    path: /api_documentation.{_format}
     controller: api_platform.swagger_ui.action
+    methods: ['HEAD', 'GET']
+    defaults:
+        _format: html
 ```
 
 Change `/api_documentation` to the URI you wish Swagger UI to be accessible on.
