@@ -160,7 +160,7 @@ It covers:
 ### Data Provider & HTTP Client
 
 Create a custom HTTP client to add authentication tokens to request headers.
-Configure the data `ApiPlatformAdminDataProvider` data provider, and
+Configure the `openApiDataProvider`, and
 inject the custom HTTP client into the [Simple REST Data Provider for React-Admin](https://github.com/Serind/ra-data-simple-rest).
 
 **File:** `src/components/jsonDataProvider.tsx`
