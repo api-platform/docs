@@ -239,6 +239,21 @@ For instance, go to `https://localhost/greetings.jsonld` to retrieve the list of
 Of course, you can also use your favorite HTTP client to query the API.
 We are fond of [Hoppscotch](https://hoppscotch.com), a free and open source API client with good support of API Platform.
 
+## Keep Your Project in Sync with the API Platform Template
+
+You have started a project with the API Platform template and you would like to benefit from the latest enhancements introduced since you created your project (i.e. [FrankenPHP](https://frankenphp.dev/). Juste use this Git based tool
+[The _template-sync_ project](https://github.com/coopTilleuls/template-sync) got you covered.
+
+Run the following command to import the changes since your last update:
+
+```console
+curl -sSL https://raw.githubusercontent.com/coopTilleuls/template-sync/main/template-sync.sh| sh -s -- https://github.com/api-platform/api-platform
+```
+
+Resolve potential conflicts, run `git cherry-pick --continue` and you are done!
+
+For more details, refer to the [coopTilleuls/template-sync documentation](https://github.com/coopTilleuls/template-sync/blob/main/README.md)
+
 ## Bringing your Own Model
 
 Your API Platform project is now 100% functional. Let's expose our own data model.
