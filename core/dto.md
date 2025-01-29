@@ -23,6 +23,8 @@ final class UserResetPasswordDto
 }
 ```
 
+**Note**: if you have any *denormalizationContext* groups on the *User* entity (or just on the entity *Post* operation), make sure to annotate the fields in the DTO class accordingly.
+
 ```php
 <?php
 // api/src/Model/User.php
@@ -96,6 +98,8 @@ This will dispatch the `App\Dto\Message` via [Symfony Messenger](https://symfony
 ## Implementing a Read Operation With an Output Different From the Resource
 
 To return another representation of your data in a [State Provider](./state-providers.md) we advise to specify the `output` attribute of the resource. Note that this technique works without any changes to the resource but your API documentation would be wrong.
+
+**Note**: if you have any *normalizationContext* groups on the *User* entity (or just on the entity *Get* operation), make sure to annotate the fields in the DTO class accordingly.
 
 ```php
 <?php
