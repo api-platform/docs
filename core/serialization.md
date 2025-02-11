@@ -548,7 +548,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
 class Person
 {
     #[Groups('person')]
-    public name $name;
+    public string $name;
 
     #[Groups('person')]
    public ?Person $parent;  // Note that a Person instance has a relation with another Person.
