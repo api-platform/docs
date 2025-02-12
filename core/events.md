@@ -103,11 +103,8 @@ use Symfony\Component\Mailer\MailerInterface;
 
 final class BookMailSubscriber implements EventSubscriberInterface
 {
-    private $mailer;
-
-    public function __construct(MailerInterface $mailer)
+    public function __construct(private MailerInterface $mailer)
     {
-        $this->mailer = $mailer;
     }
 
     public static function getSubscribedEvents()

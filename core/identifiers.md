@@ -24,11 +24,8 @@ use App\Uuid;
 #[ApiResource(provider: PersonProvider::class)]
 final class Person
 {
-    /**
-     * @var Uuid
-     */
     #[ApiProperty(identifier: true)]
-    public $code;
+    public Uuid $code;
 
     // ...
 }
@@ -214,12 +211,9 @@ final class Person
     #[ApiProperty(identifier: false)]
     private ?int $id = null;
 
-    /**
-     * @var Uuid
-     */
     #[ORM\Column(type: 'uuid', unique: true)]
     #[ApiProperty(identifier: true)]
-    public $code;
+    public Uuid $code;
 
     // ...
 }
