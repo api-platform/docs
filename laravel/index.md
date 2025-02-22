@@ -7,16 +7,16 @@ using Laravel!
 
 With API Platform, you can:
 
-- [expose your Eloquent](#exposing-a-model) models in minutes as:
+- [expose your Eloquent](./#exposing-a-model) models in minutes as:
   - a REST API implementing the industry-leading standards, formats and best practices: [JSON-LD](https://en.wikipedia.org/wiki/JSON-LD)/[RDF](https://en.wikipedia.org/wiki/Resource_Description_Framework), [JSON:API](https://jsonapi.org), [HAL](https://stateless.group/hal_specification.html), and many RFCs...
-  - a [GraphQL](#enabling-graphql) API
+  - a [GraphQL](./#enabling-graphql) API
   - or both at the same time, with the same code!
 - automatically expose an [OpenAPI](https://www.openapis.org) specification (formerly Swagger), dynamically generated from your Eloquent models and always up to date
 - automatically expose nice UIs and playgrounds to develop using your API ([Swagger UI](https://swagger.io/tools/swagger-ui/) and [GraphiQL](https://github.com/graphql/graphiql))
 - automatically paginate your collections
-- add validation logic using Laravel [Form Request Validation](#write-operations-authorization-and-validation)
-- add authorization logic using [gates and policies](#authorization) ([compatible with Sanctum, Passport, Socialite...](#authentication))
-- add [filtering logic](#adding-filters)
+- add validation logic using Laravel [Form Request Validation](./#write-operations-authorization-and-validation)
+- add authorization logic using [gates and policies](./#authorization) ([compatible with Sanctum, Passport, Socialite...](./#authentication))
+- add [filtering logic](./#adding-filters)
 <!--* push changed data to the clients in real-time using Laravel Broadcast and [Mercure](https://mercure.rocks) (a popular WebSockets alternative, created by Kévin Dunglas, the original author of API Platform) and receive them using Laravel Echo-->
 - benefits from the API Platform JavaScript tools: [admin](../admin/index.md) and [create client](../create-client/index.md) (supports Next/React, Nuxt/Vue.js, Quasar, Vuetify and more!)
 <!-- * benefits from native HTTP cache (with automatic invalidation) -->
@@ -168,7 +168,7 @@ For instance, go to `http://127.0.0.1:8000/api/books.jsonld` to retrieve the lis
 > [!NOTE]
 > Documentation for Eloquent "API resources" encourages using the JSON:API community format.
 > While we recommend preferring JSON-LD when possible, JSON:API is also supported by API Platform,
-> read the [Content Negotiation](#content-negotiation) section to learn how to enable it.
+> read the [Content Negotiation](./#content-negotiation) section to learn how to enable it.
 
 Of course, you can also use your favorite HTTP client to query the API.
 We are fond of [Hoppscotch](https://hoppscotch.com), a free and open source API client with good support of API Platform.

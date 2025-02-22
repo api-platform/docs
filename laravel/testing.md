@@ -220,7 +220,7 @@ As a result, your test environment remains reliable and consistent across multip
 If everything is working properly, you should see `Tests: 5 passed (15 assertions)`.
 Your REST API is now properly tested!
 
-Check out the [API Test Assertions section](#api-test-assertions-with-laravel) to discover the full range of assertions
+Check out the [API Test Assertions section](./#api-test-assertions-with-laravel) to discover the full range of assertions
 and other features provided by API Platform's test utilities.
 
 ### Migrating from PHPUnit to Pest
@@ -244,7 +244,7 @@ If for some reason, PHPUnit is not installed refer to the [PHPUnit Installation 
 
 ### Writing Functional Tests with PHPUnit
 
-For instructions on generating the factory, please refer to the  [Generate The Factory section](#generate-the-factory).
+For instructions on generating the factory, please refer to the  [Generate The Factory section](./#generate-the-factory).
 
 #### Writing PHPUnit tests
 
@@ -428,7 +428,7 @@ during the test. As a result, your test environment remains reliable and consist
 If everything is working properly, you should see `OK (5 tests, 15 assertions)`.
 Your REST API is now properly tested!
 
-Check out the [API Test Assertions section](#api-test-assertions-with-laravel) to discover the full range of assertions
+Check out the [API Test Assertions section](./#api-test-assertions-with-laravel) to discover the full range of assertions
 and other features provided by API Platform's test utilities.
 
 ## Writing Unit Tests

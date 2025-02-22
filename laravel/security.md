@@ -5,7 +5,7 @@
 API Platform is compatible with Laravel's [authorization](https://laravel.com/docs/authorization) mechanism.
 
 To utilize policies in API Platform, it is essential to have Laravel's authentication system initialized.
-See the [Authentication section](#authentication) for more information.
+See the [Authentication section](./#authentication) for more information.
 
 Once a gate is defined, API Platform will automatically detect your policy.
 
