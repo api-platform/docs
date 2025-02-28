@@ -2,7 +2,10 @@
 
 ## API Platform Core  
 - [General Contribution Guide](https://github.com/api-platform/core/blob/main/CONTRIBUTING.md)  
-- [Laravel-Specific Contribution Guide](https://github.com/api-platform/core/blob/main/src/Laravel/CONTRIBUTING.md)  
+- [Laravel-Specific Contribution Guide](https://github.com/api-platform/core/blob/main/src/Laravel/CONTRIBUTING.md)
+
+## API Platform Documentation
+- [General Contribution Guide](https://github.com/api-platform/docs/blob/main/CONTRIBUTING.md)  
 
 ## API Platform Tools  
 - [Schema Generator Contribution Guide](https://github.com/api-platform/schema-generator/blob/main/CONTRIBUTING.md)  
