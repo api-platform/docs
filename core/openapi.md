@@ -50,6 +50,26 @@ It is also possible to use OpenAPI v3.0.0 format:
 bin/console api:openapi:export --spec-version=3.0.0
 ```
 
+## Create several versions of a specification
+
+You can now decline a same OpenAPI specification in multiple versions using the `x-apiplatform-tags` tag:
+
+```php
+use ApiPlatform\OpenApi\Factory\OpenApiFactory;
+
+#[GetCollection(openapi: new Operation(extensionProperties: [OpenApiFactory::API_PLATFORM_TAG => ['customer', 'developer']]))]
+#[Post(openapi: new Operation(extensionProperties: [OpenApiFactory::API_PLATFORM_TAG => 'developer']))]
+class Book {}
+```
+
+Then, either use the query parameter for the web version such as `/docs?filter_tags[]=customer` or through the command line:
+
+```
+bin/console api:openapi:export --filter-tags=customer
+```
+
+To produce a specification including only the operation matching your tag.
+
 ## Overriding the OpenAPI Specification
 
 ### Overriding the OpenAPI Specification with Symfony
