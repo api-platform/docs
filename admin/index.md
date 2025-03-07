@@ -1,36 +1,57 @@
 # The API Platform Admin
 
-![Screencast](images/admin-demo.gif)
+<video controls autoplay playsinline muted loop>
+  <source src="./images/admin-demo.mp4" type="video/mp4"/>
+  <source src="./images/admin-demo.webm" type="video/webm"/>
+  Sorry, your browser doesn't support HTML5 video.
+</video>
 
-API Platform Admin is a tool to automatically create a beautiful (Material Design) and fully-featured administration interface
-for any API supporting [the Hydra Core Vocabulary](https://www.hydra-cg.com/), exposing an [OpenAPI documentation](https://www.openapis.org/)
-or other API specification formats supported by [`@api-platform/api-doc-parser`](https://github.com/api-platform/api-doc-parser).
+API Platform **Admin** is a tool to automatically create a beautiful (Material Design) and fully-featured administration interface
+for any API implementing specification formats supported by [`@api-platform/api-doc-parser`](https://github.com/api-platform/api-doc-parser).
 
-API Platform Admin is the perfect companion of APIs created
-using [the API Platform framework](https://api-platform.com), but also supports APIs written with any other programming language or framework as long as they expose a standard Hydra API documentation or an OpenAPI documentation.
+In particular, that includes:
 
-API Platform Admin is a 100% standalone Single-Page-Application written in TypeScript with no coupling to the server part,
-according to the API-first paradigm.
+- APIs using [the Hydra Core Vocabulary](https://www.hydra-cg.com/)
+- APIs exposing an [OpenAPI documentation](https://www.openapis.org/)
 
-API Platform Admin parses the API documentation then uses the awesome [React Admin](https://marmelab.com/react-admin/)
-library to expose a nice, responsive, management interface (Create-Retrieve-Update-Delete) for all documented resource types.
+Of course, API Platform Admin is the perfect companion of APIs created
+using [the API Platform framework](https://api-platform.com). But it also supports APIs written with any other programming language or framework as long as they expose a standard Hydra or OpenAPI documentation.
 
-You can **customize everything** by using provided React Admin and [MUI](https://mui.com/) components, or by writing your custom [React](https://reactjs.org/) components.
+## Based On React Admin
+
+API Platform Admin is a Single Page Application (SPA), based on [React Admin](https://marmelab.com/react-admin/), a powerful frontend framework for building B2B applications on top of REST/GraphQL APIs, written in TypeScript and React.
+
+Thanks to its built-in **guessers**, API Platform Admin parses the API documentation then uses React Admin to expose a nice, responsive management interface (Create-Retrieve-Update-Delete, i.e. CRUD) for all documented resource types.
+
+Afterwards, you can **customize everything** by using the numerous components provided [React Admin](https://marmelab.com/react-admin/documentation.html) and [MUI](https://mui.com/), or even writing your own [React](https://reactjs.org/) components.
+
+<iframe src="https://www.youtube-nocookie.com/embed/UyAkN85wGNk" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen style="aspect-ratio: 16 / 9;width:100%;margin-bottom:1em;"></iframe>
 
 <p align="center" class="symfonycasts"><a href="https://symfonycasts.com/screencast/api-platform/react-admin?cid=apip"><img src="../symfony/images/symfonycasts-player.png" alt="React Admin Screencast"><br>Watch the React Admin screencast</a></p>
 
 ## Features
 
-- Automatically generates an admin interface for all the resources of the API thanks to the hypermedia features of Hydra or to the OpenAPI documentation
-- Generates 'list', 'create', 'show', and 'edit' screens, as well as a delete button
-- Generates suitable inputs and fields according to the API doc (e.g. number HTML input for numbers, checkbox for booleans, selectbox for relationships...)
-- Generates suitable inputs and fields according to Schema.org types if available (e.g. email field for `https://schema.org/email`)
-- Handles relationships
-- Supports pagination
-- Supports filters and ordering
-- Automatically validates whether a field is mandatory client-side according to the API description
-- Sends proper HTTP requests to the API and decodes them using Hydra and JSON-LD formats if available
+Simply by reading your API documentation, API Platform Admin provides the following features:
+
+- Generate 'list', 'create', 'show', and 'edit' views for all resources
+- Automatically detect the type for inputs and fields
+- Client-side [validation](./validation.md) on required inputs
+- Pagination
+- Filtering and ordering
+- Easily view and edit [related records](./handling-relations.md)
+- Display the related resource’s name instead of its IRI ([using the Schema.org vocabulary](./schema.org.md#displaying-related-resources-name-instead-of-its-iri))
 - Nicely displays server-side errors (e.g. advanced validation)
-- Supports real-time updates with [Mercure](https://mercure.rocks)
-- All the [features provided by React-admin](https://marmelab.com/react-admin/Tutorial.html) can also be used
-- **100% customizable**
+- Real-time updates with [Mercure](https://mercure.rocks)
+
+By leveraging React Admin components, you can further customize the generated interface and get access to many more features:
+
+- Powerful Datagrid components
+- Search and filtering
+- Advanced form validation
+- Undoable mutations
+- Authentication
+- Access Control
+- Internationalization
+- [And many more](https://marmelab.com/react-admin/Features.html)
+
+**Next step:** get your Admin up and running by following the [Getting Started guide](./getting-started.md).
