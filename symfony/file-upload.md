@@ -15,8 +15,8 @@ Enable the multipart format globally in order to use it as the input format of y
 ```yaml
 api_platform:
   formats:
-    multipart: ['multipart/form-data']
     jsonld: ['application/ld+json']
+    multipart: ['multipart/form-data']
 ```
 
 ## Installing VichUploaderBundle
