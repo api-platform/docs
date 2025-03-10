@@ -2,7 +2,7 @@
 
 API Platform Admin handles `to-one` and `to-many` relations automatically.
 
-Thanks to [the Schema.org support](schema.org.md), you can easily display the name of a related resource instead of its IRI.
+Thanks to [the Schema.org support](./schema-org.md#displaying-related-resources-name-instead-of-its-iri), you can easily display the name of a related resource instead of its IRI.
 
 ## Embedded Relations
 
@@ -11,12 +11,10 @@ If a relation is an array of [embeddeds or an embedded](../core/serialization.md
 The embedded data will be displayed as text field and editable as text input: the admin cannot determine the fields present in it.
 To display the fields you want, see [this section](handling-relations.md#display-a-field-of-an-embedded-relation).
 
-You can also ask the admin to automatically replace the embedded resources' data by their IRI,
-by setting the `useEmbedded` parameter of the Hydra data provider to `false`.
-Embedded data is inserted to a local cache: it will not be necessary to make more requests if you reference some fields of the embedded resource later on.
+You can also ask the admin to return the embedded resources' IRI instead of the full record, by setting the `useEmbedded` parameter of the Hydra data provider to `false`.
 
-```javascript
-// admin/src/App.js
+```jsx
+// admin/src/App.jsx
 
 import { HydraAdmin, fetchHydra, hydraDataProvider } from '@api-platform/admin';
 import { parseHydraDocumentation } from '@api-platform/api-doc-parser';
@@ -31,18 +29,20 @@ const dataProvider = hydraDataProvider({
   useEmbedded: false,
 });
 
-export default () => (
+export const App = () => (
   <HydraAdmin dataProvider={dataProvider} entrypoint={entrypoint} />
 );
 ```
+
+**Tip:** Embedded data is inserted to a local cache: it will not be necessary to make more requests if you reference some fields of the embedded resource later on.
 
 ## Display a Field of an Embedded Relation
 
 If you have an [embedded relation](../core/serialization.md#embedding-relations) and need to display a nested field, the code you need to write depends of the value of `useEmbedded` of the Hydra data provider.
 
-If `true` (default behavior), you need to use the dot notation to display a field:
+If `true` (default behavior), you can use the dot notation to display a field:
 
-```javascript
+```jsx
 import {
   HydraAdmin,
   FieldGuesser,
@@ -51,16 +51,16 @@ import {
 } from '@api-platform/admin';
 import { TextField } from 'react-admin';
 
-const BooksList = (props) => (
-  <ListGuesser {...props}>
+const BooksList = () => (
+  <ListGuesser>
     <FieldGuesser source="title" />
     {/* Use react-admin components directly when you want complex fields. */}
     <TextField label="Author first name" source="author.firstName" />
   </ListGuesser>
 );
 
-export default () => (
-  <HydraAdmin entrypoint={process.env.REACT_APP_API_ENTRYPOINT}>
+export const App = () => (
+  <HydraAdmin entrypoint={...} >
     <ResourceGuesser name="books" list={BooksList} />
   </HydraAdmin>
 );
@@ -96,9 +96,9 @@ For instance, if your API returns:
 }
 ```
 
-If you want to display the author first name in the list, you need to write the following code:
+If you want to display the author first name in the list, you need to leverage React Admin's [`<ReferenceField>`](https://marmelab.com/react-admin/ReferenceField.html) to fetch the related record:
 
-```javascript
+```jsx
 import {
   HydraAdmin,
   FieldGuesser,
@@ -107,8 +107,8 @@ import {
 } from '@api-platform/admin';
 import { ReferenceField, TextField } from 'react-admin';
 
-const BooksList = (props) => (
-  <ListGuesser {...props}>
+const BooksList = () => (
+  <ListGuesser>
     <FieldGuesser source="title" />
     {/* Use react-admin components directly when you want complex fields. */}
     <ReferenceField
@@ -121,8 +121,8 @@ const BooksList = (props) => (
   </ListGuesser>
 );
 
-export default () => (
-  <HydraAdmin entrypoint={process.env.REACT_APP_API_ENTRYPOINT}>
+export const App = () => (
+  <HydraAdmin entrypoint={...} >
     <ResourceGuesser name="books" list={BooksList} />
     <ResourceGuesser name="authors" />
   </HydraAdmin>
@@ -131,7 +131,7 @@ export default () => (
 
 ## Using an Autocomplete Input for Relations
 
-Let's go one step further thanks to the [customization capabilities](customizing.md) of API Platform Admin by adding autocompletion support to form inputs for relations.
+Let's go one step further thanks to the customization capabilities of API Platform Admin by adding autocompletion support to form inputs for relations.
 
 Let's consider an API exposing `Review` and `Book` resources linked by a `many-to-one` relation (through the `book` property).
 
@@ -192,9 +192,9 @@ class Book
 
 Notice the "partial search" [filter](../core/filters.md) on the `title` property of the `Book` resource class.
 
-Now, let's configure API Platform Admin to enable autocompletion for the relation selector:
+Now, let's configure API Platform Admin to enable autocompletion for the book selector. We will leverage the [`<ReferenceInput>`](https://marmelab.com/react-admin/ReferenceInput.html) and [`<AutocompleteInput>`](https://marmelab.com/react-admin/AutocompleteInput.html) components from React Admin:
 
-```javascript
+```jsx
 import {
   HydraAdmin,
   ResourceGuesser,
@@ -204,25 +204,8 @@ import {
 } from '@api-platform/admin';
 import { ReferenceInput, AutocompleteInput } from 'react-admin';
 
-const ReviewsCreate = (props) => (
-  <CreateGuesser {...props}>
-    <InputGuesser source="author" />
-    <ReferenceInput source="book" reference="books">
-      <AutocompleteInput
-        filterToQuery={(searchText) => ({ title: searchText })}
-        optionText="title"
-        label="Books"
-      />
-    </ReferenceInput>
-
-    <InputGuesser source="rating" />
-    <InputGuesser source="body" />
-    <InputGuesser source="publicationDate" />
-  </CreateGuesser>
-);
-
-const ReviewsEdit = (props) => (
-  <EditGuesser {...props}>
+const ReviewsEdit = () => (
+  <EditGuesser>
     <InputGuesser source="author" />
 
     <ReferenceInput source="book" reference="books">
@@ -239,67 +222,11 @@ const ReviewsEdit = (props) => (
   </EditGuesser>
 );
 
-export default () => (
-  <HydraAdmin entrypoint={process.env.REACT_APP_API_ENTRYPOINT}>
-    <ResourceGuesser name="reviews" create={ReviewsCreate} edit={ReviewsEdit} />
+export const App = () => (
+  <HydraAdmin entrypoint={...} >
+    <ResourceGuesser name="reviews" edit={ReviewsEdit} />
   </HydraAdmin>
 );
 ```
 
-If the book is embedded into a review and if the `useEmbedded` parameter is `true` (default behavior),
-you need to change the `ReferenceInput` for the edit component:
-
-```javascript
-import {
-  HydraAdmin,
-  ResourceGuesser,
-  CreateGuesser,
-  EditGuesser,
-  InputGuesser,
-} from '@api-platform/admin';
-import { ReferenceInput, AutocompleteInput } from 'react-admin';
-
-const ReviewsCreate = (props) => (
-  <CreateGuesser {...props}>
-    <InputGuesser source="author" />
-    <ReferenceInput source="book" reference="books">
-      <AutocompleteInput
-        filterToQuery={(searchText) => ({ title: searchText })}
-        optionText="title"
-        label="Books"
-      />
-    </ReferenceInput>
-
-    <InputGuesser source="rating" />
-    <InputGuesser source="body" />
-    <InputGuesser source="publicationDate" />
-  </CreateGuesser>
-);
-
-const ReviewsEdit = (props) => (
-  <EditGuesser {...props}>
-    <InputGuesser source="author" />
-
-    <ReferenceInput source="book" reference="books">
-      <AutocompleteInput
-        filterToQuery={(searchText) => ({ title: searchText })}
-        format={(v) => v['@id'] || v}
-        optionText="title"
-        label="Books"
-      />
-    </ReferenceInput>
-
-    <InputGuesser source="rating" />
-    <InputGuesser source="body" />
-    <InputGuesser source="publicationDate" />
-  </EditGuesser>
-);
-
-export default () => (
-  <HydraAdmin entrypoint={process.env.REACT_APP_API_ENTRYPOINT}>
-    <ResourceGuesser name="reviews" create={ReviewsCreate} edit={ReviewsEdit} />
-  </HydraAdmin>
-);
-```
-
-The autocomplete field should now work properly!
+You can now search for books by title in the book selector of the review form.
