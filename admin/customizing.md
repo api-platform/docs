@@ -65,6 +65,27 @@ const App = () => (
 );
 ```
 
+Likewise, you can use the `icon` prop to customize the icon displayed in the menu:
+
+```diff
++import AutoStoriesIcon from '@mui/icons-material/AutoStories';
++import ReviewsIcon from '@mui/icons-material/Reviews';
+import { HydraAdmin, ResourceGuesser } from "@api-platform/admin";
+
+const App = () => (
+    <HydraAdmin entrypoint={...}>
+-       <ResourceGuesser name="books" />
++       <ResourceGuesser name="books" icon={AutoStoriesIcon} />
+-       <ResourceGuesser name="reviews" />
++       <ResourceGuesser name="reviews" icon={ReviewsIcon} />
+    </HydraAdmin>
+);
+```
+
+Here is the result:
+
+![Admin menu with custom icons](./images/admin-menu-icons.png)
+
 ## Customizing the `<ListGuesser>`
 
 By default, `<ResourceGuesser>` will render a `<ListGuesser>` component as the list view for a resource.
