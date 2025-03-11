@@ -64,7 +64,7 @@ class Book {}
 
 Then, either use the query parameter for the web version such as `/docs?filter_tags[]=customer` or through the command line:
 
-```
+```console
 bin/console api:openapi:export --filter-tags=customer
 ```
 
