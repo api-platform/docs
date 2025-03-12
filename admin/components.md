@@ -1,19 +1,23 @@
-# Components
+# Components Reference
 
 ## Resource Components
 
 ### AdminGuesser
 
-`<AdminGuesser>` renders automatically an [Admin component](https://marmelab.com/react-admin/Admin.html) for resources exposed by a web API documented with any format supported by `@api-platform/api-doc-parser`
-(for Hydra documented APIs, use the [HydraAdmin component](components.md#hydraadmin) instead,
-for OpenAPI documented APIs, use the [OpenApiAdmin component](components.md#openapiadmin) instead).
-It also creates a [schema analyzer](components.md#schema-analyzer) context, where the `schemaAnalyzer` service (for getting information about the provided API documentation) is stored.
+`<AdminGuesser>` renders automatically an [`<Admin>` component](https://marmelab.com/react-admin/Admin.html) for resources exposed by a web API documented with any format supported by `@api-platform/api-doc-parser`.
 
-`<AdminGuesser>` renders all exposed resources by default, but you can choose what resource you want to render by passing [ResourceGuesser components](components.md#resourceguesser) as children.
-Deprecated resources are hidden by default, but you can add them back using an explicit `<ResourceGuesser>` component.
+**Tip:** For Hydra documented APIs, use the [`<HydraAdmin>` component](#hydraadmin) instead.
 
-```javascript
-// App.js
+**Tip:** For OpenAPI documented APIs, use the [`<OpenApiAdmin>` component](#openapiadmin) instead.
+
+It also creates a [schema analyzer](#hydra-schema-analyzer) context, where the `schemaAnalyzer` service (for getting information about the provided API documentation) is stored.
+
+`<AdminGuesser>` renders all exposed resources by default, but you can choose what resource you want to render by passing [`<ResourceGuesser>` components](#resourceguesser) as children.
+
+**Tip:** Deprecated resources are hidden by default, but you can add them back using an explicit `<ResourceGuesser>` component.
+
+```tsx
+// App.tsx
 import { AdminGuesser, ResourceGuesser } from '@api-platform/admin';
 
 const App = () => (
@@ -34,33 +38,31 @@ export default App;
 
 #### Props
 
-| Name              | Type    | Value          | required | Description                                                                      |
-| ----------------- | ------- | -------------- | -------- | -------------------------------------------------------------------------------- |
-| dataProvider      | object  | dataProvider   | yes      | communicates with your API                                                       |
-| schemaAnalyzer    | object  | schemaAnalyzer | yes      | retrieves resource type according to [Schema.org](https://schema.org) vocabulary |
-| theme             | object  | theme          | no       | theme of your Admin App                                                          |
-| includeDeprecated | boolean | true or false  | no       | displays or not deprecated resources                                             |
+| Name              | Type            | Value          | required | Description                                                                      |
+| ----------------- | --------------- | -------------- | -------- | -------------------------------------------------------------------------------- |
+| dataProvider      | object          | dataProvider   | yes      | the dataProvider to use to communicate with your API                             |
+| schemaAnalyzer    | object          | schemaAnalyzer | yes      | retrieves resource type according to [Schema.org](https://schema.org) vocabulary |
+| admin             | React component | -              | no       | React component to use to render the Admin                                       |
+| includeDeprecated | boolean         | true or false  | no       | displays or not deprecated resources                                             |
+
+`<AdminGuesser>` also accepts all props accepted by React Admin's [`<Admin>` component](https://marmelab.com/react-admin/Admin.html), such as [`theme`](https://marmelab.com/react-admin/Admin.html#theme), [`darkTheme`](https://marmelab.com/react-admin/Admin.html#darktheme), [`layout`](https://marmelab.com/react-admin/Admin.html#layout) and many others.
 
 ### ResourceGuesser
 
-Based on React Admin [Resource component](https://marmelab.com/react-admin/Resource.html), `<ResourceGuesser>` provides default props [CreateGuesser](components.md#createguesser), [ListGuesser](components.md#listguesser), [EditGuesser](components.md#editguesser) and [ShowGuesser](components.md#showguesser).
+Based on React Admin [`<Resource>` component](https://marmelab.com/react-admin/Resource.html), `<ResourceGuesser>` provides the default component to render for each view: [`<CreateGuesser>`](#createguesser), [`<ListGuesser>`](#listguesser), [`<EditGuesser>`](#editguesser) and [`<ShowGuesser>`](#showguesser).
 
-Otherwise, you can pass it your own CRUD components using `create`, `list`, `edit`, `show` props.
+You can also pass your own component to use for any view, using the `create`, `list`, `edit` or `show` props.
 
-```javascript
-// App.js
+```tsx
+// App.tsx
 import { AdminGuesser, ResourceGuesser } from '@api-platform/admin';
 
 const App = () => (
   <AdminGuesser dataProvider={dataProvider} schemaAnalyzer={schemaAnalyzer}>
-    <ResourceGuesser
-      name="books"
-      list={BooksList}
-      show={BooksShow}
-      create={BooksCreate}
-      edit={BooksEdit}
-    />
-    <ResourceGuesser name="reviews" />
+    {/* Uses the default guesser components for each CRUD view */}
+    <ResourceGuesser name="books" />
+    {/* Overrides only the list view */}
+    <ResourceGuesser name="reviews" list={ReviewList} />
   </AdminGuesser>
 );
 
@@ -73,131 +75,203 @@ export default App;
 | ---- | ------ | ----- | -------- | ------------------------ |
 | name | string | -     | yes      | endpoint of the resource |
 
-You can also use props accepted by React Admin [Resource component](https://marmelab.com/react-admin/Resource.html). For example, the props `list`, `show`, `create` or `edit`.
+`<ResourceGuesser>` also accepts all props accepted by React Admin's [`<Resource>` component](https://marmelab.com/react-admin/Resource.html), such as [`recordRepresentation`](https://marmelab.com/react-admin/Resource.html#recordrepresentation), [`icon`](https://marmelab.com/react-admin/Resource.html#icon) or [`options`](https://marmelab.com/react-admin/Resource.html#options).
 
 ## Page Components
 
 ### ListGuesser
 
-Based on React Admin [List](https://marmelab.com/react-admin/List.html), `<ListGuesser>` displays a list of resources in a [Datagrid](https://marmelab.com/react-admin/List.html#the-datagrid-component), according to children passed to it (usually [FieldGuesser](components.md#fieldguesser) or any [field component](https://marmelab.com/react-admin/Fields.html#basic-fields)
-available in React Admin).
+Based on React Admin [`<List>`](https://marmelab.com/react-admin/List.html), `<ListGuesser>` displays a list of records in a [`<Datagrid>`](https://marmelab.com/react-admin/Datagrid.html).
 
-Use `hasShow` and `hasEdit` props if you want to display `show` and `edit` buttons (both set to `true` by default).
+If no children are passed, it will display fields guessed from the schema.
 
-By default, `<ListGuesser>` comes with [Pagination](components.md#pagination).
+```tsx
+// BooksList.tsx
+import { ListGuesser } from '@api-platform/admin';
 
-```javascript
-// BooksList.js
+export const BooksList = () => (
+  /* Will display fields guessed from the schema */
+  <ListGuesser />
+);
+```
+
+It also accepts a list of fields as children. They can be either  [`<FieldGuesser>`](#fieldguesser) elements, or any [field component](https://marmelab.com/react-admin/Fields.html)
+available in React Admin, such as [`<TextField>`](https://marmelab.com/react-admin/TextField.html), [`<DateField>`](https://marmelab.com/react-admin/DateField.html) or [`<ReferenceField>`](https://marmelab.com/react-admin/ReferenceField.html) for instance.
+
+```tsx
+// BooksList.tsx
 import { FieldGuesser, ListGuesser } from '@api-platform/admin';
-import { ReferenceField, TextField } from 'react-admin';
+import { DateField, NumberField } from 'react-admin';
 
-export const BooksList = (props) => (
-  <ListGuesser {...props}>
-    <FieldGuesser source="author" />
-    <FieldGuesser source="title" />
-    <FieldGuesser source="rating" />
-    <FieldGuesser source="description" />
-    <FieldGuesser source="publicationDate" />
+export const BooksList = () => (
+  <ListGuesser>
+      {/* FieldGuesser comes from API Platform Admin */}
+      <FieldGuesser source="isbn" label="ISBN" />
+      <FieldGuesser source="title" />
+      <FieldGuesser source="author" />
+
+      {/* DateField and NumberField come from React Admin */}
+      <DateField source="publicationDate" />
+      <NumberField source="reviews.length" label="Reviews" />
   </ListGuesser>
 );
 ```
 
 #### ListGuesser Props
 
-| Name    | Type    | Value | required | Description                             |
-| ------- | ------- | ----- | -------- | --------------------------------------- |
-| filters | element | -     | no       | filters that can be applied to the list |
+`<ListGuesser>` accepts all props accepted by both React Admin [`<List>` component](https://marmelab.com/react-admin/List.html) and [`<Datagrid>` component](https://marmelab.com/react-admin/Datagrid.html).
 
-You can also use props accepted by React Admin [List](https://marmelab.com/react-admin/List.html).
+For instance you can pass props such as [`filters`](https://marmelab.com/react-admin/List.html#filters-filter-inputs), [`sort`](https://marmelab.com/react-admin/List.html#sort) or [`pagination`](https://marmelab.com/react-admin/List.html#pagination).
 
 ### CreateGuesser
 
-Displays a creation page for a single item. Uses React Admin [Create](https://marmelab.com/react-admin/CreateEdit.html) and [SimpleForm](https://marmelab.com/react-admin/CreateEdit.html#the-simpleform-component) components.
-For simple inputs, you can pass as children API Platform Admin [InputGuesser](components.md#inputguesser), or any React Admin [Input components](https://marmelab.com/react-admin/Inputs.html#input-components) for more complex inputs.
+Displays a creation page for a single item. Uses React Admin [`<Create>`](https://marmelab.com/react-admin/Create.html) and [`<SimpleForm>`](https://marmelab.com/react-admin/SimpleForm.html) components.
 
-```javascript
-// BooksCreate.js
+If no children are passed, it will display inputs guessed from the schema.
+
+```tsx
+// BooksCreate.tsx
+import { CreateGuesser } from '@api-platform/admin';
+
+export const BooksCreate = () => (
+  /* Will display inputs guessed from the schema */
+  <CreateGuesser />
+);
+```
+
+It also accepts a list of inputs as children, which can be either [`<InputGuesser>`](#inputguesser) elements, or any [input component](https://marmelab.com/react-admin/Inputs.html) available in React Admin, such as [`<TextInput>`](https://marmelab.com/react-admin/TextInput.html), [`<DateInput>`](https://marmelab.com/react-admin/DateInput.html) or [`<ReferenceInput>`](https://marmelab.com/react-admin/ReferenceInput.html) for instance.
+
+```tsx
+// BooksCreate.tsx
 import { CreateGuesser, InputGuesser } from '@api-platform/admin';
+import { DateInput, TextInput, required } from 'react-admin';
 
-export const BooksCreate = (props) => (
-  <CreateGuesser {...props}>
-    <InputGuesser source="author" />
+export const BooksCreate = () => (
+  <CreateGuesser>
+    {/* InputGuesser comes from API Platform Admin */}
+    <InputGuesser source="isbn" label="ISBN" />
     <InputGuesser source="title" />
-    <InputGuesser source="rating" />
-    <InputGuesser source="description" />
-    <InputGuesser source="publicationDate" />
+    <InputGuesser source="author" />
+
+    {/* DateInput and TextInput come from React Admin */}
+    <DateInput source="publicationDate" />
+    <TextInput
+      source="description"
+      multiline
+      validate={required()}
+    />
   </CreateGuesser>
 );
 ```
 
 #### CreateGuesser Props
 
-You can use props accepted by React Admin [Create](https://marmelab.com/react-admin/CreateEdit.html).
+`<CreateGuesser>` accepts all props accepted by both React Admin [`<Create>` component](https://marmelab.com/react-admin/Create.html) and [`<SimpleForm>` component](https://marmelab.com/react-admin/SimpleForm.html).
+
+For instance you can pass props such as [`redirect`](https://marmelab.com/react-admin/Create.html#redirect), [`defaultValues`](https://marmelab.com/react-admin/SimpleForm.html#defaultvalues) or [`warnWhenUnsavedChanges`](https://marmelab.com/react-admin/SimpleForm.html#warnwhenunsavedchanges).
 
 ### EditGuesser
 
-Displays an edition page for a single item. Uses React Admin [Edit](https://marmelab.com/react-admin/CreateEdit.html) and [SimpleForm](https://marmelab.com/react-admin/CreateEdit.html#the-simpleform-component) components.
-For simple inputs, you can use API Platform Admin [InputGuesser](components.md#inputguesser), or any React Admin [Input components](https://marmelab.com/react-admin/Inputs.html#input-components) for more complex inputs.
+Displays an edition page for a single item. Uses React Admin [`<Edit>`](https://marmelab.com/react-admin/Edit.html) and [`<SimpleForm>`](https://marmelab.com/react-admin/SimpleForm.html) components.
 
-```javascript
-// BooksEdit.js
+If no children are passed, it will display inputs guessed from the schema.
+
+```tsx
+// BooksEdit.tsx
+import { EditGuesser } from '@api-platform/admin';
+
+export const BooksEdit = () => (
+  /* Will display inputs guessed from the schema */
+  <EditGuesser />
+);
+```
+
+It also accepts a list of inputs as children, which can be either [`<InputGuesser>`](#inputguesser) elements, or any [input component](https://marmelab.com/react-admin/Inputs.html) available in React Admin, such as [`<TextInput>`](https://marmelab.com/react-admin/TextInput.html), [`<DateInput>`](https://marmelab.com/react-admin/DateInput.html) or [`<ReferenceInput>`](https://marmelab.com/react-admin/ReferenceInput.html) for instance.
+
+```tsx
+// BooksEdit.tsx
 import { EditGuesser, InputGuesser } from '@api-platform/admin';
+import { DateInput, TextInput, required } from 'react-admin';
 
-export const BooksEdit = (props) => (
-  <EditGuesser {...props}>
-    <InputGuesser source="author" />
+export const BooksEdit = () => (
+  <EditGuesser>
+    {/* InputGuesser comes from API Platform Admin */}
+    <InputGuesser source="isbn" label="ISBN" />
     <InputGuesser source="title" />
-    <InputGuesser source="rating" />
-    <InputGuesser source="description" />
-    <InputGuesser source="publicationDate" />
+    <InputGuesser source="author" />
+
+    {/* DateInput and TextInput come from React Admin */}
+    <DateInput source="publicationDate" />
+    <TextInput
+      source="description"
+      multiline
+      validate={required()}
+    />
   </EditGuesser>
 );
 ```
 
 #### EditGuesser Props
 
-You can use props accepted by React Admin [Edit](https://marmelab.com/react-admin/CreateEdit.html).
+`<EditGuesser>` accepts all props accepted by both React Admin [`<Edit>` component](https://marmelab.com/react-admin/Edit.html) and [`<SimpleForm>` component](https://marmelab.com/react-admin/SimpleForm.html).
+
+For instance you can pass props such as [`redirect`](https://marmelab.com/react-admin/Edit.html#redirect), [`mutationMode`](https://marmelab.com/react-admin/Edit.html#mutationmode), [`defaultValues`](https://marmelab.com/react-admin/SimpleForm.html#defaultvalues) or [`warnWhenUnsavedChanges`](https://marmelab.com/react-admin/SimpleForm.html#warnwhenunsavedchanges).
 
 ### ShowGuesser
 
-Displays a detailed page for one item. Based on React Admin [Show component](https://marmelab.com/react-admin/Show.html). You can pass [FieldGuesser](components.md#fieldguesser) as children for simple fields, or use any of React Admin [basic fields](https://marmelab.com/react-admin/Fields.html#basic-fields) for more complex fields.
+Displays a detailed page for one item. Based on React Admin [`<Show>`](https://marmelab.com/react-admin/Show.html) ans [`<SimpleShowLayout>`](https://marmelab.com/react-admin/SimpleShowLayout.html) components.
 
-```javascript
-// BooksShow.js
+If you pass no children, it will display fields guessed from the schema.
+
+```tsx
+// BooksShow.tsx
+import { ShowGuesser } from '@api-platform/admin';
+
+export const BooksShow = () => (
+  /* Will display fields guessed from the schema */
+  <ShowGuesser />
+);
+```
+
+It also accepts a list of fields as children, which can be either [`<FieldGuesser>`](#fieldguesser) elements, or any [field component](https://marmelab.com/react-admin/Fields.html) available in React Admin, such as [`<TextField>`](https://marmelab.com/react-admin/TextField.html), [`<DateField>`](https://marmelab.com/react-admin/DateField.html) or [`<ReferenceField>`](https://marmelab.com/react-admin/ReferenceField.html) for instance.
+
+```tsx
+// BooksShow.tsx
 import { FieldGuesser, ShowGuesser } from '@api-platform/admin';
+import { DateField, NumberField } from 'react-admin';
 
-export const BooksShow = (props) => (
-  <ShowGuesser {...props}>
-    <FieldGuesser source="author" />
+export const BooksShow = () => (
+  <ShowGuesser>
+    {/* FieldGuesser comes from API Platform Admin */}
+    <FieldGuesser source="isbn" label="ISBN" />
     <FieldGuesser source="title" />
-    <FieldGuesser source="rating" />
-    <FieldGuesser source="description" />
-    <FieldGuesser source="publicationDate" />
+    <FieldGuesser source="author" />
+
+    {/* DateField and NumberField come from React Admin */}
+    <DateField source="publicationDate" />
+    <NumberField source="reviews.length" label="Reviews" />
   </ShowGuesser>
 );
 ```
 
 #### ShowGuesser Props
 
-You can use props accepted by React Admin [Show component](https://marmelab.com/react-admin/Show.html).
+`<ShowGuesser>` accepts all props accepted by both React Admin [`<Show>` component](https://marmelab.com/react-admin/Show.html) and [`<SimpleShowLayout>` component](https://marmelab.com/react-admin/SimpleShowLayout.html).
 
 ## Hydra
 
 ### HydraAdmin
 
-Creates a complete Admin, as [AdminGuesser](components.md#adminguesser), but configured specially for [Hydra](https://www.hydra-cg.com/).
-If you want to use other formats (see supported formats: `@api-platform/api-doc-parser`) use [AdminGuesser](components.md#adminguesser) instead.
+Creates a complete Admin, using [`<AdminGuesser>`](#adminguesser), but configured specially for [Hydra](https://www.hydra-cg.com/).
 
-```javascript
-// App.js
+**Tip:** If you want to use other formats (see supported formats: `@api-platform/api-doc-parser`) use [`<AdminGuesser>`](#adminguesser) instead.
+
+```tsx
+// App.tsx
 import { HydraAdmin, ResourceGuesser } from '@api-platform/admin';
 
 const App = () => (
-  <HydraAdmin
-    entrypoint={entrypoint}
-    dataProvider={dataProvider}
-    authProvider={authProvider}
-  >
+  <HydraAdmin entrypoint="https://demo.api-platform.com">
     <ResourceGuesser name="books" />
     {/* ... */}
   </HydraAdmin>
@@ -222,8 +296,12 @@ export default App;
 
 ### Hydra Data Provider
 
-Based on React Admin `create`, `delete`, `getList`, `getManyReference`, `getOne`, `update` methods, the `dataProvider` is used by API Platform Admin to communicate with the API.
+An implementation for the React Admin [dataProvider methods](https://marmelab.com/react-admin/DataProviderWriting.html): `create`, `delete`, `getList`, `getManyReference`, `getOne` and `update`.
+
+The `dataProvider` is used by API Platform Admin to communicate with the API.
+
 In addition, the specific `introspect` method parses your API documentation.
+
 Note that the `dataProvider` can be overridden to fit your API needs.
 
 ### Hydra Schema Analyzer
@@ -234,19 +312,18 @@ Analyses your resources and retrieves their types according to the [Schema.org](
 
 ### OpenApiAdmin
 
-Creates a complete Admin, as [AdminGuesser](components.md#adminguesser), but configured specially for [OpenAPI](https://www.openapis.org/).
-If you want to use other formats (see supported formats: `@api-platform/api-doc-parser`) use [AdminGuesser](components.md#adminguesser) instead.
+Creates a complete Admin, as [`<AdminGuesser>`](#adminguesser), but configured specially for [OpenAPI](https://www.openapis.org/).
 
-```javascript
-// App.js
+**Tip:** If you want to use other formats (see supported formats: `@api-platform/api-doc-parser`) use [`<AdminGuesser>`](#adminguesser) instead.
+
+```tsx
+// App.tsx
 import { OpenApiAdmin, ResourceGuesser } from '@api-platform/admin';
 
 const App = () => (
   <OpenApiAdmin
     entrypoint={entrypoint}
     docEntrypoint={docEntrypoint}
-    dataProvider={dataProvider}
-    authProvider={authProvider}
   >
     <ResourceGuesser name="books" />
     {/* ... */}
@@ -260,9 +337,9 @@ export default App;
 
 | Name          | Type                | Value | required | Description                  |
 | ------------- | ------------------- | ----- | -------- | ---------------------------- |
-| dataProvider  | dataProvider        | -     | yes      | data provider to use         |
 | docEntrypoint | string              | -     | yes      | doc entrypoint of the API    |
 | entrypoint    | string              | -     | yes      | entrypoint of the API        |
+| dataProvider  | dataProvider        | -     | no       | data provider to use         |
 | mercure       | object&#124;boolean | \*    | no       | configuration to use Mercure |
 
 \* `false` to explicitly disable, `true` to enable with default parameters or an object with the following properties:
@@ -273,8 +350,12 @@ export default App;
 
 ### Open API Data Provider
 
-Based on React Admin `create`, `delete`, `getList`, `getManyReference`, `getOne`, `update` methods, the `dataProvider` is used by API Platform Admin to communicate with the API.
+An implementation for the React Admin [dataProvider methods](https://marmelab.com/react-admin/DataProviderWriting.html): `create`, `delete`, `getList`, `getManyReference`, `getOne` and `update`.
+
+The `dataProvider` is used by API Platform Admin to communicate with the API.
+
 In addition, the specific `introspect` method parses your API documentation.
+
 Note that the `dataProvider` can be overridden to fit your API needs.
 
 ### Open API Schema Analyzer
@@ -285,19 +366,21 @@ Analyses your resources and retrieves their types according to the [Schema.org](
 
 ### FieldGuesser
 
-Renders fields according to their types, using the [schema analyzer](components.md#schemaanalyzer).
-Based on React Admin [field components](https://marmelab.com/react-admin/Fields.html).
+Renders a field according to its type, using the [schema analyzer](#hydra-schema-analyzer).
 
-```javascript
-// BooksShow.js
+Based on React Admin [field components](https://marmelab.com/react-admin/Fields.html), such as [`<TextField>`](https://marmelab.com/react-admin/TextField.html), [`<DateField>`](https://marmelab.com/react-admin/DateField.html) or [`<ReferenceField>`](https://marmelab.com/react-admin/ReferenceField.html).
+
+```tsx
+// BooksShow.tsx
 import { FieldGuesser, ShowGuesser } from '@api-platform/admin';
 
-export const BooksShow = (props) => (
-  <ShowGuesser {...props}>
-    <FieldGuesser source="author" />
+export const BooksShow = () => (
+  <ShowGuesser>
+    {/* Renders a TextField */}
     <FieldGuesser source="title" />
+    {/* Renders a NumberField */}
     <FieldGuesser source="rating" />
-    <FieldGuesser source="description" />
+    {/* Renders a DateField */}
     <FieldGuesser source="publicationDate" />
   </ShowGuesser>
 );
@@ -309,14 +392,41 @@ export const BooksShow = (props) => (
 | ------ | ------ | ----- | -------- | ------------------------------------ |
 | source | string | -     | yes      | name of the property of the resource |
 
-You can also use props accepted by React Admin [basic fields](https://marmelab.com/react-admin/Fields.html#basic-fields).
+`<FieldGuesser>` also accepts any [common field prop](https://marmelab.com/react-admin/Fields.html#common-field-props) supported by React Admin, such as [`label`](https://marmelab.com/react-admin/Fields.html#label) for instance.
 
 ### InputGuesser
 
-Uses React Admin [input components](https://marmelab.com/react-admin/Inputs.html) to generate inputs according to your API documentation (e.g. number HTML input for numbers, checkbox for booleans, selectbox for relationships...).
+Renders an input according to its type, using the [schema analyzer](#hydra-schema-analyzer).
+
+Uses React Admin [input components](https://marmelab.com/react-admin/Inputs.html), such as [`<TextInput>`](https://marmelab.com/react-admin/TextInput.html), [`<DateInput>`](https://marmelab.com/react-admin/DateInput.html) or [`<ReferenceInput>`](https://marmelab.com/react-admin/ReferenceInput.html).
+
+```tsx
+// BooksCreate.tsx
+import { CreateGuesser, InputGuesser } from '@api-platform/admin';
+
+export const BooksCreate = () => (
+  <CreateGuesser>
+    {/* Renders a TextInput */}
+    <InputGuesser source="title" />
+    {/* Renders a NumberInput */}
+    <InputGuesser source="rating" />
+    {/* Renders a DateInput */}
+    <InputGuesser source="publicationDate" />
+  </CreateGuesser>
+);
+```
 
 #### InputGuesser Props
 
 | Name   | Type   | Value | required | Description                          |
 | ------ | ------ | ----- | -------- | ------------------------------------ |
 | source | string | -     | yes      | name of the property of the resource |
+
+`<InputGuesser>` also accepts any [common input prop](https://marmelab.com/react-admin/Inputs.html#common-input-props) supported by React Admin, such as [`defaultValue`](https://marmelab.com/react-admin/Inputs.html#defaultvalue), [`readOnly`](https://marmelab.com/react-admin/Inputs.html#readonly), [`helperText`](https://marmelab.com/react-admin/Inputs.html#helpertext) or [`label`](https://marmelab.com/react-admin/Inputs.html#label).
+
+You can also pass props that are specific to a certain input component. For example, if you know an `<InputGuesser>` will render a `<TextInput>` and you would like that input to be multiline, you can set the [`multiline`](https://marmelab.com/react-admin/TextInput.html#multiline) prop.
+
+```tsx
+<InputGuesser source="description" multiline />
+```
+
