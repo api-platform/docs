@@ -1,6 +1,6 @@
 # Customizing the Schema
 
-Both [`HydraAdmin`](./components.md#hydraadmin) and [`OpenApiAdmin`](./components.md#openapiadmin) leverage introspection of the API's schema to discover its capabilities, like **filtering** and **sorting**.
+Both [`HydraAdmin`](./components.md#hydraadmin) and [`OpenApiAdmin`](./components.md#openapiadmin) leverage introspection of the API schema to discover its capabilities, like **filtering** and **sorting**.
 
 They also detect wether the API has real-time capabilities using [Mercure](./real-time-mercure.md), and automatically enable it if it does.
 

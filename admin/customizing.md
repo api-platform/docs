@@ -21,7 +21,7 @@ If you are using `<HydraAdmin>` or `<OpenApiAdmin>` directly, there is a simple 
 
 Simply open your browser's developer tools and look at the console. You will see messages like this:
 
-```
+```txt
 If you want to override at least one resource, paste this content in the <AdminGuesser> component of your app:
 
 <ResourceGuesser name="books" />
@@ -90,7 +90,7 @@ Here is the result:
 
 By default, `<ResourceGuesser>` will render a `<ListGuesser>` component as the list view for a resource.
 
-Again, this component will automatically introspect the API's schema and generate a list view with all the fields of the resource.
+Again, this component will automatically introspect the API schema and generate a list view with all the fields of the resource.
 
 ![Admin default generated list view](./images/admin-default-list.png)
 
@@ -98,7 +98,7 @@ This is already usable, but may not provide the best user experience yet.
 
 Here, too, to start customizing the list view, you can look at the DevTools console. You will see messages like this:
 
-```
+```txt
 If you want to override at least one field, create a BookList component with this content:
 
 import { ListGuesser, FieldGuesser } from "@api-platform/admin";
@@ -223,7 +223,7 @@ Customizing the `<EditGuesser>` and `<CreateGuesser>` is very similar to customi
 
 Again, we can start by looking at the DevTools console to get the initial code of the components.
 
-```
+```txt
 If you want to override at least one input, create a ReviewEdit component with this content:
 
 import { EditGuesser, InputGuesser } from "@api-platform/admin";

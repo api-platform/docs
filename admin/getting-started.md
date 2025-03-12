@@ -6,7 +6,7 @@ If you use the [API Platform Symfony variant](../symfony/), good news, API Platf
 
 You can access it by visiting `/admin` on your API Platform application.
 
-When running locally, you can also click on the "Admin" button of the welcome page at https://localhost.
+When running locally, you can also click on the "Admin" button of the welcome page at [https://localhost](https://localhost).
 
 ![API Platform welcome page](./images/api-platform-welcome-page.png)
 

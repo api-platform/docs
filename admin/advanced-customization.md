@@ -239,7 +239,7 @@ Now, if the user tries to navigate away from the form with unsaved changes, they
 
 ## Customizing the Form Layout
 
-As we saw in the [Enable Undoable Mutations](#enable-undoable-mutations) section, when using React Admin's `<Edit>` or `<Create>` components, we need to wrap the inputs in a form component, such as [`<SimpleForm>`](https://marmelab.com/react-admin/SimpleForm.html).
+As we saw in the [Enable Undoable Mutations](#enabling-undoable-mutations) section, when using React Admin's `<Edit>` or `<Create>` components, we need to wrap the inputs in a form component, such as [`<SimpleForm>`](https://marmelab.com/react-admin/SimpleForm.html).
 
 `<SimpleForm>` organizes the inputs in a very simple layout, simply stacking them vertically.
 
@@ -289,7 +289,8 @@ With these simple changes we already get a more appealing form layout:
 
 ![Admin with customized form layout](./images/admin-form-layout.png)
 
-**Tip:** `<SimpleForm>` is not the only form layout provided by React Admin. You can also use another layout such as [`<TabbedForm>`](https://marmelab.com/react-admin/TabbedForm.html), [`<LongForm>`](https://marmelab.com/react-admin/LongForm.html), [`<AccordionForm>`](https://marmelab.com/react-admin/AccordionForm.html), [`<WizardForm>`](https://marmelab.com/react-admin/WizardForm.html) or even [create your own](https://marmelab.com/react-admin/Form.html).
+**Tip:** `<SimpleForm>` is not the only form layout provided by React Admin. You can also use another layout such as [`<TabbedForm>`](https://marmelab.com/react-admin/TabbedForm.html), [`<LongForm>`](https://marmelab.com/react-admin/LongForm.html),
+[`<AccordionForm>`](https://marmelab.com/react-admin/AccordionForm.html), [`<WizardForm>`](https://marmelab.com/react-admin/WizardForm.html) or even [create your own](https://marmelab.com/react-admin/Form.html).
 
 ## Rendering Related Records in a Dedicated Tab
 
