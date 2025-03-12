@@ -230,3 +230,9 @@ export const App = () => (
 ```
 
 You can now search for books by title in the book selector of the review form.
+
+## Going Further
+
+React Admin can handle many types of relations, even `many-to-many`. You can learn more about them in the [Fields For Relationships](https://marmelab.com/react-admin/FieldsForRelationships.html) documentation.
+
+You can also read the [Handling Relationships in React Admin](https://marmelab.com/blog/2025/02/06/handling-relationships-in-react-admin.html) post from the React Admin blog for concrete examples and source code.
