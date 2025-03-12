@@ -269,7 +269,7 @@ class Book {
 }
 ```
 
-If you need you can use the `filterContext` to transfer information between a parmameter and its filter.
+If you need you can use the `filterContext` to transfer information between a parameter and its filter.
 
 ### Parameter validation
 
