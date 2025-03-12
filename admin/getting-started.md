@@ -123,4 +123,6 @@ Clear the cache to apply this change:
 bin/console cache:clear --env=prod
 ```
 
-**Next step:** Learn how to add more features to your generated Admin by [Customizing the Schema](./schema-org.md).
+## Next Step
+
+Learn how to add more features to your generated Admin by [Customizing the Schema](./schema-org.md).

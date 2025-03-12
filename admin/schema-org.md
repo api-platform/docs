@@ -138,4 +138,6 @@ The following Schema.org types are currently supported by API Platform Admin:
 
 Note: if you already use validation on your properties, the semantics are already configured correctly (see [the correspondence table](../core/validation.md#open-vocabulary-generated-from-validation-metadata))!
 
-**Next step:** Learn how to tweak the generated Admin by [Customizing the Guessers](./customizing.md).
+## Next Step
+
+Learn how to tweak the generated Admin by [Customizing the Guessers](./customizing.md).

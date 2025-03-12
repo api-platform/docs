@@ -281,10 +281,10 @@ Here is the result:
 
 **Tip:** Here, we leveraged the `multiline` and `readOnly` props of the `<InputGuesser>` component. But you can use any [common input prop](https://marmelab.com/react-admin/Inputs.html#common-input-props) supported by react-admin [Inputs](https://marmelab.com/react-admin/Inputs.html) on them.
 
-## Going Further
+## Next Step
 
 The above examples limit to customizing the various API Platform Admin Guessers, but this is just the tip of the iceberg.
 
 By leveraging React Admin components and props, you can go much further in customizing the generated pages.
 
-Head to the next section, [Customizing the Admin](./customizing-the-admin.md), for step-by-step examples.
+Head to the next section, [Customizing the Admin](./advanced-customization.md), for step-by-step examples.

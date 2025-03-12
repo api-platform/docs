@@ -441,14 +441,14 @@ This is made possible thanks to the numerous **React Admin components**. They ar
 
 Here are some examples, from the simplest to the most complete solutions:
 
-- PrevNextButton
-- MenuLive
-- FilterList
-- RevisionsButton
-- WizardForm
-- Calendar
-- SmartRichTextInput
-- SolarLayout
+- [PrevNextButton](https://marmelab.com/react-admin/PrevNextButton.html)
+- [MenuLive](https://marmelab.com/react-admin/MenuLive.html)
+- [FilterList](https://marmelab.com/react-admin/FilterList.html)
+- [RevisionsButton](https://marmelab.com/react-admin/RevisionsButton.html)
+- [WizardForm](https://marmelab.com/react-admin/WizardForm.html)
+- [Calendar](https://marmelab.com/react-admin/Calendar.html)
+- [SmartRichTextInput](https://marmelab.com/react-admin/SmartRichTextInput.html)
+- [SolarLayout](https://marmelab.com/react-admin/SolarLayout.html)
 - And many more...
 
 React Admin already includes 230+ hooks and components. And it always allow you to make your own, thanks to the building blocks it provides. Feel free to read through its [All Features](https://marmelab.com/react-admin/Features.html) documentation page to discover them all.

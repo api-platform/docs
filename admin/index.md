@@ -39,11 +39,11 @@ Simply by reading your API documentation, API Platform Admin provides the follow
 - Pagination
 - Filtering and ordering
 - Easily view and edit [related records](./handling-relations.md)
-- Display the related resource’s name instead of its IRI ([using the Schema.org vocabulary](./schema.org.md#displaying-related-resources-name-instead-of-its-iri))
+- Display the related resource’s name instead of its IRI ([using the Schema.org vocabulary](./schema-org.md#displaying-related-resources-name-instead-of-its-iri))
 - Nicely displays server-side errors (e.g. advanced validation)
 - Real-time updates with [Mercure](https://mercure.rocks)
 
-By leveraging React Admin components, you can further customize the generated interface and get access to many more features:
+By [leveraging React Admin components](./advanced-customization.md), you can further customize the generated interface and get access to many more features:
 
 - Powerful Datagrid components
 - Search and filtering
@@ -54,4 +54,6 @@ By leveraging React Admin components, you can further customize the generated in
 - Internationalization
 - [And many more](https://marmelab.com/react-admin/Features.html)
 
-**Next step:** get your Admin up and running by following the [Getting Started guide](./getting-started.md).
+## Next Step
+
+Get your Admin up and running by following the [Getting Started guide](./getting-started.md).
