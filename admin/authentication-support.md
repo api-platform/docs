@@ -164,7 +164,7 @@ In the following steps, we will see how to:
 - Make authenticated requests to the API (i.e. include the `Authorization` header)
 - Implement an authProvider to redirect users to the login page if they are not authenticated, and clear expired tokens when encountering unauthorized `401` response
 
-### Make Authenticated Requests
+### Making Authenticated Requests
 
 First, we need to create a custom `httpClient` to add authentication tokens (via the the `Authorization` HTTP header) to requests.
 
@@ -198,10 +198,11 @@ const dataProvider = openApiDataProvider({
 > The `simpleRestProvider` provider expect the API to include a `Content-Range` header in the response.
 > You can find more about the header syntax in the [Mozilla’s MDN documentation: Content-Range](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Range).
 
+
 > [!NOTE]
 > The `getAccessToken` function retrieves the JWT token stored in the browser's localStorage. Replace it with your own logic in case you don't store the token that way.
 
-### Create The AuthProvider
+### Creating The AuthProvider
 
 Now let's create and export an `authProvider` object that handles authentication and authorization logic.
 
@@ -265,7 +266,7 @@ const authProvider = {
 export default authProvider;
 ```
 
-### Update The Admin Component
+### Updating The Admin Component
 
 Finally, we can update the `Admin` component to use the `authProvider` and `dataProvider` we created earlier.
 

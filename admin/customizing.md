@@ -1,6 +1,6 @@
 # Customizing the Guessers
 
-Using `<HydraAdmin>` or `<OpenApiAdmin>` directly is a great way to quickly get started with API Platform Admin. They will introspect your API's schema (using `@api-platform/api-doc-parser`) and automatically generate CRUD pages for all the resources it exposes. They will even [configure filtering, sorting, and real-time updates with Mercure](./schema-org.md) if your API supports it.
+Using `<HydraAdmin>` or `<OpenApiAdmin>` directly is a great way to quickly get started with API Platform Admin. They will introspect your API schema (using `@api-platform/api-doc-parser`) and automatically generate CRUD pages for all the resources it exposes. They will even [configure filtering, sorting, and real-time updates with Mercure](./schema-org.md) if your API supports it.
 
 For some this may be enough, but you will often find yourself wanting to customize the generated pages further. For instance, you may want to:
 

@@ -139,7 +139,8 @@ export const BooksCreate = () => (
 );
 ```
 
-It also accepts a list of inputs as children, which can be either [`<InputGuesser>`](#inputguesser) elements, or any [input component](https://marmelab.com/react-admin/Inputs.html) available in React Admin, such as [`<TextInput>`](https://marmelab.com/react-admin/TextInput.html), [`<DateInput>`](https://marmelab.com/react-admin/DateInput.html) or [`<ReferenceInput>`](https://marmelab.com/react-admin/ReferenceInput.html) for instance.
+It also accepts a list of inputs as children, which can be either [`<InputGuesser>`](#inputguesser) elements, or any [input component](https://marmelab.com/react-admin/Inputs.html) available in React Admin,
+such as [`<TextInput>`](https://marmelab.com/react-admin/TextInput.html), [`<DateInput>`](https://marmelab.com/react-admin/DateInput.html) or [`<ReferenceInput>`](https://marmelab.com/react-admin/ReferenceInput.html) for instance.
 
 ```tsx
 // BooksCreate.tsx
@@ -186,7 +187,8 @@ export const BooksEdit = () => (
 );
 ```
 
-It also accepts a list of inputs as children, which can be either [`<InputGuesser>`](#inputguesser) elements, or any [input component](https://marmelab.com/react-admin/Inputs.html) available in React Admin, such as [`<TextInput>`](https://marmelab.com/react-admin/TextInput.html), [`<DateInput>`](https://marmelab.com/react-admin/DateInput.html) or [`<ReferenceInput>`](https://marmelab.com/react-admin/ReferenceInput.html) for instance.
+It also accepts a list of inputs as children, which can be either [`<InputGuesser>`](#inputguesser) elements, or any [input component](https://marmelab.com/react-admin/Inputs.html) available in React Admin,
+such as [`<TextInput>`](https://marmelab.com/react-admin/TextInput.html), [`<DateInput>`](https://marmelab.com/react-admin/DateInput.html) or [`<ReferenceInput>`](https://marmelab.com/react-admin/ReferenceInput.html) for instance.
 
 ```tsx
 // BooksEdit.tsx
@@ -233,7 +235,8 @@ export const BooksShow = () => (
 );
 ```
 
-It also accepts a list of fields as children, which can be either [`<FieldGuesser>`](#fieldguesser) elements, or any [field component](https://marmelab.com/react-admin/Fields.html) available in React Admin, such as [`<TextField>`](https://marmelab.com/react-admin/TextField.html), [`<DateField>`](https://marmelab.com/react-admin/DateField.html) or [`<ReferenceField>`](https://marmelab.com/react-admin/ReferenceField.html) for instance.
+It also accepts a list of fields as children, which can be either [`<FieldGuesser>`](#fieldguesser) elements, or any [field component](https://marmelab.com/react-admin/Fields.html) available in React Admin,
+such as [`<TextField>`](https://marmelab.com/react-admin/TextField.html), [`<DateField>`](https://marmelab.com/react-admin/DateField.html) or [`<ReferenceField>`](https://marmelab.com/react-admin/ReferenceField.html) for instance.
 
 ```tsx
 // BooksShow.tsx
