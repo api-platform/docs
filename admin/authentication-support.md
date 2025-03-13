@@ -194,13 +194,9 @@ const dataProvider = openApiDataProvider({
 });
 ```
 
-> [!NOTE]
-> The `simpleRestProvider` provider expect the API to include a `Content-Range` header in the response.
-> You can find more about the header syntax in the [Mozilla’s MDN documentation: Content-Range](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Range).
+**Note:** The `simpleRestProvider` provider expect the API to include a `Content-Range` header in the response. You can find more about the header syntax in the [Mozilla’s MDN documentation: Content-Range](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Range).
 
-
-> [!NOTE]
-> The `getAccessToken` function retrieves the JWT token stored in the browser's localStorage. Replace it with your own logic in case you don't store the token that way.
+**Note:** The `getAccessToken` function retrieves the JWT token stored in the browser's localStorage. Replace it with your own logic in case you don't store the token that way.
 
 ### Creating The AuthProvider
 
