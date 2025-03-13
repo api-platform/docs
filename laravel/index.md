@@ -235,31 +235,6 @@ final class BookProvider implements ProviderInterface
 }
 ```
 
-Register the state provider:
-
-```php
-<?php
-
-namespace App\Providers;
-
-use App\State\BookProvider;
-use ApiPlatform\State\ProviderInterface;
-use Illuminate\Contracts\Foundation\Application;
-use Illuminate\Support\ServiceProvider;
-
-class ApiServiceProvider extends ServiceProvider
-{
-    public function register(): void
-    {
-        $this->app->singleton(BookProvider::class, function (Application $app) {
-            return new BookProvider();
-        });
-
-        $this->app->tag([BookProvider::class], ProviderInterface::class);
-    }
-}
-```
-
 Apply the provider to your operation:
 
 ```php

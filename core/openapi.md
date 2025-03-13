@@ -15,9 +15,6 @@ API documentation in a user friendly way.
 
 ## Using the OpenAPI Command
 
-> [!WARNING]
-> These commands are not yet available with Laravel, you're welcome to contribute [on GitHub](https://github.com/api-platform/core)
-
 You can also dump an OpenAPI specification for your API.
 
 OpenAPI, JSON format:
@@ -26,7 +23,7 @@ OpenAPI, JSON format:
 bin/console api:openapi:export
 ```
 
-OpenAPI, YAML format:
+OpenAPI, YAML format (you need to install `symfony/yaml` for this to work):
 
 ```console
 bin/console api:openapi:export --yaml

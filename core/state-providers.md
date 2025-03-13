@@ -309,34 +309,11 @@ class Book {}
 
 #### Laravel State Provider mechanism
 
-First, don't forget to tag the service with the `ProviderInterface`
+Declare a class that implements our `ProviderInterface`
 
 ```php
 <?php
-
-namespace App\Providers;
-
-use ApiPlatform\State\ProviderInterface;
-use App\State\BookStateProvider;
-use Illuminate\Support\ServiceProvider;
-
-class AppServiceProvider extends ServiceProvider
-{
-    public function register(): void
-    {
-        $this->app->tag([BookRepresentationProvider::class], ProviderInterface::class);
-    }
-
-    public function boot(): void
-    {
-    }
-}
-```
-
-After that, you can inject the `ProviderInterface`
-```php
-<?php
-// api/src/State/BlogPostProvider.php
+// api/app/State/BlogPostProvider.php
 
 namespace App\State;
 
@@ -344,7 +321,6 @@ use App\Dto\AnotherRepresentation;
 use App\Models\Book;
 use ApiPlatform\Metadata\Operation;
 use ApiPlatform\State\ProviderInterface;
-use Symfony\Component\DependencyInjection\Attribute\Autowire;
 
 /**
  * @implements ProviderInterface<AnotherRepresentation>
