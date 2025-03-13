@@ -9,7 +9,7 @@ Thanks to [the Schema.org support](./schema-org.md#displaying-related-resources-
 If a relation is an array of [embeddeds or an embedded](../core/serialization.md#embedding-relations) resource, the admin will keep them by default.
 
 The embedded data will be displayed as text field and editable as text input: the admin cannot determine the fields present in it.
-To display the fields you want, see [this section](handling-relations.md#display-a-field-of-an-embedded-relation).
+To display the fields you want, see the [Display a Field of an Embedded Relation](#display-a-field-of-an-embedded-relation) section.
 
 You can also ask the admin to return the embedded resources' IRI instead of the full record, by setting the `useEmbedded` parameter of the Hydra data provider to `false`.
 
