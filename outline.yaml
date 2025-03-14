@@ -82,15 +82,15 @@ chapters:
     items:
       - index
       - getting-started
+      - schema-org
+      - customizing
+      - advanced-customization
       - handling-relations
-      - openapi
-      - schema.org
       - validation
       - real-time-mercure
       - authentication-support
       - file-upload
       - performance
-      - customizing
       - components
   - title: Create Client
     path: create-client
