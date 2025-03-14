@@ -59,3 +59,39 @@ class Book
 If you submit the form with an invalid ISBN, you will see:
 
 ![Submission error field](images/submission-error-field.png)
+
+## Validation With React Admin Inputs
+
+If you replace an `<InputGuesser>` with a React Admin [input component](https://marmelab.com/react-admin/Inputs.html), such as [`<TextInput>`](https://marmelab.com/react-admin/TextInput.html), [`<DateInput>`](https://marmelab.com/react-admin/DateInput.html) or [`<ReferenceInput>`](https://marmelab.com/react-admin/ReferenceInput.html), you will need to **manually add the validation rules back**.
+
+Fortunately, this is very easy to do, thanks to the [`validate`](https://marmelab.com/react-admin/Inputs.html#validate) prop of the input components.
+
+For instance, here is how to replace the input for the required `title` field:
+
+```diff
+import { EditGuesser, InputGuesser } from '@api-platform/admin';
++import { TextInput, required } from 'react-admin';
+
+export const BookEdit = () => (
+    <EditGuesser>
+-       <InputGuesser source="title" />
++       <TextInput source="title" validate={required()} />
+    </EditGuesser>
+);
+```
+
+React Admin already comes with several [built-in validators](https://marmelab.com/react-admin/Validation.html#per-input-validation-built-in-field-validators), such as:
+
+* `required(message)` if the field is mandatory,
+* `minValue(min, message)` to specify a minimum value for integers,
+* `maxValue(max, message)` to specify a maximum value for integers,
+* `minLength(min, message)` to specify a minimum length for strings,
+* `maxLength(max, message)` to specify a maximum length for strings,
+* `number(message)` to check that the input is a valid number,
+* `email(message)` to check that the input is a valid email address,
+* `regex(pattern, message)` to validate that the input matches a regex,
+* `choices(list, message)` to validate that the input is within a given list
+
+React Admin also supports [Global Validation](https://marmelab.com/react-admin/Validation.html#global-validation) (at the form level).
+
+Check out the [Form Validation](https://marmelab.com/react-admin/Validation.html) documentation to learn more.
