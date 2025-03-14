@@ -30,6 +30,10 @@ const getHeaders = () =>
 Then, extend the Hydra `fetch` function to use the `getHeaders` function to add the `Authorization` header to the requests.
 
 ```typescript
+import {
+    fetchHydra as baseFetchHydra,
+} from "@api-platform/admin";
+
 const fetchHydra = (url, options = {}) =>
   baseFetchHydra(url, {
     ...options,
@@ -40,9 +44,12 @@ const fetchHydra = (url, options = {}) =>
 
 ### Redirect To Login Page
 
-Then, we'll create a `<RedirectToLogin>` component, that will redirect users to the `/login` route if no token is available in the `localStorage`, and perform the introspection otherwise.
+Then, we'll create a `<RedirectToLogin>` component, that will redirect users to the `/login` route if no token is available in the `localStorage`, and call the dataProvider's `introspect` function otherwise.
 
-```typescript
+```tsx
+import { Navigate } from "react-router-dom";
+import { useIntrospection } from "@api-platform/admin";
+
 const RedirectToLogin = () => {
   const introspect = useIntrospection();
 
@@ -61,6 +68,9 @@ Now, we will extend the `parseHydraDocumentaion` function (imported from the [@a
 We will customize it to clear expired tokens when encountering unauthorized `401` response.
 
 ```typescript
+import { parseHydraDocumentation } from "@api-platform/api-doc-parser";
+import { ENTRYPOINT } from "config/entrypoint";
+
 const apiDocumentationParser = (setRedirectToLogin) => async () => {
   try {
     setRedirectToLogin(false);
@@ -84,6 +94,11 @@ const apiDocumentationParser = (setRedirectToLogin) => async () => {
 Now, we can initialize the Hydra data provider with the custom `fetchHydra` (with custom headers) and `apiDocumentationParser` functions created earlier.
 
 ```typescript
+import {
+    hydraDataProvider as baseHydraDataProvider,
+} from "@api-platform/admin";
+import { ENTRYPOINT } from "config/entrypoint";
+
 const dataProvider = (setRedirectToLogin) =>
   baseHydraDataProvider({
     entrypoint: ENTRYPOINT,
