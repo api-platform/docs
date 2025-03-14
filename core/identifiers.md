@@ -7,7 +7,6 @@ To help with your development experience, we introduced an identifier normalizat
 
 > [!WARNING]
 > This feature is not yet available with Laravel, if you need it please open a Feature Request issue!
-
 > In the following chapter, we're assuming that `App\Uuid` is a project-owned class that manages a time-based UUID.
 
 Let's say you have the following class, which is identified by a `UUID` type. In this example, `UUID` is not a simple string but an object with many attributes.
