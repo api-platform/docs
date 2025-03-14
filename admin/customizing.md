@@ -217,6 +217,26 @@ Here is the result:
 
 ![Admin with customized show guesser](./images/admin-custom-show-guesser.png)
 
+## From `<FieldGuesser>` To React Admin Fields
+
+As mentioned in the [Customizing the `<FieldGuesser>`](#customizing-the-fieldguesser) section, we can use any [common field prop](https://marmelab.com/react-admin/Fields.html#common-field-props) from React Admin to customize the `<FieldGuesser>` elements.
+
+However in some cases you may want to go further and use a React Admin [field components](https://marmelab.com/react-admin/Fields.html), such as [`<TextField>`](https://marmelab.com/react-admin/TextField.html), [`<DateField>`](https://marmelab.com/react-admin/DateField.html) or [`<ReferenceField>`](https://marmelab.com/react-admin/ReferenceField.html) directly, to access more advanced features.
+
+For instance, you can replace a `<FieldGuesser>` with a [`<DateField>`](https://marmelab.com/react-admin/DateField.html) to control more precisely how the publication date is displayed, leveraging the [`showTime`](https://marmelab.com/react-admin/DateField.html#showtime) prop:
+
+```diff
+import { ShowGuesser, FieldGuesser } from '@api-platform/admin';
++import { DateField } from 'react-admin';
+
+const ReviewShow = () => (
+  <ShowGuesser>
+-     <FieldGuesser source="publicationDate" />
++     <DateField showTime source="publicationDate" />
+  </ShowGuesser>
+);
+```
+
 ## Customizing the `<EditGuesser>` and `<CreateGuesser>`
 
 Customizing the `<EditGuesser>` and `<CreateGuesser>` is very similar to customizing the `<ShowGuesser>`.
@@ -280,6 +300,39 @@ Here is the result:
 ![Admin with customized edit guesser](./images/admin-custom-edit-guesser.png)
 
 **Tip:** Here, we leveraged the `multiline` and `readOnly` props of the `<InputGuesser>` component. But you can use any [common input prop](https://marmelab.com/react-admin/Inputs.html#common-input-props) supported by react-admin [Inputs](https://marmelab.com/react-admin/Inputs.html) on them.
+
+## From `<InputGuesser>` To React Admin Inputs
+
+As mentioned in the previous section, we can use any [common input prop](https://marmelab.com/react-admin/Inputs.html#common-input-props) from React Admin to customize the `<InputGuesser>` elements.
+
+However in some cases you may want to go further and use a React Admin [input components](https://marmelab.com/react-admin/Inputs.html), such as [`<TextInput>`](https://marmelab.com/react-admin/TextInput.html), [`<DateInput>`](https://marmelab.com/react-admin/DateInput.html) or [`<ReferenceInput>`](https://marmelab.com/react-admin/ReferenceInput.html) directly, to access more advanced features.
+
+A good example is to use an [Autocomplete Input to edit a relation](./handling-relations.md#using-an-autocomplete-input-for-relations).
+
+This leverages both [`<ReferenceInput>`](https://marmelab.com/react-admin/ReferenceInput.html) and [`<AutocompleteInput>`](https://marmelab.com/react-admin/AutocompleteInput.html) to offer a better user experience when editing the relation:
+
+```diff
+import { EditGuesser, InputGuesser } from '@api-platform/admin';
++import { ReferenceInput, AutocompleteInput } from 'react-admin';
+
+const ReviewsEdit = () => (
+  <EditGuesser>
+    <InputGuesser source="author" />
+-   <InputGuesser source="book" />
++   <ReferenceInput source="book" reference="books">
++     <AutocompleteInput
++       filterToQuery={(searchText) => ({ title: searchText })}
++       optionText="title"
++     />
++   </ReferenceInput>
+  </EditGuesser>
+);
+```
+
+![Admin With AutocompleteInput](./images/AutocompleteInput.png)
+
+> [!WARNING]
+> When replacing `<InputGuesser>` with a React Admin input component, the validation rules are not automatically applied. You will need to manually add them back. Fortunately, this is very easy to do. Read the [Validation With React Admin Inputs](./validation.md#validation-with-react-admin-inputs) section to learn more.
 
 ## Next Step
 

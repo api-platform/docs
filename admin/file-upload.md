@@ -4,7 +4,7 @@ If you need to handle the file upload in the server part, please follow [the rel
 
 This documentation assumes you have a `/media_objects` endpoint accepting `multipart/form-data`-encoded data.
 
-To manage the upload in the admin part, you need to [customize the guessed create or edit form](./customizing.md#customizing-the-editguesser-and-createguesser).
+To manage the upload in the admin part, you need to [customize the guessed create or edit form](./customizing.md#from-inputguesser-to-react-admin-inputs).
 
 Add a [`<FileInput>`](https://marmelab.com/react-admin/FileInput.html) as a child of the guesser. For example, for the create form:
 
