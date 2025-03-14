@@ -143,4 +143,4 @@ As this is an `extraProperties` it's configurable per resource/operation. This i
 
 You may want to convert your openApiContext to openapi, doing so is quite fastidious, @lyrixx created a rector script to help if needed:
 
-https://github.com/lyrixx/rector-apip-openapi
+[https://github.com/lyrixx/rector-apip-openapi](https://github.com/lyrixx/rector-apip-openapi)
