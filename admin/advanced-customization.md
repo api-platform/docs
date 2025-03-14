@@ -185,11 +185,11 @@ export const BookEdit = () => (
 );
 ```
 
-That's enough to make the mutations undoable:
+That's enough to display an undoable notification when updating a book:
 
 ![Admin with undoable mutations](./images/admin-undoable-mutation.png)
 
-If you want, you can also use the [`mutationMode`](https://marmelab.com/react-admin/Edit.html#mutationmode) prop to pick one of the other mutation modes supported by React Admin, such as `pessimistic` or `optimistic`.
+`undoable` is the default mutation mode for the `<Edit>` component, but if you want you can use the [`mutationMode`](https://marmelab.com/react-admin/Edit.html#mutationmode) prop to pick one of the other mutation modes supported by React Admin: `pessimistic` or `optimistic`.
 
 ```diff
 export const BookEdit = () => (
