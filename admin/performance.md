@@ -36,3 +36,16 @@ class Author
     public string $name;
 }
 ```
+
+Instead of issuing a separate request for each author, the admin will now fetch all the authors in one go, with a request similar to the following:
+
+```txt
+https://localhost/authors?
+  page=1
+  &itemsPerPage=5
+  &id[0]=/authors/7
+  &id[1]=/authors/8
+  &id[2]=/authors/9
+  &id[3]=/authors/10
+  &id[4]=/authors/11
+```
