@@ -126,6 +126,10 @@ private $name;
 ...
 ```
 
+| With IRI                                                         | With Resource Name                                                           |
+| ---------------------------------------------------------------- | ---------------------------------------------------------------------------- |
+| ![Related Record With IRI](./images/related-record-with-iri.png) | ![Related Record  With Resource Name](./images/related-record-with-name.png) |
+
 ## Emails, URLs and Identifiers
 
 Besides, it is also possible to use the documentation to customize some fields automatically while configuring the semantics of your data.
