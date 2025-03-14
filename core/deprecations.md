@@ -167,7 +167,7 @@ You can prefix your URI Templates and change the representation using serializat
 namespace App\ApiResource;
 
 use ApiPlatform\Metadata\Get;
-use Symfony\Component\Serializer\Attrbute\Groups;
+use Symfony\Component\Serializer\Attribute\Groups;
 
 #[Get(uriTemplate: '/v1/books/{id}', normalizationContext: ['groups' => ['v1']])]
 #[Get(uriTemplate: '/v2/books/{id}', normalizationContext: ['groups' => ['v2']])]
