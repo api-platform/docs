@@ -219,7 +219,7 @@ Here is the result:
 
 ## From `<FieldGuesser>` To React Admin Fields
 
-As mentioned in the [Customizing the `<FieldGuesser>`](#customizing-the-fieldguesser) section, we can use any [common field prop](https://marmelab.com/react-admin/Fields.html#common-field-props) from React Admin to customize the `<FieldGuesser>` elements.
+As mentioned in the [Customizing the `<FieldGuesser>`](./customizing.md#customizing-the-fieldguesser) section, we can use any [common field prop](https://marmelab.com/react-admin/Fields.html#common-field-props) from React Admin to customize the `<FieldGuesser>` elements.
 
 However in some cases you may want to go further and use a React Admin [field components](https://marmelab.com/react-admin/Fields.html), such as [`<TextField>`](https://marmelab.com/react-admin/TextField.html), [`<DateField>`](https://marmelab.com/react-admin/DateField.html) or [`<ReferenceField>`](https://marmelab.com/react-admin/ReferenceField.html) directly, to access more advanced features.
 

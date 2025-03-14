@@ -41,8 +41,8 @@ If you do so, by default the admin will render the full object as text field and
 
 There are two ways you can handle this situation:
 
-1. Change the Field and Input components to [display the fields you want](#displaying-a-field-of-an-embedded-relation)
-2. Ask the admin to [return the embedded resources' IRI instead of the full record](#return-the-embedded-resources-iri-instead-of-the-full-record), by leveraging the `useEmbedded` parameter
+1. Change the Field and Input components to [display the fields you want](./handling-relations.md#displaying-a-field-of-an-embedded-relation)
+2. Ask the admin to [return the embedded resources' IRI instead of the full record](./handling-relations.md#return-the-embedded-resources-iri-instead-of-the-full-record), by leveraging the `useEmbedded` parameter
 
 ### Displaying a Field of an Embedded Relation
 
@@ -121,7 +121,7 @@ This offers a nice and convenient way to edit the relation.
 
 ![Embedded Relation With ReferenceInput](images/embedded-relation-ReferenceInput.png)
 
-**Tip:** We also had to customize `<ReferenceInput>`'s child [`<AutocompleteInput>`](https://marmelab.com/react-admin/AutocompleteInput.html) component to override its `label` and `filterToQuery` props. You can learn more about why that's necessary in the [Using an AutoComplete Input for Relations](#using-an-autocomplete-input-for-relations) section.
+**Tip:** We also had to customize `<ReferenceInput>`'s child [`<AutocompleteInput>`](https://marmelab.com/react-admin/AutocompleteInput.html) component to override its `label` and `filterToQuery` props. You can learn more about why that's necessary in the [Using an AutoComplete Input for Relations](./handling-relations.md#using-an-autocomplete-input-for-relations) section.
 
 ### Return the Embedded Resources' IRI Instead of the Full Record
 
@@ -246,7 +246,7 @@ This offers a nice and convenient way to edit the relation.
 
 ![Embedded Relation With ReferenceInput](images/embedded-relation-ReferenceInput.png)
 
-**Tip:** We also had to customize `<ReferenceInput>`'s child [`<AutocompleteInput>`](https://marmelab.com/react-admin/AutocompleteInput.html) component to override its `filterToQuery` props. You can learn more about why that's necessary in the [Using an AutoComplete Input for Relations](#using-an-autocomplete-input-for-relations) section.
+**Tip:** We also had to customize `<ReferenceInput>`'s child [`<AutocompleteInput>`](https://marmelab.com/react-admin/AutocompleteInput.html) component to override its `filterToQuery` props. You can learn more about why that's necessary in the [Using an AutoComplete Input for Relations](./handling-relations.md#using-an-autocomplete-input-for-relations) section.
 
 ## Using an Autocomplete Input for Relations
 

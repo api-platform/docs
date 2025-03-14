@@ -33,8 +33,8 @@ npm install @api-platform/admin
 
 Now you can use either:
 
-- [`<HydraAdmin>`](#using-hydraadmin) to connect your app to an API exposing a Hydra documentation
-- [`<OpenApiAdmin>`](#using-openapiadmin) to connect your app to an API exposing an OpenAPI documentation
+- [`<HydraAdmin>`](./getting-started.md#using-hydraadmin) to connect your app to an API exposing a Hydra documentation
+- [`<OpenApiAdmin>`](./getting-started.md#using-openapiadmin) to connect your app to an API exposing an OpenAPI documentation
 
 ## Using `HydraAdmin`
 
@@ -60,7 +60,7 @@ Type `npm run dev` to try it!
 
 **Tip:** There are more props you can pass to the `HydraAdmin` component to customize the dataProvider or the connection to Mercure. Check the [API documentation](./components.md#hydraadmin) for more information.
 
-**Tip:** You may also need to configure your API to set the correct CORS headers. Refer to the [Configuring CORS](#configuring-cors) section below to learn more.
+**Tip:** You may also need to configure your API to set the correct CORS headers. Refer to the [Configuring CORS](./getting-started.md#configuring-cors) section below to learn more.
 
 ## Using `OpenApiAdmin`
 
@@ -90,7 +90,7 @@ Type `npm run dev` to try it!
 
 **Tip:** There are more props you can pass to the `OpenApiAdmin` component to customize the dataProvider or the connection to Mercure. Check the [API documentation](./components.md#openapiadmin) for more information.
 
-**Tip:** You may also need to configure your API to set the correct CORS headers. Refer to the [Configuring CORS](#configuring-cors) section below to learn more.
+**Tip:** You may also need to configure your API to set the correct CORS headers. Refer to the [Configuring CORS](./getting-started.md#configuring-cors) section below to learn more.
 
 ## Configuring CORS
 

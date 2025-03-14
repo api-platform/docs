@@ -4,7 +4,7 @@ Both [`HydraAdmin`](./components.md#hydraadmin) and [`OpenApiAdmin`](./component
 
 They also detect wether the API has real-time capabilities using [Mercure](./real-time-mercure.md), and automatically enable it if it does.
 
-Lastly, API Platform Admin has native support for the popular [Schema.org](#about-schemaorg) vocabulary, which enables it to automatically use the field type matching your data, or display a related resource's name instead of its IRI.
+Lastly, API Platform Admin has native support for the popular [Schema.org](./schema-org.md#about-schemaorg) vocabulary, which enables it to automatically use the field type matching your data, or display a related resource's name instead of its IRI.
 
 ## Adding Filtering Capabilities
 

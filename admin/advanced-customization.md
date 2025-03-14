@@ -239,7 +239,7 @@ Now, if the user tries to navigate away from the form with unsaved changes, they
 
 ## Customizing the Form Layout
 
-As we saw in the [Enable Undoable Mutations](#enabling-undoable-mutations) section, when using React Admin's `<Edit>` or `<Create>` components, we need to wrap the inputs in a form component, such as [`<SimpleForm>`](https://marmelab.com/react-admin/SimpleForm.html).
+As we saw in the [Enable Undoable Mutations](./advanced-customization.md#enabling-undoable-mutations) section, when using React Admin's `<Edit>` or `<Create>` components, we need to wrap the inputs in a form component, such as [`<SimpleForm>`](https://marmelab.com/react-admin/SimpleForm.html).
 
 `<SimpleForm>` organizes the inputs in a very simple layout, simply stacking them vertically.
 

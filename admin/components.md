@@ -2,11 +2,11 @@
 
 ## HydraAdmin
 
-Creates a complete Admin, using [`<AdminGuesser>`](#adminguesser), but configured specially for [Hydra](https://www.hydra-cg.com/).
+Creates a complete Admin, using [`<AdminGuesser>`](./components.md#adminguesser), but configured specially for [Hydra](https://www.hydra-cg.com/).
 
-**Tip:** For OpenAPI documented APIs, use the [`<OpenApiAdmin>` component](#openapiadmin) instead.
+**Tip:** For OpenAPI documented APIs, use the [`<OpenApiAdmin>` component](./components.md#openapiadmin) instead.
 
-**Tip:** If you want to use other formats (see supported formats: `@api-platform/api-doc-parser`) use [`<AdminGuesser>`](#adminguesser) instead.
+**Tip:** If you want to use other formats (see supported formats: `@api-platform/api-doc-parser`) use [`<AdminGuesser>`](./components.md#adminguesser) instead.
 
 ```tsx
 // App.tsx
@@ -52,9 +52,9 @@ Analyses your resources and retrieves their types according to the [Schema.org](
 
 ## OpenApiAdmin
 
-Creates a complete Admin, as [`<AdminGuesser>`](#adminguesser), but configured specially for [OpenAPI](https://www.openapis.org/).
+Creates a complete Admin, as [`<AdminGuesser>`](./components.md#adminguesser), but configured specially for [OpenAPI](https://www.openapis.org/).
 
-**Tip:** If you want to use other formats (see supported formats: `@api-platform/api-doc-parser`) use [`<AdminGuesser>`](#adminguesser) instead.
+**Tip:** If you want to use other formats (see supported formats: `@api-platform/api-doc-parser`) use [`<AdminGuesser>`](./components.md#adminguesser) instead.
 
 ```tsx
 // App.tsx
@@ -121,11 +121,11 @@ export default App;
 
 Use it if your API is neither documented with Hydra nor OpenAPI, but in a format supported by `@api-platform/api-doc-parser`.
 
-**Tip:** For Hydra documented APIs, use the [`<HydraAdmin>` component](#hydraadmin) instead.
+**Tip:** For Hydra documented APIs, use the [`<HydraAdmin>` component](./components.md#hydraadmin) instead.
 
-**Tip:** For OpenAPI documented APIs, use the [`<OpenApiAdmin>` component](#openapiadmin) instead.
+**Tip:** For OpenAPI documented APIs, use the [`<OpenApiAdmin>` component](./components.md#openapiadmin) instead.
 
-`<AdminGuesser>` renders all exposed resources by default, but you can choose what resource you want to render by passing [`<ResourceGuesser>` components](#resourceguesser) as children.
+`<AdminGuesser>` renders all exposed resources by default, but you can choose what resource you want to render by passing [`<ResourceGuesser>` components](./components.md#resourceguesser) as children.
 
 ```tsx
 // App.tsx
@@ -165,7 +165,7 @@ export default App;
 
 ## ResourceGuesser
 
-Based on React Admin [`<Resource>` component](https://marmelab.com/react-admin/Resource.html), `<ResourceGuesser>` provides the default component to render for each view: [`<CreateGuesser>`](#createguesser), [`<ListGuesser>`](#listguesser), [`<EditGuesser>`](#editguesser) and [`<ShowGuesser>`](#showguesser).
+Based on React Admin [`<Resource>` component](https://marmelab.com/react-admin/Resource.html), `<ResourceGuesser>` provides the default component to render for each view: [`<CreateGuesser>`](./components.md#createguesser), [`<ListGuesser>`](./components.md#listguesser), [`<EditGuesser>`](./components.md#editguesser) and [`<ShowGuesser>`](./components.md#showguesser).
 
 You can also pass your own component to use for any view, using the `create`, `list`, `edit` or `show` props.
 
@@ -213,7 +213,7 @@ export const BooksList = () => (
 );
 ```
 
-It also accepts a list of fields as children. They can be either  [`<FieldGuesser>`](#fieldguesser) elements, or any [field component](https://marmelab.com/react-admin/Fields.html)
+It also accepts a list of fields as children. They can be either  [`<FieldGuesser>`](./components.md#fieldguesser) elements, or any [field component](https://marmelab.com/react-admin/Fields.html)
 available in React Admin, such as [`<TextField>`](https://marmelab.com/react-admin/TextField.html), [`<DateField>`](https://marmelab.com/react-admin/DateField.html) or [`<ReferenceField>`](https://marmelab.com/react-admin/ReferenceField.html) for instance.
 
 ```tsx
@@ -257,7 +257,7 @@ export const BooksCreate = () => (
 );
 ```
 
-It also accepts a list of inputs as children, which can be either [`<InputGuesser>`](#inputguesser) elements, or any [input component](https://marmelab.com/react-admin/Inputs.html) available in React Admin,
+It also accepts a list of inputs as children, which can be either [`<InputGuesser>`](./components.md#inputguesser) elements, or any [input component](https://marmelab.com/react-admin/Inputs.html) available in React Admin,
 such as [`<TextInput>`](https://marmelab.com/react-admin/TextInput.html), [`<DateInput>`](https://marmelab.com/react-admin/DateInput.html) or [`<ReferenceInput>`](https://marmelab.com/react-admin/ReferenceInput.html) for instance.
 
 ```tsx
@@ -305,7 +305,7 @@ export const BooksEdit = () => (
 );
 ```
 
-It also accepts a list of inputs as children, which can be either [`<InputGuesser>`](#inputguesser) elements, or any [input component](https://marmelab.com/react-admin/Inputs.html) available in React Admin,
+It also accepts a list of inputs as children, which can be either [`<InputGuesser>`](./components.md#inputguesser) elements, or any [input component](https://marmelab.com/react-admin/Inputs.html) available in React Admin,
 such as [`<TextInput>`](https://marmelab.com/react-admin/TextInput.html), [`<DateInput>`](https://marmelab.com/react-admin/DateInput.html) or [`<ReferenceInput>`](https://marmelab.com/react-admin/ReferenceInput.html) for instance.
 
 ```tsx
@@ -353,7 +353,7 @@ export const BooksShow = () => (
 );
 ```
 
-It also accepts a list of fields as children, which can be either [`<FieldGuesser>`](#fieldguesser) elements, or any [field component](https://marmelab.com/react-admin/Fields.html) available in React Admin,
+It also accepts a list of fields as children, which can be either [`<FieldGuesser>`](./components.md#fieldguesser) elements, or any [field component](https://marmelab.com/react-admin/Fields.html) available in React Admin,
 such as [`<TextField>`](https://marmelab.com/react-admin/TextField.html), [`<DateField>`](https://marmelab.com/react-admin/DateField.html) or [`<ReferenceField>`](https://marmelab.com/react-admin/ReferenceField.html) for instance.
 
 ```tsx
@@ -382,7 +382,7 @@ export const BooksShow = () => (
 
 ## FieldGuesser
 
-Renders a field according to its type, using the [schema analyzer](#hydra-schema-analyzer).
+Renders a field according to its type, using the [schema analyzer](./components.md#hydra-schema-analyzer).
 
 Based on React Admin [field components](https://marmelab.com/react-admin/Fields.html), such as [`<TextField>`](https://marmelab.com/react-admin/TextField.html), [`<DateField>`](https://marmelab.com/react-admin/DateField.html) or [`<ReferenceField>`](https://marmelab.com/react-admin/ReferenceField.html).
 
@@ -412,7 +412,7 @@ export const BooksShow = () => (
 
 ## InputGuesser
 
-Renders an input according to its type, using the [schema analyzer](#hydra-schema-analyzer).
+Renders an input according to its type, using the [schema analyzer](./components.md#hydra-schema-analyzer).
 
 Uses React Admin [input components](https://marmelab.com/react-admin/Inputs.html), such as [`<TextInput>`](https://marmelab.com/react-admin/TextInput.html), [`<DateInput>`](https://marmelab.com/react-admin/DateInput.html) or [`<ReferenceInput>`](https://marmelab.com/react-admin/ReferenceInput.html).
 
