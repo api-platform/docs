@@ -572,74 +572,10 @@ namespace App\Entity;
 
 use ApiPlatform\Metadata\ApiResource;
 
-#[ApiResource]
+#[ApiResource(operations: [])]
 class Weather
 {
     // ...
 ```
 
-This will expose the `Weather` model, but also all the default CRUD routes: `GET`, `PATCH`, `DELETE` and `POST`, which is nonsense in our context.
-Since we are required to expose at least one route, let's expose just one:
-
-```php
-<?php
-// api/src/Entity/Weather.php
-namespace App\Entity;
-
-use ApiPlatform\Metadata\ApiResource;
-use ApiPlatform\Metadata\Get;
-
-#[ApiResource(operations: [
-    new Get(controller: SomeRandomController::class)
-])]
-class Weather
-{
-    // ...
-}
-```
-
-This way, we expose a route that will do… nothing. Note that the controller does not even need to exist.
-
-It's almost done, we have just one final issue: our fake item operation is visible in the API docs.
-To remove it, we will need to [decorate the Swagger documentation](openapi.md#overriding-the-openapi-specification).
-Then, remove the route from the decorator:
-
-```php
-<?php
-// src/OpenApi/OpenApiFactory.php
-namespace App\OpenApi;
-
-use ApiPlatform\OpenApi\Factory\OpenApiFactoryInterface;
-use ApiPlatform\OpenApi\OpenApi;
-use ApiPlatform\OpenApi\Model;
-
-final class OpenApiFactory implements OpenApiFactoryInterface
-{
-    private $decorated;
-
-    public function __construct(OpenApiFactoryInterface $decorated)
-    {
-        $this->decorated = $decorated;
-    }
-
-    public function __invoke(array $context = []): OpenApi
-    {
-        $openApi = $this->decorated->__invoke($context);
-
-        $paths = $openApi->getPaths()->getPaths();
-
-        $filteredPaths = new Model\Paths();
-        foreach ($paths as $path => $pathItem) {
-            // If a prefix is configured on API Platform's routes, it must appear here.
-            if ($path === '/weathers/{id}') {
-                continue;
-            }
-            $filteredPaths->addPath($path, $pathItem);
-        }
-
-        return $openApi->withPaths($filteredPaths);
-    }
-}
-```
-
-That's it: your route is gone!
+That's it!
