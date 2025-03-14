@@ -1,46 +1,52 @@
 # Handling Relations
 
-API Platform Admin handles `to-one` and `to-many` relations automatically.
+API Platform Admin handles `one-to-one`, `many-to-one` and `one-to-many` relations automatically.
 
-Thanks to [the Schema.org support](./schema-org.md#displaying-related-resources-name-instead-of-its-iri), you can easily display the name of a related resource instead of its IRI.
+However, in some cases, dependeing on whether or not you chose to embed the relation in the serialized data, you may need to customize the way the relation is displayed and/or can be edited.
 
-## Embedded Relations
+## Working With Embedded Relations
 
-If a relation is an array of [embeddeds or an embedded](../core/serialization.md#embedding-relations) resource, the admin will keep them by default.
+You can configure your API to [embed the related data](../core/serialization.md#embedding-relations) in the serialized response.
 
-The embedded data will be displayed as text field and editable as text input: the admin cannot determine the fields present in it.
-To display the fields you want, see the [Display a Field of an Embedded Relation](#display-a-field-of-an-embedded-relation) section.
+```js
+// Without Embedded Book Data
+{
+  "@id": "/reviews/15",
+  id: 15,
+  rating: 5,
+  body: "A must-read for any software developer. Martin's insights are invaluable.",
+  author: "Alice Smith",
+  book: "/books/7"
+}
 
-You can also ask the admin to return the embedded resources' IRI instead of the full record, by setting the `useEmbedded` parameter of the Hydra data provider to `false`.
-
-```jsx
-// admin/src/App.jsx
-
-import { HydraAdmin, fetchHydra, hydraDataProvider } from '@api-platform/admin';
-import { parseHydraDocumentation } from '@api-platform/api-doc-parser';
-
-const entrypoint = process.env.REACT_APP_API_ENTRYPOINT;
-
-const dataProvider = hydraDataProvider({
-  entrypoint,
-  httpClient: fetchHydra,
-  apiDocumentationParser: parseHydraDocumentation,
-  mercure: true,
-  useEmbedded: false,
-});
-
-export const App = () => (
-  <HydraAdmin dataProvider={dataProvider} entrypoint={entrypoint} />
-);
+// With Embedded Book Data
+{
+  "@id": "/reviews/15",
+  id: 15,
+  rating: 5,
+  body: "A must-read for any software developer. Martin's insights are invaluable.",
+  author: "Alice Smith",
+  book: {
+    "@id": "/books/7",
+    id: 7,
+    title: "Clean Code",
+    author: "Robert C. Martin",
+  }
+}
 ```
 
-**Tip:** Embedded data is inserted to a local cache: it will not be necessary to make more requests if you reference some fields of the embedded resource later on.
+If you do so, by default the admin will render the full object as text field and text input, which is not very user-friendly.
 
-## Display a Field of an Embedded Relation
+![Embedded Relation With Full Object](images/embedded-relation-full-object.png)
 
-If you have an [embedded relation](../core/serialization.md#embedding-relations) and need to display a nested field, the code you need to write depends of the value of `useEmbedded` of the Hydra data provider.
+There are two ways you can handle this situation:
 
-If `true` (default behavior), you can use the dot notation to display a field:
+1. Change the Field and Input components to [display the fields you want](#displaying-a-field-of-an-embedded-relation)
+2. Ask the admin to [return the embedded resources' IRI instead of the full record](#return-the-embedded-resources-iri-instead-of-the-full-record), by leveraging the `useEmbedded` parameter
+
+### Displaying a Field of an Embedded Relation
+
+React Admin fields allow to use the dot notation (e.g. `book.title`) to target a field from an embedded relation.
 
 ```jsx
 import {
@@ -51,52 +57,128 @@ import {
 } from '@api-platform/admin';
 import { TextField } from 'react-admin';
 
-const BooksList = () => (
+const ReviewList = () => (
   <ListGuesser>
-    <FieldGuesser source="title" />
+    <FieldGuesser source="rating" />
+    <FieldGuesser source="body" />
+    <FieldGuesser source="author" />
     {/* Use react-admin components directly when you want complex fields. */}
-    <TextField label="Author first name" source="author.firstName" />
+    <TextField label="Book" source="book.title" />
   </ListGuesser>
 );
 
 export const App = () => (
   <HydraAdmin entrypoint={...} >
-    <ResourceGuesser name="books" list={BooksList} />
+    <ResourceGuesser name="reviews" list={ReviewList} />
   </HydraAdmin>
 );
 ```
 
-If `useEmbedded` is explicitly set to `false`, make sure you write the code as if the relation needs to be fetched as a reference.
+![Embedded Relation With Dot Notation](images/embedded-relation-dot-notation.png)
 
-In this case, you _cannot_ use the dot separator to do so.
+Allowing to edit the relation, on the other hand, is a little trickier, as it requires transforming the record to replace the nested object by its IRI.
 
-Note that you cannot edit the embedded data directly with this behavior.
+Fortunately, this can be done by leveraging the `transform` prop of the `<EditGuesser>` component.
 
-For instance, if your API returns:
+We can edit the relation by leveraging either [`<ReferenceInput>`](https://marmelab.com/react-admin/ReferenceInput.html) for a `to-one` relation or [`<ReferenceArrayInput>`](https://marmelab.com/react-admin/ReferenceArrayInput.html) for a `to-many` relation.
 
-```json
-{
-  "@context": "/contexts/Book",
-  "@id": "/books",
-  "@type": "Collection",
-  "member": [
-    {
-      "@id": "/books/07b90597-542e-480b-a6bf-5db223c761aa",
-      "@type": "https://schema.org/Book",
-      "title": "War and Peace",
-      "author": {
-        "@id": "/authors/d7a133c1-689f-4083-8cfc-afa6d867f37d",
-        "@type": "https://schema.org/Author",
-        "firstName": "Leo",
-        "lastName": "Tolstoi"
-      }
-    }
-  ],
-  "totalItems": 1
+```jsx
+import {
+  HydraAdmin,
+  InputGuesser,
+  EditGuesser,
+  ResourceGuesser,
+} from '@api-platform/admin';
+import { ReferenceInput, AutocompleteInput } from 'react-admin';
+
+const reviewEditTransform = (values) => ({
+  ...values,
+  book: values.book['@id'],
+});
+
+const ReviewEdit = () => (
+  <EditGuesser transform={reviewEditTransform}>
+    <InputGuesser source="rating" />
+    <InputGuesser source="body" />
+    <InputGuesser source="author" />
+    <ReferenceInput source="book.@id" reference="books">
+      <AutocompleteInput
+        label="Book"
+        filterToQuery={(searchText) => ({ title: searchText })}
+      />
+    </ReferenceInput>
+  </EditGuesser>
+);
+
+export const App = () => (
+  <HydraAdmin entrypoint={...} >
+    <ResourceGuesser name="reviews" edit={ReviewEdit} />
+  </HydraAdmin>
+);
+```
+
+This offers a nice and convenient way to edit the relation.
+
+![Embedded Relation With ReferenceInput](images/embedded-relation-ReferenceInput.png)
+
+**Tip:** We also had to customize `<ReferenceInput>`'s child [`<AutocompleteInput>`](https://marmelab.com/react-admin/AutocompleteInput.html) component to override its `label` and `filterToQuery` props. You can learn more about why that's necessary in the [Using an AutoComplete Input for Relations](#using-an-autocomplete-input-for-relations) section.
+
+### Return the Embedded Resources' IRI Instead of the Full Record
+
+You can also ask the admin to return the embedded resources' IRI instead of the full record, by setting the `useEmbedded` parameter of the Hydra data provider to `false`.
+
+```jsx
+// admin/src/App.jsx
+
+import { HydraAdmin, dataProvider } from '@api-platform/admin';
+
+const entrypoint = process.env.ENTRYPOINT;
+
+export const App = () => (
+  <HydraAdmin
+    entrypoint={entrypoint}
+    dataProvider={dataProvider({
+      entrypoint,
+      useEmbedded: false,
+    })}
+  />
+);
+```
+
+This tells the dataProvider to return only the IRI in the record, discarding the embedded data.
+
+```js
+// With useEmbedded=true (default)
+const record = {
+  "@id": "/reviews/15",
+  id: 15,
+  rating: 5,
+  body: "A must-read for any software developer. Martin's insights are invaluable.",
+  author: "Alice Smith",
+  book: {
+    "@id": "/books/7",
+    id: 7,
+    title: "Clean Code",
+    author: "Robert C. Martin",
+  }
+}
+
+// With useEmbedded=false
+const record = {
+  "@id": "/reviews/15",
+  id: 15,
+  rating: 5,
+  body: "A must-read for any software developer. Martin's insights are invaluable.",
+  author: "Alice Smith",
+  book: "/books/7"
 }
 ```
 
-If you want to display the author first name in the list, you need to leverage React Admin's [`<ReferenceField>`](https://marmelab.com/react-admin/ReferenceField.html) to fetch the related record:
+This way, the related record's IRI is returned and can be displayed.
+
+![Embedded Relation With useEmbedded To False](images/embedded-relation-useEmbedded-false.png)
+
+We can improve the UI further by leveraging React Admin's [`<ReferenceField>`](https://marmelab.com/react-admin/ReferenceField.html) component:
 
 ```jsx
 import {
@@ -107,31 +189,72 @@ import {
 } from '@api-platform/admin';
 import { ReferenceField, TextField } from 'react-admin';
 
-const BooksList = () => (
+const ReviewList = () => (
   <ListGuesser>
-    <FieldGuesser source="title" />
-    {/* Use react-admin components directly when you want complex fields. */}
-    <ReferenceField
-      label="Author first name"
-      source="author"
-      reference="authors"
-    >
-      <TextField source="firstName" />
+    <FieldGuesser source="rating" />
+    <FieldGuesser source="body" />
+    <FieldGuesser source="author" />
+    <ReferenceField source="book" reference="books">
+      <TextField source="title" />
     </ReferenceField>
   </ListGuesser>
 );
 
 export const App = () => (
   <HydraAdmin entrypoint={...} >
-    <ResourceGuesser name="books" list={BooksList} />
-    <ResourceGuesser name="authors" />
+    <ResourceGuesser name="reviews" list={ReviewList} />
   </HydraAdmin>
 );
 ```
 
+This allows to display the title of the related book instead of its IRI.
+
+![Embedded Relation With ReferenceField](images/embedded-relation-ReferenceField.png)
+
+Lastly, this also allows to easily edit the relation by leveraging either [`<ReferenceInput>`](https://marmelab.com/react-admin/ReferenceInput.html) for a `to-one` relation or [`<ReferenceArrayInput>`](https://marmelab.com/react-admin/ReferenceArrayInput.html) for a `to-many` relation.
+
+```jsx
+import {
+  HydraAdmin,
+  InputGuesser,
+  EditGuesser,
+  ResourceGuesser,
+} from '@api-platform/admin';
+import { ReferenceInput, AutocompleteInput } from 'react-admin';
+
+const ReviewEdit = () => (
+  <EditGuesser>
+    <InputGuesser source="rating" />
+    <InputGuesser source="body" />
+    <InputGuesser source="author" />
+    <ReferenceInput source="book" reference="books">
+      <AutocompleteInput
+        filterToQuery={(searchText) => ({ title: searchText })}
+      />
+    </ReferenceInput>
+  </EditGuesser>
+);
+
+export const App = () => (
+  <HydraAdmin entrypoint={...} >
+    <ResourceGuesser name="reviews" edit={ReviewEdit} />
+  </HydraAdmin>
+);
+```
+
+This offers a nice and convenient way to edit the relation.
+
+![Embedded Relation With ReferenceInput](images/embedded-relation-ReferenceInput.png)
+
+**Tip:** We also had to customize `<ReferenceInput>`'s child [`<AutocompleteInput>`](https://marmelab.com/react-admin/AutocompleteInput.html) component to override its `filterToQuery` props. You can learn more about why that's necessary in the [Using an AutoComplete Input for Relations](#using-an-autocomplete-input-for-relations) section.
+
 ## Using an Autocomplete Input for Relations
 
-Let's go one step further thanks to the customization capabilities of API Platform Admin by adding autocompletion support to form inputs for relations.
+By default, `<InputGuesser>` will render a [`<SelectInput>`](https://marmelab.com/react-admin/SelectInput.html) when it detects a relation.
+
+We can improve the UX further by rendering an [`<AutocompleteInput>`](https://marmelab.com/react-admin/AutocompleteInput.html) instead.
+
+`<AutocompleteInput>` allows to search for a related record by typing its name in an input field. This is much more convenient when there are many records to choose from.
 
 Let's consider an API exposing `Review` and `Book` resources linked by a `many-to-one` relation (through the `book` property).
 
@@ -212,7 +335,6 @@ const ReviewsEdit = () => (
       <AutocompleteInput
         filterToQuery={(searchText) => ({ title: searchText })}
         optionText="title"
-        label="Books"
       />
     </ReferenceInput>
 
@@ -229,7 +351,20 @@ export const App = () => (
 );
 ```
 
+The important things to note are:
+
+- the `filterToQuery` prop, which allows to search for books by title (leveraging the "partial search" filter mentioned above)
+- the `optionText` prop, which tells the `<AutocompleteInput>` component to render books using their `title` property
+
 You can now search for books by title in the book selector of the review form.
+
+![Admin With AutocompleteInput](./images/AutocompleteInput.png)
+
+## Displaying Related Record Name Instead of Their IRI
+
+Thanks to the [Schema.org](./schema-org.md) support, you can easily display the name of a related resource instead of its IRI.
+
+Follow the [Displaying Related Resource's Name Instead of its IRI](./schema-org.md#displaying-related-resources-name-instead-of-its-iri) section of the Schema.org documentation to implement this feature.
 
 ## Going Further
 
