@@ -264,32 +264,6 @@ final class UserProcessor implements ProcessorInterface
 }
 ```
 
-Don't forget to tag the service with the `PersistProcessor` and the `RemoveProcessor` state classes.
-
-```php
-<?php
-
-namespace App\Providers;
-
-use ApiPlatform\Laravel\Eloquent\State\PersistProcessor;
-use ApiPlatform\Laravel\Eloquent\State\RemoveProcessor;
-use App\State\UserProcessor;
-use Illuminate\Support\ServiceProvider;
-
-class AppServiceProvider extends ServiceProvider
-{
-    public function register(): void
-    {
-        $this->app->tag([UserProcessor::class], [PersistProcessor::class, RemoveProcessor::class,]);
-    }
-
-    public function boot(): void
-    {
-    }
-}
-```
-If you're using Laravel MongoDB ODM instead of Eloquent ORM, make sure you're using the right services.
-
 Finally, configure that you want to use this processor on the User resource:
 
 ```php

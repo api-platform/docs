@@ -78,27 +78,14 @@ services:
       - name: 'api_platform.parameter_provider'
         key: 'ApiPlatform\Tests\Fixtures\TestBundle\Parameter\CustomGroupParameterProvider'
 ```
-or if you are using Laravel tag your provider with:
 
-```php
-<?php
+With Laravel the services are automatically tagged.
 
-namespace App\Providers;
+### Declare a filter with Laravel
 
-use ApiPlatform\State\Provider\ParameterProvider;
-use ApiPlatform\Tests\Fixtures\TestBundle\Parameter\CustomGroupParameterProvider;
-use Illuminate\Support\ServiceProvider;
+Filters are classes implementing our `ApiPlatform\Laravel\Eloquent\Filter\FilterInterface`, use [our code](https://github.com/api-platform/core/tree/main/src/Laravel/Eloquent/Filter) as examples. Filters are automatically registered and tagged by our `ServiceProvider`.
 
-class AppServiceProvider extends ServiceProvider
-{
-    public function register(): void
-    {
-        $this->app->tag([CustomGroupParameterProvider::class], ParameterProvider::class);
-    }
-}
-```
-
-### Call a filter with Symfony
+### Declare a filter with Symfony
 
 A Parameter can also call a filter and works on filters that impact the data persistence layer (Doctrine ORM, ODM and Eloquent filters are supported). Let's assume, that we have an Order filter declared:
 
@@ -111,51 +98,6 @@ services:
       $properties: { id: ~, name: ~ }
       $orderParameterName: order
     tags: ['api_platform.filter']
-```
-
-We can use this filter specifying we want a query parameter with the `:property` placeholder:
-
-```php
-namespace App\ApiResource;
-
-use ApiPlatform\Metadata\QueryParameter;
-
-#[GetCollection(
-    uriTemplate: 'orders',
-    parameters: [
-        'order[:property]' => new QueryParameter(filter: 'offer.order_filter'),
-    ]
-)
-class Offer {
-    public string $id;
-    public string $name;
-}
-```
-
-### Call a filter with Laravel
-
-A Parameter can also call a filter and works on filters that impact the data persistence layer (Doctrine ORM, ODM and Eloquent filters are supported). Let's assume, that we have an Order filter declared:
-
-```php
-<?php
-
-namespace App\Providers;
-
-use ApiPlatform\Laravel\Eloquent\Filter\OrderFilter;
-use ApiPlatform\Metadata\ApiFilter;
-use Illuminate\Support\ServiceProvider;
-
-class AppServiceProvider extends ServiceProvider
-{
-    $public function register(): void
-    {
-        $this->app->singleton(OrderFilter::class, function ($app) {
-            return new OrderFilter(['id' => null, 'name' => null], 'order');
-        });
-
-        $this->app->tag([OrderFilter::class], ApiFilter::class);
-    }
-}
 ```
 
 We can use this filter specifying we want a query parameter with the `:property` placeholder:
