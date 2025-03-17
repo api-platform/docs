@@ -355,6 +355,10 @@ merge new encoders and normalizers in API Platform.
 
 ## JSON:API sparse fieldset and sort parameters
 
+> [!WARNING]  
+> The SortFilter is for Eloquent, the Doctrine equivalent is the OrderFilter. 
+> The config/api-platform.php is Laravel specific.
+
 When working with JSON:API you may want to declare the `SparseFieldset` and the
 `SortFilter` globally:
 
