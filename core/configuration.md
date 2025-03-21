@@ -369,6 +369,9 @@ api_platform:
     input: ~
     output: ~
     stateless: ~
+    schemes: ~
+    options: ~
+    host: ~
 
     # The URL generation strategy to use for IRIs
     url_generation_strategy: !php/const ApiPlatform\Api\UrlGeneratorInterface::ABS_PATH
