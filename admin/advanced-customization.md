@@ -296,7 +296,7 @@ With these simple changes we already get a more appealing form layout:
 
 Speaking of tabbed layout, a common pattern is to display related records in a dedicated tab of the show view of the main record.
 
-For instance, let's leverage the [`<TabbedShowLayout>`](https://marmelab.com/react-admin/TabbedShowLayout.html) component provided by `react-admin` to display the reviews of a book in a dedicated tab.
+For instance, let's leverage the [`<TabbedShowLayout>`](https://marmelab.com/react-admin/TabbedShowLayout.html) component provided by React Admin to display the reviews of a book in a dedicated tab.
 
 We will also leverage `<ReferenceArrayField>` to fetch the related reviews of a book, and `<SimpleList>` to display them in a list.
 
@@ -451,4 +451,4 @@ Here are some examples, from the simplest to the most complete solutions:
 - [SolarLayout](https://marmelab.com/react-admin/SolarLayout.html)
 - And many more...
 
-React Admin already includes 230+ hooks and components. And it always allow you to make your own, thanks to the building blocks it provides. Feel free to read through its [All Features](https://marmelab.com/react-admin/Features.html) documentation page to discover them all.
+React Admin already includes 230+ hooks and components. And it always allows you to make your own, thanks to the building blocks it provides. Feel free to read through its [All Features](https://marmelab.com/react-admin/Features.html) documentation page to discover them all.

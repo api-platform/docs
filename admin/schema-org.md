@@ -8,9 +8,9 @@ Lastly, API Platform Admin has native support for the popular [Schema.org](./sch
 
 ## Adding Filtering Capabilities
 
-You can add the [`ApiFilter` attribute](../core/filters.md#apifilter-attribute) to an Entity to configure a filter on a property.
+You can add the [`ApiFilter` attribute](../core/filters.md#apifilter-attribute) to an API Platform resource to configure a filter on a property.
 
-For instance, here is how configure filtering on the `id`, `title` and `author` properties of a `Book` entity:
+For instance, here is how configure filtering on the `id`, `title` and `author` properties of a `Book` resource:
 
 ```php
 <?php
@@ -43,9 +43,9 @@ If you are using the guessers, the Admin will automatically update the Book list
 
 ## Adding Sorting Capabilities
 
-You can also use the [`ApiFilter` attribute](../core/filters.md#apifilter-attribute) on an Entity to configure sorting.
+You can also use the [`ApiFilter` attribute](../core/filters.md#apifilter-attribute) on an API Plaform resource to configure sorting.
 
-For instance, here is how to configure sorting on the `id`, `isbn`, `title`, `author` and `publicationDate` properties of a `Book` entity:
+For instance, here is how to configure sorting on the `id`, `isbn`, `title`, `author` and `publicationDate` properties of a `Book` resource:
 
 ```php
 <?php

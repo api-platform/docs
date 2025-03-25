@@ -9,7 +9,7 @@ the admin will fetch the relations one by one.
 
 In this case, it can be improved by doing only one request for all the related resources instead.
 
-To do so, you need to make sure the [search filter](../core/filters.md#apifilter-attribute) is enabled for the identifier of the related resource.
+To do so, you need to make sure the [search filter](../core/doctrine-filters.md#search-filter) is enabled for the identifier of the related resource.
 
 For instance, if you have a `book` resource having a relation to `author` resources and you display the author names on your book list,
 you can make sure the authors are retrieved in one go by writing:

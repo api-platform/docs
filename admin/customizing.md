@@ -90,13 +90,13 @@ Here is the result:
 
 By default, `<ResourceGuesser>` will render a `<ListGuesser>` component as the list view for a resource.
 
-Again, this component will automatically introspect the API schema and generate a list view with all the fields of the resource.
+This component will automatically introspect the API schema and generate a list view with all the fields of the resource.
 
 ![Admin default generated list view](./images/admin-default-list.png)
 
 This is already usable, but may not provide the best user experience yet.
 
-Here, too, to start customizing the list view, you can look at the DevTools console. You will see messages like this:
+To start customizing the list view, you can look at the DevTools console. You will see messages like this:
 
 ```txt
 If you want to override at least one field, create a BookList component with this content:
@@ -182,7 +182,7 @@ And here is the result:
 
 ## Customizing the `<ShowGuesser>`
 
-Following the same principles (including looking at the DevTools console) we can customize the show view.
+Following the same principles as the `<ListGuesser>` (including looking at the DevTools console) we can customize the show view.
 
 In the following example, the show view for the `books` resource was customized to make the label of the `isbn` field uppercase:
 
@@ -241,7 +241,7 @@ const ReviewShow = () => (
 
 Customizing the `<EditGuesser>` and `<CreateGuesser>` is very similar to customizing the `<ShowGuesser>`.
 
-Again, we can start by looking at the DevTools console to get the initial code of the components.
+We can start by looking at the DevTools console to get the initial code of the components.
 
 ```txt
 If you want to override at least one input, create a ReviewEdit component with this content:
@@ -299,7 +299,7 @@ Here is the result:
 
 ![Admin with customized edit guesser](./images/admin-custom-edit-guesser.png)
 
-**Tip:** Here, we leveraged the `multiline` and `readOnly` props of the `<InputGuesser>` component. But you can use any [common input prop](https://marmelab.com/react-admin/Inputs.html#common-input-props) supported by react-admin [Inputs](https://marmelab.com/react-admin/Inputs.html) on them.
+**Tip:** Here, we leveraged the `multiline` and `readOnly` props of the `<InputGuesser>` component. But you can use any [common input prop](https://marmelab.com/react-admin/Inputs.html#common-input-props) supported by React Admin [Inputs](https://marmelab.com/react-admin/Inputs.html) on them.
 
 ## From `<InputGuesser>` To React Admin Inputs
 
@@ -336,7 +336,7 @@ const ReviewsEdit = () => (
 
 ## Next Step
 
-The above examples limit to customizing the various API Platform Admin Guessers, but this is just the tip of the iceberg.
+The above examples are limited to customizing the various API Platform Admin Guessers, but this is just the tip of the iceberg.
 
 By leveraging React Admin components and props, you can go much further in customizing the generated pages.
 

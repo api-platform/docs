@@ -23,7 +23,7 @@ API Platform Admin is a Single Page Application (SPA), based on [React Admin](ht
 
 Thanks to its built-in **guessers**, API Platform Admin parses the API documentation then uses React Admin to expose a nice, responsive management interface (Create-Retrieve-Update-Delete, i.e. CRUD) for all documented resource types.
 
-Afterwards, you can **customize everything** by using the numerous components provided [React Admin](https://marmelab.com/react-admin/documentation.html) and [MUI](https://mui.com/), or even writing your own [React](https://reactjs.org/) components.
+Afterwards, you can **customize everything** by using the numerous components provided by [React Admin](https://marmelab.com/react-admin/documentation.html) and [MUI](https://mui.com/), or even writing your own [React](https://reactjs.org/) components.
 
 <iframe src="https://www.youtube-nocookie.com/embed/UyAkN85wGNk" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen style="aspect-ratio: 16 / 9;width:100%;margin-bottom:1em;"></iframe>
 
