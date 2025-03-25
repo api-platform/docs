@@ -362,9 +362,9 @@ You can now search for books by title in the book selector of the review form.
 
 ## Displaying Related Record Name Instead of Their IRI
 
-Thanks to the [Schema.org](./schema-org.md) support, you can easily display the name of a related resource instead of its IRI.
+Thanks to the [Schema.org](./schema.md) support, you can easily display the name of a related resource instead of its IRI.
 
-Follow the [Displaying Related Resource's Name Instead of its IRI](./schema-org.md#displaying-related-resources-name-instead-of-its-iri) section of the Schema.org documentation to implement this feature.
+Follow the [Displaying Related Resource's Name Instead of its IRI](./schema.md#displaying-related-resources-name-instead-of-its-iri) section of the Schema.org documentation to implement this feature.
 
 ## Going Further
 

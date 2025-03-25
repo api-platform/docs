@@ -39,7 +39,7 @@ Simply by reading your API documentation, API Platform Admin provides the follow
 - Pagination
 - Filtering and ordering
 - Easily view and edit [related records](./handling-relations.md)
-- Display the related resource’s name instead of its IRI ([using the Schema.org vocabulary](./schema-org.md#displaying-related-resources-name-instead-of-its-iri))
+- Display the related resource’s name instead of its IRI ([using the Schema.org vocabulary](./schema.md#displaying-related-resources-name-instead-of-its-iri))
 - Nicely displays server-side errors (e.g. advanced validation)
 - Real-time updates with [Mercure](https://mercure.rocks)
 

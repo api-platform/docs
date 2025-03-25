@@ -125,4 +125,4 @@ bin/console cache:clear --env=prod
 
 ## Next Step
 
-Learn how to add more features to your generated Admin by [Customizing the Schema](./schema-org.md).
+Learn how to add more features to your generated Admin by [Customizing the Schema](./schema.md).

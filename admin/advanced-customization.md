@@ -1,6 +1,6 @@
 # Customizing the Admin
 
-In the previous sections, we have seen how to customize the generated Admin by [updating the schema](./schema-org.md), and by [customizing the guesser components](./customizing.md).
+In the previous sections, we have seen how to customize the generated Admin by [updating the schema](./schema.md), and by [customizing the guesser components](./customizing.md).
 
 But we can go much further in customizing the generated pages by leveraging React Admin components and props.
 
