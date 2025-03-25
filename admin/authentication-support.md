@@ -1,17 +1,24 @@
 # Authentication Support
 
 API Platform Admin delegates the authentication support to React Admin.
-Refer to [the chapter dedicated to authentication in the React Admin documentation](https://marmelab.com/react-admin/Authentication.html)
-for more information.
+
+Refer to the [Auth Provider Setup](https://marmelab.com/react-admin/Authentication.html) documentation for more information.
+
+**Tip:** Once you have set up the authentication, you can also configure React Admin to perform client-side Authorization checks. Refer to the [Authorization](https://marmelab.com/react-admin/Permissions.html) documentation for more information.
 
 ## HydraAdmin
 
-The authentication layer for [HydraAdmin component](https://api-platform.com/docs/admin/components/#hydra)
-consists of a few parts, which need to be integrated together.
+Enabling authentication support for [`<HydraAdmin>` component](./components.md#hydra) consists of a few parts, which need to be integrated together.
 
-### Authentication
+In the following steps, we will see how to:
 
-Add the Bearer token from `localStorage` to request headers.
+- Make authenticated requests to the API (i.e. include the `Authorization` header)
+- Redirect users to the login page if they are not authenticated
+- Clear expired tokens when encountering unauthorized `401` response
+
+### Make Authenticated Requests
+
+First, we need to implement a `getHeaders` function, that will add the Bearer token from `localStorage` (if there is one) to the `Authorization` header.
 
 ```typescript
 const getHeaders = () =>
@@ -20,9 +27,13 @@ const getHeaders = () =>
     : {};
 ```
 
-Extend the Hydra fetch function with custom headers for authentication.
+Then, extend the Hydra `fetch` function to use the `getHeaders` function to add the `Authorization` header to the requests.
 
 ```typescript
+import {
+    fetchHydra as baseFetchHydra,
+} from "@api-platform/admin";
+
 const fetchHydra = (url, options = {}) =>
   baseFetchHydra(url, {
     ...options,
@@ -31,11 +42,14 @@ const fetchHydra = (url, options = {}) =>
 
 ```
 
-### Login Redirection
+### Redirect To Login Page
 
-Redirect users to a `/login` path, if no token is available in the `localStorage`.
+Then, we'll create a `<RedirectToLogin>` component, that will redirect users to the `/login` route if no token is available in the `localStorage`, and call the dataProvider's `introspect` function otherwise.
 
-```typescript
+```tsx
+import { Navigate } from "react-router-dom";
+import { useIntrospection } from "@api-platform/admin";
+
 const RedirectToLogin = () => {
   const introspect = useIntrospection();
 
@@ -47,13 +61,16 @@ const RedirectToLogin = () => {
 };
 ```
 
-### API Documentation Parsing
+### Clear Expired Tokens
 
-Extend the `parseHydraDocumentaion` function from the [API Doc Parser library](https://github.com/api-platform/api-doc-parser)
-to handle the documentation parsing. Customize it to clear
-expired tokens when encountering unauthorized `401` response.
+Now, we will extend the `parseHydraDocumentaion` function (imported from the [@api-platform/api-doc-parser](https://github.com/api-platform/api-doc-parser) library).
+
+We will customize it to clear expired tokens when encountering unauthorized `401` response.
 
 ```typescript
+import { parseHydraDocumentation } from "@api-platform/api-doc-parser";
+import { ENTRYPOINT } from "config/entrypoint";
+
 const apiDocumentationParser = (setRedirectToLogin) => async () => {
   try {
     setRedirectToLogin(false);
@@ -72,11 +89,16 @@ const apiDocumentationParser = (setRedirectToLogin) => async () => {
 };
 ```
 
-### Data Provider
+### Extend The Data Provider
 
-Initialize the hydra data provider with custom headers and the documentation parser.
+Now, we can initialize the Hydra data provider with the custom `fetchHydra` (with custom headers) and `apiDocumentationParser` functions created earlier.
 
 ```typescript
+import {
+    hydraDataProvider as baseHydraDataProvider,
+} from "@api-platform/admin";
+import { ENTRYPOINT } from "config/entrypoint";
+
 const dataProvider = (setRedirectToLogin) =>
   baseHydraDataProvider({
     entrypoint: ENTRYPOINT,
@@ -85,12 +107,12 @@ const dataProvider = (setRedirectToLogin) =>
   });
 ```
 
-### Export Admin Component
+### Update The Admin Component
 
-Export the Hydra admin component, and track the users' authentication status.
+Lastly, we can stitch everything together in the `Admin` component.
 
-```typescript
-// components/admin/Admin.tsx
+```tsx
+// src/Admin.tsx
 
 import Head from "next/head";
 import { useState } from "react";
@@ -106,14 +128,14 @@ import { parseHydraDocumentation } from "@api-platform/api-doc-parser";
 import authProvider from "utils/authProvider";
 import { ENTRYPOINT } from "config/entrypoint";
 
-// Auth, Parser, Provider calls
+// Functions and components created in the previous steps:
 const getHeaders = () => {...};
 const fetchHydra = (url, options = {}) => {...};
 const RedirectToLogin = () => {...};
 const apiDocumentationParser = (setRedirectToLogin) => async () => {...};
 const dataProvider = (setRedirectToLogin) => {...};
 
-const Admin = () => {
+export const Admin = () => {
   const [redirectToLogin, setRedirectToLogin] = useState(false);
 
   return (
@@ -142,29 +164,32 @@ const Admin = () => {
     </>
   );
 };
-export default Admin;
 ```
 
-### Additional Notes
+### Example Implementation
 
 For the implementation of the admin component, you can find a working example in the [API Platform's demo application](https://github.com/api-platform/demo/blob/4.0/pwa/components/admin/Admin.tsx).
 
 ## OpenApiAdmin
 
-This section explains how to set up and customize the [OpenApiAdmin component](https://api-platform.com/docs/admin/components/#openapi) authentication layer.
-It covers:
-* Creating a custom HTTP Client
-* Data and rest data provider configuration
-* Implementation of an auth provider
+This section explains how to set up and customize the [`<OpenApiAdmin>` component](./components.md/#openapi) to enable authentication.
 
-### Data Provider & HTTP Client
+In the following steps, we will see how to:
 
-Create a custom HTTP client to add authentication tokens to request headers.
-Configure the `openApiDataProvider`, and
-inject the custom HTTP client into the [Simple REST Data Provider for React-Admin](https://github.com/Serind/ra-data-simple-rest).
+- Make authenticated requests to the API (i.e. include the `Authorization` header)
+- Implement an authProvider to redirect users to the login page if they are not authenticated, and clear expired tokens when encountering unauthorized `401` response
 
-**File:** `src/components/jsonDataProvider.tsx`
+### Making Authenticated Requests
+
+First, we need to create a custom `httpClient` to add authentication tokens (via the the `Authorization` HTTP header) to requests.
+
+We will then configure `openApiDataProvider` to use [`ra-data-simple-rest`](https://github.com/marmelab/react-admin/blob/master/packages/ra-data-simple-rest/README.md), a simple REST dataProvider for React Admin, and make it use the `httpClient` we created earlier.
+
 ```typescript
+// src/dataProvider.ts
+
+const getAccessToken = () => localStorage.getItem("token");
+
 const httpClient = async (url: string, options: fetchUtils.Options = {}) => {
     options.headers = new Headers({
         ...options.headers,
@@ -177,31 +202,30 @@ const httpClient = async (url: string, options: fetchUtils.Options = {}) => {
     return await fetchUtils.fetchJson(url, options);
 };
 
-const jsonDataProvider = openApiDataProvider({
+const dataProvider = openApiDataProvider({
   dataProvider: simpleRestProvider(API_ENTRYPOINT_PATH, httpClient),
   entrypoint: API_ENTRYPOINT_PATH,
   docEntrypoint: API_DOCS_PATH,
 });
 ```
 
-> [!NOTE]
-> The `simpleRestProvider` provider expect the API to include a `Content-Range` header in the response.
-> You can find more about the header syntax in the [Mozilla’s MDN documentation: Content-Range](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Range).
->
-> The `getAccessToken` function retrieves the JWT token stored in the browser.
+**Note:** The `simpleRestProvider` provider expect the API to include a `Content-Range` header in the response. You can find more about the header syntax in the [Mozilla’s MDN documentation: Content-Range](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Range).
 
-### Authentication and Authorization
+**Note:** The `getAccessToken` function retrieves the JWT token stored in the browser's localStorage. Replace it with your own logic in case you don't store the token that way.
 
-Create and export an `authProvider` object that handles authentication and authorization logic.
+### Creating The AuthProvider
 
-**File:** `src/components/authProvider.tsx`
+Now let's create and export an `authProvider` object that handles authentication and authorization logic.
+
 ```typescript
+// src/authProvider.ts
+
 interface JwtPayload {
-    exp?: number;
-    iat?: number;
-    roles: string[];
+    sub: string;
     username: string;
 }
+
+const getAccessToken = () => localStorage.getItem("token");
 
 const authProvider = {
     login: async ({username, password}: { username: string; password: string }) => {
@@ -242,7 +266,7 @@ const authProvider = {
         const decoded = jwtDecode<JwtPayload>(token);
 
         return Promise.resolve({
-            id: "",
+            id: decoded.sub,
             fullName: decoded.username,
             avatar: "",
         });
@@ -253,20 +277,23 @@ const authProvider = {
 export default authProvider;
 ```
 
-### Export OpenApiAdmin Component
+### Updating The Admin Component
 
-**File:** `src/App.tsx`
-```typescript
-import {OpenApiAdmin} from '@api-platform/admin';
-import authProvider from "./components/authProvider";
-import jsonDataProvider from "./components/jsonDataProvider";
-import {API_DOCS_PATH, API_ENTRYPOINT_PATH} from "./config/api";
+Finally, we can update the `Admin` component to use the `authProvider` and `dataProvider` we created earlier.
+
+```tsx
+// src/Admin.tsx
+
+import { OpenApiAdmin } from '@api-platform/admin';
+import authProvider from "./authProvider";
+import dataProvider from "./dataProvider";
+import { API_DOCS_PATH, API_ENTRYPOINT_PATH } from "./config/api";
 
 export default () => (
   <OpenApiAdmin
     entrypoint={API_ENTRYPOINT_PATH}
     docEntrypoint={API_DOCS_PATH}
-    dataProvider={jsonDataProvider}
+    dataProvider={dataProvider}
     authProvider={authProvider}
   />
 );
