@@ -80,7 +80,7 @@ export const App = () => (
 );
 ```
 
-**Tip:** If you don't want to hardcode the API URL, you can use an environment variable (see [ViteJS](https://vite.dev/guide/env-and-mode) or [NextJS](https://nextjs.org/docs/pages/building-your-application/configuring/environment-variables) docs).
+**Tip:** If you don't want to hardcode the API URL, you can use an environment variable (see [Vite.js](https://vite.dev/guide/env-and-mode) or [Next.js](https://nextjs.org/docs/pages/building-your-application/configuring/environment-variables) docs).
 
 Your new administration interface is ready! `OpenApiAdmin` will automatically fetch the Hydra documentation of your API and generate CRUD pages for all the resources it exposes.
 
