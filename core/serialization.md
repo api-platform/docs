@@ -932,10 +932,10 @@ services:
 // api/src/Serializer/BookContextBuilder.php
 namespace App\Serializer;
 
-use ApiPlatform\Serializer\SerializerContextBuilderInterface;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use App\ApiResource\Book;
+use Symfony\Component\HttpFoundation\Request;
+use ApiPlatform\State\SerializerContextBuilderInterface;
+use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 final class BookContextBuilder implements SerializerContextBuilderInterface
 {
