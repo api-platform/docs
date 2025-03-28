@@ -9,7 +9,7 @@ API Platform comes natively with the **reading** support for Elasticsearch. It u
 for Elasticsearch: [Elasticsearch-PHP](https://www.elastic.co/guide/en/elasticsearch/client/php-api/current/index.html).
 
 Be careful, API Platform only supports Elasticsearch >= 7.11.0 < 8.0 and Elasticsearch >= 8.4 < 9.0. Support for 
-Elasticsearch 8 was introduced in Api-platform 3.2.
+Elasticsearch 8 was introduced in API Platform 3.2.
 
 ## Enabling Reading Support
 
