@@ -13,7 +13,7 @@ Elasticsearch 8 was introduced in Api-platform 3.2.
 
 ## Enabling Reading Support
 
-To enable the reading support for Elasticsearch, simply require the Elasticsearch-PHP package using Composer. For 
+To enable the reading support for Elasticsearch, simply require the Elasticsearch-PHP package using Composer. For
 Elasticsearch 8:
 
 ```console
