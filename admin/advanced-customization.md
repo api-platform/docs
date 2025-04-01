@@ -158,11 +158,72 @@ React Admin offers the possibility to make mutations (e.g. updating or deleting 
 
 When this feature is enabled, a notification will be displayed at the bottom of the page, allowing the user to undo the mutation for a certain amount of time.
 
-If the user clicks on the undo button, the record will be restored to its previous state. Otherwise, the change is persisted to the API.
+If the user clicks on the UNDO button, the record will be restored to its previous state. Otherwise, the change is persisted to the API.
 
-Let's, for instance, add the possibility to undo an update to a book. To do that, we will replace the generated `<EditGuesser>` by the [`<Edit>`](https://marmelab.com/react-admin/Edit.html) component, provided by `react-admin`. Undoable mutations are enabled by default for the `<Edit>` component.
+Let's, for instance, add the possibility to undo an update to a book. To do that, we will leverage the [`mutationMode`](https://marmelab.com/react-admin/Edit.html#mutationmode) prop provided by React Admin, and set its value to `"undoable"`.
 
-We will also need to pick a form component to wrap the inputs. We will use the [`<SimpleForm>`](https://marmelab.com/react-admin/SimpleForm.html) component, provided by `react-admin`.
+This is possible because the `<EditGuesser>` component is a wrapper around the [`<Edit>`](https://marmelab.com/react-admin/Edit.html) component provided by React Admin, and it will forward the `mutationMode` prop to it.
+
+```diff
+import { EditGuesser, InputGuesser } from "@api-platform/admin";
+
+export const BookEdit = () => (
+- <EditGuesser>
++ <EditGuesser mutationMode="undoable">
+      <InputGuesser source="isbn" />
+      <InputGuesser source="title" />
+      <InputGuesser source="description" />
+      <InputGuesser source="author" />
+      <InputGuesser source="publicationDate" />
+      <InputGuesser source="reviews" />
+  </EditGuesser>
+);
+```
+
+That's enough to display an undoable notification when updating a book:
+
+![Admin with undoable mutations](./images/admin-undoable-mutation.png)
+
+**Tip:** The default `mutationMode` set by `<EditGuesser>` is `"pessimistic"`, however the default `mutationMode` set by React Admin's `<Edit>` component is `"undoable"`.
+
+## Warning the User When There Are Unsaved Changes
+
+Another feature offered by React Admin is the possibility to warn the user when there are unsaved changes in a form.
+
+When the user tries to navigate away from a form with unsaved changes, a confirmation dialog will be displayed, asking the user if they want to leave the page. This prevents the risk of losing unsaved data.
+
+To enable this feature, all we need to do is to leverage the [`warnWhenUnsavedChanges`](https://marmelab.com/react-admin/SimpleForm.html#warnwhenunsavedchanges) prop provided by React Admin.
+
+This is possible because the `<EditGuesser>` component is also a wrapper around the [`<SimpleForm>`](https://marmelab.com/react-admin/SimpleForm.html) component provided by React Admin, and it will forward the `warnWhenUnsavedChanges` prop to it.
+
+```diff
+import { EditGuesser, InputGuesser } from "@api-platform/admin";
+
+export const BookEdit = () => (
+- <EditGuesser>
++ <EditGuesser warnWhenUnsavedChanges>
+    <InputGuesser source="isbn" />
+    <InputGuesser source="title" />
+    <InputGuesser source="description" />
+    <InputGuesser source="author" />
+    <InputGuesser source="publicationDate" />
+    <InputGuesser source="reviews" />
+  </EditGuesser>
+);
+```
+
+Now, if the user tries to navigate away from the form with unsaved changes, they will be warned:
+
+![Admin with unsaved changes warning](./images/admin-warnWhenUnsavedChanges.png)
+
+## Customizing the Form Layout
+
+As we saw earlier, `<EditGuesser>` actually renders two (nested) React Admin components: [`<Edit>`](https://marmelab.com/react-admin/Edit.html) and [`<SimpleForm>`](https://marmelab.com/react-admin/SimpleForm.html).
+You can pass additional props to `<EditGuesser>` which will be forwarded to `<Edit>` or `<SimpleForm>` accordingly.
+
+However there are cases where this won't be enough. For instance, if we want to customize the form layout, we will need to specifically target the form component to pass styling props (such as `sx`), or to replace the component altogether (e.g. to use a [`<TabbedForm>`](https://marmelab.com/react-admin/TabbedForm.html) instead).
+
+So, for our example, let's first replace the `<EditGuesser>` by an `<Edit>` and a `<SimpleForm>`.
 
 ```diff
 -import { EditGuesser, InputGuesser } from "@api-platform/admin";
@@ -185,65 +246,11 @@ export const BookEdit = () => (
 );
 ```
 
-That's enough to display an undoable notification when updating a book:
+**Tip:** This will also enable [undoable mutation mode](./advanced-customization.md#enabling-undoable-mutations). Indeed, the default `mutationMode` set by `<EditGuesser>` is `"pessimistic"`, however the default `mutationMode` set by React Admin's `<Edit>` component is `"undoable"`. You can set the `mutationMode` prop back to `"pessimistic"` if you want to keep the same behavior as before.
 
-![Admin with undoable mutations](./images/admin-undoable-mutation.png)
-
-`undoable` is the default mutation mode for the `<Edit>` component, but if you want you can use the [`mutationMode`](https://marmelab.com/react-admin/Edit.html#mutationmode) prop to pick one of the other mutation modes supported by React Admin: `pessimistic` or `optimistic`.
-
-```diff
-export const BookEdit = () => (
-- <Edit>
-+ <Edit mutationMode="optimistic">
-    <SimpleForm>
-      <InputGuesser source="isbn" />
-      <InputGuesser source="title" />
-      <InputGuesser source="description" />
-      <InputGuesser source="author" />
-      <InputGuesser source="publicationDate" />
-      <InputGuesser source="reviews" />
-    </SimpleForm>
-  </Edit>
-);
-```
-
-**Tip:** Feel free to look at the [`<Edit>`](https://marmelab.com/react-admin/Edit.html) and [`<SimpleForm>`](https://marmelab.com/react-admin/SimpleForm.html) documentation pages to learn more about the customization options they offer.
-
-## Warning the User When There Are Unsaved Changes
-
-Another feature offered by React Admin is the possibility to warn the user when there are unsaved changes in a form.
-
-When the user tries to navigate away from a form with unsaved changes, a confirmation dialog will be displayed, asking the user if they want to leave the page. This prevents the risk of losing unsaved data.
-
-Reusing the `BookEdit` component from the previous example, all we need to do is to leverage the [`warnWhenUnsavedChanges`](https://marmelab.com/react-admin/SimpleForm.html#warnwhenunsavedchanges) prop of the `<SimpleForm>` component to enable this feature.
-
-```diff
-export const BookEdit = () => (
-  <Edit>
--   <SimpleForm>
-+   <SimpleForm warnWhenUnsavedChanges>
-      <InputGuesser source="isbn" />
-      <InputGuesser source="title" />
-      <InputGuesser source="description" />
-      <InputGuesser source="author" />
-      <InputGuesser source="publicationDate" />
-      <InputGuesser source="reviews" />
-    </SimpleForm>
-  </Edit>
-);
-```
-
-Now, if the user tries to navigate away from the form with unsaved changes, they will be warned:
-
-![Admin with unsaved changes warning](./images/admin-warnWhenUnsavedChanges.png)
-
-## Customizing the Form Layout
-
-As we saw in the [Enable Undoable Mutations](./advanced-customization.md#enabling-undoable-mutations) section, when using React Admin's `<Edit>` or `<Create>` components, we need to wrap the inputs in a form component, such as [`<SimpleForm>`](https://marmelab.com/react-admin/SimpleForm.html).
-
-`<SimpleForm>` organizes the inputs in a very simple layout, simply stacking them vertically.
-
-Under the hood, it uses Material UI's [`<Stack>`](https://mui.com/material-ui/react-stack/) component. This means we can use with `<SimpleForm>` any prop that `<Stack>` accepts, and customize the style of the component using [the `sx` prop](https://marmelab.com/react-admin/SX.html).
+By default, `<SimpleForm>` organizes the inputs in a very simple layout, simply stacking them vertically.
+Under the hood, it uses Material UI's [`<Stack>`](https://mui.com/material-ui/react-stack/) component.
+This means we can use with `<SimpleForm>` any prop that `<Stack>` accepts, and customize the style of the component using [the `sx` prop](https://marmelab.com/react-admin/SX.html).
 
 For instance, let's limit the width of the inputs to 500px:
 
@@ -288,6 +295,8 @@ export const BookEdit = () => (
 With these simple changes we already get a more appealing form layout:
 
 ![Admin with customized form layout](./images/admin-form-layout.png)
+
+**Tip:** Feel free to look at the [`<Edit>`](https://marmelab.com/react-admin/Edit.html) and [`<SimpleForm>`](https://marmelab.com/react-admin/SimpleForm.html) documentation pages to learn more about the customization options they offer.
 
 **Tip:** `<SimpleForm>` is not the only form layout provided by React Admin. You can also use another layout such as [`<TabbedForm>`](https://marmelab.com/react-admin/TabbedForm.html), [`<LongForm>`](https://marmelab.com/react-admin/LongForm.html),
 [`<AccordionForm>`](https://marmelab.com/react-admin/AccordionForm.html), [`<WizardForm>`](https://marmelab.com/react-admin/WizardForm.html) or even [create your own](https://marmelab.com/react-admin/Form.html).
