@@ -355,25 +355,24 @@ We will leverage Material UI's [`<Rating>`](https://mui.com/material-ui/react-ra
 Since the component is fairly simple, we won't create a dedicated React component, but will instead leverage [`<WithRecord>`](https://marmelab.com/react-admin/WithRecord.html), a React Admin component allowing to build a custom field on-the-fly.
 
 ```tsx
-import { Show, SimpleShowLayout, FieldGuesser, WithRecord, Labeled } from 'react-admin';
+import { ShowGuesser } from '@api-platform/admin';
+import { FieldGuesser, WithRecord, Labeled } from 'react-admin';
 import { Rating } from '@mui/material';
 
 const ReviewShow = () => (
-  <Show>
-    <SimpleShowLayout>
-      <FieldGuesser source="author" />
-      <FieldGuesser source="book" />
-      <FieldGuesser source="body" />
-      <Labeled label="Rating">
-        <WithRecord
-          render={(review) => (
-            <Rating value={review.rating} readOnly size="small" />
-          )}
-        />
-      </Labeled>
-      <FieldGuesser source="publicationDate" />
-    </SimpleShowLayout>
-  </Show>
+  <ShowGuesser>
+    <FieldGuesser source="author" />
+    <FieldGuesser source="book" />
+    <FieldGuesser source="body" />
+    <Labeled label="Rating">
+      <WithRecord
+        render={(review) => (
+          <Rating value={review.rating} readOnly size="small" />
+        )}
+      />
+    </Labeled>
+    <FieldGuesser source="publicationDate" />
+  </ShowGuesser>
 );
 ```
 
