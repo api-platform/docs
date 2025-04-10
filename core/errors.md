@@ -323,3 +323,68 @@ We recommend using the `\ApiPlatform\Metadata\Exception\ProblemExceptionInterfac
 `\ApiPlatform\Metadata\Exception\HttpExceptionInterface`. For security reasons we add: `normalizationContext: ['ignored_attributes'
 => ['trace', 'file', 'line', 'code', 'message', 'traceAsString']]` because you usually don't want these. You can override
 this context value if you want.
+
+## Document your exceptions
+
+Since 3.4, you also have the possibility to link your specific domain exceptions to your ApiResources so that they appear
+directly in your OpenAPI definition !
+
+Let's say that you have a `Greetings` resource, and that one of its providers can throw the following exception for the
+`ApiPlatform\Metadata\GetCollection` Operation: 
+
+```php
+use ApiPlatform\Metadata\ErrorResource;
+use ApiPlatform\Metadata\Exception\ProblemExceptionInterface;
+
+#[ErrorResource]
+class MyDomainException extends \Exception implements ProblemExceptionInterface
+{
+    public function getType(): string
+    {
+        return '/errors/418';
+    }
+
+    public function getTitle(): ?string
+    {
+        return 'Teapot error';
+    }
+
+    public function getStatus(): ?int
+    {
+        return 418;
+    }
+
+    public function getDetail(): ?string
+    {
+        return $this->getMessage();
+    }
+
+    public function getInstance(): ?string
+    {
+        return null;
+    }
+
+    public string $myCustomField = 'I usually prefer coffee.';
+}
+```
+
+As long as your Exception implements `ApiPlatform\Metadata\Exception\ProblemExceptionInterface` and has the `ErrorResource`
+attribute, you can then map it to your Operation this way: 
+
+```php
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\GetCollection;
+use App\Exception\MyDomainException;
+
+#[ApiResource(operations: [
+    new GetCollection(errors: [MyDomainException::class])
+    ],
+)]
+class Greeting
+{
+}
+```
+
+This will automatically document your potential domain exception as a Response in the OpenAPI definition, and show it in the UI :
+
+![Swagger UI](images/open-api-documented-error.png)
