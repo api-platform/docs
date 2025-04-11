@@ -101,7 +101,7 @@ namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use App\State\FormRequestProcessorDecorator;
-use ApiPlatform\Core\State\ProcessorInterface;
+use ApiPlatform\State\ProcessorInterface;
 use ApiPlatform\State\SerializerContextBuilderInterface;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 
