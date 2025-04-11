@@ -186,7 +186,7 @@ helm upgrade api-platform ./helm/api-platform --namespace=default \
 
 ## GitHub Actions Example for deployment
 
-You can find a [complete deploy command for GKE](https://github.com/api-platform/demo/blob/main/.github/workflows/cd.yml) on the [demo project](https://github.com/api-platform/demo/):
+You can find a [complete deploy command for GKE](https://github.com/api-platform/demo/blob/4.1/.github/workflows/cd.yml) on the [demo project](https://github.com/api-platform/demo/):
 
 ## Symfony Messenger
 
