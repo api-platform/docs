@@ -100,7 +100,8 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
                         ]
                     ])
                 )
-            )
+            ),
+            deserialize: false
         )
     ]
 )]
