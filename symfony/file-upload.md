@@ -84,6 +84,8 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
         new GetCollection(),
         new Post(
             inputFormats: ['multipart' => ['multipart/form-data']],
+            controller: CreateMediaObjectAction::class, 
+            deserialize: false, 
             openapi: new Model\Operation(
                 requestBody: new Model\RequestBody(
                     content: new \ArrayObject([
@@ -129,6 +131,38 @@ class MediaObject
 ```
 
 Note: From V3.3 onwards, `'multipart/form-data'` must either be including in the global API-Platform config, either in `formats` or `defaults->inputFormats`, or defined as an `inputFormats` parameter on an operation by operation basis.
+
+### Creating the Controller
+At this point, the entity is configured, but we still need to write the action that handles the file upload.
+```php
+<?php
+// api/src/Controller/CreateMediaObjectAction.php
+
+namespace App\Controller;
+
+use App\Entity\MediaObject;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpKernel\Attribute\AsController;
+use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
+
+#[AsController]
+final class CreateMediaObjectAction extends AbstractController
+{
+    public function __invoke(Request $request): MediaObject
+    {
+        $uploadedFile = $request->files->get('file');
+        if (!$uploadedFile) {
+            throw new BadRequestHttpException('"file" is required');
+        }
+
+        $mediaObject = new MediaObject();
+        $mediaObject->file = $uploadedFile;
+
+        return $mediaObject;
+    }
+}
+```
 
 ### Resolving the File URL
 
