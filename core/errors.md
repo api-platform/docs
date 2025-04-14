@@ -330,7 +330,7 @@ Since 3.4, you also have the possibility to link your specific domain exceptions
 directly in your OpenAPI definition !
 
 Let's say that you have a `Greetings` resource, and that one of its providers can throw the following exception for the
-`ApiPlatform\Metadata\GetCollection` Operation: 
+`ApiPlatform\Metadata\GetCollection` Operation:
 
 ```php
 use ApiPlatform\Metadata\ErrorResource;
@@ -369,7 +369,7 @@ class MyDomainException extends \Exception implements ProblemExceptionInterface
 ```
 
 As long as your Exception implements `ApiPlatform\Metadata\Exception\ProblemExceptionInterface` and has the `ErrorResource`
-attribute, you can then map it to your Operation this way: 
+attribute, you can then map it to your Operation this way:
 
 ```php
 use ApiPlatform\Metadata\ApiResource;
