@@ -10,8 +10,8 @@ For example:
 - version 3.2 has been released on 12 October 2023;
 - version 3.3 has been released on 9 April 2024 (we were a little late, it should have been published in March);
 - versions 3.4 has been released on 18 September 2024;
-- versions 4.0 has been released on 27 September 2024; 
-- versions 4.1 has been released on 28 February 2025; 
+- versions 4.0 has been released on 27 September 2024;
+- versions 4.1 has been released on 28 February 2025;
 
 ## Maintenance
 
