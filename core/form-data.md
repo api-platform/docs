@@ -38,7 +38,7 @@ final class FormRequestProcessorDecorator implements ProcessorInterface
 {
     public function __construct(
         private readonly ProcessorInterface $decorated,
-        private readonlyDenormalizerInterface $denormalizer,
+        private readonly DenormalizerInterface $denormalizer,
         private readonly SerializerContextBuilderInterface $serializerContextBuilder
     ) {}
 
