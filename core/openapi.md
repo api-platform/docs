@@ -755,21 +755,21 @@ You may want to copy the [one shipped with API Platform](https://github.com/api-
 
 ### Overriding the UI Template using Laravel
 
-As described [in the Laravel documentation](https://laravel.com/docs/blade#extending-a-layout), it's possible to override the Blade template that loads Swagger UI and renders the documentation:
+As described [in the Laravel documentation](https://laravel.com/docs/packages#overriding-package-views), it's possible to override the Blade template that loads Swagger UI and renders the documentation:
 
 ```html
-{# resources/views/swagger-ui.blade.php #}
+{{-- resources/views/vendor/api-platform/swagger-ui.blade.php --}}
 <!DOCTYPE html>
 <html>
 <head>
     <meta charset="UTF-8">
     <title>
         @if(isset($title)) 
-            {{ $title }} 
+            {{ $title }}
         @endif
         My custom template
     </title>
-    {# ... #}
+    {{-- ... --}}
 </html>
 ```
 
