@@ -356,7 +356,7 @@ merge new encoders and normalizers in API Platform.
 ## JSON:API sparse fieldset and sort parameters
 
 > [!WARNING]  
-> The SortFilter is for Eloquent, the Doctrine equivalent is the OrderFilter. 
+> The SortFilter is for Eloquent, the Doctrine equivalent is the OrderFilter.
 > The config/api-platform.php is Laravel specific.
 
 When working with JSON:API you may want to declare the `SparseFieldset` and the
@@ -371,11 +371,11 @@ use ApiPlatform\JsonApi\Filter\SparseFieldset;
 use ApiPlatform\Laravel\Eloquent\Filter\JsonApi\SortFilter;
 
 return [
-	// ...
-	'parameters' => [
-		new QueryParameter(key: 'fields', filter: SparseFieldset::class),
-		new QueryParameter(key: 'sort', filter: SortFilter::class),
-	],
+    // ...
+    'parameters' => [
+      new QueryParameter(key: 'fields', filter: SparseFieldset::class),
+      new QueryParameter(key: 'sort', filter: SortFilter::class),
+    ],
 ];
 ```
 
