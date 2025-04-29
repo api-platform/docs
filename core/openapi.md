@@ -480,7 +480,27 @@ use App\Controller\RandomRabbit;
                     ]
                 ]
             ])
-        )
+        ),
+        responses: [
+            201 => new Model\Response(
+                content: new \ArrayObject([
+                        'application/json' => [
+                            'schema' => [
+                                'type' => 'object',
+                                'properties' => [
+                                    'status' => ['type' => 'string'],
+                                    'description' => ['type' => 'string']
+                                ]
+                            ],
+                            'example' => [
+                                'status' => 'success',
+                                'description' => 'Rabbit picture created.',
+                            ]
+                        ]
+                    ]
+                )
+            )
+        ],
     )
 )]
 class Rabbit
