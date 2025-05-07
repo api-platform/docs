@@ -94,7 +94,7 @@ This case is covered by an URI variable transformer:
 // api/src/Identifier/UuidUriVariableTransformer.php with Symfony or app/Identifier/UuidUriVariableTransformer.php with Laravel 
 namespace App\Identifier;
 
-use ApiPlatform\Api\UriVariableTransformerInterface;
+use ApiPlatform\Metadata\UriVariableTransformerInterface;
 use ApiPlatform\Exception\InvalidUriVariableException;
 use App\Uuid;
 

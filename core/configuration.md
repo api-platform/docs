@@ -374,7 +374,7 @@ api_platform:
     host: ~
 
     # The URL generation strategy to use for IRIs
-    url_generation_strategy: !php/const ApiPlatform\Api\UrlGeneratorInterface::ABS_PATH
+    url_generation_strategy: !php/const ApiPlatform\Metadata\UrlGeneratorInterface::ABS_PATH
 
     # To enable collecting denormalization errors
     collectDenormalizationErrors: false
@@ -708,7 +708,7 @@ If you need to globally configure all the resources instead of adding configurat
 <?php
 // config/api-platform.php
 
-use ApiPlatform\Api\UrlGeneratorInterface;
+use ApiPlatform\Metadata\UrlGeneratorInterface;
 
 return [
     'defaults' => [

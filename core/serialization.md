@@ -648,7 +648,7 @@ Instead of sending an IRI to set a relation, you may want to send a plain identi
 
 namespace App\Serializer;
 
-use ApiPlatform\Api\IriConverterInterface;
+use ApiPlatform\Metadata\IriConverterInterface;
 use App\ApiResource\Dummy;
 use App\ApiResource\RelatedDummy;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
