@@ -133,7 +133,7 @@ Below is an example using the `topics` option:
 namespace App\ApiResource;
 
 use ApiPlatform\Metadata\ApiResource;
-use ApiPlatform\Api\UrlGeneratorInterface;
+use ApiPlatform\Metadata\UrlGeneratorInterface;
 use App\ApiResource\User;
 
 #[ApiResource(
