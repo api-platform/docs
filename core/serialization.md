@@ -548,13 +548,10 @@ use Symfony\Component\Serializer\Annotation\Groups;
 class Person
 {
     #[Groups('person')]
-    public $name;
+    public string $name;
 
-   /**
-    * @var Person
-    */
     #[Groups('person')]
-   public $parent;  // Note that a Person instance has a relation with another Person.
+   public ?Person $parent;  // Note that a Person instance has a relation with another Person.
 
     // ...
 }
@@ -607,7 +604,7 @@ class Person
 
    #[Groups('person')]
    #[ApiProperty(readableLink: false, writableLink: false)]
-   public Person $parent;  // This property is now serialized/deserialized as an IRI.
+   public ?Person $parent;  // This property is now serialized/deserialized as an IRI.
 
     // ...
 }
@@ -808,9 +805,8 @@ class Greeting
     #[Groups("greeting:collection:get")]
     private ?int $id = null;
 
-    private $a = 1;
-
-    private $b = 2;
+    private int $a = 1;
+    private int $b = 2;
 
     #[ORM\Column]
     #[Groups("greeting:collection:get")]
@@ -936,10 +932,10 @@ services:
 // api/src/Serializer/BookContextBuilder.php
 namespace App\Serializer;
 
-use ApiPlatform\Serializer\SerializerContextBuilderInterface;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use App\ApiResource\Book;
+use Symfony\Component\HttpFoundation\Request;
+use ApiPlatform\State\SerializerContextBuilderInterface;
+use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 final class BookContextBuilder implements SerializerContextBuilderInterface
 {
@@ -1182,7 +1178,7 @@ class Book
     // ...
 
     #[ApiProperty(identifier: true)]
-    private $id;
+    private ?int $id;
 
     /**
      * This field can be managed only by an admin

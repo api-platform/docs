@@ -2750,8 +2750,8 @@ The decorator could be like this:
 <?php
 namespace App\Serializer;
 
-use ApiPlatform\GraphQl\Serializer\SerializerContextBuilderInterface;
 use App\Entity\Book;
+use ApiPlatform\State\SerializerContextBuilderInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 final class BookContextBuilder implements SerializerContextBuilderInterface
@@ -2783,8 +2783,8 @@ final class BookContextBuilder implements SerializerContextBuilderInterface
 namespace App\Services;
 
 use App\Models\Book;
-use ApiPlatform\GraphQl\Serializer\SerializerContextBuilderInterface;
 use Illuminate\Support\Facades\Auth;
+use ApiPlatform\State\SerializerContextBuilderInterface;
 
 final class BookContextBuilder implements SerializerContextBuilderInterface
 {

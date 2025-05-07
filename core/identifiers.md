@@ -5,6 +5,8 @@ To help with your development experience, we introduced an identifier normalizat
 
 ## Custom Identifier Normalizer
 
+> [!WARNING]
+> This feature is not yet available with Laravel, if you need it please open a Feature Request issue!
 > In the following chapter, we're assuming that `App\Uuid` is a project-owned class that manages a time-based UUID.
 
 Let's say you have the following class, which is identified by a `UUID` type. In this example, `UUID` is not a simple string but an object with many attributes.
@@ -13,7 +15,7 @@ Let's say you have the following class, which is identified by a `UUID` type. In
 
 ```php
 <?php
-// api/src/ApiResource/Person.php with Symfony or app/ApiResource/Person.php with Laravel
+// api/src/ApiResource/Person.php with Symfony
 namespace App\ApiResource;
 
 use ApiPlatform\Metadata\ApiProperty;
@@ -24,11 +26,8 @@ use App\Uuid;
 #[ApiResource(provider: PersonProvider::class)]
 final class Person
 {
-    /**
-     * @var Uuid
-     */
     #[ApiProperty(identifier: true)]
-    public $code;
+    public Uuid $code;
 
     // ...
 }
@@ -65,7 +64,7 @@ Let's create a `Provider` for the `Person` resource:
 
 ```php
 <?php
-// api/src/State/PersonProvider.php with Symfony or app/State/PersonProvider.php with Laravel
+// api/src/State/PersonProvider.php with Symfony
 
 namespace App\State;
 
@@ -94,7 +93,7 @@ This case is covered by an URI variable transformer:
 
 ```php
 <?php
-// api/src/Identifier/UuidUriVariableTransformer.php with Symfony or app/Identifier/UuidUriVariableTransformer.php with Laravel 
+// api/src/Identifier/UuidUriVariableTransformer.php with Symfony
 namespace App\Identifier;
 
 use ApiPlatform\Api\UriVariableTransformerInterface;
@@ -169,28 +168,6 @@ services:
 
 Your `PersonProvider` will now work as expected!
 
-### Tag the Service using Laravel
-
-```php
-<?php
-
-namespace App\Providers;
-
-use App\Identifier\UuidUriVariableTransformer;
-use ApiPlatform\Metadata\UriVariableTransformerInterface;
-use Illuminate\Support\ServiceProvider;
-
-class AppServiceProvider extends ServiceProvider
-{
-    public function register(): void
-    {
-        $this->app->tag([UuidUriVariableTransformer::class], UriVariableTransformerInterface::class);
-    }
-}
-```
-
-Your `PersonProvider` will now work as expected!
-
 ## Changing Identifier in a Doctrine Entity
 
 If your resource is also a Doctrine entity and you want to use another identifier other than the Doctrine one, you have to unmark it:
@@ -214,12 +191,9 @@ final class Person
     #[ApiProperty(identifier: false)]
     private ?int $id = null;
 
-    /**
-     * @var Uuid
-     */
     #[ORM\Column(type: 'uuid', unique: true)]
     #[ApiProperty(identifier: true)]
-    public $code;
+    public Uuid $code;
 
     // ...
 }

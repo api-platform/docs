@@ -9,17 +9,19 @@ For example:
 - version 3.1 has been released on 23 January 2023;
 - version 3.2 has been released on 12 October 2023;
 - version 3.3 has been released on 9 April 2024 (we were a little late, it should have been published in March);
-- versions 3.4 and 4.0 will be released on September 2024.
+- versions 3.4 has been released on 18 September 2024;
+- versions 4.0 has been released on 27 September 2024;
+- versions 4.1 has been released on 28 February 2025;
 
 ## Maintenance
 
 3 versions are maintained at the same time:
 
-- **stable** (currently the **4.0** branch): regular bugfixes are integrated in this version
-- **old-stable** (are the last 2 minor branches: currently **3.4** and **3.3** branches): [security fixes](security.md) are integrated in this version, regular bugfixes are **not** backported in it
+- **stable** (currently the **4.1** branch): regular bugfixes are integrated in this version
+- **old-stable** (are the last branch: **4.0**): [security fixes](security.md) are integrated in this version, regular bugfixes are **not** backported in it
 - **development** (**main** branch): new features target this branch
 
-Older versions (1.x, 2.6...) **are not maintained**. If you still use them, you must upgrade as soon as possible.
+Older versions (1.x, 2.6..., 3.0...) **are not maintained**. If you still use them, you must upgrade as soon as possible.
 
 The **old-stable** branch is merged in the **stable** branch on a regular basis to propagate [security fixes](security.md).
 The **stable** branch is merged in the **development** branch on a regular basis to propagate [security](security.md) and regular bugfixes.

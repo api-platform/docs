@@ -369,6 +369,9 @@ api_platform:
     input: ~
     output: ~
     stateless: ~
+    schemes: ~
+    options: ~
+    host: ~
 
     # The URL generation strategy to use for IRIs
     url_generation_strategy: !php/const ApiPlatform\Api\UrlGeneratorInterface::ABS_PATH
@@ -566,6 +569,9 @@ return [
 
             // If set, enables filtering. The top bar will show an edit box that you can use to filter the tagged operations that are shown.
             'filter' => false,
+
+            // If set to true, it persists authorization data and it would not be lost on browser close/refresh
+            'persistAuthorization' => true,
 
             // You can use any other configuration parameters too.
         ],

@@ -15,9 +15,6 @@ API documentation in a user friendly way.
 
 ## Using the OpenAPI Command
 
-> [!WARNING]
-> These commands are not yet available with Laravel, you're welcome to contribute [on GitHub](https://github.com/api-platform/core)
-
 You can also dump an OpenAPI specification for your API.
 
 OpenAPI, JSON format:
@@ -26,7 +23,7 @@ OpenAPI, JSON format:
 bin/console api:openapi:export
 ```
 
-OpenAPI, YAML format:
+OpenAPI, YAML format (you need to install `symfony/yaml` for this to work):
 
 ```console
 bin/console api:openapi:export --yaml
@@ -49,6 +46,26 @@ It is also possible to use OpenAPI v3.0.0 format:
 ```console
 bin/console api:openapi:export --spec-version=3.0.0
 ```
+
+## Create several versions of a specification
+
+You can now decline a same OpenAPI specification in multiple versions using the `x-apiplatform-tags` tag:
+
+```php
+use ApiPlatform\OpenApi\Factory\OpenApiFactory;
+
+#[GetCollection(openapi: new Operation(extensionProperties: [OpenApiFactory::API_PLATFORM_TAG => ['customer', 'developer']]))]
+#[Post(openapi: new Operation(extensionProperties: [OpenApiFactory::API_PLATFORM_TAG => 'developer']))]
+class Book {}
+```
+
+Then, either use the query parameter for the web version such as `/docs?filter_tags[]=customer` or through the command line:
+
+```console
+bin/console api:openapi:export --filter-tags=customer
+```
+
+To produce a specification including only the operation matching your tag.
 
 ## Overriding the OpenAPI Specification
 
@@ -738,21 +755,21 @@ You may want to copy the [one shipped with API Platform](https://github.com/api-
 
 ### Overriding the UI Template using Laravel
 
-As described [in the Laravel documentation](https://laravel.com/docs/blade#extending-a-layout), it's possible to override the Blade template that loads Swagger UI and renders the documentation:
+As described [in the Laravel documentation](https://laravel.com/docs/packages#overriding-package-views), it's possible to override the Blade template that loads Swagger UI and renders the documentation:
 
 ```html
-{# resources/views/swagger-ui.blade.php #}
+{{-- resources/views/vendor/api-platform/swagger-ui.blade.php --}}
 <!DOCTYPE html>
 <html>
 <head>
     <meta charset="UTF-8">
     <title>
         @if(isset($title)) 
-            {{ $title }} 
+            {{ $title }}
         @endif
         My custom template
     </title>
-    {# ... #}
+    {{-- ... --}}
 </html>
 ```
 

@@ -31,14 +31,14 @@ namespace App\State;
 use ApiPlatform\State\ProcessorInterface;
 use Symfony\Component\HttpFoundation\Request;
 use ApiPlatform\Metadata\Operation;
-use ApiPlatform\Serializer\SerializerContextBuilderInterface;
+use ApiPlatform\State\SerializerContextBuilderInterface;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 
 final class FormRequestProcessorDecorator implements ProcessorInterface
 {
     public function __construct(
         private readonly ProcessorInterface $decorated,
-        private readonlyDenormalizerInterface $denormalizer,
+        private readonly DenormalizerInterface $denormalizer,
         private readonly SerializerContextBuilderInterface $serializerContextBuilder
     ) {}
 
@@ -101,9 +101,9 @@ namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use App\State\FormRequestProcessorDecorator;
-use ApiPlatform\Core\State\ProcessorInterface;
+use ApiPlatform\State\ProcessorInterface;
+use ApiPlatform\State\SerializerContextBuilderInterface;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
-use ApiPlatform\Core\Serializer\SerializerContextBuilderInterface;
 
 class AppServiceProvider extends ServiceProvider
 {

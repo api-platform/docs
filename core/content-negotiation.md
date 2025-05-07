@@ -1,85 +1,113 @@
 # Content Negotiation
 
-The API system has built-in [content negotiation](https://en.wikipedia.org/wiki/Content_negotiation) capabilities.
+The API system has built-in
+[content negotiation](https://en.wikipedia.org/wiki/Content_negotiation)
+capabilities.
 
-By default, only the [JSON-LD](https://json-ld.org) format is enabled. However API Platform supports many more formats and can be extended.
+By default, only the [JSON-LD](https://json-ld.org) format is enabled. However
+API Platform supports many more formats and can be extended.
 
-The framework natively supports JSON-LD (and Hydra), GraphQL, JSON:API, HAL, YAML, CSV, HTML (API docs), raw JSON and raw XML.
-Using the raw JSON or raw XML formats is discouraged, prefer using JSON-LD instead, which provides more feature and is as easy to use.
+The framework natively supports JSON-LD (and Hydra), GraphQL, JSON:API, HAL,
+YAML, CSV, HTML (API docs), raw JSON and raw XML. Using the raw JSON or raw XML
+formats is discouraged, prefer using JSON-LD instead, which provides more
+feature and is as easy to use.
 
-API Platform also supports [JSON Merge Patch (RFC 7396)](https://tools.ietf.org/html/rfc7396) the JSON:API [`PATCH`](https://jsonapi.org/format/#crud-updating) formats, as well as [Problem Details (RFC 7807)](https://tools.ietf.org/html/rfc7807), [Hydra](https://www.hydra-cg.com/spec/latest/core/#description-of-http-status-codes-and-errors) and [JSON:API](https://jsonapi.org/format/#errors) error formats.
+API Platform also supports
+[JSON Merge Patch (RFC 7396)](https://tools.ietf.org/html/rfc7396) the JSON:API
+[`PATCH`](https://jsonapi.org/format/#crud-updating) formats, as well as
+[Problem Details (RFC 7807)](https://tools.ietf.org/html/rfc7807),
+[Hydra](https://www.hydra-cg.com/spec/latest/core/#description-of-http-status-codes-and-errors)
+and [JSON:API](https://jsonapi.org/format/#errors) error formats.
 
 <p align="center" class="symfonycasts"><a href="https://symfonycasts.com/screencast/api-platform/formats?cid=apip"><img src="../symfony/images/symfonycasts-player.png" alt="Formats screencast"><br>Watch the Formats screencast</a></p>
 
 API Platform will automatically detect the best resolving format depending on:
 
 - enabled formats (see below)
-- the requested format, specified in either [the `Accept` HTTP header](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Accept) or as an extension appended to the URL
+- the requested format, specified in either
+  [the `Accept` HTTP header](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Accept)
+  or as an extension appended to the URL
 
 Available formats are:
 
 | Format                                                | Format name | MIME types                    | Backward Compatibility guaranteed |
-|-------------------------------------------------------|-------------|-------------------------------|-----------------------------------|
+| ----------------------------------------------------- | ----------- | ----------------------------- | --------------------------------- |
 | [JSON-LD](https://json-ld.org)                        | `jsonld`    | `application/ld+json`         | yes                               |
 | [GraphQL](graphql.md)                                 | n/a         | n/a                           | yes                               |
 | [JSON:API](https://jsonapi.org/)                      | `jsonapi`   | `application/vnd.api+json`    | yes                               |
 | [HAL](https://stateless.group/hal_specification.html) | `jsonhal`   | `application/hal+json`        | yes                               |
-| [YAML](https://yaml.org/)                             | `yaml`      | `application/yaml`          | no                                |
+| [YAML](https://yaml.org/)                             | `yaml`      | `application/yaml`            | no                                |
 | [CSV](https://tools.ietf.org/html/rfc4180)            | `csv`       | `text/csv`                    | no                                |
 | [HTML](https://whatwg.org/) (API docs)                | `html`      | `text/html`                   | no                                |
 | [XML](https://www.w3.org/XML/)                        | `xml`       | `application/xml`, `text/xml` | no                                |
 | [JSON](https://www.json.org/)                         | `json`      | `application/json`            | no                                |
 
-If the client's requested format is not specified, the response format will be the first format defined in the `formats` configuration key (see below).
-If the request format is not supported, an [Unsupported Media Type](https://developer.mozilla.org/fr/docs/Web/HTTP/Status/415) error will be returned.
+If the client's requested format is not specified, the response format will be
+the first format defined in the `formats` configuration key (see below). If the
+request format is not supported, an
+[Unsupported Media Type](https://developer.mozilla.org/fr/docs/Web/HTTP/Status/415)
+error will be returned.
 
-Examples showcasing how to use the different mechanisms are available [in the API Platform test suite](https://github.com/api-platform/core/blob/main/features/main/content_negotiation.feature).
+Examples showcasing how to use the different mechanisms are available
+[in the API Platform test suite](https://github.com/api-platform/core/blob/main/features/main/content_negotiation.feature).
 
 ## Configuring Formats Globally
 
-The first required step is to configure allowed formats. The following configuration will enable the support of XML (built-in)
-and of a custom format called `myformat` and having `application/vnd.myformat` as [MIME type](https://en.wikipedia.org/wiki/Media_type).
+The first required step is to configure allowed formats. The following
+configuration will enable the support of XML (built-in) and of a custom format
+called `myformat` and having `application/vnd.myformat` as
+[MIME type](https://en.wikipedia.org/wiki/Media_type).
 
 ```yaml
 # api/config/packages/api_platform.yaml
 api_platform:
   formats:
-    jsonld: ['application/ld+json']
-    jsonhal: ['application/hal+json']
-    jsonapi: ['application/vnd.api+json']
-    json: ['application/json']
-    xml: ['application/xml', 'text/xml']
-    yaml: ['application/x-yaml']
-    csv: ['text/csv']
-    html: ['text/html']
-    myformat: ['application/vnd.myformat']
+    jsonld: ["application/ld+json"]
+    jsonhal: ["application/hal+json"]
+    jsonapi: ["application/vnd.api+json"]
+    json: ["application/json"]
+    xml: ["application/xml", "text/xml"]
+    yaml: ["application/x-yaml"]
+    csv: ["text/csv"]
+    html: ["text/html"]
+    myformat: ["application/vnd.myformat"]
 ```
 
 To enable GraphQL support, [read the dedicated chapter](graphql.md).
 
-Because the Symfony Serializer component is able to serialize objects in XML, sending an `Accept` HTTP header with the
-`text/xml` string as value is enough to retrieve XML documents from our API. However API Platform knows nothing about the
-`myformat` format. We need to register an encoder and optionally a normalizer for this format.
+Because the Symfony Serializer component is able to serialize objects in XML,
+sending an `Accept` HTTP header with the `text/xml` string as value is enough to
+retrieve XML documents from our API. However API Platform knows nothing about
+the `myformat` format. We need to register an encoder and optionally a
+normalizer for this format.
 
 ## Configuring PATCH Formats
 
 By default, API Platform supports JSON Merge Patch and JSON:API PATCH formats.
-Support for the JSON:API PATCH format is automatically enabled if JSON:API support is enabled.
-JSON Merge Patch support must be enabled explicitly:
+Support for the JSON:API PATCH format is automatically enabled if JSON:API
+support is enabled. JSON Merge Patch support must be enabled explicitly:
 
 ```yaml
 # api/config/packages/api_platform.yaml
 api_platform:
   patch_formats:
-    json: ['application/merge-patch+json']
-    jsonapi: ['application/vnd.api+json']
+    json: ["application/merge-patch+json"]
+    jsonapi: ["application/vnd.api+json"]
 ```
 
-When support for at least one PATCH format is enabled, [an `Accept-Patch` HTTP header](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Accept-Patch) containing the list of supported patch formats is automatically added to all HTTP responses for items.
+When support for at least one PATCH format is enabled,
+[an `Accept-Patch` HTTP header](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Accept-Patch)
+containing the list of supported patch formats is automatically added to all
+HTTP responses for items.
 
 ## Configuring Error Formats
 
-API Platform will try to send to the client the error format matching with the format request with the `Accept` HTTP headers (or the URL extension). For instance, if a client request a JSON-LD representation of a resource, and an error occurs, then API Platform will serialize this error using the Hydra format (Hydra is a vocabulary for JSON-LD containing a standard representation of API errors).
+API Platform will try to send to the client the error format matching with the
+format request with the `Accept` HTTP headers (or the URL extension). For
+instance, if a client request a JSON-LD representation of a resource, and an
+error occurs, then API Platform will serialize this error using the Hydra format
+(Hydra is a vocabulary for JSON-LD containing a standard representation of API
+errors).
 
 Available formats can also be configured:
 
@@ -87,17 +115,20 @@ Available formats can also be configured:
 # api/config/packages/api_platform.yaml
 api_platform:
   error_formats:
-    jsonproblem: ['application/problem+json']
-    jsonld: ['application/ld+json'] # Hydra error formats
-    jsonapi: ['application/vnd.api+json']
+    jsonproblem: ["application/problem+json"]
+    jsonld: ["application/ld+json"] # Hydra error formats
+    jsonapi: ["application/vnd.api+json"]
 ```
 
 ## Configuring Formats For a Specific Resource or Operation
 
-Support for specific formats can also be configured at resource and operation level using the `inputFormats` and `outputFormats` attributes.
-`inputFormats` controls the formats accepted in request bodies while `outputFormats` controls formats available for responses.
+Support for specific formats can also be configured at resource and operation
+level using the `inputFormats` and `outputFormats` attributes. `inputFormats`
+controls the formats accepted in request bodies while `outputFormats` controls
+formats available for responses.
 
-The `format` attribute can be used as a shortcut, it sets both the `inputFormats` and `outputFormats` in one time.
+The `format` attribute can be used as a shortcut, it sets both the
+`inputFormats` and `outputFormats` in one time.
 
 ```php
 <?php
@@ -113,13 +144,16 @@ class Book
 }
 ```
 
-In the example above, `xml` or `jsonld` will be allowed and there is no need to specify the MIME types as they are already defined in the configuration.
+In the example above, `xml` or `jsonld` will be allowed and there is no need to
+specify the MIME types as they are already defined in the configuration.
 Additionally the `csv` format is added with the MIME type `text/csv`.
 
-It is also important to notice that the usage of this attribute will override the formats defined in the configuration, therefore
-this configuration might disable the `json` or the `html` on this resource for example.
+It is also important to notice that the usage of this attribute will override
+the formats defined in the configuration, therefore this configuration might
+disable the `json` or the `html` on this resource for example.
 
-You can specify different accepted formats at operation level too, it's especially convenient to configure formats available for the `PATCH` method:
+You can specify different accepted formats at operation level too, it's
+especially convenient to configure formats available for the `PATCH` method:
 
 <code-selector>
 
@@ -148,12 +182,14 @@ class Book
 resources:
   App\Entity\Book:
     formats:
-      0: 'jsonld' # format already defined in the config
-      csv: 'text/csv'
+      0: "jsonld" # format already defined in the config
+      csv: "text/csv"
     operations:
       ApiPlatform\Metadata\Get:
         formats:
-          json: ['application/merge-patch+json'] # works also with "application/merge-patch+json"
+          json: [
+            "application/merge-patch+json",
+          ] # works also with "application/merge-patch+json"
 ```
 
 ```xml
@@ -182,9 +218,10 @@ resources:
 
 ## Supporting Custom Formats
 
-The API Platform content negotiation system is extendable.
-You can add support for formats not available by default by creating custom normalizers and encoders.
-Refer to the Symfony documentation to learn [how to create and register such classes](https://symfony.com/doc/current/serializer.html#adding-normalizers-and-encoders).
+The API Platform content negotiation system is extendable. You can add support
+for formats not available by default by creating custom normalizers and
+encoders. Refer to the Symfony documentation to learn
+[how to create and register such classes](https://symfony.com/doc/current/serializer.html#adding-normalizers-and-encoders).
 
 Then, register the new format in the configuration:
 
@@ -193,36 +230,39 @@ Then, register the new format in the configuration:
 api_platform:
   formats:
     # ...
-    myformat: ['application/vnd.myformat']
+    myformat: ["application/vnd.myformat"]
 ```
 
 You will also need to declare an encoder which supports the new format:
 
 ```yaml
 services:
-    app.api-platform.myformat.encoder:
-      class: ApiPlatform\Serializer\JsonEncoder
-      arguments:
-          $format: 'myformat'
-      # The following lines are only needed if autoconfigure is disabled
-      # tags:
-      #     - { name: 'serializer.encoder' }
+  app.api-platform.myformat.encoder:
+    class: ApiPlatform\Serializer\JsonEncoder
+    arguments:
+      $format: "myformat"
+    # The following lines are only needed if autoconfigure is disabled
+    # tags:
+    #     - { name: 'serializer.encoder' }
 ```
 
-API Platform will automatically call the serializer with your defined format name as `format` parameter during the deserialization process (`myformat` in the example).
-It will then return the result to the client with the requested MIME type using its built-in responder.
-For non-standard formats, [a vendor, vanity or unregistered MIME type should be used](https://en.wikipedia.org/wiki/Media_type#Vendor_tree).
+API Platform will automatically call the serializer with your defined format
+name as `format` parameter during the deserialization process (`myformat` in the
+example). It will then return the result to the client with the requested MIME
+type using its built-in responder. For non-standard formats,
+[a vendor, vanity or unregistered MIME type should be used](https://en.wikipedia.org/wiki/Media_type#Vendor_tree).
 
 ### Reusing the API Platform Infrastructure
 
-Using composition is the recommended way to implement a custom normalizer. You can use the following template to start your
-own implementation of `CustomItemNormalizer`:
+Using composition is the recommended way to implement a custom normalizer. You
+can use the following template to start your own implementation of
+`CustomItemNormalizer`:
 
 ```yaml
 # api/config/services.yaml
 services:
   'App\Serializer\CustomItemNormalizer':
-    arguments: ['@api_platform.serializer.normalizer.item']
+    arguments: ["@api_platform.serializer.normalizer.item"]
     # Uncomment if you don't use the autoconfigure feature
     #tags: [ 'serializer.normalizer' ]
 
@@ -272,8 +312,8 @@ final class CustomItemNormalizer implements NormalizerInterface, DenormalizerInt
 }
 ```
 
-For example if you want to make the `csv` format work for even complex entities with a lot of hierarchy, you have to
-flatten or remove overly complex relations:
+For example if you want to make the `csv` format work for even complex entities
+with a lot of hierarchy, you have to flatten or remove overly complex relations:
 
 ```php
 <?php
@@ -310,5 +350,62 @@ class CustomItemNormalizer implements NormalizerInterface, DenormalizerInterface
 
 ### Contributing Support for New Formats
 
-Adding support for **standard** formats upstream is welcome!
-We'll be glad to merge new encoders and normalizers in API Platform.
+Adding support for **standard** formats upstream is welcome! We'll be glad to
+merge new encoders and normalizers in API Platform.
+
+## JSON:API sparse fieldset and sort parameters
+
+> [!WARNING]  
+> The SortFilter is for Eloquent, the Doctrine equivalent is the OrderFilter.
+> The config/api-platform.php is Laravel specific.
+
+When working with JSON:API you may want to declare the `SparseFieldset` and the
+`SortFilter` globally:
+
+```php
+<?php
+// config/api-platform.php
+
+use ApiPlatform\Metadata\QueryParameter;
+use ApiPlatform\JsonApi\Filter\SparseFieldset;
+use ApiPlatform\Laravel\Eloquent\Filter\JsonApi\SortFilter;
+
+return [
+    // ...
+    'parameters' => [
+      new QueryParameter(key: 'fields', filter: SparseFieldset::class),
+      new QueryParameter(key: 'sort', filter: SortFilter::class),
+    ],
+];
+```
+
+It's also possible to declare this per-resource such as:
+
+```php
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\QueryParameter;
+use ApiPlatform\JsonApi\Filter\SparseFieldset;
+use ApiPlatform\Laravel\Eloquent\Filter\JsonApi\SortFilter;
+
+#[ApiResource]
+#[QueryParameter(key: 'fields', filter: SparseFieldset::class)]
+#[QueryParameter(key: 'sort', filter: SortFilter::class)]
+class Book extends Model {}
+```
+
+or per-operation:
+
+```php
+use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\QueryParameter;
+use ApiPlatform\JsonApi\Filter\SparseFieldset;
+use ApiPlatform\Laravel\Eloquent\Filter\JsonApi\SortFilter;
+
+#[GetCollection(
+    parameters: [
+        new QueryParameter(key: 'fields', filter: SparseFieldset::class),
+        new QueryParameter(key: 'sort', filter: SortFilter::class)
+    ]
+)]
+class Book extends Model {}
+```

@@ -30,7 +30,7 @@ jobs:
           VALIDATE_EDITORCONFIG: false
           VALIDATE_JSCPD: false
           VALIDATE_MARKDOWN_PRETTIER: false
-          DEFAULT_BRANCH: "origin/4.0"
+          DEFAULT_BRANCH: "origin/4.1"
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - uses: actions/cache@v4
