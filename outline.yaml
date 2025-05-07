@@ -82,7 +82,7 @@ chapters:
     items:
       - index
       - getting-started
-      - schema-org
+      - schema
       - customizing
       - advanced-customization
       - handling-relations
