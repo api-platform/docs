@@ -343,7 +343,7 @@ If you want to include some properties of the nested "author" document, use: `/b
 
 ## Creating Custom Filters
 
-Custom filters can be written by implementing the `ApiPlatform\Api\FilterInterface` interface.
+Custom filters can be written by implementing the `ApiPlatform\Metadata\FilterInterface` interface.
 
 API Platform provides a convenient way to create Doctrine ORM and MongoDB ODM filters. If you use [custom state providers](state-providers.md),
 you can still create filters by implementing the previously mentioned interface, but - as API Platform isn't aware of your
