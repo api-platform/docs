@@ -417,6 +417,59 @@ Content-Type: application/merge-patch+json
 
 There's a powerful mechanism inside API Platform to create routes using relation (e.g.: `/api/authors/2/books`), read more about [subresources here](../core/subresources.md).
 
+If you need to embed data, you can use [serialization groups](/core/serialization.md). Note that when you apply groups on Eloquent models they don't have properties therefore you need to specify groups using `#[ApiProperty(property: 'title')]`. Here's an example to embed the `author`:
+
+```php
+namespace App\Models;
+
+use ApiPlatform\Metadata\ApiResource;
+use Illuminate\Database\Eloquent\Model;
+
+#[ApiResource(normalizationContext: ['groups' => ['book:read']])]
+#[ApiProperty(serialize: new Groups(['book:read']), property: 'title')]
+#[ApiProperty(serialize: new Groups(['book:read']), property: 'description')]
+#[ApiProperty(serialize: new Groups(['book:read']), property: 'author')]
+class Book extends Model
+{
+    public function author(): BelongsTo
+    {
+        return $this->belongsTo(Author::class);
+    }
+}
+```
+
+If you need a group on every properties use the `Group` attribute on the class (note that we use the same group as specified on the Book's normalizationContext):
+
+```php
+namespace App\Models;
+
+use ApiPlatform\Metadata\ApiResource;
+use Illuminate\Database\Eloquent\Model;
+
+#[ApiResource)]
+#[Groups(['book:read'])]
+class Author extends Model
+{
+}
+```
+
+You'll see:
+
+```json
+{
+  "@context": "/api/contexts/Book",
+  "@id": "/api/books/1",
+  "@type": "Book",
+  "name": "Miss Nikki Senger V",
+  "isbn": "9784291624633",
+  "publicationDate": "1971-09-04",
+  "author": {
+    "@id": "/api/author/1",
+    "name": "Homer"
+  }
+}
+```
+
 ## Paginating Data
 
 A must have feature for APIs is pagination. Without pagination, collection responses quickly become huge and slow,
@@ -784,7 +837,7 @@ You can create your own `Error` resource following [this guide](https://api-plat
 
 Read the detailed documentation about [Laravel data validation in API Platform](validation.md).
 
-## Authorization
+### Authorization
 
 To protect an operation and ensure that only authorized users can access it, start by creating a Laravel [policy](https://laravel.com/docs/authorization#creating-policies):
 
@@ -795,10 +848,6 @@ php artisan make:policy BookPolicy --model=Book
 Laravel will automatically detect your new policy and use it when manipulating a Book.
 
 Read the detailed documentation about using [Laravel gates and policies with API Platform](security.md).
-
-<!-- ## Testing the API
-
-TODO-->
 
 ## Using the JavaScript Tools
 
