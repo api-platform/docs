@@ -345,7 +345,43 @@ final class BookRepresentationProvider implements ProviderInterface
 }
 ```
 
-And configure that you want to use this provider on the Book resource:
+And we bind the [ItemProvider](https://github.com/api-platform/core/blob/main/src/Laravel/Eloquent/State/ItemProvider.php) in our Service Provider
+
+```php
+<?php
+// app/Providers/AppServiceProvider.php
+
+namespace App\Providers;
+
+use App\State\BookRepresentationProvider;
+use ApiPlatform\Laravel\Eloquent\State\ItemProvider;
+use Illuminate\Support\ServiceProvider;
+use Illuminate\Contracts\Foundation\Application;
+class AppServiceProvider extends ServiceProvider
+{
+    /**
+     * Register any application services.
+     */
+    public function register(): void
+    {
+        //
+    }
+
+    /**
+     * Bootstrap any application services.
+     */
+    public function boot(): void
+    {   
+        $this->app->singleton(BookRepresentationProvider::class, function (Application $app) {
+            return new BookRepresentationProvider(
+                $app->make(ItemProvider::class),
+            );
+        });
+    }
+}
+```
+
+Finally, configure that you want to use this provider on the Book resource:
 
 ```php
 <?php
