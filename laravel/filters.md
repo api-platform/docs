@@ -101,6 +101,35 @@ As shown above the following search filters are available:
 
 The `DateFilter` allows to filter dates with an operator (`eq`, `lt`, `gt`, `lte`, `gte`):
 
+- `eq` - equals (exact match)
+- `gt` - greater than (strictly after)
+- `gte` - greater than or equal (after or on)
+- `lt` - less than (strictly before) 
+- `lte` - less than or equal (before or on)
+- `after` - alias for `gte`
+- `before` - alias for `lte`
+- `strictly_after` - alias for `gt`
+- `strictly_before` - alias for `lt`
+
+Usage Examples
+
+With the `DateFilter` applied, you can now filter dates between 01.01.2024 and 31.01.2024 using these API calls:
+
+**Option 1: Using gte and lte operators**
+```
+GET /api/your_entities?createdAt[gte]=2024-01-01&createdAt[lte]=2024-01-31
+```
+
+**Option 2: Using after and before operators**
+```
+GET /api/your_entities?createdAt[after]=2024-01-01&createdAt[before]=2024-01-31
+```
+
+**Option 3: Using strictly_after and strictly_before**
+```
+GET /api/your_entities?createdAt[strictly_after]=2023-12-31&createdAt[strictly_before]=2024-02-01
+```
+
 ```php
 // app/Models/Book.php
 
