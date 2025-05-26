@@ -285,14 +285,6 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        //
-    }
-
-    /**
-     * Bootstrap any application services.
-     */
-    public function boot(): void
-    {   
         $this->app->tag(UserProcessor::class, ProcessorInterface::class);
 
         $this->app->singleton(UserProcessor::class, function (Application $app) {
@@ -302,6 +294,8 @@ class AppServiceProvider extends ServiceProvider
             );
         });
     }
+
+    // ...
 }
 ```
 

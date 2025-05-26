@@ -364,20 +364,14 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        //
-    }
-
-    /**
-     * Bootstrap any application services.
-     */
-    public function boot(): void
-    {   
         $this->app->singleton(BookRepresentationProvider::class, function (Application $app) {
             return new BookRepresentationProvider(
                 $app->make(ItemProvider::class),
             );
         });
     }
+
+    //...
 }
 ```
 
