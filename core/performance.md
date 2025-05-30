@@ -77,9 +77,9 @@ Set up HTTP cache invalidation in your API Platform project using the Symfony or
 api_platform:
   http_cache:
     invalidation:
-      # We assume that your API can reach your caddy instance by the hostname http://caddy.
+      # We assume that your API can reach your caddy/frankenphp instance by the hostname http://php.
       # The endpoint /souin-api/souin is the default path to the invalidation API.
-      urls: ['http://caddy/souin-api/souin']
+      urls: ['http://php:2019/souin-api/souin']
       purger: api_platform.http_cache.purger.souin
 ```
 
