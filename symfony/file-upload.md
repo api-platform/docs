@@ -490,3 +490,70 @@ final class UploadedFileDenormalizer implements DenormalizerInterface
 If you're not using `autowiring` and `autoconfiguring`, don't forget to register the service and tag it as `serializer.normalizer`.
 
 For resolving the file URL, you can use a custom normalizer, like shown in [the previous example](#resolving-the-file-url).
+
+### Uploading Files on your User Entity
+
+If you’d like to add file-upload support directly to your `User` entity (rather than a dedicated `MediaObject`), there’s one extra “gotcha” you may have to take care of.
+
+> [!NOTE]
+> If you only expose file uploads through API Platform’s endpoints (e.g. POST /media_objects or POST /users/{id}/avatar), you don’t need any special serialization hooks and you can ignore this part.
+> This part is only relevant if you try to attach an `UploadedFile` or `File` object directly to your `User` entity in a non-API context (for example via a Symfony form controller where the `User` is stored in the session).
+
+Symfony’s session handler will attempt to serialize the entire `User` object when it stores your `User` in the session (for example via the Security token in a Symfony form controller).
+Since `File` is not serializable by default, you’ll encounter:
+```text
+Serialization of 'Symfony\Component\HttpFoundation\File\File' is not allowed
+```
+
+To fix this, you need to implement both the old `\Serializable` interface **and**, starting with PHP 7.4+, the new `__serialize()` / `__unserialize()` magic methods on your `User`, limiting serialization to just scalar fields (`id`, `email`, `password`, etc.).
+Symfony will then happily keep your `User` in the session while VichUploaderBundle handles the file itself.
+
+```php
+#[Vich\Uploadable]
+#[ORM\Entity]
+#[ApiResource(...)]
+class User implements UserInterface, PasswordAuthenticatedUserInterface, \Serializable
+{
+    private ?Uuid $id;
+    private ?string $email;
+    private ?string $password;
+
+    // …
+
+    //  Legacy Serializable, still used by Symfony SessionStorage
+    public function serialize(): string
+    {
+        return serialize([
+            (string) $this->id,
+            $this->email,
+            $this->password,
+        ]);
+    }
+
+    public function unserialize(string $data): void
+    {
+        list(
+            $this->id,
+            $this->email,
+            $this->password,
+        ) = unserialize($data);
+    }
+
+    // PHP 7.4+ Magic Methods
+    public function __serialize(): array
+    {
+        return [
+            'id' => (string) $this->id,
+            'email' => $this->email,
+            'password' => $this->password,
+        ];
+    }
+
+    public function __unserialize(array $data): void
+    {
+        $this->id = Uuid::fromString($data['id']);
+        $this->email = $data['email'];
+        $this->password = $data['password'];
+    }
+}
+```
