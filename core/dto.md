@@ -213,3 +213,29 @@ final class BookRepresentationProcessor implements ProcessorInterface
     }
 }
 ```
+
+## DTO without response
+
+Sometimes we need DTOs to process something, but we don't need to send an object in response.
+Assuming that, we can disable the output for our API Resource using the following code:
+
+```php
+<?php
+// api/src/ApiResource/Book.php with Symfony or app/ApiResource/Book.php with Laravel
+
+declare(strict_types=1);
+
+namespace App\ApiResource;
+
+use ApiPlatform\Metadata\ApiResource;
+use App\Dto\BookInput;
+
+#[ApiResource(
+    input: BookInput::class,
+    output: false, // Disables the response
+)]
+final class Book
+{
+    // ...
+}
+```
