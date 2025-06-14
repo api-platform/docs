@@ -103,7 +103,7 @@ class Book extends Model
 
 The documentation will output a query parameter per property that applies the `PartialSearchFilter` and also gives the ability to sort by name and ID using: `/books?name=search&order[id]=asc&order[name]=desc`.
 
-#### Filtering on Specific Properties Only
+### Filtering on Specific Properties Only
 To enable partial search filtering and sorting on specific properties like `name` and `description`:
 
 ```php
