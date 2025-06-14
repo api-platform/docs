@@ -44,6 +44,23 @@ final class EqualsFilter implements FilterInterface
 
 You can create your own filters by implementing the `ApiPlatform\Laravel\Eloquent\Filter\FilterInterface`. API Platform provides several eloquent filters for a RAD approach.
 
+### Parameter for Specific Operations
+To defines a parameter for only a `GetCollection` operation, you can do the following: 
+
+```php
+// app/Models/Book.php
+
+use ApiPlatform\Laravel\Eloquent\Filter\EqualsFilter;
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\QueryParameter;
+
+#[ApiResource]
+#[GetCollection(parameters: ['name' => new QueryParameter(key: 'name', filter: EqualsFilter::class)])]
+class Book extends Model
+{
+}
+```
+
 ### Parameter Validation
 
 You can add [validation rules](https://laravel.com/docs/validation) to parameters within the `constraints` attribute:
@@ -85,6 +102,25 @@ class Book extends Model
 ```
 
 The documentation will output a query parameter per property that applies the `PartialSearchFilter` and also gives the ability to sort by name and ID using: `/books?name=search&order[id]=asc&order[name]=desc`.
+
+#### Filtering on Specific Properties Only
+To enable partial search filtering and sorting on specific properties like `name` and `description`:
+
+```php
+// app/Models/Book.php
+
+use ApiPlatform\Laravel\Eloquent\Filter\PartialSearchFilter;
+use ApiPlatform\Laravel\Eloquent\Filter\OrderFilter;
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\QueryParameter;
+
+#[ApiResource]
+#[QueryParameter(key: 'sort[:property]', filter: OrderFilter::class, properties: ['name', 'description'])]
+#[QueryParameter(key: ':property', filter: PartialSearchFilter::class, properties: ['name', 'description')]
+class Book extends Model
+{
+}
+```
 
 ## Filters
 
