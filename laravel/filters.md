@@ -46,7 +46,7 @@ You can create your own filters by implementing the `ApiPlatform\Laravel\Eloquen
 
 ### Parameter for Specific Operations
 
-To defines a parameter for only a `GetCollection` operation, you can do the following: 
+To defines a parameter for only a `GetCollection` operation, you can do the following:
 
 ```php
 // app/Models/Book.php
