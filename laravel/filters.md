@@ -116,7 +116,7 @@ use ApiPlatform\Metadata\QueryParameter;
 
 #[ApiResource]
 #[QueryParameter(key: 'sort[:property]', filter: OrderFilter::class, properties: ['name', 'description'])]
-#[QueryParameter(key: ':property', filter: PartialSearchFilter::class, properties: ['name', 'description')]
+#[QueryParameter(key: ':property', filter: PartialSearchFilter::class, properties: ['name', 'description'])]
 class Book extends Model
 {
 }
