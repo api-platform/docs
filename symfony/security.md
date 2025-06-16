@@ -158,7 +158,53 @@ Additionally, in some cases you need to perform security checks on the original 
 
 The value in the `previous_object` variable is cloned from the original object.
 Note that, by default, this clone is not a deep one (it doesn't clone relationships, relationships are references).
-To make a deep clone, [implement `__clone` method](https://www.php.net/manual/en/language.oop5.cloning.php) in the concerned resource class.
+To make a deep clone, [implement `__clone` method](https://www.php.net/manual/en/language.oop5.cloning.php) in the concerned resource class.i
+
+## Controlling the response on `securityPostDenormalize`
+
+By default, when a request for a write operation is made that doesn't meet the `securityPostDenormalize` requirements (i.e. the expression returns `false`), the values of those protected properties in the 
+request data are silently discarded and not set on the object. Any properties the user does have permission to update will be updated and the request succeeds.
+
+You can optionally instruct API Platform to instead return a 403 Access Denied response in such cases, by adding `throw_on_access_denied` as an extra property with a value of `true`:
+
+<code-selector>
+
+```php
+<?php
+// api/src/Entity/Book.php
+namespace App\Entity;
+
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\Put;
+
+#[ApiResource]
+#[Get]
+#[Put(
+    securityPostDenormalize: "is_granted('ROLE_ADMIN') or (object.owner == user and previous_object.owner == user)",
+    extraProperties: ['throw_on_access_denied' => true]
+)]
+class Book
+{
+    // ...
+}
+```
+
+```yaml
+# api/config/api_platform/resources.yaml
+resources:
+  App\Entity\Book:
+    operations:
+      ApiPlatform\Metadata\Get: ~
+      ApiPlatform\Metadata\GetCollectionPut:
+        securityPostDenormalize: "is_granted('ROLE_ADMIN') or (object.owner == user and previous_object.owner == user)"
+        extraProperties:
+          throw_on_access_denied: true
+    # ...
+```
+
+</code-selector>
+
 
 ## Hooking Custom Permission Checks Using Voters
 
