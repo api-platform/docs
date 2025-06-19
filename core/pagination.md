@@ -203,7 +203,7 @@ To configure this feature globally, use the following configuration:
 # api/config/packages/api_platform.yaml
 api_platform:
   defaults:
-    pagination_client_enabled: false
+    pagination_client_enabled: true
   collection:
     pagination:
       enabled_parameter_name: pagination # optional
@@ -227,7 +227,7 @@ To configure this feature globally, use the following configuration:
 return [
     // ....
     'defaults' => [
-        'pagination_client_enabled' => false,
+        'pagination_client_enabled' => true,
     ],
     'collection' => [
         'pagination' => [
