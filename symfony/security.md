@@ -174,11 +174,9 @@ You can optionally instruct API Platform to instead return a 403 Access Denied r
 // api/src/Entity/Book.php
 namespace App\Entity;
 
-use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\Put;
 
-#[ApiResource]
 #[Get]
 #[Put(
     securityPostDenormalize: "is_granted('ROLE_ADMIN') or (object.owner == user and previous_object.owner == user)",
@@ -201,6 +199,28 @@ resources:
         extraProperties:
           throw_on_access_denied: true
     # ...
+```
+
+```xml
+<?xml version="1.0" encoding="UTF-8" ?>
+<!-- api/config/api_platform/resources.xml -->
+
+<resources xmlns="https://api-platform.com/schema/metadata/resources-3.0"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="https://api-platform.com/schema/metadata/resources-3.0
+        https://api-platform.com/schema/metadata/resources-3.0.xsd">
+    <resource class="App\Entity\Book">
+        <operations>
+            <operation class="ApiPlatform\Metadata\Get" />
+            <operation class="ApiPlatform\Metadata\Put">
+                <securityPostDenormalize>is_granted('ROLE_ADMIN') or (object.owner == user and previous_object.owner == user)</securityPostDenormalize>
+                <extraProperties>
+                    <property name="throw_on_access_denied" value="true" />
+                </extraProperties>
+            </operation>
+        </operations>
+    </resource>
+</resources>
 ```
 
 </code-selector>
