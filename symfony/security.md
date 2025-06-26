@@ -162,7 +162,7 @@ To make a deep clone, [implement `__clone` method](https://www.php.net/manual/en
 
 ## Controlling the response on `securityPostDenormalize`
 
-By default, when a request for a write operation is made that doesn't meet the `securityPostDenormalize` requirements (i.e. the expression returns `false`), the values of those protected properties in the 
+By default, when a request for a write operation is made that doesn't meet the `securityPostDenormalize` requirements (i.e. the expression returns `false`), the values of those protected properties in the
 request data are silently discarded and not set on the object. Any properties the user does have permission to update will be updated and the request succeeds.
 
 You can optionally instruct API Platform to instead return a 403 Access Denied response in such cases, by adding `throw_on_access_denied` as an extra property with a value of `true`:
