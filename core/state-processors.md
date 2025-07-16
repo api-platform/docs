@@ -141,7 +141,7 @@ If you want to execute custom business logic before or after persistence, this c
 
 For GraphQL a remove Operation type will not be `DeleteOperationInterface` type but `ApiPlatform\Metadata\GraphQl\Mutation` with a `getName()` result of "delete". You can insert this to use the `$removeProcessor`. However, API Platform will not return the object in this case (which is required in the GraphQL schema on a delete op) so you'll need to create a temporary object to return:
 
-```
+```php
         if ($operation instanceof \ApiPlatform\Metadata\GraphQl\Mutation && $operation->getName() === 'delete') {
             $returnEntity = clone $data;
             $this->removeProcessor->process($data, $operation, $uriVariables, $context);
