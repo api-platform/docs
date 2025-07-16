@@ -139,11 +139,13 @@ class BlogPost {}
 ### Symfony State Processor mechanism
 If you want to execute custom business logic before or after persistence, this can be achieved by using [composition](https://en.wikipedia.org/wiki/Object_composition).
 
-For GraphQL a remove Operation type will not be `DeleteOperationInterface` type but `ApiPlatform\Metadata\GraphQl\Mutation` with a `getName()` result of "delete". You can insert this to use the `$removeProcessor`:
+For GraphQL a remove Operation type will not be `DeleteOperationInterface` type but `ApiPlatform\Metadata\GraphQl\Mutation` with a `getName()` result of "delete". You can insert this to use the `$removeProcessor`. However, API Platform will not return the object in this case (which is required in the GraphQL schema on a delete op) so you'll need to create a temporary object to return:
 
 ```
         if ($operation instanceof \ApiPlatform\Metadata\GraphQl\Mutation && $operation->getName() === 'delete') {
-            return $this->removeProcessor->process($data, $operation, $uriVariables, $context);
+            $returnEntity = clone $data;
+            $this->removeProcessor->process($data, $operation, $uriVariables, $context);
+            return $returnEntity;
         }
 ```
 
