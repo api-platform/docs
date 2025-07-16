@@ -139,6 +139,14 @@ class BlogPost {}
 ### Symfony State Processor mechanism
 If you want to execute custom business logic before or after persistence, this can be achieved by using [composition](https://en.wikipedia.org/wiki/Object_composition).
 
+For GraphQL a remove Operation type will not be `DeleteOperationInterface` type but `ApiPlatform\Metadata\GraphQl\Mutation` with a `getName()` result of "delete". You can insert this to use the `$removeProcessor`:
+
+```
+        if ($operation instanceof \ApiPlatform\Metadata\GraphQl\Mutation && $operation->getName() === 'delete') {
+            return $this->removeProcessor->process($data, $operation, $uriVariables, $context);
+        }
+```
+
 Here is an implementation example which uses [Symfony Mailer](https://symfony.com/doc/current/mailer.html) to send new users a welcome email after a REST `POST` or GraphQL `create` operation, in a project using the native Doctrine ORM state processor:
 
 ```php
