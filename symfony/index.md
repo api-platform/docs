@@ -241,7 +241,7 @@ We are fond of [Hoppscotch](https://hoppscotch.com), a free and open source API 
 
 ## Keep Your Project in Sync with the API Platform Template
 
-You have started a project with the API Platform template and you would like to benefit from the latest enhancements introduced since you created your project (i.e. [FrankenPHP](https://frankenphp.dev/). Juste use this Git based tool
+You have started a project with the API Platform template and you would like to benefit from the latest enhancements introduced since you created your project (i.e. [FrankenPHP](https://frankenphp.dev/)). Just use this Git based tool
 [The _template-sync_ project](https://github.com/coopTilleuls/template-sync) got you covered.
 
 Run the following command to import the changes since your last update:
@@ -468,7 +468,7 @@ Modify these files as described in these patches:
      public function getId(): ?int
 ```
 
-**Tip**: you can also use Symfony [MakerBundle](https://symfonycasts.com/screencast/symfony-fundamentals/maker-command?cid=apip) thanks to the `--api-resource` option:
+**Tip**: You can use Symfony [MakerBundle](https://symfonycasts.com/screencast/symfony-fundamentals/maker-command?cid=apip) to generate a Doctrine entity that is also a resource thanks to the `--api-resource` option:
 
 ```console
 bin/console make:entity --api-resource
