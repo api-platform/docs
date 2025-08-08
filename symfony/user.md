@@ -139,14 +139,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         return (string) $this->email;
     }
-
-    /**
-     * @see UserInterface
-     */
-    public function eraseCredentials(): void
-    {
-        $this->plainPassword = null;
-    }
 }
 ```
 
@@ -258,7 +250,6 @@ final readonly class UserPasswordHasher implements ProcessorInterface
             $data->getPlainPassword()
         );
         $data->setPassword($hashedPassword);
-        $data->eraseCredentials();
 
         return $this->processor->process($data, $operation, $uriVariables, $context);
     }
