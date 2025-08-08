@@ -36,7 +36,7 @@ use ApiPlatform\Metadata\QueryParameter;
 class Book {}
 ```
 
-Note that `property` is used to document the Hydra view. You can also specify an [OpenAPI Parameter](https://api-platform.com/docs/references/OpenApi/Model/Parameter/) if needed.
+Note that `property` is used to document the Hydra view. You can also specify an [OpenAPI Parameter](https://api-platform.com/docs/guides/extend-openapi-documentation/) if needed.
 A Parameter can be linked to a filter, there are two types of filters:
 
 - metadata filters, most common are serializer filters (PropertyFilter and GroupFilter) that alter the normalization context
