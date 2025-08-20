@@ -323,38 +323,63 @@ class WithParameter
 
 ### `ReadLinkParameterProvider`
 
-This provider fetches a linked resource from a given identifier. This is useful when you need to load a related entity to use later, for example in your own state provider.
+This provider fetches a linked resource from a given identifier. This is useful when you need to load a related entity to use later, for example in your own state provider. 
+When you have an API resource with a custom `uriTemplate` that includes parameters, the `ReadLinkParameterProvider` can automatically resolve the linked resource using the operation's URI template. This is particularly useful for nested resources or when you need to load a parent resource based on URI variables.
 
 ```php
 <?php
 // api/src/Resource/WithParameter.php
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\Link;
 use ApiPlatform\Metadata\Operation;
 use ApiPlatform\Metadata\QueryParameter;
 use ApiPlatform\State\ParameterProvider\ReadLinkParameterProvider;
 use App\Entity\Dummy;
 
-#[ApiResource(operations: [
-    new Get(
-        uriTemplate: '/with_parameters_links',
-        parameters: [
-            'dummy' => new QueryParameter(
-                provider: ReadLinkParameterProvider::class, 
-                extraProperties: ['resource_class' => Dummy::class]
-            )
-        ],
-        provider: [self::class, 'provideDummyFromParameter'],
-    )
-])]
+#[Get(
+    uriTemplate: 'with_parameters/{id}{._format}',
+    uriVariables: [
+        'id' => new Link(schema: ['type' => 'string', 'format' => 'uuid'], property: 'id'),
+    ],
+    parameters: [
+        'dummy' => new QueryParameter(
+            provider: ReadLinkParameterProvider::class, 
+            extraProperties: [
+                'resource_class' => Dummy::class,
+                'uri_template' => '/dummies/{id}' // Optional: specify the template for the linked resource
+            ]
+        )
+    ],
+    provider: [self::class, 'provideDummyFromParameter'],
+)]
 class WithParameter 
 {
     public static function provideDummyFromParameter(Operation $operation, array $uriVariables = [], array $context = []): object|array
     {
-        // The value has been transformed from an identifier to an entity by the provider.
+        // The dummy parameter has been resolved to the actual Dummy entity
+        // based on the parameter value and the specified uri_template
         return $operation->getParameters()->get('dummy')->getValue();
     }
 }
+```
+
+The provider will:
+- Take the parameter value (e.g., a UUID or identifier)
+- Use the `resource_class` to determine which resource to load
+- Optionally use the `uri_template` from `extraProperties` to construct the proper operation for loading the resource
+- Return the loaded entity, making it available in your state provider
+
+You can also control error handling by setting `throw_not_found` to `false` in the `extraProperties` to prevent exceptions when the linked resource is not found:
+
+```php
+'dummy' => new QueryParameter(
+    provider: ReadLinkParameterProvider::class, 
+    extraProperties: [
+        'resource_class' => Dummy::class,
+        'throw_not_found' => false // Won't throw NotFoundHttpException if resource is missing
+    ]
+)
 ```
 
 ### Creating a Custom Parameter Provider
