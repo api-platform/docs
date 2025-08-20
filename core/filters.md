@@ -135,6 +135,108 @@ class Book
 ```
 
 This configuration creates a dynamic parameter. API clients can now filter on any of the properties configured in the `SearchFilter` (in this case, `title` and `description`) by using a URL like `/books?search[title]=Ring` or `/books?search[description]=journey`.
+
+When using the `:property` placeholder, API Platform automatically populates the parameter's `extraProperties` with a `_properties` array containing all the available properties for the filter. Your filter can access this information:
+
+```php
+public function apply(QueryBuilder $queryBuilder, QueryNameGeneratorInterface $queryNameGenerator, string $resourceClass, ?Operation $operation = null, array $context = []): void
+{
+    $parameter = $context['parameter'] ?? null;
+    $properties = $parameter?->getExtraProperties()['_properties'] ?? [];
+    
+    // $properties contains: ['title' => 'title', 'description' => 'description']
+    // This allows your filter to know which properties are available for filtering
+}
+```
+
+### Restricting Properties with `:property` Placeholders
+
+There are two different approaches to property restriction depending on your filter design:
+
+#### 1. Legacy Filters (SearchFilter, etc.) - Not Recommended
+
+> [!WARNING]
+> Filters that extend `AbstractFilter` with pre-configured properties are considered legacy. They don't support property restriction via parameters and may be deprecated in future versions. Consider using per-parameter filters instead for better flexibility and performance.
+
+For existing filters that extend `AbstractFilter` and have pre-configured properties, the parameter's `properties` does **not** restrict the filter's behavior. These filters use their own internal property configuration:
+
+```php
+<?php
+// This does NOT restrict SearchFilter - it processes all its configured properties
+'search[:property]' => new QueryParameter(
+    properties: ['title', 'author'], // Only affects _properties, doesn't restrict filter
+    filter: new SearchFilter(properties: ['title' => 'partial', 'description' => 'partial'])
+)
+
+// To restrict legacy filters, configure them with only the desired properties:
+'search[:property]' => new QueryParameter(
+    filter: new SearchFilter(properties: ['title' => 'partial', 'author' => 'exact'])
+)
+```
+
+#### 2. Per-Parameter Filters (Recommended)
+
+> [!NOTE]
+> Per-parameter filters are the modern approach. They provide better performance (only process requested properties), cleaner code, and full support for parameter-based property restriction.
+
+Modern filters that work on a per-parameter basis can be effectively restricted using the parameter's `properties`:
+
+```php
+<?php
+// src/Filter/PartialSearchFilter.php
+use ApiPlatform\Doctrine\Orm\Filter\FilterInterface;
+use ApiPlatform\Doctrine\Orm\Util\QueryNameGeneratorInterface;
+use ApiPlatform\Metadata\Operation;
+use Doctrine\ORM\QueryBuilder;
+
+final class PartialSearchFilter implements FilterInterface
+{
+    public function apply(QueryBuilder $queryBuilder, QueryNameGeneratorInterface $queryNameGenerator, string $resourceClass, ?Operation $operation = null, array $context = []): void
+    {
+        $parameter = $context['parameter'];
+        $value = $parameter->getValue();
+        
+        // Get the property for this specific parameter
+        $property = $parameter->getProperty();
+        $alias = $queryBuilder->getRootAliases()[0];
+        $field = $alias.'.'.$property;
+        
+        $parameterName = $queryNameGenerator->generateParameterName($property);
+        
+        $queryBuilder
+            ->andWhere($queryBuilder->expr()->like('LOWER('.$field.')', ':'.$parameterName))
+            ->setParameter($parameterName, '%'.strtolower($value).'%');
+    }
+}
+```
+
+```php
+<?php
+// api/src/Resource/Book.php
+#[ApiResource(operations: [
+    new GetCollection(
+        parameters: [
+            // This WILL restrict to only title and author properties
+            'search[:property]' => new QueryParameter(
+                properties: ['title', 'author'], // Only these properties get parameters created
+                filter: new PartialSearchFilter()
+            )
+        ]
+    )
+])]
+class Book {
+    // ...
+}
+```
+
+**How it works:**
+1. API Platform creates individual parameters: `search[title]` and `search[author]` only
+2. URLs like `/books?search[description]=foo` are ignored (no parameter exists)
+3. Each parameter calls the filter with its specific property via `$parameter->getProperty()`
+4. The filter processes only that one property
+
+This approach is recommended for new filters as it's more flexible and allows true property restriction via the parameter configuration.
+
 Note that invalid values are usually ignored by our filters, use [validation](#parameter-validation) to trigger errors for wrong parameter values.
 
 ## OpenAPI and JSON Schema
@@ -291,7 +393,7 @@ Parameter Providers are powerful services that can inspect, transform, or provid
 
 ### `IriConverterParameterProvider`
 
-This built-in provider takes an IRI string (e.g., `/users/1`) and converts it into the corresponding Doctrine entity object.
+This built-in provider takes an IRI string (e.g., `/users/1`) and converts it into the corresponding Doctrine entity object. It supports both single IRIs and arrays of IRIs.
 
 ```php
 <?php
@@ -307,6 +409,10 @@ use ApiPlatform\State\ParameterProvider\IriConverterParameterProvider;
         uriTemplate: '/with_parameters_iris',
         parameters: [
             'dummy' => new QueryParameter(provider: IriConverterParameterProvider::class),
+            'related' => new QueryParameter(
+                provider: IriConverterParameterProvider::class,
+                extraProperties: ['fetch_data' => true] // Forces fetching the entity data
+            ),
         ],
         provider: [self::class, 'provideDummyFromParameter'],
     )
@@ -316,10 +422,21 @@ class WithParameter
     public static function provideDummyFromParameter(Operation $operation, array $uriVariables = [], array $context = []): object|array
     {
         // The value has been transformed from an IRI to an entity by the provider.
-        return $operation->getParameters()->get('dummy')->getValue();
+        $dummy = $operation->getParameters()->get('dummy')->getValue();
+        
+        // If multiple IRIs were provided as an array, this will be an array of entities
+        $related = $operation->getParameters()->get('related')->getValue();
+        
+        return $dummy;
     }
 }
 ```
+
+#### Configuration Options
+
+The `IriConverterParameterProvider` supports the following options in `extraProperties`:
+
+- **`fetch_data`**: Boolean (default: `false`) - When `true`, forces the IRI converter to fetch the actual entity data instead of just creating a reference.
 
 ### `ReadLinkParameterProvider`
 
@@ -370,14 +487,35 @@ The provider will:
 - Optionally use the `uri_template` from `extraProperties` to construct the proper operation for loading the resource
 - Return the loaded entity, making it available in your state provider
 
-You can also control error handling by setting `throw_not_found` to `false` in the `extraProperties` to prevent exceptions when the linked resource is not found:
+#### Array Support
+
+Both `IriConverterParameterProvider` and `ReadLinkParameterProvider` support processing arrays of values. When you pass an array of identifiers or IRIs, they will return an array of resolved entities:
+
+```php
+// For IRI converter: ?related[]=/dummies/1&related[]=/dummies/2
+// For ReadLink provider: ?dummies[]=uuid1&dummies[]=uuid2
+'items' => new QueryParameter(
+    provider: ReadLinkParameterProvider::class,
+    extraProperties: ['resource_class' => Dummy::class]
+)
+```
+
+#### Configuration Options
+
+You can control the behavior of `ReadLinkParameterProvider` with these `extraProperties`:
+
+- **`resource_class`**: The class of the resource to load
+- **`uri_template`**: Optional URI template for the linked resource operation
+- **`uri_variable`**: Name of the URI variable to use when building URI variables array
+- **`throw_not_found`**: Boolean (default: `true`) - Whether to throw `NotFoundHttpException` when resource is not found
 
 ```php
 'dummy' => new QueryParameter(
     provider: ReadLinkParameterProvider::class, 
     extraProperties: [
         'resource_class' => Dummy::class,
-        'throw_not_found' => false // Won't throw NotFoundHttpException if resource is missing
+        'throw_not_found' => false, // Won't throw NotFoundHttpException if resource is missing
+        'uri_variable' => 'customId' // Use 'customId' as the URI variable name
     ]
 )
 ```
@@ -445,7 +583,8 @@ final class RegexpFilter implements FilterInterface
 {
     public function apply(QueryBuilder $queryBuilder, QueryNameGeneratorInterface $queryNameGenerator, string $resourceClass, ?Operation $operation = null, array $context = []): void
     {
-        $value = $context['parameter']?->getValue();
+        $parameter = $context['parameter'] ?? null;
+        $value = $parameter?->getValue();
 
         // The parameter may not be present.
         // It's recommended to add validation (e.g., `required: true`) on the Parameter attribute
@@ -456,9 +595,15 @@ final class RegexpFilter implements FilterInterface
 
         $alias = $queryBuilder->getRootAliases()[0];
         $parameterName = $queryNameGenerator->generateParameterName('regexp_name');
+        
+        // Access the parameter's property or use the parameter key as fallback
+        $property = $parameter->getProperty() ?? $parameter->getKey() ?? 'name';
+        
+        // You can also access filter context if the parameter provides it
+        $filterContext = $parameter->getFilterContext() ?? null;
 
         $queryBuilder
-            ->andWhere(sprintf('REGEXP(%s.name, :%s) = 1', $alias, $parameterName))
+            ->andWhere(sprintf('REGEXP(%s.%s, :%s) = 1', $alias, $property, $parameterName))
             ->setParameter($parameterName, $value);
     }
 
@@ -567,4 +712,46 @@ class LogEntry {}
 | `openApi` | Customize OpenAPI documentation or hide the parameter (`false`). |
 | `hydra` | Hide the parameter from Hydra documentation (`false`). |
 | `security` | A [Symfony expression](https://symfony.com/doc/current/security/expressions.html) to control access to the parameter. |
+
+## Parameter Security
+
+You can secure individual parameters using Symfony expression language. When a security expression evaluates to `false`, the parameter will be ignored and treated as if it wasn't provided.
+
+```php
+<?php
+// api/src/Resource/SecureResource.php
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\HeaderParameter;
+use ApiPlatform\Metadata\QueryParameter;
+
+#[ApiResource(operations: [
+    new GetCollection(
+        uriTemplate: '/secure_resources',
+        parameters: [
+            'name' => new QueryParameter(
+                security: 'is_granted("ROLE_ADMIN")'
+            ),
+            'auth' => new HeaderParameter(
+                security: '"secured" == auth',
+                description: 'Only accessible when auth header equals "secured"'
+            ),
+            'secret' => new QueryParameter(
+                security: '"secured" == secret',
+                description: 'Only accessible when secret parameter equals "secured"'
+            )
+        ]
+    )
+])]
+class SecureResource
+{
+    // ...
+}
+```
+
+In the security expressions, you have access to:
+- Parameter values by their key name (e.g., `auth`, `secret`)
+- Standard security functions like `is_granted()`
+- The current user via `user`
+- Request object via `request`
 
