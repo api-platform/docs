@@ -432,7 +432,7 @@ class WithParameter
 }
 ```
 
-##### Configuration Options
+### Configuration Options
 
 The `IriConverterParameterProvider` supports the following options in `extraProperties`:
 
@@ -500,7 +500,7 @@ Both `IriConverterParameterProvider` and `ReadLinkParameterProvider` support pro
 )
 ```
 
-#### Configuration Options
+### ReadLinkParameterProvider Configuration Options
 
 You can control the behavior of `ReadLinkParameterProvider` with these `extraProperties`:
 
