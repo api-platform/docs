@@ -342,12 +342,12 @@ Here is the list of validation constraints that are automatically inferred from 
 ### From JSON Schema (`schema` property)
 
 * **`minimum`** / **`maximum`**:
-    * If both are set, a `Symfony\Component\Validator\Constraints\Range` constraint is added.
-    * If only `minimum` is set, a `Symfony\Component\Validator\Constraints\GreaterThanOrEqual` constraint is added.
-    * If only `maximum` is set, a `Symfony\Component\Validator\Constraints\LessThanOrEqual` constraint is added.
+  * If both are set, a `Symfony\Component\Validator\Constraints\Range` constraint is added.
+  * If only `minimum` is set, a `Symfony\Component\Validator\Constraints\GreaterThanOrEqual` constraint is added.
+  * If only `maximum` is set, a `Symfony\Component\Validator\Constraints\LessThanOrEqual` constraint is added.
 * **`exclusiveMinimum`** / **`exclusiveMaximum`**:
-    * If `exclusiveMinimum` is used, it becomes a `Symfony\Component\Validator\Constraints\GreaterThan` constraint.
-    * If `exclusiveMaximum` is used, it becomes a `Symfony\Component\Validator\Constraints\LessThan` constraint.
+  * If `exclusiveMinimum` is used, it becomes a `Symfony\Component\Validator\Constraints\GreaterThan` constraint.
+  * If `exclusiveMaximum` is used, it becomes a `Symfony\Component\Validator\Constraints\LessThan` constraint.
 * **`pattern`**: Becomes a `Symfony\Component\Validator\Constraints\Regex` constraint.
 * **`minLength`** / **`maxLength`**: Becomes a `Symfony\Component\Validator\Constraints\Length` constraint.
 * **`multipleOf`**: Becomes a `Symfony\Component\Validator\Constraints\DivisibleBy` constraint.
@@ -355,8 +355,8 @@ Here is the list of validation constraints that are automatically inferred from 
 * **`minItems`** / **`maxItems`**: Becomes a `Symfony\Component\Validator\Constraints\Count` constraint (for arrays).
 * **`uniqueItems`**: If `true`, becomes a `Symfony\Component\Validator\Constraints\Unique` constraint (for arrays).
 * **`type`**:
-    * If set to `'array'`, a `Symfony\Component\Validator\Constraints\Type('array')` constraint is added.
-    * If `castToNativeType` is also `true`, the schema `type` will add a `Symfony\Component\Validator\Constraints\Type` constraint for `'boolean'`, `'integer'`, and `'number'` (as `float`).
+  * If set to `'array'`, a `Symfony\Component\Validator\Constraints\Type('array')` constraint is added.
+  * If `castToNativeType` is also `true`, the schema `type` will add a `Symfony\Component\Validator\Constraints\Type` constraint for `'boolean'`, `'integer'`, and `'number'` (as `float`).
 
 ### From the Parameter's `required` Property
 
@@ -432,7 +432,7 @@ class WithParameter
 }
 ```
 
-#### Configuration Options
+##### Configuration Options
 
 The `IriConverterParameterProvider` supports the following options in `extraProperties`:
 
@@ -440,7 +440,7 @@ The `IriConverterParameterProvider` supports the following options in `extraProp
 
 ### `ReadLinkParameterProvider`
 
-This provider fetches a linked resource from a given identifier. This is useful when you need to load a related entity to use later, for example in your own state provider. 
+This provider fetches a linked resource from a given identifier. This is useful when you need to load a related entity to use later, for example in your own state provider.
 When you have an API resource with a custom `uriTemplate` that includes parameters, the `ReadLinkParameterProvider` can automatically resolve the linked resource using the operation's URI template. This is particularly useful for nested resources or when you need to load a parent resource based on URI variables.
 
 ```php
