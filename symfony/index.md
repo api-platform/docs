@@ -486,8 +486,8 @@ Now, delete the file `api/src/Entity/Greeting.php`. This demo entity isn't usefu
 Finally, generate a new database migration using [Doctrine Migrations](https://symfony.com/doc/current/doctrine.html#migrations-creating-the-database-tables-schema) and apply it:
 
 ```console
-bin/console doctrine:migrations:diff
-bin/console doctrine:migrations:migrate
+docker compose exec php bin/console doctrine:migrations:diff
+docker compose exec php bin/console doctrine:migrations:migrate
 ```
 
 **We now have a working API with read and write capabilities!**
