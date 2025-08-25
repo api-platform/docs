@@ -432,7 +432,7 @@ class WithParameter
 }
 ```
 
-### Configuration Options
+#### Configuration Options
 
 The `IriConverterParameterProvider` supports the following options in `extraProperties`:
 
@@ -487,20 +487,7 @@ The provider will:
 - Optionally use the `uri_template` from `extraProperties` to construct the proper operation for loading the resource
 - Return the loaded entity, making it available in your state provider
 
-#### Array Support
-
-Both `IriConverterParameterProvider` and `ReadLinkParameterProvider` support processing arrays of values. When you pass an array of identifiers or IRIs, they will return an array of resolved entities:
-
-```php
-// For IRI converter: ?related[]=/dummies/1&related[]=/dummies/2
-// For ReadLink provider: ?dummies[]=uuid1&dummies[]=uuid2
-'items' => new QueryParameter(
-    provider: ReadLinkParameterProvider::class,
-    extraProperties: ['resource_class' => Dummy::class]
-)
-```
-
-### ReadLinkParameterProvider Configuration Options
+#### ReadLinkParameterProvider Configuration Options
 
 You can control the behavior of `ReadLinkParameterProvider` with these `extraProperties`:
 
@@ -517,6 +504,19 @@ You can control the behavior of `ReadLinkParameterProvider` with these `extraPro
         'throw_not_found' => false, // Won't throw NotFoundHttpException if resource is missing
         'uri_variable' => 'customId' // Use 'customId' as the URI variable name
     ]
+)
+```
+
+### Array Support
+
+Both `IriConverterParameterProvider` and `ReadLinkParameterProvider` support processing arrays of values. When you pass an array of identifiers or IRIs, they will return an array of resolved entities:
+
+```php
+// For IRI converter: ?related[]=/dummies/1&related[]=/dummies/2
+// For ReadLink provider: ?dummies[]=uuid1&dummies[]=uuid2
+'items' => new QueryParameter(
+    provider: ReadLinkParameterProvider::class,
+    extraProperties: ['resource_class' => Dummy::class]
 )
 ```
 
