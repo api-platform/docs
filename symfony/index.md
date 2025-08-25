@@ -690,26 +690,32 @@ UI that is shipped with API Platform:
 
 ![GraphQL endpoint](images/api-platform-2.6-graphql.png)
 
-Try it out by creating a greeting:
+Try it out by creating a book:
 
 ```graphql
 mutation {
-  createGreeting(input: { name: "Test2" }) {
-    greeting {
+  createBook(input: {
+    isbn: "9781782164104",
+    title: "Persistence in PHP with the Doctrine ORM",
+    description: "This book is designed for PHP developers and architects who want to modernize their skills through better understanding of Persistence and ORM.",
+    author: "Kévin Dunglas",
+    publicationDate: "2013-12-01"
+  }) {
+    book {
       id
-      name
+      title
     }
   }
 }
 ```
 
-And by reading out the greeting:
+And by reading out the book:
 
 ```graphql
 {
-  greeting(id: "/greetings/1") {
+  book(id: "/books/2") {
     id
-    name
+    title
     _id
   }
 }
