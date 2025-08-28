@@ -471,7 +471,7 @@ Modify these files as described in these patches:
 **Tip**: You can use Symfony [MakerBundle](https://symfonycasts.com/screencast/symfony-fundamentals/maker-command?cid=apip) to generate a Doctrine entity that is also a resource thanks to the `--api-resource` option:
 
 ```console
-bin/console make:entity --api-resource
+docker compose exec php bin/console make:entity --api-resource
 ```
 
 Doctrine's [attributes](https://www.doctrine-project.org/projects/doctrine-orm/en/current/reference/attributes-reference.html) map these entities to tables in the database.
@@ -486,8 +486,8 @@ Now, delete the file `api/src/Entity/Greeting.php`. This demo entity isn't usefu
 Finally, generate a new database migration using [Doctrine Migrations](https://symfony.com/doc/current/doctrine.html#migrations-creating-the-database-tables-schema) and apply it:
 
 ```console
-bin/console doctrine:migrations:diff
-bin/console doctrine:migrations:migrate
+docker compose exec php bin/console doctrine:migrations:diff
+docker compose exec php bin/console doctrine:migrations:migrate
 ```
 
 **We now have a working API with read and write capabilities!**
@@ -681,7 +681,7 @@ Isn't API Platform a REST **and** GraphQL framework? That's true! GraphQL suppor
 need to install the [graphql-php](https://webonyx.github.io/graphql-php/) library. Run the following command:
 
 ```console
-composer require api-platform/graphql
+docker compose exec php composer require api-platform/graphql
 ```
 
 You now have a GraphQL API! Open `https://localhost/graphql` (or `https://localhost/api/graphql` if you used Symfony Flex
