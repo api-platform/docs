@@ -333,6 +333,8 @@ class User {}
 
 Note that when `castToNativeType` is enabled, API Platform infers type validation from the JSON Schema.
 
+The `ApiPlatform\Validator\Util\ParameterValidationConstraints` trait can be used to automatically infer validation constraints from the JSON Schema and OpenAPI definitions of a parameter.
+
 Here is the list of validation constraints that are automatically inferred from the JSON Schema and OpenAPI definitions of a parameter.
 
 ### From OpenAPI Definition
