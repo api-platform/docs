@@ -123,7 +123,7 @@ use ApiPlatform\Metadata\QueryParameter;
     new GetCollection(
         parameters: [
             'search[:property]' => new QueryParameter(
-                filter: new SearchFilter(properties: ['title' => 'partial', 'description' => 'partial'])
+                filter: 'api_platform.doctrine.orm.search_filter.instance'
             )
         ]
     )
@@ -148,6 +148,8 @@ public function apply(QueryBuilder $queryBuilder, QueryNameGeneratorInterface $q
     // This allows your filter to know which properties are available for filtering
 }
 ```
+
+Note that we're using `api_platform.doctrine.orm.search_filter.instance` (exists also for ODM). Indeed this is a special instance of the search filter where `properties` can be changed during runtime. This is considered as "legacy filter" below, in API Platform 4.0 we'll recommend to create a custom filter or to use the `PartialSearchFilter`.
 
 ### Restricting Properties with `:property` Placeholders
 
