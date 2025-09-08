@@ -54,7 +54,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Serializer\Annotation\MaxDepth;
 
 #[ApiResource(
-    normalizationContext: ['groups' => 'read', 'enable_max_depth' => true],
+    normalizationContext: ['groups' => ['read'], 'enable_max_depth' => true],
     denormalizationContext: ['groups' => ['write']],
 )]
 class Book
