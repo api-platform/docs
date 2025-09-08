@@ -49,9 +49,9 @@ to limit the serialization depth.
 
 namespace App\Entity;
 
-use ApiPlatform\Core\Annotation\ApiResource;
-use Symfony\Component\Serializer\Annotation\Groups;
-use Symfony\Component\Serializer\Annotation\MaxDepth;
+use ApiPlatform\Metadata\ApiResource;
+use Symfony\Component\Serializer\Attribute\Groups;
+use Symfony\Component\Serializer\Attribute\MaxDepth;
 
 #[ApiResource(
     normalizationContext: ['groups' => ['read'], 'enable_max_depth' => true],
