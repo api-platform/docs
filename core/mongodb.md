@@ -203,7 +203,7 @@ use Doctrine\ODM\MongoDB\Mapping\Annotations as ODM;
 
 #[ODM\Document]
 #[ApiResource]
-#[GetCollection(extraProperties: ['doctrineMongodb' => ['execute_options' => ['allowDiskUse' => true]]])]
+#[GetCollection(extraProperties: ['doctrine_mongodb' => ['execute_options' => ['allowDiskUse' => true]]])]
 class Offer
 {
     // ...
@@ -222,7 +222,7 @@ use ApiPlatform\Metadata\ApiResource;
 use Doctrine\ODM\MongoDB\Mapping\Annotations as ODM;
 
 #[ODM\Document]
-#[ApiResource(extraProperties: ['doctrineMongodb' => ['execute_options' => ['allowDiskUse' => true]]])]
+#[ApiResource(extraProperties: ['doctrine_mongodb' => ['execute_options' => ['allowDiskUse' => true]]])]
 class Offer
 {
     // ...
