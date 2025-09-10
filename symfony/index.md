@@ -91,7 +91,7 @@ docker compose up --wait
 > Alternatively, run the following command to start the web server on port `8080` with HTTPS disabled:
 >
 > ```console
-> SERVER_NAME=localhost:80 HTTP_PORT=8080 TRUSTED_HOSTS=localhost docker compose up --wait
+> SERVER_NAME=localhost:80 HTTP_PORT=8080 HTTPS_PORT=3001 HTTP3_PORT=3001 TRUSTED_HOSTS=localhost docker compose up --wait
 > ```
 
 This starts the following services:
