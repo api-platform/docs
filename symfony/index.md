@@ -91,7 +91,7 @@ docker compose up --wait
 > Alternatively, run the following command to start the web server on port `8080` with HTTPS disabled:
 >
 > ```console
-> SERVER_NAME=localhost:80 HTTP_PORT=8080 TRUSTED_HOSTS=localhost docker compose up --wait`
+> SERVER_NAME=localhost:80 HTTP_PORT=8080 TRUSTED_HOSTS=localhost docker compose up --wait
 > ```
 
 This starts the following services:
@@ -126,7 +126,7 @@ with its awesome [Symfony](https://confluence.jetbrains.com/display/PhpStorm/Get
 and [Php Inspections](https://plugins.jetbrains.com/plugin/7622-php-inspections-ea-extended-) plugins. Give them a try,
 you'll get auto-completion for almost everything and awesome quality analysis.
 
-[PHP IntelliSense for Visual Studio Code](https://marketplace.visualstudio.com/items?itemName=zobo.php-intellisense) also works well, and is free and open source.
+[PHP Intelephense for Visual Studio Code](https://marketplace.visualstudio.com/items?itemName=bmewburn.vscode-intelephense-client) also works well, and is free and open source.
 
 The API Platform distribution comes with a dummy entity for test purposes: `api/src/Entity/Greeting.php`. We will remove
 it later.
@@ -241,13 +241,13 @@ We are fond of [Hoppscotch](https://hoppscotch.com), a free and open source API 
 
 ## Keep Your Project in Sync with the API Platform Template
 
-You have started a project with the API Platform template and you would like to benefit from the latest enhancements introduced since you created your project (i.e. [FrankenPHP](https://frankenphp.dev/). Juste use this Git based tool
+You have started a project with the API Platform template and you would like to benefit from the latest enhancements introduced since you created your project (i.e. [FrankenPHP](https://frankenphp.dev/)). Just use this Git based tool
 [The _template-sync_ project](https://github.com/coopTilleuls/template-sync) got you covered.
 
 Run the following command to import the changes since your last update:
 
 ```console
-curl -sSL https://raw.githubusercontent.com/coopTilleuls/template-sync/main/template-sync.sh| sh -s -- https://github.com/api-platform/api-platform
+curl -sSL https://raw.githubusercontent.com/coopTilleuls/template-sync/main/template-sync.sh | sh -s -- https://github.com/api-platform/api-platform
 ```
 
 Resolve potential conflicts, run `git cherry-pick --continue` and you are done!
@@ -468,10 +468,10 @@ Modify these files as described in these patches:
      public function getId(): ?int
 ```
 
-**Tip**: you can also use Symfony [MakerBundle](https://symfonycasts.com/screencast/symfony-fundamentals/maker-command?cid=apip) thanks to the `--api-resource` option:
+**Tip**: You can use Symfony [MakerBundle](https://symfonycasts.com/screencast/symfony-fundamentals/maker-command?cid=apip) to generate a Doctrine entity that is also a resource thanks to the `--api-resource` option:
 
 ```console
-bin/console make:entity --api-resource
+docker compose exec php bin/console make:entity --api-resource
 ```
 
 Doctrine's [attributes](https://www.doctrine-project.org/projects/doctrine-orm/en/current/reference/attributes-reference.html) map these entities to tables in the database.
@@ -486,8 +486,8 @@ Now, delete the file `api/src/Entity/Greeting.php`. This demo entity isn't usefu
 Finally, generate a new database migration using [Doctrine Migrations](https://symfony.com/doc/current/doctrine.html#migrations-creating-the-database-tables-schema) and apply it:
 
 ```console
-bin/console doctrine:migrations:diff
-bin/console doctrine:migrations:migrate
+docker compose exec php bin/console doctrine:migrations:diff
+docker compose exec php bin/console doctrine:migrations:migrate
 ```
 
 **We now have a working API with read and write capabilities!**
@@ -681,7 +681,7 @@ Isn't API Platform a REST **and** GraphQL framework? That's true! GraphQL suppor
 need to install the [graphql-php](https://webonyx.github.io/graphql-php/) library. Run the following command:
 
 ```console
-composer require api-platform/graphql
+docker compose exec php composer require api-platform/graphql
 ```
 
 You now have a GraphQL API! Open `https://localhost/graphql` (or `https://localhost/api/graphql` if you used Symfony Flex
@@ -690,26 +690,32 @@ UI that is shipped with API Platform:
 
 ![GraphQL endpoint](images/api-platform-2.6-graphql.png)
 
-Try it out by creating a greeting:
+Try it out by creating a book:
 
 ```graphql
 mutation {
-  createGreeting(input: { name: "Test2" }) {
-    greeting {
+  createBook(input: {
+    isbn: "9781782164104",
+    title: "Persistence in PHP with the Doctrine ORM",
+    description: "This book is designed for PHP developers and architects who want to modernize their skills through better understanding of Persistence and ORM.",
+    author: "Kévin Dunglas",
+    publicationDate: "2013-12-01"
+  }) {
+    book {
       id
-      name
+      title
     }
   }
 }
 ```
 
-And by reading out the greeting:
+And by reading out the book:
 
 ```graphql
 {
-  greeting(id: "/greetings/1") {
+  book(id: "/books/2") {
     id
-    name
+    title
     _id
   }
 }

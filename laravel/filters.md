@@ -44,6 +44,24 @@ final class EqualsFilter implements FilterInterface
 
 You can create your own filters by implementing the `ApiPlatform\Laravel\Eloquent\Filter\FilterInterface`. API Platform provides several eloquent filters for a RAD approach.
 
+### Parameter for Specific Operations
+
+To defines a parameter for only a `GetCollection` operation, you can do the following:
+
+```php
+// app/Models/Book.php
+
+use ApiPlatform\Laravel\Eloquent\Filter\EqualsFilter;
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\QueryParameter;
+
+#[ApiResource]
+#[GetCollection(parameters: ['name' => new QueryParameter(key: 'name', filter: EqualsFilter::class)])]
+class Book extends Model
+{
+}
+```
+
 ### Parameter Validation
 
 You can add [validation rules](https://laravel.com/docs/validation) to parameters within the `constraints` attribute:
@@ -86,6 +104,26 @@ class Book extends Model
 
 The documentation will output a query parameter per property that applies the `PartialSearchFilter` and also gives the ability to sort by name and ID using: `/books?name=search&order[id]=asc&order[name]=desc`.
 
+### Filtering on Specific Properties Only
+
+To enable partial search filtering and sorting on specific properties like `name` and `description`:
+
+```php
+// app/Models/Book.php
+
+use ApiPlatform\Laravel\Eloquent\Filter\PartialSearchFilter;
+use ApiPlatform\Laravel\Eloquent\Filter\OrderFilter;
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\QueryParameter;
+
+#[ApiResource]
+#[QueryParameter(key: 'sort[:property]', filter: OrderFilter::class, properties: ['name', 'description'])]
+#[QueryParameter(key: ':property', filter: PartialSearchFilter::class, properties: ['name', 'description'])]
+class Book extends Model
+{
+}
+```
+
 ## Filters
 
 ### Text
@@ -100,6 +138,38 @@ As shown above the following search filters are available:
 ### Date
 
 The `DateFilter` allows to filter dates with an operator (`eq`, `lt`, `gt`, `lte`, `gte`):
+
+- `eq` - equals (exact match)
+- `gt` - greater than (strictly after)
+- `gte` - greater than or equal (after or on)
+- `lt` - less than (strictly before)
+- `lte` - less than or equal (before or on)
+- `after` - alias for `gte`
+- `before` - alias for `lte`
+- `strictly_after` - alias for `gt`
+- `strictly_before` - alias for `lt`
+
+Usage Examples
+
+With the `DateFilter` applied, you can now filter dates between 2024-01-01 and 2024-01-31 using these API calls:
+
+**Option 1: Using gte and lte operators**
+
+```http
+GET /api/your_entities?createdAt[gte]=2024-01-01&createdAt[lte]=2024-01-31
+```
+
+**Option 2: Using after and before operators**
+
+```http
+GET /api/your_entities?createdAt[after]=2024-01-01&createdAt[before]=2024-01-31
+```
+
+**Option 3: Using strictly_after and strictly_before**
+
+```http
+GET /api/your_entities?createdAt[strictly_after]=2023-12-31&createdAt[strictly_before]=2024-02-01
+```
 
 ```php
 // app/Models/Book.php

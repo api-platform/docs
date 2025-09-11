@@ -189,6 +189,85 @@ class MediaObjectNormalizer implements NormalizerInterface
 
 ```
 
+### Handling the Multipart Deserialization
+
+By default, Symfony is not able to decode `multipart/form-data`-encoded data.
+We need to create our own decoder to do it:
+
+```php
+<?php
+// api/src/Encoder/MultipartDecoder.php
+
+namespace App\Encoder;
+
+use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\Serializer\Encoder\DecoderInterface;
+
+final class MultipartDecoder implements DecoderInterface
+{
+    public const FORMAT = 'multipart';
+
+    public function __construct(private readonly RequestStack $requestStack)
+    {
+    }
+
+    public function decode(string $data, string $format, array $context = []): ?array
+    {
+        $request = $this->requestStack->getCurrentRequest();
+
+        if (!$request) {
+            return null;
+        }
+
+        return array_map(static function (string $element) {
+            // Multipart form values will be encoded in JSON.
+            return json_decode($element, true, flags: \JSON_THROW_ON_ERROR);
+        }, $request->request->all()) + $request->files->all();
+    }
+
+    public function supportsDecoding(string $format): bool
+    {
+        return self::FORMAT === $format;
+    }
+}
+```
+
+If you're not using `autowiring` and `autoconfiguring`, don't forget to register the service and tag it as `serializer.encoder`.
+
+We also need to make sure the field containing the uploaded file is not denormalized:
+
+```php
+<?php
+// api/src/Serializer/UploadedFileDenormalizer.php
+
+namespace App\Serializer;
+
+use Symfony\Component\HttpFoundation\File\File;
+use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
+
+final class UploadedFileDenormalizer implements DenormalizerInterface
+{
+    public function denormalize($data, string $type, string $format = null, array $context = []): File
+    {
+        return $data;
+    }
+
+    public function supportsDenormalization($data, $type, $format = null, array $context = []): bool
+    {
+        return $data instanceof File;
+    }
+
+    public function getSupportedTypes(?string $format): array
+    {
+        return [
+            File::class => true,
+        ];
+    }
+}
+```
+
+If you're not using `autowiring` and `autoconfiguring`, don't forget to register the service and tag it as `serializer.normalizer`.
+
 ### Making a Request to the `/media_objects` Endpoint
 
 Your `/media_objects` endpoint is now ready to receive a `POST` request with a
@@ -409,84 +488,3 @@ class Book
     // ...
 }
 ```
-
-### Handling the Multipart Deserialization
-
-By default, Symfony is not able to decode `multipart/form-data`-encoded data.
-We need to create our own decoder to do it:
-
-```php
-<?php
-// api/src/Encoder/MultipartDecoder.php
-
-namespace App\Encoder;
-
-use Symfony\Component\HttpFoundation\RequestStack;
-use Symfony\Component\Serializer\Encoder\DecoderInterface;
-
-final class MultipartDecoder implements DecoderInterface
-{
-    public const FORMAT = 'multipart';
-
-    public function __construct(private readonly RequestStack $requestStack)
-    {
-    }
-
-    public function decode(string $data, string $format, array $context = []): ?array
-    {
-        $request = $this->requestStack->getCurrentRequest();
-
-        if (!$request) {
-            return null;
-        }
-
-        return array_map(static function (string $element) {
-            // Multipart form values will be encoded in JSON.
-            return json_decode($element, true, flags: \JSON_THROW_ON_ERROR);
-        }, $request->request->all()) + $request->files->all();
-    }
-
-    public function supportsDecoding(string $format): bool
-    {
-        return self::FORMAT === $format;
-    }
-}
-```
-
-If you're not using `autowiring` and `autoconfiguring`, don't forget to register the service and tag it as `serializer.encoder`.
-
-We also need to make sure the field containing the uploaded file is not denormalized:
-
-```php
-<?php
-// api/src/Serializer/UploadedFileDenormalizer.php
-
-namespace App\Serializer;
-
-use Symfony\Component\HttpFoundation\File\File;
-use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
-
-final class UploadedFileDenormalizer implements DenormalizerInterface
-{
-    public function denormalize($data, string $type, string $format = null, array $context = []): File
-    {
-        return $data;
-    }
-
-    public function supportsDenormalization($data, $type, $format = null, array $context = []): bool
-    {
-        return $data instanceof File;
-    }
-
-    public function getSupportedTypes(?string $format): array
-    {
-        return [
-            File::class => true,
-        ];
-    }
-}
-```
-
-If you're not using `autowiring` and `autoconfiguring`, don't forget to register the service and tag it as `serializer.normalizer`.
-
-For resolving the file URL, you can use a custom normalizer, like shown in [the previous example](#resolving-the-file-url).

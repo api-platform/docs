@@ -95,7 +95,7 @@ security:
       stateless: true
       provider: users
       json_login:
-        check_path: auth # The name in routes.yaml is enough for mapping
+        check_path: /auth # The name in routes.yaml is enough for mapping
         username_path: email
         password_path: password
         success_handler: lexik_jwt_authentication.handler.authentication_success
@@ -154,7 +154,7 @@ security:
       jwt: ~
     main:
       json_login:
-        check_path: auth # The name in routes.yaml is enough for mapping
+        check_path: /auth # The name in routes.yaml is enough for mapping
         username_path: email
         password_path: password
         success_handler: lexik_jwt_authentication.handler.authentication_success

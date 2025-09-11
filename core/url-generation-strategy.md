@@ -32,7 +32,7 @@ It can be configured globally using one of the configurations below:
 # api/config/packages/api_platform.yaml
 api_platform:
   defaults:
-    url_generation_strategy: !php/const ApiPlatform\Api\UrlGeneratorInterface::ABS_URL
+    url_generation_strategy: !php/const ApiPlatform\Metadata\UrlGeneratorInterface::ABS_URL
 ```
 ### Configure URL Generation Globally using Laravel
 
@@ -42,7 +42,7 @@ api_platform:
 return [
     // ....
     'defaults' => [
-        'url_generation_strategy' => ApiPlatform\Api\UrlGeneratorInterface::ABS_URL
+        'url_generation_strategy' => ApiPlatform\Metadata\UrlGeneratorInterface::ABS_URL
     ],
 ];
 ```
@@ -60,7 +60,7 @@ It can also be configured only for a specific resource:
 namespace App\ApiResource;
 
 use ApiPlatform\Metadata\ApiResource;
-use ApiPlatform\Api\UrlGeneratorInterface;
+use ApiPlatform\Metadata\UrlGeneratorInterface;
 
 #[ApiResource(urlGenerationStrategy: UrlGeneratorInterface::ABS_URL)]
 class Book

@@ -1268,7 +1268,7 @@ use ApiPlatform\Core\Annotation\ApiResource;
 use App\Filter\CustomAndFilter;
 
 #[ApiResource]
-#[ApiFilter(CustomAndFilter::class, properties=["name", "cost"])]
+#[ApiFilter(CustomAndFilter::class, properties: ['name', 'cost'])]
 class Offer
 {
     // ...

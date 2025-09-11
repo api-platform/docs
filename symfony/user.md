@@ -12,8 +12,6 @@ You can follow the [official Symfony Documentation](https://symfony.com/doc/curr
 
 namespace App\Entity;
 
-use ApiPlatform\Metadata\ApiFilter;
-use ApiPlatform\Metadata\ApiProperty;
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Delete;
 use ApiPlatform\Metadata\Get;
@@ -144,10 +142,13 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     /**
      * @see UserInterface
+     *
+     * Required until Symfony 8.0, where eraseCredentials() will be removed from the interface.
+     * No-op since plainPassword is cleared manually in the password processor.
      */
     public function eraseCredentials(): void
     {
-        $this->plainPassword = null;
+        // Intentionally left blank
     }
 }
 ```
@@ -231,6 +232,7 @@ namespace App\State;
 
 use ApiPlatform\Metadata\Operation;
 use ApiPlatform\State\ProcessorInterface;
+use App\Entity\User;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 /**
@@ -259,7 +261,9 @@ final readonly class UserPasswordHasher implements ProcessorInterface
             $data->getPlainPassword()
         );
         $data->setPassword($hashedPassword);
-        $data->eraseCredentials();
+
+        // To avoid leaving sensitive data like the plain password in memory or logs, we manually clear it after hashing.
+        $data->setPlainPassword(null);
 
         return $this->processor->process($data, $operation, $uriVariables, $context);
     }

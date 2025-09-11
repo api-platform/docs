@@ -96,7 +96,7 @@ This case is covered by an URI variable transformer:
 // api/src/Identifier/UuidUriVariableTransformer.php with Symfony
 namespace App\Identifier;
 
-use ApiPlatform\Api\UriVariableTransformerInterface;
+use ApiPlatform\Metadata\UriVariableTransformerInterface;
 use ApiPlatform\Exception\InvalidUriVariableException;
 use App\Uuid;
 
@@ -204,8 +204,8 @@ final class Person
 API Platform supports the following identifier types:
 
 - `scalar` (string, integer)
-- `\DateTime` (uses the symfony `DateTimeNormalizer` internally, see [DateTimeIdentifierNormalizer](https://github.com/api-platform/core/blob/main/src/Api/UriVariableTransformer/DateTimeUriVariableTransformer.php))
-- `\Ramsey\Uuid\Uuid` (see [UuidNormalizer](https://github.com/api-platform/core/blob/main/src/RamseyUuid/UriVariableTransformer/UuidUriVariableTransformer.php))
-- `\Symfony\Component\Uid\Ulid` (see [UlidNormalizer](https://github.com/api-platform/core/blob/main/src/Symfony/UriVariableTransformer/UlidUriVariableTransformer.php))
-- `\Symfony\Component\Uid\Uuid` (see [UuidNormalizer](https://github.com/api-platform/core/blob/main/src/Symfony/UriVariableTransformer/UuidUriVariableTransformer.php))
+- `\DateTime` (uses the symfony `DateTimeNormalizer` internally, see [DateTimeUriVariableTransformer](https://github.com/api-platform/core/blob/main/src/Metadata/UriVariableTransformer/DateTimeUriVariableTransformer.php))
+- `\Ramsey\Uuid\Uuid` (see [UuidUriVariableTransformer](https://github.com/api-platform/core/blob/main/src/RamseyUuid/UriVariableTransformer/UuidUriVariableTransformer.php))
+- `\Symfony\Component\Uid\Ulid` (see [UlidUriVariableTransformer](https://github.com/api-platform/core/blob/main/src/Symfony/UriVariableTransformer/UlidUriVariableTransformer.php))
+- `\Symfony\Component\Uid\Uuid` (see [UuidUriVariableTransformer](https://github.com/api-platform/core/blob/main/src/Symfony/UriVariableTransformer/UuidUriVariableTransformer.php))
 - `\Stringable` (essential when using composite identifiers from related resource classes)

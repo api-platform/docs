@@ -264,6 +264,41 @@ final class UserProcessor implements ProcessorInterface
 }
 ```
 
+Next, we bind the [PersistProcessor](https://github.com/api-platform/core/blob/main/src/Laravel/Eloquent/State/PersistProcessor.php) and [RemoveProcessor](https://github.com/api-platform/core/blob/main/src/Laravel/Eloquent/State/RemoveProcessor.php) in our Service Provider:
+
+```php
+<?php
+// app/Providers/AppServiceProvider.php
+
+namespace App\Providers;
+
+use App\State\UserProcessor;
+use ApiPlatform\State\ProcessorInterface;
+use ApiPlatform\Laravel\Eloquent\State\PersistProcessor;
+use ApiPlatform\Laravel\Eloquent\State\RemoveProcessor;
+use Illuminate\Support\ServiceProvider;
+use Illuminate\Contracts\Foundation\Application;
+class AppServiceProvider extends ServiceProvider
+{
+    /**
+     * Register any application services.
+     */
+    public function register(): void
+    {
+        $this->app->tag(UserProcessor::class, ProcessorInterface::class);
+
+        $this->app->singleton(UserProcessor::class, function (Application $app) {
+            return new UserProcessor(
+                $app->make(PersistProcessor::class),
+                $app->make(RemoveProcessor::class),
+            );
+        });
+    }
+
+    // ...
+}
+```
+
 Finally, configure that you want to use this processor on the User resource:
 
 ```php

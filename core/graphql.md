@@ -16,11 +16,11 @@ To enable GraphQL and its IDE (GraphiQL and GraphQL Playground) in your API, sim
 composer require api-platform/graphql
 ```
 
-You can now use GraphQL at the endpoint: `https://localhost:8443/graphql`.
+You can now use GraphQL at the endpoint: `https://localhost/graphql`.
 
 > [!NOTE]
 > If you used [the Symfony Variant thanks to Symfony Flex](../symfony/index.md#installing-the-framework) or the Laravel
-> variant, URLs will be prefixed with `/api` by default. For example, the GraphQL endpoint will be: `https://localhost:8443/api/graphql`.
+> variant, the default GraphQL endpoint will be available at a relative URL like `/graphql`. For example: `https://localhost/graphql`.
 
 ## Changing Location of the GraphQL Endpoint
 
@@ -33,12 +33,12 @@ Using the Symfony variant we can do this modification by adding the following co
 ```yaml
 # api/config/routes.yaml
 api_graphql_entrypoint:
-  path: /api/graphql
+  path: /graphql
   controller: api_platform.graphql.action.entrypoint
 # ...
 ```
 
-Change `/api/graphql` to the URI you wish the GraphQL endpoint to be accessible on.
+Change `/graphql` to the URI you wish the GraphQL endpoint to be accessible on.
 
 ### Laravel Routes
 
@@ -49,11 +49,11 @@ Using the Laravel variant we can do this modification by adding the following co
 use Illuminate\Support\Facades\Route;
 use ApiPlatform\GraphQL\Action\EntrypointAction;
 
-Route::post('/api/graphql', EntrypointAction::class)
+Route::post('/graphql', EntrypointAction::class)
     ->name('api_graphql_entrypoint');
 ```
 
-Change `/api/graphql` to the URI you wish the GraphQL endpoint to be accessible on.
+Change `/graphql` to the URI you wish the GraphQL endpoint to be accessible on.
 
 ## GraphiQL
 
