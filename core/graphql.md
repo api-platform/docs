@@ -2945,7 +2945,7 @@ For handling the upload of multiple files, iterate over `$context['args']['input
 ### Normalization of MediaObjects
 
 In the constructor of the `MediaObjectNormalizer`, the injected Normalizer must be replaced with the one from the
-graphql-namespace:
+`api_platform.graphql.normalizer.item` from GraphQL:
 
 ```PHP
 <?php
