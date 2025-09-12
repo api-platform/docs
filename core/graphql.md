@@ -2947,20 +2947,23 @@ For handling the upload of multiple files, iterate over `$context['args']['input
 In the constructor of the `MediaObjectNormalizer`, the injected Normalizer must be replaced with the one from the
 `api_platform.graphql.normalizer.item` from GraphQL:
 
-```PHP
+```php
 <?php
 // api/src/Serializer/MediaObjectNormalizer.php
 
-...
+use App\Storage\StorageInterface;
+use ApiPlatform\GraphQl\Serializer\ItemNormalizer;
 
-public function __construct(
-    #[Autowire(service: 'api_platform.graphql.normalizer.item')]
-    private readonly NormalizerInterface $normalizer,
-    private readonly StorageInterface $storage
-) {}
-
-...
-```
+final readonly class MediaObjectNormalizer
+{
+    public function __construct(
+        #[Autowire(service: ItemNormalizer::class)]
+        private NormalizerInterface $normalizer,
+        private StorageInterface $storage
+    ) {}
+    
+    // ...
+}
 
 ### Using the `createMediaObject` Mutation
 
