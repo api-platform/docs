@@ -284,7 +284,7 @@ Given that the collection endpoint is `/books`, you can filter the serialization
 
 ### Creating Custom Filters (API Platform >= 4.2)
 
-#### Generating the Filter Skeleton
+#### Generating the Laravel Eloquent Filter Skeleton
 
 To get started, API Platform includes a very handy make command to generate the basic structure of an Laravel Eloquent filter:
 
@@ -327,7 +327,7 @@ final class MonthFilter implements FilterInterface
 }
 ```
 
-#### Implementing a Custom Filter
+#### Implementing a Custom Laravel Eloquent Filter
 
 Let's create a concrete filter that allows fetching entities based on the month of a date field (e.g., `createdAt`).
 
@@ -360,7 +360,7 @@ final class MonthFilter implements FilterInterface
     }
 }
 ```
-    
+
 We can now use it in our resources and model like other filters, for example, as follows:
 ```php
 <?php

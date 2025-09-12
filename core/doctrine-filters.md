@@ -1,10 +1,12 @@
 # Doctrine ORM and MongoDB ODM Filters
 
+## Introduction
+
 For further documentation on filters (including for Eloquent and Elasticsearch), please see the [Filters documentation](filters.md).
 
 > [!WARNING]
 > For maximum flexibility and to ensure future compatibility, it is strongly recommended to configure your filters via
-> the parameters attribute using `QueryParameter`. The legacy method using the `ApiFilter` attribute is **deprecated** and 
+> the parameters attribute using `QueryParameter`. The legacy method using the `ApiFilter` attribute is **deprecated** and
 > will be **removed** in version **5.0**.
 
 The modern way to declare filters is to associate them directly with an operation's parameters. This allows for more
@@ -32,7 +34,7 @@ class Book {
 }
 ```
 > [!TIP]
-> This filter can be also defined directly on a specific operation like `#[GetCollection(...)])` for finer 
+> This filter can be also defined directly on a specific operation like `#[GetCollection(...)])` for finer
 > control, like the following code:
 
 ```php
@@ -179,7 +181,7 @@ services all begin with `api_platform.doctrine_mongodb.odm`.
 ### Built-in new Search Filters (API Platform >= 4.2)
 
 To add some search filters, choose over this new list:
-- [IriFilter](#iri-filter) (filter on IRIs)                                                 
+- [IriFilter](#iri-filter) (filter on IRIs)       
 - [ExactFilter](#exact-filter) (filter with exact value)
 - [PartialSearchFilter](#partial-search-filter) (filter using a `LIKE %value%``)
 - [FreeTextQueryFilter](#free-text-query-filter) (allows you to apply multiple filters to multiple properties of a resource at the same time, using a single parameter in the URL)
@@ -313,7 +315,7 @@ The iri filter allows filtering a resource using IRIs.
 
 Syntax: `?property=value`
 
-The value can take any [IRI(Internationalized Resource Identifier) ](https://en.wikipedia.org/wiki/Internationalized_Resource_Identifier).
+The value can take any [IRI(Internationalized Resource Identifier)](https://en.wikipedia.org/wiki/Internationalized_Resource_Identifier).
 
 Like other [new search filters](#built-in-new-search-filters-api-platform--42) it can be used on the ApiResource attribute
 or in the operation attribute, for e.g., the `#GetCollection()` attribute:
@@ -486,7 +488,7 @@ Given that the endpoint is `/chickens`, you can filter chickens by name with the
 This request will return all chickens where:
 
 - the `name` is exactly "FR123456"
-- OR 
+- OR
 - the `ean` is exactly "FR123456".
 
 ## Date Filter
@@ -1402,7 +1404,7 @@ Advantages of the new approach:
 - Clarity and Code Quality: The logic is more direct and decoupled.
 - Tooling: A make command is available to generate all the boilerplate code.
 
-#### Generating the Filter Skeleton
+#### Generating the Filter ORM Skeleton
 
 To get started, API Platform includes a very handy make command to generate the basic structure of an ORM filter:
 
@@ -1495,10 +1497,8 @@ class MonthFilter implements FilterInterface
 }
 ```
 
-Now that the filter is created, it must be associated with an API resource. We use the `#[QueryParameter]` attribute on 
-a `GetCollection` operation for this. For other synthax please refer to 
-
-[//]: # (TODO: add link to synthax)
+Now that the filter is created, it must be associated with an API resource. We use the `#[QueryParameter]` attribute on
+a `GetCollection` operation for this. For other syntax please refer to the [documentation](#introduction).
 
 ```php
 <?php
@@ -1512,9 +1512,9 @@ use App\Filters\MonthFilter;
 
 #[GetCollection(
     parameters: [
-    	'createdAtMonth' => new QueryParameter(
-        	filter: new MonthFilter(), 
-        	property: 'createdAt'
+        'createdAtMonth' => new QueryParameter(
+            filter: new MonthFilter(),
+            property: 'createdAt'
         ),
     ]
 )]
@@ -1527,9 +1527,9 @@ class Invoice
 And that's it! ✅ Your filter is operational. A request like `GET /invoices?createdAtMonth=7` will now correctly return
 the invoices from July!
 
-#### Adding Custom Filter Validation And A Better Typing
+#### Adding Custom Filter ORM Validation And A Better Typing
 
-Currently, our filter accepts any value, like `createdAtMonth=99` or `createdAtMonth=foo`, which could cause errors. 
+Currently, our filter accepts any value, like `createdAtMonth=99` or `createdAtMonth=foo`, which could cause errors.
 To validate inputs and ensure the correct type, we can implement the `JsonSchemaFilterInterface`.
 
 This allows delegating validation to API Platform, respecting the [SOLID Principles](https://en.wikipedia.org/wiki/SOLID).
@@ -1550,8 +1550,8 @@ final class MonthFilter implements FilterInterface, JsonSchemaFilterInterface
     public function getSchema(Parameter $parameter): array
     {
         return [
-        	'type' => 'integer',
-            
+            'type' => 'integer',
+
             // <=> Symfony\Component\Validator\Constraints\Range
             'minimum' => 1,
             'maximum' => 12,
@@ -1560,14 +1560,14 @@ final class MonthFilter implements FilterInterface, JsonSchemaFilterInterface
 }
 ```
 
-With this code, under the hood, API Platform has added a Symfony Range constraint (https://symfony.com/doc/current/reference/constraints/Range.html)
+With this code, under the hood, API Platform has added a [Symfony Range constraint](https://symfony.com/doc/current/reference/constraints/Range.html)
 that only accepts values between `1` and `12` (inclusive), which is what we want. In addition, we map the value to an integer,
 which allows us to reject other types and directly return an integer in our filter when we retrieve the value with
 `$monthValue = $parameter->getValue();`.
 
-### Documenting the Filter (OpenAPI)
+### Documenting the ORM Filter (OpenAPI)
 
-#### The Simple Method (for scalar types)
+#### The Simple Method (for scalar types) On A Custom ORM Filter
 
 If your filter expects a simple type (`int`, `string`, `bool`, or arrays of these types), the quickest way is to use the
 `OpenApiFilterTrait`.
@@ -1593,7 +1593,7 @@ final class MonthFilter implements FilterInterface, JsonSchemaFilterInterface, O
 
 That's all! The trait takes care of generating the corresponding OpenAPI documentation. 🚀
 
-#### The Custom Method to Documenting the Filter (OpenAPI)
+#### The Custom Method to Documenting the ORM Filter (OpenAPI)
 
 If your filter expects more complex data (an object, a specific format), you must implement the `getOpenApiParameters`
 method manually.
@@ -1854,7 +1854,7 @@ Advantages of the new approach:
 - Clarity and Code Quality: The logic is more direct and decoupled.
 - Tooling: A make command is available to generate all the boilerplate code.
 
-#### Generating the Filter Skeleton
+#### Generating the Filter ODM Skeleton
 
 To get started, API Platform includes a very handy make command to generate the basic structure of an ODM filter:
 
@@ -1901,7 +1901,7 @@ class MonthFilter implements FilterInterface
     }
 }
 ```
-#### Implementing a Custom Filter
+#### Implementing a Custom ODM Filter
 
 Let's create a concrete filter that allows fetching entities based on the month of a date field (e.g., `createdAt`).
 
@@ -1962,9 +1962,9 @@ use App\Filters\MonthFilter;
 
 #[GetCollection(
     parameters: [
-    	'createdAtMonth' => new QueryParameter(
-        	filter: new MonthFilter(), 
-        	property: 'createdAt'
+        'createdAtMonth' => new QueryParameter(
+            filter: new MonthFilter(), 
+            property: 'createdAt'
         ),
     ]
 )]
@@ -1977,7 +1977,7 @@ class Invoice
 And that's it! ✅ Your filter is operational. A request like `GET /invoices?createdAtMonth=7` will now correctly return
 the invoices from July!
 
-#### Adding Custom Filter Validation And A Better Typing
+#### Adding Custom Filter ODM Validation And A Better Typing
 
 Currently, our filter accepts any value, like `createdAtMonth=99` or `createdAtMonth=foo`, which could cause errors.
 To validate inputs and ensure the correct type, we can implement the `JsonSchemaFilterInterface`.
@@ -2000,8 +2000,8 @@ final class MonthFilter implements FilterInterface, JsonSchemaFilterInterface
     public function getSchema(Parameter $parameter): array
     {
         return [
-        	'type' => 'integer',
-            
+            'type' => 'integer',
+
             // <=> Symfony\Component\Validator\Constraints\Range
             'minimum' => 1,
             'maximum' => 12,
@@ -2010,14 +2010,14 @@ final class MonthFilter implements FilterInterface, JsonSchemaFilterInterface
 }
 ```
 
-With this code, under the hood, API Platform has added a Symfony Range constraint (https://symfony.com/doc/current/reference/constraints/Range.html)
+With this code, under the hood, API Platform has added a [Symfony Range constraint](https://symfony.com/doc/current/reference/constraints/Range.html)
 that only accepts values between `1` and `12` (inclusive), which is what we want. In addition, we map the value to an integer,
 which allows us to reject other types and directly return an integer in our filter when we retrieve the value with
 `$monthValue = $parameter->getValue();`.
 
-### Documenting the Filter (OpenAPI)
+### Documenting the ODM Filter (OpenAPI)
 
-#### The Simple Method (for scalar types)
+#### The Simple Method (for scalar types) On A Custom ODM Filter
 
 If your filter expects a simple type (`int`, `string`, `bool`, or arrays of these types), the quickest way is to use the
 `OpenApiFilterTrait`.
@@ -2043,7 +2043,7 @@ final class MonthFilter implements FilterInterface, JsonSchemaFilterInterface, O
 
 That's all! The trait takes care of generating the corresponding OpenAPI documentation. 🚀
 
-#### The Custom Method to Documenting the Filter (OpenAPI)
+#### The Custom Method to Documenting the Filter (OpenAPI) On A Custom ODM Filter
 
 If your filter expects more complex data (an object, a specific format), you must implement the `getOpenApiParameters`
 method manually.
