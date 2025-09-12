@@ -2,6 +2,60 @@
 
 For further documentation on filters (including for Eloquent and Doctrine), please see the [Filters documentation](filters.md).
 
+> [!WARNING]
+> For maximum flexibility and to ensure future compatibility, it is strongly recommended to configure your filters via
+> the parameters attribute using `QueryParameter`. The legacy method using the `ApiFilter` attribute is **deprecated** and
+> will be **removed** in version **5.0**.
+
+The modern way to declare filters is to associate them directly with an operation's parameters. This allows for more
+precise control over the exposed properties.
+
+Here is the recommended approach to apply a `MatchFilter` only to the title and author properties of a Book resource.
+
+```php
+<?php
+// api/src/Resource/Book.php
+#[ApiResource(operations: [
+    new GetCollection(
+        parameters: [
+            // This WILL restrict to only title and author properties
+            'search[:property]' => new QueryParameter(
+                properties: ['title', 'author'], // Only these properties get parameters created
+                filter: new MatchFilter()
+            )
+        ]
+    )
+])]
+class Book {
+    // ...
+}
+```
+> [!TIP]
+> This filter can be also defined directly on a specific operation like `#[GetCollection(...)])` for finer
+> control, like the following code:
+
+```php
+<?php
+// api/src/Resource/Book.php
+#[GetCollection(
+    parameters: [
+        // This WILL restrict to only title and author properties
+        'search[:property]' => new QueryParameter(
+            properties: ['title', 'author'], // Only these properties get parameters created
+            filter: new matchFilter()
+        )
+    ]
+)]
+class Book {
+    // ...
+}
+```
+
+**Further Reading**
+
+- Consult the documentation on [Per-Parameter Filters (Recommended Method)](../core/filters.md#2-per-parameter-filters-recommended).
+- If you are working with a legacy codebase, you can refer to the [documentation for the old syntax (deprecated)](../core/filters.md#1-legacy-filters-searchfilter-etc---not-recommended).
+
 ## Ordering Filter (Sorting)
 
 The order filter allows to [sort](https://www.elastic.co/guide/en/elasticsearch/reference/current/search-request-sort.html)
