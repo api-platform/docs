@@ -281,3 +281,107 @@ A few `filterContext` options are available to configure the filter:
 - `whitelist` properties whitelist to avoid uncontrolled data exposure (default `null` to allow all properties)
 
 Given that the collection endpoint is `/books`, you can filter the serialization properties with the following query: `/books?properties[]=title&properties[]=author`.
+
+### Creating Custom Filters (API Platform >= 4.2)
+
+#### Generating the Filter Skeleton
+
+To get started, API Platform includes a very handy make command to generate the basic structure of an Laravel Eloquent filter:
+
+```console
+bin/console make:filter
+```
+
+Then, provide the name of your filter, for example `MonthFilter`, or pass it directly as an argument:
+
+```console
+make:filter MyCustomFilter
+```
+
+You will get a file at `app/Filter/MonthFilter.php` with the following content:
+
+```php
+<?php
+// app/Filter/MonthFilter.php
+<?php
+
+declare(strict_types=1);
+
+namespace App\Filter;
+
+use ApiPlatform\Metadata\Parameter;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Model;
+
+final class MonthFilter implements FilterInterface
+{
+    /**
+     * @param Builder<Model>       $builder
+     * @param array<string, mixed> $context
+    */
+    public function apply(Builder $builder, mixed $values, Parameter $parameter, array $context = []): Builder
+    {
+        // TODO: make your awesome query using the $builder
+        // return $builder->
+    }
+}
+```
+
+#### Implementing a Custom Filter
+
+Let's create a concrete filter that allows fetching entities based on the month of a date field (e.g., `createdAt`).
+
+The goal is to be able to call a URL like `GET /invoices?createdAtMonth=7` to get all invoices created in July.
+
+Here is the complete and corrected code for the filter:
+
+```php
+<?php
+// app/Filter/MonthFilter.php
+<?php
+
+declare(strict_types=1);
+
+namespace App\Filter;
+
+use ApiPlatform\Metadata\Parameter;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Model;
+
+final class MonthFilter implements FilterInterface
+{
+    /**
+     * @param Builder<Model>       $builder
+     * @param array<string, mixed> $context
+    */
+    public function apply(Builder $builder, mixed $values, Parameter $parameter, array $context = []): Builder
+    {        
+        return $builder->->whereMonth($parameter->getProperty(), $values);
+    }
+}
+```
+    
+We can now use it in our resources and model like other filters, for example, as follows:
+```php
+<?php
+
+// app/ApiResource/Invoice.php
+
+namespace App\ApiResource;
+
+use ApiPlatform\Metadata\QueryParameter;
+use App\Filters\MonthFilter;
+
+#[ApiResource]
+#[QueryParameter(
+    key: 'createdAtMonth',
+    filter: new MonthFilter(), 
+    property: 'createdAt'
+)]
+class Invoice
+{
+    // ...
+}
+```
+And that's it! ✅ Your filter is operational. A request like `GET /invoices?createdAtMonth=7` will now correctly return
+the invoices from July!
