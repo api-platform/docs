@@ -1143,6 +1143,251 @@ retrieve data from the database. They are only applied to collections. If you wa
 to retrieve items, [extensions](extensions.md) are the way to go.
 
 A Doctrine ORM filter is basically a class implementing the `ApiPlatform\Doctrine\Orm\Filter\FilterInterface`.
+
+For `MongoDB (ODM)` filters, please refer to [Creating Custom Doctrine ODM Filters documentation](#creating-custom-doctrine-mongodb-odm-filters).
+
+### Creating Custom Doctrine ORM Filters With The New Syntax (API Platform >= 4.2)
+
+Advantages of the new approach:
+
+- Simplicity: No more need to extend `AbstractFilter`. A simple implementation of `FilterInterface` is all it takes.
+- Clarity and Code Quality: The logic is more direct and decoupled.
+- Tooling: A make command is available to generate all the boilerplate code.
+
+#### Generating the Filter Skeleton
+
+To get started, API Platform includes a very handy make command to generate the basic structure of an ORM filter:
+
+```console
+bin/console make:filter orm
+```
+
+Then, provide the name of your filter, for example `MonthFilter`, or pass it directly as an argument:
+
+```console
+make:filter orm MyCustomFilter
+```
+
+You will get a file at `api/src/Filter/MonthFilter.php` with the following content:
+
+```php
+<?php
+// api/src/Filter/MonthFilter.php
+
+declare(strict_types=1);
+
+namespace App\Filter;
+
+use ApiPlatform\Doctrine\Orm\Filter\FilterInterface;
+use ApiPlatform\Doctrine\Orm\Util\QueryNameGeneratorInterface;
+use ApiPlatform\Metadata\BackwardCompatibleFilterDescriptionTrait;
+use ApiPlatform\Metadata\Operation;
+use Doctrine\ORM\QueryBuilder;
+
+class MyCustomFilter implements FilterInterface
+{
+    use BackwardCompatibleFilterDescriptionTrait; // Here for backward compatibility, keep it until 5.0.
+
+    public function apply(QueryBuilder $queryBuilder, QueryNameGeneratorInterface $queryNameGenerator, string $resourceClass, ?Operation $operation = null, array $context = []): void
+    {
+        // Retrieve the parameter and it's value
+        // $parameter = $context['parameter'];
+        // $value = $parameter->getValue();
+
+        // Retrieve the property
+        // $property = $parameter->getProperty();
+
+        // Retrieve alias and parameter name
+        // $alias = $queryBuilder->getRootAliases()[0];
+        // $parameterName = $queryNameGenerator->generateParameterName($property);
+
+        // TODO: make your awesome query using the $queryBuilder
+        // $queryBuilder->
+    }
+}
+```
+#### Implementing a Custom Filter
+
+Let's create a concrete filter that allows fetching entities based on the month of a date field (e.g., `createdAt`).
+
+The goal is to be able to call a URL like `GET /invoices?createdAtMonth=7` to get all invoices created in July.
+
+Here is the complete and corrected code for the filter:
+
+```php
+<?php
+// api/src/Filter/MonthFilter.php
+
+declare(strict_types=1);
+
+namespace App\Filter;
+
+use ApiPlatform\Doctrine\Orm\Filter\FilterInterface;
+use ApiPlatform\Doctrine\Orm\Util\QueryNameGeneratorInterface;
+use ApiPlatform\Metadata\BackwardCompatibleFilterDescriptionTrait;
+use ApiPlatform\Metadata\Operation;
+use Doctrine\ORM\QueryBuilder;
+
+class MonthFilter implements FilterInterface
+{
+    use BackwardCompatibleFilterDescriptionTrait; // Here for backward compatibility, keep it until 5.0.
+
+    public function apply(QueryBuilder $queryBuilder, QueryNameGeneratorInterface $queryNameGenerator, string $resourceClass, ?Operation $operation = null, array $context = []): void
+    {
+        $parameter = $context['parameter'];
+        $monthValue = $parameter->getValue();
+
+        $parameterName = $queryNameGenerator->generateParameterName($property);
+        $alias = $queryBuilder->getRootAliases()[0];
+        
+        $queryBuilder
+            ->andWhere(sprintf('MONTH(%s.%s) = :%s', $alias, $property, $parameterName))
+            ->setParameter($parameterName, $monthValue);
+    }
+}
+```
+
+Now that the filter is created, it must be associated with an API resource. We use the `#[QueryParameter]` attribute on 
+a `GetCollection` operation for this. For other synthax please refer to 
+
+[//]: # (TODO: add link to synthax)
+
+```php
+<?php
+
+// src/ApiResource/Invoice.php
+
+namespace App\ApiResource;
+
+use ApiPlatform\Metadata\QueryParameter;
+use App\Filters\MonthFilter;
+
+#[GetCollection(
+    parameters: [
+    	'createdAtMonth' => new QueryParameter(
+        	filter: new MonthFilter(), 
+        	property: 'createdAt'
+        ),
+    ]
+)]
+class Invoice
+{
+    // ...
+}
+```
+
+And that's it! ✅ Your filter is operational. A request like `GET /invoices?createdAtMonth=7` will now correctly return
+the invoices from July!
+
+#### Adding Custom Filter Validation And A Better Typing
+
+Currently, our filter accepts any value, like `createdAtMonth=99` or `createdAtMonth=foo`, which could cause errors. 
+To validate inputs and ensure the correct type, we can implement the `JsonSchemaFilterInterface`.
+
+This allows delegating validation to API Platform, respecting the [SOLID Principles](https://en.wikipedia.org/wiki/SOLID).
+
+```php
+<?php
+
+// api/src/Filters/MonthFilter.php
+namespace App\Filters;
+
+use ApiPlatform\Metadata\JsonSchemaFilterInterface;
+// ...
+
+final class MonthFilter implements FilterInterface, JsonSchemaFilterInterface
+{
+    public function apply(...): void {}
+    
+    public function getSchema(Parameter $parameter): array
+    {
+        return [
+        	'type' => 'integer',
+            
+            // <=> Symfony\Component\Validator\Constraints\Range
+            'minimum' => 1,
+            'maximum' => 12,
+        ];
+    }
+}
+```
+
+With this code, under the hood, API Platform has added a Symfony Range constraint (https://symfony.com/doc/current/reference/constraints/Range.html)
+that only accepts values between `1` and `12` (inclusive), which is what we want. In addition, we map the value to an integer,
+which allows us to reject other types and directly return an integer in our filter when we retrieve the value with
+`$monthValue = $parameter->getValue();`.
+
+### Documenting the Filter (OpenAPI)
+
+#### The Simple Method (for scalar types)
+
+If your filter expects a simple type (`int`, `string`, `bool`, or arrays of these types), the quickest way is to use the
+`OpenApiFilterTrait`.
+
+```php
+<?php
+
+// api/src/Filters/MonthFilter.php
+namespace App\Filters;
+
+use ApiPlatform\Metadata\JsonSchemaFilterInterface;
+use ApiPlatform\Doctrine\Common\Filter\OpenApiFilterTrait;
+use ApiPlatform\Metadata\OpenApiParameterFilterInterface;
+// ...
+
+final class MonthFilter implements FilterInterface, JsonSchemaFilterInterface, OpenApiParameterFilterInterface
+{
+    use OpenApiFilterTrait;
+    
+   // ...
+}
+```
+
+That's all! The trait takes care of generating the corresponding OpenAPI documentation. 🚀
+
+#### The Custom Method to Documenting the Filter (OpenAPI)
+
+If your filter expects more complex data (an object, a specific format), you must implement the `getOpenApiParameters`
+method manually.
+
+```php
+<?php
+
+// api/src/Filter/MyComplexFilter.php
+
+namespace App\Filter;
+
+use ApiPlatform\OpenApi\Model\Parameter as OpenApiParameter;
+use ApiPlatform\Metadata\OpenApiParameterFilterInterface;
+use ApiPlatform\Metadata\Parameter;
+
+final class MyComplexFilter implements FilterInterface, OpenApiParameterFilterInterface
+{   
+   public function apply(...): void {}
+    
+    /**
+     * @return array<OpenApiParameter>
+     */
+    public function getOpenApiParameters(Parameter $parameter): array
+    {
+        // Example for a filter that expects an array of values
+        // like ?myParam[key1]=value1&myParam[key2]=value2
+        return [
+            new OpenApiParameter(
+                name: $parameter->getKey(), 
+                in: 'query', 
+                description: 'A custom filter for complex objects.',
+                style: 'deepObject', 
+                explode: true
+            )
+        ];
+    }
+}
+```
+
+### Creating Custom Doctrine ORM Filters With The Old Syntax (API Platform < 4.2)
+
+
 API Platform includes a convenient abstract class implementing this interface and providing utility methods: `ApiPlatform\Doctrine\Orm\Filter\AbstractFilter`.
 
 In the following example, we create a class to filter a collection by applying a regular expression to a property.
@@ -1345,9 +1590,252 @@ class Offer
 
 ## Creating Custom Doctrine MongoDB ODM Filters
 
+For `Doctrine ORM` filters, please refer to [Creating Custom Doctrine ORM Filters documentation](#creating-custom-doctrine-orm-filters).
+
 Doctrine MongoDB ODM filters have access to the context created from the HTTP request and to the [aggregation builder](https://www.doctrine-project.org/projects/doctrine-mongodb-odm/en/current/reference/aggregation-builder.html)
 instance used to retrieve data from the database and to execute [complex operations on data](https://docs.mongodb.com/manual/aggregation/).
 They are only applied to collections. If you want to deal with the aggregation pipeline generated to retrieve items, [extensions](extensions.md) are the way to go.
 
 A Doctrine MongoDB ODM filter is basically a class implementing the `ApiPlatform\Doctrine\Odm\Filter\FilterInterface`.
-API Platform includes a convenient abstract class implementing this interface and providing utility methods: `ApiPlatform\Doctrine\Odm\Filter\AbstractFilter`.
+
+### Creating Custom Doctrine ODM Filters With The New Syntax (API Platform >= 4.2)
+
+Advantages of the new approach:
+
+- Simplicity: No more need to extend `AbstractFilter`. A simple implementation of `FilterInterface` is all it takes.
+- Clarity and Code Quality: The logic is more direct and decoupled.
+- Tooling: A make command is available to generate all the boilerplate code.
+
+#### Generating the Filter Skeleton
+
+To get started, API Platform includes a very handy make command to generate the basic structure of an ODM filter:
+
+```console
+bin/console make:filter odm
+```
+
+Then, provide the name of your filter, for example `MonthFilter`, or pass it directly as an argument:
+
+```console
+make:filter orm MyCustomFilter
+```
+
+You will get a file at `api/src/Filter/MonthFilter.php` with the following content:
+
+```php
+<?php
+// api/src/Filter/MonthFilter.php
+
+declare(strict_types=1);
+
+namespace App\Filter;
+
+use ApiPlatform\Doctrine\Odm\Filter\FilterInterface;
+use ApiPlatform\Metadata\BackwardCompatibleFilterDescriptionTrait;
+use ApiPlatform\Metadata\Operation;
+use Doctrine\ODM\MongoDB\Aggregation\Builder;
+
+class MonthFilter implements FilterInterface
+{
+    use BackwardCompatibleFilterDescriptionTrait; // Here for backward compatibility, keep it until 5.0.
+
+    public function apply(Builder $aggregationBuilder, string $resourceClass, ?Operation $operation = null, array &$context = []): void
+    {
+        // Retrieve the parameter and it's value
+        // $parameter = $context['parameter'];
+        // $value = $parameter->getValue();
+
+        // Retrieve the property
+        // $property = $parameter->getProperty();
+
+        // TODO: make your awesome query using the $aggregationBuilder
+        // $aggregationBuilder->
+    }
+}
+```
+#### Implementing a Custom Filter
+
+Let's create a concrete filter that allows fetching entities based on the month of a date field (e.g., `createdAt`).
+
+The goal is to be able to call a URL like `GET /invoices?createdAtMonth=7` to get all invoices created in July.
+
+Here is the complete and corrected code for the filter:
+
+```php
+<?php
+// api/src/Filter/MonthFilter.php
+
+declare(strict_types=1);
+
+namespace App\Filter;
+
+use ApiPlatform\Doctrine\Odm\Filter\FilterInterface;
+use ApiPlatform\Metadata\BackwardCompatibleFilterDescriptionTrait;
+use ApiPlatform\Metadata\Operation;
+use Doctrine\ODM\MongoDB\Aggregation\Builder;
+
+class MonthFilter implements FilterInterface
+{
+    use BackwardCompatibleFilterDescriptionTrait; // Here for backward compatibility, keep it until 5.0.
+
+    public function apply(Builder $aggregationBuilder, string $resourceClass, ?Operation $operation = null, array &$context = []): void
+    {
+        $parameter = $context['parameter'];
+        $value = $parameter->getValue();
+
+        $property = $parameter->getProperty();
+
+        $aggregationBuilder->match(
+            $aggregationBuilder->expr()->operator('$expr', [
+                '$eq' => [
+                    ['$month' => '$' . $property],
+                    $monthValue
+                ]
+            ])
+        );
+    }
+}
+```
+
+Now that the filter is created, it must be associated with an API resource. We use the `#[QueryParameter]` attribute on
+a `GetCollection` operation for this. For other synthax please refer to
+
+[//]: # (TODO: add link to synthax)
+
+```php
+<?php
+
+// src/ApiResource/Invoice.php
+
+namespace App\ApiResource;
+
+use ApiPlatform\Metadata\QueryParameter;
+use App\Filters\MonthFilter;
+
+#[GetCollection(
+    parameters: [
+    	'createdAtMonth' => new QueryParameter(
+        	filter: new MonthFilter(), 
+        	property: 'createdAt'
+        ),
+    ]
+)]
+class Invoice
+{
+    // ...
+}
+```
+
+And that's it! ✅ Your filter is operational. A request like `GET /invoices?createdAtMonth=7` will now correctly return
+the invoices from July!
+
+#### Adding Custom Filter Validation And A Better Typing
+
+Currently, our filter accepts any value, like `createdAtMonth=99` or `createdAtMonth=foo`, which could cause errors.
+To validate inputs and ensure the correct type, we can implement the `JsonSchemaFilterInterface`.
+
+This allows delegating validation to API Platform, respecting the [SOLID Principles](https://en.wikipedia.org/wiki/SOLID).
+
+```php
+<?php
+
+// api/src/Filters/MonthFilter.php
+namespace App\Filters;
+
+use ApiPlatform\Metadata\JsonSchemaFilterInterface;
+// ...
+
+final class MonthFilter implements FilterInterface, JsonSchemaFilterInterface
+{
+    public function apply(...): void {}
+    
+    public function getSchema(Parameter $parameter): array
+    {
+        return [
+        	'type' => 'integer',
+            
+            // <=> Symfony\Component\Validator\Constraints\Range
+            'minimum' => 1,
+            'maximum' => 12,
+        ];
+    }
+}
+```
+
+With this code, under the hood, API Platform has added a Symfony Range constraint (https://symfony.com/doc/current/reference/constraints/Range.html)
+that only accepts values between `1` and `12` (inclusive), which is what we want. In addition, we map the value to an integer,
+which allows us to reject other types and directly return an integer in our filter when we retrieve the value with
+`$monthValue = $parameter->getValue();`.
+
+### Documenting the Filter (OpenAPI)
+
+#### The Simple Method (for scalar types)
+
+If your filter expects a simple type (`int`, `string`, `bool`, or arrays of these types), the quickest way is to use the
+`OpenApiFilterTrait`.
+
+```php
+<?php
+
+// api/src/Filters/MonthFilter.php
+namespace App\Filters;
+
+use ApiPlatform\Metadata\JsonSchemaFilterInterface;
+use ApiPlatform\Doctrine\Common\Filter\OpenApiFilterTrait;
+use ApiPlatform\Metadata\OpenApiParameterFilterInterface;
+// ...
+
+final class MonthFilter implements FilterInterface, JsonSchemaFilterInterface, OpenApiParameterFilterInterface
+{
+    use OpenApiFilterTrait;
+    
+   // ...
+}
+```
+
+That's all! The trait takes care of generating the corresponding OpenAPI documentation. 🚀
+
+#### The Custom Method to Documenting the Filter (OpenAPI)
+
+If your filter expects more complex data (an object, a specific format), you must implement the `getOpenApiParameters`
+method manually.
+
+```php
+<?php
+
+// api/src/Filter/MyComplexFilter.php
+
+namespace App\Filter;
+
+use ApiPlatform\OpenApi\Model\Parameter as OpenApiParameter;
+use ApiPlatform\Metadata\OpenApiParameterFilterInterface;
+use ApiPlatform\Metadata\Parameter;
+
+final class MyComplexFilter implements FilterInterface, OpenApiParameterFilterInterface
+{   
+   public function apply(...): void {}
+    
+    /**
+     * @return array<OpenApiParameter>
+     */
+    public function getOpenApiParameters(Parameter $parameter): array
+    {
+        // Example for a filter that expects an array of values
+        // like ?myParam[key1]=value1&myParam[key2]=value2
+        return [
+            new OpenApiParameter(
+                name: $parameter->getKey(), 
+                in: 'query', 
+                description: 'A custom filter for complex objects.',
+                style: 'deepObject', 
+                explode: true
+            )
+        ];
+    }
+}
+```
+
+### Creating Custom Doctrine ODM Filters With The Old Syntax (API Platform < 4.2)
+
+API Platform includes a convenient abstract class implementing this interface and providing utility methods:
+`ApiPlatform\Doctrine\Odm\Filter\AbstractFilter`.
