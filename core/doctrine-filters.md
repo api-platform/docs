@@ -171,7 +171,21 @@ For the sake of consistency, we're using the attribute in the below documentatio
 For MongoDB ODM, all the filters are in the namespace `ApiPlatform\Doctrine\Odm\Filter`. The filter
 services all begin with `api_platform.doctrine_mongodb.odm`.
 
-## Search Filter
+## Search Filter (not recommended)
+
+> [!WARNING]
+> Instead of using the deprecated `SearchFilter` its recommended to use the new search filters with QueryParameter attributes
+
+### Built-in new Search Filters (API Platform >= 4.2)
+
+To add some search filters, choose over this new list:
+- [IriFilter](#iri-filter) (filter on IRIs)                                                 
+- [ExactFilter](#exact-filter) (filter with exact value)
+- [PartialSearchFilter](#partial-search-filter) (filter using a `LIKE %value%``)
+- [FreeTextQueryFilter](#free-text-query-filter) (allows you to apply multiple filters to multiple properties of a resource at the same time, using a single parameter in the URL)
+- [OrFilter](#or-filter) (apply a filter using `orWhere` instead of `andWhere` )
+
+### Legacy SearchFilter (API Platform < 4.2))
 
 If Doctrine ORM or MongoDB ODM support is enabled, adding filters is as easy as registering a filter service in the
 `api/config/services.yaml` file and adding an attribute to your resource configuration.
@@ -292,6 +306,188 @@ Try the following: `http://localhost:8000/api/offers?product=/api/products/12`.
 Using a numeric ID is also supported: `http://localhost:8000/api/offers?product=12`
 
 The above URLs will return all offers for the product having the following IRI as JSON-LD identifier (`@id`): `http://localhost:8000/api/products/12`.
+
+## Iri Filter
+
+The iri filter allows filtering a resource using IRIs.
+
+Syntax: `?property=value`
+
+The value can take any [IRI(Internationalized Resource Identifier) ](https://en.wikipedia.org/wiki/Internationalized_Resource_Identifier).
+
+Like other [new search filters](#built-in-new-search-filters-api-platform--42) it can be used on the ApiResource attribute
+or in the operation attribute, for e.g., the `#GetCollection()` attribute:
+
+```php
+// api/src/ApiResource/Chicken.php
+
+#[GetCollection(
+    parameters: [
+        'chickenCoop' => new QueryParameter(filter: new IriFilter()),
+    ],
+)]
+class Chicken
+{
+    //...
+}
+```
+
+Given that the endpoint is `/chickens`, you can filter chickens by chicken coop with the following query:
+`/chikens?chickenCoop=/chickenCoop/1`.
+
+It will return all the chickens that live the chicken coop number 1.
+
+## Exact Filter
+
+The exact filter allows filtering a resource using exact values.
+
+Syntax: `?property=value`
+
+The value can take any scalar value or array of values.
+
+Like other [new search filters](#built-in-new-search-filters-api-platform--42) it can be used on the ApiResource attribute
+or in the operation attribute, for e.g., the `#GetCollection()` attribute:
+
+```php
+// api/src/ApiResource/Chicken.php
+
+#[GetCollection(
+    parameters: [
+        'name' => new QueryParameter(filter: new ExactFilter()),
+    ],
+)]
+class Chicken
+{
+    //...
+}
+```
+
+Given that the endpoint is `/chickens`, you can filter chickens by name with the following query:
+`/chikens?name=Gertrude`.
+
+It will return all the chickens that are exactly named _Gertrude_.
+
+## Partial Search Filter
+
+The partial search filter allows filtering a resource using partial values.
+
+Syntax: `?property=value`
+
+The value can take any scalar value or array of values.
+
+Like other [new search filters](#built-in-new-search-filters-api-platform--42) it can be used on the ApiResource attribute
+or in the operation attribute, for e.g., the `#GetCollection()` attribute:
+
+```php
+// api/src/ApiResource/Chicken.php
+
+#[GetCollection(
+    parameters: [
+        'name' => new QueryParameter(filter: new PartialSearchFilter()),
+    ],
+)]
+class Chicken
+{
+    //...
+}
+```
+
+Given that the endpoint is `/chickens`, you can filter chickens by name with the following query:
+`/chikens?name=tom`.
+
+It will return all chickens where the name contains the substring _tom_.
+
+> [!NOTE]
+> This filter performs a case-insensitive search. It automatically normalizes both the input value and the stored data
+> (e.g., by converting them to lowercase) before making the comparison.
+
+## Free Text Query Filter
+
+The free text query filter allows filtering allows you to apply a single filter across a list of properties. Its primary
+role is to repeat a filter's logic for each specified field.
+
+Syntax: `?property=value`
+
+The value can take any scalar value or array of values.
+
+Like other [new search filters](#built-in-new-search-filters-api-platform--42) it can be used on the ApiResource attribute
+or in the operation attribute, for e.g. the `#GetCollection()` attribute:
+
+```php
+// api/src/ApiResource/Chicken.php
+
+#[GetCollection(
+    parameters: [
+        'q' => new QueryParameter(
+            filter: new FreeTextQueryFilter(new PartialSearchFilter()), 
+            properties: ['name', 'ean']
+        ),
+    ],
+)]
+class Chicken
+{
+    //...
+}
+```
+
+Given that the endpoint is `/chickens`, you can filter chickens by name with the following query:
+`/chikens?q=tom`.
+
+**Result**:
+
+This request will return all chickens where:
+
+- the `name` is exactly "FR123456"
+- **AND**
+- the `ean` is exactly "FR123456".
+
+For the `OR` option refer to the [OrFilter](#or-filter).
+
+## Or Filter
+
+The or filter allows you to explicitly change the logical condition used by the filter it wraps. Its sole purpose is to
+force a filter to combine its criteria with OR instead of the default AND.
+
+It's the ideal tool for creating a search parameter that should find a match in any of the specified fields,
+but not necessarily all of them.
+
+Syntax: `?property=value`
+
+The value can take any scalar value or array of values.
+
+The `OrFilter` is a decorator: it is used by "wrapping" another, more specific filter (like for e.g. `PartialSearchFilter`
+or `ExactFilter`).
+
+The real power emerges when you combine these decorators. For instance, to create an "autocomplete" feature that finds
+exact matches in one of several fields. Example of usage:
+
+```php
+// api/src/ApiResource/Chicken.php
+
+#[GetCollection(
+    parameters: [
+        'autocomplete' => new QueryParameter(
+            filter: new FreeTextQueryFilter(new OrFilter(new ExactFilter())), 
+            properties: ['name', 'ean']
+        ),
+    ],
+)]
+class Chicken
+{
+    //...
+}
+```
+
+Given that the endpoint is `/chickens`, you can filter chickens by name with the following query:
+`/chikens?autocomplete=tom`.
+
+**Result**:
+
+This request will return all chickens where:
+
+- the `name` is exactly "FR123456"
+- OR 
+- the `ean` is exactly "FR123456".
 
 ## Date Filter
 
