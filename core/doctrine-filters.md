@@ -1524,9 +1524,9 @@ class Invoice
 }
 ```
 
-And that's it! ✅ 
+And that's it! ✅
 
-Your filter is operational. 
+Your filter is operational.
 
 A request like `GET /invoices?createdAtMonth=7` will now correctly return the invoices from July!
 
@@ -1586,6 +1586,9 @@ This approach offers two key benefits:
 
 This means you **don't have to add custom validation to your filter class, entity, or model**. The validation is handled
 for you, making your code cleaner and more efficient.
+
+> [!TIP]
+> For a complete list of constraints, see the [complete OpenApi format in the documentation](../core/filters.md#from-openapi-definition).
 
 ### Documenting the ORM Filter (OpenAPI)
 
@@ -1994,12 +1997,11 @@ class Invoice
 }
 ```
 
-And that's it! ✅ 
+And that's it! ✅
 
-Your filter is operational. 
+Your filter is operational.
 
-A request like `GET /invoices?createdAtMonth=7` will now correctly return
-the invoices from July!
+A request like `GET /invoices?createdAtMonth=7` will now correctly return the invoices from July!
 
 #### Adding Custom Filter ODM Validation And A Better Typing
 
@@ -2057,6 +2059,9 @@ This approach offers two key benefits:
 
 This means you **don't have to add custom validation to your filter class, entity, or model**. The validation is handled
 for you, making your code cleaner and more efficient.
+
+> [!TIP]
+> For a complete list of constraints, see the [full OpenApi format in the documentation](../core/filters.md#from-openapi-definition).
 
 ### Documenting the ODM Filter (OpenAPI)
 
