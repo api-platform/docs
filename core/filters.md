@@ -1,5 +1,10 @@
 # Parameters and Filters
 
+For documentation on the specific filter implementations available for your persistence layer, please refer to the following pages:
+
+- **[Doctrine Filters](../core/doctrine-filters.md)**
+- **[Elasticsearch Filters](../core/elasticsearch-filters.md)**
+
 API Platform provides a generic and powerful system to apply filters, sort criteria, and handle other request parameters. This system is primarily managed through **Parameter attributes** (`#[QueryParameter]` and `#[HeaderParameter]`), which allow for detailed and explicit configuration of how an API consumer can interact with a resource.
 
 These parameters can be linked to **Filters**, which are classes that contain the logic for applying criteria to your persistence backend (like Doctrine ORM or MongoDB ODM).
@@ -8,10 +13,10 @@ You can declare parameters on a resource class to apply them to all operations, 
 
 <p align="center" class="symfonycasts"><a href="https://symfonycasts.com/screencast/api-platform/filters?cid=apip"><img src="../symfony/images/symfonycasts-player.png" alt="Filtering and Searching screencast"><br>Watch the Filtering & Searching screencast</a></p>
 
-For documentation on the specific filter implementations available for your persistence layer, please refer to the following pages:
-
-* [Doctrine Filters](../core/doctrine-filters.md)
-* [Elasticsearch Filters](../core/elasticsearch-filters.md)
+> [!WARNING]
+> For maximum flexibility and to ensure future compatibility, it is strongly recommended to configure your filters via
+> the parameters attribute using `QueryParameter`. The legacy method using the `ApiFilter` attribute is **deprecated** and
+> will be **removed** in version **5.0**.
 
 ## Declaring Parameters
 
