@@ -181,7 +181,7 @@ services all begin with `api_platform.doctrine_mongodb.odm`.
 ### Built-in new Search Filters (API Platform >= 4.2)
 
 To add some search filters, choose over this new list:
-- [IriFilter](#iri-filter) (filter on IRIs)       
+- [IriFilter](#iri-filter) (filter on IRIs)
 - [ExactFilter](#exact-filter) (filter with exact value)
 - [PartialSearchFilter](#partial-search-filter) (filter using a `LIKE %value%``)
 - [FreeTextQueryFilter](#free-text-query-filter) (allows you to apply multiple filters to multiple properties of a resource at the same time, using a single parameter in the URL)
@@ -1534,6 +1534,18 @@ To validate inputs and ensure the correct type, we can implement the `JsonSchema
 
 This allows delegating validation to API Platform, respecting the [SOLID Principles](https://en.wikipedia.org/wiki/SOLID).
 
+> [!NOTE]
+> Even with our internal systems, some additional **manual validation** is needed to ensure greater accuracy. However,
+> we already take care of a lot of these validations for you.
+>
+> You can see how this works directly in our code components:
+>
+> * The `ParameterValidatorProvider` for **Symfony** can be found [here](https://github.com/api-platform/core/blob/c9692b509d5b641104addbadb349b9bcab83e251/src/Symfony/Validator/State/ParameterValidatorProvider.php).
+> * The `ParameterValidatorProvider` for **Laravel** is located [here](https://github.com/api-platform/core/blob/c9692b509d5b641104addbadb349b9bcab83e251/src/Laravel/State/ParameterValidatorProvider.php).
+>
+> Additionally, we filter out empty values within our `ParameterExtension` classes. For instance, the **Doctrine ORM**
+> `ParameterExtension` [handles this filtering here](https://github.com/api-platform/core/blob/c9692b509d5b641104addbadb349b9bcab83e251/src/Doctrine/Orm/Extension/ParameterExtension.php#L51C13-L53C14).
+
 ```php
 <?php
 
@@ -1560,10 +1572,17 @@ final class MonthFilter implements FilterInterface, JsonSchemaFilterInterface
 }
 ```
 
-With this code, under the hood, API Platform has added a [Symfony Range constraint](https://symfony.com/doc/current/reference/constraints/Range.html)
-that only accepts values between `1` and `12` (inclusive), which is what we want. In addition, we map the value to an integer,
-which allows us to reject other types and directly return an integer in our filter when we retrieve the value with
-`$monthValue = $parameter->getValue();`.
+With this code, under the hood, API Platform automatically adds a [Symfony Range constraint](https://symfony.com/doc/current/reference/constraints/Range.html).
+This ensures the parameter only accepts values between `1` and `12` (inclusive), which is exactly what we need.
+
+This approach offers two key benefits:
+
+- Automatic Validation: It rejects other data types and invalid values, so you get an integer directly.
+- Simplified Logic: You can retrieve the value with `$monthValue = $parameter->getValue();` knowing it's already a
+- validated integer.
+
+This means you **don't have to add custom validation to your filter class, entity, or model**. The validation is handled
+for you, making your code cleaner and more efficient.
 
 ### Documenting the ORM Filter (OpenAPI)
 
