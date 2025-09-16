@@ -815,7 +815,7 @@ Keep in mind that you can use your favorite client-side technology: API Platform
 requests is OK (even COBOL can do that).
 
 To go further, the API Platform team maintains a demo application showing more advanced use cases like leveraging serialization
-groups, user management, or JWT and OAuth authentication. [Checkout the demo code source on GitHub](https://github.com/api-platform/demo)
+groups, user management, or JWT and OAuth authentication. [Check out the demo code source on GitHub](https://github.com/api-platform/demo)
 and [browse it online](https://demo.api-platform.com).
 
 ## Screencasts
