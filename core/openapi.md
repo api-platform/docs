@@ -77,14 +77,6 @@ need to decorate `api_platform.openapi.factory`.
 In the following example, we will see how to override the title and the base path URL of the Swagger documentation and add a custom filter for
 the `GET` operation of `/foos` path.
 
-```yaml
-# api/config/services.yaml
-App\OpenApi\OpenApiFactory:
-  decorates: 'api_platform.openapi.factory'
-  arguments: ['@App\OpenApi\OpenApiFactory.inner']
-  autoconfigure: false
-```
-
 ```php
 <?php
 namespace App\OpenApi;
@@ -92,7 +84,9 @@ namespace App\OpenApi;
 use ApiPlatform\OpenApi\Factory\OpenApiFactoryInterface;
 use ApiPlatform\OpenApi\OpenApi;
 use ApiPlatform\OpenApi\Model;
+use Symfony\Component\DependencyInjection\Attribute\AsDecorator;
 
+#[AsDecorator(decorates: 'api_platform.openapi.factory')]
 class OpenApiFactory implements OpenApiFactoryInterface
 {
 
