@@ -69,24 +69,17 @@ To produce a specification including only the operation matching your tag.
 
 ## Overriding the OpenAPI Specification
 
-### Overriding the OpenAPI Specification with Symfony
-
-Symfony allows to [decorate services](https://symfony.com/doc/current/service_container/service_decoration.html), here we
-need to decorate `api_platform.openapi.factory`.
+API Platform generates the OpenAPI specification through the `ApiPlatform\OpenApi\Factory\OpenApiFactoryInterface` service.
+To customize it, you need to create your own factory service that **decorates** (wraps) the original one.
 
 In the following example, we will see how to override the title and the base path URL of the Swagger documentation and add a custom filter for
-the `GET` operation of `/foos` path.
+the `GET` operation of `/api/grumpy_pizzas/{id}` path.
 
-```yaml
-# api/config/services.yaml
-App\OpenApi\OpenApiFactory:
-  decorates: 'api_platform.openapi.factory'
-  arguments: ['@App\OpenApi\OpenApiFactory.inner']
-  autoconfigure: false
-```
+First, create a custom OpenAPI factory that decorates the original service:
 
 ```php
 <?php
+
 namespace App\OpenApi;
 
 use ApiPlatform\OpenApi\Factory\OpenApiFactoryInterface;
@@ -125,21 +118,48 @@ class OpenApiFactory implements OpenApiFactoryInterface
 }
 ```
 
-The impact on the swagger-ui is the following:
+Then configure it as a decorator in your service container:
 
-![Swagger UI](images/swagger-ui-modified.png)
+### Decorate with Symfony
 
-### Overriding the OpenAPI Specification with Laravel
+Symfony allows to [decorate services](https://symfony.com/doc/current/service_container/service_decoration.html) as following:
 
-Laravel allows to [decorate services](https://laravel.com/docs/container#extending-bindings), here we
-need to decorate `api_platform.openapi.factory`.
-
-In the following example, we will see how to override the title and the base path URL of the Swagger documentation and add a custom filter for
-the `GET` operation of `/foos` path.
+<code-selector>
 
 ```php
 <?php
 
+namespace App\OpenApi;
+
+use ApiPlatform\OpenApi\Factory\OpenApiFactoryInterface;
+use Symfony\Component\DependencyInjection\Attribute\AsDecorator;
+
+#[AsDecorator(decorates: 'api_platform.openapi.factory')]
+class OpenApiFactory implements OpenApiFactoryInterface
+{
+    // ...
+}
+```
+
+```yaml
+# api/config/services.yaml
+services:
+  # ...
+  App\OpenApi\OpenApiFactory:
+    decorates: 'api_platform.openapi.factory'
+    arguments: ['@App\OpenApi\OpenApiFactory.inner']
+    autoconfigure: false
+```
+
+</code-selector>
+
+### Decorate with Laravel
+
+Laravel allows to [decorate services](https://laravel.com/docs/container#extending-bindings), as following:
+
+```php
+<?php
+# 
 namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
@@ -153,46 +173,6 @@ class AppServiceProvider extends ServiceProvider
         $this->app->extend(OpenApiFactoryInterface::class, function (OpenApiFactoryInterface $factory) {
             return new OpenApiFactory($factory);
         });
-    }
-}
-```
-
-```php
-<?php
-namespace App\OpenApi;
-
-use ApiPlatform\OpenApi\Factory\OpenApiFactoryInterface;
-use ApiPlatform\OpenApi\OpenApi;
-use ApiPlatform\OpenApi\Model;
-
-class OpenApiFactory implements OpenApiFactoryInterface
-{
-
-    public function __construct(private OpenApiFactoryInterface $decorated)
-    {
-    }
-
-    public function __invoke(array $context = []): OpenApi
-    {
-        $openApi = $this->decorated->__invoke($context);
-        $pathItem = $openApi->getPaths()->getPath('/api/grumpy_pizzas/{id}');
-        $operation = $pathItem->getGet();
-
-        $openApi->getPaths()->addPath('/api/grumpy_pizzas/{id}', $pathItem->withGet(
-            $operation->withParameters(array_merge(
-                $operation->getParameters(),
-                [new Model\Parameter('fields', 'query', 'Fields to remove of the output')]
-            ))
-        ));
-
-        $openApi = $openApi->withInfo((new Model\Info('New Title', 'v2', 'Description of my custom API'))->withExtensionProperty('info-key', 'Info value'));
-        $openApi = $openApi->withExtensionProperty('key', 'Custom x-key value');
-        $openApi = $openApi->withExtensionProperty('x-value', 'Custom x-value value');
-
-        // to define base path URL
-        $openApi = $openApi->withServers([new Model\Server('https://foo.bar')]);
-
-        return $openApi;
     }
 }
 ```
