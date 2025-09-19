@@ -409,3 +409,12 @@ use ApiPlatform\Laravel\Eloquent\Filter\JsonApi\SortFilter;
 )]
 class Book extends Model {}
 ```
+
+### Advertising Linked Data Platform HTTP Headers (Allow & Accept-Post)
+
+API Platform automatically adds two HTTP headers to responses for resources:
+
+- **Allow** advertises enabled HTTP methods on the *current URI template*.
+- **Accept-Post** advertises POST-able media types (from operation input formats) and is only present when a POST operation exists for the template.
+
+> See [LDP §4.2 / Primer notes on Accept-Post](https://www.w3.org/TR/ldp/#Accept-Post) and typical exposure via OPTIONS.
