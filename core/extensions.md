@@ -1,4 +1,4 @@
-# Extensions for Doctrine and Elasticsearch
+# Extensions for Doctrine, Eloquent and Elasticsearch
 
 API Platform provides a system to extend queries on items and collections.
 
