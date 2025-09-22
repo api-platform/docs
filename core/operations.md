@@ -189,65 +189,11 @@ resources:
 API Platform is smart enough to automatically register the applicable Symfony route referencing a built-in CRUD action
 just by specifying the method name as key, or by checking the explicitly configured HTTP method.
 
-If you do not want to allow access to the resource item (i.e. you don't want a `GET` item operation), instead of omitting it altogether, you should instead declare a `GET` item operation which returns HTTP 404 (Not Found), so that the resource item can still be identified by an IRI. For example:
+By default, API Platform uses the first `Get` operation defined to generate the IRI of an item and the first `GetCollection` operation to generate the IRI of a collection.
 
-<code-selector>
-
-```php
-<?php
-// api/src/Entity/Book.php
-namespace App\Entity;
-
-use ApiPlatform\Action\NotFoundAction;
-use ApiPlatform\Metadata\Get;
-use ApiPlatform\Metadata\GetCollection;
-use ApiPlatform\Metadata\ApiResource;
-
-#[ApiResource(operations: [
-    new Get(
-        controller: NotFoundAction::class,
-        read: false,
-        output: false
-    ),
-    new GetCollection()
-])]
-class Book
-{
-    // ...
-}
-```
-
-```yaml
-# api/config/api_platform/resources.yaml
-resources:
-  App\Entity\Book:
-    operations:
-      ApiPlatform\Metadata\GetCollection: ~
-      ApiPlatform\Metadata\Get:
-        controller: ApiPlatform\Action\NotFoundAction
-        read: false
-        output: false
-```
-
-```xml
-<?xml version="1.0" encoding="UTF-8" ?>
-<!-- api/config/api_platform/resources.xml -->
-
-<resources xmlns="https://api-platform.com/schema/metadata/resources-3.0"
-        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xsi:schemaLocation="https://api-platform.com/schema/metadata/resources-3.0
-        https://api-platform.com/schema/metadata/resources-3.0.xsd">
-    <resource class="App\Entity\Book">
-        <operations>
-            <operation class="ApiPlatform\Metadata\GetCollection" />
-            <operation class="ApiPlatform\Metadata\Get" controller="ApiPlatform\Action\NotFoundAction"
-                       read="false" output="false" />
-        </operations>
-    </resource>
-</resources>
-```
-
-</code-selector>
+If your resource does not have any `Get` operation, API Platform automatically adds an operation to help generating this IRI.
+If your resource has any identifier, this operation will look like `/books/{id}`. But if your resource doesn’t have any identifier, API Platform will use the Skolem format `/.well-known/genid/{id}`.
+Those routes are not exposed from any documentation (for instance OpenAPI), but are anyway declared on the routing system and always return a HTTP 404.
 
 ## Configuring Operations
 
@@ -336,6 +282,73 @@ resources:
                     </values>
                 </options>
             </operation>
+        </operations>
+    </resource>
+</resources>
+```
+
+</code-selector>
+
+When you do not want to allow access to the resource item (i.e. you don't want a `GET` item operation), instead of omitting the resource item altogether, you can explicitly specify the IRI of the resource item by declaring a `GET` item operation that returns HTTP 404 (Not Found). For example:
+
+<code-selector>
+
+```php
+<?php
+// api/src/Entity/Book.php
+namespace App\Entity;
+
+use ApiPlatform\Action\NotFoundAction;
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\Post;
+
+#[ApiResource(operations: [
+    new Get(
+        uriTemplate: '/grimoire/{id}',
+        controller: NotFoundAction::class,
+        read: false,
+        output: false
+    ),
+    new Post(
+        uriTemplate: '/grimoire',
+        status: 301
+    )
+])]
+class Book
+{
+    // ...
+}
+```
+
+```yaml
+# api/config/api_platform/resources.yaml
+resources:
+  App\Entity\Book:
+    operations:
+      ApiPlatform\Metadata\Post:
+        uriTemplate: '/grimoire'
+        status: 301
+      ApiPlatform\Metadata\Get:
+        uriTemplate: '/grimoire/{id}'
+        controller: ApiPlatform\Action\NotFoundAction
+        read: false
+        output: false
+```
+
+```xml
+<?xml version="1.0" encoding="UTF-8" ?>
+<!-- api/config/api_platform/resources.xml -->
+
+<resources xmlns="https://api-platform.com/schema/metadata/resources-3.0"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="https://api-platform.com/schema/metadata/resources-3.0
+        https://api-platform.com/schema/metadata/resources-3.0.xsd">
+    <resource class="App\Entity\Book">
+        <operations>
+            <operation class="ApiPlatform\Metadata\Post" uriTemplate="/grimoire" status="301" />
+            <operation class="ApiPlatform\Metadata\Get" uriTemplate="/grimoire/{id}"
+                       controller="ApiPlatform\Action\NotFoundAction" read="false" output="false" />
         </operations>
     </resource>
 </resources>
