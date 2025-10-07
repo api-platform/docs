@@ -449,6 +449,12 @@ The `IriConverterParameterProvider` supports the following options in `extraProp
 
 ### `ReadLinkParameterProvider`
 
+This provider must be enabled before it can be used.
+```
+api_platform:
+  enable_link_security: true
+```
+
 This provider fetches a linked resource from a given identifier. This is useful when you need to load a related entity to use later, for example in your own state provider.
 When you have an API resource with a custom `uriTemplate` that includes parameters, the `ReadLinkParameterProvider` can automatically resolve the linked resource using the operation's URI template. This is particularly useful for nested resources or when you need to load a parent resource based on URI variables.
 
