@@ -47,6 +47,32 @@ api_platform:
   #...
 ```
 
+#### SSL Configuration
+
+When connecting to Elasticsearch over HTTPS with self-signed certificates or custom Certificate Authorities, you can configure SSL verification.
+
+**With a custom CA bundle:**
+
+```yaml
+# config/packages/api_platform.yaml
+api_platform:
+  elasticsearch:
+    hosts: ['%env(ELASTICSEARCH_HOST)%']
+    ssl_ca_bundle: '/path/to/ca-bundle.crt'
+```
+
+**Disable SSL verification (dev/test only):**
+
+```yaml
+# config/packages/api_platform.yaml
+api_platform:
+  elasticsearch:
+    hosts: ['%env(ELASTICSEARCH_HOST)%']
+    ssl_verification: false  # Never use in production
+```
+
+**Note:** You cannot use both options together.
+
 ### Enabling Reading Support using Laravel
 
 ```php
