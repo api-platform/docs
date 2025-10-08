@@ -72,9 +72,6 @@ for the `GET` method for both `collection` and `item` to create a readonly endpo
 If the operation's name matches a supported HTTP method (`GET`, `POST`, `PUT`, `PATCH` or `DELETE`), the corresponding `method` property
 will be automatically added.
 
-> [!TIP]
-> The `#[GetCollection]` attribute is an alias for `#[Get(collection: true)]`
-
 ---
 
 > [!NOTE]
