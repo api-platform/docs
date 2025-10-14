@@ -71,7 +71,8 @@ api_platform:
     ssl_verification: false  # Never use in production
 ```
 
-**Note:** You cannot use both options together.
+> [!NOTE]
+> You cannot use both options together.
 
 ### Enabling Reading Support using Laravel
 
