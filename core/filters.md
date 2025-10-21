@@ -154,7 +154,10 @@ public function apply(QueryBuilder $queryBuilder, QueryNameGeneratorInterface $q
 }
 ```
 
-Note that we're using `api_platform.doctrine.orm.search_filter.instance` (exists also for ODM). Indeed this is a special instance of the search filter where `properties` can be changed during runtime. This is considered as "legacy filter" below, in API Platform 4.0 we'll recommend to create a custom filter or to use the `PartialSearchFilter`.
+> [!NOTE]
+> We are using `api_platform.doctrine.orm.search_filter.instance` (exists also for ODM).
+> Indeed this is a special instance of the search filter where `properties` can be changed during runtime.
+> This is considered as "legacy filter" below, in API Platform 4.0 we'll recommend to create a custom filter or to use the `PartialSearchFilter`.
 
 ### Restricting Properties with `:property` Placeholders
 
@@ -244,7 +247,8 @@ class Book {
 
 This approach is recommended for new filters as it's more flexible and allows true property restriction via the parameter configuration.
 
-Note that invalid values are usually ignored by our filters, use [validation](#parameter-validation) to trigger errors for wrong parameter values.
+> [!NOTE]
+> Invalid values are usually ignored by our filters, use [validation](#parameter-validation) to trigger errors for wrong parameter values.
 
 ## OpenAPI and JSON Schema
 
@@ -338,7 +342,8 @@ use Symfony\Component\Validator\Constraints as Assert;
 class User {}
 ```
 
-Note that when `castToNativeType` is enabled, API Platform infers type validation from the JSON Schema.
+> [!NOTE]
+> When `castToNativeType` is enabled, API Platform infers type validation from the JSON Schema.
 
 The `ApiPlatform\Validator\Util\ParameterValidationConstraints` trait can be used to automatically infer validation constraints from the JSON Schema and OpenAPI definitions of a parameter.
 
@@ -395,6 +400,49 @@ class StrictParameters {}
 ```
 
 With this configuration, a request to `/strict_query_parameters?bar=test` will fail with a 400 error because `bar` is not a supported parameter.
+
+### Property filter
+
+> [!NOTE]
+> We strongly recommend using [Vulcain](https://vulcain.rocks) instead of this filter.
+> Vulcain is faster, allows a better hit rate, and is supported out of the box in the API Platform distribution.
+> [!NOTE]
+> When unsing JSON:API check out the [specific SparseFieldset and Sort filters](./content-negotiation/#jsonapi-sparse-fieldset-and-sort-parameters)
+
+The property filter adds the possibility to select the properties to serialize (sparse fieldsets).
+
+Syntax: `?properties[]=<property>&properties[<relation>][]=<property>`
+
+You can add as many properties as you need.
+
+Enable the filter:
+
+```php
+<?php
+// api/src/Entity/Book.php
+namespace App\Entity;
+
+use ApiPlatform\Metadata\ApiFilter;
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Serializer\Filter\PropertyFilter;
+
+#[ApiResource(
+    parameters: ['properties' => new QueryParameter(filter: PropertyFilter::class)]
+)]
+class Book
+{
+    // ...
+}
+```
+
+Three arguments are available to configure the filter:
+
+- `parameterName` is the query parameter name (default `properties`)
+- `overrideDefaultProperties` allows to override the default serialization properties (default `false`)
+- `whitelist` properties whitelist to avoid uncontrolled data exposure (default `null` to allow all properties)
+
+Given that the collection endpoint is `/books`, you can filter the serialization properties with the following query: `/books?properties[]=title&properties[]=author`.
+If you want to include some properties of the nested "author" document, use: `/books?properties[]=title&properties[author][]=name`.
 
 ## Parameter Providers
 
