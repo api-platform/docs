@@ -324,7 +324,7 @@ If you disabled this feature, you need to register the services by yourself and 
 
 services:
     # ...
-    App\State\BlogPostProcessor: ~
+    App\State\BlogPostProcessor:
         tags: [ 'api_platform.state_processor' ]
 
     App\State\UserProcessor:
