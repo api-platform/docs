@@ -473,6 +473,7 @@ Modify these files as described in these patches:
 ```console
 docker compose exec php bin/console make:entity --api-resource
 ```
+For more information on the available makers see [Maker documentation](./maker.md).
 
 Doctrine's [attributes](https://www.doctrine-project.org/projects/doctrine-orm/en/current/reference/attributes-reference.html) map these entities to tables in the database.
 Mapping through [annotations](https://www.doctrine-project.org/projects/doctrine-annotations/en/current/index.html)  is still supported for backward compatibility, but they are considered deprecated and attributes are now the recommended approach.
