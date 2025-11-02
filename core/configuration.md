@@ -265,6 +265,13 @@ api_platform:
     # The list of enabled patch formats. The first one will be the default.
     patch_formats: []
 
+    # The list of enabled docs formats. The first one will be the default.
+    docs_formats:
+        jsonld: ['application/ld+json']
+        #jsonapi: ['application/vnd.api+json']
+        jsonopenapi: ['application/vnd.openapi+json']
+        html: ['text/html']
+
     # The list of enabled error formats. The first one will be the default.
     error_formats:
         jsonproblem:
