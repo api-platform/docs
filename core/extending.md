@@ -20,6 +20,7 @@ The following tables summarizes which extension point to use depending on what y
 | [Messenger Handlers](../symfony/messenger.md)                                                  | create 100% custom, RPC, async, service-oriented endpoints (should be used in place of custom controllers because the messenger integration is compatible with both REST and GraphQL, while custom controllers only work with REST) |
 | [DTOs](dto.md)                                                                                 | use a specific class to represent the input or output data structure related to an operation                                                                                                                                        |
 | [Kernel Events](events.md)                                                                     | customize the HTTP request or response (REST only, other extension points must be preferred when possible)                                                                                                                          |
+| [Operations and Resources](operations.md)                                                      | use mutators to dynamically alter metadata (works for third party API endpoints)                                                                                                                                                    |
 
 ## Doctrine Specific Extension Points
 

@@ -589,3 +589,84 @@ class Weather
 ```
 
 That's it!
+
+## Customize Operation and Resource Metadata
+
+Metadata mutators allow a dynamic control over resources and operations, by programmatically altering metadata before they are exposed as endpoints. Providing a way to modify, add or remove operations, adjust serialization groups or pagination settings.
+
+It also makes it possible to customize built-in endpoints from a third-party API, such as Sylius.
+
+### Resource Mutator
+
+Use the resource mutator to modify the entire resource metadata by adding the attribute and target resource class as argument:
+
+```php
+<?php
+
+namespace App;
+
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\AsResourceMutator;
+use ApiPlatform\Metadata\ResourceMutatorInterface;
+use App\Entity\Book;
+use App\Entity\Comic;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
+
+// Metadata mutators are repeatable
+#[AsResourceMutator(resourceClass: Book::class)]
+#[AsResourceMutator(resourceClass: Comic::class)]
+final readonly class ApiPrefixMutator implements ResourceMutatorInterface
+{
+    public function __construct(#[Autowire(env: 'API_PREFIX')] private string $prefix) {
+    }
+
+    public function __invoke(ApiResource $resource): ApiResource
+    {
+        $operations = $resource->getOperations();
+        
+        if (null !== $operations) {
+            return $resource;
+        }
+
+        foreach ($operations as $name => $operation) {
+            // add route prefix to each resource operation
+            $prefixedOperation = $operation->withRoutePrefix($this->prefix);
+            $operations->add($name, $prefixedOperation);
+        }
+
+        return $resource->withOperations($operations);
+    }
+}
+```
+
+### Operation Mutator
+
+The operation mutator will modify a specific operation's metadata, by using the attribute and passing the operation name:
+
+```php
+<?php
+
+namespace App\Mutator;
+
+use ApiPlatform\Metadata\AsOperationMutator;
+use ApiPlatform\Metadata\Operation;
+use ApiPlatform\Metadata\OperationMutatorInterface;
+
+#[AsOperationMutator(operationName: '_api_Book_get_collection')]
+final class BookOperationMutator implements OperationMutatorInterface
+{
+    public function __invoke(Operation $operation): Operation
+    {
+        $context = $operation->getNormalizationContext() ?? [];
+        // add another group to normalization group
+        $context['groups'][] = 'review:list:read';
+        
+        return $operation->withNormalizationContext($context);
+    }
+}
+```
+
+> [!NOTE]
+> Operation mutators are executed during metadata loading, the result is stored in cache so runtime logic is prohibited.
+
+---
