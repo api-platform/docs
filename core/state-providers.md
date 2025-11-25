@@ -404,7 +404,7 @@ To declare the service explicitly, you can use the following snippet:
 
 services:
     # ...
-    App\State\BlogPostProvider: ~
+    App\State\BlogPostProvider:
         tags: [ 'api_platform.state_provider' ]
 
 # api/config/services.yaml
