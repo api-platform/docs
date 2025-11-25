@@ -361,8 +361,7 @@ The framework also uses these metadata to serialize and deserialize data from JS
 
 For the sake of simplicity, in this example we used public properties (except for the ID, see below). API Platform (as well
 as Symfony and Doctrine) also supports accessor methods (getters/setters), use them if you want to.
-We used a private property and a getter for the ID to enforce the fact that it is read only (we will let the DBMS generate it). API Platform also has first-grade support for UUIDs. [You should
-probably use them instead of auto-incremented IDs](https://www.clever-cloud.com/blog/engineering/2015/05/20/why-auto-increment-is-a-terrible-idea/).
+We used a private property and a getter for the ID to enforce the fact that it is read only (we will let the DBMS generate it). API Platform also has first-grade support for UUIDs v7. In some cases it is preferable use them instead of auto-incremented IDs.
 
 Because API Platform provides all the infrastructure for us, our API is almost ready!
 
