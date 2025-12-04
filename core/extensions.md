@@ -1,11 +1,8 @@
-# Extensions for Doctrine and Elasticsearch
-
-> [!WARNING]
-> This is not yet available with [Eloquent](https://laravel.com/docs/eloquent), you're welcome to contribute [on GitHub](https://github.com/api-platform/core)
+# Extensions for Doctrine, Eloquent and Elasticsearch
 
 API Platform provides a system to extend queries on items and collections.
 
-Extensions are specific to Doctrine and Elasticsearch-PHP, and therefore, the Doctrine ORM / MongoDB ODM support or the Elasticsearch
+Extensions are specific to Doctrine, Eloquent and Elasticsearch-PHP, and therefore, the Doctrine ORM / MongoDB ODM support, Eloquent support or the Elasticsearch
 reading support must be enabled to use this feature. If you use custom providers it's up to you to implement your own
 extension system or not.
 
@@ -159,6 +156,59 @@ The tags are `api_platform.doctrine_mongodb.odm.aggregation_extension.item` and 
 
 The custom extensions receive the [aggregation builder](https://www.doctrine-project.org/projects/doctrine-mongodb-odm/en/current/reference/aggregation-builder.html),
 used to execute [complex operations on data](https://docs.mongodb.com/manual/aggregation/).
+
+## Custom Eloquent Extension
+
+Custom extensions must implement `ApiPlatform\Laravel\Eloquent\Extension\QueryExtensionInterface` and be tagged with the interface name, so they will be executed both when querying for a collection of items and when querying for an item.
+
+```php
+<?php
+// api/app/Eloquent/OfferExtension.php
+
+namespace App\Eloquent;
+
+use ApiPlatform\Laravel\Eloquent\Extension\QueryExtensionInterface;
+use ApiPlatform\Metadata\Operation;
+use App\Models\Offer;
+use App\Models\User;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\Auth;
+
+final readonly class OfferExtension implements QueryExtensionInterface
+{
+    public function apply(Builder $builder, array $uriVariables, Operation $operation, $context = []): Builder
+    {
+        if (!$builder->getModel() instanceof Offer) {
+            return $builder;
+        }
+        
+        if (!$builder->getModel() instanceof Offer || !($user = Auth::user()) instanceof User || $user->is_admin) {
+            return $builder;
+        }
+        
+        return $builder->where('user_id', $user->id);
+    }
+}
+```
+
+```php
+<?php
+// api/app/Providers/AppServiceProvider.php
+
+namespace App\Providers;
+
+use ApiPlatform\Laravel\Eloquent\Extension\QueryExtensionInterface;
+use App\Eloquent\OfferExtension;
+use Illuminate\Support\ServiceProvider;
+
+class AppServiceProvider extends ServiceProvider
+{
+    public function register(): void
+    {
+        $this->app->tag([OfferExtension::class], QueryExtensionInterface::class);
+    }
+}
+```
 
 ## Custom Elasticsearch Extension
 

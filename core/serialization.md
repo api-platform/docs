@@ -37,7 +37,7 @@ JSON-LD, or JavaScript Object Notation for Linked Data, is a method of encoding 
 
 <p align="center" class="symfonycasts"><a href="https://symfonycasts.com/screencast/api-platform/serialization-groups?cid=apip"><img src="../symfony/images/symfonycasts-player.png" alt="Serialization Groups screencast"><br>Watch the Serialization Groups screencast</a></p>
 
-API Platform allows you to specify the `$context` variable used by the Symfony Serializer. This variable is an associative array that has a handy `groups` key allowing you to choose which attributes of the resource are exposed during the normalization (read) and denormalization (write) processes.
+API Platform allows you to specify the `$context` variable used by the Symfony Serializer. This variable is an associative array that has a handy `groups` key allowing you to choose which properties of the resource are exposed during the normalization (read) and denormalization (write) processes.
 It relies on the [serialization (and deserialization) groups](https://symfony.com/doc/current/components/serializer.html#attributes-groups)
 feature of the Symfony Serializer component.
 
