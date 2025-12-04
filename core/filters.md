@@ -25,6 +25,34 @@ The recommended way to define parameters is by using Parameter attributes direct
 * `ApiPlatform\Metadata\QueryParameter`: For URL query parameters (e.g., `?name=value`).
 * `ApiPlatform\Metadata\HeaderParameter`: For HTTP headers (e.g., `Custom-Header: value`).
 
+### List of Available Filters
+
+When defining a `QueryParameter`, you must specify the filtering logic using the `filter` option. 
+
+Here is a list of available filters you can use. You can pass the filter class name (recommended) or a new instance:
+
+*   **`DateFilter`**: For filtering by date intervals (e.g., `?createdAt[after]=...`).
+    *   Usage: `new QueryParameter(filter: DateFilter::class)`
+*   **`ExactFilter`**: For exact value matching.
+    *   Usage: `new QueryParameter(filter: ExactFilter::class)`
+*   **`PartialSearchFilter`**: For partial string matching (SQL `LIKE %...%`).
+    *   Usage: `new QueryParameter(filter: PartialSearchFilter::class)`
+*   **`IriFilter`**: For filtering by IRIs (e.g., relations).
+    *   Usage: `new QueryParameter(filter: IriFilter::class)`
+*   **`BooleanFilter`**: For boolean field filtering.
+    *   Usage: `new QueryParameter(filter: BooleanFilter::class)`
+*   **`NumericFilter`**: For numeric field filtering.
+    *   Usage: `new QueryParameter(filter: NumericFilter::class)`
+*   **`RangeFilter`**: For range-based filtering (e.g., prices between X and Y).
+    *   Usage: `new QueryParameter(filter: RangeFilter::class)`
+*   **`ExistsFilter`**: For checking existence of nullable values.
+    *   Usage: `new QueryParameter(filter: ExistsFilter::class)`
+*   **`OrderFilter`**: For sorting results.
+    *   Usage: `new QueryParameter(filter: OrderFilter::class)`
+
+> [!TIP]
+> Always check the specific documentation for your persistence layer (Doctrine ORM, MongoDB ODM, Laravel Eloquent) to see the exact namespace and available options for these filters.
+
 You can declare a parameter on the resource class to make it available for all its operations:
 
 ```php
@@ -70,6 +98,42 @@ class Friend
     // ...
 }
 ```
+
+### Using Filters with DateTime Properties
+
+When working with `DateTime` or `DateTimeImmutable` properties, the system might default to exact matching. To enable date ranges (e.g., `after`, `before`), you must explicitly use the `DateFilter`:
+
+```php
+<?php
+// api/src/Entity/Event.php
+namespace App\Entity;
+
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\QueryParameter;
+use ApiPlatform\Doctrine\Orm\Filter\DateFilter;
+
+#[ApiResource(operations: [
+    new GetCollection(
+        parameters: [
+            'date[:property]' => new QueryParameter(
+                // Use the class string to leverage the service container (recommended)
+                filter: DateFilter::class, 
+                properties: ['startDate', 'endDate']
+            )
+        ]
+    )
+])]
+class Event
+{
+    // ...
+}
+```
+
+This configuration allows clients to filter events by date ranges using queries like:
+
+  * `/events?date[startDate][after]=2023-01-01`
+  * `/events?date[endDate][before]=2023-12-31`
 
 ### Filtering a Single Property
 
