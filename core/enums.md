@@ -26,8 +26,8 @@ By default, API Platform will automatically generate `GET` and `GET Collection` 
 
 ### Default Operations and Identifiers
 
--   **Collection**: `GET /statuses` will return a collection of all enum cases.
--   **Item**: `GET /statuses/{value}` will return a single enum case based on its `value`.
+- **Collection**: `GET /statuses` will return a collection of all enum cases.
+- **Item**: `GET /statuses/{value}` will return a single enum case based on its `value`.
 
 Example `GET /statuses` response:
 
@@ -87,6 +87,7 @@ enum Audit: string
     }
 }
 ```
+
 #### Adding Custom Properties
 
 You can add custom properties to your enum resource by defining public methods and marking them with `#[ApiProperty]`:

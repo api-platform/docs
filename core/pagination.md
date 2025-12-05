@@ -748,4 +748,3 @@ class BookRepository extends ServiceEntityRepository
     }
 }
 ```
-

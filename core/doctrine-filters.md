@@ -32,6 +32,7 @@ class Book {
     // ...
 }
 ```
+
 > [!TIP]
 > This filter can be also defined directly on a specific operation like `#[GetCollection(...)])` for finer
 > control, like the following code:
@@ -73,7 +74,7 @@ services:
 
 > [!WARNING]
 > Its discouraged to use a filter with properties in the dependency injection as it may conflict with how
-> `QueryParameter` works. We recommend to use a per-parameter filter or to use the :property placeholder with a defined 
+> `QueryParameter` works. We recommend to use a per-parameter filter or to use the :property placeholder with a defined
 > `filterContext` specifying your strategy for a given set of parameters.
 
 We're linking the filter `offer.date_filter` with the resource like this:
@@ -104,6 +105,7 @@ services all begin with `api_platform.doctrine_mongodb.odm`.
 ### Built-in new Search Filters since API Platform >= 4.2
 
 To add some search filters, choose over this new list:
+
 - [IriFilter](#iri-filter) (filter on IRIs)
 - [ExactFilter](#exact-filter) (filter with exact value)
 - [PartialSearchFilter](#partial-search-filter) (filter using a `LIKE %value%`)
@@ -505,7 +507,6 @@ class Offer
 > [!TIP]
 > For other syntaxes, for e.g., if you want to new syntax with the ApiResource attribute take a look [here](#introduction).
 
-
 ## Boolean Filter
 
 The boolean filter allows you to search on boolean fields and values.
@@ -594,7 +595,7 @@ Syntax: `?property[<lt|gt|lte|gte|between>]=value`
 
 Enable the filter:
 
-### Range Filter using the QueryParameter Syntax 
+### Range Filter using the QueryParameter Syntax
 
 ```php
 <?php
@@ -998,7 +999,6 @@ It means that the filter will be **silently** ignored if the property:
 - it is not enabled
 - has an invalid value
 
-
 ## Decorate a Doctrine filter using Symfony
 
 A filter that implements the `ApiPlatform\Doctrine\Common\Filter\PropertyAwareFilterInterface` interface can be decorated:
@@ -1309,6 +1309,7 @@ class MyCustomFilter implements FilterInterface
     }
 }
 ```
+
 #### Implementing a Custom ORM Filter
 
 Let's create a concrete filter that allows fetching entities based on the month of a date field (for e.g., `createdAt`).
@@ -1396,8 +1397,8 @@ This allows delegating validation to API Platform, respecting the [SOLID Princip
 >
 > You can see how this works directly in our code components:
 >
-> * The `ParameterValidatorProvider` for **Symfony** can be found [here](https://github.com/api-platform/core/blob/c9692b509d5b641104addbadb349b9bcab83e251/src/Symfony/Validator/State/ParameterValidatorProvider.php).
-> * The `ParameterValidatorProvider` for **Laravel** is located [here](https://github.com/api-platform/core/blob/c9692b509d5b641104addbadb349b9bcab83e251/src/Laravel/State/ParameterValidatorProvider.php).
+> - The `ParameterValidatorProvider` for **Symfony** can be found [here](https://github.com/api-platform/core/blob/c9692b509d5b641104addbadb349b9bcab83e251/src/Symfony/Validator/State/ParameterValidatorProvider.php).
+> - The `ParameterValidatorProvider` for **Laravel** is located [here](https://github.com/api-platform/core/blob/c9692b509d5b641104addbadb349b9bcab83e251/src/Laravel/State/ParameterValidatorProvider.php).
 >
 > Additionally, we filter out empty values within our `ParameterExtension` classes. For instance, the **Doctrine ORM**
 > `ParameterExtension` [handles this filtering here](https://github.com/api-platform/core/blob/c9692b509d5b641104addbadb349b9bcab83e251/src/Doctrine/Orm/Extension/ParameterExtension.php#L51C13-L53C14).
@@ -1576,6 +1577,7 @@ class MonthFilter implements FilterInterface
     }
 }
 ```
+
 #### Implementing a Custom ODM Filter
 
 Let's create a concrete filter that allows fetching entities based on the month of a date field (for e.g., `createdAt`).
@@ -1666,8 +1668,8 @@ This allows delegating validation to API Platform, respecting the [SOLID Princip
 >
 > You can see how this works directly in our code components:
 >
-> * The `ParameterValidatorProvider` for **Symfony** can be found [here](https://github.com/api-platform/core/blob/c9692b509d5b641104addbadb349b9bcab83e251/src/Symfony/Validator/State/ParameterValidatorProvider.php).
-> * The `ParameterValidatorProvider` for **Laravel** is located [here](https://github.com/api-platform/core/blob/c9692b509d5b641104addbadb349b9bcab83e251/src/Laravel/State/ParameterValidatorProvider.php).
+> - The `ParameterValidatorProvider` for **Symfony** can be found [here](https://github.com/api-platform/core/blob/c9692b509d5b641104addbadb349b9bcab83e251/src/Symfony/Validator/State/ParameterValidatorProvider.php).
+> - The `ParameterValidatorProvider` for **Laravel** is located [here](https://github.com/api-platform/core/blob/c9692b509d5b641104addbadb349b9bcab83e251/src/Laravel/State/ParameterValidatorProvider.php).
 >
 > Additionally, we filter out empty values within our `ParameterExtension` classes. For instance, the **Doctrine ODM**
 > `ParameterExtension` [handles this filtering here](https://github.com/api-platform/core/blob/c9692b509d5b641104addbadb349b9bcab83e251/src/Doctrine/Odm/Extension/ParameterExtension.php#L50-L52).

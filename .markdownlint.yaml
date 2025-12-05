@@ -1,0 +1,9 @@
+---
+MD013:
+  line_length: 400
+no-inline-html:
+  allowed_elements: [a, p, img, br, code-selector]
+MD046:
+  style: fenced
+MD004:
+  style: dash

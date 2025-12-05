@@ -17,6 +17,7 @@ We begin by installing the bundle:
 ```console
 composer require lexik/jwt-authentication-bundle
 ```
+
 Then we need to generate the public and private keys used for signing JWT tokens.
 
 You can generate them by using this command:

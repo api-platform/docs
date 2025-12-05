@@ -137,6 +137,7 @@ import { parseHydraDocumentation } from '@api-platform/api-doc-parser';
 
 parseHydraDocumentation('https://demo.api-platform.com').then(({api}) => console.log(api));
 ```
+
 This example fetches Hydra documentation from `https://demo.api-platform.com`, parses it, and logs the resulting API
 structure. The `parseHydraDocumentation` method is particularly useful for building metadata-driven clients or handling advanced API interactions.
 

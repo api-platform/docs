@@ -225,7 +225,6 @@ resources:
 
 </code-selector>
 
-
 ## Hooking Custom Permission Checks Using Voters
 
 The easiest and recommended way to hook custom access control logic is [to write Symfony Voter classes](https://symfony.com/doc/current/security/voters.html). Your custom voters will automatically be used in security expressions through the `is_granted()` function.

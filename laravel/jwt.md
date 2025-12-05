@@ -116,5 +116,3 @@ class AuthenticationTest extends TestCase
     }
 }
 ```
-
-

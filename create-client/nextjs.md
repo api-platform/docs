@@ -16,30 +16,39 @@ If you use API Platform, jump to the next section!
 Alternatively, create a Next.js application by executing:
 
 - Pnpm (recommended)
+
     ```console
     pnpm create next-app --typescript
     ```
+
 - Npm
+
     ```console
     npm init next-app --typescript
     ```
+
 - Yarn
+
     ```console
     yarn reate next-app --typescript
     ```
 
-
 Install the required dependencies:
 
 - Pnpm (recommended)
+
     ```console
     pnpm install isomorphic-unfetch formik react-query
     ```
+
 - Npm
+
     ```console
     npm install isomorphic-unfetch formik react-query
     ```
+
 - Yarn
+
     ```console
     yarn add isomorphic-unfetch formik react-query
     ```
@@ -62,14 +71,19 @@ Omit the resource flag to generate files for all resource types exposed by the A
 Or if you don't use the standalone installation, run the following command instead:
 
 - Pnpm (recommended)
+
     ```console
     pnpm create @api-platform/client https://demo.api-platform.com . --generator next --resource book
     ```
+
 - Npm
+
     ```console
     npm init @api-platform/client https://demo.api-platform.com . -- --generator next --resource book
     ```
+
 - Yarn
+
     ```console
     yarn create @api-platform/client https://demo.api-platform.com . --generator next --resource book
     ```
@@ -101,14 +115,19 @@ export default App;
 You can launch the server with:
 
 - Pnpm (recommended)
+
     ```console
     pnpm dev
     ```
+
 - Npm
+
     ```console
     npm run dev
     ```
+
 - Yarn
+
     ```console
     yarn dev
     ```

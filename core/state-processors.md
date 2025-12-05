@@ -24,6 +24,7 @@ process the data for a given resource will be used.
 ## Creating a Custom State Processor
 
 ### Custom State Processor with Symfony
+
 If the [Symfony MakerBundle](https://symfony.com/doc/current/bundles/SymfonyMakerBundle) is installed in your project, you can use the following command to generate a custom state processor easily:
 
 ```console
@@ -80,7 +81,9 @@ class BlogPost {}
 ```
 
 ### Custom State Processor with Laravel
+
 Using [Laravel Artisan Console](https://laravel.com/docs/artisan), you can generate a custom state processor easily with the following command:
+
 ```console
 php artisan make:state-processor
 ```
@@ -137,6 +140,7 @@ class BlogPost {}
 ## Hooking into the Built-In State Processors
 
 ### Symfony State Processor mechanism
+
 If you want to execute custom business logic before or after persistence, this can be achieved by using [composition](https://en.wikipedia.org/wiki/Object_composition).
 
 Here is an implementation example which uses [Symfony Mailer](https://symfony.com/doc/current/mailer.html) to send new users a welcome email after a REST `POST` or GraphQL `create` operation, in a project using the native Doctrine ORM state processor:
@@ -212,6 +216,7 @@ class User {}
 ```
 
 ### Laravel State Processor mechanism
+
 If you want to execute custom business logic before or after persistence, this can be achieved by using [composition](https://en.wikipedia.org/wiki/Object_composition).
 
 Here is an implementation example which uses [Laravel Mail](https://laravel.com/docs/mail) to send new users a welcome email after a REST `POST` or GraphQL `create` operation, in a project using the native Eloquent ORM state processor:

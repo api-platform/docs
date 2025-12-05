@@ -30,6 +30,7 @@ class Book {
     // ...
 }
 ```
+
 > [!TIP]
 > This filter can be also defined directly on a specific operation like `#[GetCollection(...)])` for finer
 > control, like the following code:

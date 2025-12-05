@@ -21,33 +21,33 @@ You can declare parameters on a resource class to apply them to all operations, 
 
 The recommended way to define parameters is by using Parameter attributes directly on a resource class or on an operation. API Platform provides two main types of Parameter attributes based on their location (matching the OpenAPI `in` configuration):
 
-* `ApiPlatform\Metadata\QueryParameter`: For URL query parameters (e.g., `?name=value`).
-* `ApiPlatform\Metadata\HeaderParameter`: For HTTP headers (e.g., `Custom-Header: value`).
+- `ApiPlatform\Metadata\QueryParameter`: For URL query parameters (e.g., `?name=value`).
+- `ApiPlatform\Metadata\HeaderParameter`: For HTTP headers (e.g., `Custom-Header: value`).
 
 ### List of Available Filters
 
-When defining a `QueryParameter`, you must specify the filtering logic using the `filter` option. 
+When defining a `QueryParameter`, you must specify the filtering logic using the `filter` option.
 
 Here is a list of available filters you can use. You can pass the filter class name (recommended) or a new instance:
 
-*   **`DateFilter`**: For filtering by date intervals (e.g., `?createdAt[after]=...`).
-    *   Usage: `new QueryParameter(filter: DateFilter::class)`
-*   **`ExactFilter`**: For exact value matching.
-    *   Usage: `new QueryParameter(filter: ExactFilter::class)`
-*   **`PartialSearchFilter`**: For partial string matching (SQL `LIKE %...%`).
-    *   Usage: `new QueryParameter(filter: PartialSearchFilter::class)`
-*   **`IriFilter`**: For filtering by IRIs (e.g., relations).
-    *   Usage: `new QueryParameter(filter: IriFilter::class)`
-*   **`BooleanFilter`**: For boolean field filtering.
-    *   Usage: `new QueryParameter(filter: BooleanFilter::class)`
-*   **`NumericFilter`**: For numeric field filtering.
-    *   Usage: `new QueryParameter(filter: NumericFilter::class)`
-*   **`RangeFilter`**: For range-based filtering (e.g., prices between X and Y).
-    *   Usage: `new QueryParameter(filter: RangeFilter::class)`
-*   **`ExistsFilter`**: For checking existence of nullable values.
-    *   Usage: `new QueryParameter(filter: ExistsFilter::class)`
-*   **`OrderFilter`**: For sorting results.
-    *   Usage: `new QueryParameter(filter: OrderFilter::class)`
+- **`DateFilter`**: For filtering by date intervals (e.g., `?createdAt[after]=...`).
+  - Usage: `new QueryParameter(filter: DateFilter::class)`
+- **`ExactFilter`**: For exact value matching.
+  - Usage: `new QueryParameter(filter: ExactFilter::class)`
+- **`PartialSearchFilter`**: For partial string matching (SQL `LIKE %...%`).
+  - Usage: `new QueryParameter(filter: PartialSearchFilter::class)`
+- **`IriFilter`**: For filtering by IRIs (e.g., relations).
+  - Usage: `new QueryParameter(filter: IriFilter::class)`
+- **`BooleanFilter`**: For boolean field filtering.
+  - Usage: `new QueryParameter(filter: BooleanFilter::class)`
+- **`NumericFilter`**: For numeric field filtering.
+  - Usage: `new QueryParameter(filter: NumericFilter::class)`
+- **`RangeFilter`**: For range-based filtering (e.g., prices between X and Y).
+  - Usage: `new QueryParameter(filter: RangeFilter::class)`
+- **`ExistsFilter`**: For checking existence of nullable values.
+  - Usage: `new QueryParameter(filter: ExistsFilter::class)`
+- **`OrderFilter`**: For sorting results.
+  - Usage: `new QueryParameter(filter: OrderFilter::class)`
 
 > [!TIP]
 > Always check the specific documentation for your persistence layer (Doctrine ORM, MongoDB ODM, Laravel Eloquent) to see the exact namespace and available options for these filters.
@@ -131,8 +131,8 @@ class Event
 
 This configuration allows clients to filter events by date ranges using queries like:
 
-  * `/events?date[startDate][after]=2023-01-01`
-  * `/events?date[endDate][before]=2023-12-31`
+- `/events?date[startDate][after]=2023-01-01`
+- `/events?date[endDate][before]=2023-12-31`
 
 ### Filtering a Single Property
 
@@ -158,6 +158,7 @@ class Issue {}
 ```
 
 This will generate the following Hydra `IriTemplateMapping`:
+
 ```json
 {
   "@context": "http://www.w3.org/ns/hydra/context.jsonld",
@@ -275,6 +276,7 @@ final class PartialSearchFilter implements FilterInterface
 ```
 
 **How it works:**
+
 1. API Platform creates individual parameters: `search[title]` and `search[author]` only
 2. URLs like `/books?search[description]=foo` are ignored (no parameter exists)
 3. Each parameter calls the filter with its specific property via `$parameter->getProperty()`
@@ -386,30 +388,30 @@ Here is the list of validation constraints that are automatically inferred from 
 
 ### From OpenAPI Definition
 
-* **`allowEmptyValue`**: If set to `false`, a `Symfony\Component\Validator\Constraints\NotBlank` constraint is added.
+- **`allowEmptyValue`**: If set to `false`, a `Symfony\Component\Validator\Constraints\NotBlank` constraint is added.
 
 ### From JSON Schema (`schema` property)
 
-* **`minimum`** / **`maximum`**:
-  * If both are set, a `Symfony\Component\Validator\Constraints\Range` constraint is added.
-  * If only `minimum` is set, a `Symfony\Component\Validator\Constraints\GreaterThanOrEqual` constraint is added.
-  * If only `maximum` is set, a `Symfony\Component\Validator\Constraints\LessThanOrEqual` constraint is added.
-* **`exclusiveMinimum`** / **`exclusiveMaximum`**:
-  * If `exclusiveMinimum` is used, it becomes a `Symfony\Component\Validator\Constraints\GreaterThan` constraint.
-  * If `exclusiveMaximum` is used, it becomes a `Symfony\Component\Validator\Constraints\LessThan` constraint.
-* **`pattern`**: Becomes a `Symfony\Component\Validator\Constraints\Regex` constraint.
-* **`minLength`** / **`maxLength`**: Becomes a `Symfony\Component\Validator\Constraints\Length` constraint.
-* **`multipleOf`**: Becomes a `Symfony\Component\Validator\Constraints\DivisibleBy` constraint.
-* **`enum`**: Becomes a `Symfony\Component\Validator\Constraints\Choice` constraint with the specified values.
-* **`minItems`** / **`maxItems`**: Becomes a `Symfony\Component\Validator\Constraints\Count` constraint (for arrays).
-* **`uniqueItems`**: If `true`, becomes a `Symfony\Component\Validator\Constraints\Unique` constraint (for arrays).
-* **`type`**:
-  * If set to `'array'`, a `Symfony\Component\Validator\Constraints\Type('array')` constraint is added.
-  * If `castToNativeType` is also `true`, the schema `type` will add a `Symfony\Component\Validator\Constraints\Type` constraint for `'boolean'`, `'integer'`, and `'number'` (as `float`).
+- **`minimum`** / **`maximum`**:
+  - If both are set, a `Symfony\Component\Validator\Constraints\Range` constraint is added.
+  - If only `minimum` is set, a `Symfony\Component\Validator\Constraints\GreaterThanOrEqual` constraint is added.
+  - If only `maximum` is set, a `Symfony\Component\Validator\Constraints\LessThanOrEqual` constraint is added.
+- **`exclusiveMinimum`** / **`exclusiveMaximum`**:
+  - If `exclusiveMinimum` is used, it becomes a `Symfony\Component\Validator\Constraints\GreaterThan` constraint.
+  - If `exclusiveMaximum` is used, it becomes a `Symfony\Component\Validator\Constraints\LessThan` constraint.
+- **`pattern`**: Becomes a `Symfony\Component\Validator\Constraints\Regex` constraint.
+- **`minLength`** / **`maxLength`**: Becomes a `Symfony\Component\Validator\Constraints\Length` constraint.
+- **`multipleOf`**: Becomes a `Symfony\Component\Validator\Constraints\DivisibleBy` constraint.
+- **`enum`**: Becomes a `Symfony\Component\Validator\Constraints\Choice` constraint with the specified values.
+- **`minItems`** / **`maxItems`**: Becomes a `Symfony\Component\Validator\Constraints\Count` constraint (for arrays).
+- **`uniqueItems`**: If `true`, becomes a `Symfony\Component\Validator\Constraints\Unique` constraint (for arrays).
+- **`type`**:
+  - If set to `'array'`, a `Symfony\Component\Validator\Constraints\Type('array')` constraint is added.
+  - If `castToNativeType` is also `true`, the schema `type` will add a `Symfony\Component\Validator\Constraints\Type` constraint for `'boolean'`, `'integer'`, and `'number'` (as `float`).
 
 ### From the Parameter's `required` Property
 
-* **`required`**: If set to `true`, a `Symfony\Component\Validator\Constraints\NotNull` constraint is added.
+- **`required`**: If set to `true`, a `Symfony\Component\Validator\Constraints\NotNull` constraint is added.
 
 ### Strict Parameter Validation
 
@@ -533,6 +535,7 @@ The `IriConverterParameterProvider` supports the following options in `extraProp
 ### `ReadLinkParameterProvider`
 
 This provider must be enabled before it can be used.
+
 ```
 api_platform:
   enable_link_security: true
@@ -580,6 +583,7 @@ class WithParameter
 ```
 
 The provider will:
+
 - Take the parameter value (e.g., a UUID or identifier)
 - Use the `resource_class` to determine which resource to load
 - Optionally use the `uri_template` from `extraProperties` to construct the proper operation for loading the resource
@@ -790,8 +794,8 @@ class SecureResource
 ```
 
 In the security expressions, you have access to:
+
 - Parameter values by their key name (e.g., `auth`, `secret`)
 - Standard security functions like `is_granted()`
 - The current user via `user`
 - Request object via `request`
-

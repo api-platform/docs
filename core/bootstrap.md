@@ -22,5 +22,3 @@ composer require \
     symfony/routing \
     symfony/validator
 ```
-
-

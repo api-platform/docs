@@ -11,4 +11,3 @@ This repository contains all the API Platform documentation resources.
 ## Contributing
 
 Please check our [CONTRIBUTING file](/CONTRIBUTING.md) to contribute.
-

@@ -379,7 +379,6 @@ export const BooksShow = () => (
 
 `<ShowGuesser>` accepts all props accepted by both React Admin [`<Show>` component](https://marmelab.com/react-admin/Show.html) and [`<SimpleShowLayout>` component](https://marmelab.com/react-admin/SimpleShowLayout.html).
 
-
 ## FieldGuesser
 
 Renders a field according to its type, using the [schema analyzer](./components.md#hydra-schema-analyzer).
@@ -445,4 +444,3 @@ You can also pass props that are specific to a certain input component. For exam
 ```tsx
 <InputGuesser source="description" multiline />
 ```
-

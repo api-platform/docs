@@ -224,7 +224,6 @@ return [
 ];
 ```
 
-
 In addition to the cache invalidation mechanism, you may want to [use HTTP/2 Server Push to pre-emptively send relations
 to the client](push-relations.md).
 
@@ -341,6 +340,7 @@ with a huge collection. [Here are some examples to index LIKE filters](https://u
 ### Eager Loading
 
 By default, Doctrine comes with [lazy loading](https://www.doctrine-project.org/projects/doctrine-orm/en/current/reference/working-with-objects.html#by-lazy-loading)
+
 - usually a killer time-saving feature but also a performance killer with large applications.
 
 Fortunately, Doctrine offers another approach to solve this problem: [eager loading](https://www.doctrine-project.org/projects/doctrine-orm/en/current/reference/working-with-objects.html#by-eager-loading).
@@ -530,7 +530,7 @@ services:
       - BLACKFIRE_DISABLE_LEGACY_PORT=1
 ```
 
-2. Add your Blackfire.io ID and server token to your `.env` file at the root of your project (be sure not to commit this to a public repository):
+1. Add your Blackfire.io ID and server token to your `.env` file at the root of your project (be sure not to commit this to a public repository):
 
 ```console
 BLACKFIRE_SERVER_ID=xxxxxxxxxx
@@ -544,7 +544,7 @@ export BLACKFIRE_SERVER_ID=xxxxxxxxxx
 export BLACKFIRE_SERVER_TOKEN=xxxxxxxxxx
 ```
 
-3. Install and configure the Blackfire probe in the app container, by adding the following to your `./Dockerfile`:
+1. Install and configure the Blackfire probe in the app container, by adding the following to your `./Dockerfile`:
 
 ```dockerfile
         RUN version=$(php -r "echo PHP_MAJOR_VERSION.PHP_MINOR_VERSION.(PHP_ZTS ? '-zts' : '');") \
@@ -557,7 +557,7 @@ export BLACKFIRE_SERVER_TOKEN=xxxxxxxxxx
             && rm -rf /tmp/blackfire /tmp/blackfire-probe.tar.gz
 ```
 
-4. Rebuild and restart all your containers
+1. Rebuild and restart all your containers
 
 ```console
 docker compose build

@@ -21,6 +21,7 @@ composer require elasticsearch/elasticsearch:^8.4
 ```
 
 For Elasticsearch 7:
+
 ```console
 composer require elasticsearch/elasticsearch:^7.11
 ```

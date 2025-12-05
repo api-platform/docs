@@ -11,7 +11,6 @@ With the Laravel variant, a state provider using [Eloquent ORM](https://laravel.
 
 The ORM providers are enabled by default, based on your framework variant (Eloquent or Doctrine will be set up).
 
-
 These state providers natively support paged collections and filters. They can be used as-is and are perfectly suited to common uses.
 
 However, you sometimes want to retrieve data from other sources such as another persistence layer or a webservice.
@@ -21,6 +20,7 @@ retrieve data for a given resource will be used.
 To do so you need to implement the `ApiPlatform\State\ProviderInterface`.
 
 In the following examples we will create custom state providers for Symfony entities and Laravel models:
+
 - For Symfony we will create an entity class called `App\Entity\BlogPost`.
 - For Laravel, we will create a model class called `App\Models\BlogPost`.
 
@@ -390,7 +390,6 @@ use App\State\BookRepresentationProvider;
 #[Get(output: AnotherRepresentation::class, provider: BookRepresentationProvider::class)]
 class Book {}
 ```
-
 
 ## Registering Services Without Autowiring (only for the Symfony variant)
 

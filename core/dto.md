@@ -14,7 +14,6 @@ This reference covers three implementation strategies:
     * [Automated Mapped Inputs: Using input DTOs with stateOptions for automated Write operations.](#2-automated-mapped-inputs-outputs)
     * [Custom Business Logic: Using input DTOs with custom State Processors for specific business actions.](#3-custom-business-logic-custom-processor)
 
-
 ## 1. The DTO Resource (State Options)
 
 > [!WARNING]
@@ -130,7 +129,6 @@ The `ObjectMapperProvider` delegates fetching the data to the underlying Doctrin
 **Write (POST/PUT/PATCH):**
 
 The `ObjectMapperProcessor` receives the deserialized Input DTO. It uses `$objectMapper->map($inputDto, $entityClass)` to transform the input into an Entity instance. It then delegates to the underlying Doctrine processor (to persist the Entity). Finally, it maps the persisted Entity back to the Output DTO Resource.
-
 
 ## 2. Automated Mapped Inputs & Outputs
 

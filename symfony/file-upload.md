@@ -411,6 +411,7 @@ This example will use a custom `multipart/form-data` decoder to deserialize the 
 > Make sure to encode the fields in JSON before sending them.
 
 For instance, you could do something like this:
+
 ```js
 async function uploadBook(file) {
     const bookMetadata = {

@@ -30,7 +30,7 @@ api_platform:
 
 ## Creating a Decoder
 
-The Symfony Serializer (used by API Platform) does not decode `application/x-www-form-urlencoded` by default. 
+The Symfony Serializer (used by API Platform) does not decode `application/x-www-form-urlencoded` by default.
 You need to create a custom decoder that implements DecoderInterface to handle this format.  
 
 ```php

@@ -34,6 +34,7 @@ api_platform:
   defaults:
     url_generation_strategy: !php/const ApiPlatform\Metadata\UrlGeneratorInterface::ABS_URL
 ```
+
 ### Configure URL Generation Globally using Laravel
 
 ```php

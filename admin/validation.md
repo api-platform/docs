@@ -82,15 +82,15 @@ export const BookEdit = () => (
 
 React Admin already comes with several [built-in validators](https://marmelab.com/react-admin/Validation.html#per-input-validation-built-in-field-validators), such as:
 
-* `required(message)` if the field is mandatory,
-* `minValue(min, message)` to specify a minimum value for integers,
-* `maxValue(max, message)` to specify a maximum value for integers,
-* `minLength(min, message)` to specify a minimum length for strings,
-* `maxLength(max, message)` to specify a maximum length for strings,
-* `number(message)` to check that the input is a valid number,
-* `email(message)` to check that the input is a valid email address,
-* `regex(pattern, message)` to validate that the input matches a regular expression,
-* `choices(list, message)` to validate that the input is within a given list
+- `required(message)` if the field is mandatory,
+- `minValue(min, message)` to specify a minimum value for integers,
+- `maxValue(max, message)` to specify a maximum value for integers,
+- `minLength(min, message)` to specify a minimum length for strings,
+- `maxLength(max, message)` to specify a maximum length for strings,
+- `number(message)` to check that the input is a valid number,
+- `email(message)` to check that the input is a valid email address,
+- `regex(pattern, message)` to validate that the input matches a regular expression,
+- `choices(list, message)` to validate that the input is within a given list
 
 React Admin also supports [Global Validation](https://marmelab.com/react-admin/Validation.html#global-validation) (at the form level).
 

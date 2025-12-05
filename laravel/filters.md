@@ -244,7 +244,9 @@ class Book extends Model
     }
 }
 ```
+
 Examples:
+
 - `/books?published=true`
 - `/books?published=1`
 - `/books?published=false`
@@ -362,6 +364,7 @@ final class MonthFilter implements FilterInterface
 ```
 
 We can now use it in our resources and model like other filters, for example, as follows:
+
 ```php
 <?php
 
@@ -383,5 +386,6 @@ class Invoice
     // ...
 }
 ```
+
 And that's it! ✅ Your filter is operational. A request like `GET /invoices?createdAtMonth=7` will now correctly return
 the invoices from July!

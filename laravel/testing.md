@@ -236,6 +236,7 @@ By default, with Laravel, PHPUnit is already a dependency in your project. You m
 section of your `composer.json`.
 
 You can test the PHPUnit installation by running:
+
 ```console
 ./vendor/bin/phpunit --version
 ```

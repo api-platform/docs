@@ -24,13 +24,17 @@ By contributing to this project, you agree to abide by our [Code of Conduct](htt
 1. Fork this repository by clicking the "Fork" button at the top right of the `api-platform/docs` repository page.
 
 2. Clone the forked repository to your local machine:
+
    ```console
      git clone https://github.com/your-username/repository-name.git
    ```
+
 3. Create a new branch for your contribution:
+
    ```console
      git switch -c docs-your-branch-name
    ```
+
 4. Commit and push your changes
 5. Submit a Pull Request. You must decide on what branch your changes will be based depending of the nature of the change.
    See [the dedicated documentation entry](https://api-platform.com/docs/extra/releases/).

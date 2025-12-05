@@ -277,7 +277,6 @@ Let's customize this `ReviewEdit` component to:
 - make the `body` input multiline
 - mark the `publicationDate` input as read-only
 
-
 ```diff
 export const ReviewEdit = () => (
     <EditGuesser>
