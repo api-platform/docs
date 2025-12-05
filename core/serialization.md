@@ -1,5 +1,7 @@
 # The Serialization Process
 
+For documentation on how to expose PHP 8.1+ Enums as API resources, refer to the [Enums documentation](enums.md).
+
 ## Overall Process
 
 API Platform embraces and extends the Symfony Serializer Component to transform PHP entities in (hypermedia) API responses.

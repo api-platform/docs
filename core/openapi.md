@@ -345,6 +345,7 @@ This will produce the following Swagger documentation:
 ```
 
 To pass a context to the OpenAPI **v2** generator, use the `swaggerContext` attribute (notice the prefix: `swagger` instead of `openapi`).
+For documentation on how to expose PHP 8.1+ Enums as API resources, refer to the [Enums documentation](enums.md).
 
 ## Disabling an Operation From OpenAPI Documentation
 
