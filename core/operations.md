@@ -1,31 +1,36 @@
 # Operations
 
-API Platform relies on the concept of operations. Operations can be applied to a resource exposed by the API. From
-an implementation point of view, an operation is a link between a resource, a route and its related controller.
+API Platform relies on the concept of operations. Operations can be applied to a resource exposed by
+the API. From an implementation point of view, an operation is a link between a resource, a route
+and its related controller.
 
 <p align="center" class="symfonycasts"><a href="https://symfonycasts.com/screencast/api-platform/operations?cid=apip"><img src="../symfony/images/symfonycasts-player.png" alt="Operations screencast"><br>Watch the Operations screencast</a></p>
 
-API Platform automatically registers typical [CRUD](https://en.wikipedia.org/wiki/Create,_read,_update_and_delete) operations
-and describes them in the exposed documentation (Hydra and Swagger). It also creates and registers routes
-for these operations in the Symfony routing system, if available, or in the Laravel routing system,
-should that be the case.
+API Platform automatically registers typical
+[CRUD](https://en.wikipedia.org/wiki/Create,_read,_update_and_delete) operations and describes them
+in the exposed documentation (Hydra and Swagger). It also creates and registers routes for these
+operations in the Symfony routing system, if available, or in the Laravel routing system, should
+that be the case.
 
-The behavior of built-in operations is briefly presented in the [Getting started](getting-started.md#mapping-the-entities)
-guide.
+The behavior of built-in operations is briefly presented in the
+[Getting started](getting-started.md#mapping-the-entities) guide.
 
-The list of enabled operations can be configured on a per-resource basis. Creating custom operations on specific routes
-is also possible.
+The list of enabled operations can be configured on a per-resource basis. Creating custom operations
+on specific routes is also possible.
 
 There are two types of operations: collection operations and item operations.
 
-Collection operations act on a collection of resources. By default two operations are implemented: `POST` and `GET`. Item
-operations act on an individual resource. Three default operation are defined: `GET`, `DELETE` and `PATCH`. `PATCH` is supported
-with [JSON Merge Patch (RFC 7396)](https://www.rfc-editor.org/rfc/rfc7386), or [using the JSON:API format](https://jsonapi.org/format/#crud-updating), as required by the specification.
+Collection operations act on a collection of resources. By default two operations are implemented:
+`POST` and `GET`. Item operations act on an individual resource. Three default operation are
+defined: `GET`, `DELETE` and `PATCH`. `PATCH` is supported with
+[JSON Merge Patch (RFC 7396)](https://www.rfc-editor.org/rfc/rfc7386), or
+[using the JSON:API format](https://jsonapi.org/format/#crud-updating), as required by the
+specification.
 
 The `PUT` operation is also supported, but is not registered by default.
 
-When the `ApiPlatform\Metadata\ApiResource` annotation is applied to an entity class, the following built-in CRUD
-operations are automatically enabled:
+When the `ApiPlatform\Metadata\ApiResource` annotation is applied to an entity class, the following
+built-in CRUD operations are automatically enabled:
 
 Collection operations:
 
@@ -43,39 +48,41 @@ Item operations:
 | `PATCH`  | no        | Apply a partial modification to an element | yes                   |
 | `DELETE` | no        | Delete an element                          | yes                   |
 
-> [!NOTE]
-> The `PATCH` method must be enabled explicitly in the configuration, refer to the [Content Negotiation](content-negotiation.md) section for more information.
+> [!NOTE] The `PATCH` method must be enabled explicitly in the configuration, refer to the
+> [Content Negotiation](content-negotiation.md) section for more information.
 
 ---
 
-> [!NOTE]
-> With JSON Merge Patch, the [null values will be skipped](https://symfony.com/doc/current/components/serializer.html#skipping-null-values) in the response.
+> [!NOTE] With JSON Merge Patch, the
+> [null values will be skipped](https://symfony.com/doc/current/components/serializer.html#skipping-null-values)
+> in the response.
 
 ---
 
-> [!NOTE]
-> Current `PUT` implementation behaves more or less like the `PATCH` method.
-> Existing properties not included in the payload are **not** removed, their current values are preserved.
-> To remove an existing property, its value must be explicitly set to `null`.
+> [!NOTE] Current `PUT` implementation behaves more or less like the `PATCH` method. Existing
+> properties not included in the payload are **not** removed, their current values are preserved. To
+> remove an existing property, its value must be explicitly set to `null`.
 
 ## Enabling and Disabling Operations
 
-If no operation is specified, all default CRUD operations are automatically registered. It is also possible - and recommended
-for large projects - to define operations explicitly.
+If no operation is specified, all default CRUD operations are automatically registered. It is also
+possible - and recommended for large projects - to define operations explicitly.
 
-Keep in mind that once you explicitly set up an operation, the automatically registered CRUD will no longer be.
-If you declare even one operation manually, such as `#[GET]`, you must declare the others manually as well if you need them.
+Keep in mind that once you explicitly set up an operation, the automatically registered CRUD will no
+longer be. If you declare even one operation manually, such as `#[GET]`, you must declare the others
+manually as well if you need them.
 
-Operations can be configured using attributes, XML or YAML. In the following examples, we enable only the built-in operation
-for the `GET` method for both `collection` and `item` to create a readonly endpoint.
+Operations can be configured using attributes, XML or YAML. In the following examples, we enable
+only the built-in operation for the `GET` method for both `collection` and `item` to create a
+readonly endpoint.
 
-If the operation's name matches a supported HTTP method (`GET`, `POST`, `PUT`, `PATCH` or `DELETE`), the corresponding `method` property
-will be automatically added.
+If the operation's name matches a supported HTTP method (`GET`, `POST`, `PUT`, `PATCH` or `DELETE`),
+the corresponding `method` property will be automatically added.
 
 ---
 
-> [!NOTE]
-> In Symfony we use the term “entities”, while the following documentation is mostly for Laravel “models”.
+> [!NOTE] In Symfony we use the term “entities”, while the following documentation is mostly for
+> Laravel “models”.
 
 <code-selector>
 
@@ -103,10 +110,10 @@ class Book
 ```yaml
 # api/config/api_platform/resources.yaml
 resources:
-  App\Entity\Book:
-    operations:
-      ApiPlatform\Metadata\GetCollection: ~ # nothing more to add if we want to keep the default controller
-      ApiPlatform\Metadata\Get: ~
+    App\Entity\Book:
+        operations:
+            ApiPlatform\Metadata\GetCollection: ~ # nothing more to add if we want to keep the default controller
+            ApiPlatform\Metadata\Get: ~
 ```
 
 ```xml
@@ -156,12 +163,12 @@ class Book
 ```yaml
 # api/config/api_platform/resources.yaml
 resources:
-  App\Entity\Book:
-    operations:
-      ApiPlatform\Metadata\GetCollection:
-        method: GET
-      ApiPlatform\Metadata\Get:
-        method: GET
+    App\Entity\Book:
+        operations:
+            ApiPlatform\Metadata\GetCollection:
+                method: GET
+            ApiPlatform\Metadata\Get:
+                method: GET
 ```
 
 ```xml
@@ -183,21 +190,28 @@ resources:
 
 </code-selector>
 
-API Platform is smart enough to automatically register the applicable Symfony route referencing a built-in CRUD action
-just by specifying the method name as key, or by checking the explicitly configured HTTP method.
+API Platform is smart enough to automatically register the applicable Symfony route referencing a
+built-in CRUD action just by specifying the method name as key, or by checking the explicitly
+configured HTTP method.
 
-By default, API Platform uses the first `Get` operation defined to generate the IRI of an item and the first `GetCollection` operation to generate the IRI of a collection.
+By default, API Platform uses the first `Get` operation defined to generate the IRI of an item and
+the first `GetCollection` operation to generate the IRI of a collection.
 
-If your resource does not have any `Get` operation, API Platform automatically adds an operation to help generating this IRI.
-If your resource has any identifier, this operation will look like `/books/{id}`. But if your resource doesn’t have any identifier, API Platform will use the Skolem format `/.well-known/genid/{id}`.
-Those routes are not exposed from any documentation (for instance OpenAPI), but are anyway declared on the routing system and always return a HTTP 404.
+If your resource does not have any `Get` operation, API Platform automatically adds an operation to
+help generating this IRI. If your resource has any identifier, this operation will look like
+`/books/{id}`. But if your resource doesn’t have any identifier, API Platform will use the Skolem
+format `/.well-known/genid/{id}`. Those routes are not exposed from any documentation (for instance
+OpenAPI), but are anyway declared on the routing system and always return a HTTP 404.
 
 ## Configuring Operations
 
-The URL, the method and the default status code (among other options) can be configured per operation.
+The URL, the method and the default status code (among other options) can be configured per
+operation.
 
-In the next example, both `GET` and `POST` operations are registered with custom URLs. Those will override the URLs generated by default.
-In addition to that, we require the `id` parameter in the URL of the `GET` operation to be an integer, and we configure the status code generated after successful `POST` request to be `301`:
+In the next example, both `GET` and `POST` operations are registered with custom URLs. Those will
+override the URLs generated by default. In addition to that, we require the `id` parameter in the
+URL of the `GET` operation to be an integer, and we configure the status code generated after
+successful `POST` request to be `301`:
 
 <code-selector>
 
@@ -233,21 +247,21 @@ class Book
 ```yaml
 # api/config/api_platform/resources.yaml
 resources:
-  App\Entity\Book:
-    operations:
-      ApiPlatform\Metadata\Post:
-        uriTemplate: '/grimoire'
-        status: 301
-      ApiPlatform\Metadata\Get:
-        uriTemplate: '/grimoire/{id}'
-        requirements:
-          id: '\d+'
-        defaults:
-          color: 'brown'
-        host: '{subdomain}.api-platform.com'
-        schemes: ['https']
-        options:
-          my_option: 'my_option_value'
+    App\Entity\Book:
+        operations:
+            ApiPlatform\Metadata\Post:
+                uriTemplate: "/grimoire"
+                status: 301
+            ApiPlatform\Metadata\Get:
+                uriTemplate: "/grimoire/{id}"
+                requirements:
+                    id: '\d+'
+                defaults:
+                    color: "brown"
+                host: "{subdomain}.api-platform.com"
+                schemes: ["https"]
+                options:
+                    my_option: "my_option_value"
 ```
 
 ```xml
@@ -286,7 +300,10 @@ resources:
 
 </code-selector>
 
-When you do not want to allow access to the resource item (i.e. you don't want a `GET` item operation), instead of omitting the resource item altogether, you can explicitly specify the IRI of the resource item by declaring a `GET` item operation that returns HTTP 404 (Not Found). For example:
+When you do not want to allow access to the resource item (i.e. you don't want a `GET` item
+operation), instead of omitting the resource item altogether, you can explicitly specify the IRI of
+the resource item by declaring a `GET` item operation that returns HTTP 404 (Not Found). For
+example:
 
 <code-selector>
 
@@ -321,16 +338,16 @@ class Book
 ```yaml
 # api/config/api_platform/resources.yaml
 resources:
-  App\Entity\Book:
-    operations:
-      ApiPlatform\Metadata\Post:
-        uriTemplate: '/grimoire'
-        status: 301
-      ApiPlatform\Metadata\Get:
-        uriTemplate: '/grimoire/{id}'
-        controller: ApiPlatform\Action\NotFoundAction
-        read: false
-        output: false
+    App\Entity\Book:
+        operations:
+            ApiPlatform\Metadata\Post:
+                uriTemplate: "/grimoire"
+                status: 301
+            ApiPlatform\Metadata\Get:
+                uriTemplate: "/grimoire/{id}"
+                controller: ApiPlatform\Action\NotFoundAction
+                read: false
+                output: false
 ```
 
 ```xml
@@ -355,9 +372,10 @@ resources:
 
 ## Prefixing All Routes of All Operations
 
-Sometimes it's also useful to put a whole resource into its own "namespace" regarding the URI. Let's say you want to
-put everything that's related to a `Book` into the `library` so that URIs become `library/book/{id}`. In that case
-you don't need to override all the operations to set the path but configure the `routePrefix` attribute for the whole entity instead:
+Sometimes it's also useful to put a whole resource into its own "namespace" regarding the URI. Let's
+say you want to put everything that's related to a `Book` into the `library` so that URIs become
+`library/book/{id}`. In that case you don't need to override all the operations to set the path but
+configure the `routePrefix` attribute for the whole entity instead:
 
 <code-selector>
 
@@ -378,8 +396,8 @@ class Book
 ```yaml
 # api/config/api_platform/resources.yaml
 resources:
-  App\Entity\Book:
-    routePrefix: /library
+    App\Entity\Book:
+        routePrefix: /library
 ```
 
 ```xml
@@ -398,20 +416,20 @@ resources:
 
 ## Defining Which Operation to Use to Generate the IRI
 
-Using multiple operations on your resource, you may want to specify which operation to use to generate the IRI, instead
-of letting API Platform use the first one it finds.
+Using multiple operations on your resource, you may want to specify which operation to use to
+generate the IRI, instead of letting API Platform use the first one it finds.
 
-Let's say you have 2 resources in relationship: `Company` and `User`, where a company has multiple users. You can declare
-the following routes:
+Let's say you have 2 resources in relationship: `Company` and `User`, where a company has multiple
+users. You can declare the following routes:
 
 - `/users`
 - `/users/{id}`
 - `/companies/{companyId}/users`
 - `/companies/{companyId}/users/{id}`
 
-The first routes (`/users...`) are only accessible by the admin, and the others by regular users. Calling
-`/companies/{companyId}/users` should return IRIs matching `/companies/{companyId}/users/{id}` to not expose an admin
-route to regular users.
+The first routes (`/users...`) are only accessible by the admin, and the others by regular users.
+Calling `/companies/{companyId}/users` should return IRIs matching
+`/companies/{companyId}/users/{id}` to not expose an admin route to regular users.
 
 To do so, use the `itemUriTemplate` option only available on `GetCollection` and `Post` operations:
 
@@ -441,22 +459,22 @@ class User
 ```yaml
 # api/config/api_platform/resources.yaml
 resources:
-  App\Entity\User:
-    - operations:
-        ApiPlatform\Metadata\GetCollection: ~
-        ApiPlatform\Metadata\Get: ~
-    - operations:
-        ApiPlatform\Metadata\GetCollection:
-          uriTemplate: /companies/{companyId}/users
-          itemUriTemplate: /companies/{companyId}/users/{id}
-          # ...
-        ApiPlatform\Metadata\Post:
-          uriTemplate: /companies/{companyId}/users
-          itemUriTemplate: /companies/{companyId}/users/{id}
-          # ...
-        ApiPlatform\Metadata\Get:
-          uriTemplate: /companies/{companyId}/users/{id}
-          # ...
+    App\Entity\User:
+        - operations:
+              ApiPlatform\Metadata\GetCollection: ~
+              ApiPlatform\Metadata\Get: ~
+        - operations:
+              ApiPlatform\Metadata\GetCollection:
+                  uriTemplate: /companies/{companyId}/users
+                  itemUriTemplate: /companies/{companyId}/users/{id}
+                  # ...
+              ApiPlatform\Metadata\Post:
+                  uriTemplate: /companies/{companyId}/users
+                  itemUriTemplate: /companies/{companyId}/users/{id}
+                  # ...
+              ApiPlatform\Metadata\Get:
+                  uriTemplate: /companies/{companyId}/users/{id}
+                  # ...
 ```
 
 ```xml
@@ -492,9 +510,9 @@ If this option is not set, the first `Get` operation is used to generate the IRI
 
 ## Expose a Model Without Any Routes
 
-Sometimes, you may want to expose a model, but want it to be used through subrequests only, and never through item or collection operations.
-Because the OpenAPI standard requires at least one route to be exposed to make your models consumable, let's see how you can manage this kind
-of issue.
+Sometimes, you may want to expose a model, but want it to be used through subrequests only, and
+never through item or collection operations. Because the OpenAPI standard requires at least one
+route to be exposed to make your models consumable, let's see how you can manage this kind of issue.
 
 Let's say you have the following entities in your project:
 
@@ -539,8 +557,9 @@ class Weather
 }
 ```
 
-We don't save the `Weather` entity in the database, since we want to return the weather in real time when it is queried.
-Because we want to get the weather for a known place, it is more reasonable to query it through a subresource of the `Place` entity, so let's do this:
+We don't save the `Weather` entity in the database, since we want to return the weather in real time
+when it is queried. Because we want to get the weather for a known place, it is more reasonable to
+query it through a subresource of the `Place` entity, so let's do this:
 
 ```php
 <?php
@@ -572,8 +591,9 @@ class Place
     // ...
 ```
 
-The `GetWeather` controller fetches the weather for the given city and returns an instance of the `Weather` entity.
-This implies that API Platform has to know about this entity, so we will need to make it an API resource too:
+The `GetWeather` controller fetches the weather for the given city and returns an instance of the
+`Weather` entity. This implies that API Platform has to know about this entity, so we will need to
+make it an API resource too:
 
 ```php
 <?php
@@ -592,13 +612,16 @@ That's it!
 
 ## Customize Operation and Resource Metadata
 
-Metadata mutators allow a dynamic control over resources and operations, by programmatically altering metadata before they are exposed as endpoints. Providing a way to modify, add or remove operations, adjust serialization groups or pagination settings.
+Metadata mutators allow a dynamic control over resources and operations, by programmatically
+altering metadata before they are exposed as endpoints. Providing a way to modify, add or remove
+operations, adjust serialization groups or pagination settings.
 
 It also makes it possible to customize built-in endpoints from a third-party API, such as Sylius.
 
 ### Resource Mutator
 
-Use the resource mutator to modify the entire resource metadata by adding the attribute and target resource class as argument:
+Use the resource mutator to modify the entire resource metadata by adding the attribute and target
+resource class as argument:
 
 ```php
 <?php
@@ -623,7 +646,7 @@ final readonly class ApiPrefixMutator implements ResourceMutatorInterface
     public function __invoke(ApiResource $resource): ApiResource
     {
         $operations = $resource->getOperations();
-        
+
         if (null !== $operations) {
             return $resource;
         }
@@ -641,7 +664,8 @@ final readonly class ApiPrefixMutator implements ResourceMutatorInterface
 
 ### Operation Mutator
 
-The operation mutator will modify a specific operation's metadata, by using the attribute and passing the operation name:
+The operation mutator will modify a specific operation's metadata, by using the attribute and
+passing the operation name:
 
 ```php
 <?php
@@ -660,13 +684,13 @@ final class BookOperationMutator implements OperationMutatorInterface
         $context = $operation->getNormalizationContext() ?? [];
         // add another group to normalization group
         $context['groups'][] = 'review:list:read';
-        
+
         return $operation->withNormalizationContext($context);
     }
 }
 ```
 
-> [!NOTE]
-> Operation mutators are executed during metadata loading, the result is stored in cache so runtime logic is prohibited.
+> [!NOTE] Operation mutators are executed during metadata loading, the result is stored in cache so
+> runtime logic is prohibited.
 
 ---

@@ -1,27 +1,33 @@
 # The Event System
 
-> [!WARNING]
-> In API Platform 4.0 with Symfony, you need `use_symfony_listeners: true` to activate event listeners.
+> [!WARNING] In API Platform 4.0 with Symfony, you need `use_symfony_listeners: true` to activate
+> event listeners.
 
 ---
 
-> [!NOTE]
-> Using Kernel event with API Platform should be mostly limited to tweaking the generated HTTP response. Also, GraphQL is **not supported**.
-> We recommend to use [System providers and processors](extending.md#system-providers-and-processors) to extend API Platform internals.
+> [!NOTE] Using Kernel event with API Platform should be mostly limited to tweaking the generated
+> HTTP response. Also, GraphQL is **not supported**. We recommend to use
+> [System providers and processors](extending.md#system-providers-and-processors) to extend API
+> Platform internals.
 
-API Platform Core implements the [Action-Domain-Responder](https://github.com/pmjones/adr) pattern. This implementation
-is covered in depth in the [Creating custom operations and controllers](operations.md#creating-custom-operations-and-controllers)
+API Platform Core implements the [Action-Domain-Responder](https://github.com/pmjones/adr) pattern.
+This implementation is covered in depth in the
+[Creating custom operations and controllers](operations.md#creating-custom-operations-and-controllers)
 chapter.
 
-Basically, API Platform Core executes an action class that will return an entity or a collection of entities. Then a series
-of event listeners are executed which validate the data, persist it in database, serialize it (typically in a JSON-LD document)
-and create an HTTP response that will be sent to the client.
+Basically, API Platform Core executes an action class that will return an entity or a collection of
+entities. Then a series of event listeners are executed which validate the data, persist it in
+database, serialize it (typically in a JSON-LD document) and create an HTTP response that will be
+sent to the client.
 
-To do so, API Platform Core leverages [events triggered by the Symfony HTTP Kernel](https://symfony.com/doc/current/reference/events.html#kernel-events).
-You can also hook your own code to those events. There are handy and powerful extension points available at all points
-of the request lifecycle.
+To do so, API Platform Core leverages
+[events triggered by the Symfony HTTP Kernel](https://symfony.com/doc/current/reference/events.html#kernel-events).
+You can also hook your own code to those events. There are handy and powerful extension points
+available at all points of the request lifecycle.
 
-If you are using Doctrine, lifecycle events ([ORM](https://www.doctrine-project.org/projects/doctrine-orm/en/current/reference/events.html#lifecycle-events), [MongoDB ODM](https://www.doctrine-project.org/projects/doctrine-mongodb-odm/en/current/reference/events.html#lifecycle-events))
+If you are using Doctrine, lifecycle events
+([ORM](https://www.doctrine-project.org/projects/doctrine-orm/en/current/reference/events.html#lifecycle-events),
+[MongoDB ODM](https://www.doctrine-project.org/projects/doctrine-mongodb-odm/en/current/reference/events.html#lifecycle-events))
 are also available if you want to hook into the persistence layer's object lifecycle.
 
 ## Built-in Event Listeners
@@ -54,8 +60,8 @@ Some of these built-in listeners can be enabled/disabled by setting operation at
 | `write`                    | `bool` | `true`  | Enables or disables `WriteListener`                  |
 | `serialize`                | `bool` | `true`  | Enables or disables `SerializeListener`              |
 
-Some of these built-in listeners can be enabled/disabled by setting request attributes (for instance in the [`defaults`
-attribute of an operation](operations.md#recommended-method)):
+Some of these built-in listeners can be enabled/disabled by setting request attributes (for instance
+in the [`defaults` attribute of an operation](operations.md#recommended-method)):
 
 | Attribute      | Type   | Default | Description                                                                   |
 | -------------- | ------ | ------- | ----------------------------------------------------------------------------- |
@@ -67,7 +73,9 @@ attribute of an operation](operations.md#recommended-method)):
 
 Registering your own event listeners to add extra logic is convenient.
 
-The [`ApiPlatform\Symfony\EventListener\EventPriorities`](https://github.com/api-platform/core/blob/main/src/Symfony/EventListener/EventPriorities.php) class comes with a convenient set of class constants corresponding to commonly used priorities:
+The
+[`ApiPlatform\Symfony\EventListener\EventPriorities`](https://github.com/api-platform/core/blob/main/src/Symfony/EventListener/EventPriorities.php)
+class comes with a convenient set of class constants corresponding to commonly used priorities:
 
 | Constant           | Event             | Priority |
 | ------------------ | ----------------- | -------- |
@@ -134,7 +142,10 @@ final class BookMailSubscriber implements EventSubscriberInterface
 }
 ```
 
-If you use the official API Platform distribution, creating the previous class is enough. The Symfony DependencyInjection
-component will automatically register this subscriber as a service and will inject its dependencies thanks to the [autowiring feature](https://symfony.com/doc/current/service_container/autowiring.html).
+If you use the official API Platform distribution, creating the previous class is enough. The
+Symfony DependencyInjection component will automatically register this subscriber as a service and
+will inject its dependencies thanks to the
+[autowiring feature](https://symfony.com/doc/current/service_container/autowiring.html).
 
-Alternatively, [the subscriber must be registered manually](https://symfony.com/doc/current/components/event_dispatcher.html#connecting-listeners).
+Alternatively,
+[the subscriber must be registered manually](https://symfony.com/doc/current/components/event_dispatcher.html#connecting-listeners).

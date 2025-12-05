@@ -1,7 +1,6 @@
 # Quasar Framework Generator
 
-Create a Quasar Framework application using
-[Quasar CLI](https://quasar.dev/start/quasar-cli):
+Create a Quasar Framework application using [Quasar CLI](https://quasar.dev/start/quasar-cli):
 
 ```console
 npm i -g @quasar/cli
@@ -35,22 +34,23 @@ In the app directory, generate the files for the resource you want:
 npm init @api-platform/client https://demo.api-platform.com src/ -- --generator quasar --resource foo
 ```
 
-Replace the URL by the entrypoint of your Hydra-enabled API.
-You can also use an OpenAPI documentation with `https://demo.api-platform.com/docs.jsonopenapi` and `-f openapi3`.
+Replace the URL by the entrypoint of your Hydra-enabled API. You can also use an OpenAPI
+documentation with `https://demo.api-platform.com/docs.jsonopenapi` and `-f openapi3`.
 
 Omit the resource flag to generate files for all resource types exposed by the API.
 
-**Note:** Make sure to follow the result indications of the command to register the routes and the translations.
+**Note:** Make sure to follow the result indications of the command to register the routes and the
+translations.
 
 Import common translations:
 
 ```ts
 // src/i18n/en-US/index.ts
-import common from './common';
+import common from "./common";
 
 export default {
-  // ...
-  ...common,
+    // ...
+    ...common,
 };
 ```
 

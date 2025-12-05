@@ -1,15 +1,17 @@
 # Identifiers
 
-Every item operation has an identifier in its URL. Although this identifier is usually a number, it can also be an `UUID`, a date, or the type of your choice.
-To help with your development experience, we introduced an identifier normalization process.
+Every item operation has an identifier in its URL. Although this identifier is usually a number, it
+can also be an `UUID`, a date, or the type of your choice. To help with your development experience,
+we introduced an identifier normalization process.
 
 ## Custom Identifier Normalizer
 
-> [!WARNING]
-> This feature is not yet available with Laravel, if you need it please open a Feature Request issue!
-> In the following chapter, we're assuming that `App\Uuid` is a project-owned class that manages a time-based UUID.
+> [!WARNING] This feature is not yet available with Laravel, if you need it please open a Feature
+> Request issue! In the following chapter, we're assuming that `App\Uuid` is a project-owned class
+> that manages a time-based UUID.
 
-Let's say you have the following class, which is identified by a `UUID` type. In this example, `UUID` is not a simple string but an object with many attributes.
+Let's say you have the following class, which is identified by a `UUID` type. In this example,
+`UUID` is not a simple string but an object with many attributes.
 
 <code-selector>
 
@@ -37,12 +39,12 @@ final class Person
 # api/config/api_platform/resources/Person.yaml
 # The YAML syntax is only supported for Symfony
 properties:
-  App\ApiResource\Person:
-    code:
-      identifier: true
+    App\ApiResource\Person:
+        code:
+            identifier: true
 resource:
-  App\ApiResource\Person:
-    provider: App\State\PersonProvider
+    App\ApiResource\Person:
+        provider: App\State\PersonProvider
 ```
 
 ```xml
@@ -57,8 +59,9 @@ resource:
 
 </code-selector>
 
-Once registered as an `ApiResource`, having an existing person, it will be accessible through the following URL:
-`/people/110e8400-e29b-11d4-a716-446655440000`. Note that the property identifying our resource is named `code`.
+Once registered as an `ApiResource`, having an existing person, it will be accessible through the
+following URL: `/people/110e8400-e29b-11d4-a716-446655440000`. Note that the property identifying
+our resource is named `code`.
 
 Let's create a `Provider` for the `Person` resource:
 
@@ -88,8 +91,8 @@ final class PersonProvider implements ProviderInterface
 }
 ```
 
-To cover this use case, we need to `transform` the identifier to an instance of our `App\Uuid` class.
-This case is covered by an URI variable transformer:
+To cover this use case, we need to `transform` the identifier to an instance of our `App\Uuid`
+class. This case is covered by an URI variable transformer:
 
 ```php
 <?php
@@ -140,7 +143,8 @@ final class UuidUriVariableTransformer implements UriVariableTransformerInterfac
 }
 ```
 
-Tag this service as an `api_platform.uri_variables.transformer` using one of the configurations below:
+Tag this service as an `api_platform.uri_variables.transformer` using one of the configurations
+below:
 
 ### Tag the Service using Symfony
 
@@ -151,9 +155,9 @@ Tag this service as an `api_platform.uri_variables.transformer` using one of the
 # The YAML syntax is only supported for Symfony
 
 services:
-  App\Identifier\UuidUriVariableTransformer:
-    tags:
-      - { name: api_platform.uri_variables.transformer }
+    App\Identifier\UuidUriVariableTransformer:
+        tags:
+            - { name: api_platform.uri_variables.transformer }
 ```
 
 ```xml
@@ -170,7 +174,8 @@ Your `PersonProvider` will now work as expected!
 
 ## Changing Identifier in a Doctrine Entity
 
-If your resource is also a Doctrine entity and you want to use another identifier other than the Doctrine one, you have to unmark it:
+If your resource is also a Doctrine entity and you want to use another identifier other than the
+Doctrine one, you have to unmark it:
 
 ```php
 <?php
@@ -204,8 +209,12 @@ final class Person
 API Platform supports the following identifier types:
 
 - `scalar` (string, integer)
-- `\DateTime` (uses the symfony `DateTimeNormalizer` internally, see [DateTimeUriVariableTransformer](https://github.com/api-platform/core/blob/main/src/Metadata/UriVariableTransformer/DateTimeUriVariableTransformer.php))
-- `\Ramsey\Uuid\Uuid` (see [UuidUriVariableTransformer](https://github.com/api-platform/core/blob/main/src/RamseyUuid/UriVariableTransformer/UuidUriVariableTransformer.php))
-- `\Symfony\Component\Uid\Ulid` (see [UlidUriVariableTransformer](https://github.com/api-platform/core/blob/main/src/Symfony/UriVariableTransformer/UlidUriVariableTransformer.php))
-- `\Symfony\Component\Uid\Uuid` (see [UuidUriVariableTransformer](https://github.com/api-platform/core/blob/main/src/Symfony/UriVariableTransformer/UuidUriVariableTransformer.php))
+- `\DateTime` (uses the symfony `DateTimeNormalizer` internally, see
+  [DateTimeUriVariableTransformer](https://github.com/api-platform/core/blob/main/src/Metadata/UriVariableTransformer/DateTimeUriVariableTransformer.php))
+- `\Ramsey\Uuid\Uuid` (see
+  [UuidUriVariableTransformer](https://github.com/api-platform/core/blob/main/src/RamseyUuid/UriVariableTransformer/UuidUriVariableTransformer.php))
+- `\Symfony\Component\Uid\Ulid` (see
+  [UlidUriVariableTransformer](https://github.com/api-platform/core/blob/main/src/Symfony/UriVariableTransformer/UlidUriVariableTransformer.php))
+- `\Symfony\Component\Uid\Uuid` (see
+  [UuidUriVariableTransformer](https://github.com/api-platform/core/blob/main/src/Symfony/UriVariableTransformer/UuidUriVariableTransformer.php))
 - `\Stringable` (essential when using composite identifiers from related resource classes)

@@ -8,7 +8,7 @@ Pre-registered resolvers are available and can easily be overridden.
 There are two pre-registered operation path naming services:
 
 | Service name                                                   | Entity name  | Path result     |
-|----------------------------------------------------------------|--------------|-----------------|
+| -------------------------------------------------------------- | ------------ | --------------- |
 | `api_platform.metadata.path_segment_name_generator.underscore` | `MyResource` | `/my_resources` |
 | `api_platform.metadata.path_segment_name_generator.dash`       | `MyResource` | `/my-resources` |
 
@@ -16,12 +16,13 @@ The default resolver is `api_platform.metadata.path_segment_name_generator.under
 
 ### Configuration using Symfony
 
-To change it to the dash resolver, add the following lines to `api/config/packages/api_platform.yaml`:
+To change it to the dash resolver, add the following lines to
+`api/config/packages/api_platform.yaml`:
 
 ```yaml
 # api/config/packages/api_platform.yaml
 api_platform:
-  path_segment_name_generator: api_platform.metadata.path_segment_name_generator.dash
+    path_segment_name_generator: api_platform.metadata.path_segment_name_generator.dash
 ```
 
 ### Configuration using Laravel
@@ -43,7 +44,8 @@ Let's assume we need URLs without separators (e.g. `api.tld/myresources`)
 
 ### Defining the Operation Segment Name Generator
 
-Make sure the custom segment generator implements [`ApiPlatform\Metadata\Operation\PathSegmentNameGeneratorInterface`](https://github.com/api-platform/core/blob/main/src/Metadata/Operation/PathSegmentNameGeneratorInterface.php):
+Make sure the custom segment generator implements
+[`ApiPlatform\Metadata\Operation\PathSegmentNameGeneratorInterface`](https://github.com/api-platform/core/blob/main/src/Metadata/Operation/PathSegmentNameGeneratorInterface.php):
 
 ```php
 <?php
@@ -75,19 +77,20 @@ class SingularPathSegmentNameGenerator implements PathSegmentNameGeneratorInterf
 }
 ```
 
-Note that `$name` contains a camelCase string, by default the resource class name (e.g. `MyResource`).
+Note that `$name` contains a camelCase string, by default the resource class name (e.g.
+`MyResource`).
 
 ### Registering the Service (for Symfony only)
 
-If you haven't disabled the autowiring option, the service will be registered automatically and you have nothing more to
-do.
-Otherwise, you must register this class as a service like in the following example:
+If you haven't disabled the autowiring option, the service will be registered automatically and you
+have nothing more to do. Otherwise, you must register this class as a service like in the following
+example:
 
 ```yaml
 # api/config/services.yaml
 services:
-  # ...
-  'App\Operation\SingularPathSegmentNameGenerator': ~
+    # ...
+    'App\Operation\SingularPathSegmentNameGenerator': ~
 ```
 
 ### Configuring the Service
@@ -97,7 +100,7 @@ services:
 ```yaml
 # api/config/packages/api_platform.yaml
 api_platform:
-  path_segment_name_generator: 'App\Operation\SingularPathSegmentNameGenerator'
+    path_segment_name_generator: 'App\Operation\SingularPathSegmentNameGenerator'
 ```
 
 #### Configuring It using Laravel

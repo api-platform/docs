@@ -6,19 +6,24 @@ This is a list of common pitfalls while using API Platform, and how to avoid the
 
 ### With Docker Toolbox on Windows
 
-Docker Toolbox is not supported anymore by API Platform. Please upgrade to [Docker for Windows](https://www.docker.com/docker-windows).
+Docker Toolbox is not supported anymore by API Platform. Please upgrade to
+[Docker for Windows](https://www.docker.com/docker-windows).
 
 ### Error Starting The Web Server
 
-If the `php` container cannot start and display this `Error starting userland proxy: Bind for 0.0.0.0:80`, it means that port 80 is already in use. You can check to see which processes are currently listening on certain ports.
+If the `php` container cannot start and display this
+`Error starting userland proxy: Bind for 0.0.0.0:80`, it means that port 80 is already in use. You
+can check to see which processes are currently listening on certain ports.
 
-Find out if any service listens on port 80. You can use this command on UNIX-based OSes like macOS and Linux:
+Find out if any service listens on port 80. You can use this command on UNIX-based OSes like macOS
+and Linux:
 
 ```console
 sudo lsof -n -i :80 | grep LISTEN
 ```
 
-On Windows, you can use `netstat`. This will give you all TCP/IP network connections and not just processes listening to port 80.
+On Windows, you can use `netstat`. This will give you all TCP/IP network connections and not just
+processes listening to port 80.
 
 ```console
 netstat -a -b
@@ -30,29 +35,41 @@ You can change the port to be used in the `compose.yaml` file (default ports are
 
 ## Using API Platform and JMS Serializer in the same project
 
-For the latest versions of [JMSSerializerBundle](https://jmsyst.com/bundles/JMSSerializerBundle), there is no conflict so everything should work out of the box.
+For the latest versions of [JMSSerializerBundle](https://jmsyst.com/bundles/JMSSerializerBundle),
+there is no conflict so everything should work out of the box.
 
-If you are still using the old, unmaintained v1 of JMSSerializerBundle, the best way would be to [upgrade to v2](https://github.com/schmittjoh/JMSSerializerBundle/blob/2.4.2/UPGRADING.md#upgrading-from-1x-to-20) of JMSSerializerBundle.
+If you are still using the old, unmaintained v1 of JMSSerializerBundle, the best way would be to
+[upgrade to v2](https://github.com/schmittjoh/JMSSerializerBundle/blob/2.4.2/UPGRADING.md#upgrading-from-1x-to-20)
+of JMSSerializerBundle.
 
-In v1 of JMSSerializerBundle, the `serializer` alias is registered for the JMS Serializer service by default. However, API Platform requires the Symfony Serializer (and not the JMS one) to work properly. If you cannot upgrade for some reason, this behavior can be deactivated using the following configuration:
+In v1 of JMSSerializerBundle, the `serializer` alias is registered for the JMS Serializer service by
+default. However, API Platform requires the Symfony Serializer (and not the JMS one) to work
+properly. If you cannot upgrade for some reason, this behavior can be deactivated using the
+following configuration:
 
 ```yaml
 # api/config/packages/jms_serializer.yaml
 jms_serializer:
-  enable_short_alias: false
+    enable_short_alias: false
 ```
 
 The JMS Serializer service is available as `jms_serializer`.
 
-**Note:** if you are using JMSSerializerBundle along with FOSRestBundle and considering migrating to API Platform, you might want to take a look at [this guide](migrate-from-fosrestbundle.md) too.
+**Note:** if you are using JMSSerializerBundle along with FOSRestBundle and considering migrating to
+API Platform, you might want to take a look at [this guide](migrate-from-fosrestbundle.md) too.
 
 ## "upstream sent too big header while reading response header from upstream" NGINX 502 Error
 
-Some of your API calls fail with a 502 error and the logs for the API container shows the following error message `upstream sent too big header while reading response header from upstream`.
+Some of your API calls fail with a 502 error and the logs for the API container shows the following
+error message `upstream sent too big header while reading response header from upstream`.
 
-This can be due to the cache invalidation headers that are too big for NGINX. When you query the API, API Platform adds the IDs of all returned entities and their dependencies in the headers like so : `Cache-Tags: /entity/1,/dependent_entity/1,/entity/2`. This can overflow the default header size (4k) when your API gets larger and more complex.
+This can be due to the cache invalidation headers that are too big for NGINX. When you query the
+API, API Platform adds the IDs of all returned entities and their dependencies in the headers like
+so : `Cache-Tags: /entity/1,/dependent_entity/1,/entity/2`. This can overflow the default header
+size (4k) when your API gets larger and more complex.
 
-You can modify the PHP FPM configuration file and set values to `fastcgi_buffer_size` and `fastcgi_buffers` that suit your needs, like so:
+You can modify the PHP FPM configuration file and set values to `fastcgi_buffer_size` and
+`fastcgi_buffers` that suit your needs, like so:
 
 ```nginx
 server {

@@ -2,11 +2,13 @@
 
 API Platform Admin handles `one-to-one`, `many-to-one` and `one-to-many` relations automatically.
 
-However, in some cases, dependeing on whether or not you chose to embed the relation in the serialized data, you may need to customize the way the relation is displayed and/or can be edited.
+However, in some cases, dependeing on whether or not you chose to embed the relation in the
+serialized data, you may need to customize the way the relation is displayed and/or can be edited.
 
 ## Working With Embedded Relations
 
-You can configure your API to [embed the related data](../core/serialization.md#embedding-relations) in the serialized response.
+You can configure your API to [embed the related data](../core/serialization.md#embedding-relations)
+in the serialized response.
 
 ```js
 // Without Embedded Book Data
@@ -35,18 +37,23 @@ You can configure your API to [embed the related data](../core/serialization.md#
 }
 ```
 
-If you do so, by default the admin will render the full object as text field and text input, which is not very user-friendly.
+If you do so, by default the admin will render the full object as text field and text input, which
+is not very user-friendly.
 
 ![Embedded Relation With Full Object](images/embedded-relation-full-object.png)
 
 There are two ways you can handle this situation:
 
-1. Change the Field and Input components to [display the fields you want](./handling-relations.md#displaying-a-field-of-an-embedded-relation)
-2. Ask the admin to [return the embedded resources' IRI instead of the full record](./handling-relations.md#return-the-embedded-resources-iri-instead-of-the-full-record), by leveraging the `useEmbedded` parameter
+1. Change the Field and Input components to
+   [display the fields you want](./handling-relations.md#displaying-a-field-of-an-embedded-relation)
+2. Ask the admin to
+   [return the embedded resources' IRI instead of the full record](./handling-relations.md#return-the-embedded-resources-iri-instead-of-the-full-record),
+   by leveraging the `useEmbedded` parameter
 
 ### Displaying a Field of an Embedded Relation
 
-React Admin fields allow to use the dot notation (e.g. `book.title`) to target a field from an embedded relation.
+React Admin fields allow to use the dot notation (e.g. `book.title`) to target a field from an
+embedded relation.
 
 ```jsx
 import {
@@ -76,11 +83,15 @@ export const App = () => (
 
 ![Embedded Relation With Dot Notation](images/embedded-relation-dot-notation.png)
 
-Allowing to edit the relation, on the other hand, is a little trickier, as it requires transforming the record to replace the nested object by its IRI.
+Allowing to edit the relation, on the other hand, is a little trickier, as it requires transforming
+the record to replace the nested object by its IRI.
 
 Fortunately, this can be done by leveraging the `transform` prop of the `<EditGuesser>` component.
 
-We can edit the relation by leveraging either [`<ReferenceInput>`](https://marmelab.com/react-admin/ReferenceInput.html) for a `to-one` relation or [`<ReferenceArrayInput>`](https://marmelab.com/react-admin/ReferenceArrayInput.html) for a `to-many` relation.
+We can edit the relation by leveraging either
+[`<ReferenceInput>`](https://marmelab.com/react-admin/ReferenceInput.html) for a `to-one` relation
+or [`<ReferenceArrayInput>`](https://marmelab.com/react-admin/ReferenceArrayInput.html) for a
+`to-many` relation.
 
 ```jsx
 import {
@@ -121,27 +132,32 @@ This offers a nice and convenient way to edit the relation.
 
 ![Embedded Relation With ReferenceInput](images/embedded-relation-ReferenceInput.png)
 
-**Tip:** We also had to customize `<ReferenceInput>`'s child [`<AutocompleteInput>`](https://marmelab.com/react-admin/AutocompleteInput.html) component to override its `label` and `filterToQuery` props. You can learn more about why that's necessary in the [Using an AutoComplete Input for Relations](./handling-relations.md#using-an-autocomplete-input-for-relations) section.
+**Tip:** We also had to customize `<ReferenceInput>`'s child
+[`<AutocompleteInput>`](https://marmelab.com/react-admin/AutocompleteInput.html) component to
+override its `label` and `filterToQuery` props. You can learn more about why that's necessary in the
+[Using an AutoComplete Input for Relations](./handling-relations.md#using-an-autocomplete-input-for-relations)
+section.
 
 ### Return the Embedded Resources' IRI Instead of the Full Record
 
-You can also ask the admin to return the embedded resources' IRI instead of the full record, by setting the `useEmbedded` parameter of the Hydra data provider to `false`.
+You can also ask the admin to return the embedded resources' IRI instead of the full record, by
+setting the `useEmbedded` parameter of the Hydra data provider to `false`.
 
 ```jsx
 // admin/src/App.jsx
 
-import { HydraAdmin, dataProvider } from '@api-platform/admin';
+import { HydraAdmin, dataProvider } from "@api-platform/admin";
 
 const entrypoint = process.env.ENTRYPOINT;
 
 export const App = () => (
-  <HydraAdmin
-    entrypoint={entrypoint}
-    dataProvider={dataProvider({
-      entrypoint,
-      useEmbedded: false,
-    })}
-  />
+    <HydraAdmin
+        entrypoint={entrypoint}
+        dataProvider={dataProvider({
+            entrypoint,
+            useEmbedded: false,
+        })}
+    />
 );
 ```
 
@@ -150,35 +166,36 @@ This tells the dataProvider to return only the IRI in the record, discarding the
 ```js
 // With useEmbedded=true (default)
 const record = {
-  "@id": "/reviews/15",
-  id: 15,
-  rating: 5,
-  body: "A must-read for any software developer. Martin's insights are invaluable.",
-  author: "Alice Smith",
-  book: {
-    "@id": "/books/7",
-    id: 7,
-    title: "Clean Code",
-    author: "Robert C. Martin",
-  }
-}
+    "@id": "/reviews/15",
+    id: 15,
+    rating: 5,
+    body: "A must-read for any software developer. Martin's insights are invaluable.",
+    author: "Alice Smith",
+    book: {
+        "@id": "/books/7",
+        id: 7,
+        title: "Clean Code",
+        author: "Robert C. Martin",
+    },
+};
 
 // With useEmbedded=false
 const record = {
-  "@id": "/reviews/15",
-  id: 15,
-  rating: 5,
-  body: "A must-read for any software developer. Martin's insights are invaluable.",
-  author: "Alice Smith",
-  book: "/books/7"
-}
+    "@id": "/reviews/15",
+    id: 15,
+    rating: 5,
+    body: "A must-read for any software developer. Martin's insights are invaluable.",
+    author: "Alice Smith",
+    book: "/books/7",
+};
 ```
 
 This way, the related record's IRI is returned and can be displayed.
 
 ![Embedded Relation With useEmbedded To False](images/embedded-relation-useEmbedded-false.png)
 
-We can improve the UI further by leveraging React Admin's [`<ReferenceField>`](https://marmelab.com/react-admin/ReferenceField.html) component:
+We can improve the UI further by leveraging React Admin's
+[`<ReferenceField>`](https://marmelab.com/react-admin/ReferenceField.html) component:
 
 ```jsx
 import {
@@ -211,7 +228,10 @@ This allows to display the title of the related book instead of its IRI.
 
 ![Embedded Relation With ReferenceField](images/embedded-relation-ReferenceField.png)
 
-Lastly, this also allows to easily edit the relation by leveraging either [`<ReferenceInput>`](https://marmelab.com/react-admin/ReferenceInput.html) for a `to-one` relation or [`<ReferenceArrayInput>`](https://marmelab.com/react-admin/ReferenceArrayInput.html) for a `to-many` relation.
+Lastly, this also allows to easily edit the relation by leveraging either
+[`<ReferenceInput>`](https://marmelab.com/react-admin/ReferenceInput.html) for a `to-one` relation
+or [`<ReferenceArrayInput>`](https://marmelab.com/react-admin/ReferenceArrayInput.html) for a
+`to-many` relation.
 
 ```jsx
 import {
@@ -246,17 +266,25 @@ This offers a nice and convenient way to edit the relation.
 
 ![Embedded Relation With ReferenceInput](images/embedded-relation-ReferenceInput.png)
 
-**Tip:** We also had to customize `<ReferenceInput>`'s child [`<AutocompleteInput>`](https://marmelab.com/react-admin/AutocompleteInput.html) component to override its `filterToQuery` props. You can learn more about why that's necessary in the [Using an AutoComplete Input for Relations](./handling-relations.md#using-an-autocomplete-input-for-relations) section.
+**Tip:** We also had to customize `<ReferenceInput>`'s child
+[`<AutocompleteInput>`](https://marmelab.com/react-admin/AutocompleteInput.html) component to
+override its `filterToQuery` props. You can learn more about why that's necessary in the
+[Using an AutoComplete Input for Relations](./handling-relations.md#using-an-autocomplete-input-for-relations)
+section.
 
 ## Using an Autocomplete Input for Relations
 
-By default, `<InputGuesser>` will render a [`<SelectInput>`](https://marmelab.com/react-admin/SelectInput.html) when it detects a relation.
+By default, `<InputGuesser>` will render a
+[`<SelectInput>`](https://marmelab.com/react-admin/SelectInput.html) when it detects a relation.
 
-We can improve the UX further by rendering an [`<AutocompleteInput>`](https://marmelab.com/react-admin/AutocompleteInput.html) instead.
+We can improve the UX further by rendering an
+[`<AutocompleteInput>`](https://marmelab.com/react-admin/AutocompleteInput.html) instead.
 
-`<AutocompleteInput>` allows to search for a related record by typing its name in an input field. This is much more convenient when there are many records to choose from.
+`<AutocompleteInput>` allows to search for a related record by typing its name in an input field.
+This is much more convenient when there are many records to choose from.
 
-Let's consider an API exposing `Review` and `Book` resources linked by a `many-to-one` relation (through the `book` property).
+Let's consider an API exposing `Review` and `Book` resources linked by a `many-to-one` relation
+(through the `book` property).
 
 This API uses the following PHP code:
 
@@ -313,9 +341,13 @@ class Book
 }
 ```
 
-Notice the "partial search" [filter](../core/filters.md) on the `title` property of the `Book` resource class.
+Notice the "partial search" [filter](../core/filters.md) on the `title` property of the `Book`
+resource class.
 
-Now, let's configure API Platform Admin to enable autocompletion for the book selector. We will leverage the [`<ReferenceInput>`](https://marmelab.com/react-admin/ReferenceInput.html) and [`<AutocompleteInput>`](https://marmelab.com/react-admin/AutocompleteInput.html) components from React Admin:
+Now, let's configure API Platform Admin to enable autocompletion for the book selector. We will
+leverage the [`<ReferenceInput>`](https://marmelab.com/react-admin/ReferenceInput.html) and
+[`<AutocompleteInput>`](https://marmelab.com/react-admin/AutocompleteInput.html) components from
+React Admin:
 
 ```jsx
 import {
@@ -353,8 +385,10 @@ export const App = () => (
 
 The important things to note are:
 
-- the `filterToQuery` prop, which allows to search for books by title (leveraging the "partial search" filter mentioned above)
-- the `optionText` prop, which tells the `<AutocompleteInput>` component to render books using their `title` property
+- the `filterToQuery` prop, which allows to search for books by title (leveraging the "partial
+  search" filter mentioned above)
+- the `optionText` prop, which tells the `<AutocompleteInput>` component to render books using their
+  `title` property
 
 You can now search for books by title in the book selector of the review form.
 
@@ -362,12 +396,19 @@ You can now search for books by title in the book selector of the review form.
 
 ## Displaying Related Record Name Instead of Their IRI
 
-Thanks to the [Schema.org](./schema.md) support, you can easily display the name of a related resource instead of its IRI.
+Thanks to the [Schema.org](./schema.md) support, you can easily display the name of a related
+resource instead of its IRI.
 
-Follow the [Displaying Related Resource's Name Instead of its IRI](./schema.md#displaying-related-resources-name-instead-of-its-iri) section of the Schema.org documentation to implement this feature.
+Follow the
+[Displaying Related Resource's Name Instead of its IRI](./schema.md#displaying-related-resources-name-instead-of-its-iri)
+section of the Schema.org documentation to implement this feature.
 
 ## Going Further
 
-React Admin can handle many types of relations, even `many-to-many`. You can learn more about them in the [Fields For Relationships](https://marmelab.com/react-admin/FieldsForRelationships.html) documentation.
+React Admin can handle many types of relations, even `many-to-many`. You can learn more about them
+in the [Fields For Relationships](https://marmelab.com/react-admin/FieldsForRelationships.html)
+documentation.
 
-You can also read the [Handling Relationships in React Admin](https://marmelab.com/blog/2025/02/06/handling-relationships-in-react-admin.html) post from the React Admin blog for concrete examples and source code.
+You can also read the
+[Handling Relationships in React Admin](https://marmelab.com/blog/2025/02/06/handling-relationships-in-react-admin.html)
+post from the React Admin blog for concrete examples and source code.

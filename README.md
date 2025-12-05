@@ -4,7 +4,8 @@
 
 [![Lint](https://github.com/api-platform/docs/actions/workflows/ci.yml/badge.svg)](https://github.com/api-platform/docs/actions/workflows/ci.yml)
 
-Welcome to the official documentation for [API Platform](https://api-platform.com), a powerful framework for building APIs and web applications.
+Welcome to the official documentation for [API Platform](https://api-platform.com), a powerful
+framework for building APIs and web applications.
 
 This repository contains all the API Platform documentation resources.
 

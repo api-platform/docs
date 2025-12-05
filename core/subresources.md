@@ -1,28 +1,29 @@
 # Subresources
 
-A Subresource is another way of declaring a resource that usually involves a more complex URI.
-In API Platform you can declare as many `ApiResource` as you want on a PHP class
-creating Subresources.
+A Subresource is another way of declaring a resource that usually involves a more complex URI. In
+API Platform you can declare as many `ApiResource` as you want on a PHP class creating Subresources.
 
-Subresources work well by implementing your own state [providers](./state-providers.md)
-or [processors](./state-processors.md). In API Platform, we provide functional Doctrine and Eloquent layers for
-subresources, as long as the correct configuration for URI variables is added.
+Subresources work well by implementing your own state [providers](./state-providers.md) or
+[processors](./state-processors.md). In API Platform, we provide functional Doctrine and Eloquent
+layers for subresources, as long as the correct configuration for URI variables is added.
 
 ## URI Variables Configuration
 
-URI Variables are configured via the `uriVariables` node on an `ApiResource`. It's an array indexed by the variables
-present in your URI, `/companies/{companyId}/employees/{id}` has two URI variables `companyId` and `id`.
-For each of these, we need to create a `Link` between the previous and the next node, in this example the link between a Company and an Employee.
+URI Variables are configured via the `uriVariables` node on an `ApiResource`. It's an array indexed
+by the variables present in your URI, `/companies/{companyId}/employees/{id}` has two URI variables
+`companyId` and `id`. For each of these, we need to create a `Link` between the previous and the
+next node, in this example the link between a Company and an Employee.
 
-If you're using the Doctrine or the Eloquent implementation, queries are automatically built using the provided links.
+If you're using the Doctrine or the Eloquent implementation, queries are automatically built using
+the provided links.
 
 ### Answer to a Question
 
-> [!NOTE]
-> In Symfony we use the term “entities”, while the following documentation is mostly for Laravel “models”.
+> [!NOTE] In Symfony we use the term “entities”, while the following documentation is mostly for
+> Laravel “models”.
 
-For this example we have two classes, a Question and an Answer. We want to find the Answer to
-the Question about the Universe using the following URI: `/question/42/answer`.
+For this example we have two classes, a Question and an Answer. We want to find the Answer to the
+Question about the Universe using the following URI: `/question/42/answer`.
 
 Let's start by defining the resources:
 
@@ -90,8 +91,8 @@ class Question
 # The YAML syntax is only supported for Symfony
 # api/config/api_platform/resources.yaml
 resources:
-  App\Entity\Answer: ~
-  App\Entity\Question: ~
+    App\Entity\Answer: ~
+    App\Entity\Question: ~
 ```
 
 ```xml
@@ -111,9 +112,9 @@ resources:
 
 </code-selector>
 
-Now to create a new way of retrieving an Answer we will declare another resource on the `Answer` class.
-To make things work, API Platform needs information about how to retrieve the `Answer` belonging to
-the `Question`, this is done by configuring the `uriVariables`:
+Now to create a new way of retrieving an Answer we will declare another resource on the `Answer`
+class. To make things work, API Platform needs information about how to retrieve the `Answer`
+belonging to the `Question`, this is done by configuring the `uriVariables`:
 
 <code-selector>
 
@@ -148,16 +149,16 @@ class Answer
 # The YAML syntax is only supported for Symfony
 # api/config/api_platform/resources.yaml
 resources:
-  App\Entity\Answer:
-    uriTemplate: /questions/{id}/answer
-    uriVariables:
-      id:
-        fromClass: App\Entity\Question
-        fromProperty: answer
-    operations:
-      ApiPlatform\Metadata\Get: ~
+    App\Entity\Answer:
+        uriTemplate: /questions/{id}/answer
+        uriVariables:
+            id:
+                fromClass: App\Entity\Question
+                fromProperty: answer
+        operations:
+            ApiPlatform\Metadata\Get: ~
 
-  App\Entity\Question: ~
+    App\Entity\Question: ~
 ```
 
 ```xml
@@ -186,12 +187,14 @@ resources:
 
 </code-selector>
 
-In this example, we instructed API Platform that the `Answer` we retrieve comes **from** the **class** `Question`
-**from** the **property** `answer` of that class.
+In this example, we instructed API Platform that the `Answer` we retrieve comes **from** the
+**class** `Question` **from** the **property** `answer` of that class.
 
-URI Variables are defined using Links (`ApiPlatform\Metadata\Link`). A `Link` can be binded either from or to a class and a property.
+URI Variables are defined using Links (`ApiPlatform\Metadata\Link`). A `Link` can be binded either
+from or to a class and a property.
 
-If we had a `relatedQuestions` property on the `Answer` we could retrieve the collection of related questions via the following definition:
+If we had a `relatedQuestions` property on the `Answer` we could retrieve the collection of related
+questions via the following definition:
 
 <code-selector>
 
@@ -209,14 +212,14 @@ If we had a `relatedQuestions` property on the `Answer` we could retrieve the co
 #The YAML syntax is only supported for Symfony
 # api/config/api_platform/resources.yaml
 resources:
-  App\Entity\Question:
-    uriTemplate: /answers/{id}/related_questions.{_format}
-    uriVariables:
-      id:
-        fromClass: App\Entity\Answer
-        fromProperty: relatedQuestions
-    operations:
-      ApiPlatform\Metadata\GetCollection: ~
+    App\Entity\Question:
+        uriTemplate: /answers/{id}/related_questions.{_format}
+        uriVariables:
+            id:
+                fromClass: App\Entity\Answer
+                fromProperty: relatedQuestions
+        operations:
+            ApiPlatform\Metadata\GetCollection: ~
 ```
 
 ```xml
@@ -237,12 +240,15 @@ resources:
 
 ### Company Employee's
 
-> [!NOTE]
-> In Symfony we use the term “entities”, while the following documentation is mostly for Laravel “models”.
+> [!NOTE] In Symfony we use the term “entities”, while the following documentation is mostly for
+> Laravel “models”.
 
-Note that in this example, we declared an association using Doctrine only between Employee and Company using a ManyToOne. There is no inverse association hence the use of `toProperty` in the URI Variables definition.
+Note that in this example, we declared an association using Doctrine only between Employee and
+Company using a ManyToOne. There is no inverse association hence the use of `toProperty` in the URI
+Variables definition.
 
-The following declares a few subresources: - `/companies/{companyId}/employees/{id}` - get an employee belonging to a company - `/companies/{companyId}/employees` - get the company employee's
+The following declares a few subresources: - `/companies/{companyId}/employees/{id}` - get an
+employee belonging to a company - `/companies/{companyId}/employees` - get the company employee's
 
 ```php
 <?php
@@ -320,11 +326,15 @@ class Company
 }
 ```
 
-We did not define any Doctrine or Eloquent annotation here and if we want things to work properly with GraphQL, we need to map the `employees` field as a Link to the class `Employee` using the property `company`.
+We did not define any Doctrine or Eloquent annotation here and if we want things to work properly
+with GraphQL, we need to map the `employees` field as a Link to the class `Employee` using the
+property `company`.
 
-As a general rule, if the property we want to create a link from is in the `fromClass`, use `fromProperty`, if not, use `toProperty`.
+As a general rule, if the property we want to create a link from is in the `fromClass`, use
+`fromProperty`, if not, use `toProperty`.
 
-For example, we could add a subresource fetching an employee's company. The `company` property belongs to the `Employee` class we can use `fromProperty`:
+For example, we could add a subresource fetching an employee's company. The `company` property
+belongs to the `Employee` class we can use `fromProperty`:
 
 ```php
 <?php
@@ -345,12 +355,15 @@ class Company {
 
 ## Security
 
-> [!WARNING]
-> This is not yet available with Laravel, you're welcome to contribute [on GitHub](https://github.com/api-platform/core)
+> [!WARNING] This is not yet available with Laravel, you're welcome to contribute
+> [on GitHub](https://github.com/api-platform/core)
 
-In order to use Symfony's built-in security system on subresources the security option of the `Link` attribute can be used.
+In order to use Symfony's built-in security system on subresources the security option of the `Link`
+attribute can be used.
 
-To restrict the access to a subresource based on the parent object simply use the Symfony expression language as you would do normally, with the exception that the name defined in `toProperty` or `fromProperty` is used to access the object.
+To restrict the access to a subresource based on the parent object simply use the Symfony expression
+language as you would do normally, with the exception that the name defined in `toProperty` or
+`fromProperty` is used to access the object.
 
 Alternatively you can also use the `securityObjectName` to set a custom name.
 
@@ -371,10 +384,11 @@ class Company {
 }
 ```
 
-This is currently an experimental feature disabled by default. To enable it please set `enable_link_security` to true:
+This is currently an experimental feature disabled by default. To enable it please set
+`enable_link_security` to true:
 
 ```yaml
 # api/config/packages/api_platform.yaml
 api_platform:
-  enable_link_security: true
+    enable_link_security: true
 ```

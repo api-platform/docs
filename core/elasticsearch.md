@@ -2,19 +2,20 @@
 
 ## Overview
 
-Elasticsearch is a distributed RESTful search and analytics engine capable of solving a growing number of use cases:
-application search, security analytics, metrics, logging, etc.
+Elasticsearch is a distributed RESTful search and analytics engine capable of solving a growing
+number of use cases: application search, security analytics, metrics, logging, etc.
 
-API Platform comes natively with the **reading** support for Elasticsearch. It uses internally the official PHP client
-for Elasticsearch: [Elasticsearch-PHP](https://www.elastic.co/guide/en/elasticsearch/client/php-api/current/index.html).
+API Platform comes natively with the **reading** support for Elasticsearch. It uses internally the
+official PHP client for Elasticsearch:
+[Elasticsearch-PHP](https://www.elastic.co/guide/en/elasticsearch/client/php-api/current/index.html).
 
-Be careful, API Platform only supports Elasticsearch >= 7.11.0 < 8.0 and Elasticsearch >= 8.4 < 9.0. Support for
-Elasticsearch 8 was introduced in API Platform 3.2.
+Be careful, API Platform only supports Elasticsearch >= 7.11.0 < 8.0 and Elasticsearch >= 8.4 < 9.0.
+Support for Elasticsearch 8 was introduced in API Platform 3.2.
 
 ## Enabling Reading Support
 
-To enable the reading support for Elasticsearch, simply require the Elasticsearch-PHP package using Composer. For
-Elasticsearch 8:
+To enable the reading support for Elasticsearch, simply require the Elasticsearch-PHP package using
+Composer. For Elasticsearch 8:
 
 ```console
 composer require elasticsearch/elasticsearch:^8.4
@@ -33,19 +34,19 @@ Then, enable it inside the API Platform configuration, using one of the configur
 ```yaml
 # api/config/packages/api_platform.yaml
 parameters:
-  # ...
-  env(ELASTICSEARCH_HOST): 'http://localhost:9200'
+    # ...
+    env(ELASTICSEARCH_HOST): "http://localhost:9200"
 
 api_platform:
-  # ...
+    # ...
 
-  mapping:
-    paths: ['%kernel.project_dir%/src/Model']
+    mapping:
+        paths: ["%kernel.project_dir%/src/Model"]
 
-  elasticsearch:
-    hosts: ['%env(ELASTICSEARCH_HOST)%']
+    elasticsearch:
+        hosts: ["%env(ELASTICSEARCH_HOST)%"]
 
-  #...
+    #...
 ```
 
 ### Enabling Reading Support using Laravel
@@ -72,8 +73,8 @@ return [
 
 API Platform follows the best practices of Elasticsearch:
 
-- a single index per resource should be used because Elasticsearch is going to [drop support for index types and will
-allow only a single type per index](https://www.elastic.co/guide/en/elasticsearch/reference/current/removal-of-types.html);
+- a single index per resource should be used because Elasticsearch is going to
+  [drop support for index types and will allow only a single type per index](https://www.elastic.co/guide/en/elasticsearch/reference/current/removal-of-types.html);
 - index name should be the short resource name in lower snake_case;
 - the default `_doc` type should be used;
 - all fields should be lower case and should use camelCase for combining words.
@@ -86,44 +87,44 @@ Here is an example of mappings for 2 resources, `User` and `Tweet`, and their mo
 
 ```json
 {
-  "mappings": {
-    "_doc": {
-      "properties": {
-        "id": {
-          "type": "keyword"
-        },
-        "gender": {
-          "type": "keyword"
-        },
-        "age": {
-          "type": "integer"
-        },
-        "first_name": {
-          "type": "text"
-        },
-        "last_name": {
-          "type": "text"
-        },
-        "tweets": {
-          "type": "nested",
-          "properties": {
-            "id": {
-              "type": "keyword"
+    "mappings": {
+        "_doc": {
+            "properties": {
+                "id": {
+                    "type": "keyword"
+                },
+                "gender": {
+                    "type": "keyword"
+                },
+                "age": {
+                    "type": "integer"
+                },
+                "first_name": {
+                    "type": "text"
+                },
+                "last_name": {
+                    "type": "text"
+                },
+                "tweets": {
+                    "type": "nested",
+                    "properties": {
+                        "id": {
+                            "type": "keyword"
+                        },
+                        "date": {
+                            "type": "date",
+                            "format": "yyyy-MM-dd HH:mm:ss"
+                        },
+                        "message": {
+                            "type": "text"
+                        }
+                    },
+                    "dynamic": "strict"
+                }
             },
-            "date": {
-              "type": "date",
-              "format": "yyyy-MM-dd HH:mm:ss"
-            },
-            "message": {
-              "type": "text"
-            }
-          },
-          "dynamic": "strict"
+            "dynamic": "strict"
         }
-      },
-      "dynamic": "strict"
     }
-  }
 }
 ```
 
@@ -131,43 +132,43 @@ Here is an example of mappings for 2 resources, `User` and `Tweet`, and their mo
 
 ```json
 {
-  "mappings": {
-    "_doc": {
-      "properties": {
-        "id": {
-          "type": "keyword"
-        },
-        "author": {
-          "properties": {
-            "id": {
-              "type": "keyword"
+    "mappings": {
+        "_doc": {
+            "properties": {
+                "id": {
+                    "type": "keyword"
+                },
+                "author": {
+                    "properties": {
+                        "id": {
+                            "type": "keyword"
+                        },
+                        "gender": {
+                            "type": "keyword"
+                        },
+                        "age": {
+                            "type": "integer"
+                        },
+                        "first_name": {
+                            "type": "text"
+                        },
+                        "last_name": {
+                            "type": "text"
+                        }
+                    },
+                    "dynamic": "strict"
+                },
+                "date": {
+                    "type": "date",
+                    "format": "yyyy-MM-dd HH:mm:ss"
+                },
+                "message": {
+                    "type": "text"
+                }
             },
-            "gender": {
-              "type": "keyword"
-            },
-            "age": {
-              "type": "integer"
-            },
-            "first_name": {
-              "type": "text"
-            },
-            "last_name": {
-              "type": "text"
-            }
-          },
-          "dynamic": "strict"
-        },
-        "date": {
-          "type": "date",
-          "format": "yyyy-MM-dd HH:mm:ss"
-        },
-        "message": {
-          "type": "text"
+            "dynamic": "strict"
         }
-      },
-      "dynamic": "strict"
     }
-  }
 }
 ```
 
@@ -242,12 +243,13 @@ class Tweet
 }
 ```
 
-API Platform will automatically disable write operations and snake_case document fields will automatically be converted to
-camelCase object properties during serialization.
+API Platform will automatically disable write operations and snake_case document fields will
+automatically be converted to camelCase object properties during serialization.
 
-Keep in mind that it is your responsibility to populate your Elasticsearch index. To do so, you can use [Logstash](https://www.elastic.co/products/logstash),
-a custom [state processors](state-processors.md#creating-a-custom-state-processor) or any other mechanism that suits your
-project (such as an [ETL](https://en.wikipedia.org/wiki/Extract,_transform,_load)).
+Keep in mind that it is your responsibility to populate your Elasticsearch index. To do so, you can
+use [Logstash](https://www.elastic.co/products/logstash), a custom
+[state processors](state-processors.md#creating-a-custom-state-processor) or any other mechanism
+that suits your project (such as an [ETL](https://en.wikipedia.org/wiki/Extract,_transform,_load)).
 
 You're done! The API is now ready to use.
 
@@ -258,4 +260,5 @@ See how to use Elasticsearch filters and how to create Elasticsearch custom filt
 
 ## Creating Custom Extensions
 
-See how to create Elasticsearch custom extensions in [the Extensions chapter](extensions.md#custom-elasticsearch-extension).
+See how to create Elasticsearch custom extensions in
+[the Extensions chapter](extensions.md#custom-elasticsearch-extension).

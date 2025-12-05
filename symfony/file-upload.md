@@ -1,22 +1,22 @@
 # Handling File Upload with Symfony
 
-As common a problem as it may seem, handling file upload requires a custom implementation in your app. This page will
-guide you in handling file upload in your API, with the help of[VichUploaderBundle](https://github.com/dustin10/VichUploaderBundle).
-It is recommended you [read the documentation of VichUploaderBundle](https://github.com/dustin10/VichUploaderBundle/blob/master/docs/index.md)
+As common a problem as it may seem, handling file upload requires a custom implementation in your
+app. This page will guide you in handling file upload in your API, with the help
+of[VichUploaderBundle](https://github.com/dustin10/VichUploaderBundle). It is recommended you
+[read the documentation of VichUploaderBundle](https://github.com/dustin10/VichUploaderBundle/blob/master/docs/index.md)
 before proceeding. It will help you get a grasp on how the bundle works, and why we use it.
 
-> [!NOTE]
-> Uploading files won't work in `PUT` or `PATCH` requests, you must use `POST` method to upload files.
-> See [the related issue on Symfony](https://github.com/symfony/symfony/issues/9226) and
-> [the related bug in PHP](https://bugs.php.net/bug.php?id=55815) talking about this behavior.
+> [!NOTE] Uploading files won't work in `PUT` or `PATCH` requests, you must use `POST` method to
+> upload files. See [the related issue on Symfony](https://github.com/symfony/symfony/issues/9226)
+> and [the related bug in PHP](https://bugs.php.net/bug.php?id=55815) talking about this behavior.
 
 Enable the multipart format globally in order to use it as the input format of your resource:
 
 ```yaml
 api_platform:
-  formats:
-    jsonld: ['application/ld+json']
-    multipart: ['multipart/form-data']
+    formats:
+        jsonld: ["application/ld+json"]
+        multipart: ["multipart/form-data"]
 ```
 
 ## Installing VichUploaderBundle
@@ -27,29 +27,28 @@ Install the bundle with the help of Composer:
 composer require vich/uploader-bundle
 ```
 
-This will create a new configuration file that you will need to slightly change
-to make it look like this.
+This will create a new configuration file that you will need to slightly change to make it look like
+this.
 
 ```yaml
 # api/config/packages/vich_uploader.yaml
 
 vich_uploader:
-  db_driver: orm
-  metadata:
-    type: attribute
-  mappings:
-    media_object:
-      uri_prefix: /media
-      upload_destination: '%kernel.project_dir%/public/media'
-      # Will rename uploaded files using a uniqueid as a suffix.
-      namer: Vich\UploaderBundle\Naming\SmartUniqueNamer
+    db_driver: orm
+    metadata:
+        type: attribute
+    mappings:
+        media_object:
+            uri_prefix: /media
+            upload_destination: "%kernel.project_dir%/public/media"
+            # Will rename uploaded files using a uniqueid as a suffix.
+            namer: Vich\UploaderBundle\Naming\SmartUniqueNamer
 ```
 
 ## Uploading to a Dedicated Resource
 
-In this example, we will create a `MediaObject` API resource. We will post files
-to this resource endpoint, and then link the newly created resource to another
-resource (in our case: `Book`).
+In this example, we will create a `MediaObject` API resource. We will post files to this resource
+endpoint, and then link the newly created resource to another resource (in our case: `Book`).
 
 ### Configuring the Resource Receiving the Uploaded File
 
@@ -128,14 +127,17 @@ class MediaObject
 }
 ```
 
-Note: From V3.3 onwards, `'multipart/form-data'` must either be including in the global API-Platform config, either in `formats` or `defaults->inputFormats`, or defined as an `inputFormats` parameter on an operation by operation basis.
+Note: From V3.3 onwards, `'multipart/form-data'` must either be including in the global API-Platform
+config, either in `formats` or `defaults->inputFormats`, or defined as an `inputFormats` parameter
+on an operation by operation basis.
 
 ### Resolving the File URL
 
-Returning the plain file path on the filesystem where the file is stored is not useful for the client, which needs a
-URL to work with.
+Returning the plain file path on the filesystem where the file is stored is not useful for the
+client, which needs a URL to work with.
 
-A [normalizer](../core/serialization.md#normalization) could be used to set the `contentUrl` property:
+A [normalizer](../core/serialization.md#normalization) could be used to set the `contentUrl`
+property:
 
 ```php
 <?php
@@ -191,8 +193,8 @@ class MediaObjectNormalizer implements NormalizerInterface
 
 ### Handling the Multipart Deserialization
 
-By default, Symfony is not able to decode `multipart/form-data`-encoded data.
-We need to create our own decoder to do it:
+By default, Symfony is not able to decode `multipart/form-data`-encoded data. We need to create our
+own decoder to do it:
 
 ```php
 <?php
@@ -232,7 +234,8 @@ final class MultipartDecoder implements DecoderInterface
 }
 ```
 
-If you're not using `autowiring` and `autoconfiguring`, don't forget to register the service and tag it as `serializer.encoder`.
+If you're not using `autowiring` and `autoconfiguring`, don't forget to register the service and tag
+it as `serializer.encoder`.
 
 We also need to make sure the field containing the uploaded file is not denormalized:
 
@@ -266,26 +269,28 @@ final class UploadedFileDenormalizer implements DenormalizerInterface
 }
 ```
 
-If you're not using `autowiring` and `autoconfiguring`, don't forget to register the service and tag it as `serializer.normalizer`.
+If you're not using `autowiring` and `autoconfiguring`, don't forget to register the service and tag
+it as `serializer.normalizer`.
 
 ### Making a Request to the `/media_objects` Endpoint
 
-Your `/media_objects` endpoint is now ready to receive a `POST` request with a
-file. This endpoint accepts standard `multipart/form-data`-encoded data, but
-not JSON data. You will need to format your request accordingly. After posting
-your data, you will get a response looking like this:
+Your `/media_objects` endpoint is now ready to receive a `POST` request with a file. This endpoint
+accepts standard `multipart/form-data`-encoded data, but not JSON data. You will need to format your
+request accordingly. After posting your data, you will get a response looking like this:
 
 ```json
 {
-  "@type": "https://schema.org/MediaObject",
-  "@id": "/media_objects/<id>",
-  "contentUrl": "<url>"
+    "@type": "https://schema.org/MediaObject",
+    "@id": "/media_objects/<id>",
+    "contentUrl": "<url>"
 }
 ```
 
 ### Accessing Your Media Objects Directly
 
-You will need to modify your `Caddyfile` to allow the above `contentUrl` to be accessed directly. If you followed the above configuration for the VichUploaderBundle, that will be in `api/public/media`. Add your folder to the list of path matches, e.g. `|^/media/|`:
+You will need to modify your `Caddyfile` to allow the above `contentUrl` to be accessed directly. If
+you followed the above configuration for the VichUploaderBundle, that will be in `api/public/media`.
+Add your folder to the list of path matches, e.g. `|^/media/|`:
 
 <!-- markdownlint-disable no-hard-tabs -->
 
@@ -307,8 +312,8 @@ You will need to modify your `Caddyfile` to allow the above `contentUrl` to be a
 
 ### Linking a MediaObject Resource to Another Resource
 
-We now need to update our `Book` resource, so that we can link a `MediaObject`
-to serve as the book cover.
+We now need to update our `Book` resource, so that we can link a `MediaObject` to serve as the book
+cover.
 
 We first need to edit our Book resource, and add a new property called `image`.
 
@@ -339,20 +344,19 @@ class Book
 }
 ```
 
-By sending a POST request to create a new book, linked with the previously
-uploaded cover, you can have a nice illustrated book record!
+By sending a POST request to create a new book, linked with the previously uploaded cover, you can
+have a nice illustrated book record!
 
 `POST /books`
 
 ```json
 {
-  "name": "The name",
-  "image": "/media_objects/<id>"
+    "name": "The name",
+    "image": "/media_objects/<id>"
 }
 ```
 
-Voilà! You can now send files to your API, and link them to any other resource
-in your app.
+Voilà! You can now send files to your API, and link them to any other resource in your app.
 
 ### Testing
 
@@ -402,13 +406,13 @@ class MediaObjectTest extends ApiTestCase
 
 ## Uploading to an Existing Resource with its Fields
 
-In this example, the file will be included in an existing resource (in our case: `Book`).
-The file and the resource fields will be posted to the resource endpoint.
+In this example, the file will be included in an existing resource (in our case: `Book`). The file
+and the resource fields will be posted to the resource endpoint.
 
-This example will use a custom `multipart/form-data` decoder to deserialize the resource instead of a custom controller.
+This example will use a custom `multipart/form-data` decoder to deserialize the resource instead of
+a custom controller.
 
-> [!WARNING]
-> Make sure to encode the fields in JSON before sending them.
+> [!WARNING] Make sure to encode the fields in JSON before sending them.
 
 For instance, you could do something like this:
 
@@ -416,18 +420,18 @@ For instance, you could do something like this:
 async function uploadBook(file) {
     const bookMetadata = {
         title: "API Platform Best Practices",
-        genre: "Programming"
+        genre: "Programming",
     };
 
     const formData = new FormData();
     for (const [name, value] of Object.entries(bookMetadata)) {
         formData.append(name, JSON.stringify(value));
     }
-    formData.append('file', file);
+    formData.append("file", file);
 
-    const response = await fetch('https://my-api.com/books', {
-        method: 'POST',
-        body: formData
+    const response = await fetch("https://my-api.com/books", {
+        method: "POST",
+        body: formData,
     });
 
     const result = await response.json();

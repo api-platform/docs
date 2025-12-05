@@ -1,19 +1,19 @@
 # Contribution Guides
 
-## API Platform Core  
+## API Platform Core
 
-- [General Contribution Guide](https://github.com/api-platform/core/blob/main/CONTRIBUTING.md)  
+- [General Contribution Guide](https://github.com/api-platform/core/blob/main/CONTRIBUTING.md)
 - [Laravel-Specific Contribution Guide](https://github.com/api-platform/core/blob/main/src/Laravel/CONTRIBUTING.md)
 
 ## API Platform Documentation
 
-- [General Contribution Guide](https://github.com/api-platform/docs/blob/main/CONTRIBUTING.md)  
+- [General Contribution Guide](https://github.com/api-platform/docs/blob/main/CONTRIBUTING.md)
 
-## API Platform Tools  
+## API Platform Tools
 
-- [Schema Generator Contribution Guide](https://github.com/api-platform/schema-generator/blob/main/CONTRIBUTING.md)  
-- [Admin Contribution Guide](https://github.com/api-platform/admin/blob/master/CONTRIBUTING.md)  
-- [CRUD Generator Contribution Guide](https://github.com/api-platform/create-client/blob/master/CONTRIBUTING.md)  
+- [Schema Generator Contribution Guide](https://github.com/api-platform/schema-generator/blob/main/CONTRIBUTING.md)
+- [Admin Contribution Guide](https://github.com/api-platform/admin/blob/master/CONTRIBUTING.md)
+- [CRUD Generator Contribution Guide](https://github.com/api-platform/create-client/blob/master/CONTRIBUTING.md)
 
 **To report a security issue, please take a look at [the dedicated document](security.md).**
 

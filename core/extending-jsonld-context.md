@@ -4,10 +4,10 @@
 
 <p align="center" class="symfonycasts"><a href="https://symfonycasts.com/screencast/api-platform/json-ld?cid=apip"><img src="../symfony/images/symfonycasts-player.png" alt="JSON-LD screencast"><br>Watch the JSON-LD screencast</a></p>
 
-API Platform provides the possibility to extend the JSON-LD context of properties. This allows you to describe JSON-LD-typed
-values, inverse properties using the `@reverse` keyword, and you can even overwrite the `@id` property this way.
-Everything you define within the following annotation will be passed to the context. This provides a generic way to
-extend the context.
+API Platform provides the possibility to extend the JSON-LD context of properties. This allows you
+to describe JSON-LD-typed values, inverse properties using the `@reverse` keyword, and you can even
+overwrite the `@id` property this way. Everything you define within the following annotation will be
+passed to the context. This provides a generic way to extend the context.
 
 ```php
 <?php
@@ -45,22 +45,23 @@ The generated context will now have your custom attributes set:
 
 ```json
 {
-  "@context": {
-    "@vocab": "http://example.com/apidoc#",
-    "hydra": "http://www.w3.org/ns/hydra/core#",
-    "name": {
-      "@id": "http://yourcustomid.com",
-      "@type": "http://www.w3.org/2001/XMLSchema#string",
-      "someProperty": {
-        "a": "textA",
-        "b": "textB"
-      }
+    "@context": {
+        "@vocab": "http://example.com/apidoc#",
+        "hydra": "http://www.w3.org/ns/hydra/core#",
+        "name": {
+            "@id": "http://yourcustomid.com",
+            "@type": "http://www.w3.org/2001/XMLSchema#string",
+            "someProperty": {
+                "a": "textA",
+                "b": "textB"
+            }
+        }
     }
-  }
 }
 ```
 
-Note that you do not have to provide the `@id` attribute. If you do not provide an `@id` attribute, the value from `iri` will be used.
+Note that you do not have to provide the `@id` attribute. If you do not provide an `@id` attribute,
+the value from `iri` will be used.
 
 ## Hydra
 
@@ -91,10 +92,10 @@ class Book
 # api/config/api_platform/resources.yaml
 # The YAML syntax is only supported for Symfony
 resources:
-  App\ApiResource\Book:
-    operations:
-      ApiPlatform\Metadata\Get:
-        hydraContext: { foo: 'bar' }
+    App\ApiResource\Book:
+        operations:
+            ApiPlatform\Metadata\Get:
+                hydraContext: { foo: "bar" }
 ```
 
 ```xml

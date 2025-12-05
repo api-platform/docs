@@ -19,18 +19,19 @@ To generate all the code you need for a given resource run the following command
 npm init @api-platform/client https://demo.api-platform.com src/ -- --generator vuetify --resource book
 ```
 
-Replace the URL with the entrypoint of your Hydra-enabled API.
-You can also use an OpenAPI documentation with `https://demo.api-platform.com/docs.jsonopenapi` and `-f openapi3`.
+Replace the URL with the entrypoint of your Hydra-enabled API. You can also use an OpenAPI
+documentation with `https://demo.api-platform.com/docs.jsonopenapi` and `-f openapi3`.
 
 Omit the resource flag to generate files for all resource types exposed by the API.
 
-**Note:** Make sure to follow the result indications of the command to register the routes and the translations.
+**Note:** Make sure to follow the result indications of the command to register the routes and the
+translations.
 
 Then add this import in `src/plugins/vuetify.ts`:
 
 ```typescript
 // src/plugins/vuetify.ts
-import { VDataTableServer } from 'vuetify/labs/VDataTable';
+import { VDataTableServer } from "vuetify/labs/VDataTable";
 ```
 
 In the same file replace the export with:
@@ -38,9 +39,9 @@ In the same file replace the export with:
 ```typescript
 // src/plugins/vuetify.ts
 export default createVuetify({
-  components: {
-    VDataTableServer,
-  },
+    components: {
+        VDataTableServer,
+    },
 });
 ```
 
@@ -48,7 +49,7 @@ In `src/plugins/index.ts` add this import:
 
 ```typescript
 // src/plugins/index.ts
-import i18n from '@/plugins/i18n';
+import i18n from "@/plugins/i18n";
 ```
 
 In the same file add `.use(i18n)` chained with the other `use()` functions.

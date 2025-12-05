@@ -1,11 +1,13 @@
 # Validation
 
-API Platform Admin manages automatically two types of validation: client-side validation and server-side (or submission) validation.
+API Platform Admin manages automatically two types of validation: client-side validation and
+server-side (or submission) validation.
 
 ## Client-side Validation
 
-If the API documentation indicates that a field is mandatory,
-API Platform Admin will automatically add a [required client-side validation](https://marmelab.com/react-admin/Validation.html#per-input-validation-built-in-field-validators).
+If the API documentation indicates that a field is mandatory, API Platform Admin will automatically
+add a
+[required client-side validation](https://marmelab.com/react-admin/Validation.html#per-input-validation-built-in-field-validators).
 
 For instance, with API Platform as backend, if you write the following:
 
@@ -31,12 +33,16 @@ If you create a new book and try to submit without filling the "Title" field, yo
 
 ## Server-side Validation
 
-When the form is submitted and if submission errors are received,
-API Platform Admin will automatically show the errors for the corresponding fields.
+When the form is submitted and if submission errors are received, API Platform Admin will
+automatically show the errors for the corresponding fields.
 
-To do so, it uses the [Server-Side Validation](https://marmelab.com/react-admin/Validation.html#server-side-validation) feature of React Admin, and the mapping between the response and the fields is done by the [schema analyzer](components.md#hydra-schema-analyzer) with its method `getSubmissionErrors`.
+To do so, it uses the
+[Server-Side Validation](https://marmelab.com/react-admin/Validation.html#server-side-validation)
+feature of React Admin, and the mapping between the response and the fields is done by the
+[schema analyzer](components.md#hydra-schema-analyzer) with its method `getSubmissionErrors`.
 
-API Platform is supported by default, but if you use another backend, you will need to override the `getSubmissionErrors` method.
+API Platform is supported by default, but if you use another backend, you will need to override the
+`getSubmissionErrors` method.
 
 For example if you have this code:
 
@@ -62,9 +68,15 @@ If you submit the form with an invalid ISBN, you will see:
 
 ## Validation With React Admin Inputs
 
-If you replace an `<InputGuesser>` with a React Admin [input component](https://marmelab.com/react-admin/Inputs.html), such as [`<TextInput>`](https://marmelab.com/react-admin/TextInput.html), [`<DateInput>`](https://marmelab.com/react-admin/DateInput.html) or [`<ReferenceInput>`](https://marmelab.com/react-admin/ReferenceInput.html), you will need to **manually add the validation rules back**.
+If you replace an `<InputGuesser>` with a React Admin
+[input component](https://marmelab.com/react-admin/Inputs.html), such as
+[`<TextInput>`](https://marmelab.com/react-admin/TextInput.html),
+[`<DateInput>`](https://marmelab.com/react-admin/DateInput.html) or
+[`<ReferenceInput>`](https://marmelab.com/react-admin/ReferenceInput.html), you will need to
+**manually add the validation rules back**.
 
-Fortunately, this is very easy to do, thanks to the [`validate`](https://marmelab.com/react-admin/Inputs.html#validate) prop of the input components.
+Fortunately, this is very easy to do, thanks to the
+[`validate`](https://marmelab.com/react-admin/Inputs.html#validate) prop of the input components.
 
 For instance, here is how to replace the input for the required `title` field:
 
@@ -80,7 +92,9 @@ export const BookEdit = () => (
 );
 ```
 
-React Admin already comes with several [built-in validators](https://marmelab.com/react-admin/Validation.html#per-input-validation-built-in-field-validators), such as:
+React Admin already comes with several
+[built-in validators](https://marmelab.com/react-admin/Validation.html#per-input-validation-built-in-field-validators),
+such as:
 
 - `required(message)` if the field is mandatory,
 - `minValue(min, message)` to specify a minimum value for integers,
@@ -92,6 +106,9 @@ React Admin already comes with several [built-in validators](https://marmelab.co
 - `regex(pattern, message)` to validate that the input matches a regular expression,
 - `choices(list, message)` to validate that the input is within a given list
 
-React Admin also supports [Global Validation](https://marmelab.com/react-admin/Validation.html#global-validation) (at the form level).
+React Admin also supports
+[Global Validation](https://marmelab.com/react-admin/Validation.html#global-validation) (at the form
+level).
 
-Check out the [Form Validation](https://marmelab.com/react-admin/Validation.html) documentation to learn more.
+Check out the [Form Validation](https://marmelab.com/react-admin/Validation.html) documentation to
+learn more.

@@ -4,9 +4,13 @@
 
 Watch the Custom Resources screencast</a></p>
 
-The DTO pattern isolates your public API contract from your internal data model (Entities). This decoupling allows you to evolve your data structure without breaking the API and provides finer control over validation and serialization.
+The DTO pattern isolates your public API contract from your internal data model (Entities). This
+decoupling allows you to evolve your data structure without breaking the API and provides finer
+control over validation and serialization.
 
-In API Platform, [the general design considerations](design.md) recommended pattern is [DTO](https://en.wikipedia.org/wiki/Data_transfer_object) as a Resource: the class marked with `#[ApiResource]` is the DTO, effectively becoming the "contract" of your API.
+In API Platform, [the general design considerations](design.md) recommended pattern is
+[DTO](https://en.wikipedia.org/wiki/Data_transfer_object) as a Resource: the class marked with
+`#[ApiResource]` is the DTO, effectively becoming the "contract" of your API.
 
 This reference covers three implementation strategies:
 
@@ -16,13 +20,15 @@ This reference covers three implementation strategies:
 
 ## 1. The DTO Resource (State Options)
 
-> [!WARNING]
-> This is a Symfony only feature in 4.2 and is not working properly without the symfony/object-mapper:^7.4
+> [!WARNING] This is a Symfony only feature in 4.2 and is not working properly without the
+> symfony/object-mapper:^7.4
 
-You can map a DTO Resource directly to a Doctrine Entity using stateOptions. This automatically configures the built-in State Providers and Processors to fetch/persist data using the Entity and map it to your Resource (DTO) using the Symfony Object Mapper.
+You can map a DTO Resource directly to a Doctrine Entity using stateOptions. This automatically
+configures the built-in State Providers and Processors to fetch/persist data using the Entity and
+map it to your Resource (DTO) using the Symfony Object Mapper.
 
-> [!WARNING]
-> You must apply the #[Map] attribute to your DTO class. This signals API Platform to use the Object Mapper for transforming data between the Entity and the DTO.
+> [!WARNING] You must apply the #[Map] attribute to your DTO class. This signals API Platform to use
+> the Object Mapper for transforming data between the Entity and the DTO.
 
 ### The Entity
 
@@ -61,7 +67,9 @@ class Book
 
 ### The API Resource (Main DTO)
 
-The Resource DTO handles the public representation. We use `#[Map]` to handle differences between the internal model (title) and the public API (name), as well as value transformations (`formatPrice`).
+The Resource DTO handles the public representation. We use `#[Map]` to handle differences between
+the internal model (title) and the public API (name), as well as value transformations
+(`formatPrice`).
 
 ```php
 // src/Api/Resource/Book.php
@@ -75,7 +83,7 @@ use Symfony\Component\ObjectMapper\Attribute\Map;
 #[ApiResource(
     shortName: 'Book',
     // 1. Link this DTO to the Doctrine Entity
-    stateOptions: new Options(entityClass: BookEntity::class), 
+    stateOptions: new Options(entityClass: BookEntity::class),
     operations: [ /* ... defined in next sections ... */ ]
 )]
 #[Map(source: BookEntity::class)]
@@ -112,9 +120,11 @@ final class Book
 
 ### Implementation Details: The Object Mapper Magic
 
-Automated mapping relies on two internal classes: `ApiPlatform\State\Provider\ObjectMapperProvider` and `ApiPlatform\State\Processor\ObjectMapperProcessor`.
+Automated mapping relies on two internal classes: `ApiPlatform\State\Provider\ObjectMapperProvider`
+and `ApiPlatform\State\Processor\ObjectMapperProcessor`.
 
-These classes act as decorators around the standard Provider/Processor chain. They are activated when:
+These classes act as decorators around the standard Provider/Processor chain. They are activated
+when:
 
 - The Object Mapper component is available.
 - `stateOptions` are configured with an `entityClass` (or `documentClass` for ODM).
@@ -124,19 +134,26 @@ These classes act as decorators around the standard Provider/Processor chain. Th
 
 **Read (GET):**
 
-The `ObjectMapperProvider` delegates fetching the data to the underlying Doctrine provider (which returns an Entity). It then uses `$objectMapper->map($entity, $resourceClass)` to transform the Entity into your DTO Resource.
+The `ObjectMapperProvider` delegates fetching the data to the underlying Doctrine provider (which
+returns an Entity). It then uses `$objectMapper->map($entity, $resourceClass)` to transform the
+Entity into your DTO Resource.
 
 **Write (POST/PUT/PATCH):**
 
-The `ObjectMapperProcessor` receives the deserialized Input DTO. It uses `$objectMapper->map($inputDto, $entityClass)` to transform the input into an Entity instance. It then delegates to the underlying Doctrine processor (to persist the Entity). Finally, it maps the persisted Entity back to the Output DTO Resource.
+The `ObjectMapperProcessor` receives the deserialized Input DTO. It uses
+`$objectMapper->map($inputDto, $entityClass)` to transform the input into an Entity instance. It
+then delegates to the underlying Doctrine processor (to persist the Entity). Finally, it maps the
+persisted Entity back to the Output DTO Resource.
 
 ## 2. Automated Mapped Inputs and Outputs
 
-Ideally, your read and write models should differ. You might want to expose less data in a collection view (Output DTO) or enforce strict validation during creation/updates (Input DTOs).
+Ideally, your read and write models should differ. You might want to expose less data in a
+collection view (Output DTO) or enforce strict validation during creation/updates (Input DTOs).
 
 ### Input DTOs (Write Operations)
 
-For POST and PATCH, we define specific DTOs. The `#[Map(target: BookEntity::class)]` attribute tells the system to map this DTO onto the Entity class before persistence.
+For POST and PATCH, we define specific DTOs. The `#[Map(target: BookEntity::class)]` attribute tells
+the system to map this DTO onto the Entity class before persistence.
 
 #### CreateBook DTO
 
@@ -242,7 +259,8 @@ final class Book { /* ... */ }
 
 ## 3. Custom Business Logic (Custom Processor)
 
-For complex business actions (like applying a discount), standard CRUD mapping isn't enough. You should use a custom Processor paired with a specific Input DTO.
+For complex business actions (like applying a discount), standard CRUD mapping isn't enough. You
+should use a custom Processor paired with a specific Input DTO.
 
 ### The Input DTO
 
@@ -263,7 +281,8 @@ final class DiscountBook
 
 ### The Processor
 
-The processor handles the business logic. It receives the DiscountBook DTO as $data and the loaded Entity (retrieved automatically via stateOptions) in the context.
+The processor handles the business logic. It receives the DiscountBook DTO as $data and the loaded
+Entity (retrieved automatically via stateOptions) in the context.
 
 ```php
 // src/State/DiscountBookProcessor.php

@@ -1,32 +1,41 @@
 # Creating Async APIs using the Mercure Protocol
 
-API Platform can automatically push the modified version of the resources exposed by the API to the currently connected clients (webapps, mobile apps...) using [the Mercure protocol](https://mercure.rocks).
+API Platform can automatically push the modified version of the resources exposed by the API to the
+currently connected clients (webapps, mobile apps...) using
+[the Mercure protocol](https://mercure.rocks).
 
-> _Mercure_ is a protocol allowing to push data updates to web browsers and other HTTP clients in a convenient, fast, reliable and battery-efficient way. It is especially useful to publish real-time updates of resources served through web APIs, to reactive web and mobile apps.
+> _Mercure_ is a protocol allowing to push data updates to web browsers and other HTTP clients in a
+> convenient, fast, reliable and battery-efficient way. It is especially useful to publish real-time
+> updates of resources served through web APIs, to reactive web and mobile apps.
 >
 > —[https://mercure.rocks](https://mercure.rocks)
 
-API Platform detects changes made to your Doctrine entities, and sends the updated resources to the Mercure hub.
-Then, the Mercure hub dispatches the updates to all connected clients using [Server-sent Events (SSE)](https://developer.mozilla.org/en-US/docs/Web/API/Server-sent_events).
+API Platform detects changes made to your Doctrine entities, and sends the updated resources to the
+Mercure hub. Then, the Mercure hub dispatches the updates to all connected clients using
+[Server-sent Events (SSE)](https://developer.mozilla.org/en-US/docs/Web/API/Server-sent_events).
 
 ![Mercure subscriptions](images/mercure-subscriptions.png)
 
 ## Installing Mercure Support
 
-Mercure support is already installed, configured and enabled in [the API Platform Symfony variant](../symfony/index.md).
-If you use the distribution, you have nothing more to do, and you can skip to the next section.
+Mercure support is already installed, configured and enabled in
+[the API Platform Symfony variant](../symfony/index.md). If you use the distribution, you have
+nothing more to do, and you can skip to the next section.
 
-If you installed API Platform using another method (e.g., `composer require api`), you will need to set up the following:
+If you installed API Platform using another method (e.g., `composer require api`), you will need to
+set up the following:
 
 1. A [Mercure hub](https://mercure.rocks/docs/getting-started).
 
 2. One of the following, depending on your framework:
     - For Symfony users: the [MercureBundle](https://symfony.com/doc/current/mercure.html).
-    - For Laravel users: the [Laravel Mercure Broadcaster](https://github.com/mvanduijker/laravel-mercure-broadcaster).
+    - For Laravel users: the
+      [Laravel Mercure Broadcaster](https://github.com/mvanduijker/laravel-mercure-broadcaster).
 
 ## Pushing the API Updates
 
-Use the `mercure` attribute to hint API Platform that it must dispatch the updates regarding the given resources to the Mercure hub:
+Use the `mercure` attribute to hint API Platform that it must dispatch the updates regarding the
+given resources to the Mercure hub:
 
 ```php
 <?php
@@ -42,15 +51,17 @@ class Book
 }
 ```
 
-Then, every time an object of this type is created, updated or deleted, the new version is sent to all connected clients
-through the Mercure hub. If the resource has been deleted, only the (now deleted) IRI of the resource is sent to the clients.
+Then, every time an object of this type is created, updated or deleted, the new version is sent to
+all connected clients through the Mercure hub. If the resource has been deleted, only the (now
+deleted) IRI of the resource is sent to the clients.
 
-In addition, API Platform automatically adds a `Link` HTTP header to all responses related to this resource class.
-This header allows smart clients to automatically discover the Mercure hub.
+In addition, API Platform automatically adds a `Link` HTTP header to all responses related to this
+resource class. This header allows smart clients to automatically discover the Mercure hub.
 
 ![Mercure subscriptions](images/mercure-discovery.png)
 
-Clients generated using [Create Client](../create-client/index.md) will use this capability to automatically subscribe to Mercure updates when available:
+Clients generated using [Create Client](../create-client/index.md) will use this capability to
+automatically subscribe to Mercure updates when available:
 
 ![Screencast](../create-client/images/create-client-demo.gif)
 
@@ -58,8 +69,10 @@ Clients generated using [Create Client](../create-client/index.md) will use this
 
 ## Dispatching Private Updates (Authorized Mode)
 
-Mercure allows dispatching [private updates, that will be received only by authorized clients](https://mercure.rocks/spec#authorization).
-To receive this kind of updates, the client must hold a JWT containing at least one _target selector_ matched by the update.
+Mercure allows dispatching
+[private updates, that will be received only by authorized clients](https://mercure.rocks/spec#authorization).
+To receive this kind of updates, the client must hold a JWT containing at least one _target
+selector_ matched by the update.
 
 Then, use options to mark the published updates as privates:
 
@@ -77,7 +90,8 @@ class Book
 }
 ```
 
-It's also possible to execute an _expression_ (using the [Symfony Expression Language component](https://symfony.com/doc/current/components/expression_language.html)),
+It's also possible to execute an _expression_ (using the
+[Symfony Expression Language component](https://symfony.com/doc/current/components/expression_language.html)),
 to generate the options dynamically:
 
 ```php
@@ -101,7 +115,8 @@ class Book
 In addition to `private`, the following options are available:
 
 - `topics`: the list of topics of this update, if not the resource IRI is used
-- `data`: the content of this update, if not set the content will be the serialization of the resource using the default format
+- `data`: the content of this update, if not set the content will be the serialization of the
+  resource using the default format
 - `id`: the SSE ID of this event, if not set the ID will be generated by the Mercure Hub
 - `type`: the SSE type of this event, if not set this field is omitted
 - `retry`: the `retry` field of the SSE, if not set this field is omitted
@@ -109,19 +124,23 @@ In addition to `private`, the following options are available:
 
 ## Dispatching Restrictive Updates (Security Mode)
 
-Use `iri` (iriConverter) and `escape` (rawurlencode) functions to add an alternative topic, in order to restrict a subscriber
-with `topic_selector` to receive only publications that are authorized (partner match).
+Use `iri` (iriConverter) and `escape` (rawurlencode) functions to add an alternative topic, in order
+to restrict a subscriber with `topic_selector` to receive only publications that are authorized
+(partner match).
 
-> Let's say that a subscriber wants to receive updates concerning all book resources it has access to. The subscriber
-> can use the topic selector `https://example.com/books/{id}` as value of the topic query parameter.
-> Adding this same URI template to the mercure.subscribe claim of the JWS presented by the subscriber to the hub would
-> allow this subscriber to receive all updates for all book resources. It is not what we want here: this subscriber is
-> only authorized to access some of these resources.
+> Let's say that a subscriber wants to receive updates concerning all book resources it has access
+> to. The subscriber can use the topic selector `https://example.com/books/{id}` as value of the
+> topic query parameter. Adding this same URI template to the mercure.subscribe claim of the JWS
+> presented by the subscriber to the hub would allow this subscriber to receive all updates for all
+> book resources. It is not what we want here: this subscriber is only authorized to access some of
+> these resources.
 >
-> To solve this problem, the mercure.subscribe claim could contain a topic selector such as: `https://example.com/users/foo/{?topic}`.
+> To solve this problem, the mercure.subscribe claim could contain a topic selector such as:
+> `https://example.com/users/foo/{?topic}`.
 >
-> The publisher could then take advantage of the previously described behavior by publishing a private update having
-> `https://example.com/books/1` as canonical topic and `https://example.com/users/foo/?topic=https%3A%2F%2Fexample.com%2Fbooks%2F1` as alternate topic.
+> The publisher could then take advantage of the previously described behavior by publishing a
+> private update having `https://example.com/books/1` as canonical topic and
+> `https://example.com/users/foo/?topic=https%3A%2F%2Fexample.com%2Fbooks%2F1` as alternate topic.
 >
 > —[https://mercure.rocks/spec#subscribers](https://mercure.rocks/spec#subscribers)
 
@@ -201,11 +220,10 @@ In this case, the JWT Token for the subscriber should contain:
 
 ```json
 {
-  "mercure": {
-    "subscribe": ["https://example.com/users/foo/{?topic}"]
-  }
+    "mercure": {
+        "subscribe": ["https://example.com/users/foo/{?topic}"]
+    }
 }
 ```
 
-The subscribe topic should be:
-`https://example.com/books/{id}`
+The subscribe topic should be: `https://example.com/books/{id}`
