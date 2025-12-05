@@ -298,8 +298,7 @@ api_platform:
     description: ~
     iri: ~
     short_name: ~
-    item_operations: ~
-    collection_operations: ~
+    operations: ~
 
     graphql: ~
 
@@ -725,8 +724,7 @@ return [
         'description' => null,
         'iri' => null,
         'short_name' => null,
-        'item_operations' => null,
-        'collection_operations' => null,
+        'operations' => null,
 
         'graphql' => null,
 
