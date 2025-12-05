@@ -1,6 +1,6 @@
 ---
 MD013:
-  line_length: 100
+  line_length: 1000
   code_blocks: false
   tables: false
 no-inline-html:
@@ -9,3 +9,5 @@ MD046:
   style: fenced
 MD004:
   style: dash
+MD007:
+  indent: 4
