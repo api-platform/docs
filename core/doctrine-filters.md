@@ -6,8 +6,7 @@ For further documentation on filters (including for Eloquent and Elasticsearch),
 
 > [!WARNING]
 > For maximum flexibility and to ensure future compatibility, it is strongly recommended to configure your filters via
-> the parameters attribute using `QueryParameter`. The legacy method using the `ApiFilter` attribute is **deprecated** and
-> will be **removed** in version **5.0**.
+> the parameters attribute using `QueryParameter`. The legacy method using the `ApiFilter` attribute is not recommended.
 
 The modern way to declare filters is to associate them directly with an operation's parameters. This allows for more
 precise control over the exposed properties.
@@ -54,11 +53,6 @@ class Book {
 }
 ```
 
-**Further Reading**
-
-- Consult the documentation on [Per-Parameter Filters (Recommended Method)](../core/filters.md#2-per-parameter-filters-recommended).
-- If you are working with a legacy codebase, you can refer to the [documentation for the old syntax (deprecated)](../core/filters.md#1-legacy-filters-searchfilter-etc---not-recommended).
-
 ## Basic Knowledge
 
 Filters are services (see the section on [custom filters](../core/filters.md#creating-custom-filters)), and they can be linked
@@ -69,23 +63,6 @@ to a Resource in two ways:
 For example, having a filter service declaration in `services.yaml`:
 
 ```yaml
-# api/config/services.yaml
-services:
-  # ...
-  offer.date_filter:
-    parent: 'api_platform.doctrine.orm.date_filter'
-    arguments: [{ dateProperty: ~ }]
-    tags: ['api_platform.filter']
-    # The following are mandatory only if a _defaults section is defined with inverted values.
-    # You may want to isolate filters in a dedicated file to avoid adding the following lines.
-    autowire: false
-    autoconfigure: false
-    public: false
-```
-
-Alternatively, you can choose to use a dedicated file to gather filters together:
-
-```yaml
 # api/config/filters.yaml
 services:
   offer.date_filter:
@@ -94,10 +71,13 @@ services:
     tags: ['api_platform.filter']
 ```
 
+> [!WARNING]
+> Its discouraged to use a filter with properties in the dependency injection as it may conflict with how
+> `QueryParameter` works. We recommend to use a per-parameter filter or to use the :property placeholder with a defined 
+> `filterContext` specifying your strategy for a given set of parameters.
+
 We're linking the filter `offer.date_filter` with the resource like this:
 
-<code-selector>
-
 ```php
 <?php
 // api/src/Entity/Offer.php
@@ -105,80 +85,23 @@ namespace App\Entity;
 
 use ApiPlatform\Metadata\ApiResource;
 
-#[ApiResource(filters: ['offer.date_filter'])]
+#[GetCollection(parameters: ['date' => new QueryParameter(filter: 'offer.date_filter')])]
 class Offer
 {
     // ...
 }
 ```
-
-```yaml
-# api/config/api_platform/resources.yaml
-resources:
-  App\Entity\Offer:
-    operations:
-      ApiPlatform\Metadata\GetCollection:
-        filters: ['offer.date_filter']
-    # ...
-```
-
-```xml
-<?xml version="1.0" encoding="UTF-8" ?>
-<!-- api/config/api_platform/resources.xml -->
-
-<resources xmlns="https://api-platform.com/schema/metadata/resources-3.0"
-        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xsi:schemaLocation="https://api-platform.com/schema/metadata/resources-3.0
-        https://api-platform.com/schema/metadata/resources-3.0.xsd">
-    <resource class="App\Entity\Offer">
-        <operations>
-            <operation class="ApiPlatform\Metadata\GetCollection">
-                <filters>
-                    <filter>offer.date_filter</filter>
-                </filters>
-            </operation>
-            <!-- ... -->
-        </operations>
-    </resource>
-</resources>
-```
-
-</code-selector>
-
-2. By using the `#[ApiFilter]` attribute.
-
-This attribute automatically declares the service, and you just have to use the filter class you want:
-
-```php
-<?php
-// api/src/Entity/Offer.php
-namespace App\Entity;
-
-use ApiPlatform\Metadata\ApiFilter;
-use ApiPlatform\Metadata\ApiResource;
-use ApiPlatform\Doctrine\Orm\Filter\DateFilter;
-
-#[ApiResource]
-#[ApiFilter(DateFilter::class, properties: ['dateProperty'])]
-class Offer
-{
-    // ...
-}
-```
-
-Learn more on how the [ApiFilter attribute](../core/filters.md#1-legacy-filters-searchfilter-etc---not-recommended) works.
-
-For the sake of consistency, we're using the attribute in the below documentation.
 
 For MongoDB ODM, all the filters are in the namespace `ApiPlatform\Doctrine\Odm\Filter`. The filter
 services all begin with `api_platform.doctrine_mongodb.odm`.
 
-## Search Filter (not recommended)
+## Search Filter
 
 > [!WARNING]
-> Instead of using the deprecated `SearchFilter` its recommended to use the new search filters with QueryParameter attributes
+> The SearchFilter is a multi-type filter that may have inconsistencies (eg: you can search a partial date with LIKE)
+> we recommend to use type-specific filters such as `PartialSearchFilter` or `DateFilter` instead.
 
-### Built-in new Search Filters (API Platform >= 4.2)
+### Built-in new Search Filters since API Platform >= 4.2
 
 To add some search filters, choose over this new list:
 - [IriFilter](#iri-filter) (filter on IRIs)
@@ -187,10 +110,17 @@ To add some search filters, choose over this new list:
 - [FreeTextQueryFilter](#free-text-query-filter) (allows you to apply multiple filters to multiple properties of a resource at the same time, using a single parameter in the URL)
 - [OrFilter](#or-filter) (apply a filter using `orWhere` instead of `andWhere` )
 
-### Legacy SearchFilter (API Platform < 4.2))
+### SearchFilter
 
-If Doctrine ORM or MongoDB ODM support is enabled, adding filters is as easy as registering a filter service in the
-`api/config/services.yaml` file and adding an attribute to your resource configuration.
+If Doctrine ORM or MongoDB ODM support is enabled, using the search filter service requires you to registering a filter service in the
+`api/config/services.yaml` file and adding an attribute to your resource configuration:
+
+```yaml
+    app_search_filter_via_parameter:
+        parent:    'api_platform.doctrine.orm.search_filter'
+        arguments: [ { 'id': 'exact', 'price': 'exact', 'description': 'partial' } ] # Declare strategies for each property
+        tags:      [ { name: 'api_platform.filter', id: 'app_search_filter_via_parameter' } ]
+```
 
 The search filter supports `exact`, `partial`, `start`, `end`, and `word_start` matching strategies:
 
@@ -210,9 +140,7 @@ Note: Search filters with the `exact` strategy can have multiple values for the 
 
 Syntax: `?property[]=foo&property[]=bar`
 
-In the following example, we will see how to allow the filtering of a list of e-commerce offers:
-
-<code-selector>
+In the following example, we will see how to allow the filtering of e-commerce offers (a list):
 
 ```php
 <?php
@@ -223,91 +151,24 @@ use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\ApiFilter;
 use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
 
-#[ApiResource]
-#[ApiFilter(SearchFilter::class, properties: ['id' => 'exact', 'price' => 'exact', 'description' => 'partial'])]
+#[GetCollection(
+    parameters: [
+        new QueryParameter(
+            filter: 'app_search_filter_via_parameter', // the previously declared filter
+            properties: ['id', 'price', 'description'],
+        )
+    ]
+)]
 class Offer
 {
     // ...
 }
 ```
-
-```yaml
-# config/services.yaml
-services:
-  offer.search_filter:
-    parent: 'api_platform.doctrine.orm.search_filter'
-    arguments: [{ id: 'exact', price: 'exact', description: 'partial' }]
-    tags: ['api_platform.filter']
-    # The following are mandatory only if a _defaults section is defined with inverted values.
-    # You may want to isolate filters in a dedicated file to avoid adding the following lines (by adding them in the defaults section)
-    autowire: false
-    autoconfigure: false
-    public: false
-
-# config/api/Offer.yaml
-App\Entity\Offer:
-  # ...
-  operations:
-    ApiPlatform\Metadata\GetCollection:
-      filters: ['offer.search_filter']
-```
-
-</code-selector>
 
 `http://localhost:8000/api/offers?price=10` will return all offers with a price being exactly `10`.
 `http://localhost:8000/api/offers?description=shirt` will return all offers with a description containing the word "shirt".
 
 Filters can be combined: `http://localhost:8000/api/offers?price=10&description=shirt`
-
-It is possible to filter on relations too, if `Offer` has a `Product` relation:
-
-<code-selector>
-
-```php
-<?php
-// api/src/Entity/Offer.php
-namespace App\Entity;
-
-use ApiPlatform\Metadata\ApiResource;
-use ApiPlatform\Metadata\ApiFilter;
-use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
-
-#[ApiResource]
-#[ApiFilter(SearchFilter::class, properties: ['product' => 'exact'])]
-class Offer
-{
-    // ...
-}
-```
-
-```yaml
-# config/services.yaml
-services:
-  offer.search_filter:
-    parent: 'api_platform.doctrine.orm.search_filter'
-    arguments: [{ product: 'exact' }]
-    tags: ['api_platform.filter']
-    # The following are mandatory only if a _defaults section is defined with inverted values.
-    # You may want to isolate filters in a dedicated file to avoid adding the following lines (by adding them in the defaults section)
-    autowire: false
-    autoconfigure: false
-    public: false
-
-# config/api/Offer.yaml
-App\Entity\Offer:
-  # ...
-  operations:
-    ApiPlatform\Metadata\GetCollection:
-      filters: ['offer.search_filter']
-```
-
-</code-selector>
-
-With this service definition, it is possible to find all offers belonging to the product identified by a given IRI.
-Try the following: `http://localhost:8000/api/offers?product=/api/products/12`.
-Using a numeric ID is also supported: `http://localhost:8000/api/offers?product=12`
-
-The above URLs will return all offers for the product having the following IRI as JSON-LD identifier (`@id`): `http://localhost:8000/api/products/12`.
 
 ## Iri Filter
 
@@ -401,7 +262,7 @@ It will return all chickens where the name contains the substring _tom_.
 
 > [!NOTE]
 > This filter performs a case-insensitive search. It automatically normalizes both the input value and the stored data
-> (e.g., by converting them to lowercase) before making the comparison.
+> (for e.g., by converting them to lowercase) before making the comparison.
 
 ## Free Text Query Filter
 
@@ -413,7 +274,7 @@ Syntax: `?property=value`
 The value can take any scalar value or array of values.
 
 Like other [new search filters](#built-in-new-search-filters-api-platform--42) it can be used on the ApiResource attribute
-or in the operation attribute, for e.g. the `#GetCollection()` attribute:
+or in the operation attribute, for e.g., the `#GetCollection()` attribute:
 
 ```php
 // api/src/ApiResource/Chicken.php
@@ -501,14 +362,42 @@ The value can take any date format supported by the [`\DateTime` constructor](ht
 
 The `after` and `before` filters will filter including the value whereas `strictly_after` and `strictly_before` will filter excluding the value.
 
-Like other filters, the date filter must be explicitly enabled:
+Like other filters, the Date Filter must be explicitly enabled:
+
+### Date Filter using the QueryParameter Syntax (recommended)
+
+```php
+<?php
+// api/src/ApiResource/Offer.php
+namespace App\ApiResource;
+
+#[GetCollection(
+    parameters: [
+        'created' => new QueryParameter(
+            filter: new DateFilter(),
+            property: 'createdAt' // Facultative if you use the exact property name for the parameter name (for e.g., if you use "createdAt" instead of "created", the property is auto-discovered)
+        ),
+    ],
+)]
+class Offer
+{
+    // ...
+}
+```
+
+> [!TIP]
+> For other syntaxes, for e.g., if you want to new syntax with the ApiResource attribute take a look [here](#introduction).
+
+### Date Filter using the ApiFilter Attribute Syntax (not recommended)
+
+Basically the ApiFilter declares the correct service under the hood. We recommend to use `QueryParameter` as they're more declarative and hide less complexity.
 
 <code-selector>
 
 ```php
 <?php
-// api/src/Entity/Offer.php
-namespace App\Entity;
+// api/src/ApiResource/Offer.php
+namespace App\ApiResource;
 
 use ApiPlatform\Metadata\ApiFilter;
 use ApiPlatform\Metadata\ApiResource;
@@ -530,13 +419,13 @@ services:
     arguments: [{ createdAt: ~ }]
     tags: ['api_platform.filter']
     # The following are mandatory only if a _defaults section is defined with inverted values.
-    # You may want to isolate filters in a dedicated file to avoid adding the following lines (by adding them in the defaults section)
+    # You may want to isolate filters in a dedicated file to avoid adding the following lines (by adding them in the "defaults" section)
     autowire: false
     autoconfigure: false
     public: false
 
 # config/api/Offer.yaml
-App\Entity\Offer:
+App\ApiResource\Offer:
   # ...
   operations:
     ApiPlatform\Metadata\GetCollection:
@@ -544,6 +433,8 @@ App\Entity\Offer:
 ```
 
 </code-selector>
+
+### Result using the Date Filter
 
 Given that the collection endpoint is `/offers`, you can filter offers by date with the following query: `/offers?createdAt[after]=2018-03-19`.
 
@@ -564,48 +455,56 @@ Four behaviors are available at the property level of the filter:
 
 For instance, exclude entries with a property value of `null` with the following service definition:
 
-<code-selector>
+#### Managing `null` Values with the Date Filter using the QueryParameter Syntax (recommended)
 
 ```php
 <?php
-// api/src/Entity/Offer.php
-namespace App\Entity;
+// api/src/ApiResource/Offer.php
+namespace App\ApiResource;
 
 use ApiPlatform\Doctrine\Common\Filter\DateFilterInterface;
-use ApiPlatform\Metadata\ApiFilter;
-use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\QueryParamater;
+use ApiPlatform\Metadata\Get;
 use ApiPlatform\Doctrine\Orm\Filter\DateFilter;
 
-#[ApiResource]
-#[ApiFilter(DateFilter::class, properties: ['dateProperty' => DateFilterInterface::EXCLUDE_NULL])]
+#[Get(parameters: [
+    'dateProperty' => new QueryParameter(
+        filter: new DateFilter(),
+        filterContext: DateFilterInterface::EXCLUDE_NULL,
+    ),
+])]
 class Offer
 {
     // ...
 }
 ```
 
-```yaml
-# config/services.yaml
-services:
-  offer.date_filter:
-    parent: 'api_platform.doctrine.orm.date_filter'
-    arguments: [{ dateProperty: exclude_null }]
-    tags: ['api_platform.filter']
-    # The following are mandatory only if a _defaults section is defined with inverted values.
-    # You may want to isolate filters in a dedicated file to avoid adding the following lines (by adding them in the defaults section)
-    autowire: false
-    autoconfigure: false
-    public: false
+Or you can also use the `properties` attribute on the `DateFilter` to apply your [`null` strategy](#managing-null-values):
 
-# config/api/Offer.yaml
-App\Entity\Offer:
-  # ...
-  operations:
-    ApiPlatform\Metadata\GetCollection:
-      filters: ['offer.date_filter']
+```php
+<?php
+// api/src/ApiResource/Offer.php
+namespace App\ApiResource;
+
+use ApiPlatform\Doctrine\Common\Filter\DateFilterInterface;
+use ApiPlatform\Metadata\QueryParamater;
+use ApiPlatform\Metadata\Get;
+use ApiPlatform\Doctrine\Orm\Filter\DateFilter;
+
+#[Get(parameters: [
+    'dateProperty' => new QueryParameter(
+        filter: new DateFilter(properties: ['dateProperty' => DateFilterInterface::EXCLUDE_NULL]),
+    ),
+])]
+class Offer
+{
+    // ...
+}
 ```
 
-</code-selector>
+> [!TIP]
+> For other syntaxes, for e.g., if you want to new syntax with the ApiResource attribute take a look [here](#introduction).
+
 
 ## Boolean Filter
 
@@ -615,47 +514,33 @@ Syntax: `?property=<true|false|1|0>`
 
 Enable the filter:
 
-<code-selector>
+### Boolean Filter using the QueryParameter Syntax
 
 ```php
 <?php
-// api/src/Entity/Offer.php
-namespace App\Entity;
+// api/src/ApiResource/Offer.php
+namespace App\ApiResource;
 
-use ApiPlatform\Metadata\ApiFilter;
+use ApiPlatform\Metadata\QueryParameter;
+use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Doctrine\Orm\Filter\BooleanFilter;
 
-#[ApiResource]
-#[ApiFilter(BooleanFilter::class, properties: ['isAvailableGenericallyInMyCountry'])]
+#[GetCollection(
+    parameters: [
+        'isAvailableGenericallyInMyCountry' => new QueryParameter(filter: new BooleanFilter()),
+    ]
+)]
 class Offer
 {
     // ...
 }
 ```
 
-```yaml
-# config/services.yaml
-services:
-  offer.boolean_filter:
-    parent: 'api_platform.doctrine.orm.boolean_filter'
-    arguments: [{ isAvailableGenericallyInMyCountry: ~ }]
-    tags: ['api_platform.filter']
-    # The following are mandatory only if a _defaults section is defined with inverted values.
-    # You may want to isolate filters in a dedicated file to avoid adding the following lines (by adding them in the defaults section)
-    autowire: false
-    autoconfigure: false
-    public: false
+> [!TIP]
+> For other syntaxes, for e.g., if you want to new syntax with the ApiResource attribute take a look [here](#introduction).
 
-# config/api/Offer.yaml
-App\Entity\Offer:
-  # ...
-  operations:
-    ApiPlatform\Metadata\GetCollection:
-      filters: ['offer.boolean_filter']
-```
-
-</code-selector>
+### Result using the Boolean Filter
 
 Given that the collection endpoint is `/offers`, you can filter offers with the following query: `/offers?isAvailableGenericallyInMyCountry=true`.
 
@@ -669,47 +554,33 @@ Syntax: `?property=<int|bigint|decimal...>`
 
 Enable the filter:
 
-<code-selector>
+### Numeric Filter using the QueryParameter Syntax
 
 ```php
 <?php
-// api/src/Entity/Offer.php
-namespace App\Entity;
+// api/src/ApiResource/Offer.php
+namespace App\ApiResource;
 
-use ApiPlatform\Metadata\ApiFilter;
+use ApiPlatform\Metadata\QueryParameter;
+use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Doctrine\Orm\Filter\NumericFilter;
 
-#[ApiResource]
-#[ApiFilter(NumericFilter::class, properties: ['sold'])]
+#[GetCollection(
+    parameters: [
+        'sold' => new QueryParameter(filter: new NumericFilter()),
+    ]
+)]
 class Offer
 {
     // ...
 }
 ```
 
-```yaml
-# config/services.yaml
-services:
-  offer.numeric_filter:
-    parent: 'api_platform.doctrine.orm.numeric_filter'
-    arguments: [{ sold: ~ }]
-    tags: ['api_platform.filter']
-    # The following are mandatory only if a _defaults section is defined with inverted values.
-    # You may want to isolate filters in a dedicated file to avoid adding the following lines (by adding them in the defaults section)
-    autowire: false
-    autoconfigure: false
-    public: false
+> [!TIP]
+> For other syntaxes, for e.g., if you want to new syntax with the ApiResource attribute take a look [here](#introduction).
 
-# config/api/Offer.yaml
-App\Entity\Offer:
-  # ...
-  operations:
-    ApiPlatform\Metadata\GetCollection:
-      filters: ['offer.numeric_filter']
-```
-
-</code-selector>
+### Result using the Numeric Filter
 
 Given that the collection endpoint is `/offers`, you can filter offers with the following query: `/offers?sold=1`.
 
@@ -723,47 +594,33 @@ Syntax: `?property[<lt|gt|lte|gte|between>]=value`
 
 Enable the filter:
 
-<code-selector>
+### Range Filter using the QueryParameter Syntax 
 
 ```php
 <?php
-// api/src/Entity/Offer.php
-namespace App\Entity;
+// api/src/ApiResource/Offer.php
+namespace App\ApiResource;
 
-use ApiPlatform\Metadata\ApiFilter;
+use ApiPlatform\Metadata\QueryParameter;
+use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Doctrine\Orm\Filter\RangeFilter;
 
-#[ApiResource]
-#[ApiFilter(RangeFilter::class, properties: ['price'])]
+#[GetCollection(
+    parameters: [
+        'price' => new QueryParameter(filter: new RangeFilter()),
+    ]
+)]
 class Offer
 {
     // ...
 }
 ```
 
-```yaml
-# config/services.yaml
-services:
-  offer.range_filter:
-    parent: 'api_platform.doctrine.orm.range_filter'
-    arguments: [{ price: ~ }]
-    tags: ['api_platform.filter']
-    # The following are mandatory only if a _defaults section is defined with inverted values.
-    # You may want to isolate filters in a dedicated file to avoid adding the following lines (by adding them in the defaults section)
-    autowire: false
-    autoconfigure: false
-    public: false
+> [!TIP]
+> For other syntaxes, for e.g., if you want to new syntax with the ApiResource attribute take a look [here](#introduction).
 
-# config/api/Offer.yaml
-App\Entity\Offer:
-  # ...
-  operations:
-    ApiPlatform\Metadata\GetCollection:
-      filters: ['offer.range_filter']
-```
-
-</code-selector>
+### Result using the Range Filter
 
 Given that the collection endpoint is `/offers`, you can filter the price with the following query: `/offers?price[between]=12.99..15.99`.
 
@@ -780,53 +637,42 @@ Syntax: `?exists[property]=<true|false|1|0>`
 
 Enable the filter:
 
-<code-selector>
+### Exists Filter using the QueryParameter Syntax
 
 ```php
 <?php
-// api/src/Entity/Offer.php
-namespace App\Entity;
+// api/src/ApiResource/Offer.php
+namespace App\ApiResource;
 
-use ApiPlatform\Metadata\ApiFilter;
+use ApiPlatform\Metadata\QueryParameter;
+use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Doctrine\Orm\Filter\ExistsFilter;
 
-#[ApiResource]
-#[ApiFilter(ExistsFilter::class, properties: ['transportFees'])]
+#[GetCollection(
+    parameters: [
+        'transportFees' => new QueryParameter(filter: new ExistsFilter()),
+    ]
+)]
 class Offer
 {
     // ...
 }
 ```
 
-```yaml
-# config/services.yaml
-services:
-  offer.exists_filter:
-    parent: 'api_platform.doctrine.orm.exists_filter'
-    arguments: [{ transportFees: ~ }]
-    tags: ['api_platform.filter']
-    # The following are mandatory only if a _defaults section is defined with inverted values.
-    # You may want to isolate filters in a dedicated file to avoid adding the following lines (by adding them in the defaults section)
-    autowire: false
-    autoconfigure: false
-    public: false
+> [!TIP]
+> For other syntaxes, for e.g., if you want to new syntax with the ApiResource attribute take a look [here](#introduction).
 
-# config/api/Offer.yaml
-App\Entity\Offer:
-  # ...
-  operations:
-    ApiPlatform\Metadata\GetCollection:
-      filters: ['offer.exists_filter']
-```
-
-</code-selector>
+### Result using the Exists Filter
 
 Given that the collection endpoint is `/offers`, you can filter offers on the nullable field with the following query: `/offers?exists[transportFees]=true`.
 
 It will return all offers where `transportFees` is not `null`.
 
-### Using a Custom Exists Query Parameter Name
+### Using a Custom Exists Query Parameter Name (deprecated)
+
+> [!TIP]
+> Since API Platform 4.2 defined the query parameter yourself and you don't need the above configuration.
 
 A conflict will occur if `exists` is also the name of a property with the search filter enabled.
 Luckily, the query parameter name to use is configurable:
@@ -846,99 +692,130 @@ Syntax: `?order[property]=<asc|desc>`
 
 Enable the filter:
 
-<code-selector>
+### Order Filter using the QueryParameter Syntax
 
 ```php
 <?php
-// api/src/Entity/Offer.php
-namespace App\Entity;
+// api/src/ApiResource/Offer.php
+namespace App\ApiResource;
 
-use ApiPlatform\Metadata\ApiFilter;
+use ApiPlatform\Metadata\QueryParameter;
+use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Doctrine\Orm\Filter\OrderFilter;
 
-#[ApiResource]
-#[ApiFilter(OrderFilter::class, properties: ['id', 'name'], arguments: ['orderParameterName' => 'order'])]
+#[GetCollection(
+    parameters: [
+        'transportFees' => new QueryParameter(filter: new OrderFilter()),
+    ]
+)]
 class Offer
 {
     // ...
 }
 ```
 
-```yaml
-# config/services.yaml
-services:
-  offer.order_filter:
-    parent: 'api_platform.doctrine.orm.order_filter'
-    arguments:
-      $properties: { id: ~, name: ~ }
-      $orderParameterName: order
-    tags: ['api_platform.filter']
-    # The following are mandatory only if a _defaults section is defined with inverted values.
-    # You may want to isolate filters in a dedicated file to avoid adding the following lines (by adding them in the defaults section)
-    autowire: false
-    autoconfigure: false
-    public: false
+Or you can define one Query Parameter `'order[:property]'`, which uses an Order Filter and allow you to sort on all available properties, thanks to this code:
 
-# config/api/Offer.yaml
-App\Entity\Offer:
-  # ...
-  operations:
-    ApiPlatform\Metadata\GetCollection:
-      filters: ['offer.order_filter']
+```php
+<?php
+// api/src/ApiResource/Offer.php
+namespace App\ApiResource;
+
+use ApiPlatform\Doctrine\Common\Filter\OrderFilterInterface;
+use ApiPlatform\Metadata\QueryParameter;
+use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Doctrine\Orm\Filter\OrderFilter;
+
+#[GetCollection(
+    parameters: [
+        'order[:property]' => new QueryParameter(filter: new OrderFilter()),
+    ]
+)]
+class Offer
+{
+    // ...
+}
 ```
 
-</code-selector>
+After that, you can use it with the following query: `/offers?order[name]=desc&order[id]=asc`.
+
+> [!TIP]
+> For other syntaxes, for e.g., if you want to new syntax with the ApiResource attribute take a look [here](#introduction).
+
+### Result using the Order Filter
 
 Given that the collection endpoint is `/offers`, you can filter offers by name in ascending order and then by ID in descending
 order with the following query: `/offers?order[name]=desc&order[id]=asc`.
 
+### Basic Directions Strategies with the Order Filter
+
 By default, whenever the query does not specify the direction explicitly (e.g.: `/offers?order[name]&order[id]`), filters
 will not be applied unless you configure a default order direction to use:
 
-<code-selector>
+**Basic Strategies**
+
+| Description | Strategy to set                                                                    |
+|-------------|------------------------------------------------------------------------------------|
+| Ascending   | `ApiPlatform\Doctrine\Common\Filter\OrderFilterInterface::DIRECTION_DESC` (`DESC`) |
+| Descending  | `ApiPlatform\Doctrine\Common\Filter\OrderFilterInterface::DIRECTION_ASC` (`ASC`)   |
+
+**Other Strategies**
+
+For other sort strategies (about `null` values), please refer to the [Handling Null Values with the Order Filter section](#comparing-with-null-values-using-order-filter).
+
+#### Order Filter Direction using the QueryParameter Syntax
 
 ```php
 <?php
-// api/src/Entity/Offer.php
-namespace App\Entity;
+// api/src/ApiResource/Offer.php
+namespace App\ApiResource;
 
-use ApiPlatform\Metadata\ApiFilter;
+use ApiPlatform\Doctrine\Common\Filter\OrderFilterInterface;
+use ApiPlatform\Metadata\QueryParameter;
+use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Doctrine\Orm\Filter\OrderFilter;
 
-#[ApiResource]
-#[ApiFilter(OrderFilter::class, properties: ['id' => 'ASC', 'name' => 'DESC'])]
+#[GetCollection(
+    parameters: [
+        'id' => new QueryParameter(filter: new OrderFilter(), filterContext: OrderFilterInterface::DIRECTION_ASC ),
+        'name' => new QueryParameter(filter: new OrderFilter(), filterContext: OrderFilterInterface::DIRECTION_DESC),
+    ]
+)]
 class Offer
 {
     // ...
 }
 ```
 
-```yaml
-# config/services.yaml
-services:
-  offer.order_filter:
-    parent: 'api_platform.doctrine.orm.order_filter'
-    arguments: [{ id: 'ASC', name: 'DESC' }]
-    tags: ['api_platform.filter']
-    # The following are mandatory only if a _defaults section is defined with inverted values.
-    # You may want to isolate filters in a dedicated file to avoid adding the following lines (by adding them in the defaults section)
-    autowire: false
-    autoconfigure: false
-    public: false
+Or you can also use the `properties` attribute on the `OrderFilter` to apply your [`direction` strategy](#basic-directions-strategies-with-the-order-filter):
 
-# config/api/Offer.yaml
-App\Entity\Offer:
-  # ...
-  operations:
-    ApiPlatform\Metadata\GetCollection:
-      filters: ['offer.order_filter']
+```php
+<?php
+// api/src/ApiResource/Offer.php
+namespace App\ApiResource;
+
+use ApiPlatform\Doctrine\Common\Filter\OrderFilterInterface;
+use ApiPlatform\Metadata\QueryParameter;
+use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Doctrine\Orm\Filter\OrderFilter;
+
+#[GetCollection(
+    parameters: [
+        'id' => new QueryParameter(filter: new OrderFilter(properties: ['id' => OrderFilterInterface::DIRECTION_ASC])),
+        'name' => new QueryParameter(filter: new OrderFilter(properties: ['name' => OrderFilterInterface::DIRECTION_DESC])),
+    ]
+)]
+class Offer
+{
+    // ...
+}
 ```
 
-</code-selector>
-
-### Comparing with Null Values
+### Comparing with Null Values using Order Filter
 
 When the property used for ordering can contain `null` values, you may want to specify how `null` values are treated in
 the comparison:
@@ -951,79 +828,50 @@ the comparison:
 | Order items always first             | `ApiPlatform\Doctrine\Common\Filter\OrderFilterInterface::NULLS_ALWAYS_FIRST` (`nulls_always_first`) |
 | Order items always last              | `ApiPlatform\Doctrine\Common\Filter\OrderFilterInterface::NULLS_ALWAYS_LAST` (`nulls_always_last`)   |
 
+> [!TIP]
+> For other sort strategies (including `ASC` and `DESC`), please refer to the [Handling Basic Directions with the Order Filter section](#basic-directions-strategies-with-the-order-filter).
+
 For instance, treat entries with a property value of `null` as the smallest, with the following service definition:
 
-<code-selector>
+### Comparing with Null Values using Order Filter using the Query Parameter Syntax
 
 ```php
 <?php
-// api/src/Entity/Offer.php
-namespace App\Entity;
+// api/src/ApiResource/Offer.php
+namespace App\ApiResource;
 
 use ApiPlatform\Doctrine\Common\Filter\OrderFilterInterface;
-use ApiPlatform\Metadata\ApiFilter;
+use ApiPlatform\Metadata\QueryParameter;
+use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Doctrine\Orm\Filter\OrderFilter;
 
-#[ApiResource]
-#[ApiFilter(OrderFilter::class, properties: ['validFrom' => ['nulls_comparison' => OrderFilterInterface::NULLS_SMALLEST, 'default_direction' => 'DESC']])]
+#[GetCollection(
+    parameters: [
+        'nulls_comparison' => new QueryParameter(
+            filter: new OrderFilter(),
+            property: 'validFrom',
+            filterContext: OrderFilterInterface::NULLS_SMALLEST,
+        ),
+        'default_direction' => new QueryParameter(
+            filter: new OrderFilter(),
+            property: 'validFrom',
+            filterContext: OrderFilterInterface::DIRECTION_DESC,
+        ),
+    ]
+)]
 class Offer
 {
     // ...
 }
 ```
 
-```yaml
-# config/services.yaml
-services:
-  offer.order_filter:
-    parent: 'api_platform.doctrine.orm.order_filter'
-    arguments:
-      [
-        {
-          validFrom:
-            { nulls_comparison: 'nulls_smallest', default_direction: 'DESC' },
-        },
-      ]
-    tags: ['api_platform.filter']
-    # The following are mandatory only if a _defaults section is defined with inverted values.
-    # You may want to isolate filters in a dedicated file to avoid adding the following lines (by adding them in the defaults section)
-    autowire: false
-    autoconfigure: false
-    public: false
-
-# config/api/Offer.yaml
-App\Entity\Offer:
-  # ...
-  operations:
-    ApiPlatform\Metadata\GetCollection:
-      filters: ['offer.order_filter']
-```
-
-</code-selector>
-
-The strategy to use by default can be configured globally:
-
-```yaml
-# api/config/packages/api_platform.yaml
-api_platform:
-  collection:
-    order_nulls_comparison: 'nulls_smallest'
-```
-
-### Using a Custom Order Query Parameter Name
-
-A conflict will occur if `order` is also the name of a property with the search filter enabled.
-Luckily, the query parameter name to use is configurable:
-
-```yaml
-# api/config/packages/api_platform.yaml
-api_platform:
-  collection:
-    order_parameter_name: '_order' # the URL query parameter to use is now "_order"
-```
-
 ## Filtering on Nested Properties
+
+> [!WARNING]
+> The legacy method using the `ApiFilter` attribute is **deprecated** and scheduled for **removal** in API Platform **5.0**.
+> We strongly recommend migrating to the new `QueryParameter` syntax, which is detailed in the [Introduction](#introduction).
+> For nested properties support we recommend to use a custom filter.
 
 Sometimes, you need to be able to perform filtering based on some linked resources (on the other side of a relation). All
 built-in filters support nested properties using the dot (`.`) syntax, e.g.:
@@ -1057,7 +905,7 @@ services:
     arguments: [{ product.releaseDate: ~ }]
     tags: ['api_platform.filter']
     # The following are mandatory only if a _defaults section is defined with inverted values.
-    # You may want to isolate filters in a dedicated file to avoid adding the following lines (by adding them in the defaults section)
+    # You may want to isolate filters in a dedicated file to avoid adding the following lines (by adding them in the "defaults" section)
     autowire: false
     autoconfigure: false
     public: false
@@ -1066,7 +914,7 @@ services:
     arguments: [{ product.color: 'exact' }]
     tags: ['api_platform.filter']
     # The following are mandatory only if a _defaults section is defined with inverted values.
-    # You may want to isolate filters in a dedicated file to avoid adding the following lines (by adding them in the defaults section)
+    # You may want to isolate filters in a dedicated file to avoid adding the following lines (by adding them in the "defaults" section)
     autowire: false
     autoconfigure: false
     public: false
@@ -1086,8 +934,13 @@ or order offers by the product's release date: `http://localhost:8000/api/offers
 
 ## Enabling a Filter for All Properties of a Resource
 
+> [!WARNING]
+> The legacy method using the `ApiFilter` attribute is **deprecated** and scheduled for **removal** in API Platform **5.0**.
+> We strongly recommend migrating to the new `QueryParameter` syntax, which is detailed in the [Introduction](#introduction).
+> You can use the `:property` placeholder instead and it is recommended to use a filter for each type of data you are filtering.
+
 As we have seen in previous examples, properties where filters can be applied must be explicitly declared. If you don't
-care about security and performance (e.g. an API with restricted access), it is also possible to enable built-in filters
+care about security and performance (for e.g., an API with restricted access), it is also possible to enable built-in filters
 for all properties:
 
 <code-selector>
@@ -1117,7 +970,7 @@ services:
     arguments: [~] # Pass null to enable the filter for all properties
     tags: ['api_platform.filter']
     # The following are mandatory only if a _defaults section is defined with inverted values.
-    # You may want to isolate filters in a dedicated file to avoid adding the following lines (by adding them in the defaults section)
+    # You may want to isolate filters in a dedicated file to avoid adding the following lines (by adding them in the "defaults" section)
     autowire: false
     autoconfigure: false
     public: false
@@ -1132,7 +985,7 @@ App\Entity\Offer:
 
 </code-selector>
 
-**Note: Filters on nested properties must still be enabled explicitly, in order to keep things sane.**
+**Note: Filters on nested properties must still be enabled explicitly to keep things sane.**
 
 Regardless of this option, filters can be applied on a property only if:
 
@@ -1141,8 +994,8 @@ Regardless of this option, filters can be applied on a property only if:
 
 It means that the filter will be **silently** ignored if the property:
 
-- does not exist
-- is not enabled
+- it does not exist
+- it is not enabled
 - has an invalid value
 
 
@@ -1188,8 +1041,8 @@ final class SearchTextAndDateFilter implements FilterInterface
             $this->dateFilter->setProperties($this->dateFilterProperties);
         }
 
-        $this->searchFilter->apply($queryBuilder, $queryNameGenerator, $resourceClass, $operation, ['filters' => $context['filters']['searchOnTextAndDate']] + $context);
-        $this->dateFilter->apply($queryBuilder, $queryNameGenerator, $resourceClass, $operation, ['filters' => $context['filters']['searchOnTextAndDate']] + $context);
+        $this->searchFilter->apply($queryBuilder, $queryNameGenerator, $resourceClass, $operation, $context);
+        $this->dateFilter->apply($queryBuilder, $queryNameGenerator, $resourceClass, $operation, $context);
     }
 }
 ```
@@ -1254,7 +1107,7 @@ class SearchFilterParameter
 
 ## Using Doctrine ORM Filters
 
-Doctrine ORM features [a filter system](https://www.doctrine-project.org/projects/doctrine-orm/en/current/reference/filters.html) that allows the developer to add SQL to the conditional clauses of queries, regardless of the place where the SQL is generated (e.g. from a DQL query, or by loading associated entities).
+Doctrine ORM features [a filter system](https://www.doctrine-project.org/projects/doctrine-orm/en/current/reference/filters.html) that allows the developer to add SQL to the conditional clauses of queries, regardless of the place where the SQL is generated (for e.g., from a DQL query, or by loading associated entities).
 These are applied to collections and items and therefore are incredibly useful.
 
 The following information, specific to Doctrine filters in Symfony, is based upon [a great article posted on Michaël Perrin's blog](https://www.michaelperrin.fr/blog/2014/12/doctrine-filters).
@@ -1458,7 +1311,7 @@ class MyCustomFilter implements FilterInterface
 ```
 #### Implementing a Custom ORM Filter
 
-Let's create a concrete filter that allows fetching entities based on the month of a date field (e.g., `createdAt`).
+Let's create a concrete filter that allows fetching entities based on the month of a date field (for e.g., `createdAt`).
 
 The goal is to be able to call a URL like `GET /invoices?createdAtMonth=7` to get all invoices created in July.
 
@@ -1658,209 +1511,6 @@ final class MyComplexFilter implements FilterInterface, OpenApiParameterFilterIn
 }
 ```
 
-### Creating Custom Doctrine ORM Filters With The Old Syntax (API Platform < 4.2)
-
-
-API Platform includes a convenient abstract class implementing this interface and providing utility methods: `ApiPlatform\Doctrine\Orm\Filter\AbstractFilter`.
-
-In the following example, we create a class to filter a collection by applying a regular expression to a property.
-The `REGEXP` DQL function used in this example can be found in the [`DoctrineExtensions`](https://github.com/beberlei/DoctrineExtensions)
-library. This library must be properly installed and registered to use this example (works only with MySQL).
-
-```php
-<?php
-// api/src/Filter/RegexpFilter.php
-
-namespace App\Filter;
-
-use ApiPlatform\Doctrine\Orm\Filter\AbstractFilter;
-use ApiPlatform\Doctrine\Orm\Util\QueryNameGeneratorInterface;
-use ApiPlatform\Metadata\Operation;
-use Doctrine\ORM\QueryBuilder;
-use Symfony\Component\PropertyInfo\Type;
-use ApiPlatform\OpenApi\Model\Parameter;
-
-final class RegexpFilter extends AbstractFilter
-{
-    protected function filterProperty(string $property, $value, QueryBuilder $queryBuilder, QueryNameGeneratorInterface $queryNameGenerator, string $resourceClass, Operation $operation = null, array $context = []): void
-    {
-        // Otherwise filter is applied to order and page as well
-        if (
-            !$this->isPropertyEnabled($property, $resourceClass) ||
-            !$this->isPropertyMapped($property, $resourceClass)
-        ) {
-            return;
-        }
-
-        $parameterName = $queryNameGenerator->generateParameterName($property); // Generate a unique parameter name to avoid collisions with other filters
-        $queryBuilder
-            ->andWhere(sprintf('REGEXP(o.%s, :%s) = 1', $property, $parameterName))
-            ->setParameter($parameterName, $value);
-    }
-
-    // This function is only used to hook in documentation generators (supported by Swagger and Hydra)
-    public function getDescription(string $resourceClass): array
-    {
-        if (!$this->properties) {
-            return [];
-        }
-
-        $description = [];
-        foreach ($this->properties as $property => $strategy) {
-            $description["regexp_$property"] = [
-                'property' => $property,
-                'type' => Type::BUILTIN_TYPE_STRING,
-                'required' => false,
-                'description' => 'Filter using a regex. This will appear in the OpenApi documentation!',
-                'openapi' => new Parameter(
-                    name: $property,
-                    in: 'query',
-                    allowEmptyValue: true,
-                    explode: false, // to be true, the type must be Type::BUILTIN_TYPE_ARRAY, ?product=blue,green will be ?product=blue&product=green
-                    allowReserved: false, // if true, query parameters will be not percent-encoded
-                    example: 'Custom example that will be in the documentation and be the default value of the sandbox',
-                ),
-            ];
-        }
-
-        return $description;
-    }
-}
-```
-
-Thanks to [Symfony's automatic service loading](https://symfony.com/doc/current/service_container.html#service-container-services-load-example), which is enabled by default in the API Platform distribution, the filter is automatically registered as a service!
-
-Finally, add this filter to resources you want to be filtered by using the `ApiFilter` attribute:
-
-```php
-<?php
-// api/src/Entity/Offer.php
-namespace App\Entity;
-
-use ApiPlatform\Metadata\ApiFilter;
-use ApiPlatform\Metadata\ApiResource;
-use App\Filter\RegexpFilter;
-
-#[ApiResource]
-#[ApiFilter(RegexpFilter::class)]
-class Offer
-{
-    // ...
-}
-```
-
-You can now use this filter in the URL like `http://example.com/offers?regexp_email=^[FOO]`. This new filter will also
-appear in OpenAPI and Hydra documentations.
-
-In the previous example, the filter can be applied to any property. You can also apply this filter on a specific property:
-
-```php
-<?php
-// api/src/Entity/Offer.php
-namespace App\Entity;
-
-use ApiPlatform\Metadata\ApiFilter;
-use ApiPlatform\Metadata\ApiResource;
-use App\Filter\RegexpFilter;
-
-#[ApiResource]
-class Offer
-{
-    // ...
-
-    #[ApiFilter(RegexpFilter::class)]
-    public string $name;
-}
-```
-
-When creating a custom filter you can specify multiple properties of a resource using the usual filter syntax:
-
-```php
-<?php
-// api/src/Entity/Offer.php
-
-namespace App\Entity;
-
-use ApiPlatform\Core\Annotation\ApiFilter;
-use ApiPlatform\Core\Annotation\ApiResource;
-use App\Filter\CustomAndFilter;
-
-#[ApiResource]
-#[ApiFilter(CustomAndFilter::class, properties: ['name', 'cost'])]
-class Offer
-{
-    // ...
-    public string $name;
-    public int $cost;
-}
-```
-
-These properties can then be accessed in the custom filter like this:
-
-```php
-// api/src/Filter/CustomAndFilter.php
-
-protected function filterProperty(string $property, $value, QueryBuilder $queryBuilder, QueryNameGeneratorInterface $queryNameGenerator, string $resourceClass, Operation $operation = null, array $context = []): void {
-  $rootAlias = $queryBuilder->getRootAliases()[0];
-  foreach(array_keys($this->getProperties()) as $prop) { // we use array_keys() because getProperties() returns a map of property => strategy
-      if (!$this->isPropertyEnabled($prop, $resourceClass) || !$this->isPropertyMapped($prop, $resourceClass)) {
-          return;
-      }
-      $parameterName = $queryNameGenerator->generateParameterName($prop);
-      $queryBuilder
-          ->andWhere(sprintf('%s.%s LIKE :%s', $rootAlias, $prop, $parameterName))
-          ->setParameter($parameterName, "%" . $value . "%");
-  }
-}
-```
-
-### Manual Service and Attribute Registration
-
-If you don't use Symfony's automatic service loading, you have to register the filter as a service by yourself.
-Use the following service definition (remember, by default, this isn't needed!):
-
-```yaml
-# api/config/services.yaml
-services:
-  # ...
-  # This whole definition can be omitted if automatic service loading is enabled
-  'App\Filter\RegexpFilter':
-    # The "arguments" key can be omitted if the autowiring is enabled
-    arguments: ['@doctrine', '@?logger']
-    # The "tags" key can be omitted if the autoconfiguration is enabled
-    tags: ['api_platform.filter']
-```
-
-In the previous example, the filter can be applied to any property. However, thanks to the `AbstractFilter` class,
-it can also be enabled for some properties:
-
-```yaml
-# api/config/services.yaml
-services:
-  'App\Filter\RegexpFilter':
-    arguments: ['@doctrine', '@?logger', { email: ~, anOtherProperty: ~ }]
-    tags: ['api_platform.filter']
-```
-
-Finally, if you don't want to use the `#[ApiFilter]` attribute, you can register the filter on an API resource class using the `filters` attribute:
-
-```php
-<?php
-// api/src/Entity/Offer.php
-namespace App\Entity;
-
-use ApiPlatform\Metadata\ApiResource;
-use App\Filter\RegexpFilter;
-
-#[ApiResource(
-    filters: [RegexpFilter::class]
-)]
-class Offer
-{
-    // ...
-}
-```
-
 ## Creating Custom Doctrine MongoDB ODM Filters
 
 For `Doctrine ORM` filters, please refer to [Creating Custom Doctrine ORM Filters documentation](#creating-custom-doctrine-orm-filters).
@@ -1928,7 +1578,7 @@ class MonthFilter implements FilterInterface
 ```
 #### Implementing a Custom ODM Filter
 
-Let's create a concrete filter that allows fetching entities based on the month of a date field (e.g., `createdAt`).
+Let's create a concrete filter that allows fetching entities based on the month of a date field (for e.g., `createdAt`).
 
 The goal is to be able to call a URL like `GET /invoices?createdAtMonth=7` to get all invoices created in July.
 
@@ -1971,7 +1621,7 @@ class MonthFilter implements FilterInterface
 ```
 
 Now that the filter is created, it must be associated with an API resource. We use the `QueryParameter` object on
-a `#[GetCollection]` operation attribute for this. For other synthax please refer to [this documentation](#introduction).
+a `#[GetCollection]` operation attribute for this. For other syntax please refer to [this documentation](#introduction).
 
 ```php
 <?php
@@ -2130,8 +1780,3 @@ final class MyComplexFilter implements FilterInterface, OpenApiParameterFilterIn
     }
 }
 ```
-
-### Creating Custom Doctrine ODM Filters With The Old Syntax (API Platform < 4.2)
-
-API Platform includes a convenient abstract class implementing this interface and providing utility methods:
-`ApiPlatform\Doctrine\Odm\Filter\AbstractFilter`.

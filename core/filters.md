@@ -15,8 +15,7 @@ You can declare parameters on a resource class to apply them to all operations, 
 
 > [!WARNING]
 > For maximum flexibility and to ensure future compatibility, it is strongly recommended to configure your filters via
-> the parameters attribute using `QueryParameter`. The legacy method using the `ApiFilter` attribute is **deprecated** and
-> will be **removed** in version **5.0**.
+> the parameters attribute using `QueryParameter`. The legacy method using the `ApiFilter` attribute is not recommended.
 
 ## Declaring Parameters
 
@@ -205,16 +204,14 @@ class Book
 
 This configuration creates a dynamic parameter. API clients can now filter on any of the properties configured in the `SearchFilter` (in this case, `title` and `description`) by using a URL like `/books?search[title]=Ring` or `/books?search[description]=journey`.
 
-When using the `:property` placeholder, API Platform automatically populates the parameter's `extraProperties` with a `_properties` array containing all the available properties for the filter. Your filter can access this information:
+When using the `:property` placeholder, API Platform automatically creates as many parameters as there are properties. Each filter will be called by each detected parameter:
 
 ```php
 public function apply(QueryBuilder $queryBuilder, QueryNameGeneratorInterface $queryNameGenerator, string $resourceClass, ?Operation $operation = null, array $context = []): void
 {
     $parameter = $context['parameter'] ?? null;
-    $properties = $parameter?->getExtraProperties()['_properties'] ?? [];
-    
-    // $properties contains: ['title' => 'title', 'description' => 'description']
-    // This allows your filter to know which properties are available for filtering
+    dump(key: $parameter->getKey(), value: $parameter->getValue());
+    // shows key: search[title], value: Ring
 }
 ```
 
@@ -225,35 +222,28 @@ public function apply(QueryBuilder $queryBuilder, QueryNameGeneratorInterface $q
 
 ### Restricting Properties with `:property` Placeholders
 
-There are two different approaches to property restriction depending on your filter design:
-
-#### 1. Legacy Filters (SearchFilter, etc.) - Not Recommended
-
-> [!WARNING]
-> Filters that extend `AbstractFilter` with pre-configured properties are considered legacy. They don't support property restriction via parameters and may be deprecated in future versions. Consider using per-parameter filters instead for better flexibility and performance.
-
-For existing filters that extend `AbstractFilter` and have pre-configured properties, the parameter's `properties` does **not** restrict the filter's behavior. These filters use their own internal property configuration:
+Filters that work on a per-parameter basis can also use the `:property` placeholde and use the parameter's `properties` configuration:
 
 ```php
 <?php
-// This does NOT restrict SearchFilter - it processes all its configured properties
-'search[:property]' => new QueryParameter(
-    properties: ['title', 'author'], // Only affects _properties, doesn't restrict filter
-    filter: new SearchFilter(properties: ['title' => 'partial', 'description' => 'partial'])
-)
-
-// To restrict legacy filters, configure them with only the desired properties:
-'search[:property]' => new QueryParameter(
-    filter: new SearchFilter(properties: ['title' => 'partial', 'author' => 'exact'])
-)
+// api/src/Resource/Book.php
+#[ApiResource(operations: [
+    new GetCollection(
+        parameters: [
+            // This WILL restrict to only title and author properties
+            'search[:property]' => new QueryParameter(
+                properties: ['title', 'author'], // Only these properties get parameters created, defaults to all properties
+                filter: new PartialSearchFilter()
+            )
+        ]
+    )
+])]
+class Book {
+    // ...
+}
 ```
 
-#### 2. Per-Parameter Filters (Recommended)
-
-> [!NOTE]
-> Per-parameter filters are the modern approach. They provide better performance (only process requested properties), cleaner code, and full support for parameter-based property restriction.
-
-Modern filters that work on a per-parameter basis can be effectively restricted using the parameter's `properties`:
+This will create 2 parameters: `search[title]` and `search[author]`, here is an example of the associated filter for Doctrine ORM:
 
 ```php
 <?php
@@ -281,25 +271,6 @@ final class PartialSearchFilter implements FilterInterface
             ->andWhere($queryBuilder->expr()->like('LOWER('.$field.')', ':'.$parameterName))
             ->setParameter($parameterName, '%'.strtolower($value).'%');
     }
-}
-```
-
-```php
-<?php
-// api/src/Resource/Book.php
-#[ApiResource(operations: [
-    new GetCollection(
-        parameters: [
-            // This WILL restrict to only title and author properties
-            'search[:property]' => new QueryParameter(
-                properties: ['title', 'author'], // Only these properties get parameters created
-                filter: new PartialSearchFilter()
-            )
-        ]
-    )
-])]
-class Book {
-    // ...
 }
 ```
 
@@ -761,66 +732,8 @@ use App\Filter\RegexpFilter;
 class User {}
 ```
 
-### Advanced Use Case: Composing Filters
-
-You can create complex filters by composing existing ones. This is useful when you want to apply multiple filtering logics based on a single parameter.
-
-```php
-<?php
-// src/Filter/SearchTextAndDateFilter.php
-namespace App\Filter;
-
-use ApiPlatform\Doctrine\Orm\Filter\FilterInterface;
-use ApiPlatform\Metadata\Operation;
-use Doctrine\ORM\QueryBuilder;
-use Doctrine\ORM\Query\QueryNameGeneratorInterface;
-use Symfony\Component\DependencyInjection\Attribute\Autowire;
-
-final class SearchTextAndDateFilter implements FilterInterface
-{
-    public function __construct(
-        #[Autowire('@api_platform.doctrine.orm.search_filter.instance')] 
-        public readonly FilterInterface $searchFilter, 
-        #[Autowire('@api_platform.doctrine.orm.date_filter.instance')] 
-        public readonly FilterInterface $dateFilter
-    ) {}
-
-    public function apply(QueryBuilder $queryBuilder, QueryNameGeneratorInterface $queryNameGenerator, string $resourceClass, ?Operation $operation = null, array $context = []): void
-    {
-        $value = $context['parameter']?->getValue();
-        if ($value instanceof ParameterNotFound) {
-            return;
-        }
-
-        // Create a new context for the sub-filters, passing the value.
-        $subContext = ['filters' => ['searchOnTextAndDate' => $value]] + $context;
-
-        $this->searchFilter->apply($queryBuilder, $queryNameGenerator, $resourceClass, $operation, $subContext);
-        $this->dateFilter->apply($queryBuilder, $queryNameGenerator, $resourceClass, $operation, $subContext);
-    }
-}
-```
-
-To use this composite filter, register it as a service and reference it by its ID:
-
-```yaml
-# config/services.yaml
-services:
-    'app.filter_date_and_search':
-        class: App\Filter\SearchTextAndDateFilter
-        autowire: true
-```php
-<?php
-// ...
-#[ApiResource(operations: [
-    new GetCollection(
-        parameters: [
-            'searchOnTextAndDate' => new QueryParameter(filter: 'app.filter_date_and_search')
-        ]
-    )
-])]
-class LogEntry {}
-```
+> [!NOTE]
+> A `filter` is either an instanceof `FilterInterface` or a string referencing a filter service.
 
 ## Parameter Attribute Reference
 
