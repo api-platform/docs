@@ -1,6 +1,8 @@
 ---
 MD013:
-  line_length: 400
+  line_length: 80
+  code_blocks: false
+  tables: false
 no-inline-html:
   allowed_elements: [a, p, img, br, code-selector, video, source, iframe, h1]
 MD046:
