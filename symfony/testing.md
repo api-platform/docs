@@ -149,7 +149,7 @@ Now that you have some data fixtures for your API, you are ready to write functi
 
 The API Platform test client implements the interfaces of the [Symfony HttpClient](https://symfony.com/doc/current/components/http_client.html). HttpClient is shipped with the API Platform distribution. The [Symfony test pack](https://github.com/symfony/test-pack/blob/main/composer.json), which includes PHPUnit as well as Symfony components useful for testing, is also included.
 
-If you don't use the distribution, run `composer require --dev symfony/test-pack symfony/http-client` to install them.
+Run `composer require --dev symfony/test-pack symfony/http-client` to install the testing tools (when using the distribution they're already installed).
 
 Install [DAMADoctrineTestBundle](https://github.com/dmaicher/doctrine-test-bundle) to reset the database automatically before each test:
 
