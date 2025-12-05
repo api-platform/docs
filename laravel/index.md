@@ -7,12 +7,12 @@ API Platform is **the easiest way** to create **state-of-the-art** web APIs usin
 With API Platform, you can:
 
 - [expose your Eloquent](#exposing-a-model) models in minutes as:
-    - a REST API implementing the industry-leading standards, formats and best practices:
-      [JSON-LD](https://en.wikipedia.org/wiki/JSON-LD)/[RDF](https://en.wikipedia.org/wiki/Resource_Description_Framework),
-      [JSON:API](https://jsonapi.org), [HAL](https://stateless.group/hal_specification.html), and
-      many RFCs...
-    - a [GraphQL](#enabling-graphql) API
-    - or both at the same time, with the same code!
+- a REST API implementing the industry-leading standards, formats and best practices:
+  [JSON-LD](https://en.wikipedia.org/wiki/JSON-LD)/[RDF](https://en.wikipedia.org/wiki/Resource_Description_Framework),
+  [JSON:API](https://jsonapi.org), [HAL](https://stateless.group/hal_specification.html), and many
+  RFCs...
+- a [GraphQL](#enabling-graphql) API
+- or both at the same time, with the same code!
 - automatically expose an [OpenAPI](https://www.openapis.org) specification (formerly Swagger),
   dynamically generated from your Eloquent models and always up to date
 - automatically expose nice UIs and playgrounds to develop using your API
@@ -24,11 +24,13 @@ With API Platform, you can:
 - add authorization logic using [gates and policies](#authorization)
   ([compatible with Sanctum, Passport, Socialite...](#authentication))
 - add [filtering logic](#adding-filters)
-  <!--* push changed data to the clients in real-time using Laravel Broadcast and [Mercure](https://mercure.rocks) (a popular WebSockets alternative, created by Kévin Dunglas, the original author of API Platform) and receive them using Laravel Echo-->
+- push changed data to the clients in real-time using Laravel Broadcast and
+  [Mercure](https://mercure.rocks) (a popular WebSockets alternative, created by Kévin Dunglas, the
+  original author of API Platform) and receive them using Laravel Echo-->
 - benefits from the API Platform JavaScript tools: [admin](../admin/index.md) and
-[create client](../create-client/index.md) (supports Next/React, Nuxt/Vue.js, Quasar, Vuetify and
-more!)
-  <!-- * benefits from native HTTP cache (with automatic invalidation) -->
+  [create client](../create-client/index.md) (supports Next/React, Nuxt/Vue.js, Quasar, Vuetify and
+  more!)
+- benefits from native HTTP cache (with automatic invalidation)
 - boost your app with [Octane](https://laravel.com/docs/octane) and
   [FrankenPHP](https://frankenphp.dev) (the default Octane engine, also created by Kévin)
 - [decouple your API from your models](../core/state-providers.md) and implement patterns such as
