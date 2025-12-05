@@ -94,6 +94,8 @@ docker compose up --wait
 > SERVER_NAME=localhost:80 HTTP_PORT=8080 TRUSTED_HOSTS=localhost docker compose up --wait
 > ```
 
+The `SERVER_NAME` is used by Caddy server, specify `localhost:8080` if you want any other address or to diable https.
+
 This starts the following services:
 
 | Name     | Description                                                                                                                                                                                                                                                                                                                       |
