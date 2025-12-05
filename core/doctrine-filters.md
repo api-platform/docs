@@ -21,7 +21,7 @@ Here is the recommended approach to apply a `PartialSearchFilter` only to the ti
 #[ApiResource(operations: [
     new GetCollection(
         parameters: [
-            // This WILL restricts to only title and author properties
+            // This WILL restrict to only title and author properties
             'search[:property]' => new QueryParameter(
                 properties: ['title', 'author'], // Only these properties get parameters created
                 filter: new PartialSearchFilter()
@@ -42,7 +42,7 @@ class Book {
 // api/src/Resource/Book.php
 #[GetCollection(
     parameters: [
-        // This WILL restricts to only title and author properties
+        // This WILL restrict to only title and author properties
         'search[:property]' => new QueryParameter(
             properties: ['title', 'author'], // Only these properties get parameters created
             filter: new PartialSearchFilter()
@@ -239,7 +239,7 @@ services:
     arguments: [{ id: 'exact', price: 'exact', description: 'partial' }]
     tags: ['api_platform.filter']
     # The following are mandatory only if a _defaults section is defined with inverted values.
-    # You may want to isolate filters in a dedicated file to avoid adding the following lines (by adding them in the default section)
+    # You may want to isolate filters in a dedicated file to avoid adding the following lines (by adding them in the "defaults" section)
     autowire: false
     autoconfigure: false
     public: false
@@ -288,7 +288,7 @@ services:
     arguments: [{ product: 'exact' }]
     tags: ['api_platform.filter']
     # The following are mandatory only if a _defaults section is defined with inverted values.
-    # You may want to isolate filters in a dedicated file to avoid adding the following lines (by adding them in the default section)
+    # You may want to isolate filters in a dedicated file to avoid adding the following lines (by adding them in the "defaults" section)
     autowire: false
     autoconfigure: false
     public: false
@@ -556,7 +556,7 @@ services:
     arguments: [{ createdAt: ~ }]
     tags: ['api_platform.filter']
     # The following are mandatory only if a _defaults section is defined with inverted values.
-    # You may want to isolate filters in a dedicated file to avoid adding the following lines (by adding them in the default section)
+    # You may want to isolate filters in a dedicated file to avoid adding the following lines (by adding them in the "defaults" section)
     autowire: false
     autoconfigure: false
     public: false
@@ -837,7 +837,7 @@ services:
     arguments: [{ sold: ~ }]
     tags: ['api_platform.filter']
     # The following are mandatory only if a _defaults section is defined with inverted values.
-    # You may want to isolate filters in a dedicated file to avoid adding the following lines (by adding them in the default section)
+    # You may want to isolate filters in a dedicated file to avoid adding the following lines (by adding them in the "defaults" section)
     autowire: false
     autoconfigure: false
     public: false
@@ -921,7 +921,7 @@ services:
     arguments: [{ price: ~ }]
     tags: ['api_platform.filter']
     # The following are mandatory only if a _defaults section is defined with inverted values.
-    # You may want to isolate filters in a dedicated file to avoid adding the following lines (by adding them in the default section)
+    # You may want to isolate filters in a dedicated file to avoid adding the following lines (by adding them in the "defaults" section)
     autowire: false
     autoconfigure: false
     public: false
@@ -1008,7 +1008,7 @@ services:
     arguments: [{ transportFees: ~ }]
     tags: ['api_platform.filter']
     # The following are mandatory only if a _defaults section is defined with inverted values.
-    # You may want to isolate filters in a dedicated file to avoid adding the following lines (by adding them in the default section)
+    # You may want to isolate filters in a dedicated file to avoid adding the following lines (by adding them in the "defaults" section)
     autowire: false
     autoconfigure: false
     public: false
@@ -1247,7 +1247,7 @@ services:
     arguments: [{ id: 'ASC', name: 'DESC' }]
     tags: ['api_platform.filter']
     # The following are mandatory only if a _defaults section is defined with inverted values.
-    # You may want to isolate filters in a dedicated file to avoid adding the following lines (by adding them in the default section)
+    # You may want to isolate filters in a dedicated file to avoid adding the following lines (by adding them in the "defaults" section)
     autowire: false
     autoconfigure: false
     public: false
@@ -1349,7 +1349,7 @@ services:
       ]
     tags: ['api_platform.filter']
     # The following are mandatory only if a _defaults section is defined with inverted values.
-    # You may want to isolate filters in a dedicated file to avoid adding the following lines (by adding them in the default section)
+    # You may want to isolate filters in a dedicated file to avoid adding the following lines (by adding them in the "defaults" section)
     autowire: false
     autoconfigure: false
     public: false
@@ -1428,7 +1428,7 @@ services:
     arguments: [{ product.releaseDate: ~ }]
     tags: ['api_platform.filter']
     # The following are mandatory only if a _defaults section is defined with inverted values.
-    # You may want to isolate filters in a dedicated file to avoid adding the following lines (by adding them in the default section)
+    # You may want to isolate filters in a dedicated file to avoid adding the following lines (by adding them in the "defaults" section)
     autowire: false
     autoconfigure: false
     public: false
@@ -1437,7 +1437,7 @@ services:
     arguments: [{ product.color: 'exact' }]
     tags: ['api_platform.filter']
     # The following are mandatory only if a _defaults section is defined with inverted values.
-    # You may want to isolate filters in a dedicated file to avoid adding the following lines (by adding them in the default section)
+    # You may want to isolate filters in a dedicated file to avoid adding the following lines (by adding them in the "defaults" section)
     autowire: false
     autoconfigure: false
     public: false
@@ -1492,7 +1492,7 @@ services:
     arguments: [~] # Pass null to enable the filter for all properties
     tags: ['api_platform.filter']
     # The following are mandatory only if a _defaults section is defined with inverted values.
-    # You may want to isolate filters in a dedicated file to avoid adding the following lines (by adding them in the default section)
+    # You may want to isolate filters in a dedicated file to avoid adding the following lines (by adding them in the "defaults" section)
     autowire: false
     autoconfigure: false
     public: false
