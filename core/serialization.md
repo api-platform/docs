@@ -1042,6 +1042,13 @@ class BookAttributeNormalizer implements NormalizerInterface, NormalizerAwareInt
         // for the current $object (book) and
         // return true or false
     }
+
+    public function getSupportedTypes(?string $format): array
+    {
+        return [
+            Book::class => true
+        ];
+    }
 }
 ```
 
@@ -1148,6 +1155,11 @@ final class ApiNormalizer implements NormalizerInterface, DenormalizerInterface,
         if($this->decorated instanceof SerializerAwareInterface) {
             $this->decorated->setSerializer($serializer);
         }
+    }
+
+    public function getSupportedTypes(?string $format): array
+    {
+        return $this->decorated->getSupportedTypes($format);
     }
 }
 ```

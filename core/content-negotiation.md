@@ -309,6 +309,14 @@ final class CustomItemNormalizer implements NormalizerInterface, DenormalizerInt
     {
         return $this->normalizer->supportsNormalization($data, $format);
     }
+
+    public function getSupportedTypes(?string $format): array
+    {
+        return [
+            'object' => null,
+            '*' => false,
+        ];
+    }
 }
 ```
 
@@ -347,6 +355,8 @@ class CustomItemNormalizer implements NormalizerInterface, DenormalizerInterface
     // ...
 }
 ```
+
+Read more about the [serialization here](./serialization) or check out how to decode [Form Data](./form-data)
 
 ### Contributing Support for New Formats
 
