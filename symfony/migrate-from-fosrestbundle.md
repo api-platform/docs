@@ -13,13 +13,13 @@ The table below provides a list of the main features you can find in FOSRestBund
 
 ### Make CRUD endpoints
 
-**In FOSRestBundle**
+#### In FOSRestBundle (CRUD endpoints)
 
 Create a controller extending the `AbstractFOSRestController` abstract class, make your magic manually in your methods, and return responses through the `handleView()` provided by FOSRest's `ControllerTrait`.
 
 See [The view layer](https://github.com/FriendsOfSymfony/FOSRestBundle/blob/3.x/Resources/doc/2-the-view-layer.rst).
 
-**In API Platform**
+#### In API Platform (CRUD endpoints)
 
 Add the `ApiResource` attribute to your entities, and enable the operations you desire inside. By default, every operation is activated.
 
@@ -27,11 +27,11 @@ See [Operations](../core/operations.md).
 
 ### Make custom controllers
 
-**In FOSRestBundle**
+#### In FOSRestBundle (Custom controllers)
 
 Same as above.
 
-**In API Platform**
+#### In API Platform (Custom controllers)
 
 Even though this is not recommended, API Platform allows you to [create custom controllers](controllers.md) and declare them in your entity's `ApiResource` attribute.
 
@@ -41,13 +41,13 @@ See [General Design Considerations](../core/design.md).
 
 ### Routing system (with native documentation support)
 
-**In FOSRestBundle**
+#### In FOSRestBundle (Routing)
 
 Annotate your controllers with FOSRest's route annotations that are the most suitable to your needs.
 
 See [Full default annotations](https://github.com/FriendsOfSymfony/FOSRestBundle/blob/3.x/Resources/doc/annotations-reference.rst).
 
-**In API Platform**
+#### In API Platform (Routing)
 
 Use the `ApiResource` attribute to activate the HTTP methods you need for your entity. By default, all the methods are enabled.
 
@@ -55,13 +55,13 @@ See [Operations](../core/operations.md).
 
 ### Hook into the handling of the requests
 
-**In FOSRestBundle**
+#### In FOSRestBundle (Request handling)
 
 Listen to FOSRest's events to modify the requests before they come into your controllers and the responses after they come out of them.
 
 See [Listener support](https://github.com/FriendsOfSymfony/FOSRestBundle/blob/3.x/Resources/doc/3-listener-support.rst).
 
-**In API Platform**
+#### In API Platform (Request handling)
 
 API Platform provides a lot of ways to customize the behavior of your API, depending on what you exactly want to do.
 
@@ -69,7 +69,7 @@ See [Extending API Platform](../core/extending.md) for more details.
 
 ### Customize the formats of the requests and the responses
 
-**In FOSRestBundle**
+#### In FOSRestBundle (Formats)
 
 Only the request body's format can be customized.
 
@@ -77,7 +77,7 @@ Use body listeners to use either FOSRest's own decoders or your own ones. FOSRes
 
 See [Body Listener](https://github.com/FriendsOfSymfony/FOSRestBundle/blob/3.x/Resources/doc/body_listener.rst).
 
-**In API Platform**
+#### In API Platform (Formats)
 
 Both the request and the response body's format can be customized.
 
@@ -87,7 +87,7 @@ See [Content negotiation](../core/content-negotiation.md).
 
 ### Name conversion
 
-**In FOSRestBundle**
+#### In FOSRestBundle (Name conversion)
 
 Only request bodies can be converted before entering into your controller.
 
@@ -95,7 +95,7 @@ FOSRest provides two native normalizers for converting the names of your JSON ke
 
 See [Body Listeners](https://github.com/FriendsOfSymfony/FOSRestBundle/blob/3.x/Resources/doc/body_listener.rst).
 
-**In API Platform**
+#### In API Platform (Name conversion)
 
 Both request and response bodies can be converted.
 
@@ -105,13 +105,13 @@ See [_Name Conversion_ in The Serialization Process](../core/serialization.md#na
 
 ### Handle errors
 
-**In FOSRestBundle**
+#### In FOSRestBundle (Error handling)
 
 Map the exceptions to HTTP statuses in the `fos_rest.exception` parameter.
 
 See [ExceptionController support](https://github.com/FriendsOfSymfony/FOSRestBundle/blob/3.x/Resources/doc/4-exception-controller-support.rst).
 
-**In API Platform**
+#### In API Platform (Error handling)
 
 Map the exceptions to HTTP statuses in the `api_platform.exception_to_status` parameter.
 
@@ -119,11 +119,11 @@ See [Errors Handling](../core/errors.md).
 
 ### Security
 
-**In FOSRestBundle**
+#### In FOSRestBundle (Security)
 
 Use [Symfony's Security component](https://symfony.com/doc/current/security) to control your API access.
 
-**In API Platform**
+#### In API Platform (Security)
 
 Use the `security` attribute in the `ApiResource` and `ApiProperty` attributes. It is an [Expression language](https://symfony.com/doc/current/components/expression_language.md) string describing who can access your resources or who can see the properties of your resources. By default, everything is accessible without authentication.
 
@@ -133,13 +133,13 @@ See [Security](../core/security.md).
 
 ### API versioning
 
-**In FOSRestBundle**
+#### In FOSRestBundle (API versioning)
 
 FOSRestBundle provides a way to provide versions to your APIs in a way users have to specify which one they want to use.
 
 See [API versioning](https://github.com/FriendsOfSymfony/FOSRestBundle/blob/3.x/Resources/doc/versioning.rst).
 
-**In API Platform**
+#### In API Platform (API versioning)
 
 API Platform has no native support for API versioning, but instead provides an approach consisting of deprecating resources when needed. It allows a smoother upgrade for clients, as they need to change their code only when it is necessary.
 

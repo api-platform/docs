@@ -52,7 +52,7 @@ class Book {
 }
 ```
 
-**Further Reading**
+## Further Reading
 
 - Consult the documentation on [Per-Parameter Filters (Recommended Method)](../core/filters.md#2-per-parameter-filters-recommended).
 - If you are working with a legacy codebase, you can refer to the [documentation for the old syntax (deprecated)](../core/filters.md#1-legacy-filters-searchfilter-etc---not-recommended).

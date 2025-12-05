@@ -536,7 +536,7 @@ The `IriConverterParameterProvider` supports the following options in `extraProp
 
 This provider must be enabled before it can be used.
 
-```
+```yaml
 api_platform:
   enable_link_security: true
 ```
@@ -742,7 +742,7 @@ class User {}
 ## Parameter Attribute Reference
 
 | Property | Description |
-|---|---|
+| --- | --- |
 | `key` | The name of the parameter (e.g., `name`, `order`). |
 | `filter` | The filter service or instance that processes the parameter's value. |
 | `provider` | A service that transforms the parameter's value before it's used. |

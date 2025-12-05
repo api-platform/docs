@@ -2,7 +2,7 @@
 MD013:
   line_length: 400
 no-inline-html:
-  allowed_elements: [a, p, img, br, code-selector]
+  allowed_elements: [a, p, img, br, code-selector, video, source, iframe, h1]
 MD046:
   style: fenced
 MD004:

@@ -680,7 +680,7 @@ Your custom queries will be available like this:
 
 ## Mutations
 
-If you don't know what mutations are yet, the documentation about them is [here](https://graphql.org/learn/queries/#mutations).
+If you don't know what mutations are yet, the documentation about them is [in the GraphQL documentation for mutations](https://graphql.org/learn/queries/#mutations).
 
 For each resource, three mutations are available:
 

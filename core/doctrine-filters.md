@@ -56,10 +56,7 @@ class Book {
 
 ## Basic Knowledge
 
-Filters are services (see the section on [custom filters](../core/filters.md#creating-custom-filters)), and they can be linked
-to a Resource in two ways:
-
-1. Through the resource declaration, as the `filters` attribute.
+Filters are services (see the section on [custom filters](../core/filters.md#creating-custom-filters)), the can be linked to an API Platform Operation throuh [parameters](./filters.md):
 
 For example, having a filter service declaration in `services.yaml`:
 
@@ -71,11 +68,6 @@ services:
     arguments: [{ dateProperty: ~ }]
     tags: ['api_platform.filter']
 ```
-
-> [!WARNING]
-> Its discouraged to use a filter with properties in the dependency injection as it may conflict with how
-> `QueryParameter` works. We recommend to use a per-parameter filter or to use the :property placeholder with a defined
-> `filterContext` specifying your strategy for a given set of parameters.
 
 We're linking the filter `offer.date_filter` with the resource like this:
 
@@ -93,6 +85,32 @@ class Offer
 }
 ```
 
+> [!WARNING]
+> Its discouraged to use a filter with properties in the dependency injection as it may conflict with how
+> `QueryParameter` works. We recommend to use a per-parameter filter or to use the :property placeholder with a defined
+> `filterContext` specifying your strategy for a given set of parameters.
+
+Since API platform 4.2 we're allowing singleton objects, indeed a filter now acts on a single parameter associated
+with a single scalar value (or a list). You may use the [`:property` placeholder](./filters.md#filtering-multiple-properties-with-property))
+
+```php
+<?php
+// api/src/ApiResource/Offer.php
+namespace App\ApiResource;
+
+#[GetCollection(
+    parameters: [
+        'createdAt' => new QueryParameter(
+            filter: new DateFilter(),
+        ),
+    ],
+)]
+class Offer
+{
+    // ...
+}
+```
+
 For MongoDB ODM, all the filters are in the namespace `ApiPlatform\Doctrine\Odm\Filter`. The filter
 services all begin with `api_platform.doctrine_mongodb.odm`.
 
@@ -102,7 +120,7 @@ services all begin with `api_platform.doctrine_mongodb.odm`.
 > The SearchFilter is a multi-type filter that may have inconsistencies (eg: you can search a partial date with LIKE)
 > we recommend to use type-specific filters such as `PartialSearchFilter` or `DateFilter` instead.
 
-### Built-in new Search Filters since API Platform >= 4.2
+### Built-in Search Filters since API Platform >= 4.2
 
 To add some search filters, choose over this new list:
 
@@ -132,7 +150,7 @@ The search filter supports `exact`, `partial`, `start`, `end`, and `word_start` 
 - `word_start` strategy uses `LIKE text% OR LIKE % text%` to search for fields that contain words starting with `text`.
 
 Prepend the letter `i` to the filter if you want it to be case insensitive. For example `ipartial` or `iexact`. Note that
-this will use the `LOWER` function and **will** impact performance [if there is no proper index](performance.md#search-filter).
+this will use the `LOWER` function and will impact performance [as described in the performance documentation](./performance#search-filter).
 
 Case insensitivity may already be enforced at the database level depending on the [collation](https://en.wikipedia.org/wiki/Collation)
 used. If you are using MySQL, note that the commonly used `utf8_unicode_ci` collation (and its sibling `utf8mb4_unicode_ci`)
@@ -180,7 +198,7 @@ Syntax: `?property=value`
 
 The value can take any [IRI(Internationalized Resource Identifier)](https://en.wikipedia.org/wiki/Internationalized_Resource_Identifier).
 
-Like other [new search filters](#built-in-new-search-filters-api-platform--42) it can be used on the ApiResource attribute
+This filter can be used on the ApiResource attribute
 or in the operation attribute, for e.g., the `#GetCollection()` attribute:
 
 ```php
@@ -210,7 +228,7 @@ Syntax: `?property=value`
 
 The value can take any scalar value or array of values.
 
-Like other [new search filters](#built-in-new-search-filters-api-platform--42) it can be used on the ApiResource attribute
+This filter can be used on the ApiResource attribute
 or in the operation attribute, for e.g., the `#GetCollection()` attribute:
 
 ```php
@@ -240,7 +258,7 @@ Syntax: `?property=value`
 
 The value can take any scalar value or array of values.
 
-Like other [new search filters](#built-in-new-search-filters-api-platform--42) it can be used on the ApiResource attribute
+This filter can be used on the ApiResource attribute
 or in the operation attribute, for e.g., the `#GetCollection()` attribute:
 
 ```php
@@ -275,7 +293,7 @@ Syntax: `?property=value`
 
 The value can take any scalar value or array of values.
 
-Like other [new search filters](#built-in-new-search-filters-api-platform--42) it can be used on the ApiResource attribute
+This filter can be used on the ApiResource attribute
 or in the operation attribute, for e.g., the `#GetCollection()` attribute:
 
 ```php
@@ -388,7 +406,7 @@ class Offer
 ```
 
 > [!TIP]
-> For other syntaxes, for e.g., if you want to new syntax with the ApiResource attribute take a look [here](#introduction).
+> For other syntaxes, for e.g., if you want to new syntax with the ApiResource attribute take a look [in the Introduction section](#introduction).
 
 ### Date Filter using the ApiFilter Attribute Syntax (not recommended)
 
@@ -505,7 +523,7 @@ class Offer
 ```
 
 > [!TIP]
-> For other syntaxes, for e.g., if you want to new syntax with the ApiResource attribute take a look [here](#introduction).
+> For other syntaxes, for e.g., if you want to new syntax with the ApiResource attribute take a look [in the Introduction section](#introduction).
 
 ## Boolean Filter
 
@@ -539,7 +557,7 @@ class Offer
 ```
 
 > [!TIP]
-> For other syntaxes, for e.g., if you want to new syntax with the ApiResource attribute take a look [here](#introduction).
+> For other syntaxes, for e.g., if you want to new syntax with the ApiResource attribute take a look [in the Introduction section](#introduction).
 
 ### Result using the Boolean Filter
 
@@ -579,7 +597,7 @@ class Offer
 ```
 
 > [!TIP]
-> For other syntaxes, for e.g., if you want to new syntax with the ApiResource attribute take a look [here](#introduction).
+> For other syntaxes, for e.g., if you want to new syntax with the ApiResource attribute take a look [in the Introduction section](#introduction).
 
 ### Result using the Numeric Filter
 
@@ -619,7 +637,7 @@ class Offer
 ```
 
 > [!TIP]
-> For other syntaxes, for e.g., if you want to new syntax with the ApiResource attribute take a look [here](#introduction).
+> For other syntaxes, for e.g., if you want to new syntax with the ApiResource attribute take a look [in the Introduction section](#introduction).
 
 ### Result using the Range Filter
 
@@ -662,7 +680,7 @@ class Offer
 ```
 
 > [!TIP]
-> For other syntaxes, for e.g., if you want to new syntax with the ApiResource attribute take a look [here](#introduction).
+> For other syntaxes, for e.g., if you want to new syntax with the ApiResource attribute take a look [in the Introduction section](#introduction).
 
 ### Result using the Exists Filter
 
@@ -743,7 +761,7 @@ class Offer
 After that, you can use it with the following query: `/offers?order[name]=desc&order[id]=asc`.
 
 > [!TIP]
-> For other syntaxes, for e.g., if you want to new syntax with the ApiResource attribute take a look [here](#introduction).
+> For other syntaxes, for e.g., if you want to new syntax with the ApiResource attribute take a look [in the Introduction section](#introduction).
 
 ### Result using the Order Filter
 
@@ -755,14 +773,14 @@ order with the following query: `/offers?order[name]=desc&order[id]=asc`.
 By default, whenever the query does not specify the direction explicitly (e.g.: `/offers?order[name]&order[id]`), filters
 will not be applied unless you configure a default order direction to use:
 
-**Basic Strategies**
+#### Basic Strategies
 
 | Description | Strategy to set                                                                    |
 |-------------|------------------------------------------------------------------------------------|
 | Ascending   | `ApiPlatform\Doctrine\Common\Filter\OrderFilterInterface::DIRECTION_DESC` (`DESC`) |
 | Descending  | `ApiPlatform\Doctrine\Common\Filter\OrderFilterInterface::DIRECTION_ASC` (`ASC`)   |
 
-**Other Strategies**
+#### Other Strategies
 
 For other sort strategies (about `null` values), please refer to the [Handling Null Values with the Order Filter section](#comparing-with-null-values-using-order-filter).
 
@@ -1397,8 +1415,8 @@ This allows delegating validation to API Platform, respecting the [SOLID Princip
 >
 > You can see how this works directly in our code components:
 >
-> - The `ParameterValidatorProvider` for **Symfony** can be found [here](https://github.com/api-platform/core/blob/c9692b509d5b641104addbadb349b9bcab83e251/src/Symfony/Validator/State/ParameterValidatorProvider.php).
-> - The `ParameterValidatorProvider` for **Laravel** is located [here](https://github.com/api-platform/core/blob/c9692b509d5b641104addbadb349b9bcab83e251/src/Laravel/State/ParameterValidatorProvider.php).
+> - The `ParameterValidatorProvider` for **Symfony** can be found [in the Symfony ParameterValidatorProvider.php file](https://github.com/api-platform/core/blob/c9692b509d5b641104addbadb349b9bcab83e251/src/Symfony/Validator/State/ParameterValidatorProvider.php).
+> - The `ParameterValidatorProvider` for **Laravel** is located [in the Laravel ParameterValidatorProvider.php file](https://github.com/api-platform/core/blob/c9692b509d5b641104addbadb349b9bcab83e251/src/Laravel/State/ParameterValidatorProvider.php).
 >
 > Additionally, we filter out empty values within our `ParameterExtension` classes. For instance, the **Doctrine ORM**
 > `ParameterExtension` [handles this filtering here](https://github.com/api-platform/core/blob/c9692b509d5b641104addbadb349b9bcab83e251/src/Doctrine/Orm/Extension/ParameterExtension.php#L51C13-L53C14).
@@ -1668,8 +1686,8 @@ This allows delegating validation to API Platform, respecting the [SOLID Princip
 >
 > You can see how this works directly in our code components:
 >
-> - The `ParameterValidatorProvider` for **Symfony** can be found [here](https://github.com/api-platform/core/blob/c9692b509d5b641104addbadb349b9bcab83e251/src/Symfony/Validator/State/ParameterValidatorProvider.php).
-> - The `ParameterValidatorProvider` for **Laravel** is located [here](https://github.com/api-platform/core/blob/c9692b509d5b641104addbadb349b9bcab83e251/src/Laravel/State/ParameterValidatorProvider.php).
+> - The `ParameterValidatorProvider` for **Symfony** can be found [in the Symfony ParameterValidatorProvider.php file](https://github.com/api-platform/core/blob/c9692b509d5b641104addbadb349b9bcab83e251/src/Symfony/Validator/State/ParameterValidatorProvider.php).
+> - The `ParameterValidatorProvider` for **Laravel** is located [in the Laravel ParameterValidatorProvider.php file](https://github.com/api-platform/core/blob/c9692b509d5b641104addbadb349b9bcab83e251/src/Laravel/State/ParameterValidatorProvider.php).
 >
 > Additionally, we filter out empty values within our `ParameterExtension` classes. For instance, the **Doctrine ODM**
 > `ParameterExtension` [handles this filtering here](https://github.com/api-platform/core/blob/c9692b509d5b641104addbadb349b9bcab83e251/src/Doctrine/Odm/Extension/ParameterExtension.php#L50-L52).

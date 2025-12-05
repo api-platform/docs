@@ -24,12 +24,9 @@ jobs:
         with:
           fetch-depth: 0
 
-      - uses: articulate/actions-markdownlint@v1
+      - uses: DavidAnson/markdownlint-cli2-action@v21
         with:
-          config: .markdownlint.yaml
-          files: '**/*.md'
-          ignore: node_modules
-          version: 0.46.1
+          globs: '**/*.md'
 
       - uses: actions/cache@v4
         with:

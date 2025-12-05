@@ -10,9 +10,9 @@ In API Platform, [the general design considerations](design.md) recommended patt
 
 This reference covers three implementation strategies:
 
-    * [State Options: Linking a DTO Resource to an Entity for automated CRUD operations.](#1-the-dto-resource-state-options)
-    * [Automated Mapped Inputs: Using input DTOs with stateOptions for automated Write operations.](#2-automated-mapped-inputs-outputs)
-    * [Custom Business Logic: Using input DTOs with custom State Processors for specific business actions.](#3-custom-business-logic-custom-processor)
+- [State Options: Linking a DTO Resource to an Entity for automated CRUD operations.](#1-the-dto-resource-state-options)
+- [Automated Mapped Inputs: Using input DTOs with stateOptions for automated Write operations.](#2-automated-mapped-inputs-and-outputs)
+- [Custom Business Logic: Using input DTOs with custom State Processors for specific business actions.](#3-custom-business-logic-custom-processor)
 
 ## 1. The DTO Resource (State Options)
 
@@ -116,9 +116,9 @@ Automated mapping relies on two internal classes: `ApiPlatform\State\Provider\Ob
 
 These classes act as decorators around the standard Provider/Processor chain. They are activated when:
 
-    * The Object Mapper component is available.
-    * `stateOptions` are configured with an `entityClass` (or `documentClass` for ODM).
-    * The Resource (and Entity for writes) classes have the `#[Map]` attribute.
+- The Object Mapper component is available.
+- `stateOptions` are configured with an `entityClass` (or `documentClass` for ODM).
+- The Resource (and Entity for writes) classes have the `#[Map]` attribute.
 
 #### How it works internally
 
@@ -130,7 +130,7 @@ The `ObjectMapperProvider` delegates fetching the data to the underlying Doctrin
 
 The `ObjectMapperProcessor` receives the deserialized Input DTO. It uses `$objectMapper->map($inputDto, $entityClass)` to transform the input into an Entity instance. It then delegates to the underlying Doctrine processor (to persist the Entity). Finally, it maps the persisted Entity back to the Output DTO Resource.
 
-## 2. Automated Mapped Inputs & Outputs
+## 2. Automated Mapped Inputs and Outputs
 
 Ideally, your read and write models should differ. You might want to expose less data in a collection view (Output DTO) or enforce strict validation during creation/updates (Input DTOs).
 
