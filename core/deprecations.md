@@ -169,6 +169,41 @@ class Parchment
 }
 ```
 
+### Setting the Deprecation HTTP Header to Indicate When an Operation Is Deprecated
+
+[The Deprecation HTTP Response Header Field (RFC 9745)](https://datatracker.ietf.org/doc/rfc9745/)
+indicates that a URI will be or has been deprecated. This header can be used alongside the `Sunset`
+header to provide a deprecation date and a link to relevant documentation. Additionally, the
+`deprecation` link relation can be used to point to a resource that provides further information
+about the planned or existing deprecation.
+
+To set a `Deprecation` header, use the `headers` option in the operation definition. The value of
+the `deprecation` header should be a Unix timestamp. You can also provide a `Link` header with a
+`deprecation` relation to give users more context about the deprecation:
+
+```php
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\Link;
+
+#[ApiResource(
+    operations: [
+        new GetCollection(
+            headers: [
+                'deprecation' => '1688169599', // Unix timestamp
+            ],
+            links: [
+                new Link('deprecation', 'https://developer.example.com/deprecation'),
+            ],
+        ),
+    ],
+)]
+class DeprecationHeader
+{
+    // ...
+}
+```
+
 ## Path versioning
 
 > [!NOTE] REST and GraphQL architectures recommend to use deprecations instead of path versioning.
