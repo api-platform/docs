@@ -647,7 +647,7 @@ final readonly class ApiPrefixMutator implements ResourceMutatorInterface
     {
         $operations = $resource->getOperations();
 
-        if (null !== $operations) {
+        if (null === $operations) {
             return $resource;
         }
 
