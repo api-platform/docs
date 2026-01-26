@@ -172,6 +172,71 @@ services:
 
 Your `PersonProvider` will now work as expected!
 
+## Using DateTime as an Identifier
+
+DateTime identifiers are useful for resources that are naturally identified by timestamps or dates,
+such as daily reports, scheduled events, or time-series data. API Platform provides built-in support
+for using `\DateTime`, `\DateTimeImmutable`, and `\DateTimeInterface` as resource identifiers.
+
+### Basic Example with Doctrine Entity
+
+Here's a complete example of an entity using `\DateTimeImmutable` as the identifier:
+
+```php
+<?php
+// api/src/Entity/DailyReport.php
+namespace App\Entity;
+
+use ApiPlatform\Metadata\ApiProperty;
+use ApiPlatform\Metadata\ApiResource;
+use Doctrine\ORM\Mapping as ORM;
+
+#[ORM\Entity]
+#[ApiResource]
+final class DailyReport
+{
+    #[ORM\Id]
+    #[ORM\Column(type: 'datetime_immutable')]
+    #[ApiProperty(identifier: true)]
+    public \DateTimeImmutable $reportDate;
+
+    #[ORM\Column]
+    public string $content;
+
+    // ...
+}
+```
+
+### URL Format
+
+When using DateTime identifiers, the date-time value is represented in the URL using the ISO 8601
+format. For example:
+
+- `/daily_reports/2023-05-31T10:30:00+00:00`
+
+Note that special characters in the DateTime string (such as `:` and `+`) need to be URL-encoded
+when making requests. The
+[DateTimeUriVariableTransformer](https://github.com/api-platform/core/blob/main/src/Metadata/UriVariableTransformer/DateTimeUriVariableTransformer.php)
+handles the conversion automatically between the URL representation and the DateTime object.
+
+### Important Notes
+
+- The `DateTimeUriVariableTransformer` uses Symfony's `DateTimeNormalizer` internally to parse and
+  format DateTime values.
+- This transformer supports `\DateTime`, `\DateTimeImmutable`, and `\DateTimeInterface`.
+- The transformer is automatically registered with the `api_platform.uri_variables.transformer`
+  tag - no manual configuration is needed.
+- The feature works out of the box without any additional setup.
+
+### Best Practices
+
+- **Use `DateTimeImmutable`**: Prefer `DateTimeImmutable` over `DateTime` for better immutability
+  and to avoid unintended side effects.
+- **Use the `datetime_immutable` Doctrine type**: When using Doctrine, use the `datetime_immutable`
+  type to match your PHP type.
+- **Consider timezone implications**: Be aware of timezone handling in your API design. DateTime
+  values in URLs should typically include timezone information to avoid ambiguity.
+
 ## Changing Identifier in a Doctrine Entity
 
 If your resource is also a Doctrine entity and you want to use another identifier other than the
