@@ -172,6 +172,140 @@ services:
 
 Your `PersonProvider` will now work as expected!
 
+## Using DateTime Identifiers
+
+API Platform supports using `\DateTime` and `\DateTimeImmutable` objects as identifiers. This is particularly useful for resources that are naturally identified by a timestamp or date, such as time-series data, scheduled events, or logs.
+
+When you use a DateTime object as an identifier, API Platform automatically handles the conversion between the URL representation and the DateTime object using the built-in `DateTimeUriVariableTransformer`. This transformer uses Symfony's `DateTimeNormalizer` internally to parse and format DateTime values according to RFC 3339 format.
+
+Here's an example of a resource using a DateTime identifier:
+
+<code-selector>
+
+```php
+<?php
+// api/src/ApiResource/Observation.php with Symfony
+namespace App\ApiResource;
+
+use ApiPlatform\Metadata\ApiProperty;
+use ApiPlatform\Metadata\ApiResource;
+use App\State\ObservationProvider;
+
+#[ApiResource(provider: ObservationProvider::class)]
+final class Observation
+{
+    #[ApiProperty(identifier: true)]
+    public \DateTimeImmutable $recordedAt;
+
+    public string $temperature;
+
+    public string $location;
+
+    // ...
+}
+```
+
+```yaml
+# api/config/api_platform/resources/Observation.yaml
+# The YAML syntax is only supported for Symfony
+properties:
+    App\ApiResource\Observation:
+        recordedAt:
+            identifier: true
+resource:
+    App\ApiResource\Observation:
+        provider: App\State\ObservationProvider
+```
+
+```xml
+<!-- The XML syntax is only supported for Symfony -->
+<properties xmlns="https://api-platform.com/schema/metadata/properties-3.0">
+    <property resource="App\ApiResource\Observation" name="recordedAt" identifier="true"/>
+</properties>
+<resources xmlns="https://api-platform.com/schema/metadata/resources-3.0">
+    <resource class="App\ApiResource\Observation" provider="App\State\ObservationProvider" />
+</resources>
+```
+
+</code-selector>
+
+With this configuration, your observations will be accessible through URLs like:
+
+- `/observations/2023-05-31T10:30:00+00:00`
+- `/observations/2024-01-15T14:45:30Z`
+
+The DateTime identifier is automatically parsed from the URL and provided to your state provider as a `\DateTimeImmutable` object:
+
+```php
+<?php
+// api/src/State/ObservationProvider.php with Symfony
+
+namespace App\State;
+
+use App\ApiResource\Observation;
+use ApiPlatform\Metadata\Operation;
+use ApiPlatform\State\ProviderInterface;
+
+/**
+ * @implements ProviderInterface<Observation>
+ */
+final class ObservationProvider implements ProviderInterface
+{
+    public function provide(Operation $operation, array $uriVariables = [], array $context = []): ?Observation
+    {
+        // $uriVariables['recordedAt'] is automatically a \DateTimeImmutable instance
+        $recordedAt = $uriVariables['recordedAt'];
+        
+        // Use the DateTime to fetch your observation
+        // For example, from a database or time-series storage
+        return $this->findObservationByTimestamp($recordedAt);
+    }
+    
+    private function findObservationByTimestamp(\DateTimeImmutable $timestamp): ?Observation
+    {
+        // Your implementation here
+    }
+}
+```
+
+### Using DateTime Identifiers with Doctrine
+
+If you're using Doctrine entities, you can also use DateTime identifiers. Here's an example:
+
+```php
+<?php
+// api/src/Entity/Event.php
+
+namespace App\Entity;
+
+use ApiPlatform\Metadata\ApiProperty;
+use ApiPlatform\Metadata\ApiResource;
+use Doctrine\ORM\Mapping as ORM;
+
+#[ORM\Entity]
+#[ApiResource]
+final class Event
+{
+    #[ORM\Id]
+    #[ORM\Column(type: 'datetime_immutable')]
+    #[ApiProperty(identifier: true)]
+    public \DateTimeImmutable $scheduledAt;
+
+    #[ORM\Column]
+    public string $title;
+
+    #[ORM\Column(type: 'text')]
+    public string $description;
+
+    // ...
+}
+```
+
+In this Doctrine example, the `scheduledAt` property serves as both the database primary key and the API identifier. The event will be accessible at `/events/2023-12-25T09:00:00+00:00`.
+
+> [!NOTE]
+> DateTime identifiers are available in API Platform 3.1+. The DateTime values in URLs must follow RFC 3339 format and are automatically URL-encoded when necessary.
+
 ## Changing Identifier in a Doctrine Entity
 
 If your resource is also a Doctrine entity and you want to use another identifier other than the
