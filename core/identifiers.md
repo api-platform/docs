@@ -172,6 +172,71 @@ services:
 
 Your `PersonProvider` will now work as expected!
 
+## Decorating the IdentifiersExtractor
+
+The `IdentifiersExtractor` is responsible for extracting identifiers from a resource. By default, when `\DateTime` objects are used as identifiers, their serialization to `IRI` format is handled by the `DateTimeUriVariableTransformer`, which internally uses Symfony's `DateTimeNormalizer`. If you need a custom format, you can decorate the `IdentifiersExtractor`.
+
+Let's say you want to format all `\DateTime` identifiers to `Y-m-d`.
+
+First, create a custom `IdentifiersExtractor` that decorates the original:
+
+```php
+<?php
+// api/src/Identifier/DateTimeIdentifiersExtractor.php
+namespace App\Identifier;
+
+use ApiPlatform\Api\IdentifiersExtractorInterface;
+use DateTimeInterface;
+
+final class DateTimeIdentifiersExtractor implements IdentifiersExtractorInterface
+{
+    public function __construct(private IdentifiersExtractorInterface $decorated)
+    {
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getIdentifiersFromItem(object $item, array $options = []): array
+    {
+        $identifiers = $this->decorated->getIdentifiersFromItem($item, $options);
+
+        foreach ($identifiers as $key => $value) {
+            if ($value instanceof DateTimeInterface) {
+                $identifiers[$key] = $value->format('Y-m-d');
+            }
+        }
+
+        return $identifiers;
+    }
+}
+```
+
+Then, configure the service decoration in your `services.yaml`:
+
+<code-selector>
+
+```yaml
+# api/config/services.yaml
+services:
+    App\Identifier\DateTimeIdentifiersExtractor:
+        decorates: 'api_platform.identifiers.identifiers_extractor'
+        arguments: ['@.inner']
+        public: false
+```
+
+```xml
+<!-- The XML syntax is only supported for Symfony -->
+  <service id="App\Identifier\DateTimeIdentifiersExtractor" class="App\Identifier\DateTimeIdentifiersExtractor" public="false">
+      <decorate id="api_platform.identifiers.identifiers_extractor" />
+      <argument type="service" id="App\Identifier\DateTimeIdentifiersExtractor.inner" />
+  </service>
+```
+
+</code-selector>
+
+Now, all `\DateTime` identifiers will be formatted as `Y-m-d` in your resource IRIs.
+
 ## Changing Identifier in a Doctrine Entity
 
 If your resource is also a Doctrine entity and you want to use another identifier other than the
