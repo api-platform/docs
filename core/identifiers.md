@@ -174,7 +174,10 @@ Your `PersonProvider` will now work as expected!
 
 ## Decorating the IdentifiersExtractor
 
-The `IdentifiersExtractor` is responsible for extracting identifiers from a resource. By default, when `\DateTime` objects are used as identifiers, their serialization to `IRI` format is handled by the `DateTimeUriVariableTransformer`, which internally uses Symfony's `DateTimeNormalizer`. If you need a custom format, you can decorate the `IdentifiersExtractor`.
+The `IdentifiersExtractor` is responsible for extracting identifiers from a resource. By default,
+when `\DateTime` objects are used as identifiers, their serialization to `IRI` format is handled by
+the `DateTimeUriVariableTransformer`, which internally uses Symfony's `DateTimeNormalizer`. If you
+need a custom format, you can decorate the `IdentifiersExtractor`.
 
 Let's say you want to format all `\DateTime` identifiers to `Y-m-d`.
 
@@ -220,8 +223,8 @@ Then, configure the service decoration in your `services.yaml`:
 # api/config/services.yaml
 services:
     App\Identifier\DateTimeIdentifiersExtractor:
-        decorates: 'api_platform.identifiers.identifiers_extractor'
-        arguments: ['@.inner']
+        decorates: "api_platform.identifiers.identifiers_extractor"
+        arguments: ["@.inner"]
         public: false
 ```
 
