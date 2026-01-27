@@ -191,21 +191,23 @@ resources:
 
 </code-selector>
 
-### Disabling the Pagination Client-side
+### Allowing the Client to Control Pagination
 
-#### Disabling the Pagination Client-side Globally
+By default, clients cannot enable or disable pagination via query parameters
+(`pagination_client_enabled` defaults to `false`). You can allow clients to control pagination by
+setting this option to `true`.
 
-You can configure API Platform to let the client enable or disable the pagination.
+#### Allowing the Client to Control Pagination Globally
 
-##### Disabling the Pagination Client-side Globally with Symfony
+##### Allowing the Client to Control Pagination Globally with Symfony
 
-To configure this feature globally, use the following configuration:
+To enable this feature globally, use the following configuration:
 
 ```yaml
 # api/config/packages/api_platform.yaml
 api_platform:
     defaults:
-        pagination_client_enabled: false
+        pagination_client_enabled: true
     collection:
         pagination:
             enabled_parameter_name: pagination # optional
@@ -220,9 +222,9 @@ Any value accepted by the
 [`FILTER_VALIDATE_BOOLEAN`](https://www.php.net/manual/en/filter.filters.validate.php) filter can be
 used as the value.
 
-##### Disabling the Pagination Client-side Globally with Laravel
+##### Allowing the Client to Control Pagination Globally with Laravel
 
-To configure this feature globally, use the following configuration:
+To enable this feature globally, use the following configuration:
 
 ```php
 <?php
@@ -230,7 +232,7 @@ To configure this feature globally, use the following configuration:
 return [
     // ....
     'defaults' => [
-        'pagination_client_enabled' => false,
+        'pagination_client_enabled' => true,
     ],
     'collection' => [
         'pagination' => [
@@ -249,9 +251,9 @@ Any value accepted by the
 [`FILTER_VALIDATE_BOOLEAN`](https://www.php.net/manual/en/filter.filters.validate.php) filter can be
 used as the value.
 
-#### Disabling the Pagination Client-side For a Specific Resource
+#### Allowing the Client to Control Pagination For a Specific Resource
 
-The client ability to disable the pagination can also be set in the resource configuration:
+The client ability to control pagination can also be enabled for a specific resource:
 
 ```php
 <?php
