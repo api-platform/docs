@@ -114,7 +114,7 @@ use ApiPlatform\Metadata\CollectionOperationInterface;
  */
 final class BlogPostProvider implements ProviderInterface
 {
-    private array $data;
+    // …
 
     public function provide(Operation $operation, array $uriVariables = [], array $context = []): iterable|BlogPost|null
     {
@@ -172,6 +172,13 @@ final class BlogPostProvider implements ProviderInterface
 {
     private array $data;
 
+    public function __construct() {
+        $this->data = [
+            'ab' => new BlogPost('ab'),
+            'cd' => new BlogPost('cd'),
+        ];
+    }
+
     public function provide(Operation $operation, array $uriVariables = [], array $context = []): BlogPost|null
     {
         return $this->data[$uriVariables['id']] ?? null;
@@ -219,7 +226,7 @@ use ApiPlatform\Metadata\CollectionOperationInterface;
  */
 final class BlogPostProvider implements ProviderInterface
 {
-    private array $data;
+    // …
 
     public function provide(Operation $operation, array $uriVariables = [], array $context = []): iterable|BlogPost|null
     {
