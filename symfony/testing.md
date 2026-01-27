@@ -398,18 +398,13 @@ Kubernetes cluster.
 You may also be interested in these alternative testing tools (not included in the API Platform
 distribution):
 
-- [Hoppscotch](https://docs.hoppscotch.io/features/tests), create functional test for your API
-- [Hoppscotch](https://docs.hoppscotch.io/documentation/features/rest-api-testing/), create
-  functional test for your API Platform project using a nice UI, benefit from its Swagger
-  integration and run tests in the CI using [the command-line tool](https://docs.hoppscotch.io/cli);
-- [Behat](https://behat.org), a
-  [behavior-driven development (BDD)](https://en.wikipedia.org/wiki/Behavior-driven_development)
-  framework to write the API specification as user stories and in natural language then execute
-  these scenarios against the application to validate its behavior;
-- [Blackfire Player](https://blackfire.io/player), a nice DSL to crawl HTTP services, assert
-  responses, and extract data from HTML/XML/JSON responses;
-- [PHP Matcher](https://github.com/coduo/php-matcher), the Swiss Army knife of JSON document
-  testing.
+- [Hoppscotch](https://docs.hoppscotch.io/), create functional [test](https://docs.hoppscotch.io/documentation/getting-started/rest/tests) for your API
+  Platform project using a nice UI, benefit from its Swagger integration and run tests in the CI using [the command-line tool](https://docs.hoppscotch.io/documentation/clients/cli/overview);
+- [Behat](https://behat.org), a [behavior-driven development (BDD)](https://en.wikipedia.org/wiki/Behavior-driven_development) framework to write the API specification as user
+  stories and in natural language then execute these scenarios against the application to validate its behavior;
+- [Blackfire Player](https://blackfire.io/player), a nice DSL to crawl HTTP services, assert responses, and extract data
+  from HTML/XML/JSON responses;
+- [PHP Matcher](https://github.com/coduo/php-matcher), the Swiss Army knife of JSON document testing.
 
 ## Using the API Platform Distribution for End-to-End Testing
 
