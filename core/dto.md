@@ -20,8 +20,8 @@ This reference covers three implementation strategies:
 
 ## 1. The DTO Resource (State Options)
 
-> [!WARNING] This is a Symfony only feature in 4.2 and is not working properly without the
-> symfony/object-mapper:^7.4
+> [!WARNING] This is a Symfony only feature in 4.2 and is not working properly without
+> symfony/object-mapper:^7.4 or symfony/object-mapper:^8.0
 
 You can map a DTO Resource directly to a Doctrine Entity using stateOptions. This automatically
 configures the built-in State Providers and Processors to fetch/persist data using the Entity and
