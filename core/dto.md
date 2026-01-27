@@ -14,9 +14,9 @@ In API Platform, [the general design considerations](design.md) recommended patt
 
 This reference covers three implementation strategies:
 
-- [State Options: Linking a DTO Resource to an Entity for automated CRUD operations.](#1-the-dto-resource-state-options)
-- [Automated Mapped Inputs: Using input DTOs with stateOptions for automated Write operations.](#2-automated-mapped-inputs-and-outputs)
-- [Custom Business Logic: Using input DTOs with custom State Processors for specific business actions.](#3-custom-business-logic-custom-processor)
+- For automated CRUD operations, link a DTO Resource to an Entity: [State Options](#1-the-dto-resource-state-options)
+- For automated Write operation, use input DTOs with stateOptions: [Automated Mapped Inputs](#2-automated-mapped-inputs-and-outputs)
+- For specific business actions, use input DTOs with custom State Processors : [Custom Business Logic](#3-custom-business-logic-custom-processor)
 
 ## 1. The DTO Resource (State Options)
 
