@@ -59,7 +59,7 @@ class Book {
 
 Filters are services (see the section on
 [custom filters](../core/filters.md#creating-custom-filters)), the can be linked to an API Platform
-Operation throuh [parameters](./filters.md):
+Operation through [parameters](./filters.md):
 
 For example, having a filter service declaration in `services.yaml`:
 
