@@ -101,3 +101,22 @@ return [
     ],
 ];
 ```
+
+If you plan to use Swagger UI to test your API through the browser, also uncomment the `swagger_ui.apiKeys` config to display the Authorization form in Swagger UI:
+```php
+<?php
+// config/api-platform.php
+return [
+    // ....
+    'swagger_ui' => [
+        // ....
+         'apiKeys' => [
+             'api' => [
+                 'name' => 'Authorization',
+                 'type' => 'header',
+             ],
+         ],
+    ]
+];
+```
+<img width="898" height="722" alt="image" src="https://github.com/user-attachments/assets/a8ac68ec-e02c-4c49-a2b0-c8dd633ad707" />
