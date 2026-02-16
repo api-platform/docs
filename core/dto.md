@@ -16,9 +16,9 @@ This reference covers three implementation strategies:
 
 - For automated CRUD operations, link a DTO Resource to an Entity:
   [State Options](#1-the-dto-resource-state-options)
-- For automated Write operation, use input DTOs with stateOptions:
-  [Automated Mapped Inputs](#2-automated-mapped-inputs-and-outputs)
-- For specific business actions, use input DTOs with custom State Processors :
+- For automated Write operations, use input DTOs with stateOptions:
+  [Input DTOs for Write Operations](#2-input-dtos-for-write-operations)
+- For specific business actions, use input DTOs with custom State Processors:
   [Custom Business Logic](#3-custom-business-logic-custom-processor)
 
 ## 1. The DTO Resource (State Options)
@@ -146,14 +146,19 @@ Entity into your DTO Resource.
 The `ObjectMapperProcessor` receives the deserialized Input DTO. It uses
 `$objectMapper->map($inputDto, $entityClass)` to transform the input into an Entity instance. It
 then delegates to the underlying Doctrine processor (to persist the Entity). Finally, it maps the
-persisted Entity back to the Output DTO Resource.
+persisted Entity back to the Resource DTO for the response.
 
-## 2. Automated Mapped Inputs and Outputs
+## 2. Input DTOs for Write Operations
 
-Ideally, your read and write models should differ. You might want to expose less data in a
-collection view (Output DTO) or enforce strict validation during creation/updates (Input DTOs).
+For write operations, you often want different validation rules or structures for creation versus
+updates. Use dedicated input DTOs with the `#[Map(target: EntityClass::class)]` attribute to
+transform input data into your entity before persistence.
 
-### Input DTOs (Write Operations)
+> [!NOTE]
+> While it's possible to specify a different `output` class on write operations, it's not
+> recommended. The resource class itself should typically be the output.
+
+### Input DTOs
 
 For POST and PATCH, we define specific DTOs. The `#[Map(target: BookEntity::class)]` attribute tells
 the system to map this DTO onto the Entity class before persistence.
@@ -209,32 +214,10 @@ final class UpdateBook
 }
 ```
 
-#### Output DTO (Collection Read)
+### Configuring Operations with Input DTOs
 
-For the `GetCollection` operation, we use a lighter DTO that exposes only essential fields.
-
-```php
-// src/Api/Dto/BookCollection.php
-namespace App\Api\Dto;
-
-use App\Entity\Book as BookEntity;
-use Symfony\Component\ObjectMapper\Attribute\Map;
-
-#[Map(source: BookEntity::class)]
-final class BookCollection
-{
-    public int $id;
-
-    #[Map(source: 'title')]
-    public string $name;
-
-    public string $isbn;
-}
-```
-
-#### Wiring it all together in the Resource
-
-In your Book resource, configure the operations to use these classes via input and output.
+Configure your Book resource operations to use the input DTOs. The Book resource class itself
+serves as the output for all operations.
 
 ```php
 // src/Api/Resource/Book.php
@@ -243,10 +226,7 @@ In your Book resource, configure the operations to use these classes via input a
     stateOptions: new Options(entityClass: BookEntity::class),
     operations: [
         new Get(),
-        // Use the specialized Output DTO for collections
-        new GetCollection(
-            output: BookCollection::class
-        ),
+        new GetCollection(),
         // Use the specialized Input DTO for creation
         new Post(
             input: CreateBook::class
