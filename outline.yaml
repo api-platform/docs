@@ -55,6 +55,7 @@ chapters:
       - dto
       - openapi
       - json-schema
+      - mcp
       - mercure
       - push-relations
       - errors
