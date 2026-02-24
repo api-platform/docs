@@ -41,6 +41,15 @@ cd my-api-platform-laravel-app
 
 ## Installing API Platform
 
+> [!TIP]
+> The API Platform CLI can automate all of the steps below. To scaffold a new Laravel project with API Platform already installed, run:
+>
+> ```console
+> api-platform new my-project --framework=laravel
+> ```
+>
+> This detects the `laravel` installer if available, creates the project, requires `api-platform/laravel`, and runs `php artisan api-platform:install` for you. The manual steps below remain valid for adding API Platform to an existing Laravel project.
+
 In your Laravel project, install the API Platform integration for Laravel:
 
 ```console
