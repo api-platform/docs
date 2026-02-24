@@ -3,7 +3,7 @@
 API Platform Core provides an easy way to override the default order of items in your collection.
 
 By default, items in the collection are ordered in ascending (ASC) order by their resource identifier(s). If you want to
-customize this order, you must add an `order` attribute on your ApiResource annotation:
+customize this order, you must add an `order` attribute on your ApiResource attribute:
 
 <code-selector>
 
