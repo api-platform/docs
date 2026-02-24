@@ -16,14 +16,13 @@ API Platform also provides ambitious **JavaScript** tools to create web and mobi
 
 API Platform is shipped with **[Docker](../deployment/docker-compose.md)** and **[Kubernetes](../deployment/kubernetes.md)** definitions, to develop and deploy instantly on the cloud.
 
-The easiest and most powerful way to get started is [to download the API Platform distribution](https://github.com/api-platform/api-platform/releases). It contains:
+The easiest way to get started is to use the API Platform CLI to scaffold a new project. It sets up:
 
 - the API skeleton, including [the Core library](../core/index.md), [the Symfony framework](https://symfony.com/) ([optional](../core/bootstrap.md)) and [the Doctrine ORM](https://www.doctrine-project.org/projects/orm.html) ([optional](../core/extending.md))
 - [the client scaffolding tool](../create-client/index.md) to generate [Next.js](../create-client/index.md) web applications from the API documentation ([Nuxt](https://nuxt.com/), [Vue](https://vuejs.org/), [Create React App](https://reactjs.org), [React Native](https://reactnative.dev/), [Quasar](https://quasar.dev/) and [Vuetify](https://vuetifyjs.com/) are also supported)
 - [a beautiful admin interface](../admin/index.md), built on top of React Admin, dynamically created by parsing the API documentation
 - all you need to [create real-time and async APIs using the Mercure protocol](../core/mercure.md)
-- a [Docker](../deployment/docker-compose.md) definition to start a working development environment in a single command, providing containers for the API and the Next.js web application
-- a [Helm](https://helm.sh/) chart to deploy the API in any [Kubernetes](../deployment/kubernetes.md) cluster
+- a [Docker](../deployment/docker-compose.md) definition to start a working development environment in a single command, providing containers for the API and optionally a Next.js web application
 
 ## A Bookshop API
 
@@ -56,31 +55,42 @@ asynchronous jobs to your APIs is straightforward.
 
 ## Installing the Framework
 
-### Using the API Platform Distribution (Recommended)
+### Using the API Platform CLI (Recommended)
 
-Start by [downloading the API Platform distribution](https://github.com/api-platform/api-platform/releases/latest), or [generate a GitHub repository from the template we provide](https://github.com/new?template_name=api-platform&template_owner=api-platform).
-You will add your own code and configuration inside this skeleton.
+First, install the API Platform CLI:
 
-**Note**: Avoid downloading the `.zip` archive, as it may cause potential [permission](https://github.com/api-platform/api-platform/issues/319#issuecomment-307037562) [issues](https://github.com/api-platform/api-platform/issues/777#issuecomment-412515342), prefer the `.tar.gz` archive.
+```console
+# macOS / Linux (Homebrew — recommended)
+brew install api-platform/tap/api-platform
+
+# Or download the binary directly (macOS / Linux)
+curl -sL "https://github.com/api-platform/api-platform/releases/latest/download/api-platform_$(uname -s | tr '[:upper:]' '[:lower:]')_$(uname -m | sed 's/x86_64/amd64/' | sed 's/aarch64/arm64/').tar.gz" | tar xz -C /usr/local/bin
+
+# Or with Go
+go install github.com/api-platform/api-platform/cmd/api-platform@latest
+```
+
+Then scaffold a new Symfony project:
+
+```console
+api-platform new my-project --framework=symfony
+```
+
+To also scaffold a Next.js PWA frontend, add the `--with-pwa` flag:
+
+```console
+api-platform new my-project --framework=symfony --with-pwa
+```
+
+The CLI creates a `my-project/` directory containing an `api/` subdirectory with the Symfony application and all Docker infrastructure. If you used `--with-pwa`, a `pwa/` subdirectory is also created with a Next.js application.
 
 API Platform is shipped with a [Docker](https://docker.com) definition that makes it easy to get a containerized development
 environment up and running. If you do not already have Docker on your computer, it's the right time to [install it](https://docs.docker.com/get-docker/).
 
-**Note**: On Mac, only [Docker for Mac](https://docs.docker.com/docker-for-mac/) is supported.
-Similarly, on Windows, only [Docker for Windows](https://docs.docker.com/docker-for-windows/) is supported. Docker Machine **is not** supported out of the box.
-
-Open a terminal, and navigate to the directory containing your project skeleton. Run the following command to start all
-services using [Docker Compose](https://docs.docker.com/compose/):
-
-Build the images:
+Enter the project directory and start the services:
 
 ```console
-docker compose build --no-cache
-```
-
-Then, start Docker Compose in detached mode:
-
-```console
+cd my-project/api
 docker compose up --wait
 ```
 
@@ -99,14 +109,24 @@ This starts the following services:
 | Name     | Description                                                                                                                                                                                                                                                                                                                       |
 | -------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | php      | The API powered by [FrankenPHP](https://frankenphp.dev) (a modern application server for PHP built on top of [Caddy web server](caddy.md) and with native support for [Mercure realtime](../core/mercure.md), [Vulcain relations preloading](https://vulcain.rocks), and [XDebug](debugging.md)), Composer, and sensitive configs |
-| pwa      | Next.js project compatible with Create Client and having Admin preinstalled                                                                                                                                                                                                                                                       |
 | database | PostgreSQL database server                                                                                                                                                                                                                                                                                                        |
+
+If you used `--with-pwa`, a `pwa` container is also started:
+
+| Name | Description                                                                |
+| ---- | -------------------------------------------------------------------------- |
+| pwa  | Next.js project compatible with Create Client and having Admin preinstalled |
 
 The following components are available:
 
+| URL                        | Path   | Language | Description |
+| -------------------------- | ------ | -------- | ----------- |
+| `https://localhost/docs/`  | `api/` | PHP      | The API     |
+
+If you used `--with-pwa`:
+
 | URL                        | Path               | Language   | Description             |
 | -------------------------- | ------------------ | ---------- | ----------------------- |
-| `https://localhost/docs/`  | `api/`             | PHP        | The API                 |
 | `https://localhost/`       | `pwa/`             | TypeScript | The Next.js application |
 | `https://localhost/admin/` | `pwa/pages/admin/` | TypeScript | The Admin               |
 
@@ -128,14 +148,13 @@ you'll get auto-completion for almost everything and awesome quality analysis.
 
 [PHP Intelephense for Visual Studio Code](https://marketplace.visualstudio.com/items?itemName=bmewburn.vscode-intelephense-client) also works well, and is free and open source.
 
-The API Platform distribution comes with a dummy entity for test purposes: `api/src/Entity/Greeting.php`. We will remove
-it later.
+The Flex recipe may install demo files for testing purposes. These can be removed once you are ready to build your own resources.
 
-If you're used to the PHP ecosystem, you probably guessed that this test entity uses the industry-leading [Doctrine ORM](https://www.doctrine-project.org/projects/orm.html)
-library as a persistence system. It is shipped, in the API Platform distribution.
+If you're used to the PHP ecosystem, you probably guessed that the project uses the industry-leading [Doctrine ORM](https://www.doctrine-project.org/projects/orm.html)
+library as a persistence system.
 
 Doctrine ORM is the easiest way to persist and query data in an API Platform project thanks to the bridge shipped with the
-distribution, but it's also entirely optional, and [you may prefer to plug your own persistence system](../core/design.md).
+framework, but it's also entirely optional, and [you may prefer to plug your own persistence system](../core/design.md).
 
 The Doctrine Bridge is optimized for performance and development convenience. For instance, when using Doctrine, API Platform
 is able to automatically optimize the generated SQL queries by adding the appropriate `JOIN` clauses. It also provides a
@@ -152,16 +171,13 @@ systems together in the same project.
 > given command in this container. You may want [to create an alias](https://www.linfo.org/alias.html) to make your life easier.
 > So, for example, you could run a command like this: `docker compose exec php <command>`.
 
-### Using Symfony CLI
+### Adding to an Existing Symfony Project
 
-Alternatively, the API Platform server component can also be installed directly on a local machine.
-**This method is recommended only for users who want full control over the directory structure and the installed
-dependencies.**
+If you already have a Symfony project and want to add API Platform to it, you can install it directly using [the Symfony binary](https://symfony.com/download).
 
-[For a good introduction, watch how to install API Platform without the distribution on SymfonyCasts](https://symfonycasts.com/screencast/api-platform/install?cid=apip).
+[For a good introduction, watch how to install API Platform without the CLI on SymfonyCasts](https://symfonycasts.com/screencast/api-platform/install?cid=apip).
 
-The rest of this tutorial assumes that you have installed API Platform using the official distribution. Go straight to the
-next section if it's your case.
+The rest of this tutorial assumes that you have used the CLI to create a new project. If you are adding API Platform to an existing project, adapt the steps below accordingly.
 
 API Platform has an official Symfony Flex recipe. It means that you can easily install it from any Symfony
 application using [the Symfony binary](https://symfony.com/download):
@@ -212,9 +228,7 @@ Open `https://localhost` in your favorite web browser:
 You'll need to add a security exception in your browser to accept the self-signed TLS certificate that has been generated
 for this container when installing the framework.
 
-Later you will probably replace this welcome screen by the homepage of your Next.js application. If you don't plan to create
-a Progressive Web App, you can remove the `pwa/` directory as well as the related lines in `docker-compose*.yml` and in `api/frankenphp/Caddyfile` (don't do it
-now, we'll use this container later in this tutorial).
+If you used `--with-pwa`, the welcome screen will later be replaced by the homepage of your Next.js application. If you no longer need the PWA, you can remove the `pwa/` directory as well as the related service in `compose.yaml` and the `@pwa` matcher block in `api/frankenphp/Caddyfile`.
 
 Click on the "API" button, or go to `https://localhost/docs/`:
 
@@ -224,17 +238,16 @@ API Platform exposes a description of the API in the [OpenAPI](https://www.opena
 It also integrates a customized version of [Swagger UI](https://swagger.io/swagger-ui/), a nice interface rendering the
 OpenAPI documentation.
 Click on an operation to display its details. You can also send requests to the API directly from the UI.
-Try to create a new _Greeting_ resource using the `POST` operation, then access it using the `GET` operation and, finally,
-delete it by executing the `DELETE` operation.
+If the Flex recipe installed demo resources, you can use the `POST` operation to create a resource, retrieve it with `GET`, and delete it with `DELETE`.
 If you access any API URL with the `.html` extension appended, API Platform displays
-the corresponding API request in the UI. Try it yourself by browsing to `https://localhost/greetings.html`. If no extension is present, API Platform will use the `Accept` header to select the format to use. By default, a JSON-LD response is sent ([configurable behavior](../core/content-negotiation.md)).
+the corresponding API request in the UI. If no extension is present, API Platform will use the `Accept` header to select the format to use. By default, a JSON-LD response is sent ([configurable behavior](../core/content-negotiation.md)).
 
 So, if you want to access the raw data, you have two alternatives:
 
 - Add the correct `Accept` header (or don't set any `Accept` header at all if you don't care about security) - preferred when writing API clients
 - Add the format you want as the extension of the resource - for debug purpose only
 
-For instance, go to `https://localhost/greetings.jsonld` to retrieve the list of `Greeting` resources in JSON-LD.
+For instance, if a `books` resource is defined, go to `https://localhost/books.jsonld` to retrieve the list in JSON-LD.
 
 Of course, you can also use your favorite HTTP client to query the API.
 We are fond of [Hoppscotch](https://hoppscotch.com), a free and open source API client with good support of API Platform.
@@ -483,7 +496,7 @@ They are supported as well.
 Learn more about how to map entities with the Doctrine ORM in [the project's official documentation](https://docs.doctrine-project.org/projects/doctrine-orm/en/current/reference/association-mapping.html)
 or in Kévin's book "[Persistence in PHP with the Doctrine ORM](https://www.amazon.fr/gp/product/B00HEGSKYQ/ref=as_li_tl?ie=UTF8&camp=1642&creative=6746&creativeASIN=B00HEGSKYQ&linkCode=as2&tag=kevidung-21)".
 
-Now, delete the file `api/src/Entity/Greeting.php`. This demo entity isn't useful anymore.
+Now, if the Flex recipe installed any demo entities, remove them from `api/src/Entity/` as they are no longer needed.
 Finally, generate a new database migration using [Doctrine Migrations](https://symfony.com/doc/current/doctrine.html#migrations-creating-the-database-tables-schema) and apply it:
 
 ```console
@@ -774,7 +787,7 @@ API Platform also has an awesome [client generator](../create-client/index.md) a
 [React/Redux](../create-client/react.md), [Vue.js](../create-client/vuejs.md), [Quasar](../create-client/quasar.md), and [Vuetify](../create-client/vuetify.md) Progressive Web Apps/Single Page Apps that you can
 easily tune and customize. The generator also supports [React Native](../create-client/react-native.md) if you prefer to leverage all capabilities of mobile devices.
 
-The distribution comes with a skeleton ready to welcome the [Next.js](https://nextjs.org/) flavor of the generated code. To bootstrap your app, run:
+If you created your project with `--with-pwa`, a Next.js skeleton is already present in `pwa/` ready to welcome generated code. To bootstrap your app, run:
 
 ```console
 docker compose exec pwa \
