@@ -128,9 +128,10 @@ services all begin with `api_platform.doctrine_mongodb.odm`.
 
 To add some search filters, choose over this new list:
 
-- [IriFilter](#iri-filter) (filter on IRIs)
-- [ExactFilter](#exact-filter) (filter with exact value)
-- [PartialSearchFilter](#partial-search-filter) (filter using a `LIKE %value%`)
+- [SortFilter](#sort-filter) (sort a collection by a property; supports nested properties via dot notation)
+- [IriFilter](#iri-filter) (filter on IRIs; supports nested associations via dot notation)
+- [ExactFilter](#exact-filter) (filter with exact value; supports nested properties via dot notation)
+- [PartialSearchFilter](#partial-search-filter) (filter using a `LIKE %value%`; supports nested properties via dot notation)
 - [FreeTextQueryFilter](#free-text-query-filter) (allows you to apply multiple filters to multiple
   properties of a resource at the same time, using a single parameter in the URL)
 - [OrFilter](#or-filter) (apply a filter using `orWhere` instead of `andWhere` )
@@ -204,12 +205,12 @@ Filters can be combined: `http://localhost:8000/api/offers?price=10&description=
 
 ## Iri Filter
 
-The iri filter allows filtering a resource using IRIs.
+The IRI filter allows filtering a resource using IRIs.
 
 Syntax: `?property=value`
 
 The value can take any
-[IRI(Internationalized Resource Identifier)](https://en.wikipedia.org/wiki/Internationalized_Resource_Identifier).
+[IRI (Internationalized Resource Identifier)](https://en.wikipedia.org/wiki/Internationalized_Resource_Identifier).
 
 This filter can be used on the ApiResource attribute or in the operation attribute, for e.g., the
 `#GetCollection()` attribute:
@@ -229,9 +230,12 @@ class Chicken
 ```
 
 Given that the endpoint is `/chickens`, you can filter chickens by chicken coop with the following
-query: `/chikens?chickenCoop=/chickenCoop/1`.
+query: `/chickens?chickenCoop=/chickenCoop/1`.
 
-It will return all the chickens that live the chicken coop number 1.
+It will return all the chickens that live in chicken coop number 1.
+
+`IriFilter` supports filtering through nested associations using dot notation in the `property` argument.
+See [Filtering on Nested Properties](#filtering-on-nested-properties).
 
 ## Exact Filter
 
@@ -262,6 +266,9 @@ Given that the endpoint is `/chickens`, you can filter chickens by name with the
 `/chikens?name=Gertrude`.
 
 It will return all the chickens that are exactly named _Gertrude_.
+
+`ExactFilter` supports filtering on nested properties using dot notation in the `property` argument.
+See [Filtering on Nested Properties](#filtering-on-nested-properties).
 
 ## Partial Search Filter
 
@@ -296,6 +303,9 @@ It will return all chickens where the name contains the substring _tom_.
 > [!NOTE] This filter performs a case-insensitive search. It automatically normalizes both the input
 > value and the stored data (for e.g., by converting them to lowercase) before making the
 > comparison.
+
+`PartialSearchFilter` supports searching on nested properties using dot notation in the `property` argument.
+See [Filtering on Nested Properties](#filtering-on-nested-properties).
 
 ## Free Text Query Filter
 
@@ -1071,16 +1081,265 @@ class Offer
 }
 ```
 
+## Sort Filter
+
+The `SortFilter` is a parameter-based filter designed exclusively for use with `QueryParameter`. Unlike the
+[`OrderFilter`](#order-filter-sorting), it does not extend `AbstractFilter` and works with a single parameter
+per sorted property. This makes it straightforward to declare sort parameters with full control over naming
+and behavior.
+
+**ORM**: `ApiPlatform\Doctrine\Orm\Filter\SortFilter`
+**ODM**: `ApiPlatform\Doctrine\Odm\Filter\SortFilter`
+
+### Basic Usage
+
+Each `QueryParameter` using `SortFilter` controls sorting for one property. The filter accepts `asc`, `desc`,
+`ASC`, and `DESC` as values. Any other value causes a 422 validation error, because the filter publishes a
+JSON Schema `enum` constraint automatically.
+
+```php
+<?php
+// api/src/Entity/Book.php
+namespace App\Entity;
+
+use ApiPlatform\Doctrine\Orm\Filter\SortFilter;
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\QueryParameter;
+
+#[ApiResource(
+    operations: [
+        new GetCollection(
+            parameters: [
+                'order' => new QueryParameter(filter: new SortFilter(), property: 'name'),
+                'orderDate' => new QueryParameter(filter: new SortFilter(), property: 'createdAt'),
+            ]
+        ),
+    ]
+)]
+class Book
+{
+    // ...
+}
+```
+
+Clients can then sort with:
+
+- `GET /books?order=asc` — sort by name ascending
+- `GET /books?orderDate=desc` — sort by creation date descending
+- `GET /books?order=asc&orderDate=desc` — combine both
+
+### Handling Null Values
+
+When a sorted property can be `null`, use the `nullsComparison` constructor argument to specify how
+null values are ordered relative to non-null values:
+
+| Strategy                                   | Constant                                        |
+| ------------------------------------------ | ----------------------------------------------- |
+| Use the default DBMS behavior              | `null` (default)                                |
+| Null values always sort first              | `OrderFilterInterface::NULLS_ALWAYS_FIRST`      |
+| Null values always sort last               | `OrderFilterInterface::NULLS_ALWAYS_LAST`       |
+| Null values treated as smallest            | `OrderFilterInterface::NULLS_SMALLEST`          |
+| Null values treated as largest             | `OrderFilterInterface::NULLS_LARGEST`           |
+
+```php
+<?php
+// api/src/Entity/Book.php
+namespace App\Entity;
+
+use ApiPlatform\Doctrine\Common\Filter\OrderFilterInterface;
+use ApiPlatform\Doctrine\Orm\Filter\SortFilter;
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\QueryParameter;
+
+#[ApiResource(
+    operations: [
+        new GetCollection(
+            parameters: [
+                'order' => new QueryParameter(filter: new SortFilter(), property: 'name'),
+                'orderDate' => new QueryParameter(
+                    filter: new SortFilter(nullsComparison: OrderFilterInterface::NULLS_ALWAYS_LAST),
+                    property: 'createdAt'
+                ),
+            ]
+        ),
+    ]
+)]
+class Book
+{
+    // ...
+}
+```
+
+### Sorting by Nested Properties
+
+The `SortFilter` supports dot notation to sort by properties of related entities (associations). API Platform
+resolves the necessary JOINs (ORM) or aggregation pipeline stages (ODM) at metadata time, so no runtime overhead
+is added for each request.
+
+```php
+<?php
+// api/src/Entity/Employee.php
+namespace App\Entity;
+
+use ApiPlatform\Doctrine\Common\Filter\OrderFilterInterface;
+use ApiPlatform\Doctrine\Orm\Filter\SortFilter;
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\QueryParameter;
+use Doctrine\ORM\Mapping as ORM;
+
+#[ApiResource(
+    operations: [
+        new GetCollection(
+            parameters: [
+                // Sort by a direct property of the related entity (one hop)
+                'orderDept' => new QueryParameter(
+                    filter: new SortFilter(),
+                    property: 'department.name'
+                ),
+                // Sort by a property two hops away (employee → department → company)
+                'orderCompany' => new QueryParameter(
+                    filter: new SortFilter(nullsComparison: OrderFilterInterface::NULLS_ALWAYS_LAST),
+                    property: 'department.company.name'
+                ),
+            ]
+        ),
+    ]
+)]
+class Employee
+{
+    #[ORM\ManyToOne(targetEntity: Department::class)]
+    private Department $department;
+
+    // ...
+}
+```
+
+Example queries:
+
+- `GET /employees?orderDept=asc` — sort by department name
+- `GET /employees?orderCompany=desc` — sort by company name through two associations
+
+### MongoDB ODM Usage
+
+For MongoDB ODM, the `SortFilter` uses the aggregation pipeline. References between documents must use
+`storeAs: 'id'` (not DBRef) for the `$lookup` stage to work correctly. Embedded documents are accessed via
+dot notation without a `$lookup`.
+
+```php
+<?php
+// api/src/Document/Employee.php
+namespace App\Document;
+
+use ApiPlatform\Doctrine\Common\Filter\OrderFilterInterface;
+use ApiPlatform\Doctrine\Odm\Filter\SortFilter;
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\QueryParameter;
+use Doctrine\ODM\MongoDB\Mapping\Annotations as ODM;
+
+#[ODM\Document]
+#[ApiResource(
+    operations: [
+        new GetCollection(
+            parameters: [
+                'orderDept' => new QueryParameter(
+                    filter: new SortFilter(),
+                    property: 'department.name'
+                ),
+                'orderDate' => new QueryParameter(
+                    filter: new SortFilter(nullsComparison: OrderFilterInterface::NULLS_ALWAYS_LAST),
+                    property: 'createdAt'
+                ),
+            ]
+        ),
+    ]
+)]
+class Employee
+{
+    // storeAs: 'id' is required for $lookup to work; DBRef is not supported
+    #[ODM\ReferenceOne(targetDocument: Department::class, storeAs: 'id')]
+    private Department $department;
+
+    // ...
+}
+```
+
 ## Filtering on Nested Properties
+
+Parameter-based filters (`QueryParameter`) support nested/related properties via dot notation.
+The following filters handle the necessary JOINs (ORM) or `$lookup`/`$unwind` pipeline stages (ODM) automatically:
+
+| Filter               | ORM nested support | ODM nested support |
+| -------------------- | ------------------ | ------------------ |
+| `SortFilter`         | Yes                | Yes                |
+| `IriFilter`          | Yes                | Yes                |
+| `ExactFilter`        | Yes                | Yes                |
+| `PartialSearchFilter`| Yes                | Yes                |
+| `FreeTextQueryFilter`| Yes (via delegate) | Yes (via delegate) |
+
+Use the `property` argument on `QueryParameter` with dot notation to target nested properties:
+
+```php
+<?php
+// api/src/Entity/Employee.php
+namespace App\Entity;
+
+use ApiPlatform\Doctrine\Orm\Filter\IriFilter;
+use ApiPlatform\Doctrine\Orm\Filter\SortFilter;
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\QueryParameter;
+use Doctrine\ORM\Mapping as ORM;
+
+#[ApiResource(
+    operations: [
+        new GetCollection(
+            parameters: [
+                // Filter by the department IRI (direct association)
+                'department' => new QueryParameter(filter: new IriFilter(), property: 'department'),
+                // Sort by a property of the related department (one hop)
+                'orderDept' => new QueryParameter(filter: new SortFilter(), property: 'department.name'),
+                // Filter by company IRI through department (two hops)
+                'departmentCompany' => new QueryParameter(
+                    filter: new IriFilter(),
+                    property: 'department.company'
+                ),
+                // Sort by company name (two hops)
+                'orderCompany' => new QueryParameter(filter: new SortFilter(), property: 'department.company.name'),
+            ]
+        ),
+    ]
+)]
+class Employee
+{
+    #[ORM\ManyToOne(targetEntity: Department::class)]
+    private Department $department;
+
+    // ...
+}
+```
+
+Example queries:
+
+- `GET /employees?department=/api/departments/1` — filter by department IRI
+- `GET /employees?orderDept=asc` — sort by department name
+- `GET /employees?departmentCompany=/api/companies/1` — filter by company through department
+- `GET /employees?orderCompany=desc` — sort by company name
+
+Multiple parameters targeting the same relation path share the same JOIN (ORM) or `$lookup` stage (ODM),
+so there is no duplication in the generated query.
+
+### Nested Properties with the Legacy ApiFilter Syntax (deprecated)
 
 > [!WARNING] The legacy method using the `ApiFilter` attribute is **deprecated** and scheduled for
 > **removal** in API Platform **5.0**. We strongly recommend migrating to the new `QueryParameter`
-> syntax, which is detailed in the [Introduction](#introduction). For nested properties support we
-> recommend to use a custom filter.
+> syntax described above.
 
-Sometimes, you need to be able to perform filtering based on some linked resources (on the other
-side of a relation). All built-in filters support nested properties using the dot (`.`) syntax,
-e.g.:
+For legacy code, the built-in filters that extend `AbstractFilter` support nested properties using the dot
+(`.`) syntax, e.g.:
 
 <code-selector>
 
