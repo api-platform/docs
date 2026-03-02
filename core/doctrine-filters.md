@@ -134,6 +134,7 @@ To add some search filters, choose over this new list:
 - [FreeTextQueryFilter](#free-text-query-filter) (allows you to apply multiple filters to multiple
   properties of a resource at the same time, using a single parameter in the URL)
 - [OrFilter](#or-filter) (apply a filter using `orWhere` instead of `andWhere` )
+- [ComparisonFilter](#comparison-filter) (add `gt`, `gte`, `lt`, `lte`, `ne` operators to an equality or UUID filter)
 
 ### SearchFilter
 
@@ -383,6 +384,163 @@ This request will return all chickens where:
 - the `name` is exactly "FR123456"
 - OR
 - the `ean` is exactly "FR123456".
+
+## Comparison Filter
+
+> [!NOTE]
+> `ComparisonFilter` is experimental and its API may change before a stable release.
+
+The comparison filter is a decorator that wraps an equality filter (such as `ExactFilter`) and adds comparison
+operators to it. It lets clients filter a collection using greater-than, greater-than-or-equal, less-than,
+less-than-or-equal, and not-equal comparisons on any filterable property.
+
+Syntax: `?parameter[<gt|gte|lt|lte|ne>]=value`
+
+Available operators:
+
+| Operator | SQL equivalent | Description |
+| --- | --- | --- |
+| `gt` | `>` | Strictly greater than |
+| `gte` | `>=` | Greater than or equal to |
+| `lt` | `<` | Strictly less than |
+| `lte` | `<=` | Less than or equal to |
+| `ne` | `!=` | Not equal to |
+
+`ComparisonFilter` is a decorator: it is applied by wrapping another filter. The canonical pairing is with `ExactFilter`
+for standard properties, or with `UuidFilter` for UUID columns.
+It works for Doctrine ORM (`ApiPlatform\Doctrine\Orm\Filter\ComparisonFilter`) and Doctrine MongoDB ODM
+(`ApiPlatform\Doctrine\Odm\Filter\ComparisonFilter`).
+
+```php
+<?php
+// api/src/ApiResource/Product.php
+namespace App\ApiResource;
+
+use ApiPlatform\Doctrine\Orm\Filter\ComparisonFilter;
+use ApiPlatform\Doctrine\Orm\Filter\ExactFilter;
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\QueryParameter;
+
+#[ApiResource]
+#[GetCollection(
+    parameters: [
+        'price' => new QueryParameter(
+            filter: new ComparisonFilter(new ExactFilter()),
+            property: 'price',
+        ),
+    ],
+)]
+class Product
+{
+    // ...
+}
+```
+
+Given that the collection endpoint is `/products`, you can filter products by price range with the following queries:
+
+- `/products?price[gt]=10` — products whose price is strictly greater than 10
+- `/products?price[gte]=10` — products whose price is greater than or equal to 10
+- `/products?price[lt]=100` — products whose price is strictly less than 100
+- `/products?price[lte]=100` — products whose price is less than or equal to 100
+- `/products?price[ne]=0` — products whose price is not equal to 0
+
+### Range Queries (Combining Operators)
+
+There is no dedicated `between` operator. To filter within a range, combine `gte` and `lte` (or `gt` and `lt`) in a
+single request:
+
+```http
+GET /products?price[gte]=10&price[lte]=100
+```
+
+This returns all products whose price is between 10 and 100 inclusive.
+
+### DateTime Support
+
+`ComparisonFilter` accepts `DateTimeInterface` values. When the underlying property is typed as a `DateTime` or
+`DateTimeImmutable`, API Platform automatically casts the raw string from the query string into a `DateTimeImmutable`
+before passing it to the filter. Any format accepted by the PHP
+[`DateTimeImmutable` constructor](https://www.php.net/manual/en/datetime.construct.php) is valid.
+
+```php
+<?php
+// api/src/ApiResource/Event.php
+namespace App\ApiResource;
+
+use ApiPlatform\Doctrine\Orm\Filter\ComparisonFilter;
+use ApiPlatform\Doctrine\Orm\Filter\ExactFilter;
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\QueryParameter;
+
+#[ApiResource]
+#[GetCollection(
+    parameters: [
+        'startDate' => new QueryParameter(
+            filter: new ComparisonFilter(new ExactFilter()),
+            property: 'startDate',
+        ),
+    ],
+)]
+class Event
+{
+    // ...
+}
+```
+
+Example request to fetch events starting after a given date:
+
+```http
+GET /events?startDate[gt]=2025-01-01T00:00:00Z
+```
+
+### UUID Support
+
+`ComparisonFilter` can also wrap `UuidFilter` to enable comparison operators on UUID columns. This is especially useful
+for cursor-based pagination on time-ordered UUIDs (UUID v7), where the lexicographic order of UUIDs matches their
+chronological order.
+
+```php
+<?php
+// api/src/ApiResource/Device.php
+namespace App\ApiResource;
+
+use ApiPlatform\Doctrine\Orm\Filter\ComparisonFilter;
+use ApiPlatform\Doctrine\Orm\Filter\UuidFilter;
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\QueryParameter;
+
+#[ApiResource]
+#[GetCollection(
+    parameters: [
+        'id' => new QueryParameter(
+            filter: new ComparisonFilter(new UuidFilter()),
+            property: 'id',
+        ),
+    ],
+)]
+class Device
+{
+    // ...
+}
+```
+
+Example requests:
+
+- `/devices?id[gt]=0192d4e0-7b5a-7a3f-9e1c-4b8f2a1c3d5e` — devices created after the given UUID
+- `/devices?id[gte]=...&id[lte]=...` — devices within a UUID range
+- `/devices?id[ne]=...` — exclude a specific device
+
+`UuidFilter` handles the conversion of UUID strings to their database binary representation via Doctrine's type system,
+which is required for correct comparisons on binary UUID columns.
+
+### OpenAPI Documentation
+
+`ComparisonFilter` automatically generates five OpenAPI query parameters for each configured parameter key, one per
+operator. For a parameter named `price`, the generated parameters are `price[gt]`, `price[gte]`, `price[lt]`,
+`price[lte]`, and `price[ne]`.
 
 ## Date Filter
 
