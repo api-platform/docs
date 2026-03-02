@@ -2,37 +2,44 @@
 
 To retrieve data exposed by the API, API Platform uses classes called **state providers**.
 
-With the Symfony variant, a state provider using [Doctrine
-ORM](https://www.doctrine-project.org/projects/orm.html) is ready to retrieve data from a database and a state provider using
-[Doctrine MongoDB ODM](https://www.doctrine-project.org/projects/mongodb-odm.html) to retrieve data from a document
-database.
+With the Symfony variant, a state provider using
+[Doctrine ORM](https://www.doctrine-project.org/projects/orm.html) is ready to retrieve data from a
+database and a state provider using
+[Doctrine MongoDB ODM](https://www.doctrine-project.org/projects/mongodb-odm.html) to retrieve data
+from a document database.
 
-With the Laravel variant, a state provider using [Eloquent ORM](https://laravel.com/docs/eloquent) to retrieve data from a relational database and a state provider.
+With the Laravel variant, a state provider using [Eloquent ORM](https://laravel.com/docs/eloquent)
+to retrieve data from a relational database and a state provider.
 
-The ORM providers are enabled by default, based on your framework variant (Eloquent or Doctrine will be set up).
+The ORM providers are enabled by default, based on your framework variant (Eloquent or Doctrine will
+be set up).
 
+These state providers natively support paged collections and filters. They can be used as-is and are
+perfectly suited to common uses.
 
-These state providers natively support paged collections and filters. They can be used as-is and are perfectly suited to common uses.
-
-However, you sometimes want to retrieve data from other sources such as another persistence layer or a webservice.
-Custom state providers can be used to do so. A project can include as many state providers as needed. The first able to
-retrieve data for a given resource will be used.
+However, you sometimes want to retrieve data from other sources such as another persistence layer or
+a webservice. Custom state providers can be used to do so. A project can include as many state
+providers as needed. The first able to retrieve data for a given resource will be used.
 
 To do so you need to implement the `ApiPlatform\State\ProviderInterface`.
 
-In the following examples we will create custom state providers for Symfony entities and Laravel models:
+In the following examples we will create custom state providers for Symfony entities and Laravel
+models:
+
 - For Symfony we will create an entity class called `App\Entity\BlogPost`.
 - For Laravel, we will create a model class called `App\Models\BlogPost`.
 
-Note, that if your entity is not Doctrine-related or Eloquent-related, you need to flag the identifier property by using
-`#[ApiProperty(identifier: true)` for things to work properly (see also [Entity Identifier Case](serialization.md#entity-identifier-case)).
+Note, that if your entity is not Doctrine-related or Eloquent-related, you need to flag the
+identifier property by using `#[ApiProperty(identifier: true)` for things to work properly (see also
+[Entity Identifier Case](serialization.md#entity-identifier-case)).
 
 ## Creating a Custom State Provider
 
 ### Custom State Provider with Symfony
 
-If the [Symfony MakerBundle](https://symfony.com/doc/current/bundles/SymfonyMakerBundle) is installed in your project,
-you can use the following command to generate a custom state provider easily:
+If the [Symfony MakerBundle](https://symfony.com/doc/current/bundles/SymfonyMakerBundle) is
+installed in your project, you can use the following command to generate a custom state provider
+easily:
 
 ```console
 bin/console make:state-provider
@@ -65,7 +72,7 @@ final class BlogPostProvider implements ProviderInterface
             'ab' => new BlogPost('ab'),
             'cd' => new BlogPost('cd'),
         ];
-    } 
+    }
 
     public function provide(Operation $operation, array $uriVariables = [], array $context = []): BlogPost|null
     {
@@ -76,7 +83,10 @@ final class BlogPostProvider implements ProviderInterface
 
 For the example, we store the list of our blog posts in an associative array `$data`.
 
-As this operation expects a `BlogPost`, the `provide` methods return the instance of the `BlogPost` corresponding to the ID passed in the URL. If the ID doesn't exist in the associative array, `provide()` returns `null`. API Platform will automatically generate a 404 response if the provider returns `null`.
+As this operation expects a `BlogPost`, the `provide` methods return the instance of the `BlogPost`
+corresponding to the ID passed in the URL. If the ID doesn't exist in the associative array,
+`provide()` returns `null`. API Platform will automatically generate a 404 response if the provider
+returns `null`.
 
 The `$uriVariables` parameter contains an array with the values of the URI variables.
 
@@ -95,8 +105,9 @@ use App\State\BlogPostProvider;
 class BlogPost {}
 ```
 
-Now let's say that we also want to handle the `/blog_posts` URI which returns a collection. We can change the Provider into
-supporting a wider range of operations. Then we can provide a collection of blog posts when the operation is a `CollectionOperationInterface`:
+Now let's say that we also want to handle the `/blog_posts` URI which returns a collection. We can
+change the Provider into supporting a wider range of operations. Then we can provide a collection of
+blog posts when the operation is a `CollectionOperationInterface`:
 
 ```php
 <?php
@@ -114,7 +125,7 @@ use ApiPlatform\Metadata\CollectionOperationInterface;
  */
 final class BlogPostProvider implements ProviderInterface
 {
-    private array $data;
+    // …
 
     public function provide(Operation $operation, array $uriVariables = [], array $context = []): iterable|BlogPost|null
     {
@@ -127,7 +138,8 @@ final class BlogPostProvider implements ProviderInterface
 }
 ```
 
-We then need to configure this same provider on the BlogPost `GetCollection` operation, or for every operation via the `ApiResource` attribute:
+We then need to configure this same provider on the BlogPost `GetCollection` operation, or for every
+operation via the `ApiResource` attribute:
 
 ```php
 <?php
@@ -144,7 +156,8 @@ class BlogPost {}
 
 #### Custom State Provider with Laravel
 
-Using [Laravel Artisan Console](https://laravel.com/docs/artisan), you can generate a custom state provider easily with the following command:
+Using [Laravel Artisan Console](https://laravel.com/docs/artisan), you can generate a custom state
+provider easily with the following command:
 
 ```console
 php artisan make:state-provider
@@ -172,6 +185,13 @@ final class BlogPostProvider implements ProviderInterface
 {
     private array $data;
 
+    public function __construct() {
+        $this->data = [
+            'ab' => new BlogPost('ab'),
+            'cd' => new BlogPost('cd'),
+        ];
+    }
+
     public function provide(Operation $operation, array $uriVariables = [], array $context = []): BlogPost|null
     {
         return $this->data[$uriVariables['id']] ?? null;
@@ -181,7 +201,10 @@ final class BlogPostProvider implements ProviderInterface
 
 For the example, we store the list of our blog posts in an associative array `$data`.
 
-As this operation expects a `BlogPost`, the `provide` methods return the instance of the `BlogPost` corresponding to the ID passed in the URL. If the ID doesn't exist in the associative array, `provide()` returns `null`. API Platform will automatically generate a 404 response if the provider returns `null`.
+As this operation expects a `BlogPost`, the `provide` methods return the instance of the `BlogPost`
+corresponding to the ID passed in the URL. If the ID doesn't exist in the associative array,
+`provide()` returns `null`. API Platform will automatically generate a 404 response if the provider
+returns `null`.
 
 The `$uriVariables` parameter contains an array with the values of the URI variables.
 
@@ -200,8 +223,9 @@ use App\State\BlogPostProvider;
 class BlogPost {}
 ```
 
-Now let's say that we also want to handle the `/blog_posts` URI which returns a collection. We can change the Provider into
-supporting a wider range of operations. Then we can provide a collection of blog posts when the operation is a `CollectionOperationInterface`:
+Now let's say that we also want to handle the `/blog_posts` URI which returns a collection. We can
+change the Provider into supporting a wider range of operations. Then we can provide a collection of
+blog posts when the operation is a `CollectionOperationInterface`:
 
 ```php
 <?php
@@ -219,7 +243,7 @@ use ApiPlatform\Metadata\CollectionOperationInterface;
  */
 final class BlogPostProvider implements ProviderInterface
 {
-    private array $data;
+    // …
 
     public function provide(Operation $operation, array $uriVariables = [], array $context = []): iterable|BlogPost|null
     {
@@ -232,7 +256,8 @@ final class BlogPostProvider implements ProviderInterface
 }
 ```
 
-We then need to configure this same provider on the BlogPost `GetCollection` operation, or for every operation via the `ApiResource` attribute:
+We then need to configure this same provider on the BlogPost `GetCollection` operation, or for every
+operation via the `ApiResource` attribute:
 
 ```php
 <?php
@@ -249,9 +274,13 @@ class BlogPost {}
 
 ## Hooking into the Built-In State Provider
 
-If you want to execute custom business logic before or after retrieving data, this can be achieved by [decorating](https://symfony.com/doc/current/service_container/service_decoration.html) the built-in state providers or using [composition](https://en.wikipedia.org/wiki/Object_composition).
+If you want to execute custom business logic before or after retrieving data, this can be achieved
+by [decorating](https://symfony.com/doc/current/service_container/service_decoration.html) the
+built-in state providers or using [composition](https://en.wikipedia.org/wiki/Object_composition).
 
-The next examples (one for  Symfony and one for Laravel) uses a [DTO](https://api-platform.com/docs/core/dto/#using-data-transfer-objects-dtos) to change the presentation for data originally retrieved by the default state provider.
+The next examples (one for Symfony and one for Laravel) uses a
+[DTO](https://api-platform.com/docs/core/dto/#using-data-transfer-objects-dtos) to change the
+presentation for data originally retrieved by the default state provider.
 
 ### Symfony State Provider mechanism
 
@@ -332,11 +361,11 @@ final class BookRepresentationProvider implements ProviderInterface
     )
     {
     }
-    
+
     public function provide(Operation $operation, array $uriVariables = [], array $context = []): AnotherRepresentation
     {
         $book = $this->itemProvider->provide($operation, $uriVariables, $context);
-        
+
         return new AnotherRepresentation(
             // Add DTO constructor params here.
             // $book->getTitle(),
@@ -345,7 +374,9 @@ final class BookRepresentationProvider implements ProviderInterface
 }
 ```
 
-And we bind the [ItemProvider](https://github.com/api-platform/core/blob/main/src/Laravel/Eloquent/State/ItemProvider.php) in our Service Provider
+And we bind the
+[ItemProvider](https://github.com/api-platform/core/blob/main/src/Laravel/Eloquent/State/ItemProvider.php)
+in our Service Provider
 
 ```php
 <?php
@@ -391,20 +422,19 @@ use App\State\BookRepresentationProvider;
 class Book {}
 ```
 
-
 ## Registering Services Without Autowiring (only for the Symfony variant)
 
 The services in the previous examples are automatically registered because
-[autowiring](https://symfony.com/doc/current/service_container/autowiring.html)
-and autoconfiguration are enabled by default in API Platform.
-To declare the service explicitly, you can use the following snippet:
+[autowiring](https://symfony.com/doc/current/service_container/autowiring.html) and
+autoconfiguration are enabled by default in API Platform. To declare the service explicitly, you can
+use the following snippet:
 
 ```yaml
 # api/config/services.yaml
 
 services:
     # ...
-    App\State\BlogPostProvider: ~
+    App\State\BlogPostProvider:
         tags: [ 'api_platform.state_provider' ]
 
 # api/config/services.yaml

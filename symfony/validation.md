@@ -1,16 +1,19 @@
 # Validation with Symfony
 
-API Platform takes care of validating the data sent to the API by the client (usually user data entered through forms).
-By default, the framework relies on [the powerful Symfony Validator Component](https://symfony.com/doc/current/validation.html)
-for this task, but you can replace it with your preferred validation library such as [the PHP filter extension](https://www.php.net/manual/en/intro.filter.php) if you want to.
+API Platform takes care of validating the data sent to the API by the client (usually user data
+entered through forms). By default, the framework relies on
+[the powerful Symfony Validator Component](https://symfony.com/doc/current/validation.html) for this
+task, but you can replace it with your preferred validation library such as
+[the PHP filter extension](https://www.php.net/manual/en/intro.filter.php) if you want to.
 
 <p align="center" class="symfonycasts"><a href="https://symfonycasts.com/screencast/api-platform/validation?cid=apip"><img src="../symfony/images/symfonycasts-player.png" alt="Validation screencast"><br>Watch the Validation screencast</a></p>
 
 ## Validating Submitted Data
 
-Validating submitted data is as simple as adding [Symfony's built-in constraints](https://symfony.com/doc/current/reference/constraints.html)
-or [custom constraints](https://symfony.com/doc/current/validation/custom_constraint.html) directly in classes marked with
-the `#[ApiResource]` attribute:
+Validating submitted data is as simple as adding
+[Symfony's built-in constraints](https://symfony.com/doc/current/reference/constraints.html) or
+[custom constraints](https://symfony.com/doc/current/validation/custom_constraint.html) directly in
+classes marked with the `#[ApiResource]` attribute:
 
 ```php
 <?php
@@ -85,34 +88,37 @@ final class MinimalPropertiesValidator extends ConstraintValidator
 }
 ```
 
-If the data submitted by the client is invalid, the HTTP status code will be set to `422 Unprocessable Entity` and the response's
-body will contain the list of violations serialized in a format compliant with the requested one. For instance, a validation
-error will look like the following if the requested format is JSON-LD (the default):
+If the data submitted by the client is invalid, the HTTP status code will be set to
+`422 Unprocessable Entity` and the response's body will contain the list of violations serialized in
+a format compliant with the requested one. For instance, a validation error will look like the
+following if the requested format is JSON-LD (the default):
 
 ```json
 {
-  "@context": "/contexts/ConstraintViolationList",
-  "@type": "ConstraintViolationList",
-  "title": "An error occurred",
-  "description": "properties: The product must have the minimal properties required (\"description\", \"price\")",
-  "violations": [
-    {
-      "propertyPath": "properties",
-      "message": "The product must have the minimal properties required (\"description\", \"price\")"
-    }
-  ]
+    "@context": "/contexts/ConstraintViolationList",
+    "@type": "ConstraintViolationList",
+    "title": "An error occurred",
+    "description": "properties: The product must have the minimal properties required (\"description\", \"price\")",
+    "violations": [
+        {
+            "propertyPath": "properties",
+            "message": "The product must have the minimal properties required (\"description\", \"price\")"
+        }
+    ]
 }
 ```
 
-Take a look at the [Errors Handling guide](../core/errors.md) to learn how API Platform converts PHP exceptions like validation
-errors to HTTP errors.
+Take a look at the [Errors Handling guide](../core/errors.md) to learn how API Platform converts PHP
+exceptions like validation errors to HTTP errors.
 
 ## Using Validation Groups
 
-Without specific configuration, the default validation group is always used, but this behavior is customizable: the framework
-is able to leverage Symfony's [validation groups](https://symfony.com/doc/current/validation/groups.html).
+Without specific configuration, the default validation group is always used, but this behavior is
+customizable: the framework is able to leverage Symfony's
+[validation groups](https://symfony.com/doc/current/validation/groups.html).
 
-You can configure the groups you want to use when the validation occurs directly through the `ApiResource` attribute:
+You can configure the groups you want to use when the validation occurs directly through the
+`ApiResource` attribute:
 
 ```php
 <?php
@@ -134,19 +140,22 @@ class Book
 }
 ```
 
-With the previous configuration, the validation groups `a` and `b` will be used when validation is performed.
+With the previous configuration, the validation groups `a` and `b` will be used when validation is
+performed.
 
 Like for [serialization groups](../core/serialization.md#using-serialization-groups-per-operation),
 you can specify validation groups globally or on a per-operation basis.
 
 Of course, you can use XML or YAML configuration format instead of attributes if you prefer.
 
-You may also pass in a [group sequence](https://symfony.com/doc/current/validation/sequence_provider.html) in place of
-the array of group names.
+You may also pass in a
+[group sequence](https://symfony.com/doc/current/validation/sequence_provider.html) in place of the
+array of group names.
 
 ## Using Validation Groups on Operations
 
-You can have different validation for each [operation](../core/operations.md) related to your resource.
+You can have different validation for each [operation](../core/operations.md) related to your
+resource.
 
 ```php
 <?php
@@ -194,9 +203,10 @@ With this configuration, there are three validation groups:
 
 ## Dynamic Validation Groups
 
-If you need to dynamically determine which validation groups to use for an entity in different scenarios, just pass in a
-[callable](https://www.php.net/manual/en/language.types.callable.php). The callback will receive the entity object as its first
-argument, and should return an array of group names or a [group sequence](https://symfony.com/doc/current/validation/sequence_provider.html).
+If you need to dynamically determine which validation groups to use for an entity in different
+scenarios, just pass in a [callable](https://www.php.net/manual/en/language.types.callable.php). The
+callback will receive the entity object as its first argument, and should return an array of group
+names or a [group sequence](https://symfony.com/doc/current/validation/sequence_provider.html).
 
 In the following example, we use a static method to return the validation groups:
 
@@ -264,9 +274,11 @@ final class AdminGroupsGenerator implements ValidationGroupsGeneratorInterface
 }
 ```
 
-This class selects the groups to apply based on the role of the current user: if the current user has the `ROLE_ADMIN` role, groups `a` and `b` are returned. In other cases, just `a` is returned.
+This class selects the groups to apply based on the role of the current user: if the current user
+has the `ROLE_ADMIN` role, groups `a` and `b` are returned. In other cases, just `a` is returned.
 
-This class is automatically registered as a service thanks to [the autowiring feature of the Symfony DependencyInjection component](https://symfony.com/doc/current/service_container/autowiring.html).
+This class is automatically registered as a service thanks to
+[the autowiring feature of the Symfony DependencyInjection component](https://symfony.com/doc/current/service_container/autowiring.html).
 
 Then, configure the entity class to use this service to retrieve validation groups:
 
@@ -294,8 +306,9 @@ class Book
 
 ## Sequential Validation Groups
 
-If you need to specify the order in which your validation groups must be tested against, you can use a [group sequence](https://symfony.com/doc/current/validation/sequence_provider.html).
-First, you need to create your sequenced group.
+If you need to specify the order in which your validation groups must be tested against, you can use
+a [group sequence](https://symfony.com/doc/current/validation/sequence_provider.html). First, you
+need to create your sequenced group.
 
 ```php
 <?php
@@ -312,7 +325,8 @@ class MySequencedGroup
 }
 ```
 
-Just creating the class is not enough because Symfony does not see this service as being used. Therefore to prevent the service to be removed, you need to enforce it to be public.
+Just creating the class is not enough because Symfony does not see this service as being used.
+Therefore to prevent the service to be removed, you need to enforce it to be public.
 
 ```yaml
 # api/config/services.yaml
@@ -362,7 +376,8 @@ class Greeting
 
 ## Validating Delete Operations
 
-By default, validation rules that are specified on the API resource are not evaluated during DELETE operations. You need to trigger the validation in your code, if needed.
+By default, validation rules that are specified on the API resource are not evaluated during DELETE
+operations. You need to trigger the validation in your code, if needed.
 
 Assume that you have the following entity that uses a custom delete validator:
 
@@ -427,15 +442,16 @@ final readonly class MyEntityRemoveProcessor implements ProcessorInterface
 
 ## Error Levels and Payload Serialization
 
-As stated in the [Symfony documentation](https://symfony.com/doc/current/validation/severity.html), you can use the payload field to define error levels.
-You can retrieve the payload field by setting the `serialize_payload_fields` to an empty `array` in the API Platform config:
+As stated in the [Symfony documentation](https://symfony.com/doc/current/validation/severity.html),
+you can use the payload field to define error levels. You can retrieve the payload field by setting
+the `serialize_payload_fields` to an empty `array` in the API Platform config:
 
 ```yaml
 # api/config/packages/api_platform.yaml
 
 api_platform:
-  validator:
-    serialize_payload_fields: ~
+    validator:
+        serialize_payload_fields: ~
 ```
 
 Then, the serializer will return all payload values in the error response.
@@ -446,8 +462,8 @@ If you want to serialize only some payload fields, define them in the config lik
 # api/config/packages/api_platform.yaml
 
 api_platform:
-  validator:
-    serialize_payload_fields: [severity, anotherPayloadField]
+    validator:
+        serialize_payload_fields: [severity, anotherPayloadField]
 ```
 
 In this example, only `severity` and `anotherPayloadField` will be serialized.
@@ -456,8 +472,12 @@ In this example, only `severity` and `anotherPayloadField` will be serialized.
 
 Use the [Valid](https://symfony.com/doc/current/reference/constraints/Valid.html) constraint.
 
-Note: this is related to the [collection relation denormalization](../core/serialization.md#collection-relation-using-doctrine).
-You may have an issue when trying to validate a relation representing a Doctrine's `ArrayCollection` (`toMany`). Fix the denormalization using the property getter. Return an `array` instead of an `ArrayCollection` with `$collectionRelation->getValues()`. Then, define your validation on the getter instead of the property.
+Note: this is related to the
+[collection relation denormalization](../core/serialization.md#collection-relation-using-doctrine).
+You may have an issue when trying to validate a relation representing a Doctrine's `ArrayCollection`
+(`toMany`). Fix the denormalization using the property getter. Return an `array` instead of an
+`ArrayCollection` with `$collectionRelation->getValues()`. Then, define your validation on the
+getter instead of the property.
 
 For example:
 
@@ -495,7 +515,9 @@ final class Brand
 
 ## Open Vocabulary Generated from Validation Metadata
 
-API Platform automatically detects Symfony's built-in validators and generates schema.org IRI metadata accordingly. This allows for rich clients such as the Admin component to infer the field types for most basic use cases.
+API Platform automatically detects Symfony's built-in validators and generates schema.org IRI
+metadata accordingly. This allows for rich clients such as the Admin component to infer the field
+types for most basic use cases.
 
 The following validation constraints are covered:
 
@@ -520,13 +542,15 @@ The following validation constraints are covered:
 
 API Platform generates specification property restrictions based on Symfony’s built-in validator.
 
-For example, from [`Regex`](https://symfony.com/doc/4.4/reference/constraints/Regex.html) constraint API
-Platform builds [`pattern`](https://swagger.io/docs/specification/data-models/data-types/#pattern) restriction.
+For example, from [`Regex`](https://symfony.com/doc/4.4/reference/constraints/Regex.html) constraint
+API Platform builds
+[`pattern`](https://swagger.io/docs/specification/data-models/data-types/#pattern) restriction.
 
-For building custom property schema based on custom validation constraints you can create a custom class
-for generating property scheme restriction.
+For building custom property schema based on custom validation constraints you can create a custom
+class for generating property scheme restriction.
 
-To create property schema, you have to implement the [`PropertySchemaRestrictionMetadataInterface`](https://github.com/api-platform/core/blob/main/src/Symfony/Validator/Metadata/Property/Restriction/PropertySchemaRestrictionMetadataInterface.php).
+To create property schema, you have to implement the
+[`PropertySchemaRestrictionMetadataInterface`](https://github.com/api-platform/core/blob/main/src/Symfony/Validator/Metadata/Property/Restriction/PropertySchemaRestrictionMetadataInterface.php).
 This interface defines only 2 methods:
 
 - `create`: to create property schema
@@ -558,23 +582,25 @@ final class CustomPropertySchemaRestriction implements PropertySchemaRestriction
 }
 ```
 
-If you use a custom dependency injection configuration, you need to register the corresponding service and add the
-`api_platform.metadata.property_schema_restriction` tag. The `priority` attribute can be used for service ordering.
+If you use a custom dependency injection configuration, you need to register the corresponding
+service and add the `api_platform.metadata.property_schema_restriction` tag. The `priority`
+attribute can be used for service ordering.
 
 ```yaml
 # api/config/services.yaml
 
 services:
-  # ...
-  'App\PropertySchemaRestriction\CustomPropertySchemaRestriction':
-    ~
-    # Uncomment only if autoconfiguration is disabled
-    #tags: [ 'api_platform.metadata.property_schema_restriction' ]
+    # ...
+    'App\PropertySchemaRestriction\CustomPropertySchemaRestriction':
+        ~
+        # Uncomment only if autoconfiguration is disabled
+        #tags: [ 'api_platform.metadata.property_schema_restriction' ]
 ```
 
 ## Collecting Denormalization Errors
 
-When submitting data you can collect denormalization errors using the [COLLECT_DENORMALIZATION_ERRORS option](https://symfony.com/doc/current/components/serializer.html#collecting-type-errors-while-denormalizing).
+When submitting data you can collect denormalization errors using the
+[COLLECT_DENORMALIZATION_ERRORS option](https://symfony.com/doc/current/components/serializer.html#collecting-type-errors-while-denormalizing).
 
 It can be done directly in the `#[ApiResource]` attribute (or in the operations):
 
@@ -596,27 +622,29 @@ class Book
 }
 ```
 
-If the submitted data has denormalization errors, the HTTP status code will be set to `422 Unprocessable Content` and the response body will contain the list of errors:
+If the submitted data has denormalization errors, the HTTP status code will be set to
+`422 Unprocessable Content` and the response body will contain the list of errors:
 
 ```json
 {
-  "@context": "/api/contexts/ConstraintViolationList",
-  "@type": "ConstraintViolationList",
-  "title": "An error occurred",
-  "description": "boolean: This value should be of type bool.\nproperty1: This value should be of type string.",
-  "violations": [
-    {
-      "propertyPath": "boolean",
-      "message": "This value should be of type bool.",
-      "code": "0"
-    },
-    {
-      "propertyPath": "property1",
-      "message": "This value should be of type string.",
-      "code": "0"
-    }
-  ]
+    "@context": "/api/contexts/ConstraintViolationList",
+    "@type": "ConstraintViolationList",
+    "title": "An error occurred",
+    "description": "boolean: This value should be of type bool.\nproperty1: This value should be of type string.",
+    "violations": [
+        {
+            "propertyPath": "boolean",
+            "message": "This value should be of type bool.",
+            "code": "0"
+        },
+        {
+            "propertyPath": "property1",
+            "message": "This value should be of type string.",
+            "code": "0"
+        }
+    ]
 }
 ```
 
-You can also enable collecting of denormalization errors globally in the [Global Resources Defaults](https://api-platform.com/docs/core/configuration/#global-resources-defaults).
+You can also enable collecting of denormalization errors globally in the
+[Global Resources Defaults](https://api-platform.com/docs/core/configuration/#global-resources-defaults).

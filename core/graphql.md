@@ -1,16 +1,21 @@
 # GraphQL Support
 
-[GraphQL](https://graphql.org/) is a query language made to communicate with an API and therefore is an alternative to REST.
+[GraphQL](https://graphql.org/) is a query language made to communicate with an API and therefore is
+an alternative to REST.
 
-It has some advantages compared to REST: it solves the over-fetching or under-fetching of data, is strongly typed, and is capable of retrieving multiple and nested data in one go, but it also comes with drawbacks. For example it creates overhead depending on the request.
+It has some advantages compared to REST: it solves the over-fetching or under-fetching of data, is
+strongly typed, and is capable of retrieving multiple and nested data in one go, but it also comes
+with drawbacks. For example it creates overhead depending on the request.
 
 API Platform creates a REST API by default. But you can choose to enable GraphQL as well.
 
-Once enabled, you have nothing to do: your schema describing your API is automatically built and your GraphQL endpoint is ready to go!
+Once enabled, you have nothing to do: your schema describing your API is automatically built and
+your GraphQL endpoint is ready to go!
 
 ## Enabling GraphQL
 
-To enable GraphQL and its IDE (GraphiQL and GraphQL Playground) in your API, simply require the `api-platform/graphql` package using Composer:
+To enable GraphQL and its IDE (GraphiQL and GraphQL Playground) in your API, simply require the
+`api-platform/graphql` package using Composer:
 
 ```console
 composer require api-platform/graphql
@@ -18,13 +23,15 @@ composer require api-platform/graphql
 
 You can now use GraphQL at the endpoint: `https://localhost/graphql`.
 
-> [!NOTE]
-> If you used [the Symfony Variant thanks to Symfony Flex](../symfony/index.md#installing-the-framework) or the Laravel
-> variant, the default GraphQL endpoint will be available at a relative URL like `/graphql`. For example: `https://localhost/graphql`.
+> [!NOTE] If you used
+> [the Symfony Variant thanks to Symfony Flex](../symfony/index.md#installing-the-framework) or the
+> Laravel variant, the default GraphQL endpoint will be available at a relative URL like `/graphql`.
+> For example: `https://localhost/graphql`.
 
 ## Changing Location of the GraphQL Endpoint
 
-Sometimes you may want to have the GraphQL endpoint at a different location. This can be done by manually configuring the GraphQL controller.
+Sometimes you may want to have the GraphQL endpoint at a different location. This can be done by
+manually configuring the GraphQL controller.
 
 ### Symfony Routes
 
@@ -33,8 +40,8 @@ Using the Symfony variant we can do this modification by adding the following co
 ```yaml
 # api/config/routes.yaml
 api_graphql_entrypoint:
-  path: /graphql
-  controller: api_platform.graphql.action.entrypoint
+    path: /graphql
+    controller: api_platform.graphql.action.entrypoint
 # ...
 ```
 
@@ -57,7 +64,8 @@ Change `/graphql` to the URI you wish the GraphQL endpoint to be accessible on.
 
 ## GraphiQL
 
-Go to the GraphQL endpoint with your browser, you will see a nice interface provided by GraphiQL to interact with your API.
+Go to the GraphQL endpoint with your browser, you will see a nice interface provided by GraphiQL to
+interact with your API.
 
 The GraphiQL IDE can also be found at `/graphql/graphiql`.
 
@@ -68,9 +76,9 @@ If you need to disable it, it can be done in the configuration:
 ```yaml
 # api/config/packages/api_platform.yaml
 api_platform:
-  graphql:
-    graphiql:
-      enabled: false
+    graphql:
+        graphiql:
+            enabled: false
 # ...
 ```
 
@@ -91,22 +99,25 @@ return [
 
 ### Add another Location for GraphiQL
 
-Sometimes you may want to have the GraphiQL at a different location. This can be done by manually configuring the GraphiQL controller.
+Sometimes you may want to have the GraphiQL at a different location. This can be done by manually
+configuring the GraphiQL controller.
 
 ### Symfony config routes for GraphiQL
 
-If you want to add a different location besides `/graphql/graphiql`, you can do it like this if you are using the Symfony variant:
+If you want to add a different location besides `/graphql/graphiql`, you can do it like this if you
+are using the Symfony variant:
 
 ```yaml
 # app/config/routes.yaml
 graphiql:
-  path: /docs/graphiql
-  controller: api_platform.graphql.action.graphiql
+    path: /docs/graphiql
+    controller: api_platform.graphql.action.graphiql
 ```
 
 ### Laravel config routes for GraphiQL
 
-If you want to add a different location besides `/graphql/graphiql`, you can do it like this if you are using the Laravel variant:
+If you want to add a different location besides `/graphql/graphiql`, you can do it like this if you
+are using the Laravel variant:
 
 ```php
 // routes/web.php
@@ -130,16 +141,16 @@ You can disable it if you want in the configuration.
 ```yaml
 # api/config/packages/api_platform.yaml
 api_platform:
-  graphql:
-    graphql_playground:
-      enabled: false
+    graphql:
+        graphql_playground:
+            enabled: false
 # ...
 ```
 
 ### Disable GraphQL Playground with Laravel
 
-> [!WARNING]
-> This is not yet available with Laravel, you're welcome to contribute [on GitHub](https://github.com/api-platform/core)
+> [!WARNING] This is not yet available with Laravel, you're welcome to contribute
+> [on GitHub](https://github.com/api-platform/core)
 
 ### Add another Location for GraphQL Playground
 
@@ -152,8 +163,8 @@ Using the Symfony variant we can do this modification by adding the following co
 ```yaml
 # app/config/routes.yaml
 graphql_playground:
-  path: /docs/graphql_playground
-  controller: api_platform.graphql.action.graphql_playground
+    path: /docs/graphql_playground
+    controller: api_platform.graphql.action.graphql_playground
 ```
 
 ### Laravel config routes for GraphQL Playground
@@ -178,9 +189,9 @@ When going to the GraphQL endpoint, you can choose to launch the IDE you want.
 ```yaml
 # api/config/packages/api_platform.yaml
 api_platform:
-  graphql:
-    # Choose between graphiql or graphql-playground
-    default_ide: graphql-playground
+    graphql:
+        # Choose between graphiql or graphql-playground
+        default_ide: graphql-playground
 # ...
 ```
 
@@ -205,8 +216,8 @@ You can also disable this feature by setting the configuration value to `false`.
 ```yaml
 # api/config/packages/api_platform.yaml
 api_platform:
-  graphql:
-    default_ide: false
+    graphql:
+        default_ide: false
 # ...
 ```
 
@@ -234,8 +245,8 @@ If you need to disable it, it can be done in the configuration:
 ```yaml
 # api/config/packages/api_platform.yaml
 api_platform:
-  graphql:
-    introspection: false
+    graphql:
+        introspection: false
 # ...
 ```
 
@@ -256,17 +267,19 @@ return [
 
 ## Request with `application/graphql` Content-Type
 
-If you wish to send a [POST request using the `application/graphql` Content-Type](https://graphql.org/learn/serving-over-http/#post-request),
-you need to enable it in the [allowed formats of API Platform](content-negotiation.md#configuring-formats-globally):
+If you wish to send a
+[POST request using the `application/graphql` Content-Type](https://graphql.org/learn/serving-over-http/#post-request),
+you need to enable it in the
+[allowed formats of API Platform](content-negotiation.md#configuring-formats-globally):
 
 ### Symfony config for GraphQL Content-Type
 
 ```yaml
 # api/config/packages/api_platform.yaml
 api_platform:
-  formats:
-    # ...
-    graphql: ['application/graphql']
+    formats:
+        # ...
+        graphql: ["application/graphql"]
 ```
 
 ### Laravel config for GraphQL Content-Type
@@ -286,12 +299,13 @@ return [
 
 ## Operations
 
-> [!NOTE]
-> In Symfony we use the term “entities”, while the following documentation is mostly for Laravel “models”.
+> [!NOTE] In Symfony we use the term “entities”, while the following documentation is mostly for
+> Laravel “models”.
 
 To understand what an operation is, please refer to the [operations documentation](operations.md).
 
-For GraphQL, the operations are defined by using the `Query`, `QueryCollection`, `Mutation`, `DeleteMutation` and `Subscription` attributes.
+For GraphQL, the operations are defined by using the `Query`, `QueryCollection`, `Mutation`,
+`DeleteMutation` and `Subscription` attributes.
 
 By default, the following operations are enabled:
 
@@ -303,7 +317,8 @@ By default, the following operations are enabled:
 
 You can of course disable or configure these operations.
 
-For instance, in the following example, only the query of an item and the create mutation are enabled:
+For instance, in the following example, only the query of an item and the create mutation are
+enabled:
 
 <code-selector>
 
@@ -329,11 +344,11 @@ class Book
 ```yaml
 #The YAML syntax is only supported for Symfony
 resources:
-  App\Entity\Book:
-    graphQlOperations:
-      ApiPlatform\Metadata\GraphQl\Query: ~
-      ApiPlatform\Metadata\GraphQl\Mutation:
-        name: create
+    App\Entity\Book:
+        graphQlOperations:
+            ApiPlatform\Metadata\GraphQl\Query: ~
+            ApiPlatform\Metadata\GraphQl\Mutation:
+                name: create
 ```
 
 ```xml
@@ -355,24 +370,27 @@ resources:
 
 ## Queries
 
-If you don't know what queries are yet, please [read the documentation about them](https://graphql.org/learn/queries/).
+If you don't know what queries are yet, please
+[read the documentation about them](https://graphql.org/learn/queries/).
 
-For each resource, two queries are available: one for retrieving an item and the other one for the collection.
-For example, if you have a `Book` resource, the queries `book` and `books` can be used.
+For each resource, two queries are available: one for retrieving an item and the other one for the
+collection. For example, if you have a `Book` resource, the queries `book` and `books` can be used.
 
 ### Global Object Identifier
 
-When querying an item, you need to pass an identifier as argument. Following the [GraphQL Global Object Identification Specification](https://relay.dev/graphql/objectidentification.htm),
-the identifier needs to be globally unique. In API Platform, this argument is represented as an [IRI (Internationalized Resource Identifier)](https://www.w3.org/TR/ld-glossary/#internationalized-resource-identifier).
+When querying an item, you need to pass an identifier as argument. Following the
+[GraphQL Global Object Identification Specification](https://relay.dev/graphql/objectidentification.htm),
+the identifier needs to be globally unique. In API Platform, this argument is represented as an
+[IRI (Internationalized Resource Identifier)](https://www.w3.org/TR/ld-glossary/#internationalized-resource-identifier).
 
 For example, to query a book having as identifier `89`, you have to run the following:
 
 ```graphql
 {
-  book(id: "/books/89") {
-    title
-    isbn
-  }
+    book(id: "/books/89") {
+        title
+        isbn
+    }
 }
 ```
 
@@ -414,17 +432,18 @@ final class BookCollectionResolver implements QueryCollectionResolverInterface
 
 ### Custom Queries config for Symfony
 
-If you use autoconfiguration (the default Symfony configuration) in your application, then you are done!
+If you use autoconfiguration (the default Symfony configuration) in your application, then you are
+done!
 
 Else, you need to tag your resolver like this if you are using Symfony without autoconfiguration :
 
 ```yaml
 # api/config/services.yaml
 services:
-  # ...
-  App\Resolver\BookCollectionResolver:
-    tags:
-      - { name: api_platform.graphql.query_resolver }
+    # ...
+    App\Resolver\BookCollectionResolver:
+        tags:
+            - { name: api_platform.graphql.query_resolver }
 ```
 
 ### Custom Queries config for Laravel
@@ -482,11 +501,14 @@ final class BookResolver implements QueryItemResolverInterface
 }
 ```
 
-Note that you will receive the retrieved item or not in this resolver depending on how you configure your query in your resource.
+Note that you will receive the retrieved item or not in this resolver depending on how you configure
+your query in your resource.
 
-Since the resolver is a service, you can inject some dependencies and fetch your item in the resolver if you want.
+Since the resolver is a service, you can inject some dependencies and fetch your item in the
+resolver if you want.
 
-Now that your resolver is created and registered, you can configure your custom query and link its resolver.
+Now that your resolver is created and registered, you can configure your custom query and link its
+resolver.
 
 In your resource, add the following:
 
@@ -543,42 +565,42 @@ class Book
 ```yaml
 #The YAML syntax is only supported for Symfony
 resources:
-  App\Entity\Book:
-    graphQlOperations:
-      - class: ApiPlatform\Metadata\GraphQl\Query
-      - class: ApiPlatform\Metadata\GraphQl\QueryCollection
-      - class: ApiPlatform\Metadata\GraphQl\Mutation
-        name: create
-      - class: ApiPlatform\Metadata\GraphQl\Mutation
-        name: update
-      - class: ApiPlatform\Metadata\GraphQl\Mutation
-        name: delete
+    App\Entity\Book:
+        graphQlOperations:
+            - class: ApiPlatform\Metadata\GraphQl\Query
+            - class: ApiPlatform\Metadata\GraphQl\QueryCollection
+            - class: ApiPlatform\Metadata\GraphQl\Mutation
+              name: create
+            - class: ApiPlatform\Metadata\GraphQl\Mutation
+              name: update
+            - class: ApiPlatform\Metadata\GraphQl\Mutation
+              name: delete
 
-      - class: ApiPlatform\Metadata\GraphQl\Query
-        name: retrievedQuery
-        resolver: App\Resolver\BookResolver
-      - class: ApiPlatform\Metadata\GraphQl\Query
-        name: notRetrievedQuery
-        resolver: App\Resolver\BookResolver
-        args: []
-      - class: ApiPlatform\Metadata\GraphQl\Query
-        name: withDefaultArgsNotRetrievedQuery
-        resolver: App\Resolver\BookResolver
-        read: false
-      - class: ApiPlatform\Metadata\GraphQl\Query
-        name: withCustomArgsQuery
-        resolver: App\Resolver\BookResolver
-        args:
-          id:
-            type: 'ID!'
-          log:
-            type: 'Boolean!'
-            description: 'Is logging activated?'
-          logDate:
-            type: 'DateTime'
-      - class: ApiPlatform\Metadata\GraphQl\QueryCollection
-        name: collectionQuery
-        resolver: App\Resolver\BookCollectionResolver
+            - class: ApiPlatform\Metadata\GraphQl\Query
+              name: retrievedQuery
+              resolver: App\Resolver\BookResolver
+            - class: ApiPlatform\Metadata\GraphQl\Query
+              name: notRetrievedQuery
+              resolver: App\Resolver\BookResolver
+              args: []
+            - class: ApiPlatform\Metadata\GraphQl\Query
+              name: withDefaultArgsNotRetrievedQuery
+              resolver: App\Resolver\BookResolver
+              read: false
+            - class: ApiPlatform\Metadata\GraphQl\Query
+              name: withCustomArgsQuery
+              resolver: App\Resolver\BookResolver
+              args:
+                  id:
+                      type: "ID!"
+                  log:
+                      type: "Boolean!"
+                      description: "Is logging activated?"
+                  logDate:
+                      type: "DateTime"
+            - class: ApiPlatform\Metadata\GraphQl\QueryCollection
+              name: collectionQuery
+              resolver: App\Resolver\BookCollectionResolver
 ```
 
 ```xml
@@ -628,59 +650,65 @@ resources:
 
 </code-selector>
 
-Note that you need to explicitly add the auto-generated queries and mutations if they are needed when configuring custom queries, like it's done for the [operations](#operations).
+Note that you need to explicitly add the auto-generated queries and mutations if they are needed
+when configuring custom queries, like it's done for the [operations](#operations).
 
-As you can see, it's possible to define your own arguments for your custom queries.
-They are following the GraphQL type system.
-If you don't define the `args` property, it will be the default ones (for example `id` for an item).
-You can also use the `extraArgs` property if you want to add more arguments than the generated ones.
+As you can see, it's possible to define your own arguments for your custom queries. They are
+following the GraphQL type system. If you don't define the `args` property, it will be the default
+ones (for example `id` for an item). You can also use the `extraArgs` property if you want to add
+more arguments than the generated ones.
 
-If you don't want API Platform to retrieve the item for you, disable the `read` provider.
-Some other providers and processors [can be disabled](#disabling-system-providers-and-processors).
-Another option would be to make sure there is no `id` argument.
-This is the case for `notRetrievedQuery` (empty args).
-Conversely, if you need to add custom arguments, make sure `id` is added among the arguments if you need the item to be retrieved automatically.
+If you don't want API Platform to retrieve the item for you, disable the `read` provider. Some other
+providers and processors [can be disabled](#disabling-system-providers-and-processors). Another
+option would be to make sure there is no `id` argument. This is the case for `notRetrievedQuery`
+(empty args). Conversely, if you need to add custom arguments, make sure `id` is added among the
+arguments if you need the item to be retrieved automatically.
 
 Note also that:
 
-- If you have added your [own custom types](#custom-types), you can use them directly for your arguments types (it's the case here for `DateTime`).
-- You can also add a custom description for your custom arguments. You can see the [field arguments documentation](https://webonyx.github.io/graphql-php/type-system/object-types/#field-arguments) for more options.
+- If you have added your [own custom types](#custom-types), you can use them directly for your
+  arguments types (it's the case here for `DateTime`).
+- You can also add a custom description for your custom arguments. You can see the
+  [field arguments documentation](https://webonyx.github.io/graphql-php/type-system/object-types/#field-arguments)
+  for more options.
 
-The arguments you have defined or the default ones and their value will be in `$context['args']` of your resolvers.
+The arguments you have defined or the default ones and their value will be in `$context['args']` of
+your resolvers.
 
 Your custom queries will be available like this:
 
 ```graphql
 {
-  retrievedQueryBook(id: "/books/56") {
-    title
-  }
-
-  notRetrievedQueryBook {
-    title
-  }
-
-  withDefaultArgsNotRetrievedQueryBook(id: "/books/56") {
-    title
-  }
-
-  withCustomArgsQueryBook(id: "/books/23", log: true, logDate: "2019-12-20") {
-    title
-  }
-
-  collectionQueryBooks {
-    edges {
-      node {
+    retrievedQueryBook(id: "/books/56") {
         title
-      }
     }
-  }
+
+    notRetrievedQueryBook {
+        title
+    }
+
+    withDefaultArgsNotRetrievedQueryBook(id: "/books/56") {
+        title
+    }
+
+    withCustomArgsQueryBook(id: "/books/23", log: true, logDate: "2019-12-20") {
+        title
+    }
+
+    collectionQueryBooks {
+        edges {
+            node {
+                title
+            }
+        }
+    }
 }
 ```
 
 ## Mutations
 
-If you don't know what mutations are yet, the documentation about them is [here](https://graphql.org/learn/queries/#mutations).
+If you don't know what mutations are yet, the documentation about them is
+[in the GraphQL documentation for mutations](https://graphql.org/learn/queries/#mutations).
 
 For each resource, three mutations are available:
 
@@ -688,20 +716,22 @@ For each resource, three mutations are available:
 - `Mutation(name: 'update')` for updating an existing resource
 - `DeleteMutation(name: 'delete')` for deleting an existing resource
 
-When updating or deleting a resource, you need to pass the **IRI** of the resource as argument. See [Global Object Identifier](#global-object-identifier) for more information.
+When updating or deleting a resource, you need to pass the **IRI** of the resource as argument. See
+[Global Object Identifier](#global-object-identifier) for more information.
 
 ### Client Mutation ID
 
-Following the [Relay Input Object Mutations Specification](https://github.com/facebook/relay/blob/v7.1.0/website/spec/Mutations.md#relay-input-object-mutations-specification),
+Following the
+[Relay Input Object Mutations Specification](https://github.com/facebook/relay/blob/v7.1.0/website/spec/Mutations.md#relay-input-object-mutations-specification),
 you can pass a `clientMutationId` as argument and can ask its value as a field.
 
 For example, if you delete a book:
 
 ```graphql
 mutation DeleteBook($id: ID!, $clientMutationId: String!) {
-  deleteBook(input: { id: $id, clientMutationId: $clientMutationId }) {
-    clientMutationId
-  }
+    deleteBook(input: { id: $id, clientMutationId: $clientMutationId }) {
+        clientMutationId
+    }
 }
 ```
 
@@ -739,37 +769,47 @@ final class BookMutationResolver implements MutationResolverInterface
 }
 ```
 
-As you can see, depending on how you configure your custom mutation in the resource, the item is retrieved or not.
-For instance, if you don't set an `id` argument or if you disable the `read` or the `deserialize` providers (other state providers and state processors [can also be disabled](#disabling-system-providers-and-processors)),
-the received item will be `null`.
+As you can see, depending on how you configure your custom mutation in the resource, the item is
+retrieved or not. For instance, if you don't set an `id` argument or if you disable the `read` or
+the `deserialize` providers (other state providers and state processors
+[can also be disabled](#disabling-system-providers-and-processors)), the received item will be
+`null`.
 
-Likewise, if you don't want your item to be persisted by API Platform,
-you can return `null` instead of the mutated item (be careful: the response will also be `null`) or disable the `write` provider.
+Likewise, if you don't want your item to be persisted by API Platform, you can return `null` instead
+of the mutated item (be careful: the response will also be `null`) or disable the `write` provider.
 
 Don't forget the resolver is a service and you can inject the dependencies you want.
 
-If you don't use autoconfiguration, add the tag `api_platform.graphql.mutation_resolver` to the resolver service.
-If you're using Laravel, don't forget to tag the resolver service with the `ApiPlatform\GraphQl\Resolver\MutationResolverInterface`.
+If you don't use autoconfiguration, add the tag `api_platform.graphql.mutation_resolver` to the
+resolver service. If you're using Laravel, don't forget to tag the resolver service with the
+`ApiPlatform\GraphQl\Resolver\MutationResolverInterface`.
 
-Note that you need to explicitly add the auto-generated queries and mutations if they are needed when configuring custom mutations, like it's done for the [operations](#operations).
+Note that you need to explicitly add the auto-generated queries and mutations if they are needed
+when configuring custom mutations, like it's done for the [operations](#operations).
 
-As the custom queries, you can define your own arguments if you don't want to use the default ones (extracted from your resource).
-The only difference with them is that, even if you define your own arguments, the `clientMutationId` will always be set.
-You can also use the `extraArgs` property in case you need to add additional arguments (for instance to add the `id` argument since it is not added by default for a custom mutation).
+As the custom queries, you can define your own arguments if you don't want to use the default ones
+(extracted from your resource). The only difference with them is that, even if you define your own
+arguments, the `clientMutationId` will always be set. You can also use the `extraArgs` property in
+case you need to add additional arguments (for instance to add the `id` argument since it is not
+added by default for a custom mutation).
 
 The arguments will be in `$context['args']['input']` of your resolvers.
 
 ## Subscriptions
 
-Subscriptions are an [RFC](https://github.com/graphql/graphql-spec/blob/master/rfcs/Subscriptions.md#rfc-graphql-subscriptions) to allow a client to receive pushed realtime data from the server.
+Subscriptions are an
+[RFC](https://github.com/graphql/graphql-spec/blob/master/rfcs/Subscriptions.md#rfc-graphql-subscriptions)
+to allow a client to receive pushed realtime data from the server.
 
-In API Platform, the built-in subscription support is handled by using [Mercure](https://mercure.rocks/) as its underlying protocol.
+In API Platform, the built-in subscription support is handled by using
+[Mercure](https://mercure.rocks/) as its underlying protocol.
 
 ### Enable Update Subscriptions for a Resource
 
 To enable update subscriptions for a resource, these conditions have to be met:
 
-- the [Mercure hub and bundle need to be installed and configured](mercure.md#installing-mercure-support).
+- the
+  [Mercure hub and bundle need to be installed and configured](mercure.md#installing-mercure-support).
 - Mercure needs to be enabled for the resource.
 - the `update` mutation needs to be enabled for the resource.
 - the subscription needs to be enabled for the resource.
@@ -800,11 +840,11 @@ class Book
 ```yaml
 #The YAML syntax is only supported for Symfony
 resources:
-  App\Entity\Book:
-    graphQlOperations:
-      ApiPlatform\Metadata\GraphQl\Mutation:
-        name: update
-      ApiPlatform\Metadata\GraphQl\Subscription: ~
+    App\Entity\Book:
+        graphQlOperations:
+            ApiPlatform\Metadata\GraphQl\Mutation:
+                name: update
+            ApiPlatform\Metadata\GraphQl\Subscription: ~
 ```
 
 ```xml
@@ -830,50 +870,56 @@ Doing a subscription is very similar to doing a query:
 
 ```graphql
 {
-  subscription {
-    updateBookSubscribe(
-      input: { id: "/books/1", clientSubscriptionId: "myId" }
-    ) {
-      book {
-        title
-        isbn
-      }
-      mercureUrl
-      clientSubscriptionId
+    subscription {
+        updateBookSubscribe(input: { id: "/books/1", clientSubscriptionId: "myId" }) {
+            book {
+                title
+                isbn
+            }
+            mercureUrl
+            clientSubscriptionId
+        }
     }
-  }
 }
 ```
 
-As you can see, you need to pass the **IRI** of the resource as argument. See [Global Object Identifier](#global-object-identifier) for more information.
+As you can see, you need to pass the **IRI** of the resource as argument. See
+[Global Object Identifier](#global-object-identifier) for more information.
 
 You can also pass `clientSubscriptionId` as argument and can ask its value as a field.
 
-In the payload of the subscription, the given fields of the resource will be the fields you subscribe to: if any of these fields is updated, you will be pushed their updated values.
+In the payload of the subscription, the given fields of the resource will be the fields you
+subscribe to: if any of these fields is updated, you will be pushed their updated values.
 
-The `mercureUrl` field is the Mercure URL you need to use to [subscribe to the updates](https://mercure.rocks/docs/getting-started#subscribing) on the client-side.
+The `mercureUrl` field is the Mercure URL you need to use to
+[subscribe to the updates](https://mercure.rocks/docs/getting-started#subscribing) on the
+client-side.
 
 ### Receiving an Update
 
-On the client-side, you will receive the pushed updated data like you would receive the updated data if you did an `update` mutation.
+On the client-side, you will receive the pushed updated data like you would receive the updated data
+if you did an `update` mutation.
 
 For instance, you could receive a JSON payload like this:
 
 ```json
 {
-  "book": {
-    "title": "Updated title",
-    "isbn": "978-6-6344-4051-1"
-  }
+    "book": {
+        "title": "Updated title",
+        "isbn": "978-6-6344-4051-1"
+    }
 }
 ```
 
 ### Subscriptions Cache
 
-Internally, API Platform stores the subscriptions in a cache, using the [Symfony Cache](https://symfony.com/doc/current/cache.html) if you're using the Symfony variant
-or API Platform uses [Laravel cache](https://laravel.com/docs/cache) if you're using the Laravel variant.
+Internally, API Platform stores the subscriptions in a cache, using the
+[Symfony Cache](https://symfony.com/doc/current/cache.html) if you're using the Symfony variant or
+API Platform uses [Laravel cache](https://laravel.com/docs/cache) if you're using the Laravel
+variant.
 
-The cache is named `api_platform.graphql.cache.subscription` and the subscription keys are generated from the subscription payload by using a SHA-256 hash.
+The cache is named `api_platform.graphql.cache.subscription` and the subscription keys are generated
+from the subscription payload by using a SHA-256 hash.
 
 It's recommended to use an adapter like Redis for this cache.
 
@@ -881,16 +927,19 @@ It's recommended to use an adapter like Redis for this cache.
 
 API Platform resolves the queries and mutations by using its own **resolvers**.
 
-Even if you create your [custom queries](#custom-queries) or your [custom mutations](#custom-mutations),
-these resolvers will be used and yours will be called at the right time.
+Even if you create your [custom queries](#custom-queries) or your
+[custom mutations](#custom-mutations), these resolvers will be used and yours will be called at the
+right time.
 
 See the [Extending API Platform](extending.md) documentation for more information.
 
 ### Disabling system providers and processors
 
-If you need to, you can disable some states providers and state processors, for instance if you don't want your data to be validated.
+If you need to, you can disable some states providers and state processors, for instance if you
+don't want your data to be validated.
 
-The following table lists the system states providers and states processors you can disable in your resource configuration.
+The following table lists the system states providers and states processors you can disable in your
+resource configuration.
 
 | Attribute                  | Type   | Default | Description                               |
 | -------------------------- | ------ | ------- | ----------------------------------------- |
@@ -929,13 +978,13 @@ class Book
 ```yaml
 #The YAML syntax is only supported for Symfony
 resources:
-  App\Entity\Book:
-    graphQlOperations:
-      ApiPlatform\Metadata\GraphQl\Query: ~
-      ApiPlatform\Metadata\GraphQl\QueryCollection: ~
-      ApiPlatform\Metadata\GraphQl\Mutation:
-        name: create
-        write: false
+    App\Entity\Book:
+        graphQlOperations:
+            ApiPlatform\Metadata\GraphQl\Query: ~
+            ApiPlatform\Metadata\GraphQl\QueryCollection: ~
+            ApiPlatform\Metadata\GraphQl\Mutation:
+                name: create
+                write: false
 ```
 
 ```xml
@@ -985,13 +1034,13 @@ class Book
 #The YAML syntax is only supported for Symfony
 
 resources:
-  App\Entity\Book:
-    write: false
-    graphQlOperations:
-      ApiPlatform\Metadata\GraphQl\Query: ~
-      ApiPlatform\Metadata\GraphQl\QueryCollection: ~
-      ApiPlatform\Metadata\GraphQl\Mutation:
-        name: create
+    App\Entity\Book:
+        write: false
+        graphQlOperations:
+            ApiPlatform\Metadata\GraphQl\Query: ~
+            ApiPlatform\Metadata\GraphQl\QueryCollection: ~
+            ApiPlatform\Metadata\GraphQl\Mutation:
+                name: create
 ```
 
 ```xml
@@ -1014,17 +1063,20 @@ resources:
 
 ## Events
 
-No events are sent by the resolvers in API Platform. If you want to add your custom logic, [extending API Platform](extending.md) is
-the recommended way to do it.
+No events are sent by the resolvers in API Platform. If you want to add your custom logic,
+[extending API Platform](extending.md) is the recommended way to do it.
 
 ## Filters
 
-Filters are supported out-of-the-box. Follow the [filters](filters.md) documentation and your filters will be available as arguments of queries.
+Filters are supported out-of-the-box. Follow the [filters](filters.md) documentation and your
+filters will be available as arguments of queries.
 
 However, you don't necessarily have the same needs for your GraphQL endpoint as for your REST one.
 
-In the `QueryCollection` attribute, you can choose to decorrelate the GraphQL filters.
-In order to keep the default behavior (possibility to fetch, delete, update or create), define all the auto-generated operations (`Query` ,`QueryCollection`, `DeleteMutation`, and the `update` and `create` `Mutation`).
+In the `QueryCollection` attribute, you can choose to decorrelate the GraphQL filters. In order to
+keep the default behavior (possibility to fetch, delete, update or create), define all the
+auto-generated operations (`Query` ,`QueryCollection`, `DeleteMutation`, and the `update` and
+`create` `Mutation`).
 
 For example, this entity will have a search filter for REST and a date filter for GraphQL:
 
@@ -1057,18 +1109,18 @@ class Offer
 ```yaml
 #The YAML syntax is only supported for Symfony
 resources:
-  App\Entity\Book:
-    filters: ['offer.search_filter']
-    graphQlOperations:
-      - class: ApiPlatform\Metadata\GraphQl\Query
-      - class: ApiPlatform\Metadata\GraphQl\QueryCollection
-        filters: ['offer.date_filter']
-      - class: ApiPlatform\Metadata\GraphQl\Mutation
-        name: create
-      - class: ApiPlatform\Metadata\GraphQl\Mutation
-        name: update
-      - class: ApiPlatform\Metadata\GraphQl\Mutation
-        name: delete
+    App\Entity\Book:
+        filters: ["offer.search_filter"]
+        graphQlOperations:
+            - class: ApiPlatform\Metadata\GraphQl\Query
+            - class: ApiPlatform\Metadata\GraphQl\QueryCollection
+              filters: ["offer.date_filter"]
+            - class: ApiPlatform\Metadata\GraphQl\Mutation
+              name: create
+            - class: ApiPlatform\Metadata\GraphQl\Mutation
+              name: update
+            - class: ApiPlatform\Metadata\GraphQl\Mutation
+              name: delete
 ```
 
 ```xml
@@ -1101,38 +1153,39 @@ resources:
 
 ### Syntax for Filters with a List of Key / Value Arguments
 
-Some filters like the [exists filter](doctrine-filters.md#exists-filter) or the [order filter](doctrine-filters.md#order-filter-sorting) take a list of key / value as arguments.
+Some filters like the [exists filter](doctrine-filters.md#exists-filter) or the
+[order filter](doctrine-filters.md#order-filter-sorting) take a list of key / value as arguments.
 
 The first syntax coming to mind to use them is to write:
 
 ```graphql
 {
-  offers(order: { id: "ASC", name: "DESC" }) {
-    edges {
-      node {
-        id
-        name
-      }
+    offers(order: { id: "ASC", name: "DESC" }) {
+        edges {
+            node {
+                id
+                name
+            }
+        }
     }
-  }
 }
 ```
 
-However this syntax has a problematic issue: it doesn't keep the order of the arguments.
-These filters usually need a proper order to give results as expected.
+However this syntax has a problematic issue: it doesn't keep the order of the arguments. These
+filters usually need a proper order to give results as expected.
 
 That's why this syntax needs to be used instead:
 
 ```graphql
 {
-  offers(order: [{ id: "ASC" }, { name: "DESC" }]) {
-    edges {
-      node {
-        id
-        name
-      }
+    offers(order: [{ id: "ASC" }, { name: "DESC" }]) {
+        edges {
+            node {
+                id
+                name
+            }
+        }
     }
-  }
 }
 ```
 
@@ -1140,7 +1193,8 @@ Since a list is used for the arguments, the order is preserved.
 
 ### Filtering on Nested Properties
 
-Unlike for REST, all built-in filters support nested properties using the underscore (`_`) syntax instead of the dot (`.`) syntax, e.g.:
+Unlike for REST, all built-in filters support nested properties using the underscore (`_`) syntax
+instead of the dot (`.`) syntax, e.g.:
 
 ```php
 <?php
@@ -1161,22 +1215,22 @@ class Offer
 }
 ```
 
-The above allows you to find offers by their respective product's color like for the REST API.
-You can then filter using the following syntax:
+The above allows you to find offers by their respective product's color like for the REST API. You
+can then filter using the following syntax:
 
 ```graphql
 {
-  offers(product_color: "red") {
-    edges {
-      node {
-        id
-        product {
-          name
-          color
+    offers(product_color: "red") {
+        edges {
+            node {
+                id
+                product {
+                    name
+                    color
+                }
+            }
         }
-      }
     }
-  }
 }
 ```
 
@@ -1184,44 +1238,48 @@ Or order your results like:
 
 ```graphql
 {
-  offers(order: [{ product_releaseDate: "DESC" }]) {
-    edges {
-      node {
-        id
-        product {
-          name
-          color
+    offers(order: [{ product_releaseDate: "DESC" }]) {
+        edges {
+            node {
+                id
+                product {
+                    name
+                    color
+                }
+            }
         }
-      }
     }
-  }
 }
 ```
 
-Another difference with the REST API filters is that the keyword `_list` must be used instead of the traditional `[]` to filter over multiple values.
+Another difference with the REST API filters is that the keyword `_list` must be used instead of the
+traditional `[]` to filter over multiple values.
 
-For example, if you want to search the offers with a green or a red product you can use the following syntax:
+For example, if you want to search the offers with a green or a red product you can use the
+following syntax:
 
 ```graphql
 {
-  offers(product_color_list: ["red", "green"]) {
-    edges {
-      node {
-        id
-        product {
-          name
-          color
+    offers(product_color_list: ["red", "green"]) {
+        edges {
+            node {
+                id
+                product {
+                    name
+                    color
+                }
+            }
         }
-      }
     }
-  }
 }
 ```
 
 ## Pagination
 
-API Platform natively enables a cursor-based pagination for collections.
-It supports [GraphQL's Complete Connection Model](https://graphql.org/learn/pagination/#complete-connection-model) and is compatible with [GraphQL Cursor Connections Specification](https://relay.dev/graphql/connections.htm).
+API Platform natively enables a cursor-based pagination for collections. It supports
+[GraphQL's Complete Connection Model](https://graphql.org/learn/pagination/#complete-connection-model)
+and is compatible with
+[GraphQL Cursor Connections Specification](https://relay.dev/graphql/connections.htm).
 
 A page-based pagination can also be enabled per resource or per operation.
 
@@ -1231,19 +1289,19 @@ Here is an example query leveraging the pagination system:
 
 ```graphql
 {
-  offers(first: 10, after: "cursor") {
-    totalCount
-    pageInfo {
-      endCursor
-      hasNextPage
+    offers(first: 10, after: "cursor") {
+        totalCount
+        pageInfo {
+            endCursor
+            hasNextPage
+        }
+        edges {
+            cursor
+            node {
+                id
+            }
+        }
     }
-    edges {
-      cursor
-      node {
-        id
-      }
-    }
-  }
 }
 ```
 
@@ -1258,7 +1316,8 @@ More precisely:
 - `after` corresponds to the `cursor` from which the items are returned.
 
 - `last` corresponds to the items per page starting from the end;
-- `before` corresponds to the `cursor` from which the items are returned, from a backwards point of view.
+- `before` corresponds to the `cursor` from which the items are returned, from a backwards point of
+  view.
 
 The current page always has a `startCursor` and an `endCursor`, present in the `pageInfo` field.
 
@@ -1271,7 +1330,8 @@ To get the next page, you would add the `endCursor` from the current page as the
 }
 ```
 
-For the previous page, you would add the `startCursor` from the current page as the `before` parameter.
+For the previous page, you would add the `startCursor` from the current page as the `before`
+parameter.
 
 ```graphql
 {
@@ -1280,8 +1340,9 @@ For the previous page, you would add the `startCursor` from the current page as 
 }
 ```
 
-How do you know when you have reached the last page? It is the aim of the property `hasNextPage` or `hasPreviousPage` in `pageInfo`.
-When it is false, you know it is the last page and moving forward or backward will give you an empty result.
+How do you know when you have reached the last page? It is the aim of the property `hasNextPage` or
+`hasPreviousPage` in `pageInfo`. When it is false, you know it is the last page and moving forward
+or backward will give you an empty result.
 
 ### Using the Page-based Pagination
 
@@ -1318,17 +1379,17 @@ class Offer
 ```yaml
 #The YAML syntax is only supported for Symfony
 resources:
-  App\Entity\Book:
-    graphQlOperations:
-      - class: ApiPlatform\Metadata\GraphQl\Query
-      - class: ApiPlatform\Metadata\GraphQl\QueryCollection
-        paginationType: page
-      - class: ApiPlatform\Metadata\GraphQl\Mutation
-        name: create
-      - class: ApiPlatform\Metadata\GraphQl\Mutation
-        name: update
-      - class: ApiPlatform\Metadata\GraphQl\Mutation
-        name: delete
+    App\Entity\Book:
+        graphQlOperations:
+            - class: ApiPlatform\Metadata\GraphQl\Query
+            - class: ApiPlatform\Metadata\GraphQl\QueryCollection
+              paginationType: page
+            - class: ApiPlatform\Metadata\GraphQl\Mutation
+              name: create
+            - class: ApiPlatform\Metadata\GraphQl\Mutation
+              name: update
+            - class: ApiPlatform\Metadata\GraphQl\Mutation
+              name: delete
 ```
 
 ```xml
@@ -1372,8 +1433,8 @@ class Offer
 ```yaml
 #The YAML syntax is only supported for Symfony
 resources:
-  App\Entity\Book:
-    paginationType: page
+    App\Entity\Book:
+        paginationType: page
 ```
 
 ```xml
@@ -1388,12 +1449,16 @@ resources:
 
 </code-selector>
 
-Once enabled, a `page` filter will be available in the collection query (its name [can be changed in the configuration](pagination.md))
-and an `itemsPerPage` filter will be available too if [client-side-pagination](pagination.md#changing-the-number-of-items-per-page-for-a-specific-resource) is enabled.
+Once enabled, a `page` filter will be available in the collection query (its name
+[can be changed in the configuration](pagination.md)) and an `itemsPerPage` filter will be available
+too if
+[client-side-pagination](pagination.md#changing-the-number-of-items-per-page-for-a-specific-resource)
+is enabled.
 
 A `paginationInfo` field can be queried to obtain the following information:
 
-- `itemsPerPage`: the number of items per page. To change it, follow the [pagination documentation](pagination.md#changing-the-number-of-items-per-page).
+- `itemsPerPage`: the number of items per page. To change it, follow the
+  [pagination documentation](pagination.md#changing-the-number-of-items-per-page).
 - `lastPage`: the last page of the collection.
 - `totalCount`: the total number of items in the collection.
 - `hasNextPage`: does the current collection offers a next page.
@@ -1404,17 +1469,17 @@ An example of a query:
 
 ```graphql
 {
-  offers(page: 3, itemsPerPage: 15) {
-    collection {
-      id
+    offers(page: 3, itemsPerPage: 15) {
+        collection {
+            id
+        }
+        paginationInfo {
+            itemsPerPage
+            lastPage
+            totalCount
+            hasNextPage
+        }
     }
-    paginationInfo {
-      itemsPerPage
-      lastPage
-      totalCount
-      hasNextPage
-    }
-  }
 }
 ```
 
@@ -1431,10 +1496,10 @@ The pagination can be disabled for all GraphQL resources using this configuratio
 ```yaml
 # api/config/packages/api_platform.yaml
 api_platform:
-  graphql:
-    collection:
-      pagination:
-        enabled: false
+    graphql:
+        collection:
+            pagination:
+                enabled: false
 ```
 
 ##### Disable pagination for all GraphQL resources with Laravel
@@ -1477,8 +1542,8 @@ class Book
 ```yaml
 #The YAML syntax is only supported for Symfony
 resources:
-  App\Entity\Book:
-    paginationEnabled: false
+    App\Entity\Book:
+        paginationEnabled: false
 ```
 
 ```xml
@@ -1517,10 +1582,10 @@ class Book
 ```yaml
 #The YAML syntax is only supported for Symfony
 resources:
-  App\Entity\Book:
-    graphQlOperations:
-      ApiPlatform\Metadata\GraphQl\QueryCollection:
-        paginationEnabled: false
+    App\Entity\Book:
+        graphQlOperations:
+            ApiPlatform\Metadata\GraphQl\QueryCollection:
+                paginationEnabled: false
 ```
 
 ```xml
@@ -1543,18 +1608,22 @@ resources:
 
 [Partial pagination](pagination.md#partial-pagination) is possible with GraphQL.
 
-When enabled, backwards pagination will not be possible, and the `hasNextPage` information will be always `false`.
+When enabled, backwards pagination will not be possible, and the `hasNextPage` information will be
+always `false`.
 
 ## Security
 
-To add a security layer to your queries and mutations, follow the [security](security.md) documentation.
+To add a security layer to your queries and mutations, follow the [security](security.md)
+documentation.
 
 The REST security configuration and the GraphQL one are **not** correlated.
 
-If you have only some parts differing between REST and GraphQL, you have to redefine the common parts anyway.
+If you have only some parts differing between REST and GraphQL, you have to redefine the common
+parts anyway.
 
-In the example below, we want the same security rules as we have in REST, but we also want to allow an admin to delete a book only in GraphQL.
-Please note that, it's not possible to update a book in GraphQL because the `update` operation is not defined.
+In the example below, we want the same security rules as we have in REST, but we also want to allow
+an admin to delete a book only in GraphQL. Please note that, it's not possible to update a book in
+GraphQL because the `update` operation is not defined.
 
 <code-selector>
 
@@ -1593,26 +1662,26 @@ class Book
 ```yaml
 #The YAML syntax is only supported for Symfony
 resources:
-  App\Entity\Book:
-    security: "is_granted('ROLE_USER')"
-    operations:
-      ApiPlatform\Metadata\Get:
-        security: "is_granted('ROLE_USER') and object.owner == user"
-        securityMessage: 'Sorry, but you are not the book owner.'
-      ApiPlatform\Metadata\Post:
-        security: "is_granted('ROLE_ADMIN')"
-        securityMessage: 'Only admins can add books.'
-    graphQlOperations:
-      ApiPlatform\Metadata\GraphQl\Query:
-        security: "is_granted('ROLE_USER') and object.owner == user"
-      ApiPlatform\Metadata\GraphQl\QueryCollection:
-        security: "is_granted('ROLE_ADMIN')"
-      ApiPlatform\Metadata\GraphQl\DeleteMutation:
-        name: delete
-        security: "is_granted('ROLE_ADMIN')"
-      ApiPlatform\Metadata\GraphQl\Mutation:
-        name: create
-        security: "is_granted('ROLE_ADMIN')"
+    App\Entity\Book:
+        security: "is_granted('ROLE_USER')"
+        operations:
+            ApiPlatform\Metadata\Get:
+                security: "is_granted('ROLE_USER') and object.owner == user"
+                securityMessage: "Sorry, but you are not the book owner."
+            ApiPlatform\Metadata\Post:
+                security: "is_granted('ROLE_ADMIN')"
+                securityMessage: "Only admins can add books."
+        graphQlOperations:
+            ApiPlatform\Metadata\GraphQl\Query:
+                security: "is_granted('ROLE_USER') and object.owner == user"
+            ApiPlatform\Metadata\GraphQl\QueryCollection:
+                security: "is_granted('ROLE_ADMIN')"
+            ApiPlatform\Metadata\GraphQl\DeleteMutation:
+                name: delete
+                security: "is_granted('ROLE_ADMIN')"
+            ApiPlatform\Metadata\GraphQl\Mutation:
+                name: create
+                security: "is_granted('ROLE_ADMIN')"
 ```
 
 ```xml
@@ -1640,23 +1709,30 @@ resources:
 
 ### Securing Properties (Including Associations)
 
-You may want to limit access to certain resource properties with a security expression. This can be done with the `ApiProperty` `security` attribute.
+You may want to limit access to certain resource properties with a security expression. This can be
+done with the `ApiProperty` `security` attribute.
 
-Note: adding the `ApiProperty` `security` expression to a GraphQL property will automatically make the GraphQL property type nullable (if it wasn't already).
-This is because `null` is returned as the property value if access is denied via the `security` expression.
+Note: adding the `ApiProperty` `security` expression to a GraphQL property will automatically make
+the GraphQL property type nullable (if it wasn't already). This is because `null` is returned as the
+property value if access is denied via the `security` expression.
 
-In GraphQL, it's possible to expose associations - allowing nested querying.
-For example, associations can be made with Doctrine ORM's `OneToMany`, `ManyToOne`, `ManyToMany`, etc.
+In GraphQL, it's possible to expose associations - allowing nested querying. For example,
+associations can be made with Doctrine ORM's `OneToMany`, `ManyToOne`, `ManyToMany`, etc.
 
-It's important to note that the security defined on resource operations applies only to the exposed query/mutation endpoints (e.g. `Query.users`, `Mutation.updateUser`, etc.).
-Resource operation security is defined via the `security` attribute for each operation defined on the resource.
-This security is _not_ applied to exposed associations.
+It's important to note that the security defined on resource operations applies only to the exposed
+query/mutation endpoints (e.g. `Query.users`, `Mutation.updateUser`, etc.). Resource operation
+security is defined via the `security` attribute for each operation defined on the resource. This
+security is _not_ applied to exposed associations.
 
-Associations can instead be secured with the `ApiProperty` `security` attribute. This provides the flexibility to have different security depending on where an association is exposed.
+Associations can instead be secured with the `ApiProperty` `security` attribute. This provides the
+flexibility to have different security depending on where an association is exposed.
 
-To prevent traversal attacks, you should ensure that any exposed associations are secured appropriately.
-A traversal attack is where a user can gain unintended access to a resource by querying nested associations, gaining access to a resource that prevents direct access (via the query endpoint).
-For example, a user may be denied using `Query.getUser` to get a user, but is able to access the user through an association on an object that they do have access to (e.g. `document.createdBy`).
+To prevent traversal attacks, you should ensure that any exposed associations are secured
+appropriately. A traversal attack is where a user can gain unintended access to a resource by
+querying nested associations, gaining access to a resource that prevents direct access (via the
+query endpoint). For example, a user may be denied using `Query.getUser` to get a user, but is able
+to access the user through an association on an object that they do have access to (e.g.
+`document.createdBy`).
 
 The following example shows how associations can be secured:
 
@@ -1701,19 +1777,19 @@ class User
 ```yaml
 #The YAML syntax is only supported for Symfony
 resources:
-  App\Entity\User:
-    graphQlOperations:
-      ApiPlatform\Metadata\GraphQl\Query:
-        security: "is_granted('VIEW', object)"
-      ApiPlatform\Metadata\GraphQl\QueryCollection:
-        security: "is_granted('ROLE_ADMIN')"
+    App\Entity\User:
+        graphQlOperations:
+            ApiPlatform\Metadata\GraphQl\Query:
+                security: "is_granted('VIEW', object)"
+            ApiPlatform\Metadata\GraphQl\QueryCollection:
+                security: "is_granted('ROLE_ADMIN')"
 
 properties:
-  App\Entity\User:
-    viewableDocuments:
-      security: "is_granted('VIEW', object)"
-    email:
-      security: "is_granted('ROLE_ADMIN')"
+    App\Entity\User:
+        viewableDocuments:
+            security: "is_granted('VIEW', object)"
+        email:
+            security: "is_granted('ROLE_ADMIN')"
 ```
 
 ```xml
@@ -1784,19 +1860,19 @@ class Document
 ```yaml
 #The YAML syntax is only supported for Symfony
 resources:
-  App\Entity\Document:
-    graphQlOperations:
-      ApiPlatform\Metadata\GraphQl\Query:
-        security: "is_granted('VIEW', object)"
-      ApiPlatform\Metadata\GraphQl\QueryCollection:
-        security: "is_granted('ROLE_ADMIN')"
+    App\Entity\Document:
+        graphQlOperations:
+            ApiPlatform\Metadata\GraphQl\Query:
+                security: "is_granted('VIEW', object)"
+            ApiPlatform\Metadata\GraphQl\QueryCollection:
+                security: "is_granted('ROLE_ADMIN')"
 
 properties:
-  App\Entity\Document:
-    viewers:
-      security: "is_granted('VIEW', object)"
-    createdBy:
-      security: "is_granted('VIEW', object)"
+    App\Entity\Document:
+        viewers:
+            security: "is_granted('VIEW', object)"
+        createdBy:
+            security: "is_granted('VIEW', object)"
 ```
 
 ```xml
@@ -1826,26 +1902,34 @@ properties:
 
 </code-selector>
 
-The above example only allows admins to see the full collection of each resource (`QueryCollection`).
-Users must be granted the `VIEW` attribute on a resource to be able to query it directly (`Query`) - which would use a `Voter` to make this decision.
+The above example only allows admins to see the full collection of each resource
+(`QueryCollection`). Users must be granted the `VIEW` attribute on a resource to be able to query it
+directly (`Query`) - which would use a `Voter` to make this decision.
 
-Similar to `Query`, all associations are secured, requiring `VIEW` access on the parent object (_not_ on the association).
-This means that a user with `VIEW` access to a `Document` is able to see all users who are in the `viewers` collection, as well as the `createdBy` association.
-This may be a little too open, so you could instead do a role check here to only allow admins to access these fields, or check for a different attribute that could be implemented in the voter (e.g. `VIEW_CREATED_BY`.)
-Alternatively, you could still expose the users, but limit the visible fields by limiting access with `ApiProperty` `security` (such as the `User::$email` property above) or with [dynamic serializer groups](serialization.md#changing-the-serialization-context-dynamically).
+Similar to `Query`, all associations are secured, requiring `VIEW` access on the parent object
+(_not_ on the association). This means that a user with `VIEW` access to a `Document` is able to see
+all users who are in the `viewers` collection, as well as the `createdBy` association. This may be a
+little too open, so you could instead do a role check here to only allow admins to access these
+fields, or check for a different attribute that could be implemented in the voter (e.g.
+`VIEW_CREATED_BY`.) Alternatively, you could still expose the users, but limit the visible fields by
+limiting access with `ApiProperty` `security` (such as the `User::$email` property above) or with
+[dynamic serializer groups](serialization.md#changing-the-serialization-context-dynamically).
 
 ## Serialization Groups
 
 You may want to restrict some resource's attributes to your GraphQL clients.
 
-As described in the [serialization process](serialization.md) documentation, you can use serialization groups to expose only the attributes you want in queries or in mutations.
+As described in the [serialization process](serialization.md) documentation, you can use
+serialization groups to expose only the attributes you want in queries or in mutations.
 
-If the (de)normalization context between GraphQL and REST is different, use the `(de)normalizationContext` key to change it in each query and mutations.
+If the (de)normalization context between GraphQL and REST is different, use the
+`(de)normalizationContext` key to change it in each query and mutations.
 
 Note that:
 
 - A **query** is only using the normalization context.
-- A **mutation** is using the denormalization context for its input and the normalization context for its output.
+- A **mutation** is using the denormalization context for its input and the normalization context
+  for its output.
 
 The following example shows you what can be done:
 
@@ -1892,24 +1976,24 @@ class Book
 ```yaml
 #The YAML syntax is only supported for Symfony
 resources:
-  App\Entity\Book:
-    normalizationContext:
-      groups: ['read']
-    denormalizationContext:
-      groups: ['write']
-    graphQlOperations:
-      ApiPlatform\Metadata\GraphQl\Query:
+    App\Entity\Book:
         normalizationContext:
-          groups: ['query']
-      ApiPlatform\Metadata\GraphQl\QueryCollection:
-        normalizationContext:
-          groups: ['query_collection']
-      ApiPlatform\Metadata\GraphQl\Mutation:
-        name: create
-        normalizationContext:
-          groups: ['query_collection']
+            groups: ["read"]
         denormalizationContext:
-          groups: ['mutation']
+            groups: ["write"]
+        graphQlOperations:
+            ApiPlatform\Metadata\GraphQl\Query:
+                normalizationContext:
+                    groups: ["query"]
+            ApiPlatform\Metadata\GraphQl\QueryCollection:
+                normalizationContext:
+                    groups: ["query_collection"]
+            ApiPlatform\Metadata\GraphQl\Mutation:
+                name: create
+                normalizationContext:
+                    groups: ["query_collection"]
+                denormalizationContext:
+                    groups: ["mutation"]
 ```
 
 ```xml
@@ -1987,29 +2071,38 @@ resources:
 
 </code-selector>
 
-In this case, the REST endpoint will be able to get the two attributes of the book and to modify only its title.
+In this case, the REST endpoint will be able to get the two attributes of the book and to modify
+only its title.
 
-The GraphQL endpoint will be able to query the title and author of an item.
-It will be able to query the title of the items in the collection.
-It will only be able to create a book with an author.
-When doing this mutation, the author of the created book will not be returned (the title will be instead).
+The GraphQL endpoint will be able to query the title and author of an item. It will be able to query
+the title of the items in the collection. It will only be able to create a book with an author. When
+doing this mutation, the author of the created book will not be returned (the title will be
+instead).
 
 ### Different Types when Using Different Serialization Groups
 
 When you use different serialization groups, it will create different types in your schema.
 
-Make sure you understand the implications when doing this: having different types means breaking the cache features in some GraphQL clients (in [Apollo Client](https://www.apollographql.com/docs/react/caching/cache-configuration/#automatic-cache-updates) for example).
+Make sure you understand the implications when doing this: having different types means breaking the
+cache features in some GraphQL clients (in
+[Apollo Client](https://www.apollographql.com/docs/react/caching/cache-configuration/#automatic-cache-updates)
+for example).
 
 For instance:
 
-- If you use a different `normalizationContext` for a mutation, a `MyResourcePayloadData` type with the restricted fields will be generated and used instead of `MyResource` (the query type).
-- If you use a different `normalizationContext` for the query of an item (`Query` attribute) and for the query of a collection (`QueryCollection` attribute), two types `MyResourceItem` and `MyResourceCollection` with the restricted fields will be generated and used instead of `MyResource` (the query type).
+- If you use a different `normalizationContext` for a mutation, a `MyResourcePayloadData` type with
+  the restricted fields will be generated and used instead of `MyResource` (the query type).
+- If you use a different `normalizationContext` for the query of an item (`Query` attribute) and for
+  the query of a collection (`QueryCollection` attribute), two types `MyResourceItem` and
+  `MyResourceCollection` with the restricted fields will be generated and used instead of
+  `MyResource` (the query type).
 
 ### Embedded Relation Input (Creation of Relation in Mutation)
 
 By default, creating a relation when using a `create` or `update` mutation is not possible.
 
-Indeed, the mutation expects an IRI for the relation in the input, so you need to use an existing relation.
+Indeed, the mutation expects an IRI for the relation in the input, so you need to use an existing
+relation.
 
 For instance if you have the following resource:
 
@@ -2039,10 +2132,10 @@ class Book
 ```yaml
 #The YAML syntax is only supported for Symfony
 resources:
-  App\Entity\Book:
-    graphQlOperations:
-      ApiPlatform\Metadata\GraphQl\Mutation:
-        name: create
+    App\Entity\Book:
+        graphQlOperations:
+            ApiPlatform\Metadata\GraphQl\Mutation:
+                name: create
 ```
 
 ```xml
@@ -2061,28 +2154,27 @@ resources:
 
 </code-selector>
 
-Creating a book with its author will be done like this, where `/authors/32` is the IRI of an existing resource:
+Creating a book with its author will be done like this, where `/authors/32` is the IRI of an
+existing resource:
 
 ```graphql
 {
-  mutation {
-    createBook(
-      input: { title: "The Name of the Wind", author: "/authors/32" }
-    ) {
-      book {
-        title
-        author {
-          name
+    mutation {
+        createBook(input: { title: "The Name of the Wind", author: "/authors/32" }) {
+            book {
+                title
+                author {
+                    name
+                }
+            }
         }
-      }
     }
-  }
 }
 ```
 
-In order to create an author as the same time as a book,
-you need to use the denormalization context and groups on the book and the author
-(see also [the dedicated part in the serialization documentation](serialization.md#denormalization):
+In order to create an author as the same time as a book, you need to use the denormalization context
+and groups on the book and the author (see also
+[the dedicated part in the serialization documentation](serialization.md#denormalization):
 
 <code-selector>
 
@@ -2113,12 +2205,12 @@ class Book
 ```yaml
 #The YAML syntax is only supported for Symfony
 resources:
-  App\Entity\Book:
-    graphQlOperations:
-      ApiPlatform\Metadata\GraphQl\Mutation:
-        name: create
-        denormalizationContext:
-          groups: ['book:create']
+    App\Entity\Book:
+        graphQlOperations:
+            ApiPlatform\Metadata\GraphQl\Mutation:
+                name: create
+                denormalizationContext:
+                    groups: ["book:create"]
 ```
 
 ```xml
@@ -2173,21 +2265,16 @@ In this case, creating a book with its author can now be done like this:
 
 ```graphql
 {
-  mutation {
-    createBook(
-      input: {
-        title: "The Name of the Wind"
-        author: { name: "Patrick Rothfuss" }
-      }
-    ) {
-      book {
-        title
-        author {
-          name
+    mutation {
+        createBook(input: { title: "The Name of the Wind", author: { name: "Patrick Rothfuss" } }) {
+            book {
+                title
+                author {
+                    name
+                }
+            }
         }
-      }
     }
-  }
 }
 ```
 
@@ -2195,8 +2282,9 @@ In this case, creating a book with its author can now be done like this:
 
 ### Handling Exceptions and Errors (Logging, Filtering, ...)
 
-When there are errors (GraphQL ones, or if an exception is sent), a default error handler (`api_platform.graphql.error_handler`) is called.
-Its main responsibility is to apply a formatter to them.
+When there are errors (GraphQL ones, or if an exception is sent), a default error handler
+(`api_platform.graphql.error_handler`) is called. Its main responsibility is to apply a formatter to
+them.
 
 If you need to log the errors, or if you want to filter them, you have to decorate this service.
 
@@ -2236,9 +2324,9 @@ Then register the service:
 ```yaml
 # api/config/services.yaml
 services:
-  # ...
-  App\Error\ErrorHandler:
-    decorates: api_platform.graphql.error_handler
+    # ...
+    App\Error\ErrorHandler:
+        decorates: api_platform.graphql.error_handler
 ```
 
 ```xml
@@ -2298,25 +2386,37 @@ class AppServiceProvider extends ServiceProvider
 
 ### Formatting Exceptions and Errors
 
-By default, if an exception is sent when resolving a query or a mutation or if there are GraphQL errors, they are normalized following the [GraphQL specification](https://github.com/graphql/graphql-spec/blob/master/spec/Section%207%20--%20Response.md#errors).
+By default, if an exception is sent when resolving a query or a mutation or if there are GraphQL
+errors, they are normalized following the
+[GraphQL specification](https://github.com/graphql/graphql-spec/blob/master/spec/Section%207%20--%20Response.md#errors).
 
-It means an `errors` entry will be returned in the response, containing the following entries: `message`, `extensions`, `locations` and `path`.
-For more information, please [refer to the documentation in graphql-php](https://webonyx.github.io/graphql-php/error-handling/#default-error-formatting).
+It means an `errors` entry will be returned in the response, containing the following entries:
+`message`, `extensions`, `locations` and `path`. For more information, please
+[refer to the documentation in graphql-php](https://webonyx.github.io/graphql-php/error-handling/#default-error-formatting).
 
-In `prod` mode, the displayed message will be a generic one, excepted for a `RuntimeException` (and all exceptions inherited from it) for which it will be its actual message.
-This behavior is different from what is described in the [graphql-php documentation](https://webonyx.github.io/graphql-php/error-handling).
-It's because a built-in [custom exception normalizer](#custom-exception-normalizer) is used to normalize the `RuntimeException` and change the default behavior.
+In `prod` mode, the displayed message will be a generic one, excepted for a `RuntimeException` (and
+all exceptions inherited from it) for which it will be its actual message. This behavior is
+different from what is described in the
+[graphql-php documentation](https://webonyx.github.io/graphql-php/error-handling). It's because a
+built-in [custom exception normalizer](#custom-exception-normalizer) is used to normalize the
+`RuntimeException` and change the default behavior.
 
-If you are in `dev` mode, more entries will be added in the response: `debugMessage` (containing the actual exception message, for instance in the case of a `LogicException`) and `trace` (the formatted exception trace).
+If you are in `dev` mode, more entries will be added in the response: `debugMessage` (containing the
+actual exception message, for instance in the case of a `LogicException`) and `trace` (the formatted
+exception trace).
 
-For some specific exceptions, built-in [custom exception normalizers](#custom-exception-normalizer) are also used to add more information.
-It's the case for a `HttpException` for which the `status` entry will be added under `extensions` and for a `ValidationException` for which `status` (by default 422) and `violations` entries will be added.
+For some specific exceptions, built-in [custom exception normalizers](#custom-exception-normalizer)
+are also used to add more information. It's the case for a `HttpException` for which the `status`
+entry will be added under `extensions` and for a `ValidationException` for which `status` (by
+default 422) and `violations` entries will be added.
 
 #### Custom Exception Normalizer
 
-If you want to add more specific behaviors depending on the exception or if you want to change the behavior of the built-in ones, you can do so by creating your own normalizer.
+If you want to add more specific behaviors depending on the exception or if you want to change the
+behavior of the built-in ones, you can do so by creating your own normalizer.
 
-Please follow the [Symfony documentation to create a custom normalizer](https://symfony.com/doc/current/serializer/custom_normalizer.html).
+Please follow the
+[Symfony documentation to create a custom normalizer](https://symfony.com/doc/current/serializer/custom_normalizer.html).
 
 The code should look like this:
 
@@ -2350,26 +2450,30 @@ final class MyExceptionNormalizer implements NormalizerInterface
 }
 ```
 
-You can see that, in the `normalize` method, you should add a call to `FormattedError::createFromException` in order to have the same behavior as the other normalizers.
+You can see that, in the `normalize` method, you should add a call to
+`FormattedError::createFromException` in order to have the same behavior as the other normalizers.
 
-When registering your custom normalizer, you can add a priority to order your normalizers between themselves.
+When registering your custom normalizer, you can add a priority to order your normalizers between
+themselves.
 
-If you use a positive priority (or no priority), your normalizer will always be called before the built-in normalizers.
-For instance, you can register a custom normalizer like this:
+If you use a positive priority (or no priority), your normalizer will always be called before the
+built-in normalizers. For instance, you can register a custom normalizer like this:
 
 ```yaml
 # api/config/services.yaml
 services:
-  App\Serializer\Exception\MyExceptionNormalizer:
-    tags:
-      - { name: 'serializer.normalizer', priority: 12 }
+    App\Serializer\Exception\MyExceptionNormalizer:
+        tags:
+            - { name: "serializer.normalizer", priority: 12 }
 ```
 
 ## Name Conversion
 
-You can modify how the property names of your resources are converted into field and filter names of your GraphQL schema.
+You can modify how the property names of your resources are converted into field and filter names of
+your GraphQL schema.
 
-By default, the property name will be used without conversion. If you want to apply a name converter, follow the [Name Conversion documentation](serialization.md#name-conversion).
+By default, the property name will be used without conversion. If you want to apply a name
+converter, follow the [Name Conversion documentation](serialization.md#name-conversion).
 
 For instance, your resource can have properties in camelCase:
 
@@ -2398,13 +2502,13 @@ By default, with the search filter, the query to retrieve a collection will be:
 
 ```graphql
 {
-  books(publicationDate: "2010") {
-    edges {
-      node {
-        publicationDate
-      }
+    books(publicationDate: "2010") {
+        edges {
+            node {
+                publicationDate
+            }
+        }
     }
-  }
 }
 ```
 
@@ -2412,19 +2516,20 @@ But if you use the `CamelCaseToSnakeCaseNameConverter`, it will be:
 
 ```graphql
 {
-  books(publication_date: "2010") {
-    edges {
-      node {
-        publication_date
-      }
+    books(publication_date: "2010") {
+        edges {
+            node {
+                publication_date
+            }
+        }
     }
-  }
 }
 ```
 
 ### Nesting Separator
 
-If you use snake_case, you can wonder how to make the difference between an underscore and the separator of the nested fields in the filter names, by default an underscore too.
+If you use snake_case, you can wonder how to make the difference between an underscore and the
+separator of the nested fields in the filter names, by default an underscore too.
 
 For instance if you have this resource:
 
@@ -2456,25 +2561,26 @@ You would need to use the search filter like this:
 
 ```graphql
 {
-  books(related_books_title: "The Fitz and the Fool") {
-    edges {
-      node {
-        title
-      }
+    books(related_books_title: "The Fitz and the Fool") {
+        edges {
+            node {
+                title
+            }
+        }
     }
-  }
 }
 ```
 
-To avoid this issue, you can configure the nesting separator to use, for example, `__` instead of `_`:
+To avoid this issue, you can configure the nesting separator to use, for example, `__` instead of
+`_`:
 
 #### Modifying nesting separator for GraphQL with Symfony
 
 ```yaml
 # api/config/packages/api_platform.yaml
 api_platform:
-  graphql:
-    nesting_separator: __
+    graphql:
+        nesting_separator: __
 # ...
 ```
 
@@ -2482,13 +2588,13 @@ In this case, your query will be:
 
 ```graphql
 {
-  books(related_books__title: "The Fitz and the Fool") {
-    edges {
-      node {
-        title
-      }
+    books(related_books__title: "The Fitz and the Fool") {
+        edges {
+            node {
+                title
+            }
+        }
     }
-  }
 }
 ```
 
@@ -2509,13 +2615,13 @@ In this case, your query will be:
 
 ```graphql
 {
-  books(related_books__title: "The Fitz and the Fool") {
-    edges {
-      node {
-        title
-      }
+    books(related_books__title: "The Fitz and the Fool") {
+        edges {
+            node {
+                title
+            }
+        }
     }
-  }
 }
 ```
 
@@ -2525,9 +2631,11 @@ Much better, isn't it?
 
 You might need to add your own types to your GraphQL application.
 
-Create your type class by implementing the interface `ApiPlatform\GraphQl\Type\Definition\TypeInterface`.
+Create your type class by implementing the interface
+`ApiPlatform\GraphQl\Type\Definition\TypeInterface`.
 
-You should extend the `GraphQL\Type\Definition\ScalarType` class too to take advantage of its useful methods.
+You should extend the `GraphQL\Type\Definition\ScalarType` class too to take advantage of its useful
+methods.
 
 For instance, to create a custom `DateType`:
 
@@ -2596,29 +2704,33 @@ final class DateTimeType extends ScalarType implements TypeInterface
 }
 ```
 
-You can also check the documentation of [graphql-php](https://webonyx.github.io/graphql-php/type-definitions/scalars/#writing-custom-scalar-types).
+You can also check the documentation of
+[graphql-php](https://webonyx.github.io/graphql-php/type-definitions/scalars/#writing-custom-scalar-types).
 
-The big difference in API Platform is that the value is already serialized when it's received in your type class.
-Similarly, you would not want to denormalize your parsed value since it will be done by API Platform later.
+The big difference in API Platform is that the value is already serialized when it's received in
+your type class. Similarly, you would not want to denormalize your parsed value since it will be
+done by API Platform later.
 
 ### Custom Types config for Symfony
 
-If you use autoconfiguration (the default Symfony configuration) in your application, then you are done!
+If you use autoconfiguration (the default Symfony configuration) in your application, then you are
+done!
 
 Else, you need to tag your type class like this, if you're using Symfony :
 
 ```yaml
 # api/config/services.yaml
 services:
-  # ...
-  App\Type\Definition\DateTimeType:
-    tags:
-      - { name: api_platform.graphql.type }
+    # ...
+    App\Type\Definition\DateTimeType:
+        tags:
+            - { name: api_platform.graphql.type }
 ```
 
 Your custom type is now registered and is available in the `TypesContainer`.
 
-To use it please [modify the extracted types](#modify-the-extracted-types) or use it directly in [custom queries](#custom-queries) or [custom mutations](#custom-mutations).
+To use it please [modify the extracted types](#modify-the-extracted-types) or use it directly in
+[custom queries](#custom-queries) or [custom mutations](#custom-mutations).
 
 ### Custom Types config for Laravel
 
@@ -2644,12 +2756,13 @@ class AppServiceProvider extends ServiceProvider
 
 Your custom type is now registered and is available in the `TypesContainer`.
 
-To use it please [modify the extracted types](#modify-the-extracted-types) or use it directly in [custom queries](#custom-queries) or [custom mutations](#custom-mutations).
+To use it please [modify the extracted types](#modify-the-extracted-types) or use it directly in
+[custom queries](#custom-queries) or [custom mutations](#custom-mutations).
 
 ## Modify the Extracted Types
 
-The GraphQL schema and its types are extracted from your resources.
-In some cases, you would want to modify the extracted types for instance to use your custom ones.
+The GraphQL schema and its types are extracted from your resources. In some cases, you would want to
+modify the extracted types for instance to use your custom ones.
 
 To do so, you need to decorate the `api_platform.graphql.type_converter` service:
 
@@ -2658,9 +2771,9 @@ To do so, you need to decorate the `api_platform.graphql.type_converter` service
 ```yaml
 # api/config/services.yaml
 services:
-  # ...
-  'App\Type\TypeConverter':
-    decorates: api_platform.graphql.type_converter
+    # ...
+    'App\Type\TypeConverter':
+        decorates: api_platform.graphql.type_converter
 ```
 
 ### Laravel TypeConverter Decoration
@@ -2722,7 +2835,8 @@ final class TypeConverter implements TypeConverterInterface
 
 In this case, the `publicationDate` property of the `Book` class will have a custom `DateTime` type.
 
-You can even apply this logic for a kind of property. Replace the previous condition with something like this:
+You can even apply this logic for a kind of property. Replace the previous condition with something
+like this:
 
 ```php
 if (Type::BUILTIN_TYPE_OBJECT === $type->getBuiltinType()
@@ -2736,11 +2850,13 @@ All `DateTimeInterface` properties will have the `DateTime` type in this example
 
 ## Changing the Serialization Context Dynamically
 
-[As REST](serialization.md#changing-the-serialization-context-dynamically), it's possible to add dynamically a (de)serialization group when resolving a query or a mutation.
+[As REST](serialization.md#changing-the-serialization-context-dynamically), it's possible to add
+dynamically a (de)serialization group when resolving a query or a mutation.
 
 There are some differences though.
 
-The service is `api_platform.graphql.serializer.context_builder` and the method to override is `create`.
+The service is `api_platform.graphql.serializer.context_builder` and the method to override is
+`create`.
 
 The decorator could be like this:
 
@@ -2813,8 +2929,8 @@ final class BookContextBuilder implements SerializerContextBuilderInterface
 
 ## Export the Schema in SDL
 
-> [!WARNING]
-> This command is not yet available with Laravel, you're welcome to contribute [on GitHub](https://github.com/api-platform/core)
+> [!WARNING] This command is not yet available with Laravel, you're welcome to contribute
+> [on GitHub](https://github.com/api-platform/core)
 
 You may need to export your schema in SDL (Schema Definition Language) to import it in some tools.
 
@@ -2824,7 +2940,8 @@ The `api:graphql:export` command is provided to do so:
     bin/console api:graphql:export -o path/to/your/volume/schema.graphql
 ```
 
-Since the command prints the schema to the output if you don't use the `-o` option, you can also use this command:
+Since the command prints the schema to the output if you don't use the `-o` option, you can also use
+this command:
 
 ```shell-session
     bin/console api:graphql:export > path/in/host/schema.graphql
@@ -2832,10 +2949,11 @@ Since the command prints the schema to the output if you don't use the `-o` opti
 
 ## Handling File Upload with Symfony
 
-If you use Symfony, please follow the [file upload documentation](../symfony/file-upload.md), only the differences
-will be documented here.
+If you use Symfony, please follow the [file upload documentation](../symfony/file-upload.md), only
+the differences will be documented here.
 
-The file upload with GraphQL follows the [GraphQL multipart request specification](https://github.com/jaydenseric/graphql-multipart-request-spec).
+The file upload with GraphQL follows the
+[GraphQL multipart request specification](https://github.com/jaydenseric/graphql-multipart-request-spec).
 
 You can also upload multiple files at the same time.
 
@@ -2904,9 +3022,10 @@ class MediaObject
 }
 ```
 
-As you can see, a dedicated type `Upload` is used in the argument of the `upload` mutation.
-If you need to upload multiple files, replace `'file' => ['type' => 'Upload!', 'description' => 'The file to upload']`
-with `'files' => ['type' => '[Upload!]!', 'description' => 'Files to upload']`.
+As you can see, a dedicated type `Upload` is used in the argument of the `upload` mutation. If you
+need to upload multiple files, replace
+`'file' => ['type' => 'Upload!', 'description' => 'The file to upload']` with
+`'files' => ['type' => '[Upload!]!', 'description' => 'Files to upload']`.
 
 You don't need to create it, it's provided in API Platform.
 
@@ -2942,6 +3061,29 @@ final class CreateMediaObjectResolver implements MutationResolverInterface
 
 For handling the upload of multiple files, iterate over `$context['args']['input']['files']`.
 
+### Normalization of MediaObjects
+
+In the constructor of the `MediaObjectNormalizer`, the injected Normalizer must be replaced with the
+one from the `api_platform.graphql.normalizer.item` from GraphQL:
+
+````php
+<?php
+// api/src/Serializer/MediaObjectNormalizer.php
+
+use App\Storage\StorageInterface;
+use ApiPlatform\GraphQl\Serializer\ItemNormalizer;
+
+final readonly class MediaObjectNormalizer
+{
+    public function __construct(
+        #[Autowire(service: ItemNormalizer::class)]
+        private NormalizerInterface $normalizer,
+        private StorageInterface $storage
+    ) {}
+
+    // ...
+}
+
 ### Using the `createMediaObject` Mutation
 
 Following the specification, the upload must be done with a `multipart/form-data` content type.
@@ -2956,7 +3098,7 @@ api_platform:
   formats:
     # ...
     multipart: ['multipart/form-data']
-```
+````
 
 #### Modifying allowed formats with Laravel
 
@@ -2972,17 +3114,19 @@ return [
 ];
 ```
 
-You can now upload files using the `createMediaObject` mutation, for details check [GraphQL multipart request specification](https://github.com/jaydenseric/graphql-multipart-request-spec)
-and for an example implementation for the Apollo client check out [Apollo Upload Client](https://github.com/jaydenseric/apollo-upload-client).
+You can now upload files using the `createMediaObject` mutation, for details check
+[GraphQL multipart request specification](https://github.com/jaydenseric/graphql-multipart-request-spec)
+and for an example implementation for the Apollo client check out
+[Apollo Upload Client](https://github.com/jaydenseric/apollo-upload-client).
 
 ```graphql
 mutation CreateMediaObject($file: Upload!) {
-  uploadMediaObject(input: { file: $file }) {
-    mediaObject {
-      id
-      contentUrl
+    uploadMediaObject(input: { file: $file }) {
+        mediaObject {
+            id
+            contentUrl
+        }
     }
-  }
 }
 ```
 
@@ -2990,7 +3134,8 @@ mutation CreateMediaObject($file: Upload!) {
 
 By default, API Platform generates descriptions for mutations and subscriptions.
 
-If you want to change them, or add some for queries, you can do it in the resource declaration, at the operation level, with the `description` attribute.
+If you want to change them, or add some for queries, you can do it in the resource declaration, at
+the operation level, with the `description` attribute.
 
 For instance, if you want to change the description of the `create` mutation:
 

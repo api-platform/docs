@@ -1,8 +1,12 @@
 # Security with Symfony
 
-The API Platform security layer is built on top of the [Symfony Security component](https://symfony.com/doc/current/security.html).
-All its features, including [global access control directives](https://symfony.com/doc/current/security.html#securing-url-patterns-access-control) are supported.
-API Platform also provides convenient [access control expressions](https://symfony.com/doc/current/expressions.html#security-complex-access-controls-with-expressions) which you can apply at resource and operation level.
+The API Platform security layer is built on top of the
+[Symfony Security component](https://symfony.com/doc/current/security.html). All its features,
+including
+[global access control directives](https://symfony.com/doc/current/security.html#securing-url-patterns-access-control)
+are supported. API Platform also provides convenient
+[access control expressions](https://symfony.com/doc/current/expressions.html#security-complex-access-controls-with-expressions)
+which you can apply at resource and operation level.
 
 <p align="center" class="symfonycasts"><a href="https://symfonycasts.com/screencast/api-platform-security/?cid=apip"><img src="../symfony/images/symfonycasts-player.png" alt="Security screencast"><br>Watch the Security screencast</a></p>
 
@@ -49,15 +53,15 @@ class Book
 ```yaml
 # api/config/api_platform/resources.yaml
 resources:
-  App\Entity\Book:
-    security: 'is_granted("ROLE_USER")'
-    operations:
-      ApiPlatform\Metadata\GetCollection: ~
-      ApiPlatform\Metadata\Post:
-        security: 'is_granted("ROLE_ADMIN")'
-      ApiPlatform\Metadata\Get: ~
-      ApiPlatform\Metadata\Put:
-        security: 'is_granted("ROLE_ADMIN") or object.owner == user'
+    App\Entity\Book:
+        security: 'is_granted("ROLE_USER")'
+        operations:
+            ApiPlatform\Metadata\GetCollection: ~
+            ApiPlatform\Metadata\Post:
+                security: 'is_granted("ROLE_ADMIN")'
+            ApiPlatform\Metadata\Get: ~
+            ApiPlatform\Metadata\Put:
+                security: 'is_granted("ROLE_ADMIN") or object.owner == user'
 ```
 
 </code-selector>
@@ -88,9 +92,9 @@ class Book
 ```yaml
 # api/config/api_platform/resources/Book.yaml
 properties:
-  App\Entity\Book:
-    adminOnlyProperty:
-      security: 'is_granted("ROLE_ADMIN")'
+    App\Entity\Book:
+        adminOnlyProperty:
+            security: 'is_granted("ROLE_ADMIN")'
 ```
 
 </code-selector>
@@ -98,25 +102,33 @@ properties:
 In this example:
 
 - The user must be logged in to interact with `Book` resources (configured at the resource level)
-- Only users having [the role](https://symfony.com/doc/current/security.html#roles) `ROLE_ADMIN` can create a new resource (configured on the `post` operation)
-- Only users having the `ROLE_ADMIN` or owning the current object can replace an existing book (configured on the `put` operation)
-- Only users having the `ROLE_ADMIN` can view or modify the `adminOnlyProperty` property. Only users having the `ROLE_ADMIN` can create a new resource specifying `adminOnlyProperty` value.
-- Only users that are granted the `UPDATE` attribute on the book (via a voter) can write to the field
+- Only users having [the role](https://symfony.com/doc/current/security.html#roles) `ROLE_ADMIN` can
+  create a new resource (configured on the `post` operation)
+- Only users having the `ROLE_ADMIN` or owning the current object can replace an existing book
+  (configured on the `put` operation)
+- Only users having the `ROLE_ADMIN` can view or modify the `adminOnlyProperty` property. Only users
+  having the `ROLE_ADMIN` can create a new resource specifying `adminOnlyProperty` value.
+- Only users that are granted the `UPDATE` attribute on the book (via a voter) can write to the
+  field
 
 Available variables are:
 
 - `user`: the current logged in object, if any
-- `object`: the current resource class during denormalization, the current resource during normalization, or collection of resources for collection operations
-- `previous_object`: (`securityPostDenormalize` only) a clone of `object`, before modifications were made - this is `null` for create operations
+- `object`: the current resource class during denormalization, the current resource during
+  normalization, or collection of resources for collection operations
+- `previous_object`: (`securityPostDenormalize` only) a clone of `object`, before modifications were
+  made - this is `null` for create operations
 - `request` (only at the resource level): the current request
 
-Access control checks in the `security` attribute are always executed before the [denormalization step](../core/serialization.md).
-It means that for `PUT` or `PATCH` requests, `object` doesn't contain the value submitted by the user, but values currently stored in [the persistence layer](../core/state-processors.md).
+Access control checks in the `security` attribute are always executed before the
+[denormalization step](../core/serialization.md). It means that for `PUT` or `PATCH` requests,
+`object` doesn't contain the value submitted by the user, but values currently stored in
+[the persistence layer](../core/state-processors.md).
 
 ## Executing Access Control Rules After Denormalization
 
-In some cases, it might be useful to execute a security after the denormalization step.
-To do so, use the `securityPostDenormalize` attribute:
+In some cases, it might be useful to execute a security after the denormalization step. To do so,
+use the `securityPostDenormalize` attribute:
 
 <code-selector>
 
@@ -141,31 +153,40 @@ class Book
 ```yaml
 # api/config/api_platform/resources.yaml
 resources:
-  App\Entity\Book:
-    operations:
-      ApiPlatform\Metadata\Get: ~
-      ApiPlatform\Metadata\GetCollectionPut:
-        securityPostDenormalize: "is_granted('ROLE_ADMIN') or (object.owner == user and previous_object.owner == user)"
-    # ...
+    App\Entity\Book:
+        operations:
+            ApiPlatform\Metadata\Get: ~
+            ApiPlatform\Metadata\GetCollectionPut:
+                securityPostDenormalize:
+                    "is_granted('ROLE_ADMIN') or (object.owner == user and previous_object.owner ==
+                    user)"
+        # ...
 ```
 
 </code-selector>
 
-This time, the `object` variable contains data that have been extracted from the HTTP request body during the denormalization process.
-However, the object is not persisted yet.
+This time, the `object` variable contains data that have been extracted from the HTTP request body
+during the denormalization process. However, the object is not persisted yet.
 
-Additionally, in some cases you need to perform security checks on the original data. For example here, only the actual owner should be allowed to edit their book. In these cases, you can use the `previous_object` variable which contains the object that was read from the state provider.
+Additionally, in some cases you need to perform security checks on the original data. For example
+here, only the actual owner should be allowed to edit their book. In these cases, you can use the
+`previous_object` variable which contains the object that was read from the state provider.
 
-The value in the `previous_object` variable is cloned from the original object.
-Note that, by default, this clone is not a deep one (it doesn't clone relationships, relationships are references).
-To make a deep clone, [implement `__clone` method](https://www.php.net/manual/en/language.oop5.cloning.php) in the concerned resource class.i
+The value in the `previous_object` variable is cloned from the original object. Note that, by
+default, this clone is not a deep one (it doesn't clone relationships, relationships are
+references). To make a deep clone,
+[implement `__clone` method](https://www.php.net/manual/en/language.oop5.cloning.php) in the
+concerned resource class.i
 
 ## Controlling the response on `securityPostDenormalize`
 
-By default, when a request for a write operation is made that doesn't meet the `securityPostDenormalize` requirements (i.e. the expression returns `false`), the values of those protected properties in the
-request data are silently discarded and not set on the object. Any properties the user does have permission to update will be updated and the request succeeds.
+By default, when a request for a write operation is made that doesn't meet the
+`securityPostDenormalize` requirements (i.e. the expression returns `false`), the values of those
+protected properties in the request data are silently discarded and not set on the object. Any
+properties the user does have permission to update will be updated and the request succeeds.
 
-You can optionally instruct API Platform to instead return a 403 Access Denied response in such cases, by adding `throw_on_access_denied` as an extra property with a value of `true`:
+You can optionally instruct API Platform to instead return a 403 Access Denied response in such
+cases, by adding `throw_on_access_denied` as an extra property with a value of `true`:
 
 <code-selector>
 
@@ -191,14 +212,16 @@ class Book
 ```yaml
 # api/config/api_platform/resources.yaml
 resources:
-  App\Entity\Book:
-    operations:
-      ApiPlatform\Metadata\Get: ~
-      ApiPlatform\Metadata\GetCollectionPut:
-        securityPostDenormalize: "is_granted('ROLE_ADMIN') or (object.owner == user and previous_object.owner == user)"
-        extraProperties:
-          throw_on_access_denied: true
-    # ...
+    App\Entity\Book:
+        operations:
+            ApiPlatform\Metadata\Get: ~
+            ApiPlatform\Metadata\GetCollectionPut:
+                securityPostDenormalize:
+                    "is_granted('ROLE_ADMIN') or (object.owner == user and previous_object.owner ==
+                    user)"
+                extraProperties:
+                    throw_on_access_denied: true
+        # ...
 ```
 
 ```xml
@@ -225,10 +248,11 @@ resources:
 
 </code-selector>
 
-
 ## Hooking Custom Permission Checks Using Voters
 
-The easiest and recommended way to hook custom access control logic is [to write Symfony Voter classes](https://symfony.com/doc/current/security/voters.html). Your custom voters will automatically be used in security expressions through the `is_granted()` function.
+The easiest and recommended way to hook custom access control logic is
+[to write Symfony Voter classes](https://symfony.com/doc/current/security/voters.html). Your custom
+voters will automatically be used in security expressions through the `is_granted()` function.
 
 In order to give the current `object` to your voter, use the expression `is_granted('READ', object)`
 
@@ -263,23 +287,26 @@ class Book
 ```yaml
 # api/config/api_platform/resources/Book.yaml
 App\Entity\Book:
-  security: 'is_granted("ROLE_USER")'
-  operations:
-    ApiPlatform\Metadata\GetCollection: ~
-    ApiPlatform\Metadata\Post:
-      securityPostDenormalize: 'is_granted("BOOK_CREATE", object)'
-    ApiPlatform\Metadata\Get:
-      security: 'is_granted("BOOK_READ", object)'
-    ApiPlatform\Metadata\Put:
-      security: 'is_granted("BOOK_EDIT", object)'
-    ApiPlatform\Metadata\Delete:
-      security: 'is_granted("BOOK_DELETE", object)'
+    security: 'is_granted("ROLE_USER")'
+    operations:
+        ApiPlatform\Metadata\GetCollection: ~
+        ApiPlatform\Metadata\Post:
+            securityPostDenormalize: 'is_granted("BOOK_CREATE", object)'
+        ApiPlatform\Metadata\Get:
+            security: 'is_granted("BOOK_READ", object)'
+        ApiPlatform\Metadata\Put:
+            security: 'is_granted("BOOK_EDIT", object)'
+        ApiPlatform\Metadata\Delete:
+            security: 'is_granted("BOOK_DELETE", object)'
 ```
 
 </code-selector>
 
-Please note that if you use both `security: "..."` and then `"post" => ["securityPostDenormalize" => "..."]`, the `security` on top level is called first, and after `securityPostDenormalize`. This could lead to unwanted behaviour, so avoid using both of them simultaneously.
-If you need to use `securityPostDenormalize`, consider adding `security` for the other operations instead of the global one.
+Please note that if you use both `security: "..."` and then
+`"post" => ["securityPostDenormalize" => "..."]`, the `security` on top level is called first, and
+after `securityPostDenormalize`. This could lead to unwanted behaviour, so avoid using both of them
+simultaneously. If you need to use `securityPostDenormalize`, consider adding `security` for the
+other operations instead of the global one.
 
 Create a _BookVoter_ with the `bin/console make:voter` command:
 
@@ -335,14 +362,19 @@ class BookVoter extends Voter
 }
 ```
 
-_Note 1: When using Voters on POST methods: The voter needs an `$attribute` and `$subject` as input parameter, so you have to use the `securityPostDenormalize` (i.e. `"post" = { "securityPostDenormalize" = "is_granted('BOOK_CREATE', object)" }` ) because the object does not exist before denormalization (it is not created, yet.)_
+_Note 1: When using Voters on POST methods: The voter needs an `$attribute` and `$subject` as input
+parameter, so you have to use the `securityPostDenormalize` (i.e.
+`"post" = { "securityPostDenormalize" = "is_granted('BOOK_CREATE', object)" }` ) because the object
+does not exist before denormalization (it is not created, yet.)_
 
-_Note 2: You can't use Voters on the collection GET method, use [Collection Filters](https://api-platform.com/docs/core/security/#filtering-collection-according-to-the-current-user-permissions) instead._
+_Note 2: You can't use Voters on the collection GET method, use
+[Collection Filters](https://api-platform.com/docs/core/security/#filtering-collection-according-to-the-current-user-permissions)
+instead._
 
 ## Configuring the Access Control Error Message
 
-By default when API requests are denied, you will get the "Access Denied" message.
-You can change it by configuring the `securityMessage` attribute or the `securityPostDenormalizeMessage` attribute.
+By default when API requests are denied, you will get the "Access Denied" message. You can change it
+by configuring the `securityMessage` attribute or the `securityPostDenormalizeMessage` attribute.
 
 For example:
 
@@ -384,36 +416,47 @@ class Book
 ```yaml
 # api/config/api_platform/resources.yaml
 resources:
-  App\Entity\Book:
-    security: 'is_granted("ROLE_USER")'
-    operations:
-      ApiPlatform\Metadata\Post:
-        security: 'is_granted("ROLE_ADMIN")'
-        securityMessage: 'Only admins can add books.'
-      ApiPlatform\Metadata\Get:
-        security: 'is_granted("ROLE_USER") and object.owner == user'
-        securityMessage: 'Sorry, but you are not the book owner.'
-      ApiPlatform\Metadata\Put:
-        securityPostDenormalize: "is_granted('ROLE_ADMIN') or (object.owner == user and previous_object.owner == user)"
-        securityPostDenormalizeMessage: 'Sorry, but you are not the actual book owner.'
-    # ...
+    App\Entity\Book:
+        security: 'is_granted("ROLE_USER")'
+        operations:
+            ApiPlatform\Metadata\Post:
+                security: 'is_granted("ROLE_ADMIN")'
+                securityMessage: "Only admins can add books."
+            ApiPlatform\Metadata\Get:
+                security: 'is_granted("ROLE_USER") and object.owner == user'
+                securityMessage: "Sorry, but you are not the book owner."
+            ApiPlatform\Metadata\Put:
+                securityPostDenormalize:
+                    "is_granted('ROLE_ADMIN') or (object.owner == user and previous_object.owner ==
+                    user)"
+                securityPostDenormalizeMessage: "Sorry, but you are not the actual book owner."
+        # ...
 ```
 
 </code-selector>
 
 ## Filtering Collection According to the Current User Permissions
 
-Filtering collections according to the role or permissions of the current user must be done directly at [the state provider](../core/state-providers.md) level. For instance, when using the built-in adapters for Doctrine ORM, MongoDB and ElasticSearch, removing entries from a collection should be done using [extensions](../core/extensions.md).
-Extensions allow to customize the generated DQL/Mongo/Elastic/... query used to retrieve the collection (e.g. add `WHERE` clauses depending of the currently connected user) instead of using access control expressions.
-As extensions are services, you can [inject the Symfony `Security` class](https://symfony.com/doc/current/security.html#b-fetching-the-user-from-a-service) into them to access to current user's roles and permissions.
+Filtering collections according to the role or permissions of the current user must be done directly
+at [the state provider](../core/state-providers.md) level. For instance, when using the built-in
+adapters for Doctrine ORM, MongoDB and ElasticSearch, removing entries from a collection should be
+done using [extensions](../core/extensions.md). Extensions allow to customize the generated
+DQL/Mongo/Elastic/... query used to retrieve the collection (e.g. add `WHERE` clauses depending of
+the currently connected user) instead of using access control expressions. As extensions are
+services, you can
+[inject the Symfony `Security` class](https://symfony.com/doc/current/security.html#b-fetching-the-user-from-a-service)
+into them to access to current user's roles and permissions.
 
-If you use [custom state providers](../core/state-providers.md), you'll have to implement the filtering logic according to the persistence layer you rely on.
+If you use [custom state providers](../core/state-providers.md), you'll have to implement the
+filtering logic according to the persistence layer you rely on.
 
 ## Disabling Operations
 
-To completely disable some operations from your application, refer to the [disabling operations](../core/operations.md#enabling-and-disabling-operations)
-section.
+To completely disable some operations from your application, refer to the
+[disabling operations](../core/operations.md#enabling-and-disabling-operations) section.
 
 ## Changing Serialization Groups Depending of the Current User
 
-See [how to dynamically change](../core/serialization.md#changing-the-serialization-context-dynamically) the current Serializer context according to the current logged-in user.
+See
+[how to dynamically change](../core/serialization.md#changing-the-serialization-context-dynamically)
+the current Serializer context according to the current logged-in user.

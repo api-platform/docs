@@ -1,10 +1,15 @@
 # User Entity with Symfony
 
-This documentation is based on the [official Symfony Documentation](https://symfony.com/doc/current/security/user_providers.html) with some API Platform integrations.
+This documentation is based on the
+[official Symfony Documentation](https://symfony.com/doc/current/security/user_providers.html) with
+some API Platform integrations.
 
 ## Creating the Entity and Repository
 
-You can follow the [official Symfony Documentation](https://symfony.com/doc/current/security/user_providers.html) and add the API Platform attributes (e.g. `#[ApiResource]`) by your own, or just use the following entity file and modify it to your needs:
+You can follow the
+[official Symfony Documentation](https://symfony.com/doc/current/security/user_providers.html) and
+add the API Platform attributes (e.g. `#[ApiResource]`) by your own, or just use the following
+entity file and modify it to your needs:
 
 ```php
 <?php
@@ -219,8 +224,9 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
 
 ## Creating and Updating User Password
 
-There's no built-in way for hashing the plain password on `POST`, `PUT` or `PATCH`.
-Happily you can use the API Platform [state processors](../core/state-processors.md) for auto-hashing plain passwords.
+There's no built-in way for hashing the plain password on `POST`, `PUT` or `PATCH`. Happily you can
+use the API Platform [state processors](../core/state-processors.md) for auto-hashing plain
+passwords.
 
 First create a new state processor:
 
@@ -276,11 +282,11 @@ Then bind it to the ORM persist processor:
 # api/config/services.yaml
 
 services:
-  # ...
+    # ...
 
-  App\State\UserPasswordHasher:
-    bind:
-      $processor: '@api_platform.doctrine.orm.state.persist_processor'
+    App\State\UserPasswordHasher:
+        bind:
+            $processor: "@api_platform.doctrine.orm.state.persist_processor"
 ```
 
 You may have wondered about the following lines in our entity file we created before:
@@ -295,4 +301,5 @@ You may have wondered about the following lines in our entity file we created be
     ],
 ```
 
-This just means we want to run the new created state processor to these specific operations. So we're done. Create a new user, change the password and enjoy!
+This just means we want to run the new created state processor to these specific operations. So
+we're done. Create a new user, change the password and enjoy!

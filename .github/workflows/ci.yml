@@ -9,29 +9,12 @@ permissions:
   contents: read
 
 jobs:
-  build:
-    name: Lint
+  proselint:
+    name: Prose Lint
     runs-on: ubuntu-latest
-
-    permissions:
-      contents: read
-      packages: read
-      statuses: write
-
     steps:
-      - name: Checkout
+      - name: Checkout code
         uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-
-      - name: Lint
-        uses: super-linter/super-linter/slim@v7
-        env:
-          VALIDATE_EDITORCONFIG: false
-          VALIDATE_JSCPD: false
-          VALIDATE_MARKDOWN_PRETTIER: false
-          DEFAULT_BRANCH: "origin/4.1"
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - uses: actions/cache@v4
         with:
@@ -45,3 +28,40 @@ jobs:
 
       - name: Run Proselint
         run: find . -name '*.md' -exec proselint {} \;
+  lint:
+    name: Lint
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - uses: DavidAnson/markdownlint-cli2-action@v21
+        with:
+          globs: '**/*.md'
+
+  prettier-format:
+    name: Prettier
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Prettier Dry Run
+        run: |
+          npx prettier --check "**/*.md" || {
+            echo "::error title=Formatting Failed::Some files are not formatted correctly."
+            echo "-------------------------------------------------------"
+            echo "❌ CHECK FAILED"
+            echo "To fix these issues, run the following command locally:"
+            echo ""
+            echo "    npx prettier --write \"**/*.md\" --prose-wrap always"
+            echo ""
+            echo "-------------------------------------------------------"
+            exit 1
+            }

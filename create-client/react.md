@@ -2,8 +2,8 @@
 
 ![List screenshot](images/react/create-client-react-list.png)
 
-The React generator scaffolds a Single Page Application or a Progressive Web App built with battle-tested libraries
-from the ecosystem:
+The React generator scaffolds a Single Page Application or a Progressive Web App built with
+battle-tested libraries from the ecosystem:
 
 - [React](https://reactjs.org/)
 - [React Router](https://reactrouter.com/)
@@ -42,8 +42,8 @@ npm run dev
 npm init @api-platform/client https://demo.api-platform.com src/ -- --generator react --resource book
 ```
 
-Replace the URL by the entrypoint of your Hydra-enabled API.
-You can also use an OpenAPI documentation with `-f openapi3`.
+Replace the URL by the entrypoint of your Hydra-enabled API. You can also use an OpenAPI
+documentation with `-f openapi3`.
 
 Omit the resource flag to generate files for all resource types exposed by the API.
 

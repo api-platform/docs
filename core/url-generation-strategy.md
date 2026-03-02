@@ -6,21 +6,22 @@ For instance, in JSON-LD, you will get a collection like this:
 
 ```json
 {
-  "@context": "/contexts/Book",
-  "@id": "/books",
-  "@type": "Collection",
-  "member": [
-    {
-      "@id": "/books/1",
-      "@type": "https://schema.org/Book",
-      "name": "My awesome book"
-    }
-  ],
-  "totalItems": 1
+    "@context": "/contexts/Book",
+    "@id": "/books",
+    "@type": "Collection",
+    "member": [
+        {
+            "@id": "/books/1",
+            "@type": "https://schema.org/Book",
+            "name": "My awesome book"
+        }
+    ],
+    "totalItems": 1
 }
 ```
 
-You may want to use absolute URLs (for instance if resources are used in another API) or network paths instead.
+You may want to use absolute URLs (for instance if resources are used in another API) or network
+paths instead.
 
 ## Configure URL Generation Globally
 
@@ -31,9 +32,10 @@ It can be configured globally using one of the configurations below:
 ```yaml
 # api/config/packages/api_platform.yaml
 api_platform:
-  defaults:
-    url_generation_strategy: !php/const ApiPlatform\Metadata\UrlGeneratorInterface::ABS_URL
+    defaults:
+        url_generation_strategy: !php/const ApiPlatform\Metadata\UrlGeneratorInterface::ABS_URL
 ```
+
 ### Configure URL Generation Globally using Laravel
 
 ```php
@@ -73,8 +75,8 @@ class Book
 # api/config/api_platform/resources.yaml
 # The YAML syntax is only supported for Symfony
 resources:
-  App\ApiResource\Book:
-    urlGenerationStrategy: !php/const ApiPlatform\Api\UrlGeneratorInterface::ABS_URL
+    App\ApiResource\Book:
+        urlGenerationStrategy: !php/const ApiPlatform\Api\UrlGeneratorInterface::ABS_URL
 ```
 
 ```xml
@@ -97,16 +99,16 @@ For the above configuration, the collection will be like this:
 
 ```json
 {
-  "@context": "http://example.com/contexts/Book",
-  "@id": "http://example.com/books",
-  "@type": "Collection",
-  "member": [
-    {
-      "@id": "http://example.com/books/1",
-      "@type": "https://schema.org/Book",
-      "name": "My awesome book"
-    }
-  ],
-  "totalItems": 1
+    "@context": "http://example.com/contexts/Book",
+    "@id": "http://example.com/books",
+    "@type": "Collection",
+    "member": [
+        {
+            "@id": "http://example.com/books/1",
+            "@type": "https://schema.org/Book",
+            "name": "My awesome book"
+        }
+    ],
+    "totalItems": 1
 }
 ```

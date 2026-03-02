@@ -1,18 +1,23 @@
 # The API Platform Core Library
 
-API Platform Core is an easy-to-use and powerful library for creating [hypermedia-driven REST APIs](https://en.wikipedia.org/wiki/HATEOAS).
-It is a component of the [API Platform framework](https://api-platform.com).
+API Platform Core is an easy-to-use and powerful library for creating
+[hypermedia-driven REST APIs](https://en.wikipedia.org/wiki/HATEOAS). It is a component of the
+[API Platform framework](https://api-platform.com).
 
-It embraces [JSON for Linked Data (JSON-LD)](https://json-ld.org/) and [Hydra Core Vocabulary](https://www.hydra-cg.com/) web
-standards but also supports [OpenAPI (formerly known as Swagger)](https://www.openapis.org/), [JSON:API](https://jsonapi.org/), [HAL](https://stateless.co/hal_specification.html), XML, JSON, CSV and YAML.
+It embraces [JSON for Linked Data (JSON-LD)](https://json-ld.org/) and
+[Hydra Core Vocabulary](https://www.hydra-cg.com/) web standards but also supports
+[OpenAPI (formerly known as Swagger)](https://www.openapis.org/), [JSON:API](https://jsonapi.org/),
+[HAL](https://stateless.co/hal_specification.html), XML, JSON, CSV and YAML.
 
-Build a working and fully featured CRUD API in minutes. Leverage the awesome features of the tool to develop complex and
-high-performance API-first projects.
+Build a working and fully featured CRUD API in minutes. Leverage the awesome features of the tool to
+develop complex and high-performance API-first projects.
 
-If you are starting a new project, the easiest way to get API Platform up is to install
-API Platform using [API Platform for Symfony](../symfony/index.md) or [API Platform for Laravel](../laravel/index.md).
+If you are starting a new project, the easiest way to get API Platform up is to install API Platform
+using [API Platform for Symfony](../symfony/index.md) or
+[API Platform for Laravel](../laravel/index.md).
 
-Alternatively, it's possible to [bootstrap the API Platform core library manually](../core/bootstrap.md).
+Alternatively, it's possible to
+[bootstrap the API Platform core library manually](../core/bootstrap.md).
 
 ![Screenshot](../symfony/images/swagger-ui-1.png)
 
@@ -31,7 +36,8 @@ Here is the fully featured REST API you'll get in minutes:
 - [Validation](validation.md) using the Symfony Validator Component (with group support)
 - Advanced [authentication and authorization](security.md) rules
 - Errors serialization (Hydra and the [RFC 7807](https://tools.ietf.org/html/rfc7807) are supported)
-- Advanced [serialization](serialization.md) thanks to the Symfony Serializer Component (groups support, relation embedding, max depth...)
+- Advanced [serialization](serialization.md) thanks to the Symfony Serializer Component (groups
+  support, relation embedding, max depth...)
 - Automatic route registration
 - Automatic entry point generation giving access to all resources
 - [User Management using Symfony](../symfony/user.md)
@@ -40,10 +46,13 @@ Here is the fully featured REST API you'll get in minutes:
 
 Everything is fully customizable through a powerful [event system](events.md) and strong OOP.
 
-This bundle is extensively tested (unit and functional). The [`Fixtures/` directory](https://github.com/api-platform/core/tree/main/tests/Fixtures) contains a working app covering all library features.
+This bundle is extensively tested (unit and functional). The
+[`Fixtures/` directory](https://github.com/api-platform/core/tree/main/tests/Fixtures) contains a
+working app covering all library features.
 
 ## Symfony Screencasts
 
 <p align="center" class="symfonycasts"><a href="https://symfonycasts.com/tracks/rest?cid=apip#api-platform-3"><img src="../symfony/images/symfonycasts-player.png" alt="SymfonyCasts, API Platform screencasts"></a></p>
 
-The easiest and funniest way to learn how to use API Platform for Symfony is to watch [the more than 60 screencasts available on SymfonyCasts](https://symfonycasts.com/tracks/rest?cid=apip#api-platform-3)!
+The easiest and funniest way to learn how to use API Platform for Symfony is to watch
+[the more than 60 screencasts available on SymfonyCasts](https://symfonycasts.com/tracks/rest?cid=apip#api-platform-3)!

@@ -4,15 +4,17 @@ To make the admin faster and greener, you can make some changes to your API.
 
 ## Retrieve All Relations in One Request
 
-By default, if your relations are not embedded and if you decide to display some fields belonging to relations in your resource list,
-the admin will fetch the relations one by one.
+By default, if your relations are not embedded and if you decide to display some fields belonging to
+relations in your resource list, the admin will fetch the relations one by one.
 
 In this case, it can be improved by doing only one request for all the related resources instead.
 
-To do so, you need to make sure the [search filter](../core/doctrine-filters.md#search-filter) is enabled for the identifier of the related resource.
+To do so, you need to make sure the [search filter](../core/doctrine-filters.md#search-filter) is
+enabled for the identifier of the related resource.
 
-For instance, if you have a `book` resource having a relation to `author` resources and you display the author names on your book list,
-you can make sure the authors are retrieved in one go by writing:
+For instance, if you have a `book` resource having a relation to `author` resources and you display
+the author names on your book list, you can make sure the authors are retrieved in one go by
+writing:
 
 ```php
 <?php
@@ -37,7 +39,8 @@ class Author
 }
 ```
 
-Instead of issuing a separate request for each author, the admin will now fetch all the authors in one go, with a request similar to the following:
+Instead of issuing a separate request for each author, the admin will now fetch all the authors in
+one go, with a request similar to the following:
 
 ```txt
 https://localhost/authors?

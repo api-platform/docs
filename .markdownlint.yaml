@@ -1,0 +1,13 @@
+---
+MD013:
+  line_length: 1000
+  code_blocks: false
+  tables: false
+no-inline-html:
+  allowed_elements: [a, p, img, br, code-selector, video, source, iframe, h1]
+MD046:
+  style: fenced
+MD004:
+  style: dash
+MD007:
+  indent: 4

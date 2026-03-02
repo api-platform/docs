@@ -1,21 +1,24 @@
 # Deprecating Resources and Properties (Alternative to Versioning)
 
-A best practice regarding web API development is to apply [the evolution strategy](https://phil.tech/api/2018/05/02/api-evolution-for-rest-http-apis/)
-to indicate to client applications which resource types, operations and fields are deprecated and shouldn't be used anymore.
+A best practice regarding web API development is to apply
+[the evolution strategy](https://phil.tech/api/2018/05/02/api-evolution-for-rest-http-apis/) to
+indicate to client applications which resource types, operations and fields are deprecated and
+shouldn't be used anymore.
 
-While versioning an API requires modifying all clients to upgrade, even the ones not impacted by the changes.
-It's a tedious task that should be avoided as much as possible.
+While versioning an API requires modifying all clients to upgrade, even the ones not impacted by the
+changes. It's a tedious task that should be avoided as much as possible.
 
-On the other hand, the evolution strategy (also known as versionless APIs) consists of deprecating the fields, resources
-types or operations that will be removed at some point.
+On the other hand, the evolution strategy (also known as versionless APIs) consists of deprecating
+the fields, resources types or operations that will be removed at some point.
 
-Most modern API formats including [JSON-LD / Hydra](content-negotiation.md), [GraphQL](graphql.md) and [OpenAPI](openapi.md)
-allow you to mark resources types, operations or fields as deprecated.
+Most modern API formats including [JSON-LD / Hydra](content-negotiation.md), [GraphQL](graphql.md)
+and [OpenAPI](openapi.md) allow you to mark resources types, operations or fields as deprecated.
 
 ## Deprecating Resource Classes, Operations and Properties
 
-When using API Platform, it's easy to mark a whole resource, a specific operation or a specific property as deprecated.
-All documentation formats mentioned in the introduction will then automatically take the deprecation into account.
+When using API Platform, it's easy to mark a whole resource, a specific operation or a specific
+property as deprecated. All documentation formats mentioned in the introduction will then
+automatically take the deprecation into account.
 
 To deprecate a resource class, use the `deprecationReason` attribute:
 
@@ -33,10 +36,12 @@ class Parchment
 }
 ```
 
-As you can see, to deprecate a resource, we just have to explain what the client should do to upgrade in the dedicated attribute.
+As you can see, to deprecate a resource, we just have to explain what the client should do to
+upgrade in the dedicated attribute.
 
-The deprecation will automatically be taken into account by clients supporting the previously mentioned format, including
-[Admin](../admin/index.md), clients created with [Create Client](../create-client/index.md) and the lower level
+The deprecation will automatically be taken into account by clients supporting the previously
+mentioned format, including [Admin](../admin/index.md), clients created with
+[Create Client](../create-client/index.md) and the lower level
 [api-doc-parser](https://github.com/api-platform/api-doc-parser) library.
 
 Here is how it renders for OpenAPI in the built-in Swagger UI shipped with the framework:
@@ -47,7 +52,8 @@ And now in the built-in version of GraphiQL (for GraphQL APIs):
 
 ![Deprecation shown in GraphiQL](images/deprecated-graphiql.png)
 
-You can also use this new `deprecationReason` attribute to deprecate specific [operations](operations.md):
+You can also use this new `deprecationReason` attribute to deprecate specific
+[operations](operations.md):
 
 ```php
 <?php
@@ -93,25 +99,33 @@ class Review
 # api/config/api_platform/resources/Review.yaml
 # The YAML syntax is only supported for Symfony
 properties:
-  # ...
-  App\ApiResource\Review:
     # ...
-    letter:
-      deprecationReason: 'Use the rating property instead'
+    App\ApiResource\Review:
+        # ...
+        letter:
+            deprecationReason: "Use the rating property instead"
 ```
 
 </code-selector>
 
-- With JSON-lD / Hydra, [an `owl:deprecated` annotation property](https://www.w3.org/TR/owl2-syntax/#Annotation_Properties) will be added to the appropriate data structure
-- With Swagger / OpenAPI, [a `deprecated` property](https://swagger.io/docs/specification/2-0/paths-and-operations/) will be added
-- With GraphQL, the [`isDeprecated` and `deprecationReason` properties](https://facebook.github.io/graphql/June2018/#sec-Deprecation) will be added to the schema
+- With JSON-lD / Hydra,
+  [an `owl:deprecated` annotation property](https://www.w3.org/TR/owl2-syntax/#Annotation_Properties)
+  will be added to the appropriate data structure
+- With Swagger / OpenAPI,
+  [a `deprecated` property](https://swagger.io/docs/specification/2-0/paths-and-operations/) will be
+  added
+- With GraphQL, the
+  [`isDeprecated` and `deprecationReason` properties](https://facebook.github.io/graphql/June2018/#sec-Deprecation)
+  will be added to the schema
 
 ## Setting the `Sunset` HTTP Header to Indicate When a Resource or an Operation Will Be Removed
 
-[The `Sunset` HTTP response header (RFC 8594)](https://www.rfc-editor.org/rfc/rfc8594) indicates that a URI is likely to become unresponsive at a specified point in the future.
-It is especially useful to indicate when a deprecated URL will not be available anymore.
+[The `Sunset` HTTP response header (RFC 8594)](https://www.rfc-editor.org/rfc/rfc8594) indicates
+that a URI is likely to become unresponsive at a specified point in the future. It is especially
+useful to indicate when a deprecated URL will not be available anymore.
 
-Thanks to the `sunset` attribute, API Platform makes it easy to set this header for all URLs related to a resource class:
+Thanks to the `sunset` attribute, API Platform makes it easy to set this header for all URLs related
+to a resource class:
 
 ```php
 <?php
@@ -130,8 +144,9 @@ class Parchment
 }
 ```
 
-The value of the `sunset` attribute can be any string compatible with [the `\DateTime` constructor](https://www.php.net/manual/en/datetime.construct.php).
-It will be automatically converted to a valid HTTP date.
+The value of the `sunset` attribute can be any string compatible with
+[the `\DateTime` constructor](https://www.php.net/manual/en/datetime.construct.php). It will be
+automatically converted to a valid HTTP date.
 
 It's also possible to set the `Sunset` header only for a specific [operation](operations.md):
 
@@ -154,10 +169,44 @@ class Parchment
 }
 ```
 
+### Setting the Deprecation HTTP Header to Indicate When an Operation Is Deprecated
+
+[The Deprecation HTTP Response Header Field (RFC 9745)](https://datatracker.ietf.org/doc/rfc9745/)
+indicates that a URI will be or has been deprecated. This header can be used alongside the `Sunset`
+header to provide a deprecation date and a link to relevant documentation. Additionally, the
+`deprecation` link relation can be used to point to a resource that provides further information
+about the planned or existing deprecation.
+
+To set a `Deprecation` header, use the `headers` option in the operation definition. The value of
+the `deprecation` header should be a Unix timestamp. You can also provide a `Link` header with a
+`deprecation` relation to give users more context about the deprecation:
+
+```php
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\Link;
+
+#[ApiResource(
+    operations: [
+        new GetCollection(
+            headers: [
+                'deprecation' => '1688169599', // Unix timestamp
+            ],
+            links: [
+                new Link('deprecation', 'https://developer.example.com/deprecation'),
+            ],
+        ),
+    ],
+)]
+class DeprecationHeader
+{
+    // ...
+}
+```
+
 ## Path versioning
 
-> [!NOTE]
-> REST and GraphQL architectures recommend to use deprecations instead of path versioning.
+> [!NOTE] REST and GraphQL architectures recommend to use deprecations instead of path versioning.
 
 You can prefix your URI Templates and change the representation using serialization groups:
 
@@ -181,5 +230,4 @@ class Parchment
 }
 ```
 
-> [!NOTE]
-> It's also possible to use the configuration `route_prefix` to prefix all your operations.
+> [!NOTE] It's also possible to use the configuration `route_prefix` to prefix all your operations.

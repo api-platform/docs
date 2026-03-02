@@ -1,215 +1,351 @@
 # Using Data Transfer Objects (DTOs)
 
-<p class="symfonycasts" align="center"><a href="https://symfonycasts.com/api-platform-extending?cid=apip"><img src="../symfony/images/symfonycasts-player.png" alt="Custom Resources screencast"><br>Watch the Custom Resources screencast</a></p>
+<p class="symfonycasts" align="center"><a href="https://symfonycasts.com/api-platform-extending?cid=apip"><img src="../symfony/images/symfonycasts-player.png" alt="Custom Resources screencast">
 
-As stated in [the general design considerations](design.md), in most cases [the DTO pattern](https://en.wikipedia.org/wiki/Data_transfer_object) should be implemented using an API Resource class representing the public data model exposed through the API and [a custom State Provider](state-providers.md). In such cases, the class marked with `#[ApiResource]` will act as a DTO.
+Watch the Custom Resources screencast</a></p>
 
-However, it's sometimes useful to use a specific class to represent the input or output data structure related to an operation. These techniques are useful to document your API properly (using Hydra or OpenAPI) and will often be used on `POST` operations.
+The DTO pattern isolates your public API contract from your internal data model (Entities). This
+decoupling allows you to evolve your data structure without breaking the API and provides finer
+control over validation and serialization.
 
-## Implementing a Write Operation With an Input Different From the Resource
+In API Platform, [the general design considerations](design.md) recommended pattern is
+[DTO](https://en.wikipedia.org/wiki/Data_transfer_object) as a Resource: the class marked with
+`#[ApiResource]` is the DTO, effectively becoming the "contract" of your API.
 
-Using an input, the request body will be denormalized to the input instead of your resource class.
+This reference covers three implementation strategies:
+
+- For automated CRUD operations, link a DTO Resource to an Entity:
+  [State Options](#1-the-dto-resource-state-options)
+- For automated Write operation, use input DTOs with stateOptions:
+  [Automated Mapped Inputs](#2-automated-mapped-inputs-and-outputs)
+- For specific business actions, use input DTOs with custom State Processors :
+  [Custom Business Logic](#3-custom-business-logic-custom-processor)
+
+## 1. The DTO Resource (State Options)
+
+> [!WARNING] This is a Symfony only feature in 4.2 and is not working properly without
+> symfony/object-mapper:^7.4 or symfony/object-mapper:^8.0
+
+You can map a DTO Resource directly to a Doctrine Entity using stateOptions. This automatically
+configures the built-in State Providers and Processors to fetch/persist data using the Entity and
+map it to your Resource (DTO) using the Symfony Object Mapper.
+
+> [!WARNING] You must apply the #[Map] attribute to your DTO class. This signals API Platform to use
+> the Object Mapper for transforming data between the Entity and the DTO.
+
+### The Entity
+
+First, ensure your entity is a standard Doctrine entity.
+
+```php
+// src/Entity/Book.php
+namespace App\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
+
+#[ORM\Entity]
+class Book
+{
+    #[ORM\Id, ORM\GeneratedValue, ORM\Column]
+    public private(set) int $id;
+
+    #[ORM\Column(length: 13)]
+    #[Assert\NotBlank, Assert\Isbn]
+    public string $isbn;
+
+    #[ORM\Column(length: 255)]
+    #[Assert\NotBlank, Assert\Length(max: 255)]
+    public string $title;
+
+    #[ORM\Column(length: 255)]
+    #[Assert\NotBlank, Assert\Length(max: 255)]
+    public string $description;
+
+    #[ORM\Column]
+    #[Assert\PositiveOrZero]
+    public int $price;
+}
+```
+
+### The API Resource (Main DTO)
+
+The Resource DTO handles the public representation. We use `#[Map]` to handle differences between
+the internal model (title) and the public API (name), as well as value transformations
+(`formatPrice`).
+
+```php
+// src/Api/Resource/Book.php
+namespace App\Api\Resource;
+
+use ApiPlatform\Doctrine\Orm\State\Options;
+use ApiPlatform\Metadata\ApiResource;
+use App\Entity\Book as BookEntity;
+use Symfony\Component\ObjectMapper\Attribute\Map;
+
+#[ApiResource(
+    shortName: 'Book',
+    // 1. Link this DTO to the Doctrine Entity
+    stateOptions: new Options(entityClass: BookEntity::class),
+    operations: [ /* ... defined in next sections ... */ ]
+)]
+#[Map(source: BookEntity::class)]
+final class Book
+{
+    public int $id;
+
+    // 2. Map the Entity 'title' property to the DTO 'name' property
+    #[Map(source: 'title')]
+    public string $name;
+
+    public string $description;
+
+    public string $isbn;
+
+    // 3. Use a custom static method to transform the price
+    #[Map(transform: [self::class, 'formatPrice'])]
+    public string $price;
+
+    public static function formatPrice(mixed $price, object $source): int|string
+    {
+        // Entity (int) -> DTO (string)
+        if ($source instanceof BookEntity) {
+            return number_format($price / 100, 2).'$';
+        }
+        // DTO (string) -> Entity (int)
+        if ($source instanceof self) {
+            return 100 * (int) str_replace('$', '', $price);
+        }
+        throw new \LogicException(\sprintf('Unexpected "%s" source.', $source::class));
+    }
+}
+```
+
+### Implementation Details: The Object Mapper Magic
+
+Automated mapping relies on two internal classes: `ApiPlatform\State\Provider\ObjectMapperProvider`
+and `ApiPlatform\State\Processor\ObjectMapperProcessor`.
+
+These classes act as decorators around the standard Provider/Processor chain. They are activated
+when:
+
+- The Object Mapper component is available.
+- `stateOptions` are configured with an `entityClass` (or `documentClass` for ODM).
+- The Resource (and Entity for writes) classes have the `#[Map]` attribute.
+
+#### How it works internally
+
+**Read (GET):**
+
+The `ObjectMapperProvider` delegates fetching the data to the underlying Doctrine provider (which
+returns an Entity). It then uses `$objectMapper->map($entity, $resourceClass)` to transform the
+Entity into your DTO Resource.
+
+**Write (POST/PUT/PATCH):**
+
+The `ObjectMapperProcessor` receives the deserialized Input DTO. It uses
+`$objectMapper->map($inputDto, $entityClass)` to transform the input into an Entity instance. It
+then delegates to the underlying Doctrine processor (to persist the Entity). Finally, it maps the
+persisted Entity back to the Output DTO Resource.
+
+## 2. Automated Mapped Inputs and Outputs
+
+Ideally, your read and write models should differ. You might want to expose less data in a
+collection view (Output DTO) or enforce strict validation during creation/updates (Input DTOs).
+
+### Input DTOs (Write Operations)
+
+For POST and PATCH, we define specific DTOs. The `#[Map(target: BookEntity::class)]` attribute tells
+the system to map this DTO onto the Entity class before persistence.
+
+#### CreateBook DTO
+
+```php
+// src/Api/Dto/CreateBook.php
+namespace App\Api\Dto;
+
+use App\Entity\Book as BookEntity;
+use Symfony\Component\ObjectMapper\Attribute\Map;
+use Symfony\Component\Validator\Constraints as Assert;
+
+#[Map(target: BookEntity::class)]
+final class CreateBook
+{
+    #[Assert\NotBlank, Assert\Length(max: 255)]
+    #[Map(target: 'title')] // Maps 'name' input to 'title' entity field
+    public string $name;
+
+    #[Assert\NotBlank, Assert\Length(max: 255)]
+    public string $description;
+
+    #[Assert\NotBlank, Assert\Isbn]
+    public string $isbn;
+
+    #[Assert\PositiveOrZero]
+    public int $price;
+}
+```
+
+### UpdateBook DTO
 
 ```php
 <?php
-// api/src/Dto/UserResetPasswordDto.php with Symfony or app/Dto/UserResetPasswordDto.php with Laravel
-namespace App\Dto;
+// src/Api/Dto/UpdateBook.php
+namespace App\Api\Dto;
+
+use App\Entity\Book as BookEntity;
+use Symfony\Component\ObjectMapper\Attribute\Map;
+use Symfony\Component\Validator\Constraints as Assert;
+
+#[Map(target: BookEntity::class)]
+final class UpdateBook
+{
+    #[Assert\NotBlank, Assert\Length(max: 255)]
+    #[Map(target: 'title')]
+    public string $name;
+
+    #[Assert\NotBlank, Assert\Length(max: 255)]
+    public string $description;
+}
+```
+
+#### Output DTO (Collection Read)
+
+For the `GetCollection` operation, we use a lighter DTO that exposes only essential fields.
+
+```php
+// src/Api/Dto/BookCollection.php
+namespace App\Api\Dto;
+
+use App\Entity\Book as BookEntity;
+use Symfony\Component\ObjectMapper\Attribute\Map;
+
+#[Map(source: BookEntity::class)]
+final class BookCollection
+{
+    public int $id;
+
+    #[Map(source: 'title')]
+    public string $name;
+
+    public string $isbn;
+}
+```
+
+#### Wiring it all together in the Resource
+
+In your Book resource, configure the operations to use these classes via input and output.
+
+```php
+// src/Api/Resource/Book.php
+
+#[ApiResource(
+    stateOptions: new Options(entityClass: BookEntity::class),
+    operations: [
+        new Get(),
+        // Use the specialized Output DTO for collections
+        new GetCollection(
+            output: BookCollection::class
+        ),
+        // Use the specialized Input DTO for creation
+        new Post(
+            input: CreateBook::class
+        ),
+        // Use the specialized Input DTO for updates
+        new Patch(
+            input: UpdateBook::class
+        ),
+    ]
+)]
+final class Book { /* ... */ }
+```
+
+## 3. Custom Business Logic (Custom Processor)
+
+For complex business actions (like applying a discount), standard CRUD mapping isn't enough. You
+should use a custom Processor paired with a specific Input DTO.
+
+### The Input DTO
+
+This DTO holds the data required for the specific action.
+
+```php
+// src/Api/Dto/DiscountBook.php
+namespace App\Api\Dto;
 
 use Symfony\Component\Validator\Constraints as Assert;
 
-final class UserResetPasswordDto
+final class DiscountBook
 {
-    #[Assert\Email]
-    public string $email;
+    #[Assert\Range(min: 0, max: 100)]
+    public int $percentage;
 }
 ```
 
-```php
-<?php
-// api/src/Model/User.php with Symfony or app/Model/User.php with Laravel
-namespace App\Model;
+### The Processor
 
-use ApiPlatform\Metadata\Post;
-use App\Dto\UserResetPasswordDto;
-use App\State\UserResetPasswordProcessor;
-
-#[Post(input: UserResetPasswordDto::class, processor: UserResetPasswordProcessor::class)]
-final class User {}
-```
-
-And the processor:
+The processor handles the business logic. It receives the DiscountBook DTO as $data and the loaded
+Entity (retrieved automatically via stateOptions) in the context.
 
 ```php
-<?php
-// api/src/State/UserResetPasswordProcessor.php with Symfony or app/State/UserResetPasswordProcessor.php with Laravel
+// src/State/DiscountBookProcessor.php
 namespace App\State;
 
-use App\Dto\UserResetPasswordDto;
 use ApiPlatform\Metadata\Operation;
 use ApiPlatform\State\ProcessorInterface;
+use App\Api\Resource\Book; // The Output Resource
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\ObjectMapper\ObjectMapperInterface;
 
-/**
- * @implements ProcessorInterface<UserResetPasswordDto, User>
- */
-final class UserResetPasswordProcessor implements ProcessorInterface
+final readonly class DiscountBookProcessor implements ProcessorInterface
 {
-    /**
-     * @param UserResetPasswordDto $data
-     *
-     * @throws NotFoundHttpException
-     */
-    public function process(mixed $data, Operation $operation, array $uriVariables = [], array $context = []): User
+    public function __construct(
+        // Inject the built-in Doctrine persist processor to handle saving
+        #[Autowire(service: 'api_platform.doctrine.orm.state.persist_processor')]
+        private ProcessorInterface $persistProcessor,
+        private ObjectMapperInterface $objectMapper,
+    ) {
+    }
+
+    public function process(mixed $data, Operation $operation, array $uriVariables = [], array $context = []): Book
     {
-        if ('user@example.com' === $data->email) {
-            return new User(email: $data->email, id: 1);
+        // 1. Retrieve the Entity loaded by API Platform (via stateOptions)
+        if (!$entity = $context['request']->attributes->get('read_data')) {
+            throw new NotFoundHttpException('Not Found');
         }
 
-        throw new NotFoundHttpException();
+        // 2. Apply Business Logic
+        // $data is the validated DiscountBook DTO
+        $entity->price = (int) ($entity->price * (1 - $data->percentage / 100));
+
+        // 3. Persist using the inner processor
+        $entity = $this->persistProcessor->process($entity, $operation, $uriVariables, $context);
+
+        // 4. Map the updated Entity back to the main Book Resource
+        return $this->objectMapper->map($entity, $operation->getClass());
     }
 }
 ```
 
-In some cases, using an input DTO is a way to avoid serialization groups.
+### Registering the Custom Operation
 
-## Use Symfony Messenger With an Input DTO
-
-Let's use a message that will be processed by [Symfony Messenger](https://symfony.com/components/Messenger). API Platform has an [integration with messenger](../symfony/messenger.md), to use a DTO as input you need to specify the `input` attribute:
+Finally, register the custom operation in your Book resource.
 
 ```php
-<?php
-// api/src/Model/SendMessage.php with Symfony or app/Model/SendMessage.php with Laravel
-namespace App\Model;
+// src/Api/Resource/Book.php
 
-use ApiPlatform\Metadata\Post;
-use ApiPlatform\Symfony\Messenger\Processor as MessengerProcessor;
-use App\Dto\Message;
-
-#[Post(input: Message::class, processor: MessengerProcessor::class)]
-class SendMessage {}
-```
-
-This will dispatch the `App\Dto\Message` via [Symfony Messenger](https://symfony.com/components/Messenger).
-
-## Implementing a Read Operation With an Output Different From the Resource
-
-To return another representation of your data in a [State Provider](./state-providers.md) we advise to specify the `output` attribute of the resource. Note that this technique works without any changes to the resource but your API documentation would be wrong.
-
-```php
-<?php
-// api/src/ApiResource/Book.php with Symfony or app/ApiResource/Book.php with Laravel
-namespace App\ApiResource;
-
-use ApiPlatform\Metadata\Get;
-use App\Dto\AnotherRepresentation;
-use App\State\BookRepresentationProvider;
-
-#[Get(output: AnotherRepresentation::class, provider: BookRepresentationProvider::class)]
-class Book {}
-```
-
-```php
-<?php
-// api/src/State/BookRepresentationProvider.php with Symfony or app/State/BookRepresentationProvider.php with Laravel
-namespace App\State;
-
-use App\Dto\AnotherRepresentation;
-use App\Model\Book;
-use ApiPlatform\Metadata\Operation;
-use ApiPlatform\State\ProviderInterface;
-
-/**
- * @implements ProviderInterface<AnotherRepresentation>
- */
-final class BookRepresentationProvider implements ProviderInterface
-{
-    public function provide(Operation $operation, array $uriVariables = [], array $context = []): AnotherRepresentation
-    {
-        return new AnotherRepresentation();
-    }
-}
-```
-
-## Implementing a Write Operation With an Output Different From the Resource
-
-For returning another representation of your data in a [State Processor](./state-processors.md), you should specify your processor class in
-the `processor` attribute and same for your `output`.
-
-<code-selector>
-
-```php
-<?php
-// api/src/ApiResource/Book.php with Symfony or app/ApiResource/Book.php with Laravel
-namespace App\ApiResource;
-
-use ApiPlatform\Metadata\Post;
-use App\Dto\AnotherRepresentation;
-use App\State\BookRepresentationProcessor;
-
-#[Post(output: AnotherRepresentation::class, processor: BookRepresentationProcessor::class)]
-class Book {}
-```
-
-```yaml
-# api/config/api_platform/resources.yaml
-# The YAML syntax is only supported for Symfony
-resources:
-  App\ApiResource\Book:
-    operations:
-      ApiPlatform\Metadata\Post:
-        output: App\Dto\AnotherRepresentation
-        processor: App\State\BookRepresentationProcessor
-```
-
-```xml
-<?xml version="1.0" encoding="UTF-8" ?>
-<!-- api/config/api_platform/resources.xml -->
-<!-- The XML syntax is only supported for Symfony -->
-
-<resources xmlns="https://api-platform.com/schema/metadata/resources-3.0"
-        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xsi:schemaLocation="https://api-platform.com/schema/metadata/resources-3.0
-        https://api-platform.com/schema/metadata/resources-3.0.xsd">
-    <resource class="App\Entity\Book">
-        <operations>
-            <operation class="ApiPlatform\Metadata\Post"
-                       processor="App\State\BookRepresentationProcessor"
-                       output="App\Dto\AnotherRepresentation" />
-        </operations>
-    </resource>
-</resources>
-```
-
-</code-selector>
-
-Here the `$data` attribute represents an instance of your resource.
-
-```php
-<?php
-// api/src/State/BookRepresentationProcessor.php with Symfony or app/State/BookRepresentationProcessor.php with Laravel
-
-namespace App\State;
-
-use ApiPlatform\Metadata\Operation;
-use ApiPlatform\State\ProcessorInterface;
-use App\Dto\AnotherRepresentation;
-use App\Model\Book;
-
-/**
- * @implements ProcessorInterface<Book, AnotherRepresentation>
- */
-final class BookRepresentationProcessor implements ProcessorInterface
-{
-     /**
-     * @param Book $data
-     */
-    public function process(mixed $data, Operation $operation, array $uriVariables = [], array $context = []): AnotherRepresentation
-    {
-        return new AnotherRepresentation(
-            $data->getId(),
-            $data->getTitle(),
-            // etc.
-        );
-    }
-}
+#[ApiResource(
+    operations: [
+        // ... standard operations ...
+        new Post(
+            uriTemplate: '/books/{id}/discount',
+            uriVariables: ['id'],
+            input: DiscountBook::class,
+            processor: DiscountBookProcessor::class,
+            status: 200,
+        ),
+    ]
+)]
+final class Book { /* ... */ }
 ```

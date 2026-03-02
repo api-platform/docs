@@ -1,13 +1,14 @@
 # Extending API Platform
 
-Because it handles the complex, tedious and repetitive task of creating an API infrastructure for you, API Platform lets you focus on what matters the most for the end user: the business logic.
-To do so, API Platform provides a lot of extension points you can use to hook your own code.
-Those extensions points are taken into account both by the REST and [GraphQL](graphql.md) subsystems.
+Because it handles the complex, tedious and repetitive task of creating an API infrastructure for
+you, API Platform lets you focus on what matters the most for the end user: the business logic. To
+do so, API Platform provides a lot of extension points you can use to hook your own code. Those
+extensions points are taken into account both by the REST and [GraphQL](graphql.md) subsystems.
 
 The following tables summarizes which extension point to use depending on what you want to do:
 
 | Extension Point                                                                                | Usage                                                                                                                                                                                                                               |
-|------------------------------------------------------------------------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| ---------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | [State Providers](state-providers.md)                                                          | adapters for custom persistence layers, virtual fields, custom hydration                                                                                                                                                            |
 | [Denormalizers](serialization.md)                                                              | post-process objects created from the payload sent in the HTTP request body                                                                                                                                                         |
 | [Symfony Voters](../symfony/security.md#hooking-custom-permission-checks-using-voters)         | custom authorization logic                                                                                                                                                                                                          |
@@ -20,21 +21,28 @@ The following tables summarizes which extension point to use depending on what y
 | [Messenger Handlers](../symfony/messenger.md)                                                  | create 100% custom, RPC, async, service-oriented endpoints (should be used in place of custom controllers because the messenger integration is compatible with both REST and GraphQL, while custom controllers only work with REST) |
 | [DTOs](dto.md)                                                                                 | use a specific class to represent the input or output data structure related to an operation                                                                                                                                        |
 | [Kernel Events](events.md)                                                                     | customize the HTTP request or response (REST only, other extension points must be preferred when possible)                                                                                                                          |
+| [Operations and Resources](operations.md)                                                      | use mutators to dynamically alter metadata (works for third party API endpoints)                                                                                                                                                    |
 
 ## Doctrine Specific Extension Points
 
 | Extension Point                | Usage                                                                                              |
-|--------------------------------|----------------------------------------------------------------------------------------------------|
+| ------------------------------ | -------------------------------------------------------------------------------------------------- |
 | [Extensions](extensions.md)    | Access to the query builder to change the DQL query                                                |
 | [Filters](doctrine-filters.md) | Add filters documentations (OpenAPI, GraphQL, Hydra) and automatically apply them to the DQL query |
 
 ## Leveraging the Built-in Infrastructure Using Composition
 
-While most API Platform classes are marked as `final`, built-in services are straightforward to reuse and customize [using composition](https://en.wikipedia.org/wiki/Composition_over_inheritance).
+While most API Platform classes are marked as `final`, built-in services are straightforward to
+reuse and customize [using composition](https://en.wikipedia.org/wiki/Composition_over_inheritance).
 
-For instance, if you want to send a mail after a resource has been persisted, but still want to benefit from the native Doctrine ORM [state processor](state-processors.md), use [the decorator design pattern](https://en.wikipedia.org/wiki/Decorator_pattern#PHP) to wrap the native state processor in your own class sending the mail, as demonstrated in [this example](../core/state-processors.md#creating-a-custom-state-processor).
+For instance, if you want to send a mail after a resource has been persisted, but still want to
+benefit from the native Doctrine ORM [state processor](state-processors.md), use
+[the decorator design pattern](https://en.wikipedia.org/wiki/Decorator_pattern#PHP) to wrap the
+native state processor in your own class sending the mail, as demonstrated in
+[this example](../core/state-processors.md#creating-a-custom-state-processor).
 
-To replace existing API Platform services with your decorators, [check out how to decorate services](https://symfony.com/doc/current/service_container/service_decoration.html).
+To replace existing API Platform services with your decorators,
+[check out how to decorate services](https://symfony.com/doc/current/service_container/service_decoration.html).
 
 <p align="center" class="symfonycasts"><a href="https://symfonycasts.com/screencast/api-platform-security/service-decoration?cid=apip"><img src="../symfony/images/symfonycasts-player.png" alt="Service Decoration screencast"><br>Watch the Service Decoration screencast</a></p>
 
@@ -66,9 +74,9 @@ When using Symfony, the access checker provider is used at three different stage
 - `api_platform.state_provider.access_checker.post_deserialize` decorates the `DeserializeProvider`
 - `api_platform.state_provider.access_checker` decorates the `ReadProvider`
 
-> [!NOTE]
-> For graphql use: `api_platform.graphql.state_provider.access_checker.post_deserialize`,
-> `api_platform.graphql.state_provider.access_checker.post_validate`, `api_platform.graphql.state_provider.validate` and
+> [!NOTE] For graphql use: `api_platform.graphql.state_provider.access_checker.post_deserialize`,
+> `api_platform.graphql.state_provider.access_checker.post_validate`,
+> `api_platform.graphql.state_provider.validate` and
 > `api_platform.graphql.state_provider.access_checker.after_resolver`
 
 ### Decoration Example
@@ -124,9 +132,9 @@ or in the `services.yaml` by defining:
 ```yaml
 # api/config/services.yaml
 services:
-  # ...
-  App\State\CustomRespondProcessor:
-    decorates: api_platform.state.processor.respond_processor
+    # ...
+    App\State\CustomRespondProcessor:
+        decorates: api_platform.state.processor.respond_processor
 ```
 
 And that's it!

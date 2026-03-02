@@ -2,7 +2,8 @@
 
 ## Symfony Configuration
 
-Here's the complete configuration of [API Platform for Symfony](../symfony/index.md) including default values:
+Here's the complete configuration of [API Platform for Symfony](../symfony/index.md) including
+default values:
 
 ```yaml
 # api/config/packages/api_platform.yaml
@@ -265,6 +266,13 @@ api_platform:
     # The list of enabled patch formats. The first one will be the default.
     patch_formats: []
 
+    # The list of enabled docs formats. The first one will be the default.
+    docs_formats:
+        jsonld: ['application/ld+json']
+        #jsonapi: ['application/vnd.api+json']
+        jsonopenapi: ['application/vnd.openapi+json']
+        html: ['text/html']
+
     # The list of enabled error formats. The first one will be the default.
     error_formats:
         jsonproblem:
@@ -282,109 +290,110 @@ api_platform:
 
 ### Global Resources Defaults for Symfony
 
-If you need to globally configure all the resources instead of adding configuration in each one, it's possible to do so with the `defaults` key:
+If you need to globally configure all the resources instead of adding configuration in each one,
+it's possible to do so with the `defaults` key:
 
 ```yaml
 # api/config/packages/api_platform.yaml
 api_platform:
-  defaults:
-    description: ~
-    iri: ~
-    short_name: ~
-    item_operations: ~
-    collection_operations: ~
+    defaults:
+        description: ~
+        iri: ~
+        short_name: ~
+        operations: ~
 
-    graphql: ~
+        graphql: ~
 
-    elasticsearch: ~
+        elasticsearch: ~
 
-    security: ~
-    security_message: ~
-    security_post_denormalize: ~
-    security_post_denormalize_message: ~
+        security: ~
+        security_message: ~
+        security_post_denormalize: ~
+        security_post_denormalize_message: ~
 
-    cache_headers:
-      # Automatically generate etags for API responses.
-      etag: true
+        cache_headers:
+            # Automatically generate etags for API responses.
+            etag: true
 
-      # Default value for the response max age.
-      max_age: 3600
+            # Default value for the response max age.
+            max_age: 3600
 
-      # Default value for the response shared (proxy) max age.
-      shared_max_age: 3600
+            # Default value for the response shared (proxy) max age.
+            shared_max_age: 3600
 
-      # Default values of the "Vary" HTTP header.
-      vary: ['Accept']
+            # Default values of the "Vary" HTTP header.
+            vary: ["Accept"]
 
-      invalidation:
-        xkey:
-          glue: ' '
+            invalidation:
+                xkey:
+                    glue: " "
 
-    normalization_context:
-      # Default value to omit null values in conformance with the JSON Merge Patch RFC.
-      skip_null_values: true
-    denormalization_context: ~
-    swagger_context: ~
-    openapi_context: ~
-    deprecation_reason: ~
-    fetch_partial: ~
-    force_eager: ~
-    formats: ~
-    filters: ~
-    hydra_context: ~
-    mercure: ~
-    messenger: ~
-    order: ~
+        normalization_context:
+            # Default value to omit null values in conformance with the JSON Merge Patch RFC.
+            skip_null_values: true
+        denormalization_context: ~
+        swagger_context: ~
+        openapi_context: ~
+        deprecation_reason: ~
+        fetch_partial: ~
+        force_eager: ~
+        formats: ~
+        filters: ~
+        hydra_context: ~
+        mercure: ~
+        messenger: ~
+        order: ~
 
-    # To enable or disable pagination for all resource collections.
-    pagination_enabled: true
+        # To enable or disable pagination for all resource collections.
+        pagination_enabled: true
 
-    # To allow the client to enable or disable the pagination.
-    pagination_client_enabled: false
+        # To allow the client to enable or disable the pagination.
+        pagination_client_enabled: false
 
-    # To allow the client to set the number of items per page.
-    pagination_client_items_per_page: false
+        # To allow the client to set the number of items per page.
+        pagination_client_items_per_page: false
 
-    # To allow the client to enable or disable the partial pagination.
-    pagination_client_partial: false
+        # To allow the client to enable or disable the partial pagination.
+        pagination_client_partial: false
 
-    # The default number of items per page.
-    pagination_items_per_page: 30
+        # The default number of items per page.
+        pagination_items_per_page: 30
 
-    # The maximum number of items per page.
-    pagination_maximum_items_per_page: ~
+        # The maximum number of items per page.
+        pagination_maximum_items_per_page: ~
 
-    # To allow partial pagination for all resource collections.
-    # This improves performances by skipping the `COUNT` query.
-    pagination_partial: false
+        # To allow partial pagination for all resource collections.
+        # This improves performances by skipping the `COUNT` query.
+        pagination_partial: false
 
-    # To use cursor-based pagination.
-    pagination_via_cursor: ~
+        # To use cursor-based pagination.
+        pagination_via_cursor: ~
 
-    pagination_fetch_join_collection: ~
+        pagination_fetch_join_collection: ~
 
-    route_prefix: ~
-    validation_groups: ~
-    sunset: ~
-    input: ~
-    output: ~
-    stateless: ~
-    schemes: ~
-    options: ~
-    host: ~
+        route_prefix: ~
+        validation_groups: ~
+        sunset: ~
+        input: ~
+        output: ~
+        stateless: ~
+        schemes: ~
+        options: ~
+        host: ~
 
-    # The URL generation strategy to use for IRIs
-    url_generation_strategy: !php/const ApiPlatform\Metadata\UrlGeneratorInterface::ABS_PATH
+        # The URL generation strategy to use for IRIs
+        url_generation_strategy: !php/const ApiPlatform\Metadata\UrlGeneratorInterface::ABS_PATH
 
-    # To enable collecting denormalization errors
-    collectDenormalizationErrors: false
+        # To enable collecting denormalization errors
+        collectDenormalizationErrors: false
 
-    # ...
+        # ...
 ```
 
 ## Laravel Configuration
 
-Here's the complete configuration of [API Platform for Laravel](../laravel/index.md) including default values:
+Here's the complete configuration of [API Platform for Laravel](../laravel/index.md) including
+default values:
 
 ```php
 <?php
@@ -625,33 +634,33 @@ return [
     'mercure' => [
         // Enabled by default with installed symfony/mercure-bundle.
         'enabled' => false,
-        
+
         // The URL sent in the Link HTTP header. If not set, will default to MercureBundle's default hub URL.
         'hub_url' => null,
     ],
-    
+
     'messenger' => [
         // Enabled by default with installed symfony/messenger and not installed symfony/symfony.
         'enabled' => false,
     ],
-    
+
     'elasticsearch' => [
         // To enable or disable Elasticsearch support.
         'enabled' => false,
-        
+
         // The hosts to the Elasticsearch nodes.
         'hosts' => [],
-        
+
         // The mapping between resource classes and indexes.
         'mapping' => [],
     ],
-    
+
     // The list of exceptions mapped to their HTTP status code.
     'exception_to_status' => [
         AuthenticationException::class => 401,
         AuthorizationException::class => 403
     ],
-    
+
     // The list of routes.
     'routes' => [
         // Global middleware applied to every API Platform routes
@@ -662,14 +671,14 @@ return [
     'resources' => [
         app_path('Models'),
     ],
-    
+
     // The list of enabled patch formats. The first one will be the default.
     'formats' => [
         'jsonld' => ['mime_types' => ['application/ld+json']],
         'json' => ['mime_types' => ['application/json']],
         'html' => ['mime_types' => ['text/html']],
     ],
-    
+
     // The list of enabled patch formats. The first one will be the default.
     'patch_formats' => [
         'json' => ['application/merge-patch+json'],
@@ -682,12 +691,12 @@ return [
         'jsonopenapi' => ['application/vnd.openapi+json'],
         'html' => ['text/html'],
     ],
-    
+
     // The list of enabled error formats. The first one will be the default.
     'error_formats' => [
         'jsonproblem' => ['mime_types' => ['application/problem+json']],
     ],
-    
+
     // Global resources defaults, see in the next section.
     'defaults' => [
         'pagination_enabled' => true,
@@ -705,7 +714,8 @@ return [
 
 ### Global Resources Defaults for Laravel
 
-If you need to globally configure all the resources instead of adding configuration in each one, it's possible to do so with the `defaults` key:
+If you need to globally configure all the resources instead of adding configuration in each one,
+it's possible to do so with the `defaults` key:
 
 ```php
 <?php
@@ -718,8 +728,7 @@ return [
         'description' => null,
         'iri' => null,
         'short_name' => null,
-        'item_operations' => null,
-        'collection_operations' => null,
+        'operations' => null,
 
         'graphql' => null,
 

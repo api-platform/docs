@@ -2,23 +2,28 @@
 
 ## Overview
 
-[MongoDB](https://www.mongodb.com/) is one of the most popular NoSQL document-oriented database, used for its high
-write load (useful for analytics or IoT) and high availability (easy to set replica sets with automatic failover). It
-can also shard the database easily for horizontal scalability and has a powerful query language for doing aggregation,
-text search or geospatial queries.
+[MongoDB](https://www.mongodb.com/) is one of the most popular NoSQL document-oriented database,
+used for its high write load (useful for analytics or IoT) and high availability (easy to set
+replica sets with automatic failover). It can also shard the database easily for horizontal
+scalability and has a powerful query language for doing aggregation, text search or geospatial
+queries.
 
-API Platform uses [Doctrine MongoDB ODM 2](https://www.doctrine-project.org/projects/mongodb-odm.html) and in particular
-its [aggregation builder](https://www.doctrine-project.org/projects/doctrine-mongodb-odm/en/current/reference/aggregation-builder.html)
+API Platform uses
+[Doctrine MongoDB ODM 2](https://www.doctrine-project.org/projects/mongodb-odm.html) and in
+particular its
+[aggregation builder](https://www.doctrine-project.org/projects/doctrine-mongodb-odm/en/current/reference/aggregation-builder.html)
 to leverage all the possibilities of the database.
 
-Doctrine MongoDB ODM 2 relies on the [mongodb](https://secure.php.net/manual/en/set.mongodb.php) PHP extension and not on
-the legacy [mongo](https://secure.php.net/manual/en/book.mongo.php) extension.
+Doctrine MongoDB ODM 2 relies on the [mongodb](https://secure.php.net/manual/en/set.mongodb.php) PHP
+extension and not on the legacy [mongo](https://secure.php.net/manual/en/book.mongo.php) extension.
 
 ## Enabling MongoDB Support
 
-If the `mongodb` PHP extension is not installed yet, [install it beforehand](https://secure.php.net/manual/en/mongodb.installation.pecl.php).
+If the `mongodb` PHP extension is not installed yet,
+[install it beforehand](https://secure.php.net/manual/en/mongodb.installation.pecl.php).
 
-Or if you are using the [API Platform Distribution with Symfony](../symfony/index.md), modify the `Dockerfile` to add the extension:
+Or if you are using the [API Platform Distribution with Symfony](../symfony/index.md), modify the
+`Dockerfile` to add the extension:
 
 ```diff
 # api/Dockerfile
@@ -46,25 +51,28 @@ Add a MongoDB image to the docker-compose file:
 # compose.yaml
 
 services:
-  # ...
-  db-mongodb:
-    # In production, you may want to use a managed database service
-    image: mongodb/mongodb-community-server:latest
-    environment:
-      - MONGODB_INITDB_DATABASE=api
-      - MONGODB_INITDB_ROOT_USERNAME=api-platform
-      # You should definitely change the password in production
-      - MONGODB_INITDB_ROOT_PASSWORD=!ChangeMe!
-    volumes:
-      - db-data:/data/db:rw
-      # You may use a bind-mounted host directory instead, so that it is harder to accidentally remove the volume and lose all your data!
-      # - ./docker/db/data:/data/db:rw
-    ports:
-      - '27017:27017'
+    # ...
+    db-mongodb:
+        # In production, you may want to use a managed database service
+        image: mongodb/mongodb-community-server:latest
+        environment:
+            - MONGODB_INITDB_DATABASE=api
+            - MONGODB_INITDB_ROOT_USERNAME=api-platform
+            # You should definitely change the password in production
+            - MONGODB_INITDB_ROOT_PASSWORD=!ChangeMe!
+        volumes:
+            - db-data:/data/db:rw
+            # You may use a bind-mounted host directory instead, so that it is harder to accidentally remove the volume and lose all your data!
+            # - ./docker/db/data:/data/db:rw
+        ports:
+            - "27017:27017"
 # ...
 ```
 
-In all cases, enable the MongoDB support by requiring the [Doctrine MongoDB ODM bundle](https://github.com/doctrine/DoctrineMongoDBBundle) and [MongoDB ODM for API Platform](https://github.com/api-platform/doctrine-odm/) packages using Composer:
+In all cases, enable the MongoDB support by requiring the
+[Doctrine MongoDB ODM bundle](https://github.com/doctrine/DoctrineMongoDBBundle) and
+[MongoDB ODM for API Platform](https://github.com/api-platform/doctrine-odm/) packages using
+Composer:
 
 ```console
 composer require doctrine/mongodb-odm-bundle api-platform/doctrine-odm
@@ -171,8 +179,10 @@ class Offer
 }
 ```
 
-When defining references, always use the ID for storing them instead of the native [DBRef](https://docs.mongodb.com/manual/reference/database-references/#dbrefs).
-It allows API Platform to manage [filtering on nested properties](filters.md#apifilter-annotation) by using [lookups](https://docs.mongodb.com/manual/reference/operator/aggregation/lookup/).
+When defining references, always use the ID for storing them instead of the native
+[DBRef](https://docs.mongodb.com/manual/reference/database-references/#dbrefs). It allows API
+Platform to manage [filtering on nested properties](filters.md#apifilter-annotation) by using
+[lookups](https://docs.mongodb.com/manual/reference/operator/aggregation/lookup/).
 
 ## Filtering
 
@@ -182,11 +192,13 @@ See how to use them and how to create custom ones in the [filters documentation]
 
 ## Creating Custom Extensions
 
-See how to create Doctrine MongoDB ODM custom extensions in the [extensions documentation](extensions.md).
+See how to create Doctrine MongoDB ODM custom extensions in the
+[extensions documentation](extensions.md).
 
 ## Adding Execute Options
 
-If you want to add some command options when executing an aggregate query (see the [related documentation in MongoDB manual](https://docs.mongodb.com/manual/reference/command/aggregate/#command-fields)),
+If you want to add some command options when executing an aggregate query (see the
+[related documentation in MongoDB manual](https://docs.mongodb.com/manual/reference/command/aggregate/#command-fields)),
 you can do it in your resource configuration, at the operation or the resource level.
 
 For instance at the operation level:

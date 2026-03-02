@@ -33,8 +33,8 @@ In the app directory, generate the files for the resource you want:
 npm init @api-platform/client https://demo.api-platform.com . -- --generator react-native --resource book
 ```
 
-Replace the URL with the entrypoint of your Hydra-enabled API.
-You can also use an OpenAPI documentation with `-f openapi3`.
+Replace the URL with the entrypoint of your Hydra-enabled API. You can also use an OpenAPI
+documentation with `-f openapi3`.
 
 Omit the resource flag to generate files for all resource types exposed by the API.
 
@@ -42,15 +42,15 @@ Create a `Router.js` file to import all routes:
 
 ```javascript
 // Router.js
-import React from 'react';
-import { Router, Stack } from 'react-native-router-flux';
+import React from "react";
+import { Router, Stack } from "react-native-router-flux";
 // Replace "book" with the name of the resource type
-import BookRoutes from './routes/book';
+import BookRoutes from "./routes/book";
 
 const RouterComponent = () => (
-  <Router>
-    <Stack key="root">{BookRoutes}</Stack>
-  </Router>
+    <Router>
+        <Stack key="root">{BookRoutes}</Stack>
+    </Router>
 );
 
 export default RouterComponent;
@@ -60,48 +60,48 @@ Here is an example of an `App.js` file:
 
 ```javascript
 // App.js
-import React, { Component } from 'react';
-import { Provider } from 'react-redux';
-import thunk from 'redux-thunk';
-import { createStore, applyMiddleware, combineReducers } from 'redux';
-import { View } from 'react-native';
-import { reducer as form } from 'redux-form';
+import React, { Component } from "react";
+import { Provider } from "react-redux";
+import thunk from "redux-thunk";
+import { createStore, applyMiddleware, combineReducers } from "redux";
+import { View } from "react-native";
+import { reducer as form } from "redux-form";
 
 // see https://github.com/facebook/react-native/issues/14796
-import { Buffer } from 'buffer';
+import { Buffer } from "buffer";
 global.Buffer = Buffer;
 
 // see https://github.com/facebook/react-native/issues/16434
-import { URL, URLSearchParams } from 'whatwg-url';
+import { URL, URLSearchParams } from "whatwg-url";
 global.URL = URL;
 global.URLSearchParams = URLSearchParams;
 
 // see https://github.com/facebook/react-native/issues/12890
-import RNEventSource from 'react-native-event-source';
+import RNEventSource from "react-native-event-source";
 global.EventSource = RNEventSource;
 
 // Replace "book" with the name of resource type
-import book from './reducers/book';
-import Router from './Router';
+import book from "./reducers/book";
+import Router from "./Router";
 
 export default class App extends Component {
-  render() {
-    const store = createStore(
-      combineReducers({
-        book,
-        form,
-      }),
-      {},
-      applyMiddleware(thunk)
-    );
-    return (
-      <Provider store={store}>
-        <View style={{ flex: 1 }}>
-          <Router />
-        </View>
-      </Provider>
-    );
-  }
+    render() {
+        const store = createStore(
+            combineReducers({
+                book,
+                form,
+            }),
+            {},
+            applyMiddleware(thunk),
+        );
+        return (
+            <Provider store={store}>
+                <View style={{ flex: 1 }}>
+                    <Router />
+                </View>
+            </Provider>
+        );
+    }
 }
 ```
 
@@ -113,5 +113,7 @@ expo start
 
 ## Screenshots in iOS Simulator
 
-![List](images/react-native/create-client-react-native-list.png) ![Show](images/react-native/create-client-react-native-show.png)
-![Add](images/react-native/create-client-react-native-add.png) ![Delete](images/react-native/create-client-react-native-delete.png)
+![List](images/react-native/create-client-react-native-list.png)
+![Show](images/react-native/create-client-react-native-show.png)
+![Add](images/react-native/create-client-react-native-add.png)
+![Delete](images/react-native/create-client-react-native-delete.png)

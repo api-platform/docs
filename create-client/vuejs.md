@@ -19,8 +19,8 @@ To generate all the code you need for a given resource run the following command
 npm init @api-platform/client https://demo.api-platform.com src/ -- --generator vue --resource book
 ```
 
-Replace the URL with the entrypoint of your Hydra-enabled API.
-You can also use an OpenAPI documentation with `https://demo.api-platform.com/docs.jsonopenapi` and `-f openapi3`.
+Replace the URL with the entrypoint of your Hydra-enabled API. You can also use an OpenAPI
+documentation with `https://demo.api-platform.com/docs.jsonopenapi` and `-f openapi3`.
 
 Omit the resource flag to generate files for all resource types exposed by the API.
 
@@ -31,11 +31,11 @@ Replace the content of `App.vue` with the following code:
 ```html
 // src/App.vue
 <template>
-  <RouterView />
+    <RouterView />
 </template>
 
 <script setup lang="ts">
-  import { RouterView } from 'vue-router';
+    import { RouterView } from "vue-router";
 </script>
 ```
 
@@ -52,11 +52,11 @@ Replace the content of `tailwind.config.js` by:
 // tailwind.config.js
 /** @type {import('tailwindcss').Config} */
 module.exports = {
-  content: ['./index.html', './src/**/*.{vue,js,ts,jsx,tsx}'],
-  theme: {
-    extend: {},
-  },
-  plugins: [],
+    content: ["./index.html", "./src/**/*.{vue,js,ts,jsx,tsx}"],
+    theme: {
+        extend: {},
+    },
+    plugins: [],
 };
 ```
 
