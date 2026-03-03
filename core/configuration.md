@@ -380,6 +380,7 @@ api_platform:
         schemes: ~
         options: ~
         host: ~
+        parameters: ~
 
         # The URL generation strategy to use for IRIs
         url_generation_strategy: !php/const ApiPlatform\Metadata\UrlGeneratorInterface::ABS_PATH
@@ -810,6 +811,7 @@ return [
         'input' => null,
         'output' => null,
         'stateless' => null,
+        'parameters' => null,
 
         // The URL generation strategy to use for IRIs
         'url_generation_strategy' => UrlGeneratorInterface::ABS_PATH,

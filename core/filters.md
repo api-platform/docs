@@ -68,6 +68,54 @@ a new instance:
 > [!TIP] Always check the specific documentation for your persistence layer (Doctrine ORM, MongoDB
 > ODM, Laravel Eloquent) to see the exact namespace and available options for these filters.
 
+### Global Default Parameters
+
+Instead of repeating the same parameter configuration on every resource, you can define global
+default parameters that are automatically applied to all resources. This is done via the `defaults`
+key in your API Platform configuration.
+
+Add a `parameters` map under `defaults` in your API Platform configuration. Each entry maps a
+fully-qualified parameter class name to its options.
+
+```yaml
+# Symfony: api/config/packages/api_platform.yaml
+api_platform:
+    defaults:
+        parameters:
+            ApiPlatform\Metadata\HeaderParameter:
+                key: "API-Token"
+                required: true
+                description: "API authentication token"
+
+            ApiPlatform\Metadata\QueryParameter:
+                key: "api_version"
+                required: false
+                description: "API version"
+```
+
+```php
+<?php
+// Laravel: config/api-platform.php
+return [
+    'defaults' => [
+        'parameters' => [
+            \ApiPlatform\Metadata\HeaderParameter::class => [
+                'key' => 'API-Token',
+                'required' => true,
+                'description' => 'API authentication token',
+            ],
+            \ApiPlatform\Metadata\QueryParameter::class => [
+                'key' => 'api_version',
+                'required' => false,
+                'description' => 'API version',
+            ],
+        ],
+    ],
+];
+```
+
+Every resource will automatically expose these parameters on all their operations.
+
 You can declare a parameter on the resource class to make it available for all its operations:
 
 ```php
