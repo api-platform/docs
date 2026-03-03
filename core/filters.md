@@ -743,10 +743,10 @@ For Doctrine ORM, your filter should implement `ApiPlatform\Doctrine\Orm\Filter\
 namespace App\Filter;
 
 use ApiPlatform\Doctrine\Orm\Filter\FilterInterface;
+use ApiPlatform\Doctrine\Orm\Util\QueryNameGeneratorInterface;
 use ApiPlatform\Metadata\Operation;
 use ApiPlatform\State\ParameterNotFound;
 use Doctrine\ORM\QueryBuilder;
-use Doctrine\ORM\Query\QueryNameGeneratorInterface;
 
 final class RegexpFilter implements FilterInterface
 {
