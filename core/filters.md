@@ -40,13 +40,19 @@ When defining a `QueryParameter`, you must specify the filtering logic using the
 Here is a list of available filters you can use. You can pass the filter class name (recommended) or
 a new instance:
 
+- **`SortFilter`**: For sorting results by a single property. Designed exclusively for use with
+  `QueryParameter`. Supports dot notation for nested/related properties and the `nullsComparison`
+  option. Recommended over `OrderFilter` for new code.
+    - Usage: `new QueryParameter(filter: new SortFilter(), property: 'name')`
 - **`DateFilter`**: For filtering by date intervals (e.g., `?createdAt[after]=...`).
     - Usage: `new QueryParameter(filter: DateFilter::class)`
-- **`ExactFilter`**: For exact value matching.
+- **`ExactFilter`**: For exact value matching. Supports dot notation for nested properties.
     - Usage: `new QueryParameter(filter: ExactFilter::class)`
-- **`PartialSearchFilter`**: For partial string matching (SQL `LIKE %...%`).
+- **`PartialSearchFilter`**: For partial string matching (SQL `LIKE %...%`). Supports dot notation
+  for nested properties.
     - Usage: `new QueryParameter(filter: PartialSearchFilter::class)`
-- **`IriFilter`**: For filtering by IRIs (e.g., relations).
+- **`IriFilter`**: For filtering by IRIs (e.g., relations). Supports dot notation for nested
+  associations.
     - Usage: `new QueryParameter(filter: IriFilter::class)`
 - **`BooleanFilter`**: For boolean field filtering.
     - Usage: `new QueryParameter(filter: BooleanFilter::class)`
@@ -56,7 +62,7 @@ a new instance:
     - Usage: `new QueryParameter(filter: RangeFilter::class)`
 - **`ExistsFilter`**: For checking existence of nullable values.
     - Usage: `new QueryParameter(filter: ExistsFilter::class)`
-- **`OrderFilter`**: For sorting results.
+- **`OrderFilter`**: For sorting results (legacy multi-property filter).
     - Usage: `new QueryParameter(filter: OrderFilter::class)`
 
 > [!TIP] Always check the specific documentation for your persistence layer (Doctrine ORM, MongoDB
