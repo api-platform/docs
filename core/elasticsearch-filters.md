@@ -1,4 +1,7 @@
-# Elasticsearch Filters
+# Elasticsearch & OpenSearch Filters
+
+> [!NOTE] All filters documented on this page work with both Elasticsearch and OpenSearch. See the
+> [Elasticsearch & OpenSearch documentation](elasticsearch.md) for setup instructions.
 
 For further documentation on filters (including for Eloquent and Doctrine), please see the
 [Filters documentation](filters.md).

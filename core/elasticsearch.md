@@ -1,21 +1,26 @@
-# Elasticsearch Support
+# Elasticsearch & OpenSearch Support
 
 ## Overview
 
-Elasticsearch is a distributed RESTful search and analytics engine capable of solving a growing
-number of use cases: application search, security analytics, metrics, logging, etc.
+[Elasticsearch](https://www.elastic.co/elasticsearch/) and [OpenSearch](https://opensearch.org/) are
+distributed RESTful search and analytics engines capable of solving a growing number of use cases:
+application search, security analytics, metrics, logging, etc. OpenSearch is an open-source fork of
+Elasticsearch.
 
-API Platform comes natively with the **reading** support for Elasticsearch. It uses internally the
-official PHP client for Elasticsearch:
-[Elasticsearch-PHP](https://www.elastic.co/guide/en/elasticsearch/client/php-api/current/index.html).
+API Platform comes natively with **reading** support for both Elasticsearch and OpenSearch. It uses
+internally the official PHP clients:
+[Elasticsearch-PHP](https://www.elastic.co/guide/en/elasticsearch/client/php-api/current/index.html)
+or [OpenSearch-PHP](https://opensearch.org/docs/latest/clients/php/).
 
-Be careful, API Platform only supports Elasticsearch >= 7.11.0 < 8.0 and Elasticsearch >= 8.4 < 9.0.
-Support for Elasticsearch 8 was introduced in API Platform 3.2.
+API Platform supports Elasticsearch >= 7.11.0 < 8.0, Elasticsearch >= 8.4 < 9.0, and OpenSearch >=
+2.x. Support for Elasticsearch 8 was introduced in API Platform 3.2, and OpenSearch support was
+introduced in API Platform 4.3.
 
 ## Enabling Reading Support
 
-To enable the reading support for Elasticsearch, simply require the Elasticsearch-PHP package using
-Composer. For Elasticsearch 8:
+To enable the reading support, require the appropriate PHP client using Composer.
+
+For Elasticsearch 8:
 
 ```console
 composer require elasticsearch/elasticsearch:^8.4
@@ -27,9 +32,17 @@ For Elasticsearch 7:
 composer require elasticsearch/elasticsearch:^7.11
 ```
 
+For OpenSearch:
+
+```console
+composer require opensearch-project/opensearch-php:^2.5
+```
+
 Then, enable it inside the API Platform configuration, using one of the configurations below:
 
 ### Enabling Reading Support using Symfony
+
+For Elasticsearch:
 
 ```yaml
 # api/config/packages/api_platform.yaml
@@ -49,10 +62,31 @@ api_platform:
     #...
 ```
 
+For OpenSearch, set the `client` option to `opensearch`:
+
+```yaml
+# api/config/packages/api_platform.yaml
+parameters:
+    # ...
+    env(OPENSEARCH_HOST): "http://localhost:9200"
+
+api_platform:
+    # ...
+
+    mapping:
+        paths: ["%kernel.project_dir%/src/Model"]
+
+    elasticsearch:
+        client: opensearch
+        hosts: ["%env(OPENSEARCH_HOST)%"]
+
+    #...
+```
+
 #### SSL Configuration
 
-When connecting to Elasticsearch over HTTPS with self-signed certificates or custom Certificate
-Authorities, you can configure SSL verification.
+When connecting over HTTPS with self-signed certificates or custom Certificate Authorities, you can
+configure SSL verification. This works for both Elasticsearch and OpenSearch.
 
 **With a custom CA bundle:**
 
@@ -60,6 +94,7 @@ Authorities, you can configure SSL verification.
 # config/packages/api_platform.yaml
 api_platform:
     elasticsearch:
+<<<<<<< HEAD
         hosts: ["%env(ELASTICSEARCH_HOST)%"]
         ssl_ca_bundle: "/path/to/ca-bundle.crt"
 ```
@@ -78,6 +113,8 @@ api_platform:
 
 ### Enabling Reading Support using Laravel
 
+For Elasticsearch:
+
 ```php
 <?php
 // config/api-platform.php
@@ -91,6 +128,27 @@ return [
     'elasticsearch' => [
         'hosts' => [
             env('ELASTICSEARCH_HOST', 'http://localhost:9200'),
+        ],
+    ],
+];
+```
+
+For OpenSearch:
+
+```php
+<?php
+// config/api-platform.php
+return [
+    // ....
+    'mapping' => [
+        'paths' => [
+            base_path('app/Models'),
+        ],
+    ],
+    'elasticsearch' => [
+        'client' => 'opensearch',
+        'hosts' => [
+            env('OPENSEARCH_HOST', 'http://localhost:9200'),
         ],
     ],
 ];
