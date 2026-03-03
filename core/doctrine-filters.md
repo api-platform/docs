@@ -128,14 +128,18 @@ services all begin with `api_platform.doctrine_mongodb.odm`.
 
 To add some search filters, choose over this new list:
 
-- [SortFilter](#sort-filter) (sort a collection by a property; supports nested properties via dot notation)
+- [SortFilter](#sort-filter) (sort a collection by a property; supports nested properties via dot
+  notation)
 - [IriFilter](#iri-filter) (filter on IRIs; supports nested associations via dot notation)
-- [ExactFilter](#exact-filter) (filter with exact value; supports nested properties via dot notation)
-- [PartialSearchFilter](#partial-search-filter) (filter using a `LIKE %value%`; supports nested properties via dot notation)
+- [ExactFilter](#exact-filter) (filter with exact value; supports nested properties via dot
+  notation)
+- [PartialSearchFilter](#partial-search-filter) (filter using a `LIKE %value%`; supports nested
+  properties via dot notation)
 - [FreeTextQueryFilter](#free-text-query-filter) (allows you to apply multiple filters to multiple
   properties of a resource at the same time, using a single parameter in the URL)
 - [OrFilter](#or-filter) (apply a filter using `orWhere` instead of `andWhere` )
-- [ComparisonFilter](#comparison-filter) (add `gt`, `gte`, `lt`, `lte`, `ne` operators to an equality or UUID filter)
+- [ComparisonFilter](#comparison-filter) (add `gt`, `gte`, `lt`, `lte`, `ne` operators to an
+  equality or UUID filter)
 
 ### SearchFilter
 
@@ -234,8 +238,8 @@ query: `/chickens?chickenCoop=/chickenCoop/1`.
 
 It will return all the chickens that live in chicken coop number 1.
 
-`IriFilter` supports filtering through nested associations using dot notation in the `property` argument.
-See [Filtering on Nested Properties](#filtering-on-nested-properties).
+`IriFilter` supports filtering through nested associations using dot notation in the `property`
+argument. See [Filtering on Nested Properties](#filtering-on-nested-properties).
 
 ## Exact Filter
 
@@ -304,8 +308,8 @@ It will return all chickens where the name contains the substring _tom_.
 > value and the stored data (for e.g., by converting them to lowercase) before making the
 > comparison.
 
-`PartialSearchFilter` supports searching on nested properties using dot notation in the `property` argument.
-See [Filtering on Nested Properties](#filtering-on-nested-properties).
+`PartialSearchFilter` supports searching on nested properties using dot notation in the `property`
+argument. See [Filtering on Nested Properties](#filtering-on-nested-properties).
 
 ## Free Text Query Filter
 
@@ -397,28 +401,28 @@ This request will return all chickens where:
 
 ## Comparison Filter
 
-> [!NOTE]
-> `ComparisonFilter` is experimental and its API may change before a stable release.
+> [!NOTE] `ComparisonFilter` is experimental and its API may change before a stable release.
 
-The comparison filter is a decorator that wraps an equality filter (such as `ExactFilter`) and adds comparison
-operators to it. It lets clients filter a collection using greater-than, greater-than-or-equal, less-than,
-less-than-or-equal, and not-equal comparisons on any filterable property.
+The comparison filter is a decorator that wraps an equality filter (such as `ExactFilter`) and adds
+comparison operators to it. It lets clients filter a collection using greater-than,
+greater-than-or-equal, less-than, less-than-or-equal, and not-equal comparisons on any filterable
+property.
 
 Syntax: `?parameter[<gt|gte|lt|lte|ne>]=value`
 
 Available operators:
 
-| Operator | SQL equivalent | Description |
-| --- | --- | --- |
-| `gt` | `>` | Strictly greater than |
-| `gte` | `>=` | Greater than or equal to |
-| `lt` | `<` | Strictly less than |
-| `lte` | `<=` | Less than or equal to |
-| `ne` | `!=` | Not equal to |
+| Operator | SQL equivalent | Description              |
+| -------- | -------------- | ------------------------ |
+| `gt`     | `>`            | Strictly greater than    |
+| `gte`    | `>=`           | Greater than or equal to |
+| `lt`     | `<`            | Strictly less than       |
+| `lte`    | `<=`           | Less than or equal to    |
+| `ne`     | `!=`           | Not equal to             |
 
-`ComparisonFilter` is a decorator: it is applied by wrapping another filter. The canonical pairing is with `ExactFilter`
-for standard properties, or with `UuidFilter` for UUID columns.
-It works for Doctrine ORM (`ApiPlatform\Doctrine\Orm\Filter\ComparisonFilter`) and Doctrine MongoDB ODM
+`ComparisonFilter` is a decorator: it is applied by wrapping another filter. The canonical pairing
+is with `ExactFilter` for standard properties, or with `UuidFilter` for UUID columns. It works for
+Doctrine ORM (`ApiPlatform\Doctrine\Orm\Filter\ComparisonFilter`) and Doctrine MongoDB ODM
 (`ApiPlatform\Doctrine\Odm\Filter\ComparisonFilter`).
 
 ```php
@@ -447,7 +451,8 @@ class Product
 }
 ```
 
-Given that the collection endpoint is `/products`, you can filter products by price range with the following queries:
+Given that the collection endpoint is `/products`, you can filter products by price range with the
+following queries:
 
 - `/products?price[gt]=10` — products whose price is strictly greater than 10
 - `/products?price[gte]=10` — products whose price is greater than or equal to 10
@@ -457,8 +462,8 @@ Given that the collection endpoint is `/products`, you can filter products by pr
 
 ### Range Queries (Combining Operators)
 
-There is no dedicated `between` operator. To filter within a range, combine `gte` and `lte` (or `gt` and `lt`) in a
-single request:
+There is no dedicated `between` operator. To filter within a range, combine `gte` and `lte` (or `gt`
+and `lt`) in a single request:
 
 ```http
 GET /products?price[gte]=10&price[lte]=100
@@ -468,9 +473,9 @@ This returns all products whose price is between 10 and 100 inclusive.
 
 ### DateTime Support
 
-`ComparisonFilter` accepts `DateTimeInterface` values. When the underlying property is typed as a `DateTime` or
-`DateTimeImmutable`, API Platform automatically casts the raw string from the query string into a `DateTimeImmutable`
-before passing it to the filter. Any format accepted by the PHP
+`ComparisonFilter` accepts `DateTimeInterface` values. When the underlying property is typed as a
+`DateTime` or `DateTimeImmutable`, API Platform automatically casts the raw string from the query
+string into a `DateTimeImmutable` before passing it to the filter. Any format accepted by the PHP
 [`DateTimeImmutable` constructor](https://www.php.net/manual/en/datetime.construct.php) is valid.
 
 ```php
@@ -507,9 +512,9 @@ GET /events?startDate[gt]=2025-01-01T00:00:00Z
 
 ### UUID Support
 
-`ComparisonFilter` can also wrap `UuidFilter` to enable comparison operators on UUID columns. This is especially useful
-for cursor-based pagination on time-ordered UUIDs (UUID v7), where the lexicographic order of UUIDs matches their
-chronological order.
+`ComparisonFilter` can also wrap `UuidFilter` to enable comparison operators on UUID columns. This
+is especially useful for cursor-based pagination on time-ordered UUIDs (UUID v7), where the
+lexicographic order of UUIDs matches their chronological order.
 
 ```php
 <?php
@@ -543,14 +548,14 @@ Example requests:
 - `/devices?id[gte]=...&id[lte]=...` — devices within a UUID range
 - `/devices?id[ne]=...` — exclude a specific device
 
-`UuidFilter` handles the conversion of UUID strings to their database binary representation via Doctrine's type system,
-which is required for correct comparisons on binary UUID columns.
+`UuidFilter` handles the conversion of UUID strings to their database binary representation via
+Doctrine's type system, which is required for correct comparisons on binary UUID columns.
 
 ### OpenAPI Documentation
 
-`ComparisonFilter` automatically generates five OpenAPI query parameters for each configured parameter key, one per
-operator. For a parameter named `price`, the generated parameters are `price[gt]`, `price[gte]`, `price[lt]`,
-`price[lte]`, and `price[ne]`.
+`ComparisonFilter` automatically generates five OpenAPI query parameters for each configured
+parameter key, one per operator. For a parameter named `price`, the generated parameters are
+`price[gt]`, `price[gte]`, `price[lt]`, `price[lte]`, and `price[ne]`.
 
 ## Date Filter
 
@@ -1083,19 +1088,19 @@ class Offer
 
 ## Sort Filter
 
-The `SortFilter` is a parameter-based filter designed exclusively for use with `QueryParameter`. Unlike the
-[`OrderFilter`](#order-filter-sorting), it does not extend `AbstractFilter` and works with a single parameter
-per sorted property. This makes it straightforward to declare sort parameters with full control over naming
-and behavior.
+The `SortFilter` is a parameter-based filter designed exclusively for use with `QueryParameter`.
+Unlike the [`OrderFilter`](#order-filter-sorting), it does not extend `AbstractFilter` and works
+with a single parameter per sorted property. This makes it straightforward to declare sort
+parameters with full control over naming and behavior.
 
-**ORM**: `ApiPlatform\Doctrine\Orm\Filter\SortFilter`
-**ODM**: `ApiPlatform\Doctrine\Odm\Filter\SortFilter`
+**ORM**: `ApiPlatform\Doctrine\Orm\Filter\SortFilter` **ODM**:
+`ApiPlatform\Doctrine\Odm\Filter\SortFilter`
 
 ### Basic Usage
 
-Each `QueryParameter` using `SortFilter` controls sorting for one property. The filter accepts `asc`, `desc`,
-`ASC`, and `DESC` as values. Any other value causes a 422 validation error, because the filter publishes a
-JSON Schema `enum` constraint automatically.
+Each `QueryParameter` using `SortFilter` controls sorting for one property. The filter accepts
+`asc`, `desc`, `ASC`, and `DESC` as values. Any other value causes a 422 validation error, because
+the filter publishes a JSON Schema `enum` constraint automatically.
 
 ```php
 <?php
@@ -1134,13 +1139,13 @@ Clients can then sort with:
 When a sorted property can be `null`, use the `nullsComparison` constructor argument to specify how
 null values are ordered relative to non-null values:
 
-| Strategy                                   | Constant                                        |
-| ------------------------------------------ | ----------------------------------------------- |
-| Use the default DBMS behavior              | `null` (default)                                |
-| Null values always sort first              | `OrderFilterInterface::NULLS_ALWAYS_FIRST`      |
-| Null values always sort last               | `OrderFilterInterface::NULLS_ALWAYS_LAST`       |
-| Null values treated as smallest            | `OrderFilterInterface::NULLS_SMALLEST`          |
-| Null values treated as largest             | `OrderFilterInterface::NULLS_LARGEST`           |
+| Strategy                        | Constant                                   |
+| ------------------------------- | ------------------------------------------ |
+| Use the default DBMS behavior   | `null` (default)                           |
+| Null values always sort first   | `OrderFilterInterface::NULLS_ALWAYS_FIRST` |
+| Null values always sort last    | `OrderFilterInterface::NULLS_ALWAYS_LAST`  |
+| Null values treated as smallest | `OrderFilterInterface::NULLS_SMALLEST`     |
+| Null values treated as largest  | `OrderFilterInterface::NULLS_LARGEST`      |
 
 ```php
 <?php
@@ -1174,9 +1179,9 @@ class Book
 
 ### Sorting by Nested Properties
 
-The `SortFilter` supports dot notation to sort by properties of related entities (associations). API Platform
-resolves the necessary JOINs (ORM) or aggregation pipeline stages (ODM) at metadata time, so no runtime overhead
-is added for each request.
+The `SortFilter` supports dot notation to sort by properties of related entities (associations). API
+Platform resolves the necessary JOINs (ORM) or aggregation pipeline stages (ODM) at metadata time,
+so no runtime overhead is added for each request.
 
 ```php
 <?php
@@ -1224,9 +1229,9 @@ Example queries:
 
 ### MongoDB ODM Usage
 
-For MongoDB ODM, the `SortFilter` uses the aggregation pipeline. References between documents must use
-`storeAs: 'id'` (not DBRef) for the `$lookup` stage to work correctly. Embedded documents are accessed via
-dot notation without a `$lookup`.
+For MongoDB ODM, the `SortFilter` uses the aggregation pipeline. References between documents must
+use `storeAs: 'id'` (not DBRef) for the `$lookup` stage to work correctly. Embedded documents are
+accessed via dot notation without a `$lookup`.
 
 ```php
 <?php
@@ -1269,16 +1274,17 @@ class Employee
 
 ## Filtering on Nested Properties
 
-Parameter-based filters (`QueryParameter`) support nested/related properties via dot notation.
-The following filters handle the necessary JOINs (ORM) or `$lookup`/`$unwind` pipeline stages (ODM) automatically:
+Parameter-based filters (`QueryParameter`) support nested/related properties via dot notation. The
+following filters handle the necessary JOINs (ORM) or `$lookup`/`$unwind` pipeline stages (ODM)
+automatically:
 
-| Filter               | ORM nested support | ODM nested support |
-| -------------------- | ------------------ | ------------------ |
-| `SortFilter`         | Yes                | Yes                |
-| `IriFilter`          | Yes                | Yes                |
-| `ExactFilter`        | Yes                | Yes                |
-| `PartialSearchFilter`| Yes                | Yes                |
-| `FreeTextQueryFilter`| Yes (via delegate) | Yes (via delegate) |
+| Filter                | ORM nested support | ODM nested support |
+| --------------------- | ------------------ | ------------------ |
+| `SortFilter`          | Yes                | Yes                |
+| `IriFilter`           | Yes                | Yes                |
+| `ExactFilter`         | Yes                | Yes                |
+| `PartialSearchFilter` | Yes                | Yes                |
+| `FreeTextQueryFilter` | Yes (via delegate) | Yes (via delegate) |
 
 Use the `property` argument on `QueryParameter` with dot notation to target nested properties:
 
@@ -1329,8 +1335,8 @@ Example queries:
 - `GET /employees?departmentCompany=/api/companies/1` — filter by company through department
 - `GET /employees?orderCompany=desc` — sort by company name
 
-Multiple parameters targeting the same relation path share the same JOIN (ORM) or `$lookup` stage (ODM),
-so there is no duplication in the generated query.
+Multiple parameters targeting the same relation path share the same JOIN (ORM) or `$lookup` stage
+(ODM), so there is no duplication in the generated query.
 
 ### Nested Properties with the Legacy ApiFilter Syntax (deprecated)
 
@@ -1338,8 +1344,8 @@ so there is no duplication in the generated query.
 > **removal** in API Platform **5.0**. We strongly recommend migrating to the new `QueryParameter`
 > syntax described above.
 
-For legacy code, the built-in filters that extend `AbstractFilter` support nested properties using the dot
-(`.`) syntax, e.g.:
+For legacy code, the built-in filters that extend `AbstractFilter` support nested properties using
+the dot (`.`) syntax, e.g.:
 
 <code-selector>
 

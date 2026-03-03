@@ -560,6 +560,7 @@ generate a Doctrine entity that is also a resource thanks to the `--api-resource
 ```console
 docker compose exec php bin/console make:entity --api-resource
 ```
+
 For more information on the available makers see [Maker documentation](./maker.md).
 
 Doctrine's

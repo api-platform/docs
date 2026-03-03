@@ -48,9 +48,11 @@ a new instance:
     - Usage: `new QueryParameter(filter: DateFilter::class)`
 - **`ExactFilter`**: For exact value matching. Supports dot notation for nested properties.
     - Usage: `new QueryParameter(filter: ExactFilter::class)`
-- **`PartialSearchFilter`**: For partial string matching (SQL `LIKE %...%`). Supports dot notation for nested properties.
+- **`PartialSearchFilter`**: For partial string matching (SQL `LIKE %...%`). Supports dot notation
+  for nested properties.
     - Usage: `new QueryParameter(filter: PartialSearchFilter::class)`
-- **`IriFilter`**: For filtering by IRIs (e.g., relations). Supports dot notation for nested associations.
+- **`IriFilter`**: For filtering by IRIs (e.g., relations). Supports dot notation for nested
+  associations.
     - Usage: `new QueryParameter(filter: IriFilter::class)`
 - **`BooleanFilter`**: For boolean field filtering.
     - Usage: `new QueryParameter(filter: BooleanFilter::class)`

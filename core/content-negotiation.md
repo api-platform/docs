@@ -414,7 +414,9 @@ class Book extends Model {}
 
 API Platform automatically adds two HTTP headers to responses for resources:
 
-- **Allow** advertises enabled HTTP methods on the *current URI template*.
-- **Accept-Post** advertises POST-able media types (from operation input formats) and is only present when a POST operation exists for the template.
+- **Allow** advertises enabled HTTP methods on the _current URI template_.
+- **Accept-Post** advertises POST-able media types (from operation input formats) and is only
+  present when a POST operation exists for the template.
 
-> See [LDP §4.2 / Primer notes on Accept-Post](https://www.w3.org/TR/ldp/#Accept-Post) and typical exposure via OPTIONS.
+> See [LDP §4.2 / Primer notes on Accept-Post](https://www.w3.org/TR/ldp/#Accept-Post) and typical
+> exposure via OPTIONS.
