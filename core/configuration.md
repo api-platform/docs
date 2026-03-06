@@ -331,6 +331,10 @@ api_platform:
         normalization_context:
             # Default value to omit null values in conformance with the JSON Merge Patch RFC.
             skip_null_values: true
+            
+            # Set the genId property globally
+            gen_id: true
+
         denormalization_context: ~
         swagger_context: ~
         openapi_context: ~
