@@ -7,7 +7,8 @@ MCP defines a standard way for AI models to discover available tools, understand
 schemas, and invoke them. API Platform leverages its existing metadata system — state processors,
 validation, serialization — to turn your PHP classes into MCP-compliant tool definitions.
 
-> **Note:** The MCP integration is marked `@experimental`. The API may change between minor releases.
+> **Note:** The MCP integration is marked `@experimental`. The API may change between minor
+> releases.
 
 ## Installation
 
@@ -43,8 +44,8 @@ You can also configure API Platform's MCP integration in `api_platform.yaml`:
 # config/packages/api_platform.yaml
 api_platform:
     mcp:
-        enabled: true  # default: true
-        format: jsonld  # default: 'jsonld'
+        enabled: true # default: true
+        format: jsonld # default: 'jsonld'
 ```
 
 The `format` option sets the serialization format used for MCP tool structured content. It must be a
@@ -70,9 +71,9 @@ The MCP endpoint is automatically registered at `/mcp`.
 ## Architecture
 
 API Platform registers its own `Handler` with the MCP SDK. The handler's `supports()` method returns
-`true` only for tools and resources that are registered through API Platform metadata. If a requested
-tool or resource is not found in the API Platform registry, the handler returns `false` and the MCP
-SDK proceeds through its own handler chain.
+`true` only for tools and resources that are registered through API Platform metadata. If a
+requested tool or resource is not found in the API Platform registry, the handler returns `false`
+and the MCP SDK proceeds through its own handler chain.
 
 This means you can register both API Platform MCP tools and native `mcp/sdk` tools on the same
 server — they coexist without conflict.
@@ -336,8 +337,8 @@ a `CallToolResult` directly, bypassing automatic JSON serialization.
 ### Customizing Property Schemas with ApiProperty
 
 Some LLM providers reject JSON Schema union types such as `["array", "null"]` that PHP nullable
-types produce by default. Use `#[ApiProperty(schema: [...])]` to override the generated schema for
-a specific property:
+types produce by default. Use `#[ApiProperty(schema: [...])]` to override the generated schema for a
+specific property:
 
 ```php
 <?php
@@ -368,8 +369,9 @@ class InvokeHydraOperation
 }
 ```
 
-Without the `#[ApiProperty]` override, `?array $payload` would generate `{"type": ["array", "null"]}`.
-The explicit schema replaces it with `{"type": "object", ...}`, which all major LLM providers accept.
+Without the `#[ApiProperty]` override, `?array $payload` would generate
+`{"type": ["array", "null"]}`. The explicit schema replaces it with `{"type": "object", ...}`, which
+all major LLM providers accept.
 
 ## Validation
 
@@ -474,35 +476,35 @@ The `uri` must be unique across the MCP server and follows the `resource://` URI
 
 The `McpTool` attribute accepts all standard [operation options](operations.md) plus:
 
-| Option                | Description                                                               |
-| --------------------- | ------------------------------------------------------------------------- |
-| `name`                | Tool name exposed to AI agents (defaults to the class short name)         |
-| `description`         | Human-readable description of the tool (defaults to class DocBlock)       |
-| `structuredContent`   | Whether to include JSON structured content in responses (default: `true`) |
-| `input`               | A separate DTO class to use as the tool's input schema                    |
-| `output`              | A separate DTO class to use as the tool's output representation           |
-| `inputFormats`        | Serialization formats for deserializing the tool input (e.g. `['json']`)  |
-| `outputFormats`       | Serialization formats for serializing structured content (e.g. `['jsonld']`); MCP uses JSON-RPC as transport, so this controls the internal serialization format only |
-| `contentNegotiation`  | Whether to enable HTTP content negotiation (default: `false` for MCP; set to `true` only if you need format negotiation via Accept headers) |
-| `validate`            | Whether to run the validation pipeline (default: `false` for MCP; set to `true` to enable) |
-| `annotations`         | MCP tool annotations describing behavior hints                            |
-| `icons`               | List of icon URLs representing the tool                                   |
-| `meta`                | Arbitrary metadata                                                        |
-| `rules`               | Laravel validation rules (Laravel only)                                   |
+| Option               | Description                                                               |
+| -------------------- | ------------------------------------------------------------------------- |
+| `name`               | Tool name exposed to AI agents (defaults to the class short name)         |
+| `description`        | Human-readable description of the tool (defaults to class DocBlock)       |
+| `structuredContent`  | Whether to include JSON structured content in responses (default: `true`) |
+| `input`              | A separate DTO class to use as the tool's input schema                    |
+| `output`             | A separate DTO class to use as the tool's output representation           |
+| `inputFormats`       | Serialization formats for deserializing the tool input (e.g. `['json']`)  |
+| `outputFormats`      | Serialization formats for structured content (e.g. `['jsonld']`)          |
+| `contentNegotiation` | Whether to enable HTTP content negotiation (default: `false` for MCP)     |
+| `validate`           | Whether to run the validation pipeline (default: `false` for MCP)         |
+| `annotations`        | MCP tool annotations describing behavior hints                            |
+| `icons`              | List of icon URLs representing the tool                                   |
+| `meta`               | Arbitrary metadata                                                        |
+| `rules`              | Laravel validation rules (Laravel only)                                   |
 
 ## McpResource Options
 
 The `McpResource` attribute accepts all standard [operation options](operations.md) plus:
 
-| Option                | Description                                                                |
-| --------------------- | -------------------------------------------------------------------------- |
-| `uri`                 | Unique URI identifying this resource (required, uses `resource://` scheme) |
-| `name`                | Human-readable name for the resource                                       |
-| `description`         | Description of the resource (defaults to class DocBlock)                   |
-| `structuredContent`   | Whether to include JSON structured content (default: `true`)               |
-| `contentNegotiation`  | Whether to enable HTTP content negotiation (default: `false` for MCP; set to `true` only if you need format negotiation via Accept headers) |
-| `mimeType`            | MIME type of the resource content                                          |
-| `size`                | Size in bytes, if known                                                    |
-| `annotations`         | MCP resource annotations                                                   |
-| `icons`               | List of icon URLs                                                          |
-| `meta`                | Arbitrary metadata                                                         |
+| Option               | Description                                                                |
+| -------------------- | -------------------------------------------------------------------------- |
+| `uri`                | Unique URI identifying this resource (required, uses `resource://` scheme) |
+| `name`               | Human-readable name for the resource                                       |
+| `description`        | Description of the resource (defaults to class DocBlock)                   |
+| `structuredContent`  | Whether to include JSON structured content (default: `true`)               |
+| `contentNegotiation` | Whether to enable HTTP content negotiation (default: `false` for MCP)      |
+| `mimeType`           | MIME type of the resource content                                          |
+| `size`               | Size in bytes, if known                                                    |
+| `annotations`        | MCP resource annotations                                                   |
+| `icons`              | List of icon URLs                                                          |
+| `meta`               | Arbitrary metadata                                                         |
