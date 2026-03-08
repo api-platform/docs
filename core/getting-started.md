@@ -275,8 +275,8 @@ resources:
 
 </code-selector>
 
-If you prefer to use YAML, XML or PHP files instead of attributes, you must configure API Platform to
-load the appropriate files:
+If you prefer to use YAML, XML or PHP files instead of attributes, you must configure API Platform
+to load the appropriate files:
 
 ```yaml
 # api/config/packages/api_platform.yaml
@@ -291,9 +291,10 @@ api_platform:
 
 > [!NOTE]
 >
-> PHP resource files must be placed in a directory listed under `mapping.imports` (not `mapping.paths`).
-> Each file must return an `ApiResource` instance. Since these files are not autoloaded, they won't
-> conflict with your entity classes. This approach provides the same fluent API as PHP attributes.
+> PHP resource files must be placed in a directory listed under `mapping.imports` (not
+> `mapping.paths`). Each file must return an `ApiResource` instance. Since these files are not
+> autoloaded, they won't conflict with your entity classes. This approach provides the same fluent
+> API as PHP attributes.
 
 If you want to serialize only a subset of your data, please refer to the
 [Serialization documentation](serialization.md). **You're done!** You now have a fully featured API
@@ -399,12 +400,12 @@ REST [operations](operations.md) for resources of the product type:
 
 In addition, among other things, API Platform under the hood does the following:
 
-- Generated machine-readable documentations of the API in the
-  [OpenAPI (formerly known as Swagger)](../core/openapi.md) (available at
-  `http://127.0.0.1:8000/api/docs.json`) and
-  [JSON-LD](https://json-ld.org)/[Hydra](https://www.hydra-cg.com) formats using this metadata
-- Generated nice human-readable documentation and a sandbox for the API with
-  [SwaggerUI](https://swagger.io/tools/swagger-ui/) (Redoc is also available out-of-the-box)
+-   Generated machine-readable documentations of the API in the
+    [OpenAPI (formerly known as Swagger)](../core/openapi.md) (available at
+    `http://127.0.0.1:8000/api/docs.json`) and
+    [JSON-LD](https://json-ld.org)/[Hydra](https://www.hydra-cg.com) formats using this metadata
+-   Generated nice human-readable documentation and a sandbox for the API with
+    [SwaggerUI](https://swagger.io/tools/swagger-ui/) (Redoc is also available out-of-the-box)
 
 ## Interactions with the API
 
