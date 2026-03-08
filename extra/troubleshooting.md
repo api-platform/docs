@@ -58,6 +58,31 @@ The JMS Serializer service is available as `jms_serializer`.
 **Note:** if you are using JMSSerializerBundle along with FOSRestBundle and considering migrating to
 API Platform, you might want to take a look at [this guide](migrate-from-fosrestbundle.md) too.
 
+## "The service has a dependency on a non-existent service property_info" Error
+
+If you get the following error after upgrading API Platform or Symfony:
+
+```text
+The service "api_platform.metadata.property.name_collection_factory.property_info"
+has a dependency on a non-existent service "property_info".
+```
+
+This means the `property_info` component is not enabled. Recent versions of Symfony require it to be
+explicitly activated in your configuration:
+
+```yaml
+# config/packages/property_info.yaml
+framework:
+    property_info:
+        enabled: true
+```
+
+Clear your cache after making the change:
+
+```console
+php bin/console cache:clear
+```
+
 ## "upstream sent too big header while reading response header from upstream" NGINX 502 Error
 
 Some of your API calls fail with a 502 error and the logs for the API container shows the following
