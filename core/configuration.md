@@ -95,6 +95,9 @@ api_platform:
             partial_parameter_name: 'partial'
 
     mapping:
+        # The list of directories containing PHP files that return ApiResource instances.
+        imports: []
+
         # The list of paths with files or directories where the bundle will look for additional resource files.
         paths: []
 
