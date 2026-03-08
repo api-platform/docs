@@ -400,12 +400,12 @@ REST [operations](operations.md) for resources of the product type:
 
 In addition, among other things, API Platform under the hood does the following:
 
--   Generated machine-readable documentations of the API in the
-    [OpenAPI (formerly known as Swagger)](../core/openapi.md) (available at
-    `http://127.0.0.1:8000/api/docs.json`) and
-    [JSON-LD](https://json-ld.org)/[Hydra](https://www.hydra-cg.com) formats using this metadata
--   Generated nice human-readable documentation and a sandbox for the API with
-    [SwaggerUI](https://swagger.io/tools/swagger-ui/) (Redoc is also available out-of-the-box)
+- Generated machine-readable documentations of the API in the
+  [OpenAPI (formerly known as Swagger)](../core/openapi.md) (available at
+  `http://127.0.0.1:8000/api/docs.json`) and
+  [JSON-LD](https://json-ld.org)/[Hydra](https://www.hydra-cg.com) formats using this metadata
+- Generated nice human-readable documentation and a sandbox for the API with
+  [SwaggerUI](https://swagger.io/tools/swagger-ui/) (Redoc is also available out-of-the-box)
 
 ## Interactions with the API
 
