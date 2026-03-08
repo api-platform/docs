@@ -62,7 +62,7 @@ API Platform, you might want to take a look at [this guide](migrate-from-fosrest
 
 If you get the following error after upgrading API Platform or Symfony:
 
-```
+```text
 The service "api_platform.metadata.property.name_collection_factory.property_info"
 has a dependency on a non-existent service "property_info".
 ```
