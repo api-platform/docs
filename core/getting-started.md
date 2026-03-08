@@ -203,9 +203,43 @@ Thanks to the mapping done previously, API Platform will automatically register 
 > of the mapped entity class. It is also possible to override the naming convention using
 > [operation path namings](operation-path-naming.md).
 
-As an alternative to attributes, you can map entity classes using YAML or XML:
+As an alternative to attributes, you can map entity classes using PHP, YAML or XML files:
 
 <code-selector>
+
+```php
+<?php
+// config/api_platform/resources/product.php
+
+use ApiPlatform\Metadata\ApiResource;
+use App\Entity\Product;
+
+return (new ApiResource())->withClass(Product::class);
+```
+
+```php
+<?php
+// config/api_platform/resources/offer.php
+
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\Operations;
+use ApiPlatform\Metadata\Post;
+use App\Entity\Offer;
+
+return (new ApiResource())
+    ->withClass(Offer::class)
+    ->withShortName('Offer')
+    ->withDescription('An offer from my shop')
+    ->withTypes(['https://schema.org/Offer'])
+    ->withPaginationItemsPerPage(25)
+    ->withOperations(new Operations([
+        new Get(),
+        new GetCollection(),
+        new Post(),
+    ]));
+```
 
 ```yaml
 # api/config/api_platform/resources.yaml
@@ -241,7 +275,7 @@ resources:
 
 </code-selector>
 
-If you prefer to use YAML or XML files instead of attributes, you must configure API Platform to
+If you prefer to use YAML, XML or PHP files instead of attributes, you must configure API Platform to
 load the appropriate files:
 
 ```yaml
@@ -251,7 +285,15 @@ api_platform:
         paths:
             - "%kernel.project_dir%/src/Entity" # default configuration for attributes
             - "%kernel.project_dir%/config/api_platform" # yaml or xml directory configuration
+        imports:
+            - "%kernel.project_dir%/config/api_platform/resources" # php directory configuration
 ```
+
+> [!NOTE]
+>
+> PHP resource files must be placed in a directory listed under `mapping.imports` (not `mapping.paths`).
+> Each file must return an `ApiResource` instance. Since these files are not autoloaded, they won't
+> conflict with your entity classes. This approach provides the same fluent API as PHP attributes.
 
 If you want to serialize only a subset of your data, please refer to the
 [Serialization documentation](serialization.md). **You're done!** You now have a fully featured API
