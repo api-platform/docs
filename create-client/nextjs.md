@@ -145,3 +145,7 @@ If you want to generate a production build locally with docker compose, follow
 
 ![List](images/nextjs/create-client-nextjs-list.png)
 ![Show](images/nextjs/create-client-nextjs-show.png)
+
+## Troubleshooting
+
+Having issues? Check the [Troubleshooting](troubleshooting.md) page.

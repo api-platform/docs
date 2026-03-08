@@ -1,5 +1,9 @@
 # Troubleshooting
 
+> [!TIP]
+>
+> Run `npm init @api-platform/client -- --help` to see all available options.
+
 ## Self-Signed TLS Certificate
 
 If you are running API Platform on development machine which does not have valid TLS certificate,
@@ -11,15 +15,27 @@ NODE_TLS_REJECT_UNAUTHORIZED=0 npm init @api-platform/client --generator typescr
 
 ## Authenticated API
 
-The generator does not perform any authentication, so you must ensure that all referenced Hydra
-paths for your API are accessible anonymously. If you are using API Platform this will at least
-include:
+The generator needs to access the API documentation to introspect your resources. If your API
+requires authentication, you can use the built-in authentication options (Hydra format only):
+
+```console
+# Bearer token authentication
+npm init @api-platform/client -- --bearer "your-token" https://localhost/api src/
+
+# Basic authentication
+npm init @api-platform/client -- --username "admin" --password "secret" https://localhost/api src/
+```
+
+If you do not use these options, you must ensure that all referenced Hydra paths for your API are
+accessible anonymously. If you are using API Platform, this includes at least:
 
 ```console
 api_entrypoint                             ANY      ANY      ANY    /{index}.{_format}
 api_doc                                    ANY      ANY      ANY    /docs.{_format}
 api_jsonld_context                         ANY      ANY      ANY    /contexts/{shortName}.{_format}
 ```
+
+See [Symfony Security](../core/security.md) for details on how to configure access control rules.
 
 ## ApiDocumentation doesn't exist
 
