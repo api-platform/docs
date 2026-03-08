@@ -66,6 +66,109 @@ If you submit the form with an invalid ISBN, you will see:
 
 ![Submission error field](images/submission-error-field.png)
 
+### How Server-side Validation Works Under the Hood
+
+When `fetchHydra` receives an error response (HTTP status outside the 2xx range), it
+[expands](https://www.w3.org/TR/json-ld11-api/#expansion) the JSON-LD body using the API
+documentation context. This means the error object passed to `getSubmissionErrors` does not contain
+the raw response payload, but an expanded JSON-LD document.
+
+For example, a typical API Platform validation error response:
+
+```json
+{
+    "@context": "/contexts/ConstraintViolationList",
+    "@type": "ConstraintViolationList",
+    "title": "An error occurred",
+    "description": "isbn: This value is neither a valid ISBN-10 nor a valid ISBN-13.",
+    "violations": [
+        {
+            "propertyPath": "isbn",
+            "message": "This value is neither a valid ISBN-10 nor a valid ISBN-13."
+        }
+    ]
+}
+```
+
+Gets expanded into a structure like:
+
+```json
+[
+    {
+        "http://www.w3.org/ns/hydra/core#description": [
+            {
+                "@value": "isbn: This value is neither a valid ISBN-10 nor a valid ISBN-13."
+            }
+        ],
+        "http://www.w3.org/ns/hydra/core#violations": [
+            {
+                "http://www.w3.org/ns/hydra/core#propertyPath": [{ "@value": "isbn" }],
+                "http://www.w3.org/ns/hydra/core#ConstraintViolation/message": [
+                    {
+                        "@value": "This value is neither a valid ISBN-10 nor a valid ISBN-13."
+                    }
+                ]
+            }
+        ]
+    }
+]
+```
+
+This expanded document is what the `HttpError`'s `body` property contains. The `getSubmissionErrors`
+method of the [schema analyzer](components.md#hydra-schema-analyzer) handles parsing this expanded
+format automatically and maps violations back to field names.
+
+### Handling Validation Errors Outside React Admin
+
+If you use `fetchHydra` in a custom React application (outside of React Admin forms), you need to
+handle the expanded JSON-LD error format yourself.
+
+Here is an example of how to extract validation errors from the expanded response:
+
+```typescript
+import { fetchHydra } from "@api-platform/admin";
+import type { HttpError } from "react-admin";
+
+async function submitData(url: URL, data: object) {
+    try {
+        return await fetchHydra(url, {
+            method: "POST",
+            body: JSON.stringify(data),
+        });
+    } catch (error) {
+        if (error instanceof HttpError && error.status === 422 && error.body?.[0]) {
+            const content = error.body[0];
+            // Find the violations key (e.g. "http://www.w3.org/ns/hydra/core#violations")
+            const violationKey = Object.keys(content).find((key) => key.includes("violations"));
+            if (violationKey) {
+                const base = violationKey.substring(0, violationKey.indexOf("#"));
+                const violations = content[violationKey].map((violation) => ({
+                    propertyPath: violation[`${base}#propertyPath`]?.[0]?.["@value"],
+                    message: (violation[`${base}#message`] ??
+                        violation[`${base}#ConstraintViolation/message`])?.[0]?.["@value"],
+                }));
+                return { violations };
+            }
+        }
+        throw error;
+    }
+}
+```
+
+Alternatively, you can use the
+[`jsonld.compact`](https://github.com/digitalbazaar/jsonld.js#compacting) method to convert the
+expanded response back to a compact form closer to the original payload:
+
+```typescript
+import jsonld from "jsonld";
+
+// Inside your catch block, after getting error.body:
+const compacted = await jsonld.compact(error.body, {
+    "@context": "http://www.w3.org/ns/hydra/context.jsonld",
+});
+// compacted now has a structure closer to the original API response
+```
+
 ## Validation With React Admin Inputs
 
 If you replace an `<InputGuesser>` with a React Admin
