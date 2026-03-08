@@ -21,6 +21,26 @@ It is able to generate apps using the following frontend stacks:
 Create Client works especially well with APIs built with the
 [API Platform](https://api-platform.com) framework.
 
+## Usage
+
+```console
+npm init @api-platform/client entrypoint outputDirectory
+```
+
+You can run `npm init @api-platform/client -- --help` to see all available options:
+
+| Option                                         | Description                                                                                                                                       |
+| ---------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `-r, --resource [resourceName]`                | Generate CRUD for the given resource only                                                                                                         |
+| `-g, --generator [generator]`                  | Generator to use: `next`, `nuxt`, `quasar`, `react`, `react-native`, `typescript`, `vue`, `vuetify`, or a path to a [custom generator](custom.md) |
+| `-f, --format [hydra\|openapi3\|openapi2]`     | API documentation format (default: `hydra`)                                                                                                       |
+| `-t, --template-directory [templateDirectory]` | Custom templates directory                                                                                                                        |
+| `-p, --hydra-prefix [hydraPrefix]`             | The Hydra prefix used by the API                                                                                                                  |
+| `--bearer [bearer]`                            | Token for bearer auth (Hydra only)                                                                                                                |
+| `--username [username]`                        | Username for basic auth (Hydra only)                                                                                                              |
+| `--password [password]`                        | Password for basic auth (Hydra only)                                                                                                              |
+| `-s, --server-path [serverPath]`               | Path to Express server file for dynamic route addition (Next.js only)                                                                             |
+
 ## Features
 
 - Generates high-quality TypeScript:

@@ -35,3 +35,7 @@ You will obtain 2 `.ts` files arranged as following:
     - interfaces/
         - foo.ts
         - bar.ts
+
+## Troubleshooting
+
+Having issues? Check the [Troubleshooting](troubleshooting.md) page.

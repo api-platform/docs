@@ -125,3 +125,7 @@ fn main() {
   ];
 }
 ```
+
+## Troubleshooting
+
+Having issues? Check the [Troubleshooting](troubleshooting.md) page.

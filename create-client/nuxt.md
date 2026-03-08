@@ -100,3 +100,7 @@ Go to `https://localhost:3000/books/` to start using your app.
 ## Screenshots
 
 ![List](images/nuxt/create-client-nuxt-list.png) ![Edit](images/nuxt/create-client-nuxt-edit.png)
+
+## Troubleshooting
+
+Having issues? Check the [Troubleshooting](troubleshooting.md) page.

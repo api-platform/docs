@@ -90,3 +90,7 @@ Go to `https://localhost/books/` to start using your app.
 ![Show](images/react/create-client-react-show.png)
 ![Edit](images/react/create-client-react-edit.png)
 ![Delete](images/react/create-client-react-delete.png)
+
+## Troubleshooting
+
+Having issues? Check the [Troubleshooting](troubleshooting.md) page.

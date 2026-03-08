@@ -117,3 +117,7 @@ expo start
 ![Show](images/react-native/create-client-react-native-show.png)
 ![Add](images/react-native/create-client-react-native-add.png)
 ![Delete](images/react-native/create-client-react-native-delete.png)
+
+## Troubleshooting
+
+Having issues? Check the [Troubleshooting](troubleshooting.md) page.
