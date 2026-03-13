@@ -25,7 +25,7 @@ composer require symfony/mcp-bundle
 MCP support is optional in Laravel. Install the required packages:
 
 ```console
-composer require api-platform/mcp symfony/mcp-bundle symfony/object-mapper
+composer require api-platform/mcp symfony/mcp-bundle
 ```
 
 ## Configuring the MCP Server
