@@ -1,5 +1,61 @@
 # Upgrade Guide
 
+## API Platform 4.2 to 4.3
+
+### Breaking Changes
+
+#### Doctrine Filters Require Explicit `property`
+
+Doctrine parameter-based filters (`ExactFilter`, `IriFilter`, `PartialSearchFilter`, `UuidFilter`)
+now throw `InvalidArgumentException` if the `property` attribute is missing. If you have filter
+parameters without an explicit `property`, you must either add one or use the `:property` placeholder
+in your parameter name.
+
+```php
+// Before (would silently work without property):
+#[ApiFilter(ExactFilter::class)]
+
+// After (property is required):
+#[ApiFilter(ExactFilter::class, property: 'name')]
+// Or use the :property placeholder in the parameter name
+```
+
+#### Readonly Doctrine Entities Lose PUT & PATCH
+
+Entities marked as readonly via Doctrine metadata (`$classMetadata->markReadOnly()`) no longer
+expose PUT and PATCH operations. Clients sending PUT/PATCH to these resources will receive a 404.
+If you need write operations on readonly entities, explicitly define them in your `ApiResource`
+attribute.
+
+#### JSON-LD `@type` with `output` and `itemUriTemplate`
+
+When using `output` with `itemUriTemplate` on a collection operation, the JSON-LD `@type` now uses
+the resource class name instead of the output DTO class name for semantic consistency with
+`itemUriTemplate` behavior. Update any client code that relies on the DTO class name in `@type`.
+
+### Behavioral Changes
+
+#### `isGranted` Evaluated Before Provider
+
+Security expressions are now evaluated before the state provider runs. Expressions that do not
+reference the `object` variable will be checked at the `pre_read` stage, improving security by
+preventing unnecessary database queries on unauthorized requests. Expressions that reference `object`
+still wait for the provider to resolve the entity. Review any security expressions that relied on
+provider side-effects running before authorization.
+
+#### Hydra Class `@id` Now Always Uses `#ShortName`
+
+Hydra documentation classes now consistently use `#ShortName` as their `@id` instead of schema.org
+type URIs (e.g. `schema:Product`). Semantic types configured via `types` are now exposed through
+`rdfs:subClassOf`. Clients should expect class `@id` and property range changes in the Hydra
+documentation if resources had custom `types` configured.
+
+#### LDP-Compliant Response Headers
+
+API responses now include `Allow` and `Accept-Post` headers per the Linked Data Platform
+specification. These are informational headers that help clients discover API capabilities and should
+not break existing integrations.
+
 ## API Platform 3.4
 
 Remove the `keep_legacy_inflector`, the `event_listeners_backward_compatibility_layer` and the
