@@ -22,10 +22,10 @@ composer require api-platform/mcp symfony/mcp-bundle
 
 ### Laravel
 
-Install the [MCP Bundle](https://github.com/symfony-tools/mcp-bundle) (`api-platform/mcp` is already a dependency of `api-platform/laravel`):
+Install `api-platform/mcp` and the [MCP Bundle](https://github.com/symfony-tools/mcp-bundle):
 
 ```console
-composer require symfony/mcp-bundle
+composer require api-platform/mcp symfony/mcp-bundle
 ```
 
 ## Configuring the MCP Server
