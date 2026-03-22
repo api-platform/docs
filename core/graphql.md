@@ -804,17 +804,22 @@ to allow a client to receive pushed realtime data from the server.
 In API Platform, the built-in subscription support is handled by using
 [Mercure](https://mercure.rocks/) as its underlying protocol.
 
-### Enable Update Subscriptions for a Resource
+### Enable Subscriptions for a Resource
 
-To enable update subscriptions for a resource, these conditions have to be met:
+To enable GraphQL subscriptions for a resource, these conditions have to be met:
 
 - the
   [Mercure hub and bundle need to be installed and configured](mercure.md#installing-mercure-support).
 - Mercure needs to be enabled for the resource.
 - the `update` mutation needs to be enabled for the resource.
-- the subscription needs to be enabled for the resource.
+- at least one subscription operation needs to be enabled for the resource.
 
-For instance, your resource should look like this:
+API Platform provides two GraphQL subscription operation types:
+
+- `Subscription`: subscribes to updates for a specific item.
+- `SubscriptionCollection`: subscribes to future events affecting a collection.
+
+For instance, your resource could expose both an item subscription and a collection subscription:
 
 <code-selector>
 
@@ -826,10 +831,12 @@ namespace App\Entity;
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\GraphQl\Mutation;
 use ApiPlatform\Metadata\GraphQl\Subscription;
+use ApiPlatform\Metadata\GraphQl\SubscriptionCollection;
 
 #[ApiResource(mercure: true, graphQlOperations: [
     new Mutation(name: 'update'),
-    new Subscription()
+    new Subscription(name: 'update'),
+    new SubscriptionCollection(name: 'update_collection'),
 ])]
 class Book
 {
@@ -844,7 +851,10 @@ resources:
         graphQlOperations:
             ApiPlatform\Metadata\GraphQl\Mutation:
                 name: update
-            ApiPlatform\Metadata\GraphQl\Subscription: ~
+            ApiPlatform\Metadata\GraphQl\Subscription:
+                name: update
+            ApiPlatform\Metadata\GraphQl\SubscriptionCollection:
+                name: update_collection
 ```
 
 ```xml
@@ -856,7 +866,8 @@ resources:
     <resource class="App\Entity\Book">
         <graphQlOperations>
             <graphQlOperation class="ApiPlatform\Metadata\GraphQl\Mutation" name="update" />
-            <graphQlOperation class="ApiPlatform\Metadata\GraphQl\Subscription" />
+            <graphQlOperation class="ApiPlatform\Metadata\GraphQl\Subscription" name="update" />
+            <graphQlOperation class="ApiPlatform\Metadata\GraphQl\SubscriptionCollection" name="update_collection" />
         </graphQlOperations>
     </resource>
 </resources>
@@ -864,21 +875,19 @@ resources:
 
 </code-selector>
 
-### Subscribe
+### Subscribe to an Item
 
-Doing a subscription is very similar to doing a query:
+An item subscription is very similar to doing a query:
 
 ```graphql
-{
-    subscription {
-        updateBookSubscribe(input: { id: "/books/1", clientSubscriptionId: "myId" }) {
-            book {
-                title
-                isbn
-            }
-            mercureUrl
-            clientSubscriptionId
+subscription {
+    updateBookSubscribe(input: { id: "/books/1", clientSubscriptionId: "myId" }) {
+        book {
+            title
+            isbn
         }
+        mercureUrl
+        clientSubscriptionId
     }
 }
 ```
@@ -889,18 +898,75 @@ As you can see, you need to pass the **IRI** of the resource as argument. See
 You can also pass `clientSubscriptionId` as argument and can ask its value as a field.
 
 In the payload of the subscription, the given fields of the resource will be the fields you
-subscribe to: if any of these fields is updated, you will be pushed their updated values.
+subscribe to.
+
+An item subscription receives events for that specific item:
+
+- `update` events for the item
+- `delete` events for the item
 
 The `mercureUrl` field is the Mercure URL you need to use to
 [subscribe to the updates](https://mercure.rocks/docs/getting-started#subscribing) on the
 client-side.
 
-### Receiving an Update
+The initial registration response contains the current item payload together with the Mercure
+metadata:
+
+```json
+{
+    "book": {
+        "title": "API Platform in Action",
+        "isbn": "978-6-6344-4051-1"
+    },
+    "mercureUrl": "https://localhost/.well-known/mercure",
+    "clientSubscriptionId": "myId"
+}
+```
+
+### Subscribe to a Collection
+
+A collection subscription registers interest in future events affecting a collection:
+
+```graphql
+subscription {
+    update_collectionBookSubscribe(input: { id: "/books" }) {
+        book {
+            title
+            isbn
+        }
+        mercureUrl
+        clientSubscriptionId
+    }
+}
+```
+
+The initial registration response contains the Mercure metadata, but no item payload yet because no
+specific item event has happened:
+
+```json
+{
+    "book": null,
+    "mercureUrl": "https://localhost/.well-known/mercure",
+    "clientSubscriptionId": null
+}
+```
+
+Collection subscriptions receive events affecting items in the collection:
+
+- `create` events for new items in the collection
+- `update` events for existing items in the collection
+- `delete` events for deleted items from the collection
+
+For `create` and `update`, the pushed payload contains the affected item with the fields requested
+in the subscription query.
+
+### Receiving Updates
 
 On the client-side, you will receive the pushed updated data like you would receive the updated data
 if you did an `update` mutation.
 
-For instance, you could receive a JSON payload like this:
+For item subscriptions receiving `update` events, and collection subscriptions receiving `create` or
+`update` events, you could receive a JSON payload like this:
 
 ```json
 {
@@ -910,6 +976,83 @@ For instance, you could receive a JSON payload like this:
     }
 }
 ```
+
+When a subscribed item is deleted, or when a collection subscription receives a `delete` event, API
+Platform sends a lightweight payload instead of a regular normalized resource. By that point, the
+deleted object can no longer be normalized safely like a regular resource. This payload contains the
+information needed by the client to identify and evict the deleted item.
+
+The delete payload shape is the same for item subscriptions and collection subscriptions. Even
+though an item subscription could infer the deleted item from the subscribed IRI, collection
+subscriptions cannot. Using one explicit delete event shape keeps client handling uniform.
+
+For example, a delete event payload looks like this:
+
+```json
+{
+    "type": "delete",
+    "payload": {
+        "id": "/books/1",
+        "iri": "https://example.com/books/1",
+        "type": "Book"
+    }
+}
+```
+
+### Private Subscription Delivery
+
+GraphQL subscriptions use Mercure for transport. The `mercure` option controls how the subscription
+is delivered:
+
+- no `private` option: the subscription is public
+- `mercure: ['private' => true]`: the subscription is private and requires Mercure authorization
+- `mercure: ['private' => true, 'private_fields' => [...]]`: the subscription is private and
+  additionally partitioned by explicit fields on the resource
+
+The `private_fields` option is specific to GraphQL subscriptions. It tells API Platform which
+resource fields define the delivery scope of the subscription registration.
+
+Concretely, API Platform:
+
+- reads the configured field values from the resource when the subscription is registered
+- builds a private delivery partition from those values
+- stores subscriptions having the same partition together
+- only publishes updates to subscriptions matching that same partition later
+
+`private_fields` does not change Mercure topics and it is not based on the authenticated user ID. It
+is an application-defined partition key derived from resource data.
+
+When a client subscribes, API Platform reads the values of these fields from the resource and uses
+them to group subscriptions together. Two subscriptions sharing the same GraphQL field selection but
+different `private_fields` values are stored separately and do not receive each other's updates.
+
+This is useful when authorization alone is not precise enough for your application. For example, a
+single authenticated user might belong to several organizations, accounts or workspaces, and you may
+want subscriptions to be isolated by one of those scopes instead of by the user identity itself.
+
+```php
+new Subscription(
+    name: 'update',
+    mercure: ['private' => true, 'private_fields' => ['organizationId']]
+)
+```
+
+In this example:
+
+- clients subscribed to resources with `organizationId = 12` share one private subscription
+  partition
+- clients subscribed to resources with `organizationId = 42` use another
+- updates for one organization are not delivered to subscriptions registered for the other one
+
+This is especially useful when Mercure authorization is necessary but not sufficient to describe the
+actual business scope of the subscription. For example, a single authenticated client may be allowed
+to access multiple organizations, projects, inboxes or workspaces, while each subscription should
+still be isolated to only one of those scopes.
+
+Use `private_fields` only together with `mercure.private = true`.
+
+If you only need Mercure authorization and do not need this extra partitioning, use
+`mercure: ['private' => true]` without `private_fields`.
 
 ### Subscriptions Cache
 
