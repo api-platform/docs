@@ -358,7 +358,7 @@ class SearchFilterParameter
 ```
 ## Doctrine ORM and MongoDB ODM Filters
 
-!> [!WARNING]
+> [!WARNING]
 > Prefer using QueryParameter instead of ApiFilter for more flexibility, this is subject to change in the next major version.
 
 ### Basic Knowledge
