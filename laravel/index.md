@@ -44,6 +44,9 @@ Let's discover how to use API Platform with Laravel!
 API Platform can be installed easily on new and existing Laravel projects. If you already have an
 existing project, skip directly to the next section.
 
+API Platform 4.2 supports **Laravel 11 and Laravel 12** (`laravel/framework ^11.0 || ^12.0`).
+For Laravel 13 support, use API Platform 4.3.
+
 If you don't have an existing Laravel project, [create one](https://laravel.com/docs/installation).
 All Laravel installation methods are supported. For instance, you can use Composer:
 
