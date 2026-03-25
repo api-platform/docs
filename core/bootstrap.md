@@ -31,6 +31,13 @@ composer require \
     willdurand/negotiation
 ```
 
+You may also want to install additional packages depending on your needs:
+
+```console
+composer require \
+    symfony/validator           # validation support
+```
+
 ## Full Bootstrap Example
 
 Create the following file structure:
@@ -669,6 +676,9 @@ $serializeProcessor = new SerializeProcessor(
 // ──────────────────────────────────────────────
 // 12. Event Listeners and HttpKernel
 // ──────────────────────────────────────────────
+// Note: this section is specific to the Symfony HttpKernel.
+// When using Laravel, request handling is managed differently
+// (see ApiPlatformProvider).
 
 $formatListener = new AddFormatListener($contentNegotiationProvider, $resourceMetadataFactory);
 $readListener = new ReadListener(
