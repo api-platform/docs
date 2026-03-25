@@ -12,7 +12,7 @@ validation, serialization — to turn your PHP classes into MCP-compliant tool d
 
 ## Installation
 
-### Symfony
+### Installing on Symfony
 
 Install `api-platform/mcp` and the [MCP Bundle](https://github.com/symfony-tools/mcp-bundle):
 
@@ -20,7 +20,7 @@ Install `api-platform/mcp` and the [MCP Bundle](https://github.com/symfony-tools
 composer require api-platform/mcp symfony/mcp-bundle
 ```
 
-### Laravel
+### Installing on Laravel
 
 Install `api-platform/mcp` and the [MCP Bundle](https://github.com/symfony-tools/mcp-bundle):
 
@@ -30,7 +30,7 @@ composer require api-platform/mcp symfony/mcp-bundle
 
 ## Configuring the MCP Server
 
-### Symfony
+### Configuring Symfony
 
 Enable the MCP server and configure the transport in your Symfony configuration:
 
@@ -62,7 +62,7 @@ The `format` option sets the serialization format used for MCP tool structured c
 format registered in `api_platform.formats` (e.g. `jsonld`, `json`, `jsonapi`). The default `jsonld`
 produces rich semantic output with `@context`, `@id`, and `@type` fields.
 
-### Laravel
+### Configuring Laravel
 
 MCP is enabled by default in the Laravel configuration:
 
