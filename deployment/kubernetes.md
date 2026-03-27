@@ -113,16 +113,16 @@ helm upgrade main ./helm/api-platform --namespace=default --create-namespace --w
     --set "pwa.image.repository=gcr.io/test-api-platform/pwa" \
     --set pwa.image.tag=latest \
     --set php.appSecret='!ChangeMe!' \
-    --set postgresql.postgresqlPassword='!ChangeMe!' \
-    --set postgresql.persistence.enabled=true \
-    --set "corsAllowOrigin=^https?:\/\/[a-z]*\.mywebsite.com$"
+    --set postgresql.global.postgresql.auth.password='!ChangeMe!' \
+    --set postgresql.primary.persistence.enabled=true \
+    --set "php.corsAllowOrigin=^https?:\/\/[a-z]*\.mywebsite.com$"
 ```
 
 The `"` are necessary for Windows. Use ^ on Windows instead of \ to split commands into multiple
 lines. You can add the parameter `--dry-run` to check upfront if anything is correct. Replace the
 values with the image parameters from the stage above. The parameter `php.appSecret` is the
 `AppSecret` from ./.env Fill the rest of the values with the correct settings. For available options
-see /helm/api-platform/values.yaml. If you want a test deploy you can set corsAllowOrigin='\*'
+see /helm/api-platform/values.yaml. If you want a test deploy you can set php.corsAllowOrigin='\*'
 
 After a successful installation, there is a message at the end. You can copy these commands and
 execute them to set a port-forwarding and get access on your local machine to the deploy. See image
@@ -140,8 +140,8 @@ helm upgrade api-platform ./helm/api-platform \
     --set postgresql.url=pgsql://username:password@host/database?serverVersion=13
 ```
 
-Finally, build the `pwa` (client and admin) JavaScript apps and
-[deploy them on a static site hosting service](https://create-react-app.dev/docs/deployment/).
+The PWA (Next.js) is deployed alongside the PHP container through the Helm chart. FrankenPHP
+automatically proxies requests to the PWA service.
 
 ## Access the container
 
@@ -186,9 +186,9 @@ helm upgrade api-platform ./helm/api-platform --namespace=default \
     --set "pwa.image.repository=gcr.io/test-api-platform/pwa" \
     --set pwa.image.tag=latest \
     --set php.appSecret='!ChangeMe!' \
-    --set postgresql.postgresqlPassword='!ChangeMe!' \
-    --set postgresql.persistence.enabled=true \
-    --set "corsAllowOrigin=^https?://[a-z\]*\.mywebsite.com$" \
+    --set postgresql.global.postgresql.auth.password='!ChangeMe!' \
+    --set postgresql.primary.persistence.enabled=true \
+    --set "php.corsAllowOrigin=^https?://[a-z\]*\.mywebsite.com$" \
     --set php.image.pullPolicy=Always \
     --set pwa.image.pullPolicy=Always
 ```
@@ -196,7 +196,7 @@ helm upgrade api-platform ./helm/api-platform --namespace=default \
 ## GitHub Actions Example for deployment
 
 You can find a
-[complete deploy command for GKE](https://github.com/api-platform/demo/blob/4.1/.github/workflows/cd.yml)
+[complete deploy command for GKE](https://github.com/api-platform/demo/blob/4.3/.github/workflows/cd.yml)
 on the [demo project](https://github.com/api-platform/demo/):
 
 ## Symfony Messenger
@@ -204,7 +204,9 @@ on the [demo project](https://github.com/api-platform/demo/):
 Running Pods with the Messenger Component to consume queues requires additions to the Helm chart.
 
 Start by creating a new template for the queue-worker-deployment. The `deployment.yaml` can be used
-as template, the caddy container and all unused ENV variables should be removed.
+as template. Since the PHP image uses FrankenPHP (which embeds Caddy as web server), you should
+replace the default command to run the Messenger consumer instead of the web server, and remove all
+unused ENV variables.
 
 Add the following lines under `containers` to overwrite the command.
 
