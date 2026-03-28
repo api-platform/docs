@@ -6,6 +6,7 @@ API Platform is **the easiest way** to create **state-of-the-art** web APIs usin
 
 With API Platform, you can:
 
+<!-- prettier-ignore -->
 - [expose your Eloquent](#exposing-a-model) models in minutes as:
 - a REST API implementing the industry-leading standards, formats and best practices:
   [JSON-LD](https://en.wikipedia.org/wiki/JSON-LD)/[RDF](https://en.wikipedia.org/wiki/Resource_Description_Framework),
@@ -25,11 +26,11 @@ With API Platform, you can:
   ([compatible with Sanctum, Passport, Socialite...](#authentication))
 - add [filtering logic](#adding-filters)
 - push changed data to the clients in real-time using Laravel Broadcast and
-  [Mercure](https://mercure.rocks) (a popular WebSockets alternative, created by Kévin Dunglas, the
-  original author of API Platform) and receive them using Laravel Echo-->
+  [Mercure](https://mercure.rocks) (a popular WebSockets alternative, created by Kévin Dunglas,
+  the original author of API Platform) and receive them using Laravel Echo-->
 - benefits from the API Platform JavaScript tools: [admin](../admin/index.md) and
-  [create client](../create-client/index.md) (supports Next/React, Nuxt/Vue.js, Quasar, Vuetify and
-  more!)
+  [create client](../create-client/index.md) (supports Next/React, Nuxt/Vue.js, Quasar, Vuetify
+  and more!)
 - benefits from native HTTP cache (with automatic invalidation)
 - boost your app with [Octane](https://laravel.com/docs/octane) and
   [FrankenPHP](https://frankenphp.dev) (the default Octane engine, also created by Kévin)
@@ -44,8 +45,8 @@ Let's discover how to use API Platform with Laravel!
 API Platform can be installed easily on new and existing Laravel projects. If you already have an
 existing project, skip directly to the next section.
 
-API Platform 4.2 supports **Laravel 11 and Laravel 12** (`laravel/framework ^11.0 || ^12.0`).
-For Laravel 13 support, use API Platform 4.3.
+API Platform 4.2 supports **Laravel 11 and Laravel 12** (`laravel/framework ^11.0 || ^12.0`). For
+Laravel 13 support, use API Platform 4.3.
 
 If you don't have an existing Laravel project, [create one](https://laravel.com/docs/installation).
 All Laravel installation methods are supported. For instance, you can use Composer:
@@ -191,6 +192,7 @@ corresponding API request in the UI. Try it yourself by browsing to
 
 So, if you want to access the raw data, you have two alternatives:
 
+<!-- prettier-ignore -->
 - Add the correct `Accept` header (or don't set any `Accept` header at all if you don't care about
   security) - preferred when writing API clients
 - Add the format you want as the extension of the resource - for debug purposes only
@@ -757,6 +759,7 @@ API Platform hooks into the native
 
 It also natively supports:
 
+<!-- prettier-ignore -->
 - [Laravel Sanctum](https://laravel.com/docs/sanctum), an authentication system for SPAs (single
   page applications), mobile applications, and simple, token-based APIs
 - [Laravel Passport](https://laravel.com/docs/passport), a full OAuth 2 server
