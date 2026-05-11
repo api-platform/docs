@@ -282,6 +282,59 @@ final class UserResourcesSubscriber implements EventSubscriberInterface
 }
 ```
 
+### Invalidating Additional Tags on Mutation
+
+Implement `ApiPlatform\HttpCache\PurgeTagProviderInterface` to add extra cache tags to invalidate
+when an entity is mutated. This is useful for any tags the built-in listener cannot resolve on its
+own: sub-resource collection IRIs (e.g. `/parents/{parentId}/children`), surrogate-key prefixes,
+class-based tags, or any custom invalidation strategy.
+
+```php
+<?php
+// src/HttpCache/ChildPurgeTagProvider.php
+namespace App\HttpCache;
+
+use ApiPlatform\HttpCache\PurgeTagProviderInterface;
+use App\Entity\Child;
+
+final class ChildPurgeTagProvider implements PurgeTagProviderInterface
+{
+    public function getTagsForResource(object $entity): iterable
+    {
+        if (!$entity instanceof Child || null === $entity->getParent()) {
+            return [];
+        }
+
+        yield '/parents/'.$entity->getParent()->getId().'/children';
+    }
+}
+```
+
+#### Symfony
+
+With [autowiring and autoconfiguration](https://symfony.com/doc/current/service_container/autowiring.html)
+enabled (the default), the service is automatically registered. To declare the service explicitly:
+
+```yaml
+# config/services.yaml
+services:
+    App\HttpCache\ChildPurgeTagProvider:
+        tags:
+            - name: api_platform.http_cache.purge_tag_provider
+```
+
+#### Laravel
+
+Register and tag the implementation in a service provider:
+
+```php
+$this->app->bind(\App\HttpCache\ChildPurgeTagProvider::class);
+$this->app->tag(
+    [\App\HttpCache\ChildPurgeTagProvider::class],
+    \ApiPlatform\HttpCache\PurgeTagProviderInterface::class
+);
+```
+
 ## Setting Custom HTTP Cache Headers
 
 The `cacheHeaders` attribute can be used to set custom HTTP cache headers:
