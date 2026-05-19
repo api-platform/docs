@@ -347,6 +347,11 @@ services:
             - name: api_platform.http_cache.purge_tag_provider
 ```
 
+#### Laravel
+
+Any class implementing `PurgeTagProviderInterface` placed inside your `app/` directory is automatically
+discovered and registered by API Platform's autoconfiguration. No further setup is required.
+
 ## Setting Custom HTTP Cache Headers
 
 The `cacheHeaders` attribute can be used to set custom HTTP cache headers:
