@@ -282,6 +282,76 @@ final class UserResourcesSubscriber implements EventSubscriberInterface
 }
 ```
 
+### Invalidating Additional Tags on Mutation
+
+Implement `ApiPlatform\HttpCache\PurgeTagProviderInterface` to add extra cache tags to invalidate
+when a resource is mutated. This is useful for any tags the built-in listener cannot resolve on its
+own: sub-resource collection IRIs (e.g. `/parents/{parentId}/children`), surrogate-key prefixes,
+class-based tags, or any custom invalidation strategy.
+
+The interface provides three methods so you can differentiate between operations and receive the
+previous state of the resource on updates:
+
+```php
+<?php
+// src/HttpCache/ChildPurgeTagProvider.php
+namespace App\HttpCache;
+
+use ApiPlatform\HttpCache\PurgeTagProviderInterface;
+use App\Entity\Child;
+
+final class ChildPurgeTagProvider implements PurgeTagProviderInterface
+{
+    public function getTagsForInsert(object $resource): iterable
+    {
+        if (!$resource instanceof Child || null === $resource->getParent()) {
+            return [];
+        }
+
+        yield '/parents/'.$resource->getParent()->getId().'/children';
+    }
+
+    public function getTagsForUpdate(object $resource, object $previousResource): iterable
+    {
+        // Invalidate both the old and new parent collection when the parent changes
+        if ($resource instanceof Child && null !== $resource->getParent()) {
+            yield '/parents/'.$resource->getParent()->getId().'/children';
+        }
+
+        if ($previousResource instanceof Child && null !== $previousResource->getParent()) {
+            yield '/parents/'.$previousResource->getParent()->getId().'/children';
+        }
+    }
+
+    public function getTagsForDelete(object $resource): iterable
+    {
+        if (!$resource instanceof Child || null === $resource->getParent()) {
+            return [];
+        }
+
+        yield '/parents/'.$resource->getParent()->getId().'/children';
+    }
+}
+```
+
+#### Symfony
+
+With [autowiring and autoconfiguration](https://symfony.com/doc/current/service_container/autowiring.html)
+enabled (the default), the service is automatically registered. To declare the service explicitly:
+
+```yaml
+# config/services.yaml
+services:
+    App\HttpCache\ChildPurgeTagProvider:
+        tags:
+            - name: api_platform.http_cache.purge_tag_provider
+```
+
+#### Laravel
+
+Any class implementing `PurgeTagProviderInterface` placed inside your `app/` directory is automatically
+discovered and registered by API Platform's autoconfiguration. No further setup is required.
+
 ## Setting Custom HTTP Cache Headers
 
 The `cacheHeaders` attribute can be used to set custom HTTP cache headers:
