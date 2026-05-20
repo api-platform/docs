@@ -302,10 +302,9 @@ resources:
 
 When you do not want to allow access to the resource item (i.e. you don't want a `GET` item
 operation), instead of omitting the resource item altogether, you can explicitly specify the IRI of
-the resource item by declaring a `GET` item operation that returns HTTP 404 (Not Found). 
+the resource item by declaring a `GET` item operation that returns HTTP 404 (Not Found).
 
 > For Laravel applications, the same behavior can be implemented using the ApiPlatform\Laravel\Controller\NotExposedController.
-
 
 For example:
 
