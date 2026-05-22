@@ -926,17 +926,16 @@ return [
 
 ## Sending Credentials with Swagger UI Requests
 
-When your API is deployed behind a proxy that uses cookie-based authentication
-(e.g. Cloudflare Access), Swagger UI's requests may be rejected because the
-authentication cookie is not forwarded by default. Enabling `withCredentials`
-adds a `requestInterceptor` to SwaggerUIBundle that sets `credentials: 'include'`
-on every outgoing request, ensuring cookies are sent alongside token and CORS requests.
+When your API is deployed behind a proxy that uses cookie-based authentication (e.g. Cloudflare
+Access), Swagger UI's requests may be rejected because the authentication cookie is not forwarded by
+default. Enabling `withCredentials` adds a `requestInterceptor` to SwaggerUIBundle that sets
+`credentials: 'include'` on every outgoing request, ensuring cookies are sent alongside token and
+CORS requests.
 
 ### Sending Credentials with Swagger UI Requests using Symfony
 
-> [!NOTE]
-> This feature is only available with Laravel. You're welcome to contribute the Symfony implementation
-> [on GitHub](https://github.com/api-platform/core).
+> [!NOTE] This feature is only available with Laravel. You're welcome to contribute the Symfony
+> implementation [on GitHub](https://github.com/api-platform/core).
 
 ### Sending Credentials with Swagger UI Requests using Laravel
 
