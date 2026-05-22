@@ -924,6 +924,33 @@ return [
 > **must** be set according to the
 > [OpenID Connect specification](https://openid.net/specs/openid-connect-core-1_0.html).
 
+## Sending Credentials with Swagger UI Requests
+
+When your API is deployed behind a proxy that uses cookie-based authentication
+(e.g. Cloudflare Access), Swagger UI's requests may be rejected because the
+authentication cookie is not forwarded by default. Enabling `withCredentials`
+adds a `requestInterceptor` to SwaggerUIBundle that sets `credentials: 'include'`
+on every outgoing request, ensuring cookies are sent alongside token and CORS requests.
+
+### Sending Credentials with Swagger UI Requests using Symfony
+
+> [!NOTE]
+> This feature is only available with Laravel. You're welcome to contribute the Symfony implementation
+> [on GitHub](https://github.com/api-platform/core).
+
+### Sending Credentials with Swagger UI Requests using Laravel
+
+```php
+<?php
+// config/api-platform.php
+return [
+    // ...
+    'swagger_ui' => [
+        'with_credentials' => true,
+    ],
+];
+```
+
 ## Info Object
 
 The [info object](https://swagger.io/specification/#info-object) provides metadata about the API
