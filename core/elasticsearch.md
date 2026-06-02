@@ -94,7 +94,6 @@ configure SSL verification. This works for both Elasticsearch and OpenSearch.
 # config/packages/api_platform.yaml
 api_platform:
     elasticsearch:
-<<<<<<< HEAD
         hosts: ["%env(ELASTICSEARCH_HOST)%"]
         ssl_ca_bundle: "/path/to/ca-bundle.crt"
 ```

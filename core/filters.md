@@ -54,19 +54,70 @@ a new instance:
 - **`IriFilter`**: For filtering by IRIs (e.g., relations). Supports dot notation for nested
   associations.
     - Usage: `new QueryParameter(filter: IriFilter::class)`
-- **`BooleanFilter`**: For boolean field filtering.
+- **`ComparisonFilter`**: A decorator that wraps an equality filter (`ExactFilter`, `UuidFilter`) to
+  add `gt`, `gte`, `lt`, `lte`, and `ne` operators. Replaces `DateFilter`, `NumericFilter`, and
+  `RangeFilter` for comparison use cases.
+    - Usage:
+      `new QueryParameter(filter: new ComparisonFilter(new ExactFilter()), property: 'price')`
+- **`FreeTextQueryFilter`**: Applies a filter across multiple properties using a single parameter.
+    - Usage:
+      `new QueryParameter(filter: new FreeTextQueryFilter(new PartialSearchFilter()), properties: ['name', 'description'])`
+- **`OrFilter`**: A decorator that forces a filter to combine criteria with `OR` instead of `AND`.
+    - Usage:
+      `new QueryParameter(filter: new OrFilter(new ExactFilter()), properties: ['name', 'ean'])`
+- **`BooleanFilter`**: For boolean field filtering (legacy, `ExactFilter` is recommended instead).
     - Usage: `new QueryParameter(filter: BooleanFilter::class)`
-- **`NumericFilter`**: For numeric field filtering.
+- **`NumericFilter`**: For numeric field filtering (legacy, `ExactFilter` or `ComparisonFilter` is
+  recommended instead).
     - Usage: `new QueryParameter(filter: NumericFilter::class)`
-- **`RangeFilter`**: For range-based filtering (e.g., prices between X and Y).
+- **`RangeFilter`**: For range-based filtering (legacy, `ComparisonFilter` is recommended instead).
     - Usage: `new QueryParameter(filter: RangeFilter::class)`
 - **`ExistsFilter`**: For checking existence of nullable values.
     - Usage: `new QueryParameter(filter: ExistsFilter::class)`
-- **`OrderFilter`**: For sorting results (legacy multi-property filter).
+- **`OrderFilter`**: For sorting results (legacy, `SortFilter` is recommended instead).
     - Usage: `new QueryParameter(filter: OrderFilter::class)`
 
 > [!TIP] Always check the specific documentation for your persistence layer (Doctrine ORM, MongoDB
 > ODM, Laravel Eloquent) to see the exact namespace and available options for these filters.
+
+### How Modern Filters Work
+
+Modern filters (those that do **not** extend `AbstractFilter`) are designed around a clear
+separation between **metadata time** and **runtime**.
+
+**At metadata time** (`ParameterResourceMetadataCollectionFactory`), when the application boots:
+
+- **`:property` placeholders are expanded**: A parameter key like `'search[:property]'` is expanded
+  into one concrete parameter per property (e.g., `search[title]`, `search[author]`). Properties are
+  auto-discovered from the entity or explicitly listed via the `properties` option.
+- **Nested property paths are resolved**: Dot-notation properties (e.g., `author.name`) are
+  validated against entity metadata and association chains are stored so they don't need to be
+  re-resolved on every request.
+- **OpenAPI and JSON Schema documentation is extracted**: Filters implementing
+  `OpenApiParameterFilterInterface` or `JsonSchemaFilterInterface` provide their documentation once
+  during metadata collection.
+
+**At runtime** (`ParameterExtension`), when a request comes in:
+
+- The extension simply reads the parameter value from the request, injects dependencies
+  (`ManagerRegistry`, `Logger`) if needed, and calls `$filter->apply()`. All the metadata work has
+  already been done.
+
+This design has two benefits for developers:
+
+1. **Less boilerplate**: You declare
+   `'price' => new QueryParameter(filter: new ComparisonFilter(new ExactFilter()))` and the
+   framework handles property discovery, OpenAPI documentation, JSON Schema generation, and
+   association traversal automatically.
+2. **Better performance**: Expensive metadata operations (property resolution, association chain
+   walking, schema generation) happen once at boot time and are cached, keeping the per-request hot
+   path minimal.
+
+Legacy filters extending `AbstractFilter` predate this architecture. They mix metadata concerns with
+runtime logic and require service injection (`ManagerRegistry`, `NameConverter`) that can fail when
+instantiated with `new` inside an attribute. See the
+[migration guide](doctrine-filters.md#migrating-from-apifilter-to-queryparameter) for how to
+upgrade.
 
 ### Global Default Parameters
 
@@ -165,26 +216,31 @@ class Friend
 ### Using Filters with DateTime Properties
 
 When working with `DateTime` or `DateTimeImmutable` properties, the system might default to exact
-matching. To enable date ranges (e.g., `after`, `before`), you must explicitly use the `DateFilter`:
+matching. To enable date comparison operators (`gt`, `gte`, `lt`, `lte`), use `ComparisonFilter`
+wrapping `ExactFilter`:
 
 ```php
 <?php
 // api/src/Entity/Event.php
 namespace App\Entity;
 
+use ApiPlatform\Doctrine\Orm\Filter\ComparisonFilter;
+use ApiPlatform\Doctrine\Orm\Filter\ExactFilter;
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\QueryParameter;
-use ApiPlatform\Doctrine\Orm\Filter\DateFilter;
 
 #[ApiResource(operations: [
     new GetCollection(
         parameters: [
-            'date[:property]' => new QueryParameter(
-                // Use the class string to leverage the service container (recommended)
-                filter: DateFilter::class,
-                properties: ['startDate', 'endDate']
-            )
+            'startDate' => new QueryParameter(
+                filter: new ComparisonFilter(new ExactFilter()),
+                property: 'startDate',
+            ),
+            'endDate' => new QueryParameter(
+                filter: new ComparisonFilter(new ExactFilter()),
+                property: 'endDate',
+            ),
         ]
     )
 ])]
@@ -196,8 +252,9 @@ class Event
 
 This configuration allows clients to filter events by date ranges using queries like:
 
-- `/events?date[startDate][after]=2023-01-01`
-- `/events?date[endDate][before]=2023-12-31`
+- `/events?startDate[gte]=2023-01-01` — events starting on or after January 1st 2023
+- `/events?endDate[lt]=2023-12-31` — events ending before December 31st 2023
+- `/events?startDate[gte]=2023-01-01&endDate[lte]=2023-12-31` — events within a date range
 
 ### Filtering a Single Property
 
@@ -295,7 +352,7 @@ public function apply(QueryBuilder $queryBuilder, QueryNameGeneratorInterface $q
 
 ### Restricting Properties with `:property` Placeholders
 
-Filters that work on a per-parameter basis can also use the `:property` placeholde and use the
+Filters that work on a per-parameter basis can also use the `:property` placeholder and use the
 parameter's `properties` configuration:
 
 ```php
@@ -797,10 +854,10 @@ For Doctrine ORM, your filter should implement `ApiPlatform\Doctrine\Orm\Filter\
 namespace App\Filter;
 
 use ApiPlatform\Doctrine\Orm\Filter\FilterInterface;
+use ApiPlatform\Doctrine\Orm\Util\QueryNameGeneratorInterface;
 use ApiPlatform\Metadata\Operation;
 use ApiPlatform\State\ParameterNotFound;
 use Doctrine\ORM\QueryBuilder;
-use Doctrine\ORM\Query\QueryNameGeneratorInterface;
 
 final class RegexpFilter implements FilterInterface
 {

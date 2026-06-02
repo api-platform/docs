@@ -120,9 +120,10 @@ services all begin with `api_platform.doctrine_mongodb.odm`.
 
 ## Search Filter
 
-> [!WARNING] The SearchFilter is a multi-type filter that may have inconsistencies (eg: you can
-> search a partial date with LIKE) we recommend to use type-specific filters such as
-> `PartialSearchFilter` or `DateFilter` instead.
+> [!WARNING] The SearchFilter is a multi-type filter that may have inconsistencies (e.g., you can
+> search a partial date with LIKE). We recommend using type-specific filters such as `ExactFilter`,
+> `PartialSearchFilter`, `ComparisonFilter`, or `IriFilter` instead. See the
+> [migration guide](#migrating-from-apifilter-to-queryparameter).
 
 ### Built-in Search Filters since API Platform >= 4.2
 
@@ -135,11 +136,11 @@ To add some search filters, choose over this new list:
   notation)
 - [PartialSearchFilter](#partial-search-filter) (filter using a `LIKE %value%`; supports nested
   properties via dot notation)
+- [ComparisonFilter](#comparison-filter) (filter with comparison operators `gt`, `gte`, `lt`, `lte`,
+  `ne`; replaces `DateFilter`, `NumericFilter`, and `RangeFilter`)
 - [FreeTextQueryFilter](#free-text-query-filter) (allows you to apply multiple filters to multiple
   properties of a resource at the same time, using a single parameter in the URL)
-- [OrFilter](#or-filter) (apply a filter using `orWhere` instead of `andWhere` )
-- [ComparisonFilter](#comparison-filter) (add `gt`, `gte`, `lt`, `lte`, `ne` operators to an
-  equality or UUID filter)
+- [OrFilter](#or-filter) (apply a filter using `orWhere` instead of `andWhere`)
 
 ### SearchFilter
 
@@ -559,6 +560,11 @@ parameter key, one per operator. For a parameter named `price`, the generated pa
 
 ## Date Filter
 
+> [!TIP] Consider using [`ComparisonFilter`](#comparison-filter) wrapping `ExactFilter` as a modern
+> replacement. `ComparisonFilter` does not extend `AbstractFilter`, works natively with
+> `QueryParameter`, and supports the same date comparison use cases with `gt`, `gte`, `lt`, `lte`
+> operators.
+
 The date filter allows filtering a collection by date intervals.
 
 Syntax: `?property[<after|before|strictly_after|strictly_before>]=value`
@@ -717,6 +723,9 @@ class Offer
 
 ## Boolean Filter
 
+> [!TIP] Consider using [`ExactFilter`](#exact-filter) as a modern replacement. `ExactFilter` does
+> not extend `AbstractFilter` and works natively with `QueryParameter`.
+
 The boolean filter allows you to search on boolean fields and values.
 
 Syntax: `?property=<true|false|1|0>`
@@ -758,6 +767,11 @@ It will return all offers where `isAvailableGenericallyInMyCountry` equals `true
 
 ## Numeric Filter
 
+> [!TIP] For comparison operations on numeric fields, consider using
+> [`ComparisonFilter`](#comparison-filter) wrapping `ExactFilter`. `ComparisonFilter` does not
+> extend `AbstractFilter`, works natively with `QueryParameter`, and provides `gt`, `gte`, `lt`,
+> `lte`, and `ne` operators. For exact numeric matching, `ExactFilter` alone is sufficient.
+
 The numeric filter allows you to search on numeric fields and values.
 
 Syntax: `?property=<int|bigint|decimal...>`
@@ -798,6 +812,11 @@ Given that the collection endpoint is `/offers`, you can filter offers with the 
 It will return all offers with `sold` equals `1`.
 
 ## Range Filter
+
+> [!TIP] Consider using [`ComparisonFilter`](#comparison-filter) wrapping `ExactFilter` as a modern
+> replacement. `ComparisonFilter` does not extend `AbstractFilter`, works natively with
+> `QueryParameter`, and supports range queries by combining `gte` and `lte` operators (e.g.,
+> `?price[gte]=10&price[lte]=100`).
 
 The range filter allows you to filter by a value lower than, greater than, lower than or equal,
 greater than or equal and between two values.
@@ -899,6 +918,9 @@ api_platform:
 ```
 
 ## Order Filter (Sorting)
+
+> [!TIP] Consider using [`SortFilter`](#sort-filter) as a modern replacement. `SortFilter` does not
+> extend `AbstractFilter` and works natively with `QueryParameter`.
 
 The order filter allows sorting a collection against the given properties.
 
@@ -1271,6 +1293,154 @@ class Employee
     // ...
 }
 ```
+
+## Migrating from ApiFilter to QueryParameter
+
+API Platform 4.2+ introduces a new generation of filters designed to work natively with
+`QueryParameter`. These filters do not extend `AbstractFilter` and avoid the issues that arise when
+legacy filters are instantiated with `new` inside an attribute (missing `ManagerRegistry`,
+`NameConverter`, `Logger`).
+
+The following table shows how to replace each legacy filter. All modern replacements are available
+for both Doctrine ORM (`ApiPlatform\Doctrine\Orm\Filter\*`) and MongoDB ODM
+(`ApiPlatform\Doctrine\Odm\Filter\*`).
+
+| Legacy filter (`AbstractFilter`)                            | Modern replacement                                                                                            |
+| ----------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------- |
+| `SearchFilter` (exact strategy)                             | [`ExactFilter`](#exact-filter)                                                                                |
+| `SearchFilter` (partial, start, end, word_start strategies) | [`PartialSearchFilter`](#partial-search-filter)                                                               |
+| `SearchFilter` (relations / IRI matching)                   | [`IriFilter`](#iri-filter)                                                                                    |
+| `BooleanFilter`                                             | [`ExactFilter`](#exact-filter)                                                                                |
+| `DateFilter`                                                | [`ComparisonFilter(new ExactFilter())`](#comparison-filter)                                                   |
+| `NumericFilter`                                             | [`ExactFilter`](#exact-filter) (exact) or [`ComparisonFilter(new ExactFilter())`](#comparison-filter) (range) |
+| `RangeFilter`                                               | [`ComparisonFilter(new ExactFilter())`](#comparison-filter)                                                   |
+| `OrderFilter`                                               | [`SortFilter`](#sort-filter)                                                                                  |
+| `ExistsFilter`                                              | No modern replacement yet — keep using `ExistsFilter`                                                         |
+
+### Example: Migrating a DateFilter
+
+Before (legacy):
+
+```php
+<?php
+use ApiPlatform\Doctrine\Orm\Filter\DateFilter;
+use ApiPlatform\Metadata\ApiFilter;
+use ApiPlatform\Metadata\ApiResource;
+
+#[ApiResource]
+#[ApiFilter(DateFilter::class, properties: ['createdAt'])]
+class Offer
+{
+    // ...
+}
+```
+
+After (modern):
+
+```php
+<?php
+use ApiPlatform\Doctrine\Orm\Filter\ComparisonFilter;
+use ApiPlatform\Doctrine\Orm\Filter\ExactFilter;
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\QueryParameter;
+
+#[ApiResource]
+#[GetCollection(
+    parameters: [
+        'createdAt' => new QueryParameter(
+            filter: new ComparisonFilter(new ExactFilter()),
+            property: 'createdAt',
+        ),
+    ],
+)]
+class Offer
+{
+    // ...
+}
+```
+
+The query syntax changes from `?createdAt[after]=2025-01-01` to `?createdAt[gte]=2025-01-01`.
+
+### Example: Migrating a RangeFilter
+
+Before (legacy):
+
+```php
+<?php
+use ApiPlatform\Doctrine\Orm\Filter\RangeFilter;
+use ApiPlatform\Metadata\ApiFilter;
+use ApiPlatform\Metadata\ApiResource;
+
+#[ApiResource]
+#[ApiFilter(RangeFilter::class, properties: ['price'])]
+class Product
+{
+    // ...
+}
+```
+
+After (modern):
+
+```php
+<?php
+use ApiPlatform\Doctrine\Orm\Filter\ComparisonFilter;
+use ApiPlatform\Doctrine\Orm\Filter\ExactFilter;
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\QueryParameter;
+
+#[ApiResource]
+#[GetCollection(
+    parameters: [
+        'price' => new QueryParameter(
+            filter: new ComparisonFilter(new ExactFilter()),
+            property: 'price',
+        ),
+    ],
+)]
+class Product
+{
+    // ...
+}
+```
+
+The query syntax changes from `?price[between]=10..100` to `?price[gte]=10&price[lte]=100`.
+
+### MongoDB ODM
+
+The migration works the same way for MongoDB ODM — just use the ODM namespace:
+
+```php
+<?php
+use ApiPlatform\Doctrine\Odm\Filter\ComparisonFilter;
+use ApiPlatform\Doctrine\Odm\Filter\ExactFilter;
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\QueryParameter;
+
+#[ApiResource]
+#[GetCollection(
+    parameters: [
+        'createdAt' => new QueryParameter(
+            filter: new ComparisonFilter(new ExactFilter()),
+            property: 'createdAt',
+        ),
+    ],
+)]
+class Event
+{
+    // ...
+}
+```
+
+The same modern filters are available for both ORM and ODM: `ExactFilter`, `PartialSearchFilter`,
+`ComparisonFilter`, `SortFilter`, and `IriFilter`.
+
+> [!NOTE] Legacy filters extending `AbstractFilter` still work with `QueryParameter` but may have
+> issues with `nameConverter` when properties use camelCase names. If you encounter silent filter
+> failures with camelCase properties (e.g., `createdAt`, `firstName`), upgrading to the modern
+> filter equivalents listed above is the recommended solution.
 
 ## Filtering on Nested Properties
 
