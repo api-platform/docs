@@ -653,32 +653,29 @@ You can also enable collecting of denormalization errors globally in the
 
 Starting with API Platform 4.4, type mismatches detected during input denormalization (for example,
 the client sends `"foo"` for an `int` field, or `null` for a non-nullable property) are promoted to
-HTTP 422 validation responses when the affected property has a matching Symfony Validator constraint.
-When no matching constraint exists, API Platform rethrows the original serializer exception as an
-honest HTTP 400.
-
-This eliminates the need to enable `collectDenormalizationErrors` on every resource or write a
-custom event listener solely to convert 400 serializer errors into 422 validation responses.
+HTTP 422 validation responses when the affected property has a matching Symfony Validator
+constraint. When no matching constraint exists, API Platform rethrows the original serializer
+exception as an honest HTTP 400.
 
 ### How It Works
 
 `DeserializeProvider` catches `NotNormalizableValueException` and `PartialDenormalizationException`
-from the Symfony Serializer. It delegates to `ApiPlatform\Validator\DenormalizationViolationFactory`,
-which reads the Symfony Validator metadata for the operation's resource class and applies the
-following rule table:
+from the Symfony Serializer. It delegates to
+`ApiPlatform\Validator\DenormalizationViolationFactory`, which reads the Symfony Validator metadata
+for the operation's resource class and applies the following rule table:
 
-| Serializer `currentType` | Matching constraint on the property | HTTP status | Violation code             |
-|--------------------------|-------------------------------------|-------------|----------------------------|
-| `null`                   | `NotBlank`                          | 422         | `NotBlank::IS_BLANK_ERROR` |
-| `null`                   | `NotNull`                           | 422         | `NotNull::IS_NULL_ERROR`   |
-| any wrong type           | `Type`                              | 422         | `Type::INVALID_TYPE_ERROR` |
-| any wrong type           | any other constraint                | 422         | `Type::INVALID_TYPE_ERROR` |
-| any wrong type           | (no constraint)                     | 400         | original exception rethrown|
+| Serializer `currentType` | Matching constraint on the property | HTTP status | Violation code              |
+| ------------------------ | ----------------------------------- | ----------- | --------------------------- |
+| `null`                   | `NotBlank`                          | 422         | `NotBlank::IS_BLANK_ERROR`  |
+| `null`                   | `NotNull`                           | 422         | `NotNull::IS_NULL_ERROR`    |
+| any wrong type           | `Type`                              | 422         | `Type::INVALID_TYPE_ERROR`  |
+| any wrong type           | any other constraint                | 422         | `Type::INVALID_TYPE_ERROR`  |
+| any wrong type           | (no constraint)                     | 400         | original exception rethrown |
 
-In `collectDenormalizationErrors` mode (where the serializer raises `PartialDenormalizationException`
-instead of failing on the first error), properties without any constraint still emit a generic
-`Type::INVALID_TYPE_ERROR` violation so the 422 response surface remains consistent with prior
-behavior.
+In `collectDenormalizationErrors` mode (where the serializer raises
+`PartialDenormalizationException` instead of failing on the first error), properties without any
+constraint still emit a generic `Type::INVALID_TYPE_ERROR` violation so the 422 response surface
+remains consistent with prior behavior.
 
 Validation groups set via `Operation::getValidationContext()['groups']` are respected when looking
 up constraints.
@@ -768,21 +765,14 @@ Returns a 422 using the `Type` constraint message:
 
 If `year` had no validator constraint at all, both requests would receive HTTP 400 instead.
 
-### BackedEnum Properties
+### Tip: use Symfony Validator auto-mapping
 
-Prior to 4.4, a special case promoted `BackedEnum` denormalization failures to 422 unconditionally.
-That implicit promotion has been replaced by the constraint-aware rule above:
+When
+[`framework.validation.auto_mapping`](https://symfony.com/doc/current/validation/auto_mapping.html)
+is enabled, Symfony Validator derives implicit constraints directly from PHP type declarations —
+`string`, `int`, `float`, nullability, `BackedEnum` cases, and more. Every property with a PHP type
+then effectively has a `Type` constraint without any manual annotation.
 
-- Enum properties annotated with `#[Assert\NotNull]`, `#[Assert\Type]`, or any other constraint
-  continue to produce 422 responses.
-- Enum properties with **no constraints** now receive HTTP 400.
-
-To preserve the 422 behavior for an unconstrained enum property, either enable Symfony Validator's
-[auto-mapping](https://symfony.com/doc/current/validation/auto_mapping.html) on the resource class
-(which generates an implicit `Type` constraint from the PHP type declaration) or add an explicit
-constraint:
-
-```php
-#[Assert\Type(Status::class)]
-public Status $status;
-```
+This means the constraint-aware 422 promotion applies across the board: you get consistent 422
+responses for type mismatches on all typed properties without scattering `#[Assert\Type]`
+everywhere.

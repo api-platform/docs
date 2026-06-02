@@ -28,28 +28,25 @@ HTTP 422 validation responses when the affected property has a matching Laravel 
 When no matching rule exists, API Platform rethrows the original serializer exception as an honest
 HTTP 400.
 
-This eliminates the need to write a custom middleware or exception handler solely to convert 400
-serializer errors into 422 validation responses.
-
 ### How It Works
 
 `DeserializeProvider` catches denormalization exceptions from the Symfony Serializer. It delegates
 to `ApiPlatform\Laravel\State\DenormalizationViolationFactory`, which reads the `rules` declared on
 the operation and applies the following rule table:
 
-| Serializer `currentType` | Matching rule in `rules` | Code |
-| --- | --- | --- |
-| `null` | `required`, `filled` | `blank` |
-| `null` | `present` | `null` |
-| any wrong type | `string`, `integer`, `int`, `numeric`, `boolean`, `bool`, `array`, `date`, `json` | `invalid_type` |
-| any wrong type | any other rule (when `nullable` is absent) | `invalid_type` |
-| `null` | `nullable` only (no `required`, `present`, or `filled`) | 400 (rethrow) |
-| any | (no rule for the property) | 400 (rethrow) |
+| Serializer `currentType` | Matching rule in `rules`                                                          | Code           |
+| ------------------------ | --------------------------------------------------------------------------------- | -------------- |
+| `null`                   | `required`, `filled`                                                              | `blank`        |
+| `null`                   | `present`                                                                         | `null`         |
+| any wrong type           | `string`, `integer`, `int`, `numeric`, `boolean`, `bool`, `array`, `date`, `json` | `invalid_type` |
+| any wrong type           | any other rule (when `nullable` is absent)                                        | `invalid_type` |
+| `null`                   | `nullable` only (no `required`, `present`, or `filled`)                           | 400 (rethrow)  |
+| any                      | (no rule for the property)                                                        | 400 (rethrow)  |
 
 Rules may be declared in string pipe-separated form (`'required|integer'`) or array form
-(`['required', 'integer']`). Object-based rules (`Rule`, `ValidationRule`) and
-`FormRequest`-class rule sets are skipped — `FormRequest` contracts run during the
-validation phase against the raw request, not the denormalized body.
+(`['required', 'integer']`). Object-based rules (`Rule`, `ValidationRule`) and `FormRequest`-class
+rule sets are skipped — `FormRequest` contracts run during the validation phase against the raw
+request, not the denormalized body.
 
 ### Example
 
