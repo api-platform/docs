@@ -114,8 +114,7 @@ App\ApiResource\Book:
 
 </code-selector>
 
-Another possibility is to apply the default order for a specific collection operation, which will
-override the global default order configuration.
+Another possibility is to apply the default order for a specific collection operation.
 
 <code-selector>
 
@@ -163,3 +162,56 @@ App\ApiResource\Book:
 ```
 
 </code-selector>
+
+## Global Default Order and Operation Order Precedence
+
+`api_platform.defaults.order` (set under the `defaults:` key in `api_platform.yaml`) applies an
+order to every operation. It is not a fallback that yields to operation-level configuration — it is
+a cross-cutting invariant that is always applied.
+
+When an operation also defines its own `order`, the two arrays are **merged**: the global default
+keys come first, followed by the operation-level keys. This means the global default takes priority
+in the SQL `ORDER BY` clause, and the operation-level keys act as tie-breakers.
+
+For example, given this configuration:
+
+```yaml
+# config/packages/api_platform.yaml
+api_platform:
+    defaults:
+        order:
+            createdAt: DESC
+```
+
+And this resource:
+
+```php
+<?php
+// api/src/ApiResource/Book.php
+namespace App\ApiResource;
+
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\GetCollection;
+
+#[ApiResource(operations: [
+    new GetCollection(order: ['title' => 'ASC']),
+])]
+class Book
+{
+    public \DateTimeImmutable $createdAt;
+    public string $title;
+}
+```
+
+The effective order for the `GetCollection` operation is
+`['createdAt' => 'DESC', 'title' => 'ASC']`, producing `ORDER BY createdAt DESC, title ASC`. The
+global default is prepended to the operation-level order, not replaced by it.
+
+This behavior is intentional. `api_platform.defaults.order` is designed for invariants such as
+"always order by `createdAt DESC`" that must hold across all collections regardless of which
+operation is called.
+
+**If you want an operation to use a specific order with no global keys prepended**, do not set
+`api_platform.defaults.order`. Instead, set the `order` explicitly on each operation or resource
+where you need it. For more control over ordering logic, implement a custom
+[Doctrine ORM extension](extensions.md) that replaces the built-in `OrderExtension`.
