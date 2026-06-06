@@ -675,6 +675,93 @@ App\ApiResource\Person:
 
 </code-selector>
 
+### Collection Getters and readableLink
+
+When `readableLink: false` is set on a property whose getter returns a bare `array` (no element type),
+the Symfony PropertyInfo component resolves the type as `array<mixed>`. Because the element class is
+unknown, API Platform cannot determine that the items are API resources and falls back to embedding
+them instead of serializing them as IRIs.
+
+This is a configuration issue, not a bug. Provide the element type using one of the following
+approaches.
+
+**PHPDoc `@return` annotation**
+
+```php
+<?php
+// api/src/Entity/Brand.php
+namespace App\Entity;
+
+use ApiPlatform\Metadata\ApiProperty;
+use ApiPlatform\Metadata\ApiResource;
+use Doctrine\ORM\Mapping as ORM;
+
+#[ORM\Entity]
+#[ApiResource]
+class Brand
+{
+    /** @return Car[] */
+    #[ApiProperty(readableLink: false)]
+    public function getCars(): array
+    {
+        return $this->cars->getValues();
+    }
+}
+```
+
+**`ApiProperty` `nativeType` parameter (API Platform >= 4.2)**
+
+```php
+<?php
+// api/src/Entity/Brand.php
+namespace App\Entity;
+
+use ApiPlatform\Metadata\ApiProperty;
+use ApiPlatform\Metadata\ApiResource;
+use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\TypeInfo\Type;
+
+#[ORM\Entity]
+#[ApiResource]
+class Brand
+{
+    #[ApiProperty(readableLink: false, nativeType: Type::list(Type::object(Car::class)))]
+    public function getCars(): array
+    {
+        return $this->cars->getValues();
+    }
+}
+```
+
+**Typed Doctrine collection**
+
+Return `Collection<int, Car>` instead of a plain `array`. PropertyInfo reads the generic type parameter
+and resolves the element class automatically.
+
+```php
+<?php
+// api/src/Entity/Brand.php
+namespace App\Entity;
+
+use ApiPlatform\Metadata\ApiProperty;
+use ApiPlatform\Metadata\ApiResource;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\ORM\Mapping as ORM;
+
+#[ORM\Entity]
+#[ApiResource]
+class Brand
+{
+    #[ApiProperty(readableLink: false)]
+    public function getCars(): Collection
+    {
+        return $this->cars;
+    }
+}
+```
+
+For more details see [#8179](https://github.com/api-platform/core/issues/8179).
+
 ### Plain Identifiers for Symfony
 
 Instead of sending an IRI to set a relation, you may want to send a plain identifier. To do so, you
