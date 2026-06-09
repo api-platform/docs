@@ -719,9 +719,7 @@ class PlainIdentifierDenormalizer implements DenormalizerInterface, Denormalizer
     public function getSupportedTypes(?string $format): array
     {
         return [
-            'object' => null,
-            '*' => false,
-            Dummy::class => true
+            Dummy::class => false,
         ];
     }
 }
