@@ -155,6 +155,80 @@ use App\State\BlogPostProcessor;
 class BlogPost {}
 ```
 
+## Running a Processor on Read (GET) Operations
+
+By default, a custom `processor` only runs on operations that mutate state: `POST`, `PUT`, `PATCH`,
+and `DELETE`. The internal `WriteProcessor` is responsible for dispatching to your processor, and it
+skips that step when the operation's `write` flag is `false`.
+
+For safe HTTP methods (`GET`, `GetCollection`), the `write` flag defaults to `false` — so even if
+you configure a `processor:` on a `GetCollection`, it will not be called unless you explicitly opt
+in.
+
+To run a processor on a `GET` or `GetCollection` operation, set `write: true` on that operation.
+
+This pattern fits naturally into a [CQRS](https://martinfowler.com/bliki/CQRS.html) design
+(mentioned at the top of this page): the `processor` acts as the command/query handler while the
+[`provider`](state-providers.md) covers the read (query) side. With `write: true`, a processor can
+serve as the handler for a read operation — for example to record that a collection was accessed,
+dispatch a domain event, or feed results from a non-standard source that also produces side-effects.
+
+<code-selector>
+
+```php
+<?php
+// api/src/Entity/Car.php
+
+namespace App\Entity;
+
+use ApiPlatform\Metadata\GetCollection;
+use App\State\CarProcessor;
+
+#[GetCollection(processor: CarProcessor::class, write: true)]
+class Car
+{
+    // ...
+}
+```
+
+```yaml
+# api/config/api_platform/resources.yaml
+resources:
+    App\Entity\Car:
+        operations:
+            ApiPlatform\Metadata\GetCollection:
+                processor: App\State\CarProcessor
+                write: true
+```
+
+</code-selector>
+
+The corresponding processor receives the data returned by the provider and can transform or act on
+it:
+
+```php
+<?php
+// api/src/State/CarProcessor.php
+
+namespace App\State;
+
+use ApiPlatform\Metadata\Operation;
+use ApiPlatform\State\ProcessorInterface;
+
+/**
+ * @implements ProcessorInterface<mixed, mixed>
+ */
+final class CarProcessor implements ProcessorInterface
+{
+    public function process(mixed $data, Operation $operation, array $uriVariables = [], array $context = []): mixed
+    {
+        // $data is the collection returned by the provider.
+        // Add side-effects or transformations here, then return the data.
+        return $data;
+    }
+}
+```
+
 ## Hooking into the Built-In State Processors
 
 ### Symfony State Processor mechanism
