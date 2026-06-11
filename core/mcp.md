@@ -14,7 +14,7 @@ validation, serialization — to turn your PHP classes into MCP-compliant tool d
 
 ### Installing on Symfony
 
-Install `api-platform/mcp` and the [MCP Bundle](https://github.com/symfony-tools/mcp-bundle):
+Install `api-platform/mcp` and the [MCP Bundle](https://github.com/symfony/ai):
 
 ```console
 composer require api-platform/mcp symfony/mcp-bundle
@@ -22,7 +22,7 @@ composer require api-platform/mcp symfony/mcp-bundle
 
 ### Installing on Laravel
 
-Install `api-platform/mcp` and the [MCP Bundle](https://github.com/symfony-tools/mcp-bundle):
+Install `api-platform/mcp` and the [MCP Bundle](https://github.com/symfony/ai):
 
 ```console
 composer require api-platform/mcp symfony/mcp-bundle
