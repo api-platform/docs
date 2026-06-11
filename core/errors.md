@@ -164,13 +164,12 @@ return [
 ];
 ```
 
-> [!WARNING]
-> The `exception_to_status` configuration is **not merged** with the defaults: as soon as you declare
-> your own mapping, it replaces the built-in one entirely. If you omit the default handlers shown
-> above, exceptions that were previously mapped to `400` (such as the
-> `Symfony\Component\Serializer\Exception\ExceptionInterface` thrown when denormalizing a relation to a
-> non-existing item, or an invalid backed enum value) will fall through to the `500` fallback. Always
-> keep the default lines and append your custom mappings to them.
+> [!WARNING] The `exception_to_status` configuration is **not merged** with the defaults: as soon as
+> you declare your own mapping, it replaces the built-in one entirely. If you omit the default
+> handlers shown above, exceptions that were previously mapped to `400` (such as the
+> `Symfony\Component\Serializer\Exception\ExceptionInterface` thrown when denormalizing a relation
+> to a non-existing item, or an invalid backed enum value) will fall through to the `500` fallback.
+> Always keep the default lines and append your custom mappings to them.
 
 Any type of `Exception` can be thrown, API Platform will convert it to a Symfony's `HttpException`
 (note that it means the exception will be flattened and lose all of its custom properties). The
