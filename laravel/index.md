@@ -957,6 +957,76 @@ drastically.
 
 To clear the cache, use `php artisan optimize:clear`.
 
+## Booting Without a Database Connection
+
+To expose an Eloquent model, API Platform reads its metadata (columns, types, nullability, relations,
+identifiers) directly from the database schema. This introspection happens while the resource metadata
+is built, which occurs when the service provider boots — including during routing, OpenAPI generation,
+and metadata caching.
+
+As a consequence, **the application cannot boot when no migrated database connection is reachable**. Any
+command that boots the framework will fail with a connection error such as:
+
+```text
+SQLSTATE[HY000] [2002] Connection refused
+could not find driver (Connection: mariadb, SQL: select ... from information_schema.columns ...)
+```
+
+This typically happens in setups where the database is not available at the time the app boots:
+
+- building a Docker image (the database service is not running during `docker build`);
+- running `composer install`, which triggers `@php artisan package:discover` and boots the providers;
+- running static analysis such as [Larastan](https://github.com/larastan/larastan) in a CI/CD pipeline,
+  since it boots the Laravel application.
+
+### Use SQLite at Build Time
+
+The simplest workaround is to point the application to a migrated SQLite database while building or
+running analysis, instead of your production database server. SQLite needs no separate service, so it is
+always reachable.
+
+Configure the connection (for example through environment variables) and run the migrations before any
+command that boots the app:
+
+```console
+export DB_CONNECTION=sqlite
+export DB_DATABASE=/tmp/api-platform.sqlite
+
+touch /tmp/api-platform.sqlite
+php artisan migrate --force
+
+# now commands that boot the app succeed
+php artisan optimize
+```
+
+### Building a Docker Image
+
+During `docker build` the database server is usually not running. Two approaches work:
+
+- run the metadata-dependent commands (such as `php artisan optimize` to warm the
+  [metadata cache](#caching)) against a migrated SQLite database inside the build, as shown above;
+- or defer those commands to the container's entrypoint, so they run at startup when the real database
+  connection is available.
+
+If you only want to avoid the failure triggered by Composer scripts during the build, run
+`composer install --no-scripts` and execute `php artisan package:discover` later, once the database is
+reachable.
+
+### Static Analysis in CI
+
+[Larastan](https://github.com/larastan/larastan) boots the Laravel application before analyzing it, so it
+hits the same requirement. Provision a migrated SQLite database (or a real database server) and run the
+migrations before invoking the analyzer:
+
+```console
+export DB_CONNECTION=sqlite
+export DB_DATABASE=/tmp/api-platform.sqlite
+touch /tmp/api-platform.sqlite
+php artisan migrate --force
+
+vendor/bin/phpstan analyse
+```
+
 ## Hooking Your Own Business Logic
 
 Now that you learned the basics, be sure to read
