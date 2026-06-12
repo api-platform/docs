@@ -614,8 +614,9 @@ class Book
 Streaming applies to the `json` and `jsonld` formats. When a request asks for another format, or
 when `jsonStream` is not enabled, API Platform falls back to the regular Serializer-based response.
 
-> **Note:** JsonStreamer relies on the typed properties of your resources to build its encoders.
-> Make sure every serialized property has a type declaration.
+> **Note:** JsonStreamer only serializes **public properties**, and it relies on their type
+> declarations to build its encoders. Make sure every serialized property is public and typed;
+> values exposed only through getters or non-public properties will not be streamed.
 
 ## Profiling with Blackfire.io
 
