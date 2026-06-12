@@ -22,8 +22,8 @@ extension and not on the legacy [mongo](https://secure.php.net/manual/en/book.mo
 If the `mongodb` PHP extension is not installed yet,
 [install it beforehand](https://secure.php.net/manual/en/mongodb.installation.pecl.php).
 
-Or if you are using the [API Platform Distribution with Symfony](../symfony/index.md), modify the
-`Dockerfile` to add the extension:
+Or if you are using the [API Platform Symfony variant](../symfony/index.md) with Docker, modify the
+`api/Dockerfile` to add the extension:
 
 ```diff
 # api/Dockerfile

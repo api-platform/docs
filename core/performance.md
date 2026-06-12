@@ -27,8 +27,8 @@ document is added or removed or for relationships and inverse relations is built
 
 #### Built-in Caddy HTTP Cache
 
-The API Platform distribution relies on the [Caddy web server](https://caddyserver.com) which
-provides an official HTTP cache module called
+The Docker setup of the API Platform Symfony variant relies on the
+[Caddy web server](https://caddyserver.com) which provides an official HTTP cache module called
 [cache-handler](https://github.com/caddyserver/cache-handler), that is based on
 [Souin](https://github.com/darkweak/souin).
 
@@ -332,18 +332,18 @@ class Book
 
 Computing metadata used by the bundle is a costly operation. Fortunately, metadata can be computed
 once and then cached. API Platform internally uses a [PSR-6](https://www.php-fig.org/psr/psr-6/)
-cache. If the Symfony Cache component is available (the default in the API Platform distribution),
-it automatically enables support for the best cache adapter available.
+cache. If the Symfony Cache component is available (the default in the API Platform Symfony
+variant), it automatically enables support for the best cache adapter available.
 
 Best performance is achieved using [APCu](https://github.com/krakjoe/apcu). Be sure to have the APCu
 extension installed on your production server (this is the case by default in the Docker image
-provided by the API Platform distribution). API Platform will automatically use it.
+provided by the API Platform Symfony variant). API Platform will automatically use it.
 
 ## Using FrankenPHP's Worker Mode
 
 API response times can be significantly improved by enabling
 [FrankenPHP's worker mode](https://frankenphp.dev/docs/worker/). This feature is enabled by default
-in the production environment of the API Platform distribution.
+in the production environment of the API Platform Symfony variant.
 
 ## Doctrine Queries and Index
 

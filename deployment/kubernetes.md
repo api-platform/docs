@@ -6,8 +6,17 @@ containers in production. [Google Cloud Platform](https://cloud.google.com/kuber
 [Amazon Web Services](https://aws.amazon.com/eks/) and many more companies provide managed
 Kubernetes environment.
 
-[The API Platform symfony variant](../symfony/index.md) contains a built-in [Helm](https://helm.sh/)
-(the k8s package manager) chart to deploy in a wink on any of these platforms.
+API Platform can be deployed to any of these platforms with a [Helm](https://helm.sh/) (the k8s
+package manager) chart.
+
+> [!NOTE]
+>
+> The Helm chart is no longer bundled with the project scaffolded by the `api-platform` installer. A
+> reworked chart is in the works. In the meantime, you can use the chart preserved in the `4.1`
+> release of the distribution: copy the
+> [`helm/api-platform`](https://github.com/api-platform/api-platform/tree/v4.1.0/helm/api-platform)
+> directory from that tag into your project, and adapt it to your image names and project layout.
+> The commands below assume it is available at `./helm/api-platform`.
 
 This guide is based on Helm 3.
 

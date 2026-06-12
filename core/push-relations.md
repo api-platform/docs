@@ -11,7 +11,7 @@ API Platform leverages this capability by pushing relations of a resource to cli
 
 > [!NOTE] We strongly recommend using [Vulcain](https://vulcain.rocks) instead of this feature.
 > Vulcain is faster, cleaner, more flexible, and is supported out of the box in
-> [the API Platform distribution](../symfony/index.md).
+> [the API Platform Symfony variant](../symfony/index.md).
 
 ```php
 <?php
@@ -37,8 +37,8 @@ automatically add a valid `Link` HTTP header with the `preload` relation. Accord
 servers and proxy servers can read this header, fetch the related resource and send it to the client
 using Server Push.
 
-With the Caddy web server (the server shipped as part of the [distribution](../symfony/index.md)),
-you must add [the `push` directive](https://caddyserver.com/docs/caddyfile/directives/push) to your
+With the Caddy web server (the server shipped with the [Docker setup](../symfony/index.md)), you
+must add [the `push` directive](https://caddyserver.com/docs/caddyfile/directives/push) to your
 `Caddyfile` to be able to use this feature.
 
 [NGINX](https://www.nginx.com/blog/nginx-1-13-9-http2-server-push/),

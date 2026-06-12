@@ -30,7 +30,7 @@ Internally, API Platform implements the [Action-Domain-Responder](https://github
 pattern (ADR), a web-specific refinement of
 [MVC](https://en.wikipedia.org/wiki/Model%E2%80%93view%E2%80%93controller).
 
-The distribution of API Platform also eases the implementation of the ADR pattern: it automatically
+The API Platform Symfony variant also eases the implementation of the ADR pattern: it automatically
 registers action classes stored in `api/src/Controller` as autowired services.
 
 Thanks to the [autowiring](https://symfony.com/doc/current/service_container/autowiring.html)
@@ -85,7 +85,7 @@ corresponding to the ID passed in the URL.
 
 Here we consider that
 [autowiring](https://symfony.com/doc/current/service_container/autowiring.html) is enabled for
-controller classes (the default when using the API Platform distribution). This action will be
+controller classes (the default when using the API Platform Symfony variant). This action will be
 automatically registered as a service (the service name is the same as the class name:
 `App\Controller\CreateBookPublication`).
 

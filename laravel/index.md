@@ -39,6 +39,36 @@ With API Platform, you can:
 
 Let's discover how to use API Platform with Laravel!
 
+## Scaffolding a New Project (Recommended)
+
+The fastest way to start a new project is the **`api-platform` installer**, a command-line tool that
+creates a ready-to-use Laravel project with API Platform pre-installed.
+
+Download the latest release for your platform from the
+[Releases page](https://github.com/api-platform/api-platform/releases/latest) and move the binary
+somewhere on your `$PATH`:
+
+```console
+curl -L https://github.com/api-platform/api-platform/releases/latest/download/api-platform-linux-x86_64 -o /usr/local/bin/api-platform
+chmod +x /usr/local/bin/api-platform
+```
+
+Alternatively, if you already have PHP and [Composer](https://getcomposer.org/) installed, install
+it globally with `composer global require api-platform/installer`.
+
+Then scaffold the project:
+
+```console
+api-platform my-api-platform-laravel-app --framework=laravel
+```
+
+The installer creates the Laravel application, requires `api-platform/laravel`, and runs
+`php artisan api-platform:install` for you. Once it finishes, start the server with
+`php artisan serve` and open `http://127.0.0.1:8000/api/`.
+
+If you prefer to install API Platform manually, or you want to add it to an existing Laravel
+project, follow the sections below instead.
+
 ## Installing Laravel
 
 API Platform can be installed easily on new and existing Laravel projects. If you already have an
