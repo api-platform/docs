@@ -15,7 +15,8 @@ The previous command starts minikube with a Docker registry (we'll use it in the
 the Kubernetes dashboard.
 
 Finally, [install Helm](https://helm.sh/docs/intro/install/). We'll use it to deploy the application
-in the cluster thanks to the chart provided in the API Platform distribution.
+in the cluster thanks to a Helm chart (see the [Kubernetes guide](kubernetes.md) for how to obtain
+it).
 
 ## Building and Pushing Docker Images
 

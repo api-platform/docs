@@ -5,7 +5,8 @@
 ## Xdebug
 
 For development purposes such as debugging tests or remote API requests,
-[Xdebug](https://xdebug.org/) is shipped by default with the API Platform distribution.
+[Xdebug](https://xdebug.org/) is shipped by default with the Docker setup of the API Platform
+Symfony variant.
 
 To enable it, run:
 

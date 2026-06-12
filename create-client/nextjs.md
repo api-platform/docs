@@ -60,8 +60,8 @@ The generated HTML will contain [Tailwind CSS](https://tailwindcss.com) classes.
 
 ## Generating Routes
 
-If you are using the [API Platform Distribution with Symfony](../symfony/index.md) generating all
-the code you need for a given resource is as simple as running the following command:
+If you are using the [API Platform Symfony variant](../symfony/index.md) generating all the code you
+need for a given resource is as simple as running the following command:
 
 ```console
 docker compose exec pwa \

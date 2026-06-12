@@ -142,9 +142,9 @@ final class BookMailSubscriber implements EventSubscriberInterface
 }
 ```
 
-If you use the official API Platform distribution, creating the previous class is enough. The
-Symfony DependencyInjection component will automatically register this subscriber as a service and
-will inject its dependencies thanks to the
+If you use the API Platform Symfony variant, creating the previous class is enough. The Symfony
+DependencyInjection component will automatically register this subscriber as a service and will
+inject its dependencies thanks to the
 [autowiring feature](https://symfony.com/doc/current/service_container/autowiring.html).
 
 Alternatively,

@@ -62,8 +62,8 @@ Just like other Symfony and API Platform components, the Serializer component ca
 using attributes, XML or YAML. Since attributes are easy to understand, we will use them in the
 following examples.
 
-> [!NOTE] If you are not using the API Platform distribution, you need to enable annotation support
-> in the serializer configuration as outlined below, depending on your Symfony version.
+> [!NOTE] If you are not using the API Platform Symfony variant, you need to enable annotation
+> support in the serializer configuration as outlined below, depending on your Symfony version.
 
 #### Configuration for Symfony `<= 6.4`
 
@@ -401,7 +401,7 @@ requests.
 
 **Note:** We strongly recommend using [Vulcain](https://vulcain.rocks) instead of this feature.
 Vulcain allows creating faster (better hit rate) and better designed APIs than relying on compound
-documents, and is supported out of the box in the API Platform distribution.
+documents, and is supported out of the box in the API Platform Symfony variant.
 
 ### Normalization
 

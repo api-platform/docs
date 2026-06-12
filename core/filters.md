@@ -599,7 +599,7 @@ because `bar` is not a supported parameter.
 
 > [!NOTE] We strongly recommend using [Vulcain](https://vulcain.rocks) instead of this filter.
 > Vulcain is faster, allows a better hit rate, and is supported out of the box in the API Platform
-> distribution. [!NOTE] When unsing JSON:API check out the
+> Symfony variant. [!NOTE] When unsing JSON:API check out the
 > [specific SparseFieldset and Sort filters](./content-negotiation/#jsonapi-sparse-fieldset-and-sort-parameters)
 
 The property filter adds the possibility to select the properties to serialize (sparse fieldsets).

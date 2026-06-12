@@ -271,8 +271,8 @@ Examples:
 ### PropertyFilter
 
 Note: We strongly recommend using [Vulcain](https://vulcain.rocks) instead of this filter. Vulcain
-is faster, allows a better hit rate, and is supported out of the box in the API Platform
-distribution.
+is faster, allows a better hit rate, and is supported out of the box in the API Platform Symfony
+variant.
 
 The property filter adds the possibility to select the properties to serialize (sparse fieldsets).
 
