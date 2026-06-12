@@ -538,6 +538,85 @@ api_platform:
 
 More details are available on the [pagination documentation](pagination.md#partial-pagination).
 
+## JSON Streaming
+
+Available since API Platform 4.2.
+
+By default, API Platform builds the whole serialized representation of a response in memory (using
+the Symfony Serializer) before sending it. For large payloads this is costly both in memory and in
+time to first byte.
+
+API Platform can instead use the
+[Symfony JsonStreamer](https://symfony.com/doc/current/components/json_streamer.html) component to
+stream the response. JsonStreamer generates optimized, ahead-of-time-compiled encoders from the
+typed properties of your resources and writes the JSON directly to a `StreamedResponse`, without
+holding the full output in memory.
+
+This is an opt-in optimization. JsonStreamer is an experimental Symfony component and requires
+**Symfony 7.4 or higher**.
+
+### Installing the Component
+
+```console
+composer require symfony/json-streamer
+```
+
+Once installed, the streaming integration is enabled automatically (the `enable_json_streamer`
+configuration option defaults to `true` when the component is available). You can toggle it
+explicitly:
+
+```yaml
+# api/config/packages/api_platform.yaml
+api_platform:
+    enable_json_streamer: true
+```
+
+### Enabling Streaming on a Resource or Operation
+
+Streaming is opt-in per resource or per operation through the `jsonStream` attribute. Set it on the
+`#[ApiResource]` attribute to enable it for every operation:
+
+```php
+<?php
+// api/src/ApiResource/Book.php
+namespace App\ApiResource;
+
+use ApiPlatform\Metadata\ApiResource;
+
+#[ApiResource(jsonStream: true)]
+class Book
+{
+    public string $title;
+    public string $author;
+
+    // ...
+}
+```
+
+Or enable it for a single operation only:
+
+```php
+<?php
+// api/src/ApiResource/Book.php
+namespace App\ApiResource;
+
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\GetCollection;
+
+#[ApiResource]
+#[GetCollection(jsonStream: true)]
+class Book
+{
+    // ...
+}
+```
+
+Streaming applies to the `json` and `jsonld` formats. When a request asks for another format, or
+when `jsonStream` is not enabled, API Platform falls back to the regular Serializer-based response.
+
+> **Note:** JsonStreamer relies on the typed properties of your resources to build its encoders.
+> Make sure every serialized property has a type declaration.
+
 ## Profiling with Blackfire.io
 
 Blackfire.io allows you to monitor the performance of your applications. For more information, visit
