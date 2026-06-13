@@ -119,6 +119,20 @@ This keeps a single source of project guidance for every agent. For Claude Code 
 [skillset](#claude-code-the-api-platform-skillset) remains the richer option and complements
 `AGENTS.md`.
 
+## Documentation index for LLMs
+
+The documentation is also published in the [llms.txt](https://llmstxt.org) format, an agent-agnostic
+index any LLM can fetch to ground its answers in the current documentation:
+
+- <https://api-platform.com/docs/llms.txt> — a curated index of the documentation, one link per
+  page, grouped by chapter.
+- <https://api-platform.com/docs/llms-full.txt> — the full text of every current-version page,
+  concatenated.
+
+Where `AGENTS.md` tells an agent _how_ to behave, `llms.txt` tells it _where_ the current reference
+lives. The two are complementary: point your `AGENTS.md` at these URLs so the agent reads the
+documentation instead of relying on stale training data.
+
 ## Related: exposing your API to agents with MCP
 
 This guide is about the agent that _writes_ your code. A separate concern is letting an AI agent
