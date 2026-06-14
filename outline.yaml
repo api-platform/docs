@@ -57,6 +57,7 @@ chapters:
       - openapi
       - json-schema
       - mcp
+      - ai-agents
       - mercure
       - push-relations
       - errors
