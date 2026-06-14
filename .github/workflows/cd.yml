@@ -82,6 +82,10 @@ jobs:
         working-directory: docs-website
         run: hugo --minify
 
+      - name: Generate llms.txt
+        working-directory: docs-website
+        run: node tools/llms.mjs
+
       - name: Deploy
         working-directory: docs-website
         run: gsutil -q -m rsync -d -r ./public gs://api-platform-website-v3/
