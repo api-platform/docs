@@ -126,6 +126,10 @@ When the PWA and the admin are enabled, the installer creates a project director
 `api/` subdirectory (the Symfony API) alongside a `pwa/` directory (the Next.js application) and an
 `admin/` directory (the React-admin SPA). The rest of this tutorial assumes this layout.
 
+By default the installer also writes `AGENTS.md` and `CLAUDE.md` instruction files so AI coding
+agents (Claude Code, Cursor, GitHub Copilot, …) know how to work with API Platform in your project.
+Pass `--no-with-agents` to skip them.
+
 API Platform is shipped with a [Docker](https://docker.com) definition that makes it easy to get a
 containerized development environment up and running. If you do not already have Docker on your
 computer, it's the right time to [install it](https://docs.docker.com/get-docker/).
@@ -167,7 +171,9 @@ This starts the following services:
 
 When generated with `--with-pwa`, the Next.js application lives in the sibling `pwa/` directory. It
 is **not** part of the Docker Compose stack: you run it separately with its own development server
-(see [A Next.js Web App](#a-nextjs-web-app) below).
+(see [A Next.js Web App](#a-nextjs-web-app) below). To serve the API and the PWA on the same domain
+through Caddy instead, see
+[Configuring the Caddy Web Server](caddy.md#serving-the-api-and-the-pwa-on-the-same-domain).
 
 The following components are available:
 

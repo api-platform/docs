@@ -10,8 +10,9 @@ library manually.
 
 ### Symfony
 
-If you are starting a new project, the easiest way to get API Platform up is to install
-[API Platform for Symfony](../symfony/index.md).
+If you are starting a new project, the easiest way to get API Platform up is to use the CLI:
+`api-platform my-project --framework=symfony`. See [API Platform for Symfony](../symfony/index.md)
+for details.
 
 It comes with the API Platform core library integrated with
 [the Symfony framework](https://symfony.com), [the schema generator](../schema-generator/index.md),
