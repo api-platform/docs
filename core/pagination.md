@@ -219,8 +219,8 @@ The pagination can now be enabled or disabled by adding a query parameter named 
 - `GET /books?pagination=true`: enabled
 
 Any value accepted by the
-[`FILTER_VALIDATE_BOOLEAN`](https://www.php.net/manual/en/filter.filters.validate.php) filter can be
-used as the value.
+[`FILTER_VALIDATE_BOOLEAN`](https://www.php.net/manual/en/filter.constants.php#constant.filter-validate-bool)
+filter can be used as the value.
 
 ##### Allowing the Client to Control Pagination Globally with Laravel
 
@@ -248,8 +248,8 @@ The pagination can now be enabled or disabled by adding a query parameter named 
 - `GET /books?pagination=true`: enabled
 
 Any value accepted by the
-[`FILTER_VALIDATE_BOOLEAN`](https://www.php.net/manual/en/filter.filters.validate.php) filter can be
-used as the value.
+[`FILTER_VALIDATE_BOOLEAN`](https://www.php.net/manual/en/filter.constants.php#constant.filter-validate-bool)
+filter can be used as the value.
 
 #### Allowing the Client to Control Pagination For a Specific Resource
 
