@@ -12,17 +12,18 @@ upgrade to the next major a no-op.
 
 The legacy Doctrine filter API is deprecated in favor of parameter-based filters declared with the
 `#[QueryParameter]` attribute. The `#[ApiFilter]` attribute, the `Operation::$filters` property, and
-the `AbstractFilter` base class (Doctrine ORM and MongoDB ODM) are all deprecated and removed in 6.0.
+the `AbstractFilter` base class (Doctrine ORM and MongoDB ODM) are all deprecated and removed in
+6.0.
 
 There are two kinds of migration:
 
 - **Replaced filters** — removed in 6.0, swap the class:
 
-    | Legacy filter | Replacement |
-    | ------------- | ----------- |
-    | `SearchFilter` | `ExactFilter` / `PartialSearchFilter` / `IriFilter` (depending on the strategy) |
-    | `BooleanFilter`, `NumericFilter`, `BackedEnumFilter` | `ExactFilter` |
-    | `OrderFilter` | `SortFilter` |
+    | Legacy filter                                        | Replacement                                                                     |
+    | ---------------------------------------------------- | ------------------------------------------------------------------------------- |
+    | `SearchFilter`                                       | `ExactFilter` / `PartialSearchFilter` / `IriFilter` (depending on the strategy) |
+    | `BooleanFilter`, `NumericFilter`, `BackedEnumFilter` | `ExactFilter`                                                                   |
+    | `OrderFilter`                                        | `SortFilter`                                                                    |
 
 - **Kept filters** — `DateFilter`, `RangeFilter` and `ExistsFilter` survive. Only the way you
   _declare_ them is deprecated: move the declaration from `#[ApiFilter]` to `#[QueryParameter]`. The
