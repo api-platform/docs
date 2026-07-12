@@ -1,5 +1,67 @@
 # Upgrade Guide
 
+## API Platform 4.3 to 4.4
+
+4.4 is the last 4.x minor. It introduces no breaking changes: everything deprecated here keeps
+working until it is removed in a later major (5.0 or 6.0). Fixing the deprecations now makes the
+upgrade to the next major a no-op.
+
+### Deprecations
+
+#### Legacy Doctrine Filters
+
+The legacy Doctrine filter API is deprecated in favor of parameter-based filters declared with the
+`#[QueryParameter]` attribute. The `#[ApiFilter]` attribute, the `Operation::$filters` property, and
+the `AbstractFilter` base class (Doctrine ORM and MongoDB ODM) are all deprecated and removed in 6.0.
+
+There are two kinds of migration:
+
+- **Replaced filters** — removed in 6.0, swap the class:
+
+    | Legacy filter | Replacement |
+    | ------------- | ----------- |
+    | `SearchFilter` | `ExactFilter` / `PartialSearchFilter` / `IriFilter` (depending on the strategy) |
+    | `BooleanFilter`, `NumericFilter`, `BackedEnumFilter` | `ExactFilter` |
+    | `OrderFilter` | `SortFilter` |
+
+- **Kept filters** — `DateFilter`, `RangeFilter` and `ExistsFilter` survive. Only the way you
+  _declare_ them is deprecated: move the declaration from `#[ApiFilter]` to `#[QueryParameter]`. The
+  class name and the URL syntax stay the same (drop-in).
+
+`ComparisonFilter` and `OrFilter` are now stable (no longer experimental) and are the recommended
+building blocks for comparison and disjunction filtering.
+
+A codemod automates the rewrite of `#[ApiFilter]` declarations to `#[QueryParameter]`:
+
+```console
+bin/console api:upgrade-filter
+```
+
+See the [filter migration guide](doctrine-filters.md#migrating-from-apifilter-to-queryparameter) for
+the full table and before/after examples.
+
+> [!TIP] When instantiating a filter inside a `QueryParameter`, always use named arguments
+> (`new DateFilter(nullManagement: ...)` rather than positional). Filter constructors are refined
+> across versions; named arguments keep your declarations forward-compatible.
+
+#### JSON:API `use_iri_as_id`
+
+Not setting `api_platform.jsonapi.use_iri_as_id` explicitly is deprecated. The default changes from
+`true` to `false` in 5.0. Set it explicitly to silence the deprecation and lock in the behavior you
+want:
+
+```yaml
+# api/config/packages/api_platform.yaml
+api_platform:
+    jsonapi:
+        use_iri_as_id: true # keep IRIs as the "id" field; set to false to use entity identifiers
+```
+
+#### Security `AccessDeniedException`
+
+`ApiPlatform\Symfony\Security\Exception\AccessDeniedException` is deprecated. Use
+`ApiPlatform\Metadata\Exception\AccessDeniedException` instead.
+
 ## API Platform 4.2 to 4.3
 
 ### Breaking Changes
