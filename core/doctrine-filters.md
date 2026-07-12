@@ -1373,8 +1373,8 @@ class Offer
 ```
 
 `DateFilter` is kept: only the declaration style changes. The URL syntax is unchanged
-(`?createdAt[before]=2025-01-01`, `?createdAt[after]=2025-01-01`, and the `strictly_*` variants), and
-per-property null management still applies.
+(`?createdAt[before]=2025-01-01`, `?createdAt[after]=2025-01-01`, and the `strictly_*` variants),
+and per-property null management still applies.
 
 ### Example: Migrating a RangeFilter
 

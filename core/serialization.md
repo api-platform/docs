@@ -308,22 +308,22 @@ class Book
 # api/config/api_platform/resources/Book.yaml
 App\ApiResource\Book:
     normalizationContext:
-        groups: ['get']
+        groups: ["get"]
     operations:
         ApiPlatform\Metadata\Get: ~
         ApiPlatform\Metadata\Get: ~
         ApiPlatform\Metadata\Patch:
             normalizationContext:
-                groups: ['patch']
+                groups: ["patch"]
 
 # The YAML syntax is only supported for Symfony
 # api/config/serializer/Book.yaml
 App\ApiResource\Book:
     attributes:
         name:
-            groups: ['get', 'patch']
+            groups: ["get", "patch"]
         author:
-            groups: ['get']
+            groups: ["get"]
 ```
 
 ```xml
@@ -452,16 +452,16 @@ class Book
 # api/config/api_platform/resources/Book.yaml
 App\ApiResource\Book:
     normalizationContext:
-        groups: ['book']
+        groups: ["book"]
 
 # The YAML syntax is only supported for Symfony
 # api/config/serializer/Book.yaml
 App\ApiResource\Book:
     attributes:
         name:
-            groups: ['book']
+            groups: ["book"]
         author:
-            groups: ['book']
+            groups: ["book"]
 ```
 
 </code-selector>
@@ -597,18 +597,18 @@ class Person
 # api/config/api_platform/resources/Person.yaml
 App\ApiResource\Person:
     normalizationContext:
-        groups: ['person']
+        groups: ["person"]
     denormalizationContext:
-        groups: ['person']
+        groups: ["person"]
 
 # The YAML syntax is only supported for Symfony
 # api/config/serializer/Person.yaml
 App\ApiResource\Person:
     attributes:
         name:
-            groups: ['person']
+            groups: ["person"]
         parent:
-            groups: ['person']
+            groups: ["person"]
 ```
 
 </code-selector>
@@ -870,18 +870,18 @@ App\Entity\Greeting:
     operations:
         ApiPlatform\Metadata\GetCollection:
             normalizationContext:
-                groups: 'greeting:collection:get'
+                groups: "greeting:collection:get"
 
 # The YAML syntax is only supported for Symfony
 # api/config/serializer/Greeting.yaml
 App\Entity\Greeting:
     attributes:
         id:
-            groups: 'greeting:collection:get'
+            groups: "greeting:collection:get"
         name:
-            groups: 'greeting:collection:get'
+            groups: "greeting:collection:get"
         sum:
-            groups: 'greeting:collection:get'
+            groups: "greeting:collection:get"
 ```
 
 </code-selector>
@@ -932,18 +932,18 @@ class Book
 # api/config/api_platform/resources/Book.yaml
 App\ApiResource\Book:
     normalizationContext:
-        groups: ['book:output']
+        groups: ["book:output"]
     denormalizationContext:
-        groups: ['book:input']
+        groups: ["book:input"]
 
 # The YAML syntax is only supported for Symfony
 # api/config/serializer/Book.yaml
 App\ApiResource\Book:
     attributes:
         active:
-            groups: ['book:output', 'admin:input']
+            groups: ["book:output", "admin:input"]
         name:
-            groups: ['book:output', 'book:input']
+            groups: ["book:output", "book:input"]
 ```
 
 </code-selector>
