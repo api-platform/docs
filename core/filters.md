@@ -55,8 +55,9 @@ a new instance:
   associations.
     - Usage: `new QueryParameter(filter: IriFilter::class)`
 - **`ComparisonFilter`**: A decorator that wraps an equality filter (`ExactFilter`, `UuidFilter`) to
-  add `gt`, `gte`, `lt`, `lte`, and `ne` operators. Replaces `DateFilter`, `NumericFilter`, and
-  `RangeFilter` for comparison use cases.
+  add `gt`, `gte`, `lt`, `lte`, and `ne` operators. Recommended for numeric comparisons; in 5.0 it
+  also gains a native `[between]=X..Y` operator. (`DateFilter` and `RangeFilter` are kept as drop-in
+  filters — see below.)
     - Usage:
       `new QueryParameter(filter: new ComparisonFilter(new ExactFilter()), property: 'price')`
 - **`FreeTextQueryFilter`**: Applies a filter across multiple properties using a single parameter.
