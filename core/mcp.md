@@ -14,7 +14,7 @@ validation, serialization — to turn your PHP classes into MCP-compliant tool d
 
 ### Installing on Symfony
 
-Install `api-platform/mcp` and the [MCP Bundle](https://github.com/symfony-tools/mcp-bundle):
+Install `api-platform/mcp` and the [MCP Bundle](https://github.com/symfony/ai):
 
 ```console
 composer require api-platform/mcp symfony/mcp-bundle
@@ -22,7 +22,7 @@ composer require api-platform/mcp symfony/mcp-bundle
 
 ### Installing on Laravel
 
-Install `api-platform/mcp` and the [MCP Bundle](https://github.com/symfony-tools/mcp-bundle):
+Install `api-platform/mcp` and the [MCP Bundle](https://github.com/symfony/ai):
 
 ```console
 composer require api-platform/mcp symfony/mcp-bundle
@@ -481,6 +481,243 @@ class Documentation
 ```
 
 The `uri` must be unique across the MCP server and follows the `resource://` URI scheme.
+
+## Securing the MCP Server with OAuth2 (Symfony)
+
+The MCP endpoint is plain HTTP (JSON-RPC over the `http` transport), so it can be secured upstream
+with the [Symfony Security component](https://symfony.com/doc/current/security.html) — exactly like
+any other API Platform route. **There is no need for an MCP-specific security layer**: everything is
+already in `symfony/security-bundle`. You protect `/mcp` with a firewall, and you expose the small
+amount of OAuth discovery metadata MCP clients expect.
+
+The flow follows the MCP
+[authorization spec](https://modelcontextprotocol.io/specification/draft/basic/authorization), which
+builds on
+[OAuth 2.0 Protected Resource Metadata (RFC 9728)](https://www.rfc-editor.org/rfc/rfc9728):
+
+1. The MCP client calls `/mcp` without a token and receives a `401` with a `WWW-Authenticate` header
+   pointing to the protected-resource metadata document.
+2. The client fetches `/.well-known/oauth-protected-resource`, which lists the authorization
+   server(s) (e.g. Keycloak) protecting the resource.
+3. The client runs the OAuth flow against that authorization server, obtains an access token, and
+   retries `/mcp` with `Authorization: Bearer <token>`.
+4. The Symfony firewall validates the token through its access-token handler and resolves a user.
+
+Two of these pieces are plain Symfony Security and are documented upstream: a **stateless firewall**
+on `/mcp` and an **access-token handler** that validates the bearer token. The other two are what
+MCP adds on top — a **public metadata endpoint** (RFC 9728) and a **`WWW-Authenticate` challenge**
+on `401` responses — and are covered in full below.
+
+### Firewall and Access Token Handler
+
+Protect `/mcp` (and your API) with a stateless firewall using Symfony's
+[access token authenticator](https://symfony.com/doc/current/security/access_token.html). This is
+standard Symfony Security with no MCP specifics; refer to that documentation for the available token
+handlers. Any OpenID Connect provider works — the example below uses the `oidc` handler (Keycloak),
+which validates the JWT locally via the provider's discovery document:
+
+```yaml
+# config/packages/security.yaml
+security:
+    providers:
+        # A custom provider that turns validated token claims into a user (see below)
+        oidc:
+            id: App\Security\KeycloakUserProvider
+
+    firewalls:
+        dev:
+            pattern: ^/(_profiler|_wdt|assets|build)/
+            security: false
+
+        # RFC 9728 metadata must stay public so a client holding a stale/expired token can still
+        # discover the authorization server instead of getting a 401 from the access_token handler.
+        oauth_metadata:
+            pattern: ^/\.well-known/oauth-protected-resource$
+            security: false
+
+        api_and_mcp:
+            pattern: ^/(api|mcp)
+            stateless: true
+            provider: oidc
+            access_token:
+                token_handler:
+                    oidc:
+                        discovery:
+                            base_uri: "%env(KEYCLOAK_URL)%/realms/%env(KEYCLOAK_REALM)%/"
+                            cache:
+                                id: cache.app
+                        audience: "%env(KEYCLOAK_CLIENT_ID)%"
+                        issuers:
+                            - "%env(KEYCLOAK_PUBLIC_URL)%/realms/%env(KEYCLOAK_REALM)%"
+                        algorithms:
+                            - RS256
+```
+
+> **Note:** Use a separate `security: false` firewall for the metadata endpoint. Putting it on the
+> protected firewall would reject a client that arrives with an expired token before it ever sees
+> the discovery document.
+
+For opaque tokens (no locally verifiable JWT), swap the `oidc` handler for the
+[`oauth2` token handler](https://symfony.com/doc/current/security/access_token.html#oauth2-server),
+which validates the token against the provider's introspection endpoint — again, standard Symfony
+configuration.
+
+The token handler hands the validated token claims to a
+[user provider](https://symfony.com/doc/current/security/user_providers.html) implementing
+`AttributesBasedUserProviderInterface`, which maps the claims (identifier, email, roles) onto your
+own user object. The only API Platform–relevant detail is that the roles resolved there drive
+[security expressions](../symfony/security.md) on your operations and MCP tools — e.g.
+`security: "is_granted('ROLE_ADMIN')"` applies to a tool exactly as it does to an HTTP operation.
+
+### Protected Resource Metadata Endpoint
+
+MCP clients discover which authorization server protects `/mcp` by fetching
+`/.well-known/oauth-protected-resource` (RFC 9728). Symfony provides nothing for this, so expose it
+with an invokable controller:
+
+```php
+<?php
+namespace App\Controller\Mcp;
+
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\Attribute\Route;
+
+final readonly class ProtectedResourceMetadataController
+{
+    public function __construct(
+        #[Autowire(env: 'KEYCLOAK_PUBLIC_URL')]
+        private string $keycloakPublicUrl,
+        #[Autowire(env: 'KEYCLOAK_REALM')]
+        private string $keycloakRealm,
+    ) {
+    }
+
+    #[Route('/.well-known/oauth-protected-resource', name: 'mcp_oauth_protected_resource_metadata', methods: ['GET'])]
+    public function __invoke(Request $request): JsonResponse
+    {
+        $issuer = rtrim($this->keycloakPublicUrl, '/').'/realms/'.$this->keycloakRealm;
+
+        return new JsonResponse([
+            'resource' => $request->getSchemeAndHttpHost().'/mcp',
+            'authorization_servers' => [$issuer],
+            'scopes_supported' => ['openid', 'profile', 'email'],
+            'bearer_methods_supported' => ['header'],
+        ]);
+    }
+}
+```
+
+This endpoint is required by
+[`modelcontextprotocol/inspector`](https://github.com/modelcontextprotocol/inspector) and other
+compliant clients to bootstrap the OAuth flow.
+
+### WWW-Authenticate Challenge
+
+To complete the discovery loop, an unauthorized `/mcp` response must carry a `WWW-Authenticate`
+header pointing at the metadata document (RFC 9728 §5.1). A response listener adds it on `401`
+responses scoped to `/mcp`:
+
+```php
+<?php
+namespace App\EventListener;
+
+use Symfony\Component\EventDispatcher\Attribute\AsEventListener;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Event\ResponseEvent;
+use Symfony\Component\HttpKernel\KernelEvents;
+
+#[AsEventListener(event: KernelEvents::RESPONSE)]
+final readonly class McpProtectedResourceChallengeListener
+{
+    public function __invoke(ResponseEvent $event): void
+    {
+        $response = $event->getResponse();
+        if (Response::HTTP_UNAUTHORIZED !== $response->getStatusCode()) {
+            return;
+        }
+
+        $path = $event->getRequest()->getPathInfo();
+        if ('/mcp' !== $path && !str_starts_with($path, '/mcp/')) {
+            return;
+        }
+
+        $existing = $response->headers->get('WWW-Authenticate');
+        // The same 401 can pass through kernel.response twice (error sub-request then main request).
+        if (null !== $existing && str_contains($existing, 'resource_metadata=')) {
+            return;
+        }
+
+        $metadataUrl = $event->getRequest()->getSchemeAndHttpHost().'/.well-known/oauth-protected-resource';
+        // Append to any existing Bearer challenge (e.g. error="invalid_token") rather than replacing it,
+        // so the upstream auth error detail survives (RFC 9728 §5.1).
+        $response->headers->set('WWW-Authenticate', null !== $existing
+            ? $existing.',resource_metadata="'.$metadataUrl.'"'
+            : \sprintf('Bearer resource_metadata="%s"', $metadataUrl));
+    }
+}
+```
+
+An MCP client connecting to `/mcp` is now transparently redirected through the OAuth flow, and every
+tool invocation runs as an authenticated Symfony user — so your existing `security` expressions,
+voters, and role hierarchy apply to MCP tools without any MCP-specific security code.
+
+### Advertising OAuth2 in OpenAPI (optional)
+
+If you also expose the same API over HTTP and want Swagger UI / the OpenAPI document to offer the
+OAuth2 flow, decorate the OpenAPI factory to register the security scheme:
+
+```php
+<?php
+namespace App\OpenApi;
+
+use ApiPlatform\OpenApi\Factory\OpenApiFactoryInterface;
+use ApiPlatform\OpenApi\Model\OAuthFlow;
+use ApiPlatform\OpenApi\Model\OAuthFlows;
+use ApiPlatform\OpenApi\Model\SecurityScheme;
+use ApiPlatform\OpenApi\OpenApi;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
+
+final class SecuritySchemeOpenApiDecorator implements OpenApiFactoryInterface
+{
+    public function __construct(
+        private readonly OpenApiFactoryInterface $decorated,
+        #[Autowire(env: 'KEYCLOAK_PUBLIC_URL')]
+        private readonly string $keycloakPublicUrl,
+        #[Autowire(env: 'KEYCLOAK_REALM')]
+        private readonly string $keycloakRealm,
+    ) {
+    }
+
+    public function __invoke(array $context = []): OpenApi
+    {
+        $openApi = ($this->decorated)($context);
+
+        $tokenUrl = \sprintf(
+            '%s/realms/%s/protocol/openid-connect/token',
+            rtrim($this->keycloakPublicUrl, '/'),
+            $this->keycloakRealm
+        );
+
+        $scheme = new SecurityScheme(
+            type: 'oauth2',
+            flows: new OAuthFlows(
+                password: new OAuthFlow(tokenUrl: $tokenUrl, scopes: new \ArrayObject([])),
+            ),
+        );
+
+        $schemes = $openApi->getComponents()->getSecuritySchemes() ?? new \ArrayObject();
+        $schemes['oauth2'] = $scheme;
+
+        return $openApi
+            ->withComponents($openApi->getComponents()->withSecuritySchemes($schemes))
+            ->withSecurity([['oauth2' => []]]);
+    }
+}
+```
+
+See the [OpenAPI documentation](openapi.md) for more on customizing security schemes.
 
 ## McpTool Options
 

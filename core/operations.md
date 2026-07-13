@@ -63,6 +63,60 @@ Item operations:
 > properties not included in the payload are **not** removed, their current values are preserved. To
 > remove an existing property, its value must be explicitly set to `null`.
 
+## Upsert: Creating a Resource With PUT
+
+By default, sending a `PUT` request to an item that does not exist returns a `404 Not Found`. To
+enable an "upsert" behavior (update the resource if it exists, create it otherwise), set the
+`allowCreate` property to `true` on the `PUT` operation. The identifier provided in the URI is then
+used for the new resource and a `201 Created` response is returned when the item did not exist.
+
+<code-selector>
+
+```php
+<?php
+// api/src/Entity/Book.php
+namespace App\Entity;
+
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Put;
+
+#[ApiResource(
+    operations: [
+        new Put(allowCreate: true),
+    ]
+)]
+class Book
+{
+    // ...
+}
+```
+
+```yaml
+# api/config/api_platform/resources.yaml
+resources:
+    App\Entity\Book:
+        operations:
+            ApiPlatform\Metadata\Put:
+                allowCreate: true
+```
+
+```xml
+<?xml version="1.0" encoding="UTF-8" ?>
+<!-- api/config/api_platform/resources.xml -->
+<resources xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xmlns="https://api-platform.com/schema/metadata/resources-3.0"
+           xsi:schemaLocation="https://api-platform.com/schema/metadata/resources-3.0
+           https://api-platform.com/schema/metadata/resources-3.0.xsd">
+    <resource class="App\Entity\Book">
+        <operations>
+            <operation class="ApiPlatform\Metadata\Put" allowCreate="true" />
+        </operations>
+    </resource>
+</resources>
+```
+
+</code-selector>
+
 ## Enabling and Disabling Operations
 
 If no operation is specified, all default CRUD operations are automatically registered. It is also
@@ -302,8 +356,12 @@ resources:
 
 When you do not want to allow access to the resource item (i.e. you don't want a `GET` item
 operation), instead of omitting the resource item altogether, you can explicitly specify the IRI of
-the resource item by declaring a `GET` item operation that returns HTTP 404 (Not Found). For
-example:
+the resource item by declaring a `GET` item operation that returns HTTP 404 (Not Found).
+
+> For Laravel applications, the same behavior can be implemented using the
+> ApiPlatform\Laravel\Controller\NotExposedController.
+
+For example:
 
 <code-selector>
 

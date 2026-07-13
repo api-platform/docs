@@ -700,13 +700,13 @@ use the following snippet:
 services:
     # ...
     App\State\BlogPostProvider:
-        tags: [ 'api_platform.state_provider' ]
+        tags: ["api_platform.state_provider"]
 
 # api/config/services.yaml
 services:
     # ...
     App\State\BookRepresentationProvider:
         arguments:
-            $itemProvider: '@api_platform.doctrine.orm.state.item_provider'
-        tags: [ 'api_platform.state_provider' ]
+            $itemProvider: "@api_platform.doctrine.orm.state.item_provider"
+        tags: ["api_platform.state_provider"]
 ```

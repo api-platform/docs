@@ -201,6 +201,64 @@ With this configuration, there are three validation groups:
 
 `putValidation` contains the constraints on the author (length from 2 to 70) field only.
 
+## Validation Groups and the Generated Schema
+
+Validation groups also affect the [JSON Schema](../core/json-schema.md) and
+[OpenAPI](../core/openapi.md) output that API Platform generates.
+
+When a constraint declares an explicit `groups:` option, it leaves the `Default` group (standard
+Symfony semantics). Schema generation is per-operation: if the operation does not declare
+`validationContext`, it falls back to the `Default` group only, so grouped constraints are not
+reflected in the generated schema.
+
+For example, with the following resource:
+
+```php
+<?php
+// api/src/Entity/Order.php
+
+namespace App\Entity;
+
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Post;
+use Symfony\Component\Validator\Constraints as Assert;
+
+#[ApiResource]
+#[Post]
+class Order
+{
+    #[Assert\Choice(choices: ['standard', 'express', 'overnight'], groups: ['postValidation'])]
+    public string $shippingMethod;
+
+    // ...
+}
+```
+
+The `enum` restriction for `shippingMethod` does **not** appear in the generated schema for the
+`Post` operation, because `Choice` belongs to `postValidation`, not `Default`.
+
+To make grouped constraints visible in the schema, declare the matching groups on the operation via
+`validationContext`:
+
+```php
+#[Post(validationContext: ['groups' => ['Default', 'postValidation']])]
+```
+
+Include `'Default'` in the list if the resource also has ungrouped constraints that should still
+apply. Omitting `'Default'` drops all constraints that do not belong to a named group, which is
+standard Symfony group behavior.
+
+### Callable Validation Groups
+
+When `validationContext` uses a callable (a closure or an invokable service) to resolve groups
+dynamically at runtime, those groups **cannot** be reflected in the generated schema. The schema is
+built once per operation at documentation generation time, before any request object is available,
+so the callable is never invoked during schema generation. The schema falls back to the `Default`
+group only.
+
+If accurate OpenAPI / JSON Schema output matters for a given operation, prefer a static group list
+over a callable.
+
 ## Dynamic Validation Groups
 
 If you need to dynamically determine which validation groups to use for an entity in different

@@ -27,8 +27,8 @@ document is added or removed or for relationships and inverse relations is built
 
 #### Built-in Caddy HTTP Cache
 
-The API Platform distribution relies on the [Caddy web server](https://caddyserver.com) which
-provides an official HTTP cache module called
+The Docker setup of the API Platform Symfony variant relies on the
+[Caddy web server](https://caddyserver.com) which provides an official HTTP cache module called
 [cache-handler](https://github.com/caddyserver/cache-handler), that is based on
 [Souin](https://github.com/darkweak/souin).
 
@@ -332,18 +332,18 @@ class Book
 
 Computing metadata used by the bundle is a costly operation. Fortunately, metadata can be computed
 once and then cached. API Platform internally uses a [PSR-6](https://www.php-fig.org/psr/psr-6/)
-cache. If the Symfony Cache component is available (the default in the API Platform distribution),
-it automatically enables support for the best cache adapter available.
+cache. If the Symfony Cache component is available (the default in the API Platform Symfony
+variant), it automatically enables support for the best cache adapter available.
 
 Best performance is achieved using [APCu](https://github.com/krakjoe/apcu). Be sure to have the APCu
 extension installed on your production server (this is the case by default in the Docker image
-provided by the API Platform distribution). API Platform will automatically use it.
+provided by the API Platform Symfony variant). API Platform will automatically use it.
 
 ## Using FrankenPHP's Worker Mode
 
 API response times can be significantly improved by enabling
 [FrankenPHP's worker mode](https://frankenphp.dev/docs/worker/). This feature is enabled by default
-in the production environment of the API Platform distribution.
+in the production environment of the API Platform Symfony variant.
 
 ## Doctrine Queries and Index
 
@@ -537,6 +537,86 @@ api_platform:
 ```
 
 More details are available on the [pagination documentation](pagination.md#partial-pagination).
+
+## JSON Streaming
+
+Available since API Platform 4.2.
+
+By default, API Platform builds the whole serialized representation of a response in memory (using
+the Symfony Serializer) before sending it. For large payloads this is costly both in memory and in
+time to first byte.
+
+API Platform can instead use the
+[Symfony JsonStreamer](https://symfony.com/doc/current/components/json_streamer.html) component to
+stream the response. JsonStreamer generates optimized, ahead-of-time-compiled encoders from the
+typed properties of your resources and writes the JSON directly to a `StreamedResponse`, without
+holding the full output in memory.
+
+This is an opt-in optimization. JsonStreamer is an experimental Symfony component and requires
+**Symfony 7.4 or higher**.
+
+### Installing the Component
+
+```console
+composer require symfony/json-streamer
+```
+
+Once installed, the streaming integration is enabled automatically (the `enable_json_streamer`
+configuration option defaults to `true` when the component is available). You can toggle it
+explicitly:
+
+```yaml
+# api/config/packages/api_platform.yaml
+api_platform:
+    enable_json_streamer: true
+```
+
+### Enabling Streaming on a Resource or Operation
+
+Streaming is opt-in per resource or per operation through the `jsonStream` attribute. Set it on the
+`#[ApiResource]` attribute to enable it for every operation:
+
+```php
+<?php
+// api/src/ApiResource/Book.php
+namespace App\ApiResource;
+
+use ApiPlatform\Metadata\ApiResource;
+
+#[ApiResource(jsonStream: true)]
+class Book
+{
+    public string $title;
+    public string $author;
+
+    // ...
+}
+```
+
+Or enable it for a single operation only:
+
+```php
+<?php
+// api/src/ApiResource/Book.php
+namespace App\ApiResource;
+
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\GetCollection;
+
+#[ApiResource]
+#[GetCollection(jsonStream: true)]
+class Book
+{
+    // ...
+}
+```
+
+Streaming applies to the `json` and `jsonld` formats. When a request asks for another format, or
+when `jsonStream` is not enabled, API Platform falls back to the regular Serializer-based response.
+
+> **Note:** JsonStreamer only serializes **public properties**, and it relies on their type
+> declarations to build its encoders. Make sure every serialized property is public and typed;
+> values exposed only through getters or non-public properties will not be streamed.
 
 ## Profiling with Blackfire.io
 

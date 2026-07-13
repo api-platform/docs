@@ -62,8 +62,8 @@ Just like other Symfony and API Platform components, the Serializer component ca
 using attributes, XML or YAML. Since attributes are easy to understand, we will use them in the
 following examples.
 
-> [!NOTE] If you are not using the API Platform distribution, you need to enable annotation support
-> in the serializer configuration as outlined below, depending on your Symfony version.
+> [!NOTE] If you are not using the API Platform Symfony variant, you need to enable annotation
+> support in the serializer configuration as outlined below, depending on your Symfony version.
 
 #### Configuration for Symfony `<= 6.4`
 
@@ -308,22 +308,22 @@ class Book
 # api/config/api_platform/resources/Book.yaml
 App\ApiResource\Book:
     normalizationContext:
-        groups: ['get']
+        groups: ["get"]
     operations:
         ApiPlatform\Metadata\Get: ~
         ApiPlatform\Metadata\Get: ~
         ApiPlatform\Metadata\Patch:
             normalizationContext:
-                groups: ['patch']
+                groups: ["patch"]
 
 # The YAML syntax is only supported for Symfony
 # api/config/serializer/Book.yaml
 App\ApiResource\Book:
     attributes:
         name:
-            groups: ['get', 'patch']
+            groups: ["get", "patch"]
         author:
-            groups: ['get']
+            groups: ["get"]
 ```
 
 ```xml
@@ -401,7 +401,7 @@ requests.
 
 **Note:** We strongly recommend using [Vulcain](https://vulcain.rocks) instead of this feature.
 Vulcain allows creating faster (better hit rate) and better designed APIs than relying on compound
-documents, and is supported out of the box in the API Platform distribution.
+documents, and is supported out of the box in the API Platform Symfony variant.
 
 ### Normalization
 
@@ -452,16 +452,16 @@ class Book
 # api/config/api_platform/resources/Book.yaml
 App\ApiResource\Book:
     normalizationContext:
-        groups: ['book']
+        groups: ["book"]
 
 # The YAML syntax is only supported for Symfony
 # api/config/serializer/Book.yaml
 App\ApiResource\Book:
     attributes:
         name:
-            groups: ['book']
+            groups: ["book"]
         author:
-            groups: ['book']
+            groups: ["book"]
 ```
 
 </code-selector>
@@ -597,18 +597,18 @@ class Person
 # api/config/api_platform/resources/Person.yaml
 App\ApiResource\Person:
     normalizationContext:
-        groups: ['person']
+        groups: ["person"]
     denormalizationContext:
-        groups: ['person']
+        groups: ["person"]
 
 # The YAML syntax is only supported for Symfony
 # api/config/serializer/Person.yaml
 App\ApiResource\Person:
     attributes:
         name:
-            groups: ['person']
+            groups: ["person"]
         parent:
-            groups: ['person']
+            groups: ["person"]
 ```
 
 </code-selector>
@@ -719,9 +719,7 @@ class PlainIdentifierDenormalizer implements DenormalizerInterface, Denormalizer
     public function getSupportedTypes(?string $format): array
     {
         return [
-            'object' => null,
-            '*' => false,
-            Dummy::class => true
+            Dummy::class => false,
         ];
     }
 }
@@ -872,18 +870,18 @@ App\Entity\Greeting:
     operations:
         ApiPlatform\Metadata\GetCollection:
             normalizationContext:
-                groups: 'greeting:collection:get'
+                groups: "greeting:collection:get"
 
 # The YAML syntax is only supported for Symfony
 # api/config/serializer/Greeting.yaml
 App\Entity\Greeting:
     attributes:
         id:
-            groups: 'greeting:collection:get'
+            groups: "greeting:collection:get"
         name:
-            groups: 'greeting:collection:get'
+            groups: "greeting:collection:get"
         sum:
-            groups: 'greeting:collection:get'
+            groups: "greeting:collection:get"
 ```
 
 </code-selector>
@@ -934,18 +932,18 @@ class Book
 # api/config/api_platform/resources/Book.yaml
 App\ApiResource\Book:
     normalizationContext:
-        groups: ['book:output']
+        groups: ["book:output"]
     denormalizationContext:
-        groups: ['book:input']
+        groups: ["book:input"]
 
 # The YAML syntax is only supported for Symfony
 # api/config/serializer/Book.yaml
 App\ApiResource\Book:
     attributes:
         active:
-            groups: ['book:output', 'admin:input']
+            groups: ["book:output", "admin:input"]
         name:
-            groups: ['book:output', 'book:input']
+            groups: ["book:output", "book:input"]
 ```
 
 </code-selector>

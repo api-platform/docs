@@ -80,3 +80,86 @@ class Tag
 This allows a parent resource to reference `Tag` objects in its relationships while `Tag` itself has
 no public item endpoint. The `NotExposed` operation requires a `uriTemplate` with a single URI
 variable.
+
+## Client-Generated IDs
+
+The
+[JSON:API specification allows clients to supply their own `id` on `POST`](https://jsonapi.org/format/#crud-creating-client-ids)
+when the server agrees to accept it. This is useful when the client generates a UUID before sending
+the request and needs the server to persist it as-is.
+
+By default, API Platform rejects client-supplied `data.id` on `POST` with a `400` response. Enable
+it explicitly when needed.
+
+### Enabling Globally
+
+**Symfony:**
+
+```yaml
+# config/packages/api_platform.yaml
+api_platform:
+    jsonapi:
+        allow_client_generated_id: true
+```
+
+**Laravel** (`config/api-platform.php`):
+
+```php
+'jsonapi' => [
+    'allow_client_generated_id' => true,
+],
+```
+
+### Enabling Per Operation
+
+Use the `denormalizationContext` on the `#[Post]` operation to enable the feature for a single
+endpoint without affecting the rest of the API:
+
+```php
+<?php
+
+namespace App\ApiResource;
+
+use ApiPlatform\JsonApi\Serializer\ItemNormalizer;
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\Post;
+
+#[ApiResource(
+    formats: ['jsonapi' => ['application/vnd.api+json']],
+    operations: [
+        new Get(uriTemplate: '/books/{id}'),
+        new Post(
+            uriTemplate: '/books',
+            denormalizationContext: [ItemNormalizer::ALLOW_CLIENT_GENERATED_ID => true],
+        ),
+    ],
+)]
+class Book
+{
+    public ?string $id = null;
+    public string $title = '';
+}
+```
+
+A request that supplies `data.id` is then accepted:
+
+```http
+POST /api/books HTTP/1.1
+Accept: application/vnd.api+json
+Content-Type: application/vnd.api+json
+
+{
+    "data": {
+        "type": "Book",
+        "id": "01932b4c-a3f1-7b7e-9e5b-3d8f1c2e4a6d",
+        "attributes": {
+            "title": "Hyperion"
+        }
+    }
+}
+```
+
+The supplied `id` is passed to the entity's `id` setter. The processor is responsible for persisting
+it. The response output schema still requires `id`; only the `POST` input schema marks it as
+optional.

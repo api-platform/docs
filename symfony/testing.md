@@ -160,12 +160,12 @@ Now that you have some data fixtures for your API, you are ready to write functi
 
 The API Platform test client implements the interfaces of the
 [Symfony HttpClient](https://symfony.com/doc/current/components/http_client.html). HttpClient is
-shipped with the API Platform distribution. The
+shipped with the API Platform Symfony variant. The
 [Symfony test pack](https://github.com/symfony/test-pack/blob/main/composer.json), which includes
 PHPUnit as well as Symfony components useful for testing, is also included.
 
 Run `composer require --dev symfony/test-pack symfony/http-client` to install the testing tools
-(when using the distribution they're already installed).
+(when using the API Platform Symfony variant they're already installed).
 
 Install [DAMADoctrineTestBundle](https://github.com/dmaicher/doctrine-test-bundle) to reset the
 database automatically before each test:
@@ -382,21 +382,19 @@ Running your test suite in your
 [CI/CD pipeline](https://en.wikipedia.org/wiki/Continuous_integration) is important to ensure good
 quality and delivery time.
 
-The API Platform distribution is
-[shipped with a GitHub Actions workflow](https://github.com/api-platform/api-platform/blob/main/.github/workflows/ci.yml)
+The API Platform Demo is
+[shipped with a GitHub Actions workflow](https://github.com/api-platform/demo/tree/main/.github/workflows)
 that builds the Docker images, does a
 [smoke test](<https://en.wikipedia.org/wiki/Smoke_testing_(software)>) to check that the
 application's entrypoint is accessible, and runs PHPUnit.
 
 The API Platform Demo
 [contains a CD workflow](https://github.com/api-platform/demo/tree/main/.github/workflows) that uses
-[the Helm chart provided with the distribution](../deployment/kubernetes.md) to deploy the app on a
-Kubernetes cluster.
+[a Helm chart](../deployment/kubernetes.md) to deploy the app on a Kubernetes cluster.
 
 ## Additional and Alternative Testing Tools
 
-You may also be interested in these alternative testing tools (not included in the API Platform
-distribution):
+You may also be interested in these alternative testing tools (not included by default):
 
 - [Hoppscotch](https://docs.hoppscotch.io/), create functional
   [test](https://docs.hoppscotch.io/documentation/getting-started/rest/tests) for your API Platform
@@ -411,7 +409,7 @@ distribution):
 - [PHP Matcher](https://github.com/coduo/php-matcher), the Swiss Army knife of JSON document
   testing.
 
-## Using the API Platform Distribution for End-to-End Testing
+## End-to-End Testing
 
 If you would like to verify that your stack (including services such as the DBMS, web server,
 [Varnish](https://varnish-cache.org/)) works, you need

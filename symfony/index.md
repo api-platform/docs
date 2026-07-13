@@ -25,26 +25,23 @@ API Platform is shipped with **[Docker](../deployment/docker-compose.md)** and
 **[Kubernetes](../deployment/kubernetes.md)** definitions, to develop and deploy instantly on the
 cloud.
 
-The easiest and most powerful way to get started is
-[to download the API Platform distribution](https://github.com/api-platform/api-platform/releases).
-It contains:
+The easiest and most powerful way to get started is to use the **`api-platform` installer**, a
+command-line tool that scaffolds a new project for you. Depending on the options you select, it can
+generate:
 
 - the API skeleton, including [the Core library](../core/index.md),
   [the Symfony framework](https://symfony.com/) ([optional](../core/bootstrap.md)) and
   [the Doctrine ORM](https://www.doctrine-project.org/projects/orm.html)
   ([optional](../core/extending.md))
-- [the client scaffolding tool](../create-client/index.md) to generate
-  [Next.js](../create-client/index.md) web applications from the API documentation
-  ([Nuxt](https://nuxt.com/), [Vue](https://vuejs.org/), [Create React App](https://reactjs.org),
-  [React Native](https://reactnative.dev/), [Quasar](https://quasar.dev/) and
-  [Vuetify](https://vuetifyjs.com/) are also supported)
 - [a beautiful admin interface](../admin/index.md), built on top of React Admin, dynamically created
   by parsing the API documentation
+- a [Next.js](../create-client/nextjs.md) Progressive Web App, ready to welcome the code generated
+  by [the client scaffolding tool](../create-client/index.md) ([Nuxt](https://nuxt.com/),
+  [Vue](https://vuejs.org/), [React Native](https://reactnative.dev/), [Quasar](https://quasar.dev/)
+  and [Vuetify](https://vuetifyjs.com/) are also supported)
 - all you need to [create real-time and async APIs using the Mercure protocol](../core/mercure.md)
 - a [Docker](../deployment/docker-compose.md) definition to start a working development environment
   in a single command, providing containers for the API and the Next.js web application
-- a [Helm](https://helm.sh/) chart to deploy the API in any
-  [Kubernetes](../deployment/kubernetes.md) cluster
 
 ## A Bookshop API
 
@@ -75,7 +72,7 @@ features:
 - [invalidation-based HTTP caching](../core/performance.md)
 - and basically everything needed to build modern APIs.
 
-One more thing, before we start: as the API Platform distribution includes
+One more thing, before we start: as the generated project is built on top of
 [the Symfony framework](https://symfony.com), it is compatible with most
 [Symfony bundles](https://symfony.com/bundles) (plugins) and benefits from
 [the numerous extension points](../core/extending.md) provided by this rock-solid foundation
@@ -85,18 +82,53 @@ is straightforward.
 
 ## Installing the Framework
 
-### Using the API Platform Distribution (Recommended)
+### Using the API Platform Installer (Recommended)
 
-Start by
-[downloading the API Platform distribution](https://github.com/api-platform/api-platform/releases/latest),
-or
-[generate a GitHub repository from the template we provide](https://github.com/new?template_name=api-platform&template_owner=api-platform).
-You will add your own code and configuration inside this skeleton.
+The `api-platform` installer is a command-line tool that scaffolds a new project for you.
 
-**Note**: Avoid downloading the `.zip` archive, as it may cause potential
-[permission](https://github.com/api-platform/api-platform/issues/319#issuecomment-307037562)
-[issues](https://github.com/api-platform/api-platform/issues/777#issuecomment-412515342), prefer the
-`.tar.gz` archive.
+#### Installing the CLI
+
+Download the latest release for your platform from the
+[Releases page](https://github.com/api-platform/api-platform/releases/latest) and move the binary
+somewhere on your `$PATH`:
+
+```console
+curl -L https://github.com/api-platform/api-platform/releases/latest/download/api-platform-linux-x86_64 -o /usr/local/bin/api-platform
+chmod +x /usr/local/bin/api-platform
+```
+
+Alternatively, if you already have PHP and [Composer](https://getcomposer.org/) installed, you can
+install the installer globally with Composer:
+
+```console
+composer global require api-platform/installer
+```
+
+The `api-platform` binary will then be available in `~/.composer/vendor/bin` (make sure this
+directory is in your `$PATH`).
+
+#### Scaffolding the Project
+
+This tutorial builds a full stack project (API, admin and a Next.js Progressive Web App), so we
+generate it with the `--with-pwa` and `--with-admin` options. Run:
+
+```console
+api-platform bookshop-api --framework=symfony --with-docker --with-pwa --with-admin
+```
+
+> [!TIP]
+>
+> Run `api-platform` without any argument to start the interactive wizard, which lets you pick the
+> framework, the API formats, the documentation UI, and whether to include Docker, the admin and the
+> PWA.
+
+When the PWA and the admin are enabled, the installer creates a project directory containing an
+`api/` subdirectory (the Symfony API) alongside a `pwa/` directory (the Next.js application) and an
+`admin/` directory (the React-admin SPA). The rest of this tutorial assumes this layout.
+
+By default the installer also writes `AGENTS.md` and `CLAUDE.md` instruction files so AI coding
+agents (Claude Code, Cursor, GitHub Copilot, …) know how to work with API Platform in your project.
+Pass `--no-with-agents` to skip them.
 
 API Platform is shipped with a [Docker](https://docker.com) definition that makes it easy to get a
 containerized development environment up and running. If you do not already have Docker on your
@@ -106,18 +138,11 @@ computer, it's the right time to [install it](https://docs.docker.com/get-docker
 Similarly, on Windows, only [Docker for Windows](https://docs.docker.com/docker-for-windows/) is
 supported. Docker Machine **is not** supported out of the box.
 
-Open a terminal, and navigate to the directory containing your project skeleton. Run the following
-command to start all services using [Docker Compose](https://docs.docker.com/compose/):
-
-Build the images:
+Open a terminal and navigate to the generated `api/` directory. Run the following command to start
+all services using [Docker Compose](https://docs.docker.com/compose/):
 
 ```console
-docker compose build --no-cache
-```
-
-Then, start Docker Compose in detached mode:
-
-```console
+cd bookshop-api/api
 docker compose up --wait
 ```
 
@@ -142,16 +167,20 @@ This starts the following services:
 | Name     | Description                                                                                                                                                                                                                                                                                                                       |
 | -------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | php      | The API powered by [FrankenPHP](https://frankenphp.dev) (a modern application server for PHP built on top of [Caddy web server](caddy.md) and with native support for [Mercure realtime](../core/mercure.md), [Vulcain relations preloading](https://vulcain.rocks), and [XDebug](debugging.md)), Composer, and sensitive configs |
-| pwa      | Next.js project compatible with Create Client and having Admin preinstalled                                                                                                                                                                                                                                                       |
 | database | PostgreSQL database server                                                                                                                                                                                                                                                                                                        |
+
+When generated with `--with-pwa`, the Next.js application lives in the sibling `pwa/` directory. It
+is **not** part of the Docker Compose stack: you run it separately with its own development server
+(see [A Next.js Web App](#a-nextjs-web-app) below). To serve the API and the PWA on the same domain
+through Caddy instead, see
+[Configuring the Caddy Web Server](caddy.md#serving-the-api-and-the-pwa-on-the-same-domain).
 
 The following components are available:
 
-| URL                        | Path               | Language   | Description             |
-| -------------------------- | ------------------ | ---------- | ----------------------- |
-| `https://localhost/docs/`  | `api/`             | PHP        | The API                 |
-| `https://localhost/`       | `pwa/`             | TypeScript | The Next.js application |
-| `https://localhost/admin/` | `pwa/pages/admin/` | TypeScript | The Admin               |
+| URL                       | Path   | Language   | Description                                   |
+| ------------------------- | ------ | ---------- | --------------------------------------------- |
+| `https://localhost/docs/` | `api/` | PHP        | The API                                       |
+| `http://localhost:3000/`  | `pwa/` | TypeScript | The Next.js application (run with `pnpm dev`) |
 
 To see the container's logs, run:
 
@@ -174,15 +203,15 @@ analysis.
 [PHP Intelephense for Visual Studio Code](https://marketplace.visualstudio.com/items?itemName=bmewburn.vscode-intelephense-client)
 also works well, and is free and open source.
 
-The API Platform distribution comes with a dummy entity for test purposes:
-`api/src/Entity/Greeting.php`. We will remove it later.
+The installer creates a dummy API resource for test purposes: `api/src/ApiResource/Greetings.php`.
+We will remove it later.
 
-If you're used to the PHP ecosystem, you probably guessed that this test entity uses the
-industry-leading [Doctrine ORM](https://www.doctrine-project.org/projects/orm.html) library as a
-persistence system. It is shipped, in the API Platform distribution.
+The installer also requires the [Doctrine ORM](https://www.doctrine-project.org/projects/orm.html)
+bridge (`api-platform/doctrine-orm`), the industry-leading PHP persistence system, so you can start
+mapping your own entities right away.
 
-Doctrine ORM is the easiest way to persist and query data in an API Platform project thanks to the
-bridge shipped with the distribution, but it's also entirely optional, and
+Doctrine ORM is the easiest way to persist and query data in an API Platform project thanks to this
+bridge, but it's also entirely optional, and
 [you may prefer to plug your own persistence system](../core/design.md).
 
 The Doctrine Bridge is optimized for performance and development convenience. For instance, when
@@ -208,10 +237,10 @@ Alternatively, the API Platform server component can also be installed directly 
 **This method is recommended only for users who want full control over the directory structure and
 the installed dependencies.**
 
-[For a good introduction, watch how to install API Platform without the distribution on SymfonyCasts](https://symfonycasts.com/screencast/api-platform/install?cid=apip).
+[For a good introduction, watch how to install API Platform manually on SymfonyCasts](https://symfonycasts.com/screencast/api-platform/install?cid=apip).
 
-The rest of this tutorial assumes that you have installed API Platform using the official
-distribution. Go straight to the next section if it's your case.
+The rest of this tutorial assumes that you have scaffolded your project with the `api-platform`
+installer. Go straight to the next section if it's your case.
 
 API Platform has an official Symfony Flex recipe. It means that you can easily install it from any
 Symfony application using [the Symfony binary](https://symfony.com/download):
@@ -267,10 +296,9 @@ Open `https://localhost` in your favorite web browser:
 You'll need to add a security exception in your browser to accept the self-signed TLS certificate
 that has been generated for this container when installing the framework.
 
-Later you will probably replace this welcome screen by the homepage of your Next.js application. If
-you don't plan to create a Progressive Web App, you can remove the `pwa/` directory as well as the
-related lines in `docker-compose*.yml` and in `api/frankenphp/Caddyfile` (don't do it now, we'll use
-this container later in this tutorial).
+If you generated the project without `--with-pwa`, you can skip this welcome screen and build your
+Next.js application separately later. When the PWA is included, it runs as a standalone Next.js app
+in the sibling `pwa/` directory (don't remove it now, we'll use it later in this tutorial).
 
 Click on the "API" button, or go to `https://localhost/docs/`:
 
@@ -280,12 +308,12 @@ API Platform exposes a description of the API in the [OpenAPI](https://www.opena
 (formerly known as Swagger). It also integrates a customized version of
 [Swagger UI](https://swagger.io/swagger-ui/), a nice interface rendering the OpenAPI documentation.
 Click on an operation to display its details. You can also send requests to the API directly from
-the UI. Try to create a new _Greeting_ resource using the `POST` operation, then access it using the
-`GET` operation and, finally, delete it by executing the `DELETE` operation. If you access any API
-URL with the `.html` extension appended, API Platform displays the corresponding API request in the
-UI. Try it yourself by browsing to `https://localhost/greetings.html`. If no extension is present,
-API Platform will use the `Accept` header to select the format to use. By default, a JSON-LD
-response is sent ([configurable behavior](../core/content-negotiation.md)).
+the UI. Try to fetch the _Greetings_ collection using the `GET` operation, then fetch a single item.
+If you access any API URL with the `.html` extension appended, API Platform displays the
+corresponding API request in the UI. Try it yourself by browsing to
+`https://localhost/greetings.html`. If no extension is present, API Platform will use the `Accept`
+header to select the format to use. By default, a JSON-LD response is sent
+([configurable behavior](../core/content-negotiation.md)).
 
 So, if you want to access the raw data, you have two alternatives:
 
@@ -300,17 +328,17 @@ Of course, you can also use your favorite HTTP client to query the API. We are f
 [Hoppscotch](https://hoppscotch.com), a free and open source API client with good support of API
 Platform.
 
-## Keep Your Project in Sync with the API Platform Template
+## Keep Your Docker Setup in Sync
 
-You have started a project with the API Platform template and you would like to benefit from the
-latest enhancements introduced since you created your project (i.e.
-[FrankenPHP](https://frankenphp.dev/)). Just use this Git based tool
-[The _template-sync_ project](https://github.com/coopTilleuls/template-sync) got you covered.
+The Docker and [FrankenPHP](https://frankenphp.dev/) configuration scaffolded by the installer comes
+from the [Symfony Docker](https://github.com/dunglas/symfony-docker) project. To benefit from the
+latest enhancements introduced upstream since you created your project, you can use the Git based
+[_template-sync_ project](https://github.com/coopTilleuls/template-sync).
 
-Run the following command to import the changes since your last update:
+Run the following command from the `api/` directory to import the changes since your last update:
 
 ```console
-curl -sSL https://raw.githubusercontent.com/coopTilleuls/template-sync/main/template-sync.sh | sh -s -- https://github.com/api-platform/api-platform
+curl -sSL https://raw.githubusercontent.com/coopTilleuls/template-sync/main/template-sync.sh | sh -s -- https://github.com/dunglas/symfony-docker
 ```
 
 Resolve potential conflicts, run `git cherry-pick --continue` and you are done!
@@ -876,9 +904,15 @@ use it with the popular [RelayJS](https://relay.dev) and
 ## The Admin
 
 Wouldn't it be nice to have an administration backend to manage the data exposed by your API?
-Wait... You already have one!
+Wait... You already have one! When generated with `--with-admin`, the React-admin SPA lives in the
+sibling `admin/` directory. Start its development server:
 
-Open `https://localhost/admin/` in your browser:
+```console
+cd ../admin
+npm run dev
+```
+
+Open `http://localhost:5173/` in your browser:
 
 ![The admin](images/api-platform-2.6-admin.png)
 
@@ -899,15 +933,17 @@ Apps/Single Page Apps that you can easily tune and customize. The generator also
 [React Native](../create-client/react-native.md) if you prefer to leverage all capabilities of
 mobile devices.
 
-The distribution comes with a skeleton ready to welcome the [Next.js](https://nextjs.org/) flavor of
-the generated code. To bootstrap your app, run:
+When generated with `--with-pwa`, the installer scaffolds a [Next.js](https://nextjs.org/)
+application in the `pwa/` directory, ready to welcome the generated code. To bootstrap your app, run
+the client generator from that directory, then start the development server:
 
 ```console
-docker compose exec pwa \
-    pnpm create @api-platform/client
+cd ../pwa
+pnpm create @api-platform/client
+pnpm dev
 ```
 
-Open `https://localhost/books/` in your browser:
+Open `http://localhost:3000/books/` in your browser:
 
 ![The Next.js Progressive Web App](images/api-platform-2.6-pwa-react.png)
 

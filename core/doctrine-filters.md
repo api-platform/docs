@@ -402,8 +402,6 @@ This request will return all chickens where:
 
 ## Comparison Filter
 
-> [!NOTE] `ComparisonFilter` is experimental and its API may change before a stable release.
-
 The comparison filter is a decorator that wraps an equality filter (such as `ExactFilter`) and adds
 comparison operators to it. It lets clients filter a collection using greater-than,
 greater-than-or-equal, less-than, less-than-or-equal, and not-equal comparisons on any filterable
@@ -463,14 +461,17 @@ following queries:
 
 ### Range Queries (Combining Operators)
 
-There is no dedicated `between` operator. To filter within a range, combine `gte` and `lte` (or `gt`
-and `lt`) in a single request:
+In 4.4 there is no dedicated `between` operator. To filter within a range, combine `gte` and `lte`
+(or `gt` and `lt`) in a single request:
 
 ```http
 GET /products?price[gte]=10&price[lte]=100
 ```
 
 This returns all products whose price is between 10 and 100 inclusive.
+
+> [!NOTE] Since API Platform 5.0, `ComparisonFilter` also accepts a native `[between]=X..Y` operator
+> (`?price[between]=10..100`), which emits a single SQL `BETWEEN` clause on Doctrine ORM.
 
 ### DateTime Support
 
@@ -1311,11 +1312,23 @@ for both Doctrine ORM (`ApiPlatform\Doctrine\Orm\Filter\*`) and MongoDB ODM
 | `SearchFilter` (partial, start, end, word_start strategies) | [`PartialSearchFilter`](#partial-search-filter)                                                               |
 | `SearchFilter` (relations / IRI matching)                   | [`IriFilter`](#iri-filter)                                                                                    |
 | `BooleanFilter`                                             | [`ExactFilter`](#exact-filter)                                                                                |
-| `DateFilter`                                                | [`ComparisonFilter(new ExactFilter())`](#comparison-filter)                                                   |
 | `NumericFilter`                                             | [`ExactFilter`](#exact-filter) (exact) or [`ComparisonFilter(new ExactFilter())`](#comparison-filter) (range) |
-| `RangeFilter`                                               | [`ComparisonFilter(new ExactFilter())`](#comparison-filter)                                                   |
 | `OrderFilter`                                               | [`SortFilter`](#sort-filter)                                                                                  |
-| `ExistsFilter`                                              | No modern replacement yet — keep using `ExistsFilter`                                                         |
+| `DateFilter`                                                | Kept — declare it through a `QueryParameter`, same class, same `[before]`/`[after]` URL syntax (drop-in)      |
+| `RangeFilter`                                               | Kept — declare it through a `QueryParameter`, same class, same `[between]` URL syntax (drop-in)               |
+| `ExistsFilter`                                              | Kept — declare it through a `QueryParameter`, same class (drop-in)                                            |
+
+There are two kinds of migration:
+
+- **Replaced filters** (`SearchFilter`, `BooleanFilter`, `NumericFilter`, `BackedEnumFilter`,
+  `OrderFilter`) — these are removed in 6.0. Swap the class for the modern equivalent shown above.
+- **Kept filters** (`DateFilter`, `RangeFilter`, `ExistsFilter`) — these survive. Only the way you
+  _declare_ them is deprecated (via `#[ApiFilter]` / extending `AbstractFilter`). Move the
+  declaration to a `QueryParameter`; the class name and the URL syntax stay the same.
+
+> [!TIP] When instantiating a filter inside a `QueryParameter`, always use named arguments
+> (`new DateFilter(nullManagement: ...)` rather than positional). Filter constructors are refined
+> across versions; named arguments keep your declarations forward-compatible.
 
 ### Example: Migrating a DateFilter
 
@@ -1339,8 +1352,7 @@ After (modern):
 
 ```php
 <?php
-use ApiPlatform\Doctrine\Orm\Filter\ComparisonFilter;
-use ApiPlatform\Doctrine\Orm\Filter\ExactFilter;
+use ApiPlatform\Doctrine\Orm\Filter\DateFilter;
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\QueryParameter;
@@ -1349,7 +1361,7 @@ use ApiPlatform\Metadata\QueryParameter;
 #[GetCollection(
     parameters: [
         'createdAt' => new QueryParameter(
-            filter: new ComparisonFilter(new ExactFilter()),
+            filter: new DateFilter(),
             property: 'createdAt',
         ),
     ],
@@ -1360,7 +1372,9 @@ class Offer
 }
 ```
 
-The query syntax changes from `?createdAt[after]=2025-01-01` to `?createdAt[gte]=2025-01-01`.
+`DateFilter` is kept: only the declaration style changes. The URL syntax is unchanged
+(`?createdAt[before]=2025-01-01`, `?createdAt[after]=2025-01-01`, and the `strictly_*` variants),
+and per-property null management still applies.
 
 ### Example: Migrating a RangeFilter
 
@@ -1384,8 +1398,7 @@ After (modern):
 
 ```php
 <?php
-use ApiPlatform\Doctrine\Orm\Filter\ComparisonFilter;
-use ApiPlatform\Doctrine\Orm\Filter\ExactFilter;
+use ApiPlatform\Doctrine\Orm\Filter\RangeFilter;
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\QueryParameter;
@@ -1394,7 +1407,7 @@ use ApiPlatform\Metadata\QueryParameter;
 #[GetCollection(
     parameters: [
         'price' => new QueryParameter(
-            filter: new ComparisonFilter(new ExactFilter()),
+            filter: new RangeFilter(),
             property: 'price',
         ),
     ],
@@ -1405,7 +1418,12 @@ class Product
 }
 ```
 
-The query syntax changes from `?price[between]=10..100` to `?price[gte]=10&price[lte]=100`.
+`RangeFilter` is kept: only the declaration style changes. The URL syntax is unchanged
+(`?price[between]=10..100`, `?price[gt]=10&price[lt]=100`, …).
+
+> [!TIP] Since API Platform 5.0, `ComparisonFilter` covers the full range syntax (including a native
+> `[between]=X..Y`), and `RangeFilter` is deprecated in favor of it. When you upgrade to 5.0, switch
+> `new RangeFilter()` to `new ComparisonFilter(new ExactFilter())` — the URL syntax is preserved.
 
 ### MongoDB ODM
 

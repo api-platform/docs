@@ -462,21 +462,19 @@ Running your test suite in your
 [CI/CD pipeline](https://en.wikipedia.org/wiki/Continuous_integration) is important to ensure good
 quality and delivery time.
 
-The API Platform distribution is
-[shipped with a GitHub Actions workflow](https://github.com/api-platform/api-platform/blob/main/.github/workflows/ci.yml)
+The API Platform Demo is
+[shipped with a GitHub Actions workflow](https://github.com/api-platform/demo/tree/main/.github/workflows)
 that builds the Docker images, does a
 [smoke test](<https://en.wikipedia.org/wiki/Smoke_testing_(software)>) to check that the
 application's entrypoint is accessible, and runs PHPUnit.
 
 The API Platform Demo
 [contains a CD workflow](https://github.com/api-platform/demo/tree/main/.github/workflows) that uses
-[the Helm chart provided with the distribution](../deployment/kubernetes.md) to deploy the app on a
-Kubernetes cluster.
+[a Helm chart](../deployment/kubernetes.md) to deploy the app on a Kubernetes cluster.
 
 ## Additional and Alternative Testing Tools
 
-You may also be interested in these alternative testing tools (not included in the API Platform
-distribution):
+You may also be interested in these alternative testing tools (not included by default):
 
 - [Hoppscotch](https://docs.hoppscotch.io/features/tests), create functional test for your API
 - [Behat](https://behat.org), a

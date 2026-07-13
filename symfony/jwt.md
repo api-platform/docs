@@ -26,8 +26,8 @@ You can generate them by using this command:
 php bin/console lexik:jwt:generate-keypair
 ```
 
-Or if you're using the [API Platform distribution with Symfony](../symfony/index.md), you may run
-this from the project's root directory:
+Or if you're using the [API Platform Symfony variant](../symfony/index.md) with Docker, you may run
+this from the project's `api/` directory:
 
 ```console
 docker compose exec php sh -c '
@@ -39,9 +39,9 @@ docker compose exec php sh -c '
 '
 ```
 
-Note that the `setfacl` command relies on the `acl` package. This is installed by default when using
-the API Platform docker distribution but may need to be installed in your working environment in
-order to execute the `setfacl` command.
+Note that the `setfacl` command relies on the `acl` package. This is installed by default in the
+Docker setup of the API Platform Symfony variant but may need to be installed in your working
+environment in order to execute the `setfacl` command.
 
 This takes care of keypair creation (including using the correct passphrase to encrypt the private
 key), and setting the correct permissions on the keys allowing the web server to read them.

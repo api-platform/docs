@@ -2,8 +2,8 @@
 
 ## Installation
 
-If you use [the API Platform Distribution with Symfony](../symfony/index.md), the Schema Generator
-is already installed as a development dependency of your project and can be invoked with:
+If you use [the API Platform Symfony variant](../symfony/index.md), the Schema Generator is already
+installed as a development dependency of your project and can be invoked with:
 
 ```console
 vendor/bin/schema

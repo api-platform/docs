@@ -55,8 +55,9 @@ a new instance:
   associations.
     - Usage: `new QueryParameter(filter: IriFilter::class)`
 - **`ComparisonFilter`**: A decorator that wraps an equality filter (`ExactFilter`, `UuidFilter`) to
-  add `gt`, `gte`, `lt`, `lte`, and `ne` operators. Replaces `DateFilter`, `NumericFilter`, and
-  `RangeFilter` for comparison use cases.
+  add `gt`, `gte`, `lt`, `lte`, and `ne` operators. Recommended for numeric comparisons; in 5.0 it
+  also gains a native `[between]=X..Y` operator. (`DateFilter` and `RangeFilter` are kept as drop-in
+  filters — see below.)
     - Usage:
       `new QueryParameter(filter: new ComparisonFilter(new ExactFilter()), property: 'price')`
 - **`FreeTextQueryFilter`**: Applies a filter across multiple properties using a single parameter.
@@ -599,7 +600,7 @@ because `bar` is not a supported parameter.
 
 > [!NOTE] We strongly recommend using [Vulcain](https://vulcain.rocks) instead of this filter.
 > Vulcain is faster, allows a better hit rate, and is supported out of the box in the API Platform
-> distribution. [!NOTE] When unsing JSON:API check out the
+> Symfony variant. [!NOTE] When unsing JSON:API check out the
 > [specific SparseFieldset and Sort filters](./content-negotiation/#jsonapi-sparse-fieldset-and-sort-parameters)
 
 The property filter adds the possibility to select the properties to serialize (sparse fieldsets).
