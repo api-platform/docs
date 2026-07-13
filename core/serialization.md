@@ -389,7 +389,7 @@ the specific configuration for this operation.
 
 Refer to the [operations](operations.md) documentation to learn more.
 
-## Embedding Relations
+## Embedding Relations With Serialization Groups
 
 <p align="center" class="symfonycasts"><a href="https://symfonycasts.com/screencast/api-platform/relations?cid=apip"><img src="../symfony/images/symfonycasts-player.png" alt="Relations screencast"><br>Watch the Relations screencast</a></p>
 
@@ -724,6 +724,352 @@ class PlainIdentifierDenormalizer implements DenormalizerInterface, Denormalizer
     }
 }
 ```
+
+## Using Serialization Attributes
+
+In addition to using serialization groups, you can specify which attributes (properties) of a
+resource should be exposed during normalization (read) and denormalization (write) processes. This
+is done through the `attributes` key in the serialization context.
+
+It is simple to specify which attributes to use in the API system:
+
+Add the normalization context and denormalization context to the resource, and specify which
+attributes to expose.
+
+<code-selector>
+
+```php
+<?php
+// api/src/ApiResource/Book.php with Symfony or app/ApiResource/Book.php with Laravel
+namespace App\ApiResource;
+
+use ApiPlatform\Metadata\ApiResource;
+
+#[ApiResource(
+    normalizationContext: [
+        'attributes' => ['id', 'title'],
+    ],
+    denormalizationContext: [
+        'attributes' => ['title'],
+    ],
+)]
+class Book
+{
+    public ?int $id = null;
+
+    public string $title = '';
+
+    public string $isbn = '';
+
+    // ...
+}
+```
+
+```yaml
+# The YAML syntax is only supported for Symfony
+# api/config/api_platform/resources/Book.yaml
+App\ApiResource\Book:
+    normalizationContext:
+        attributes: ["id", "title"]
+    denormalizationContext:
+        attributes: ["title"]
+```
+
+```xml
+<!-- The XML syntax is only supported for Symfony -->
+<!-- api/config/api_platform/resources.xml -->
+<?xml version="1.0" encoding="UTF-8" ?>
+<resources xmlns="https://api-platform.com/schema/metadata/resources-3.0"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="https://api-platform.com/schema/metadata/resources-3.0
+                               https://api-platform.com/schema/metadata/resources-3.0.xsd">
+    <resource class="App\ApiResource\Book">
+        <normalizationContext>
+            <values>
+                <value name="attributes">
+                    <values>
+                        <value>id</value>
+                        <value>title</value>
+                    </values>
+                </value>
+            </values>
+        </normalizationContext>
+        <denormalizationContext>
+            <values>
+                <value name="attributes">
+                    <values>
+                        <value>title</value>
+                    </values>
+                </value>
+            </values>
+        </denormalizationContext>
+    </resource>
+</resources>
+```
+
+</code-selector>
+
+In the previous example, the `id` and `title` properties will be visible when reading (`GET`) the
+object. When writing (`PUT` / `PATCH` / `POST`), only `title` is accepted. The `isbn` property is
+never exposed because it was not specified in the attributes list.
+
+Internally, API Platform passes the value of the `normalizationContext` as the 3rd argument of
+[the `Serializer::serialize()` method](https://api.symfony.com/master/Symfony/Component/Serializer/SerializerInterface.html#method_serialize)
+during the normalization process. `denormalizationContext` is passed as the 4th argument of
+[the `Serializer::deserialize()` method](https://api.symfony.com/master/Symfony/Component/Serializer/SerializerInterface.html#method_deserialize)
+during denormalization (writing).
+
+In addition to the `attributes` key, you can configure any Symfony Serializer option through the
+`$context` parameter (e.g. the `enable_max_depth` key when using
+[the `@MaxDepth` annotation](https://symfony.com/doc/current/components/serializer.html#handling-serialization-depth)).
+
+Any attributes configuration that you specify will also be leveraged by the built-in actions and the
+OpenAPI documentation generator.
+
+## Using Serialization Attributes per Operation
+
+It is possible to specify normalization and denormalization contexts (as well as any other
+attribute) on a per-operation basis. API Platform will always use the most specific definition. For
+instance, if normalization attributes are set both at the resource level and at the operation level,
+the configuration set at the operation level will be used and the resource level ignored.
+
+In the following example we use different attributes for the `GET` and `POST` operations:
+
+<code-selector>
+
+```php
+<?php
+// api/src/ApiResource/Book.php with Symfony or app/ApiResource/Book.php with Laravel
+namespace App\ApiResource;
+
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\Post;
+
+#[ApiResource]
+#[Get(
+    normalizationContext: [
+        'attributes' => ['id', 'title'],
+    ],
+)]
+#[Post(
+    denormalizationContext: [
+        'attributes' => ['title'],
+    ],
+    normalizationContext: [
+        'attributes' => ['id', 'title'],
+    ],
+)]
+class Book
+{
+    public ?int $id = null;
+
+    public string $title = '';
+
+    public ?string $name = null;
+
+    public string $isbn = '';
+
+    // ...
+}
+```
+
+```yaml
+# The YAML syntax is only supported for Symfony
+# api/config/api_platform/resources/Book.yaml
+App\ApiResource\Book:
+    operations:
+        ApiPlatform\Metadata\Get:
+            normalizationContext:
+                attributes: ["id", "title"]
+        ApiPlatform\Metadata\Post:
+            denormalizationContext:
+                attributes: ["title"]
+            normalizationContext:
+                attributes: ["id", "title"]
+```
+
+```xml
+<!-- The XML syntax is only supported for Symfony -->
+<!-- api/config/api_platform/resources.xml -->
+<?xml version="1.0" encoding="UTF-8" ?>
+<resources xmlns="https://api-platform.com/schema/metadata/resources-3.0"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="https://api-platform.com/schema/metadata/resources-3.0
+                               https://api-platform.com/schema/metadata/resources-3.0.xsd">
+    <resource class="App\ApiResource\Book">
+        <operations>
+            <operation class="ApiPlatform\Metadata\Get">
+                <normalizationContext>
+                    <values>
+                        <value name="attributes">
+                            <values>
+                                <value>id</value>
+                                <value>title</value>
+                            </values>
+                        </value>
+                    </values>
+                </normalizationContext>
+            </operation>
+            <operation class="ApiPlatform\Metadata\Post">
+                <denormalizationContext>
+                    <values>
+                        <value name="attributes">
+                            <values>
+                                <value>title</value>
+                            </values>
+                        </value>
+                    </values>
+                </denormalizationContext>
+                <normalizationContext>
+                    <values>
+                        <value name="attributes">
+                            <values>
+                                <value>id</value>
+                                <value>title</value>
+                            </values>
+                        </value>
+                    </values>
+                </normalizationContext>
+            </operation>
+        </operations>
+    </resource>
+</resources>
+```
+
+</code-selector>
+
+The `id` and `title` attributes will be included in the document generated during both `GET` and
+`POST` operations because the operation-specific configuration is used. When writing (`POST`), only
+`title` is accepted in the request.
+
+Refer to the [operations](operations.md) documentation to learn more.
+
+## Embedding Relations With Serialization Attributes
+
+When you include related resources (like an author in a book), you can control which attributes of
+those related resources are exposed by using nested attribute definitions. This is useful when you
+want to limit the data returned for related objects without creating separate operations.
+
+In the following example, we use nested attribute filtering to expose only specific fields of
+related resources:
+
+<code-selector>
+
+```php
+<?php
+// api/src/ApiResource/Book.php with Symfony or app/ApiResource/Book.php with Laravel
+namespace App\ApiResource;
+
+use ApiPlatform\Metadata\ApiResource;
+
+#[ApiResource(
+    normalizationContext: [
+        'attributes' => ['id', 'title', 'author' => ['id', 'name']],
+    ],
+)]
+class Book
+{
+    public ?int $id = null;
+
+    public string $title = '';
+
+    public Author $author;
+
+    public string $isbn = '';
+
+    // ...
+}
+```
+
+```yaml
+# The YAML syntax is only supported for Symfony
+# api/config/api_platform/resources/Book.yaml
+App\ApiResource\Book:
+    normalizationContext:
+        attributes:
+            - id
+            - title
+            - author:
+                  - id
+                  - name
+```
+
+```xml
+<!-- The XML syntax is only supported for Symfony -->
+<!-- api/config/api_platform/resources.xml -->
+<?xml version="1.0" encoding="UTF-8" ?>
+<resources xmlns="https://api-platform.com/schema/metadata/resources-3.0"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="https://api-platform.com/schema/metadata/resources-3.0
+                               https://api-platform.com/schema/metadata/resources-3.0.xsd">
+    <resource class="App\ApiResource\Book">
+        <normalizationContext>
+            <values>
+                <value name="attributes">
+                    <values>
+                        <value>id</value>
+                        <value>title</value>
+                        <value key="author">
+                            <values>
+                                <value>id</value>
+                                <value>name</value>
+                            </values>
+                        </value>
+                    </values>
+                </value>
+            </values>
+        </normalizationContext>
+    </resource>
+</resources>
+```
+
+</code-selector>
+
+<code-selector>
+
+```php
+<?php
+// api/src/ApiResource/Author.php with Symfony or app/ApiResource/Author.php with Laravel
+namespace App\ApiResource;
+
+use ApiPlatform\Metadata\ApiResource;
+
+#[ApiResource]
+class Author
+{
+    public ?int $id = null;
+
+    public string $name;
+
+    // ...
+}
+```
+
+```yaml
+# The YAML syntax is only supported for Symfony
+# api/config/api_platform/resources/Author.yaml
+App\ApiResource\Author: ~
+```
+
+```xml
+<!-- The XML syntax is only supported for Symfony -->
+<!-- api/config/api_platform/resources.xml -->
+<?xml version="1.0" encoding="UTF-8" ?>
+<resources xmlns="https://api-platform.com/schema/metadata/resources-3.0"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="https://api-platform.com/schema/metadata/resources-3.0
+                               https://api-platform.com/schema/metadata/resources-3.0.xsd">
+    <resource class="App\ApiResource\Author" />
+</resources>
+```
+
+</code-selector>
+
+In this example, the `author` property will be included in the response with only its `id` and
+`name` attributes visible. Other attributes of the Author resource will be filtered out. The nested
+attribute syntax `'author' => ['id', 'name']` instructs the serializer to only expose those
+specified attributes of the related object.
 
 ## Property Normalization Context for Symfony
 
