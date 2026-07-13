@@ -618,6 +618,50 @@ when `jsonStream` is not enabled, API Platform falls back to the regular Seriali
 > declarations to build its encoders. Make sure every serialized property is public and typed;
 > values exposed only through getters or non-public properties will not be streamed.
 
+## HEAD Request Optimization
+
+Available since API Platform 4.4.
+
+On `HEAD` requests, API Platform no longer builds the response body: the collection is never
+iterated (no row is fetched from the database) and serialization is skipped entirely. This
+optimization is **enabled by default** and reduces the cost of `HEAD` requests, especially on large
+collections.
+
+Compared to the previous behavior, where a `HEAD` request was processed identically to its `GET`
+counterpart, this introduces two observable changes:
+
+- The `Content-Length` header is no longer set on `HEAD` responses (this is permitted by
+  [RFC 9110 §9.3.2](https://www.rfc-editor.org/rfc/rfc9110#section-9.3.2)).
+- Cache-Tags and `xkey` headers used by the
+  [HTTP cache invalidation system](#enabling-the-built-in-http-cache-invalidation-system) are no
+  longer emitted on `HEAD` responses. Previously, a `HEAD` response carried the same tags as its
+  `GET` counterpart and could be purged by tag; it now expires by TTL only.
+
+> **Note:** Independently of this optimization, the `Allow` header no longer advertises `HEAD` for
+> resources that have no `GET` operation, since `HEAD` is defined as `GET` without a response body.
+
+If you rely on the previous behavior, for example if a caching layer purges `HEAD` responses by
+Cache-Tag, disable the optimization to process `HEAD` identically to `GET`:
+
+### Disabling the Optimization using Symfony
+
+```yaml
+# api/config/packages/api_platform.yaml
+api_platform:
+    enable_head_request_optimization: false # process HEAD identically to GET
+```
+
+### Disabling the Optimization using Laravel
+
+```php
+<?php
+// config/api-platform.php
+return [
+    // ...
+    'enable_head_request_optimization' => false, // process HEAD identically to GET
+];
+```
+
 ## Profiling with Blackfire.io
 
 Blackfire.io allows you to monitor the performance of your applications. For more information, visit
