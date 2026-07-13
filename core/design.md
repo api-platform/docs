@@ -1,8 +1,8 @@
 # General Design Considerations
 
 Since you only need to describe the structure of the data to expose, API Platform is both
-[a "design-first" and "code-first"](https://swagger.io/blog/api-design/design-first-or-code-first-api-development/)
-API framework. However, the "design-first" methodology is strongly recommended: first you design the
+[a "design-first" and "code-first"](https://swagger.io/blog/code-first-vs-design-first-api/) API
+framework. However, the "design-first" methodology is strongly recommended: first you design the
 **public shape** of API endpoints.
 
 To do so, you have to write a plain old PHP object (POPO) representing the input and output of your

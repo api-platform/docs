@@ -734,7 +734,9 @@ You can change the default configuration (for instance, which operations are ena
 the config (`config/api-platform.php`).
 
 For the rest of this tutorial, we'll assume that at least all default operations are enabled (you
-can also enable `PUT` if you want to support upsert operations).
+can also enable `PUT`, optionally with
+[`allowCreate: true`](../core/operations.md#upsert-creating-a-resource-with-put) if you want to
+support upsert operations).
 
 ## Adding Filters
 
