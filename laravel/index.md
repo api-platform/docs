@@ -1002,13 +1002,13 @@ To clear the cache, use `php artisan optimize:clear`.
 
 ## Booting Without a Database Connection
 
-To expose an Eloquent model, API Platform reads its metadata (columns, types, nullability, relations,
-identifiers) directly from the database schema. This introspection happens while the resource metadata
-is built, which occurs when the service provider boots — including during routing, OpenAPI generation,
-and metadata caching.
+To expose an Eloquent model, API Platform reads its metadata (columns, types, nullability,
+relations, identifiers) directly from the database schema. This introspection happens while the
+resource metadata is built, which occurs when the service provider boots — including during routing,
+OpenAPI generation, and metadata caching.
 
-As a consequence, **the application cannot boot when no migrated database connection is reachable**. Any
-command that boots the framework will fail with a connection error such as:
+As a consequence, **the application cannot boot when no migrated database connection is reachable**.
+Any command that boots the framework will fail with a connection error such as:
 
 ```text
 SQLSTATE[HY000] [2002] Connection refused
@@ -1018,18 +1018,20 @@ could not find driver (Connection: mariadb, SQL: select ... from information_sch
 This typically happens in setups where the database is not available at the time the app boots:
 
 - building a Docker image (the database service is not running during `docker build`);
-- running `composer install`, which triggers `@php artisan package:discover` and boots the providers;
-- running static analysis such as [Larastan](https://github.com/larastan/larastan) in a CI/CD pipeline,
-  since it boots the Laravel application.
+- running `composer install`, which triggers `@php artisan package:discover` and boots the
+  providers;
+- running static analysis such as [Larastan](https://github.com/larastan/larastan) in a CI/CD
+  pipeline, since it boots the Laravel application.
 
 ### Dump the Metadata to a File
 
-The recommended solution is to pre-compute the resource metadata once, while the database is up, dump it
-to a single file, and serve the metadata from that file at boot. The introspection no longer runs, so the
-app boots without any database connection.
+The recommended solution is to pre-compute the resource metadata once, while the database is up,
+dump it to a single file, and serve the metadata from that file at boot. The introspection no longer
+runs, so the app boots without any database connection.
 
-Choose where the dump file lives through the `metadata_dump` key of `config/api-platform.php`. The file is
-meant to be committed to your VCS or baked into your Docker image, so pick a path inside the project:
+Choose where the dump file lives through the `metadata_dump` key of `config/api-platform.php`. The
+file is meant to be committed to your VCS or baked into your Docker image, so pick a path inside the
+project:
 
 ```php
 // config/api-platform.php
@@ -1045,55 +1047,54 @@ Generate the file with a reachable, migrated database:
 php artisan api-platform:metadata:dump
 ```
 
-The command iterates every resource, builds its metadata (this is the step that hits the database) and
-serializes the result to the configured path. You can override the destination with `--path`:
+The command iterates every resource, builds its metadata (this is the step that hits the database)
+and serializes the result to the configured path. You can override the destination with `--path`:
 
 ```console
 php artisan api-platform:metadata:dump --path=/tmp/api-platform-metadata.dump
 ```
 
-Once the file exists, the metadata is read from it at boot **when `APP_DEBUG` is `false`** — bypassing the
-database. It is ignored when `APP_DEBUG` is `true`, so local development always recomputes fresh metadata
-(mirroring the [metadata cache](#caching) behavior). Leave `metadata_dump` to `null` to disable the
-feature entirely.
+Once the file exists, the metadata is read from it at boot **when `APP_DEBUG` is `false`** —
+bypassing the database. It is ignored when `APP_DEBUG` is `true`, so local development always
+recomputes fresh metadata (mirroring the [metadata cache](#caching) behavior). Leave `metadata_dump`
+to `null` to disable the feature entirely.
 
-> [!WARNING]
-> The dump is a snapshot. It is **not** refreshed automatically when you change a resource or migrate the
-> database — you must re-run `php artisan api-platform:metadata:dump` (with the database up) and commit the
-> new file. To help you catch a forgotten refresh, API Platform compares the dump against the current state
-> and logs a warning when they diverge:
+> [!WARNING] The dump is a snapshot. It is **not** refreshed automatically when you change a
+> resource or migrate the database — you must re-run `php artisan api-platform:metadata:dump` (with
+> the database up) and commit the new file. To help you catch a forgotten refresh, API Platform
+> compares the dump against the current state and logs a warning when they diverge:
 >
-> - **at boot**, when your `ApiResource` source files changed since the dump was generated (this check
->   needs no database, so it runs during a cacheless boot);
+> - **at boot**, when your `ApiResource` source files changed since the dump was generated (this
+>   check needs no database, so it runs during a cacheless boot);
 > - **after `php artisan migrate`**, when the database schema no longer matches the dump.
 >
-> The warning never stops the boot — the (possibly stale) dump is still served so a database-less boot keeps
-> working — but it tells you to regenerate the file.
+> The warning never stops the boot — the (possibly stale) dump is still served so a database-less
+> boot keeps working — but it tells you to regenerate the file.
 
 ### Building a Docker Image
 
-Commit the dump file (or generate it in an earlier build stage that has a database) and copy it into the
-image. At runtime, with `APP_DEBUG=false`, the app boots from the dump and never queries the database
-during boot.
+Commit the dump file (or generate it in an earlier build stage that has a database) and copy it into
+the image. At runtime, with `APP_DEBUG=false`, the app boots from the dump and never queries the
+database during boot.
 
 If you only want to avoid the failure triggered by Composer scripts during the build, run
-`composer install --no-scripts` and run `php artisan api-platform:metadata:dump` later, in a stage or step
-where the database is reachable.
+`composer install --no-scripts` and run `php artisan api-platform:metadata:dump` later, in a stage
+or step where the database is reachable.
 
 ### Static Analysis in CI
 
-[Larastan](https://github.com/larastan/larastan) boots the Laravel application before analyzing it, so it
-hits the same requirement. Commit the dump file and make sure `APP_DEBUG` is `false` during analysis; the
-app then boots from the dump without a database.
+[Larastan](https://github.com/larastan/larastan) boots the Laravel application before analyzing it,
+so it hits the same requirement. Commit the dump file and make sure `APP_DEBUG` is `false` during
+analysis; the app then boots from the dump without a database.
 
 ### Use SQLite at Build Time
 
-If you would rather not commit a dump file, point the application to a migrated SQLite database while
-building or running analysis, instead of your production database server. SQLite needs no separate service,
-so it is always reachable.
+If you would rather not commit a dump file, point the application to a migrated SQLite database
+while building or running analysis, instead of your production database server. SQLite needs no
+separate service, so it is always reachable.
 
-Configure the connection (for example through environment variables) and run the migrations before any
-command that boots the app:
+Configure the connection (for example through environment variables) and run the migrations before
+any command that boots the app:
 
 ```console
 export DB_CONNECTION=sqlite
