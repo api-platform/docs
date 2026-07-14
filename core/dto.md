@@ -123,8 +123,9 @@ final class Book
 
 ### Implementation Details: The Object Mapper Magic
 
-Automated mapping relies on two internal classes: `ApiPlatform\State\Provider\ObjectMapperProvider`
-and `ApiPlatform\State\Processor\ObjectMapperProcessor`.
+Automated mapping relies on three internal classes: `ApiPlatform\State\Provider\ObjectMapperProvider`,
+`ApiPlatform\State\Processor\ObjectMapperInputProcessor`, and
+`ApiPlatform\State\Processor\ObjectMapperOutputProcessor`.
 
 These classes act as decorators around the standard Provider/Processor chain. They are activated
 when:
@@ -133,20 +134,75 @@ when:
 - `stateOptions` are configured with an `entityClass` (or `documentClass` for ODM).
 - The Resource (and Entity for writes) classes have the `#[Map]` attribute.
 
-#### How it works internally
+#### Read flow (GET)
 
-**Read (GET):**
+```mermaid
+sequenceDiagram
+    participant Client
+    participant Provider as Doctrine Provider
+    participant OMP as ObjectMapperProvider
+    participant Serializer
+
+    Client->>Provider: GET /books/1
+    Provider->>Provider: Fetch Entity from DB
+    Provider->>OMP: Entity
+    OMP->>OMP: map(Entity, output ?? ResourceClass)
+    OMP->>Serializer: Resource DTO
+    Serializer->>Client: JSON response
+```
 
 The `ObjectMapperProvider` delegates fetching the data to the underlying Doctrine provider (which
-returns an Entity). It then uses `$objectMapper->map($entity, $resourceClass)` to transform the
-Entity into your DTO Resource.
+returns an Entity). It then maps the Entity to the **output class** (if `output:` is configured on
+the operation) or the **resource class**, using `$objectMapper->map($entity, $outputOrResourceClass)`.
+The `input:` configuration is not used during read operations.
 
-**Write (POST/PUT/PATCH):**
+#### Write flow (POST/PUT/PATCH)
 
-The `ObjectMapperProcessor` receives the deserialized Input DTO. It uses
-`$objectMapper->map($inputDto, $entityClass)` to transform the input into an Entity instance. It
-then delegates to the underlying Doctrine processor (to persist the Entity). Finally, it maps the
-persisted Entity back to the Output DTO Resource.
+```mermaid
+sequenceDiagram
+    participant Client
+    participant Serializer as Deserializer
+    participant OMIP as ObjectMapper<br/>InputProcessor
+    participant VP as ValidateProcessor
+    participant WP as WriteProcessor
+    participant OMOP as ObjectMapper<br/>OutputProcessor
+    participant Ser as Serializer
+
+    Client->>Serializer: POST /books (JSON body)
+    Serializer->>Serializer: Deserialize → input DTO (or Resource)
+    Serializer->>OMIP: Input DTO
+    OMIP->>OMIP: map(DTO, Entity)
+    OMIP->>VP: Entity
+    VP->>VP: Validate Entity
+    VP->>WP: Entity
+    WP->>WP: Persist (Doctrine flush)
+    WP->>OMOP: Persisted Entity
+    OMOP->>OMOP: map(Entity, ResourceClass)
+    OMOP->>Ser: Resource DTO
+    Ser->>Client: JSON response
+```
+
+The serializer deserializes the request body into the **input class** (if `input:` is configured)
+or the resource class. The `ObjectMapperInputProcessor` then receives that deserialized object and
+maps it to the Entity. For PATCH, it maps onto the existing Entity retrieved by the provider
+(stored in `request->attributes['mapped_data']`), so only the properties set by the client are
+applied. It then delegates to the underlying Doctrine processor to persist the Entity. After
+persistence, `ObjectMapperOutputProcessor` maps the persisted Entity back to the **resource
+class**.
+
+#### Without stateOptions (custom or static provider)
+
+`stateOptions` is not required to use the Object Mapper. When it is absent, the three decorator
+classes still activate as long as the resource class (and input class for writes) carry the
+`#[Map]` attribute. The difference is in what the mapper targets:
+
+- **`ObjectMapperProvider`** maps your provider's return value to the **output class** (if set) or
+  the **resource class** — determined by `getOutput()['class'] ?? getClass()`.
+- **`ObjectMapperInputProcessor`** maps the deserialized input to the **resource class** — it falls
+  back to `$operation->getClass()` when no entity class is found in `stateOptions`.
+
+This is useful for non-Doctrine backends (static data, remote APIs, in-memory stores) where you
+still want clean DTO separation without writing manual mapping code in a custom processor.
 
 ## 2. Automated Mapped Inputs and Outputs
 
@@ -188,8 +244,10 @@ final class CreateBook
 
 ### UpdateBook DTO
 
+For PATCH, properties must be **uninitialized** (no default values). A default value causes every
+PATCH request to overwrite that field even when the client did not include it in the request body.
+
 ```php
-<?php
 // src/Api/Dto/UpdateBook.php
 namespace App\Api\Dto;
 
@@ -234,7 +292,18 @@ final class BookCollection
 
 #### Wiring it all together in the Resource
 
-In your Book resource, configure the operations to use these classes via input and output.
+In your Book resource, configure the operations to use these classes via `input` and `output`.
+
+> [!NOTE]
+> `input:` and `output:` operate at the **serializer** layer: `input:` is the class the request
+> body is deserialized into; `output:` is the class the serializer normalizes into the response.
+> The ObjectMapper (`map: true`, `#[Map]`) operates at the **state pipeline** layer: the Provider
+> maps the Entity to the output class (or resource class), and the InputProcessor maps the input
+> DTO to the Entity. These two mechanisms are independent and can be combined safely.
+>
+> When `stateOptions` is configured, the ObjectMapper maps between your DTO and the Doctrine
+> Entity. Without `stateOptions`, the ObjectMapper still works but maps to the resource class
+> itself — useful when you bring your own provider.
 
 ```php
 // src/Api/Resource/Book.php
@@ -243,15 +312,15 @@ In your Book resource, configure the operations to use these classes via input a
     stateOptions: new Options(entityClass: BookEntity::class),
     operations: [
         new Get(),
-        // Use the specialized Output DTO for collections
+        // ObjectMapperProvider maps Entity -> BookCollection for this operation
         new GetCollection(
             output: BookCollection::class
         ),
-        // Use the specialized Input DTO for creation
+        // Serializer deserializes request body into CreateBook; ObjectMapperInputProcessor maps CreateBook -> Entity
         new Post(
             input: CreateBook::class
         ),
-        // Use the specialized Input DTO for updates
+        // Serializer deserializes request body into UpdateBook; ObjectMapperInputProcessor maps UpdateBook -> existing Entity
         new Patch(
             input: UpdateBook::class
         ),
@@ -259,6 +328,21 @@ In your Book resource, configure the operations to use these classes via input a
 )]
 final class Book { /* ... */ }
 ```
+
+### Recommendations on input and output
+
+**Declare your operations on the Resource class** — it represents the JSON contract of your API.
+Avoid using `output:` on write operations (`Post`, `Put`, `Patch`, `Delete`). The
+`ObjectMapperOutputProcessor` already maps the persisted Entity back to the Resource class
+automatically. Adding an explicit `output:` on writes creates confusion and can lead to subtle
+bugs (see [#7745](https://github.com/api-platform/core/issues/7745)).
+
+The main legitimate use case for `output:` is on `GetCollection` when you need a lighter
+representation with fewer fields than the main Resource. Even then, consider whether serialization
+groups or a separate Resource class might be clearer.
+
+Use `input:` freely for write operations — it is the right tool for differentiating Create vs
+Update validation and accepted fields.
 
 ## 3. Custom Business Logic (Custom Processor)
 
