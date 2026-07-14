@@ -3,6 +3,9 @@
 For documentation on how to expose PHP 8.1+ Enums as API resources, refer to the
 [Enums documentation](enums.md).
 
+For polymorphic resources using inheritance with discriminators, see the
+[Polymorphism documentation](polymorphism.md).
+
 ## Overall Process
 
 API Platform embraces and extends the Symfony Serializer Component to transform PHP entities in
