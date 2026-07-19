@@ -122,6 +122,12 @@ In addition to `private`, the following options are available:
 - `retry`: the `retry` field of the SSE, if not set this field is omitted
 - `normalization_context`: the specific normalization context to use for the update.
 
+> [!NOTE] GraphQL subscriptions can also use `private_fields` together with `mercure.private` to
+> partition private subscription registrations by explicit resource fields. This partition is
+> derived from resource field values, not from Mercure topics or from the authenticated user
+> identity. This is specific to GraphQL subscriptions and is documented in
+> [GraphQL subscriptions](graphql.md#private-subscription-delivery).
+
 ## Dispatching Restrictive Updates (Security Mode)
 
 Use `iri` (iriConverter) and `escape` (rawurlencode) functions to add an alternative topic, in order
