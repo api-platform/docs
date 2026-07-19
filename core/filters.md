@@ -257,6 +257,35 @@ This configuration allows clients to filter events by date ranges using queries 
 - `/events?endDate[lt]=2023-12-31` — events ending before December 31st 2023
 - `/events?startDate[gte]=2023-01-01&endDate[lte]=2023-12-31` — events within a date range
 
+### Declaring Parameters on Properties
+
+You can also declare parameters directly on entity properties using `#[QueryParameter]` or
+`#[HeaderParameter]` attributes. This keeps your parameter definition close to the property it
+affects:
+
+```php
+<?php
+// api/src/Entity/Book.php
+namespace App\Entity;
+
+use ApiPlatform\Doctrine\Orm\Filter\PartialSearchFilter;
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\HeaderParameter;
+use ApiPlatform\Metadata\QueryParameter;
+
+#[ApiResource]
+class Book
+{
+    #[QueryParameter(key: 'search', filter: new PartialSearchFilter())]
+    private string $title = '';
+
+    #[HeaderParameter(key: 'API-Key', description: 'API authentication key')]
+    public string $apiKey = '';
+}
+```
+
+Parameters declared on properties are automatically applied to all operations on the resource.
+
 ### Filtering a Single Property
 
 Most of the time, a parameter maps directly to a property on your resource. For example, a
