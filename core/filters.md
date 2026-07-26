@@ -66,6 +66,11 @@ a new instance:
 - **`OrFilter`**: A decorator that forces a filter to combine criteria with `OR` instead of `AND`.
     - Usage:
       `new QueryParameter(filter: new OrFilter(new ExactFilter()), properties: ['name', 'ean'])`
+- **`ChainFilter`** (Doctrine ORM/ODM only): Composes several filters on a single parameter key; each
+  wrapped filter self-selects by the shape of the value. See the
+  [Doctrine Filters documentation](doctrine-filters.md#chain-filter) for details.
+    - Usage:
+      `new QueryParameter(filter: new ChainFilter([new ExactFilter(), new DateFilter()]), property: 'birthdate')`
 - **`BooleanFilter`**: For boolean field filtering (legacy, `ExactFilter` is recommended instead).
     - Usage: `new QueryParameter(filter: BooleanFilter::class)`
 - **`NumericFilter`**: For numeric field filtering (legacy, `ExactFilter` or `ComparisonFilter` is
@@ -256,6 +261,11 @@ This configuration allows clients to filter events by date ranges using queries 
 - `/events?startDate[gte]=2023-01-01` — events starting on or after January 1st 2023
 - `/events?endDate[lt]=2023-12-31` — events ending before December 31st 2023
 - `/events?startDate[gte]=2023-01-01&endDate[lte]=2023-12-31` — events within a date range
+
+> [!NOTE] This is a plain comparison, distinct from
+> [`DateFilter`](doctrine-filters.md#date-filter): it does not provide per-property `null`
+> management, tolerant handling of invalid or empty values, or the `before`/`after` versus
+> `strictly_before`/`strictly_after` vocabulary. Use `DateFilter` when you need those behaviors.
 
 ### Filtering a Single Property
 
