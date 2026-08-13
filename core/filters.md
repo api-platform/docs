@@ -126,8 +126,9 @@ Instead of repeating the same parameter configuration on every resource, you can
 default parameters that are automatically applied to all resources. This is done via the `defaults`
 key in your API Platform configuration.
 
-Add a `parameters` map under `defaults` in your API Platform configuration. Each entry maps a
-fully-qualified parameter class name to its options.
+Add a `parameters` map under `defaults` in your API Platform configuration. In Symfony, entries can
+either use the fully-qualified parameter class name as their key, or use a custom name and specify
+the class explicitly with the `class` option.
 
 ```yaml
 # Symfony: api/config/packages/api_platform.yaml
@@ -144,6 +145,30 @@ api_platform:
                 required: false
                 description: "API version"
 ```
+
+To define multiple global parameters using the same parameter class, use named entries with an
+explicit `class`:
+
+```yaml
+# Symfony: api/config/packages/api_platform.yaml
+api_platform:
+    defaults:
+        parameters:
+            api_token:
+                class: ApiPlatform\Metadata\HeaderParameter
+                key: "API-Token"
+                required: true
+                description: "API authentication token"
+
+            request_id:
+                class: ApiPlatform\Metadata\HeaderParameter
+                key: "Request-ID"
+                required: false
+                description: "A unique request identifier"
+```
+
+The name of a named entry is only a configuration identifier. The `key` option defines the parameter
+name exposed at runtime.
 
 ```php
 <?php
