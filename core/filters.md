@@ -939,7 +939,7 @@ class User {}
 ## Parameter Security
 
 You can secure individual parameters using Symfony expression language. When a security expression
-evaluates to `false`, the parameter will be ignored and treated as if it wasn't provided.
+evaluates to `false`, a context appropriate `AccessDeniedException` will be thrown.
 
 ```php
 <?php
