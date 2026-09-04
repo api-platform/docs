@@ -525,6 +525,7 @@ class User {}
 > Schema.
 
 If `constraints` are used then a valid type needs to be passed using `nativeType` named argument.
+Otherwise, the values will be passed as an array to each constraints.
 
 The `ApiPlatform\Validator\Util\ParameterValidationConstraints` trait can be used to automatically
 infer validation constraints from the JSON Schema and OpenAPI definitions of a parameter.
