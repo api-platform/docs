@@ -498,6 +498,8 @@ use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\HeaderParameter;
 use ApiPlatform\Metadata\QueryParameter;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\TypeInfo\Type\BuiltinType;
+use Symfony\Component\TypeInfo\TypeIdentifier;
 
 #[ApiResource(operations: [
     new GetCollection(
@@ -510,7 +512,8 @@ use Symfony\Component\Validator\Constraints as Assert;
             'X-Request-ID' => new HeaderParameter(
                 description: 'A unique request identifier.',
                 required: true,
-                constraints: [new Assert\Uuid()]
+                constraints: [new Assert\Uuid()],
+                nativeType: new BuiltinType(typeIdentifier: TypeIdentifier::STRING)
             )
         ]
     )
@@ -520,6 +523,8 @@ class User {}
 
 > [!NOTE] When `castToNativeType` is enabled, API Platform infers type validation from the JSON
 > Schema.
+
+If `constraints` are used then a valid type needs to be passed using `nativeType` named argument.
 
 The `ApiPlatform\Validator\Util\ParameterValidationConstraints` trait can be used to automatically
 infer validation constraints from the JSON Schema and OpenAPI definitions of a parameter.
