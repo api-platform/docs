@@ -319,16 +319,16 @@ namespace App\Security\Voter;
 use App\Entity\Book;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
-use Symfony\Component\Security\Core\Security;
+use Symfony\Component\Security\Core\Authorization\AccessDecisionManagerInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 class BookVoter extends Voter
 {
-    private $security = null;
+    private $accessDecisionManager = null;
 
-    public function __construct(Security $security)
+    public function __construct(AccessDecisionManagerInterface $accessDecisionManager)
     {
-        $this->security = $security;
+        $this->accessDecisionManager = $accessDecisionManager;
     }
 
     protected function supports($attribute, $subject): bool
@@ -351,7 +351,7 @@ class BookVoter extends Voter
 
         switch ($attribute) {
             case 'BOOK_CREATE':
-                if ( $this->security->isGranted(Role::ADMIN) ) { return true; }  // only admins can create books
+                if ( $this->accessDecisionManager->decide($token, ['ROLE_ADMIN']) ) { return true; }  // only admins can create books
                 break;
             case 'BOOK_READ':
                 /** ... other authorization rules ... **/
