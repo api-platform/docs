@@ -371,6 +371,147 @@ _Note 2: You can't use Voters on the collection GET method, use
 [Collection Filters](https://api-platform.com/docs/core/security/#filtering-collection-according-to-the-current-user-permissions)
 instead._
 
+## Exposing Voter Reasons in the Error Response
+
+Since API Platform 4.4, the variables available to a `security` (and `securityPostDenormalize`,
+etc.) expression also include `access_decision`, an instance of
+[`Symfony\Component\Security\Core\Authorization\AccessDecision`](https://github.com/symfony/symfony/blob/7.4/src/Symfony/Component/Security/Core/Authorization/AccessDecision.php).
+It carries the `isGranted` result together with the `votes` cast by every voter consulted through
+`is_granted()`, and exposes `getMessage(): string`, which concatenates `"Access Granted."` or
+`"Access Denied."` with every reason attached by a voter whose vote matches the final result.
+
+A voter extending Symfony's `Voter` base class receives an optional `?Vote $vote` argument in
+`voteOnAttribute()`. Call `$vote?->addReason(...)` to explain a denial:
+
+```php
+<?php
+// api/src/Security/Voter/BookVoter.php
+namespace App\Security\Voter;
+
+use App\Entity\Book;
+use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
+use Symfony\Component\Security\Core\Authorization\Voter\Vote;
+use Symfony\Component\Security\Core\Authorization\Voter\Voter;
+
+final class BookVoter extends Voter
+{
+    protected function supports(string $attribute, mixed $subject): bool
+    {
+        return 'EDIT' === $attribute && $subject instanceof Book;
+    }
+
+    protected function voteOnAttribute(string $attribute, mixed $subject, TokenInterface $token, ?Vote $vote = null): bool
+    {
+        if ($subject->owner === $token->getUser()) {
+            return true;
+        }
+
+        $vote?->addReason(\sprintf('Only the owner (%s) can edit this book.', $subject->owner->getUserIdentifier()));
+
+        return false;
+    }
+}
+```
+
+The resource only needs to call `is_granted()` as usual — API Platform forwards `access_decision` to
+the voters for you:
+
+```php
+<?php
+// api/src/Entity/Book.php
+namespace App\Entity;
+
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Put;
+
+#[ApiResource]
+#[Put(security: "is_granted('EDIT', object)")]
+class Book
+{
+    // ...
+}
+```
+
+When no explicit `securityMessage` is configured, API Platform falls back to
+`$decision->getMessage()` to build the 403 response's `detail`:
+
+```json
+{
+    "@context": "/contexts/Error",
+    "@type": "Error",
+    "title": "An error occurred",
+    "detail": "Access Denied. Only the owner (alice) can edit this book.",
+    "status": 403
+}
+```
+
+> [!WARNING] That `detail` is only populated from `$decision->getMessage()` when the kernel runs
+> with `debug: true` (Symfony's `dev` and `test` environments by default). In `prod`
+> (`kernel.debug: false`), the client always receives the generic `"Access Denied."` detail instead,
+> no matter what your voters added — unless you also configure an explicit `securityMessage`, which
+> is always returned verbatim, in every environment. Do not treat `debug: false` as your only
+> safeguard: write vote reasons as if any caller could read them, and never put roles, ownership
+> details, or other authorization internals in them.
+
+## Throwing `AccessDeniedException` Directly
+
+You are not limited to `security` expressions and voters: any provider, processor, or voter can deny
+access explicitly by throwing `ApiPlatform\Metadata\Exception\AccessDeniedException`. Unlike a
+voter's reason (see above), the `detail` you pass here is always returned to the client, in every
+environment:
+
+```php
+<?php
+// api/src/State/BookProcessor.php
+namespace App\State;
+
+use ApiPlatform\Metadata\Exception\AccessDeniedException;
+use ApiPlatform\Metadata\Operation;
+use ApiPlatform\State\ProcessorInterface;
+use App\Entity\Book;
+use Symfony\Bundle\SecurityBundle\Security;
+
+/**
+ * @implements ProcessorInterface<Book, Book>
+ */
+final class BookProcessor implements ProcessorInterface
+{
+    public function __construct(private readonly Security $security)
+    {
+    }
+
+    public function process(mixed $data, Operation $operation, array $uriVariables = [], array $context = []): mixed
+    {
+        if ($data->archived && !$this->security->isGranted('ROLE_ADMIN')) {
+            throw new AccessDeniedException('Access Denied.', detail: 'Archived books can only be edited by an administrator.');
+        }
+
+        // call your persistence layer to save $data
+        return $data;
+    }
+}
+```
+
+This produces the same problem response shape:
+
+```json
+{
+    "@context": "/contexts/Error",
+    "@type": "Error",
+    "title": "An error occurred",
+    "detail": "Archived books can only be edited by an administrator.",
+    "status": 403
+}
+```
+
+> [!WARNING] Because the `detail` you pass to `AccessDeniedException` is always exposed to the
+> client, apply the same rule as for `securityMessage`: keep it free of roles, ownership details, or
+> any other authorization internals.
+>
+> [!NOTE] `ApiPlatform\Symfony\Security\Exception\AccessDeniedException` is deprecated since API
+> Platform 4.4 in favor of `ApiPlatform\Metadata\Exception\AccessDeniedException` shown above. See
+> the [upgrade guide](../core/upgrade-guide.md#security-accessdeniedexception).
+
 ## Configuring the Access Control Error Message
 
 By default when API requests are denied, you will get the "Access Denied" message. You can change it
