@@ -48,6 +48,67 @@ Item operations:
 | `PATCH`  | no        | Apply a partial modification to an element | yes                   |
 | `DELETE` | no        | Delete an element                          | yes                   |
 
+## The HTTP QUERY Operation
+
+[HTTP QUERY](https://www.rfc-editor.org/rfc/rfc10008.html) is a safe, idempotent collection
+operation whose criteria are sent in the request body instead of the URI. It is useful when a
+collection query is too large or too structured for a URL. API Platform does not enable it by
+default; add a `Query` operation explicitly.
+
+Unlike `GET`, a `QUERY` request must include a `Content-Type` header, including when its body is
+empty. API Platform supports `application/json` and `application/x-www-form-urlencoded` request
+bodies for this operation.
+
+The following operation uses a parameter-driven filter. Although it is declared with
+`QueryParameter`, the `name` criterion is sent in the `QUERY` request body, not as `?name=...` in
+the URL:
+
+```php
+<?php
+// api/src/Entity/Book.php
+namespace App\Entity;
+
+use ApiPlatform\Doctrine\Orm\Filter\PartialSearchFilter;
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\Query;
+use ApiPlatform\Metadata\QueryParameter;
+
+#[ApiResource(operations: [
+    new GetCollection(),
+    new Query(parameters: [
+        'name' => new QueryParameter(
+            filter: new PartialSearchFilter(),
+            property: 'name',
+        ),
+    ]),
+])]
+class Book
+{
+    // ...
+}
+```
+
+Call the `QUERY` operation with the same collection URI:
+
+```console
+curl -X QUERY https://example.com/books \
+    -H 'Accept: application/ld+json' \
+    -H 'Content-Type: application/json' \
+    --data '{"name":"Dune"}'
+```
+
+The parsed values are processed by the same [parameter and filter system](filters.md) as URL query
+parameters. This lets existing `QueryParameter` filters describe and apply body criteria without a
+custom provider.
+
+### OpenAPI
+
+When exporting an OpenAPI 3.2 document, API Platform represents the operation in the Path Item
+Object's `query` field. Its request body lists `application/json` and
+`application/x-www-form-urlencoded`; parameter-driven criteria are represented as body properties.
+Path and header parameters remain OpenAPI parameters.
+
 > [!NOTE] The `PATCH` method must be enabled explicitly in the configuration, refer to the
 > [Content Negotiation](content-negotiation.md) section for more information.
 
