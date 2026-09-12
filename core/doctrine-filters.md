@@ -136,6 +136,12 @@ To add some search filters, choose over this new list:
   notation)
 - [PartialSearchFilter](#partial-search-filter) (filter using a `LIKE %value%`; supports nested
   properties via dot notation)
+- [StartSearchFilter](#start-search-filter) (filter using a `LIKE value%`; supports nested
+  properties via dot notation)
+- [EndSearchFilter](#end-search-filter) (filter using a `LIKE %value`; supports nested properties
+  via dot notation)
+- [WordStartSearchFilter](#word-start-search-filter) (filter on a word boundary prefix, matching
+  fields containing a word that starts with the value; supports nested properties via dot notation)
 - [ComparisonFilter](#comparison-filter) (filter with comparison operators `gt`, `gte`, `lt`, `lte`,
   `ne`; replaces `NumericFilter` and `RangeFilter` — it is not a replacement for `DateFilter`, which
   is kept)
@@ -315,6 +321,164 @@ It will return all chickens where the name contains the substring _tom_.
 `PartialSearchFilter` supports searching on nested properties using dot notation in the `property`
 argument. See [Filtering on Nested Properties](#filtering-on-nested-properties).
 
+## Start Search Filter
+
+The start search filter allows filtering a resource by the beginning of a string property.
+
+Syntax: `?property=value`
+
+The value can take any scalar value or array of values.
+
+This filter can be used on the ApiResource attribute or in the operation attribute, for e.g., the
+`#GetCollection()` attribute:
+
+```php
+// api/src/ApiResource/Chicken.php
+
+#[GetCollection(
+    parameters: [
+        'name' => new QueryParameter(filter: new StartSearchFilter()),
+    ],
+)]
+class Chicken
+{
+    //...
+}
+```
+
+Given that the endpoint is `/chickens`, you can filter chickens by name with the following query:
+`/chikens?name=Ger`.
+
+It will return all chickens whose name starts with the substring _Ger_ (for e.g. "Gertrude").
+
+> [!NOTE] The generated query and the default case sensitivity differ between Doctrine ORM and
+> MongoDB ODM:
+>
+> - **Doctrine ORM** builds a `LOWER(field) LIKE LOWER('value%')` clause and is **case-insensitive
+>   by default**. Pass `new StartSearchFilter(caseSensitive: true)` for a case-sensitive
+>   `field LIKE 'value%'` match.
+> - **MongoDB ODM** matches with a regular expression anchored at the start of the string (`^value`)
+>   and is **case-sensitive by default**. Pass `new StartSearchFilter(caseSensitive: false)` to add
+>   the case-insensitive `i` regex flag.
+
+`StartSearchFilter` supports filtering on nested properties using dot notation in the `property`
+argument. See [Filtering on Nested Properties](#filtering-on-nested-properties).
+
+This filter replaces the `start` strategy of the deprecated `SearchFilter`
+(`#[ApiFilter(SearchFilter::class, strategy: 'start')]`). See the
+[migration guide](#migrating-from-apifilter-to-queryparameter).
+
+> [!NOTE] A Laravel/Eloquent equivalent also exists:
+> [`ApiPlatform\Laravel\Eloquent\Filter\StartSearchFilter`](../laravel/filters.md#text). It always
+> generates a `LIKE 'value%'` clause (case sensitivity depends on your database collation) and does
+> not support nested/relation properties.
+
+## End Search Filter
+
+The end search filter allows filtering a resource by the end of a string property.
+
+Syntax: `?property=value`
+
+The value can take any scalar value or array of values.
+
+This filter can be used on the ApiResource attribute or in the operation attribute, for e.g., the
+`#GetCollection()` attribute:
+
+```php
+// api/src/ApiResource/Chicken.php
+
+#[GetCollection(
+    parameters: [
+        'name' => new QueryParameter(filter: new EndSearchFilter()),
+    ],
+)]
+class Chicken
+{
+    //...
+}
+```
+
+Given that the endpoint is `/chickens`, you can filter chickens by name with the following query:
+`/chikens?name=trude`.
+
+It will return all chickens whose name ends with the substring _trude_ (for e.g. "Gertrude").
+
+> [!NOTE] The generated query and the default case sensitivity differ between Doctrine ORM and
+> MongoDB ODM:
+>
+> - **Doctrine ORM** builds a `LOWER(field) LIKE LOWER('%value')` clause and is **case-insensitive
+>   by default**. Pass `new EndSearchFilter(caseSensitive: true)` for a case-sensitive
+>   `field LIKE '%value'` match.
+> - **MongoDB ODM** matches with a regular expression anchored at the end of the string (`value$`)
+>   and is **case-sensitive by default**. Pass `new EndSearchFilter(caseSensitive: false)` to add
+>   the case-insensitive `i` regex flag.
+
+`EndSearchFilter` supports filtering on nested properties using dot notation in the `property`
+argument. See [Filtering on Nested Properties](#filtering-on-nested-properties).
+
+This filter replaces the `end` strategy of the deprecated `SearchFilter`
+(`#[ApiFilter(SearchFilter::class, strategy: 'end')]`). See the
+[migration guide](#migrating-from-apifilter-to-queryparameter).
+
+> [!NOTE] A Laravel/Eloquent equivalent also exists:
+> [`ApiPlatform\Laravel\Eloquent\Filter\EndSearchFilter`](../laravel/filters.md#text). It always
+> generates a `LIKE '%value'` clause (case sensitivity depends on your database collation) and does
+> not support nested/relation properties.
+
+## Word Start Search Filter
+
+The word start search filter allows filtering a resource by fields that contain a word starting with
+the given value, matching either the beginning of the string or a word boundary further inside it.
+
+Syntax: `?property=value`
+
+The value can take any scalar value or array of values.
+
+This filter can be used on the ApiResource attribute or in the operation attribute, for e.g., the
+`#GetCollection()` attribute:
+
+```php
+// api/src/ApiResource/Chicken.php
+
+#[GetCollection(
+    parameters: [
+        'name' => new QueryParameter(filter: new WordStartSearchFilter()),
+    ],
+)]
+class Chicken
+{
+    //...
+}
+```
+
+Given that the endpoint is `/chickens`, you can filter chickens by name with the following query:
+`/chikens?name=Coq`.
+
+It matches "Coquette" (the value starts the string) and "Farm Coquette" (the value starts a word
+that is not the first one), but not "Silkycoquette" (there, `coq` is inside the word
+"silkycoquette", not at the start of a word).
+
+> [!NOTE] The generated query, and the exact word-boundary semantics, differ between Doctrine ORM
+> and MongoDB ODM:
+>
+> - **Doctrine ORM** builds `field LIKE 'value%' OR field LIKE '% value%'` (word boundaries are
+>   recognized only on a literal ASCII space) and is **case-insensitive by default** (via
+>   `LOWER()`). Pass `new WordStartSearchFilter(caseSensitive: true)` for a case-sensitive match.
+> - **MongoDB ODM** matches with the regular expression `(^value|\svalue)` — the value at the start
+>   of the string, or preceded by any whitespace character (space, tab, newline, not only a plain
+>   space) — and is **case-sensitive by default**. Pass
+>   `new WordStartSearchFilter(caseSensitive: false)` to add the case-insensitive `i` regex flag.
+
+`WordStartSearchFilter` supports filtering on nested properties using dot notation in the `property`
+argument. See [Filtering on Nested Properties](#filtering-on-nested-properties).
+
+This filter replaces the `word_start` strategy of the deprecated `SearchFilter`
+(`#[ApiFilter(SearchFilter::class, strategy: 'word_start')]`). See the
+[migration guide](#migrating-from-apifilter-to-queryparameter).
+
+> [!NOTE] There is no Laravel/Eloquent equivalent of `WordStartSearchFilter`: the Laravel package
+> only ships `PartialSearchFilter`, `StartSearchFilter`, and `EndSearchFilter`.
+
 ## Free Text Query Filter
 
 The free text query filter allows filtering allows you to apply a single filter across a list of
@@ -356,6 +520,50 @@ This request will return all chickens where:
 - the `ean` is exactly "FR123456".
 
 For the `OR` option refer to the [OrFilter](#or-filter).
+
+### Using a Different Filter per Property
+
+The constructor also accepts an `array<string, FilterInterface>` map instead of a single shared
+filter, so a single free-text parameter can apply a **different** filter strategy to each property.
+This is available identically for Doctrine ORM and MongoDB ODM.
+
+```php
+// api/src/ApiResource/Book.php
+
+#[GetCollection(
+    parameters: [
+        'q' => new QueryParameter(
+            filter: new FreeTextQueryFilter([
+                'title' => new PartialSearchFilter(),
+                'isbn' => new ExactFilter(),
+            ]),
+        ),
+    ],
+)]
+class Book
+{
+    //...
+}
+```
+
+Given that the endpoint is `/books`, the query `/books?q=vin` will return all books where:
+
+- the `title` contains the substring "vin"
+- **AND**
+- the `isbn` is exactly "vin".
+
+As with the single-filter form, properties are combined with `AND` by default; wrap the whole
+`FreeTextQueryFilter` in [`OrFilter`](#or-filter) to combine them with `OR` instead — this still
+works when `filter` is a map, since `OrFilter` only changes how the outer `FreeTextQueryFilter` call
+combines its results, not which per-property filter is used.
+
+When `filter` is a map, the `properties` option is not required: it defaults to the map's keys
+(`['title', 'isbn']` above). Pass `properties` explicitly only to restrict the search to a subset of
+the map's keys.
+
+> [!NOTE] A property listed in `properties` that has no matching entry in the `filter` map (and,
+> symmetrically, a map entry not listed in `properties`) is silently skipped: no filtering criteria
+> is added for it, it neither restricts nor is required by the resulting query.
 
 ## Or Filter
 
@@ -1405,17 +1613,20 @@ The following table shows how to replace each legacy filter. All modern replacem
 for both Doctrine ORM (`ApiPlatform\Doctrine\Orm\Filter\*`) and MongoDB ODM
 (`ApiPlatform\Doctrine\Odm\Filter\*`).
 
-| Legacy filter (`AbstractFilter`)                            | Modern replacement                                                                                            |
-| ----------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------- |
-| `SearchFilter` (exact strategy)                             | [`ExactFilter`](#exact-filter)                                                                                |
-| `SearchFilter` (partial, start, end, word_start strategies) | [`PartialSearchFilter`](#partial-search-filter)                                                               |
-| `SearchFilter` (relations / IRI matching)                   | [`IriFilter`](#iri-filter)                                                                                    |
-| `BooleanFilter`                                             | [`ExactFilter`](#exact-filter)                                                                                |
-| `NumericFilter`                                             | [`ExactFilter`](#exact-filter) (exact) or [`ComparisonFilter(new ExactFilter())`](#comparison-filter) (range) |
-| `OrderFilter`                                               | [`SortFilter`](#sort-filter)                                                                                  |
-| `DateFilter`                                                | Kept — declare it through a `QueryParameter`, same class, same `[before]`/`[after]` URL syntax (drop-in)      |
-| `RangeFilter`                                               | Kept — declare it through a `QueryParameter`, same class, same `[between]` URL syntax (drop-in)               |
-| `ExistsFilter`                                              | Kept — declare it through a `QueryParameter`, same class (drop-in)                                            |
+| Legacy filter (`AbstractFilter`)          | Modern replacement                                                                                            |
+| ----------------------------------------- | ------------------------------------------------------------------------------------------------------------- |
+| `SearchFilter` (exact strategy)           | [`ExactFilter`](#exact-filter)                                                                                |
+| `SearchFilter` (partial strategy)         | [`PartialSearchFilter`](#partial-search-filter)                                                               |
+| `SearchFilter` (start strategy)           | [`StartSearchFilter`](#start-search-filter)                                                                   |
+| `SearchFilter` (end strategy)             | [`EndSearchFilter`](#end-search-filter)                                                                       |
+| `SearchFilter` (word_start strategy)      | [`WordStartSearchFilter`](#word-start-search-filter)                                                          |
+| `SearchFilter` (relations / IRI matching) | [`IriFilter`](#iri-filter)                                                                                    |
+| `BooleanFilter`                           | [`ExactFilter`](#exact-filter)                                                                                |
+| `NumericFilter`                           | [`ExactFilter`](#exact-filter) (exact) or [`ComparisonFilter(new ExactFilter())`](#comparison-filter) (range) |
+| `OrderFilter`                             | [`SortFilter`](#sort-filter)                                                                                  |
+| `DateFilter`                              | Kept — declare it through a `QueryParameter`, same class, same `[before]`/`[after]` URL syntax (drop-in)      |
+| `RangeFilter`                             | Kept — declare it through a `QueryParameter`, same class, same `[between]` URL syntax (drop-in)               |
+| `ExistsFilter`                            | Kept — declare it through a `QueryParameter`, same class (drop-in)                                            |
 
 There are two kinds of migration:
 
