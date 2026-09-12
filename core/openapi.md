@@ -6,13 +6,15 @@ API Platform natively supports the [OpenAPI](https://www.openapis.org/) API spec
 
 <p align="center" class="symfonycasts"><a href="https://symfonycasts.com/screencast/api-platform/open-api-spec?cid=apip"><img src="../symfony/images/symfonycasts-player.png" alt="OpenAPI screencast"><br>Watch the OpenAPI screencast</a></p>
 
-The specification of the API is available at the `/docs.jsonopenapi` path. By default, OpenAPI v3 is
-used. You can also get an OpenAPI v3-compliant version thanks to the `spec_version` query parameter:
-`/docs.jsonopenapi?spec_version=3`
+The specification of the API is available at the `/docs.jsonopenapi` path. Generated documents
+currently target OpenAPI v3.2.0 (`ApiPlatform\OpenApi\OpenApi::VERSION`). If a tool you use does not
+yet support v3.2.0, you can ask for the legacy v3.0.0 format instead thanks to the `spec_version`
+query parameter: `/docs.jsonopenapi?spec_version=3.0.0`
 
-It also integrates a customized version of [Swagger UI](https://swagger.io/swagger-ui/) and
-[ReDoc](https://rebilly.github.io/ReDoc/), some nice tools to display the API documentation in a
-user friendly way.
+It also integrates a customized version of [Swagger UI](https://swagger.io/swagger-ui/),
+[ReDoc](https://rebilly.github.io/ReDoc/) and
+[Scalar API Reference](https://github.com/scalar/scalar), some nice tools to display the API
+documentation in a user friendly way.
 
 ## Using the OpenAPI Command
 
@@ -42,11 +44,18 @@ If you want to use the old OpenAPI v2 (Swagger) JSON format, use:
 bin/console api:swagger:export
 ```
 
-It is also possible to use OpenAPI v3.0.0 format:
+By default, `api:openapi:export` generates a document following the current OpenAPI version,
+`3.2.0`. It is also possible to use the legacy OpenAPI v3.0.0 format:
 
 ```console
 bin/console api:openapi:export --spec-version=3.0.0
 ```
+
+> [!NOTE] This `--spec-version` option (and the `spec_version` query parameter documented above)
+> only switches between the OpenAPI v3.0.0 and v3.2.0 document formats. Do not confuse it with the
+> `api_platform.swagger.versions` configuration option: that array (`[3]` by default, and emptied
+> automatically when `enable_swagger` is set to `false`) tracks which major OpenAPI versions are
+> exposed at all, it does not select between the v3.0.0 and v3.2.0 document formats.
 
 ## Create several versions of a specification
 
@@ -608,9 +617,65 @@ resources:
 
 ![Impact on Swagger UI](../symfony/images/swagger-ui-2.png)
 
-## Disabling Swagger UI or ReDoc
+## Choosing Between Swagger UI, ReDoc and Scalar
 
-### Disabling Swagger UI or ReDoc with Symfony
+When the HTML format is served, API Platform can render three different documentation UIs:
+[Swagger UI](https://swagger.io/swagger-ui/), [ReDoc](https://rebilly.github.io/ReDoc/) and
+[Scalar API Reference](https://github.com/scalar/scalar). All three are backed by the same
+documentation route (`/docs` by default) and the same generated OpenAPI document; which one is
+rendered is chosen with the `ui` query parameter, for instance:
+
+`/docs?ui=scalar`
+
+Swagger UI is the default when no `ui` parameter is given. If it is disabled and ReDoc is also
+disabled while Scalar remains enabled, Scalar becomes the default UI instead. Every UI's page prints
+an "Other API docs" footer linking to the other enabled UIs.
+
+> [!NOTE] The value expected by `ui` for ReDoc differs between stacks: `ui=re_doc` on Symfony,
+> `ui=redoc` on Laravel. `ui=scalar` is the same on both.
+
+Like Swagger UI and ReDoc, Scalar is enabled by default (when `symfony/twig-bundle` is installed, on
+Symfony); see [Disabling Swagger UI, ReDoc or Scalar](#disabling-swagger-ui-redoc-or-scalar) below
+to turn it off.
+
+### Configuring Scalar API Reference
+
+API Platform builds the object passed to `Scalar.createApiReference()` from the generated OpenAPI
+document (`content`) and a default `theme` of `default`. Any key you pass through
+`scalar_extra_configuration` is merged on top of it and forwarded as-is, so it accepts any option
+supported by [Scalar API Reference](https://github.com/scalar/scalar), such as `theme` or
+`darkMode`.
+
+With Symfony:
+
+```yaml
+# api/config/packages/api_platform.yaml
+api_platform:
+    swagger:
+        scalar_extra_configuration:
+            theme: "purple"
+            darkMode: true
+```
+
+With Laravel:
+
+```php
+<?php
+// config/api-platform.php
+return [
+    // ...
+    'scalar' => [
+        'extra_configuration' => [
+            'theme' => 'purple',
+            'darkMode' => true,
+        ],
+    ],
+];
+```
+
+## Disabling Swagger UI, ReDoc or Scalar
+
+### Disabling Swagger UI, ReDoc or Scalar with Symfony
 
 To disable Swagger UI (ReDoc will be shown by default):
 
@@ -630,7 +695,16 @@ api_platform:
     enable_re_doc: false
 ```
 
-### Disabling Swagger UI or ReDoc with Laravel
+To disable Scalar:
+
+```yaml
+# api/config/packages/api_platform.yaml
+api_platform:
+    # ...
+    enable_scalar: false
+```
+
+### Disabling Swagger UI, ReDoc or Scalar with Laravel
 
 To disable Swagger UI (ReDoc will be shown by default):
 
@@ -651,6 +725,19 @@ To disable ReDoc:
 return [
     // ....
     'enable_re_doc' => false,
+];
+```
+
+To disable Scalar:
+
+```php
+<?php
+// config/api-platform.php
+return [
+    // ...
+    'scalar' => [
+        'enabled' => false,
+    ],
 ];
 ```
 
@@ -693,7 +780,10 @@ Change `/api_documentation` to the URI you wish Swagger UI to be accessible on.
 
 ### Disabling Swagger UI at the API Location
 
-To disable the Swagger UI at the API location, disable both Swagger UI and ReDoc.
+To disable all HTML documentation at the API location, disable Swagger UI, ReDoc and Scalar. Note
+that disabling only Swagger UI and ReDoc leaves Scalar enabled, and it will be shown instead (see
+[Choosing Between Swagger UI, ReDoc and Scalar](#choosing-between-swagger-ui-redoc-and-scalar)
+above).
 
 With Symfony use:
 
@@ -703,6 +793,7 @@ api_platform:
     # ...
     enable_swagger_ui: false
     enable_re_doc: false
+    enable_scalar: false
 ```
 
 Or with Laravel use:
@@ -714,6 +805,9 @@ return [
     // ....
     'enable_swagger_ui' => false,
     'enable_re_doc' => false,
+    'scalar' => [
+        'enabled' => false,
+    ],
 ];
 ```
 
