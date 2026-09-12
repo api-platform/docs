@@ -38,12 +38,6 @@ Create a file containing the specification:
 bin/console api:openapi:export --output=swagger_docs.json
 ```
 
-If you want to use the old OpenAPI v2 (Swagger) JSON format, use:
-
-```console
-bin/console api:swagger:export
-```
-
 By default, `api:openapi:export` generates a document following the current OpenAPI version,
 `3.2.0`. It is also possible to use the legacy OpenAPI v3.0.0 format:
 
