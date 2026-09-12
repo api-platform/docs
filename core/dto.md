@@ -123,8 +123,10 @@ final class Book
 
 ### Implementation Details: The Object Mapper Magic
 
-Automated mapping relies on two internal classes: `ApiPlatform\State\Provider\ObjectMapperProvider`
-and `ApiPlatform\State\Processor\ObjectMapperProcessor`.
+Automated mapping relies on three internal classes:
+`ApiPlatform\State\Provider\ObjectMapperProvider`,
+`ApiPlatform\State\Processor\ObjectMapperInputProcessor`, and
+`ApiPlatform\State\Processor\ObjectMapperOutputProcessor`.
 
 These classes act as decorators around the standard Provider/Processor chain. They are activated
 when:
@@ -143,10 +145,11 @@ Entity into your DTO Resource.
 
 **Write (POST/PUT/PATCH):**
 
-The `ObjectMapperProcessor` receives the deserialized Input DTO. It uses
-`$objectMapper->map($inputDto, $entityClass)` to transform the input into an Entity instance. It
-then delegates to the underlying Doctrine processor (to persist the Entity). Finally, it maps the
-persisted Entity back to the Output DTO Resource.
+The `ObjectMapperInputProcessor` receives the deserialized Input DTO. It uses
+`$objectMapper->map($inputDto, $entityClass)` to transform the input into an Entity instance, then
+delegates to the underlying Doctrine processor to persist the Entity. Once the Entity is persisted,
+the `ObjectMapperOutputProcessor` always maps it back to the Resource class, the class carrying
+`#[ApiResource]`, never to an `output` class.
 
 ## 2. Automated Mapped Inputs and Outputs
 
@@ -259,6 +262,81 @@ In your Book resource, configure the operations to use these classes via input a
 )]
 final class Book { /* ... */ }
 ```
+
+> [!NOTE] Combining `output` with the Object Mapper only applies to read operations (`Get`,
+> `GetCollection`). On a write operation, the persisted Entity is always mapped back to the Resource
+> class, and any `output` class configured on that operation is ignored for mapping. This is because
+> the response needs a Resource instance to generate its IRI and the `Location` header.
+
+### Returning a Different Representation From a Write Operation
+
+Because a write operation always maps back to the Resource class, an `output` DTO cannot be used to
+change the shape of a POST or PATCH response. When a write operation must return a representation
+different from its Resource class, declare a second `#[ApiResource]` class that shares the Entity
+through the same `stateOptions`, and reuse the main resource's item IRI with `itemUriTemplate`.
+
+```php
+// src/Api/Resource/Book.php
+namespace App\Api\Resource;
+
+use ApiPlatform\Doctrine\Orm\State\Options;
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\Patch;
+use App\Api\Dto\BookCollection;
+use App\Api\Dto\UpdateBook;
+use App\Entity\Book as BookEntity;
+use Symfony\Component\ObjectMapper\Attribute\Map;
+
+#[ApiResource(
+    stateOptions: new Options(entityClass: BookEntity::class),
+    operations: [
+        new Get(),
+        new GetCollection(output: BookCollection::class),
+        new Patch(input: UpdateBook::class),
+    ],
+)]
+#[Map(source: BookEntity::class)]
+final class Book { /* full representation, see section 1 */ }
+```
+
+```php
+// src/Api/Resource/BookCreated.php
+namespace App\Api\Resource;
+
+use ApiPlatform\Doctrine\Orm\State\Options;
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Post;
+use App\Api\Dto\CreateBook;
+use App\Entity\Book as BookEntity;
+use Symfony\Component\ObjectMapper\Attribute\Map;
+
+#[ApiResource(
+    stateOptions: new Options(entityClass: BookEntity::class),
+    operations: [
+        new Post(
+            uriTemplate: '/books',
+            input: CreateBook::class,
+            itemUriTemplate: '/books/{id}',
+        ),
+    ],
+)]
+#[Map(source: BookEntity::class)]
+final class BookCreated
+{
+    public int $id;
+
+    #[Map(source: 'title')]
+    public string $name;
+}
+```
+
+The request body is deserialized into `CreateBook`, mapped onto the Entity, and persisted. The
+Entity is then mapped back to `BookCreated`, which is itself a Resource, so the JSON-LD context, the
+`@id` (built from the main resource's item route through `itemUriTemplate`), and the response
+headers are all generated correctly. For a response that is not a projection of the Entity, use a
+custom Processor as described in [section 3](#3-custom-business-logic-custom-processor).
 
 ## 3. Custom Business Logic (Custom Processor)
 
