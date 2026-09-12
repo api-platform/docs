@@ -62,45 +62,15 @@ Just like other Symfony and API Platform components, the Serializer component ca
 using attributes, XML or YAML. Since attributes are easy to understand, we will use them in the
 following examples.
 
-> [!NOTE] If you are not using the API Platform Symfony variant, you need to enable annotation
-> support in the serializer configuration as outlined below, depending on your Symfony version.
-
-#### Configuration for Symfony `<= 6.4`
-
-##### General Case
+> [!NOTE] If you are not using the API Platform Symfony variant, you need to enable attribute
+> support in the serializer configuration as outlined below.
 
 Add the following configuration to your `framework.yaml` file:
 
 ```yaml
 # api/config/packages/framework.yaml
 framework:
-    serializer: { enable_annotations: true }
-```
-
-##### Using Symfony Flex
-
-If you use [Symfony Flex](https://github.com/symfony/flex) and Symfony `<= 6.4`, simply run the
-following command:
-
-```console
-composer req doctrine/annotations
-```
-
-You're all set!
-
-#### Configuration for Symfony `>= 7.0`
-
-If you are using Symfony >= 7.0,
-[annotations have been replaced by attributes](https://www.doctrine-project.org/2022/11/04/annotations-to-attributes.html).
-
-Update your configuration as follows:
-
-```diff
-# api/config/packages/framework.yaml
-
-framework:
--  serializer: { enable_annotations: true }
-+  serializer: { enable_attributes: true }
+    serializer: { enable_attributes: true }
 ```
 
 #### Additional Syntax Configuration for All Versions
