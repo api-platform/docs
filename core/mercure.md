@@ -16,6 +16,14 @@ Mercure hub. Then, the Mercure hub dispatches the updates to all connected clien
 
 ![Mercure subscriptions](images/mercure-subscriptions.png)
 
+## Which Protocol Version Does Your Hub Speak?
+
+Mercure has a 1.0 protocol version that changes how subscribers pick which updates to receive:
+`match=` and `match_urlpattern=` query parameters replace `topic=`. API Platform talks to 0.x hubs
+by default; switching a hub to 1.0 is done by configuring `protocol_version: '1.0'` on the
+[MercureBundle](https://symfony.com/doc/current/mercure.html) side, not on this page. The examples
+below cover both; check with whoever operates your hub if you're not sure which version it runs.
+
 ## Installing Mercure Support
 
 Mercure support is already installed, configured and enabled in
@@ -66,6 +74,54 @@ automatically subscribe to Mercure updates when available:
 ![Screencast](../create-client/images/create-client-demo.gif)
 
 [Learn how to use the discovery capabilities of Mercure in your own clients](https://mercure.rocks/docs/ecosystem/awesome).
+
+## Subscribing to Updates
+
+API Platform publishes each update on the resource's absolute IRI — the same value as the `@id` of
+the JSON-LD document the API serves for that resource. This means the topic to subscribe to is
+nothing you need to build: it's the `@id` you already have from fetching the resource.
+
+A minimal browser client fetches the resource, discovers the hub from the `Link: rel="mercure"`
+header, and subscribes using the resource's `@id` as the topic:
+
+```javascript
+const response = await fetch("/books/1", { headers: { Accept: "application/ld+json" } });
+const book = await response.json();
+
+// Discover the hub through the Link header API Platform adds to the response
+const linkHeader = response.headers.get("Link");
+const [, hubUrlString] = linkHeader.match(/<([^>]+)>;\s*rel="mercure"/);
+const hubUrl = new URL(hubUrlString);
+
+hubUrl.searchParams.append("topic", book["@id"]); // Mercure 0.x
+
+const eventSource = new EventSource(hubUrl);
+eventSource.onmessage = (event) => {
+    console.log(JSON.parse(event.data));
+};
+```
+
+If your hub speaks the Mercure 1.0 protocol, subscribe with `match` instead of `topic`:
+
+```javascript
+hubUrl.searchParams.append("match", book["@id"]); // Mercure 1.0
+```
+
+To subscribe to every book instead of a single one, 1.0 hubs also accept `match_urlpattern`, with a
+[URL Pattern](https://mercure.rocks/docs/1.0/concepts/topics-and-matchers) matching the resources'
+IRIs:
+
+```javascript
+hubUrl.searchParams.append("match_urlpattern", "https://api.example.com/books/:id"); // Mercure 1.0
+```
+
+`match_urlpattern` has no 0.x equivalent: under 0.x, subscribing to a family of resources at once
+means either subscribing to each IRI individually, or using the alternate-topic technique described
+below.
+
+See the [Mercure protocol reference](https://mercure.rocks/docs/1.0/reference/protocol) (1.0) or
+[the spec's subscribers section](https://mercure.rocks/spec#subscribers) (0.x) for the full
+`topic`/`match`/`match_urlpattern` semantics.
 
 ## Dispatching Private Updates (Authorized Mode)
 
