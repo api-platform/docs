@@ -35,9 +35,6 @@ api_platform:
         # If you want to serialize only some payload fields, define them like this: [ severity, anotherPayloadField ]
         serialize_payload_fields: []
 
-        # To enable or disable query parameters validation on collection GET requests
-        query_parameter_validation: true
-
     eager_loading:
         # To enable or disable eager loading.
         enabled: true
@@ -102,10 +99,6 @@ api_platform:
         # The list of paths with files or directories where the bundle will look for additional resource files.
         paths: []
 
-    # The list of your resources class directories. Defaults to the directories of the mapping paths but might differ.
-    resource_class_directories:
-        - '%kernel.project_dir%/src/Entity'
-
     doctrine:
         # To enable or disable Doctrine ORM support.
         enabled: true
@@ -143,14 +136,10 @@ api_platform:
         # Enabled by default with installed api-platform/graphql.
         enabled: false
 
-        # The default IDE (graphiql or graphql-playground) used when going to the GraphQL endpoint. False to disable.
+        # The default IDE (graphiql) used when going to the GraphQL endpoint. False to disable.
         default_ide: 'graphiql'
 
         graphiql:
-            # Enabled by default with installed api-platform/graphql and Twig.
-            enabled: false
-
-        graphql_playground:
             # Enabled by default with installed api-platform/graphql and Twig.
             enabled: false
 
@@ -211,7 +200,7 @@ api_platform:
             enabled: false
 
             # URLs of the Varnish servers to purge using cache tags when a resource is updated.
-            varnish_urls: []
+            urls: []
 
             # To pass options to the client charged with the request.
             request_options: []
@@ -433,9 +422,6 @@ return [
         // Enable the serialization of payload fields when a validation error is thrown.
         // If you want to serialize only some payload fields, define them like this: [ severity, anotherPayloadField ]
         'serialize_payload_fields' => [],
-
-        // To enable or disable query parameters validation on collection GET requests
-        'query_parameter_validation' => true,
     ],
 
     'eager_loading' => [
@@ -504,11 +490,6 @@ return [
     'mapping' => [
         // The list of paths with files or directories where the bundle will look for additional resource files.
         'paths' => [],
-    ],
-
-    // The list of your resources class directories. Defaults to the directories of the mapping paths but might differ.
-    'resource_class_directories' => [
-        '%kernel.project_dir%/src/Entity',
     ],
 
     'doctrine' => [
@@ -630,7 +611,7 @@ return [
             'enabled' => false,
 
             // URLs of the Varnish servers to purge using cache tags when a resource is updated.
-            'varnish_urls' => [],
+            'urls' => [],
 
             // To pass options to the client charged with the request.
             'request_options' => [],
@@ -829,3 +810,54 @@ return [
     ],
 ];
 ```
+
+## Resolving Container Parameters in Resource Configuration
+
+> [!WARNING] This is not available with Laravel, only with the Symfony integration.
+
+Symfony container parameters (`%app.some_param%`) can be referenced inside resource configuration,
+whether it is declared with YAML, XML, or PHP attributes. This lets you keep values such as a
+security expression or a route prefix in `parameters.yaml` instead of hard-coding them in the
+resource.
+
+Two resolution rules apply, depending on the field:
+
+- On plain string fields (`shortName`, `description`, `uriTemplate`, `routePrefix`, `routeName`,
+  `host`, `controller`, `provider`, `processor`, `securityMessage`,
+  `securityPostDenormalizeMessage`, and `securityPostValidationMessage`), `%param%` is resolved
+  anywhere in the string.
+- On ExpressionLanguage fields (`security`, `securityPostDenormalize`, `securityPostValidation`,
+  `condition`), the whole trimmed value must be a single `%param%` reference to be resolved. A
+  partial use, or a real modulo expression such as `object.value % 2 === 0`, reaches the expression
+  engine untouched.
+
+YAML and XML resource configuration also resolve `%param%` in a URI variable `Link`'s `fromClass`
+and `toClass` values.
+
+`%%` escapes a literal `%`, and `%env(...)%` parameters are not allowed in resource configuration.
+
+```yaml
+# config/services.yaml
+parameters:
+    app.admin_security: 'is_granted("ROLE_ADMIN")'
+```
+
+```php
+// src/ApiResource/Book.php
+namespace App\ApiResource;
+
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Get;
+
+#[ApiResource(
+    operations: [
+        new Get(security: '%app.admin_security%'),
+    ],
+)]
+final class Book
+{
+}
+```
+
+The same `%app.admin_security%` reference works unchanged in an equivalent YAML or XML resource
+configuration file.
