@@ -128,6 +128,24 @@ Route::post('/docs/graphiql', GraphiQlAction::class)
     ->name('graphiql');
 ```
 
+### Serving GraphiQL Under a Content Security Policy
+
+> [!NOTE] This feature is only available with Symfony. Laravel's GraphiQL page is served from its
+> own Blade template and controller, which this feature doesn't cover yet. You're welcome to
+> contribute the Laravel implementation [on GitHub](https://github.com/api-platform/core).
+
+GraphiQL renders its data and loads its scripts through several inline and external `<script>` tags.
+A strict
+[Content-Security-Policy](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy)
+that forbids `unsafe-inline` blocks every one of them, unless each tag carries the `nonce` your
+policy expects. API Platform doesn't generate or manage that nonce itself: it looks it up and, when
+found, adds the matching `nonce` attribute to every `<script>` tag it renders, exactly as it does
+for Swagger UI; see
+[Serving Swagger UI Under a Content Security Policy](openapi.md#serving-swagger-ui-under-a-content-security-policy)
+for the full precedence rules (the `_csp_nonce` request attribute, falling back to a Twig
+`csp_nonce()` function such as the one provided by
+[NelmioSecurityBundle](https://github.com/nelmio/NelmioSecurityBundle)).
+
 ## GraphQL Playground
 
 Another IDE is by default included in API Platform: GraphQL Playground.
