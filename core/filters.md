@@ -51,6 +51,19 @@ a new instance:
 - **`PartialSearchFilter`**: For partial string matching (SQL `LIKE %...%`). Supports dot notation
   for nested properties.
     - Usage: `new QueryParameter(filter: PartialSearchFilter::class)`
+- **`StartSearchFilter`**: For prefix matching (`LIKE value%`). Supports dot notation for nested
+  properties. See the [Doctrine Filters documentation](doctrine-filters.md#start-search-filter) for
+  case-sensitivity defaults.
+    - Usage: `new QueryParameter(filter: StartSearchFilter::class)`
+- **`EndSearchFilter`**: For suffix matching (`LIKE %value`). Supports dot notation for nested
+  properties. See the [Doctrine Filters documentation](doctrine-filters.md#end-search-filter) for
+  case-sensitivity defaults.
+    - Usage: `new QueryParameter(filter: EndSearchFilter::class)`
+- **`WordStartSearchFilter`** (Doctrine ORM/ODM only, no Laravel/Eloquent equivalent): Matches
+  fields containing a word that starts with the value. Supports dot notation for nested properties.
+  See the [Doctrine Filters documentation](doctrine-filters.md#word-start-search-filter) for
+  details.
+    - Usage: `new QueryParameter(filter: WordStartSearchFilter::class)`
 - **`IriFilter`**: For filtering by IRIs (e.g., relations). Supports dot notation for nested
   associations.
     - Usage: `new QueryParameter(filter: IriFilter::class)`
