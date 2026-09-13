@@ -68,9 +68,9 @@ a new instance:
   associations.
     - Usage: `new QueryParameter(filter: IriFilter::class)`
 - **`ComparisonFilter`**: A decorator that wraps an equality filter (`ExactFilter`, `UuidFilter`) to
-  add `gt`, `gte`, `lt`, `lte`, and `ne` operators. Recommended for numeric comparisons; in 5.0 it
-  also gains a native `[between]=X..Y` operator. (`DateFilter` and `RangeFilter` are kept as drop-in
-  filters — see below.)
+  add `gt`, `gte`, `lt`, `lte`, `ne`, and a native `between` (`[between]=X..Y`) operator.
+  Recommended for numeric comparisons. (`DateFilter` is kept as a drop-in filter — see below;
+  `RangeFilter` is deprecated in its favor.)
     - Usage:
       `new QueryParameter(filter: new ComparisonFilter(new ExactFilter()), property: 'price')`
 - **`FreeTextQueryFilter`**: Applies a filter across multiple properties using a single parameter.
@@ -89,7 +89,8 @@ a new instance:
 - **`NumericFilter`**: For numeric field filtering (legacy, `ExactFilter` or `ComparisonFilter` is
   recommended instead).
     - Usage: `new QueryParameter(filter: NumericFilter::class)`
-- **`RangeFilter`**: For range-based filtering (legacy, `ComparisonFilter` is recommended instead).
+- **`RangeFilter`**: For range-based filtering. **Deprecated since 4.4, removed in 6.0** — use
+  `ComparisonFilter` wrapping `ExactFilter` instead.
     - Usage: `new QueryParameter(filter: RangeFilter::class)`
 - **`ExistsFilter`**: For checking existence of nullable values.
     - Usage: `new QueryParameter(filter: ExistsFilter::class)`
@@ -753,12 +754,8 @@ The `IriConverterParameterProvider` supports the following options in `extraProp
 
 ### `ReadLinkParameterProvider`
 
-This provider must be enabled before it can be used.
-
-```yaml
-api_platform:
-    enable_link_security: true
-```
+Security on `Link` is always enabled since API Platform 5.0; the previous `enable_link_security`
+flag has been removed and no longer needs to be configured.
 
 This provider fetches a linked resource from a given identifier. This is useful when you need to
 load a related entity to use later, for example in your own state provider. When you have an API

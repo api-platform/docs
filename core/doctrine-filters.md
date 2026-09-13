@@ -670,19 +670,35 @@ following queries:
 - `/products?price[lte]=100` — products whose price is less than or equal to 100
 - `/products?price[ne]=0` — products whose price is not equal to 0
 
-### Range Queries (Combining Operators)
+### Range Queries
 
-In 4.4 there is no dedicated `between` operator. To filter within a range, combine `gte` and `lte`
-(or `gt` and `lt`) in a single request:
+`ComparisonFilter` provides a native `between` operator
+(`ApiPlatform\Doctrine\Orm\Filter\ComparisonFilter::OPERATOR_BETWEEN`, value `between`) for range
+queries: `?property[between]=<min>..<max>`. Both bounds are required, must be numeric, and are
+separated by two dots (`..`):
 
 ```http
-GET /products?price[gte]=10&price[lte]=100
+GET /products?price[between]=10..100
 ```
 
-This returns all products whose price is between 10 and 100 inclusive.
+This returns all products whose price is between 10 and 100 inclusive. On Doctrine ORM, it compiles
+to a single SQL `BETWEEN` clause:
 
-> [!NOTE] Since API Platform 5.0, `ComparisonFilter` also accepts a native `[between]=X..Y` operator
-> (`?price[between]=10..100`), which emits a single SQL `BETWEEN` clause on Doctrine ORM.
+```sql
+o.price BETWEEN :price_1 AND :price_2
+```
+
+When both bounds are equal (`?price[between]=10..10`), the filter collapses the range to an equality
+(`o.price = :price`) instead of a `BETWEEN` clause. On Doctrine MongoDB ODM, which has no native
+`BETWEEN` operator, the same `[between]=X..Y` syntax is translated to the native `gte`/`lte` pair on
+the field instead.
+
+`[between]` only accepts numeric bounds. To range-filter a `DateTime` property, combine `gte` and
+`lte` (or `gt` and `lt`) explicitly instead — see [DateTime Support](#datetime-support) below:
+
+```http
+GET /events?startDate[gte]=2025-01-01&startDate[lte]=2025-12-31
+```
 
 ### DateTime Support
 
@@ -766,19 +782,24 @@ Doctrine's type system, which is required for correct comparisons on binary UUID
 
 ### OpenAPI Documentation
 
-`ComparisonFilter` automatically generates five OpenAPI query parameters for each configured
+`ComparisonFilter` automatically generates six OpenAPI query parameters for each configured
 parameter key, one per operator. For a parameter named `price`, the generated parameters are
-`price[gt]`, `price[gte]`, `price[lt]`, `price[lte]`, and `price[ne]`.
+`price[gt]`, `price[gte]`, `price[lt]`, `price[lte]`, `price[ne]`, and `price[between]`.
 
 ## Date Filter
 
 > [!NOTE] `DateFilter` is a kept filter: there is no modern replacement for it.
-> [`ComparisonFilter`](#comparison-filter) only performs plain `gt`/`gte`/`lt`/`lte`/`ne`
-> comparisons and does not replicate `DateFilter`'s per-property
+> [`ComparisonFilter`](#comparison-filter) performs plain `gt`/`gte`/`lt`/`lte`/`ne` comparisons and
+> provides a numeric-only `between` operator, but does not replicate `DateFilter`'s per-property
 > [`null` management](#managing-null-values), its automatic `\DateTime`/`\DateTimeImmutable` binding
 > based on the Doctrine column type, its tolerant handling of invalid or empty date values, or its
 > inclusive `before`/`after` versus exclusive `strictly_before`/`strictly_after` URL vocabulary.
 > Keep `DateFilter` and declare it through a `QueryParameter`.
+
+Since API Platform 5.0, the ORM and ODM `DateFilter` classes implement `FilterInterface` directly
+instead of extending `AbstractFilter`. Their syntax and behavior are unchanged. Both classes were
+already final, so this change only affects code that checks or type-hints them as `AbstractFilter`;
+use `FilterInterface` or the interface for the capability your code requires instead.
 
 The date filter allows filtering a collection by date intervals.
 
@@ -1113,10 +1134,11 @@ It will return all offers with `sold` equals `1`.
 
 ## Range Filter
 
-> [!TIP] Consider using [`ComparisonFilter`](#comparison-filter) wrapping `ExactFilter` as a modern
-> replacement. `ComparisonFilter` does not extend `AbstractFilter`, works natively with
-> `QueryParameter`, and supports range queries by combining `gte` and `lte` operators (e.g.,
-> `?price[gte]=10&price[lte]=100`).
+> [!WARNING] `RangeFilter` is **deprecated** since API Platform 4.4 and will be **removed in API
+> Platform 6.0**. Use [`ComparisonFilter`](#comparison-filter) wrapping `ExactFilter` instead: it
+> does not extend `AbstractFilter`, works natively with `QueryParameter`, and covers the same syntax
+> (`gt`/`gte`/`lt`/`lte` and a native `[between]=X..Y`, see [Range Queries](#range-queries)). See
+> the [migration example](#example-migrating-a-rangefilter) below — the URL syntax is unchanged.
 
 The range filter allows you to filter by a value lower than, greater than, lower than or equal,
 greater than or equal and between two values.
@@ -1165,6 +1187,11 @@ It will return all offers with `price` between 12.99 and 15.99.
 You can filter offers by joining two values, for example: `/offers?price[gt]=12.99&price[lt]=19.99`.
 
 ## Exists Filter
+
+Since API Platform 5.0, the ORM and ODM `ExistsFilter` classes implement `FilterInterface` directly
+instead of extending `AbstractFilter`. Their syntax and behavior are unchanged. Both classes were
+already final, so this change only affects code that checks or type-hints them as `AbstractFilter`;
+use `FilterInterface` or the interface for the capability your code requires instead.
 
 The "exists" filter allows you to select items based on a nullable field value. It will also check
 the emptiness of a collection association.
@@ -1989,6 +2016,13 @@ It means that the filter will be **silently** ignored if the property:
 A filter that implements the `ApiPlatform\Doctrine\Common\Filter\PropertyAwareFilterInterface`
 interface can be decorated:
 
+> [!NOTE] Since API Platform 5.0, `PropertyAwareFilterInterface` declares both
+> `setProperties(array $properties): void` and `getProperties(): ?array` (the getter was previously
+> commented out on the interface and only enforced by convention). A class implementing the
+> interface directly must now implement both methods, or a fatal error is raised. `getProperties()`
+> returns the property map currently configured on the filter, or `null` when the filter is not
+> restricted to specific properties (it then applies to all of them).
+
 ```php
 namespace App\Doctrine\Filter;
 
@@ -1999,10 +2033,20 @@ use ApiPlatform\Metadata\Operation;
 use Doctrine\ORM\QueryBuilder;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 
-final class SearchTextAndDateFilter implements FilterInterface
+final class SearchTextAndDateFilter implements FilterInterface, PropertyAwareFilterInterface
 {
     public function __construct(#[Autowire('@api_platform.doctrine.orm.search_filter.instance')] readonly FilterInterface $searchFilter, #[Autowire('@api_platform.doctrine.orm.date_filter.instance')] readonly FilterInterface $dateFilter, protected ?array $properties = null, private array $dateFilterProperties = [], private array $searchFilterProperties = [])
     {
+    }
+
+    public function setProperties(array $properties): void
+    {
+        $this->properties = $properties;
+    }
+
+    public function getProperties(): ?array
+    {
+        return $this->properties;
     }
 
     // This function is only used to hook in documentation generators (supported by Swagger and Hydra)
