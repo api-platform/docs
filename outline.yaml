@@ -44,6 +44,7 @@ chapters:
       - doctrine-filters
       - subresources
       - serialization
+      - polymorphism
       - validation
       - security
       - content-negotiation
