@@ -137,10 +137,13 @@ To add some search filters, choose over this new list:
 - [PartialSearchFilter](#partial-search-filter) (filter using a `LIKE %value%`; supports nested
   properties via dot notation)
 - [ComparisonFilter](#comparison-filter) (filter with comparison operators `gt`, `gte`, `lt`, `lte`,
-  `ne`; replaces `DateFilter`, `NumericFilter`, and `RangeFilter`)
+  `ne`; replaces `NumericFilter` and `RangeFilter` — it is not a replacement for `DateFilter`, which
+  is kept)
 - [FreeTextQueryFilter](#free-text-query-filter) (allows you to apply multiple filters to multiple
   properties of a resource at the same time, using a single parameter in the URL)
 - [OrFilter](#or-filter) (apply a filter using `orWhere` instead of `andWhere`)
+- [ChainFilter](#chain-filter) (compose several filters on a single parameter key, each
+  self-selecting by value shape)
 
 ### SearchFilter
 
@@ -561,10 +564,13 @@ parameter key, one per operator. For a parameter named `price`, the generated pa
 
 ## Date Filter
 
-> [!TIP] Consider using [`ComparisonFilter`](#comparison-filter) wrapping `ExactFilter` as a modern
-> replacement. `ComparisonFilter` does not extend `AbstractFilter`, works natively with
-> `QueryParameter`, and supports the same date comparison use cases with `gt`, `gte`, `lt`, `lte`
-> operators.
+> [!NOTE] `DateFilter` is a kept filter: there is no modern replacement for it.
+> [`ComparisonFilter`](#comparison-filter) only performs plain `gt`/`gte`/`lt`/`lte`/`ne`
+> comparisons and does not replicate `DateFilter`'s per-property
+> [`null` management](#managing-null-values), its automatic `\DateTime`/`\DateTimeImmutable` binding
+> based on the Doctrine column type, its tolerant handling of invalid or empty date values, or its
+> inclusive `before`/`after` versus exclusive `strictly_before`/`strictly_after` URL vocabulary.
+> Keep `DateFilter` and declare it through a `QueryParameter`.
 
 The date filter allows filtering a collection by date intervals.
 
@@ -599,8 +605,15 @@ class Offer
 }
 ```
 
-> [!TIP] For other syntaxes, for e.g., if you want to new syntax with the ApiResource attribute take
-> a look [in the Introduction section](#introduction).
+> [!NOTE] Instantiating a legacy filter with `new` (e.g. `new DateFilter()`) directly inside a
+> `QueryParameter` logs a cosmetic `ManagerRegistry must be initialized before accessing it.` ALERT
+> at cache warmup — filtering still works correctly. To silence it, reference the filter by its
+> service id (a string) instead of an inline object, or wrap it in a [`ChainFilter`](#chain-filter),
+> which suppresses the warmup call. See
+> [issue #7361](https://github.com/api-platform/core/issues/7361).
+>
+> For other syntaxes, for e.g., if you want to new syntax with the ApiResource attribute take a look
+> [in the Introduction section](#introduction).
 
 ### Date Filter using the ApiFilter Attribute Syntax (not recommended)
 
@@ -719,13 +732,91 @@ class Offer
 }
 ```
 
-> [!TIP] For other syntaxes, for e.g., if you want to new syntax with the ApiResource attribute take
-> a look [in the Introduction section](#introduction).
+> [!NOTE] The inline `new DateFilter(...)` instances above trigger the same cosmetic warmup ALERT
+> described [above](#date-filter-using-the-queryparameter-syntax-recommended)
+> ([#7361](https://github.com/api-platform/core/issues/7361)). Use a service id or a
+> [`ChainFilter`](#chain-filter) to silence it.
+>
+> For other syntaxes, for e.g., if you want to new syntax with the ApiResource attribute take a look
+> [in the Introduction section](#introduction).
+
+## Chain Filter
+
+> [!NOTE] Since API Platform 4.4, `ChainFilter` is available for both Doctrine ORM
+> (`ApiPlatform\Doctrine\Orm\Filter\ChainFilter`) and MongoDB ODM
+> (`ApiPlatform\Doctrine\Odm\Filter\ChainFilter`).
+
+`ChainFilter` is a decorator that composes several filters on a single query parameter key. Each
+wrapped filter self-selects by the shape of the incoming value: `ComparisonFilter` and `DateFilter`
+ignore plain scalar values (they only react to their operator-map syntax, e.g. `[gt]`/`[lt]` or
+`[before]`/`[after]`), while `ExactFilter` and `PartialSearchFilter` ignore operator-map arrays.
+This lets you combine, for instance, an exact match and a full `DateFilter` on the same property
+without changing the URL vocabulary of either.
+
+The canonical use case is adding exact-match filtering to a date property while keeping
+`DateFilter`'s null management and `before`/`after`/`strictly_before`/`strictly_after` semantics
+intact:
+
+```php
+<?php
+// api/src/ApiResource/Person.php
+namespace App\ApiResource;
+
+use ApiPlatform\Doctrine\Orm\Filter\ChainFilter;
+use ApiPlatform\Doctrine\Orm\Filter\DateFilter;
+use ApiPlatform\Doctrine\Orm\Filter\ExactFilter;
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\QueryParameter;
+
+#[ApiResource]
+#[GetCollection(
+    parameters: [
+        'birthdate' => new QueryParameter(
+            property: 'birthdate',
+            filter: new ChainFilter([
+                new ExactFilter(),
+                new DateFilter(),
+            ]),
+        ),
+    ],
+)]
+class Person
+{
+    // ...
+}
+```
+
+Given that the collection endpoint is `/people`, both of the following queries work on the same
+`birthdate` parameter:
+
+- `/people?birthdate=1999-12-31` — exact match, handled by `ExactFilter`
+- `/people?birthdate[after]=1999-01-01` — date interval, handled by `DateFilter`
+- `/people?birthdate[strictly_before]=2000-01-01` — date interval, handled by `DateFilter`
+
+`ChainFilter` forwards `ManagerRegistry` and `Logger` to any wrapped filter that needs them, and
+merges the OpenAPI parameters documented by every wrapped filter. Because it manages this injection
+itself, wrapping a legacy filter in a `ChainFilter` also suppresses the cosmetic
+`ManagerRegistry must be initialized before accessing it.` ALERT described in the
+[#7361 note](#date-filter-using-the-queryparameter-syntax-recommended) — it is a valid alternative
+to referencing the filter by service id when you need to compose it with another filter on the same
+key.
 
 ## Boolean Filter
 
 > [!TIP] Consider using [`ExactFilter`](#exact-filter) as a modern replacement. `ExactFilter` does
-> not extend `AbstractFilter` and works natively with `QueryParameter`.
+> not extend `AbstractFilter` and works natively with `QueryParameter`. For a boolean field, declare
+> the parameter type and disable the array variant so a single `?field=true` parameter is exposed
+> (without `castToArray: false`, `ExactFilter` also documents a `field[]` array variant):
+>
+> ```php
+> 'isAvailableGenericallyInMyCountry' => new QueryParameter(
+>     filter: new ExactFilter(),
+>     schema: ['type' => 'boolean'],
+>     castToNativeType: true,
+>     castToArray: false,
+> ),
+> ```
 
 The boolean filter allows you to search on boolean fields and values.
 
@@ -849,8 +940,12 @@ class Offer
 }
 ```
 
-> [!TIP] For other syntaxes, for e.g., if you want to new syntax with the ApiResource attribute take
-> a look [in the Introduction section](#introduction).
+> [!NOTE] `new RangeFilter()` inline triggers the same cosmetic warmup ALERT described in the
+> [#7361 note](#date-filter-using-the-queryparameter-syntax-recommended). Use a service id or a
+> [`ChainFilter`](#chain-filter) to silence it.
+>
+> For other syntaxes, for e.g., if you want to new syntax with the ApiResource attribute take a look
+> [in the Introduction section](#introduction).
 
 ### Result using the Range Filter
 
@@ -893,8 +988,12 @@ class Offer
 }
 ```
 
-> [!TIP] For other syntaxes, for e.g., if you want to new syntax with the ApiResource attribute take
-> a look [in the Introduction section](#introduction).
+> [!NOTE] `new ExistsFilter()` inline triggers the same cosmetic warmup ALERT described in the
+> [#7361 note](#date-filter-using-the-queryparameter-syntax-recommended). Use a service id or a
+> [`ChainFilter`](#chain-filter) to silence it.
+>
+> For other syntaxes, for e.g., if you want to new syntax with the ApiResource attribute take a look
+> [in the Introduction section](#introduction).
 
 ### Result using the Exists Filter
 
@@ -1326,7 +1425,13 @@ There are two kinds of migration:
   _declare_ them is deprecated (via `#[ApiFilter]` / extending `AbstractFilter`). Move the
   declaration to a `QueryParameter`; the class name and the URL syntax stay the same.
 
-> [!TIP] When instantiating a filter inside a `QueryParameter`, always use named arguments
+> [!NOTE] Declaring a kept filter as an inline `new` instance inside a `QueryParameter` (as shown in
+> the examples below) logs a cosmetic `ManagerRegistry must be initialized before accessing it.`
+> ALERT at cache warmup — filtering still works. Reference the filter by its service id (a string)
+> instead, or wrap it in a [`ChainFilter`](#chain-filter) to silence it. See
+> [issue #7361](https://github.com/api-platform/core/issues/7361).
+>
+> Also, when instantiating a filter inside a `QueryParameter`, always use named arguments
 > (`new DateFilter(nullManagement: ...)` rather than positional). Filter constructors are refined
 > across versions; named arguments keep your declarations forward-compatible.
 
@@ -1376,6 +1481,11 @@ class Offer
 (`?createdAt[before]=2025-01-01`, `?createdAt[after]=2025-01-01`, and the `strictly_*` variants),
 and per-property null management still applies.
 
+> [!NOTE] The `new DateFilter()` instance in the "modern" example above triggers the same cosmetic
+> warmup ALERT described in the
+> [#7361 note](#date-filter-using-the-queryparameter-syntax-recommended). Use a service id or a
+> [`ChainFilter`](#chain-filter) to silence it.
+
 ### Example: Migrating a RangeFilter
 
 Before (legacy):
@@ -1424,6 +1534,11 @@ class Product
 > [!TIP] Since API Platform 5.0, `ComparisonFilter` covers the full range syntax (including a native
 > `[between]=X..Y`), and `RangeFilter` is deprecated in favor of it. When you upgrade to 5.0, switch
 > `new RangeFilter()` to `new ComparisonFilter(new ExactFilter())` — the URL syntax is preserved.
+>
+> Also, the `new RangeFilter()` instance in the "modern" example above triggers the same cosmetic
+> warmup ALERT described in the
+> [#7361 note](#date-filter-using-the-queryparameter-syntax-recommended). Use a service id or a
+> [`ChainFilter`](#chain-filter) to silence it.
 
 ### MongoDB ODM
 
@@ -1440,13 +1555,13 @@ use ApiPlatform\Metadata\QueryParameter;
 #[ApiResource]
 #[GetCollection(
     parameters: [
-        'createdAt' => new QueryParameter(
+        'price' => new QueryParameter(
             filter: new ComparisonFilter(new ExactFilter()),
-            property: 'createdAt',
+            property: 'price',
         ),
     ],
 )]
-class Event
+class Product
 {
     // ...
 }

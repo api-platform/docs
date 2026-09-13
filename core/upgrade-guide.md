@@ -2,9 +2,49 @@
 
 ## API Platform 4.3 to 4.4
 
-4.4 is the last 4.x minor. It introduces no breaking changes: everything deprecated here keeps
-working until it is removed in a later major (5.0 or 6.0). Fixing the deprecations now makes the
-upgrade to the next major a no-op.
+4.4 is the last 4.x minor. It ships a single backwards-incompatible change (below); everything else
+is a deprecation that keeps working until it is removed in a later major (5.0 or 6.0). Fixing the
+deprecations now makes the upgrade to the next major a no-op.
+
+### Backwards-Incompatible Changes
+
+#### Denormalization Type Errors on Unconstrained BackedEnum Properties Revert to HTTP 400
+
+Prior to 4.4, `BackedEnum`-typed properties received special treatment: any serializer type mismatch
+during denormalization was unconditionally promoted to HTTP 422. Starting with 4.4, that implicit
+promotion is replaced by a constraint-aware check.
+
+**Who is affected**: code that relied on enum-typed properties producing 422 without any Symfony
+Validator constraint (or Laravel rule) on the property.
+
+**What to do (Symfony)**: add an explicit constraint on the enum property:
+
+```php
+use Symfony\Component\Validator\Constraints as Assert;
+
+#[Assert\Type(Status::class)]
+public Status $status;
+```
+
+Alternatively, enable Symfony Validator's
+[auto-mapping](https://symfony.com/doc/current/validation/auto_mapping.html) on the resource class.
+Auto-mapping generates an implicit `Type` constraint from the PHP type declaration, which is
+sufficient for the 422 promotion to apply.
+
+**What to do (Laravel)**: add a rule for the property in `rules`:
+
+```php
+#[ApiResource(
+    rules: ['status' => 'required']
+)]
+```
+
+Properties that already carry any constraint or rule are unaffected — they continue to produce 422.
+
+For the full rule tables and additional details, see
+[Constraint-Aware 422 for Denormalization Errors](../symfony/validation.md#constraint-aware-422-for-denormalization-errors)
+(Symfony) and the equivalent section in the
+[Laravel validation guide](../laravel/validation.md#constraint-aware-422-for-denormalization-errors).
 
 ### Deprecations
 

@@ -422,6 +422,271 @@ use App\State\BookRepresentationProvider;
 class Book {}
 ```
 
+## Customizing the Doctrine Query via `repositoryMethod` (Symfony only)
+
+When using the built-in Doctrine ORM or MongoDB ODM state providers, you can instruct them to start
+from a custom query builder produced by your entity repository instead of the default
+`createQueryBuilder('o')` / `createAggregationBuilder()` call. This keeps all the standard provider
+behavior (pagination, filters, link handling, identifier WHERE clauses) intact while giving you full
+control over the base query.
+
+Set `repositoryMethod` on the `stateOptions` of the operation:
+
+```php
+<?php
+// api/src/Entity/Product.php
+
+namespace App\Entity;
+
+use ApiPlatform\Doctrine\Orm\State\Options;
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\GetCollection;
+use App\Repository\ProductRepository;
+use Doctrine\ORM\Mapping as ORM;
+
+#[ORM\Entity(repositoryClass: ProductRepository::class)]
+#[ApiResource]
+#[GetCollection(stateOptions: new Options(repositoryMethod: 'findAvailable'))]
+#[Get(stateOptions: new Options(repositoryMethod: 'findAvailable'))]
+class Product
+{
+    #[ORM\Id, ORM\GeneratedValue, ORM\Column]
+    private ?int $id = null;
+
+    #[ORM\Column]
+    public bool $available = true;
+
+    // ...
+}
+```
+
+The repository method must be `public` and return a `Doctrine\ORM\QueryBuilder` for ORM (or a
+`Doctrine\ODM\MongoDB\Aggregation\Builder` for MongoDB ODM):
+
+```php
+<?php
+// api/src/Repository/ProductRepository.php
+
+namespace App\Repository;
+
+use App\Entity\Product;
+use Doctrine\ORM\EntityRepository;
+use Doctrine\ORM\QueryBuilder;
+
+/**
+ * @extends EntityRepository<Product>
+ */
+class ProductRepository extends EntityRepository
+{
+    public function findAvailable(): QueryBuilder
+    {
+        return $this->createQueryBuilder('o')
+            ->andWhere('o.available = :available')
+            ->setParameter('available', true);
+    }
+}
+```
+
+The providers apply identifier resolution (for item operations), pagination, and filters on top of
+the returned builder. A custom root alias is supported — the link handler reads the builder's root
+alias automatically.
+
+If the method does not exist on the repository, a `RuntimeException` is thrown:
+`The repository method "ProductRepository::findAvailable" does not exist.`
+
+If the method returns a value that is not the expected builder type, a `RuntimeException` is thrown:
+`The repository method "findAvailable" must return a QueryBuilder instance.`
+
+> [!NOTE] Because the filter applies at the item level too, a `Get` operation using a
+> `repositoryMethod` that filters rows will return a 404 response for any item excluded by that
+> filter.
+
+### GraphQL
+
+`repositoryMethod` works identically for GraphQL queries. Use it on the `ApiResource` or on specific
+GraphQL operations:
+
+```php
+<?php
+// api/src/Entity/Product.php
+
+namespace App\Entity;
+
+use ApiPlatform\Doctrine\Orm\State\Options;
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\GraphQl\Query;
+use ApiPlatform\Metadata\GraphQl\QueryCollection;
+use App\Repository\ProductRepository;
+use Doctrine\ORM\Mapping as ORM;
+
+#[ORM\Entity(repositoryClass: ProductRepository::class)]
+#[ApiResource(
+    stateOptions: new Options(repositoryMethod: 'findAvailable'),
+    graphQlOperations: [
+        new Query(),
+        new QueryCollection(),
+    ]
+)]
+class Product
+{
+    // ...
+}
+```
+
+### Computed Fields
+
+A common use case is adding a computed scalar to each row using `addSelect`. Doctrine then returns
+mixed rows shaped `[0 => $entity, 'fieldAlias' => $scalar]` instead of plain entities. To map the
+scalar back onto the entity, combine `repositoryMethod` with a `processor` on the operation.
+
+A processor only runs on a read operation when `write: true` is set on that operation. Without this
+flag the processor stage is skipped and the raw array rows reach normalization, which produces
+errors such as "Cannot return null for non-nullable field". Set `write: true` explicitly to enable
+the processor.
+
+**REST example:**
+
+```php
+<?php
+// api/src/Repository/CartRepository.php
+
+namespace App\Repository;
+
+use App\Entity\Cart;
+use Doctrine\ORM\EntityRepository;
+use Doctrine\ORM\QueryBuilder;
+
+/**
+ * @extends EntityRepository<Cart>
+ */
+class CartRepository extends EntityRepository
+{
+    public function getCartsWithTotalQuantity(): QueryBuilder
+    {
+        return $this->createQueryBuilder('o')
+            ->leftJoin('o.items', 'items')
+            ->addSelect('COALESCE(SUM(items.quantity), 0) AS totalQuantity')
+            ->addGroupBy('o.id');
+    }
+}
+```
+
+```php
+<?php
+// api/src/Entity/Cart.php
+
+namespace App\Entity;
+
+use ApiPlatform\Doctrine\Orm\State\Options;
+use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\Operation;
+use App\Repository\CartRepository;
+use Doctrine\ORM\Mapping as ORM;
+
+#[ORM\Entity(repositoryClass: CartRepository::class)]
+#[GetCollection(
+    stateOptions: new Options(repositoryMethod: 'getCartsWithTotalQuantity'),
+    processor: [self::class, 'process'],
+    write: true,
+)]
+class Cart
+{
+    public ?int $totalQuantity = null;
+
+    // ...
+
+    public static function process(mixed $data, Operation $operation, array $uriVariables = [], array $context = []): mixed
+    {
+        foreach ($data as &$row) {
+            $cart = $row[0];
+            $cart->totalQuantity = $row['totalQuantity'] ?? 0;
+            $row = $cart;
+        }
+
+        return $data;
+    }
+}
+```
+
+**GraphQL example:**
+
+The same `process` method works for GraphQL. Declare it on the `QueryCollection` operation alongside
+`write: true`:
+
+```php
+<?php
+// api/src/Entity/Cart.php
+
+namespace App\Entity;
+
+use ApiPlatform\Doctrine\Orm\State\Options;
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\GraphQl\Query;
+use ApiPlatform\Metadata\GraphQl\QueryCollection;
+use ApiPlatform\Metadata\Operation;
+use App\Repository\CartRepository;
+use Doctrine\ORM\Mapping as ORM;
+
+#[ORM\Entity(repositoryClass: CartRepository::class)]
+#[ApiResource(
+    stateOptions: new Options(repositoryMethod: 'getCartsWithTotalQuantity'),
+    graphQlOperations: [
+        new Query(),
+        new QueryCollection(
+            processor: [self::class, 'process'],
+            write: true,
+        ),
+    ],
+)]
+#[GetCollection(
+    processor: [self::class, 'process'],
+    write: true,
+)]
+class Cart
+{
+    public ?int $totalQuantity = null;
+
+    // ...
+
+    public static function process(mixed $data, Operation $operation, array $uriVariables = [], array $context = []): mixed
+    {
+        foreach ($data as &$row) {
+            $cart = $row[0];
+            $cart->totalQuantity = $row['totalQuantity'] ?? 0;
+            $row = $cart;
+        }
+
+        return $data;
+    }
+}
+```
+
+With `paginationEnabled: false` the GraphQL query returns a plain list:
+
+```graphql
+{
+    carts {
+        totalQuantity
+    }
+}
+```
+
+With pagination enabled (the default), it returns a Relay connection:
+
+```graphql
+{
+    carts {
+        edges {
+            node {
+                totalQuantity
+            }
+        }
+    }
+}
+```
+
 ## Registering Services Without Autowiring (only for the Symfony variant)
 
 The services in the previous examples are automatically registered because

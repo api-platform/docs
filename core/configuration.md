@@ -68,6 +68,10 @@ api_platform:
     # Enable the docs.
     enable_docs: true
 
+    # Skip response body construction on HEAD requests so collections are not iterated.
+    # Disable to process HEAD identically to GET.
+    enable_head_request_optimization: true
+
     # Enable the data collector and the WebProfilerBundle integration.
     enable_profiler: true
 
@@ -464,6 +468,10 @@ return [
 
     // Enable the docs.
     'enable_docs' => true,
+
+    // Skip response body construction on HEAD requests so collections are not iterated.
+    // Disable to process HEAD identically to GET.
+    'enable_head_request_optimization' => true,
 
     // Enable the data collector and the WebProfilerBundle integration.
     'enable_profiler' => true,

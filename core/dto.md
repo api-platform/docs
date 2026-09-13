@@ -30,6 +30,10 @@ You can map a DTO Resource directly to a Doctrine Entity using stateOptions. Thi
 configures the built-in State Providers and Processors to fetch/persist data using the Entity and
 map it to your Resource (DTO) using the Symfony Object Mapper.
 
+The Doctrine `stateOptions` also support a `repositoryMethod` parameter to start the provider query
+from a custom repository method. See
+[Customizing the Doctrine Query via `repositoryMethod`](state-providers.md#customizing-the-doctrine-query-via-repositorymethod-symfony-only).
+
 > [!WARNING] You must apply the #[Map] attribute to your DTO class. This signals API Platform to use
 > the Object Mapper for transforming data between the Entity and the DTO.
 
