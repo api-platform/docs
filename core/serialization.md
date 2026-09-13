@@ -645,6 +645,110 @@ App\ApiResource\Person:
 
 </code-selector>
 
+### Doctrine Inheritance Relations
+
+Whether a relation is embedded or serialized as an IRI is decided by checking the serialization
+groups declared on the properties of the **related resource class**. When that related class is the
+parent of a Doctrine inheritance hierarchy, a group declared only on a discriminator subclass used
+to be invisible to this check: the relation was always serialized as an IRI, even though the
+concrete object returned at runtime did have a matching property.
+
+Since API Platform 5.0, API Platform also checks the discriminator map for Doctrine ORM `JOINED` and
+`SINGLE_TABLE` inheritance and MongoDB ODM `SINGLE_COLLECTION` inheritance. If any subclass listed
+in the map declares a property in a group that matches the current normalization or denormalization
+context, the relation is embedded as if that group had been declared directly on the parent class.
+
+```php
+<?php
+// api/src/Entity/BarJoined.php
+namespace App\Entity;
+
+use ApiPlatform\Metadata\ApiResource;
+use Doctrine\ORM\Mapping as ORM;
+
+#[ApiResource]
+#[ORM\Entity]
+#[ORM\InheritanceType('JOINED')]
+#[ORM\DiscriminatorColumn(name: 'discr', type: 'string')]
+#[ORM\DiscriminatorMap(['a' => BarJoinedA::class, 'b' => BarJoinedB::class])]
+abstract class BarJoined
+{
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column]
+    private ?int $id = null;
+
+    // ...
+}
+```
+
+```php
+<?php
+// api/src/Entity/BarJoinedA.php
+namespace App\Entity;
+
+use ApiPlatform\Metadata\ApiResource;
+use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Attribute\Groups;
+
+#[ApiResource]
+#[ORM\Entity]
+class BarJoinedA extends BarJoined
+{
+    #[ORM\Column]
+    #[Groups(['foo'])]
+    private ?string $y = null;
+
+    // ...
+}
+```
+
+```php
+<?php
+// api/src/Entity/Foo.php
+namespace App\Entity;
+
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Get;
+use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Attribute\Groups;
+
+#[ApiResource(operations: [new Get(normalizationContext: ['groups' => ['foo']])])]
+#[ORM\Entity]
+class Foo
+{
+    #[ORM\ManyToOne(targetEntity: BarJoined::class)]
+    #[Groups(['foo'])]
+    private ?BarJoined $barJoined = null;
+
+    // ...
+}
+```
+
+`Foo::$barJoined` has the `foo` group, but `BarJoined` (the abstract parent) has no property in that
+group; only its subclass `BarJoinedA` does. Before 5.0, `GET /foos/1` always returned `barJoined` as
+an IRI. Since 5.0, because `BarJoinedA::$y` is in the `foo` group and `BarJoinedA` is part of
+`BarJoined`'s discriminator map, the relation is now embedded:
+
+```json
+{
+    "@id": "/foos/1",
+    "barJoined": {
+        "@type": "BarJoinedA",
+        "y": "y_value"
+    }
+}
+```
+
+This is a behavior change for existing APIs using these Doctrine ORM or MongoDB ODM inheritance
+strategies when a discriminator subclass declares a group also used for normalization or
+denormalization elsewhere: relations that used to serialize as an IRI may now be embedded after
+upgrading to 5.0. The new logic only fills in a link status that is not already decided; it never
+overrides an explicit choice. To keep the pre-5.0 IRI-only behavior, force it explicitly as
+described in
+[Force IRI with relations of the same type](#force-iri-with-relations-of-the-same-type-parentchilds-relations)
+above, for example `#[ApiProperty(readableLink: false, writableLink: false)]` on `Foo::$barJoined`.
+
 ### Plain Identifiers for Symfony
 
 Instead of sending an IRI to set a relation, you may want to send a plain identifier. To do so, you
