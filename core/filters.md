@@ -51,6 +51,19 @@ a new instance:
 - **`PartialSearchFilter`**: For partial string matching (SQL `LIKE %...%`). Supports dot notation
   for nested properties.
     - Usage: `new QueryParameter(filter: PartialSearchFilter::class)`
+- **`StartSearchFilter`**: For prefix matching (`LIKE value%`). Supports dot notation for nested
+  properties. See the [Doctrine Filters documentation](doctrine-filters.md#start-search-filter) for
+  case-sensitivity defaults.
+    - Usage: `new QueryParameter(filter: StartSearchFilter::class)`
+- **`EndSearchFilter`**: For suffix matching (`LIKE %value`). Supports dot notation for nested
+  properties. See the [Doctrine Filters documentation](doctrine-filters.md#end-search-filter) for
+  case-sensitivity defaults.
+    - Usage: `new QueryParameter(filter: EndSearchFilter::class)`
+- **`WordStartSearchFilter`** (Doctrine ORM/ODM only, no Laravel/Eloquent equivalent): Matches
+  fields containing a word that starts with the value. Supports dot notation for nested properties.
+  See the [Doctrine Filters documentation](doctrine-filters.md#word-start-search-filter) for
+  details.
+    - Usage: `new QueryParameter(filter: WordStartSearchFilter::class)`
 - **`IriFilter`**: For filtering by IRIs (e.g., relations). Supports dot notation for nested
   associations.
     - Usage: `new QueryParameter(filter: IriFilter::class)`
@@ -66,8 +79,8 @@ a new instance:
 - **`OrFilter`**: A decorator that forces a filter to combine criteria with `OR` instead of `AND`.
     - Usage:
       `new QueryParameter(filter: new OrFilter(new ExactFilter()), properties: ['name', 'ean'])`
-- **`ChainFilter`** (Doctrine ORM/ODM only): Composes several filters on a single parameter key; each
-  wrapped filter self-selects by the shape of the value. See the
+- **`ChainFilter`** (Doctrine ORM/ODM only): Composes several filters on a single parameter key;
+  each wrapped filter self-selects by the shape of the value. See the
   [Doctrine Filters documentation](doctrine-filters.md#chain-filter) for details.
     - Usage:
       `new QueryParameter(filter: new ChainFilter([new ExactFilter(), new DateFilter()]), property: 'birthdate')`
@@ -131,8 +144,9 @@ Instead of repeating the same parameter configuration on every resource, you can
 default parameters that are automatically applied to all resources. This is done via the `defaults`
 key in your API Platform configuration.
 
-Add a `parameters` map under `defaults` in your API Platform configuration. Each entry maps a
-fully-qualified parameter class name to its options.
+Add a `parameters` map under `defaults` in your API Platform configuration. In Symfony, entries can
+either use the fully-qualified parameter class name as their key, or use a custom name and specify
+the class explicitly with the `class` option.
 
 ```yaml
 # Symfony: api/config/packages/api_platform.yaml
@@ -149,6 +163,30 @@ api_platform:
                 required: false
                 description: "API version"
 ```
+
+To define multiple global parameters using the same parameter class, use named entries with an
+explicit `class`:
+
+```yaml
+# Symfony: api/config/packages/api_platform.yaml
+api_platform:
+    defaults:
+        parameters:
+            api_token:
+                class: ApiPlatform\Metadata\HeaderParameter
+                key: "API-Token"
+                required: true
+                description: "API authentication token"
+
+            request_id:
+                class: ApiPlatform\Metadata\HeaderParameter
+                key: "Request-ID"
+                required: false
+                description: "A unique request identifier"
+```
+
+The name of a named entry is only a configuration identifier. The `key` option defines the parameter
+name exposed at runtime.
 
 ```php
 <?php
@@ -262,10 +300,10 @@ This configuration allows clients to filter events by date ranges using queries 
 - `/events?endDate[lt]=2023-12-31` — events ending before December 31st 2023
 - `/events?startDate[gte]=2023-01-01&endDate[lte]=2023-12-31` — events within a date range
 
-> [!NOTE] This is a plain comparison, distinct from
-> [`DateFilter`](doctrine-filters.md#date-filter): it does not provide per-property `null`
-> management, tolerant handling of invalid or empty values, or the `before`/`after` versus
-> `strictly_before`/`strictly_after` vocabulary. Use `DateFilter` when you need those behaviors.
+> [!NOTE] This is a plain comparison, distinct from [`DateFilter`](doctrine-filters.md#date-filter):
+> it does not provide per-property `null` management, tolerant handling of invalid or empty values,
+> or the `before`/`after` versus `strictly_before`/`strictly_after` vocabulary. Use `DateFilter`
+> when you need those behaviors.
 
 ### Filtering a Single Property
 
@@ -508,6 +546,8 @@ use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\HeaderParameter;
 use ApiPlatform\Metadata\QueryParameter;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\TypeInfo\Type\BuiltinType;
+use Symfony\Component\TypeInfo\TypeIdentifier;
 
 #[ApiResource(operations: [
     new GetCollection(
@@ -520,7 +560,8 @@ use Symfony\Component\Validator\Constraints as Assert;
             'X-Request-ID' => new HeaderParameter(
                 description: 'A unique request identifier.',
                 required: true,
-                constraints: [new Assert\Uuid()]
+                constraints: [new Assert\Uuid()],
+                nativeType: new BuiltinType(typeIdentifier: TypeIdentifier::STRING)
             )
         ]
     )
@@ -530,6 +571,9 @@ class User {}
 
 > [!NOTE] When `castToNativeType` is enabled, API Platform infers type validation from the JSON
 > Schema.
+
+If `constraints` are used then a valid type needs to be passed using `nativeType` named argument.
+Otherwise, the values will be passed as an array to each constraints.
 
 The `ApiPlatform\Validator\Util\ParameterValidationConstraints` trait can be used to automatically
 infer validation constraints from the JSON Schema and OpenAPI definitions of a parameter.
@@ -949,7 +993,7 @@ class User {}
 ## Parameter Security
 
 You can secure individual parameters using Symfony expression language. When a security expression
-evaluates to `false`, the parameter will be ignored and treated as if it wasn't provided.
+evaluates to `false`, a context appropriate `AccessDeniedException` will be thrown.
 
 ```php
 <?php

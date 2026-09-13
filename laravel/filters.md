@@ -147,6 +147,35 @@ As shown above the following search filters are available:
 - `ApiPlatform\Laravel\Eloquent\Filter\StartSearchFilter` queries `LIKE term%`
 - `ApiPlatform\Laravel\Eloquent\Filter\EndSearchFilter` queries `LIKE %term`
 
+`StartSearchFilter` and `EndSearchFilter` are used the same way as `EqualsFilter` above:
+
+```php
+// app/Models/Book.php
+
+use ApiPlatform\Laravel\Eloquent\Filter\EndSearchFilter;
+use ApiPlatform\Laravel\Eloquent\Filter\StartSearchFilter;
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\QueryParameter;
+
+#[ApiResource]
+#[QueryParameter(key: 'titleStartsWith', property: 'title', filter: StartSearchFilter::class)]
+#[QueryParameter(key: 'titleEndsWith', property: 'title', filter: EndSearchFilter::class)]
+class Book extends Model
+{
+}
+```
+
+`/books?titleStartsWith=The` returns every book whose `title` starts with "The", and
+`/books?titleEndsWith=Farm` returns every book whose `title` ends with "Farm". Case sensitivity
+depends on your database collation; neither filter exposes a `caseSensitive` option.
+
+> [!NOTE] Unlike `PartialSearchFilter`, `StartSearchFilter` and `EndSearchFilter` do not support
+> filtering across a relationship using dot notation (for e.g. `author.name`): they only apply to a
+> property of the resource itself.
+
+There is no Eloquent equivalent of the Doctrine ORM/ODM `WordStartSearchFilter` (see
+[Word Start Search Filter](../core/doctrine-filters.md#word-start-search-filter)).
+
 ### Date
 
 The `DateFilter` allows to filter dates with an operator (`eq`, `lt`, `gt`, `lte`, `gte`):

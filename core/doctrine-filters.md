@@ -136,14 +136,20 @@ To add some search filters, choose over this new list:
   notation)
 - [PartialSearchFilter](#partial-search-filter) (filter using a `LIKE %value%`; supports nested
   properties via dot notation)
+- [StartSearchFilter](#start-search-filter) (filter using a `LIKE value%`; supports nested
+  properties via dot notation)
+- [EndSearchFilter](#end-search-filter) (filter using a `LIKE %value`; supports nested properties
+  via dot notation)
+- [WordStartSearchFilter](#word-start-search-filter) (filter on a word boundary prefix, matching
+  fields containing a word that starts with the value; supports nested properties via dot notation)
 - [ComparisonFilter](#comparison-filter) (filter with comparison operators `gt`, `gte`, `lt`, `lte`,
   `ne`; replaces `NumericFilter` and `RangeFilter` — it is not a replacement for `DateFilter`, which
   is kept)
 - [FreeTextQueryFilter](#free-text-query-filter) (allows you to apply multiple filters to multiple
   properties of a resource at the same time, using a single parameter in the URL)
 - [OrFilter](#or-filter) (apply a filter using `orWhere` instead of `andWhere`)
-- [ChainFilter](#chain-filter) (compose several filters on a single parameter key, each self-selecting
-  by value shape)
+- [ChainFilter](#chain-filter) (compose several filters on a single parameter key, each
+  self-selecting by value shape)
 
 ### SearchFilter
 
@@ -315,6 +321,164 @@ It will return all chickens where the name contains the substring _tom_.
 `PartialSearchFilter` supports searching on nested properties using dot notation in the `property`
 argument. See [Filtering on Nested Properties](#filtering-on-nested-properties).
 
+## Start Search Filter
+
+The start search filter allows filtering a resource by the beginning of a string property.
+
+Syntax: `?property=value`
+
+The value can take any scalar value or array of values.
+
+This filter can be used on the ApiResource attribute or in the operation attribute, for e.g., the
+`#GetCollection()` attribute:
+
+```php
+// api/src/ApiResource/Chicken.php
+
+#[GetCollection(
+    parameters: [
+        'name' => new QueryParameter(filter: new StartSearchFilter()),
+    ],
+)]
+class Chicken
+{
+    //...
+}
+```
+
+Given that the endpoint is `/chickens`, you can filter chickens by name with the following query:
+`/chikens?name=Ger`.
+
+It will return all chickens whose name starts with the substring _Ger_ (for e.g. "Gertrude").
+
+> [!NOTE] The generated query and the default case sensitivity differ between Doctrine ORM and
+> MongoDB ODM:
+>
+> - **Doctrine ORM** builds a `LOWER(field) LIKE LOWER('value%')` clause and is **case-insensitive
+>   by default**. Pass `new StartSearchFilter(caseSensitive: true)` for a case-sensitive
+>   `field LIKE 'value%'` match.
+> - **MongoDB ODM** matches with a regular expression anchored at the start of the string (`^value`)
+>   and is **case-sensitive by default**. Pass `new StartSearchFilter(caseSensitive: false)` to add
+>   the case-insensitive `i` regex flag.
+
+`StartSearchFilter` supports filtering on nested properties using dot notation in the `property`
+argument. See [Filtering on Nested Properties](#filtering-on-nested-properties).
+
+This filter replaces the `start` strategy of the deprecated `SearchFilter`
+(`#[ApiFilter(SearchFilter::class, strategy: 'start')]`). See the
+[migration guide](#migrating-from-apifilter-to-queryparameter).
+
+> [!NOTE] A Laravel/Eloquent equivalent also exists:
+> [`ApiPlatform\Laravel\Eloquent\Filter\StartSearchFilter`](../laravel/filters.md#text). It always
+> generates a `LIKE 'value%'` clause (case sensitivity depends on your database collation) and does
+> not support nested/relation properties.
+
+## End Search Filter
+
+The end search filter allows filtering a resource by the end of a string property.
+
+Syntax: `?property=value`
+
+The value can take any scalar value or array of values.
+
+This filter can be used on the ApiResource attribute or in the operation attribute, for e.g., the
+`#GetCollection()` attribute:
+
+```php
+// api/src/ApiResource/Chicken.php
+
+#[GetCollection(
+    parameters: [
+        'name' => new QueryParameter(filter: new EndSearchFilter()),
+    ],
+)]
+class Chicken
+{
+    //...
+}
+```
+
+Given that the endpoint is `/chickens`, you can filter chickens by name with the following query:
+`/chikens?name=trude`.
+
+It will return all chickens whose name ends with the substring _trude_ (for e.g. "Gertrude").
+
+> [!NOTE] The generated query and the default case sensitivity differ between Doctrine ORM and
+> MongoDB ODM:
+>
+> - **Doctrine ORM** builds a `LOWER(field) LIKE LOWER('%value')` clause and is **case-insensitive
+>   by default**. Pass `new EndSearchFilter(caseSensitive: true)` for a case-sensitive
+>   `field LIKE '%value'` match.
+> - **MongoDB ODM** matches with a regular expression anchored at the end of the string (`value$`)
+>   and is **case-sensitive by default**. Pass `new EndSearchFilter(caseSensitive: false)` to add
+>   the case-insensitive `i` regex flag.
+
+`EndSearchFilter` supports filtering on nested properties using dot notation in the `property`
+argument. See [Filtering on Nested Properties](#filtering-on-nested-properties).
+
+This filter replaces the `end` strategy of the deprecated `SearchFilter`
+(`#[ApiFilter(SearchFilter::class, strategy: 'end')]`). See the
+[migration guide](#migrating-from-apifilter-to-queryparameter).
+
+> [!NOTE] A Laravel/Eloquent equivalent also exists:
+> [`ApiPlatform\Laravel\Eloquent\Filter\EndSearchFilter`](../laravel/filters.md#text). It always
+> generates a `LIKE '%value'` clause (case sensitivity depends on your database collation) and does
+> not support nested/relation properties.
+
+## Word Start Search Filter
+
+The word start search filter allows filtering a resource by fields that contain a word starting with
+the given value, matching either the beginning of the string or a word boundary further inside it.
+
+Syntax: `?property=value`
+
+The value can take any scalar value or array of values.
+
+This filter can be used on the ApiResource attribute or in the operation attribute, for e.g., the
+`#GetCollection()` attribute:
+
+```php
+// api/src/ApiResource/Chicken.php
+
+#[GetCollection(
+    parameters: [
+        'name' => new QueryParameter(filter: new WordStartSearchFilter()),
+    ],
+)]
+class Chicken
+{
+    //...
+}
+```
+
+Given that the endpoint is `/chickens`, you can filter chickens by name with the following query:
+`/chikens?name=Coq`.
+
+It matches "Coquette" (the value starts the string) and "Farm Coquette" (the value starts a word
+that is not the first one), but not "Silkycoquette" (there, `coq` is inside the word
+"silkycoquette", not at the start of a word).
+
+> [!NOTE] The generated query, and the exact word-boundary semantics, differ between Doctrine ORM
+> and MongoDB ODM:
+>
+> - **Doctrine ORM** builds `field LIKE 'value%' OR field LIKE '% value%'` (word boundaries are
+>   recognized only on a literal ASCII space) and is **case-insensitive by default** (via
+>   `LOWER()`). Pass `new WordStartSearchFilter(caseSensitive: true)` for a case-sensitive match.
+> - **MongoDB ODM** matches with the regular expression `(^value|\svalue)` — the value at the start
+>   of the string, or preceded by any whitespace character (space, tab, newline, not only a plain
+>   space) — and is **case-sensitive by default**. Pass
+>   `new WordStartSearchFilter(caseSensitive: false)` to add the case-insensitive `i` regex flag.
+
+`WordStartSearchFilter` supports filtering on nested properties using dot notation in the `property`
+argument. See [Filtering on Nested Properties](#filtering-on-nested-properties).
+
+This filter replaces the `word_start` strategy of the deprecated `SearchFilter`
+(`#[ApiFilter(SearchFilter::class, strategy: 'word_start')]`). See the
+[migration guide](#migrating-from-apifilter-to-queryparameter).
+
+> [!NOTE] There is no Laravel/Eloquent equivalent of `WordStartSearchFilter`: the Laravel package
+> only ships `PartialSearchFilter`, `StartSearchFilter`, and `EndSearchFilter`.
+
 ## Free Text Query Filter
 
 The free text query filter allows filtering allows you to apply a single filter across a list of
@@ -356,6 +520,50 @@ This request will return all chickens where:
 - the `ean` is exactly "FR123456".
 
 For the `OR` option refer to the [OrFilter](#or-filter).
+
+### Using a Different Filter per Property
+
+The constructor also accepts an `array<string, FilterInterface>` map instead of a single shared
+filter, so a single free-text parameter can apply a **different** filter strategy to each property.
+This is available identically for Doctrine ORM and MongoDB ODM.
+
+```php
+// api/src/ApiResource/Book.php
+
+#[GetCollection(
+    parameters: [
+        'q' => new QueryParameter(
+            filter: new FreeTextQueryFilter([
+                'title' => new PartialSearchFilter(),
+                'isbn' => new ExactFilter(),
+            ]),
+        ),
+    ],
+)]
+class Book
+{
+    //...
+}
+```
+
+Given that the endpoint is `/books`, the query `/books?q=vin` will return all books where:
+
+- the `title` contains the substring "vin"
+- **AND**
+- the `isbn` is exactly "vin".
+
+As with the single-filter form, properties are combined with `AND` by default; wrap the whole
+`FreeTextQueryFilter` in [`OrFilter`](#or-filter) to combine them with `OR` instead — this still
+works when `filter` is a map, since `OrFilter` only changes how the outer `FreeTextQueryFilter` call
+combines its results, not which per-property filter is used.
+
+When `filter` is a map, the `properties` option is not required: it defaults to the map's keys
+(`['title', 'isbn']` above). Pass `properties` explicitly only to restrict the search to a subset of
+the map's keys.
+
+> [!NOTE] A property listed in `properties` that has no matching entry in the `filter` map (and,
+> symmetrically, a map entry not listed in `properties`) is silently skipped: no filtering criteria
+> is added for it, it neither restricts nor is required by the resulting query.
 
 ## Or Filter
 
@@ -565,12 +773,12 @@ parameter key, one per operator. For a parameter named `price`, the generated pa
 ## Date Filter
 
 > [!NOTE] `DateFilter` is a kept filter: there is no modern replacement for it.
-> [`ComparisonFilter`](#comparison-filter) only performs plain `gt`/`gte`/`lt`/`lte`/`ne` comparisons
-> and does not replicate `DateFilter`'s per-property [`null` management](#managing-null-values), its
-> automatic `\DateTime`/`\DateTimeImmutable` binding based on the Doctrine column type, its tolerant
-> handling of invalid or empty date values, or its inclusive `before`/`after` versus exclusive
-> `strictly_before`/`strictly_after` URL vocabulary. Keep `DateFilter` and declare it through a
-> `QueryParameter`.
+> [`ComparisonFilter`](#comparison-filter) only performs plain `gt`/`gte`/`lt`/`lte`/`ne`
+> comparisons and does not replicate `DateFilter`'s per-property
+> [`null` management](#managing-null-values), its automatic `\DateTime`/`\DateTimeImmutable` binding
+> based on the Doctrine column type, its tolerant handling of invalid or empty date values, or its
+> inclusive `before`/`after` versus exclusive `strictly_before`/`strictly_after` URL vocabulary.
+> Keep `DateFilter` and declare it through a `QueryParameter`.
 
 The date filter allows filtering a collection by date intervals.
 
@@ -608,8 +816,8 @@ class Offer
 > [!NOTE] Instantiating a legacy filter with `new` (e.g. `new DateFilter()`) directly inside a
 > `QueryParameter` logs a cosmetic `ManagerRegistry must be initialized before accessing it.` ALERT
 > at cache warmup — filtering still works correctly. To silence it, reference the filter by its
-> service id (a string) instead of an inline object, or wrap it in a
-> [`ChainFilter`](#chain-filter), which suppresses the warmup call. See
+> service id (a string) instead of an inline object, or wrap it in a [`ChainFilter`](#chain-filter),
+> which suppresses the warmup call. See
 > [issue #7361](https://github.com/api-platform/core/issues/7361).
 >
 > For other syntaxes, for e.g., if you want to new syntax with the ApiResource attribute take a look
@@ -749,10 +957,9 @@ class Offer
 `ChainFilter` is a decorator that composes several filters on a single query parameter key. Each
 wrapped filter self-selects by the shape of the incoming value: `ComparisonFilter` and `DateFilter`
 ignore plain scalar values (they only react to their operator-map syntax, e.g. `[gt]`/`[lt]` or
-`[before]`/`[after]`), while `ExactFilter` and `PartialSearchFilter` ignore operator-map arrays. This
-lets you combine, for
-instance, an exact match and a full `DateFilter` on the same property without changing the URL
-vocabulary of either.
+`[before]`/`[after]`), while `ExactFilter` and `PartialSearchFilter` ignore operator-map arrays.
+This lets you combine, for instance, an exact match and a full `DateFilter` on the same property
+without changing the URL vocabulary of either.
 
 The canonical use case is adding exact-match filtering to a date property while keeping
 `DateFilter`'s null management and `before`/`after`/`strictly_before`/`strictly_after` semantics
@@ -799,8 +1006,8 @@ Given that the collection endpoint is `/people`, both of the following queries w
 merges the OpenAPI parameters documented by every wrapped filter. Because it manages this injection
 itself, wrapping a legacy filter in a `ChainFilter` also suppresses the cosmetic
 `ManagerRegistry must be initialized before accessing it.` ALERT described in the
-[#7361 note](#date-filter-using-the-queryparameter-syntax-recommended) — it is a valid alternative to
-referencing the filter by service id when you need to compose it with another filter on the same
+[#7361 note](#date-filter-using-the-queryparameter-syntax-recommended) — it is a valid alternative
+to referencing the filter by service id when you need to compose it with another filter on the same
 key.
 
 ## Boolean Filter
@@ -1406,17 +1613,20 @@ The following table shows how to replace each legacy filter. All modern replacem
 for both Doctrine ORM (`ApiPlatform\Doctrine\Orm\Filter\*`) and MongoDB ODM
 (`ApiPlatform\Doctrine\Odm\Filter\*`).
 
-| Legacy filter (`AbstractFilter`)                            | Modern replacement                                                                                            |
-| ----------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------- |
-| `SearchFilter` (exact strategy)                             | [`ExactFilter`](#exact-filter)                                                                                |
-| `SearchFilter` (partial, start, end, word_start strategies) | [`PartialSearchFilter`](#partial-search-filter)                                                               |
-| `SearchFilter` (relations / IRI matching)                   | [`IriFilter`](#iri-filter)                                                                                    |
-| `BooleanFilter`                                             | [`ExactFilter`](#exact-filter)                                                                                |
-| `NumericFilter`                                             | [`ExactFilter`](#exact-filter) (exact) or [`ComparisonFilter(new ExactFilter())`](#comparison-filter) (range) |
-| `OrderFilter`                                               | [`SortFilter`](#sort-filter)                                                                                  |
-| `DateFilter`                                                | Kept — declare it through a `QueryParameter`, same class, same `[before]`/`[after]` URL syntax (drop-in)      |
-| `RangeFilter`                                               | Kept — declare it through a `QueryParameter`, same class, same `[between]` URL syntax (drop-in)               |
-| `ExistsFilter`                                              | Kept — declare it through a `QueryParameter`, same class (drop-in)                                            |
+| Legacy filter (`AbstractFilter`)          | Modern replacement                                                                                            |
+| ----------------------------------------- | ------------------------------------------------------------------------------------------------------------- |
+| `SearchFilter` (exact strategy)           | [`ExactFilter`](#exact-filter)                                                                                |
+| `SearchFilter` (partial strategy)         | [`PartialSearchFilter`](#partial-search-filter)                                                               |
+| `SearchFilter` (start strategy)           | [`StartSearchFilter`](#start-search-filter)                                                                   |
+| `SearchFilter` (end strategy)             | [`EndSearchFilter`](#end-search-filter)                                                                       |
+| `SearchFilter` (word_start strategy)      | [`WordStartSearchFilter`](#word-start-search-filter)                                                          |
+| `SearchFilter` (relations / IRI matching) | [`IriFilter`](#iri-filter)                                                                                    |
+| `BooleanFilter`                           | [`ExactFilter`](#exact-filter)                                                                                |
+| `NumericFilter`                           | [`ExactFilter`](#exact-filter) (exact) or [`ComparisonFilter(new ExactFilter())`](#comparison-filter) (range) |
+| `OrderFilter`                             | [`SortFilter`](#sort-filter)                                                                                  |
+| `DateFilter`                              | Kept — declare it through a `QueryParameter`, same class, same `[before]`/`[after]` URL syntax (drop-in)      |
+| `RangeFilter`                             | Kept — declare it through a `QueryParameter`, same class, same `[between]` URL syntax (drop-in)               |
+| `ExistsFilter`                            | Kept — declare it through a `QueryParameter`, same class (drop-in)                                            |
 
 There are two kinds of migration:
 
@@ -1645,7 +1855,7 @@ Multiple parameters targeting the same relation path share the same JOIN (ORM) o
 ### Nested Properties with the Legacy ApiFilter Syntax (deprecated)
 
 > [!WARNING] The legacy method using the `ApiFilter` attribute is **deprecated** and scheduled for
-> **removal** in API Platform **5.0**. We strongly recommend migrating to the new `QueryParameter`
+> **removal** in API Platform **6.0**. We strongly recommend migrating to the new `QueryParameter`
 > syntax described above.
 
 For legacy code, the built-in filters that extend `AbstractFilter` support nested properties using
@@ -1711,7 +1921,7 @@ The above allows you to find offers by their respective product's color:
 ## Enabling a Filter for All Properties of a Resource
 
 > [!WARNING] The legacy method using the `ApiFilter` attribute is **deprecated** and scheduled for
-> **removal** in API Platform **5.0**. We strongly recommend migrating to the new `QueryParameter`
+> **removal** in API Platform **6.0**. We strongly recommend migrating to the new `QueryParameter`
 > syntax, which is detailed in the [Introduction](#introduction). You can use the `:property`
 > placeholder instead and it is recommended to use a filter for each type of data you are filtering.
 
@@ -2077,7 +2287,7 @@ use Doctrine\ORM\QueryBuilder;
 
 class MyCustomFilter implements FilterInterface
 {
-    use BackwardCompatibleFilterDescriptionTrait; // Here for backward compatibility, keep it until 5.0.
+    use BackwardCompatibleFilterDescriptionTrait; // Here for backward compatibility, keep it until 6.0.
 
     public function apply(QueryBuilder $queryBuilder, QueryNameGeneratorInterface $queryNameGenerator, string $resourceClass, ?Operation $operation = null, array $context = []): void
     {
@@ -2097,6 +2307,12 @@ class MyCustomFilter implements FilterInterface
     }
 }
 ```
+
+`BackwardCompatibleFilterDescriptionTrait` supplies a `getDescription()` method that returns an
+empty array, satisfying the legacy `FilterInterface::getDescription()` requirement without you
+having to implement it by hand. It lets a custom filter keep working with the deprecated filter
+chain while you migrate it to `#[QueryParameter]`, and it will be removed in API Platform 6.0
+together with `getDescription()` itself.
 
 #### Implementing a Custom ORM Filter
 
@@ -2124,7 +2340,7 @@ use Doctrine\ORM\QueryBuilder;
 
 class MonthFilter implements FilterInterface
 {
-    use BackwardCompatibleFilterDescriptionTrait; // Here for backward compatibility, keep it until 5.0.
+    use BackwardCompatibleFilterDescriptionTrait; // Here for backward compatibility, keep it until 6.0.
 
     public function apply(QueryBuilder $queryBuilder, QueryNameGeneratorInterface $queryNameGenerator, string $resourceClass, ?Operation $operation = null, array $context = []): void
     {
@@ -2368,7 +2584,7 @@ use Doctrine\ODM\MongoDB\Aggregation\Builder;
 
 class MonthFilter implements FilterInterface
 {
-    use BackwardCompatibleFilterDescriptionTrait; // Here for backward compatibility, keep it until 5.0.
+    use BackwardCompatibleFilterDescriptionTrait; // Here for backward compatibility, keep it until 6.0.
 
     public function apply(Builder $aggregationBuilder, string $resourceClass, ?Operation $operation = null, array &$context = []): void
     {
@@ -2410,7 +2626,7 @@ use Doctrine\ODM\MongoDB\Aggregation\Builder;
 
 class MonthFilter implements FilterInterface
 {
-    use BackwardCompatibleFilterDescriptionTrait; // Here for backward compatibility, keep it until 5.0.
+    use BackwardCompatibleFilterDescriptionTrait; // Here for backward compatibility, keep it until 6.0.
 
     public function apply(Builder $aggregationBuilder, string $resourceClass, ?Operation $operation = null, array &$context = []): void
     {
