@@ -8,14 +8,16 @@ For details on enabling formats, see [content negotiation](content-negotiation.m
 
 ## Entity Identifiers as Resource IDs
 
-We recommend configuring API Platform to use entity identifiers as the `id` field of JSON:API
-resource objects. This will become the default in 5.x:
+Since API Platform 5.0, entity identifiers are used as the `id` field of JSON:API resource objects
+by default (`use_iri_as_id` defaults to `false`). If you are upgrading from an earlier version and
+relied on the previous default (the IRI as the JSON:API `id`), see the
+[upgrade guide](upgrade-guide.md) for the migration path.
 
 ```yaml
 # config/packages/api_platform.yaml
 api_platform:
     jsonapi:
-        use_iri_as_id: false
+        use_iri_as_id: false # the default since API Platform 5.0
 ```
 
 With this configuration, the JSON:API `id` field contains the entity identifier (e.g., `"10"`)
