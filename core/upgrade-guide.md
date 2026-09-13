@@ -1,5 +1,260 @@
 # Upgrade Guide
 
+## API Platform 4.4 to 5.0
+
+5.0 removes long-deprecated APIs. Components ship with a `@beta` stability flag (for example
+`"api-platform/state": "^5.0@beta"`) instead of `@alpha`. If your 4.4 install runs without
+deprecation notices, most of this upgrade is a no-op; the sections below cover the changes that are
+not announced by a 4.4 deprecation.
+
+### API Platform 5.0 Breaking Changes
+
+#### JSON:API `use_iri_as_id` Now Defaults to `false`
+
+The default announced by the 4.4 deprecation now applies: not setting
+`api_platform.jsonapi.use_iri_as_id` explicitly resolves to `false` instead of `true`. The JSON:API
+`data.id` member carries the resource identifier and the IRI moves to `data.links.self`.
+
+**Before (4.x default, `use_iri_as_id: true`)**:
+
+```json
+{
+    "data": {
+        "id": "/dummies/10",
+        "type": "Dummy",
+        "attributes": {
+            "name": "Dummy #10"
+        }
+    }
+}
+```
+
+**After (5.0 default, `use_iri_as_id: false`)**:
+
+```json
+{
+    "data": {
+        "id": "10",
+        "type": "Dummy",
+        "links": {
+            "self": "/dummies/10"
+        },
+        "attributes": {
+            "name": "Dummy #10"
+        }
+    }
+}
+```
+
+To keep the previous payload, set the option explicitly back to `true`.
+
+**Symfony**:
+
+```yaml
+# api/config/packages/api_platform.yaml
+api_platform:
+    jsonapi:
+        use_iri_as_id: true
+```
+
+**Laravel**:
+
+```php
+// config/api-platform.php
+return [
+    'jsonapi' => [
+        'use_iri_as_id' => true,
+    ],
+];
+```
+
+See [JSON:API](jsonapi.md#entity-identifiers-as-resource-ids) for the full behavior, including
+composite identifiers and resources without a standalone item endpoint.
+
+#### `DeserializeProvider` No Longer Accepts a Translator
+
+`ApiPlatform\State\Provider\DeserializeProvider` drops the
+`Symfony\Contracts\Translation\TranslatorInterface` fourth constructor argument that was deprecated
+in 4.4. `DenormalizationViolationFactoryInterface`, previously the fifth argument, moves to the
+fourth position:
+
+```php
+public function __construct(
+    ?ProviderInterface $decorated,
+    SerializerInterface $serializer,
+    SerializerContextBuilderInterface $serializerContextBuilder,
+    ?DenormalizationViolationFactoryInterface $violationFactory = null,
+)
+```
+
+**Who is affected**: anyone constructing `DeserializeProvider` by hand, or overriding the
+`api_platform.state_provider.deserialize` service definition with a `TranslatorInterface` argument.
+Translation of denormalization violations is entirely handled by
+`DenormalizationViolationFactoryInterface` since 4.4; drop the translator argument and shift any
+positional `$violationFactory` argument one position to the left.
+
+`api-platform/state` no longer requires `symfony/translation-contracts`.
+
+#### Deprecated APIs Removed
+
+The following long-deprecated APIs are removed:
+
+- **Configuration keys** — these Symfony bundle options no longer exist; remove them from
+  `config/packages/api_platform.yaml`. The [configuration reference](configuration.md) lists the
+  current options:
+
+    | Removed key                            | Replacement                                                                                                         |
+    | -------------------------------------- | ------------------------------------------------------------------------------------------------------------------- |
+    | `validator.query_parameter_validation` | none — always on                                                                                                    |
+    | `enable_link_security`                 | none — sub-resource link security is always enabled                                                                 |
+    | `resource_class_directories`           | none — `#[ApiResource]` classes are autoconfigured                                                                  |
+    | `graphql.graphql_playground`           | none — was already ignored                                                                                          |
+    | `http_cache.invalidation.varnish_urls` | `http_cache.invalidation.urls` or `scoped_clients`                                                                  |
+    | `http_cache.invalidation.xkey`         | a custom purger, see [HTTP cache invalidation](performance.md#enabling-the-built-in-http-cache-invalidation-system) |
+
+- **`ObjectMapperProcessor`** — `ApiPlatform\State\Processor\ObjectMapperProcessor` is removed. Use
+  `ApiPlatform\State\Processor\ObjectMapperInputProcessor` and
+  `ApiPlatform\State\Processor\ObjectMapperOutputProcessor` instead; see [DTOs](dto.md) for the
+  split responsibilities.
+
+- **The `$distinctFormats` constructor argument** — it is removed from both
+  `ApiPlatform\JsonSchema\DefinitionNameFactory` and `ApiPlatform\JsonSchema\SchemaFactory`. JSON
+  Schema definition names for formats other than `json` and `merge-patch+json` are now always
+  suffixed with the format. If you instantiate `SchemaFactory` positionally, its
+  `$definitionNameFactory` argument moves from the seventh to the sixth position.
+
+- **`ValidationException`'s string-message constructor** — the first constructor argument only
+  accepts a `Symfony\Component\Validator\ConstraintViolationListInterface` now; the
+  `string|ConstraintViolationListInterface` union and the plain-string code path are removed.
+
+- **`ApiTestCase::$alwaysBootKernel` defaulting to `null`** — the property now defaults to `false`
+  (kernel not rebooted between requests if already booted) instead of triggering a deprecation and
+  always booting the kernel. Set it to `true` in your test class if you relied on the implicit
+  always-boot behavior.
+
+- **Automatic short-name deduplication** — the
+  `defaults.extra_properties.deduplicate_resource_short_names` opt-in flag is removed. Resources
+  sharing a `shortName` are now always deduplicated with a numeric suffix (`AttributeResource2`,
+  `Employee3`, …), unconditionally, instead of raising a deprecation when two `#[ApiResource]`
+  attributes shared the same `shortName` without opting in.
+
+- **Explicit `api_assign_object_to_populate` context** — `DeserializeProvider` no longer falls back
+  to computing `SerializerContextBuilderInterface::ASSIGN_OBJECT_TO_POPULATE`
+  (`api_assign_object_to_populate`) from the HTTP method itself; it only assigns the loaded object
+  to the denormalization context's `object_to_populate` when that flag is already set. Symfony's
+  `MainController` and `DeserializeListener`, and Laravel's `ApiPlatformController`, already set it
+  for `POST`, `PATCH`, and non-standard `PUT` before calling the provider, so this only matters if
+  you call `DeserializeProvider::provide()` directly from a custom controller or pipeline.
+
+- **Serializer-aware state providers** — `ApiPlatform\State\SerializerAwareProviderInterface` and
+  `ApiPlatform\State\SerializerAwareProviderTrait` are removed. Inject
+  `Symfony\Component\Serializer\SerializerInterface` through your provider's constructor instead of
+  relying on `setSerializerLocator()`. The internal `DataProviderPass` that performed setter
+  injection for these providers is removed as a consequence.
+
+See [core#8367](https://github.com/api-platform/core/pull/8367) for the full diff.
+
+#### Legacy PropertyInfo Type System Removed
+
+The legacy `symfony/property-info` `Type` system is replaced by `symfony/type-info` throughout:
+
+- `ApiProperty::$builtinTypes`, `ApiProperty::getBuiltinTypes()`, and
+  `ApiProperty::withBuiltinTypes()` are removed. Use `ApiProperty::getNativeType()` /
+  `withNativeType()`, which return a `Symfony\Component\TypeInfo\Type`.
+- GraphQL's `TypeConverterInterface::convertType()` is removed. Implement `convertPhpType()`
+  instead; it takes a `Symfony\Component\TypeInfo\Type` rather than a legacy
+  `Symfony\Component\PropertyInfo\Type`.
+- `ContextAwareTypeBuilderInterface::isCollection(LegacyType $type)` is removed entirely; collection
+  detection is handled internally from the `Type` object.
+
+**Who is affected**: custom `TypeConverterInterface` or `ContextAwareTypeBuilderInterface`
+implementations, and any code reading `ApiProperty::getBuiltinTypes()`.
+
+#### `PropertyAwareFilterInterface::getProperties()` Is Now a Real Interface Method
+
+`getProperties(): ?array` was previously only documented via an `@method` docblock annotation on
+`ApiPlatform\Doctrine\Common\Filter\PropertyAwareFilterInterface` (with the real method commented
+out). It is now declared on the interface. Custom filters implementing
+`PropertyAwareFilterInterface` without a `getProperties()` method now fail with a fatal "must
+implement" error; add the method (or use `PropertyAwareFilterTrait`).
+
+#### JSON:API Error `status` Is Now a String
+
+`ApiPlatform\JsonApi\Serializer\ErrorNormalizer` now always casts the `status` member of a JSON:API
+error object to a string, matching the
+[JSON:API error object spec](https://jsonapi.org/format/#error-objects). Update any client or custom
+normalizer that expects `status` to be an integer.
+
+#### JSON-LD `/contexts/Error` and `/contexts/ConstraintViolationList` Are No Longer Special-Cased
+
+`ApiPlatform\JsonLd\Action\ContextAction::RESERVED_SHORT_NAMES` and the hardcoded base-context
+fallback for the `Error` and `ConstraintViolationList` short names are removed. Since exceptions and
+validation errors have been resources since 3.2, their `@context` is now built through the normal
+per-resource context loop like any other resource. The `/contexts/ConstraintViolationList` route no
+longer has a producer: responses reference `/contexts/ConstraintViolation` (singular) instead.
+
+**Who is affected**: code or tests hardcoding `/contexts/ConstraintViolationList` URLs.
+
+#### `SerializerContextBuilder` No Longer Injects `uri_variables`
+
+`SerializerContextBuilder::createFromRequest()` no longer populates `$context['uri_variables']` from
+the request attributes. The key is still set — but only later in the state pipeline, by
+`SerializeProcessor` and `DeserializeProvider`, which already had the correctly parsed values.
+
+**Who is affected**: custom normalizers reading `$context['uri_variables']` in a context built
+directly from `SerializerContextBuilder::createFromRequest()` outside the standard state pipeline
+(for example, a custom controller that calls it directly). Normalizers invoked through the regular
+provider/processor flow are unaffected — the key is still present by the time normalization runs.
+
+#### `UniqueConstraintViolationException` Maps to 422 by Default
+
+`Doctrine\DBAL\Exception\UniqueConstraintViolationException` is added to the Symfony bundle's
+default `exception_to_status` map, resolving to `422 Unprocessable Entity` (alongside the
+pre-existing `OptimisticLockException => 409 Conflict`). If you previously mapped this exception
+yourself, or relied on it falling through to `500`, review your `exception_to_status` configuration.
+See [Exception to status](errors.md#exception-to-status).
+
+#### Doctrine Filters: `RangeFilter` Deprecated, `ComparisonFilter` Gains `[between]`
+
+`ComparisonFilter` now natively supports `?price[between]=10..100`, covering the full range syntax
+(`[gt]`/`[gte]`/`[lt]`/`[lte]`/`[between]`). `RangeFilter` is deprecated in favor of it and is
+removed in 6.0; `DateFilter` and `ExistsFilter` become standalone classes (they no longer extend
+`AbstractFilter`) with no change to their URL syntax. See
+[Doctrine Filters](doctrine-filters.md#comparison-filter) for the full migration path.
+
+### API Platform 5.0 Deprecations
+
+#### `FilterInterface::getDescription()` Stays Deprecated
+
+`ApiPlatform\Metadata\FilterInterface::getDescription()` was deprecated in 4.2 for removal in 6.0.
+That removal is **deferred to 6.0** and does **not** happen in 5.0 — the method, `#[ApiFilter]`,
+`Operation::$filters`, and the `AbstractFilter` base class all still work in 5.0. Only migrate off
+them when you are ready to keep pace with the 6.0 timeline; see
+[Doctrine Filters](doctrine-filters.md#creating-custom-doctrine-orm-filters) for the modern filter
+interfaces.
+
+### API Platform 5.0 Package Changes
+
+The testing utilities have moved from `api-platform/symfony` to the new `api-platform/test` package.
+Install it as a development dependency:
+
+```console
+composer require --dev api-platform/test:^5.0@beta
+```
+
+Update imports to use the new namespace:
+
+```php
+use ApiPlatform\Test\ApiTestCase;
+```
+
+`ApiPlatform\Symfony\Bundle\Test\ApiTestCase` remains as a deprecated compatibility shim when
+`api-platform/test` is installed, but it emits a deprecation notice. The other testing utilities
+have moved under the same `ApiPlatform\Test` namespace.
+
+The removal of the internal `Request::getContentType()` fallbacks and the Symfony 6 value-resolver
+compatibility interface requires no application changes.
+
 ## API Platform 4.3 to 4.4
 
 4.4 is the last 4.x minor. It ships a single backwards-incompatible change (below); everything else
