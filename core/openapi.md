@@ -1042,6 +1042,45 @@ return [
 ];
 ```
 
+## Serving Swagger UI Under a Content Security Policy
+
+> [!NOTE] This feature is only available with Symfony. You're welcome to contribute the Laravel
+> implementation [on GitHub](https://github.com/api-platform/core).
+
+Swagger UI renders its data and loads its scripts through several inline and external `<script>`
+tags. A strict
+[Content-Security-Policy](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy)
+that forbids `unsafe-inline` blocks every one of them, unless each tag carries the `nonce` your
+policy expects. API Platform doesn't generate or manage that nonce itself: it looks it up and, when
+found, adds the matching `nonce` attribute to every `<script>` tag it renders.
+
+The nonce is resolved in this order:
+
+1. The `_csp_nonce` request attribute. Set it yourself (typically from a request listener that also
+   builds your `Content-Security-Policy` header), and API Platform reuses it as-is.
+2. A Twig `csp_nonce()` function, if one is registered — the convention used by
+   [NelmioSecurityBundle](https://github.com/nelmio/NelmioSecurityBundle)'s CSP extension. It's
+   called with `'script'` as its argument.
+
+If neither is available, no `nonce` attribute is added and the scripts are left as plain
+inline/external tags, so make sure your policy allows them if you don't configure either mechanism.
+
+For example, with NelmioSecurityBundle configured to generate a per-request nonce and to add it to
+your CSP header, Swagger UI's scripts automatically pick up the same value with no extra
+configuration:
+
+```yaml
+# config/packages/nelmio_security.yaml
+nelmio_security:
+    csp:
+        enforce:
+            script-src:
+                - self
+```
+
+> [!NOTE] GraphiQL is served under the same mechanism; see
+> [Serving GraphiQL Under a Content Security Policy](graphql.md#serving-graphiql-under-a-content-security-policy).
+
 ## Info Object
 
 The [info object](https://swagger.io/specification/#info-object) provides metadata about the API

@@ -716,6 +716,90 @@ final class ImportBookProcessor implements ProcessorInterface
 > the resource metadata and in the generated OpenAPI/Hydra documentation, while a request attribute
 > set at runtime is not.
 
+## Setting the Route Matching Priority
+
+Symfony's router matches an incoming URL against every registered route, in order, and stops at the
+first one that fits. When a resource combines a static, custom URI template with the default,
+parameterized one, the static route must be tried first, or it never gets a chance to match. Take a
+`Book` resource that has a default `Get` item operation on `/books/{id}` and a custom
+`GetCollection` operation exposing the "featured" books at `/books/featured`: because
+`/books/featured` also fits the `/books/{id}` pattern (`id` becomes the string `featured`),
+whichever route is registered first wins. If the item operation happens to load before the featured
+one, requests to `/books/featured` are routed to `Get` with `id: 'featured'` instead of reaching the
+intended operation.
+
+The `routePriority` option is available on the standard CRUD HTTP operations: `Get`,
+`GetCollection`, `Post`, `Put`, `Patch`, and `Delete`. It tells the Symfony router which route to
+try first: **the higher the value, the earlier the route is checked**, regardless of the order in
+which operations are declared. It accepts any integer (negative values are allowed to deprioritize a
+route) and defaults to `0` when omitted.
+
+<code-selector>
+
+```php
+<?php
+// api/src/Entity/Book.php
+namespace App\Entity;
+
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\GetCollection;
+
+#[ApiResource(operations: [
+    new Get(uriTemplate: '/books/{id}'),
+    new GetCollection(
+        uriTemplate: '/books/featured',
+        routePriority: 1,
+    ),
+])]
+class Book
+{
+    //...
+}
+```
+
+```yaml
+# api/config/api_platform/resources.yaml
+resources:
+    App\Entity\Book:
+        operations:
+            ApiPlatform\Metadata\Get:
+                uriTemplate: "/books/{id}"
+            ApiPlatform\Metadata\GetCollection:
+                uriTemplate: "/books/featured"
+                routePriority: 1
+```
+
+```xml
+<?xml version="1.0" encoding="UTF-8" ?>
+<!-- api/config/api_platform/resources.xml -->
+
+<resources xmlns="https://api-platform.com/schema/metadata/resources-3.0"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="https://api-platform.com/schema/metadata/resources-3.0
+        https://api-platform.com/schema/metadata/resources-3.0.xsd">
+    <resource class="App\Entity\Book">
+        <operations>
+            <operation class="ApiPlatform\Metadata\Get" uriTemplate="/books/{id}" />
+            <operation class="ApiPlatform\Metadata\GetCollection" uriTemplate="/books/featured" routePriority="1" />
+        </operations>
+    </resource>
+</resources>
+```
+
+</code-selector>
+
+With `routePriority: 1` set on the `/books/featured` operation, its route is now checked before
+`/books/{id}`, so `GET /books/featured` reaches the intended `GetCollection` operation, and every
+other `/books/{id}` request still falls through to `Get`.
+
+> [!NOTE] Do not confuse `routePriority` with the pre-existing `priority` option: `priority` only
+> orders operations within a resource's own operation list (used, for instance, to determine which
+> operation generates a resource's IRI) and sorts ascending — a lower value comes first.
+> `routePriority` controls Symfony route matching order and sorts descending — a higher value is
+> matched first. The two options are unrelated and are intentionally kept separate to avoid this
+> confusion.
+
 ## Prefixing All Routes of All Operations
 
 Sometimes it's also useful to put a whole resource into its own "namespace" regarding the URI. Let's
