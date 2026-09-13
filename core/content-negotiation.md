@@ -420,3 +420,37 @@ API Platform automatically adds two HTTP headers to responses for resources:
 
 > See [LDP §4.2 / Primer notes on Accept-Post](https://www.w3.org/TR/ldp/#Accept-Post) and typical
 > exposure via OPTIONS.
+
+## Content-Type Charset
+
+> [!NOTE] Behavioral change in API Platform 4.4 (core
+> [#8226](https://github.com/api-platform/core/pull/8226)).
+
+Since 4.4, the `; charset=utf-8` parameter is only appended to the `Content-Type` response header
+for media types whose IANA registration actually defines a `charset` parameter: `text/*` types (for
+example `text/html`, `text/csv`, `text/xml`) and `application/xml`. JSON-based media types —
+`application/json`, `application/ld+json`, `application/hal+json`, `application/vnd.api+json`,
+`application/merge-patch+json`, `application/problem+json`, and so on — do not define a `charset`
+parameter (per RFC 8259, and the `+json` structured syntax suffix of RFC 6839) and are always UTF-8,
+so the parameter is no longer added to them.
+
+Before 4.4, `; charset=utf-8` was appended unconditionally to every response, including JSON-based
+formats. For example, for a JSON-LD response:
+
+```diff
+- Content-Type: application/ld+json; charset=utf-8
++ Content-Type: application/ld+json
+```
+
+An XML response is unaffected, as `application/xml` still gets the parameter:
+
+```http
+Content-Type: application/xml; charset=utf-8
+```
+
+> [!WARNING] If a client or a test asserts on the exact `Content-Type` header value for a JSON-based
+> format, it will break after upgrading to 4.4: the `charset=utf-8` suffix is gone. Update those
+> assertions accordingly.
+
+The rule is implemented in `formatContentType()` in
+[`HttpResponseHeadersTrait`](https://github.com/api-platform/core/blob/4.4/src/State/Util/HttpResponseHeadersTrait.php).
