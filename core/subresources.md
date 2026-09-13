@@ -384,11 +384,5 @@ class Company {
 }
 ```
 
-This is currently an experimental feature disabled by default. To enable it please set
-`enable_link_security` to true:
-
-```yaml
-# api/config/packages/api_platform.yaml
-api_platform:
-    enable_link_security: true
-```
+Security on `Link` is always enabled since API Platform 5.0; the previous `enable_link_security`
+flag has been removed and no longer needs to be configured.
