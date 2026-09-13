@@ -687,6 +687,136 @@ With pagination enabled (the default), it returns a Relay connection:
 }
 ```
 
+## Applying Provider Values to URI Variables
+
+A `Link` used in `uriVariables` can declare a `provider`, either a callable (a static method, as
+used for operation-level `provider`) or a service implementing
+`ApiPlatform\State\ParameterProviderInterface`. The value set by the provider remains available on
+the `Parameter`. Since API Platform 5.0, that value also replaces the URI variable used to fetch the
+resource. This lets a provider transform an identifier before the resource lookup happens, for
+example to decode it:
+
+```php
+<?php
+// api/src/Entity/Base64UriVariableDummy.php
+namespace App\Entity;
+
+use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\Link;
+use ApiPlatform\Metadata\Parameter;
+use Doctrine\ORM\Mapping as ORM;
+
+#[ORM\Entity]
+#[Get]
+#[Get(
+    uriTemplate: '/base64_uri_variable_dummies/encoded/{encodedName}',
+    uriVariables: [
+        'encodedName' => new Link(
+            fromClass: self::class,
+            identifiers: ['name'],
+            provider: [self::class, 'decodeName'],
+        ),
+    ],
+)]
+class Base64UriVariableDummy
+{
+    #[ORM\Id, ORM\GeneratedValue, ORM\Column]
+    public ?int $id = null;
+
+    #[ORM\Column]
+    public string $name;
+
+    public static function decodeName(Parameter $parameter, array $parameters = [], array $context = []): void
+    {
+        $parameter->setValue(base64_decode((string) $parameter->getValue(), true));
+    }
+}
+```
+
+`GET /base64_uri_variable_dummies/encoded/QmxpcA==` now queries the entity with `name` equal to
+`Blip`, the decoded value, instead of the raw base64 string: the Doctrine state provider fetches the
+resource using the value the `decodeName` provider set, not the original path segment.
+
+A provider that does not implement
+`ApiPlatform\State\ParameterProvider\PreservesUriVariableInterface` is assumed to transform its
+parameter's value this way, and the result becomes the URI variable used to query the resource. This
+is a behavior change for any custom `Link` provider that used to call `$parameter->setValue()` only
+to communicate a value to a later provider or to a custom state provider/processor without intending
+it to replace the identifier used for the resource lookup: since 5.0, that value is now also used to
+fetch the resource, unless the provider opts out.
+
+### Opting Out with `PreservesUriVariableInterface`
+
+Some providers resolve a URI variable to a whole linked resource instead of transforming an
+identifier, typically to run a security expression against it. For example,
+[`ReadLinkParameterProvider`](filters.md#readlinkparameterprovider) leaves the resolved resource on
+the `Parameter`. Replacing the URI variable with that resource object would break the resource
+lookup, which still expects an identifier. Such a provider must implement
+`PreservesUriVariableInterface` so the original URI variable value is left untouched by default:
+
+```php
+<?php
+
+namespace ApiPlatform\State\ParameterProvider;
+
+use ApiPlatform\Metadata\Parameter;
+
+interface PreservesUriVariableInterface
+{
+    public function preservesUriVariable(Parameter $parameter): bool;
+}
+```
+
+`ReadLinkParameterProvider::preservesUriVariable()` reads the `write_uri_variable` extra property
+(it falls back to a constructor flag when the property is absent), so it preserves the URI variable
+by default. Setting `write_uri_variable: true` on the `Link` opts back into writing: the resolved
+resource then replaces the URI variable, and a custom `provider` on the operation can work directly
+with that resource instead of an identifier:
+
+```php
+<?php
+// api/src/ApiResource/WriteUriVariableLinkResource.php
+namespace App\ApiResource;
+
+use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\Link;
+use ApiPlatform\Metadata\Operation;
+use ApiPlatform\State\ParameterProvider\ReadLinkParameterProvider;
+use App\Entity\Dummy;
+
+#[Get(
+    uriTemplate: '/write_uri_variable_link_resources/{id}',
+    uriVariables: [
+        'id' => new Link(
+            provider: ReadLinkParameterProvider::class,
+            fromClass: Dummy::class,
+            extraProperties: ['write_uri_variable' => true],
+        ),
+    ],
+    provider: [self::class, 'provide'],
+)]
+class WriteUriVariableLinkResource
+{
+    public string $id;
+    public string $dummyName;
+
+    public static function provide(Operation $operation, array $uriVariables = []): self
+    {
+        $resource = new self();
+        $resource->id = '1';
+        // $uriVariables['id'] is the resolved Dummy entity, not its identifier,
+        // because write_uri_variable replaced the URI variable with it.
+        $resource->dummyName = $uriVariables['id']->getName();
+
+        return $resource;
+    }
+}
+```
+
+Without `write_uri_variable: true`, `ReadLinkParameterProvider` still resolves and exposes the
+linked `Dummy` through `$operation->getParameters()->get('id')->getValue()` (useful for a `security`
+expression on the `Link`), but `$uriVariables['id']` stays the raw identifier from the URI.
+
 ## Registering Services Without Autowiring (only for the Symfony variant)
 
 The services in the previous examples are automatically registered because

@@ -33,7 +33,14 @@ to use an [Error Provider](https://api-platform.com/docs/guides/error-provider/)
 
 The decision works like this, if you are using API Platform with Symfony:
 
-1. We look at `exception_to_status` and take one if there's a match
+1. We look at `exception_to_status` and take one if there's a match. By default, this configuration
+   maps the following exceptions (see `addExceptionToStatusSection()` in
+   [`Configuration.php`](https://github.com/api-platform/core/blob/main/src/Symfony/Bundle/DependencyInjection/Configuration.php)):
+    - `Symfony\Component\Serializer\Exception\ExceptionInterface` => 400
+    - `ApiPlatform\Metadata\Exception\InvalidArgumentException` => 400
+    - `Doctrine\ORM\OptimisticLockException` => 409 (Doctrine ORM only)
+    - `Doctrine\DBAL\Exception\UniqueConstraintViolationException` => 422 (Doctrine ORM only, since
+      API Platform 5.0, see [#8478](https://github.com/api-platform/core/pull/8478))
 2. If your exception is a `Symfony\Component\HttpKernel\Exception\HttpExceptionInterface` we get its
    status.
 3. If the exception is a `ApiPlatform\Metadata\Exception\ProblemExceptionInterface` and there is a
@@ -131,9 +138,9 @@ api_platform:
     exception_to_status:
         # The 4 following handlers are registered by default, keep those lines to prevent unexpected side effects
         Symfony\Component\Serializer\Exception\ExceptionInterface: 400 # Use a raw status code (recommended)
-        ApiPlatform\Exception\InvalidArgumentException: !php/const Symfony\Component\HttpFoundation\Response::HTTP_BAD_REQUEST
-        ApiPlatform\ParameterValidator\Exception\ValidationExceptionInterface: 400
-        Doctrine\ORM\OptimisticLockException: 409
+        ApiPlatform\Metadata\Exception\InvalidArgumentException: !php/const Symfony\Component\HttpFoundation\Response::HTTP_BAD_REQUEST
+        Doctrine\ORM\OptimisticLockException: 409 # Doctrine ORM only
+        Doctrine\DBAL\Exception\UniqueConstraintViolationException: !php/const Symfony\Component\HttpFoundation\Response::HTTP_UNPROCESSABLE_ENTITY # Doctrine ORM only, since API Platform 5.0
 
         # Validation exception
         ApiPlatform\Validator\Exception\ValidationException: !php/const Symfony\Component\HttpFoundation\Response::HTTP_UNPROCESSABLE_ENTITY
