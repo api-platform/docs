@@ -117,6 +117,87 @@ resources:
 
 </code-selector>
 
+## Controlling the 404 Response When Data Is Missing
+
+Available since API Platform 4.4.
+
+When the provider returns `null` (no matching entity, or a provider that has nothing to give back
+for this request), API Platform's `ReadProvider` decides whether to throw a `404 Not Found` or to
+let the request through with `null` data. By default, that decision depends on the HTTP method:
+
+- a `POST` operation never throws: creating a resource does not require one to already exist;
+- a `PUT` operation with [`allowCreate`](#upsert-creating-a-resource-with-put) enabled never throws
+  either, since a missing item is exactly the "create it" case of the upsert behavior;
+- every other operation (`GET`, `GetCollection`, `PATCH`, `DELETE`, or a `PUT` without
+  `allowCreate`) throws a `404 Not Found` when the provider returns `null`.
+
+Set the `throwOnNotFound` property to `false` to opt out of this default and let the operation
+proceed with `null` data, or to `true` to force the `404` even on an operation that would not throw
+by default (for instance a `PUT` with `allowCreate: true` for which you still want a strict "must
+already exist" semantics).
+
+A common use case for `throwOnNotFound: false` is an operation whose provider legitimately returns
+`null` as valid data, for example a "current user" or "current cart" endpoint that returns `null`
+when none is set instead of failing:
+
+<code-selector>
+
+```php
+<?php
+// api/src/Entity/Cart.php
+namespace App\Entity;
+
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Get;
+
+#[ApiResource(
+    operations: [
+        new Get(
+            uriTemplate: '/cart/current',
+            provider: CurrentCartProvider::class,
+            throwOnNotFound: false
+        ),
+    ]
+)]
+class Cart
+{
+    // ...
+}
+```
+
+```yaml
+# api/config/api_platform/resources.yaml
+resources:
+    App\Entity\Cart:
+        operations:
+            ApiPlatform\Metadata\Get:
+                uriTemplate: "/cart/current"
+                provider: App\State\CurrentCartProvider
+                throwOnNotFound: false
+```
+
+```xml
+<?xml version="1.0" encoding="UTF-8" ?>
+<!-- api/config/api_platform/resources.xml -->
+<resources xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xmlns="https://api-platform.com/schema/metadata/resources-3.0"
+           xsi:schemaLocation="https://api-platform.com/schema/metadata/resources-3.0
+           https://api-platform.com/schema/metadata/resources-3.0.xsd">
+    <resource class="App\Entity\Cart">
+        <operations>
+            <operation class="ApiPlatform\Metadata\Get" uriTemplate="/cart/current"
+                       provider="App\State\CurrentCartProvider" throwOnNotFound="false" />
+        </operations>
+    </resource>
+</resources>
+```
+
+</code-selector>
+
+With `throwOnNotFound: false`, the `null` value reaches the rest of the pipeline (normalization,
+custom processors, and so on) instead of interrupting the request with an exception, so the
+controller and later stages must be prepared to handle a `null` resource.
+
 ## Enabling and Disabling Operations
 
 If no operation is specified, all default CRUD operations are automatically registered. It is also
@@ -427,6 +508,52 @@ resources:
 ```
 
 </code-selector>
+
+## Setting the Response Status Code at Runtime
+
+Available since API Platform 4.4.
+
+The `status` option shown above is static: it is the right tool when the response code for an
+operation is fixed and known when you configure it. Sometimes, though, the status code can only be
+decided while the request is being handled, for example a state processor that returns
+`202 Accepted` when a task is queued for later processing but `200 OK` when it completes
+synchronously.
+
+For this case, `RespondProcessor` reads a `_api_response_status` request attribute before falling
+back to the operation's static `status` (or to the framework default). Set it from a custom state
+processor to override the status code for the current request only:
+
+```php
+<?php
+// api/src/State/ImportBookProcessor.php
+namespace App\State;
+
+use ApiPlatform\Metadata\Operation;
+use ApiPlatform\State\ProcessorInterface;
+use Symfony\Component\HttpFoundation\Response;
+
+final class ImportBookProcessor implements ProcessorInterface
+{
+    public function process(mixed $data, Operation $operation, array $uriVariables = [], array $context = []): mixed
+    {
+        $request = $context['request'];
+
+        if ($this->isQueuedForAsyncImport($data)) {
+            $request->attributes->set('_api_response_status', Response::HTTP_ACCEPTED);
+        }
+
+        // ... persist $data, return it or a DTO
+
+        return $data;
+    }
+}
+```
+
+> [!NOTE] The `_api_response_status` attribute always wins over the operation's `status` option, so
+> use it only when the code truly depends on runtime conditions. When the status is fixed per
+> operation, the static `status` option documented above remains the right tool: it is visible in
+> the resource metadata and in the generated OpenAPI/Hydra documentation, while a request attribute
+> set at runtime is not.
 
 ## Prefixing All Routes of All Operations
 
