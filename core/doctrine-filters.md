@@ -1529,7 +1529,7 @@ Multiple parameters targeting the same relation path share the same JOIN (ORM) o
 ### Nested Properties with the Legacy ApiFilter Syntax (deprecated)
 
 > [!WARNING] The legacy method using the `ApiFilter` attribute is **deprecated** and scheduled for
-> **removal** in API Platform **5.0**. We strongly recommend migrating to the new `QueryParameter`
+> **removal** in API Platform **6.0**. We strongly recommend migrating to the new `QueryParameter`
 > syntax described above.
 
 For legacy code, the built-in filters that extend `AbstractFilter` support nested properties using
@@ -1595,7 +1595,7 @@ The above allows you to find offers by their respective product's color:
 ## Enabling a Filter for All Properties of a Resource
 
 > [!WARNING] The legacy method using the `ApiFilter` attribute is **deprecated** and scheduled for
-> **removal** in API Platform **5.0**. We strongly recommend migrating to the new `QueryParameter`
+> **removal** in API Platform **6.0**. We strongly recommend migrating to the new `QueryParameter`
 > syntax, which is detailed in the [Introduction](#introduction). You can use the `:property`
 > placeholder instead and it is recommended to use a filter for each type of data you are filtering.
 
@@ -1961,7 +1961,7 @@ use Doctrine\ORM\QueryBuilder;
 
 class MyCustomFilter implements FilterInterface
 {
-    use BackwardCompatibleFilterDescriptionTrait; // Here for backward compatibility, keep it until 5.0.
+    use BackwardCompatibleFilterDescriptionTrait; // Here for backward compatibility, keep it until 6.0.
 
     public function apply(QueryBuilder $queryBuilder, QueryNameGeneratorInterface $queryNameGenerator, string $resourceClass, ?Operation $operation = null, array $context = []): void
     {
@@ -1981,6 +1981,12 @@ class MyCustomFilter implements FilterInterface
     }
 }
 ```
+
+`BackwardCompatibleFilterDescriptionTrait` supplies a `getDescription()` method that returns an
+empty array, satisfying the legacy `FilterInterface::getDescription()` requirement without you
+having to implement it by hand. It lets a custom filter keep working with the deprecated filter
+chain while you migrate it to `#[QueryParameter]`, and it will be removed in API Platform 6.0
+together with `getDescription()` itself.
 
 #### Implementing a Custom ORM Filter
 
@@ -2008,7 +2014,7 @@ use Doctrine\ORM\QueryBuilder;
 
 class MonthFilter implements FilterInterface
 {
-    use BackwardCompatibleFilterDescriptionTrait; // Here for backward compatibility, keep it until 5.0.
+    use BackwardCompatibleFilterDescriptionTrait; // Here for backward compatibility, keep it until 6.0.
 
     public function apply(QueryBuilder $queryBuilder, QueryNameGeneratorInterface $queryNameGenerator, string $resourceClass, ?Operation $operation = null, array $context = []): void
     {
@@ -2252,7 +2258,7 @@ use Doctrine\ODM\MongoDB\Aggregation\Builder;
 
 class MonthFilter implements FilterInterface
 {
-    use BackwardCompatibleFilterDescriptionTrait; // Here for backward compatibility, keep it until 5.0.
+    use BackwardCompatibleFilterDescriptionTrait; // Here for backward compatibility, keep it until 6.0.
 
     public function apply(Builder $aggregationBuilder, string $resourceClass, ?Operation $operation = null, array &$context = []): void
     {
@@ -2294,7 +2300,7 @@ use Doctrine\ODM\MongoDB\Aggregation\Builder;
 
 class MonthFilter implements FilterInterface
 {
-    use BackwardCompatibleFilterDescriptionTrait; // Here for backward compatibility, keep it until 5.0.
+    use BackwardCompatibleFilterDescriptionTrait; // Here for backward compatibility, keep it until 6.0.
 
     public function apply(Builder $aggregationBuilder, string $resourceClass, ?Operation $operation = null, array &$context = []): void
     {
