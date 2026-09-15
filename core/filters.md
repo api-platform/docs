@@ -306,6 +306,50 @@ This configuration allows clients to filter events by date ranges using queries 
 > or the `before`/`after` versus `strictly_before`/`strictly_after` vocabulary. Use `DateFilter`
 > when you need those behaviors.
 
+### Declaring Parameters on Properties
+
+You can also declare parameters directly on entity properties using `#[QueryParameter]` or
+`#[HeaderParameter]` attributes. This keeps your parameter definition close to the property it
+affects:
+
+```php
+<?php
+// api/src/Entity/Book.php
+namespace App\Entity;
+
+use ApiPlatform\Doctrine\Orm\Filter\PartialSearchFilter;
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\HeaderParameter;
+use ApiPlatform\Metadata\Patch;
+use ApiPlatform\Metadata\QueryParameter;
+
+#[ApiResource(
+    operations: [
+        new GetCollection(),
+        new Get(),
+    ],
+)]
+class Book
+{
+    // Applies to all operations
+    #[QueryParameter(key: 'search', filter: new PartialSearchFilter())]
+    private string $title = '';
+
+    // Applies only to GetCollection
+    #[QueryParameter(key: 'name', filter: new PartialSearchFilter(), operations: [new GetCollection()])]
+    public string $name = '';
+
+    // Applies only to GetCollection (Patch is not in the list of operations)
+    #[HeaderParameter(key: 'X-Authorization', operations: [new GetCollection(), new Patch()])]
+    public string $authToken = '';
+}
+```
+
+Parameters declared on properties are automatically applied to all operations on the resource. You
+can restrict a parameter to specific operations using the `operations` argument.
+
 ### Filtering a Single Property
 
 Most of the time, a parameter maps directly to a property on your resource. For example, a
