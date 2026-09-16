@@ -1201,14 +1201,20 @@ instead of the dot (`.`) syntax, e.g.:
 // api/src/Entity/Offer.php
 namespace App\Entity;
 
-use ApiPlatform\Metadata\ApiFilter;
+use ApiPlatform\Doctrine\Orm\Filter\ExactFilter;
+use ApiPlatform\Doctrine\Orm\Filter\SortFilter;
 use ApiPlatform\Metadata\ApiResource;
-use ApiPlatform\Doctrine\Orm\Filter\OrderFilter;
-use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
+use ApiPlatform\Metadata\QueryParameter;
 
-#[ApiResource]
-#[ApiFilter(OrderFilter::class, properties: ['product.releaseDate'])]
-#[ApiFilter(SearchFilter::class, properties: ['product.color' => 'exact'])]
+#[ApiResource(
+    parameters: [
+        'product_releaseDate' => new QueryParameter(
+            filter: new SortFilter(),
+            property: 'product.releaseDate'
+        ),
+        'product_color' => new QueryParameter(filter: new ExactFilter(), property: 'product.color'),
+    ]
+)]
 class Offer
 {
     // ...
@@ -1238,7 +1244,7 @@ Or order your results like:
 
 ```graphql
 {
-    offers(order: [{ product_releaseDate: "DESC" }]) {
+    offers(product_releaseDate: "DESC") {
         edges {
             node {
                 id
@@ -2482,12 +2488,15 @@ For instance, your resource can have properties in camelCase:
 // api/src/Entity/Book.php
 namespace App\Entity;
 
+use ApiPlatform\Doctrine\Orm\Filter\PartialSearchFilter;
 use ApiPlatform\Metadata\ApiResource;
-use ApiPlatform\Metadata\ApiFilter;
-use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
+use ApiPlatform\Metadata\QueryParameter;
 
-#[ApiResource]
-#[ApiFilter(SearchFilter::class, properties: ['publicationDate' => 'partial'])]
+#[ApiResource(
+    parameters: [
+        'publicationDate' => new QueryParameter(filter: new PartialSearchFilter()),
+    ]
+)]
 class Book
 {
     // ...
@@ -2498,7 +2507,7 @@ class Book
 }
 ```
 
-By default, with the search filter, the query to retrieve a collection will be:
+By default, with the partial search filter, the query to retrieve a collection will be:
 
 ```graphql
 {
@@ -2531,6 +2540,9 @@ But if you use the `CamelCaseToSnakeCaseNameConverter`, it will be:
 If you use snake_case, you can wonder how to make the difference between an underscore and the
 separator of the nested fields in the filter names, by default an underscore too.
 
+API Platform builds the GraphQL argument name from the parameter key. It replaces the dot in that
+key with the nesting separator.
+
 For instance if you have this resource:
 
 ```php
@@ -2538,12 +2550,18 @@ For instance if you have this resource:
 // api/src/Entity/Book.php
 namespace App\Entity;
 
+use ApiPlatform\Doctrine\Orm\Filter\ExactFilter;
 use ApiPlatform\Metadata\ApiResource;
-use ApiPlatform\Metadata\ApiFilter;
-use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
+use ApiPlatform\Metadata\QueryParameter;
 
-#[ApiResource]
-#[ApiFilter(SearchFilter::class, properties: ['relatedBooks.title' => 'exact'])]
+#[ApiResource(
+    parameters: [
+        'related_books.title' => new QueryParameter(
+            filter: new ExactFilter(),
+            property: 'relatedBooks.title'
+        ),
+    ]
+)]
 class Book
 {
     // ...
@@ -2557,7 +2575,7 @@ class Book
 }
 ```
 
-You would need to use the search filter like this:
+You would then query the filter like this:
 
 ```graphql
 {

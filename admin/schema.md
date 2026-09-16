@@ -1,20 +1,20 @@
 # Customizing the Schema
 
 Both [`HydraAdmin`](./components.md#hydraadmin) and [`OpenApiAdmin`](./components.md#openapiadmin)
-leverage introspection of the API schema to discover its capabilities, like **filtering** and
+use introspection of the API schema to discover its capabilities, like **filtering** and
 **sorting**.
 
-They also detect wether the API has real-time capabilities using [Mercure](./real-time-mercure.md),
-and automatically enable it if it does.
+They also detect whether the API has real-time capabilities through
+[Mercure](./real-time-mercure.md). When it does, Admin enables real-time updates automatically.
 
-Lastly, API Platform Admin has native support for the popular
-[Schema.org](./schema.md#about-schemaorg) vocabulary, which enables it to automatically use the
-field type matching your data, or display a related resource's name instead of its IRI.
+API Platform Admin also has native support for the popular [Schema.org](./schema.md#about-schemaorg)
+vocabulary. This support lets it automatically use the field type matching your data, or display a
+related resource's name instead of its IRI.
 
 ## Adding Filtering Capabilities
 
-You can add the [`ApiFilter` attribute](../core/filters.md#apifilter-attribute) to an API Platform
-resource to configure a filter on a property.
+You can use the [`QueryParameter` attribute](../core/filters.md#declaring-parameters) on an API
+Platform resource to configure a filter on a property.
 
 For instance, here is how configure filtering on the `id`, `title` and `author` properties of a
 `Book` resource:
@@ -24,18 +24,20 @@ For instance, here is how configure filtering on the `id`, `title` and `author` 
 // api/src/Entity/Book.php
 namespace App\Entity;
 
-use ApiPlatform\Metadata\ApiFilter;
+use ApiPlatform\Doctrine\Orm\Filter\ExactFilter;
+use ApiPlatform\Doctrine\Orm\Filter\PartialSearchFilter;
 use ApiPlatform\Metadata\ApiResource;
-use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
+use ApiPlatform\Metadata\QueryParameter;
 use Doctrine\ORM\Mapping as ORM;
 
-#[ApiResource]
+#[ApiResource(
+    parameters: [
+        'id' => new QueryParameter(filter: new ExactFilter()),
+        'title' => new QueryParameter(filter: new PartialSearchFilter()),
+        'author' => new QueryParameter(filter: new PartialSearchFilter()),
+    ]
+)]
 #[ORM\Entity]
-#[ApiFilter(SearchFilter::class, properties: [
-    'id' => 'exact',
-    'title' => 'ipartial',
-    'author' => 'ipartial'
-])]
 class Book
 {
     // ...
@@ -47,12 +49,12 @@ filter on the selected properties.
 
 ![Filtering on the title property](./images/admin-filter.png)
 
-**Tip:** Learn more about the [`ApiFilter` attribute](../core/filters.md#apifilter-attribute) in the
-core documentation.
+**Tip:** Learn more about the [available filters](../core/filters.md#list-of-available-filters) in
+the core documentation.
 
 ## Adding Sorting Capabilities
 
-You can also use the [`ApiFilter` attribute](../core/filters.md#apifilter-attribute) on an API
+You can also use the [`QueryParameter` attribute](../core/filters.md#declaring-parameters) on an API
 Plaform resource to configure sorting.
 
 For instance, here is how to configure sorting on the `id`, `isbn`, `title`, `author` and
@@ -63,20 +65,24 @@ For instance, here is how to configure sorting on the `id`, `isbn`, `title`, `au
 // api/src/Entity/Book.php
 namespace App\Entity;
 
-use ApiPlatform\Metadata\ApiFilter;
+use ApiPlatform\Doctrine\Orm\Filter\SortFilter;
 use ApiPlatform\Metadata\ApiResource;
-use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
+use ApiPlatform\Metadata\QueryParameter;
 use Doctrine\ORM\Mapping as ORM;
 
-#[ApiResource]
+#[ApiResource(
+    parameters: [
+        'order' => new QueryParameter(filter: new SortFilter(), property: 'id'),
+        'orderIsbn' => new QueryParameter(filter: new SortFilter(), property: 'isbn'),
+        'orderTitle' => new QueryParameter(filter: new SortFilter(), property: 'title'),
+        'orderAuthor' => new QueryParameter(filter: new SortFilter(), property: 'author'),
+        'orderPublicationDate' => new QueryParameter(
+            filter: new SortFilter(),
+            property: 'publicationDate'
+        ),
+    ]
+)]
 #[ORM\Entity]
-#[ApiFilter(OrderFilter::class, properties: [
-    'id' => 'ASC',
-    'isbn' => 'ASC',
-    'title' => 'ASC',
-    'author' => 'ASC',
-    'publicationDate' => 'DESC'
-])]
 class Book
 {
     // ...
@@ -88,7 +94,7 @@ selected columns sortable.
 
 ![Sorting by the title property](./images/admin-sort.png)
 
-**Tip:** Learn more about the [`ApiFilter` attribute](../core/filters.md#apifilter-attribute) in the
+**Tip:** Learn more about the [`SortFilter`](../core/filters.md#list-of-available-filters) in the
 core documentation.
 
 ## Enabling Real-Time Updates
@@ -122,10 +128,10 @@ API Platform Admin has native support for the popular [Schema.org](https://schem
 > Schema.org is a collaborative, community activity with a mission to create, maintain, and promote
 > schemas for structured data on the Internet, on web pages, in email messages, and beyond.
 
-To leverage this capability, your API must use the JSON-LD format and the appropriate Schema.org
-types. The following examples will use [API Platform Core](../core/) to create such API, but keep in
-mind that this feature will work with any JSON-LD API using the Schema.org vocabulary, regardless of
-the used web framework or programming language.
+To use this capability, your API must use the JSON-LD format and the appropriate Schema.org types.
+The following examples use [API Platform Core](../core/) to create such an API. This feature works
+with any JSON-LD API that uses the Schema.org vocabulary, regardless of the web framework or
+programming language.
 
 ## Displaying Related Resource's Name Instead of its IRI
 
@@ -133,8 +139,8 @@ By default, IRIs of related objects are displayed in lists and forms. However, i
 user-friendly to display a string representation of the resource (such as its name) instead of its
 ID.
 
-To configure which property should be shown to represent your entity, map the property containing
-the name of the object with the `https://schema.org/name` type:
+To configure which property represents your entity, map the property that holds the name of the
+object with the `https://schema.org/name` type:
 
 ```php
 // api/src/Entity/Person.php
