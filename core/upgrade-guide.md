@@ -103,6 +103,32 @@ api_platform:
 `ApiPlatform\Symfony\Security\Exception\AccessDeniedException` is deprecated. Use
 `ApiPlatform\Metadata\Exception\AccessDeniedException` instead.
 
+#### Denormalization Moved Out of the Item Normalizers
+
+The item normalizers no longer denormalize. Calling `denormalize()` on one of them triggers a
+deprecation, and the denormalization code moves to a new `ItemDenormalizer` class in the same
+namespace:
+
+| Deprecated denormalization entry point          | Replacement                                       |
+| ----------------------------------------------- | ------------------------------------------------- |
+| `ApiPlatform\Serializer\ItemNormalizer`         | `ApiPlatform\Serializer\ItemDenormalizer`         |
+| `ApiPlatform\JsonLd\Serializer\ItemNormalizer`  | `ApiPlatform\JsonLd\Serializer\ItemDenormalizer`  |
+| `ApiPlatform\JsonApi\Serializer\ItemNormalizer` | `ApiPlatform\JsonApi\Serializer\ItemDenormalizer` |
+| `ApiPlatform\GraphQl\Serializer\ItemNormalizer` | `ApiPlatform\GraphQl\Serializer\ItemDenormalizer` |
+
+This affects you only if you decorate or extend one of these classes to change how API Platform
+reads an incoming payload. If you decorate a normalizer service to alter denormalization, decorate
+the matching denormalizer service instead:
+
+| Format   | Denormalizer service                        |
+| -------- | ------------------------------------------- |
+| Default  | `api_platform.serializer.denormalizer.item` |
+| JSON-LD  | `api_platform.jsonld.denormalizer.item`     |
+| JSON:API | `api_platform.jsonapi.denormalizer.item`    |
+| GraphQL  | `api_platform.graphql.denormalizer.item`    |
+
+Decoration that only changes normalization keeps working without a change.
+
 ## API Platform 4.2 to 4.3
 
 ### Breaking Changes
