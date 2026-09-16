@@ -545,8 +545,8 @@ class Book
 
 To configure your resource to use the cursor-based pagination, select your unique sorted field as
 well as the direction you’ll like the pagination to go via filters and enable the
-`paginationViaCursor` option. Note that for now you have to declare a `RangeFilter` and an
-`OrderFilter` on the property used for the cursor-based pagination.
+`paginationViaCursor` option. Note that for now you have to declare a `RangeFilter` and a
+`SortFilter` on the property used for the cursor-based pagination.
 
 The following configuration also works on a specific operation:
 
@@ -555,19 +555,21 @@ The following configuration also works on a specific operation:
 // api/src/ApiResource/Book.php with Symfony or app/ApiResource/Book.php with Laravel
 namespace App\ApiResource;
 
-use ApiPlatform\Metadata\ApiFilter;
-use ApiPlatform\Metadata\ApiResource;
-use ApiPlatform\Doctrine\Odm\Filter\OrderFilter;
 use ApiPlatform\Doctrine\Odm\Filter\RangeFilter;
+use ApiPlatform\Doctrine\Odm\Filter\SortFilter;
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\QueryParameter;
 
 #[ApiResource(
     paginationPartial: true,
     paginationViaCursor: [
         ['field' => 'id', 'direction' => 'DESC']
+    ],
+    parameters: [
+        'id' => new QueryParameter(filter: new RangeFilter()),
+        'order' => new QueryParameter(filter: new SortFilter(), property: 'id'),
     ]
 )]
-#[ApiFilter(RangeFilter::class, properties: ["id"])]
-#[ApiFilter(OrderFilter::class, properties: ["id" => "DESC"])]
 class Book
 {
     // ...
