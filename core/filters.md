@@ -350,6 +350,10 @@ class Book
 Parameters declared on properties are automatically applied to all operations on the resource. You
 can restrict a parameter to specific operations using the `operations` argument.
 
+The restriction matches on the operation class, not on a single configured operation. If a resource
+declares two `Get` operations with different URI templates, `operations: [new Get()]` applies the
+parameter to both of them.
+
 ### Filtering a Single Property
 
 Most of the time, a parameter maps directly to a property on your resource. For example, a
@@ -1015,21 +1019,22 @@ class User {}
 
 ## Parameter Attribute Reference
 
-| Property           | Description                                                                                                           |
-| ------------------ | --------------------------------------------------------------------------------------------------------------------- |
-| `key`              | The name of the parameter (e.g., `name`, `order`).                                                                    |
-| `filter`           | The filter service or instance that processes the parameter's value.                                                  |
-| `provider`         | A service that transforms the parameter's value before it's used.                                                     |
-| `description`      | A description for the API documentation.                                                                              |
-| `property`         | The resource property this parameter is mapped to.                                                                    |
-| `required`         | Whether the parameter is required.                                                                                    |
-| `constraints`      | Symfony Validator constraints to apply to the value.                                                                  |
-| `schema`           | A JSON Schema for validation and documentation.                                                                       |
-| `castToArray`      | Casts the parameter value to an array. Useful for query parameters like `foo[]=1&foo[]=2`. Defaults to `true`.        |
-| `castToNativeType` | Casts the parameter value to its native PHP type based on the `schema`.                                               |
-| `openApi`          | Customize OpenAPI documentation or hide the parameter (`false`).                                                      |
-| `hydra`            | Hide the parameter from Hydra documentation (`false`).                                                                |
-| `security`         | A [Symfony expression](https://symfony.com/doc/current/security/expressions.html) to control access to the parameter. |
+| Property           | Description                                                                                                             |
+| ------------------ | ----------------------------------------------------------------------------------------------------------------------- |
+| `key`              | The name of the parameter (e.g., `name`, `order`).                                                                      |
+| `filter`           | The filter service or instance that processes the parameter's value.                                                    |
+| `provider`         | A service that transforms the parameter's value before it's used.                                                       |
+| `description`      | A description for the API documentation.                                                                                |
+| `property`         | The resource property this parameter is mapped to.                                                                      |
+| `required`         | Whether the parameter is required.                                                                                      |
+| `constraints`      | Symfony Validator constraints to apply to the value.                                                                    |
+| `schema`           | A JSON Schema for validation and documentation.                                                                         |
+| `castToArray`      | Casts the parameter value to an array. Useful for query parameters like `foo[]=1&foo[]=2`. Defaults to `true`.          |
+| `castToNativeType` | Casts the parameter value to its native PHP type based on the `schema`.                                                 |
+| `openApi`          | Customize OpenAPI documentation or hide the parameter (`false`).                                                        |
+| `hydra`            | Hide the parameter from Hydra documentation (`false`).                                                                  |
+| `operations`       | On a property-level parameter, the operation classes the parameter applies to. Applies to every operation when not set. |
+| `security`         | A [Symfony expression](https://symfony.com/doc/current/security/expressions.html) to control access to the parameter.   |
 
 ## Parameter Security
 
