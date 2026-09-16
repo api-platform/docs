@@ -313,22 +313,25 @@ class Review
 // api/src/Entity/Book.php
 namespace App\Entity;
 
-use ApiPlatform\Metadata\ApiFilter;
+use ApiPlatform\Doctrine\Orm\Filter\PartialSearchFilter;
 use ApiPlatform\Metadata\ApiResource;
-use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
+use ApiPlatform\Metadata\QueryParameter;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity]
-#[ApiResource]
+#[ApiResource(
+    parameters: [
+        'title' => new QueryParameter(filter: new PartialSearchFilter()),
+    ]
+)]
 class Book
 {
     #[ORM\Id, ORM\Column, ORM\GeneratedValue]
     public ?int $id = null;
 
     #[ORM\Column]
-    #[ApiFilter(SearchFilter::class, strategy: 'ipartial')]
     public string $title;
 
     #[ORM\OneToMany(targetEntity: Review::class, mappedBy: 'book')]
@@ -341,8 +344,8 @@ class Book
 }
 ```
 
-Notice the "partial search" [filter](../core/filters.md) on the `title` property of the `Book`
-resource class.
+Notice the [`PartialSearchFilter`](../core/filters.md#list-of-available-filters) on the `title`
+property of the `Book` resource class.
 
 Now, let's configure API Platform Admin to enable autocompletion for the book selector. We will
 leverage the [`<ReferenceInput>`](https://marmelab.com/react-admin/ReferenceInput.html) and
