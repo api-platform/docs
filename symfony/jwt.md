@@ -248,7 +248,8 @@ You will see something like this in Swagger UI:
 
 ## Testing
 
-To test your authentication with `ApiTestCase`, you can write a method as below:
+To test your authentication with `ApiTestCase`, see [Testing the API with Symfony](testing.md) to
+install the test helpers, then write a method as below:
 
 ```php
 <?php
@@ -256,7 +257,7 @@ To test your authentication with `ApiTestCase`, you can write a method as below:
 
 namespace App\Tests;
 
-use ApiPlatform\Symfony\Bundle\Test\ApiTestCase;
+use ApiPlatform\Test\ApiTestCase;
 use App\Entity\User;
 use Hautelook\AliceBundle\PhpUnit\ReloadDatabaseTrait;
 

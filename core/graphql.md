@@ -14,8 +14,8 @@ your GraphQL endpoint is ready to go!
 
 ## Enabling GraphQL
 
-To enable GraphQL and its IDE (GraphiQL and GraphQL Playground) in your API, simply require the
-`api-platform/graphql` package using Composer:
+To enable GraphQL and its IDE (GraphiQL) in your API, simply require the `api-platform/graphql`
+package using Composer:
 
 ```console
 composer require api-platform/graphql
@@ -146,90 +146,14 @@ for the full precedence rules (the `_csp_nonce` request attribute, falling back 
 `csp_nonce()` function such as the one provided by
 [NelmioSecurityBundle](https://github.com/nelmio/NelmioSecurityBundle)).
 
-## GraphQL Playground
+## Disabling the Default IDE
 
-Another IDE is by default included in API Platform: GraphQL Playground.
+GraphiQL is the only IDE bundled with API Platform. Going to the GraphQL endpoint with your browser
+launches it by default, as `default_ide` defaults to `graphiql`. Set `default_ide` to `false` to
+stop the endpoint from launching it. See [GraphiQL](#graphiql) above to disable or relocate the
+GraphiQL page itself.
 
-It can be found at `/graphql/graphql_playground`.
-
-You can disable it if you want in the configuration.
-
-### Disable GraphQL Playground with Symfony
-
-```yaml
-# api/config/packages/api_platform.yaml
-api_platform:
-    graphql:
-        graphql_playground:
-            enabled: false
-# ...
-```
-
-### Disable GraphQL Playground with Laravel
-
-> [!WARNING] This is not yet available with Laravel, you're welcome to contribute
-> [on GitHub](https://github.com/api-platform/core)
-
-### Add another Location for GraphQL Playground
-
-You can add a different location besides `/graphql/graphql_playground`.
-
-### Symfony config routes for GraphQL Playground
-
-Using the Symfony variant we can do this modification by adding the following code:
-
-```yaml
-# app/config/routes.yaml
-graphql_playground:
-    path: /docs/graphql_playground
-    controller: api_platform.graphql.action.graphql_playground
-```
-
-### Laravel config routes for GraphQL Playground
-
-Using the Laravel variant we can do this modification by adding the following code:
-
-```php
-// routes/web.php
-use Illuminate\Support\Facades\Route;
-use ApiPlatform\GraphQL\Action\GraphQlPlaygroundAction;
-
-Route::post('/docs/graphql_playground', GraphQlPlaygroundAction::class)
-    ->name('graphql_playground');
-```
-
-## Modifying or Disabling the Default IDE
-
-When going to the GraphQL endpoint, you can choose to launch the IDE you want.
-
-### Symfony config to modifying the default IDE
-
-```yaml
-# api/config/packages/api_platform.yaml
-api_platform:
-    graphql:
-        # Choose between graphiql or graphql-playground
-        default_ide: graphql-playground
-# ...
-```
-
-### Laravel config to modifying the default IDE
-
-```php
-<?php
-// config/api-platform.php
-return [
-    // ....
-    'graphql' => [
-        // Choose between graphiql or graphql-playground
-        'default_ide' => 'graphql-playground',
-    ],
-];
-```
-
-You can also disable this feature by setting the configuration value to `false`.
-
-### Symfony config to disable default IDE
+### Symfony config to disable the default IDE
 
 ```yaml
 # api/config/packages/api_platform.yaml
@@ -2826,14 +2750,13 @@ use ApiPlatform\GraphQl\Type\TypeConverterInterface;
 use ApiPlatform\Metadata\GraphQl\Operation;
 use App\Entity\Book;
 use GraphQL\Type\Definition\Type as GraphQLType;
-use Symfony\Component\PropertyInfo\Type;
+use Symfony\Component\TypeInfo\Type;
 
 final class TypeConverter implements TypeConverterInterface
 {
-
     public function __construct(private readonly TypeConverterInterface $defaultTypeConverter) {}
 
-    public function convertType(Type $type, bool $input, Operation $rootOperation, string $resourceClass, string $rootResource, ?string $property, int $depth)
+    public function convertPhpType(Type $type, bool $input, Operation $rootOperation, string $resourceClass, string $rootResource, ?string $property, int $depth): GraphQLType|string|null
     {
         if ('publicationDate' === $property
             && Book::class === $rootResource
@@ -2841,7 +2764,7 @@ final class TypeConverter implements TypeConverterInterface
             return 'DateTime';
         }
 
-        return $this->defaultTypeConverter->convertType($type, $input, $rootOperation, $resourceClass, $rootResource, $property, $depth);
+        return $this->defaultTypeConverter->convertPhpType($type, $input, $rootOperation, $resourceClass, $rootResource, $property, $depth);
     }
 
     public function resolveType(string $type): ?GraphQLType
@@ -2857,9 +2780,7 @@ You can even apply this logic for a kind of property. Replace the previous condi
 like this:
 
 ```php
-if (Type::BUILTIN_TYPE_OBJECT === $type->getBuiltinType()
-    && is_a($type->getClassName(), \DateTimeInterface::class, true)
-) {
+if ($type->isIdentifiedBy(\DateTimeInterface::class)) {
     return 'DateTime';
 }
 ```

@@ -76,7 +76,7 @@ As Heroku doesn't support Varnish out of the box, let's disable its integration:
 -    http_cache:
 -        invalidation:
 -            enabled: true
--            varnish_urls: ['%env(VARNISH_URL)%']
+-            urls: ['%env(VARNISH_URL)%']
 -        max_age: 0
 -        shared_max_age: 3600
 -        vary: ['Content-Type', 'Authorization', 'Origin']

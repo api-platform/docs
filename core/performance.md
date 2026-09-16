@@ -145,13 +145,16 @@ api_platform:
     http_cache:
         invalidation:
             enabled: true
-            varnish_urls: ["%env(VARNISH_URL)%"]
+            urls: ["%env(VARNISH_URL)%"]
     defaults:
         cache_headers:
             max_age: 0
             shared_max_age: 3600
             vary: ["Content-Type", "Authorization", "Origin"]
 ```
+
+To target a specific HTTP client instead of a plain URL, use `scoped_clients`. It accepts the
+service names of pre-configured HTTP clients.
 
 ##### Varnish cache invalidation system using Laravel
 
@@ -165,7 +168,7 @@ return [
     'http_cache' => [
         'invalidation' => [
             'enabled' => true,
-            'varnish_urls' => ['%env(VARNISH_URL)%'],
+            'urls' => ['%env(VARNISH_URL)%'],
         ]
     ],
     'defaults' => [
@@ -195,7 +198,7 @@ api_platform:
     http_cache:
         invalidation:
             enabled: true
-            varnish_urls: ["%env(VARNISH_URL)%"]
+            urls: ["%env(VARNISH_URL)%"]
             purger: "api_platform.http_cache.purger.varnish.xkey"
         public: true
     defaults:
@@ -218,7 +221,7 @@ return [
     'http_cache' => [
         'invalidation' => [
             'enabled' => true,
-            'varnish_urls' => ['%env(VARNISH_URL)%'],
+            'urls' => ['%env(VARNISH_URL)%'],
             'purger' => 'api_platform.http_cache.purger.varnish.xkey',
         ],
         'public' => true,

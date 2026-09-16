@@ -532,7 +532,7 @@ return [
         // Enabled by default with installed api-platform/graphql.
         'enabled' => false,
 
-        // The default IDE (graphiql or graphql-playground) used when going to the GraphQL endpoint. False to disable.
+        // The default IDE (graphiql) used when going to the GraphQL endpoint. False to disable.
         'default_ide' => 'graphiql',
 
         'graphiql' => [

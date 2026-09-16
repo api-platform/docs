@@ -360,7 +360,8 @@ Voilà! You can now send files to your API, and link them to any other resource 
 
 ### Testing
 
-To test your upload with `ApiTestCase`, you can write a method as below:
+To test your upload with `ApiTestCase`, see [Testing the API with Symfony](testing.md) to install
+the test helpers, then write a method as below:
 
 ```php
 <?php
@@ -368,7 +369,7 @@ To test your upload with `ApiTestCase`, you can write a method as below:
 
 namespace App\Tests;
 
-use ApiPlatform\Symfony\Bundle\Test\ApiTestCase;
+use ApiPlatform\Test\ApiTestCase;
 use App\Entity\MediaObject;
 use Hautelook\AliceBundle\PhpUnit\RefreshDatabaseTrait;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
