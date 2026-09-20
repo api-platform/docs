@@ -152,6 +152,58 @@ The `ObjectMapperProcessor` receives the deserialized Input DTO. It uses
 then delegates to the underlying Doctrine processor (to persist the Entity). Finally, it maps the
 persisted Entity back to the Output DTO Resource.
 
+### Relations Between Mapped Resources
+
+A relation typed on another DTO Resource needs one more thing: the object mapper builds objects and
+has no identity map, so the related DTO has to be turned back into the **managed** Doctrine object
+before the entity is flushed. Left alone, the DTO itself reaches the entity's property and
+`PropertyAccess` fails:
+
+```
+Expected argument of type "?App\Entity\Author", "App\Api\Resource\Author" given at property path "author"
+```
+
+Declaring the reverse mapping is not enough either: the mapper then builds a *fresh* entity from the
+DTO's scalars — the right identifier, but an instance Doctrine has never seen — and the flush raises
+`A new entity was found through the relationship`. Cascading inserts a duplicate row instead.
+
+Use `ManagedEntityTransform` on the relation:
+
+```php
+// src/Api/Resource/Book.php
+namespace App\Api\Resource;
+
+use ApiPlatform\Doctrine\Common\State\ManagedEntityTransform;
+use App\Entity\Book as BookEntity;
+use Symfony\Component\ObjectMapper\Attribute\Map;
+
+#[Map(source: BookEntity::class)]
+final class Book
+{
+    public ?int $id = null;
+
+    public string $title = '';
+
+    #[Map(target: 'author', transform: ManagedEntityTransform::class)]
+    public ?Author $author = null;
+}
+```
+
+Nothing is declared per relation: the managed class is read from the related resource's
+`stateOptions`, and the identifier from its metadata — it is never assumed to be called `id`, so a
+resource keyed on a natural code (an ISO code, a currency, a slug) works the same way.
+
+A to-many relation is handled by the same transform, which resolves every item of the collection:
+
+```php
+#[Map(target: 'categories', transform: ManagedEntityTransform::class)]
+public iterable $categories = [];
+```
+
+Only the write direction needs it. On read, a to-one is mapped by the object mapper itself — the
+related resource declares `#[Map(source: Entity::class)]` — and a to-many by Symfony's
+`MapCollection`.
+
 ## 2. Automated Mapped Inputs and Outputs
 
 Ideally, your read and write models should differ. You might want to expose less data in a
