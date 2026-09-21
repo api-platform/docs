@@ -173,7 +173,7 @@ Use `ManagedEntityTransform` on the relation:
 // src/Api/Resource/Book.php
 namespace App\Api\Resource;
 
-use ApiPlatform\Doctrine\Common\State\ManagedEntityTransform;
+use ApiPlatform\Doctrine\Orm\State\ManagedEntityTransform;
 use App\Entity\Book as BookEntity;
 use Symfony\Component\ObjectMapper\Attribute\Map;
 
