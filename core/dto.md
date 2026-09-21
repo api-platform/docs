@@ -159,11 +159,11 @@ has no identity map, so the related DTO has to be turned back into the **managed
 before the entity is flushed. Left alone, the DTO itself reaches the entity's property and
 `PropertyAccess` fails:
 
-```
+```txt
 Expected argument of type "?App\Entity\Author", "App\Api\Resource\Author" given at property path "author"
 ```
 
-Declaring the reverse mapping is not enough either: the mapper then builds a *fresh* entity from the
+Declaring the reverse mapping is not enough either: the mapper then builds a _fresh_ entity from the
 DTO's scalars — the right identifier, but an instance Doctrine has never seen — and the flush raises
 `A new entity was found through the relationship`. Cascading inserts a duplicate row instead.
 
