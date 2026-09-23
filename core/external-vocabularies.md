@@ -20,7 +20,7 @@ class Book
 {
     // ...
 
-    #[ApiProperty(types: ['https://schema.org/name'])]
+    #[ApiProperty(iris: ['https://schema.org/name'])]
     public $name;
 
     // ...
@@ -50,6 +50,30 @@ according to the specified attributes:
         "hydra": "http://www.w3.org/ns/hydra/core#",
         "name": "https://schema.org/name"
     }
+}
+```
+
+## Resource `types`, Property `iris`, and Property `types`
+
+These three attributes each control a different output, and mixing them up is a common mistake:
+
+- `types` on `#[ApiResource]` sets the RDF class of the resource. It replaces the JSON-LD `@type`
+  and sets the `subClassOf` value in the Hydra documentation.
+- `iris` on `#[ApiProperty]` sets the RDF property IRI. It is used in the JSON-LD `@context` (as
+  shown above) and in the Hydra documentation. Without it, API Platform builds a local term from
+  the property name instead.
+- `types` on `#[ApiProperty]` produces no RDF output at all. Its only effect is to populate the
+  `externalDocs.url` field of that property in the generated OpenAPI schema.
+
+To map both the class and a property to Schema.org, use `types` on the resource and `iris` on the
+property:
+
+```php
+#[ApiResource(types: ['https://schema.org/Store'])]
+class Store
+{
+    #[ApiProperty(iris: ['https://schema.org/name'])]
+    public string $name;
 }
 ```
 
