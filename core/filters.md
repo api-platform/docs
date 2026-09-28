@@ -341,7 +341,7 @@ class Book
     #[QueryParameter(key: 'name', filter: new PartialSearchFilter(), operations: [new GetCollection()])]
     public string $name = '';
 
-    // Applies only to GetCollection (Patch is not in the list of operations)
+    // Error: Patch is not declared in the resource operations
     #[HeaderParameter(key: 'X-Authorization', operations: [new GetCollection(), new Patch()])]
     public string $authToken = '';
 }
@@ -353,6 +353,9 @@ can restrict a parameter to specific operations using the `operations` argument.
 The restriction matches on the operation class, not on a single configured operation. If a resource
 declares two `Get` operations with different URI templates, `operations: [new Get()]` applies the
 parameter to both of them.
+
+Every operation listed in `operations` must be declared in the resource operations, otherwise an
+error is thrown.
 
 ### Filtering a Single Property
 
