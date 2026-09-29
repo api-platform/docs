@@ -327,8 +327,7 @@ class Tweet
 }
 ```
 
-API Platform will automatically disable write operations and snake_case document fields will
-automatically be converted to camelCase object properties during serialization.
+API Platform will automatically disable write operations.
 
 Keep in mind that it is your responsibility to populate your Elasticsearch index. To do so, you can
 use [Logstash](https://www.elastic.co/products/logstash), a custom
@@ -336,6 +335,40 @@ use [Logstash](https://www.elastic.co/products/logstash), a custom
 that suits your project (such as an [ETL](https://en.wikipedia.org/wiki/Extract,_transform,_load)).
 
 You're done! The API is now ready to use.
+
+### Mapping Field Names
+
+By default, API Platform does not convert Elasticsearch document field names: a `_source` field is mapped to the
+object property of the same name (unless [`#[SerializedName]`](serialization.md) is used). Use camelCase field names in your
+mappings, as described above.
+
+If your documents use snake_case field names, configure a name converter so that they are mapped to camelCase
+properties. There are two options.
+
+To convert names for every format, set the global `name_converter` in the API Platform configuration. This also changes
+the serialization of all other formats:
+
+```yaml
+# api/config/packages/api_platform.yaml
+api_platform:
+    name_converter: 'serializer.name_converter.camel_case_to_snake_case'
+```
+
+To convert names for Elasticsearch only, override the `api_platform.elasticsearch.name_converter.inner_fields` service
+and pass it the converter:
+
+```yaml
+# api/config/services.yaml
+services:
+    api_platform.elasticsearch.name_converter.inner_fields:
+        class: ApiPlatform\Elasticsearch\Serializer\NameConverter\InnerFieldsNameConverter
+        arguments:
+            - '@serializer.name_converter.camel_case_to_snake_case'
+```
+
+> [!WARNING]
+> The same name converter builds the field names used by the Elasticsearch filters and by sorting. Once a converter is
+> set, a filter or sort on the `firstName` property targets the `first_name` field of the index.
 
 ## Filtering
 
