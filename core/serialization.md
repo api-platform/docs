@@ -1126,32 +1126,24 @@ have to decorate another service:
 
 namespace App\Serializer;
 
-use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 use Symfony\Component\Serializer\SerializerAwareInterface;
 use Symfony\Component\Serializer\SerializerInterface;
 
-final class ApiNormalizer implements NormalizerInterface, DenormalizerInterface, SerializerAwareInterface
+final class ApiNormalizer implements NormalizerInterface, SerializerAwareInterface
 {
-    private $decorated;
-
-    public function __construct(NormalizerInterface $decorated)
+    public function __construct(private readonly NormalizerInterface $decorated)
     {
-        if (!$decorated instanceof DenormalizerInterface) {
-            throw new \InvalidArgumentException(sprintf('The decorated normalizer must implement the %s.', DenormalizerInterface::class));
-        }
-
-        $this->decorated = $decorated;
     }
 
-    public function supportsNormalization($data, $format = null)
+    public function supportsNormalization(mixed $data, ?string $format = null, array $context = []): bool
     {
-        return $this->decorated->supportsNormalization($data, $format);
+        return $this->decorated->supportsNormalization($data, $format, $context);
     }
 
-    public function normalize($object, $format = null, array $context = [])
+    public function normalize(mixed $data, ?string $format = null, array $context = []): array|string|int|float|bool|\ArrayObject|null
     {
-        $data = $this->decorated->normalize($object, $format, $context);
+        $data = $this->decorated->normalize($data, $format, $context);
         if (is_array($data)) {
             $data['date'] = date(\DateTime::RFC3339);
         }
@@ -1159,19 +1151,67 @@ final class ApiNormalizer implements NormalizerInterface, DenormalizerInterface,
         return $data;
     }
 
-    public function supportsDenormalization($data, $type, $format = null)
+    public function setSerializer(SerializerInterface $serializer): void
     {
-        return $this->decorated->supportsDenormalization($data, $type, $format);
+        if ($this->decorated instanceof SerializerAwareInterface) {
+            $this->decorated->setSerializer($serializer);
+        }
     }
 
-    public function denormalize($data, string $type, string $format = null, array $context = [])
+    public function getSupportedTypes(?string $format): array
     {
+        return $this->decorated->getSupportedTypes($format);
+    }
+}
+```
+
+### Changing the Denormalization
+
+Since API Platform 4.4, incoming payloads are read by dedicated denormalizer services, which run
+before the normalizers. To change how a payload is read, decorate the matching denormalizer service,
+listed in the [upgrade guide](upgrade-guide.md#denormalization-moved-out-of-the-item-normalizers).
+To change both directions, decorate both services.
+
+Decorating the normalizer with a class that also implements `DenormalizerInterface`, as in earlier
+versions, still works until API Platform 6.0, but triggers a deprecation.
+
+```yaml
+# api/config/services.yaml
+services:
+    'App\Serializer\ApiDenormalizer':
+        decorates: "api_platform.jsonld.denormalizer.item"
+```
+
+```php
+<?php
+// api/src/Serializer/ApiDenormalizer.php
+
+namespace App\Serializer;
+
+use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
+use Symfony\Component\Serializer\SerializerAwareInterface;
+use Symfony\Component\Serializer\SerializerInterface;
+
+final class ApiDenormalizer implements DenormalizerInterface, SerializerAwareInterface
+{
+    public function __construct(private readonly DenormalizerInterface $decorated)
+    {
+    }
+
+    public function supportsDenormalization(mixed $data, string $type, ?string $format = null, array $context = []): bool
+    {
+        return $this->decorated->supportsDenormalization($data, $type, $format, $context);
+    }
+
+    public function denormalize(mixed $data, string $type, ?string $format = null, array $context = []): mixed
+    {
+        // change the incoming payload, or the context, before the resource is built
         return $this->decorated->denormalize($data, $type, $format, $context);
     }
 
-    public function setSerializer(SerializerInterface $serializer)
+    public function setSerializer(SerializerInterface $serializer): void
     {
-        if($this->decorated instanceof SerializerAwareInterface) {
+        if ($this->decorated instanceof SerializerAwareInterface) {
             $this->decorated->setSerializer($serializer);
         }
     }
