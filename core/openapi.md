@@ -900,11 +900,10 @@ To enable API Gateway compatibility on your OpenAPI docs, add `api_gateway=true`
 `http://www.example.com/docs.jsonopenapi?api_gateway=true`. The flag `--api-gateway` is also
 available through the command-line.
 
-The compatibility layer removes every query parameter whose name does not match
-`^[a-zA-Z0-9._$-]+$` from the generated specification. Bracketed filter parameters such as
-`order[title]` or `exists[author]` are dropped, not renamed. To keep a filter usable behind API
-Gateway, declare it with a [`QueryParameter`](filters.md#declaring-parameters) and a bracket-free
-key:
+The compatibility layer removes every query parameter whose name does not match `^[a-zA-Z0-9._$-]+$`
+from the generated specification. Bracketed filter parameters such as `order[title]` or
+`exists[author]` are dropped, not renamed. To keep a filter usable behind API Gateway, declare it
+with a [`QueryParameter`](filters.md#declaring-parameters) and a bracket-free key:
 
 ```php
 use ApiPlatform\Doctrine\Orm\Filter\SortFilter;
