@@ -60,8 +60,8 @@ These three attributes each control a different output, and mixing them up is a 
 - `types` on `#[ApiResource]` sets the RDF class of the resource. It replaces the JSON-LD `@type`
   and sets the `subClassOf` value in the Hydra documentation.
 - `iris` on `#[ApiProperty]` sets the RDF property IRI. It is used in the JSON-LD `@context` (as
-  shown above) and in the Hydra documentation. Without it, API Platform builds a local term from
-  the property name instead.
+  shown above) and in the Hydra documentation. Without it, API Platform builds a local term from the
+  property name instead.
 - `types` on `#[ApiProperty]` produces no RDF output at all. Its only effect is to populate the
   `externalDocs.url` field of that property in the generated OpenAPI schema.
 
