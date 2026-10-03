@@ -1,5 +1,17 @@
 # Upgrade Guide
 
+## API Platform 5.0 to 5.1
+
+### API Platform 5.1 Behavioral Changes
+
+#### JSON-LD Representations Expose Their Operations
+
+JSON-LD items and collections now expose the operations sharing their IRI, filtered by their
+security, in a `hydra:operation` property (`operation` without the `hydra:` prefix). Use the
+`hydraOperations` option of an operation to narrow or remove them, or set the
+`serializer.hydra_operations` configuration to `false` to keep the previous responses. See
+[The `hydra:operation` Property](extending-jsonld-context.md#the-hydraoperation-property).
+
 ## API Platform 4.4 to 5.0
 
 5.0 removes long-deprecated APIs. Components ship with a `@beta` stability flag (for example
