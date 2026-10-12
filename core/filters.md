@@ -354,8 +354,8 @@ The restriction matches on the operation class, not on a single configured opera
 declares two `Get` operations with different URI templates, `operations: [new Get()]` applies the
 parameter to both of them.
 
-Every operation listed in `operations` must be declared in the resource operations, otherwise an
-error is thrown.
+Every operation listed in `operations` must be declared on the resource, either in `operations` or
+in `graphQlOperations`, otherwise an error is thrown.
 
 ### Filtering a Single Property
 
