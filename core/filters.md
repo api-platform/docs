@@ -592,11 +592,9 @@ Symfony Validator constraints.
 // api/src/Resource/User.php
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\GetCollection;
-use ApiPlatform\Metadata\HeaderParameter;
 use ApiPlatform\Metadata\QueryParameter;
+use ApiPlatform\Metadata\ScalarHeaderParameter;
 use Symfony\Component\Validator\Constraints as Assert;
-use Symfony\Component\TypeInfo\Type\BuiltinType;
-use Symfony\Component\TypeInfo\TypeIdentifier;
 
 #[ApiResource(operations: [
     new GetCollection(
@@ -606,11 +604,10 @@ use Symfony\Component\TypeInfo\TypeIdentifier;
                 description: 'Filter by country code.',
                 constraints: [new Assert\Country()]
             ),
-            'X-Request-ID' => new HeaderParameter(
+            'X-Request-ID' => new ScalarHeaderParameter(
                 description: 'A unique request identifier.',
                 required: true,
-                constraints: [new Assert\Uuid()],
-                nativeType: new BuiltinType(typeIdentifier: TypeIdentifier::STRING)
+                constraints: [new Assert\Uuid()]
             )
         ]
     )
@@ -621,8 +618,9 @@ class User {}
 > [!NOTE] When `castToNativeType` is enabled, API Platform infers type validation from the JSON
 > Schema.
 
-If `constraints` are used then a valid type needs to be passed using `nativeType` named argument.
-Otherwise, the values will be passed as an array to each constraints.
+A `HeaderParameter` value is typed `string|list<string>` because a header can be repeated, so
+constraints receive an array. Use `ScalarHeaderParameter` (available since API Platform 5.1) to
+validate a single string value, or pass a `schema` or a `nativeType` yourself.
 
 The `ApiPlatform\Validator\Util\ParameterValidationConstraints` trait can be used to automatically
 infer validation constraints from the JSON Schema and OpenAPI definitions of a parameter.
