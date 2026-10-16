@@ -844,6 +844,40 @@ class Offer
 > For other syntaxes, for e.g., if you want to new syntax with the ApiResource attribute take a look
 > [in the Introduction section](#introduction).
 
+### Input format
+
+Since API Platform 5.1, the `format` argument of the ORM and ODM `DateFilter` restricts the accepted
+input to a single
+[date format](https://www.php.net/manual/en/datetime.format.php#refsect1-datetime.format-parameters):
+
+```php
+<?php
+// api/src/ApiResource/Article.php
+namespace App\ApiResource;
+
+use ApiPlatform\Doctrine\Orm\Filter\DateFilter;
+use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\QueryParameter;
+
+#[GetCollection(
+    parameters: [
+        'publishedAt' => new QueryParameter(filter: new DateFilter(format: 'd/m/Y')),
+    ],
+)]
+class Article
+{
+    // ...
+}
+```
+
+A request such as `/articles?publishedAt[before]=20/03/2022` is then parsed with
+`DateTimeImmutable::createFromFormat`. Parsing is strict: the time part resets to midnight when the
+format does not define it, and values that overflow (such as `32/03/2022`) or carry trailing data
+are rejected. Like any other invalid date, a rejected value is ignored by the filter. The documented
+JSON Schema and OpenAPI type of the parameter is a plain `string`, without `format: date`.
+
+Without `format`, the filter accepts any value supported by the `\DateTime` constructor.
+
 ### Date Filter using the ApiFilter Attribute Syntax (not recommended)
 
 Basically the ApiFilter declares the correct service under the hood. We recommend to use
