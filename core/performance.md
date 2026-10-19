@@ -23,6 +23,14 @@ proxy’s cache. This ensures that the content served will always be fresh becau
 in real time. Support for most specific cases such as the invalidation of collections when a
 document is added or removed or for relationships and inverse relations is built-in.
 
+The purge listener is registered automatically for Doctrine ORM. Since API Platform 5.1, when
+`doctrine_mongodb_odm` is enabled, a MongoDB ODM listener
+(`api_platform.doctrine_mongodb.odm.listener.http_cache.purge`, tagged
+`doctrine_mongodb.odm.event_listener`) is registered as well. It purges the collection and item IRIs
+of inserted, updated, upserted, and deleted documents, along with their referenced documents
+(previous and current values, and members removed from reference collections). Inserts purge the
+collection IRI only.
+
 ### Integrations
 
 #### Built-in Caddy HTTP Cache
