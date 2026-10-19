@@ -328,6 +328,117 @@ class Book
 }
 ```
 
+## Caching Authenticated Responses
+
+With Symfony, the `max_age` and `public` options of `cacheHeaders` do not always reach the client as
+configured when the request is authenticated. API Platform builds the `Cache-Control` header in
+`ApiPlatform\HttpCache\State\AddHeadersProcessor`, but Symfony's
+`Symfony\Component\HttpKernel\EventListener\AbstractSessionListener` rewrites it afterwards, on the
+response event, as soon as the session has been used during the request (for instance by a
+form-login or any other firewall that is not stateless).
+
+When the session is used, the listener forces the response to be `private` and sets
+`must-revalidate`. It keeps the `max-age` of the response, unless the response is `public`: in that
+case it resets `max-age` to `0`, and the response is no longer `public`. Consider the following
+operation:
+
+```php
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\GetCollection;
+
+#[ApiResource(
+    operations: [
+        new GetCollection(
+            security: "is_granted('ROLE_USER')",
+            cacheHeaders: ['max_age' => 3600, 'shared_max_age' => 3600, 'public' => true],
+        ),
+    ]
+)]
+class Book
+{
+    // ...
+}
+```
+
+For a request that uses the session, the response carries the following header, and the client
+revalidates on every request:
+
+```http
+Cache-Control: max-age=0, must-revalidate, private, s-maxage=3600
+```
+
+This is intended: a response that depends on the session must never be stored by a shared cache (a
+reverse proxy or a CDN), otherwise one user could receive the data of another one. Choose one of the
+following strategies depending on what you want to cache.
+
+### Let the Client Cache the Response
+
+To allow only the client (the browser or the SPA) to cache an authenticated response, do not mark
+the operation as `public`. Symfony then keeps the `max-age` and adds `private`:
+
+```php
+use ApiPlatform\Metadata\GetCollection;
+
+new GetCollection(
+    security: "is_granted('ROLE_USER')",
+    cacheHeaders: ['max_age' => 3600, 'public' => false],
+);
+```
+
+```http
+Cache-Control: max-age=3600, must-revalidate, private
+```
+
+Setting `public` to `false` also removes `s-maxage`, as it has no meaning for a private response.
+Every user caches the response separately in their own client.
+
+### Use a Stateless Firewall
+
+When the API is authenticated by a token (for example a JWT or an API key), declare the firewall as
+`stateless`. No session is started, so Symfony does not alter the `Cache-Control` header and your
+`cacheHeaders` are sent as configured:
+
+```yaml
+# api/config/packages/security.yaml
+security:
+    firewalls:
+        api:
+            pattern: ^/api
+            stateless: true
+            # ...
+```
+
+If a shared cache stores the response, its cache key **must** take the credentials into account, or
+the response of one user is served to every other user. Either keep the response `private` as shown
+above, or add the `Vary` header:
+
+```php
+use ApiPlatform\Metadata\GetCollection;
+
+new GetCollection(
+    security: "is_granted('ROLE_USER')",
+    cacheHeaders: [
+        'max_age' => 3600,
+        'shared_max_age' => 3600,
+        'public' => true,
+        'vary' => ['Authorization'],
+    ],
+);
+```
+
+`Vary: Authorization` gives every user their own cache entry, which is correct but reduces the
+benefit of a shared cache. Publicly cache only the responses that are the same for all users, and
+check that your cache does not ignore the `Vary` header.
+
+### Opt Out of the Automatic Cache-Control
+
+As a last resort, Symfony lets you opt out of the automatic `Cache-Control` rewrite by adding the
+`AbstractSessionListener::NO_AUTO_CACHE_CONTROL_HEADER` header to the response, for example in a
+custom processor decorating `api_platform.state_processor.respond`. Symfony removes this internal
+header before sending the response. API Platform does not set it for you, because it would let a
+shared cache store a response that depends on the session. Use it only when the response is the same
+for every user.
+
 ## Enabling the Metadata Cache
 
 Computing metadata used by the bundle is a costly operation. Fortunately, metadata can be computed
