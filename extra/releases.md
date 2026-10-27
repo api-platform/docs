@@ -16,18 +16,20 @@ For example:
 - versions 4.1 has been released on 28 February 2025;
 - versions 4.2 has been released on 18 September 2025;
 - versions 4.3 has been released on 13 March 2026;
+- versions 4.4 and 5.0 have been released on 16 September 2026;
 
 ## Maintenance
 
 3 versions are maintained at the same time:
 
-- **stable** (currently the **4.3** branch): regular bugfixes are integrated in this version
-- **old-stable** (are the last branch: **4.2**): [security fixes](security.md) are integrated in
+- **stable** (currently the **5.0** and **4.4** branches): regular bugfixes are integrated in these
+  versions, fixes are made on **4.4** and merged into **5.0**
+- **old-stable** (are the last branch: **4.3**): [security fixes](security.md) are integrated in
   this version, regular bugfixes are **not** backported in it
 - **development** (**main** branch): new features target this branch
 
-Older versions (1.x, 2.6..., 3.0..., 4.0, 4.1) **are not maintained**. If you still use them, you
-must upgrade as soon as possible.
+Older versions (1.x, 2.6..., 3.0..., 4.0, 4.1, 4.2) **are not maintained**. If you still use them,
+you must upgrade as soon as possible.
 
 The **old-stable** branch is merged in the **stable** branch on a regular basis to propagate
 [security fixes](security.md). The **stable** branch is merged in the **development** branch on a
