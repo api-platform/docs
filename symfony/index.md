@@ -651,7 +651,7 @@ You may have noticed that some keys start with the `@` symbol in the generated J
 allows to build smart clients, with auto-discoverability capabilities such as the API Platform Admin
 that we will discover in a few lines. It is useful for open data, SEO and interoperability,
 especially when
-[used with open vocabularies such as Schema.org](http://blog.schema.org/2013/06/schemaorg-and-json-ld.html)
+[used with open vocabularies such as Schema.org](https://blog.schema.org/2013/06/03/schema-org-and-json-ld/)
 and allows to
 [give access to Google to your structured data](https://developers.google.com/search/docs/guides/intro-structured-data)
 or to query your APIs in [SPARQL](https://en.wikipedia.org/wiki/SPARQL) using
@@ -695,7 +695,7 @@ of HTTP requests). You can even
 
 The other interesting thing is how API Platform handles dates (the `publicationDate` property). API
 Platform understands
-[any date format supported by PHP](https://www.php.net/manual/en/datetime.formats.date.php). In
+[any date format supported by PHP](https://www.php.net/manual/en/datetime.formats.php). In
 production we strongly recommend using the format specified by the
 [RFC 3339](https://tools.ietf.org/html/rfc3339), but, as you can see, most common formats including
 `September 21, 2016` can be used.

@@ -3,9 +3,9 @@
 ## Enabling the Built-in HTTP Cache Invalidation System
 
 Exposing a hypermedia API has
-[many advantages](http://blog.theamazingrando.com/in-band-vs-out-of-band.html). One is the ability
-to know exactly which resources are included in HTTP responses created by the API. We used this
-specificity to make API Platform apps blazing fast.
+[many advantages](https://blog.theamazingrando.com/posts/in-band-vs-out-of-band.html). One is the
+ability to know exactly which resources are included in HTTP responses created by the API. We used
+this specificity to make API Platform apps blazing fast.
 
 When the cache mechanism [is enabled](configuration.md), API Platform collects identifiers of every
 resource included in a given HTTP response (including lists, embedded documents, and subresources)
@@ -547,7 +547,7 @@ the Symfony Serializer) before sending it. For large payloads this is costly bot
 time to first byte.
 
 API Platform can instead use the
-[Symfony JsonStreamer](https://symfony.com/doc/current/components/json_streamer.html) component to
+[Symfony JsonStreamer](https://symfony.com/doc/current/serializer/streaming_json.html) component to
 stream the response. JsonStreamer generates optimized, ahead-of-time-compiled encoders from the
 typed properties of your resources and writes the JSON directly to a `StreamedResponse`, without
 holding the full output in memory.

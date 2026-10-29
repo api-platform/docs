@@ -115,7 +115,7 @@ properties:
   [a `deprecated` property](https://swagger.io/docs/specification/2-0/paths-and-operations/) will be
   added
 - With GraphQL, the
-  [`isDeprecated` and `deprecationReason` properties](https://facebook.github.io/graphql/June2018/#sec-Deprecation)
+  [`isDeprecated` and `deprecationReason` properties](https://spec.graphql.org/June2018/#sec-Deprecation)
   will be added to the schema
 
 ## Setting the `Sunset` HTTP Header to Indicate When a Resource or an Operation Will Be Removed

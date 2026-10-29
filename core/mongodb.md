@@ -15,7 +15,7 @@ particular its
 to leverage all the possibilities of the database.
 
 Doctrine MongoDB ODM 2 relies on the [mongodb](https://secure.php.net/manual/en/set.mongodb.php) PHP
-extension and not on the legacy [mongo](https://secure.php.net/manual/en/book.mongo.php) extension.
+extension and not on the legacy [mongo](https://pecl.php.net/package/mongo) extension.
 
 ## Enabling MongoDB Support
 
