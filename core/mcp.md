@@ -482,6 +482,56 @@ class Documentation
 
 The `uri` must be unique across the MCP server and follows the `resource://` URI scheme.
 
+## Securing the MCP Server (Laravel)
+
+> [!WARNING] The `/mcp` route is registered outside the API route group, so the middleware listed in
+> `api-platform.routes.middleware` (for example `auth:sanctum`) does **not** apply to it. Without
+> further configuration, the endpoint is unprotected: only tools and resources that declare a
+> `policy` are restricted.
+
+### Protecting the Endpoint
+
+Declare the middleware of the MCP endpoint with the `middleware` option:
+
+```php
+// config/api-platform.php
+return [
+    // ...
+    'mcp' => [
+        'enabled' => true,
+        'middleware' => ['auth:sanctum'],
+    ],
+];
+```
+
+The option defaults to an empty array. Set `'enabled' => false` to disable the endpoint entirely.
+
+### Restricting Tools and Resources
+
+MCP tools and resources are API Platform operations, so the operation-level `policy` is enforced
+when a tool is called or a resource is read, and tools or resources the current user is not allowed
+to use are omitted from `tools/list` and `resources/list`:
+
+```php
+// app/ApiResource/ProcessMessage.php
+namespace App\ApiResource;
+
+use ApiPlatform\Metadata\McpTool;
+
+#[McpTool(
+    name: 'process_message',
+    description: 'Processes a message',
+    policy: 'processMessage',
+    processor: ProcessMessageProcessor::class,
+)]
+class ProcessMessage
+{
+    public string $message;
+}
+```
+
+The `security` option is a Symfony expression and is not evaluated on Laravel: use `policy`.
+
 ## Securing the MCP Server with OAuth2 (Symfony)
 
 The MCP endpoint is plain HTTP (JSON-RPC over the `http` transport), so it can be secured upstream
@@ -738,6 +788,7 @@ The `McpTool` attribute accepts all standard [operation options](operations.md) 
 | `icons`              | List of icon URLs representing the tool                                   |
 | `meta`               | Arbitrary metadata                                                        |
 | `rules`              | Laravel validation rules (Laravel only)                                   |
+| `policy`             | Laravel policy ability checked before the tool runs (Laravel only)        |
 
 ## McpResource Options
 
@@ -755,3 +806,4 @@ The `McpResource` attribute accepts all standard [operation options](operations.
 | `annotations`        | MCP resource annotations                                                   |
 | `icons`              | List of icon URLs                                                          |
 | `meta`               | Arbitrary metadata                                                         |
+| `policy`             | Laravel policy ability checked before the resource is read (Laravel only)  |
