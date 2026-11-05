@@ -62,6 +62,8 @@ And like this, if you are using API Platform with Laravel:
 4. Similarly, check for `App\Contracts\Exceptions\HttpExceptionInterface`.
 5. Use defaults for the following exceptions:
     - `Illuminate\Http\Exceptions\HttpResponseException` => 400
+    - `Symfony\Component\Serializer\Exception\ExceptionInterface` => 400
+    - `ApiPlatform\Metadata\Exception\InvalidArgumentException` => 400
     - `ApiPlatform\Symfony\Validator\Exception\ValidationException` => 422
 6. The status defined on an `ErrorResource`
 7. Fallback to 500.
