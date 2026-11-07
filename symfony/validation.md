@@ -4,7 +4,7 @@ API Platform takes care of validating the data sent to the API by the client (us
 entered through forms). By default, the framework relies on
 [the powerful Symfony Validator Component](https://symfony.com/doc/current/validation.html) for this
 task, but you can replace it with your preferred validation library such as
-[the PHP filter extension](https://www.php.net/manual/en/intro.filter.php) if you want to.
+[the PHP filter extension](https://www.php.net/manual/en/book.filter.php) if you want to.
 
 <p align="center" class="symfonycasts"><a href="https://symfonycasts.com/screencast/api-platform/validation?cid=apip"><img src="../symfony/images/symfonycasts-player.png" alt="Validation screencast"><br>Watch the Validation screencast</a></p>
 
@@ -826,7 +826,7 @@ If `year` had no validator constraint at all, both requests would receive HTTP 4
 ### Tip: use Symfony Validator auto-mapping
 
 When
-[`framework.validation.auto_mapping`](https://symfony.com/doc/current/validation/auto_mapping.html)
+[`framework.validation.auto_mapping`](https://symfony.com/doc/current/reference/configuration/framework.html#reference-validation-auto-mapping)
 is enabled, Symfony Validator derives implicit constraints directly from PHP type declarations —
 `string`, `int`, `float`, nullability, `BackedEnum` cases, and more. Every property with a PHP type
 then effectively has a `Type` constraint without any manual annotation.

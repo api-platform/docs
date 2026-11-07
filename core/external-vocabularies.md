@@ -54,7 +54,7 @@ according to the specified attributes:
 ```
 
 An extended list of existing open vocabularies is available on
-[the Linked Open Vocabularies (LOV) database](https://lov.linkeddata.es/dataset/lov/).
+[the Linked Open Vocabularies (LOV) database](https://lov.linkeddata.es/dataset/lov/vocabs).
 
 By default, when using [validations](validation.md) API Platform will try to define known
 [Schema.org](https://schema.org) types as IRIs for your properties if you did not provide any in

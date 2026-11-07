@@ -21,7 +21,7 @@ In 25 years of PHP, the web changed dramatically and is now evolving faster than
 [PHP.net](https://www.php.net), [Symfony](https://symfony.com), [Facebook](https://hhvm.com/) and
 many others have worked hard to improve and professionalize the PHP ecosystem. The PHP world has
 closed the gap with most backend solutions and is often [more innovative](https://wiki.php.net/rfc)
-and [faster](https://benchmarksgame-team.pages.debian.net/benchmarksgame/fastest/php-python3.html)
+and [faster](https://benchmarksgame-team.pages.debian.net/benchmarksgame/fastest/python3-php.html)
 than them.
 
 However in critical areas I've described previously, many things can be improved. Almost all
