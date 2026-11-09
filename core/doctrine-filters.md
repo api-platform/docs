@@ -1355,8 +1355,8 @@ use ApiPlatform\Doctrine\Orm\Filter\OrderFilter;
 
 #[GetCollection(
     parameters: [
-        'id' => new QueryParameter(filter: new OrderFilter(), filterContext: OrderFilterInterface::DIRECTION_ASC ),
-        'name' => new QueryParameter(filter: new OrderFilter(), filterContext: OrderFilterInterface::DIRECTION_DESC),
+        'id' => new QueryParameter(filter: new OrderFilter(), filterContext: ['default_direction' => OrderFilterInterface::DIRECTION_ASC]),
+        'name' => new QueryParameter(filter: new OrderFilter(), filterContext: ['default_direction' => OrderFilterInterface::DIRECTION_DESC]),
     ]
 )]
 class Offer
@@ -1428,12 +1428,12 @@ use ApiPlatform\Doctrine\Orm\Filter\OrderFilter;
         'nulls_comparison' => new QueryParameter(
             filter: new OrderFilter(),
             property: 'validFrom',
-            filterContext: OrderFilterInterface::NULLS_SMALLEST,
+            filterContext: ['nulls_comparison' => OrderFilterInterface::NULLS_SMALLEST],
         ),
         'default_direction' => new QueryParameter(
             filter: new OrderFilter(),
             property: 'validFrom',
-            filterContext: OrderFilterInterface::DIRECTION_DESC,
+            filterContext: ['default_direction' => OrderFilterInterface::DIRECTION_DESC],
         ),
     ]
 )]
