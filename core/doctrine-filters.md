@@ -1652,16 +1652,17 @@ for both Doctrine ORM (`ApiPlatform\Doctrine\Orm\Filter\*`) and MongoDB ODM
 | `NumericFilter`                           | [`ExactFilter`](#exact-filter) (exact) or [`ComparisonFilter(new ExactFilter())`](#comparison-filter) (range) |
 | `OrderFilter`                             | [`SortFilter`](#sort-filter)                                                                                  |
 | `DateFilter`                              | Kept — declare it through a `QueryParameter`, same class, same `[before]`/`[after]` URL syntax (drop-in)      |
-| `RangeFilter`                             | Kept — declare it through a `QueryParameter`, same class, same `[between]` URL syntax (drop-in)               |
+| `RangeFilter`                             | [`ComparisonFilter(new ExactFilter())`](#comparison-filter) (same URL syntax, including `[between]`)          |
 | `ExistsFilter`                            | Kept — declare it through a `QueryParameter`, same class (drop-in)                                            |
 
 There are two kinds of migration:
 
 - **Replaced filters** (`SearchFilter`, `BooleanFilter`, `NumericFilter`, `BackedEnumFilter`,
-  `OrderFilter`) — these are removed in 6.0. Swap the class for the modern equivalent shown above.
-- **Kept filters** (`DateFilter`, `RangeFilter`, `ExistsFilter`) — these survive. Only the way you
-  _declare_ them is deprecated (via `#[ApiFilter]` / extending `AbstractFilter`). Move the
-  declaration to a `QueryParameter`; the class name and the URL syntax stay the same.
+  `OrderFilter`, `RangeFilter`) — these are removed in 6.0. Swap the class for the modern equivalent
+  shown above.
+- **Kept filters** (`DateFilter`, `ExistsFilter`) — these survive. Only the way you _declare_ them
+  is deprecated (via `#[ApiFilter]` / extending `AbstractFilter`). Move the declaration to a
+  `QueryParameter`; the class name and the URL syntax stay the same.
 
 > [!NOTE] Declaring a kept filter as an inline `new` instance inside a `QueryParameter` (as shown in
 > the examples below) logs a cosmetic `ManagerRegistry must be initialized before accessing it.`
@@ -1746,7 +1747,8 @@ After (modern):
 
 ```php
 <?php
-use ApiPlatform\Doctrine\Orm\Filter\RangeFilter;
+use ApiPlatform\Doctrine\Orm\Filter\ComparisonFilter;
+use ApiPlatform\Doctrine\Orm\Filter\ExactFilter;
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\QueryParameter;
@@ -1755,7 +1757,7 @@ use ApiPlatform\Metadata\QueryParameter;
 #[GetCollection(
     parameters: [
         'price' => new QueryParameter(
-            filter: new RangeFilter(),
+            filter: new ComparisonFilter(new ExactFilter()),
             property: 'price',
         ),
     ],
@@ -1766,17 +1768,10 @@ class Product
 }
 ```
 
-`RangeFilter` is kept: only the declaration style changes. The URL syntax is unchanged
-(`?price[between]=10..100`, `?price[gt]=10&price[lt]=100`, …).
-
-> [!TIP] Since API Platform 5.0, `ComparisonFilter` covers the full range syntax (including a native
-> `[between]=X..Y`), and `RangeFilter` is deprecated in favor of it. When you upgrade to 5.0, switch
-> `new RangeFilter()` to `new ComparisonFilter(new ExactFilter())` — the URL syntax is preserved.
->
-> Also, the `new RangeFilter()` instance in the "modern" example above triggers the same cosmetic
-> warmup ALERT described in the
-> [#7361 note](#date-filter-using-the-queryparameter-syntax-recommended). Use a service id or a
-> [`ChainFilter`](#chain-filter) to silence it.
+`RangeFilter` is deprecated and removed in 6.0. `ComparisonFilter` covers the same URL syntax
+(`?price[between]=10..100`, `?price[gt]=10&price[lt]=100`, …). The upgrade codemod keeps
+`RangeFilter` (it only moves the declaration to a `QueryParameter`), so switch to `ComparisonFilter`
+by hand.
 
 ### MongoDB ODM
 
