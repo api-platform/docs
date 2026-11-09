@@ -67,10 +67,10 @@ a new instance:
 - **`IriFilter`**: For filtering by IRIs (e.g., relations). Supports dot notation for nested
   associations.
     - Usage: `new QueryParameter(filter: IriFilter::class)`
-- **`ComparisonFilter`**: A decorator that wraps an equality filter (`ExactFilter`, `UuidFilter`) to
-  add `gt`, `gte`, `lt`, `lte`, `ne`, and a native `between` (`[between]=X..Y`) operator.
-  Recommended for numeric comparisons. (`DateFilter` is kept as a drop-in filter — see below;
-  `RangeFilter` is deprecated in its favor.)
+- **`ComparisonFilter`**: A decorator that wraps an equality filter (`ExactFilter`, or `UuidFilter`
+  with Doctrine ORM) to add `gt`, `gte`, `lt`, `lte`, `ne`, and a native `between`
+  (`[between]=X..Y`) operator. Recommended for numeric comparisons. (`DateFilter` is kept as a
+  drop-in filter — see below; `RangeFilter` is deprecated in its favor.)
     - Usage:
       `new QueryParameter(filter: new ComparisonFilter(new ExactFilter()), property: 'price')`
 - **`FreeTextQueryFilter`**: Applies a filter across multiple properties using a single parameter.

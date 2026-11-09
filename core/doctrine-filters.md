@@ -741,9 +741,9 @@ GET /events?startDate[gt]=2025-01-01T00:00:00Z
 
 ### UUID Support
 
-`ComparisonFilter` can also wrap `UuidFilter` to enable comparison operators on UUID columns. This
-is especially useful for cursor-based pagination on time-ordered UUIDs (UUID v7), where the
-lexicographic order of UUIDs matches their chronological order.
+`ComparisonFilter` can also wrap `UuidFilter` (Doctrine ORM only) to enable comparison operators on
+UUID columns. This is especially useful for cursor-based pagination on time-ordered UUIDs (UUID v7),
+where the lexicographic order of UUIDs matches their chronological order.
 
 ```php
 <?php
