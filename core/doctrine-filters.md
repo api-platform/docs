@@ -1332,8 +1332,8 @@ direction to use:
 
 | Description | Strategy to set                                                                    |
 | ----------- | ---------------------------------------------------------------------------------- |
-| Ascending   | `ApiPlatform\Doctrine\Common\Filter\OrderFilterInterface::DIRECTION_DESC` (`DESC`) |
-| Descending  | `ApiPlatform\Doctrine\Common\Filter\OrderFilterInterface::DIRECTION_ASC` (`ASC`)   |
+| Ascending   | `ApiPlatform\Doctrine\Common\Filter\OrderFilterInterface::DIRECTION_ASC` (`ASC`)   |
+| Descending  | `ApiPlatform\Doctrine\Common\Filter\OrderFilterInterface::DIRECTION_DESC` (`DESC`) |
 
 #### Other Strategies
 
