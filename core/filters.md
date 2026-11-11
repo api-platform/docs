@@ -751,6 +751,23 @@ The `IriConverterParameterProvider` supports the following options in `extraProp
 
 - **`fetch_data`**: Boolean (default: `false`) - When `true`, forces the IRI converter to fetch the
   actual entity data instead of just creating a reference.
+- **`throw_invalid_argument`**: Boolean (default: `false`) - When `true`, propagate invalid IRI
+  exceptions instead of logging them. With the default Symfony exception mapping, this returns HTTP
+  400. This applies to both single IRIs and arrays.
+- **`throw_not_found`**: Boolean (default: `false`) - When `true`, propagate exceptions for resources
+  that cannot be found. Use `fetch_data: true` when the converter must check that the resource exists.
+
+For example, to reject malformed IRIs in an `IriFilter` parameter:
+
+```php
+use ApiPlatform\Doctrine\Orm\Filter\IriFilter;
+use ApiPlatform\Metadata\QueryParameter;
+
+new QueryParameter(
+    filter: new IriFilter(),
+    extraProperties: ['throw_invalid_argument' => true],
+)
+```
 
 ### `ReadLinkParameterProvider`
 
