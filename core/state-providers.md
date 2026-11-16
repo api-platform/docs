@@ -694,7 +694,8 @@ used for operation-level `provider`) or a service implementing
 `ApiPlatform\State\ParameterProviderInterface`. The value set by the provider remains available on
 the `Parameter`. Since API Platform 5.0, that value also replaces the URI variable used to fetch the
 resource. This lets a provider transform an identifier before the resource lookup happens, for
-example to decode it:
+example to decode it. Parameters are immutable (since API Platform 5.1), so the provider returns a
+new `Parameter` holding the resolved value:
 
 ```php
 <?php
@@ -726,9 +727,9 @@ class Base64UriVariableDummy
     #[ORM\Column]
     public string $name;
 
-    public static function decodeName(Parameter $parameter, array $parameters = [], array $context = []): void
+    public static function decodeName(Parameter $parameter, array $parameters = [], array $context = []): Parameter
     {
-        $parameter->setValue(base64_decode((string) $parameter->getValue(), true));
+        return $parameter->withValue(base64_decode((string) $parameter->getValue(), true));
     }
 }
 ```
