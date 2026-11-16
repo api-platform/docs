@@ -1,5 +1,42 @@
 # Upgrade Guide
 
+## API Platform 5.0 to 5.1
+
+5.1 only adds deprecations, they keep working until they are removed in 6.0.
+
+### API Platform 5.1 Deprecations
+
+#### Immutable Parameters
+
+Parameters live in operation metadata that is cached and shared across requests, so mutating them
+leaked values from one request to the next in long-running workers. `Parameter` and `Parameters` are
+now immutable.
+
+`Parameter::setValue()` is deprecated. A parameter provider returns the resolved value instead of
+mutating the parameter it receives. `ParameterProviderInterface::provide()` now returns
+`Operation|Parameter|null`: return `$parameter->withValue($value)` to change only the value, or an
+`Operation` holding the replaced parameter. Callable providers, including those of
+`ResponseHeaderParameter`, follow the same contract. Existing implementations returning `?Operation`
+stay valid.
+
+```diff
+-public static function decodeName(Parameter $parameter, array $parameters = [], array $context = []): void
++public static function decodeName(Parameter $parameter, array $parameters = [], array $context = []): Parameter
+ {
+-    $parameter->setValue(base64_decode((string) $parameter->getValue(), true));
++    return $parameter->withValue(base64_decode((string) $parameter->getValue(), true));
+ }
+```
+
+`Parameters::add()`, `remove()` and `sort()` are deprecated in favor of `with()`, `without()` and
+`sorted()`, which return a new instance. In a custom metadata factory:
+
+```diff
+-$parameters->add('key', $parameter);
++$parameters = $parameters->with('key', $parameter);
+ $operation = $operation->withParameters($parameters);
+```
+
 ## API Platform 4.4 to 5.0
 
 5.0 removes long-deprecated APIs. Components ship with a `@beta` stability flag (for example
