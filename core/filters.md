@@ -337,6 +337,10 @@ class Book
     #[QueryParameter(key: 'search', filter: new PartialSearchFilter())]
     private string $title = '';
 
+    // Operations can also be given by class name
+    #[QueryParameter(key: 'author', filter: new PartialSearchFilter(), operations: [GetCollection::class])]
+    public string $author = '';
+
     // Applies only to GetCollection
     #[QueryParameter(key: 'name', filter: new PartialSearchFilter(), operations: [new GetCollection()])]
     public string $name = '';
