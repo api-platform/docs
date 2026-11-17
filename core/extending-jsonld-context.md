@@ -209,3 +209,97 @@ This assertion is generated automatically for every collection and isn't configu
 > `range` array). `owl:equivalentClass` no longer appears anywhere in the generated Hydra
 > documentation: if you parse `range` and expect that structure, read `hydra:memberAssertion`
 > instead.
+
+### The `hydra:operation` Property
+
+Following [Hydra](https://www.hydra-cg.com/spec/latest/core/#adding-affordances-to-representations),
+JSON-LD representations expose the operations a client can perform on them in their
+`hydra:operation` property (`operation` without the `hydra:` prefix). By default, every item and
+collection exposes all the operations sharing its IRI, filtered by their `security`: a client only
+discovers the operations it's allowed to call. Each operation is described as in the
+`hydra:supportedOperation` property of the API documentation. For instance, with a `Book` resource
+declaring a `Get` and a `Delete` operation, `GET /books/1` returns:
+
+```json
+{
+    "@context": "/contexts/Book",
+    "@id": "/books/1",
+    "@type": "Book",
+    "operation": [
+        {
+            "@type": ["Operation", "schema:FindAction"],
+            "description": "Retrieves a Book resource.",
+            "method": "GET",
+            "returns": "Book",
+            "title": "getBook"
+        },
+        {
+            "@type": ["Operation", "schema:DeleteAction"],
+            "description": "Deletes the Book resource.",
+            "method": "DELETE",
+            "returns": "owl:Nothing",
+            "title": "deleteBook"
+        }
+    ],
+    "title": "Hyperion"
+}
+```
+
+To narrow this list, pass `HydraOperation` references to the `hydraOperations` option of an
+operation. A reference points to an operation declared on the resource, either by its `name` or by
+its `method` and `uriTemplate` (the format suffix is ignored, and the URI template of the current
+operation is used when omitted). Referencing an operation that doesn't exist throws an exception. A
+reference can also have its own `security`, otherwise the one of the referenced operation is used:
+
+```php
+<?php
+// api/src/ApiResource/Book.php with Symfony or app/ApiResource/Book.php with Laravel
+namespace App\ApiResource;
+
+use ApiPlatform\Metadata\Delete;
+use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\HydraOperation;
+use ApiPlatform\Metadata\Patch;
+
+#[Get(hydraOperations: [
+    new HydraOperation(method: 'DELETE'),
+    new HydraOperation(name: 'publish_book', security: "is_granted('ROLE_EDITOR')"),
+])]
+#[GetCollection(hydraOperations: false)]
+#[Delete(security: "is_granted('ROLE_ADMIN')", hideHydraOperation: true)]
+#[Patch(uriTemplate: '/books/{id}/publish', name: 'publish_book')]
+class Book
+{
+    // ...
+}
+```
+
+Here, a book (including the members of the collection) only exposes the `DELETE` operation to
+administrators and the publish one to editors, while `hydraOperations: false` removes the property
+from the collection. As `hideHydraOperation` only applies to the API documentation, the `DELETE`
+operation is hidden from `hydra:supportedOperation` but authorized users can still discover it in
+the responses.
+
+To only expose the operations referenced by `hydraOperations`, disable the default behavior with
+Symfony:
+
+```yaml
+# api/config/packages/api_platform.yaml
+api_platform:
+    serializer:
+        hydra_operations: false
+```
+
+Or with Laravel:
+
+```php
+<?php
+// config/api-platform.php
+return [
+    // ....
+    'serializer' => [
+        'hydra_operations' => false,
+    ],
+];
+```
