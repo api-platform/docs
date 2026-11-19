@@ -298,7 +298,13 @@ final class UserResourcesSubscriber implements EventSubscriberInterface
 Implement `ApiPlatform\HttpCache\PurgeTagProviderInterface` to add extra cache tags to invalidate
 when a resource is mutated. This is useful for any tags the built-in listener cannot resolve on its
 own: sub-resource collection IRIs (e.g. `/parents/{parentId}/children`), surrogate-key prefixes,
-class-based tags, or any custom invalidation strategy.
+class-based tags, or any custom invalidation strategy. This interface is available since API
+Platform 5.1.
+
+> [!NOTE] Providers are called by the built-in Doctrine persist and remove state processors, after
+> the resource has been persisted or removed. Changes flushed outside of an API Platform operation
+> (for instance in a console command or a message handler), or by a custom state processor that does
+> not delegate to the built-in ones, do not trigger them.
 
 The interface provides three methods so you can differentiate between operations and receive the
 previous state of the resource on updates:
@@ -347,7 +353,8 @@ final class ChildPurgeTagProvider implements PurgeTagProviderInterface
 
 #### Symfony
 
-With [autowiring and autoconfiguration](https://symfony.com/doc/current/service_container/autowiring.html)
+With
+[autowiring and autoconfiguration](https://symfony.com/doc/current/service_container/autowiring.html)
 enabled (the default), the service is automatically registered. To declare the service explicitly:
 
 ```yaml
@@ -360,8 +367,9 @@ services:
 
 #### Laravel
 
-Any class implementing `PurgeTagProviderInterface` placed inside your `app/` directory is automatically
-discovered and registered by API Platform's autoconfiguration. No further setup is required.
+Any class implementing `PurgeTagProviderInterface` placed inside your `app/` directory is
+automatically discovered and registered by API Platform's autoconfiguration. No further setup is
+required.
 
 ## Setting Custom HTTP Cache Headers
 
