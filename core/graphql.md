@@ -1273,8 +1273,17 @@ To get the next page, you would add the `endCursor` from the current page as the
 
 ```graphql
 {
-  offers(first: 10, after: "endCursor") {
-  }
+    offers(first: 10, after: "endCursor") {
+        pageInfo {
+            endCursor
+            hasNextPage
+        }
+        edges {
+            node {
+                id
+            }
+        }
+    }
 }
 ```
 
@@ -1283,8 +1292,17 @@ parameter.
 
 ```graphql
 {
-  offers(last: 10, before: "startCursor") {
-  }
+    offers(last: 10, before: "startCursor") {
+        pageInfo {
+            startCursor
+            hasPreviousPage
+        }
+        edges {
+            node {
+                id
+            }
+        }
+    }
 }
 ```
 
@@ -3023,7 +3041,7 @@ For handling the upload of multiple files, iterate over `$context['args']['input
 In the constructor of the `MediaObjectNormalizer`, the injected Normalizer must be replaced with the
 one from the `api_platform.graphql.normalizer.item` from GraphQL:
 
-````php
+```php
 <?php
 // api/src/Serializer/MediaObjectNormalizer.php
 
@@ -3040,22 +3058,24 @@ final readonly class MediaObjectNormalizer
 
     // ...
 }
+```
 
 ### Using the `createMediaObject` Mutation
 
 Following the specification, the upload must be done with a `multipart/form-data` content type.
 
-You need to enable it in the [allowed formats of API Platform](content-negotiation.md#configuring-formats-globally):
+You need to enable it in the
+[allowed formats of API Platform](content-negotiation.md#configuring-formats-globally):
 
 #### Modifying allowed formats with Symfony
 
 ```yaml
 # api/config/packages/api_platform.yaml
 api_platform:
-  formats:
-    # ...
-    multipart: ['multipart/form-data']
-````
+    formats:
+        # ...
+        multipart: ["multipart/form-data"]
+```
 
 #### Modifying allowed formats with Laravel
 
