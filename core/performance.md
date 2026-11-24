@@ -301,13 +301,28 @@ own: sub-resource collection IRIs (e.g. `/parents/{parentId}/children`), surroga
 class-based tags, or any custom invalidation strategy. This interface is available since API
 Platform 5.1.
 
-> [!NOTE] Providers are called by the built-in Doctrine persist and remove state processors, after
-> the resource has been persisted or removed. Changes flushed outside of an API Platform operation
-> (for instance in a console command or a message handler), or by a custom state processor that does
-> not delegate to the built-in ones, do not trigger them.
+> [!NOTE] HTTP cache invalidation must be enabled. Providers are called by the built-in persist and
+> remove state processors (Doctrine or Eloquent), for every write handled by API Platform. Changes
+> flushed outside of an API Platform operation (for instance directly with Doctrine or Eloquent in a
+> console command or a message handler), or by a custom state processor that does not delegate to
+> the built-in ones, do not trigger them.
 
-The interface provides three methods so you can differentiate between operations and receive the
-previous state of the resource on updates:
+The interface has a single method, `getTags()`. It receives the resource, the operation and the
+context:
+
+- On a delete operation (`$operation instanceof DeleteOperationInterface`), providers are called
+  before the object is removed, so its identifier is still set. Otherwise, they receive the object
+  returned by the persistence processor.
+- `$context['previous_data']` holds the API resource as it was before the request. It is an object
+  on updates and `null` on creation.
+- With `stateOptions` (`entityClass` or `documentClass`, for example with the ObjectMapper),
+  `$resource` is the entity or document while `$context['previous_data']` is the API resource. Use
+  `$operation->getClass()` to know which API resource the write is for.
+- Every provider is called for every write: return early, with an empty array, for the classes you
+  do not handle.
+
+The following provider invalidates the sub-resource collection of the previous and of the new parent
+when the parent of a child changes:
 
 ```php
 <?php
@@ -315,38 +330,25 @@ previous state of the resource on updates:
 namespace App\HttpCache;
 
 use ApiPlatform\HttpCache\PurgeTagProviderInterface;
+use ApiPlatform\Metadata\Operation;
 use App\Entity\Child;
 
 final class ChildPurgeTagProvider implements PurgeTagProviderInterface
 {
-    public function getTagsForInsert(object $resource): iterable
+    public function getTags(object $resource, Operation $operation, array $context = []): iterable
     {
-        if (!$resource instanceof Child || null === $resource->getParent()) {
-            return [];
+        if (!$resource instanceof Child) {
+            return;
         }
 
-        yield '/parents/'.$resource->getParent()->getId().'/children';
-    }
-
-    public function getTagsForUpdate(object $resource, object $previousResource): iterable
-    {
-        // Invalidate both the old and new parent collection when the parent changes
-        if ($resource instanceof Child && null !== $resource->getParent()) {
+        if (null !== $resource->getParent()) {
             yield '/parents/'.$resource->getParent()->getId().'/children';
         }
 
+        $previousResource = $context['previous_data'] ?? null;
         if ($previousResource instanceof Child && null !== $previousResource->getParent()) {
             yield '/parents/'.$previousResource->getParent()->getId().'/children';
         }
-    }
-
-    public function getTagsForDelete(object $resource): iterable
-    {
-        if (!$resource instanceof Child || null === $resource->getParent()) {
-            return [];
-        }
-
-        yield '/parents/'.$resource->getParent()->getId().'/children';
     }
 }
 ```
@@ -355,7 +357,8 @@ final class ChildPurgeTagProvider implements PurgeTagProviderInterface
 
 With
 [autowiring and autoconfiguration](https://symfony.com/doc/current/service_container/autowiring.html)
-enabled (the default), the service is automatically registered. To declare the service explicitly:
+enabled (the default), the service is automatically tagged
+`api_platform.http_cache.purge_tag_provider`. To declare the service explicitly:
 
 ```yaml
 # config/services.yaml
@@ -368,8 +371,8 @@ services:
 #### Laravel
 
 Any class implementing `PurgeTagProviderInterface` placed inside your `app/` directory is
-automatically discovered and registered by API Platform's autoconfiguration. No further setup is
-required.
+automatically discovered and tagged with `PurgeTagProviderInterface::class` by API Platform's
+autoconfiguration, like other API Platform services. No further setup is required.
 
 ## Setting Custom HTTP Cache Headers
 
