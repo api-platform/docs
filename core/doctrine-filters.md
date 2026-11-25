@@ -148,6 +148,8 @@ To add some search filters, choose over this new list:
 - [FreeTextQueryFilter](#free-text-query-filter) (allows you to apply multiple filters to multiple
   properties of a resource at the same time, using a single parameter in the URL)
 - [OrFilter](#or-filter) (apply a filter using `orWhere` instead of `andWhere`)
+- [SubtypeFilter](#subtype-filter) (apply a filter to a property declared on a subclass of the
+  queried entity; Doctrine ORM only)
 - [ChainFilter](#chain-filter) (compose several filters on a single parameter key, each
   self-selecting by value shape)
 
@@ -785,6 +787,103 @@ Doctrine's type system, which is required for correct comparisons on binary UUID
 `ComparisonFilter` automatically generates six OpenAPI query parameters for each configured
 parameter key, one per operator. For a parameter named `price`, the generated parameters are
 `price[gt]`, `price[gte]`, `price[lt]`, `price[lte]`, `price[ne]`, and `price[between]`.
+
+## Subtype Filter
+
+The subtype filter is a decorator that applies the filter it wraps to a property that only exists on
+a subclass of the queried entity. It is meant for resources mapped with Doctrine
+[single table or class table inheritance](https://www.doctrine-project.org/projects/doctrine-orm/en/current/reference/inheritance-mapping.html).
+
+Syntax: depends on the decorated filter (e.g. `?seats=4` with `ExactFilter`, `?horsepower[gte]=300`
+with `ComparisonFilter`).
+
+> [!NOTE] `SubtypeFilter` is only available for Doctrine ORM
+> (`ApiPlatform\Doctrine\Orm\Filter\SubtypeFilter`).
+
+```php
+<?php
+// api/src/Entity/Vehicle.php
+namespace App\Entity;
+
+use ApiPlatform\Doctrine\Orm\Filter\ComparisonFilter;
+use ApiPlatform\Doctrine\Orm\Filter\ExactFilter;
+use ApiPlatform\Doctrine\Orm\Filter\SubtypeFilter;
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\QueryParameter;
+use Doctrine\ORM\Mapping as ORM;
+
+#[ApiResource]
+#[GetCollection(
+    parameters: [
+        'seats' => new QueryParameter(
+            filter: new SubtypeFilter(Car::class, new ExactFilter()),
+            property: 'seats',
+        ),
+        'horsepower' => new QueryParameter(
+            filter: new SubtypeFilter(MotorVehicle::class, new ComparisonFilter(new ExactFilter())),
+            property: 'horsepower',
+        ),
+    ],
+)]
+#[ORM\Entity]
+#[ORM\InheritanceType('SINGLE_TABLE')]
+#[ORM\DiscriminatorColumn(name: 'discr', type: 'string')]
+#[ORM\DiscriminatorMap(['car' => Car::class, 'truck' => Truck::class, 'bicycle' => Bicycle::class])]
+abstract class Vehicle
+{
+    // ...
+}
+```
+
+Given that the collection endpoint is `/vehicles`:
+
+- `/vehicles?seats=4` returns the cars with exactly 4 seats
+- `/vehicles?horsepower[gte]=300` returns the cars and trucks (both extending the `MotorVehicle`
+  mapped superclass) with at least 300 horsepower
+
+The first argument of `SubtypeFilter` is the subtype declaring the property. It can be:
+
+- an entity (e.g. `Car`): its own subclasses (e.g. `SportsCar`) are matched as well
+- a mapped superclass or an interface: it is expanded to every entity of the hierarchy of that type,
+  so new subclasses or implementations are picked up automatically
+
+The OpenAPI parameters and JSON Schema are those of the decorated filter (e.g. the operators of
+`ComparisonFilter` are documented).
+
+### Strict Mode
+
+By default (`strict: true`), only entities of the subtype matching the decorated filter are
+returned. With `strict: false`, entities of every other type are returned as well, since the filter
+does not apply to them:
+
+```php
+'seats' => new QueryParameter(
+    filter: new SubtypeFilter(Car::class, new ExactFilter(), strict: false),
+    property: 'seats',
+),
+```
+
+Here, `/vehicles?seats=4` returns the cars with 4 seats, along with all trucks and bicycles.
+
+When wrapped in an [`OrFilter`](#or-filter), `SubtypeFilter` always behaves as strict: otherwise the
+disjunction would match every entity of another type.
+
+### How It Works
+
+DQL only knows the fields of the class in the `FROM` clause, and Doctrine has no equivalent of the
+JPA `TREAT` downcast. The decorated filter is therefore applied, unchanged, to a subquery selecting
+from the subtype, and the root query keeps the rows whose identifier is returned by that subquery:
+
+```sql
+o INSTANCE OF Car AND o.id IN (SELECT s.id FROM Car s WHERE s.seats = :seats)
+```
+
+The `INSTANCE OF` guard lets the database discard rows of other types on the discriminator before
+evaluating the subquery.
+
+> [!WARNING] Nested properties (e.g. `owner.name`) are resolved from the metadata of the queried
+> resource, so the built-in filters only support properties declared directly on the subtype.
 
 ## Date Filter
 
