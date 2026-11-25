@@ -120,9 +120,24 @@ Path and header parameters remain OpenAPI parameters.
 
 ---
 
-> [!NOTE] Current `PUT` implementation behaves more or less like the `PATCH` method. Existing
-> properties not included in the payload are **not** removed, their current values are preserved. To
-> remove an existing property, its value must be explicitly set to `null`.
+> [!NOTE] `PUT` replaces the whole resource: properties not included in the payload are reset to
+> their default value, they are **not** preserved. Use `PATCH` to update only some properties.
+
+To get the previous behavior back, where `PUT` updates only the properties sent in the payload, set
+the `standard_put` extra property to `false`, either for all resources:
+
+```yaml
+api_platform:
+    defaults:
+        extra_properties:
+            standard_put: false
+```
+
+or on an `ApiResource` or an `HttpOperation`, for example:
+
+```php
+#[ApiResource(extraProperties: ['standard_put' => false])]
+```
 
 ## Upsert: Creating a Resource With PUT
 
