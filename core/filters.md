@@ -350,6 +350,33 @@ class Book
 Parameters declared on properties are automatically applied to all operations on the resource. You
 can restrict a parameter to specific operations using the `operations` argument.
 
+A parameter declared on an operation takes precedence over a parameter with the same key declared on
+a property:
+
+```php
+<?php
+// api/src/Entity/Book.php
+namespace App\Entity;
+
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\HeaderParameter;
+
+#[ApiResource(
+    operations: [
+        // The header is optional on this operation only
+        new GetCollection(parameters: ['X-Authorization' => new HeaderParameter(required: false)]),
+        new Get(),
+    ],
+)]
+class Book
+{
+    #[HeaderParameter(key: 'X-Authorization', required: true)]
+    public string $authToken = '';
+}
+```
+
 The restriction matches on the operation class, not on a single configured operation. If a resource
 declares two `Get` operations with different URI templates, `operations: [new Get()]` applies the
 parameter to both of them.
