@@ -899,8 +899,16 @@ entities:
 ### Creating a Custom Parameter Provider
 
 You can create your own providers to implement any custom logic. A provider must implement
-`ParameterProviderInterface`. The `provide` method can modify the parameter's value or even return a
-modified `Operation` to alter the request handling flow.
+`ParameterProviderInterface`. Parameters are immutable and shared across requests, so the `provide`
+method never modifies the parameter it receives. Since API Platform 5.1, it returns
+`Operation|Parameter|null`:
+
+- a new `Parameter` (`return $parameter->withValue($value);`) to change only the parameter's value,
+- a modified `Operation` (for example holding a replaced parameter) to alter the request handling
+  flow,
+- `null` to leave everything unchanged.
+
+Calling `Parameter::setValue()` is deprecated and will be removed in 6.0.
 
 For instance, a provider could add serialization groups to the normalization context based on a
 query parameter:
@@ -917,7 +925,7 @@ use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
 
 final class DynamicGroupProvider implements ParameterProviderInterface
 {
-    public function provide(Parameter $parameter, array $parameters = [], array $context = []): ?Operation
+    public function provide(Parameter $parameter, array $parameters = [], array $context = []): Operation|Parameter|null
     {
         $operation = $context['operation'] ?? null;
         if (!$operation) {
@@ -932,6 +940,28 @@ final class DynamicGroupProvider implements ParameterProviderInterface
         }
 
         return $operation;
+    }
+}
+```
+
+A provider that only transforms the value returns the new parameter:
+
+```php
+<?php
+// src/State/TrimProvider.php
+namespace App\State;
+
+use ApiPlatform\Metadata\Operation;
+use ApiPlatform\Metadata\Parameter;
+use ApiPlatform\State\ParameterProviderInterface;
+
+final class TrimProvider implements ParameterProviderInterface
+{
+    public function provide(Parameter $parameter, array $parameters = [], array $context = []): Operation|Parameter|null
+    {
+        $value = $parameter->getValue();
+
+        return is_string($value) ? $parameter->withValue(trim($value)) : null;
     }
 }
 ```
