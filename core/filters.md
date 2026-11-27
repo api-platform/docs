@@ -703,6 +703,9 @@ Parameter Providers are powerful services that can inspect, transform, or provid
 parameters. They can even modify the current `Operation` metadata on the fly. A provider is a class
 that implements `ApiPlatform\State\ParameterProviderInterface`.
 
+Some filters set their own provider, for instance `IriFilter` uses `IriConverterParameterProvider`.
+When a `provider` is declared on the parameter, it is used instead.
+
 ### `IriConverterParameterProvider`
 
 This built-in provider takes an IRI string (e.g., `/users/1`) and converts it into the corresponding
