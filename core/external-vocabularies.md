@@ -20,12 +20,16 @@ class Book
 {
     // ...
 
-    #[ApiProperty(types: ['https://schema.org/name'])]
+    #[ApiProperty(iris: ['https://schema.org/name'])]
     public $name;
 
     // ...
 }
 ```
+
+On a property, `iris` sets the IRI used in the JSON-LD context and in the Hydra documentation. The
+`types` option of `#[ApiProperty]` is only used as the `externalDocs` URL of the property in the
+JSON Schema.
 
 The generated JSON for products and the related context document will now use external IRIs
 according to the specified attributes:
@@ -57,8 +61,8 @@ An extended list of existing open vocabularies is available on
 [the Linked Open Vocabularies (LOV) database](https://lov.linkeddata.es/dataset/lov/).
 
 By default, when using [validations](validation.md) API Platform will try to define known
-[Schema.org](https://schema.org) types as IRIs for your properties if you did not provide any in
-your `#[ApiProperty]` attributes.
+[Schema.org](https://schema.org) types for your properties (the `types` option, used in the JSON
+Schema) if you did not provide any in your `#[ApiProperty]` attributes.
 
 - Symfony built-in mapping is:
 

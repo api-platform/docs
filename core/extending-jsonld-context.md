@@ -23,7 +23,7 @@ class Book
     // ...
 
     #[ApiProperty(
-        types: ['https://schema.org/name'],
+        iris: ['https://schema.org/name'],
         jsonldContext: [
             '@id' => 'http://yourcustomid.com',
             '@type' => 'http://www.w3.org/2001/XMLSchema#string',
@@ -61,7 +61,7 @@ The generated context will now have your custom attributes set:
 ```
 
 Note that you do not have to provide the `@id` attribute. If you do not provide an `@id` attribute,
-the value from `iri` will be used.
+the value from `iris` will be used.
 
 ### Extending the Context of a Whole Resource
 

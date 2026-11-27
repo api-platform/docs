@@ -108,7 +108,7 @@ class MediaObject
     #[ORM\Id, ORM\Column, ORM\GeneratedValue]
     private ?int $id = null;
 
-    #[ApiProperty(types: ['https://schema.org/contentUrl'], writable: false)]
+    #[ApiProperty(iris: ['https://schema.org/contentUrl'], writable: false)]
     #[Groups(['media_object:read'])]
     public ?string $contentUrl = null;
 
@@ -337,7 +337,7 @@ class Book
 
     #[ORM\ManyToOne(targetEntity: MediaObject::class)]
     #[ORM\JoinColumn(nullable: true)]
-    #[ApiProperty(types: ['https://schema.org/image'])]
+    #[ApiProperty(iris: ['https://schema.org/image'])]
     public ?MediaObject $image = null;
 
     // ...
@@ -476,7 +476,7 @@ class Book
 {
     // ...
 
-    #[ApiProperty(types: ['https://schema.org/contentUrl'])]
+    #[ApiProperty(iris: ['https://schema.org/contentUrl'])]
     #[Groups(['book:read'])]
     public ?string $contentUrl = null;
 

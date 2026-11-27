@@ -3020,7 +3020,7 @@ class MediaObject
     #[ORM\Id, ORM\Column, ORM\GeneratedValue]
     protected ?int $id = null;
 
-    #[ApiProperty(types: ['https://schema.org/contentUrl'])]
+    #[ApiProperty(iris: ['https://schema.org/contentUrl'])]
     #[Groups(['media_object_read'])]
     public ?string $contentUrl = null;
 
