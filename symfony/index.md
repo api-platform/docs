@@ -160,7 +160,7 @@ docker compose up --wait
 > ```
 
 The `SERVER_NAME` is used by Caddy server, specify `localhost:8080` if you want any other address or
-to diable https.
+to disable https.
 
 This starts the following services:
 
