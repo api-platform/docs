@@ -1065,6 +1065,105 @@ itself, wrapping a legacy filter in a `ChainFilter` also suppresses the cosmetic
 to referencing the filter by service id when you need to compose it with another filter on the same
 key.
 
+## Subtype Filter
+
+> [!NOTE] Since API Platform 5.1, `SubtypeFilter` is available for Doctrine ORM
+> (`ApiPlatform\Doctrine\Orm\Filter\SubtypeFilter`). It is not available for MongoDB ODM.
+
+When a resource is backed by a Doctrine inheritance hierarchy (single table or class table), a
+property declared on a subclass cannot be referenced in DQL from the parent entity. `SubtypeFilter`
+is a decorator that solves this: it applies the filter it wraps to the rows of a given subtype only.
+
+The `QueryParameter`'s `property` is the property of the subtype. Internally the filter generates:
+
+```sql
+root INSTANCE OF Subtype AND root.id IN (SELECT sub.id FROM Subtype sub WHERE <decorated filter>)
+```
+
+Constructor: `new SubtypeFilter(string $subtype, FilterInterface $filter, bool $strict = true)`.
+`$subtype` is an entity, a mapped superclass or an interface. It is expanded to the topmost mapped
+entities of the queried hierarchy that are instances of it, so a mapped superclass or an interface
+matches every entity that extends or implements it. New subclasses are picked up automatically. If
+no mapped entity matches, a `RuntimeException` is thrown.
+
+```php
+<?php
+// api/src/Entity/Vehicle.php
+namespace App\Entity;
+
+use ApiPlatform\Doctrine\Orm\Filter\ComparisonFilter;
+use ApiPlatform\Doctrine\Orm\Filter\ExactFilter;
+use ApiPlatform\Doctrine\Orm\Filter\SubtypeFilter;
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\QueryParameter;
+use Doctrine\ORM\Mapping as ORM;
+
+#[ApiResource(operations: [
+    new GetCollection(parameters: [
+        'seats' => new QueryParameter(
+            filter: new SubtypeFilter(Car::class, new ExactFilter()),
+            property: 'seats',
+        ),
+        'seatsOrOtherType' => new QueryParameter(
+            filter: new SubtypeFilter(Car::class, new ExactFilter(), strict: false),
+            property: 'seats',
+        ),
+        'horsepower' => new QueryParameter(
+            filter: new SubtypeFilter(MotorVehicle::class, new ComparisonFilter(new ExactFilter())),
+            property: 'horsepower',
+        ),
+    ]),
+])]
+#[ORM\Entity]
+#[ORM\InheritanceType('SINGLE_TABLE')]
+#[ORM\DiscriminatorColumn(name: 'type')]
+#[ORM\DiscriminatorMap([
+    'car' => Car::class,
+    'sports_car' => SportsCar::class,
+    'truck' => Truck::class,
+    'bicycle' => Bicycle::class,
+])]
+abstract class Vehicle
+{
+    // id, name
+}
+```
+
+Here `Car` declares `seats`, and `MotorVehicle` is a mapped superclass declaring `horsepower` that
+`Car`, `SportsCar` and `Truck` extend.
+
+The query parameter has the shape of the decorated filter:
+
+- `/vehicles?seats=4` — cars with 4 seats, including subclasses of `Car` such as `SportsCar`. The
+  array form `?seats[]=4&seats[]=2` is also supported, as `ExactFilter` does.
+- `/vehicles?horsepower[gte]=300&horsepower[lt]=400` — every motor vehicle with at least 300 and
+  fewer than 400 horsepower.
+
+### Strict and Non-Strict Mode
+
+With `strict: true` (the default), only rows of the subtype that match the condition are returned.
+
+With `strict: false`, the result contains the rows of the subtype that match, plus every row of
+other types, as the condition does not apply to them. `/vehicles?seatsOrOtherType=4` returns the
+cars with 4 seats and all the vehicles that are not cars.
+
+### Using SubtypeFilter in an OrFilter
+
+Inside an `OrFilter`, `SubtypeFilter` always behaves as strict. A non-strict condition would match
+every row of other types and make the whole disjunction match everything.
+
+### OpenAPI and JSON Schema
+
+The OpenAPI parameter and the JSON Schema come from the decorated filter.
+
+### Limitations
+
+- Composite identifiers are not supported.
+- Only properties declared on the subtype itself are supported. Nested paths such as `owner.name`
+  are not.
+- Doctrine ORM only. There is no MongoDB ODM implementation.
+
 ## Boolean Filter
 
 > [!TIP] Consider using [`ExactFilter`](#exact-filter) as a modern replacement. `ExactFilter` does

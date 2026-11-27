@@ -84,6 +84,11 @@ a new instance:
   [Doctrine Filters documentation](doctrine-filters.md#chain-filter) for details.
     - Usage:
       `new QueryParameter(filter: new ChainFilter([new ExactFilter(), new DateFilter()]), property: 'birthdate')`
+- **`SubtypeFilter`** (Doctrine ORM only, since API Platform 5.1): Decorates a filter to apply it to
+  a property declared on a subclass of a Doctrine inheritance hierarchy. See the
+  [Doctrine Filters documentation](doctrine-filters.md#subtype-filter) for details.
+    - Usage:
+      `new QueryParameter(filter: new SubtypeFilter(Car::class, new ExactFilter()), property: 'seats')`
 - **`BooleanFilter`**: For boolean field filtering (legacy, `ExactFilter` is recommended instead).
     - Usage: `new QueryParameter(filter: BooleanFilter::class)`
 - **`NumericFilter`**: For numeric field filtering (legacy, `ExactFilter` or `ComparisonFilter` is
