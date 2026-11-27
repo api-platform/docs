@@ -214,9 +214,9 @@ will also be available to write (`PUT` / `PATCH` / `POST`). The `author` propert
 write-only; it will not be visible when serialized responses are returned by the API.
 
 Internally, API Platform passes the value of the `normalizationContext` as the 3rd argument of
-[the `Serializer::serialize()` method](https://api.symfony.com/master/Symfony/Component/Serializer/SerializerInterface.html#method_serialize)
+[the `Serializer::serialize()` method](https://github.com/symfony/symfony/blob/7.4/src/Symfony/Component/Serializer/SerializerInterface.php)
 during the normalization process. `denormalizationContext` is passed as the 4th argument of
-[the `Serializer::deserialize()` method](https://api.symfony.com/master/Symfony/Component/Serializer/SerializerInterface.html#method_deserialize)
+[the `Serializer::deserialize()` method](https://github.com/symfony/symfony/blob/7.4/src/Symfony/Component/Serializer/SerializerInterface.php)
 during denormalization (writing).
 
 To configure the serialization groups of classes's properties, you must use directly

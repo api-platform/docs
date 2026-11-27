@@ -669,7 +669,7 @@ Note also that:
 - If you have added your [own custom types](#custom-types), you can use them directly for your
   arguments types (it's the case here for `DateTime`).
 - You can also add a custom description for your custom arguments. You can see the
-  [field arguments documentation](https://webonyx.github.io/graphql-php/type-system/object-types/#field-arguments)
+  [field arguments documentation](https://webonyx.github.io/graphql-php/type-definitions/object-types/#field-argument-configuration-options)
   for more options.
 
 The arguments you have defined or the default ones and their value will be in `$context['args']` of
@@ -798,7 +798,7 @@ The arguments will be in `$context['args']['input']` of your resolvers.
 ## Subscriptions
 
 Subscriptions are an
-[RFC](https://github.com/graphql/graphql-spec/blob/master/rfcs/Subscriptions.md#rfc-graphql-subscriptions)
+[RFC](https://github.com/graphql/graphql-wg/blob/main/rfcs/Subscriptions.md#rfc-graphql-subscriptions)
 to allow a client to receive pushed realtime data from the server.
 
 In API Platform, the built-in subscription support is handled by using

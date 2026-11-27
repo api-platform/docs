@@ -45,7 +45,7 @@ defined in the `formats` configuration key (see below). If the request format is
 returned.
 
 Examples showcasing how to use the different mechanisms are available
-[in the API Platform test suite](https://github.com/api-platform/core/blob/main/features/main/content_negotiation.feature).
+[in the API Platform test suite](https://github.com/api-platform/core/blob/main/tests/Functional/ContentNegotiationTest.php).
 
 ## Configuring Formats Globally
 

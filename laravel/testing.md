@@ -476,7 +476,8 @@ The API Platform Demo
 
 You may also be interested in these alternative testing tools (not included by default):
 
-- [Hoppscotch](https://docs.hoppscotch.io/features/tests), create functional test for your API
+- [Hoppscotch](https://docs.hoppscotch.io/documentation/features/scripts), create functional test
+  for your API
 - [Behat](https://behat.org), a
   [behavior-driven development (BDD)](https://en.wikipedia.org/wiki/Behavior-driven_development)
   framework to write the API specification as user stories and in natural language then execute
@@ -487,8 +488,8 @@ You may also be interested in these alternative testing tools (not included by d
 
 ### API Test Assertions with Laravel
 
-In addition to [the built-in ones](https://phpunit.readthedocs.io/en/main/assertions.html), API
-Platform provides convenient PHPUnit assertions dedicated to API testing:
+In addition to [the built-in ones](https://docs.phpunit.de/en/11.5/assertions.html), API Platform
+provides convenient PHPUnit assertions dedicated to API testing:
 
 ```php
 <?php

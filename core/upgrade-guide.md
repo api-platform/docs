@@ -27,9 +27,9 @@ public Status $status;
 ```
 
 Alternatively, enable Symfony Validator's
-[auto-mapping](https://symfony.com/doc/current/validation/auto_mapping.html) on the resource class.
-Auto-mapping generates an implicit `Type` constraint from the PHP type declaration, which is
-sufficient for the 422 promotion to apply.
+[auto-mapping](https://symfony.com/doc/current/reference/constraints/EnableAutoMapping.html) on the
+resource class. Auto-mapping generates an implicit `Type` constraint from the PHP type declaration,
+which is sufficient for the 422 promotion to apply.
 
 **What to do (Laravel)**: add a rule for the property in `rules`:
 

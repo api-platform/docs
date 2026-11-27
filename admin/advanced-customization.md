@@ -536,7 +536,7 @@ backend agnostic, fully customizable solutions to common Admin requirements.
 
 Here are some examples, from the simplest to the most complete solutions:
 
-- [PrevNextButton](https://marmelab.com/react-admin/PrevNextButton.html)
+- [PrevNextButtons](https://marmelab.com/react-admin/PrevNextButtons.html)
 - [MenuLive](https://marmelab.com/react-admin/MenuLive.html)
 - [FilterList](https://marmelab.com/react-admin/FilterList.html)
 - [RevisionsButton](https://marmelab.com/react-admin/RevisionsButton.html)

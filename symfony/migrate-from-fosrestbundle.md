@@ -153,7 +153,7 @@ access.
 #### In API Platform (Security)
 
 Use the `security` attribute in the `ApiResource` and `ApiProperty` attributes. It is an
-[Expression language](https://symfony.com/doc/current/components/expression_language.md) string
+[Expression language](https://symfony.com/doc/current/components/expression_language.html) string
 describing who can access your resources or who can see the properties of your resources. By
 default, everything is accessible without authentication.
 

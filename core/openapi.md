@@ -12,7 +12,7 @@ yet support v3.2.0, you can ask for the legacy v3.0.0 format instead thanks to t
 query parameter: `/docs.jsonopenapi?spec_version=3.0.0`
 
 It also integrates a customized version of [Swagger UI](https://swagger.io/swagger-ui/),
-[ReDoc](https://rebilly.github.io/ReDoc/) and
+[ReDoc](https://redocly.github.io/redoc/) and
 [Scalar API Reference](https://github.com/scalar/scalar), some nice tools to display the API
 documentation in a user friendly way.
 
@@ -614,7 +614,7 @@ resources:
 ## Choosing Between Swagger UI, ReDoc and Scalar
 
 When the HTML format is served, API Platform can render three different documentation UIs:
-[Swagger UI](https://swagger.io/swagger-ui/), [ReDoc](https://rebilly.github.io/ReDoc/) and
+[Swagger UI](https://swagger.io/swagger-ui/), [ReDoc](https://redocly.github.io/redoc/) and
 [Scalar API Reference](https://github.com/scalar/scalar). All three are backed by the same
 documentation route (`/docs` by default) and the same generated OpenAPI document; which one is
 rendered is chosen with the `ui` query parameter, for instance:

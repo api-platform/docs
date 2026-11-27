@@ -489,7 +489,8 @@ vocabularies:
 ```
 
 You can also use any other vocabulary. Check the
-[Linked Open Vocabularies](https://lov.linkeddata.es/dataset/lov/) to find one fitting your needs.
+[Linked Open Vocabularies](https://lov.linkeddata.es/dataset/lov/vocabs) to find one fitting your
+needs.
 
 For instance, to generate a data model from the
 [Video Game Ontology](http://purl.org/net/VideoGameOntology), use the following config file:
