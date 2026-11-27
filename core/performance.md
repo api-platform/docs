@@ -293,6 +293,87 @@ final class UserResourcesSubscriber implements EventSubscriberInterface
 }
 ```
 
+### Invalidating Additional Tags on Mutation
+
+Implement `ApiPlatform\HttpCache\PurgeTagProviderInterface` to add extra cache tags to invalidate
+when a resource is mutated. This is useful for any tags the built-in listener cannot resolve on its
+own: sub-resource collection IRIs (e.g. `/parents/{parentId}/children`), surrogate-key prefixes,
+class-based tags, or any custom invalidation strategy. This interface is available since API
+Platform 5.1.
+
+> [!NOTE] HTTP cache invalidation must be enabled. Providers are called by the built-in persist and
+> remove state processors (Doctrine or Eloquent), for every write handled by API Platform. Changes
+> flushed outside of an API Platform operation (for instance directly with Doctrine or Eloquent in a
+> console command or a message handler), or by a custom state processor that does not delegate to
+> the built-in ones, do not trigger them.
+
+The interface has a single method, `getTags()`. It receives the resource, the operation and the
+context:
+
+- On a delete operation (`$operation instanceof DeleteOperationInterface`), providers are called
+  before the object is removed, so its identifier is still set. Otherwise, they receive the object
+  returned by the persistence processor.
+- `$context['previous_data']` holds the API resource as it was before the request. It is an object
+  on updates and `null` on creation.
+- With `stateOptions` (`entityClass` or `documentClass`, for example with the ObjectMapper),
+  `$resource` is the entity or document while `$context['previous_data']` is the API resource. Use
+  `$operation->getClass()` to know which API resource the write is for.
+- Every provider is called for every write: return early, with an empty array, for the classes you
+  do not handle.
+
+The following provider invalidates the sub-resource collection of the previous and of the new parent
+when the parent of a child changes:
+
+```php
+<?php
+// src/HttpCache/ChildPurgeTagProvider.php
+namespace App\HttpCache;
+
+use ApiPlatform\HttpCache\PurgeTagProviderInterface;
+use ApiPlatform\Metadata\Operation;
+use App\Entity\Child;
+
+final class ChildPurgeTagProvider implements PurgeTagProviderInterface
+{
+    public function getTags(object $resource, Operation $operation, array $context = []): iterable
+    {
+        if (!$resource instanceof Child) {
+            return;
+        }
+
+        if (null !== $resource->getParent()) {
+            yield '/parents/'.$resource->getParent()->getId().'/children';
+        }
+
+        $previousResource = $context['previous_data'] ?? null;
+        if ($previousResource instanceof Child && null !== $previousResource->getParent()) {
+            yield '/parents/'.$previousResource->getParent()->getId().'/children';
+        }
+    }
+}
+```
+
+#### Symfony
+
+With
+[autowiring and autoconfiguration](https://symfony.com/doc/current/service_container/autowiring.html)
+enabled (the default), the service is automatically tagged
+`api_platform.http_cache.purge_tag_provider`. To declare the service explicitly:
+
+```yaml
+# config/services.yaml
+services:
+    App\HttpCache\ChildPurgeTagProvider:
+        tags:
+            - name: api_platform.http_cache.purge_tag_provider
+```
+
+#### Laravel
+
+Any class implementing `PurgeTagProviderInterface` placed inside your `app/` directory is
+automatically discovered and tagged with `PurgeTagProviderInterface::class` by API Platform's
+autoconfiguration, like other API Platform services. No further setup is required.
+
 ## Setting Custom HTTP Cache Headers
 
 The `cacheHeaders` attribute can be used to set custom HTTP cache headers:
