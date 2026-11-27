@@ -276,6 +276,14 @@ api_platform:
 
         # ...
 
+    serializer:
+        # Use the "hydra:" prefix.
+        hydra_prefix: false
+
+        # Expose the operations sharing the IRI of a resource in the "hydra:operation" property of its
+        # JSON-LD representations, filtered by their security, unless the operation sets "hydraOperations".
+        hydra_operations: true
+
     # Global resources defaults, see in the next section.
     defaults:
         # ...
@@ -685,6 +693,14 @@ return [
     // The list of enabled error formats. The first one will be the default.
     'error_formats' => [
         'jsonproblem' => ['mime_types' => ['application/problem+json']],
+    ],
+
+    'serializer' => [
+        // Use the "hydra:" prefix.
+        'hydra_prefix' => false,
+        // Expose the operations sharing the IRI of a resource in the "hydra:operation" property of its
+        // JSON-LD representations, filtered by their security, unless the operation sets "hydraOperations".
+        'hydra_operations' => true,
     ],
 
     // Global resources defaults, see in the next section.
