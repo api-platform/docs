@@ -890,6 +890,73 @@ You may want to copy the
 [one shipped with API Platform](https://github.com/api-platform/core/blob/main/src/Laravel/resources/views/swagger-ui.blade.php)
 and customize it.
 
+## Registering Swagger UI Plugins
+
+[Swagger UI plugins](https://swagger.io/docs/open-source-tools/swagger-ui/customization/plugin-api/)
+are JavaScript functions that must be passed to Swagger UI when it is created, so they cannot be set
+with the `swagger_ui_extra_configuration` option. Instead, API Platform passes every plugin found in
+the `window.apiPlatformSwaggerUiPlugins` array, which means you don't have to override the script
+that initializes Swagger UI.
+
+Push your plugin to this array from your own script:
+
+```javascript
+// public/js/swagger-ui-plugin.js
+(window.apiPlatformSwaggerUiPlugins ||= []).push(function NoticePlugin() {
+    return {
+        wrapComponents: {
+            // Renders a notice above the title and description of the API
+            InfoContainer:
+                (Original, { React }) =>
+                (props) =>
+                    React.createElement(
+                        "div",
+                        null,
+                        React.createElement("p", null, "This is the staging environment."),
+                        React.createElement(Original, props),
+                    ),
+        },
+    };
+});
+```
+
+Then load this script in the documentation page. It only has to run before the `load` event of the
+page, so it can be added after the scripts of API Platform.
+
+For a complete example, see
+[swagger-ui-login-plugin](https://github.com/ViPErCZ/swagger-ui-login-plugin), a community plugin
+that logs in from Swagger UI and authorizes with the returned token.
+
+### Registering Swagger UI Plugins using Symfony
+
+Extend the Twig template of API Platform and add your script to the `javascript` block (use the
+`stylesheet` block for stylesheets):
+
+```twig
+{# templates/bundles/ApiPlatformBundle/SwaggerUi/index.html.twig #}
+{% extends '@!ApiPlatform/SwaggerUi/index.html.twig' %}
+
+{% block javascript %}
+    {{ parent() }}
+    <script src="{{ asset('js/swagger-ui-plugin.js') }}"{{ csp_nonce_attr|raw }}></script>
+{% endblock %}
+```
+
+### Registering Swagger UI Plugins using Laravel
+
+The documentation page includes two optional views. Create them in your application to add your own
+scripts and stylesheets, there is no need to override the whole Blade template:
+
+```html
+{{-- resources/views/vendor/api-platform/swagger-ui-javascript.blade.php --}}
+<script src="/js/swagger-ui-plugin.js"></script>
+```
+
+```html
+{{-- resources/views/vendor/api-platform/swagger-ui-stylesheet.blade.php --}}
+<link rel="stylesheet" href="/css/swagger-ui-plugin.css" />
+```
+
 ## Compatibility Layer with Amazon API Gateway
 
 [AWS API Gateway](https://aws.amazon.com/api-gateway/) supports OpenAPI partially, but it

@@ -555,22 +555,30 @@ return [
         ],
     ],
 
-    'swagger' => [
-        // The active versions of OpenAPI to be exported or used in the swagger_ui. The first value is the default.
-        'versions' => [2, 3],
+    'swagger_ui' => [
+        // Enable or disable Swagger UI.
+        'enabled' => true,
 
-        // The swagger API keys.
-        'api_keys' => [],
+        // The API keys Swagger UI can send, indexed by the name of the security scheme.
+        'apiKeys' => [
+            'api' => [
+                // The name of the header or query parameter containing the API key.
+                'name' => 'Authorization',
 
-        'swagger_ui_extra_configuration' => [
+                // Whether the API key should be a query parameter or a header.
+                'type' => 'header',
+            ],
+        ],
+
+        // If set to true, it persists authorization data and it would not be lost on browser close/refresh
+        'persist_authorization' => true,
+
+        'extra_configuration' => [
             // Controls the default expansion setting for the operations and tags. It can be 'list' (expands only the tags), 'full' (expands the tags and operations) or 'none' (expands nothing).
             'docExpansion' => 'list',
 
             // If set, enables filtering. The top bar will show an edit box that you can use to filter the tagged operations that are shown.
             'filter' => false,
-
-            // If set to true, it persists authorization data and it would not be lost on browser close/refresh
-            'persistAuthorization' => true,
 
             // You can use any other configuration parameters too.
         ],

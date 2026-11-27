@@ -1273,8 +1273,7 @@ To get the next page, you would add the `endCursor` from the current page as the
 
 ```graphql
 {
-  offers(first: 10, after: "endCursor") {
-  }
+    offers(first: 10, after: "endCursor") {}
 }
 ```
 
@@ -1283,8 +1282,7 @@ parameter.
 
 ```graphql
 {
-  offers(last: 10, before: "startCursor") {
-  }
+    offers(last: 10, before: "startCursor") {}
 }
 ```
 
