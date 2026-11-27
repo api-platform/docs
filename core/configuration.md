@@ -392,9 +392,11 @@ default values:
 ```php
 <?php
 // config/api-platform.php
+use ApiPlatform\Metadata\Exception\InvalidArgumentException;
 use ApiPlatform\Metadata\UrlGeneratorInterface;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Auth\AuthenticationException;
+use Symfony\Component\Serializer\Exception\ExceptionInterface as SerializerExceptionInterface;
 
 return [
     // The title of the API.
@@ -648,7 +650,9 @@ return [
     // The list of exceptions mapped to their HTTP status code.
     'exception_to_status' => [
         AuthenticationException::class => 401,
-        AuthorizationException::class => 403
+        AuthorizationException::class => 403,
+        SerializerExceptionInterface::class => 400,
+        InvalidArgumentException::class => 400,
     ],
 
     // The list of routes.
